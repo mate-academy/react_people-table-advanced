@@ -1,6 +1,22 @@
-# Base template for React
+# React + Redux list of TODOs
 
 ## Task
+
+By requesting [https://jsonplaceholder.typicode.com/todos](https://jsonplaceholder.typicode.com/todos) and [https://jsonplaceholder.typicode.com/users](https://jsonplaceholder.typicode.com/users), create and display a list of TODO items with an option of removing individual items.
+
+Create and use five components:
+
+- `TodoList` (for the whole list),
+- `TodoListHandler` (Redux container for `TodoList` that manages its props, including callbacks if any),
+- `TodoItem` (for a single TODO item),
+- `TodoItemHandler` (Redux container for `TodoItem` that manages its props, including callbacks if any),
+- `User` (for displaying information about a user).
+
+`TodoList` should display a list of `TodoItem`s (through `TodoItemHandler`); each `TodoItem` must display the basic info about an item as well as the `User` the item belongs to. You can choose yourself what exact information you want to present and how, but you need to show at least the title of the item, the name of the user and whether the item is completed. Alongside each TODO item there should also be a button that removes the item when clicked.
+
+Initially `TodoList` has to present the user with a button labeled "Load". When the user hits the button, the script starts to download the data; the label of the button has to change to "Loading..." and the button must become disabled. Once the data has been loaded, hide the button altogether and display the TODO items instead.
+
+Additionally, you should provide a capability of sorting the items either by title, user, or the item’s status (whether the item is completed or not).
 
 ## Workflow
 
@@ -10,7 +26,7 @@
     git clone git@github.com:<user_name>>/<task_repository>.git
     ```
 - Run `npm install` to install dependencies.
-- Then develop.
+- Then develop
 
 ## Development mode 
 
