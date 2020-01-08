@@ -7,9 +7,7 @@ By requesting [https://jsonplaceholder.typicode.com/todos](https://jsonplacehold
 Create and use five components:
 
 - `TodoList` (for the whole list),
-- `TodoListHandler` (Redux container for `TodoList` that manages its props, including callbacks if any),
 - `TodoItem` (for a single TODO item),
-- `TodoItemHandler` (Redux container for `TodoItem` that manages its props, including callbacks if any),
 - `User` (for displaying information about a user).
 
 `TodoList` should display a list of `TodoItem`s (through `TodoItemHandler`); each `TodoItem` must display the basic info about an item as well as the `User` the item belongs to. You can choose yourself what exact information you want to present and how, but you need to show at least the title of the item, the name of the user and whether the item is completed. Alongside each TODO item there should also be a button that removes the item when clicked.
