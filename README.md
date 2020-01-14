@@ -4,7 +4,7 @@
 
 By requesting [https://jsonplaceholder.typicode.com/todos](https://jsonplaceholder.typicode.com/todos) and [https://jsonplaceholder.typicode.com/users](https://jsonplaceholder.typicode.com/users), create and display a list of TODO items with an option of removing individual items.
 
-Create and use five components:
+Create and use 3 components:
 
 - `TodoList` (for the whole list),
 - `TodoItem` (for a single TODO item),
