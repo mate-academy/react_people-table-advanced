@@ -1,1 +1,44 @@
-// styles go here
+header {
+  margin-bottom: 20px;
+}
+
+.nav-item {
+  text-decoration: none;
+  margin-right: 10px;
+  color: black;
+}
+
+.active {
+  color: blue;
+  text-decoration: underline;
+}
+
+.peopleTable {
+  border-collapse: collapse;
+}
+
+.peopleTable td {
+  border: 1px solid black;
+  text-align: center;
+}
+
+.peopleTable thead td {
+  background: lightgray;
+}
+
+.name-link {
+  text-decoration: none;
+  color: black;
+}
+
+.name-link:hover {
+  color: gray;
+}
+
+.blue {
+  color: blue;
+}
+
+.red {
+  color: red;
+}
