@@ -19,7 +19,7 @@ const PeopleTable: React.FC<{ people: IPerson[] }> = ({ people }) => {
         </thead>
         <tbody>
           {people.map((person) => (
-            <PersonRow person={person} people={people} key={person.name} />
+            <PersonRow person={person} key={person.name} people={people} />
           ))}
         </tbody>
       </table>

@@ -35,10 +35,18 @@ header {
   color: gray;
 }
 
-.blue {
+.person-name .blue {
   color: blue;
 }
 
-.red {
+.person-name .red {
   color: red;
+}
+
+.row {
+  background: rgb(168, 201, 134);
+}
+
+.bold {
+  font-weight: bolder;
 }

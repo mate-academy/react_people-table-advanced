@@ -1,27 +1,15 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { IPerson } from '../../Interfaces/Interfaces';
-import { Link, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import cn from 'classnames';
+import PersonName from './PersonName';
 
 const PersonRow: React.FC<{ person: IPerson; people: IPerson[] }> = ({
   person,
   people,
 }) => {
-  const [isMan, setIsMan] = useState(false);
-  const isWoman = false;
   // skip
   const params: { person: string } = useParams();
-
-  const createQueryStr = (personName: string) => {
-    if (personName) {
-      const queryStr =
-        personName.toLowerCase().split(' ').join('-') + `-${person.born}`;
-
-      return queryStr;
-    }
-
-    return '';
-  };
 
   const parsParamsName = () => {
     if (params.person) {
@@ -34,82 +22,39 @@ const PersonRow: React.FC<{ person: IPerson; people: IPerson[] }> = ({
     return '';
   };
 
-  const isPersonInPeople = () => {
-    const paramsName = parsParamsName();
-
-    if (paramsName) {
-      return people.some((item) => item.name.toLowerCase() === paramsName);
-    }
-
-    return '';
-  };
-
-  console.log(isPersonInPeople());
-
-  const onClick = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
-    const curName = e.currentTarget.text.toLowerCase();
-    const paramsName = parsParamsName();
-    console.log(curName, params);
-
-    if (isPersonInPeople()) {
-      if (curName === paramsName) {
-        setIsMan(true);
-      } else {
-        setIsMan(false);
-      }
-    }
-  };
+  const paramsName = parsParamsName();
 
   return (
-    <tr>
-      <td>
-        <Link
-          to={`/people/${createQueryStr(person.name)}`}
-          className={cn('name-link', { blue: isMan }, { red: isWoman })}
-          onClick={onClick}
-        >
-          {person.name}
-        </Link>
+    <tr className={cn({ row: paramsName === person.name.toLowerCase() })}>
+      <td className="person-name">
+        <PersonName
+          person={person}
+          name={person.name}
+          paramsName={paramsName}
+          people={people}
+        />
       </td>
       <td>{person.sex}</td>
       <td>{person.born}</td>
       <td>{person.died}</td>
       <td>
-        <Link
-          to={`/people/${createQueryStr(person.mother)}`}
-          className="name-link"
-          onClick={onClick}
-        >
-          {person.mother}
-        </Link>
+        <PersonName
+          person={person}
+          name={person.mother}
+          paramsName={paramsName}
+          people={people}
+        />
       </td>
       <td>
-        <Link
-          to={`/people/${createQueryStr(person.father)}`}
-          className="name-link"
-          onClick={onClick}
-        >
-          {person.father}
-        </Link>
+        <PersonName
+          person={person}
+          name={person.father}
+          paramsName={paramsName}
+          people={people}
+        />
       </td>
     </tr>
   );
 };
 
 export default PersonRow;
-
-// // hooks
-// const params: { person: string } = useParams();
-// //query
-// const queryNameArr = params.person.split('-');
-// const queryName = queryNameArr.slice(0, queryNameArr.length - 1).join(' ');
-// const personQueryStr =
-
-// // classnames
-// const isMan = queryName === person.name.toLowerCase() && person.sex === 'm';
-// const isWomen = queryName === person.name.toLowerCase() && person.sex === 'f';
-
-// const isPersonInPeopleArr = people.some((item) => {
-//   console.log(queryName);
-//   return item.name.toLowerCase() === queryName;
-// });
