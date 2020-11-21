@@ -56,6 +56,15 @@ header {
   display: flex;
 }
 
+span[data-name] {
+  margin: 0 5px;
+}
+
 td[data-name]:hover {
   cursor: pointer;
+}
+
+.title {
+  font-weight: bolder;
+  margin: 0 5px;
 }

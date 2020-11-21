@@ -1,26 +1,17 @@
 import React from 'react';
-import { useLocation, useHistory } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 
 import { IPerson } from '../../Interfaces/Interfaces';
 import PersonRow from './PersonRow';
+import TableHeader from './TableHeader';
 
 const PeopleTable: React.FC<{ people: IPerson[] }> = ({ people }) => {
   const location = useLocation();
-  const history = useHistory();
   const searchParams = new URLSearchParams(location.search);
   const name = searchParams.get('name');
   const sortBy = searchParams.get('sortBy');
+  const sortByOrder = searchParams.get('sortByOrder');
   const selectors = ['name', 'sex', 'born', 'died'];
-
-  const onClick = (e: React.MouseEvent<HTMLTableDataCellElement>): void => {
-    const selector = e.currentTarget.attributes.getNamedItem('data-name')
-      ?.value;
-
-    if (selector) {
-      searchParams.set('sortBy', selector);
-      history.push(`?${searchParams.toString()}`);
-    }
-  };
 
   let filtredPeople = name
     ? people.filter(
@@ -35,11 +26,15 @@ const PeopleTable: React.FC<{ people: IPerson[] }> = ({ people }) => {
   if (sortBy && selectors.some((item) => item === sortBy)) {
     filtredPeople = filtredPeople.sort((personA, personB): number => {
       if (sortBy === 'name' || sortBy === 'sex') {
-        return personA[sortBy].localeCompare(personB[sortBy]);
+        return sortByOrder === 'asc' || !sortByOrder
+          ? personA[sortBy].localeCompare(personB[sortBy])
+          : personB[sortBy].localeCompare(personA[sortBy]);
       }
 
       if (sortBy === 'born' || sortBy === 'died') {
-        return personA[sortBy] - personB[sortBy];
+        return sortByOrder === 'asc' || !sortByOrder
+          ? personA[sortBy] - personB[sortBy]
+          : personB[sortBy] - personA[sortBy];
       }
 
       return 0;
@@ -51,22 +46,10 @@ const PeopleTable: React.FC<{ people: IPerson[] }> = ({ people }) => {
       <table className="peopleTable">
         <thead>
           <tr>
-            <td data-name="name" onClick={onClick}>
-              Name {sortBy === 'name' && '*'}
-              <img alt="img" src="public/images/sort_both.png" />
-            </td>
-            <td data-name="sex" onClick={onClick}>
-              Sex {sortBy === 'sex' && '*'}
-              <img alt="img" src="public/images/sort_both.png" />
-            </td>
-            <td data-name="born" onClick={onClick}>
-              Born {sortBy === 'born' && '*'}
-              <img alt="img" src="public/images/sort_both.png" />
-            </td>
-            <td data-name="died" onClick={onClick}>
-              Died {sortBy === 'died' && '*'}
-              <img alt="img" src="public/images/sort_both.png" />
-            </td>
+            <TableHeader sortBy={sortBy} title="Name" />
+            <TableHeader sortBy={sortBy} title="Sex" />
+            <TableHeader sortBy={sortBy} title="Born" />
+            <TableHeader sortBy={sortBy} title="Died" />
             <td>Mother</td>
             <td>Father</td>
           </tr>
