@@ -1,14 +1,16 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useContext } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import cn from 'classnames';
 import { IPerson } from '../../Interfaces/Interfaces';
+import { AppContext } from '../../Context/Context';
 
 const PersonName: React.FC<{
   person: IPerson;
   name: string;
   paramsName: string;
-  people: IPerson[];
-}> = ({ person, name, paramsName, people = [] }) => {
+}> = ({ person, name, paramsName }) => {
+  const { search } = useLocation();
+  const { people } = useContext(AppContext);
   const createQueryStr = (personName: string) => {
     if (personName) {
       const queryStr =
@@ -25,7 +27,7 @@ const PersonName: React.FC<{
 
   return (
     <Link
-      to={`/people/${createQueryStr(name)}`}
+      to={`/people/${createQueryStr(name)}${search}`}
       className={cn(
         'name-link',
         {

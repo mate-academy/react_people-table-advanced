@@ -1,11 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useContext } from 'react';
 import { getPeople } from '../../api';
-
+import { AppContext } from '../../Context/Context';
 import { IPerson } from '../../Interfaces/Interfaces';
 import PeopleTable from '../PeopleTable/PeopleTable';
+import Filter from '../Filter/Filter';
 
 const PeoplePage = () => {
-  const [people, setPeople] = useState([]);
+  const { people, setPeople } = useContext(AppContext);
 
   useEffect(() => {
     getPeople().then((people) => {
@@ -16,10 +17,11 @@ const PeoplePage = () => {
       });
       setPeople(peopleWithParents);
     });
-  }, []);
+  }, [setPeople]);
 
   return (
     <div className="peoplePage">
+      <Filter />
       <PeopleTable people={people} />
     </div>
   );

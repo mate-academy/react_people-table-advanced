@@ -50,3 +50,12 @@ header {
 .bold {
   font-weight: bolder;
 }
+
+.form {
+  margin-bottom: 20px;
+  display: flex;
+}
+
+td[data-name]:hover {
+  cursor: pointer;
+}

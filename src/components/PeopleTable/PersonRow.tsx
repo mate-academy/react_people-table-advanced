@@ -4,11 +4,7 @@ import { useParams } from 'react-router-dom';
 import cn from 'classnames';
 import PersonName from './PersonName';
 
-const PersonRow: React.FC<{ person: IPerson; people: IPerson[] }> = ({
-  person,
-  people,
-}) => {
-  // skip
+const PersonRow: React.FC<{ person: IPerson }> = ({ person }) => {
   const params: { person: string } = useParams();
 
   const parsParamsName = () => {
@@ -31,7 +27,6 @@ const PersonRow: React.FC<{ person: IPerson; people: IPerson[] }> = ({
           person={person}
           name={person.name}
           paramsName={paramsName}
-          people={people}
         />
       </td>
       <td>{person.sex}</td>
@@ -42,7 +37,6 @@ const PersonRow: React.FC<{ person: IPerson; people: IPerson[] }> = ({
           person={person}
           name={person.mother}
           paramsName={paramsName}
-          people={people}
         />
       </td>
       <td>
@@ -50,7 +44,6 @@ const PersonRow: React.FC<{ person: IPerson; people: IPerson[] }> = ({
           person={person}
           name={person.father}
           paramsName={paramsName}
-          people={people}
         />
       </td>
     </tr>
