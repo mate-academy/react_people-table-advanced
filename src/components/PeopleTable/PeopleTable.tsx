@@ -8,18 +8,18 @@ import TableHeader from './TableHeader';
 const PeopleTable: React.FC<{ people: IPerson[] }> = ({ people }) => {
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
-  const name = searchParams.get('name');
+  const query = searchParams.get('query');
   const sortBy = searchParams.get('sortBy');
   const sortByOrder = searchParams.get('sortByOrder');
   const selectors = ['name', 'sex', 'born', 'died'];
 
-  let filtredPeople = name
+  let filtredPeople = query
     ? people.filter(
         (person) =>
-          person.name.toLowerCase().includes(name) ||
+          person.name.toLowerCase().includes(query) ||
           (person.fatherName &&
-            person.fatherName.toLowerCase().includes(name)) ||
-          (person.motherName && person.motherName.toLowerCase().includes(name))
+            person.fatherName.toLowerCase().includes(query)) ||
+          (person.motherName && person.motherName.toLowerCase().includes(query))
       )
     : people;
 
