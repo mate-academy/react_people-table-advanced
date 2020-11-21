@@ -53,19 +53,19 @@ const PeopleTable: React.FC<{ people: IPerson[] }> = ({ people }) => {
           <tr>
             <td data-name="name" onClick={onClick}>
               Name {sortBy === 'name' && '*'}
-              <img alt="img" src="../../../public/images/sort_both.png" />
+              <img alt="img" src="public/images/sort_both.png" />
             </td>
             <td data-name="sex" onClick={onClick}>
               Sex {sortBy === 'sex' && '*'}
-              <img alt="img" />
+              <img alt="img" src="public/images/sort_both.png" />
             </td>
             <td data-name="born" onClick={onClick}>
               Born {sortBy === 'born' && '*'}
-              <img alt="img" />
+              <img alt="img" src="public/images/sort_both.png" />
             </td>
             <td data-name="died" onClick={onClick}>
               Died {sortBy === 'died' && '*'}
-              <img alt="img" />
+              <img alt="img" src="public/images/sort_both.png" />
             </td>
             <td>Mother</td>
             <td>Father</td>
