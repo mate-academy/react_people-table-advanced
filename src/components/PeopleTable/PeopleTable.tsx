@@ -1,9 +1,9 @@
-import React, { useCallback, useState } from 'react';
-import { useLocation, useHistory } from 'react-router-dom';
+import React from 'react';
+import { useLocation } from 'react-router-dom';
 import { IPerson } from '../../Interfaces/Interfaces';
 import PersonRow from './PersonRow';
 import TableHeader from './TableHeader';
-import debounce from 'lodash/debounce';
+import Filter from '../Filter/Filter';
 
 const PeopleTable: React.FC<{
   people: IPerson[];
@@ -14,38 +14,15 @@ const PeopleTable: React.FC<{
   const sortByOrder = searchParams.get('sortByOrder');
   const selectors = ['name', 'sex', 'born', 'died'];
   //Filter
-  const apliedQuery = searchParams.get('query') || '';
-  const [query, setQuery] = useState(apliedQuery);
-  const history = useHistory();
+  const query = searchParams.get('query') || '';
 
-  const applyQuery = useCallback(
-    debounce((newQuery) => {
-      if (newQuery) {
-        searchParams.set('query', newQuery);
-      } else {
-        searchParams.delete('query');
-      }
-
-      console.log(searchParams.toString());
-
-      history.push(`?${searchParams.toString()}`);
-    }, 500),
-    []
-  );
-
-  const onChange: (e: React.ChangeEvent<HTMLInputElement>) => void = (e) => {
-    setQuery(e.target.value);
-    applyQuery(e.target.value);
-  };
-
-  let filtredPeople = apliedQuery
+  let filtredPeople = query
     ? people.filter(
         (person) =>
-          person.name.toLowerCase().includes(apliedQuery) ||
+          person.name.toLowerCase().includes(query) ||
           (person.fatherName &&
-            person.fatherName.toLowerCase().includes(apliedQuery)) ||
-          (person.motherName &&
-            person.motherName.toLowerCase().includes(apliedQuery))
+            person.fatherName.toLowerCase().includes(query)) ||
+          (person.motherName && person.motherName.toLowerCase().includes(query))
       )
     : people;
 
@@ -69,14 +46,7 @@ const PeopleTable: React.FC<{
 
   return (
     <div>
-      <form className="form">
-        <input
-          value={query ? query : ''}
-          type="text"
-          placeholder="filter"
-          onChange={onChange}
-        />
-      </form>
+      <Filter searchParams={searchParams} />
       <table className="peopleTable">
         <thead>
           <tr>

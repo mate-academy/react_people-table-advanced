@@ -1,32 +1,20 @@
-import React, { useCallback, useState } from 'react';
+import React from 'react';
 import { useHistory } from 'react-router-dom';
-import debounce from 'lodash/debounce';
 
 const Filter: React.FC<{ searchParams: URLSearchParams }> = ({
   searchParams,
 }) => {
-  const apliedQuery = searchParams.get('query');
-  const [query, setQuery] = useState(apliedQuery);
+  const query = searchParams.get('query') || '';
   const history = useHistory();
 
-  const applyQuery = useCallback(
-    debounce((newQuery) => {
-      if (newQuery) {
-        searchParams.set('query', newQuery);
-      } else {
-        searchParams.delete('query');
-      }
+  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.value) {
+      searchParams.set('query', e.target.value);
+    } else {
+      searchParams.delete('query');
+    }
 
-      console.log(searchParams.toString());
-
-      history.push(`?${searchParams.toString()}`);
-    }, 500),
-    []
-  );
-
-  const onChange: (e: React.ChangeEvent<HTMLInputElement>) => void = (e) => {
-    setQuery(e.target.value);
-    applyQuery(e.target.value);
+    history.push(`?${searchParams.toString()}`);
   };
 
   return (
