@@ -3,16 +3,15 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSort } from '@fortawesome/free-solid-svg-icons';
 import { faSortUp } from '@fortawesome/free-solid-svg-icons';
 import { faSortDown } from '@fortawesome/free-solid-svg-icons';
-import { useLocation, useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 
 const TableHeader: React.FC<{
   sortBy: string | null;
   title: string;
-}> = ({ sortBy, title }) => {
+  searchParams: URLSearchParams;
+}> = ({ sortBy, title, searchParams }) => {
   const [order, setOrder] = useState('asc');
   const history = useHistory();
-  const location = useLocation();
-  const searchParams = new URLSearchParams(location.search);
   const sortByOrder = searchParams.get('sortByOrder');
 
   const onClick = (e: React.MouseEvent<HTMLTableDataCellElement>): void => {

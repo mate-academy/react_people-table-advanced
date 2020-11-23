@@ -1,25 +1,51 @@
-import React from 'react';
-import { useLocation } from 'react-router-dom';
-
+import React, { useCallback, useState } from 'react';
+import { useLocation, useHistory } from 'react-router-dom';
 import { IPerson } from '../../Interfaces/Interfaces';
 import PersonRow from './PersonRow';
 import TableHeader from './TableHeader';
+import debounce from 'lodash/debounce';
 
-const PeopleTable: React.FC<{ people: IPerson[] }> = ({ people }) => {
+const PeopleTable: React.FC<{
+  people: IPerson[];
+}> = ({ people }) => {
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
-  const query = searchParams.get('query');
   const sortBy = searchParams.get('sortBy');
   const sortByOrder = searchParams.get('sortByOrder');
   const selectors = ['name', 'sex', 'born', 'died'];
+  //Filter
+  const apliedQuery = searchParams.get('query') || '';
+  const [query, setQuery] = useState(apliedQuery);
+  const history = useHistory();
 
-  let filtredPeople = query
+  const applyQuery = useCallback(
+    debounce((newQuery) => {
+      if (newQuery) {
+        searchParams.set('query', newQuery);
+      } else {
+        searchParams.delete('query');
+      }
+
+      console.log(searchParams.toString());
+
+      history.push(`?${searchParams.toString()}`);
+    }, 500),
+    []
+  );
+
+  const onChange: (e: React.ChangeEvent<HTMLInputElement>) => void = (e) => {
+    setQuery(e.target.value);
+    applyQuery(e.target.value);
+  };
+
+  let filtredPeople = apliedQuery
     ? people.filter(
         (person) =>
-          person.name.toLowerCase().includes(query) ||
+          person.name.toLowerCase().includes(apliedQuery) ||
           (person.fatherName &&
-            person.fatherName.toLowerCase().includes(query)) ||
-          (person.motherName && person.motherName.toLowerCase().includes(query))
+            person.fatherName.toLowerCase().includes(apliedQuery)) ||
+          (person.motherName &&
+            person.motherName.toLowerCase().includes(apliedQuery))
       )
     : people;
 
@@ -43,13 +69,37 @@ const PeopleTable: React.FC<{ people: IPerson[] }> = ({ people }) => {
 
   return (
     <div>
+      <form className="form">
+        <input
+          value={query ? query : ''}
+          type="text"
+          placeholder="filter"
+          onChange={onChange}
+        />
+      </form>
       <table className="peopleTable">
         <thead>
           <tr>
-            <TableHeader sortBy={sortBy} title="Name" />
-            <TableHeader sortBy={sortBy} title="Sex" />
-            <TableHeader sortBy={sortBy} title="Born" />
-            <TableHeader sortBy={sortBy} title="Died" />
+            <TableHeader
+              sortBy={sortBy}
+              title="Name"
+              searchParams={searchParams}
+            />
+            <TableHeader
+              sortBy={sortBy}
+              title="Sex"
+              searchParams={searchParams}
+            />
+            <TableHeader
+              sortBy={sortBy}
+              title="Born"
+              searchParams={searchParams}
+            />
+            <TableHeader
+              sortBy={sortBy}
+              title="Died"
+              searchParams={searchParams}
+            />
             <td>Mother</td>
             <td>Father</td>
           </tr>

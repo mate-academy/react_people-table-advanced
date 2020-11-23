@@ -3,7 +3,6 @@ import { getPeople } from '../../api';
 import { AppContext } from '../../Context/Context';
 import { IPerson } from '../../Interfaces/Interfaces';
 import PeopleTable from '../PeopleTable/PeopleTable';
-import Filter from '../Filter/Filter';
 
 const PeoplePage = () => {
   const { people, setPeople } = useContext(AppContext);
@@ -21,7 +20,6 @@ const PeoplePage = () => {
 
   return (
     <div className="peoplePage">
-      <Filter />
       <PeopleTable people={people} />
     </div>
   );

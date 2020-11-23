@@ -1,10 +1,10 @@
 import React, { useCallback, useState } from 'react';
-import { useHistory, useLocation } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import debounce from 'lodash/debounce';
 
-const Filter: React.FC = () => {
-  const location = useLocation();
-  const searchParams = new URLSearchParams(location.search);
+const Filter: React.FC<{ searchParams: URLSearchParams }> = ({
+  searchParams,
+}) => {
   const apliedQuery = searchParams.get('query');
   const [query, setQuery] = useState(apliedQuery);
   const history = useHistory();
@@ -16,6 +16,8 @@ const Filter: React.FC = () => {
       } else {
         searchParams.delete('query');
       }
+
+      console.log(searchParams.toString());
 
       history.push(`?${searchParams.toString()}`);
     }, 500),
