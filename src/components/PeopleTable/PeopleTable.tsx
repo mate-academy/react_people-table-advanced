@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useLocation } from 'react-router-dom';
 import { IPerson } from '../../Interfaces/Interfaces';
 import PersonRow from './PersonRow';
@@ -13,36 +13,49 @@ const PeopleTable: React.FC<{
   const sortBy = searchParams.get('sortBy');
   const sortByOrder = searchParams.get('sortByOrder');
   const selectors = ['name', 'sex', 'born', 'died'];
+  const tableHeaders = ['Name', 'Sex', 'Born', 'Died'];
   //Filter
   const query = searchParams.get('query') || '';
 
-  let filtredPeople = query
-    ? people.filter(
-        (person) =>
-          person.name.toLowerCase().includes(query) ||
-          (person.fatherName &&
-            person.fatherName.toLowerCase().includes(query)) ||
-          (person.motherName && person.motherName.toLowerCase().includes(query))
-      )
-    : people;
+  let getfiltredPeople = () => {
+    let filtredPeople = query
+      ? people.filter(
+          (person) =>
+            person.name.toLowerCase().includes(query) ||
+            (person.fatherName &&
+              person.fatherName.toLowerCase().includes(query)) ||
+            (person.motherName &&
+              person.motherName.toLowerCase().includes(query))
+        )
+      : people;
 
-  if (sortBy && selectors.some((item) => item === sortBy)) {
-    filtredPeople = filtredPeople.sort((personA, personB): number => {
-      if (sortBy === 'name' || sortBy === 'sex') {
-        return sortByOrder === 'asc' || !sortByOrder
-          ? personA[sortBy].localeCompare(personB[sortBy])
-          : personB[sortBy].localeCompare(personA[sortBy]);
-      }
+    if (sortBy && selectors.some((item) => item === sortBy)) {
+      filtredPeople = filtredPeople.sort((personA, personB): number => {
+        if (sortBy === 'name' || sortBy === 'sex') {
+          return sortByOrder === 'asc' || !sortByOrder
+            ? personA[sortBy].localeCompare(personB[sortBy])
+            : personB[sortBy].localeCompare(personA[sortBy]);
+        }
 
-      if (sortBy === 'born' || sortBy === 'died') {
-        return sortByOrder === 'asc' || !sortByOrder
-          ? personA[sortBy] - personB[sortBy]
-          : personB[sortBy] - personA[sortBy];
-      }
+        if (sortBy === 'born' || sortBy === 'died') {
+          return sortByOrder === 'asc' || !sortByOrder
+            ? personA[sortBy] - personB[sortBy]
+            : personB[sortBy] - personA[sortBy];
+        }
 
-      return 0;
-    });
-  }
+        return 0;
+      });
+    }
+
+    return filtredPeople;
+  };
+
+  const filtredPeople = useMemo(() => getfiltredPeople(), [
+    query,
+    sortByOrder,
+    sortBy,
+    people,
+  ]);
 
   return (
     <div>
@@ -50,26 +63,14 @@ const PeopleTable: React.FC<{
       <table className="peopleTable">
         <thead>
           <tr>
-            <TableHeader
-              sortBy={sortBy}
-              title="Name"
-              searchParams={searchParams}
-            />
-            <TableHeader
-              sortBy={sortBy}
-              title="Sex"
-              searchParams={searchParams}
-            />
-            <TableHeader
-              sortBy={sortBy}
-              title="Born"
-              searchParams={searchParams}
-            />
-            <TableHeader
-              sortBy={sortBy}
-              title="Died"
-              searchParams={searchParams}
-            />
+            {tableHeaders.map((item) => (
+              <TableHeader
+                sortBy={sortBy}
+                title={item}
+                searchParams={searchParams}
+                key={item}
+              />
+            ))}
             <td>Mother</td>
             <td>Father</td>
           </tr>
@@ -84,4 +85,4 @@ const PeopleTable: React.FC<{
   );
 };
 
-export default PeopleTable;
+export default React.memo(PeopleTable);
