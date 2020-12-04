@@ -1,1 +1,105 @@
-// styles go here
+* {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: rgb(163, 212, 99);
+}
+
+header {
+  margin-bottom: 20px;
+  display: flex;
+  background: darkcyan;
+  color: azure;
+  padding: 20px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.header-title {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.nav-item {
+  text-decoration: none;
+  margin-right: 10px;
+  color: azure;
+}
+
+.active {
+  color: yellowgreen;
+  text-decoration: underline;
+}
+
+.peopleTable {
+  border-collapse: collapse;
+}
+
+table {
+  background-color: white;
+  margin: auto;
+  margin-bottom: 50px;
+}
+
+.peopleTable td {
+  border: 1px solid black;
+  text-align: center;
+}
+
+.peopleTable thead td {
+  background: lightgray;
+}
+
+.name-link {
+  text-decoration: none;
+  color: black;
+}
+
+.name-link:hover {
+  color: gray;
+}
+
+.person-name .blue {
+  color: blue;
+}
+
+.person-name .red {
+  color: red;
+}
+
+.row {
+  background: rgb(168, 201, 134);
+}
+
+.bold {
+  font-weight: bolder;
+}
+
+.form {
+  margin: 20px 0;
+  display: flex;
+  justify-content: center;
+}
+
+.form input {
+  width: 30%;
+  padding: 10px;
+  border-radius: 10px;
+  font-size: 1.2rem;
+  outline: none;
+}
+
+span[data-name] {
+  margin: 0 5px;
+}
+
+td[data-name]:hover {
+  cursor: pointer;
+}
+
+.title {
+  font-weight: bolder;
+  margin: 0 5px;
+}
