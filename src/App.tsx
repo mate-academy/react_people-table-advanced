@@ -10,8 +10,6 @@ import PeoplePage from './components/PeoplePage/PeoplePage';
 const App: React.FC = () => {
   return (
     <div className="App">
-      <h1>People table</h1>
-
       <Header />
       <Switch>
         <Route path="/" exact component={HomePage} />

@@ -17,7 +17,7 @@ const PeopleTable: React.FC<{
   //Filter
   const query = searchParams.get('query') || '';
 
-  let getfiltredPeople = () => {
+  const filtredPeople = useMemo(() => {
     let filtredPeople = query
       ? people.filter(
           (person) =>
@@ -48,14 +48,7 @@ const PeopleTable: React.FC<{
     }
 
     return filtredPeople;
-  };
-
-  const filtredPeople = useMemo(() => getfiltredPeople(), [
-    query,
-    sortByOrder,
-    sortBy,
-    people,
-  ]);
+  }, [query, sortByOrder, sortBy, people, selectors]);
 
   return (
     <div>

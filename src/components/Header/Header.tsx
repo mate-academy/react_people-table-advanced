@@ -3,6 +3,7 @@ import { NavLink } from 'react-router-dom';
 
 const Header = () => (
   <header>
+    <div className="header-title">People table</div>
     <nav className="nav">
       <NavLink to="/" exact className="nav-item" activeClassName="active">
         Home
