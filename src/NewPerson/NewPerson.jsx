@@ -36,7 +36,7 @@ export const NewPerson = ({ people, setPeople }) => {
     setPersonDate({
       ...personDate,
       [item]: value,
-      slug: validName(item, born),
+      slug: validName(name, born),
     });
     validate(value, id);
   };
