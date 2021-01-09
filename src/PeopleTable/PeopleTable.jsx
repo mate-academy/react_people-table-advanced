@@ -103,7 +103,7 @@ export const PeopleTable = () => {
       <table className="PeopleTable">
         <thead className="Person">
           <tr className="header">
-            {['name', 'sex', 'born', 'died', 'mother', 'father'].map(item => (
+            {['name', 'sex', 'born', 'died', 'father', 'mother'].map(item => (
               <th key={item} className="Person person">
                 <button
                   key={item}
