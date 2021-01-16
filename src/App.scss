@@ -1,1 +1,205 @@
-// styles go here
+body {
+  margin: 0;
+  background: rgb(232, 230, 242);
+}
+
+.App {
+  text-align: center;
+}
+
+.img {
+  filter: invert(0) contrast(200%);
+}
+
+.color_img {
+  filter: hue-rotate(243deg) contrast(200%);
+  width: 22px;
+}
+
+.Header {
+  display: flex;
+  justify-content: space-evenly;
+  background-color: rgb(78, 69, 122);
+}
+
+.home,
+.people {
+  color: white;
+}
+
+.Person {
+  border-collapse: collapse;
+  border: 1px solid rgb(78, 69, 122);
+  padding: 5px;
+}
+
+.person {
+  border: 1px solid white;
+}
+
+.button {
+  font-size: 15px;
+  font-weight: bold;
+  outline: none;
+  background: rgb(78, 69, 122);
+  border: 1px rgb(78, 69, 122);
+  color: white;
+  cursor: pointer;
+}
+
+.parent {
+  padding-bottom: 0;
+}
+
+.male {
+  background: rgb(219, 237, 255);
+}
+
+.female {
+  background: rgb(254, 220, 223);
+}
+
+.active {
+  color: rgb(7, 247, 47);
+}
+
+.PeopleTable {
+  margin: auto;
+  margin-top: 30px;
+  border-collapse: collapse;
+  border: 2px solid rgb(78, 69, 122);
+}
+
+.header {
+  background: rgb(78, 69, 122);
+}
+
+.table_body {
+  border: 1px solid rgb(78, 69, 122);
+}
+
+.person_date {
+  color: rgb(78, 69, 122);
+}
+
+.link {
+  text-decoration: none;
+  color: rgb(78, 69, 122);
+}
+
+.no_parents {
+  font-weight: bold;
+  color: black;
+}
+
+.input_filter {
+  margin-top: 30px;
+  width: 200px;
+  font-size: 15px;
+  padding: 5px;
+  color: rgb(78, 69, 122);
+  border: 2px solid rgb(78, 69, 122);
+  border-radius: 5px;
+  outline: none;
+  margin-bottom: 30px;
+}
+
+.input_radio {
+  margin: 30px;
+  color: rgb(78, 69, 122);
+  font-weight: bold;
+  cursor: pointer;
+}
+
+::placeholder {
+  color: rgb(187, 181, 211);
+}
+
+.button_open {
+  padding: 7px;
+  border-radius: 5px;
+  margin: auto;
+  width: 100px;
+  color: rgb(7, 247, 47);
+}
+
+.button_form {
+  padding: 6px;
+  border-radius: 5px;
+  outline: none;
+  margin: 10px 20px;
+  color: rgb(7, 247, 47);
+}
+
+.person_form {
+  display: inline-block;
+  margin: auto;
+  width: 400px;
+ 
+}
+
+.form {
+  display: grid;
+  grid-row-gap: 2px;
+  border: 2px solid rgb(78, 69, 122);
+  padding: 10px;
+  border-radius: 5px;
+  margin-right: 100px;
+}
+
+.check {
+  background-color: rgb(78, 69, 122);
+  color: white;
+}
+
+.input_person {
+  font-size: 14px;
+  margin: 2px;
+  border: 1px solid rgb(78, 69, 122);
+  border-radius: 5px;
+  padding: 6px;
+  width: 240px;
+  color: rgb(78, 69, 122);
+  outline: none;
+}
+
+.select {
+  width: 255px;
+}
+
+.label {
+  color: red;
+  font-size: 14px;
+  display: block;
+  margin: 2px;
+  padding: 1px;
+  text-align: left;
+  font-style: bold;
+}
+
+.radio {
+  appearance: none;
+  border-radius: 50%;
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgb(78, 69, 122);
+  margin-right: 5px;
+  background-color: white;
+  position: relative;
+  top: 2px;
+  outline: none;
+  cursor: pointer;
+}
+
+.radio:checked {
+  border: 6px solid rgb(78, 69, 122);
+  background-color: rgb(7, 247, 47);
+}
+
+:disabled {
+  color: white;
+}
+
+.invalid {
+  border-color: red;
+}
