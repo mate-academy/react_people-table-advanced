@@ -68,7 +68,9 @@ export const PeopleTable = () => {
           break;
         default:
       }
-    } else {
+    }
+
+    if (sortOrder === 'desc') {
       result = visiblePeople.reverse();
     }
 

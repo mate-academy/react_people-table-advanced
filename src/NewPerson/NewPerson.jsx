@@ -102,7 +102,7 @@ export const NewPerson = ({
 
   const addPerson = useCallback(() => {
     setPersonNew(personData);
-    setPeopleNew([...peopleNew, personData]);
+    setPeopleNew([personData, ...peopleNew]);
   }, [setPersonNew, setPeopleNew, personData, peopleNew]);
 
   const handleSubmit = useCallback((e) => {
