@@ -111,7 +111,6 @@ export const PeopleTable = () => {
         setPersonNew={setPersonNew}
         setPeopleNew={setPeopleNew}
         peopleNew={peopleNew}
-        setPeople={setPeople}
       />
       <input
         type="text"
@@ -131,9 +130,7 @@ export const PeopleTable = () => {
                   className={classNames('button', 'Person', {
                     active: item === sortBy,
                   })}
-                  onClick={() => {
-                    handleClick(item);
-                  }}
+                  onClick={() => handleClick(item)}
                 >
                   {tableFields.slice(0, 4).includes(item)
                     ? (

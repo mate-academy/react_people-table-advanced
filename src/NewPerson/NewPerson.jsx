@@ -9,7 +9,6 @@ export const NewPerson = ({
   setPersonNew,
   peopleNew,
   setPeopleNew,
-  setPeople,
 }) => {
   const [personData, setPersonData] = useState(initPerson);
   const [errors, setErrors] = useState(initErrors);
@@ -242,5 +241,4 @@ NewPerson.propTypes = {
   setPersonNew: PropTypes.func.isRequired,
   setPeopleNew: PropTypes.func.isRequired,
   peopleNew: PropTypes.arrayOf(PropTypes.object.isRequired).isRequired,
-  setPeople: PropTypes.func.isRequired,
 };
