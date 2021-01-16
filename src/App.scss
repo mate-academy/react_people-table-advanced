@@ -104,6 +104,13 @@ body {
   margin-bottom: 30px;
 }
 
+.input_radio {
+  margin: 30px;
+  color: rgb(78, 69, 122);
+  font-weight: bold;
+  cursor: pointer;
+}
+
 ::placeholder {
   color: rgb(187, 181, 211);
 }
@@ -140,7 +147,7 @@ body {
   margin-right: 100px;
 }
 
-.checked {
+.check {
   background-color: rgb(78, 69, 122);
   color: white;
 }
@@ -168,14 +175,6 @@ body {
   padding: 1px;
   text-align: left;
   font-style: bold;
-}
-
-.input_radio {
-  display: inline;
-  margin: 30px;
-  color: rgb(78, 69, 122);
-  font-weight: bold;
-  cursor: pointer;
 }
 
 .radio {

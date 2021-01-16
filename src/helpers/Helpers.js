@@ -4,6 +4,15 @@ const BASE_URL = (
 export const getPeople = () => (
   fetch(`${BASE_URL}`)
     .then(response => response.json())
+    .then(res => res.map(person => ({
+      name: person.name,
+      sex: person.sex === 'f' ? 'female' : 'male',
+      born: person.born,
+      died: person.died,
+      mother: person.motherName,
+      father: person.fatherName,
+      slug: person.slug,
+    })))
 );
 
 export const validName = (name, born) => (
@@ -17,8 +26,8 @@ export const initPerson = {
   sex: '',
   born: '',
   died: '',
-  fatherName: '',
-  motherName: '',
+  father: '',
+  mother: '',
   slug: '',
 };
 

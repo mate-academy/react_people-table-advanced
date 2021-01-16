@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 import debounce from 'lodash/debounce';
 import classNames from 'classnames';
@@ -8,7 +8,11 @@ import { NewPerson } from '../NewPerson/NewPerson';
 
 export const PeopleTable = () => {
   const [people, setPeople] = useState([]);
+  const [peopleNew, setPeopleNew] = useState([]);
+  const [personNew, setPersonNew] = useState({});
+  const [visiblePeople, setVisiblePeople] = useState([]);
   const [initial, setInitial] = useState('');
+
   const location = useLocation();
   const history = useHistory();
   const searchParams = new URLSearchParams(location.search);
@@ -16,6 +20,7 @@ export const PeopleTable = () => {
   const [query, setQuery] = useState(applyiedQuery);
   const sortBy = searchParams.get('sortBy');
   const sortOrder = searchParams.get('sortOrder');
+
   const applyQuery = useCallback(
     debounce((newQuery) => {
       newQuery.trimStart()
@@ -26,22 +31,51 @@ export const PeopleTable = () => {
     [],
   );
 
-  const changeQuery = ({ value }) => {
+  const changeQuery = useCallback(({ value }) => {
     setQuery(value);
     applyQuery(value);
-  };
+  }, [applyQuery]);
+
+  useEffect(() => {
+    getPeople().then(setPeople);
+    getPeople().then(setPeopleNew);
+  }, []);
 
   useEffect(() => {
     if (applyiedQuery) {
-      getPeople().then(res => setPeople(res
+      setVisiblePeople((personNew ? peopleNew : people)
         .filter(person => person.name.toLowerCase()
-          .includes(applyiedQuery.toLowerCase()))));
+          .includes(applyiedQuery.toLowerCase())));
     } else {
-      getPeople().then(setPeople);
+      setVisiblePeople(personNew ? peopleNew : people);
     }
-  }, [applyiedQuery]);
+  }, [applyiedQuery, personNew, people, peopleNew]);
 
-  const handleClick = (item) => {
+  useMemo(() => {
+    let result;
+
+    if (sortOrder === 'asc') {
+      switch (sortBy) {
+        case 'name':
+        case 'sex':
+          result = visiblePeople.sort((a, b) => (
+            a[sortBy].localeCompare(b[sortBy])));
+          break;
+        case 'born':
+        case 'died':
+          result = visiblePeople.sort((a, b) => (
+            a[sortBy] - b[sortBy]));
+          break;
+        default:
+      }
+    } else {
+      result = visiblePeople.reverse();
+    }
+
+    return result;
+  }, [sortOrder, sortBy, visiblePeople]);
+
+  const handleClick = useCallback((item) => {
     searchParams.set('sortBy', item);
     if (initial === item) {
       searchParams.set('sortOrder', 'desc');
@@ -53,46 +87,30 @@ export const PeopleTable = () => {
 
     if (item === 'mother' || item === 'father') {
       searchParams.delete('sortOrder');
+      searchParams.delete('sortBy');
     }
 
     history.push(`?${searchParams}`);
-  };
+  }, [searchParams, history, initial]);
 
-  const setImg = val => (
-    `images/sort_${
-      !sortBy || sortBy !== val
-        ? 'both'
-        : `${sortBy === val && sortOrder === 'asc'
-          ? 'asc'
-          : 'desc'}`}.png`
-  );
+  const setImg = useCallback(val => `images/sort_${
+    sortBy !== val
+      ? 'both'
+      : `${sortBy === val && sortOrder === 'asc'
+        ? 'asc'
+        : 'desc'}`}.png`, [sortBy, sortOrder]);
 
-  const sortTable = (item) => {
-    const order = searchParams.get('sortOrder');
-    const bySort = searchParams.get('sortBy');
-
-    if (bySort && item === bySort) {
-      setPeople([...people].sort((a, b) => {
-        if (bySort === 'name' || bySort === 'sex') {
-          return order === 'asc' || !order
-            ? a[bySort].localeCompare(b[bySort])
-            : b[bySort].localeCompare(a[bySort]);
-        }
-
-        if (bySort === 'born' || bySort === 'died') {
-          return order === 'asc' || !order
-            ? a[bySort] - b[bySort]
-            : b[bySort] - a[bySort];
-        }
-
-        return '';
-      }));
-    }
-  };
+  const tableFields = ['name', 'sex', 'born', 'died', 'mother', 'father'];
 
   return (
-    <>
-      <NewPerson people={people} setPeople={setPeople} />
+    <ol>
+      <NewPerson
+        people={people}
+        setPersonNew={setPersonNew}
+        setPeopleNew={setPeopleNew}
+        peopleNew={peopleNew}
+        setPeople={setPeople}
+      />
       <input
         type="text"
         className="input_filter"
@@ -103,7 +121,7 @@ export const PeopleTable = () => {
       <table className="PeopleTable">
         <thead className="Person">
           <tr className="header">
-            {['name', 'sex', 'born', 'died', 'father', 'mother'].map(item => (
+            {tableFields.map(item => (
               <th key={item} className="Person person">
                 <button
                   key={item}
@@ -113,10 +131,9 @@ export const PeopleTable = () => {
                   })}
                   onClick={() => {
                     handleClick(item);
-                    sortTable(item);
                   }}
                 >
-                  {item !== 'mother' && item !== 'father'
+                  {tableFields.slice(0, 4).includes(item)
                     ? (
                       <img
                         src={setImg(item)}
@@ -137,9 +154,9 @@ export const PeopleTable = () => {
           </tr>
         </thead>
         <tbody className="Person">
-          <PersonName people={people} />
+          <PersonName visiblePeople={visiblePeople} />
         </tbody>
       </table>
-    </>
+    </ol>
   );
 };

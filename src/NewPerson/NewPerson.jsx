@@ -1,47 +1,45 @@
-import React, { useState, useEffect } from 'react';
+import React, { useCallback, useState } from 'react';
 import { useHistory, useRouteMatch } from 'react-router-dom';
 import { PropTypes } from 'prop-types';
 import classNames from 'classnames';
-import { validName, getPeople, initErrors,
-  initPerson } from '../helpers/Helpers';
+import { validName, initErrors, initPerson } from '../helpers/Helpers';
 
-export const NewPerson = ({ people, setPeople }) => {
-  const [personDate, setPersonDate] = useState(initPerson);
-  const [peopleDate, setPeopleDate] = useState();
+export const NewPerson = ({
+  people,
+  setPersonNew,
+  peopleNew,
+  setPeopleNew,
+  setPeople,
+}) => {
+  const [personData, setPersonData] = useState(initPerson);
   const [errors, setErrors] = useState(initErrors);
-  const { name, sex, born, died, fatherName, motherName } = personDate;
+  const { name, sex, born, died, father, mother } = personData;
   const history = useHistory();
   const match = useRouteMatch('/people/:slug?');
   const { slug } = match.params;
 
-  useEffect(() => {
-    getPeople().then(setPeopleDate);
-  }, []);
+  const makeParent = useCallback((parSex, parParent) => {
+    if (people) {
+      const arr = [];
 
-  const makeParent = (parSex, parParent) => (
-    peopleDate
-      ? peopleDate.filter(item => (
-        item.sex === parSex ? item[parParent] : ''))
-        .map(val => (
-          <option key={val.born}>
-            {val[parParent]}
-          </option>
-        ))
-      : ''
-  );
+      people.filter(person => (
+        person.sex === parSex ? person[parParent] : ''))
+        .forEach(item => (!arr.includes(item[parParent])
+          ? arr.push(item[parParent])
+          : ''
+        ));
 
-  const handleChange = (e) => {
-    const { value, name: item, id } = e.target;
+      return arr.map(val => (
+        <option key={val}>
+          {val}
+        </option>
+      ));
+    }
 
-    setPersonDate({
-      ...personDate,
-      [item]: value,
-      slug: validName(name, born),
-    });
-    validate(value, id);
-  };
+    return '';
+  }, [people]);
 
-  const validate = (value, id) => {
+  const validate = useCallback((value, id) => {
     const validErrors = {
       Name: [],
       Sex: [],
@@ -68,49 +66,134 @@ export const NewPerson = ({ people, setPeople }) => {
       ...errors,
       ...validErrors,
     });
-  };
+  }, [errors]);
 
-  const handleOnBlur = (e) => {
+  const handleChange = useCallback((e) => {
+    const { value, name: item, id } = e.target;
+
+    setPersonData({
+      ...personData,
+      [item]: value,
+      slug: validName(name, born),
+    });
+    validate(value, id);
+  }, [born, name, personData, validate]);
+
+  const handleOnBlur = useCallback((e) => {
     const { value, id } = e.target;
 
     validate(value, id);
-  };
+  }, [validate]);
 
-  const hasErrors = () => {
+  const hasErrors = useCallback(() => {
     let valid;
 
     if ((Object.values(errors).some(arr => arr.length > 0))
-      || (Object.values(personDate).some(arr => arr === ''))) {
+      || (Object.values(personData).some(arr => arr === ''))) {
       valid = true;
     }
 
-    if (Object.values(personDate).every(arr => arr !== '')) {
+    if (Object.values(personData).every(arr => arr !== '')) {
       valid = false;
     }
 
     return valid;
-  };
+  }, [errors, personData]);
 
-  const addPerson = () => {
-    setPeople([personDate, ...people]);
-  };
+  const addPerson = useCallback(() => {
+    setPersonNew(personData);
+    setPeopleNew([...peopleNew, personData]);
+  }, [setPersonNew, setPeopleNew, personData, peopleNew]);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = useCallback((e) => {
     e.preventDefault();
-    if (Object.values(personDate).every(arr => arr === '')) {
+    if (Object.values(personData).every(arr => arr === '')) {
       return;
     }
 
     addPerson();
-    setPersonDate(initPerson);
+    setPersonData(initPerson);
     history.push('/people');
-  };
+  }, [addPerson, history, personData]);
 
-  const handleCloseForm = (e) => {
+  const handleCloseForm = useCallback((e) => {
     e.preventDefault();
-    setPersonDate(initPerson);
+    setPersonData(initPerson);
     history.push('/people');
+  }, [history]);
+
+  const inputs = {
+    Name: name,
+    Born: born,
+    Died: died,
+    Father: father,
+    Mother: mother,
+    Sex: sex,
   };
+  const initInputs = Object.entries(inputs);
+
+  const makeInputs = useCallback((key, value) => {
+    switch (key) {
+      case 'Name':
+      case 'Born':
+      case 'Died':
+        return (
+          <input
+            type={key === 'Name' ? 'text' : 'number'}
+            id={key}
+            name={key.toLowerCase()}
+            className={classNames('input_person', {
+              invalid: errors[key][0],
+            })}
+            value={value}
+            placeholder={key}
+            onChange={handleChange}
+            onBlur={handleOnBlur}
+          />
+        );
+      case 'Mother':
+      case 'Father':
+        return (
+          <select
+            id={key}
+            name={key.toLowerCase()}
+            className={classNames('input_person', 'select', {
+              invalid: errors[key][0],
+            })}
+            onChange={handleChange}
+            onBlur={handleOnBlur}
+            value={value}
+          >
+            <option>{key}</option>
+            {key === 'Mother'
+              ? makeParent('female', 'mother')
+              : makeParent('male', 'father')
+            }
+          </select>
+        );
+      case 'Sex':
+        return (
+          <div className="sex">
+            {['Male', 'Female'].map(val => (
+              <label key={val} className="input_radio">
+                <input
+                  type="radio"
+                  name="sex"
+                  className="radio"
+                  value={val.toLowerCase()}
+                  checked={value === val.toLowerCase()}
+                  onChange={handleChange}
+                />
+                {val}
+              </label>
+            ))}
+          </div>
+        );
+      default:
+    }
+
+    return '';
+  }, [errors, handleOnBlur, handleChange, makeParent]);
 
   return (
     <>
@@ -125,70 +208,19 @@ export const NewPerson = ({ people, setPeople }) => {
       <div className="person_form">
         <form hidden={slug !== 'new'} onSubmit={handleSubmit}>
           <div className="form">
-            {['Name', 'Born', 'Died', 'Mother', 'Father', 'Sex']
-              .map(item => (
-                <div key={item}>
-                  <label className="label" htmlFor={item}>
-                    {errors[item]}
-                  </label>
-                  {(item === 'Name' || item === 'Born' || item === 'Died') && (
-                    <input
-                      type={item === 'Name' ? 'text' : 'number'}
-                      id={item}
-                      name={item.toLowerCase()}
-                      className={classNames('input_person', {
-                        invalid: errors[item][0],
-                      })}
-                      value={item === 'Name'
-                        ? name : `${item === 'Born' ? born : died}`}
-                      min="1400"
-                      max="2021"
-                      placeholder={item}
-                      onChange={handleChange}
-                      onBlur={handleOnBlur}
-                    />
-                  )}
-                  {(item === 'Mother' || item === 'Father') && (
-                    <select
-                      id={item === 'Mother' ? 'Mother' : 'Father'}
-                      name={item === 'Mother' ? 'motherName' : 'fatherName'}
-                      className={classNames('input_person', 'select', {
-                        invalid: errors[item][0],
-                      })}
-                      onChange={handleChange}
-                      onBlur={handleOnBlur}
-                      value={item === 'Mother' ? motherName : fatherName}
-                    >
-                      <option>{item}</option>
-                      {item === 'Mother'
-                        ? makeParent('f', 'motherName')
-                        : makeParent('m', 'fatherName')
-                      }
-                    </select>
-                  )}
-                  {item === 'Sex' && (
-                    ['Male', 'Female'].map(val => (
-                      <label key={val} className="input_radio">
-                        <input
-                          type="radio"
-                          name="sex"
-                          className="radio"
-                          value={val === 'Male' ? 'm' : 'f'}
-                          checked={val === 'Male' ? sex === 'm' : sex === 'f'}
-                          onChange={handleChange}
-                        />
-                        {val}
-                      </label>
-                    )))}
-                </div>
-              ))}
+            {initInputs.map(([key, value]) => (
+              <div key={key}>
+                <span className="label">{errors[key]}</span>
+                {makeInputs(key, value)}
+              </div>
+            ))}
             <div>
               <button
                 type="submit"
                 disabled={hasErrors()}
                 className="button_form button"
               >
-                Add person
+                Add Person
               </button>
               <button
                 type="button"
@@ -207,5 +239,8 @@ export const NewPerson = ({ people, setPeople }) => {
 
 NewPerson.propTypes = {
   people: PropTypes.arrayOf(PropTypes.object.isRequired).isRequired,
+  setPersonNew: PropTypes.func.isRequired,
+  setPeopleNew: PropTypes.func.isRequired,
+  peopleNew: PropTypes.arrayOf(PropTypes.object.isRequired).isRequired,
   setPeople: PropTypes.func.isRequired,
 };
