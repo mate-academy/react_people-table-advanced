@@ -1,0 +1,69 @@
+table {
+  border-collapse: collapse;
+  width: 100%;
+  justify-content: center;
+}
+
+thead {
+  font-family: "Times New Roman", Times, serif;
+  color: #30336b;
+  border-bottom: 1px solid #30336b;
+}
+
+table tbody {
+  display: block;
+  height: 76vh;
+  overflow-y: scroll;
+}
+
+thead > tr {
+  border-bottom: 2px solid #2c3e50;
+}
+
+table thead,
+table tbody tr {
+  display: table;
+  width: 100%;
+  table-layout: fixed;
+}
+
+.PeoplePage {
+  display: flex;
+  width: 100%;
+  height: 100vh;
+}
+
+.form-info {
+  width: 90vh;
+  height: 100vh;
+  border-right: 2px solid #2c3e50;
+  padding-right: 5px;
+}
+
+.info {
+  margin-top: 25px;
+  font-size: 23px;
+}
+
+.search {
+  border-radius: 15px;
+  outline-style: none;
+  height: 35px;
+  width: 100%;
+}
+
+.form-popup {
+  width: 100%;
+  min-height: 100%;
+  background-color: rgba(0,0,0,0.5);
+  overflow: hidden;
+  position: fixed;
+  top: 0;
+}
+
+.form-info button[type="button"] {
+  height: 35px;
+  width: 100px;
+  margin-top: 15px;
+  border-radius: 15px;
+}

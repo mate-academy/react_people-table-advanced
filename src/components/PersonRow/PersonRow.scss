@@ -1,0 +1,23 @@
+.parents-info {
+  font-size: 15px;
+}
+
+tr {
+  padding-bottom: 10px;
+  border-bottom: 1px solid #718093;
+  width: 100%;
+}
+
+tr p {
+  font-size: 18px;
+  text-align: center;
+}
+
+.selected {
+  background-color: #55efc4;
+}
+
+.selected-collumn {
+  background-color: #c7ecee;
+  border: 1.5px solid #7ed6df;
+}

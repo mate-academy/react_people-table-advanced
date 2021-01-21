@@ -1,0 +1,56 @@
+.NewPerson {
+  display: grid;
+  font-size: 18px;
+  margin: 170px auto 0;
+  width: 300px;
+  height: max-content;
+  padding: 10px;
+  background-color: #b5cbe4;
+  border-radius: 15px;
+  box-shadow: 0 0 10px #000;
+}
+
+.NewPerson input[type="text"],
+input[type="number"],
+select {
+  width: 70%;
+  margin-left: 5px;
+  border-radius: 15px;
+  outline-style: none;
+  height: 35px;
+}
+
+.NewPerson input[type="number"] {
+  width: 80%;
+  margin-bottom: 5px;
+}
+
+.NewPerson label {
+  font-size: 20px;
+  font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+}
+
+.NewPerson div label {
+  margin-left: 5px;
+}
+
+select {
+  margin-bottom: 5px;
+}
+
+input[type="submit"] {
+  width: 100px;
+  height: 35px;
+  border-radius: 15px;
+  transform: translateX(100%);
+  outline: none;
+}
+
+.error {
+  border: 1px solid red;
+}
+
+p {
+  font-size: 10px;
+  color: red;
+}
