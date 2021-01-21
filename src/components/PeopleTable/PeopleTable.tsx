@@ -5,59 +5,30 @@ import debounce from 'lodash/debounce';
 import {
   useHistory, useLocation,
 } from 'react-router-dom';
-import { getPeople } from '../../api/api';
-import { Person, ServerIPerson } from '../../api/interface';
-import { Loader } from '../Loader';
+import { ServerIPerson } from '../../api/interface';
 import { PersonInfo } from '../PersonInfo';
 import { PersonRow } from '../PersonRow';
 
 import './PeopleTable.scss';
 import {
-  filteringPeoleList,
+  filteringPeopleList,
   sortingList,
 } from '../../api/helper';
 import { TableHeader } from '../TableHeader';
 
-export const initialList: Person[] = [];
+type PeopleTableT = {
+  people: ServerIPerson[];
+  setPeople: Function;
+  error: string;
+};
 
-export const PeopleTable: React.FC = () => {
-  const [people, setPeople] = useState<Person[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [error, setError] = useState<boolean>(false);
-  const [foundPerson, setFoundPerson] = useState<Person | ServerIPerson | undefined>(undefined);
+export const PeopleTable: React.FC<PeopleTableT> = ({
+  people,
+  setPeople,
+  error,
+}) => {
+  const [foundPerson, setFoundPerson] = useState<ServerIPerson | undefined>(undefined);
   const [isAddingForm, setIsAddingForm] = useState<boolean>(false);
-
-  useEffect(() => {
-    setIsLoading(true);
-    getPeople()
-      .then(result => {
-        if (initialList.length === 0) {
-          result.forEach((person: ServerIPerson) => {
-            initialList.push({
-              name: person.name,
-              sex: person.sex,
-              born: person.born,
-              died: person.died,
-              father: person.fatherName === null
-                ? undefined
-                : result.find((father: ServerIPerson) => father.name === person.fatherName),
-              mother: person.motherName === null
-                ? undefined
-                : result.find((mother: ServerIPerson) => mother.name === person.motherName),
-              slug: person.slug,
-            });
-          });
-        }
-
-        setPeople(initialList);
-        setIsLoading(false);
-      })
-      .catch(() => setError(true));
-  }, []);
-
-  useEffect(() => {
-    setPeople(initialList);
-  }, [initialList]);
 
   const history = useHistory();
   const location = useLocation();
@@ -74,48 +45,47 @@ export const PeopleTable: React.FC = () => {
       searchParams.delete('query');
     }
 
-    history.push(`?${searchParams.toString()}`);
+    if (history.location.search !== `?${searchParams.toString()}`) {
+      history.push(`?${searchParams.toString()}`);
+    }
   }, 500), [searchParams, history]);
 
-  const handleQueryChange = (event: ChangeEvent<{value: string}>) => {
+  const handleQueryChange = useCallback((event: ChangeEvent<{value: string}>) => {
     setQuery(event.target.value);
     applyQuery(event.target.value);
-  };
+  }, [applyQuery]);
 
-  useEffect(() => {
-    const updateList = searchParams.get('sortBy')
+  const updatePeopleList = useCallback(() => {
+    return searchParams.get('sortBy')
       ? sortingList(
-        filteringPeoleList(
+        filteringPeopleList(
           apliedQuery.toLowerCase(),
-          initialList,
+          people,
         ),
         searchParams.get('sortBy') || '',
         searchParams.get('sortOrder') || '',
       )
-      : filteringPeoleList(
+      : filteringPeopleList(
         apliedQuery.toLowerCase(),
-        initialList,
+        people,
       );
-
-    setPeople(updateList);
-  }, [apliedQuery]);
+  }, [apliedQuery, people, searchParams]);
 
   // found selected person
   useEffect(() => {
-    if (foundPerson === undefined && searchParams.has('slug')) {
-      searchParams.delete('slug');
-      history.push(`?${searchParams.toString()}`);
+    if (searchParams.get('slug') !== foundPerson?.slug) {
+      setFoundPerson(people
+        .find(person => person.slug === searchParams.get('slug')));
+
+      if (people.find(person => person.slug === searchParams.get('slug')) === undefined
+        && searchParams.has('slug')) {
+        searchParams.delete('slug');
+        if (history.location.search !== `?${searchParams.toString()}`) {
+          history.push(`?${searchParams.toString()}`);
+        }
+      }
     }
-  }, [foundPerson]);
-
-  useEffect(() => {
-    setFoundPerson(people
-      .find(person => person.slug === searchParams.get('slug')));
-  }, [searchParams]);
-
-  if (isLoading) {
-    return (<Loader />);
-  }
+  }, [searchParams, people, foundPerson, history]);
 
   return (
     <div className="PeoplePage">
@@ -155,18 +125,17 @@ export const PeopleTable: React.FC = () => {
           <TableHeader
             people={people}
             setPeople={setPeople}
-            isAddingForm={isAddingForm}
           />
         </thead>
         <tbody>
           {error
             ? (
-              <p>People not found</p>
+              <p>{error}</p>
             )
             : (
               <PersonRow
-                people={people}
-                initialList={initialList}
+                people={updatePeopleList()}
+                initialList={people}
               />
             )}
         </tbody>

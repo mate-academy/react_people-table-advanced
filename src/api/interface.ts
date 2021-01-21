@@ -1,19 +1,39 @@
-export interface Person {
-  name: string;
-  sex: string;
-  born: number;
-  died: number;
-  father: ServerIPerson | undefined;
-  mother: ServerIPerson | undefined;
-  slug: string;
-}
-
 export interface ServerIPerson {
   name: string;
   sex: string;
   born: number;
   died: number;
-  fatherName: string;
-  motherName: string;
+  fatherName: string | null;
+  motherName: string | null;
   slug: string;
+}
+
+export interface Validation {
+  name: boolean;
+  sex: boolean;
+  born: boolean;
+  died: boolean;
+}
+
+export interface SortOrderI {
+  [key: string]: string;
+  Name: string;
+  Sex: string;
+  Born: string;
+  Died: string;
+}
+
+interface ThTitleI {
+  name: string;
+  isSortable: boolean;
+}
+
+export interface THEADTITLEI {
+  [key: string]: ThTitleI;
+  Name: ThTitleI;
+  Sex: ThTitleI;
+  Born: ThTitleI;
+  Died: ThTitleI;
+  Father: ThTitleI;
+  Mother: ThTitleI;
 }

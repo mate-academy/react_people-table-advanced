@@ -1,24 +1,26 @@
+/* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
 import React, { useCallback, useEffect, useState } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
+import classNames from 'classnames';
 import './TableHeader.scss';
 
 import {
   THEAD_TITLE, sortingList,
 } from '../../api/helper';
-import { Person } from '../../api/interface';
+import { ServerIPerson, SortOrderI } from '../../api/interface';
 
 type TableHeaderT = {
-  people: Person[];
+  people: ServerIPerson[];
   setPeople: Function;
-  isAddingForm: boolean;
 };
 
-export const TableHeader: React.FC<TableHeaderT> = ({ people, setPeople, isAddingForm }) => {
-  const [sortOrder, setSortOrder] = useState({
-    name: 'both',
-    sex: 'both',
-    born: 'both',
-    died: 'both',
+export const TableHeader: React.FC<TableHeaderT> = ({ people, setPeople }) => {
+  const [sortOrder, setSortOrder] = useState<SortOrderI>({
+    Name: 'both',
+    Sex: 'both',
+    Born: 'both',
+    Died: 'both',
   });
   const history = useHistory();
   const location = useLocation();
@@ -32,28 +34,28 @@ export const TableHeader: React.FC<TableHeaderT> = ({ people, setPeople, isAddin
         searchParams.get('sortOrder') || '',
       ),
     );
-  }, [searchParams, history]);
+  }, [people, searchParams, setPeople]);
 
   useEffect(() => {
     if (searchParams.has('sortBy')) {
       searchParams.set(
         'sortOrder',
-        (sortOrder as never)[searchParams.get('sortBy')?.toLowerCase() || ''],
+        sortOrder[searchParams.get('sortBy') || ''],
       );
-      history.push(`?${searchParams.toString()}`);
-      sortPeopleList();
+      if (history.location.search !== `?${searchParams.toString()}`) {
+        history.push(`?${searchParams.toString()}`);
+        sortPeopleList();
+      }
     }
-  }, [sortOrder]);
+  }, [sortOrder, searchParams, history, sortPeopleList]);
 
-  const handleSortList = (event: React.MouseEvent<HTMLTableRowElement>) => {
-    const { textContent } = (event.target as HTMLElement);
-
-    if (textContent !== THEAD_TITLE.father && textContent !== THEAD_TITLE.mother) {
-      searchParams.set('sortBy', textContent || '');
+  const handleSortList = useCallback((value: string) => {
+    if (THEAD_TITLE[value].isSortable) {
+      searchParams.set('sortBy', value);
       setSortOrder({
         ...sortOrder,
-        [`${textContent?.toLowerCase()}`]: (sortOrder as never)[`${textContent?.toLowerCase()}`] === 'desc'
-            || (sortOrder as never)[`${textContent?.toLowerCase()}`] === 'both'
+        [value]: sortOrder[value] === 'desc'
+            || sortOrder[value] === 'both'
           ? 'asc' : 'desc',
       });
     } else {
@@ -61,41 +63,38 @@ export const TableHeader: React.FC<TableHeaderT> = ({ people, setPeople, isAddin
       searchParams.delete('sortOrder');
     }
 
-    history.push(`?${searchParams.toString()}`);
-  };
+    if (history.location.search !== `?${searchParams.toString()}`) {
+      history.push(`?${searchParams.toString()}`);
+    }
+  }, [history, searchParams, sortOrder]);
 
   return (
-    <tr
-      onClick={(event) => {
-        if (!isAddingForm) {
-          handleSortList(event);
-        }
-      }}
-    >
+    <tr>
       {Object.values(THEAD_TITLE).map(title => (
         <td
-          key={title}
-          className={title === searchParams.get('sortBy')
-            ? 'selected-title' : ''}
+          key={title.name}
+          onClick={() => handleSortList(title.name)}
+          className={classNames({
+            'selected-title': title.name === searchParams.get('sortBy'),
+          })}
         >
-          {title}
+          {title.name}
           {
-            title === searchParams.get('sortBy')
-              ? ((title !== THEAD_TITLE.father && title !== THEAD_TITLE.mother)
+            title.name === searchParams.get('sortBy')
+              ? title.isSortable
                   && (
                     <img
-                      src={`images/sort_${(sortOrder as never)[title.toLowerCase()]}.png`}
-                      alt={`sort_${(sortOrder as never)[title.toLowerCase()]}`}
+                      src={`images/sort_${sortOrder[title.name]}.png`}
+                      alt={`sort_${sortOrder[title.name]}`}
                     />
-                  ))
-              : ((title !== THEAD_TITLE.father && title !== THEAD_TITLE.mother)
+                  )
+              : title.isSortable
                 && (
                   <img
                     src="images/sort_both.png"
                     alt="sort_both"
                   />
                 )
-              )
           }
         </td>
       ))}

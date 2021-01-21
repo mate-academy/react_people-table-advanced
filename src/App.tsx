@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   HashRouter, Redirect, Route, Switch,
 }
@@ -9,12 +9,29 @@ import './App.scss';
 
 import { Header } from './components/Header';
 import { HomePage } from './components/HomePage';
-import { PeoplePage } from './components/PeoplePage';
 import { NotFoundPage } from './components/NotFoundPage';
 import { NewPerson } from './components/NewPerson';
-import { initialList } from './components/PeopleTable';
+import { PeopleTable } from './components/PeopleTable';
+import { getPeople } from './api/api';
+import { ServerIPerson } from './api/interface';
+import { Loader } from './components/Loader';
+// import { Loader } from './components/Loader';
 
 const App = () => {
+  const [people, setPeople] = useState<ServerIPerson[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string>('');
+
+  useEffect(() => {
+    setIsLoading(true);
+    getPeople()
+      .then(result => {
+        setPeople(result);
+        setIsLoading(false);
+      })
+      .catch((e) => setError(e));
+  }, []);
+
   return (
     <HashRouter>
       <div className="App">
@@ -23,12 +40,30 @@ const App = () => {
         <Switch>
           <Route path="/people/new">
             <div className="form-popup">
-              <NewPerson initialList={initialList} />
+              <NewPerson
+                people={people}
+                setPeople={setPeople}
+              />
             </div>
           </Route>
 
           <Route path="/people">
-            <PeoplePage />
+            <h2>
+              People page
+            </h2>
+            {
+              isLoading
+                ? (
+                  <Loader />
+                )
+                : (
+                  <PeopleTable
+                    people={people}
+                    setPeople={setPeople}
+                    error={error}
+                  />
+                )
+            }
           </Route>
 
           <Route path="/" exact>

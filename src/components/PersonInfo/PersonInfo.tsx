@@ -1,11 +1,11 @@
 import React from 'react';
-import { Person, ServerIPerson } from '../../api/interface';
+import { ServerIPerson } from '../../api/interface';
 import { PersonName } from '../PersonName';
 
 import './PersonInfo.scss';
 
 type PersonInfo = {
-  person: ServerIPerson | Person;
+  person: ServerIPerson | undefined;
 };
 
 export const PersonInfo: React.FC<PersonInfo> = ({ person }) => (
@@ -18,15 +18,15 @@ export const PersonInfo: React.FC<PersonInfo> = ({ person }) => (
     </li>
     <li className="parents-info">
       Sex:
-      {person.sex}
+      {person?.sex}
     </li>
     <li className="parents-info">
       Born:
-      {person.born}
+      {person?.born}
     </li>
     <li className="parents-info">
       Died:
-      {person.died}
+      {person?.died}
     </li>
   </ul>
 );

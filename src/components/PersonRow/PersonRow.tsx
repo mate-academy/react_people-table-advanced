@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import { THEAD_TITLE } from '../../api/helper';
-import { Person } from '../../api/interface';
+import classNames from 'classnames';
+import { ServerIPerson } from '../../api/interface';
 import { PersonInfo } from '../PersonInfo';
 import { PersonName } from '../PersonName';
 
 import './PersonRow.scss';
 
 type PersonRow = {
-  people: Person[];
-  initialList: Person[];
+  people: ServerIPerson[];
+  initialList: ServerIPerson[];
 };
 
 export const PersonRow: React.FC<PersonRow> = ({ people, initialList }) => {
@@ -27,69 +27,49 @@ export const PersonRow: React.FC<PersonRow> = ({ people, initialList }) => {
         <tr
           id={person.slug}
           key={person.slug}
-          className={
-            person.slug === selectedPerson
-              ? 'selected' : ''
-          }
+          className={classNames({ selected: person.slug === selectedPerson })}
         >
-          <td
-            className={
-              searchParams.get('sortBy') === THEAD_TITLE.name
-                ? 'selected-collumn' : ''
-            }
-          >
-            <PersonName
-              person={person}
-            />
-          </td>
-          <td
-            className={
-              searchParams.get('sortBy') === THEAD_TITLE.sex
-                ? 'selected-collumn' : ''
-            }
-          >
-            {person.sex}
-          </td>
-          <td
-            className={
-              searchParams.get('sortBy') === THEAD_TITLE.born
-                ? 'selected-collumn' : ''
-            }
-          >
-            {person.born}
-          </td>
-          <td
-            className={
-              searchParams.get('sortBy') === THEAD_TITLE.died
-                ? 'selected-collumn' : ''
-            }
-          >
-            {person.died}
-          </td>
-          <td>
-            {person.father && (
-              initialList.find(man => man.name === person.father?.name)
-                ? (
-                  <PersonInfo
-                    person={person.father}
+          {Object.keys(person).map((key) => (
+            key !== 'slug' && (
+              <td
+                key={key}
+                className={classNames({ 'selected-collumn': searchParams.get('sortBy')?.toLowerCase() === key })}
+              >
+                {key === 'name' && (
+                  <PersonName
+                    person={person}
                   />
-                )
-                : (
-                  <p className="person">{person.name}</p>
-                ))}
-          </td>
-          <td>
-            {person.mother && (
-              initialList.find(woman => woman.name === person.mother?.name)
-                ? (
-                  <PersonInfo
-                    person={person.mother}
-                  />
-                )
-                : (
-                  <p className="person">{person.name}</p>
-                ))}
-          </td>
+                )}
+                {(key === 'born' || key === 'sex' || key === 'died') && (
+                  person[key]
+                )}
+                {key === 'fatherName' && (
+                  person.fatherName && (
+                    initialList.find(man => man.name === person.fatherName)
+                      ? (
+                        <PersonInfo
+                          person={initialList.find((man) => man.name === person.fatherName)}
+                        />
+                      )
+                      : (
+                        <p className="person">{person.fatherName}</p>
+                      ))
+                )}
+                {key === 'motherName' && (
+                  person.motherName && (
+                    initialList.find(woman => woman.name === person.motherName)
+                      ? (
+                        <PersonInfo
+                          person={initialList.find(woman => woman.name === person.motherName)}
+                        />
+                      )
+                      : (
+                        <p className="person">{person.motherName}</p>
+                      ))
+                )}
+              </td>
+            )
+          ))}
         </tr>
       ))}
     </>
