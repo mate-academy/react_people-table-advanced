@@ -40,12 +40,12 @@ export const PeopleForm: React.FC<PeopleFormProps> = ({ people, setPeople, setIs
 
   const isYearInRange = useCallback(
     (inputsField: 'born' | 'died'): boolean => {
-    if (inputs.died && +inputs.died < +inputs.born) {
-      return false;
-    };
+      if (inputs.died && +inputs.died < +inputs.born) {
+        return false;
+      };
 
-    return +inputs[inputsField] >= 1400 && +inputs[inputsField] <= CURRENT_YEAR;
-  }, [inputs]);
+      return +inputs[inputsField] >= 1400 && +inputs[inputsField] <= CURRENT_YEAR;
+    }, [inputs]);
 
   const isYearsDifferenceValid = useMemo(() => {
     if (isYearInRange('born')
@@ -80,7 +80,7 @@ export const PeopleForm: React.FC<PeopleFormProps> = ({ people, setPeople, setIs
 
   const handleChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-    ): void => {
+  ): void => {
     const { name: inputName, value } = event.target
     setInputs(inputs => (
       {
@@ -140,7 +140,7 @@ export const PeopleForm: React.FC<PeopleFormProps> = ({ people, setPeople, setIs
             <span className="input-group-text">Select gender</span>
           </div>
           <div className={classNames("wrapper input-group-inline",
-           { borderError: errors.sex })}>
+            { borderError: errors.sex })}>
 
             <div className="custom-control-inline custom-radio">
               <div className="form-check input-group radio ">
@@ -190,35 +190,46 @@ export const PeopleForm: React.FC<PeopleFormProps> = ({ people, setPeople, setIs
         {errors.sex &&
           <p className="text-danger">Gender is required</p>}
 
-        <input
-          type="number"
-          name="born"
-          className={classNames("form-control mb-3", {
-            borderError: errors.born
-          })}
-          placeholder="Year of born"
-          value={inputs.born}
-          onChange={handleChange}
-          onBlur={() => checkYears()}
-        />
+        <div className="input-group mb-3">
+          <div className="input-group-prepend">
+            <span className="input-group-text">Year of born</span>
+          </div>
+          <input
+            type="number"
+            name="born"
+            className={classNames("form-control", {
+              borderError: errors.born
+            })}
+            placeholder="Should be over 1400"
+            value={inputs.born === 0 ? '' : inputs.born}
+            onChange={handleChange}
+            onBlur={() => checkYears()}
+          />
+        </div>
+
 
         {(errors.born || errors.died) &&
           <p className="text-danger">
             {`Year of born / death should be in range from 1400 to ${CURRENT_YEAR}`}
           </p>}
 
-        <input
-          type="number"
-          name="died"
-          className={classNames("form-control mb-3", {
-            borderError: errors.died
-          })}
-          placeholder="Year of death"
-          disabled={!inputs.born}
-          value={inputs.died}
-          onChange={handleChange}
-          onBlur={() => checkYears()}
-        />
+        <div className="input-group mb-3">
+          <div className="input-group-prepend">
+            <span className="input-group-text">Year of death</span>
+          </div>
+          <input
+            type="number"
+            name="died"
+            className={classNames("form-control", {
+              borderError: errors.died
+            })}
+            placeholder={`Should be less then ${CURRENT_YEAR}`}
+            disabled={!inputs.born}
+            value={inputs.died === 0 ? '' : inputs.died}
+            onChange={handleChange}
+            onBlur={() => checkYears()}
+          />
+        </div>
 
         {!isYearsDifferenceValid &&
           <p className="text-danger">
