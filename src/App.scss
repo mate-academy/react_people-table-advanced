@@ -1,1 +1,75 @@
-// styles go here
+h1 {
+  text-align: center;
+}
+
+h2 {
+  text-align: center;
+}
+
+.nav-link {
+  font-size: 24px;
+}
+
+table {
+  border-collapse: collapse;
+}
+
+.male {
+  text-decoration-color: crimson;
+  color: red;
+}
+
+.female {
+  color: blue;
+}
+
+.normal-link {
+  color: black;
+  &:hover{
+    font-weight: bold;
+    text-decoration: none;
+  }
+}
+
+.selected {
+  background-color: lightgrey;
+}
+
+.cust-btn{
+  border:none;
+  background-color: white;
+  color: black;
+  font-weight: bold;
+  &:hover{
+    font-weight: bold;
+    text-decoration: underline;
+  }
+}
+
+.wide-select {
+  width: auto;
+}
+
+.isButton {
+  margin-top: 50px;
+}
+
+.radio {
+  padding: 6px 0 0 60px;
+}
+
+.wrapper {
+  width: 75%;
+  border: 1px solid #ced4da;
+  border-radius: 0.25rem;
+}
+
+.width30 {
+  width: 25%;
+}
+
+.borderError {
+  border: 1px solid;
+  border-color: 	#df4759;
+  border-radius: 0.25rem;
+}
