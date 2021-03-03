@@ -7,8 +7,8 @@ export const PeopleForm: React.FC<PeopleFormProps> = ({ people, setPeople, setIs
   const [inputs, setInputs] = useState({
     name: '',
     sex: '',
-    born: '',
-    died: '',
+    born: 0,
+    died: 0,
     fatherName: '',
     motherName: '',
     slug: '',
@@ -94,8 +94,8 @@ export const PeopleForm: React.FC<PeopleFormProps> = ({ people, setPeople, setIs
     setInputs({
       name: '',
       sex: '',
-      born: '',
-      died: '',
+      born: 0,
+      died: 0,
       motherName: '',
       fatherName: '',
       slug: '',

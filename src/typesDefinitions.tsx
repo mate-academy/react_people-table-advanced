@@ -16,7 +16,7 @@ export type PeopleFilterProps = {
 export type PeopleFormProps = {
   people: Person[],
   setIsFormRequired: (bool: boolean) => void;
-  setPeople: (people: any) => void
+  setPeople: (people: Person[]) => void
 };
 
 export type PeopleTableProps = {
