@@ -1,9 +1,13 @@
-import React, { BaseSyntheticEvent, useState, useMemo, useCallback } from 'react';
+import React, {
+  BaseSyntheticEvent, useState, useMemo, useCallback
+} from 'react';
 import { PeopleFormProps } from './typesDefinitions';
 import { NAME_REGEXP, CURRENT_YEAR, FILTER_PARENTS } from './constAndFunc';
 import classNames from 'classnames';
 
-export const PeopleForm: React.FC<PeopleFormProps> = ({ people, setPeople, setIsFormRequired }) => {
+export const PeopleForm: React.FC<PeopleFormProps> = (
+  { people, setPeople, setIsFormRequired }
+) => {
   const [inputs, setInputs] = useState({
     name: '',
     sex: '',
@@ -34,7 +38,8 @@ export const PeopleForm: React.FC<PeopleFormProps> = ({ people, setPeople, setIs
   }, [people, inputs.born]);
 
   const setSlug = useCallback(() => {
-    const slug = inputs.name.toLowerCase().split(' ').join('-') + `-${inputs.born}`
+    const slug = inputs.name.toLowerCase()
+      .split(' ').join('-') + `-${inputs.born}`
     setInputs(inputs => ({ ...inputs, slug }))
   }, [inputs.name, inputs.born]);
 
@@ -44,7 +49,8 @@ export const PeopleForm: React.FC<PeopleFormProps> = ({ people, setPeople, setIs
         return false;
       };
 
-      return +inputs[inputsField] >= 1400 && +inputs[inputsField] <= CURRENT_YEAR;
+      return +inputs[inputsField] >= 1400
+        && +inputs[inputsField] <= CURRENT_YEAR;
     }, [inputs]);
 
   const isYearsDifferenceValid = useMemo(() => {
@@ -75,7 +81,12 @@ export const PeopleForm: React.FC<PeopleFormProps> = ({ people, setPeople, setIs
   };
 
   const checkYears = (): void => {
-    setErrors(errors => ({ ...errors, born: !isYearInRange('born'), died: !isYearInRange('died') }))
+    setErrors(errors => (
+      {
+        ...errors,
+        born: !isYearInRange('born'),
+        died: !isYearInRange('died')
+      }))
   };
 
   const handleChange = (
@@ -126,7 +137,8 @@ export const PeopleForm: React.FC<PeopleFormProps> = ({ people, setPeople, setIs
         <input
           type="text"
           name="name"
-          className={classNames("form-control mb-3", { borderError: errors.name })}
+          className={classNames("form-control mb-3",
+            { borderError: errors.name })}
           placeholder="Enter name"
           value={inputs.name}
           onChange={handleChange}
@@ -210,7 +222,7 @@ export const PeopleForm: React.FC<PeopleFormProps> = ({ people, setPeople, setIs
 
         {(errors.born || errors.died) &&
           <p className="text-danger">
-            {`Year of born / death should be in range from 1400 to ${CURRENT_YEAR}`}
+            {`Years of born & death should be in range from 1400 to ${CURRENT_YEAR}`}
           </p>}
 
         <div className="input-group mb-3">

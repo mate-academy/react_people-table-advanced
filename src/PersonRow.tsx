@@ -2,7 +2,8 @@ import React from 'react';
 import { PersonRowProps } from './typesDefinitions'
 import { PersonName } from './PersonName';
 
-export const PersonRow: React.FC<PersonRowProps> = ({ person, people, slug }) => {
+export const PersonRow: React.FC<PersonRowProps> = (
+  { person, people, slug }) => {
   const { sex, born, died, fatherName, motherName, slug: personSlug } = person;
 
   const findParentInTable = (parentName: string) => {
