@@ -38,7 +38,8 @@ export const PeopleForm: React.FC<PeopleFormProps> = ({ people, setPeople, setIs
     setInputs(inputs => ({ ...inputs, slug }))
   }, [inputs.name, inputs.born]);
 
-  const isYearInRange = useCallback((inputsField: 'born' | 'died'): boolean => {
+  const isYearInRange = useCallback(
+    (inputsField: 'born' | 'died'): boolean => {
     if (inputs.died && +inputs.died < +inputs.born) {
       return false;
     };
@@ -77,7 +78,9 @@ export const PeopleForm: React.FC<PeopleFormProps> = ({ people, setPeople, setIs
     setErrors(errors => ({ ...errors, born: !isYearInRange('born'), died: !isYearInRange('died') }))
   };
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>): void => {
+  const handleChange = (
+    event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+    ): void => {
     const { name: inputName, value } = event.target
     setInputs(inputs => (
       {
@@ -136,7 +139,8 @@ export const PeopleForm: React.FC<PeopleFormProps> = ({ people, setPeople, setIs
           <div className="input-group-prepend-inline width30 ">
             <span className="input-group-text">Select gender</span>
           </div>
-          <div className={classNames("wrapper input-group-inline", { borderError: errors.sex })}>
+          <div className={classNames("wrapper input-group-inline",
+           { borderError: errors.sex })}>
 
             <div className="custom-control-inline custom-radio">
               <div className="form-check input-group radio ">
@@ -199,7 +203,9 @@ export const PeopleForm: React.FC<PeopleFormProps> = ({ people, setPeople, setIs
         />
 
         {(errors.born || errors.died) &&
-          <p className="text-danger">{`Year of born / death should be in range from 1400 to ${CURRENT_YEAR}`}</p>}
+          <p className="text-danger">
+            {`Year of born / death should be in range from 1400 to ${CURRENT_YEAR}`}
+          </p>}
 
         <input
           type="number"
@@ -215,7 +221,9 @@ export const PeopleForm: React.FC<PeopleFormProps> = ({ people, setPeople, setIs
         />
 
         {!isYearsDifferenceValid &&
-          <p className="text-danger">Difference between death and born years should not be more then 150</p>}
+          <p className="text-danger">
+            Difference between death and born years should not be more then 150
+          </p>}
         <select
           value={inputs.motherName}
           onChange={handleChange}
@@ -223,7 +231,7 @@ export const PeopleForm: React.FC<PeopleFormProps> = ({ people, setPeople, setIs
           name="motherName"
           disabled={!isYearInRange('born')}
         >
-          <option>Choose Mother</option>
+          <option value=''>Choose Mother</option>
           {+inputs.born >= 1400 && mothers.map(mother => (
             <option
               value={mother.name}
@@ -241,7 +249,7 @@ export const PeopleForm: React.FC<PeopleFormProps> = ({ people, setPeople, setIs
           name="fatherName"
           disabled={!isYearInRange('born')}
         >
-          <option>Choose Father</option>
+          <option value=''>Choose Father</option>
           {+inputs.born >= 1400 && fathers.map(father => (
             <option
               value={father.name}
