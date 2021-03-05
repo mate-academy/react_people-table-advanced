@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { FC } from 'react';
 import { Route, Redirect, Switch } from 'react-router-dom';
 import { Navbar } from './Navbar';
 import { PeoplePage } from './PeoplePage';
@@ -6,7 +6,7 @@ import { HomePage } from './HomePage';
 import { NotFoundPage } from './NotFoundPage';
 import './App.scss';  
 
-const App: React.FC = () => (
+const App: FC = () => (
   <>
     <header>
       <Navbar />

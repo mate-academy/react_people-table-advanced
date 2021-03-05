@@ -1,14 +1,14 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, useCallback, useMemo, FC } from 'react';
 import { PeopleTable } from './PeopleTable';
 import { PeopleForm } from './PeopleForm';
 import { fetchPeople } from './api';
 import { Person } from './typesDefinitions';
 import { useLocation, useHistory } from 'react-router-dom';
-import { NAME, BORN, DIED, SEX, ASC } from './constAndFunc';
+import { NAME, BORN, DIED, SEX, ASC } from './constants';
 import { PeopleFilter } from './PeopleFilter';
 import { debounce } from 'lodash';
 
-export const PeoplePage: React.FC = () => {
+export const PeoplePage: FC = () => {
   const [people, setPeople] = useState<Person[]>([]);
   const [isFormRequired, setIsFormRequired] = useState(false);
   const history = useHistory();
@@ -90,19 +90,24 @@ export const PeoplePage: React.FC = () => {
               query={query}
             />
             {isFormRequired
-              ? <PeopleForm
-                people={people}
-                setIsFormRequired={setIsFormRequired}
-                setPeople={setPeople} />
-              : <div className="d-grid gap-2 col-4 mx-auto sticky-top">
-                <button
-                  className="btn btn-primary isButton"
-                  type="button"
-                  onClick={() => setIsFormRequired(true)}
-                >
-                  Add new person
+              ? (
+                <PeopleForm
+                  people={people}
+                  setIsFormRequired={setIsFormRequired}
+                  setPeople={setPeople}
+                />
+              )
+              : (
+                <div className="d-grid gap-2 col-4 mx-auto sticky-top">
+                  <button
+                    className="btn btn-primary isButton"
+                    type="button"
+                    onClick={() => setIsFormRequired(true)}
+                  >
+                    Add new person
                 </button>
-              </div>}
+                </div>
+              )}
           </div>
         </div>
       </div>

@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { FC } from 'react';
 import { useLocation, useHistory } from 'react-router-dom';
-import { ASC, DESC } from './constAndFunc';
+import { ASC, DESC } from './constants';
 import { TableHeaderProps } from './typesDefinitions';
 
-export const TableHeader: React.FC<TableHeaderProps> = ({ header }) => {
+export const TableHeader: FC<TableHeaderProps> = ({ header }) => {
   const history = useHistory(); const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const sortBy = searchParams.get('sortBy') || '';

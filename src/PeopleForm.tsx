@@ -1,13 +1,13 @@
 import React, {
-  BaseSyntheticEvent, useState, useMemo, useCallback
+  BaseSyntheticEvent, useState, useMemo, useCallback, FC
 } from 'react';
 import { PeopleFormProps } from './typesDefinitions';
-import { NAME_REGEXP, CURRENT_YEAR, FILTER_PARENTS } from './constAndFunc';
-import classNames from 'classnames';
+import { NAME_REGEXP, CURRENT_YEAR, FILTER_PARENTS } from './constants';
+import cn from 'classnames';
 
-export const PeopleForm: React.FC<PeopleFormProps> = (
-  { people, setPeople, setIsFormRequired }
-) => {
+export const PeopleForm: FC<PeopleFormProps> = ({
+  people, setPeople, setIsFormRequired,
+}) => {
   const [inputs, setInputs] = useState({
     name: '',
     sex: '',
@@ -26,7 +26,7 @@ export const PeopleForm: React.FC<PeopleFormProps> = (
   });
 
   const isFormValid = useMemo(() => {
-    return (!errors.name && !errors.sex && !errors.born && !errors.died)
+    return !Object.values(errors).some(Boolean);
   }, [errors]);
 
   const fathers = useMemo(() => {
@@ -137,12 +137,14 @@ export const PeopleForm: React.FC<PeopleFormProps> = (
         <input
           type="text"
           name="name"
-          className={classNames("form-control mb-3",
-            { borderError: errors.name })}
+          className={cn(
+            "form-control mb-3",
+            { borderError: errors.name },
+          )}
           placeholder="Enter name"
           value={inputs.name}
           onChange={handleChange}
-          onBlur={() => checkInputName()}
+          onBlur={checkInputName}
         />
         {errors.name &&
           <p className="text-danger">Name should have valid characters only</p>}
@@ -151,8 +153,10 @@ export const PeopleForm: React.FC<PeopleFormProps> = (
           <div className="input-group-prepend-inline width30 ">
             <span className="input-group-text">Select gender</span>
           </div>
-          <div className={classNames("wrapper input-group-inline",
-            { borderError: errors.sex })}>
+          <div className={cn(
+            "wrapper input-group-inline",
+            { borderError: errors.sex },
+          )}>
 
             <div className="custom-control-inline custom-radio">
               <div className="form-check input-group radio ">
@@ -163,7 +167,7 @@ export const PeopleForm: React.FC<PeopleFormProps> = (
                   value='m'
                   checked={inputs.sex === 'm'}
                   onChange={handleChange}
-                  onBlur={() => checkGender()}
+                  onBlur={checkGender}
 
                 />
                   Male
@@ -179,7 +183,7 @@ export const PeopleForm: React.FC<PeopleFormProps> = (
                   value='f'
                   checked={inputs.sex === 'f'}
                   onChange={handleChange}
-                  onBlur={() => checkGender()}
+                  onBlur={checkGender}
                 />
                   Female
               </div>
@@ -199,8 +203,9 @@ export const PeopleForm: React.FC<PeopleFormProps> = (
 
           </div>
         </div>
-        {errors.sex &&
-          <p className="text-danger">Gender is required</p>}
+        {errors.sex
+          && <p className="text-danger">Gender is required</p>
+        }
 
         <div className="input-group mb-3">
           <div className="input-group-prepend">
@@ -209,21 +214,24 @@ export const PeopleForm: React.FC<PeopleFormProps> = (
           <input
             type="number"
             name="born"
-            className={classNames("form-control", {
-              borderError: errors.born
-            })}
+            className={cn(
+              "form-control",
+              { borderError: errors.born },
+            )}
             placeholder="Should be over 1400"
             value={inputs.born === 0 ? '' : inputs.born}
             onChange={handleChange}
-            onBlur={() => checkYears()}
+            onBlur={checkYears}
           />
         </div>
 
 
-        {(errors.born || errors.died) &&
-          <p className="text-danger">
-            {`Years of born & death should be in range from 1400 to ${CURRENT_YEAR}`}
-          </p>}
+        {(errors.born || errors.died)
+          && (
+            <p className="text-danger">
+              {`Years of born & death should be in range from 1400 to ${CURRENT_YEAR}`}
+            </p>
+          )}
 
         <div className="input-group mb-3">
           <div className="input-group-prepend">
@@ -232,14 +240,15 @@ export const PeopleForm: React.FC<PeopleFormProps> = (
           <input
             type="number"
             name="died"
-            className={classNames("form-control", {
-              borderError: errors.died
-            })}
+            className={cn(
+              "form-control",
+              { borderError: errors.died },
+            )}
             placeholder={`Should be less then ${CURRENT_YEAR}`}
             disabled={!inputs.born}
             value={inputs.died === 0 ? '' : inputs.died}
             onChange={handleChange}
-            onBlur={() => checkYears()}
+            onBlur={checkYears}
           />
         </div>
 

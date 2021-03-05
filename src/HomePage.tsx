@@ -1,5 +1,5 @@
-import React from 'react';
+import React, { FC } from 'react';
 
-export const HomePage: React.FC = () => {
+export const HomePage: FC = () => {
   return <h1 className="display-3">Home Page</h1>;
 };

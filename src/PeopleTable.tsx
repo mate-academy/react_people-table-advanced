@@ -1,11 +1,11 @@
-import React from 'react';
+import React, { FC } from 'react';
 import { PersonRow } from './PersonRow';
 import { Person, PeopleTableProps } from './typesDefinitions'
 import { useParams } from 'react-router-dom';
-import { TABLE_HEADERS } from './constAndFunc';
+import { TABLE_HEADERS } from './constants';
 import { TableHeader } from './TableHeader';
 
-export const PeopleTable: React.FC<PeopleTableProps> = ({ people }) => {
+export const PeopleTable: FC<PeopleTableProps> = ({ people }) => {
   const { slug } = useParams<{ slug: string }>();
 
   return (

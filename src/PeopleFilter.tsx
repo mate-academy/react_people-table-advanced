@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { FC } from 'react';
 import { PeopleFilterProps } from './typesDefinitions';
 
-export const PeopleFilter: React.FC<PeopleFilterProps> = ({ query,
-  handleQueryChange }) => {
+export const PeopleFilter: FC<PeopleFilterProps> = ({
+  query, handleQueryChange,
+}) => {
 
   return (
     <div className="input-group input-group-lg">
@@ -14,7 +15,7 @@ export const PeopleFilter: React.FC<PeopleFilterProps> = ({ query,
         className="form-control"
         placeholder="Please enter name"
         value={query}
-        onChange={(event) => handleQueryChange(event.target.value)} />
+        onChange={({ target }) => handleQueryChange(target.value)} />
     </div>
   );
 };
