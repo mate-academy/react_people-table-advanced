@@ -31,7 +31,9 @@ export const PeoplePage: FC = () => {
         searchParams.delete('query');
       };
 
-      history.push(`?${searchParams.toString()}`);
+      history.push({
+        search: searchParams.toString(),
+         });
     }, 1000), []
   );
 
@@ -44,7 +46,7 @@ export const PeoplePage: FC = () => {
     let sortedPeople = [...people];
 
     if (appliedQuery) {
-      const tempQuery = query.toLowerCase().trim();
+      const tempQuery = appliedQuery.toLowerCase().trim();
       sortedPeople = people.filter(person => (
         (person.name + person.motherName + person.fatherName)
           .toLowerCase().includes(tempQuery)));
@@ -74,7 +76,7 @@ export const PeoplePage: FC = () => {
     };
 
     return sortedPeople;
-  }, [appliedQuery, people, query, sortBy, sortOrder]);
+  }, [appliedQuery, people, sortBy, sortOrder]);
 
   return (
     <>

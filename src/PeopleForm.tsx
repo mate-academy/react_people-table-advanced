@@ -101,7 +101,7 @@ export const PeopleForm: FC<PeopleFormProps> = ({
     setSlug();
   };
 
-  const clearForm = (): void => {
+  const clearForm = useCallback((): void => {
     setInputs({
       name: '',
       sex: '',
@@ -111,8 +111,7 @@ export const PeopleForm: FC<PeopleFormProps> = ({
       fatherName: '',
       slug: '',
     });
-    setIsFormRequired(false);
-  };
+  }, [])
 
   const handleSubmit = (event: BaseSyntheticEvent) => {
     event.preventDefault();
