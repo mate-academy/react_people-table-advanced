@@ -1,1 +1,27 @@
-// styles go here
+body {
+  background-image: linear-gradient(45deg, #4ebd36, #7e7cf9);
+  background-attachment: fixed;
+  min-height: 100vh;
+  padding: 20px;
+  font-family: Roboto, sans-serif;
+  font-size: 18px;
+  margin: 0;
+  box-sizing: border-box;
+}
+.section {
+  display: flex;
+  flex-direction: row;
+  margin: auto;
+  width: 1000px;
+  font-size: 18px;
+  justify-content: space-between;
+  padding: 20px;
+}
+.container {
+  font-size: 1em;
+  margin: auto;
+  padding-top: 20px;
+}
+.title {
+  color :rgb(41, 35, 35);
+}
