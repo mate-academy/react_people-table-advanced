@@ -1,0 +1,6 @@
+{
+    "eslint.alwaysShowStatus": true,
+    "eslint.debug": true,
+    "eslint.format.enable": true,
+    "scss.lint.float": "warning"
+}

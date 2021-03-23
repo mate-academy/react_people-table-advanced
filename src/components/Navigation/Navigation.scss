@@ -1,0 +1,23 @@
+.navbar {
+  display: flex;
+  flex-direction: row;
+  margin: auto;
+  font-size: 20px;
+  width: 1000px;
+  height: 60px;
+  justify-content: center;
+}
+
+.navbar__link {
+  margin: 0 40px;
+  padding: 18px;
+  background-color: #e25644;
+  color: #f8f7f3;
+  box-sizing: border-box;
+  border-radius: 10px;
+
+  &:hover {
+    color: #fff400;
+    cursor: pointer;
+  }
+}
