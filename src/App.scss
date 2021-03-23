@@ -1,1 +1,96 @@
-// styles go here
+.App {
+  margin: 0 5rem;
+  border: 2px solid lightgray;
+}
+
+.header {
+  background-color: lightgray;
+  height: 80px;
+}
+
+.button.is-dark {
+  float: right;
+  margin: 1rem 1rem 0 0;
+}
+
+h2 {
+  text-align: center;
+}
+
+.input.is-rounded {
+  margin-left: 10px;
+  width: 310px;
+}
+
+form {
+  float: right;
+  margin-right: 10px;
+  margin-top: -37px;
+}
+
+label {
+  display: flex;
+  margin-bottom: 10px;
+
+  #name {
+    margin-left: 55px;
+  }
+}
+
+.name_input {
+  display: contents;
+}
+
+.Error {
+  margin-bottom: 10px;
+  margin-left: 150px;
+  margin-top: -10px;
+  font-size: 0.7rem;
+  color: red;
+}
+
+label.radio {
+  display: flex;
+
+  p {
+    margin-right: 55px;
+  }
+
+  input {
+    margin-top: 5.5px;
+    margin-left: 5px;
+  }
+}
+
+.select {
+  margin-bottom: 4rem;
+}
+
+.my_select select {
+  width: 310px;
+}
+
+#mother {
+  margin-left: 17px;
+}
+
+#father {
+  margin-left: 27px;
+}
+
+.select.is-rounded {
+  display: flex;
+  margin-bottom: 10px;
+}
+
+.button.is-light {
+  margin-bottom: 10px;
+}
+
+.table_root {
+  margin: 10px;
+}
+
+.table td {
+  color: grey;
+}
