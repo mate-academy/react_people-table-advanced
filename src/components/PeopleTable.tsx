@@ -74,14 +74,14 @@ export const PeopleTable = React.memo(
 
     const showOrderIMG = (title: string) => {
       if (sortOrder === 'asc' && sortBy === title) {
-        return <img src="/images/sort_asc.png" alt={title} />;
+        return <img src="images/sort_asc.png" alt={title} />;
       }
 
       if (sortOrder === 'desc' && sortBy === title) {
-        return <img src="/images/sort_desc.png" alt={title} />;
+        return <img src="images/sort_desc.png" alt={title} />;
       }
 
-      return <img src="/images/sort_both.png" alt={title} />;
+      return <img src="images/sort_both.png" alt={title} />;
     };
 
     return (
