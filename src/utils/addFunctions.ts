@@ -1,15 +1,12 @@
-/* eslint-disable no-console */
 /* eslint-disable func-names */
 import {
   Person, FieldError,
-  ValidateOnSubmit, Sumbit,
-  ValidatOnChange, CheckPerson,
-  CreateSlug,
+  ValidateOnSubmit, ValidatOnChange,
+  CheckPerson, CreateSlug, Sort,
 } from './type';
 import { NameCheck } from './constants';
 
-// eslint-disable-next-line consistent-return
-export const callback = function (sortBy: string, orderoToSort: string): any {
+export const callback = function (sortBy: string, orderoToSort: string): Sort {
   switch (sortBy) {
     case 'name': return (a: Person, b: Person) => {
       return (orderoToSort === 'desc')
@@ -23,7 +20,7 @@ export const callback = function (sortBy: string, orderoToSort: string): any {
         : a[sortBy].localeCompare(b[sortBy]);
     };
 
-    case 'born': return (a: Person, b: Person): number => {
+    case 'born': return (a: Person, b: Person) => {
       return (orderoToSort === 'desc')
         ? (Number(b[sortBy]) - Number(a[sortBy]))
         : (Number(a[sortBy]) - Number(b[sortBy]));
@@ -35,9 +32,11 @@ export const callback = function (sortBy: string, orderoToSort: string): any {
         : (Number(a[sortBy]) - Number(b[sortBy]));
     };
 
-    default: {
-      break;
-    }
+    default: return (a: Person, b: Person) => {
+      return (orderoToSort === 'desc')
+        ? b.slug.localeCompare(a.slug)
+        : a.slug.localeCompare(b.slug);
+    };
   }
 };
 
@@ -149,10 +148,6 @@ export const validateOnChange: ValidatOnChange = (event) => {
   }
 
   return inputValue;
-};
-
-export const sumbitForm: Sumbit = (message) => {
-  console.log(message);
 };
 
 export const createSlug: CreateSlug = (name, bornYear) => {

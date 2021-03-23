@@ -8,6 +8,7 @@ body {
   margin: 0;
   box-sizing: border-box;
 }
+
 .section {
   display: flex;
   flex-direction: row;
@@ -17,11 +18,13 @@ body {
   justify-content: space-between;
   padding: 20px;
 }
+
 .container {
   font-size: 1em;
   margin: auto;
   padding-top: 20px;
 }
+
 .title {
   color :rgb(41, 35, 35);
 }

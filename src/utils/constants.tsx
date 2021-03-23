@@ -7,4 +7,4 @@ export const Name = 'Name';
 export const Sex = 'Sex';
 export const Born = 'Born';
 export const Died = 'Died';
-export const NameCheck = /^[a-z .'-]+$/i;
+export const NameCheck = /^[a-z]+( [a-z]+)+$/i;

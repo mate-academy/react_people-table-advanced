@@ -25,7 +25,7 @@ export const People = () => {
   const personId = match?.params?.slug || '0';
   const appliedQuery = searchParams.get('query') || '';
   const [query, setQuery] = useState(appliedQuery);
-  const sortByColumn = searchParams.get('sortBy') || '';
+  const sortByColumn: string | undefined = searchParams.get('sortBy') || '';
   const sortByOrder = searchParams.get('sortOrder') || '';
 
   const applyQuery = useCallback(

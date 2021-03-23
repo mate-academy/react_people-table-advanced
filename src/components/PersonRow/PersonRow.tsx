@@ -7,8 +7,8 @@ import './PersonRow.scss';
 export const PersonRow: React.FC <PersonData<Person, number, string>> = ({
   person, index, people,
 }) => {
-  const motherId: Person| undefined = people.find(individ => person.motherName === individ.name);
-  const fatherId: Person| undefined = people.find(individ => person.fatherName === individ.name);
+  const mother: Person | undefined = people.find(individ => person.motherName === individ.name);
+  const father: Person | undefined = people.find(individ => person.fatherName === individ.name);
 
   return (
     <>
@@ -23,10 +23,10 @@ export const PersonRow: React.FC <PersonData<Person, number, string>> = ({
       </td>
       <td>{person.born}</td>
       <td>{person.died}</td>
-      {motherId !== undefined ? (
+      {mother ? (
         <PersonName
           human={person.motherName}
-          slug={motherId.slug}
+          slug={mother.slug}
           people={people}
         />
       ) : (
@@ -34,10 +34,10 @@ export const PersonRow: React.FC <PersonData<Person, number, string>> = ({
           <strong>{person.motherName}</strong>
         </td>
       )}
-      {fatherId !== undefined ? (
+      {father ? (
         <PersonName
           human={person.fatherName}
-          slug={fatherId.slug}
+          slug={father.slug}
           people={people}
         />
       ) : (

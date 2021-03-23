@@ -10,7 +10,7 @@ import {
 } from '../../utils/type';
 
 import {
-  sumbitForm, validateOnSubmit,
+  validateOnSubmit,
   validateOnChange, checkPersonInList,
 } from '../../utils/addFunctions';
 
@@ -60,7 +60,6 @@ const useForm = (
   useEffect(() => {
     if (Object.keys(errors).length === 0 && isSubmitting) {
       if (checkPersonInList(values, people)) {
-        sumbitForm('Person exists');
         setErrors(current => {
           return { ...current, submit: 'Person exists' };
         });
@@ -69,7 +68,6 @@ const useForm = (
       }
 
       onAddPerson(values);
-      sumbitForm('Person added');
       history.push({
         pathname: `${match.url}`,
         search: searchParams.toString(),

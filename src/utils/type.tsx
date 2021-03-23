@@ -68,8 +68,7 @@ export type EventInput = React.ChangeEvent<HTMLSelectElement>
 | React.ChangeEvent<HTMLInputElement>;
 
 export type EventForm = React.FormEvent<HTMLFormElement>;
-
 export type CheckPerson = (form: FormField, people: Person[]) => boolean;
 export type AddPerson = (form: FormField) => void;
-
 export type CreateSlug = (name: string, bornYear: string) => string;
+export type Sort = (a: Person, b: Person) => number;

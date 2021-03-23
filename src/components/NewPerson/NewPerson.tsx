@@ -30,7 +30,7 @@ export const NewPerson: React.FC<PeoplefromComp<Person, AddPerson>> = React.memo
         onSubmit={(event) => handleSubmit(event)}
       >
         <label htmlFor="name">
-          Name:
+          Full Name:
           <input
             name="name"
             value={values.name || ''}
