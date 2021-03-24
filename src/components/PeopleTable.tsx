@@ -6,13 +6,15 @@ const styleForTable: React.CSSProperties = {
   borderCollapse: 'collapse',
 };
 
+interface Props {
+  handleSortChange: MouseEventHandler;
+  sortBy: string;
+  sortOrder: string;
+  query: string;
+}
+
 export const PeopleTable = React.memo(
-  (props: {
-    handleSortChange: MouseEventHandler;
-    sortBy: string;
-    sortOrder: string;
-    query: string;
-  }) => {
+  (props: Props) => {
     const { people } = useContext(PeopleContext);
     const lowerQuery = props.query.toLowerCase();
     const {
@@ -26,9 +28,8 @@ export const PeopleTable = React.memo(
             return null;
           }
 
-          return person.name.toLocaleLowerCase().includes(lowerQuery)
-          || person.motherName.toLocaleLowerCase().includes(lowerQuery)
-          || person.fatherName.toLocaleLowerCase().includes(lowerQuery);
+          return (person.name + person.motherName + person.fatherName)
+            .toLowerCase().includes(lowerQuery);
         });
       }
 

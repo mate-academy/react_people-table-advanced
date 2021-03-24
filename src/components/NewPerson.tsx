@@ -2,23 +2,29 @@ import React, { useContext, useState } from 'react';
 import className from 'classnames';
 import { PeopleContext } from './PeopleContext';
 import { Person } from './PersonRow';
+import {
+  validateName,
+  validateBorn,
+  validateDied,
+  validateAge,
+} from './helpers';
 
 export const NewPerson = () => {
   const { people, setPeople } = useContext(PeopleContext);
-  const [name, setName] = useState('');
-  const [sex, setSex] = useState('');
-  const [born, setBorn] = useState('');
-  const [died, setDied] = useState('');
-  const [mother, setMother] = useState('');
-  const [father, setFather] = useState('');
+  const [person, setPerson] = useState<Person>({
+    name: '',
+    sex: '',
+    born: '',
+    died: '',
+    mother: '',
+    father: '',
+  });
   const [blur, setBlur] = useState<Array<string>>([]);
-  const [isClick, setClick] = useState(false);
+  const [isSecondClick, setClick] = useState(false);
 
-  const validateName = name.match(/^[a-zA-Zа-яА-Я'][a-zA-Zа-яА-Я-' ]+[a-zA-Zа-яА-Я']?$/u);
-  const validateBorn = +born >= 1400 && +born <= 2021 && born.length > 0;
-  const validateDied = +died <= 2021 && +died >= +born && died.length > 0;
-  const age = +died - +born;
-  const validateAge = age >= 0 && age <= 150;
+  const {
+    name, sex, born, died, mother, father,
+  } = person;
 
   const createNewPerson = () => {
     const newPerson = ({
@@ -26,29 +32,39 @@ export const NewPerson = () => {
       sex,
       born,
       died,
-      motherName: mother,
-      fatherName: father,
+      motherName: mother === 'Select mother' ? '' : mother,
+      fatherName: father === 'Select father' ? '' : father,
       slug: `${name.toLocaleLowerCase().trim().split(' ').join('-')}-${born}`,
     });
 
-    if (isClick) {
+    if (isSecondClick) {
       setPeople([newPerson, ...people]);
     }
   };
 
   const clearAllField = () => {
-    setName('');
-    setSex('');
-    setDied('');
-    setBorn('');
-    setMother('');
-    setFather('');
+    setPerson({
+      name: '',
+      sex: '',
+      born: '',
+      died: '',
+      mother: '',
+      father: '',
+    });
   };
 
   return (
     <div className="control">
-      <form action="">
-        {isClick && (
+      <form
+        action=""
+        onSubmit={(e) => {
+          e.preventDefault();
+          createNewPerson();
+          setClick(!isSecondClick);
+          clearAllField();
+        }}
+      >
+        {isSecondClick && (
           <>
             <label htmlFor="name" onBlur={() => setBlur([...blur, 'name'])}>
               <p>Enter name:</p>
@@ -56,16 +72,19 @@ export const NewPerson = () => {
                 className={className(
                   'input',
                   'is-rounded',
-                  { 'is-danger': !validateName && name.length > 0 },
+                  { 'is-danger': !validateName(name) && name.length > 0 },
                 )}
                 type="text"
                 name="name"
                 id="name"
                 value={name}
-                onChange={e => setName(e.target.value)}
+                onChange={e => setPerson({
+                  ...person,
+                  name: e.target.value,
+                })}
               />
             </label>
-            {(!validateName && name.length > 0) && (
+            {(!validateName(name) && name.length > 0) && (
               <div className="Error">Incorrect name!</div>
             )}
 
@@ -76,7 +95,10 @@ export const NewPerson = () => {
                 name="answer"
                 id="m"
                 checked={sex === 'm'}
-                onChange={e => setSex(e.target.id)}
+                onChange={e => setPerson({
+                  ...person,
+                  sex: e.target.id,
+                })}
               />
               Male
               <input
@@ -84,7 +106,10 @@ export const NewPerson = () => {
                 name="answer"
                 id="f"
                 checked={sex === 'f'}
-                onChange={e => setSex(e.target.id)}
+                onChange={e => setPerson({
+                  ...person,
+                  sex: e.target.id,
+                })}
               />
               Female
             </label>
@@ -95,16 +120,19 @@ export const NewPerson = () => {
                 className={className(
                   'input',
                   'is-rounded',
-                  { 'is-danger': !validateBorn && born.length > 0 },
+                  { 'is-danger': !validateBorn(born) && born.length > 0 },
                 )}
                 type="number"
                 name="born"
                 id="born"
                 value={!born ? '' : born}
-                onChange={e => setBorn(e.target.value)}
+                onChange={e => setPerson({
+                  ...person,
+                  born: e.target.value,
+                })}
               />
             </label>
-            {!validateBorn && born.length > 0 && (
+            {!validateBorn(born) && born.length > 0 && (
               <div className="Error">Year of birth must be greater than 1400 and less 2021!</div>
             )}
 
@@ -114,24 +142,32 @@ export const NewPerson = () => {
                 className={className(
                   'input',
                   'is-rounded',
-                  { 'is-danger': !validateDied && died.length > 0 },
+                  { 'is-danger': !validateDied(born, died) && died.length > 0 },
                 )}
                 type="number"
                 name="died"
                 id="died"
                 value={!died ? '' : died}
-                onChange={e => setDied(e.target.value)}
-                disabled={!validateBorn}
+                onChange={e => setPerson({
+                  ...person,
+                  died: e.target.value,
+                })}
+                disabled={!validateBorn(born)}
               />
             </label>
-            {!validateDied && died.length > 0 && (
+            {!validateDied(born, died) && died.length > 0 && (
               <div className="Error">
                 Incorect date of death!
               </div>
             )}
-            {!validateAge && born.length > 0 && died.length > 0 && (
+            {!validateAge(born, died) && born.length > 0 && died.length > 0 && (
               <div className="Error">
                 Total age should be in the range 0 - 150!
+              </div>
+            )}
+            {+born < 1871 && born.length === 4 && (
+              <div className="Error">
+                Please enter the date of death!
               </div>
             )}
 
@@ -144,14 +180,17 @@ export const NewPerson = () => {
                 <select
                   id="mother"
                   value={mother}
-                  onChange={e => setMother(e.target.value)}
+                  onChange={e => setPerson({
+                    ...person,
+                    mother: e.target.value,
+                  })}
                   disabled={+born < 1400}
                 >
                   <option>Select mother</option>
                   {people
-                    .filter((person: Person) => person.sex === 'f' && +person.died > +born)
-                    .map(person => (
-                      <option key={person.name}>{person.name}</option>
+                    .filter((newPerson: Person) => newPerson.sex === 'f' && +newPerson.died > +born)
+                    .map(newPerson => (
+                      <option key={newPerson.name}>{newPerson.name}</option>
                     ))}
                 </select>
               </label>
@@ -166,14 +205,17 @@ export const NewPerson = () => {
                 <select
                   id="father"
                   value={father}
-                  onChange={e => setFather(e.target.value)}
+                  onChange={e => setPerson({
+                    ...person,
+                    father: e.target.value,
+                  })}
                   disabled={+born < 1400}
                 >
                   <option>Select father</option>
                   {people
-                    .filter((person: Person) => person.sex === 'm' && +person.died > +born)
-                    .map(person => (
-                      <option key={person.name}>{person.name}</option>
+                    .filter((newPerson: Person) => newPerson.sex === 'm' && +newPerson.died > +born)
+                    .map(newPerson => (
+                      <option key={newPerson.name}>{newPerson.name}</option>
                     ))}
                 </select>
               </label>
@@ -183,15 +225,14 @@ export const NewPerson = () => {
 
         <button
           id="submit"
-          type="button"
+          type="submit"
           className="button is-light"
           disabled={(
-            !validateName || !sex || !validateBorn || (+born < 1871 && +died < +born)) && isClick}
-          onClick={() => {
-            createNewPerson();
-            setClick(!isClick);
-            clearAllField();
-          }}
+            !validateName(name)
+            || !sex
+            || !validateBorn(born)
+            || (+born < 1871 && +died < +born))
+            && isSecondClick}
         >
           Add person
         </button>
