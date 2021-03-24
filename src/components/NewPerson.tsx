@@ -165,7 +165,7 @@ export const NewPerson = () => {
                 Total age should be in the range 0 - 150!
               </div>
             )}
-            {+born < 1871 && born.length === 4 && (
+            {+born < 1871 && born.length === 4 && +died < +born && (
               <div className="Error">
                 Please enter the date of death!
               </div>
