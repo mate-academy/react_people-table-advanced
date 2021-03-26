@@ -29,12 +29,12 @@ export const TableHeader: React.FC<Header > = ({ header }) => {
       {header}
       {sortBy !== header.toLowerCase()
         ? (
-          <span><img src="../images/sort_both.png" alt="not sorted" /></span>
+          <span><img src="images/sort_both.png" alt="not sorted" /></span>
         )
         : (
           sortOrder === 'ASC'
-            ? <span><img src="../images/sort_desc.png" alt="sorted DESC" /></span>
-            : <span><img src="../images/sort_asc.png" alt="sorted ASC" /></span>
+            ? <span><img src="images/sort_desc.png" alt="sorted DESC" /></span>
+            : <span><img src="images/sort_asc.png" alt="sorted ASC" /></span>
         )}
     </th>
   );
