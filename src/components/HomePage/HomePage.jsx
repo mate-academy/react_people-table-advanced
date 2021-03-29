@@ -5,7 +5,3 @@ export function HomePage(props) {
     <h2 className="title">Home page</h2>
   );
 }
-
-HomePage.propTypes = {
-
-};
