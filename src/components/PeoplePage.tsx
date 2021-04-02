@@ -7,11 +7,13 @@ import { Person } from './types';
 
 export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);
+
   const location = useLocation();
+  const history = useHistory();
   const searchParams = new URLSearchParams(location.search);
   const appliedQuery = searchParams.get('query') || '';
   const [query, setQuery] = useState<string>(appliedQuery);
-  const history = useHistory();
+
   const sortBy = searchParams.get('sortBy') || '';
   const sortOrder = searchParams.get('sortOrder') || '';
 
@@ -41,25 +43,21 @@ export const PeoplePage = () => {
     const visiblePeople = appliedQuery
       ? people.filter(person => (
         (person.name + person.motherName + person.fatherName)
-          .toLowerCase().includes(appliedQuery)))
+          .toLowerCase().includes(appliedQuery.toLowerCase())))
       : people;
 
     if (sortBy) {
       switch (sortBy) {
         case 'name':
         case 'sex':
-          return visiblePeople.sort((a, b) => (
-            sortOrder === 'ASC'
-              ? a[sortBy].localeCompare(b[sortBy])
-              : b[sortBy].localeCompare(a[sortBy])
-          ));
+          return sortOrder === 'ASC'
+            ? visiblePeople.sort((a, b) => (a[sortBy].localeCompare(b[sortBy])))
+            : visiblePeople.reverse();
         case 'born':
         case 'died':
-          return visiblePeople.sort((a, b) => (
-            sortOrder === 'ASC'
-              ? a[sortBy] - b[sortBy]
-              : b[sortBy] - a[sortBy]
-          ));
+          return sortOrder === 'ASC'
+            ? visiblePeople.sort((a, b) => (a[sortBy] - b[sortBy]))
+            : visiblePeople.reverse();
 
         default:
           break;

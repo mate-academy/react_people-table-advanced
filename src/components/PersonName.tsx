@@ -7,7 +7,7 @@ export const PersonName: React.FC<personDetails> = ({ person }) => {
   const { search } = useLocation();
 
   if (!person) {
-    return <></>;
+    return null;
   }
 
   return (

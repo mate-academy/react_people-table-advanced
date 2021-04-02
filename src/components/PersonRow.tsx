@@ -21,11 +21,13 @@ export const PersonRow: React.FC<personDetails & People> = ({ person, people }) 
   };
 
   if (!person) {
-    return <></>;
+    return null;
   }
 
-  // eslint-disable-next-line object-curly-newline
-  const { sex, born, died, motherName, fatherName } = person;
+  const {
+    sex, born, died,
+    motherName, fatherName,
+  } = person;
 
   return (
     <tr

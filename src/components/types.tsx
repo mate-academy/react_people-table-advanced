@@ -20,10 +20,10 @@ export type Header = {
   header: string;
 };
 
-type Obj = {
+type ParamsObj = {
   personId: string;
 };
 
 export type Params = {
-  params: Obj;
+  params: ParamsObj;
 };

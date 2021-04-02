@@ -4,7 +4,7 @@ import { TableHeader } from './TableHeader';
 
 import { People } from './types';
 
-const tableHeaders = ['Name', 'Sex', 'Born', 'Died'];
+const TABLE_HEADERS = ['Name', 'Sex', 'Born', 'Died', 'Mother', 'Father'];
 
 export const PeopleTable: React.FC<People> = ({ people }) => (
   <div className="peopleTable">
@@ -12,19 +12,9 @@ export const PeopleTable: React.FC<People> = ({ people }) => (
     <table className="peopleTable__Body">
       <thead>
         <tr className="peopleTable__rowsHeader">
-          {tableHeaders.map(header => (
+          {TABLE_HEADERS.map(header => (
             <TableHeader key={header} header={header} />
           ))}
-          <th
-            className="peopleTable__rowsHeader peopleTable__cell"
-          >
-            Mother
-          </th>
-          <th
-            className="peopleTable__rowsHeader peopleTable__cell"
-          >
-            Father
-          </th>
         </tr>
       </thead>
 
