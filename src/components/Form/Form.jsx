@@ -1,25 +1,24 @@
 import React, { useState, useCallback } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 
-import PropTypes from 'prop-types';
 import debounce from 'lodash/debounce';
 
-export function Form({ searchParams }) {
-  const [query, setQuery] = useState(searchParams.get('query') || '');
+export function Form() {
   const history = useHistory();
-  const applyQuery = useCallback(
-    debounce((newQuary) => {
-      if (newQuary) {
-        searchParams.delete('sortBy');
-        searchParams.set('query', newQuary);
-      } else {
-        searchParams.delete('query');
-      }
+  const { search } = useLocation();
+  const searchParams = new URLSearchParams(search);
+  const [query, setQuery] = useState(searchParams.get('query') || '');
 
-      history.push(`?${searchParams.toString()}`);
-    }, 1000),
-    [],
-  );
+  const applyQuery = useCallback(debounce((newQuery) => {
+    if (newQuery) {
+      searchParams.delete('sortBy');
+      searchParams.set('query', newQuery);
+    } else {
+      searchParams.delete('query');
+    }
+
+    history.push(`?${searchParams.toString()}`);
+  }, 1000), []);
 
   const onChange = (event) => {
     const { value } = event.target;
@@ -47,11 +46,3 @@ export function Form({ searchParams }) {
     </form>
   );
 }
-
-Form.propTypes = {
-  searchParams: PropTypes.shape({
-    get: PropTypes.func.isRequired,
-    set: PropTypes.func.isRequired,
-    delete: PropTypes.func.isRequired,
-  }).isRequired,
-};

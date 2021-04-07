@@ -11,15 +11,8 @@ export const App = () => (
     <Header />
     <div className="App">
       <Switch>
+        <Route path="/" exact component={HomePage} />
         <Route path="/people" component={PeoplePage} />
-
-        <Route
-          path="/"
-          exact
-          render={routerProps => (
-            <HomePage {...routerProps} />
-          )}
-        />
         <Route path="/notfound" component={NotFoundPage} />
         <Redirect path="/home" to="/" />
         <Redirect path="/" to="/notfound" />

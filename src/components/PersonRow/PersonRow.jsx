@@ -1,12 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { useRouteMatch } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
-export function PersonRow({
-  people,
-}) {
-  const match = useRouteMatch();
-  const person = people.find(human => human.slug === match.params.slug);
+export function PersonRow({ people }) {
+  const { slug } = useParams();
+  const person = people.find(human => human.slug === slug);
 
   return (
     <>
@@ -19,12 +17,12 @@ export function PersonRow({
           </li>
           <li>
             {
-              `Sex: ${person.sex === 'f' ? 'famale' : 'male'}`
+              `Sex: ${person.sex === 'f' ? 'female' : 'male'}`
             }
           </li>
           <li>
             {
-              `Born:: ${person.born}`
+              `Born: ${person.born}`
             }
           </li>
           <li>

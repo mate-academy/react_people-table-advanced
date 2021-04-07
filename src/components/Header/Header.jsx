@@ -1,7 +1,7 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 
-export function Header(props) {
+export function Header() {
   return (
     <nav
       className="navbar"

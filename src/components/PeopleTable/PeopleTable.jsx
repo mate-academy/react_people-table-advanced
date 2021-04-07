@@ -3,14 +3,23 @@ import PropTypes from 'prop-types';
 import 'bulma';
 
 import {
-  useRouteMatch, useLocation, NavLink, Route, useHistory,
+  useRouteMatch,
+  useLocation,
+  NavLink,
+  Route,
+  useHistory,
 } from 'react-router-dom';
 import classNames from 'classnames';
 import { PersonRow } from '../PersonRow';
 
-export function PeopleTable({ people, slug, searchParams }) {
+export function PeopleTable({ people }) {
+  const { search } = useLocation();
+  const searchParams = new URLSearchParams(search);
   const sortedBy = searchParams.get('sortBy') || '';
   const [sortedPeople, setSortedPeople] = useState(people);
+  const history = useHistory();
+  const { slug } = useRouteMatch('/people/:slug?');
+  const { url } = useRouteMatch();
 
   useEffect(() => {
     switch (sortedBy) {
@@ -35,16 +44,12 @@ export function PeopleTable({ people, slug, searchParams }) {
     }
   }, [sortedBy, people]);
 
-  const match = useRouteMatch();
-  const history = useHistory();
-  const { search } = useLocation();
-
   const findPersonByName = (personName) => {
     const foundPerson = sortedPeople.find(({ name }) => name === personName);
 
     if (foundPerson) {
       return {
-        pathname: `${match.url}/${foundPerson.slug}`,
+        pathname: `${url}/${foundPerson.slug}`,
         search,
       };
     }
@@ -59,7 +64,7 @@ export function PeopleTable({ people, slug, searchParams }) {
 
   return (
     <>
-      <Route path={`${match.path}/:slug`}>
+      <Route path={`${url}/:slug`}>
         <PersonRow people={sortedPeople} />
       </Route>
       <table className="table is-fullwidth">
@@ -102,7 +107,7 @@ export function PeopleTable({ people, slug, searchParams }) {
               <td>
                 <NavLink
                   to={{
-                    pathname: `${match.url}/${person.slug}`,
+                    pathname: `${url}/${person.slug}`,
                     search,
                   }}
                   className={
@@ -169,11 +174,6 @@ export function PeopleTable({ people, slug, searchParams }) {
 }
 
 PeopleTable.propTypes = {
-  searchParams: PropTypes.shape({
-    get: PropTypes.func.isRequired,
-    set: PropTypes.func.isRequired,
-  }).isRequired,
-  slug: PropTypes.string,
   people: PropTypes.arrayOf(
     PropTypes.shape({
       name: PropTypes.string.isRequired,
@@ -184,8 +184,4 @@ PeopleTable.propTypes = {
       fatherName: PropTypes.string,
     }),
   ).isRequired,
-};
-
-PeopleTable.defaultProps = {
-  slug: '',
 };
