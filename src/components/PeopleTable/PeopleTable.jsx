@@ -71,25 +71,25 @@ export function PeopleTable({ people }) {
         <thead>
           <tr>
             <th
-              className={classNames({ people__sort: sortedBy === 'name' })}
+              className={classNames({ is_selected: sortedBy === 'name' })}
               onClick={() => sortBy('name')}
             >
               Name
             </th>
             <th
-              className={classNames({ people__sort: sortedBy === 'sex' })}
+              className={classNames({ is_selected: sortedBy === 'sex' })}
               onClick={() => sortBy('sex')}
             >
               Sex
             </th>
             <th
-              className={classNames({ people__sort: sortedBy === 'born' })}
+              className={classNames({ is_selected: sortedBy === 'born' })}
               onClick={() => sortBy('born')}
             >
               Born
             </th>
             <th
-              className={classNames({ people__sort: sortedBy === 'died' })}
+              className={classNames({ is_selected: sortedBy === 'died' })}
               onClick={() => sortBy('died')}
             >
               Died

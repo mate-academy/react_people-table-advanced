@@ -10,6 +10,9 @@ export const getPeople = async() => {
 
     return data;
   } catch (error) {
-    throw new Error(error);
+    // eslint-disable-next-line no-console
+    console.warn(error);
   }
+
+  return [];
 };
