@@ -1,1 +1,29 @@
-// styles go here
+.title {
+  background: yellow;
+  text-align: center;
+  padding: 5px;
+}
+
+.back {
+  background: yellow;
+}
+
+.man {
+  color: blue;
+}
+
+.woman {
+  color: red;
+}
+
+.person__list {
+  background: yellow;
+  width: 50%;
+  margin: 0 auto 20px;
+  padding: 20px;
+  border-radius: 10px;
+}
+
+.is_selected {
+  background: green;
+}
