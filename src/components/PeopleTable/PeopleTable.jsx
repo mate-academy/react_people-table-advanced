@@ -3,21 +3,42 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { NavLink } from 'react-router-dom';
 import className from 'classnames';
+import uniqueKey from 'unique-key';
 
 import { Table } from 'semantic-ui-react';
 import { PersonName } from '../PersonName';
 
-export const PeopleTable = ({ people }) => {
+export const PeopleTable = ({ people, handleSort }) => {
   const [activeRow, setActiveRow] = useState('');
 
   return (
     <Table striped>
       <Table.Header>
         <Table.Row>
-          <Table.HeaderCell>Name</Table.HeaderCell>
-          <Table.HeaderCell>Sex</Table.HeaderCell>
-          <Table.HeaderCell>Born</Table.HeaderCell>
-          <Table.HeaderCell>Died</Table.HeaderCell>
+          <Table.HeaderCell
+            className="sort"
+            onClick={() => handleSort('name')}
+          >
+            Name
+          </Table.HeaderCell>
+          <Table.HeaderCell
+            className="sort"
+            onClick={() => handleSort('sex')}
+          >
+            Sex
+          </Table.HeaderCell>
+          <Table.HeaderCell
+            className="sort"
+            onClick={() => handleSort('born')}
+          >
+            Born
+          </Table.HeaderCell>
+          <Table.HeaderCell
+            className="sort"
+            onClick={() => handleSort('died')}
+          >
+            Died
+          </Table.HeaderCell>
           <Table.HeaderCell>Mother</Table.HeaderCell>
           <Table.HeaderCell>Father</Table.HeaderCell>
         </Table.Row>
@@ -32,25 +53,26 @@ export const PeopleTable = ({ people }) => {
                 : activeRow === person.slug
               && person.sex === 'f'
                   ? 'active-row--women'
-                  : '',
-            )}
+                  : '')}
             key={person.slug}
           >
             <Table.Cell>
               <NavLink
+                key={uniqueKey(6)}
                 to={`/people/:person=${person.slug}?`}
                 onClick={() => setActiveRow(person.slug)}
               >
                 <PersonName
+                  key={uniqueKey(`${5}`)}
                   name={person.name}
                 />
               </NavLink>
             </Table.Cell>
-            <Table.Cell>{person.sex}</Table.Cell>
-            <Table.Cell>{person.born}</Table.Cell>
-            <Table.Cell>{person.died}</Table.Cell>
-            <Table.Cell>{person.motherName}</Table.Cell>
-            <Table.Cell>{person.fatherName}</Table.Cell>
+            <Table.Cell key={uniqueKey(`${1}`)}>{person.sex}</Table.Cell>
+            <Table.Cell key={uniqueKey(`${2}`)}>{person.born}</Table.Cell>
+            <Table.Cell key={uniqueKey(`${3}`)}>{person.died}</Table.Cell>
+            <Table.Cell key={uniqueKey(`${4}`)}>{person.motherName}</Table.Cell>
+            <Table.Cell key={uniqueKey(`${4}`)}>{person.fatherName}</Table.Cell>
           </Table.Row>
         ))}
       </Table.Body>
@@ -61,7 +83,7 @@ export const PeopleTable = ({ people }) => {
 PeopleTable.propTypes = {
   people: PropTypes.arrayOf(
     PropTypes.shape({
-      name: PropTypes.string.isRequired,
+      name: PropTypes.string,
       sex: PropTypes.string.isRequired,
       born: PropTypes.number.isRequired,
       died: PropTypes.number.isRequired,
@@ -69,4 +91,5 @@ PeopleTable.propTypes = {
       fatherName: PropTypes.string,
     }),
   ).isRequired,
+  handleSort: PropTypes.func.isRequired,
 };

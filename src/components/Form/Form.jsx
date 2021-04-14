@@ -1,21 +1,25 @@
-import React, { useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 
 import { Input } from 'semantic-ui-react';
 
-export const Form = ({ searchValue, setSearchValue }) => {
-
-  return (
-    <Input
-      value={searchValue}
-      onChange={event => setSearchValue(event.target.value)}
-      focus
-      placeholder="Search..."
-    />
-  );
-};
+export const Form = ({ searchValue, history }) => (
+  <Input
+    value={searchValue && searchValue.length ? searchValue : ''}
+    onChange={event => history.push(`?query=${event.target.value}`)}
+    focus
+    placeholder="Search..."
+  />
+);
 
 Form.propTypes = {
-  searchValue: PropTypes.string.isRequired,
-  setSearchValue: PropTypes.func.isRequired,
+  searchValue: PropTypes.string,
+  history: PropTypes.shape({
+    push: PropTypes.func,
+  }),
+};
+
+Form.defaultProps = {
+  searchValue: '',
+  history: {},
 };

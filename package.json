@@ -20,7 +20,8 @@
     "react-scripts": "3.4.3",
     "semantic-ui-css": "^2.4.1",
     "semantic-ui-react": "^2.0.3",
-    "typescript": "^3.7.5"
+    "typescript": "^3.7.5",
+    "unique-key": "^0.0.6"
   },
   "devDependencies": {
     "@mate-academy/eslint-config-react": "*",

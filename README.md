@@ -21,7 +21,7 @@ Using code from previous task implement next tasks:
     - Highlight nobody if the `slug` in the URL is not found among the people
 
 ### Filtering and sorting
-1. Add an `<input>` to filter people by `name`, `motherName` and `fatherName`
+1. Add an `<input>` to filter people by `name`, `motherName` and `fatherName`   
     - it should update the URL with `?query=car` where `car` is a string entered by the user
     - Read the `query` from the URL and set its value to the input when the page is loaded
 1. `PeoplePage` should read the `query` from the URL and filter people accordingly
