@@ -1,7 +1,7 @@
 /* eslint-disable no-nested-ternary */
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useLocation } from 'react-router-dom';
 import className from 'classnames';
 import uniqueKey from 'unique-key';
 
@@ -10,6 +10,7 @@ import { PersonName } from '../PersonName';
 
 export const PeopleTable = ({ people, handleSort }) => {
   const [activeRow, setActiveRow] = useState('');
+  const { search } = useLocation();
 
   return (
     <Table striped>
@@ -19,25 +20,41 @@ export const PeopleTable = ({ people, handleSort }) => {
             className="sort"
             onClick={() => handleSort('name')}
           >
-            Name
+            <NavLink
+              to={`/people/sortBy=name?${search}`}
+            >
+              Name
+            </NavLink>
           </Table.HeaderCell>
           <Table.HeaderCell
             className="sort"
             onClick={() => handleSort('sex')}
           >
-            Sex
+            <NavLink
+              to={`/people/sortBy=sex?${search}`}
+            >
+              Sex
+            </NavLink>
           </Table.HeaderCell>
           <Table.HeaderCell
             className="sort"
             onClick={() => handleSort('born')}
           >
-            Born
+            <NavLink
+              to={`/people/sortBy=born?${search}`}
+            >
+              Born
+            </NavLink>
           </Table.HeaderCell>
           <Table.HeaderCell
             className="sort"
             onClick={() => handleSort('died')}
           >
-            Died
+            <NavLink
+              to={`/people/sortBy=died?${search}`}
+            >
+              Died
+            </NavLink>
           </Table.HeaderCell>
           <Table.HeaderCell>Mother</Table.HeaderCell>
           <Table.HeaderCell>Father</Table.HeaderCell>
@@ -59,7 +76,7 @@ export const PeopleTable = ({ people, handleSort }) => {
             <Table.Cell>
               <NavLink
                 key={uniqueKey(6)}
-                to={`/people/:person=${person.slug}?`}
+                to={`/people/:person=${person.slug}?${search}`}
                 onClick={() => setActiveRow(person.slug)}
               >
                 <PersonName

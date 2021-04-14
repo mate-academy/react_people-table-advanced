@@ -44,31 +44,31 @@ export const PeoplePage = () => {
 
     switch (sortPeopleBy) {
       case 'name':
-        sortedPeople = [...people].sort((currentPerson, nextPerson) => (
+        sortedPeople = [...visiblePeople].sort((currentPerson, nextPerson) => (
           currentPerson.name.localeCompare(nextPerson.name)
         ));
         break;
 
       case 'sex':
-        sortedPeople = [...people].sort((currentPerson, nextPerson) => (
+        sortedPeople = [...visiblePeople].sort((currentPerson, nextPerson) => (
           currentPerson.sex.localeCompare(nextPerson.sex)
         ));
         break;
 
       case 'born':
-        sortedPeople = [...people].sort((currentPerson, nextPerson) => (
+        sortedPeople = [...visiblePeople].sort((currentPerson, nextPerson) => (
           +currentPerson.born - +nextPerson.born
         ));
         break;
 
       case 'died':
-        sortedPeople = [...people].sort((currentPerson, nextPerson) => (
+        sortedPeople = [...visiblePeople].sort((currentPerson, nextPerson) => (
           +currentPerson.died - +nextPerson.died
         ));
         break;
 
       default:
-        sortedPeople.push([...people]);
+        sortedPeople.push([...visiblePeople]);
         break;
     }
 
