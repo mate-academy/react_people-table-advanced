@@ -1,11 +1,11 @@
 # React - People table
 - Replace `<your_account>` with your Github username in the
-  [DEMO LINK](https://<your_account>.github.io/react_people-table-advanced/)
+  [DEMO LINK](https://misha-lysak.github.io/react_people-table-advanced/)
 - Follow the [React task guideline](https://github.com/mate-academy/react_task-guideline#react-tasks-guideline)
 
 ## If you don't use **Typescript**
 1. Rename `.tsx` files to `.jsx`
-1. use `eslint-config-react` in `.eslintrs.js` 
+1. use `eslint-config-react` in `.eslintrs.js`
 
 ## Advanced tasks
 Using code from previous task implement next tasks:
@@ -21,7 +21,7 @@ Using code from previous task implement next tasks:
     - Highlight nobody if the `slug` in the URL is not found among the people
 
 ### Filtering and sorting
-1. Add an `<input>` to filter people by `name`, `motherName` and `fatherName`
+1. Add an `<input>` to filter people by `name`, `motherName` and `fatherName`   
     - it should update the URL with `?query=car` where `car` is a string entered by the user
     - Read the `query` from the URL and set its value to the input when the page is loaded
 1. `PeoplePage` should read the `query` from the URL and filter people accordingly
