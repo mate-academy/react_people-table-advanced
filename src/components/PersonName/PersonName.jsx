@@ -1,7 +1,14 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
-export const PersonName = ({ name, slug }) => {
+export const PersonName = ({ name }) => {
   return (
-    <p>{name}</p>
+    <>
+      {name}
+    </>
   );
+};
+
+PersonName.propTypes = {
+  name: PropTypes.string.isRequired,
 };
