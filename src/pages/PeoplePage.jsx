@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { getPeople } from '../api';
 import { PeopleTable } from '../components/PeopleTable';
 
-export const PeoplePage = () => {
+const usePeople = () => {
   const [people, setPeople] = useState([]);
 
   useEffect(() => {
@@ -12,14 +12,20 @@ export const PeoplePage = () => {
         setPeople(peopleArray.map(person => ({
           ...person,
           mother: peopleArray.find(
-            ({ motherName }) => motherName.localeCompare(person.motherName),
+            ({ name }) => name === person.motherName,
           ) || null,
           father: peopleArray.find(
-            ({ fatherName }) => fatherName.localeCompare(person.fatherName),
+            ({ name }) => name === person.fatherName,
           ) || null,
         })));
       });
   }, []);
+
+  return people;
+};
+
+export const PeoplePage = () => {
+  const people = usePeople();
 
   return (
     <>
