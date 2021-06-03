@@ -48,23 +48,45 @@ export const PeoplePage = () => {
   const people = usePeople();
 
   const [searchParams, updateSearchParams] = useSearchParams();
+  const [sortBy, setSortBy] = useState(searchParams.get('sortBy') || '');
   const [query, setQuery] = useState(searchParams.get('query') || '');
 
-  const filteredPeople = useMemo(() => {
-    if (!query) {
+  const sortedPeople = useMemo(() => {
+    if (!sortBy) {
       return people;
     }
 
-    return people.filter(({ name, motherName, fatherName }) => (
+    return [...people].sort((a, b) => {
+      switch (sortBy) {
+        case 'name':
+        case 'sex':
+          return a[sortBy].localeCompare(b[sortBy]);
+        default:
+          return a[sortBy] - b[sortBy];
+      }
+    });
+  }, [sortBy, people]);
+
+  const filteredPeople = useMemo(() => {
+    if (!query) {
+      return sortedPeople;
+    }
+
+    return sortedPeople.filter(({ name, motherName, fatherName }) => (
       (name + motherName + fatherName).search(new RegExp(query, 'i')) !== -1
     ));
-  }, [query, people]);
+  }, [query, sortedPeople]);
 
   const handleQueryChange = (e) => {
     const newQuery = e.target.value;
 
     setQuery(newQuery);
     updateSearchParams('query', newQuery);
+  };
+
+  const handleColumnClick = (column) => {
+    setSortBy(column);
+    updateSearchParams('sortBy', column);
   };
 
   return (
@@ -82,12 +104,12 @@ export const PeoplePage = () => {
           />
 
           <span className="icon is-left">
-            <i className="fas fa-search"></i>
+            <i className="fas fa-search" />
           </span>
         </div>
       </div>
 
-      <PeopleTable people={filteredPeople} />
+      <PeopleTable people={filteredPeople} onColumnClick={handleColumnClick} />
     </>
   );
 };

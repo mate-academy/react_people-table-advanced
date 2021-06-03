@@ -2,12 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import { PersonRow } from './PersonRow';
+import { COLUMNS } from '../helpers/constants';
 
-const COLUMNS = [
-  'Name', 'Sex', 'Born', 'Died', 'Mother', 'Father',
-];
-
-export const PeopleTable = ({ people }) => (
+export const PeopleTable = ({ people, onColumnClick }) => (
   <table
     className="table is-striped is-hoverable"
     style={{ borderCollapse: 'collapse' }}
@@ -15,12 +12,25 @@ export const PeopleTable = ({ people }) => (
     <thead>
       <tr>
         {COLUMNS.map(column => (
-          <th key={column}>
-            {column}
+          <th key={column.name}>
+            <button
+              type="button"
+              className="button is-white"
+              onClick={() => onColumnClick(column.name.toLowerCase())}
+              disabled={!column.sort}
+            >
+              <span>{column.name}</span>
+              {column.sort && (
+                <span className="icon is-small">
+                  <i className="fas fa-sort" />
+                </span>
+              )}
+            </button>
           </th>
         ))}
       </tr>
     </thead>
+
     <tbody>
       {people.map(person => (
         <PersonRow key={person.slug} person={person} />
@@ -35,6 +45,7 @@ PeopleTable.propTypes = {
       slug: PropTypes.string,
     }),
   ),
+  onColumnClick: PropTypes.func.isRequired,
 };
 
 PeopleTable.defaultProps = {
