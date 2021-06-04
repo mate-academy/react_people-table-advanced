@@ -1,11 +1,15 @@
 import React, {
   useState, useEffect, useMemo, useCallback, useReducer,
 } from 'react';
-import { useHistory, useLocation } from 'react-router-dom';
+import {
+  Link, Switch, Route,
+  useHistory, useLocation, useRouteMatch,
+} from 'react-router-dom';
 import debounce from 'lodash/debounce';
 import '@fortawesome/fontawesome-free/css/all.css';
 
 import { PeopleTable } from '../components/PeopleTable';
+import { NewPerson } from '../components/NewPerson';
 import { getPeople } from '../api';
 import { filterPeople, sortPeople } from '../helpers/peopleHelpers';
 
@@ -140,6 +144,9 @@ export const PeoplePage = () => {
     return sortedPeople.reverse();
   }, [sortedPeople, state.sortBy, state.sortOrder]);
 
+  const { path, url } = useRouteMatch();
+  const { search } = useLocation();
+
   return (
     <>
       <h1 className="title">People Page</h1>
@@ -159,6 +166,26 @@ export const PeoplePage = () => {
           </span>
         </div>
       </div>
+
+      <Switch>
+        <Route path={`${path}/new`}>
+          <NewPerson people={people} />
+        </Route>
+
+        <Route>
+          <div className="field">
+            <Link
+              className="button is-primary"
+              to={{
+                pathname: `${url}/new`,
+                search,
+              }}
+            >
+              Add a Person
+            </Link>
+          </div>
+        </Route>
+      </Switch>
 
       <PeopleTable
         people={orderedPeople}
