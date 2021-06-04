@@ -1,22 +1,26 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, {
+  useState, useEffect, useMemo, useCallback, useReducer,
+} from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
+import debounce from 'lodash/debounce';
 import '@fortawesome/fontawesome-free/css/all.css';
 
 import { PeopleTable } from '../components/PeopleTable';
 import { getPeople } from '../api';
+import { filterPeople, sortPeople } from '../helpers/peopleHelpers';
 
-const usePeople = () => {
+function usePeople() {
   const [people, setPeople] = useState([]);
 
   useEffect(() => {
     getPeople()
-      .then((peopleArray) => {
-        setPeople(peopleArray.map(person => ({
+      .then((response) => {
+        setPeople(response.map(person => ({
           ...person,
-          mother: peopleArray.find(
+          mother: response.find(
             ({ name }) => name === person.motherName,
           ) || null,
-          father: peopleArray.find(
+          father: response.find(
             ({ name }) => name === person.fatherName,
           ) || null,
         })));
@@ -24,9 +28,9 @@ const usePeople = () => {
   }, []);
 
   return people;
-};
+}
 
-const useSearchParams = () => {
+function useSearchParams() {
   const history = useHistory();
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
@@ -42,52 +46,99 @@ const useSearchParams = () => {
   };
 
   return [searchParams, updateSearchParams];
-};
+}
+
+function peopleReducer(state, action) {
+  switch (action.type) {
+    case 'FILTER':
+      return {
+        ...state,
+        query: action.query,
+      };
+    case 'SORT_BY':
+      return {
+        ...state,
+        needSort: true,
+        sortBy: action.sortBy,
+        sortOrder: 'asc',
+      };
+    case 'SORT_ASC':
+      return {
+        ...state,
+        needSort: false,
+        sortOrder: 'asc',
+      };
+    case 'SORT_DESC':
+      return {
+        ...state,
+        needSort: false,
+        sortOrder: 'desc',
+      };
+    default:
+      return state;
+  }
+}
 
 export const PeoplePage = () => {
   const people = usePeople();
-
   const [searchParams, updateSearchParams] = useSearchParams();
-  const [sortBy, setSortBy] = useState(searchParams.get('sortBy') || '');
-  const [query, setQuery] = useState(searchParams.get('query') || '');
 
-  const sortedPeople = useMemo(() => {
-    if (!sortBy) {
-      return people;
-    }
+  const appliedQuery = searchParams.get('query') || '';
 
-    return [...people].sort((a, b) => {
-      switch (sortBy) {
-        case 'name':
-        case 'sex':
-          return a[sortBy].localeCompare(b[sortBy]);
-        default:
-          return a[sortBy] - b[sortBy];
-      }
-    });
-  }, [sortBy, people]);
+  const [state, dispatch] = useReducer(peopleReducer, {
+    query: appliedQuery,
+    sortBy: searchParams.get('sortBy') || '',
+    sortOrder: searchParams.get('sortOrder') || '',
+  });
 
-  const filteredPeople = useMemo(() => {
-    if (!query) {
-      return sortedPeople;
-    }
-
-    return sortedPeople.filter(({ name, motherName, fatherName }) => (
-      (name + motherName + fatherName).search(new RegExp(query, 'i')) !== -1
-    ));
-  }, [query, sortedPeople]);
+  const applyQuery = useCallback(
+    debounce((newQuery) => {
+      updateSearchParams('query', newQuery);
+    }, 500),
+    [],
+  );
 
   const handleQueryChange = (e) => {
     const newQuery = e.target.value;
 
-    setQuery(newQuery);
-    updateSearchParams('query', newQuery);
+    dispatch({
+      type: 'FILTER',
+      query: newQuery,
+    });
+    applyQuery(newQuery);
   };
 
   const handleColumnClick = (column) => {
-    setSortBy(column);
-    updateSearchParams('sortBy', column);
+    if (state.sortBy === column) {
+      const newSortOrder = (state.sortOrder === 'asc') ? 'desc' : 'asc';
+
+      dispatch({ type: `SORT_${newSortOrder.toUpperCase()}` });
+      updateSearchParams('sortOrder', newSortOrder);
+    } else {
+      dispatch({
+        type: 'SORT_BY',
+        sortBy: column,
+      });
+      updateSearchParams('sortBy', column);
+      updateSearchParams('sortOrder', 'asc');
+    }
   };
+
+  const filteredPeople = useMemo(() => (
+    filterPeople(people, appliedQuery)
+  ), [people, appliedQuery]);
+
+  const sortedPeople = useMemo(() => (
+    sortPeople(filteredPeople, state.sortBy)
+  ), [filteredPeople, state.needSort, state.sortBy]);
+
+  const orderedPeople = useMemo(() => {
+    if (state.needSort || !state.sortOrder) {
+      return sortedPeople;
+    }
+
+    return sortedPeople.reverse();
+  }, [sortedPeople, state.sortBy, state.sortOrder]);
 
   return (
     <>
@@ -98,7 +149,7 @@ export const PeoplePage = () => {
           <input
             type="text"
             className="input"
-            value={query}
+            value={state.query}
             onChange={handleQueryChange}
             placeholder="Enter person's name"
           />
@@ -109,7 +160,12 @@ export const PeoplePage = () => {
         </div>
       </div>
 
-      <PeopleTable people={filteredPeople} onColumnClick={handleColumnClick} />
+      <PeopleTable
+        people={orderedPeople}
+        sortedBy={state.sortBy}
+        sortOrder={state.sortOrder}
+        onColumnClick={handleColumnClick}
+      />
     </>
   );
 };
