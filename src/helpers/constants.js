@@ -1,4 +1,4 @@
-export const COLUMNS = [
+export const TABLE_COLUMNS = [
   {
     name: 'Name',
     sort: true,
@@ -23,4 +23,8 @@ export const COLUMNS = [
     name: 'Father',
     sort: false,
   },
+];
+
+export const FORM_FIELDS = [
+  'name', 'sex', 'born', 'died', 'mother', 'father',
 ];

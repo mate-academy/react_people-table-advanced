@@ -1,56 +1,17 @@
 import React, {
-  useState, useEffect, useMemo, useCallback, useReducer,
+  useMemo, useCallback, useReducer,
 } from 'react';
 import {
   Link, Switch, Route,
-  useHistory, useLocation, useRouteMatch,
+  useLocation, useRouteMatch,
 } from 'react-router-dom';
 import debounce from 'lodash/debounce';
 import '@fortawesome/fontawesome-free/css/all.css';
 
 import { PeopleTable } from '../components/PeopleTable';
 import { NewPerson } from '../components/NewPerson';
-import { getPeople } from '../api';
 import { filterPeople, sortPeople } from '../helpers/peopleHelpers';
-
-function usePeople() {
-  const [people, setPeople] = useState([]);
-
-  useEffect(() => {
-    getPeople()
-      .then((response) => {
-        setPeople(response.map(person => ({
-          ...person,
-          mother: response.find(
-            ({ name }) => name === person.motherName,
-          ) || null,
-          father: response.find(
-            ({ name }) => name === person.fatherName,
-          ) || null,
-        })));
-      });
-  }, []);
-
-  return people;
-}
-
-function useSearchParams() {
-  const history = useHistory();
-  const location = useLocation();
-  const searchParams = new URLSearchParams(location.search);
-
-  const updateSearchParams = (key, value) => {
-    if (value) {
-      searchParams.set(key, value);
-    } else {
-      searchParams.delete(key);
-    }
-
-    history.push({ search: searchParams.toString() });
-  };
-
-  return [searchParams, updateSearchParams];
-}
+import { usePeople, useSearchParams } from '../helpers/hooks';
 
 function peopleReducer(state, action) {
   switch (action.type) {
@@ -59,36 +20,36 @@ function peopleReducer(state, action) {
         ...state,
         query: action.query,
       };
+
     case 'SORT_BY':
       return {
         ...state,
-        needSort: true,
         sortBy: action.sortBy,
         sortOrder: 'asc',
       };
+
     case 'SORT_ASC':
       return {
         ...state,
-        needSort: false,
         sortOrder: 'asc',
       };
+
     case 'SORT_DESC':
       return {
         ...state,
-        needSort: false,
         sortOrder: 'desc',
       };
+
     default:
       return state;
   }
 }
 
 export const PeoplePage = () => {
-  const people = usePeople();
+  const [people, setPeople] = usePeople();
   const [searchParams, updateSearchParams] = useSearchParams();
 
   const appliedQuery = searchParams.get('query') || '';
-
   const [state, dispatch] = useReducer(peopleReducer, {
     query: appliedQuery,
     sortBy: searchParams.get('sortBy') || '',
@@ -106,8 +67,7 @@ export const PeoplePage = () => {
     const newQuery = e.target.value;
 
     dispatch({
-      type: 'FILTER',
-      query: newQuery,
+      type: 'FILTER', query: newQuery,
     });
     applyQuery(newQuery);
   };
@@ -120,8 +80,7 @@ export const PeoplePage = () => {
       updateSearchParams('sortOrder', newSortOrder);
     } else {
       dispatch({
-        type: 'SORT_BY',
-        sortBy: column,
+        type: 'SORT_BY', sortBy: column,
       });
       updateSearchParams('sortBy', column);
       updateSearchParams('sortOrder', 'asc');
@@ -134,15 +93,15 @@ export const PeoplePage = () => {
 
   const sortedPeople = useMemo(() => (
     sortPeople(filteredPeople, state.sortBy)
-  ), [filteredPeople, state.needSort, state.sortBy]);
+  ), [filteredPeople, state.sortBy]);
 
   const orderedPeople = useMemo(() => {
-    if (state.needSort || !state.sortOrder) {
-      return sortedPeople;
+    if (state.sortOrder === 'desc') {
+      return [...sortedPeople].reverse();
     }
 
-    return sortedPeople.reverse();
-  }, [sortedPeople, state.sortBy, state.sortOrder]);
+    return sortedPeople;
+  }, [sortedPeople, state.sortOrder]);
 
   const { path, url } = useRouteMatch();
   const { search } = useLocation();
@@ -169,7 +128,10 @@ export const PeoplePage = () => {
 
       <Switch>
         <Route path={`${path}/new`}>
-          <NewPerson people={people} />
+          <NewPerson
+            people={people}
+            onAddPerson={person => setPeople([...people, person])}
+          />
         </Route>
 
         <Route>

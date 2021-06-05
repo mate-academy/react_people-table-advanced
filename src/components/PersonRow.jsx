@@ -1,9 +1,9 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import cn from 'classnames';
 import { useRouteMatch } from 'react-router-dom';
 
 import { PersonName } from './PersonName';
+import { PersonType } from '../types/PersonType';
 
 export const PersonRow = ({ person }) => {
   const { params } = useRouteMatch('/people/:personId?');
@@ -51,23 +51,7 @@ export const PersonRow = ({ person }) => {
 };
 
 PersonRow.propTypes = {
-  person: PropTypes.shape({
-    slug: PropTypes.string,
-    name: PropTypes.string,
-    sex: PropTypes.string,
-    born: PropTypes.number,
-    died: PropTypes.number,
-    motherName: PropTypes.string,
-    mother: PropTypes.shape({
-      slug: PropTypes.string,
-      name: PropTypes.string,
-    }),
-    fatherName: PropTypes.string,
-    father: PropTypes.shape({
-      slug: PropTypes.string,
-      name: PropTypes.string,
-    }),
-  }),
+  person: PersonType,
 };
 
 PersonRow.defaultProps = {

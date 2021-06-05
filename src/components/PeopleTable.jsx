@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import cn from 'classnames';
 
 import { PersonRow } from './PersonRow';
-import { COLUMNS } from '../helpers/constants';
+import { TABLE_COLUMNS } from '../helpers/constants';
 
 export const PeopleTable = ({ people, sortedBy, sortOrder, onColumnClick }) => (
   <table
@@ -12,7 +12,7 @@ export const PeopleTable = ({ people, sortedBy, sortOrder, onColumnClick }) => (
   >
     <thead>
       <tr>
-        {COLUMNS.map((column) => {
+        {TABLE_COLUMNS.map((column) => {
           const columnName = column.name.toLowerCase();
 
           return (
