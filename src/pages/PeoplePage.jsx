@@ -3,7 +3,7 @@ import React, {
 } from 'react';
 import {
   Link, Switch, Route,
-  useLocation, useRouteMatch,
+  useLocation, useRouteMatch, useHistory,
 } from 'react-router-dom';
 import debounce from 'lodash/debounce';
 import '@fortawesome/fontawesome-free/css/all.css';
@@ -11,12 +11,16 @@ import '@fortawesome/fontawesome-free/css/all.css';
 import { PeopleTable } from '../components/PeopleTable';
 import { NewPerson } from '../components/NewPerson';
 import { filterPeople, sortPeople } from '../helpers/peopleHelpers';
-import { usePeople, useSearchParams } from '../helpers/hooks';
+import { usePeople } from '../helpers/hooks';
 import { peopleReducer, actions } from '../reducers/peopleReducer';
 
 export const PeoplePage = () => {
   const [people, setPeople] = usePeople();
-  const [searchParams, updateSearchParams] = useSearchParams();
+
+  const history = useHistory();
+  const { path, url } = useRouteMatch();
+  const { search } = useLocation();
+  const searchParams = new URLSearchParams(search);
 
   const appliedQuery = searchParams.get('query') || '';
   const [state, dispatch] = useReducer(peopleReducer, {
@@ -24,6 +28,16 @@ export const PeoplePage = () => {
     sortBy: searchParams.get('sortBy') || '',
     sortOrder: searchParams.get('sortOrder') || '',
   });
+
+  const updateSearchParams = useCallback((key, value) => {
+    if (value) {
+      searchParams.set(key, value);
+    } else {
+      searchParams.delete(key);
+    }
+
+    history.push({ search: searchParams.toString() });
+  }, []);
 
   const applyQuery = useCallback(
     debounce((newQuery) => {
@@ -67,9 +81,6 @@ export const PeoplePage = () => {
 
     return sortedPeople;
   }, [sortedPeople, state.sortOrder]);
-
-  const { path, url } = useRouteMatch();
-  const { search } = useLocation();
 
   return (
     <>
