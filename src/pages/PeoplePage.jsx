@@ -12,38 +12,7 @@ import { PeopleTable } from '../components/PeopleTable';
 import { NewPerson } from '../components/NewPerson';
 import { filterPeople, sortPeople } from '../helpers/peopleHelpers';
 import { usePeople, useSearchParams } from '../helpers/hooks';
-
-function peopleReducer(state, action) {
-  switch (action.type) {
-    case 'FILTER':
-      return {
-        ...state,
-        query: action.query,
-      };
-
-    case 'SORT_BY':
-      return {
-        ...state,
-        sortBy: action.sortBy,
-        sortOrder: 'asc',
-      };
-
-    case 'SORT_ASC':
-      return {
-        ...state,
-        sortOrder: 'asc',
-      };
-
-    case 'SORT_DESC':
-      return {
-        ...state,
-        sortOrder: 'desc',
-      };
-
-    default:
-      return state;
-  }
-}
+import { peopleReducer, actions } from '../reducers/peopleReducer';
 
 export const PeoplePage = () => {
   const [people, setPeople] = usePeople();
@@ -66,9 +35,7 @@ export const PeoplePage = () => {
   const handleQueryChange = (e) => {
     const newQuery = e.target.value;
 
-    dispatch({
-      type: 'FILTER', query: newQuery,
-    });
+    dispatch(actions.filter(newQuery));
     applyQuery(newQuery);
   };
 
@@ -76,12 +43,10 @@ export const PeoplePage = () => {
     if (state.sortBy === column) {
       const newSortOrder = (state.sortOrder === 'asc') ? 'desc' : 'asc';
 
-      dispatch({ type: `SORT_${newSortOrder.toUpperCase()}` });
+      dispatch(actions.sortOrder(newSortOrder));
       updateSearchParams('sortOrder', newSortOrder);
     } else {
-      dispatch({
-        type: 'SORT_BY', sortBy: column,
-      });
+      dispatch(actions.sortBy(column));
       updateSearchParams('sortBy', column);
       updateSearchParams('sortOrder', 'asc');
     }

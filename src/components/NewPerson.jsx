@@ -3,50 +3,16 @@ import { useHistory, useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import cn from 'classnames';
 
-import { isFormFieldValid } from '../helpers/formValidator';
-import { FORM_FIELDS } from '../helpers/constants';
 import {
   createSlug, getParentOptions, isParentSelectDisabled,
 } from '../helpers/peopleHelpers';
+import {
+  newPersonReducer, INITIAL_STATE, actions,
+} from '../reducers/newPersonReducer';
 import { PersonType } from '../types/PersonType';
 
-const INITIAL_STATE = FORM_FIELDS.reduce(
-  (state, field) => ({
-    ...state,
-    [field]: {
-      value: '',
-      meta: {
-        isValid: true,
-        errorMessage: '',
-      },
-    },
-  }),
-  {},
-);
-
-function formReducer(state, action) {
-  const { type, field, value } = action;
-
-  switch (type) {
-    case 'SET_FIELD':
-      return {
-        ...state,
-        [field]: {
-          value,
-          meta: isFormFieldValid(field, value, state),
-        },
-      };
-
-    case 'RESET':
-      return { ...INITIAL_STATE };
-
-    default:
-      return state;
-  }
-}
-
 export const NewPerson = ({ people, onAddPerson }) => {
-  const [form, dispatch] = useReducer(formReducer, INITIAL_STATE);
+  const [form, dispatch] = useReducer(newPersonReducer, INITIAL_STATE);
   const {
     name, sex, born, died, mother, father,
   } = form;
@@ -58,13 +24,10 @@ export const NewPerson = ({ people, onAddPerson }) => {
 
   const isFormValid = Object.values(form).every(prop => prop.meta.isValid);
 
-  const history = useHistory();
-  const { search } = useLocation();
-
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    dispatch({ type: 'RESET' });
+    dispatch(actions.reset());
 
     const motherObj = people.find(({ slug }) => slug === mother.value) || null;
     const fatherObj = people.find(({ slug }) => slug === father.value) || null;
@@ -88,12 +51,11 @@ export const NewPerson = ({ people, onAddPerson }) => {
   };
 
   const handleChange = (e) => {
-    const { name: field, value } = e.target;
-
-    dispatch({
-      type: 'SET_FIELD', field, value,
-    });
+    dispatch(actions.setField(e.target.name, e.target.value));
   };
+
+  const history = useHistory();
+  const { search } = useLocation();
 
   return (
     <div className="card">
