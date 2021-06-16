@@ -56,6 +56,19 @@ export const Table = React.memo(
       ));
     };
 
+    const addParents = array => (
+      [...array].map((person) => {
+        const father = array.find(human => human.name === person.fatherName);
+        const mother = array.find(human => human.name === person.motherName);
+
+        return {
+          ...person,
+          father,
+          mother,
+        };
+      })
+    );
+
     const history = useHistory();
     const location = useLocation();
     const searchParams = new URLSearchParams(location.search);
@@ -63,9 +76,6 @@ export const Table = React.memo(
     const sortOrder = searchParams.get('sortOrder') || '';
 
     const handleSort = (value) => {
-      const pathName = location.pathname;
-      const hash = location.hash || '';
-
       searchParams.set('sortBy', value);
       searchParams.set('sortOrder', 'asc');
 
@@ -85,7 +95,7 @@ export const Table = React.memo(
         }
       }
 
-      return history.replace(`${pathName}?${searchParams.toString()}${hash}`);
+      return history.push({ search: `${searchParams.toString()}` });
     };
 
     const prepareSortedList = () => {
@@ -107,7 +117,7 @@ export const Table = React.memo(
       }
     };
 
-    const visiblePeople = prepareSortedList();
+    const visiblePeople = addParents(prepareSortedList());
 
     return (
       <table className="people-section__table">

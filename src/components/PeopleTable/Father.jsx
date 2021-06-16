@@ -1,13 +1,16 @@
 import React from 'react';
 import { HashLink as Link } from 'react-router-hash-link';
+import { useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 export const Father = React.memo(
   ({ fatherName, fatherSlug }) => {
+    const { search } = useLocation();
+
     if (fatherName && fatherSlug) {
       return (
         <Link
-          to={`/people/${fatherSlug}#${fatherSlug}`}
+          to={`/people/${fatherSlug}${search}#${fatherSlug}`}
           className="people-section__table-link"
         >
           {fatherName}

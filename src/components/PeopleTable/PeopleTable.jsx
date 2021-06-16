@@ -15,56 +15,29 @@ const searchQueryDelay = 500;
 export const PeopleTable = React.memo(
   withRouter(
     ({ match }) => {
-      const [people, setPeople] = useState([]);
-      const [searchValue, setSearchValue] = useState(null);
-      const [activeInpute, setActiveInpute] = useState(false);
-
-      useEffect(() => {
-        getUsers()
-          .then(addParents);
-      }, []);
-
-      function addParents(array) {
-        const peopleWithParents = [...array].map((person) => {
-          const father = array.find(human => human.name === person.fatherName);
-          const mother = array.find(human => human.name === person.motherName);
-
-          return {
-            ...person,
-            father,
-            mother,
-          };
-        });
-
-        setPeople(peopleWithParents);
-      }
-
       const history = useHistory();
       const location = useLocation();
       const searchParams = new URLSearchParams(location.search);
       const query = searchParams.get('query') || '';
 
-      if (searchValue === null) {
-        setSearchValue(query);
-      }
+      const [people, setPeople] = useState([]);
+      const [searchValue, setSearchValue] = useState(query);
+      const [activeInpute, setActiveInpute] = useState(false);
 
-      const handleQueryChange = useCallback(
-        (value) => {
-          const pathName = location.pathname;
-          const hash = location.hash || '';
+      useEffect(() => {
+        getUsers()
+          .then(setPeople);
+      }, []);
 
-          searchParams.set('query', value);
+      const handleQueryChange = (value, params) => {
+        params.set('query', value);
 
-          if (value === '') {
-            searchParams.delete('query');
-          }
+        if (value === '') {
+          params.delete('query');
+        }
 
-          return history.replace(
-            `${pathName}?${searchParams.toString()}${hash}`,
-          );
-        },
-        [location, searchParams, history],
-      );
+        return history.push({ search: `${params.toString()}` });
+      };
 
       const applyQuery = useCallback(
         debounce(handleQueryChange, searchQueryDelay),
@@ -117,7 +90,7 @@ export const PeopleTable = React.memo(
                   }}
                   onChange={(event) => {
                     setSearchValue(event.target.value);
-                    applyQuery(event.target.value);
+                    applyQuery(event.target.value, searchParams);
                   }}
                 />
 

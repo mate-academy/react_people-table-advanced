@@ -1,5 +1,6 @@
 import React from 'react';
 import { HashLink as Link } from 'react-router-hash-link';
+import { useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
@@ -24,6 +25,8 @@ export const TableRow = React.memo(
     const fatherSlug = father ? father.slug : '';
     const motherSlug = mother ? mother.slug : '';
 
+    const { search } = useLocation();
+
     return (
       <tr
         id={slug}
@@ -41,7 +44,7 @@ export const TableRow = React.memo(
       >
         <td className="people-section__table-cell">
           <Link
-            to={`/people/${slug}#${slug}`}
+            to={`/people/${slug}${search}#${slug}`}
             className="people-section__table-link"
           >
             {name}
