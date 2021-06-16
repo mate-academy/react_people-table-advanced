@@ -1,0 +1,35 @@
+$additional-color: rgb(49, 49, 49);
+
+.navigation {
+  background-color: rgb(32, 32, 32);
+
+  &__list {
+    display: flex;
+    gap: 40px;
+    width: min-content;
+    margin: 0 auto;
+    padding: 0;
+
+    list-style: none;
+  }
+
+  &__link {
+    display: block;
+    padding: 20px 30px;
+
+    color: #fff;
+    font-size: 22px;
+    text-decoration: none;
+
+    transition: background-color 0.2s linear;
+
+    &:hover {
+      background-color: $additional-color;
+    }
+
+    &--active {
+      background-color: $additional-color;
+      cursor: default;
+    }
+  }
+}
