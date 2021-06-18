@@ -11,8 +11,8 @@
 
 .people-section {
   &__title {
-    margin: 0 0 40px;
-    padding-bottom: 10px;
+    margin: 0 0 50px;
+    padding-bottom: 15px;
 
     font-size: 32px;
     text-align: center;
@@ -29,6 +29,42 @@
     text-align: center;
   }
 
+  &__add-person {
+    width: 500px;
+
+    margin: 0 auto 65px;
+  }
+
+  &__add-person-button {
+    display: block;
+    width: 300px;
+    margin: 0 auto;
+    padding: 10px 20px;
+
+    color: black;
+    text-decoration: none;
+    font-weight: bold;
+    text-align: center;
+
+    border: 2px solid rgb(87, 87, 87);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+
+    &:hover {
+      background-color: rgb(230, 230, 230);
+    }
+
+    &:active {
+      background-color: rgb(200, 200, 200);
+      transition: background-color 0s;
+    }
+
+    &--hidden {
+      display: none;
+    }
+  }
+
   &__search-label {
     display: flex;
     flex-direction: column;
@@ -36,14 +72,17 @@
   }
 
   &__search-label-text {
-    font-size: 20px;
+    margin: 0 0 7px;
   }
 
   &__search-input-wrapper {
     display: flex;
     width: 300px;
+    padding-left: 6px;
+    padding-right: 2px;
 
     border: 1px solid rgb(148, 148, 148);
+    border-radius: 7px;
 
     &--active {
       border-color: rgb(54, 54, 54);

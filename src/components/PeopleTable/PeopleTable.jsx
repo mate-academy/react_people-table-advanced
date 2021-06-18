@@ -1,16 +1,24 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 /* eslint-disable jsx-a11y/label-has-for */
 import React, { useState, useEffect, useCallback } from 'react';
-import { useHistory, useLocation, withRouter } from 'react-router-dom';
+import {
+  NavLink,
+  Route,
+  useHistory,
+  useLocation,
+  withRouter,
+} from 'react-router-dom';
 import classNames from 'classnames';
 
 import { debounce } from '../../scripts/debounce';
-import { getUsers } from '../../api';
+import { getUsers } from '../../scripts/PeopleApi';
+import { NewPerson } from '../NewPerson';
 import { Table } from './Table';
 
 import './PeopleTable.scss';
 
 const searchQueryDelay = 500;
+const peopleFromLocaleStorage = JSON.parse(localStorage.getItem('people'));
 
 export const PeopleTable = React.memo(
   withRouter(
@@ -20,14 +28,27 @@ export const PeopleTable = React.memo(
       const searchParams = new URLSearchParams(location.search);
       const query = searchParams.get('query') || '';
 
-      const [people, setPeople] = useState([]);
+      const [people, setPeople] = useState(peopleFromLocaleStorage || []);
       const [searchValue, setSearchValue] = useState(query);
       const [activeInpute, setActiveInpute] = useState(false);
 
       useEffect(() => {
-        getUsers()
-          .then(setPeople);
+        if (people.length === 0) {
+          getUsers()
+            .then((result) => {
+              localStorage.setItem('people', JSON.stringify(result));
+              setPeople(result);
+            });
+        }
       }, []);
+
+      const onAddPerson = (person) => {
+        const currentPeopleList = JSON.parse(localStorage.getItem('people'));
+
+        currentPeopleList.push(person);
+        localStorage.setItem('people', JSON.stringify(currentPeopleList));
+        setPeople(currentPeopleList);
+      };
 
       const handleQueryChange = (value, params) => {
         params.set('query', value);
@@ -58,14 +79,30 @@ export const PeopleTable = React.memo(
             People table
           </h2>
 
+          <div className="people-section__add-person">
+            <NavLink
+              to="/people/newPerson"
+              className="people-section__add-person-button"
+              activeClassName="people-section__add-person-button--hidden"
+            >
+              Add a new person
+            </NavLink>
+
+            {people !== null && (
+              <Route path="/people/newPerson">
+                <NewPerson people={people} onAddPerson={onAddPerson} />
+              </Route>
+            )}
+          </div>
+
           <div className="people-section__search">
             <label
               htmlFor="search-field"
               className="people-section__search-label"
             >
-              <span className="people-section__search-label-text">
+              <h2 className="people-section__search-label-text">
                 Find the person
-              </span>
+              </h2>
 
               <div
                 className={classNames(
