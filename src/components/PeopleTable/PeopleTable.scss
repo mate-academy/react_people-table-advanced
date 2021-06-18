@@ -1,0 +1,196 @@
+%cell-paddings {
+  padding: 10px 20px;
+}
+
+%parent {
+  @extend %cell-paddings;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.people-section {
+  &__title {
+    margin: 0 0 50px;
+    padding-bottom: 15px;
+
+    font-size: 32px;
+    text-align: center;
+
+    border-bottom: 1px solid rgb(228, 228, 228);
+  }
+
+  &__search {
+    display: flex;
+    flex-direction: column;
+    width: 300px;
+    margin: 0 auto 40px;
+
+    text-align: center;
+  }
+
+  &__add-person {
+    width: 500px;
+
+    margin: 0 auto 65px;
+  }
+
+  &__add-person-button {
+    display: block;
+    width: 300px;
+    margin: 0 auto;
+    padding: 10px 20px;
+
+    color: black;
+    text-decoration: none;
+    font-weight: bold;
+    text-align: center;
+
+    border: 2px solid rgb(87, 87, 87);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+
+    &:hover {
+      background-color: rgb(230, 230, 230);
+    }
+
+    &:active {
+      background-color: rgb(200, 200, 200);
+      transition: background-color 0s;
+    }
+
+    &--hidden {
+      display: none;
+    }
+  }
+
+  &__search-label {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  &__search-label-text {
+    margin: 0 0 7px;
+  }
+
+  &__search-input-wrapper {
+    display: flex;
+    width: 300px;
+    padding-left: 6px;
+    padding-right: 2px;
+
+    border: 1px solid rgb(148, 148, 148);
+    border-radius: 7px;
+
+    &--active {
+      border-color: rgb(54, 54, 54);
+    }
+  }
+
+  &__search-input {
+    flex-grow: 1;
+    padding: 10px;
+    padding-left: 15px;
+
+    border: 0;
+    outline: 0;
+  }
+
+  &__search-icon {
+    align-self: stretch;
+    width: 30px;
+
+    background-image: url(../../images/search-sign.svg);
+    background-size: 25px;
+    background-repeat: no-repeat;
+    background-position: left;
+  }
+
+  &__table {
+    margin: 0 auto 40px;
+
+    border-collapse: collapse;
+  }
+
+  &__table-head {
+    color: #fff;
+    font-size: 20px;
+    text-align: left;
+
+    background-color: rgb(58, 58, 58);
+  }
+
+  &__table-subtitle {
+    @extend %cell-paddings;
+
+    font-weight: normal;
+
+    border: 1px solid rgb(199, 199, 199);
+    border-bottom: 0px;
+    cursor: pointer;
+  }
+
+  &__table-sort-icon {
+    position: relative;
+    bottom: -3px;
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+
+    background-image: url(../../images/sort_both.png);
+    background-size: contain;
+    background-repeat: no-repeat;
+
+    &--asc-sort {
+      background-image: url(../../images/sort_both-asc.png);
+    }
+
+    &--desc-sort {
+      background-image: url(../../images/sort_both-desc.png);
+    }
+  }
+
+  &__table-row {
+    &--even {
+      background-color:rgb(245, 245, 245);
+    }
+
+    &--highlight--m {
+      background-color: rgb(156, 197, 252);
+    }
+
+    &--highlight--f {
+      background-color: rgb(250, 178, 178);
+    }
+  }
+
+  &__table-cell {
+    border: 1px solid rgb(170, 170, 170);
+
+    &--align {
+      text-align: center;
+    }
+
+    &--error {
+      @extend %cell-paddings;
+      
+      color:rgb(223, 0, 0);
+    }
+  }
+
+  &__table-link {
+    @extend %parent;
+
+    color: rgb(47, 110, 228);
+  }
+
+  &__table-lost-mother {
+    @extend %parent;
+  }
+
+  &__table-lost-father {
+    @extend %parent;
+  }
+}
