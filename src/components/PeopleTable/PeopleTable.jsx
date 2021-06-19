@@ -1,6 +1,7 @@
 /* eslint-disable no-else-return */
 import React, { useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
+import ClassNames from 'classnames';
 import { useLocation } from 'react-router-dom';
 import { UserType } from '../../HelpTools/types';
 import { sortPeople } from '../../HelpTools/PeopleSort';
@@ -52,7 +53,13 @@ export const PeopleTable = ({ people, onSort }) => {
                 <span>{col}</span>
                 {!noSorted.includes(col) && (
                   <span className="icon">
-                    <i className="fas fa-sort" />
+                    <i
+                      className={ClassNames('fas', {
+                        'fa-sort-up': sortOrder === 'asc' && sortBy === col,
+                        'fa-sort-down': sortOrder === 'desc' && sortBy === col,
+                        'fa-sort': sortBy !== col,
+                      })}
+                    />
                   </span>
                 )}
               </button>
