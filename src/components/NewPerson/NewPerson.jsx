@@ -28,9 +28,11 @@ export const NewPerson = ({ people, setPeople }) => {
 
   const filterParentArr = useCallback((babyBorn) => {
     setParentsArr({
-      mothersArr: createParentArr('f').filter(mother => babyBorn > mother.born)
+      mothersArr: createParentArr('f')
+        .filter(mother => babyBorn > mother.born && babyBorn <= mother.died)
         .map(mother => mother.name),
-      fathersArr: createParentArr('m').filter(father => babyBorn > father.born)
+      fathersArr: createParentArr('m')
+        .filter(father => babyBorn > father.born && babyBorn <= father.died)
         .map(father => father.name),
     });
   }, [createParentArr]);
@@ -81,9 +83,9 @@ export const NewPerson = ({ people, setPeople }) => {
       case 'father':
         setFormData(prev => ({
           ...prev,
-          [name]: people.find(person => person.name === value),
-          [`${name}Name`]: people.find(person => person.name === value).name
-            || null,
+          [name]: people.find(person => person.name === value) || null,
+          [`${name}Name`]: people.find(person => person.name === value)?.name
+            || '',
         }));
         break;
       case 'name':
@@ -98,7 +100,9 @@ export const NewPerson = ({ people, setPeople }) => {
       case 'died':
         setFormData(prev => ({
           ...prev,
-          [name]: +value,
+          [name]: /[0-9]/.test(value) || value === ''
+            ? value
+            : prev[name],
         }));
         break;
       default:
@@ -121,7 +125,7 @@ export const NewPerson = ({ people, setPeople }) => {
             <div className="control has-icons-left">
               <div className="select">
                 <select
-                  value={formData.mother.name}
+                  value={formData.motherName}
                   name="mother"
                   onChange={handleChange}
                   disabled={!formData.born}
@@ -158,7 +162,7 @@ export const NewPerson = ({ people, setPeople }) => {
             <div className="control has-icons-left">
               <div className="select">
                 <select
-                  value={formData.father.name}
+                  value={formData.fatherName}
                   name="father"
                   onChange={handleChange}
                   disabled={!formData.born}

@@ -16,7 +16,7 @@ export const PeoplePage = () => {
     getPeople().then(setPeople);
   }, []);
 
-  const { path } = useRouteMatch();
+  const { path, url } = useRouteMatch();
   const location = useLocation();
   const history = useHistory();
   const searchParams = new URLSearchParams(location.search);

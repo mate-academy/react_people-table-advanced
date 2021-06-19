@@ -15,11 +15,11 @@ const App = () => (
         <div className="columns">
           <div className="column">
             <Switch>
-              <Route path="/people">
-                <PeoplePage />
-              </Route>
               <Route path="/" exact>
                 <HomePage />
+              </Route>
+              <Route path="/people">
+                <PeoplePage />
               </Route>
               <Redirect path="/home" to="/" />
               <p>Not found Page</p>
