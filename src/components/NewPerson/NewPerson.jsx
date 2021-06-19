@@ -100,7 +100,7 @@ export const NewPerson = ({ people, setPeople }) => {
       case 'died':
         setFormData(prev => ({
           ...prev,
-          [name]: /[0-9]/.test(value) || value === ''
+          [name]: /^[0-9]+$/.test(value) || value === ''
             ? value
             : prev[name],
         }));
