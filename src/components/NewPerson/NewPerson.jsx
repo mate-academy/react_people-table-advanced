@@ -14,10 +14,16 @@ export const NewPerson = React.memo(({ people, setPeople, setVisibleForm }) => {
 
   const year = new Date().getFullYear();
   const regEx = /\D/;
-  const male = people.filter(person => (
-    person.sex === 'm' && +person.born + 18 < inputs.born));
-  const female = people.filter(person => (
-    person.sex === 'f' && +person.born + 18 < inputs.born));
+  const male = people.filter(({sex, born, died}) => (
+    sex === 'm' && (
+      (+inputs.born - +born <= 40 && +inputs.born - +born >= 18) 
+      && died >= inputs.born )
+    ));
+  const female = people.filter(({sex, born, died}) => (
+    sex === 'f' && (
+      (+inputs.born - +born <= 40 && +inputs.born - +born >= 18)
+      && died >= inputs.born)
+    ));
 
   const changeValue = (e) => {
     const { name, value } = e.target;
@@ -110,7 +116,7 @@ export const NewPerson = React.memo(({ people, setPeople, setVisibleForm }) => {
     <div className="card">
       <form
         className="form"
-        // onSubmit={handleSubmit}
+        onSubmit={handleSubmit}
       >
         <input
           className="input is-primary"
@@ -221,7 +227,7 @@ export const NewPerson = React.memo(({ people, setPeople, setVisibleForm }) => {
           type="submit"
           className="button is-link"
           disabled={!Object.values(inputs).every(input => input)}
-          onClick={handleSubmit}
+          // onClick={handleSubmit}
         >
           Add
         </button>
