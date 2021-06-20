@@ -7,7 +7,7 @@ import { SexSelector } from '../SexSelector';
 import { DateInput } from '../DateInput';
 
 export const NewPerson = ({ addPerson, people }) => {
-  const [userData, setUserData] = useState({
+  const [personData, setPersonData] = useState({
     name: '',
     sex: '',
     born: 0,
@@ -18,9 +18,9 @@ export const NewPerson = ({ addPerson, people }) => {
     father: {},
   });
 
-  const setUserDataProp = prop => (value) => {
-    setUserData({
-      ...userData, [prop]: value,
+  const setPersonDataProp = prop => (value) => {
+    setPersonData({
+      ...personData, [prop]: value,
     });
   };
 
@@ -33,7 +33,7 @@ export const NewPerson = ({ addPerson, people }) => {
     died,
     mother,
     father,
-  } = userData;
+  } = personData;
 
   const [validationErrs, setErrs] = useState({
     nameErr: '',
@@ -80,7 +80,7 @@ export const NewPerson = ({ addPerson, people }) => {
 
         if (Object.values(errs).reduce((prev, cur) => prev && !cur, true)) {
           addPerson({
-            ...userData,
+            ...personData,
             slug: `${
               name.toLowerCase().split(' ').join('-')
             }-${
@@ -108,48 +108,50 @@ export const NewPerson = ({ addPerson, people }) => {
       <div className="block">
 
         <NameInput
-          applyName={setUserDataProp('name')}
+          applyName={setPersonDataProp('name')}
         />
 
         <SexSelector
-          applySex={setUserDataProp('sex')}
+          applySex={setPersonDataProp('sex')}
         />
 
         <DateInput
           placeholder="1964"
           label="birth date"
-          applyDate={setUserDataProp('born')}
+          applyDate={setPersonDataProp('born')}
           err={validationErrs.birthErr}
         />
 
         <DateInput
           placeholder="1994"
           label="death date"
-          applyDate={setUserDataProp('died')}
+          applyDate={setPersonDataProp('died')}
           disabled={!born}
           err={validationErrs.deathErr}
           min={born}
         />
         <ParentSelector
           people={onlyWomen}
-          setParent={value => setUserData({
-            ...userData,
+          setParent={value => setPersonData({
+            ...personData,
             motherName: value,
             mother: onlyWomen.find(person => person.name === value) || null,
           })}
           err={validationErrs.motherErr}
           disabled={!born}
+          title={'select mother'}
         />
 
         <ParentSelector
           people={onlyMen}
-          setParent={value => setUserData({
-            ...userData,
+          setParent={value => setPersonData({
+            ...personData,
             fatherName: value,
             father: onlyMen.find(person => person.name === value) || null,
           })}
           err={validationErrs.fatherErr}
           disabled={!born}
+          title={'select father'}
         />
       </div>
 

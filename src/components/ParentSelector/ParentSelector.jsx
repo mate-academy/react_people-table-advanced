@@ -6,6 +6,7 @@ export const ParentSelector = ({
   setParent,
   disabled = false,
   err,
+  title,
 }) => (
   <div className="select">
     <select
@@ -17,7 +18,7 @@ export const ParentSelector = ({
         selected
         value=""
       >
-        select mother
+        {title}
       </option>
       {people ? people.map(person => (
         <option value={person.name}>
@@ -34,6 +35,7 @@ ParentSelector.propTypes = {
   setParent: func.isRequired,
   disabled: bool,
   err: string.isRequired,
+  title: string.isRequired,
 };
 
 ParentSelector.defaultProps = {
