@@ -28,13 +28,29 @@ export const PersonRow = ({ person, isSelected }) => (
     <td>
       {person.mother !== null
         ? <PersonName person={person.mother} isParent />
-        : <p className="has-text-weight-bold">{person.motherName}</p>
+        : (
+          <p className="has-text-weight-bold">
+            {
+          person.motherName === ''
+            ? '-'
+            : person.motherName
+        }
+          </p>
+        )
       }
     </td>
     <td>
       {person.father !== null
         ? <PersonName person={person.father} isParent />
-        : <p className="has-text-weight-bold">{person.fatherName}</p>
+        : (
+          <p className="has-text-weight-bold">
+            {
+          person.fatherName === ''
+            ? '-'
+            : person.fatherName
+        }
+          </p>
+        )
       }
     </td>
   </tr>
@@ -48,8 +64,8 @@ PersonRow.propTypes = {
     died: PropTypes.number.isRequired,
     motherName: PropTypes.string.isRequired,
     fatherName: PropTypes.string.isRequired,
-    mother: PropTypes.shape().isRequired,
-    father: PropTypes.shape().isRequired,
+    mother: PropTypes.shape(),
+    father: PropTypes.shape(),
     slug: PropTypes.string.isRequired,
   }).isRequired,
   isSelected: PropTypes.bool.isRequired,

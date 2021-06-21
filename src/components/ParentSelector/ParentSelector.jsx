@@ -4,18 +4,21 @@ import { arrayOf, bool, func, shape, string } from 'prop-types';
 export const ParentSelector = ({
   people,
   setParent,
-  disabled = false,
+  disabled,
   err,
+  errText,
   title,
 }) => (
   <div className="select">
     <select
       className={err ? 'is-danger' : ''}
-      onChange={event => setParent(event.target.value)}
+      onChange={(event) => {
+        setParent(event.target.value);
+      }}
       disabled={disabled}
     >
       <option
-        selected
+        defaultValue
         value=""
       >
         {title}
@@ -26,7 +29,7 @@ export const ParentSelector = ({
         </option>
       )) : ''}
     </select>
-    <p className="help is-danger">{err}</p>
+    <p className="help is-danger">{err ? errText : ''}</p>
   </div>
 );
 
@@ -34,10 +37,13 @@ ParentSelector.propTypes = {
   people: arrayOf(shape()).isRequired,
   setParent: func.isRequired,
   disabled: bool,
-  err: string.isRequired,
+  err: bool,
+  errText: string,
   title: string.isRequired,
 };
 
 ParentSelector.defaultProps = {
   disabled: false,
+  err: false,
+  errText: '',
 };

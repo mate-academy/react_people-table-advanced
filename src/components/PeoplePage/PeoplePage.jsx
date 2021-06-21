@@ -16,7 +16,7 @@ export const PeoplePage = ({ match }) => {
   const [visiblePeople, setVisPeople] = useState(people);
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
-  const appliedQuery = searchParams.get('name') || '';
+  const appliedQuery = searchParams.get('query') || '';
   const sortBy = searchParams.get('sortBy');
   const order = searchParams.get('sortOrder') === 'asc' ? 1 : -1;
 

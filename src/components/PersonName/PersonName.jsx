@@ -27,5 +27,9 @@ export const PersonName = ({ person, isParent = false }) => {
 
 PersonName.propTypes = {
   person: PropTypes.shape().isRequired,
-  isParent: PropTypes.bool.isRequired,
+  isParent: PropTypes.bool,
+};
+
+PersonName.defaultProps = {
+  isParent: false,
 };

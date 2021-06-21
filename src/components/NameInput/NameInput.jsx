@@ -6,7 +6,7 @@ export const NameInput = ({ applyName, placeholder }) => {
 
   return (
     <div className="field">
-      <label>
+      <label className="label">
         Name
         <div className="control">
           <input

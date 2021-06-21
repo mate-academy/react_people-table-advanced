@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useHistory, useLocation } from 'react-router-dom';
+import { useHistory, useLocation, useRouteMatch } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { NameInput } from '../NameInput';
 import { ParentSelector } from '../ParentSelector';
@@ -7,6 +7,10 @@ import { SexSelector } from '../SexSelector';
 import { DateInput } from '../DateInput';
 
 export const NewPerson = ({ addPerson, people }) => {
+  const match = useRouteMatch('/people/:personSlug?/new');
+  const history = useHistory();
+  const location = useLocation();
+
   const [personData, setPersonData] = useState({
     name: '',
     sex: '',
@@ -14,18 +18,9 @@ export const NewPerson = ({ addPerson, people }) => {
     died: 0,
     fatherName: '',
     motherName: '',
-    mother: {},
-    father: {},
+    mother: null,
+    father: null,
   });
-
-  const setPersonDataProp = prop => (value) => {
-    setPersonData({
-      ...personData, [prop]: value,
-    });
-  };
-
-  const history = useHistory();
-  const location = useLocation();
 
   const {
     name,
@@ -36,50 +31,44 @@ export const NewPerson = ({ addPerson, people }) => {
     father,
   } = personData;
 
-  const [validationErrs, setErrs] = useState({
-    nameErr: '',
-    birthErr: '',
-    deathErr: '',
-    motherErr: '',
-    fatherErr: '',
-  });
+  const validationErrs = {
+    deathErr: died - born >= 150,
+    motherErr: mother
+      ? mother.died < born || mother.born > born
+      : false,
+    fatherErr: father
+      ? father.died < born || father.born > born
+      : false,
+  };
 
   const onlyWomen = people ? people.sort(
     (a, b) => a.name.localeCompare(b.name),
   ).filter(
     person => person.sex === 'f',
   ) : [];
+
   const onlyMen = people ? people.sort(
     (a, b) => a.name.localeCompare(b.name),
   ).filter(
     person => person.sex === 'm',
   ) : [];
 
-  const checkOnErrs = () => ({
-    deathErr: died - born > 150
-      ? 'people can\'t live so long' : '',
-    motherErr: mother.died < born || died < mother.born
-      ? 'she can\'t be mother of this person'
-      : '',
-    fatherErr: father.died < born || died < father.born
-      ? 'he can\'t be father of this person'
-      : '',
-  });
+  const setPersonDataProp = prop => (value) => {
+    setPersonData({
+      ...personData, [prop]: value,
+    });
+  };
 
   return (
     <form
-      onChange={() => {
-        setErrs({});
-      }}
       className="box column is-4"
       onSubmit={(event) => {
         event.preventDefault();
 
-        const errs = checkOnErrs();
-
-        setErrs(errs);
-
-        if (Object.values(errs).reduce((prev, cur) => prev && !cur, true)) {
+        if (Object.values(validationErrs).reduce(
+          (prev, cur) => prev && !cur, true,
+        )
+        ) {
           addPerson({
             ...personData,
             slug: `${
@@ -100,7 +89,10 @@ export const NewPerson = ({ addPerson, people }) => {
         className="delete is-pulled-right"
         onClick={() => {
           history.push({
-            pathname: '/people',
+            pathname: `/people${match.params.personSlug
+              ? `/${match.params.personSlug}`
+              : ''
+            }`,
             search: location.search,
           });
         }}
@@ -124,7 +116,6 @@ export const NewPerson = ({ addPerson, people }) => {
           placeholder="1964"
           label="birth date"
           applyDate={setPersonDataProp('born')}
-          err={validationErrs.birthErr}
         />
 
         <DateInput
@@ -133,31 +124,39 @@ export const NewPerson = ({ addPerson, people }) => {
           applyDate={setPersonDataProp('died')}
           disabled={!born}
           err={validationErrs.deathErr}
+          errText={'people can\'t live so long'}
           min={born}
         />
-        <ParentSelector
-          people={onlyWomen}
-          setParent={value => setPersonData({
-            ...personData,
-            motherName: value,
-            mother: onlyWomen.find(person => person.name === value) || null,
-          })}
-          err={validationErrs.motherErr}
-          disabled={!born}
-          title="select mother"
-        />
 
-        <ParentSelector
-          people={onlyMen}
-          setParent={value => setPersonData({
-            ...personData,
-            fatherName: value,
-            father: onlyMen.find(person => person.name === value) || null,
-          })}
-          err={validationErrs.fatherErr}
-          disabled={!born}
-          title="select father"
-        />
+        <div className="block">
+          <ParentSelector
+            people={onlyWomen}
+            setParent={value => setPersonData({
+              ...personData,
+              motherName: value,
+              mother: onlyWomen.find(person => person.name === value) || null,
+            })}
+            err={validationErrs.motherErr}
+            errText={'she can\'t be mother of this person'}
+            disabled={!born}
+            title="select mother"
+          />
+        </div>
+
+        <div className="block">
+          <ParentSelector
+            people={onlyMen}
+            setParent={value => setPersonData({
+              ...personData,
+              fatherName: value,
+              father: onlyMen.find(person => person.name === value) || null,
+            })}
+            err={validationErrs.fatherErr}
+            errText={'he can\'t be father of this person'}
+            disabled={!born}
+            title="select father"
+          />
+        </div>
       </div>
 
       <button

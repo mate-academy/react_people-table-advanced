@@ -6,17 +6,17 @@ export const PersonSearchBar = () => {
   const history = useHistory();
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
-  const [query, setQuery] = useState(searchParams.get('name'));
+  const [query, setQuery] = useState(searchParams.get('query') || '');
 
   const applyQuery = useCallback(debounce((newQuery) => {
     if (newQuery) {
-      searchParams.set('name', newQuery);
+      searchParams.set('query', newQuery);
     } else {
-      searchParams.delete('name');
+      searchParams.delete('query');
     }
 
     history.push({ search: searchParams.toString() });
-  }, 500));
+  }, 500), []);
 
   return (
     <div className="field">

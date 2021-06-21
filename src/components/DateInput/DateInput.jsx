@@ -5,9 +5,10 @@ export const DateInput = ({
   applyDate,
   placeholder,
   label,
-  disabled = false,
-  err = '',
-  min = 1400,
+  disabled,
+  err,
+  errText,
+  min,
 }) => {
   const [date, setDate] = useState('');
 
@@ -29,7 +30,7 @@ export const DateInput = ({
           placeholder={placeholder}
           required
         />
-        <p className="help is-danger">{err}</p>
+        <p className="help is-danger">{err ? errText : ''}</p>
       </div>
     </div>
   );
@@ -39,7 +40,15 @@ DateInput.propTypes = {
   applyDate: PropTypes.func.isRequired,
   placeholder: PropTypes.string.isRequired,
   label: PropTypes.string.isRequired,
-  disabled: PropTypes.bool.isRequired,
-  err: PropTypes.string.isRequired,
-  min: PropTypes.number.isRequired,
+  disabled: PropTypes.bool,
+  err: PropTypes.bool,
+  errText: PropTypes.string,
+  min: PropTypes.number,
+};
+
+DateInput.defaultProps = {
+  disabled: false,
+  min: 1400,
+  errText: '',
+  err: false,
 };
