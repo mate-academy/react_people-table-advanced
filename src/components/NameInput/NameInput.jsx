@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 
-export const NameInput = ({ applyName }) => {
+export const NameInput = ({ applyName, placeholder }) => {
   const [name, setName] = useState('');
 
   return (
@@ -19,7 +19,7 @@ export const NameInput = ({ applyName }) => {
             }}
             className="input"
             type="text"
-            placeholder="John Smith junior"
+            placeholder={placeholder}
             required
           />
         </div>
@@ -30,4 +30,5 @@ export const NameInput = ({ applyName }) => {
 
 NameInput.propTypes = {
   applyName: PropTypes.func.isRequired,
+  placeholder: PropTypes.string.isRequired,
 };

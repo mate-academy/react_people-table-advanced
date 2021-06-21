@@ -29,6 +29,7 @@ export const NewPerson = ({ addPerson, people }) => {
 
   const {
     name,
+    sex,
     born,
     died,
     mother,
@@ -109,6 +110,10 @@ export const NewPerson = ({ addPerson, people }) => {
 
         <NameInput
           applyName={setPersonDataProp('name')}
+          placeholder={sex === 'm' || sex === ''
+            ? 'John Smith'
+            : 'Jane Smith'
+          }
         />
 
         <SexSelector
@@ -139,7 +144,7 @@ export const NewPerson = ({ addPerson, people }) => {
           })}
           err={validationErrs.motherErr}
           disabled={!born}
-          title={'select mother'}
+          title="select mother"
         />
 
         <ParentSelector
@@ -151,7 +156,7 @@ export const NewPerson = ({ addPerson, people }) => {
           })}
           err={validationErrs.fatherErr}
           disabled={!born}
-          title={'select father'}
+          title="select father"
         />
       </div>
 

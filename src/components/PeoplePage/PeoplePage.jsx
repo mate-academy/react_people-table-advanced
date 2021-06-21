@@ -44,7 +44,7 @@ export const PeoplePage = ({ match }) => {
         || `${person.motherName}`.toLowerCase().includes(lowerQuery)
         || `${person.fatherName}`.toLowerCase().includes(lowerQuery)
     );
-  })), [sortBy, order, people]);
+  })), [sortBy, order, people, appliedQuery]);
 
   useEffect(() => {
     getPeople().then((response) => {
