@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
   Route,
   useLocation,
@@ -24,18 +24,21 @@ export const PeoplePage = ({ match }) => {
     setPeople([person, ...people]);
   };
 
+  const getSortCallback = useCallback(() => {
+    if(sortBy === 'name' || sortBy === 'sex') {
+      return (a, b) => order * a[sortBy].localeCompare(b[sortBy])
+    }
+    
+    if (sortBy === 'born' || sortBy === 'died') {
+      return (a, b) => order * (+a[sortBy] - +b[sortBy]);
+    }
+
+    return () => 0
+  }, [order, sortBy])
+
+
   useEffect(() => setVisPeople([...people].sort(
-    (a, b) => {
-      if (sortBy === 'name' || sortBy === 'sex') {
-        return order * a[sortBy].localeCompare(b[sortBy]);
-      }
-
-      if (sortBy === 'born' || sortBy === 'died') {
-        return order * (+a[sortBy] - +b[sortBy]);
-      }
-
-      return 0;
-    },
+    getSortCallback()
   ).filter((person) => {
     const lowerQuery = appliedQuery.toLowerCase();
 
@@ -44,7 +47,7 @@ export const PeoplePage = ({ match }) => {
         || `${person.motherName}`.toLowerCase().includes(lowerQuery)
         || `${person.fatherName}`.toLowerCase().includes(lowerQuery)
     );
-  })), [sortBy, order, people, appliedQuery]);
+  })), [sortBy, order, people, appliedQuery, getSortCallback]);
 
   useEffect(() => {
     getPeople().then((response) => {

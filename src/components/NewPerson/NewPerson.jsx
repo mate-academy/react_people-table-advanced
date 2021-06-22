@@ -27,30 +27,22 @@ export const NewPerson = ({ addPerson, people }) => {
     sex,
     born,
     died,
-    mother,
-    father,
   } = personData;
 
   const validationErrs = {
     deathErr: died - born >= 150,
-    motherErr: mother
-      ? mother.died < born || mother.born > born
-      : false,
-    fatherErr: father
-      ? father.died < born || father.born > born
-      : false,
   };
 
-  const onlyWomen = people ? people.sort(
+  const posibleMothers = people ? people.sort(
     (a, b) => a.name.localeCompare(b.name),
   ).filter(
-    person => person.sex === 'f',
+    person => person.sex === 'f' && person.died > born && person.born < born
   ) : [];
 
-  const onlyMen = people ? people.sort(
+  const posibleFathers = people ? people.sort(
     (a, b) => a.name.localeCompare(b.name),
   ).filter(
-    person => person.sex === 'm',
+    person => person.sex === 'm' && person.died > born && person.born < born
   ) : [];
 
   const setPersonDataProp = prop => (value) => {
@@ -59,26 +51,34 @@ export const NewPerson = ({ addPerson, people }) => {
     });
   };
 
+  const allElemetsAreValid = (arr) => Object.values(arr).every(
+      (a) => !a,
+    )
+
+  const getPersonSlug = (personName, personBorn) => `${
+      personName.toLowerCase().split(' ').join('-')
+    }-${
+      personBorn.toString()
+    }`
+  
+  const getPeoplePathName = () => `/people${match.params.personSlug
+    ? `/${match.params.personSlug}`
+    : ''
+  }`
+
   return (
     <form
       className="box column is-4"
       onSubmit={(event) => {
         event.preventDefault();
 
-        if (Object.values(validationErrs).reduce(
-          (prev, cur) => prev && !cur, true,
-        )
-        ) {
+        if (allElemetsAreValid(validationErrs)) {
           addPerson({
             ...personData,
-            slug: `${
-              name.toLowerCase().split(' ').join('-')
-            }-${
-              born.toString()
-            }`,
+            slug: getPersonSlug(name, born),
           });
           history.push({
-            pathname: '/people',
+            pathname: getPeoplePathName(),
             search: location.search,
           });
         }
@@ -89,10 +89,7 @@ export const NewPerson = ({ addPerson, people }) => {
         className="delete is-pulled-right"
         onClick={() => {
           history.push({
-            pathname: `/people${match.params.personSlug
-              ? `/${match.params.personSlug}`
-              : ''
-            }`,
+            pathname: getPeoplePathName(),
             search: location.search,
           });
         }}
@@ -130,30 +127,26 @@ export const NewPerson = ({ addPerson, people }) => {
 
         <div className="block">
           <ParentSelector
-            people={onlyWomen}
+            people={posibleMothers}
             setParent={value => setPersonData({
               ...personData,
               motherName: value,
-              mother: onlyWomen.find(person => person.name === value) || null,
+              mother: posibleMothers.find(person => person.name === value) || null,
             })}
-            err={validationErrs.motherErr}
-            errText={'she can\'t be mother of this person'}
-            disabled={!born}
+            disabled={!born || posibleMothers.length === 0}
             title="select mother"
           />
         </div>
 
         <div className="block">
           <ParentSelector
-            people={onlyMen}
+            people={posibleFathers}
             setParent={value => setPersonData({
               ...personData,
               fatherName: value,
-              father: onlyMen.find(person => person.name === value) || null,
+              father: posibleFathers.find(person => person.name === value) || null,
             })}
-            err={validationErrs.fatherErr}
-            errText={'he can\'t be father of this person'}
-            disabled={!born}
+            disabled={!born || posibleFathers.length === 0}
             title="select father"
           />
         </div>
