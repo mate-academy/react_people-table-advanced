@@ -1,1 +1,15 @@
-// styles go here
+.App {
+  width: 70%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+}
+.header {
+  margin-bottom: 15px;
+}
+.input-block {
+  margin-bottom: 15px;
+}
+.form {
+  margin-bottom: 15px;
+}
