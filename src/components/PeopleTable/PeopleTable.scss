@@ -1,0 +1,78 @@
+.container {
+  background-image: linear-gradient(45deg, #4ebd36, #7e7cf9);
+  background-attachment: fixed;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 100px;
+  font-family: Roboto, sans-serif;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+table {
+  border-collapse: collapse;
+  min-width: 600px;
+  max-width: 1000px;
+}
+
+tr {
+  background: #fff;
+  color: #808080;
+}
+
+tr:nth-child(2n + 1) {
+  background: #f5f5f5;
+}
+
+thead tr:first-child {
+  background: #e25644;
+  color: #fff;
+}
+
+tfoot tr:first-child {
+  background: #e25644;
+  color: #fff;
+}
+
+td,
+th {
+  text-align: left;
+  padding: 18px;
+  min-width: 70px;
+}
+
+.blue-man {
+  color: blue;
+}
+
+.red-woman {
+  color: red;
+}
+
+.person-name {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.name-link {
+  text-decoration: none;
+  color: #000;
+}
+
+.button {
+  font-family: Roboto, sans-serif;
+  font-size: 16px;
+  font-weight: bold;
+  border: none;
+  background: #e25644;
+  color: #fff;
+}
+
+.button:hover {
+  color: #fff400;
+  cursor: pointer;
+}
