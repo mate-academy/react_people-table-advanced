@@ -65,9 +65,6 @@ export const PeoplePage = () => {
       searchParams.delete(key);
     }
 
-    // console.log(history.location.pathname + history.location.search,
-    // searchParams.toString());
-
     history.push({ search: searchParams.toString() });
   }, []);
 
@@ -87,8 +84,6 @@ export const PeoplePage = () => {
   const handleClickColumn = (column) => {
     if (column) {
       const newSortOrder = (sortOrder === 'asc') ? 'desc' : 'asc';
-
-      // console.log(sortBy, column, newSortOrder);
 
       setSortBy(column);
       setSortOrder(newSortOrder);

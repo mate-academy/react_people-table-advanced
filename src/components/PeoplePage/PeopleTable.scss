@@ -33,12 +33,22 @@
     }
   }
 
+  button {
+    padding: 6px 18px;
+    -webkit-appearance: none;
+    text-transform: capitalize;
+    font-size: 1rem;
+    text-align: left;
+    border: none;
+    background-color: transparent;
+  }
+
   &__sortable {
     cursor: pointer;
     &:after {
       content: '';
       position: absolute;
-      margin-top: 6px;
+      margin-top: 4px;
       margin-left: 8px;
       width: 6px;
       height: 6px;
