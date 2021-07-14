@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useHistory, useLocation, useRouteMatch } from 'react-router-dom';
+import classNames from 'classnames';
 import { PersonRow } from './PersonRow';
 
 import sortBoth from '../../images/sort_both.png';
@@ -9,13 +10,17 @@ import sortAsc from '../../images/sort_asc.png';
 import sortDesc from '../../images/sort_desc.png';
 
 import './PeopleTable.scss';
-import { PersonName } from './PersonName';
 
 const heads = ['name', 'sex', 'born', 'died', 'mother', 'father'];
 
 export const PeopleTable = ({ people }) => {
   const match = useRouteMatch();
   const { id } = match.params;
+  let newId;
+
+  if (id) {
+    newId = id.slice(0, -5).replace(/-/g, ' ');
+  }
 
   const history = useHistory();
   const { search } = useLocation();
@@ -42,13 +47,12 @@ export const PeopleTable = ({ people }) => {
     }
 
     searchParams.set('sortBy', name);
-    history.push(`/people/${id}?${searchParams.toString()}`);
+    history.push({ search: searchParams.toString() });
   };
 
   return (
     <>
       <div className="container">
-        {(id) && (<PersonName people={people} id={id} />)}
         <table>
           <thead>
             <tr>
@@ -80,6 +84,9 @@ export const PeopleTable = ({ people }) => {
             {people.map(person => (
               <tr
                 key={person.name}
+                className={classNames({
+                  'highlight-person': person.name === newId,
+                })}
               >
                 <PersonRow {...person} />
               </tr>

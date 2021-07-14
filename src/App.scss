@@ -1,5 +1,9 @@
 body {
   margin: 0;
+  font-family: Roboto, sans-serif;
+  font-size: 16px;
+  background-image: linear-gradient(45deg, #4ebd36, #7e7cf9);
+  background-attachment: fixed;
 }
 
 .header {
@@ -53,4 +57,24 @@ body {
 
 .is-active {
   color: red;
+}
+
+.input {
+  margin: 20px 10px;
+  height: 25px;
+  width: 250px;
+}
+
+.blue-man {
+  color: blue;
+}
+
+.red-woman {
+  color: red;
+}
+
+.person-name {
+  font-size: 20px;
+  font-weight: bold;
+  margin-left: 10px;
 }

@@ -5,32 +5,38 @@ import classNames from 'classnames';
 import './PeopleTable.scss';
 
 export const PersonName = ({ people, id }) => {
-  const { name, sex, motherName, fatherName } = people.find(person => (
-    person.name === id.slice(0, -5).replace(/-/g, ' ')
+  const newId = id.slice(0, -5).replace(/-/g, ' ');
+
+  const human = people.find(person => (
+    person.name === newId
   ));
 
-  return (
-    <div className="person-name">
-      <div
-        className={classNames({
-          'red-woman': sex === 'f',
-          'blue-man': sex === 'm',
-        })}
-      >
-        {`Name: ${name}`}
+  if (human) {
+    return (
+      <div className="person-name">
+        <div
+          className={classNames({
+            'red-woman': human.sex === 'f',
+            'blue-man': human.sex === 'm',
+          })}
+        >
+          {`Name: ${human.name}`}
+        </div>
+        <div
+          className={classNames({ 'red-woman': human.motherName })}
+        >
+          {`Mother: ${human.motherName || 'no data'}`}
+        </div>
+        <div
+          className={classNames({ 'blue-man': human.fatherName })}
+        >
+          {`Father: ${human.fatherName || 'no data'}`}
+        </div>
       </div>
-      <div
-        className={classNames({ 'red-woman': motherName })}
-      >
-        {`Mother: ${motherName || 'no data'}`}
-      </div>
-      <div
-        className={classNames({ 'blue-man': fatherName })}
-      >
-        {`Father: ${fatherName || 'no data'}`}
-      </div>
-    </div>
-  );
+    );
+  }
+
+  return '';
 };
 
 PersonName.propTypes = {

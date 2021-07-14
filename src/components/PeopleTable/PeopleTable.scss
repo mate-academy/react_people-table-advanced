@@ -1,13 +1,10 @@
 .container {
-  background-image: linear-gradient(45deg, #4ebd36, #7e7cf9);
-  background-attachment: fixed;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   min-height: 100vh;
   padding: 100px;
-  font-family: Roboto, sans-serif;
   margin: 0;
   box-sizing: border-box;
 }
@@ -44,20 +41,6 @@ th {
   min-width: 70px;
 }
 
-.blue-man {
-  color: blue;
-}
-
-.red-woman {
-  color: red;
-}
-
-.person-name {
-  font-size: 20px;
-  font-weight: bold;
-  margin-bottom: 20px;
-}
-
 .name-link {
   text-decoration: none;
   color: #000;
@@ -75,4 +58,28 @@ th {
 .button:hover {
   color: #fff400;
   cursor: pointer;
+}
+
+.highlight-person {
+  background: #fff400 !important;
+}
+
+thead tr th:first-child {
+  border-top-left-radius: 10px;
+}
+
+thead tr th:last-child {
+  border-top-right-radius: 10px;
+}
+
+tfoot tr th:first-child {
+  border-bottom-left-radius: 10px;
+}
+
+tfoot tr th:last-child {
+  border-bottom-right-radius: 10px;
+}
+
+.highlight-column {
+  background: #fff400;
 }
