@@ -1,0 +1,71 @@
+.PeopleTable {
+  margin-top: 30px;
+  border-collapse: collapse;
+  border: none;
+
+  tr:nth-child(odd) {
+    background-color: transparentize(#fff, 0.2);
+  }
+  tr:nth-child(even) {
+    background-color: transparentize(#fff, 0.6);
+  }
+
+  .selected {
+    &:nth-child(odd), &:nth-child(even) {
+      background-color: hsl(42, 24%, 80%);
+    }
+  }
+
+  thead tr {
+    border-bottom: 3px solid #e4dfd3;
+  }
+  th span, td {
+    padding: 6px 18px;
+  }
+  th, td {
+    font-size: 1rem;
+    text-align: left;
+  }
+  th {
+    text-transform: capitalize;
+    span {
+      display: inline-block;
+    }
+  }
+
+  &__sortable {
+    cursor: pointer;
+    &:after {
+      content: '';
+      position: absolute;
+      margin-top: 6px;
+      margin-left: 8px;
+      width: 6px;
+      height: 6px;
+      border-right: 2px solid #333;
+      border-bottom: 2px solid #333;
+      transform-origin: 65% 65%;
+      transform: rotate(45deg);
+      transition: transform 350ms;
+    }
+    &--desc:after {
+      transform: rotate(-135deg);
+    }
+  }
+
+  &__link-woman {
+    &, &:hover {
+      color: #c71414 !important;
+    }
+  }
+  &__link-man {
+    &, &:hover {
+      color: #1475c7 !important;
+    }
+  }
+  &__link-woman, &__link-man {
+    &:hover, &:visited {
+      color: inherit;
+    }
+  }
+}
