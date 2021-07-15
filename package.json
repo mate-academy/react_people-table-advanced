@@ -22,9 +22,10 @@
     "typescript": "^3.7.5"
   },
   "devDependencies": {
-    "@mate-academy/eslint-config-react-typescript": "*",
     "@mate-academy/eslint-config-react": "*",
+    "@mate-academy/eslint-config-react-typescript": "*",
     "@mate-academy/stylelint-config": "*",
+    "@n8tb1t/use-scroll-position": "^2.0.3",
     "eslint": "^6.8.0",
     "gh-pages": "^2.2.0",
     "husky": "^4.0.10",

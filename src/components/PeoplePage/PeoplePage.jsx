@@ -1,9 +1,12 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
+
 import { useLocation, useRouteMatch, useHistory } from 'react-router-dom';
+
 import debounce from 'lodash/debounce'; // awesome-debounce-promise
 
 import { getPeople } from '../../api';
 import { filterPeople, sortPeople } from '../../helpers/peopleHelpers';
+
 import { PeopleTable } from './PeopleTable';
 
 export const PeoplePage = () => {
@@ -89,6 +92,7 @@ export const PeoplePage = () => {
       setSortOrder(newSortOrder);
 
       updateSearchParams('sortBy', column);
+      updateSearchParams('sortOrder', newSortOrder);
     }
   };
 
