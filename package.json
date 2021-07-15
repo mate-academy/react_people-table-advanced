@@ -6,11 +6,15 @@
   "author": "Mate Academy",
   "license": "GPL-3.0",
   "dependencies": {
+    "@fortawesome/fontawesome-free": "^5.15.3",
     "@types/node": "^12.12.62",
     "@types/react": "^16.9.49",
     "@types/react-dom": "^16.9.8",
     "@types/react-router-dom": "^5.1.5",
+    "classnames": "^2.3.1",
+    "lodash": "^4.17.21",
     "node-sass": "^4.14.1",
+    "prop-types": "^15.7.2",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-router-dom": "^5.2.0",
@@ -18,9 +22,10 @@
     "typescript": "^3.7.5"
   },
   "devDependencies": {
-    "@mate-academy/eslint-config-react-typescript": "*",
     "@mate-academy/eslint-config-react": "*",
+    "@mate-academy/eslint-config-react-typescript": "*",
     "@mate-academy/stylelint-config": "*",
+    "@n8tb1t/use-scroll-position": "^2.0.3",
     "eslint": "^6.8.0",
     "gh-pages": "^2.2.0",
     "husky": "^4.0.10",
