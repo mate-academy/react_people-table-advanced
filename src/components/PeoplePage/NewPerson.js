@@ -8,13 +8,14 @@ export const NewPerson = ({ people, onAdd }) => {
   const mens = people.filter(human => human.sex === 'm');
   const womans = people.filter(human => human.sex === 'f');
 
-  const [namePerson, setName] = useState('');
-  const [sex, setSex] = useState('m');
-  const [bornPerson, setBorn] = useState('');
-  const [diedPerson, setDied] = useState('');
-  const [mother, setMother] = useState('');
-  const [father, setFather] = useState('');
-
+  const [newPerson, setNewPerson] = useState({
+    name: '',
+    sex: 'm',
+    born: '',
+    died: '',
+    motherName: '',
+    fatherName: '',
+  });
   const [errorName, setErrorName] = useState('');
   const [errorAge, setErrorAge] = useState('');
 
@@ -24,42 +25,27 @@ export const NewPerson = ({ people, onAdd }) => {
 
     const { name, value } = event.target;
 
-    switch (name) {
-      case 'name':
-        setName(value);
-        break;
+    setNewPerson((current) => {
+      if (name === 'born' || name === 'died') {
+        return {
+          ...current,
+          [name]: +value,
+        };
+      }
 
-      case 'sex':
-        setSex(value);
-        break;
-
-      case 'born':
-        setBorn(value);
-        break;
-
-      case 'died':
-        setDied(value);
-        break;
-
-      case 'mother':
-        setMother(value);
-        break;
-
-      case 'father':
-        setFather(value);
-        break;
-
-      default:
-        break;
-    }
+      return {
+        ...current,
+        [name]: value,
+      };
+    });
   };
 
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    const nameLength = namePerson.length;
-    const checkLength = namePerson.replace(/[^a-zа-я ]/gi, '').length;
-    const age = diedPerson - bornPerson;
+    const nameLength = newPerson.name.length;
+    const checkLength = newPerson.name.replace(/[^a-zа-я ]/gi, '').length;
+    const age = newPerson.died - newPerson.born;
 
     if (checkLength !== nameLength || nameLength === 0) {
       return setErrorName('Invalid characters entered');
@@ -69,22 +55,15 @@ export const NewPerson = ({ people, onAdd }) => {
       return setErrorAge('Age should be >= 0 and < 150');
     }
 
-    const newPerson = {
-      name: namePerson,
-      sex,
-      born: +bornPerson,
-      died: +diedPerson,
-      motherName: mother,
-      fatherName: father,
-    };
-
-    setName('');
-    setBorn('');
-    setSex('m');
-    setDied('');
-    setMother('');
-    setFather('');
     onAdd(current => [newPerson, ...current]);
+    setNewPerson({
+      name: '',
+      sex: 'm',
+      born: '',
+      died: '',
+      motherName: '',
+      fatherName: '',
+    });
 
     return history.push('/people');
   };
@@ -98,7 +77,7 @@ export const NewPerson = ({ people, onAdd }) => {
           <input
             type="text"
             name="name"
-            value={namePerson}
+            value={newPerson.name}
             onChange={handleChange}
           />
           <span className="error-message">{errorName}</span>
@@ -110,7 +89,7 @@ export const NewPerson = ({ people, onAdd }) => {
             type="radio"
             value="m"
             name="sex"
-            checked={sex === 'm'}
+            checked={newPerson.sex === 'm'}
             onChange={handleChange}
           />
           Male
@@ -118,7 +97,7 @@ export const NewPerson = ({ people, onAdd }) => {
             type="radio"
             value="f"
             name="sex"
-            checked={sex === 'f'}
+            checked={newPerson.sex === 'f'}
             onChange={handleChange}
           />
           Female
@@ -129,7 +108,7 @@ export const NewPerson = ({ people, onAdd }) => {
           <input
             type="number"
             name="born"
-            value={bornPerson}
+            value={newPerson.born}
             onChange={handleChange}
             min={1400}
             max={2021}
@@ -143,25 +122,25 @@ export const NewPerson = ({ people, onAdd }) => {
           <input
             type="number"
             name="died"
-            value={diedPerson}
+            value={newPerson.died}
             onChange={handleChange}
             min={1400}
             max={2021}
-            disabled={!bornPerson}
+            disabled={!newPerson.born}
           />
         </div>
 
         <div className="form__input">
           <span>{'Mother: '}</span>
           <select
-            name="mother"
-            value={mother}
+            name="motherName"
+            value={newPerson.motherName}
             onChange={handleChange}
-            disabled={!bornPerson}
+            disabled={!newPerson.born}
           >
             <option value="">Select mother(optional)</option>
             {womans.map(({ name, died, born }) => (
-              (bornPerson <= died && bornPerson >= born + 15) && (
+              (newPerson.born <= died && newPerson.born >= born + 15) && (
                 <option key={name} value={name}>{name}</option>
               )
             ))}
@@ -171,14 +150,14 @@ export const NewPerson = ({ people, onAdd }) => {
         <div className="form__input">
           <span>{'Father: '}</span>
           <select
-            name="father"
-            value={father}
+            name="fatherName"
+            value={newPerson.fatherName}
             onChange={handleChange}
-            disabled={!bornPerson}
+            disabled={!newPerson.born}
           >
             <option value="">Select father(optional)</option>
             {mens.map(({ name, died, born }) => (
-              (bornPerson <= died && bornPerson >= born + 15) && (
+              (newPerson.born <= died && newPerson.born >= born + 15) && (
                 <option key={name} value={name}>{name}</option>
               )
             ))}

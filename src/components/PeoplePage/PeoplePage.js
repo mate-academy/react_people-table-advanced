@@ -50,21 +50,8 @@ export const PeoplePage = () => {
   if (appliedQuery) {
     const lowerQuery = appliedQuery.toLowerCase();
 
-    visiblePeople = visiblePeople.filter(({ name, fatherName, motherName }) => {
-      switch (true) {
-        case (name.toLowerCase().includes(lowerQuery)):
-          return true;
-
-        case ((fatherName || '').toLowerCase().includes(lowerQuery)):
-          return true;
-
-        case ((motherName || '').toLowerCase().includes(lowerQuery)):
-          return true;
-
-        default:
-          return false;
-      }
-    });
+    visiblePeople = visiblePeople.filter(({ name, fatherName, motherName }) => (
+      (name + fatherName + motherName).toLowerCase().includes(lowerQuery)));
   }
 
   switch (sortParam) {

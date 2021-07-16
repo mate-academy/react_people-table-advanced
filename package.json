@@ -1,6 +1,6 @@
 {
   "name": "react_people-table",
-  "homepage": ".",
+  "homepage": "https://Kirill-Osypov.github.io/react_people-table-advanced/",
   "version": "0.1.0",
   "keywords": [],
   "author": "Mate Academy",
@@ -11,7 +11,6 @@
     "@types/react-dom": "^16.9.8",
     "@types/react-router-dom": "^5.1.5",
     "classnames": "^2.3.1",
-    "loadash": "^1.0.0",
     "lodash": "^4.17.21",
     "node-sass": "^4.14.1",
     "react": "^16.13.1",

@@ -29,24 +29,32 @@ export const PeopleTable = ({ people }) => {
   const sortParam = searchParams.get('sortBy') || '';
   const sortOrder = searchParams.get('sortOrder') || '';
 
-  const [isRev, setRev] = useState(false);
+  const [isRev, setRev] = useState(true);
 
   const sortBy = (event) => {
     const { name } = event.target;
 
+    if (searchParams.get('sortBy') !== name) {
+      searchParams.set('sortBy', name);
+      history.push({ search: searchParams.toString() });
+    }
+
+    toggleSort(name);
+  };
+
+  const toggleSort = (name) => {
     if (name === sortParam) {
       setRev(current => !current);
     } else {
       setRev(false);
     }
 
-    if (isRev) {
+    if (isRev === true) {
       searchParams.set('sortOrder', 'asc');
     } else {
       searchParams.set('sortOrder', 'desc');
     }
 
-    searchParams.set('sortBy', name);
     history.push({ search: searchParams.toString() });
   };
 
