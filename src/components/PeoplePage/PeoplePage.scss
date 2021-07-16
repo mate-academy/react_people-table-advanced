@@ -1,0 +1,30 @@
+$width-button: 200px;
+
+.hide-button {
+  display: none;
+}
+
+.add-button {
+  position: absolute;
+  right: $width-button / 10;
+}
+
+.add-button,
+.form-button {
+  width: $width-button;
+  height: $width-button / 4;
+}
+
+.form {
+  color: #fff;
+
+  &__input {
+    padding: 10px;
+  }
+}
+
+.error-message {
+  margin-left: 10px;
+  color: red;
+  font-weight: bold;
+}
