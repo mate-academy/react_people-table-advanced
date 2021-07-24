@@ -1,6 +1,9 @@
 import React from 'react';
 import { useRouteMatch, withRouter } from 'react-router-dom';
+
 import PropTypes from 'prop-types';
+import cn from 'classnames';
+
 import { PersonName } from './PersonName';
 import { PersonType } from '../../types/PersonType';
 
@@ -16,7 +19,7 @@ export const PersonRow = withRouter(({
   if (person) {
     return (
       <tr
-        className={personId === person.slug ? 'selected' : ''}
+        className={cn({'selected': personId === person.slug})}
       >
         <td>
           <PersonName
