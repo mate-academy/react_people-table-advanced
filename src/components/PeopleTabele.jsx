@@ -4,11 +4,6 @@ import { useLocation } from 'react-router';
 import { PersonRow } from './PersonRow';
 import '../App.scss';
 
-// eslint-disable-next-line
-const ascImg = `https://raw.githubusercontent.com/Vasilkoff/react_people-table-advanced/master/public/images/sort_asc.png`;
-// eslint-disable-next-line
-const descImg = `https://raw.githubusercontent.com/Vasilkoff/react_people-table-advanced/master/public/images/sort_desc.png`;
-
 export function PeopleTable({ people, onSortBy }) {
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
@@ -19,53 +14,63 @@ export function PeopleTable({ people, onSortBy }) {
     <table className="PeopleTable">
       <thead
         aria-hidden
-        onClick={event => onSortBy(event)}
-        onKeyDown={event => onSortBy(event)}
       >
-        <th className="list-item" data-name="name">
-          <img
-            src={sortOrder === 'desc' && sortBy === 'name' ? descImg : ascImg}
-            alt="sortImg"
-          />
+        <th
+          onClick={() => onSortBy('name')}
+          className={`list-item ${
+            sortOrder === 'desc' && sortBy === 'name' ? 'descImg' : 'ascImg'
+          }`}
+          data-name="name"
+        >
           {sortBy === 'name' ? <span>name*</span> : 'name'}
         </th>
-        <th className="list-item" data-name="sex">
-          <img
-            src={sortOrder === 'desc' && sortBy === 'sex' ? descImg : ascImg}
-            alt="sortImg"
-          />
+        <th
+          onClick={() => onSortBy('sex')}
+          className={`list-item ${
+            sortOrder === 'desc' && sortBy === 'sex' ? 'descImg' : 'ascImg'
+          }`}
+          data-name="sex"
+        >
           {sortBy === 'sex' ? <span>sex*</span> : 'sex'}
         </th>
-        <th className="list-item" data-name="born">
-          <img
-            src={sortOrder === 'desc' && sortBy === 'born' ? descImg : ascImg}
-            alt="sortImg"
-          />
+        <th
+          onClick={() => onSortBy('born')}
+          className={`list-item ${
+            sortOrder === 'desc' && sortBy === 'born' ? 'descImg' : 'ascImg'
+          }`}
+          data-name="born"
+        >
           {sortBy === 'born' ? <span>born*</span> : 'born'}
         </th>
-        <th className="list-item" data-name="died">
-          <img
-            src={sortOrder === 'desc' && sortBy === 'died' ? descImg : ascImg}
-            alt="sortImg"
-          />
+        <th
+          onClick={() => onSortBy('died')}
+          className={`list-item ${
+            sortOrder === 'desc' && sortBy === 'died' ? 'descImg' : 'ascImg'
+          }`}
+          data-name="died"
+        >
           {sortBy === 'died' ? <span>died*</span> : 'died'}
         </th>
-        <th className="list-item" data-name="motherName">
-          <img
-            src={
-              sortOrder === 'desc' && sortBy === 'motherName' ? descImg : ascImg
-            }
-            alt="sortImg"
-          />
+        <th
+          onClick={() => onSortBy('motherName')}
+          className={`list-item ${
+            sortOrder === 'desc' && sortBy === 'motherName'
+              ? 'descImg'
+              : 'ascImg'
+          }`}
+          data-name="motherName"
+        >
           motherName
         </th>
-        <th className="list-item" data-name="fatherName">
-          <img
-            src={
-              sortOrder === 'desc' && sortBy === 'fatherName' ? descImg : ascImg
-            }
-            alt="sortImg"
-          />
+        <th
+          onClick={() => onSortBy('motherName')}
+          className={`list-item ${
+            sortOrder === 'desc' && sortBy === 'fatherName'
+              ? 'descImg'
+              : 'ascImg'
+          }`}
+          data-name="fatherName"
+        >
           fatherName
         </th>
       </thead>

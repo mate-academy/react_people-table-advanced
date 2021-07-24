@@ -5,7 +5,6 @@ import { PeopleTable } from './PeopleTabele';
 
 export function PeoplePage() {
   const [people, setPeople] = useState([]);
-  const [isSortedBy, setIsSortedBy] = useState('asc');
   const history = useHistory();
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
@@ -27,19 +26,18 @@ export function PeoplePage() {
 
   const sortBy = searchParams.get('sortBy') || '';
 
-  const handleSortBy = (event) => {
+  const handleSortBy = (tabSortType) => {
     if (
-      event.target
-      && event.target.closest('.list-item').name !== isSortedBy
+      tabSortType !== sortBy
     ) {
       searchParams.set(
         'sortBy',
-        event.target.closest('.list-item').dataset.name,
+        tabSortType,
       );
       searchParams.set('sortOrder', 'asc');
     }
 
-    if (isSortedBy === event.target.closest('.list-item').dataset.name) {
+    if (sortBy === tabSortType) {
       if (sortOrder === 'desc') {
         searchParams.set('sortOrder', 'asc');
       } else {
@@ -47,7 +45,6 @@ export function PeoplePage() {
       }
     }
 
-    setIsSortedBy(event.target.closest('.list-item').dataset.name);
     history.push(`?${searchParams.toString()}`);
   };
 
