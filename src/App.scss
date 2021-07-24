@@ -1,1 +1,31 @@
 // styles go here
+.PeopleTable {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+
+.highlightPerson {
+  background-color: yellowgreen;
+}
+
+.manColor {
+  color: blue;
+}
+
+.womenColor {
+  color: red;
+}
+
+.ascImg {
+  background-image: url("https://raw.githubusercontent.com/Vasilkoff/react_people-table-advanced/master/public/images/sort_asc.png");
+  background-repeat: no-repeat;
+}
+
+.descImg {
+  background-image: url("https://raw.githubusercontent.com/Vasilkoff/react_people-table-advanced/master/public/images/sort_desc.png");
+  background-repeat: no-repeat;
+}
+
+.list-item {
+  min-width: 75px;
+}
