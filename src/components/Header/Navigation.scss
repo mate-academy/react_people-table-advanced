@@ -1,0 +1,37 @@
+.Navigation {
+  &__link {
+    display: inline-block;
+    margin-right: 30px;
+    padding: 10px 0;
+    position: relative;
+    overflow: hidden;
+    text-transform: uppercase;
+    transition: 0.3s;
+    &.active {
+      color: #333;
+    }
+    span:after {
+      position: absolute;
+      content: "";
+      display: block;
+      left: 50%;
+      bottom: 0;
+      width: 0;
+      height: 2px;
+      background-color: transparent;
+      transition: 0.3s;
+    }
+    &:hover span:after,
+    &.active span:after {
+      width: 100%;
+      left: 0;
+      background-color: #333;
+    }
+  }
+  
+  @media (min-width: 768px) {
+    &__link {
+      padding: 14px 0;
+    }
+  }
+}

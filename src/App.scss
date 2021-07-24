@@ -1,1 +1,204 @@
 // styles go here
+
+@font-face {
+  font-family: 'OpenSans Light';
+  src: local('OpenSans-Light'),
+    url('fonts/OpenSans-Light.ttf')
+    format('truetype');
+  font-weight: 300;
+}
+
+@font-face {
+  font-family: 'MontserratAlternates Medium';
+  src: local('MontserratAlternates-Medium'),
+    url('fonts/MontserratAlternates-Medium.ttf')
+    format('truetype');
+  font-weight: 500;
+}
+
+body {
+  font-family: 'OpenSans Light', sans-serif;
+  font-size: 16px;
+  color: #333;
+  background-color: #e4dfd3;
+}
+
+h1, h2, h3 {
+  color: #344f10;
+  font-family: 'MontserratAlternates Medium', sans-serif;
+  font-weight: 500;
+}
+
+h1 {
+  margin-bottom: 40px;
+  font-size: 28px;
+}
+
+p {
+  margin-bottom: 1rem;
+  font-size: 1rem;
+}
+
+a {
+  color: #828282;
+  font-size: 1rem;
+  text-decoration: none;
+  transition: 0.3s color;
+  &:hover {
+    color: #333;
+  }
+  &:after {
+    color: #828282;
+  }
+}
+
+// Placeholder
+@mixin placeholder {
+  &::-webkit-input-placeholder {
+    @content;
+  }
+  &::-moz-placeholder {
+    @content;
+  }
+  &:-ms-input-placeholder {
+    @content;
+  }
+  &:-moz-placeholder {
+    @content;
+  }
+}
+
+input {
+  border: none;
+  padding: 6px 8px;
+  color: #333;
+  font-size: 1rem;
+  &:focus {
+    outline: none;
+  }
+  @include placeholder {
+    color: #333;
+  }
+}
+
+.icon-emoji {
+  margin-left: 3px;
+  font-size: 2rem;
+  color: #d0a300;
+}
+
+.page {
+  &--people {
+    max-width: 100%;
+    overflow: auto;
+  }
+  &--not-found {
+    text-align: center;
+
+    svg {
+      margin-top: 45px;
+      max-width: 100%;
+    }
+  }
+}
+
+.App {
+  padding: 30px 15px 60px;
+  &__filter input {
+    min-width: 300px;
+    padding-left: 45px;
+  }
+}
+
+.icon {
+  &--search {
+    display: block;
+    position: absolute;
+    margin-top: -25px;
+    margin-left: 15px;
+    width: 20px;
+    height: 20px;
+    background: url(images/search.svg);
+    background-repeat: no-repeat;
+    background-size: 20px;
+    background-position: right;
+  }
+}
+
+@media (min-width: 575.5px) {
+  h1 {
+    margin-bottom: 20px;
+    font-size: 32px;
+  }
+  
+  .App {
+    padding: 60px 30px 100px;
+  }
+}
+
+@media (min-width: 768px) {
+  p {
+    font-size: 18px;
+  }
+
+  h1 {
+    margin-bottom: 25px;
+    font-size: 40px;
+  }
+
+  .App {
+    padding: 75px 90px 120px;
+  }
+
+  .page {
+    &--not-found svg {
+      margin-top: 60px;
+    }
+  }
+
+  .icon-emoji {
+    font-size: 2.5rem;
+  }
+}
+
+@media (min-width: 992px) {
+  p {
+    font-size: 20px;
+  }
+
+  h1 {
+    margin-bottom: 30px;
+    font-size: 48px;
+  }
+
+  .App {
+    padding: 90px 120px 150px;
+  }
+
+  .page {
+    &--not-found svg {
+      margin-top: 75px;
+    }
+  }
+}
+
+@media (min-width: 1200px) {
+  p {
+    font-size: 22px;
+  }
+
+  h1 {
+    margin-bottom: 40px;
+    font-size: 60px;
+  }
+
+  .App {
+    padding: 100px 150px 200px;
+  }
+
+  .page {
+    &--not-found svg {
+      margin-top: 90px;
+    }
+  }
+}
