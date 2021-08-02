@@ -19,7 +19,7 @@ export const PeopleTable = ({ people }) => (
           <SortingHeader
             header={header}
             sortingHeaders={sortingHeaders}
-            key={nanoid()}
+            key={header}
           />
         ))}
       </tr>
@@ -27,7 +27,7 @@ export const PeopleTable = ({ people }) => (
     <tbody>
       {people.map(person => (
         <PersonRow
-          key={nanoid()}
+          key={person.slug}
           person={person}
           people={people}
         />
