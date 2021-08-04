@@ -1,1 +1,101 @@
 // styles go here
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.title {
+  margin-top: 20px;
+}
+
+.field {
+  display: flex;
+}
+
+.label {
+  font-size: large;
+  margin: 5px 20px;
+}
+
+.form {
+  display: flex;
+  margin: 20px;
+}
+
+.female {
+  color: red;
+}
+
+.male {
+  color: blue;
+}
+
+.selectedPerson {
+  border: 3px solid rgba(0, 255, 23, 0.5);
+  background-color: rgba(0, 255, 23, 0.3);
+}
+
+.th-container {
+  display: flex;
+  flex-direction: row;
+  height: 50px;
+}
+
+.buttons {
+  display: flex;
+  flex-direction: column;
+  margin-left: 10px;
+}
+
+.btn-asc, .btn-desc {
+  height: 10px;
+  width: 10px;
+}
+
+.btn-asc {
+  background: url('./images/sort_asc.png') no-repeat center;
+}
+
+.btn-desc {
+  background: url('./images/sort_desc.png') no-repeat center;
+}
+
+.form-add-person {
+  display: flex;
+  flex-direction: column;
+  border: 2px solid lightgrey;
+  width: 550px;
+  padding: 20px;
+  margin-top: 0;
+}
+
+.field-add-person {
+  display: flex;
+  flex-direction: row;
+  margin: 0;
+}
+
+.btn-add-person, .btn-open-form {
+  margin: 0 40px;
+  text-align: center;
+  font-weight: 700;
+}
+
+.btn-add-person {
+  max-width: 300px;
+  align-self: center;
+}
+
+.select {
+  min-width: 200px;
+}
+
+.error {
+  color: red;
+  margin: 0 20px 0;
+}
+
+
+
