@@ -1,0 +1,21 @@
+.header {
+  border-bottom: 2px solid blue;
+  width: 100%;
+
+  &__nav-list {
+    display: flex;
+    flex-direction: row;
+    padding-left: 0;
+  }
+
+  &__nav-item {
+    list-style-type: none;
+    padding: 0 10px;
+  }
+
+  &__nav-link {
+    text-decoration: none;
+    font-size: 22px;
+    color: blue;
+  }
+}

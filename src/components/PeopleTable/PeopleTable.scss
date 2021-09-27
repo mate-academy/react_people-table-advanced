@@ -1,0 +1,54 @@
+.PeopleTable {
+  border-collapse: collapse;
+  border: 1px solid black;
+
+  &__head {
+    background-color: white;
+  }
+
+  .head-cell {
+    border: 2px solid gray;
+
+    .button {
+      position: relative;
+      width: 100%;
+      border: none;
+      background-color: white;
+      font-weight: bold;
+      font-family: 'Times New Roman', Times, serif;
+      font-size: 16px;
+
+      .button-text {
+        position: relative;
+        top: -3px;
+      }
+    }
+
+    .button:hover {
+      cursor: pointer;
+      color: blue;
+      background-color: beige;
+    }
+
+    .button-active {
+      color: blue;
+      background-color: beige;
+    }
+  }
+
+  .name,
+  .mother,
+  .father {
+    width: 200px;
+  }
+
+  .sex,
+  .born,
+  .died {
+    width: 70px;
+  }
+
+  .center {
+    text-align: center;
+  }
+}
