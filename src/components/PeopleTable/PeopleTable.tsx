@@ -37,11 +37,11 @@ export const PeopleTable: React.FC<Props> = ({
             }}
           >
             <span className="button-text">Name</span>
-            {sortBy !== 'name' && (<img src="../../images/sort_both.png" alt="img" />)}
+            {sortBy !== 'name' && (<img src="./images/sort_both.png" alt="img" />)}
             {(sortBy === 'name' && sortOrder === 'asc')
-            && (<img src="../../images/sort_asc.png" alt="img" />)}
+            && (<img src="./images/sort_asc.png" alt="img" />)}
             {(sortBy === 'name' && sortOrder === 'desc')
-            && (<img src="../../images/sort_desc.png" alt="img" />)}
+            && (<img src="./images/sort_desc.png" alt="img" />)}
           </button>
         </th>
         <th className="head-cell sex">
@@ -56,11 +56,11 @@ export const PeopleTable: React.FC<Props> = ({
             }}
           >
             <span className="button-text">Sex</span>
-            {sortBy !== 'sex' && (<img src="../../images/sort_both.png" alt="img" />)}
+            {sortBy !== 'sex' && (<img src="./images/sort_both.png" alt="img" />)}
             {(sortBy === 'sex' && sortOrder === 'asc')
-            && (<img src="../../images/sort_asc.png" alt="img" />)}
+            && (<img src="./images/sort_asc.png" alt="img" />)}
             {(sortBy === 'sex' && sortOrder === 'desc')
-            && (<img src="../../images/sort_desc.png" alt="img" />)}
+            && (<img src="./images/sort_desc.png" alt="img" />)}
           </button>
         </th>
         <th className="head-cell born">
@@ -75,11 +75,11 @@ export const PeopleTable: React.FC<Props> = ({
             }}
           >
             <span className="button-text">Born</span>
-            {sortBy !== 'born' && (<img src="../../images/sort_both.png" alt="img" />)}
+            {sortBy !== 'born' && (<img src="./images/sort_both.png" alt="img" />)}
             {(sortBy === 'born' && sortOrder === 'asc')
-            && (<img src="../../images/sort_asc.png" alt="img" />)}
+            && (<img src="./images/sort_asc.png" alt="img" />)}
             {(sortBy === 'born' && sortOrder === 'desc')
-            && (<img src="../../images/sort_desc.png" alt="img" />)}
+            && (<img src="./images/sort_desc.png" alt="img" />)}
           </button>
         </th>
         <th className="head-cell died">
@@ -94,11 +94,11 @@ export const PeopleTable: React.FC<Props> = ({
             }}
           >
             <span className="button-text">Died</span>
-            {sortBy !== 'died' && (<img src="../../images/sort_both.png" alt="img" />)}
+            {sortBy !== 'died' && (<img src="./images/sort_both.png" alt="img" />)}
             {(sortBy === 'died' && sortOrder === 'asc')
-            && (<img src="../../images/sort_asc.png" alt="img" />)}
+            && (<img src="./images/sort_asc.png" alt="img" />)}
             {(sortBy === 'died' && sortOrder === 'desc')
-            && (<img src="../../images/sort_desc.png" alt="img" />)}
+            && (<img src="./images/sort_desc.png" alt="img" />)}
           </button>
         </th>
         <th className="head-cell mother">Mother</th>

@@ -45,10 +45,6 @@ export const PeoplePage: React.FC<any> = ({ personSlug }: MatchParams) => {
   const appliedQuery = searchParams.get('query') || '';
   const [query, setQuery] = useState('');
 
-  useEffect(() => {
-    setQuery(appliedQuery);
-  }, [appliedQuery]);
-
   const applyQuery = useCallback(
     debounce((newQuery: string) => {
       if (newQuery) {
