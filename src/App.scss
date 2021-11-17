@@ -1,1 +1,53 @@
-// styles go here
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.title {
+  margin-top: 20px;
+}
+
+.field {
+  display: flex;
+}
+
+.label {
+  font-size: large;
+  margin: 5px 20px;
+}
+
+.form {
+  display: flex;
+  margin: 20px;
+}
+
+.female {
+  color: red;
+}
+
+.male {
+  color: blue;
+}
+
+.selectedPerson {
+  border: 3px solid rgba(230, 19, 47, 0.89);
+  background-color: rgba(140, 155, 0, 0.3);
+}
+
+.th-container {
+  display: flex;
+  flex-direction: row;
+  height: 50px;
+}
+
+.buttons {
+  display: flex;
+  flex-direction: column;
+  margin-left: 10px;
+}
+
+.select {
+  min-width: 200px;
+}
