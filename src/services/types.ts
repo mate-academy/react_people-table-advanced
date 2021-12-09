@@ -12,3 +12,10 @@ export interface PersonFull extends Person {
   father?: Person;
   mother?: Person;
 }
+
+export enum SortByOptions {
+  Name = 'name',
+  Sex = 'sex',
+  Born = 'born',
+  Died = 'died',
+}
