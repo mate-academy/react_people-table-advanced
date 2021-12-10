@@ -19,3 +19,8 @@ export enum SortByOptions {
   Born = 'born',
   Died = 'died',
 }
+
+export enum SortType {
+  Asc = 'asc',
+  Desc = 'desc',
+}

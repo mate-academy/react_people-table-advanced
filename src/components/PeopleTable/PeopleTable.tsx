@@ -1,38 +1,33 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { FC, useCallback, useMemo } from 'react';
 import { faSearch } from '@fortawesome/free-solid-svg-icons/faSearch';
-import { useHistory, useLocation } from 'react-router-dom';
-import { PersonFull, SortByOptions } from '../../services/types';
-import { PeopleTableHeaders } from './PeopleTableHeaders';
+import { useLocation } from 'react-router-dom';
+import { PersonFull, SortByOptions, SortType } from '../../services/types';
 import { PeopleTableRow } from './PeopleTableRow/PeopleTableRow';
 import {
   usePeopleTableSortCallback,
 } from '../../services/hooks/usePeopleTableSortCallback';
+import { PeopleTableHeaders } from './PeopleTableHeaders';
+import { useQueryChanger } from '../../services/hooks/useQueryChanger';
 
 interface Props {
   people: PersonFull[];
 }
 
 export const PeopleTable: FC<Props> = React.memo(({ people }) => {
-  const history = useHistory();
-
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
 
   // region nameFilter
   const query = searchParams.get('query') || '';
 
+  const changeQuery = useQueryChanger();
+
   const handleQueryChange = useCallback(
     (event) => {
       const { value } = event.target;
 
-      searchParams.set('query', value);
-
-      history.push({
-        search: value
-          ? searchParams.toString()
-          : '',
-      });
+      changeQuery(value);
     },
     [],
   );
@@ -59,33 +54,25 @@ export const PeopleTable: FC<Props> = React.memo(({ people }) => {
 
   // region sortBy
   const sortBy = searchParams.get('sortBy');
+  const sortOrder = searchParams.get('sortOrder');
 
-  const sortCallback = usePeopleTableSortCallback(sortBy as SortByOptions);
-
-  const handleSortByChange = useCallback(
-    (event) => {
-      const { value } = event.target;
-
-      searchParams.set('sortBy', value);
-
-      history.push({
-        search: value
-          ? searchParams.toString()
-          : '',
-      });
-    },
-    [],
+  const sortCallback = usePeopleTableSortCallback(
+    sortBy as SortByOptions,
   );
 
   const sortedPeople = sortBy
     ? [...filteredPeople].sort(sortCallback)
     : filteredPeople;
+
+  if (sortOrder === SortType.Desc) {
+    sortedPeople.reverse();
+  }
   // endregion sortBy
 
   return (
     <div className="container">
       <div className="field columns">
-        <div className="container column is-one-fifth">
+        <div className="container column is-4">
           <label className="label" htmlFor="nameInput">Name</label>
           <div className="control has-icons-right">
             <input
@@ -99,22 +86,6 @@ export const PeopleTable: FC<Props> = React.memo(({ people }) => {
             <span className="icon is-right is-small has-text-link">
               <FontAwesomeIcon icon={faSearch} />
             </span>
-          </div>
-        </div>
-
-        <div className="container column is-one-fifth">
-          <label className="label" htmlFor="sortBySelect">Sort By</label>
-          <div className="select control">
-            <select
-              id="sortBySelect"
-              onChange={handleSortByChange}
-            >
-              <option value="">Choose option</option>
-              <option value={SortByOptions.Name}>Name</option>
-              <option value={SortByOptions.Sex}>Sex</option>
-              <option value={SortByOptions.Born}>Born</option>
-              <option value={SortByOptions.Died}>Died</option>
-            </select>
           </div>
         </div>
 
@@ -134,6 +105,5 @@ export const PeopleTable: FC<Props> = React.memo(({ people }) => {
         </tbody>
       </table>
     </div>
-
   );
 });
