@@ -1,1 +1,12 @@
-// styles go here
+.logo {
+  border-radius: 8px;
+  transition: transform 0.3s;
+
+  &:hover {
+    transform: scale(1.2);
+  }
+}
+
+.people-table {
+  border-collapse: collapse;
+}
