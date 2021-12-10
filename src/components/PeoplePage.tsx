@@ -2,7 +2,7 @@ import {
   FC, useCallback, useState,
 } from 'react';
 import useAsyncEffect from 'use-async-effect';
-import { getPeople } from '../services/api';
+import { getPreparedPeople } from '../services/api';
 import { PersonFull } from '../services/types';
 import { PeopleTable } from './PeopleTable';
 
@@ -15,7 +15,7 @@ export const PeoplePage: FC = () => {
     setIsLoading(true);
 
     try {
-      const peopleInfo: PersonFull[] = await getPeople();
+      const peopleInfo: PersonFull[] = await getPreparedPeople();
 
       setPeople(peopleInfo);
       setIsLoading(false);
@@ -34,11 +34,13 @@ export const PeoplePage: FC = () => {
       <h2 className="subtitle">People page</h2>
 
       {isLoading && (
-        <progress className="progress is-large is-info" max="100">60%</progress>
+        <progress className="progress is-large is-info" max="100" />
       )}
 
       {isError && (
-        <h3 className="subtitle">Could not load People info from server</h3>
+        <h3 className="subtitle has-text-danger-dark">
+          Could not load People info from server
+        </h3>
       )}
 
       {shouldShowPeopleTable && (

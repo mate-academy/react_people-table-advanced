@@ -1,7 +1,10 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import React, { FC, useCallback, useMemo } from 'react';
+import React, {
+  FC, useCallback, useMemo, useState,
+} from 'react';
 import { faSearch } from '@fortawesome/free-solid-svg-icons/faSearch';
 import { useLocation } from 'react-router-dom';
+import debounce from 'lodash.debounce';
 import { PersonFull, SortByOptions, SortType } from '../../services/types';
 import { PeopleTableRow } from './PeopleTableRow/PeopleTableRow';
 import {
@@ -19,22 +22,29 @@ export const PeopleTable: FC<Props> = React.memo(({ people }) => {
   const searchParams = new URLSearchParams(location.search);
 
   // region nameFilter
-  const query = searchParams.get('query') || '';
+  const appliedQuery = searchParams.get('query') || '';
+
+  const [query, setQuery] = useState(appliedQuery);
 
   const changeQuery = useQueryChanger();
+  const debouncedChangeQuery = useCallback(
+    debounce((newQuery: string) => changeQuery(newQuery), 500),
+    [],
+  );
 
   const handleQueryChange = useCallback(
     (event) => {
       const { value } = event.target;
 
-      changeQuery(value);
+      setQuery(value);
+      debouncedChangeQuery(value);
     },
     [],
   );
 
   const filteredPeople = useMemo(
     () => {
-      const queryLowerCase = query.toLowerCase();
+      const queryLowerCase = appliedQuery.toLowerCase();
 
       return people.filter((person) => {
         const fields = [
@@ -48,7 +58,7 @@ export const PeopleTable: FC<Props> = React.memo(({ people }) => {
         );
       });
     },
-    [query],
+    [appliedQuery],
   );
   // endregion nameFilter
 
