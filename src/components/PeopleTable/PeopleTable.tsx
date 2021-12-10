@@ -75,7 +75,7 @@ export const PeopleTable: FC<Props> = React.memo(({ people }) => {
     : filteredPeople;
 
   if (sortOrder === SortType.Desc) {
-    sortedPeople.reverse();
+    [...sortedPeople].reverse();
   }
   // endregion sortBy
 
