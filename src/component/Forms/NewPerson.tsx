@@ -27,7 +27,7 @@ export const NewPerson: React.FC = () => {
   const [allMothers, setAllMothers] = useState<People[]>([]);
   const [allFathers, setAllFathers] = useState<People[]>([]);
 
-  const [born, died, name] = watch(['born', 'died', 'name']);
+  const [born, name] = watch(['born', 'name']);
 
   const navigate = useNavigate();
 
