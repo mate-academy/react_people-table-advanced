@@ -1,4 +1,6 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, {
+  useCallback, useEffect, useState,
+} from 'react';
 import {
   Link, useNavigate, useSearchParams, useLocation,
 } from 'react-router-dom';
@@ -46,16 +48,17 @@ export const PeopleTable: React.FC<Props> = React.memo(({ peopleServer }) => {
 
   let modifyPeople = peopleServer;
 
-  if (searchQuery?.length) {
+  const sortingQuery = () => {
     modifyPeople = modifyPeople.filter((people: People) => {
       const smallQuery = searchQuery.toLowerCase();
 
       return people.motherName?.toLowerCase().includes(smallQuery)
-        || people.fatherName?.toLowerCase().includes(smallQuery);
+        || people.fatherName?.toLowerCase().includes(smallQuery)
+        || people.name?.toLowerCase().includes(smallQuery);
     });
-  }
+  };
 
-  if (sortBy?.length) {
+  const sortingColumn = () => {
     switch (sortBy) {
       case SortBy.Name:
       case SortBy.Sex:
@@ -102,6 +105,14 @@ export const PeopleTable: React.FC<Props> = React.memo(({ peopleServer }) => {
       default:
         break;
     }
+  };
+
+  if (searchQuery?.length) {
+    sortingQuery();
+  }
+
+  if (sortBy?.length) {
+    sortingColumn();
   }
 
   const handleChangeInput = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
@@ -151,7 +162,7 @@ export const PeopleTable: React.FC<Props> = React.memo(({ peopleServer }) => {
         />
         <Link
           to="create"
-          className="btn btn-primary"
+          className="btn btn-primary ms-5"
         >
           Create new person
         </Link>

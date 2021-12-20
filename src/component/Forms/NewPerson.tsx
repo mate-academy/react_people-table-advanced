@@ -4,6 +4,7 @@ import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { People } from '../../types/People';
 import { getPeople } from '../../utils/api';
+import { SelectCreatePeople } from '../Ui/SelectCreatePerson';
 
 type FormValues = {
   name: string,
@@ -55,7 +56,7 @@ export const NewPerson: React.FC = () => {
 
   const onSubmit = (data: FormValues) => {
     // eslint-disable-next-line no-console
-    console.log(data);
+    console.log(data); // this console log is important!
 
     navigate(
       '/people',
@@ -172,35 +173,19 @@ export const NewPerson: React.FC = () => {
         )}
       </div>
 
-      <label className="form-label">Mother name:</label>
-      <select
-        className="form-select mb-3"
-        {...register('motherName', {
-          disabled: born?.length < 4,
-        })}
-      >
-        <option value={0}>--</option>
-        {allMothers && (
-          allMothers.map(person => (
-            <option value={person.name} key={person.name}>{person.name}</option>
-          ))
-        )}
-      </select>
+      <SelectCreatePeople
+        titleLabel="Mother name:"
+        people={allMothers}
+        born={born}
+        selectName="MotherName"
+      />
 
-      <label className="form-label">Father name:</label>
-      <select
-        className="form-select mb-3"
-        {...register('fatherName', {
-          disabled: born?.length < 4,
-        })}
-      >
-        <option value={0}>--</option>
-        {allFathers && (
-          allFathers.map(person => (
-            <option value={person.name} key={person.name}>{person.name}</option>
-          ))
-        )}
-      </select>
+      <SelectCreatePeople
+        titleLabel="Father name:"
+        people={allFathers}
+        born={born}
+        selectName="FatherName"
+      />
 
       <button
         type="submit"

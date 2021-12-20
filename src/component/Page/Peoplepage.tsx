@@ -4,7 +4,7 @@ import { getPeople } from '../../utils/api';
 import Spinner from '../Loader/Loader';
 import { PeopleTable } from '../PeopleTable/PeopleTable';
 
-export const Peoplepage: React.FC = () => {
+export const PeoplePage: React.FC = () => {
   const [peopleServer, setPeopleServer] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
