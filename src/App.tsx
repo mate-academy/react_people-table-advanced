@@ -1,10 +1,9 @@
 import { Route, Routes } from 'react-router-dom';
 import { Layout } from './component/Layout';
-import { CreatePeoplePage } from './component/Page/CreatePeoplePage';
-
-import './App.scss';
 import { PeoplePage } from './component/Page/PeoplePage';
 import { HomePage } from './component/Page/HomePage';
+import { CreatePeoplePage } from './component/Page/CreatePeoplePage';
+import './App.scss';
 
 export const App: React.FC = () => {
   return (
