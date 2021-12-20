@@ -1,1 +1,83 @@
 // styles go here
+.header {
+  padding: 1rem 0;
+  &__navbar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    list-style-type: none;
+    margin: 0;
+  }
+
+  &__navbar-link {
+    color: #fff;
+    padding: 0 1rem;
+    text-decoration: none;
+
+    @media (any-hover: hover) {
+      &:hover{
+        color: #fff;
+        text-decoration: underline;
+      }
+    }
+
+    &.active {
+      text-decoration: underline;
+    }
+  }
+}
+
+.main {
+  padding: 1.5rem 0;
+}
+
+.tr {
+  &--f {
+    background-color: pink;
+  }
+
+  &--m {
+    background-color: #bcbce5;
+  }
+}
+
+.table-button {
+  background-color: transparent;
+  border: none;
+}
+
+.icon-sort {
+  vertical-align: baseline;
+  margin-left: 5px;
+  transition: .3 ease;
+
+  &--active {
+    transform: rotate(180deg);
+  }
+}
+
+.form-label {
+  font-weight: bold;
+}
+
+.field-error {
+  color: red;
+}
+
+.spinner-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 70vh;
+}
+
+.message {
+  position: absolute;
+  top: 56px;
+  right: 50px;
+  color: #fff;
+  padding: 24px 14px;
+  border-radius: 0 0 10px 10px;
+  max-width: 280px;
+}
