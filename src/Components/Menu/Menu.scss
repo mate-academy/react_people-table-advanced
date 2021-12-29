@@ -1,0 +1,33 @@
+.menu {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  height: 10vh;
+  border-bottom-left-radius: 15px;
+  border-bottom-right-radius: 15px;
+  background-color: rgb(221, 182, 215);
+  padding-left: 10px;
+}
+
+.link {
+  margin-right: 10px;
+  font-size: 20px;
+  transition: all 0.1s;
+  padding: 3px;
+
+  &:last-child {
+    margin-right: 0;
+  }
+
+  &:hover {
+    color:rgb(221, 182, 215);
+    background-color: rgb(98, 45, 100);
+    border-radius: 10px;
+  }
+}
+
+.active {
+  color:rgb(221, 182, 215);
+  background-color: rgb(98, 45, 100);
+  border-radius: 10px;
+}
