@@ -1,0 +1,31 @@
+.header {
+  position: relative;
+  z-index: 2; 
+  box-shadow: 0 5px 10px rgb(98, 45, 100);
+  border-radius: 8px;
+  margin-bottom: 20px;
+  width: 100%;
+
+  &__data {
+    // display: flex;
+    // flex-direction: row;
+    // justify-content: center;
+    // align-items: center;
+    padding: 15px 15px;
+    font-size: 18px;
+    font-weight: bold;
+  }
+
+  &__button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: none;
+    background-color: transparent;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+  }
+}
+
+  

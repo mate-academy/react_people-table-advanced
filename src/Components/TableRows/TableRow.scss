@@ -1,0 +1,15 @@
+.table-row {
+  position: relative;
+  z-index: 1;
+  border: 2px solid transparent;
+  background-color: rgb(224, 173, 217);
+}
+
+.table-main-data {
+  padding: 10px 15px;
+}
+
+.enable {
+  border: 2px solid rgb(22, 22, 59);
+  background-color: rgb(245, 239, 239);
+}
