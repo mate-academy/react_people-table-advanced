@@ -1,0 +1,7 @@
+.navbar-item {
+  border-bottom: 2px solid transparent;
+  &--active {
+    color: #485fc7;
+    border-color: #485fc7;
+  }
+}

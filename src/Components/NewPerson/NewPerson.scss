@@ -1,0 +1,39 @@
+.new-person {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.95);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.add-form {
+  background-color: rgba(0, 0, 0, 0.5);
+  padding: 40px 30px;
+  display: flex;
+  gap: 10px;
+  flex-direction: column;
+}
+
+.field .input {
+  width: 100%;
+}
+
+.field:not(:last-child) {
+  margin: 0;
+}
+
+.label {
+  color: rgb(200, 200, 200);
+}
+
+.select-parent,
+.select-dates {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+}

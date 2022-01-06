@@ -1,0 +1,19 @@
+.blue-link {
+  color: rgb(100, 100, 255);
+  cursor: pointer;
+  transition: color 0.3s;
+
+  &:hover {
+    color: blue;
+  }
+}
+
+.red-link {
+  color: rgb(255, 100, 100);
+  cursor: pointer;
+  transition: color 0.3s;
+
+  &:hover {
+    color: red;
+  }
+}
