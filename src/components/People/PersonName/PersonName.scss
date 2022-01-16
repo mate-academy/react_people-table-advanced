@@ -1,0 +1,28 @@
+.person {
+  text-decoration: none;
+  color: black;
+}
+
+.male {
+  color: rgb(40, 50, 148);
+
+  &:hover {
+    color: blue;
+  }
+
+  &:active {
+    font-weight: bold;
+  }
+}
+
+.female {
+  color: rgb(126, 41, 41);
+
+  &:hover {
+    color: red;
+}
+
+  &:active {
+    font-weight: bold;
+  }
+}

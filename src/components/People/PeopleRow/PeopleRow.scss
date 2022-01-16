@@ -1,0 +1,35 @@
+td {
+  text-align: center;
+  background-color: antiquewhite;
+}
+
+.person--active {
+  background-color: #7fff00;
+}
+
+.sorted {
+  background-color: rgba(244, 165, 96, 0.384);
+}
+
+span {
+  font-weight: bold;
+  animation: color-change 3s infinite;
+
+  @keyframes color-change {
+    0% {
+      color: transparent;
+    }
+    25% {
+      color: red;
+    }
+    50% {
+      color: darkred;
+    }
+    75% {
+      color: red;
+    }
+    100% {
+      color: transparent;
+    }
+  }
+}

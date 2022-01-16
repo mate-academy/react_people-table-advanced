@@ -1,0 +1,29 @@
+.error {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-top: 3px solid black;
+  border-bottom: 3px solid black;
+  background-color: red;
+  animation: pulse 2s ease-in-out infinite alternate;
+
+  @keyframes pulse {
+    0% {
+      background-color: transparent;
+    }
+
+    50% {
+      background-color: red;
+    }
+
+    100% {
+      background-color: transparent;
+    }
+  }
+
+  &__message {
+    font-weight: bold;
+    font-size: 40px;
+    color: black;
+  }
+}
