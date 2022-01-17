@@ -61,10 +61,10 @@ export const PeopleTable: React.FC<Props> = ({ people, setPeople }) => {
   const handleSort = (event: React.MouseEvent<HTMLElement>) => {
     const value = (event.target as Element).innerHTML;
 
-    if (!sortOrder || sortOrder === 'desc') {
-      searchParams.set('sortOrder', 'asc');
-    } else {
+    if ((!sortOrder || sortOrder === 'asc') && sortBy === value) {
       searchParams.set('sortOrder', 'desc');
+    } else {
+      searchParams.set('sortOrder', 'asc');
     }
 
     searchParams.set('sortBy', value);

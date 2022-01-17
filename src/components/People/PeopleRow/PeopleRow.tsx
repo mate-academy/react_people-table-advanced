@@ -21,7 +21,7 @@ export const PeopleRow: React.FC<Props> = ({ person, people, isSorted }) => {
   return (
     <tr
       className={
-        classNames({ 'person--active': person.slug === `${params['*']}` })
+        classNames('person-row', { 'person--active': person.slug === `${params['*']}` })
       }
     >
       <td
