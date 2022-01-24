@@ -217,7 +217,9 @@ export const AddPerson: React.FC<Props> = ({ people, setPeople }) => {
               <option value="" disabled>
                 Mothers
               </option>
-              {people.filter(human => human.sex === 'f' && human.born >= +born + 18)
+              {people.filter(human => human.sex === 'f'
+                && human.born <= +born - 18
+                && human.died > +born)
                 .map(person => (
                   <option
                     key={person.name}
@@ -251,7 +253,9 @@ export const AddPerson: React.FC<Props> = ({ people, setPeople }) => {
               <option value="" disabled>
                 Fathers
               </option>
-              {people.filter(human => human.sex === 'm' && human.born >= +born + 18)
+              {people.filter(human => human.sex === 'm'
+                && human.born <= +born - 18
+                && human.died > +born)
                 .map(person => (
                   <option
                     key={person.name}
