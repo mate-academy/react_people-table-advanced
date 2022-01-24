@@ -138,77 +138,6 @@ export const AddPerson: React.FC<Props> = ({ people, setPeople }) => {
           </div>
         </div>
 
-        <div className="addPerson__form--select_parent">
-          <div className="addPerson__form--select--mother">
-            <h3>
-              Please select mother
-              {!errors.includes('mother') && <p className="OK OK--mother">&#10004;</p>}
-            </h3>
-            <h6
-              className="form__error"
-              style={{
-                opacity: errors.includes('mother') ? '1' : '0',
-              }}
-            >
-              Please select mother from list
-            </h6>
-            <select
-              name="parents"
-              id="mother"
-              value={mother}
-              onChange={(event) => setMother(event.target.value)}
-            >
-
-              <option value="" disabled>
-                Mothers
-              </option>
-              {people.filter(human => human.sex === 'f')
-                .map(person => (
-                  <option
-                    key={person.name}
-                    value={person.name}
-                  >
-                    {person.name}
-                  </option>
-                ))}
-            </select>
-          </div>
-
-          <div className="addPerson__form--select--father">
-            <h3>
-              Please select father
-              {!errors.includes('father') && <p className="OK OK--father">&#10004;</p>}
-            </h3>
-            <h6
-              className="form__error"
-              style={{
-                opacity: errors.includes('father') ? '1' : '0',
-              }}
-            >
-              Please select father from list
-            </h6>
-            <select
-              name="parents"
-              id="father"
-              value={father}
-              onChange={(event) => setFather(event.target.value)}
-            >
-              <option value="" disabled>
-                Fathers
-              </option>
-              {people.filter(human => human.sex === 'm')
-                .map(person => (
-                  <option
-                    key={person.name}
-                    value={person.name}
-                  >
-                    {person.name}
-                  </option>
-                ))}
-            </select>
-          </div>
-        </div>
-
         <div className="addPerson__form--dates">
           <div className="born">
             <h3>
@@ -261,6 +190,77 @@ export const AddPerson: React.FC<Props> = ({ people, setPeople }) => {
                 onChange={(event) => setDied(event.target.value)}
               />
             </label>
+          </div>
+        </div>
+
+        <div className="addPerson__form--select_parent">
+          <div className="addPerson__form--select--mother">
+            <h3>
+              Please select mother
+              {!errors.includes('mother') && <p className="OK OK--mother">&#10004;</p>}
+            </h3>
+            <h6
+              className="form__error"
+              style={{
+                opacity: errors.includes('mother') ? '1' : '0',
+              }}
+            >
+              Please select mother from list
+            </h6>
+            <select
+              name="parents"
+              id="mother"
+              value={mother}
+              onChange={(event) => setMother(event.target.value)}
+            >
+
+              <option value="" disabled>
+                Mothers
+              </option>
+              {people.filter(human => human.sex === 'f' && human.born >= +born + 18)
+                .map(person => (
+                  <option
+                    key={person.name}
+                    value={person.name}
+                  >
+                    {person.name}
+                  </option>
+                ))}
+            </select>
+          </div>
+
+          <div className="addPerson__form--select--father">
+            <h3>
+              Please select father
+              {!errors.includes('father') && <p className="OK OK--father">&#10004;</p>}
+            </h3>
+            <h6
+              className="form__error"
+              style={{
+                opacity: errors.includes('father') ? '1' : '0',
+              }}
+            >
+              Please select father from list
+            </h6>
+            <select
+              name="parents"
+              id="father"
+              value={father}
+              onChange={(event) => setFather(event.target.value)}
+            >
+              <option value="" disabled>
+                Fathers
+              </option>
+              {people.filter(human => human.sex === 'm' && human.born >= +born + 18)
+                .map(person => (
+                  <option
+                    key={person.name}
+                    value={person.name}
+                  >
+                    {person.name}
+                  </option>
+                ))}
+            </select>
           </div>
         </div>
 
