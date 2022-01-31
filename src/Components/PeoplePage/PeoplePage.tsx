@@ -38,7 +38,7 @@ export const PeoplePage = () => {
   };
 
   const applyQuery = useCallback(
-    debounce((newQuery) => {
+    debounce((newQuery, currentPathname) => {
       if (newQuery) {
         searchParams.set('query', newQuery);
       } else {
@@ -46,6 +46,7 @@ export const PeoplePage = () => {
       }
 
       navigate({
+        pathname: currentPathname,
         search: searchParams.toString(),
       });
     }, 500),
@@ -54,7 +55,7 @@ export const PeoplePage = () => {
 
   const handleQueryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setEnteredQuery(event.target.value);
-    applyQuery(event.target.value);
+    applyQuery(event.target.value, pathname);
   };
 
   const handleSortByChange = (sortBy: SortBy) => {
