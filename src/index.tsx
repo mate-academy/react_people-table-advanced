@@ -4,7 +4,7 @@ import { BrowserRouter } from 'react-router-dom';
 import App from './App';
 
 ReactDOM.render(
-  <BrowserRouter>
+  <BrowserRouter basename="/react_people-table-advanced">
     <App />
   </BrowserRouter>,
   document.getElementById('root'),
