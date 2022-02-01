@@ -28,11 +28,11 @@ export const SortableColumnName: React.FC<Props> = ({
       >
         {selectedSortBy !== sortBy
           ? (
-            <img src="/react_people-table-advanced/images/sort_both.png" alt="sort" />
+            <img src="/images/sort_both.png" alt="sort" />
           )
           : (
             <img
-              src={`/react_people-table-advanced/images/sort_${selectedSortOrder}.png`}
+              src={`/images/sort_${selectedSortOrder}.png`}
               alt={`sort-${selectedSortOrder}`}
             />
           )}
