@@ -1,0 +1,17 @@
+.PeopleTable {
+  &__title {
+    cursor: pointer;
+    &::after {
+      content: '';
+      display: inline-block;
+      position: relative;
+      right: -10px;
+      top: 6px;
+      background-image: url('../../images/sort_both.png');
+      background-size: contain;
+      background-repeat: no-repeat;
+      height: 20px;
+      width: 20px;
+    }
+  }
+}
