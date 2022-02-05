@@ -1,0 +1,29 @@
+.container {
+  margin-top: 30px;
+}
+
+.table {
+  text-align: left;
+  cursor: pointer;
+
+  & > thead {
+    font-weight: 600;
+    font-size: 18px;
+  }
+
+  &__title {
+    cursor: pointer;
+    &::after {
+      content: "";
+      display: inline-block;
+      position: relative;
+      right: -10px;
+      top: 6px;
+      background-image: url("../img/sort_both.png");
+      background-size: contain;
+      background-repeat: no-repeat;
+      height: 20px;
+      width: 20px;
+    }
+  }
+}
