@@ -1,0 +1,11 @@
+.wrapper {
+  margin-top: 30px;
+  text-align: center;
+}
+
+.hp {
+  &__title {
+    font-weight: 600;
+    font-size: 25px;
+  }
+}
