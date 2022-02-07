@@ -1,0 +1,30 @@
+.header {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  background-color: rgb(149, 149, 255);
+  border-radius: 10px;
+  margin-bottom: 10px;
+
+  &__title {
+    color: whitesmoke;
+    font-size: 2rem;
+  }
+}
+
+.nav {
+  display: flex;
+  padding: 10px;
+
+  &__link {
+    position: relative;
+    display: block;
+    text-decoration: none;
+    color: rgb(101, 101, 255);
+    background-color: whitesmoke;
+    padding: 5px;
+    margin-left: 10px;
+    height: max-content;
+    border-radius: 10px;
+  }
+}
