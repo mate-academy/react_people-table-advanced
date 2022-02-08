@@ -4,6 +4,7 @@ type Props = {
   value: number | null,
   hasError: boolean,
   min: number,
+  max: number,
   disabled: boolean,
   handleInputChange: (fieldName: keyof FormFields, value: number) => void,
   validateFields: (fieldName: keyof FormFields) => void,
@@ -15,6 +16,7 @@ export const YearSelection: React.FC<Props> = ({
   value,
   hasError,
   min,
+  max,
   disabled,
   handleInputChange,
   validateFields,
@@ -30,6 +32,7 @@ export const YearSelection: React.FC<Props> = ({
             id={`${fieldName}-input`}
             placeholder={title}
             min={min}
+            max={max}
             value={value || ''}
             onChange={(e) => {
               handleInputChange(fieldName, +e.target.value);
@@ -42,7 +45,7 @@ export const YearSelection: React.FC<Props> = ({
         </div>
       </label>
       <p className="help is-danger">
-        {hasError && `Can't be less than ${min}`}
+        {hasError && `Must be between ${min} and ${max}`}
       </p>
     </div>
   );

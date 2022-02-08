@@ -12,9 +12,12 @@ import {
   generateNewPersonObject,
   getParents,
   isFormIncomplete,
+  getCurrentYear,
+  validateBornYear,
+  getMaxDiedYear,
+  MIN_BORN_YEAR,
+  validateDiedYear,
 } from './utils';
-
-const MIN_BORN_YEAR = 1400;
 
 type OutLetContext = [ProcessedPerson[], (person: ProcessedPerson) => void];
 
@@ -44,13 +47,13 @@ export const NewPerson = () => {
       case 'born':
         setErrors({
           ...errors,
-          born: fields.born ? fields.born < MIN_BORN_YEAR : false,
+          born: fields.born ? validateBornYear(fields.born) : false,
         });
         break;
       case 'died':
         setErrors({
           ...errors,
-          died: fields.died && fields.born ? fields.died < fields.born : false,
+          died: fields.died && fields.born ? validateDiedYear(fields.born, fields.died) : false,
         });
         break;
       default:
@@ -76,6 +79,8 @@ export const NewPerson = () => {
 
     handleAddPerson(newPerson);
   };
+
+  const maxDiedYear = fields.born ? getMaxDiedYear(fields.born) : getCurrentYear();
 
   return (
     <>
@@ -105,6 +110,7 @@ export const NewPerson = () => {
               fieldName="born"
               value={fields.born}
               min={MIN_BORN_YEAR}
+              max={getCurrentYear()}
               disabled={false}
               handleInputChange={handleInputChange}
               validateFields={validateFields}
@@ -118,6 +124,7 @@ export const NewPerson = () => {
               fieldName="died"
               value={fields.died}
               min={fields.born || MIN_BORN_YEAR}
+              max={maxDiedYear}
               disabled={!fields.born}
               handleInputChange={handleInputChange}
               validateFields={validateFields}

@@ -1,3 +1,7 @@
+const MAX_AGE = 150;
+
+export const MIN_BORN_YEAR = 1400;
+
 export const defaultState: FormFields = {
   name: '',
   sex: null,
@@ -56,6 +60,31 @@ export const isFormIncomplete = (fields: FormFields, errors: FormErrors) => {
   const hasYearErrors = errors.died || errors.born;
 
   return hasIncompleteFields || hasNameErrors || hasYearErrors;
+};
+
+export const getCurrentYear = () => {
+  const currentDate = new Date();
+
+  return currentDate.getFullYear();
+};
+
+export const getMaxDiedYear = (bornYear: number) => {
+  const currentYear = getCurrentYear();
+  const maxDiedYear = bornYear + MAX_AGE;
+
+  return maxDiedYear > currentYear ? currentYear : maxDiedYear;
+};
+
+export const validateBornYear = (bornYear: number) => {
+  const currentYear = getCurrentYear();
+
+  return bornYear < MIN_BORN_YEAR || bornYear > currentYear;
+};
+
+export const validateDiedYear = (bornYear: number, diedYear: number) => {
+  const maxDiedYear = getMaxDiedYear(bornYear);
+
+  return diedYear < bornYear || diedYear > maxDiedYear;
 };
 
 export const generateNewPersonObject = (fields: FormFields, people: ProcessedPerson[]) => {
