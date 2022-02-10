@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
 import './PeoplePage.scss';
+import debounce from 'lodash/debounce';
 import { PersonRow } from './PersonRow';
 import sortBoth from '../../images/sort_both.png';
 import sortAsc from '../../images/sort_asc.png';
 import sortDesc from '../../images/sort_desc.png';
-// import debounce from 'lodash/debounce';
 
 interface People {
   name: string,
@@ -33,25 +33,86 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
   const [imgBorn, setImgBorn] = useState(sortBoth);
   const [imgDied, setImgDied] = useState(sortBoth);
 
-  const params: any = {};
+  const queryText = searchParams.get('query') || '';
+  const [query, setQuery] = useState('');
 
-  // const applyQuery = useCallback(
-  //   debounce(() => {}, 1000), []);
+  // useEffect(() => {
+  //   let searchParamsObject = {};
+  //   const queryName = searchParams.get('query');
+  //   const sortBy = searchParams.get('sortBy');
+  //   const sortOrder = searchParams.get('sorsortOrdertBy');
+
+  //   if (queryName && sortBy) {
+  //     searchParamsObject = {
+  //       query: queryName,
+  //       sortBy,
+  //       sortOrder,
+  //     };
+  //   }
+
+  //   if (queryName) {
+  //     searchParamsObject = {
+  //       query: queryName,
+  //     };
+  //   }
+
+  //   if (sortBy) {
+  //     searchParamsObject = {
+  //       sortBy,
+  //       sortOrder,
+  //     };
+  //   }
+
+  //   setSearchParams(searchParamsObject);
+  // });
+
+  const search = searchParams.get('sortBy');
+  const order = searchParams.get('sortOrder');
+
+  const applyQuery = useCallback(
+    debounce((newQuery: string) => {
+      if (newQuery) {
+        if (newQuery && search && order) {
+          const params = {
+            query: newQuery,
+            sortBy: search,
+            sortOrder: order,
+          };
+
+          setSearchParams(params);
+        } else if (newQuery) {
+          setSearchParams({ query: newQuery });
+        }
+      } else {
+        setSearchParams({});
+      }
+    }, 1000), [],
+  );
+
+  // const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  //   const { value } = event.target;
+
+  //   if (value) {
+  //     apiQuery = {
+  //       query: value,
+  //     };
+  //   }
+
+  //   if (value && methodQuery) {
+  //     apiQuery = {
+  //       query: value,
+  //       sortBy: sortQuery,
+  //       sortMethod: methodQuery,
+  //     };
+  //   }
+
+  //   setSearchParams(apiQuery);
+  // };
 
   const HandleQueryChange = (event: React.FormEvent<HTMLInputElement>): void => {
-    const query = event.currentTarget.value || '';
-
-    if (query) {
-      params.query = query;
-      setSearchParams(params);
-    } else {
-      setSearchParams({
-
-      });
-    }
+    setQuery(event.currentTarget.value);
+    applyQuery(event.currentTarget.value);
   };
-
-  const queryText = searchParams.get('query') || '';
 
   const filteredPeople
     = people.filter(person => {
@@ -109,8 +170,14 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
         <input
           className="input"
           type="text"
-          value={queryText}
+          value={query}
           onChange={HandleQueryChange}
+          onFocus={() => {
+            setImgSex(sortBoth);
+            setImgBorn(sortBoth);
+            setImgDied(sortBoth);
+            setImgName(sortBoth);
+          }}
         />
       </div>
       <table className="PeopleTable">
@@ -118,7 +185,9 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
           <tr>
             <th>
               <Link
-                to={`?sortBy=name&sortOrder=${sortByName}`}
+                to={queryText
+                  ? `?query=${queryText}&?sortBy=name&sortOrder=${sortByName}`
+                  : `?sortBy=name&sortOrder=${sortByName}`}
                 className="PeopleTable__link"
                 onClick={() => {
                   setSortByName(sortByName === 'asc' ? 'desc' : 'asc');
@@ -134,7 +203,9 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
             </th>
             <th>
               <Link
-                to="?sortBy=sex"
+                to={queryText
+                  ? `?query=${queryText}&?sortBy=sex&sortOrder=${sortBySex}`
+                  : `?sortBy=sex&sortOrder=${sortBySex}`}
                 className="PeopleTable__link"
                 onClick={() => {
                   setSortBySex(sortBySex === 'asc' ? 'desc' : 'asc');
@@ -150,7 +221,9 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
             </th>
             <th>
               <Link
-                to="?sortBy=born"
+                to={queryText
+                  ? `?query=${queryText}&?sortBy=born&sortOrder=${sortByBorn}`
+                  : `?sortBy=born&sortOrder=${sortByBorn}`}
                 className="PeopleTable__link"
                 onClick={() => {
                   setSortByBorn(sortByBorn === 'asc' ? 'desc' : 'asc');
@@ -166,7 +239,9 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
             </th>
             <th>
               <Link
-                to="?sortBy=died"
+                to={queryText
+                  ? `?query=${queryText}&?sortBy=died&sortOrder=${sortByDied}`
+                  : `?sortBy=died&sortOrder=${sortByDied}`}
                 className="PeopleTable__link"
                 onClick={() => {
                   setSortByDied(sortByDied === 'asc' ? 'desc' : 'asc');
