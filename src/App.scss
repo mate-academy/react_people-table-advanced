@@ -1,1 +1,62 @@
-// styles go here
+.Header {
+  &__Nav {
+    display: flex;
+  }
+
+  &__Link {
+    margin-right: 30px;
+  }
+}
+
+.PeopleTable {
+  width: 100%;
+  border-collapse: collapse;
+
+  &__Header {
+    height: 50px;
+  }
+  
+  &__Title {
+    position: relative;
+    color: white;
+    font-size: 20px;
+    background-color: cornflowerblue;
+
+    &--sort {
+      cursor: pointer;
+      &::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        background-image: url('./assets/sort_both.png');
+      }
+    }
+  }
+
+  &__Person {
+    border-bottom: 2px solid gray;
+    background-color: lavender;
+
+    &--selected {
+      background: yellow;
+    }
+  }
+
+  &__Item {
+    padding: 5px;
+    text-align: center;
+  }
+}
+
+.PersonName {
+  text-decoration: none;
+  color: blue;
+
+  &--female {
+    color: red;
+  }
+}
