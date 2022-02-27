@@ -1,0 +1,37 @@
+.form {
+  position: relative;
+  min-width: 480px;
+  max-width: 768px;
+  margin: 0 auto;
+
+  &__back-btn {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+  }
+
+  &__field {
+    width: 100%;
+    margin-bottom: 24px;
+
+    &--radio {
+      width: 80px;
+      display: inline-block;
+    }
+  }
+
+  &__field-wrapper {
+    gap: 8px;
+  }
+
+  &__select {
+    width: 100%;
+  }
+
+  &__btn {
+    width: 100%;
+  }
+}
