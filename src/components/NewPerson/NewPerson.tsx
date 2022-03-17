@@ -17,7 +17,7 @@ type Errors = {
   died: boolean
 };
 
-const currYear = new Date().getFullYear();
+const currentYear = new Date().getFullYear();
 
 const NewPerson: React.FC<Props> = ({ people, setPeople }) => {
   const [name, setName] = useState('');
@@ -27,7 +27,7 @@ const NewPerson: React.FC<Props> = ({ people, setPeople }) => {
   const [motherName, setMotherName] = useState('');
   const [fatherName, setFatherName] = useState('');
 
-  const [touched, setTouched] = useState({
+  const [isFieldTouched, setIsFieldTouched] = useState({
     name: false,
     sex: false,
     born: false,
@@ -44,7 +44,7 @@ const NewPerson: React.FC<Props> = ({ people, setPeople }) => {
   };
 
   const clearErrors = () => {
-    setTouched({
+    setIsFieldTouched({
       name: false,
       sex: false,
       born: false,
@@ -54,6 +54,7 @@ const NewPerson: React.FC<Props> = ({ people, setPeople }) => {
 
   const onFormSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
     const newPerson = {
       name,
       sex,
@@ -66,16 +67,16 @@ const NewPerson: React.FC<Props> = ({ people, setPeople }) => {
       mother: people.find(person => person.name === motherName),
     };
 
+    setPeople([...people, newPerson]);
+
     clearInputs();
     clearErrors();
-
-    setPeople([...people, newPerson]);
   };
 
   const validate = () => ({
     name: name.length === 0 || !/^[A-Za-z\s]*$/.test(name),
     sex: sex.length === 0,
-    born: born < 1400 || born > currYear,
+    born: born < 1400 || born > currentYear,
     died: died < born || died >= born + 150,
   });
 
@@ -97,7 +98,7 @@ const NewPerson: React.FC<Props> = ({ people, setPeople }) => {
           htmlFor="name"
           className={classNames(
             'form__label',
-            { 'form__input--error': errors.name && touched.name },
+            { 'form__input--error': errors.name && isFieldTouched.name },
           )}
         >
           Name: &nbsp;
@@ -108,10 +109,10 @@ const NewPerson: React.FC<Props> = ({ people, setPeople }) => {
             required
             value={name}
             onChange={event => setName(event.target.value)}
-            onBlur={() => setTouched({ ...touched, name: true })}
+            onBlur={() => setIsFieldTouched({ ...isFieldTouched, name: true })}
             className={classNames(
               'form__input--name',
-              { error: errors.name && touched.name },
+              { error: errors.name && isFieldTouched.name },
             )}
           />
         </label>
@@ -141,7 +142,7 @@ const NewPerson: React.FC<Props> = ({ people, setPeople }) => {
           htmlFor="born"
           className={classNames(
             'form__label',
-            { 'form__input--error': errors.born && touched.born },
+            { 'form__input--error': errors.born && isFieldTouched.born },
           )}
         >
           Born: &nbsp;
@@ -149,18 +150,18 @@ const NewPerson: React.FC<Props> = ({ people, setPeople }) => {
             type="number"
             id="born"
             min="1400"
-            max={currYear}
+            max={currentYear}
             value={born}
             onChange={event => setBorn(+event.target.value)}
-            onBlur={() => setTouched({ ...touched, born: true })}
-            className={classNames({ error: errors.born && touched.born })}
+            onBlur={() => setIsFieldTouched({ ...isFieldTouched, born: true })}
+            className={classNames({ error: errors.born && isFieldTouched.born })}
           />
         </label>
         <label
           htmlFor="died"
           className={classNames(
             'form__label',
-            { 'form__input--error': errors.died && touched.died },
+            { 'form__input--error': errors.died && isFieldTouched.died },
           )}
         >
           Died: &nbsp;
@@ -168,11 +169,11 @@ const NewPerson: React.FC<Props> = ({ people, setPeople }) => {
             type="number"
             id="died"
             min="1400"
-            max={currYear}
+            max={currentYear}
             value={died}
             onChange={event => setDied(+event.target.value)}
-            onBlur={() => setTouched({ ...touched, died: true })}
-            className={classNames({ error: errors.died && touched.died })}
+            onBlur={() => setIsFieldTouched({ ...isFieldTouched, died: true })}
+            className={classNames({ error: errors.died && isFieldTouched.died })}
           />
         </label>
         <label
@@ -184,7 +185,7 @@ const NewPerson: React.FC<Props> = ({ people, setPeople }) => {
             id="mother"
             value={motherName}
             onChange={event => setMotherName(event.target.value)}
-            disabled={!touched.born || errors.born}
+            disabled={!isFieldTouched.born || errors.born}
           >
             <option value="">
               No mother
@@ -208,7 +209,7 @@ const NewPerson: React.FC<Props> = ({ people, setPeople }) => {
             id="father"
             value={fatherName}
             onChange={event => setFatherName(event.target.value)}
-            disabled={!touched.born || errors.born}
+            disabled={!isFieldTouched.born || errors.born}
           >
             <option value="">
               No Father

@@ -28,9 +28,12 @@ const PeoplePage: React.FC = () => {
 
   const displayForm = location.pathname.includes('new');
 
+  const fetchPeople = async () => {
+    setPeople(await getPeople());
+  };
+
   useEffect(() => {
-    getPeople()
-      .then(peopleFromServer => setPeople(peopleFromServer));
+    fetchPeople();
   }, []);
 
   const applyQuery = useCallback(
@@ -97,9 +100,8 @@ const PeoplePage: React.FC = () => {
         break;
       }
 
-      default: {
+      default:
         break;
-      }
     }
   }
 
@@ -113,29 +115,33 @@ const PeoplePage: React.FC = () => {
           placeholder="Search"
           value={query || ''}
           onChange={onQueryChange}
-          style={{ marginBottom: '10px' }}
+          className="mb-10"
         />
       </label>
       <div className="container">
-        <PeopleTable people={visiblePeople} sortBy={sortBy} sortOrder={sortOrder} />
-        {displayForm ? (
-          <NewPerson people={people} setPeople={setPeople} />
-        ) : (
-          <Link
-            to={{
-              pathname: '/people/new',
-              search: location.search,
-            }}
-            className="add-new-person"
-          >
-            <button
-              type="button"
-              className="add-new-person__button"
+        <PeopleTable
+          people={visiblePeople}
+          sortBy={sortBy}
+          sortOrder={sortOrder}
+        />
+        {displayForm
+          ? <NewPerson people={people} setPeople={setPeople} />
+          : (
+            <Link
+              to={{
+                pathname: '/people/new',
+                search: location.search,
+              }}
+              className="add-new-person"
             >
-              Add person
-            </button>
-          </Link>
-        )}
+              <button
+                type="button"
+                className="add-new-person__button"
+              >
+                Add person
+              </button>
+            </Link>
+          )}
       </div>
     </>
   );

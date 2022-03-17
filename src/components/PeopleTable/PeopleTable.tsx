@@ -36,7 +36,7 @@ const PeopleTable: React.FC<Props> = ({ people, sortBy, sortOrder }) => {
     setSearchParams(searchParams);
   };
 
-  const columnStyles = (columnName: string): string => {
+  const columnClasses = (columnName: string): string => {
     return classNames(
       'sort-button',
       { 'sort-button--selected': sortBy === columnName },
@@ -79,28 +79,28 @@ const PeopleTable: React.FC<Props> = ({ people, sortBy, sortOrder }) => {
         <tr className="PeopleTable__head">
           <th
             onClick={() => onSortByChange('name')}
-            className={columnStyles('name')}
+            className={columnClasses('name')}
           >
             Name
             {arrowImage('name')}
           </th>
           <th
             onClick={() => onSortByChange('sex')}
-            className={columnStyles('sex')}
+            className={columnClasses('sex')}
           >
             Sex
             {arrowImage('sex')}
           </th>
           <th
             onClick={() => onSortByChange('died')}
-            className={columnStyles('died')}
+            className={columnClasses('died')}
           >
             Born
             {arrowImage('died')}
           </th>
           <th
             onClick={() => onSortByChange('born')}
-            className={columnStyles('born')}
+            className={columnClasses('born')}
           >
             Died
             {arrowImage('born')}

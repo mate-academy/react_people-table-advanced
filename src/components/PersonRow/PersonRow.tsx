@@ -24,9 +24,9 @@ const PersonRow: React.FC<Props> = ({ person }) => {
       <td>{person.born}</td>
       <td>{person.died}</td>
       <td>
-        {person.mother ? (
-          <PersonName person={person.mother} />
-        ) : <b>{person.motherName}</b>}
+        {person.mother
+          ? <PersonName person={person.mother} />
+          : <b>{person.motherName}</b>}
       </td>
       <td>
         {person.father ? (
