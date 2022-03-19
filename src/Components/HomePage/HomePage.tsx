@@ -1,5 +1,5 @@
 export const HomePage = () => (
-  <div className="section">
+  <div className="section home__section">
     <h2>Home page</h2>
   </div>
 );

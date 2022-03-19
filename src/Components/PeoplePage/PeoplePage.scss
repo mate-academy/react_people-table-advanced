@@ -1,15 +1,28 @@
+body {
+min-height: 100vh;
+}
+
+.app {
+  min-height: 100%;
+}
+
 .section {
   display: flex;
+  flex-grow: 1;
   color: whitesmoke;
   justify-content: center;
   align-items: center;
   background-color: rgb(149, 149, 255);
-  flex-grow: 1;
   border-radius: 10px;
+}
+
+.home__section {
+  padding-bottom: 74%;
 }
 
 .people__page {
   flex-direction: column;
+  padding-bottom: 40px;
 }
 
 .people-table {
