@@ -8,7 +8,6 @@ import { getPeople } from '../../api/people';
 import './PeoplePage.scss';
 
 export const PeoplePage: React.FC = () => {
-  // const location = useLocation();
   const [searchParams, setSearchParams] = useSearchParams();
 
   const appliedQuery = searchParams.get('query');
@@ -97,6 +96,7 @@ export const PeoplePage: React.FC = () => {
 
   return (
     <>
+      <h1>People page</h1>
       <label htmlFor="query">
         Search: &nbsp;
         <input
