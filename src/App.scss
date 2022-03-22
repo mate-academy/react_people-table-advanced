@@ -1,1 +1,14 @@
-// styles go here
+.nav-link {
+  box-sizing: border-box;
+  margin: 4px;
+  padding: 4px;
+  display: inline-block;
+
+  background-color: #00acdc;
+  border: 2px solid #aaa;
+  
+  text-decoration: none;
+  border-radius: 8px;
+  font-size: 2em;
+  color: #fff;
+}

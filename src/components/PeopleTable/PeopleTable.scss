@@ -1,0 +1,19 @@
+.PeopleTable {
+
+  &__head {
+    padding: 4px;
+    text-align: left;
+    background-color: #00acdc;
+    color: white;
+  }
+
+  & th, & td {
+    border: 1px solid #ddd;
+    padding: 8px;
+  }
+}
+
+.sort-button {
+  position: relative;
+  cursor: pointer;
+}
