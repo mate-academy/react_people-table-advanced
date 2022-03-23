@@ -1,0 +1,15 @@
+.PeopleTable {
+  margin: 8px auto 0;
+  border: 1px solid #aaa;
+  border-radius: 8px;
+
+  &__header {
+    font-weight: bold;
+    text-align: center;
+  }
+
+  &__cell {
+    padding: 10px;
+    border: 1px solid black;
+  }
+}
