@@ -13,19 +13,19 @@ type Props = {
 };
 
 export const PeopleTable: React.FC<Props> = ({ people, sortBy, sortOrder }) => {
-  const [currSortBy, setCurrSortBy] = useState('');
+  const [currentSortBy, setCurrentSortBy] = useState('');
   const [searchParams, setSearchParams] = useSearchParams();
 
   const onSortByChange = (sortType: string) => {
-    let currSortOrder = sortOrder;
+    let currentSortOrder = sortOrder;
 
-    if (currSortBy !== sortType) {
-      setCurrSortBy(sortType);
-      currSortOrder = null;
+    if (currentSortBy !== sortType) {
+      setCurrentSortBy(sortType);
+      currentSortOrder = null;
     }
 
     searchParams.set('sortBy', sortType);
-    if (currSortOrder === 'asc') {
+    if (currentSortOrder === 'asc') {
       searchParams.set('sortOrder', 'desc');
     } else {
       searchParams.set('sortOrder', 'asc');
