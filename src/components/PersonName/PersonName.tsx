@@ -22,7 +22,7 @@ export const PersonName: React.FC<Props> = ({ person }) => {
         femaleColor: person.sex === 'f',
       })}
     >
-      {person?.name}
+      {person.name}
     </Link>
   );
 };
