@@ -2,6 +2,7 @@ import React, { useMemo, useState } from 'react';
 import classNames from 'classnames';
 
 import { SortKey } from '../../types/SortKey';
+import { SortOrder } from '../../types/SortOrder';
 
 import './PeopleTable.scss';
 
@@ -14,7 +15,7 @@ type Props = {
   setSearchParams: (nextParams: {}) => void,
 };
 
-const sortPeople = (people: Person[], sortBy: string) => {
+const sortPeople = (people: Person[], sortBy: string, sortOrder: string) => {
   if (sortBy === '') {
     return [...people];
   }
@@ -23,11 +24,15 @@ const sortPeople = (people: Person[], sortBy: string) => {
     switch (sortBy) {
       case SortKey.Name:
       case SortKey.Sex:
-        return a[sortBy].localeCompare(b[sortBy]);
+        return sortOrder === SortOrder.Asc
+          ? a[sortBy].localeCompare(b[sortBy])
+          : b[sortBy].localeCompare(a[sortBy]);
 
       case SortKey.Born:
       case SortKey.Died:
-        return a[sortBy] - b[sortBy];
+        return sortOrder === SortOrder.Asc
+          ? a[sortBy] - b[sortBy]
+          : b[sortBy] - a[sortBy];
 
       case SortKey.MotherName:
       case SortKey.FatherName:
@@ -40,14 +45,16 @@ const sortPeople = (people: Person[], sortBy: string) => {
         }
 
         if (valueA === null) {
-          return 1;
+          return sortOrder === SortOrder.Asc ? 1 : -1;
         }
 
         if (valueB === null) {
-          return -1;
+          return sortOrder === SortOrder.Asc ? -1 : 1;
         }
 
-        return valueA.localeCompare(valueB);
+        return sortOrder === SortOrder.Asc
+          ? valueA.localeCompare(valueB)
+          : valueB.localeCompare(valueA);
       }
 
       default:
@@ -63,14 +70,26 @@ export const PeopleTable: React.FC<Props> = ({
   setSearchParams,
 }) => {
   const [sortBy, setSortBy] = useState(searchParams.get('sortBy') || '');
+  const [sortOrder, setSortOrder] = useState(searchParams.get('sortOrder') || '');
 
   const sortedPeople = useMemo(
-    () => sortPeople(people, sortBy),
-    [sortBy, people],
+    () => sortPeople(people, sortBy, sortOrder),
+    [sortBy, people, sortOrder],
   );
 
-  const changeSortKey = (key: string) => {
-    setSortBy(key);
+  const handleSortChange = (key: string) => {
+    if (sortBy !== key) {
+      setSortBy(key);
+      setSortOrder(SortOrder.Asc);
+      searchParams.set('sortOrder', SortOrder.Asc);
+    } else if (sortOrder === SortOrder.Desc) {
+      setSortOrder(SortOrder.Asc);
+      searchParams.set('sortOrder', SortOrder.Asc);
+    } else {
+      setSortOrder(SortOrder.Desc);
+      searchParams.set('sortOrder', SortOrder.Desc);
+    }
+
     searchParams.set('sortBy', key);
     setSearchParams(searchParams);
   };
@@ -83,8 +102,9 @@ export const PeopleTable: React.FC<Props> = ({
             className={classNames(
               'PeopleTable__header',
               { 'PeopleTable__header--sorted': sortBy === SortKey.Name },
+              { 'PeopleTable__header--sorted-desc': sortBy === SortKey.Name && sortOrder === SortOrder.Desc },
             )}
-            onClick={() => changeSortKey(SortKey.Name)}
+            onClick={() => handleSortChange(SortKey.Name)}
           >
             Name
           </th>
@@ -92,8 +112,9 @@ export const PeopleTable: React.FC<Props> = ({
             className={classNames(
               'PeopleTable__header',
               { 'PeopleTable__header--sorted': sortBy === SortKey.Sex },
+              { 'PeopleTable__header--sorted-desc': sortBy === SortKey.Sex && sortOrder === SortOrder.Desc },
             )}
-            onClick={() => changeSortKey(SortKey.Sex)}
+            onClick={() => handleSortChange(SortKey.Sex)}
           >
             Sex
           </th>
@@ -101,8 +122,9 @@ export const PeopleTable: React.FC<Props> = ({
             className={classNames(
               'PeopleTable__header',
               { 'PeopleTable__header--sorted': sortBy === SortKey.Born },
+              { 'PeopleTable__header--sorted-desc': sortBy === SortKey.Born && sortOrder === SortOrder.Desc },
             )}
-            onClick={() => changeSortKey(SortKey.Born)}
+            onClick={() => handleSortChange(SortKey.Born)}
           >
             Born
           </th>
@@ -110,8 +132,9 @@ export const PeopleTable: React.FC<Props> = ({
             className={classNames(
               'PeopleTable__header',
               { 'PeopleTable__header--sorted': sortBy === SortKey.Died },
+              { 'PeopleTable__header--sorted-desc': sortBy === SortKey.Died && sortOrder === SortOrder.Desc },
             )}
-            onClick={() => changeSortKey(SortKey.Died)}
+            onClick={() => handleSortChange(SortKey.Died)}
           >
             Died
           </th>
@@ -119,8 +142,9 @@ export const PeopleTable: React.FC<Props> = ({
             className={classNames(
               'PeopleTable__header',
               { 'PeopleTable__header--sorted': sortBy === SortKey.MotherName },
+              { 'PeopleTable__header--sorted-desc': sortBy === SortKey.MotherName && sortOrder === SortOrder.Desc },
             )}
-            onClick={() => changeSortKey(SortKey.MotherName)}
+            onClick={() => handleSortChange(SortKey.MotherName)}
           >
             Mother&apos;s name
           </th>
@@ -128,8 +152,9 @@ export const PeopleTable: React.FC<Props> = ({
             className={classNames(
               'PeopleTable__header',
               { 'PeopleTable__header--sorted': sortBy === SortKey.FatherName },
+              { 'PeopleTable__header--sorted-desc': sortBy === SortKey.FatherName && sortOrder === SortOrder.Desc },
             )}
-            onClick={() => changeSortKey(SortKey.FatherName)}
+            onClick={() => handleSortChange(SortKey.FatherName)}
           >
             Father&apos;s name
           </th>

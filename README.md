@@ -3,11 +3,7 @@
   [DEMO LINK](https://trtskvalerie.github.io/react_people-table-advanced/)
 - Follow the [React task guideline](https://github.com/mate-academy/react_task-guideline#react-tasks-guideline)
 
-## Advanced sorting and filtering
-1. Implement the ability to sort people in both directions `?sortOrder=asc` or `desc`
-    - add [Sort both icon](public/images/sort_both.png) to show that column allows sorting
-    - The first click sorts `ascending` (A-Z) the second sorts `descending` (Z-A)
-    - add `sort_asc` or `sort_desc` icons accordingly to the applied sorting
+[PR](https://github.com/mate-academy/react_people-table-advanced/compare/master...trtskvalerie:develop?expand=1)
 
 ## (* OPTIONAL) Adding a person
 1. (* OPTIONAL) Create a `NewPerson` component with a form to add new people and show it above the table

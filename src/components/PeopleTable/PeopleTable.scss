@@ -10,6 +10,14 @@
       background-color: rgb(255, 255, 213);
     }
 
+    &--sorted {
+      background-image: url('../../images/sort_desc.png');
+    }
+
+    &--sorted-desc {
+      background-image: url('../../images/sort_asc.png');
+    }
+
     &--sorted::after {
       content: "*";
     }
