@@ -1,0 +1,11 @@
+.PersonName {
+  font-weight: bold;
+
+  &__male {
+    color: rgb(0, 140, 255);
+  }
+
+  &__female {
+    color: rgb(247, 49, 204);
+  }
+}
