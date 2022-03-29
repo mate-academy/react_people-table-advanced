@@ -10,24 +10,27 @@ import './App.scss';
 import PeoplePage from './components/PeoplePage';
 import NotFoundPage from './components/NotFoundPage';
 
-const App: React.FC = () => (
-  <div className="App">
-    <header>
-      <nav className="navbar">
-        <Link to={`/${Paths.Home}`} className="navbar-item">Home</Link>
-        <Link to={`/${Paths.People}`} className="navbar-item">People</Link>
-      </nav>
-    </header>
+const App: React.FC = () => {
+  return (
+    <div className="App">
+      <header>
+        <nav className="navbar">
+          <Link to={`/${Paths.Home}`} className="navbar-item">Home</Link>
+          <Link to={`/${Paths.People}`} className="navbar-item">People</Link>
+        </nav>
+      </header>
 
-    <Routes>
-      <Route path="/" element={<h1 className="title">Home page</h1>} />
-      <Route path={Paths.Home} element={<Navigate to="/" replace />} />
-      <Route path={`${Paths.People}/:personSelected`} element={<PeoplePage />} />
-      <Route path={Paths.People} element={<PeoplePage />} />
+      <Routes>
+        <Route path="/" element={<h1 className="title">Home page</h1>} />
+        <Route path={Paths.Home} element={<Navigate to="/" replace />} />
+        <Route path={`${Paths.People}/new`} element={<PeoplePage edit />} />
+        <Route path={`${Paths.People}/:personSelected`} element={<PeoplePage edit={false} />} />
+        <Route path={Paths.People} element={<PeoplePage edit={false} />} />
 
-      <Route path="*" element={<NotFoundPage />} />
-    </Routes>
-  </div>
-);
+        <Route path="*" element={<NotFoundPage />} />
+      </Routes>
+    </div>
+  );
+};
 
 export default App;

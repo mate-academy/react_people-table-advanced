@@ -1,10 +1,19 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, {
+  useCallback, useEffect, useMemo, useState,
+} from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
 import { debounce } from 'lodash';
 import { getPeople } from '../../api/people';
 
-import PeopleTable from '../PeopleTable';
+import './PeoplePage.scss';
+
 import { Loader } from '../Loader';
+import PeopleTable from '../PeopleTable';
+import NewPerson from '../NewPerson';
+
+type Props = {
+  edit: boolean,
+};
 
 const DEBOUNCE_DELAY = 500;
 
@@ -28,7 +37,7 @@ const filterPeople = (people: Person[], query: string) => {
   return filtered;
 };
 
-export const PeoplePage: React.FC = () => {
+export const PeoplePage: React.FC<Props> = ({ edit }) => {
   const [people, setPeople] = useState<Person[]>([]);
   const [visiblePeople, setVisiblePeople] = useState<Person[]>([]);
   const [isLoading, setLoading] = useState(true);
@@ -39,13 +48,19 @@ export const PeoplePage: React.FC = () => {
 
   const { personSelected = '' } = useParams<{ personSelected: string }>();
 
+  const form = useMemo(() => {
+    return edit
+      ? <NewPerson people={people} />
+      : <a href={`#/people/new?${searchParams}`} className="button add-button">Add person</a>;
+  }, [edit, searchParams]);
+
   const applyQuery = useCallback(
     debounce((newQuery) => {
       setAppliedQuery(newQuery);
       searchParams.set('query', newQuery);
       setSearchParams(searchParams);
     }, DEBOUNCE_DELAY),
-    [searchParams, personSelected],
+    [edit, searchParams, personSelected],
   );
 
   useEffect(() => {
@@ -75,6 +90,7 @@ export const PeoplePage: React.FC = () => {
           ? <Loader />
           : (
             <>
+              {form}
               <input
                 type="text"
                 className="input"
