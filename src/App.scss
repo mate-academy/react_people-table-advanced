@@ -14,6 +14,10 @@ body {
 .input {
   max-width: 200px;
   margin-bottom: 20px;
+
+  &--invalid {
+    border-color: red;
+  }
 }
 
 .radio > input {

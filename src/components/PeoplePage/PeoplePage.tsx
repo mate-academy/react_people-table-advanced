@@ -50,7 +50,7 @@ export const PeoplePage: React.FC<Props> = ({ edit }) => {
 
   const form = useMemo(() => {
     return edit
-      ? <NewPerson people={people} />
+      ? <NewPerson people={people} setPeople={setPeople} />
       : <a href={`#/people/new?${searchParams}`} className="button add-button">Add person</a>;
   }, [edit, searchParams]);
 
@@ -79,7 +79,7 @@ export const PeoplePage: React.FC<Props> = ({ edit }) => {
     const filteredPeople = filterPeople(people, appliedQuery);
 
     setVisiblePeople(filteredPeople);
-  }, [appliedQuery]);
+  }, [appliedQuery, people]);
 
   return (
     <>
