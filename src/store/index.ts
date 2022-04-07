@@ -7,7 +7,10 @@ const FINISH_LOADING = 'FINISH_LOADING';
 
 // Action creators - a function returning an action object
 export const startLoading = () => ({ type: START_LOADING });
-export const finishLoading = (message = 'No message') => ({ type: FINISH_LOADING, message });
+export const finishLoading = (message = 'No message') => ({
+  type: FINISH_LOADING,
+  message,
+});
 
 // Selectors - a function receiving Redux state and returning some data from it
 export const isLoading = (state: RootState) => state.loading;
