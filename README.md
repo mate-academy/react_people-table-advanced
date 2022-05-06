@@ -21,11 +21,11 @@ Using code from previous task implement next tasks:
     - Highlight nobody if the `slug` in the URL is not found among the people
 
 ### Filtering and sorting
-1. Add an `<input>` to filter people by `name`, `motherName` and `fatherName`
+1. Add an `<input>` with `data-cy="filterInput"` attribut to filter people by `name`, `motherName` and `fatherName`
     - it should update the URL with `?query=car` where `car` is a string entered by the user
     - Read the `query` from the URL and set its value to the input when the page is loaded
 1. `PeoplePage` should read the `query` from the URL and filter people accordingly
-    - check is the `query` matches the `name`, `motherName` or `fatherName`
+    - check if the `query` matches the `name`, `motherName` or `fatherName`
 1. Implement the sorting by `name`, `sex`, `born` and `died` by clicking on the column title
     - Highlight the column with the *
     - Add `?sortBy=born` param to the URL
