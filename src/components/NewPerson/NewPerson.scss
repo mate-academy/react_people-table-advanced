@@ -1,0 +1,15 @@
+.NewPerson {
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  width: max-content;
+  padding: 20px;
+  margin-inline: auto;
+  margin-bottom: 32px;
+  border: 2px dashed black;
+  border-radius: 12px;
+}
+
+.sex-container {
+  margin-bottom: 12px;
+}
