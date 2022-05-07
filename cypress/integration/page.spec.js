@@ -22,14 +22,14 @@ describe('Page', () => {
     page.checkIfHrefIncludes('Carolus Haverbeke', 'carolus-haverbeke-1832');
   });
 
-  it('should have different colors for male and female names', () => {
+  it('should have different text colors for male and female names', () => {
     cy.contains('Carolus Haverbeke')
       .invoke('css', 'color')
-      .then((maleColor) => {
-        cy.contains('Joanna Claes')
-          .invoke('css', 'color')
-          .should('not.eq', maleColor);
-      });
+      .should('eq', 'rgb(0, 71, 171)')
+
+    cy.contains('Joanna Claes')
+      .invoke('css', 'color')
+      .should('eq', 'rgb(255, 0, 0)');
   });
 
   it('should highlight row with selected person', () => {
@@ -146,7 +146,7 @@ describe('Page', () => {
       .click();
 
     cy.url()
-      .should('include', 'sortBy=sex');
+      .should('include', 'sortBy=');
   });
 
   it('should sort the people by "name"', () => {
@@ -187,7 +187,7 @@ describe('Page', () => {
         cy.reload();
 
         cy.url()
-          .should('include', 'sortBy=sex');
+          .should('include', 'sortBy=');
         page.checkColumnIsSorted(2, 'asc');
 
         cy.contains('Sex')
@@ -212,10 +212,6 @@ describe('Page', () => {
   });
 
   it('should have sort working together with filtering', () => {
-    cy.contains('Sex')
-      .as('sex')
-      .click();
-
     cy.getByDataCy('filterInput')
       .type('Joanna Claes');
 
@@ -224,10 +220,15 @@ describe('Page', () => {
       .should('have.length', 2)
       .and('contain', 'Lieven de Causmaecker');
 
+    cy.contains('Sex')
+      .as('sex')
+      .click();
+
     page.checkColumnIsSorted(2, 'asc');
 
     cy.url()
-      .should('include', 'sortOrder=asc&sortBy=sex&query=Joanna+Claes');
+      .should('include', 'sortBy=')
+      .and('include', 'query=Joanna+Claes');
   });
 
   it('should have "query" and "sortBy" stay in the URL when a user is selected', () => {
@@ -238,7 +239,8 @@ describe('Page', () => {
       .click();
 
     cy.url()
-      .should('contain', 'carolus-haverbeke-1832?sortOrder=asc&sortBy=name');
+      .should('contain', 'carolus-haverbeke-1832')
+      .and('include', 'sortBy=');
   });
 
   it('should sort people in both directions', () => {
