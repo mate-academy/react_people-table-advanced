@@ -16,6 +16,15 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
   const [query, setQuery] = useState(appliedQuery);
   const sortBy = searchParams.get('sortBy');
   const sortOrder = searchParams.get('sortOrder');
+  let imageSoure = '';
+
+  if (sortBy && sortOrder === 'asc') {
+    imageSoure = '../../images/sort_asc.png';
+  } else if (sortBy && sortOrder === 'desc') {
+    imageSoure = '../../images/sort_desc.png';
+  } else {
+    imageSoure = '../../images/sort_both.png';
+  }
 
   const applyQuery = useCallback(
     debounce((newQuery) => {
@@ -103,36 +112,25 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
           <tr>
             {mainRow.map((item) => {
               return (
-                <>
+                <React.Fragment key={item}>
                   {item !== 'father' && item !== 'mother'
                     ? (
                       <th
-                        key={item}
                         onClick={sortHandler}
                       >
-
                         {sortBy === item
                           ? `${item}*`.toUpperCase()
                           : item.toUpperCase()}
 
-                        {sortBy && sortOrder === 'asc' && (
-                          <img src="../../images/sort_asc.png" alt="" />)}
-
-                        {sortBy && sortOrder === 'desc' && (
-                          <img src="../../images/sort_desc.png" alt="" />)}
-
-                        {!sortBy
-                        && <img src="../../images/sort_both.png" alt="" />}
+                        <img src={imageSoure} alt="" />
                       </th>
                     )
                     : (
-                      <th
-                        key={item}
-                      >
+                      <th>
                         {item.toUpperCase()}
                       </th>
                     )}
-                </>
+                </React.Fragment>
               );
             })}
           </tr>
