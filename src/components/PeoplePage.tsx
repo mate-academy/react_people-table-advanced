@@ -4,17 +4,13 @@ import React, {
   useMemo,
   useState,
 } from 'react';
-
 import debounce from 'lodash/debounce';
-
 import {
   useParams,
   useSearchParams,
   useLocation,
 } from 'react-router-dom';
-
 import { PeopleTable } from './PeopleTable';
-
 import { getPeople } from '../api/api';
 
 export const PeoplePage: React.FC = () => {
@@ -57,8 +53,8 @@ export const PeoplePage: React.FC = () => {
 
       return people.filter(pers => (
         pers.name.toLowerCase().includes(lowerQuery)
-        || pers.motherName?.toLowerCase().includes(lowerQuery)
-        || pers.fatherName?.toLowerCase().includes(lowerQuery)
+          || pers.motherName?.toLowerCase().includes(lowerQuery)
+          || pers.fatherName?.toLowerCase().includes(lowerQuery)
       ));
     }
 

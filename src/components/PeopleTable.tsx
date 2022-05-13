@@ -1,6 +1,5 @@
 import classNames from 'classnames';
 import React, { useMemo } from 'react';
-
 import { useLocation, useSearchParams } from 'react-router-dom';
 import { PersonRow } from './PersonRow';
 import { FilterButton } from './FilterButton';

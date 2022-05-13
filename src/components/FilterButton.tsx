@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-
 import { useSearchParams, useLocation } from 'react-router-dom';
 
 type Props = {
