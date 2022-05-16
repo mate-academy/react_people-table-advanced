@@ -97,7 +97,7 @@ describe('Page', () => {
       .should('have.value', 'test');
   });
 
-  it('should filter poeple by "name"', () => {
+  it('should filter people by "name"', () => {
     cy.getByDataCy('filterInput')
       .type('Lieven');
 
@@ -107,7 +107,7 @@ describe('Page', () => {
       .and('contain', 'Lieven de Causmaecker');
   });
 
-  it('should filter poeple by "motherName"', () => {
+  it('should filter people by "motherName"', () => {
     cy.getByDataCy('filterInput')
       .type('Joanna Claes');
 
