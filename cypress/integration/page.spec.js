@@ -302,6 +302,8 @@ describe('Page', () => {
     cy.visit('/home');
     cy.get('h1')
       .should('contain', 'Home Page');
+      cy.url()
+        .should('not.contain', '/home')
   });
 
   it('should open the "Home" page', () => {
