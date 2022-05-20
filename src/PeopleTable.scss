@@ -1,0 +1,50 @@
+.PeopleTable {
+  border-collapse: collapse;
+}
+
+thead {
+  font-size: 30px;
+  display: inline-block;
+  margin-bottom: 10px;
+  font-weight: 400;
+}
+
+table {
+  border-collapse: collapse;
+  text-indent: initial;
+  border-spacing: 2px;
+  width: 100%;
+}
+
+input {
+  height: 27px;
+  display: block;
+  margin-bottom: 15px;
+}
+
+th:hover {
+  cursor: pointer;
+  background-color: #bdc3cb;
+}
+
+.title {
+  background-image: url("../src/images/sort_both.png");
+  background-repeat: no-repeat;
+  background-position: center right;
+
+  &__star::after {
+    content: "*";
+  }
+
+  &__IconASC {
+    background-image: url("../src/images/sort_asc.png");
+    background-repeat: no-repeat;
+    background-position: center right;
+  }
+
+  &__IconDESC {
+    background-image: url("../src/images/sort_desc.png");
+    background-repeat: no-repeat;
+    background-position: center right;
+  }
+}
