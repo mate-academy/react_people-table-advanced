@@ -1,0 +1,26 @@
+td,
+th {
+  padding: 0.25rem;
+  text-align: left;
+  border: 1px solid #ccc;
+  font-family: "Helvetica Neue", Arial, sans-serif ;
+}
+
+.personSex--female {
+  color: #f00;
+}
+
+.personSex--male {
+  color: #00f;
+}
+
+.isActive {
+  background-color: #689ab8;
+}
+
+.noInfo {
+  font-size: 20px;
+  color: #000;
+  padding-left: 15px;
+  font-family: "Helvetica Neue", Arial, sans-serif ;
+}
