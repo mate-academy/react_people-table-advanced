@@ -1,1 +1,63 @@
-// styles go here
+.App {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background-color: grey;
+}
+
+.title {
+  text-align: center;
+}
+
+.header {
+  display: flex;
+  justify-content: center;
+}
+
+.PeopleTable {
+  border: 1px solid red;
+  background: linear-gradient(#e66465, #9198e5);
+}
+
+.Person {
+  text-align: center;
+
+  &__name {
+    display: inline-block;
+    text-decoration: none;
+    width: 100%;
+    height: 100%;
+  }
+
+  &__input {
+    width: 25%;
+    outline: none;
+  }
+}
+
+.Person:hover {
+  border: 1px solid rgb(0, 13, 255);
+
+  &__name {
+    cursor: pointer;
+  }
+}
+
+.highlight {
+  background-color: rgb(26, 221, 78);
+  width: 100%;
+  height: 100%;
+}
+
+.nav-bar {
+  display: flex;
+  width: 100vw;
+  justify-content: space-around;
+  list-style: none;
+
+  &__link {
+    text-decoration: none;
+    color: red;
+    font-size: 20px;
+  }
+}
