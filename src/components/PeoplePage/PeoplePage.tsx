@@ -99,6 +99,7 @@ const PeoplePage: React.FC = () => {
       </h2>
 
       <div className="AddPersonEntranceContainer">
+        {location.pathname}
         {location.pathname
           === 'react_people-table-advanced/people' && <AddPerson />}
       </div>
