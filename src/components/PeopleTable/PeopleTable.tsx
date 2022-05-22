@@ -119,7 +119,7 @@ const PeopleTable: React.FC<Props> = ({ people }) => {
                               === searchParams.get('sortBy'),
                           })
                         }
-                        src="./images/sort_both.png"
+                        src="/react_people-table-advanced/images/sort_both.png"
                       />
                       <img
                         alt="Arrow up"
@@ -131,7 +131,7 @@ const PeopleTable: React.FC<Props> = ({ people }) => {
                             ),
                           })
                         }
-                        src="./images/sort_asc.png"
+                        src="/react_people-table-advanced/images/sort_asc.png"
                       />
                       <img
                         alt="Arrow down"
@@ -143,7 +143,7 @@ const PeopleTable: React.FC<Props> = ({ people }) => {
                             ),
                           })
                         }
-                        src="./images/sort_desc.png"
+                        src="/react_people-table-advanced/images/sort_desc.png"
                       />
                     </span>
                   )

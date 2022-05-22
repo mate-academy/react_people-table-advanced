@@ -7,13 +7,13 @@ const Header: React.FC = () => (
     <div className="LinksContainer">
       <NavLink
         className="Link"
-        to="/home"
+        to="/react_people-table-advanced/home"
       >
         Home
       </NavLink>
       <NavLink
         className="Link"
-        to="/people"
+        to="/react_people-table-advanced/people"
       >
         People
       </NavLink>

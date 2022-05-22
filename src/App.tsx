@@ -21,7 +21,7 @@ const App: React.FC = () => (
       />
       <Route
         path="/react_people-table-advanced/home"
-        element={<Navigate to="/" />}
+        element={<Navigate to="/react_people-table-advanced/" />}
       />
       <Route path="*" element={<NotFoundPage />} />
     </Routes>
