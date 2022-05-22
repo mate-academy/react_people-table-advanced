@@ -1,0 +1,32 @@
+.table {
+  border-collapse: collapse;
+
+  &__sort {
+    cursor: pointer;
+    position: relative;
+
+    &::after {
+      content: "";
+      height: 16px;
+      width: 16px;
+      display: inline-block;
+      position: absolute;
+      top: 8px;
+      right: 4px;
+      background-image: url("../../images/sort_both.png");
+      cursor: pointer;
+    }
+
+    &--asc {
+      &::after {
+        background-image: url("../../images/sort_asc.png");
+      }
+    }
+
+    &--desc {
+      &::after {
+        background-image: url("../../images/sort_desc.png");
+      }
+    }
+  }
+}
