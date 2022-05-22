@@ -1,0 +1,40 @@
+.PeoplePage {
+  max-width: 1000px;
+}
+
+.PeoplePageTitle {
+  text-align: center;
+  font-size: 40px;
+  color: aqua;
+}
+
+.AddPersonEntranceContainer {
+  margin: 0 auto;
+  width: 500px;
+  height: 50px;
+}
+
+.Persons {
+  padding: 0;
+}
+
+.TableTitle {
+  color: aqua;
+  text-align: center;
+  font-size: 30px;
+}
+
+.Search {
+  display: block;
+  margin-right: 10px;
+  font-size: 20px;
+  color: azure;
+
+  &__input {
+    margin-left: 20px;
+    width: 200px;
+    height: 20px;
+    border: transparent;
+    border-radius: 5px;
+  }
+}

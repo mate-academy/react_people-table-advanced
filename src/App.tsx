@@ -14,9 +14,15 @@ const App: React.FC = () => (
     <Header />
 
     <Routes>
-      <Route path="/" element={<HomePage />} />
-      <Route path="/people/*" element={<PeoplePage />} />
-      <Route path="/home" element={<Navigate to="/" />} />
+      <Route path="/react_people-table-advanced/" element={<HomePage />} />
+      <Route
+        path="/react_people-table-advanced/people/*"
+        element={<PeoplePage />}
+      />
+      <Route
+        path="/react_people-table-advanced/home"
+        element={<Navigate to="/" />}
+      />
       <Route path="*" element={<NotFoundPage />} />
     </Routes>
   </div>

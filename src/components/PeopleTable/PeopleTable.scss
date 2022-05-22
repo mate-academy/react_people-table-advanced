@@ -1,0 +1,37 @@
+.PeopleTable {
+  margin: 0 auto;
+  border-collapse: collapse;
+}
+
+thead tr:first-child {
+  background: #e25644;
+  color: #fff;
+}
+
+.HeaderCell {
+  text-align: left;
+  height: 40px;
+  line-height: 24px;
+  padding: 8px;
+  min-width: 65px;
+}
+
+.imageContainer {
+  height: 24px;
+}
+
+.ArrowsUpAndDown {
+  transform: translateY(25%);
+}
+
+.ArrowUp {
+  transform: translateY(50%);
+}
+
+.ArrowDown {
+  transform: translateY(10%);
+}
+
+.Hidden {
+  display: none;
+}

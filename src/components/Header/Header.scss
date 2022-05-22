@@ -1,0 +1,15 @@
+.LinksContainer {
+  display: flex;
+  justify-content: space-between;
+}
+
+.Link {
+  margin: 0;
+  font-size: 40px;
+  font-weight: bold;
+  color: lightblue;
+
+  &:visited {
+    color: lightblue;
+  }
+}

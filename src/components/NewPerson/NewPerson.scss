@@ -1,0 +1,166 @@
+.AddingNewPerson {
+  max-width: 1000px;
+  margin-bottom: 40px;
+}
+
+.NewPersonForm {
+  display: grid;
+  align-content: center;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 40px 40px 40px 40px;
+}
+
+.Name {
+  grid-row: 1;
+  grid-column-start: 1;
+  grid-column-end: 2;
+  color: white;
+  font-size: 20px;
+
+  &__input {
+    min-width: 200px;
+    height: 20px;
+    border: transparent;
+    border-radius: 5px;
+    outline: none;
+    margin-left: 20px;
+    color: black;
+  }
+}
+
+.Sex {
+  grid-row: 1;
+  grid-column-start: 2;
+  grid-column-end: 3;
+  color: white;
+  font-size: 20px;
+
+  &__male {
+    margin-left: 36px;
+    height: 20px;
+    color: blue;
+    font-size: 16px;
+  }
+
+  &__female {
+    margin-left: 20px;
+    height: 20px;
+    color: pink;
+    font-size: 16px;
+  }
+
+  &__radio {
+    border: transparent;
+    outline: none;
+    width: 40px;
+  }
+}
+
+.Born {
+  grid-row: 2;
+  grid-column-start: 1;
+  grid-column-end: 2;
+  color: white;
+  font-size: 20px;
+
+  &__input {
+    min-width: 80px;
+    height: 20px;
+    border: transparent;
+    border-radius: 5px;
+    outline: none;
+    margin-left: 30px;
+    color: black;
+  }
+}
+
+.Died {
+  grid-row: 2;
+  grid-column-start: 2;
+  grid-column-end: 3;
+  color: white;
+  font-size: 20px;
+
+  &__input {
+    min-width: 80px;
+    height: 20px;
+    border: transparent;
+    border-radius: 5px;
+    outline: none;
+    margin-left: 30px;
+    color: black;
+  }
+}
+
+.Mother {
+  grid-row: 3;
+  grid-column-start: 1;
+  grid-column-end: 2;
+  color: white;
+  font-size: 20px;
+
+  &__select {
+    min-width: 200px;
+    height: 20px;
+    border: transparent;
+    border-radius: 5px;
+    outline: none;
+    margin-left: 12px;
+    color: black;
+  }
+}
+
+.Father {
+  grid-row: 3;
+  grid-column-start: 2;
+  grid-column-end: 3;
+  color: white;
+  font-size: 20px;
+
+  &__select {
+    min-width: 200px;
+    height: 20px;
+    border: transparent;
+    border-radius: 5px;
+    outline: none;
+    margin-left: 12px;
+    color: black;
+  }
+}
+
+.AddPersonButton {
+  grid-row: 4;
+  grid-column-start: 1;
+  grid-column-end: 3;
+  height: 40px;
+  font-size: 30px;
+  border: transparent;
+  border-radius: 5px;
+  color: white;
+  background-color: aqua;
+  transition: 0.5s;
+
+  &:hover {
+    cursor: pointer;
+  }
+  &:active {
+    transform: scale(0.98);
+  }
+}
+
+.ErrorHint {
+  height: 150px;
+  width: 1000px;
+  border: 2px dotted red;
+  background-color: aquamarine;
+  border-radius: 10px;
+  color: red;
+  text-align: center;
+  font-size: 30px;
+  font-weight: bold;
+  margin: 20px 0;
+}
+
+.Hidden {
+  display: none;
+}
