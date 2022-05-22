@@ -1,0 +1,22 @@
+.field {
+  &-double {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  &__year {
+    display: inline-block;
+    width: 48%;
+  }
+
+  &__select {
+    display: inline-block;
+    width: 48%;
+  }
+}
+
+.select {
+  &__sizing {
+    width: 100%;
+  }
+}
