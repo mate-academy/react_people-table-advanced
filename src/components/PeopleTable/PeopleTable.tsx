@@ -23,9 +23,9 @@ const PeopleTable: React.FC<Props> = ({
     if ((selectedSort === value) && sortOrder) {
       switch (sortOrder) {
         case 'asc':
-          return '/images/sort_asc.png';
+          return './images/sort_asc.png';
         case 'desc':
-          return '/images/sort_desc.png';
+          return './images/sort_desc.png';
         default:
           break;
       }
