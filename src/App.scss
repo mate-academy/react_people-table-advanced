@@ -1,1 +1,76 @@
-// styles go here
+html {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-image: linear-gradient(45deg, #4ebd36, #7e7cf9);
+  background-attachment: fixed;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  // padding: 100px;
+  font-family: Roboto, sans-serif;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+table {
+  border-collapse: collapse;
+  min-width: 1000px;
+  max-width: 1000px;
+}
+
+tr {
+  background: #fff;
+  color: #808080;
+}
+
+thead tr:first-child {
+  background: #e25644;
+  color: #fff;
+}
+
+tfoot tr:first-child {
+  background: #f5f5f5;
+}
+
+td,
+th {
+  text-align: left;
+  padding: 8px;
+}
+
+thead th:hover {
+  color: #fff400;
+  cursor: pointer;
+}
+
+thead tr th:first-child {
+  border-top-left-radius: 10px;
+}
+
+thead tr th:last-child {
+  border-top-right-radius: 10px;
+}
+
+tfoot tr th:first-child {
+  border-bottom-left-radius: 10px;
+}
+
+tfoot tr th:last-child {
+  border-bottom-right-radius: 10px;
+}
+
+tbody tr:hover {
+  background: #f5f5f5;
+  color: #585858;
+}
+
+.App {
+  &__title {
+    text-align: center;
+    color: lightgreen;
+  }
+}

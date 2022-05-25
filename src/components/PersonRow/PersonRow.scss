@@ -1,0 +1,16 @@
+td {
+  padding: 5px;
+}
+
+.Selected {
+  background-color: lightgreen;
+
+  &:hover {
+    background-color: aqua;
+  }
+}
+
+.ParentName {
+  color: black;
+  font-weight: bold;
+}
