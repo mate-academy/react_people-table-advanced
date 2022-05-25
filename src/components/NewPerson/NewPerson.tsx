@@ -159,7 +159,7 @@ const NewPerson: React.FC<NewPersonProps> = ({
       slug: `${correctedName.toLowerCase().split(' ').join('-')}-${born}`,
     };
 
-    navigate('/react_people-table-advanced/people');
+    navigate('/people');
 
     addPersonToTheList(newPerson);
   };

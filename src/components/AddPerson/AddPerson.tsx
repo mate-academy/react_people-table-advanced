@@ -6,7 +6,7 @@ const AddPerson: React.FC = () => {
   const navigate = useNavigate();
 
   const showAddNewPersonForm = () => {
-    navigate('/react_people-table-advanced/people/new');
+    navigate('/people/new');
   };
 
   return (

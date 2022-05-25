@@ -16,11 +16,11 @@ const App: React.FC = () => (
     <Routes>
       <Route path="/" element={<HomePage />} />
       <Route
-        path="/react_people-table-advanced/people/*"
+        path="/people/*"
         element={<PeoplePage />}
       />
       <Route
-        path="/react_people-table-advanced/home"
+        path="/home"
         element={<Navigate to="/" />}
       />
       <Route path="/*" element={<NotFoundPage />} />
