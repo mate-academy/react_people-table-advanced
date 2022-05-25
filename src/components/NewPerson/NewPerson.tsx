@@ -223,7 +223,11 @@ const NewPerson: React.FC<NewPersonProps> = ({
             type="number"
             min="1400"
             max={date.getFullYear()}
-            onChange={(event) => setBorn(+event.target.value)}
+            onChange={(event) => {
+              setBorn(+event.target.value);
+              setMotherName('');
+              setFatherName('');
+            }}
             required
           />
         </label>

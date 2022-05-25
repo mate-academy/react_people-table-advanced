@@ -16,6 +16,7 @@ const PeoplePage: React.FC = () => {
   const appliedQuery = searchParams.get('query') || '';
   const [query, setQuery] = useState(appliedQuery);
   const currentSortBy = searchParams.get('sortBy') || '';
+  const currentSlug = searchParams.get('slug') || '';
   const navigate = useNavigate();
   const peopleWithParents = [...people];
 
@@ -37,7 +38,7 @@ const PeoplePage: React.FC = () => {
   });
 
   const applyQuery = useCallback(
-    debounce((newQuery: string, sortBy: string) => {
+    debounce((newQuery: string, sortBy: string, slug: string) => {
       if (newQuery) {
         searchParams.set('query', newQuery.toLowerCase());
       } else {
@@ -46,6 +47,10 @@ const PeoplePage: React.FC = () => {
 
       if (sortBy) {
         searchParams.set('sortBy', sortBy);
+      }
+
+      if (slug) {
+        searchParams.set('slug', slug);
       }
 
       navigate(`?${searchParams.toString()}`);
@@ -62,7 +67,7 @@ const PeoplePage: React.FC = () => {
 
     setQuery(value);
 
-    applyQuery(value, currentSortBy);
+    applyQuery(value, currentSortBy, currentSlug);
   };
 
   const getVisiblePeople = () => {
