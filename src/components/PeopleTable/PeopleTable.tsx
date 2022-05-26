@@ -34,11 +34,18 @@ const PeopleTable: React.FC<Props> = ({
     return './images/sort_both.png';
   };
 
+  const disabledTable = () => {
+    return (filterPeople.length === 0) ? 'disabled' : '';
+  };
+
   return (
     <table className="table table-border is-hoverable is-striped is-bordered">
       <thead>
         <tr>
-          <th onClick={() => getSortTable('name')}>
+          <th
+            onClick={() => getSortTable('name')}
+            className={disabledTable()}
+          >
             <span>Name</span>
             <img
               src={changeArrow('name')}
@@ -46,7 +53,10 @@ const PeopleTable: React.FC<Props> = ({
               className="img"
             />
           </th>
-          <th onClick={() => getSortTable('sex')}>
+          <th
+            onClick={() => getSortTable('sex')}
+            className={disabledTable()}
+          >
             <span>Sex</span>
             <img
               src={changeArrow('sex')}
@@ -54,7 +64,10 @@ const PeopleTable: React.FC<Props> = ({
               className="img"
             />
           </th>
-          <th onClick={() => getSortTable('born')}>
+          <th
+            onClick={() => getSortTable('born')}
+            className={disabledTable()}
+          >
             <span>Born</span>
             <img
               src={changeArrow('born')}
@@ -62,7 +75,10 @@ const PeopleTable: React.FC<Props> = ({
               className="img"
             />
           </th>
-          <th onClick={() => getSortTable('died')}>
+          <th
+            onClick={() => getSortTable('died')}
+            className={disabledTable()}
+          >
             <span>Died</span>
             <img
               src={changeArrow('died')}

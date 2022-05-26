@@ -15,13 +15,18 @@ const PeoplePage: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
-  const [sortOrder, setSortOrder] = useState('asc');
-  const [selectedSort, setSelectedSort] = useState('');
+  // const [sortOrder, setSortOrder] = useState('asc');
+
   const [isOpenForm, setIsOpenForm] = useState(false);
   const appliedQuery = searchParams.get('query') || '';
   const [query, setQuery] = useState(appliedQuery);
+  const sortBy = searchParams.get('sortBy') || '';
+  const sortOrder = searchParams.get('sortOrder') || '';
+  const [selectedSort, setSelectedSort] = useState(sortBy);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
+    setIsLoading(true);
     getPeople()
       .then(response => setPeople(response.map((human: People) => {
         const mother = response
@@ -31,6 +36,7 @@ const PeoplePage: React.FC = () => {
 
         return { ...human, mother, father };
       })));
+    setIsLoading(false);
   }, []);
 
   const addNewPeople = (newPerson:People) => {
@@ -50,16 +56,6 @@ const PeoplePage: React.FC = () => {
     [],
   );
 
-  const getSearchParams = (name:string, value:string) => {
-    if (value) {
-      searchParams.set(name, value);
-    } else {
-      searchParams.delete(name);
-    }
-
-    navigate(`?${searchParams.toString()}`);
-  };
-
   const handleQueryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setQuery(event.target.value);
     applyQuery(event.target.value);
@@ -71,48 +67,35 @@ const PeoplePage: React.FC = () => {
     .filter(person => person.name.toLowerCase().includes(lowerQuery)
     || person.motherName?.toLowerCase().includes(lowerQuery)
     || person.fatherName?.toLowerCase().includes(lowerQuery))
-  ), [appliedQuery, people]);
+    .sort((a, b) => {
+      switch (sortBy) {
+        case 'name':
+        case 'sex':
+          return sortOrder === 'asc'
+            ? a[sortBy].localeCompare(b[sortBy])
+            : b[sortBy].localeCompare(a[sortBy]);
+        case 'born':
+        case 'died':
+          return sortOrder === 'asc'
+            ? a[sortBy] - b[sortBy]
+            : b[sortBy] - a[sortBy];
+        default:
+          return 0;
+      }
+    })
+  ), [appliedQuery, people, sortBy, sortOrder]);
 
   const getSortTable = (sort:string) => {
-    setSelectedSort(sort);
-    getSearchParams('sortBy', selectedSort);
-    getSearchParams('sortOrder', sortOrder);
-
-    switch (sortOrder) {
-      case 'asc':
-        switch (sort) {
-          case 'name':
-          case 'sex':
-            filterPeople.sort((a, b) => (a[sort]).localeCompare(b[sort]));
-            setSortOrder('desc');
-            break;
-          case 'born':
-          case 'died':
-            filterPeople.sort((a, b) => a[sort] - b[sort]);
-            setSortOrder('desc');
-            break;
-          default:
-        }
-
-        break;
-      case 'desc':
-        switch (sort) {
-          case 'name':
-          case 'sex':
-            filterPeople.sort((a, b) => (b[sort]).localeCompare(a[sort]));
-            setSortOrder('asc');
-            break;
-          case 'born':
-          case 'died':
-            filterPeople.sort((a, b) => b[sort] - a[sort]);
-            setSortOrder('asc');
-            break;
-          default:
-        }
-
-        break;
-      default:
+    if (sortOrder === 'asc') {
+      searchParams.set('sortOrder', 'desc');
+    } else {
+      searchParams.set('sortOrder', 'asc');
     }
+
+    searchParams.set('sortBy', sort);
+    setSelectedSort(sort);
+
+    navigate(`?${searchParams.toString()}`);
   };
 
   const getOpenForm = () => {
@@ -157,7 +140,7 @@ const PeoplePage: React.FC = () => {
           onChange={handleQueryChange}
         />
       </div>
-      {(filterPeople.length === 0)
+      {isLoading
         ? <TailSpin color="blue" />
         : (
           <PeopleTable
@@ -167,6 +150,8 @@ const PeoplePage: React.FC = () => {
             selectedSort={selectedSort}
           />
         )}
+
+      {(filterPeople.length === 0) && <p>No results</p>}
     </div>
   );
 };

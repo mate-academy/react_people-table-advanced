@@ -13,8 +13,8 @@ const NewPerson:React.FC<Props> = ({ addNewPeople, people, setIsOpenForm }) => {
   const [newPerson, setNewPerson] = useState<People>({
     name: '',
     sex: 'm' || 'f',
-    born: Number('0'),
-    died: Number('0'),
+    born: 0,
+    died: 0,
   });
 
   const [slugPerson, setSlugPerson] = useState('');
@@ -37,7 +37,7 @@ const NewPerson:React.FC<Props> = ({ addNewPeople, people, setIsOpenForm }) => {
     event:React.ChangeEvent<HTMLInputElement>,
   ) => {
     setSlugPerson(newPerson.name.concat((newPerson.born).toString()));
-    const valName = new RegExp(/^([А-Яа-яЁёA-Za-z\s]+$)/);
+    const valName = new RegExp(/^(?! )[А-Яа-яЁёA-Za-z\s]+$/);
 
     const {
       name, value, type, checked,
@@ -93,6 +93,8 @@ const NewPerson:React.FC<Props> = ({ addNewPeople, people, setIsOpenForm }) => {
         slug: slugPerson,
         motherName: mother || undefined,
         fatherName: father || undefined,
+        mother: people.find(person => person.name === mother),
+        father: people.find(person => person.name === father),
       };
 
       addNewPeople(addPerson);

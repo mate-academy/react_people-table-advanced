@@ -16,8 +16,8 @@ const App = () => (
     </header>
     <Routes>
       <Route path="/" element={<HomePage />} />
-      <Route path="people/" element={<PeoplePage />}>
-        <Route path=":slug" element={<></>} />
+      <Route path="people" element={<PeoplePage />}>
+        <Route path=":slug" element={<PeoplePage />} />
       </Route>
       <Route path="*" element={<p>Page not found</p>} />
       <Route path="/home" element={<Navigate replace to="/" />} />
