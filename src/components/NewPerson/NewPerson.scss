@@ -1,0 +1,14 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  height: 400px;
+}
+
+.error {
+  color: red;
+}
+
+.selectBlock {
+  width: 300px;
+}
