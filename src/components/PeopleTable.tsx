@@ -46,7 +46,6 @@ export const PeopleTable: React.FC = React.memo(() => {
   };
 
   const nameOfColumns = ['Name', 'Sex', 'Born', 'Died'];
-
   const toLowerQuery = appliedQuery.toLowerCase();
 
   const filterByNameMotherFather

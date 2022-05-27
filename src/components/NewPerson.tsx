@@ -22,9 +22,16 @@ export const NewPerson: React.FC = React.memo(() => {
   const values = getValues();
 
   const fathersFromServer
-   = people.filter(man => man.sex === 'm' && man.died > values.born);
+    = people.filter(man => man.sex === 'm'
+      && man.died > values.born
+      && man.born < values.born);
   const mothersFromServer
-   = people.filter(women => women.sex === 'f' && women.died > values.born);
+    = people.filter(women => women.sex === 'f'
+      && women.died > values.born
+      && women.born < values.born);
+
+  // eslint-disable-next-line
+  // console.log(values.born);
 
   const onSubmit = (data: Man) => {
     let neuesPerson = data;
@@ -120,8 +127,8 @@ export const NewPerson: React.FC = React.memo(() => {
               {...register('died', {
                 required: 'Enter death day!',
                 min: {
-                  value: 1400,
-                  message: `Death day beetwen 1400 and ${currentYear}`,
+                  value: values.born,
+                  message: `Death day beetwen ${values.born} and ${currentYear}`,
                 },
                 max: {
                   value: +values.born + 150,
@@ -141,22 +148,6 @@ export const NewPerson: React.FC = React.memo(() => {
 
           <div className="form__field">
             <select
-              {...register('motherName')}
-              placeholder="Select mothers name"
-              id="mother"
-              disabled={!values.born}
-            >
-              <option value="">Select mothers name</option>
-              {mothersFromServer.map(women => (
-                <option
-                  key={women.name}
-                  value={women.name}
-                >
-                  {women.name}
-                </option>
-              ))}
-            </select>
-            <select
               {...register('fatherName')}
               placeholder="Select fathers name"
               disabled={!values.born}
@@ -169,6 +160,22 @@ export const NewPerson: React.FC = React.memo(() => {
                   value={father.name}
                 >
                   {father.name}
+                </option>
+              ))}
+            </select>
+            <select
+              {...register('motherName')}
+              placeholder="Select mothers name"
+              id="mother"
+              disabled={!values.born}
+            >
+              <option value="">Select mothers name</option>
+              {mothersFromServer.map(women => (
+                <option
+                  key={women.name}
+                  value={women.name}
+                >
+                  {women.name}
                 </option>
               ))}
             </select>

@@ -1,15 +1,11 @@
-// import { useParams } from 'react-router-dom';
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-// import { PeopleTable } from './PeopleTable';
 import { getPeople } from '../people';
 import './People.scss';
 import { Man } from '../types';
 
 export const People: React.FC = React.memo(() => {
   const [people, setPeople] = useState<Man[]>([]);
-  // const [nameToSort, setNameToSort] = useState('');
-  // const [sortOrder, setSortOrder] = useState('');
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -37,18 +33,6 @@ export const People: React.FC = React.memo(() => {
       .then(setPeople);
   }, []);
 
-  // const handleClick = useCallback((nameToSort: string) => {
-  //   filterByNameMotherFather.sort((a, b) => {
-  //     switch (nameToSort) {
-  //       case 'name':
-  //       case 'sex':
-  //         return b[nameToSort].localeCompare(a[nameToSort]);
-  //       default:
-  //         return a.name.localeCompare(b.name);
-  //     }
-  //   });
-  // }, [filterByNameMotherFather]);
-
   // eslint-disable-next-line
   console.log(filterByNameMotherFather);
 
@@ -62,9 +46,6 @@ export const People: React.FC = React.memo(() => {
           navigate(`?query=${e.target.value}`);
         }}
       />
-      {/* <PeopleTable
-        people={filterByNameMotherFather}
-      /> */}
     </div>
 
   );

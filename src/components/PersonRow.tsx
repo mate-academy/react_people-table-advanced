@@ -1,6 +1,5 @@
 import { useParams } from 'react-router-dom';
 import React from 'react';
-// import classNames from 'classnames';
 import { PersonName } from './PersonName';
 import { Man } from '../types';
 import './PersonRow.scss';
