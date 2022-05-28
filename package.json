@@ -11,7 +11,10 @@
     "bulma": "^0.9.3",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
-    "react-scripts": "^4.0.3"
+    "react-loader-spinner": "^6.0.0-0",
+    "react-router-dom": "^6.3.0",
+    "react-scripts": "^4.0.3",
+    "shortid": "^2.2.16"
   },
   "devDependencies": {
     "@cypress/webpack-dev-server": "^1.8.4",
@@ -24,6 +27,7 @@
     "@types/node": "^17.0.23",
     "@types/react": "^17.0.43",
     "@types/react-dom": "^17.0.14",
+    "@types/shortid": "0.0.29",
     "cypress": "^9.5.3",
     "eslint": "^7.32.0",
     "eslint-plugin-cypress": "^2.11.2",
