@@ -1,0 +1,56 @@
+.form {
+  border: 1px solid #f1ddbf;
+  border-radius: 5px;
+  left: 10px;
+  padding: 10px;
+  position: relative;
+  min-width: 480px;
+  max-width: 780px;
+  margin: auto 0;
+  background-color: #fff6ea;
+
+  &__goBackButton {
+    margin-bottom: 10px;
+    background-color: #e6ba95;
+    border: 1px solid beige;
+    border-radius: 12px;
+    padding: 5px;
+    color: rgb(149, 73, 73);
+    cursor: pointer;
+
+  }
+
+  &__addButton {
+    padding: 7px;
+    border-radius: 12px;
+    background-color: rgb(188, 226, 111);
+    border: 1px solid rgb(118, 229, 87);
+    color: rgb(94, 119, 110);
+    cursor: pointer;
+  }
+
+  &__field {
+    font-size: 1em;
+    display: flex;
+    width: 700px;
+    height: 30px;
+    margin-bottom: 10px;
+    gap: 10px;
+
+    &--radio {
+      margin-bottom: 10px;
+      width: 700px;
+    }
+  }
+
+}
+
+.bornDied {
+  font-size: 1em;
+  width: 350px;
+}
+
+.p {
+  margin: 0;
+  color: red;
+}

@@ -1,0 +1,20 @@
+.Person {
+  
+  &__red {
+    color: red;
+    text-decoration: none;
+  }
+
+  &__blue {
+    color: blue;
+    text-decoration: none;
+  }
+
+  &__light {
+    background-color: rgb(226, 173, 173);
+  }
+}
+
+// .active {
+//   background-color: yellow;
+// }
