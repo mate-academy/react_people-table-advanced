@@ -1,15 +1,16 @@
 import { useParams } from 'react-router-dom';
-import React from 'react';
+import React, { useContext } from 'react';
 import { PersonName } from './PersonName';
 import { Man } from '../types';
 import './PersonRow.scss';
+import { PeopleContext } from '../PeopleContext';
 
 type Props = {
   person: Man,
-  people: Man[],
 };
 
-export const PersonRow: React.FC<Props> = React.memo(({ person, people }) => {
+export const PersonRow: React.FC<Props> = React.memo(({ person }) => {
+  const { people } = useContext(PeopleContext);
   const { slug } = useParams();
   const father = people.find(vater => vater.name === person.fatherName);
   const mother = people.find(mutter => mutter.name === person.motherName);

@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
 import classNames from 'classnames';
 import debounce from 'lodash/debounce';
@@ -14,8 +14,8 @@ export const PeopleTable: React.FC = React.memo(() => {
   const appliedQuery = searchParams.get('query') || '';
   const [query, setQuery] = useState(appliedQuery);
 
-  const applieQuery = useCallback(
-    debounce((newQuery: string) => {
+  const applieQuery
+    = debounce((newQuery: string) => {
       if (newQuery) {
         searchParams.set('query', newQuery);
       } else {
@@ -23,9 +23,8 @@ export const PeopleTable: React.FC = React.memo(() => {
       }
 
       navigate(`?${searchParams.toString()}`);
-    }, 500),
-    [],
-  );
+    }, 500);
+
   const handleInputchange = (e: string) => {
     setQuery(e);
     applieQuery(e);
@@ -33,6 +32,7 @@ export const PeopleTable: React.FC = React.memo(() => {
 
   const sortBy = searchParams.get('sortBy') || '';
   const sortOrder = searchParams.get('sortOrder') || '';
+
   const handleSortTable = (name: string) => {
     searchParams.set('sortOrder', sortOrder === 'asc' ? 'desc' : 'asc');
 
@@ -120,7 +120,6 @@ export const PeopleTable: React.FC = React.memo(() => {
         <tbody>
           {filterByNameMotherFather.map(man => (
             <PersonRow
-              people={filterByNameMotherFather}
               person={man}
               key={man.slug}
             />

@@ -9,6 +9,8 @@ type Props = {
 
 export const PersonName: React.FC<Props> = React.memo(({ person }) => {
   const { search } = useLocation();
+  // eslint-disable-next-line
+  console.log('render');
 
   return (
     <Link
