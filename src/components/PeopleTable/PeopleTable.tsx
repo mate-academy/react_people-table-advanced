@@ -1,5 +1,6 @@
-import React from 'react';
+import { FC, memo } from 'react';
 import shortid from 'shortid';
+import { useParams } from 'react-router-dom';
 import { HumanWithParents } from '../../types/Human';
 
 import '../../styles/Title.scss';
@@ -9,13 +10,15 @@ interface Props {
   people: Array<HumanWithParents>
 }
 
-export const PeopleTable: React.FC<Props> = React.memo(({ people }) => {
+export const PeopleTable: FC<Props> = memo(({ people }) => {
+  const { slug } = useParams<{ slug: string }>();
+
   return (
     <div className="PeopleTable">
       <h1 className="title">
         PeopleTable
       </h1>
-      <table className="table table-dark table-striped">
+      <table className="table table-info">
         <thead>
           <tr>
             <th scope="col">#</th>
@@ -33,6 +36,7 @@ export const PeopleTable: React.FC<Props> = React.memo(({ people }) => {
               number={index}
               human={human}
               key={shortid.generate()}
+              slug={slug}
             />
           ))}
         </tbody>
