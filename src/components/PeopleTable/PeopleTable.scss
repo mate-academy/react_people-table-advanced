@@ -1,0 +1,36 @@
+.PeopleTable {
+
+  &__column {
+    cursor: pointer;
+  }
+  &__now-sorting-column {
+    display: flex;
+    justify-content: left;
+
+    position: relative;
+
+    &--sort-asc {
+      &::after {
+        background-image: url('../../images/sort_asc.png');
+        top: 8px;
+        display: inline-block;
+        position: relative;
+        width: 20px;
+        height: 20px;
+        content: "";
+      }
+    }
+
+    &--sort-desc {
+      &::after {
+        background-image: url('../../images/sort_desc.png');
+        top: 1px;
+        display: inline-block;
+        position: relative;
+        width: 20px;
+        height: 20px;
+        content: "";
+      }
+    }
+  }
+}

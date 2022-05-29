@@ -7,19 +7,19 @@ import { PeopleTable } from '../PeopleTable';
 
 import './PeoplePage.scss';
 import { useSearchParams } from '../../hooks/useSearchParams';
+import { generateCallbackSort } from '../../functions/generateCallbackSort';
 
 export const PeoplePage: React.FC<{}> = React.memo(() => {
   const [people, setPeople] = useState<Array<HumanWithParents> | null>(null);
 
-  const [peopleToShow, setPeopleToShow]
-    = useState<Array<HumanWithParents> | null>(null);
+  let peopleToShow: Array<HumanWithParents> = [];
 
   const navigate = useNavigate();
   const searchParams = useSearchParams();
-
-  const [query, setQuery] = useState('');
-  // const [sortBy, setSortBy] = useState('');
-  // const [sortType, setSortType] = useState('');
+  const currentQuery = searchParams.get('query') || '';
+  const currentSortBy = searchParams.get('sortBy') || '';
+  const currentSortOrder = searchParams.get('sortOrder') || '';
+  const callbackForSort = generateCallbackSort(currentSortBy, currentSortOrder);
 
   const loadPeople = useCallback(async () => {
     const loadedPeople: Array<Human> = await getPeople();
@@ -32,37 +32,31 @@ export const PeoplePage: React.FC<{}> = React.memo(() => {
     );
 
     setPeople(peopleWithParents);
-    setPeopleToShow(peopleWithParents);
-    setQuery(searchParams.get('query') || '');
+    peopleToShow = peopleWithParents;
   }, []);
 
   useEffect(() => {
     loadPeople();
   }, []);
 
-  useEffect(() => {
-    if (query) {
-      searchParams.set('query', query);
+  if (currentQuery) {
+    const lowerQuery = currentQuery.toLowerCase();
 
-      const lowerQuery = query.toLowerCase();
+    const filtered = people?.filter((human) => (
+      human.name.toLowerCase().includes(lowerQuery)
+      || human.motherName?.toLowerCase().includes(lowerQuery)
+      || human.fatherName?.toLowerCase().includes(lowerQuery)
+    ))
+    || [];
 
-      const filtered = people?.filter((human) => (
-        human.name.toLowerCase().includes(lowerQuery)
-        || human.motherName?.toLowerCase().includes(lowerQuery)
-        || human.fatherName?.toLowerCase().includes(lowerQuery)
-      ))
-      || [];
+    peopleToShow = filtered;
+  } else {
+    peopleToShow = people || [];
+  }
 
-      setPeopleToShow(filtered);
-    } else {
-      searchParams.delete('query');
-      setPeopleToShow(people);
-    }
-
-    // console.log('change');
-
-    navigate(`?${searchParams.toString()}`);
-  }, [query]);
+  if (currentSortBy) {
+    peopleToShow = [...peopleToShow].sort(callbackForSort);
+  }
 
   return (
     <div className="PeoplePage">
@@ -75,9 +69,17 @@ export const PeoplePage: React.FC<{}> = React.memo(() => {
                 <input
                   className="form-control"
                   type="text"
-                  value={query}
+                  value={currentQuery}
                   onChange={({ target }) => {
-                    setQuery(target.value);
+                    const { value } = target;
+
+                    if (value) {
+                      searchParams.set('query', target.value);
+                    } else {
+                      searchParams.delete('query');
+                    }
+
+                    navigate(`?${searchParams.toString()}`);
                   }}
                 />
               </label>

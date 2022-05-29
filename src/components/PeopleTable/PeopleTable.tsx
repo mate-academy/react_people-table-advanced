@@ -16,7 +16,7 @@ interface Props {
   people: Array<HumanWithParents>
 }
 
-const tableHeadings = ['#', 'Name', 'Sex', 'Born', 'Died', 'Mother', 'Father'];
+const tableHeadings = ['Name', 'Sex', 'Born', 'Died', 'Mother', 'Father'];
 
 export const PeopleTable: FC<Props> = memo(({ people }) => {
   const { slug } = useParams<{ slug: string }>();
@@ -76,9 +76,8 @@ export const PeopleTable: FC<Props> = memo(({ people }) => {
           </tr>
         </thead>
         <tbody>
-          {people.map((human, index) => (
+          {people.map((human) => (
             <PersonRow
-              number={index + 1}
               human={human}
               key={shortid.generate()}
               slug={slug}

@@ -5,13 +5,11 @@ import { PersonName } from '../PersonName';
 
 interface Props {
   human: HumanWithParents;
-  number: number;
   slug: string | undefined;
 }
 
 export const PersonRow: React.FC<Props> = React.memo(({
   human,
-  number,
   slug,
 }) => {
   const {
@@ -24,7 +22,6 @@ export const PersonRow: React.FC<Props> = React.memo(({
         { 'table-active': slug === human.slug },
       )}
     >
-      <th className="PeopleTable__cell">{number}</th>
       <td className="PeopleTable__cell">
         <PersonName person={human} />
       </td>
