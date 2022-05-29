@@ -18,6 +18,8 @@ export const PeoplePage: React.FC<{}> = React.memo(() => {
   const searchParams = useSearchParams();
 
   const [query, setQuery] = useState('');
+  // const [sortBy, setSortBy] = useState('');
+  // const [sortType, setSortType] = useState('');
 
   const loadPeople = useCallback(async () => {
     const loadedPeople: Array<Human> = await getPeople();
@@ -57,6 +59,8 @@ export const PeoplePage: React.FC<{}> = React.memo(() => {
       setPeopleToShow(people);
     }
 
+    // console.log('change');
+
     navigate(`?${searchParams.toString()}`);
   }, [query]);
 
@@ -73,9 +77,7 @@ export const PeoplePage: React.FC<{}> = React.memo(() => {
                   type="text"
                   value={query}
                   onChange={({ target }) => {
-                    const { value } = target;
-
-                    setQuery(value);
+                    setQuery(target.value);
                   }}
                 />
               </label>
