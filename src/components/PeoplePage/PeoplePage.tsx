@@ -1,12 +1,12 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useQuery } from '../../hooks/useQuery';
 import { Human, HumanWithParents } from '../../types/Human';
 import { getPeople } from '../../api/people';
 import { findHumanByName } from '../../functions/findHumanByName';
 import { PeopleTable } from '../PeopleTable';
 
 import './PeoplePage.scss';
+import { useSearchParams } from '../../hooks/useSearchParams';
 
 export const PeoplePage: React.FC<{}> = React.memo(() => {
   const [people, setPeople] = useState<Array<HumanWithParents> | null>(null);
@@ -15,7 +15,7 @@ export const PeoplePage: React.FC<{}> = React.memo(() => {
     = useState<Array<HumanWithParents> | null>(null);
 
   const navigate = useNavigate();
-  const queries = useQuery();
+  const searchParams = useSearchParams();
 
   const [query, setQuery] = useState('');
 
@@ -31,7 +31,7 @@ export const PeoplePage: React.FC<{}> = React.memo(() => {
 
     setPeople(peopleWithParents);
     setPeopleToShow(peopleWithParents);
-    setQuery(queries.get('query') || '');
+    setQuery(searchParams.get('query') || '');
   }, []);
 
   useEffect(() => {
@@ -40,6 +40,8 @@ export const PeoplePage: React.FC<{}> = React.memo(() => {
 
   useEffect(() => {
     if (query) {
+      searchParams.set('query', query);
+
       const lowerQuery = query.toLowerCase();
 
       const filtered = people?.filter((human) => (
@@ -51,8 +53,11 @@ export const PeoplePage: React.FC<{}> = React.memo(() => {
 
       setPeopleToShow(filtered);
     } else {
+      searchParams.delete('query');
       setPeopleToShow(people);
     }
+
+    navigate(`?${searchParams.toString()}`);
   }, [query]);
 
   return (
@@ -64,16 +69,11 @@ export const PeoplePage: React.FC<{}> = React.memo(() => {
               <label>
                 Filter by name:
                 <input
+                  className="form-control"
                   type="text"
                   value={query}
                   onChange={({ target }) => {
                     const { value } = target;
-
-                    if (value) {
-                      navigate(`?query=${value}`);
-                    } else {
-                      navigate('');
-                    }
 
                     setQuery(value);
                   }}
