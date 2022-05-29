@@ -13,12 +13,14 @@ interface Props {
 export const PeopleTable: FC<Props> = memo(({ people }) => {
   const { slug } = useParams<{ slug: string }>();
 
+  // console.log(people);
+
   return (
     <div className="PeopleTable">
       <h1 className="title">
         PeopleTable
       </h1>
-      <table className="table table-info">
+      <table className="table table-warning">
         <thead>
           <tr>
             <th scope="col">#</th>
@@ -33,7 +35,7 @@ export const PeopleTable: FC<Props> = memo(({ people }) => {
         <tbody>
           {people.map((human, index) => (
             <PersonRow
-              number={index}
+              number={index + 1}
               human={human}
               key={shortid.generate()}
               slug={slug}
