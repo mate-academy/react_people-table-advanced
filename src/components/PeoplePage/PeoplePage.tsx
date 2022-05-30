@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import debounce from 'lodash/debounce';
 import { Human, HumanWithParents } from '../../types/Human';
 import { getPeople } from '../../api/people';
 import { findHumanByName } from '../../functions/findHumanByName';
@@ -17,6 +18,7 @@ export const PeoplePage: React.FC<{}> = React.memo(() => {
   const navigate = useNavigate();
   const searchParams = useSearchParams();
   const currentQuery = searchParams.get('query') || '';
+  const [query, setQuery] = useState(currentQuery);
   const currentSortBy = searchParams.get('sortBy') || '';
   const currentSortOrder = searchParams.get('sortOrder') || '';
   const callbackForSort = generateCallbackSort(currentSortBy, currentSortOrder);
@@ -39,6 +41,18 @@ export const PeoplePage: React.FC<{}> = React.memo(() => {
     loadPeople();
   }, []);
 
+  const applyQuery = useCallback(
+    debounce((newQuery: string) => {
+      if (newQuery) {
+        searchParams.set('query', newQuery);
+      } else {
+        searchParams.delete('query');
+      }
+
+      navigate(`?${searchParams.toString()}`);
+    }, 500), [],
+  );
+
   if (currentQuery) {
     const lowerQuery = currentQuery.toLowerCase();
 
@@ -55,12 +69,14 @@ export const PeoplePage: React.FC<{}> = React.memo(() => {
   }
 
   if (currentSortBy) {
-    peopleToShow = [...peopleToShow].sort(callbackForSort);
+    const copyArr = [...peopleToShow];
+
+    peopleToShow = copyArr.sort(callbackForSort);
   }
 
   return (
     <div className="PeoplePage">
-      { peopleToShow
+      { people
         ? (
           <>
             <div className="PeoplePage__search-query-block">
@@ -69,17 +85,12 @@ export const PeoplePage: React.FC<{}> = React.memo(() => {
                 <input
                   className="form-control"
                   type="text"
-                  value={currentQuery}
+                  value={query}
                   onChange={({ target }) => {
                     const { value } = target;
 
-                    if (value) {
-                      searchParams.set('query', target.value);
-                    } else {
-                      searchParams.delete('query');
-                    }
-
-                    navigate(`?${searchParams.toString()}`);
+                    setQuery(value);
+                    applyQuery(value);
                   }}
                 />
               </label>

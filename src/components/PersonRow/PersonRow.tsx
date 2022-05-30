@@ -13,7 +13,7 @@ export const PersonRow: React.FC<Props> = React.memo(({
   slug,
 }) => {
   const {
-    sex, born, died, mother, father,
+    sex, born, died, mother, father, motherName, fatherName,
   } = human;
 
   return (
@@ -29,10 +29,10 @@ export const PersonRow: React.FC<Props> = React.memo(({
       <td className="PeopleTable__cell">{born}</td>
       <td className="PeopleTable__cell">{died}</td>
       <td className="PeopleTable__cell">
-        <PersonName person={mother} />
+        <PersonName person={mother} parentName={motherName} />
       </td>
       <td className="PeopleTable__cell">
-        <PersonName person={father} />
+        <PersonName person={father} parentName={fatherName} />
       </td>
     </tr>
   );

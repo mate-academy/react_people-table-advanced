@@ -45,6 +45,8 @@ export const PeopleTable: FC<Props> = memo(({ people }) => {
     navigate(`?${searchParams.toString()}`);
   }, [searchParams]);
 
+  // console.log('rerender');
+
   return (
     <div className="PeopleTable">
       <h1 className="title">
