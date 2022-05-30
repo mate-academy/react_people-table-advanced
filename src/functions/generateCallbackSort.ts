@@ -4,6 +4,10 @@ export const generateCallbackSort = (sortBy: string, sortOrder: string) => {
 
   const fieldName = sortBy.toLowerCase();
 
+  // i don't know how set sortBy str as keyof
+  // HumanWithParents because i take that value from table headings
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const callback = (h1: any, h2: any) => {
     let f1 = h1[fieldName];
     let f2 = h2[fieldName];
@@ -11,9 +15,7 @@ export const generateCallbackSort = (sortBy: string, sortOrder: string) => {
     if (fieldName === 'mother') {
       f1 = h1.motherName;
       f2 = h2.motherName;
-    }
-
-    if (fieldName === 'father') {
+    } else if (fieldName === 'father') {
       f1 = h1.fatherName;
       f2 = h2.fatherName;
     }
