@@ -1,0 +1,12 @@
+.PeoplePage {
+  &__loader-spinner-container {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+  }
+
+  &__select {
+    display: inline-block;
+    width: min-content;
+  }
+}

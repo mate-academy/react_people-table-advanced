@@ -1,0 +1,9 @@
+.link {
+  text-decoration: none;
+
+  &:hover {
+    color: aquamarine;
+  }
+
+  transition: all 0.3s;
+}

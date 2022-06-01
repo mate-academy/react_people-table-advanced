@@ -1,1 +1,15 @@
-// styles go here
+@import './styles/Variables.scss';
+@import './styles/Link.scss';
+
+.male-name-text {
+  color: $male-color;
+}
+
+.female-name-text {
+  color: $female-color;
+}
+
+.not-found-name-text {
+  color: $not-found-color;
+  font-weight: bold;
+}
