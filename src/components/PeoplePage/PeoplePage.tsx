@@ -9,6 +9,7 @@ import { PeopleTable } from '../PeopleTable';
 import './PeoplePage.scss';
 import { useSearchParams } from '../../hooks/useSearchParams';
 import { generateCallbackSort } from '../../functions/generateCallbackSort';
+import { FilterBy } from '../../enums/filterBy';
 
 export const PeoplePage: React.FC<{}> = React.memo(() => {
   const [people, setPeople] = useState<Array<HumanWithParents> | null>(null);
@@ -19,6 +20,7 @@ export const PeoplePage: React.FC<{}> = React.memo(() => {
   const searchParams = useSearchParams();
   const currentQuery = searchParams.get('query') || '';
   const [query, setQuery] = useState(currentQuery);
+  const [filterBy, setFilterBy] = useState(FilterBy.name);
   const currentSortBy = searchParams.get('sortBy') || '';
   const currentSortOrder = searchParams.get('sortOrder') || '';
   const callbackForSort = generateCallbackSort(currentSortBy, currentSortOrder);
@@ -56,14 +58,28 @@ export const PeoplePage: React.FC<{}> = React.memo(() => {
   if (currentQuery) {
     const lowerQuery = currentQuery.toLowerCase();
 
-    const filtered = people?.filter((human) => (
-      human.name.toLowerCase().includes(lowerQuery)
-      || human.motherName?.toLowerCase().includes(lowerQuery)
-      || human.fatherName?.toLowerCase().includes(lowerQuery)
-    ))
-    || [];
-
-    peopleToShow = filtered;
+    switch (filterBy) {
+      case FilterBy.name:
+        peopleToShow = people?.filter((human) => (
+          human.name.toLowerCase().includes(lowerQuery)
+        ))
+        || [];
+        break;
+      case FilterBy.motherName:
+        peopleToShow = people?.filter((human) => (
+          human.motherName?.toLowerCase().includes(lowerQuery)
+        ))
+        || [];
+        break;
+      case FilterBy.fatherName:
+        peopleToShow = people?.filter((human) => (
+          human.fatherName?.toLowerCase().includes(lowerQuery)
+        ))
+        || [];
+        break;
+      default:
+        throw new Error('unexpected selected option to sort');
+    }
   } else {
     peopleToShow = people || [];
   }
@@ -81,19 +97,40 @@ export const PeoplePage: React.FC<{}> = React.memo(() => {
           <>
             <div className="PeoplePage__search-query-block">
               <label>
-                Filter by name:
-                <input
-                  className="form-control"
-                  type="text"
-                  value={query}
+                Filter by:
+                <select
                   onChange={({ target }) => {
-                    const { value } = target;
-
-                    setQuery(value);
-                    applyQuery(value);
+                    setFilterBy(target.value as FilterBy);
                   }}
-                />
+                  value={filterBy}
+                  className="form-select form-select-sm PeoplePage__select"
+                >
+                  <option value={FilterBy.name}>
+                    {FilterBy.name}
+                  </option>
+
+                  <option value={FilterBy.motherName}>
+                    {FilterBy.motherName}
+                  </option>
+
+                  <option value={FilterBy.fatherName}>
+                    {FilterBy.fatherName}
+                  </option>
+                </select>
               </label>
+
+              <input
+                id="query"
+                className="form-control"
+                type="text"
+                value={query}
+                onChange={({ target }) => {
+                  const { value } = target;
+
+                  setQuery(value);
+                  applyQuery(value);
+                }}
+              />
             </div>
 
             <PeopleTable people={peopleToShow} />
