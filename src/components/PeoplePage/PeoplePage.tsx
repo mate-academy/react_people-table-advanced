@@ -2,7 +2,9 @@ import React, {
   useState, useCallback, useContext, useEffect,
 } from 'react';
 
-import { useSearchParams, Link } from 'react-router-dom';
+import {
+  useSearchParams, Link, useLocation,
+} from 'react-router-dom';
 import { debounce } from 'lodash';
 import './PeoplePage.scss';
 import { PeopleContext } from '../PeopleContext';
@@ -10,7 +12,8 @@ import { PeopleTable } from '../PeopleTable';
 
 export const PeoplePage:React.FC = () => {
   const { people, setVisiblePeople } = useContext(PeopleContext);
-  const [searchParams, setSearchParams] = useSearchParams();
+  const { search } = useLocation();
+  const [searchParams, setSearchParams] = useSearchParams(search);
   const appliedQuery = searchParams.get('query') || '';
   const [query, setQuery] = useState(appliedQuery);
 
@@ -24,7 +27,7 @@ export const PeoplePage:React.FC = () => {
 
       setSearchParams(searchParams);
     }, 500),
-    [],
+    [searchParams],
   );
 
   const handleQueryChange = (event: React.ChangeEvent<HTMLInputElement>) => {

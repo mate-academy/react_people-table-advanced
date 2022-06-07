@@ -1,14 +1,15 @@
 import React, { useContext, useMemo } from 'react';
 import './PeopleTable.scss';
 import classNames from 'classnames';
-import { useParams, useSearchParams } from 'react-router-dom';
+import { useParams, useSearchParams, useLocation } from 'react-router-dom';
 import { PeopleContext } from '../PeopleContext';
 import { PersonRow } from '../PersonRow';
 
 export const PeopleTable:React.FC = () => {
   const { people, visiblePeople } = useContext(PeopleContext);
   const { slug } = useParams();
-  const [searchParams, setSearchParams] = useSearchParams();
+  const { search } = useLocation();
+  const [searchParams, setSearchParams] = useSearchParams(search);
   const sortBy = searchParams.get('sortBy') || '';
   const sortOrder = searchParams.get('sortOrder') || '';
 
