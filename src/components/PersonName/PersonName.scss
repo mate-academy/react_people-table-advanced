@@ -1,0 +1,11 @@
+.personName-link {
+  text-decoration: none;
+
+  &--male {
+    color: darkblue;
+  }
+
+  &--female {
+    color: red;
+  }
+}

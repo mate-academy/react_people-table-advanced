@@ -1,0 +1,28 @@
+.people-page {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  padding: 0 50px;
+  
+  &__search {
+    align-self: center;
+    width: 300px;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+  }
+ 
+  &__link {
+    width: 100px;
+    text-align: center;
+    text-decoration: none;
+    background-color: rgb(11, 97, 168);
+    color: white;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    align-self: center;
+  }
+}

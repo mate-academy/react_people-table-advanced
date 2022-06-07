@@ -1,0 +1,46 @@
+.peopleTable {
+  border: 2px solid rgb(11, 97, 168);
+  border-collapse: collapse;
+  margin-bottom: 20px;
+
+  &__header {
+    border: 1px solid rgb(11, 97, 168);
+  }
+
+  &__cell {
+    padding: 20px;
+    background: rgb(11, 97, 168);
+    color: #fff;
+  }
+
+  &__cell-filter {
+    padding: 20px;
+    background: rgb(11, 97, 168);
+    color: #fff;
+  
+    &::after {
+      content: " ";
+      display: inline-block;
+      width: 18px;
+      height: 18px;
+      background-image: url("../../icon/sort_both.png");
+    }
+
+    &--asc {
+      &::after {
+        background-image: url("../../icon/sort_asc.png");
+      }
+    }
+
+    &--desc {
+      &::after {
+        background-image: url("../../icon/sort_desc.png");
+      }
+    }
+  }
+
+  &__row {
+    background: rgb(175, 217, 251);
+    
+  }
+}
