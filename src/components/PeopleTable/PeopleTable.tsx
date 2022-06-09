@@ -87,7 +87,7 @@ export const PeopleTable: React.FC<Props> = React.memo(
                     { 'is-selected': person.slug === slug },
                   )}
                 >
-                  <PersonRow person={person} sortBy={sortBy} />
+                  <PersonRow person={person} sortBy={sortBy} people={people}/>
                 </tr>
               ))}
             </tbody>
