@@ -1,1 +1,53 @@
-// styles go here
+.title {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.wrapper {
+  max-width: 1200px;
+  width: 100%;
+  padding: 0 20px;
+  margin: 0 auto;
+}
+
+.table th {
+  padding: 0;
+  text-align: center;
+}
+
+.filter-button {
+  font-size: 18px;
+  font-weight: 500;
+  cursor: pointer;
+  background-color: transparent;
+  border: none;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 15px;
+  outline: none;
+  transition: background-color 0.3s linear;
+
+  &:hover,
+  &:focus {
+    background-color: #65b6af15;
+  }
+}
+
+.text-wrapper {
+  font-size: 18px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  padding: 10px 15px;
+}
+
+.table tr.is-selected,
+.table td.is-selected {
+  background-color: #78c3bc60;
+}
+
+input {
+  margin-bottom: 20px;
+}
