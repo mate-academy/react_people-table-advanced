@@ -1,0 +1,48 @@
+table {
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+tr {
+  border-bottom: 1px solid black;
+
+}
+
+th {
+  border: 1px solid black;
+  padding: 10px 25px;
+}
+
+.Table {
+  &__sort {
+    background-color: rgb(173, 167, 167);
+    position: relative;
+    cursor: pointer;
+    &::after {
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      right: 5%;
+      content: '';
+      background: url("../images/sort_both.png");
+    }
+
+    &--asc::after {
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      right: 5%;
+      content: '';
+      background: url("../images/sort_asc.png");
+    }
+
+    &--desc::after {
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      right: 5%;
+      content: '';
+      background: url("../images/sort_desc.png");
+    }
+  }
+}

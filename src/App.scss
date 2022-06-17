@@ -1,1 +1,22 @@
-// styles go here
+* {
+  box-sizing: border-box;
+  font-family: sans-serif;
+}
+
+.navbar {
+  &__link {
+    text-decoration: none;
+    font-size: 20px;
+    margin-right: 10px;
+    color: gray;
+    font-weight: 600;
+
+    &--active {
+      text-decoration: none;
+      font-size: 20px;
+      margin-right: 10px;
+      font-weight: 600;
+      color: blue;
+    }
+  }
+}

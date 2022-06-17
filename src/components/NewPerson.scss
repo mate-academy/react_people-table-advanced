@@ -1,0 +1,79 @@
+.NewPerson {
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(200, 200, 200, 0.5);
+  position: fixed;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  backdrop-filter: blur(3px);
+
+  &__container {
+    position: relative;
+    width: 500px;
+    background-color: white;
+    box-shadow:  1px 1px 15px 2px #8b8b8b;
+    border-radius: 10px;
+    padding: 10px 30px;
+  }
+
+  &__form {
+    display: flex;
+    flex-direction: column;
+    width: 400px;
+    margin: 0 auto;
+  }
+
+  &__input {
+    margin: 10px 0;
+    outline: none;
+    padding: 5px 3px;
+  }
+
+  &__btn {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    border-radius: 50%;
+    outline: none;
+    border: none;
+    height: 50px;
+    height: 30px;
+    width: 30px;
+    background-color: rgb(212, 77, 77);
+    color: white;
+    font-size: larger;
+    cursor: pointer;
+  }
+
+  &__section {
+    border: 1px solid black;
+    border-radius: 5px;
+    padding: 5px;
+    margin-bottom: 10px;
+
+    &--born {
+      width: 200px;
+      display: flex;
+      flex-direction: column;
+    }
+  }
+
+  &__button {
+    background-color: #39b339;
+    color: white;
+    outline: none;
+    padding: 5px 0;
+    border-radius: 5px;
+    border: 0;
+  }
+
+  &__error {
+    color: red;
+    font-size: 14px;
+  }
+}
