@@ -66,9 +66,6 @@ export const PeoplePage: React.FC = () => {
         placeholder="Find a person"
         className="Person__input"
         value={query}
-        // onChange={(e) => {
-        //   navigate(`?query=${e.target.value}`);
-        // }}
         onChange={handleQueryChange}
       />
       <PeopleTable arrayOfPeople={visibleArrayOfPeople} />

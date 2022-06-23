@@ -21,22 +21,22 @@ export const PersonRow: React.FC<Props> = ({ person }) => {
         {person.died}
       </td>
       <td>
-        {!person.mother
-          ? (
+        {person.mother
+          ? <PersonName person={person} />
+          : (
             <p style={{ color: 'black', fontSize: 'bold' }}>
               {person.motherName}
             </p>
-          )
-          : <PersonName person={person} />}
+          )}
       </td>
       <td>
-        {!person.father
-          ? (
+        {person.father
+          ? <PersonName person={person} />
+          : (
             <p style={{ color: 'black', fontSize: 'bold' }}>
               {person.fatherName}
             </p>
-          )
-          : <PersonName person={person} />}
+          )}
       </td>
     </tr>
   );
