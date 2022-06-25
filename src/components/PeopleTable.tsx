@@ -1,6 +1,5 @@
 import React, { useCallback, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-// import debounce from 'lodash/debounce';
 import { PersonRow } from './PersonRow';
 
 type Props = {
@@ -57,7 +56,7 @@ export const PeopleTable: React.FC<Props> = React.memo(({ arrayOfPeople }) => {
 
   const sortedTable = useCallback(
     () => sortTable(arrayOfPeople, sortBy, sortingOrder),
-    [arrayOfPeople, sortBy, sortingOrder],
+    [arrayOfPeople, sortingOrder, sortBy],
   );
 
   const onClickHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
