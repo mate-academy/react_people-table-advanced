@@ -12,10 +12,20 @@ export const PeoplePage: React.FC = () => {
   const sortTable = (value: string, order: string) => {
     switch (value) {
       case 'name':
+      case 'sex':
         people.sort((el1, el2) => (
           order === 'asc'
-            ? el1.name.localeCompare(el2.name)
-            : el2.name.localeCompare(el1.name)
+            ? el1[value].localeCompare(el2[value])
+            : el2[value].localeCompare(el1[value])
+        ));
+        break;
+
+      case 'born':
+      case 'died':
+        people.sort((el1, el2) => (
+          order === 'asc'
+            ? +el1[value] - (+el2[value])
+            : +el2[value] - (+el1[value])
         ));
         break;
 

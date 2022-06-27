@@ -10,25 +10,31 @@ type Props = {
 
 export const PeopleTable: React.FC<Props> = ({ people, sortTable }) => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const sortQuery = searchParams.get('sortBy') || '';
-  const sortOrder = searchParams.get('sortOrder') || 'asc';
+  let sortOrder = searchParams.get('sortOrder') || '';
+  const query = searchParams.get('query') || '';
 
   const handleSort = (event: React.MouseEvent) => {
-    const sortBy = event.currentTarget.textContent?.toLowerCase();
+    const sortBy = event.currentTarget.textContent?.toLowerCase() || '';
 
-    if (sortBy) {
-      setSearchParams({ sortBy, sortOrder });
-    } else {
-      setSearchParams({});
+    if (sortOrder === '') {
+      sortOrder = 'desc';
     }
 
     if (sortOrder === 'asc') {
       searchParams.set('sortOrder', 'desc');
+      sortOrder = 'desc';
     } else {
       searchParams.set('sortOrder', 'asc');
+      sortOrder = 'asc';
     }
 
-    sortTable(sortQuery, sortOrder);
+    if (sortBy) {
+      setSearchParams({ query, sortBy, sortOrder });
+    } else {
+      setSearchParams({ query });
+    }
+
+    sortTable(sortBy, sortOrder);
   };
 
   return (
