@@ -11,8 +11,8 @@ export const PeoplePage: React.FC = () => {
   const searchParams = new URLSearchParams(location.search);
   const navigate = useNavigate();
 
-  const appliedQuery = searchParams.get('query') || '';
-  const [query, setQuery] = useState(appliedQuery);
+  // const appliedQuery = searchParams.get('query') || '';
+  const [query, setQuery] = useState('');
 
   const applyQuery = useCallback(
     debounce((newQuery) => {
@@ -22,7 +22,7 @@ export const PeoplePage: React.FC = () => {
         searchParams.delete('query');
       }
 
-      navigate(`?query=${searchParams.toString()}`);
+      navigate(`?${searchParams.toString()}`);
     }, 500),
     [],
   );
@@ -31,7 +31,7 @@ export const PeoplePage: React.FC = () => {
     e: React.ChangeEvent<HTMLInputElement>,
   ) => {
     setQuery(e.target.value);
-    applyQuery(e);
+    applyQuery(e.target.value);
   };
 
   const fetchPeople = async () => {
