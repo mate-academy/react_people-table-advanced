@@ -1,53 +1,16 @@
-import React, { useEffect, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
-import { getPeople } from '../../api';
+import React, { useContext } from 'react';
+import { useSearchParams, useNavigate } from 'react-router-dom';
+import { PeopleContext } from '../PeopleContext/PeopleContext';
 import { PeopleTable } from '../PeopleTable/PeopleTable';
 
 export const PeoplePage: React.FC = () => {
-  const [people, setPeople] = useState<Person[]>([]);
+  const { people } = useContext(PeopleContext);
 
   const [searchParams, setSearchParams] = useSearchParams();
   const peopleQuery = searchParams.get('query') || '';
-
-  const sortTable = (value: string, order: string) => {
-    switch (value) {
-      case 'name':
-      case 'sex':
-        people.sort((el1, el2) => (
-          order === 'asc'
-            ? el1[value].localeCompare(el2[value])
-            : el2[value].localeCompare(el1[value])
-        ));
-        break;
-
-      case 'born':
-      case 'died':
-        people.sort((el1, el2) => (
-          order === 'asc'
-            ? +el1[value] - (+el2[value])
-            : +el2[value] - (+el1[value])
-        ));
-        break;
-
-      default:
-        break;
-    }
-  };
-
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const query = event.target.value;
-
-    if (query) {
-      setSearchParams({ query });
-    } else {
-      setSearchParams({});
-    }
-  };
-
-  useEffect(() => {
-    getPeople()
-      .then(result => setPeople(result));
-  }, []);
+  const sortOrder = searchParams.get('sortOrder') || '';
+  const sortBy = searchParams.get('sortBy') || '';
+  const navigate = useNavigate();
 
   const filterPeople = () => {
     const lowerQuery = peopleQuery.toLowerCase();
@@ -63,9 +26,42 @@ export const PeoplePage: React.FC = () => {
     return people;
   };
 
+  const sortTable = () => {
+    switch (sortBy) {
+      case 'name':
+      case 'sex':
+        return filterPeople().sort((el1, el2) => (
+          sortOrder === 'asc'
+            ? el1[sortBy].localeCompare(el2[sortBy])
+            : el2[sortBy].localeCompare(el1[sortBy])
+        ));
+
+      case 'born':
+      case 'died':
+        return filterPeople().sort((el1, el2) => (
+          sortOrder === 'asc'
+            ? +el1[sortBy] - (+el2[sortBy])
+            : +el2[sortBy] - (+el1[sortBy])
+        ));
+
+      default:
+        return filterPeople();
+    }
+  };
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const query = event.target.value;
+
+    if (query || sortBy || sortOrder) {
+      setSearchParams({ query, sortBy, sortOrder });
+    } else {
+      setSearchParams({});
+    }
+  };
+
   return (
     <>
-      <div className="filterInput">
+      <div className="filter-add">
         <input
           className="input"
           type="text"
@@ -74,9 +70,19 @@ export const PeoplePage: React.FC = () => {
           onChange={handleChange}
         />
       </div>
+
+      <div className="filter-add">
+        <button
+          onClick={() => navigate('/people/new')}
+          type="button"
+          className="button is-dark button-add"
+        >
+          Add person
+        </button>
+      </div>
+
       <PeopleTable
-        people={filterPeople()}
-        sortTable={sortTable}
+        people={sortTable()}
       />
     </>
   );

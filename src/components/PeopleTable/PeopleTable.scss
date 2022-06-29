@@ -6,7 +6,30 @@
 
   &__sort {
     cursor: pointer;
+
+    &::after {
+      content: "";
+      height: 15px;
+      width: 15px;
+      display: inline-block;
+      position: relative;
+      background-image: url("../../images/sort_both.png");
+    }
+
+    &--asc {
+      &::after {
+        background-image: url("../../images/sort_asc.png");
+      }
+    }
+
+    &--desc {
+      &::after {
+        background-image: url("../../images/sort_desc.png");
+      }
+    }
   }
+
+  
 }
 
 .table thead th {

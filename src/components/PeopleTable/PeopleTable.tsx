@@ -1,40 +1,33 @@
 import React from 'react';
+import classNames from 'classnames';
 import { useSearchParams } from 'react-router-dom';
 import './PeopleTable.scss';
 import { PersonRow } from '../PersonRow/PersonRow';
 
 type Props = {
   people: Person[],
-  sortTable: (value: string, order: string) => void
 };
 
-export const PeopleTable: React.FC<Props> = ({ people, sortTable }) => {
+export const PeopleTable: React.FC<Props> = ({ people }) => {
   const [searchParams, setSearchParams] = useSearchParams();
-  let sortOrder = searchParams.get('sortOrder') || '';
+  const sortOrder = searchParams.get('sortOrder') || '';
   const query = searchParams.get('query') || '';
+  const sortBy = searchParams.get('sortBy') || '';
 
-  const handleSort = (event: React.MouseEvent) => {
-    const sortBy = event.currentTarget.textContent?.toLowerCase() || '';
+  const changeSortParams = (event: React.MouseEvent) => {
+    const value = event.currentTarget.textContent?.toLowerCase();
 
-    if (sortOrder === '') {
-      sortOrder = 'desc';
+    if (value && sortOrder === '') {
+      setSearchParams({ query, sortBy: value, sortOrder: 'asc' });
     }
 
-    if (sortOrder === 'asc') {
-      searchParams.set('sortOrder', 'desc');
-      sortOrder = 'desc';
-    } else {
-      searchParams.set('sortOrder', 'asc');
-      sortOrder = 'asc';
+    if (value && sortOrder === 'desc') {
+      setSearchParams({ query, sortBy: value, sortOrder: 'asc' });
     }
 
-    if (sortBy) {
-      setSearchParams({ query, sortBy, sortOrder });
-    } else {
-      setSearchParams({ query });
+    if (value && sortOrder === 'asc') {
+      setSearchParams({ query, sortBy: value, sortOrder: 'desc' });
     }
-
-    sortTable(sortBy, sortOrder);
   };
 
   return (
@@ -42,26 +35,38 @@ export const PeopleTable: React.FC<Props> = ({ people, sortTable }) => {
       <thead>
         <tr>
           <th
-            className="table__sort"
-            onClick={handleSort}
+            className={classNames('table__sort', {
+              'table__sort--asc': sortOrder === 'asc' && sortBy === 'name',
+              'table__sort--desc': sortOrder === 'desc' && sortBy === 'name',
+            })}
+            onClick={changeSortParams}
           >
             Name
           </th>
           <th
-            className="table__sort"
-            onClick={handleSort}
+            className={classNames('table__sort', {
+              'table__sort--asc': sortOrder === 'asc' && sortBy === 'sex',
+              'table__sort--desc': sortOrder === 'desc' && sortBy === 'sex',
+            })}
+            onClick={changeSortParams}
           >
             Sex
           </th>
           <th
-            className="table__sort"
-            onClick={handleSort}
+            className={classNames('table__sort', {
+              'table__sort--asc': sortOrder === 'asc' && sortBy === 'born',
+              'table__sort--desc': sortOrder === 'desc' && sortBy === 'born',
+            })}
+            onClick={changeSortParams}
           >
             Born
           </th>
           <th
-            className="table__sort"
-            onClick={handleSort}
+            className={classNames('table__sort', {
+              'table__sort--asc': sortOrder === 'asc' && sortBy === 'died',
+              'table__sort--desc': sortOrder === 'desc' && sortBy === 'died',
+            })}
+            onClick={changeSortParams}
           >
             Died
           </th>

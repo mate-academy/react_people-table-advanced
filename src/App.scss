@@ -25,7 +25,53 @@
   border-bottom: 2px solid white;
 }
 
-.filterInput {
+.filter-add {
+  display: flex;
+  justify-content: center;
   width: 30%;
   margin: 30px auto;
+}
+
+.button-add {
+  display: block;
+  width: 50%;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  width: 400px;
+  margin: 30px auto;
+}
+
+.form-field {
+  margin: 0 0 12px;
+}
+
+.form-button {
+  margin: auto;
+  text-align: center;
+  width: 50%;
+  background-color: #343a40;
+  font-family: "Merriweather Sans", sans-serif;
+}
+
+.form-select {
+  width: 400px;
+}
+
+.error {
+  height: 20px;
+  font-size: 10px;
+  color: red;
+}
+
+.submit {
+  background-color: #343a40;
+  color: white;
+  font-weight: bold;
+  height: 50px;
+  margin: auto;
+  width: 50%;
+  border-radius: 5px;
 }
