@@ -1,0 +1,24 @@
+.header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 50px;
+  background-color: #343a40;
+  height: 65px;
+
+  &__link {
+    text-decoration: none;
+    color: white;
+    font-weight: bold;
+    font-size: 24px;
+    border-bottom: 2px solid transparent;
+
+    &:hover {
+      color: white;
+    }
+  }
+}
+
+.active {
+  border-bottom: 2px solid white;
+}
