@@ -97,6 +97,9 @@ export const NewPerson: React.FC = () => {
           <input
             type="radio"
             value="f"
+            {...register('sex', {
+              required: 'Sex is a required field',
+            })}
           />
           {' Female '}
         </label>

@@ -50,7 +50,7 @@ export const PeoplePage: React.FC = () => {
   };
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const query = event.target.value;
+    const query = event.target.value.toLowerCase();
 
     if (query || sortBy || sortOrder) {
       setSearchParams({ query, sortBy, sortOrder });

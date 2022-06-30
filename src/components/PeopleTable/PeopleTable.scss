@@ -13,18 +13,21 @@
       width: 15px;
       display: inline-block;
       position: relative;
-      background-image: url("../../images/sort_both.png");
+      background-image: url("../../images/sort-both.svg");
+      background-repeat: no-repeat;
+      background-size: contain;
+      margin: 0 0 0 3px;
     }
 
     &--asc {
       &::after {
-        background-image: url("../../images/sort_asc.png");
+        background-image: url("../../images/sort-asc.svg");
       }
     }
 
     &--desc {
       &::after {
-        background-image: url("../../images/sort_desc.png");
+        background-image: url("../../images/sort-desc.svg");
       }
     }
   }
