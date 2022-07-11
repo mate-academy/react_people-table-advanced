@@ -14,7 +14,6 @@ export const PeoplePage = () => {
   const searchParams = new URLSearchParams(location.search);
   const appliedQuery = searchParams.get('query') || '';
   const [query, setQuery] = useState(appliedQuery);
-  const filterBy = searchParams.get('filterBy') || '';
 
   const applyQuery = useCallback(
     debounce((newQuery) => {
@@ -33,17 +32,19 @@ export const PeoplePage = () => {
     applyQuery(event.target.value.toLowerCase());
   };
 
-  const handleFilterBy = (event) => {
-    searchParams.set('filterBy', event.target.value);
-
-    navigate(`?${searchParams.toString()}`);
-  };
-
-  if (appliedQuery && filterBy) {
+  if (appliedQuery) {
     filteredPeople = people
-      .filter(person => person[filterBy] !== null
-        && person[filterBy]
-          .toLowerCase().includes(appliedQuery));
+      .filter(person => (
+        person.name !== null
+        && person.motherName !== null
+        && person.fatherName !== null
+      )
+        && (person.name
+          .toLowerCase().includes(appliedQuery)
+          || person.motherName
+            .toLowerCase().includes(appliedQuery)
+          || person.fatherName
+            .toLowerCase().includes(appliedQuery)));
   } else {
     filteredPeople = people;
   }
@@ -65,17 +66,6 @@ export const PeoplePage = () => {
             placeholder="Enter name"
           />
         </label>
-        <div className="select">
-          <select
-            className="select"
-            onChange={handleFilterBy}
-          >
-            <option defaultValue="filter by" hidden>Filter by:</option>
-            <option value="name">Name</option>
-            <option value="motherName">Mother&apos;s Name</option>
-            <option value="fatherName">Father&apos;s Name</option>
-          </select>
-        </div>
         <div>
           <button type="button" className="button button-add">
             <Link

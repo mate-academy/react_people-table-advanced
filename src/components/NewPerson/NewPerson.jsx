@@ -146,9 +146,13 @@ export const NewPerson = () => {
                 </div>
               </label>
               {errors.born
-              && <p className="help is-danger">{errors.born.message}</p>}
+              && (
+                <p className="help is-danger">{errors.born.message}</p>
+              )}
               {errors.died
-              && <p className="help is-danger">{errors.died.message}</p>}
+              && (
+                <p className="help is-danger">{errors.died.message}</p>
+              )}
             </div>
             <div className="field is-grouped">
               <div className="control">
