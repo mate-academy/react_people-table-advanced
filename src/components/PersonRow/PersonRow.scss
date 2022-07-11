@@ -1,0 +1,28 @@
+.PersonRow {
+  &--active {
+    background-color: lightblue;
+  }
+  &__cell {
+    padding: 6px;
+
+    &--active {
+      background-color: lightblue;
+    }
+  }
+
+  &__link {
+    color: black;
+    font-weight: bold;
+    text-decoration: none;
+
+    &--female {
+      color: rgb(255, 0, 0);
+      text-decoration: none;
+    }
+
+    &--male {
+      color: rgb(0, 71, 171);
+      text-decoration: none;
+    }
+  }
+}

@@ -1,0 +1,44 @@
+.PeoplePage {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+
+  &__title {
+    color: #112d32;
+    text-align: center;
+  }
+
+  &__search {
+    width: 220px;
+    height: 30px;
+    background: url("../../img/search.png") no-repeat;
+    background-position: right;
+    background-size: auto 70%;
+    cursor: pointer;
+
+    &:hover {
+      box-shadow: 5px 5px 5px #112d32;
+    }
+  }
+
+  &__options {
+    display: flex;
+    margin: 20px 0;
+    width: 70%;
+    justify-content: space-between;
+  }
+
+  &__addButton {
+    width: 120px;
+    height: 36px;
+    cursor: pointer;
+
+    &:hover {
+      box-shadow: 5px 5px 5px #112d32;
+    }
+  }
+
+  &__block {
+    display: flex;
+  }
+}
