@@ -1,0 +1,34 @@
+.add-people-container {
+  display: flex;
+  flex-direction: column;
+  justify-items: center;
+  align-items: center;
+}
+
+.title-container {
+  margin: 15px;
+}
+
+.box {
+  margin: 30px;
+  padding: 20px;
+  width: 500px;
+  align-items: center;
+  justify-items: center;
+}
+
+.title,
+.form,
+.radio,
+.select,
+.input {
+  margin-bottom: 10px;
+}
+
+.input-radio {
+  margin-right: 5px;
+}
+
+.button-submit {
+  display: flex;
+}
