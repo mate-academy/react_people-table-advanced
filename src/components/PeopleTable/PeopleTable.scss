@@ -1,0 +1,51 @@
+.PeopleTable {
+  border-collapse: collapse;
+  border: 2px solid #2b7a78;
+  width: 70%;
+
+  &__head {
+    background-color: #2b7a78;
+    font-weight: 800;
+  }
+
+  &__cell {
+    padding: 6px;
+    cursor: pointer;
+    width: 100%;
+    border: none;
+    outline: none;
+    text-align: left;
+    border-right: 2px solid #000;
+    box-sizing: border-box;
+    background-color: #2b7a78;
+
+    &--sort {
+      background: url(../../img/sort_both.png) no-repeat;
+      background-size: 18px;
+      background-position: right;
+      cursor: pointer;
+    }
+  }
+
+  &__name {
+    width: 25%;
+  }
+
+  &__sex {
+    width: 5%;
+  }
+
+  &__born,
+  &__died {
+    width: 10%;
+  }
+
+  &__mother,
+  &__father {
+    width: 25%;
+  }
+}
+
+td {
+  padding: 0;
+}
