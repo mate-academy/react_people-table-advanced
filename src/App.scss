@@ -13,12 +13,15 @@
 
 .PeopleTable {
   border-collapse: collapse;
-
   .Person:hover {
-    background-color: #00d1b2;
-
-    th {
-      color: #fff;
-    }
+    background-color: #00d1b26b;
   }
+}
+
+.name-filters {
+  display: flex;
+  flex-direction: column;
+  width: 30%;
+  gap: 5px;
+  padding: 5px 0;
 }

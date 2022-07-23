@@ -4,9 +4,11 @@ import {
   Route,
   Navigate,
 } from 'react-router-dom';
-import { HomePage } from './HomePage';
-import { PeoplePage } from './PeoplePage';
-import { Header } from './Header';
+import 'semantic-ui-css/semantic.min.css';
+
+import { HomePage } from './components/HomePage';
+import { PeoplePage } from './components/PeoplePage';
+import { Header } from './components/Header';
 
 const App: React.FC = () => {
   return (
@@ -16,7 +18,9 @@ const App: React.FC = () => {
 
         <div className="App__main">
           <Routes>
-            <Route path="/people" element={<PeoplePage />} />
+            <Route path="/people" element={<PeoplePage />}>
+              <Route path=":slug" element={<PeoplePage />} />
+            </Route>
             <Route path="/" element={<HomePage />} />
             <Route path="/home" element={<Navigate to="/" />} />
             <Route path="*" element={<><h1>Page not found</h1></>} />

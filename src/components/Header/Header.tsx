@@ -8,8 +8,8 @@ export const Header: React.FC = () => {
       <nav className="navbar">
         <div className="navbar-brand">
           <NavLink
-            to="/home"
-            className={isActive => classNames(
+            to="/"
+            className={({ isActive }) => classNames(
               'navbar-item',
               'is-tab',
               { 'is-active': isActive },
@@ -20,7 +20,7 @@ export const Header: React.FC = () => {
 
           <NavLink
             to="/people"
-            className={isActive => classNames(
+            className={({ isActive }) => classNames(
               'navbar-item',
               'is-tab',
               { 'is-active': isActive },

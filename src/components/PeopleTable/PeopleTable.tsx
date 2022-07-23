@@ -1,5 +1,6 @@
 import React from 'react';
-import { Child } from '../types/human';
+import { Child } from '../../types/human';
+import { PersonRow } from '../PersonRow';
 
 type Props = {
   people: Child[],
@@ -14,7 +15,7 @@ enum TableColumns {
   Father = 'Father',
 }
 
-export const PeopleTable: React.FC<Props> = ({ people }) => {
+export const PeopleTable: React.FC<Props> = React.memo(({ people }) => {
   return (
     <table className="PeopleTable table">
       <thead>
@@ -29,16 +30,9 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
       </thead>
       <tbody>
         {people.map(person => (
-          <tr key={person.name} className="Person">
-            <th>{person.name}</th>
-            <th>{person.sex}</th>
-            <th>{person.born}</th>
-            <th>{person.died}</th>
-            <th>{person.mother?.name}</th>
-            <th>{person.father?.name}</th>
-          </tr>
+          <PersonRow key={person.slug} person={person} />
         ))}
       </tbody>
     </table>
   );
-};
+});
