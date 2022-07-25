@@ -1,0 +1,17 @@
+.person {
+  &__selected {
+    background-color: rgba(109, 255, 106, 0.45);
+  }
+
+  &__male {
+    color: rgb(0, 71, 171);
+  }
+
+  &__female {
+    color: rgb(255, 0, 0);
+  }
+
+  &__parent {
+    font-weight: bold;
+  }
+}
