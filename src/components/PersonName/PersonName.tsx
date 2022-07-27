@@ -8,14 +8,17 @@ type Props = {
   name: Child['name'] | Child['fatherName'] | Child['motherName'];
   slug: Child['slug'];
 };
+// const searchParams = new URLSearchParams(search);
 
 export const PersonName: React.FC<Props> = ({ name, slug }) => {
   const { search } = useLocation();
-  const searchParams = new URLSearchParams(search);
 
   return (
     <Link
-      to={`${slug}?${searchParams.toString()}`}
+      to={{
+        pathname: `/people/${slug}`,
+        search,
+      }}
       style={{ color: 'inherit' }}
     >
       {name}

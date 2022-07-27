@@ -2,7 +2,6 @@
 
 .App {
   margin: 0 20px;
-
 }
 
 .nav {
@@ -15,6 +14,19 @@
   border-collapse: collapse;
   .Person:hover {
     background-color: #00d1b26b;
+  }
+
+  &__column-title {
+    text-transform: capitalize;
+
+    & img {
+      transform: translate(0, 25%);
+    }
+
+    &--sortable:hover {
+      cursor: pointer;
+      background-color: rgba(120, 218, 75, 0.49);
+    }
   }
 }
 
