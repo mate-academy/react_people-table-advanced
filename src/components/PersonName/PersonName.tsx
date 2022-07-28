@@ -6,17 +6,17 @@ import { Child } from '../../types/human';
 
 type Props = {
   name: Child['name'] | Child['fatherName'] | Child['motherName'];
-  slug: Child['slug'];
+  personSlug: Child['slug'];
 };
 // const searchParams = new URLSearchParams(search);
 
-export const PersonName: React.FC<Props> = ({ name, slug }) => {
+export const PersonName: React.FC<Props> = ({ name, personSlug }) => {
   const { search } = useLocation();
 
   return (
     <Link
       to={{
-        pathname: `/people/${slug}`,
+        pathname: `/people/${personSlug}`,
         search,
       }}
       style={{ color: 'inherit' }}

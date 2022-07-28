@@ -13,19 +13,19 @@ function getTextColorBySex(sex: 'f' | 'm') {
   return sex === 'm' ? 'rgb(0, 71, 171)' : 'rgb(255, 0, 0)';
 }
 
-export const PersonRow: React.FC<Props> // React.memo(
-  = ({ person }) => {
-    const { slug } = useParams<{ slug: string }>();
+export const PersonRow: React.FC<Props> = React.memo(
+  ({ person }) => {
+    const { personSlug } = useParams<{ personSlug: string }>();
 
     return (
       <tr
         key={person.name}
         className={classNames('Person')}
-        style={slug === person.slug
+        style={personSlug === person.slug
           ? { backgroundColor: 'green' } : {}}
       >
         <th style={{ color: getTextColorBySex(person.sex) }}>
-          <PersonName name={person.name} slug={person.slug} />
+          <PersonName name={person.name} personSlug={person.slug} />
         </th>
         <th>{person.sex}</th>
         <th>{person.born}</th>
@@ -39,7 +39,7 @@ export const PersonRow: React.FC<Props> // React.memo(
           {person.mother ? (
             <PersonName
               name={person.mother.name}
-              slug={person.mother.slug}
+              personSlug={person.mother.slug}
             />
           ) : person.motherName}
         </th>
@@ -52,11 +52,11 @@ export const PersonRow: React.FC<Props> // React.memo(
           {person.father ? (
             <PersonName
               name={person.father.name}
-              slug={person.father.slug}
+              personSlug={person.father.slug}
             />
           ) : person.fatherName}
         </th>
       </tr>
     );
-  };
-// );
+  },
+);
