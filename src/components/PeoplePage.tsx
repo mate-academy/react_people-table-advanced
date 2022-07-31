@@ -12,8 +12,7 @@ import NewPerson from './NewPerson';
 
 import { getPeople } from '../api/api';
 
-import SortBy from '../enums/SortBy';
-import SortOrder from '../enums/SortOrder';
+import PersonEnum from '../enums/PersonEnum';
 
 const addPersonParents = (person: Person, peopleArray: Person[]) => {
   const mother = peopleArray.find(possibleParent => (
@@ -57,26 +56,24 @@ const PeoplePage: React.FC = () => {
   }, []);
 
   const peopleNames = useMemo(() => {
-    const maleNames: string[] = [];
-    const femaleNames: string[] = [];
+    const maleNames: Omit<Person, 'sex'>[] = [];
+    const femaleNames: Omit<Person, 'sex'>[] = [];
 
     people?.forEach(person => {
-      if (person.sex === 'm' && !maleNames.includes(person.name)) {
-        maleNames.push(person.name);
+      if (person.sex === 'm') {
+        maleNames.push({
+          name: person.name,
+          born: person.born,
+          died: person.died,
+        });
       }
 
-      if (person.sex === 'f' && !femaleNames.includes(person.name)) {
-        femaleNames.push(person.name);
-      }
-
-      if (person.motherName !== null
-        && !femaleNames.includes(person.motherName)) {
-        femaleNames.push(person.motherName);
-      }
-
-      if (person.fatherName !== null
-        && !maleNames.includes(person.fatherName)) {
-        maleNames.push(person.fatherName);
+      if (person.sex === 'f') {
+        femaleNames.push({
+          name: person.name,
+          born: person.born,
+          died: person.died,
+        });
       }
     });
 
@@ -101,7 +98,7 @@ const PeoplePage: React.FC = () => {
     applyQuery(event.target.value);
   };
 
-  const handleSortChange = (sortByQuery: SortBy) => {
+  const handleSortChange = (sortByQuery: PersonEnum | '') => {
     switch (true) {
       case sortByQuery === '':
         searchParams.delete('sortBy');
@@ -110,13 +107,13 @@ const PeoplePage: React.FC = () => {
 
       case sortByQuery !== sortBy:
         searchParams.set('sortBy', sortByQuery);
-        searchParams.set('sortOrder', SortOrder.Asc);
+        searchParams.set('sortOrder', 'asc');
         break;
 
       case sortByQuery === sortBy:
         searchParams.set(
           'sortOrder',
-          sortOrder === SortOrder.Asc ? SortOrder.Desc : SortOrder.Asc,
+          sortOrder === 'asc' ? 'desc' : 'asc',
         );
         break;
 
@@ -127,7 +124,7 @@ const PeoplePage: React.FC = () => {
     setSearchParams(searchParams);
   };
 
-  const handleNewPersonSubmit = (newPerson: Omit<Person, 'slug'>) => {
+  const handleNewPersonSubmit = (newPerson: Person) => {
     const slug = (`${newPerson.name} ${newPerson.born}`)
       .toLowerCase()
       .split(' ')
@@ -158,9 +155,12 @@ const PeoplePage: React.FC = () => {
     }
 
     const preparedPeople = people.filter(person => (
-      person.name.toLowerCase().includes(appliedQuery.toLowerCase())
-      || person.motherName?.toLowerCase().includes(appliedQuery.toLowerCase())
-      || person.fatherName?.toLowerCase().includes(appliedQuery.toLowerCase())
+      person.name.toLowerCase()
+        .includes(appliedQuery.toLowerCase())
+      || person.motherName?.toLowerCase()
+        .includes(appliedQuery.toLowerCase())
+      || person.fatherName?.toLowerCase()
+        .includes(appliedQuery.toLowerCase())
     ));
 
     const numOrder = sortOrder === 'asc'
@@ -168,15 +168,15 @@ const PeoplePage: React.FC = () => {
       : -1;
 
     switch (sortBy) {
-      case SortBy.Name:
-      case SortBy.Sex:
+      case PersonEnum.Name:
+      case PersonEnum.Sex:
         preparedPeople.sort((firstPerson, secondPerson) => (
           firstPerson[sortBy].localeCompare(secondPerson[sortBy]) * numOrder
         ));
         break;
 
-      case SortBy.Born:
-      case SortBy.Died:
+      case PersonEnum.Born:
+      case PersonEnum.Died:
         preparedPeople.sort((firstPerson, secondPerson) => (
           (firstPerson[sortBy] - secondPerson[sortBy]) * numOrder
         ));
@@ -234,7 +234,7 @@ const PeoplePage: React.FC = () => {
       {isError
         ? (
           <h3 className="text-center">
-            An error occured while loading people data
+            An error occurred while loading people data
           </h3>
         )
         : (

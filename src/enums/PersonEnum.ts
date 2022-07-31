@@ -1,9 +1,8 @@
-enum SortBy {
-  None = '',
+enum PersonEnum {
   Name = 'name',
   Sex = 'sex',
   Born = 'born',
   Died = 'died',
 }
 
-export default SortBy;
+export default PersonEnum;

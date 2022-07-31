@@ -6,14 +6,17 @@ import './PeopleTable.scss';
 
 import PersonRow from '../PersonRow';
 
-import SortBy from '../../enums/SortBy';
+import PersonEnum from '../../enums/PersonEnum';
 
 type Props = {
   people: Person[];
-  onSortChange: (sortBy: SortBy) => void;
+  onSortChange: (sortBy: PersonEnum | '') => void;
 };
 
-const PeopleTable: React.FC<Props> = ({ people, onSortChange }) => {
+const PeopleTable: React.FC<Props> = ({
+  people,
+  onSortChange,
+}) => {
   const [searchParams] = useSearchParams();
 
   const sortOrder = searchParams.get('sortOrder');
@@ -29,7 +32,7 @@ const PeopleTable: React.FC<Props> = ({ people, onSortChange }) => {
           <th
             className="PeopleTable__header-row"
             scope="col"
-            onClick={() => onSortChange(SortBy.None)}
+            onClick={() => onSortChange('')}
           >
             #
           </th>
@@ -39,12 +42,12 @@ const PeopleTable: React.FC<Props> = ({ people, onSortChange }) => {
               'PeopleTable__header-row': true,
               sortable: true,
               'sortable--asc':
-                sortOrder === 'asc' && sortBy === SortBy.Name,
+              sortOrder === 'asc' && sortBy === PersonEnum.Name,
               'sortable--desc':
-                sortOrder === 'desc' && sortBy === SortBy.Name,
+              sortOrder === 'desc' && sortBy === PersonEnum.Name,
             })}
             scope="col"
-            onClick={() => onSortChange(SortBy.Name)}
+            onClick={() => onSortChange(PersonEnum.Name)}
           >
             Name
           </th>
@@ -54,12 +57,12 @@ const PeopleTable: React.FC<Props> = ({ people, onSortChange }) => {
               'PeopleTable__header-row': true,
               sortable: true,
               'sortable--asc':
-                sortOrder === 'asc' && sortBy === SortBy.Sex,
+              sortOrder === 'asc' && sortBy === PersonEnum.Sex,
               'sortable--desc':
-                sortOrder === 'desc' && sortBy === SortBy.Sex,
+              sortOrder === 'desc' && sortBy === PersonEnum.Sex,
             })}
             scope="col"
-            onClick={() => onSortChange(SortBy.Sex)}
+            onClick={() => onSortChange(PersonEnum.Sex)}
           >
             Sex
           </th>
@@ -69,12 +72,12 @@ const PeopleTable: React.FC<Props> = ({ people, onSortChange }) => {
               'PeopleTable__header-row': true,
               sortable: true,
               'sortable--asc':
-                sortOrder === 'asc' && sortBy === SortBy.Born,
+              sortOrder === 'asc' && sortBy === PersonEnum.Born,
               'sortable--desc':
-                sortOrder === 'desc' && sortBy === SortBy.Born,
+              sortOrder === 'desc' && sortBy === PersonEnum.Born,
             })}
             scope="col"
-            onClick={() => onSortChange(SortBy.Born)}
+            onClick={() => onSortChange(PersonEnum.Born)}
           >
             Born
           </th>
@@ -84,12 +87,12 @@ const PeopleTable: React.FC<Props> = ({ people, onSortChange }) => {
               'PeopleTable__header-row': true,
               sortable: true,
               'sortable--asc':
-                sortOrder === 'asc' && sortBy === SortBy.Died,
+              sortOrder === 'asc' && sortBy === PersonEnum.Died,
               'sortable--desc':
-                sortOrder === 'desc' && sortBy === SortBy.Died,
+              sortOrder === 'desc' && sortBy === PersonEnum.Died,
             })}
             scope="col"
-            onClick={() => onSortChange(SortBy.Died)}
+            onClick={() => onSortChange(PersonEnum.Died)}
           >
             Died
           </th>
