@@ -1,1 +1,14 @@
 // styles go here
+.person {
+  &__male {
+    color: rgb(0, 71, 171);
+  }
+
+  &__female {
+    color: rgb(255, 0, 0);
+  }
+
+  &__unknown {
+    font-weight: bold;
+  }
+}
