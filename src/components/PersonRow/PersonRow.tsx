@@ -41,7 +41,7 @@ export const PersonRow: React.FC<Props> = React.memo(
               name={person.mother.name}
               personSlug={person.mother.slug}
             />
-          ) : person.motherName}
+          ) : <b>{person.motherName}</b>}
         </th>
         <th style={{
           color: person.father
@@ -54,7 +54,7 @@ export const PersonRow: React.FC<Props> = React.memo(
               name={person.father.name}
               personSlug={person.father.slug}
             />
-          ) : person.fatherName}
+          ) : <b>{person.fatherName}</b>}
         </th>
       </tr>
     );

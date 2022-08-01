@@ -27,15 +27,6 @@ export const PeopleTable: React.FC<Props> = React.memo(({
     return columnName === sortBy;
   }, [sortBy]);
 
-  // const getNextSortOrder = useCallback((): SortOrder => {
-  //   if (!sortOrder) {
-  //     return SortOrder.asc;
-  //   }
-
-  //   return sortOrder === SortOrder.asc
-  //     ? SortOrder.desc
-  //     : SortOrder.asc;
-  // }, [sortOrder]);
   const isSortOrderValid = () => {
     return Object.values(SortOrder).includes(sortOrder as unknown as SortOrder);
   };

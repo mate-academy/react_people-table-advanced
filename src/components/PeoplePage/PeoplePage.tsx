@@ -2,13 +2,9 @@ import React, {
   useState,
   useEffect,
   useCallback,
-  useMemo,
 } from 'react';
 import {
-  useLocation,
   useSearchParams,
-  // useNavigate,
-  useParams,
 } from 'react-router-dom';
 import debounce from 'lodash/debounce';
 
@@ -33,13 +29,7 @@ function findParents(people: Human[]): Child[] {
 const compareStrings = (a: string, b: string) => a.localeCompare(b);
 
 export const PeoplePage: React.FC = () => {
-  const { personSlug } = useParams<{ personSlug: string }>();
-
-  const { search } = useLocation();
-  // const location = useLocation();
-  // const navigate = useNavigate();
-  // const searchParams = new URLSearchParams(search);
-  const [searchParams, setSearchParams] = useSearchParams(search);
+  const [searchParams, setSearchParams] = useSearchParams();
   const query = searchParams.get('query')?.toLowerCase() || '';
   const sortBy = searchParams.get('sortBy') || '';
   const sortOrder = searchParams.get('sortOrder') || '';
@@ -55,13 +45,12 @@ export const PeoplePage: React.FC = () => {
       .then(newPeople => setPeople(findParents(newPeople)));
   }, []);
 
-  const filteredPeople = useMemo(() => {
-    return people.filter(human => human.name.toLowerCase().includes(query)
+  const filteredPeople = people
+    .filter(human => human.name.toLowerCase().includes(query)
       || human.motherName?.toLowerCase().includes(query)
       || human.fatherName?.toLowerCase().includes(query));
-  }, [people, query]);
 
-  const sortedPeople = useMemo(() => {
+  const sortPeople = useCallback(() => {
     if (!sortBy) {
       return filteredPeople;
     }
@@ -84,7 +73,7 @@ export const PeoplePage: React.FC = () => {
           return 0;
       }
     });
-  }, [sortBy, sortOrder, filteredPeople]);
+  }, [filteredPeople, sortBy, sortOrder]);
 
   const updateSearchParams = useCallback(
     (newQuery: QueryParams) => {
@@ -98,11 +87,7 @@ export const PeoplePage: React.FC = () => {
       );
 
       setSearchParams(searchParams);
-
-      // console.log('navigate to:', `/people/${slug}`, `?${searchParams.toString()}`);
-
-      // navigate(`/people/${slug}?${searchParams.toString()}`);
-    }, [people, searchParams, personSlug],
+    }, [],
   );
 
   const applyQueryWithDebounce = useCallback(
@@ -120,38 +105,33 @@ export const PeoplePage: React.FC = () => {
     applyQueryWithDebounce(newQuery);
   };
 
-  const handleSortChange = useCallback(
-    (newSortByValue: SortBy) => {
-      let newOrder;
+  const handleSortChange = useCallback((newSortByValue: SortBy) => {
+    const newQuery = {
+      ...queryParams,
+      sortBy: newSortByValue.toLowerCase(),
+    };
 
-      if (newSortByValue !== queryParams.sortBy) {
-        newOrder = SortOrder.asc;
-      } else {
-        switch (sortOrder) {
-          case SortOrder.asc:
-            newOrder = SortOrder.desc;
-            break;
+    if (newSortByValue !== queryParams.sortBy) {
+      newQuery.sortOrder = SortOrder.asc;
+    } else {
+      switch (queryParams.sortOrder) {
+        case SortOrder.asc:
+          newQuery.sortOrder = SortOrder.desc;
+          break;
 
-          case SortOrder.desc:
-            newOrder = SortOrder.asc;
-            break;
+        case SortOrder.desc:
+          newQuery.sortOrder = SortOrder.asc;
+          break;
 
-          default:
-            newOrder = '';
-            break;
-        }
+        default:
+          newQuery.sortOrder = '';
+          break;
       }
+    }
 
-      const newQuery = {
-        ...queryParams,
-        sortBy: newSortByValue.toLowerCase(),
-        sortOrder: newOrder,
-      };
-
-      setQueryParams(newQuery);
-      updateSearchParams(newQuery);
-    }, [],
-  );
+    setQueryParams(newQuery);
+    updateSearchParams(newQuery);
+  }, [queryParams]);
 
   return (
     <>
@@ -173,7 +153,7 @@ export const PeoplePage: React.FC = () => {
       {people.length ? (
         <PeopleTable
           sortPeople={handleSortChange}
-          people={sortedPeople}
+          people={sortPeople()}
         />
       ) : <h1>There is nobody :/</h1> }
     </>
