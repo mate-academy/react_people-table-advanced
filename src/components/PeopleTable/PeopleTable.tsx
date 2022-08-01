@@ -63,7 +63,7 @@ export const PeopleTable: React.FC<Props> = React.memo(({
       </thead>
       <tbody>
         {people.map(person => (
-          <PersonRow key={person.slug} person={person} />
+          <PersonRow key={person.name} person={person} />
         ))}
       </tbody>
     </table>

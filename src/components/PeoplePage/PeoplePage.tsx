@@ -4,6 +4,7 @@ import React, {
   useCallback,
 } from 'react';
 import {
+  useLocation,
   useSearchParams,
 } from 'react-router-dom';
 import debounce from 'lodash/debounce';
@@ -29,6 +30,7 @@ function findParents(people: Human[]): Child[] {
 const compareStrings = (a: string, b: string) => a.localeCompare(b);
 
 export const PeoplePage: React.FC = () => {
+  const { pathname } = useLocation();
   const [searchParams, setSearchParams] = useSearchParams();
   const query = searchParams.get('query')?.toLowerCase() || '';
   const sortBy = searchParams.get('sortBy') || '';
@@ -87,14 +89,14 @@ export const PeoplePage: React.FC = () => {
       );
 
       setSearchParams(searchParams);
-    }, [],
+    }, [pathname],
   );
 
   const applyQueryWithDebounce = useCallback(
     debounce((newQuery: QueryParams) => {
       updateSearchParams(newQuery);
     }, 500),
-    [],
+    [pathname],
   );
 
   const handleFilterChange = (event: React.ChangeEvent<HTMLInputElement>) => {
