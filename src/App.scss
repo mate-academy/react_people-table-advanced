@@ -1,1 +1,27 @@
-// styles go here
+$bisiqueColor: #fef9f8;
+$pearchColor: #ef9273;
+$darkColor: #0d0d0d;
+
+html {
+  padding: 20px;
+  background-color: #fef9f8;
+}
+
+.navigation {
+  display: flex;
+  gap: 20px;
+  font-size: 30px;
+
+  &__link {
+    padding: 10px;
+    text-decoration: none;
+    color: $darkColor;
+    background-color: $pearchColor;
+    border-radius: 5px;
+    transition: transform 500ms;
+
+    &:hover {
+      transform: scale(1.2);
+    }
+  }
+}
