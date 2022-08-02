@@ -1,1 +1,18 @@
-// styles go here
+.App {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.active {
+  background-color: #e2e9e7;
+}
+
+.image {
+  width: 19px;
+  height: 19px;
+}
+
+main {
+  flex-grow: 1;
+}

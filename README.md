@@ -5,7 +5,7 @@
 
 ## If you don't use **Typescript**
 1. Rename `.tsx` files to `.jsx`
-1. use `eslint-config-react` in `.eslintrs.js` 
+1. use `eslint-config-react` in `.eslintrs.js`
 
 ## Advanced tasks
 Using code from previous task implement next tasks:
@@ -15,13 +15,13 @@ Using code from previous task implement next tasks:
     /people/carolus-haverbeke-1832
     ```
     - It should be used for `name`, `mother` and `father` columns
-    - Use `CSS` `color: rgb(0, 71, 171)` for male name text and  and `color: rgb(255, 0, 0)` for female.
+    - Use `CSS` `color: rgb(0, 71, 171)` for male name text and `color: rgb(255, 0, 0)` for female.
     - If mother or father were not found in the array by their name show just a name (black, bold) instead of `PersonName` component
 1. Highlight the `PersonRow` mentioned in the URL with some background-color
     - Highlight nobody if the `slug` in the URL is not found among the people
 
 ### Filtering and sorting
-1. Add an `<input>` with `data-cy="filterInput"` attribut to filter people by `name`, `motherName` and `fatherName`
+1. Add an `<input>` with `data-cy="filterInput"` attribute to filter people by `name`, `motherName` and `fatherName`
     - it should update the URL with `?query=car` where `car` is a string entered by the user
     - Read the `query` from the URL and set its value to the input when the page is loaded
 1. `PeoplePage` should read the `query` from the URL and filter people accordingly
@@ -30,7 +30,7 @@ Using code from previous task implement next tasks:
     - Highlight the column with the *
     - Add `?sortBy=born` param to the URL
     - Sort the people by selected column
-    - If the page is loaded with `sortBy` it should be applied (column is highilghted and people are sorted)
+    - If the page is loaded with `sortBy` it should be applied (column is highlighted and people are sorted)
     - If the `sortBy` value is not valid don't highlight any column and don't sort people
 
 ## Advanced sorting and filtering
