@@ -11,9 +11,6 @@ export enum SortOrder {
 }
 
 export interface QueryParams {
-  // personName: string;
-  // motherName: string;
-  // fatherName: string;
   query: string;
   sortBy: string;
   sortOrder: string;
