@@ -1,1 +1,49 @@
-// styles go here
+* {
+  margin: 0;
+  padding: 0;
+}
+
+.thead__bold {
+  font-weight: bold;
+}
+
+table th,
+table td {
+  padding: 10px;
+  border: solid 1px;
+  font-weight: normal;
+}
+
+.Nav {
+  display: flex;
+  justify-content: space-between;
+  width: 400px;
+  margin: 0 auto;
+  font-size: 30px;
+  font-weight: bold;
+  // background-color: aquamarine;
+
+  &__link {
+    width: fit-content;
+  }
+}
+
+.People {
+  width: max-content;
+  margin: 0 auto;
+  font-size: 30px;
+  font-weight: bold;
+}
+
+.Home {
+  width: max-content;
+  margin: 0 auto;
+  font-size: 30px;
+  font-weight: bold;
+}
+
+.PeopleTable {
+  border: solid 5px;
+  font-size: 15px;
+  font-weight: normal;
+}
