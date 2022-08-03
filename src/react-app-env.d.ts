@@ -12,7 +12,3 @@ interface Person {
   mother: Person | null;
   father: Person | null;
 }
-
-type Params = {
-  [key: string]: string,
-};

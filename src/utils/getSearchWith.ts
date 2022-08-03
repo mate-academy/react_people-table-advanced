@@ -1,3 +1,7 @@
+type Params = {
+  [key: string]: string,
+};
+
 function getSearchWith(params: Params, searchParams: URLSearchParams): string {
   const copy = new URLSearchParams(searchParams.toString());
   const paramsKeys = Object.keys(params);
