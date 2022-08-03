@@ -1,22 +1,25 @@
 import { useEffect, useState } from 'react';
 import classNames from 'classnames';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 
 import { getPeople } from '../api';
 import { Person } from '../types/Person';
 
 export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);
+  const { slug } = useParams();
 
   useEffect(() => {
     getPeople()
       .then(setPeople);
   }, []);
 
+  const visiblePeople = people;
+
   return (
     <>
       <h1 className="title">People page</h1>
-      {people.length}
+      {visiblePeople.length}
 
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
@@ -82,15 +85,15 @@ export const PeoplePage = () => {
                 </tr>
               </thead>
               <tbody>
-                {people.map(person => (
+                {visiblePeople.map(person => (
                   <tr
                     key={person.slug}
                     className={classNames('person', {
-                      'has-background-warning': person.slug === 'person-slug',
+                      'has-background-warning': person.slug === slug,
                     })}
                   >
                     <td>
-                      <Link to={`/person/${person.slug}`}>
+                      <Link to={`/people/${person.slug}`}>
                         {person.name}
                       </Link>
                     </td>
