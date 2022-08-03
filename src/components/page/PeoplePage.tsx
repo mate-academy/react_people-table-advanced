@@ -2,12 +2,14 @@ import React, {
   ChangeEvent, FC, useEffect, useState,
 } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { debounce } from 'lodash';
 import { People } from '../../types/People';
 import { getPeople } from '../../api/people';
 import { PeopleTable } from '../PeopleTable';
 
 export const PeoplePage: FC = () => {
   const [people, setPeople] = useState<People[]>([]);
+  const [appliedQuery, setAppliedQuery] = useState('');
   const [loading, setLoading] = useState(true);
   const location = useLocation();
   const history = useNavigate();
@@ -25,8 +27,10 @@ export const PeoplePage: FC = () => {
   }, []);
 
   const query = searchParams.get('query') || '';
+  const userSort = searchParams.get('sortBy') || '';
+  const sortOrder = searchParams.get('sortOrder') || '';
 
-  const handleQueryChange = (event: ChangeEvent<HTMLInputElement>) => {
+  const handleQueryChange = debounce((event: ChangeEvent<HTMLInputElement>) => {
     if (event.target.value) {
       searchParams.set('query', event.target.value);
     } else {
@@ -34,18 +38,15 @@ export const PeoplePage: FC = () => {
     }
 
     history(`?${searchParams.toString()}`);
-  };
-
-  const userSort = searchParams.get('sortBy') || '';
-  const sortOrder = searchParams.get('sortOrder') || '';
+  }, 1000);
 
   const setSortBy = (event : React.MouseEvent<HTMLTableHeaderCellElement>,
-    count: number) => {
+    toggle: boolean) => {
     if (event.currentTarget.textContent === null) {
       searchParams.delete('sortBy');
     } else {
       searchParams.set('sortBy', event.currentTarget.textContent);
-      if (count % 2 === 0) {
+      if (!toggle) {
         searchParams.set('sortOrder', 'asc');
       } else {
         searchParams.set('sortOrder', 'desc');
@@ -58,8 +59,10 @@ export const PeoplePage: FC = () => {
   const visiblePerson = people.filter(person => {
     const lowerQuery = query.toLowerCase();
 
-    if (typeof person.motherName === 'string'
-      && typeof person.fatherName === 'string') {
+    if (
+      typeof person.motherName === 'string'
+      && typeof person.fatherName === 'string'
+    ) {
       return person.name.toLowerCase().includes(lowerQuery)
         || person.motherName.toLowerCase().includes(lowerQuery)
         || person.fatherName.toLowerCase().includes(lowerQuery);
@@ -122,16 +125,34 @@ export const PeoplePage: FC = () => {
   });
 
   return (
-    <section>
+    <section className="container">
       <h2 className="title">People page</h2>
-      <div>
-        <label htmlFor="filterInput">Filter</label>
-        <input
-          type="text"
-          name="filterInput"
-          value={query}
-          onChange={handleQueryChange}
-        />
+      <div className="panel">
+        <div className="panel-block">
+          <input
+            className="input"
+            type="text"
+            name="filterInput"
+            placeholder="Filter..."
+            value={appliedQuery}
+            onChange={(e) => {
+              handleQueryChange(e);
+              setAppliedQuery(e.target.value);
+            }}
+          />
+        </div>
+        <button
+          type="button"
+          className="button is-primary"
+          onClick={() => {
+            searchParams.delete('query');
+            searchParams.delete('sortBy');
+            searchParams.delete('sortOrder');
+            history(`?${searchParams.toString()}`);
+          }}
+        >
+          Reset Filter and Sort
+        </button>
       </div>
       {!loading && (
         <PeopleTable

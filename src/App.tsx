@@ -13,14 +13,17 @@ const App = () => (
       <Routes>
         <Route
           path="people"
-          element={<PeoplePage />}
         >
+          <Route index element={<PeoplePage />} />
+
           <Route path=":userSlug" element={<PeoplePage />} />
         </Route>
+
         <Route
           path="/"
           element={<HomePage />}
         />
+
         <Route
           path="*"
           element={<NotFoundPage />}

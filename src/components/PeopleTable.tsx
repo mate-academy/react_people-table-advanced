@@ -6,7 +6,7 @@ import PersonRow from './PersonRow';
 type Props = {
   people: People[],
   onClickHandler: (event: React.MouseEvent<HTMLTableHeaderCellElement>,
-    count: number) => void;
+    toggle: boolean) => void;
   userSort: string | null
 };
 
@@ -23,10 +23,10 @@ export const PeopleTable: FC<Props> = ({
 
     return { ...person, motherName: mother, fatherName: father };
   });
-  const [countNameClick, setCountNameClick] = useState(0);
-  const [countSexClick, setCountSexClick] = useState(0);
-  const [countBornClick, setCountBornClick] = useState(0);
-  const [countDiedClick, setCountDiedClick] = useState(0);
+  const [toggleNameClick, setToggleNameClick] = useState(false);
+  const [toggleSexClick, setToggleSexClick] = useState(false);
+  const [toggleBornClick, setToggleBornClick] = useState(false);
+  const [toggleDiedClick, setToggleDiedClick] = useState(false);
 
   const isActive = (str: string | null) => {
     return str === userSort;
@@ -63,8 +63,8 @@ export const PeopleTable: FC<Props> = ({
         <tr>
           <th
             onClick={(event) => {
-              setCountNameClick(prevState => prevState + 1);
-              onClickHandler(event, countNameClick);
+              setToggleNameClick(prevState => !prevState);
+              onClickHandler(event, toggleNameClick);
             }}
             style={{ cursor: 'pointer' }}
           >
@@ -74,32 +74,35 @@ export const PeopleTable: FC<Props> = ({
 
           <th
             onClick={(event) => {
-              setCountSexClick(prevState => prevState + 1);
-              onClickHandler(event, countSexClick);
+              setToggleSexClick(prevState => !prevState);
+              onClickHandler(event, toggleSexClick);
             }}
             style={{ cursor: 'pointer' }}
           >
             Sex
+            <img src="images/sort_both.png" alt="sort_both" />
           </th>
 
           <th
             onClick={(event) => {
-              setCountBornClick(prevState => prevState + 1);
-              onClickHandler(event, countBornClick);
+              setToggleBornClick(prevState => !prevState);
+              onClickHandler(event, toggleBornClick);
             }}
             style={{ cursor: 'pointer' }}
           >
             Born
+            <img src="images/sort_both.png" alt="sort_both" />
           </th>
 
           <th
             onClick={(event) => {
-              setCountDiedClick(prevState => prevState + 1);
-              onClickHandler(event, countDiedClick);
+              setToggleDiedClick(prevState => !prevState);
+              onClickHandler(event, toggleDiedClick);
             }}
             style={{ cursor: 'pointer' }}
           >
             Died
+            <img src="images/sort_both.png" alt="sort_both" />
           </th>
 
           <th>Mother</th>
