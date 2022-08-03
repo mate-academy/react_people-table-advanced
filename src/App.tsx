@@ -11,10 +11,12 @@ import NotFoundPage from './components/NotFoundPage';
 
 const App: React.FC = () => (
   <div className="App">
+    <Header />
+
     <div className="container">
       <div className="mt-3">
         <Routes>
-          <Route path="/" element={<Header />}>
+          <Route path="/">
             <Route index element={<HomePage />} />
             <Route path="home" element={<Navigate to="/" />} />
             <Route path="people">

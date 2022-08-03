@@ -1,7 +1,6 @@
 import React, {
   useCallback,
   useEffect,
-  useMemo,
   useState,
 } from 'react';
 import { useLocation, useSearchParams, NavLink } from 'react-router-dom';
@@ -13,8 +12,9 @@ import NewPerson from './NewPerson';
 import { getPeople } from '../api/api';
 
 import PersonEnum from '../enums/PersonEnum';
+import getSearchWith from '../utils/getSearchWith';
 
-const addPersonParents = (person: Person, peopleArray: Person[]) => {
+const linkPersonWithParents = (person: Person, peopleArray: Person[]) => {
   const mother = peopleArray.find(possibleParent => (
     possibleParent.name === person.motherName
   ));
@@ -29,10 +29,12 @@ const addPersonParents = (person: Person, peopleArray: Person[]) => {
   };
 };
 
-const loadData = async (): Promise<Person[]> => {
+const loadData = (): Promise<Person[]> => {
   return getPeople()
     .then(response => {
-      return response.map((person, _, arr) => addPersonParents(person, arr));
+      return response.map((person, _, arr) => (
+        linkPersonWithParents(person, arr)
+      ));
     });
 };
 
@@ -40,7 +42,7 @@ const PeoplePage: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const isFormOpen = useLocation().pathname === '/people/new';
 
-  const [people, setPeople] = useState<Person[] | null>(null);
+  const [people, setPeople] = useState<Person[]>([]);
   const [isError, setIsError] = useState<boolean>(false);
 
   const appliedQuery = searchParams.get('query') || '';
@@ -55,40 +57,9 @@ const PeoplePage: React.FC = () => {
       .catch(() => setIsError(true));
   }, []);
 
-  const peopleNames = useMemo(() => {
-    const maleNames: Omit<Person, 'sex'>[] = [];
-    const femaleNames: Omit<Person, 'sex'>[] = [];
-
-    people?.forEach(person => {
-      if (person.sex === 'm') {
-        maleNames.push({
-          name: person.name,
-          born: person.born,
-          died: person.died,
-        });
-      }
-
-      if (person.sex === 'f') {
-        femaleNames.push({
-          name: person.name,
-          born: person.born,
-          died: person.died,
-        });
-      }
-    });
-
-    return [maleNames, femaleNames];
-  }, [people]);
-
   const applyQuery = useCallback(
     debounce((newQuery: string) => {
-      if (newQuery) {
-        searchParams.set('query', newQuery);
-        setSearchParams(searchParams);
-      } else {
-        searchParams.delete('query');
-        setSearchParams(searchParams);
-      }
+      setSearchParams(getSearchWith({ query: newQuery }, searchParams));
     }, 500),
     [],
   );
@@ -98,62 +69,16 @@ const PeoplePage: React.FC = () => {
     applyQuery(event.target.value);
   };
 
-  const handleSortChange = (sortByQuery: PersonEnum | '') => {
-    switch (true) {
-      case sortByQuery === '':
-        searchParams.delete('sortBy');
-        searchParams.delete('sortOrder');
-        break;
-
-      case sortByQuery !== sortBy:
-        searchParams.set('sortBy', sortByQuery);
-        searchParams.set('sortOrder', 'asc');
-        break;
-
-      case sortByQuery === sortBy:
-        searchParams.set(
-          'sortOrder',
-          sortOrder === 'asc' ? 'desc' : 'asc',
-        );
-        break;
-
-      default:
-        break;
-    }
-
-    setSearchParams(searchParams);
-  };
-
   const handleNewPersonSubmit = (newPerson: Person) => {
-    const slug = (`${newPerson.name} ${newPerson.born}`)
-      .toLowerCase()
-      .split(' ')
-      .join('-');
-
-    const newPersonWithSlug = {
-      ...newPerson,
-      slug,
-    };
-
-    if (people !== null) {
-      setPeople(prevPeople => {
-        if (prevPeople === null) {
-          return prevPeople;
-        }
-
-        return ([
-          ...prevPeople,
-          addPersonParents(newPersonWithSlug, people),
-        ]);
-      });
-    }
+    setPeople(prevPeople => {
+      return ([
+        ...prevPeople,
+        linkPersonWithParents(newPerson, prevPeople),
+      ]);
+    });
   };
 
   const preparePeople = () => {
-    if (people === null) {
-      return null;
-    }
-
     const preparedPeople = people.filter(person => (
       person.name.toLowerCase()
         .includes(appliedQuery.toLowerCase())
@@ -212,18 +137,22 @@ const PeoplePage: React.FC = () => {
           </div>
         </div>
 
-        <div className="col mb-3">
+        <div className="col">
           {isFormOpen
             ? (
               <NewPerson
-                peopleNames={peopleNames}
+                people={people}
                 onNewPersonSubmit={handleNewPersonSubmit}
               />
             )
             : (
               <NavLink
-                to="new"
-                className="btn btn-dark w-100"
+                to="../new"
+                className="
+                  btn btn-lg btn-dark
+                  w-100 h-100
+                  d-flex justify-content-center align-items-center
+                "
               >
                 Add new person
               </NavLink>
@@ -239,26 +168,34 @@ const PeoplePage: React.FC = () => {
         )
         : (
           <>
-            {preparedPeople === null
+            {preparedPeople.length !== 0
               ? (
-                <div className="d-flex justify-content-center">
-                  <div
-                    className="spinner-border"
-                    style={{
-                      width: '3rem',
-                      height: '3rem',
-                    }}
-                    role="status"
-                  >
-                    <span className="visually-hidden">Loading...</span>
-                  </div>
-                </div>
-              )
-              : (
                 <PeopleTable
                   people={preparedPeople}
-                  onSortChange={handleSortChange}
                 />
+              )
+              : (
+                <>
+                  {people.length !== 0 ? (
+                    <h3 className="text-center">
+                      Could not find any people by
+                      this query
+                    </h3>
+                  ) : (
+                    <div className="d-flex justify-content-center">
+                      <div
+                        className="spinner-border"
+                        style={{
+                          width: '3rem',
+                          height: '3rem',
+                        }}
+                        role="status"
+                      >
+                        <span className="visually-hidden">Loading...</span>
+                      </div>
+                    </div>
+                  )}
+                </>
               )}
           </>
         )}

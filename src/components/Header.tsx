@@ -4,11 +4,13 @@ import { NavLink, Outlet } from 'react-router-dom';
 const Header: React.FC = () => {
   return (
     <>
-      <header className="mb-5">
-        <nav className="nav nav-pills nav-fill p-3 bg-light border rounded-4">
-          <NavLink className="nav-link" to="/">Home</NavLink>
-          <NavLink className="nav-link" to="people">People</NavLink>
-        </nav>
+      <header className="border bg-light">
+        <div className="container">
+          <nav className="nav nav-pills p-3">
+            <NavLink className="nav-link" to="/">Home</NavLink>
+            <NavLink className="nav-link" to="people">People</NavLink>
+          </nav>
+        </div>
       </header>
 
       <Outlet />

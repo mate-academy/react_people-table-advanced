@@ -4,8 +4,8 @@ import classNames from 'classnames';
 import PersonEnum from '../enums/PersonEnum';
 
 type Props = {
-  peopleNames: Omit<Person, 'sex'>[][];
-  onNewPersonSubmit: (newPerson: Omit<Person, 'slug'>) => void
+  people: Person[];
+  onNewPersonSubmit: (newPerson: Person) => void
 };
 
 const initialPerson: Person = {
@@ -15,10 +15,13 @@ const initialPerson: Person = {
   died: 0,
   fatherName: '',
   motherName: '',
+  slug: '',
+  mother: null,
+  father: null,
 };
 
 const NewPerson: React.FC<Props> = ({
-  peopleNames,
+  people,
   onNewPersonSubmit,
 }) => {
   const navigate = useNavigate();
@@ -26,10 +29,7 @@ const NewPerson: React.FC<Props> = ({
   const minYear = 1400;
   const currentYear = new Date().getFullYear();
 
-  const [
-    newPerson,
-    setNewPerson,
-  ] = useState<Person>(initialPerson);
+  const [newPerson, setNewPerson] = useState<Person>(initialPerson);
 
   const [invalidFields, setInvalidFields] = useState<string[]>([]);
 
@@ -75,7 +75,7 @@ const NewPerson: React.FC<Props> = ({
 
     const toInvalidate: string[] = [];
 
-    if (name === '' || (/[^a-zA-Z\s]/g).test(name)) {
+    if ((/[^a-zA-Z\s]|(^$)/g).test(name)) {
       toInvalidate.push(PersonEnum.Name);
     }
 
@@ -106,7 +106,15 @@ const NewPerson: React.FC<Props> = ({
       return;
     }
 
-    onNewPersonSubmit(newPerson);
+    const slug = (`${newPerson.name} ${newPerson.born}`)
+      .toLowerCase()
+      .split(' ')
+      .join('-');
+
+    onNewPersonSubmit({
+      ...newPerson,
+      slug,
+    });
 
     setNewPerson(initialPerson);
 
@@ -123,13 +131,29 @@ const NewPerson: React.FC<Props> = ({
   } = newPerson;
 
   const [timeAppropriateMaleNames, timeAppropriateFemaleNames] = useMemo(() => {
-    return peopleNames.map(byGenderPeople => (
-      byGenderPeople.filter(person => born > person.born && born < person.died)
-    ));
-  }, [peopleNames, born, died]);
+    const maleNames: Person[] = [];
+    const femaleNames: Person[] = [];
+
+    people.forEach(person => {
+      if (born < person.born || born > person.died) {
+        return;
+      }
+
+      if (person.sex === 'm') {
+        maleNames.push(person);
+      } else {
+        femaleNames.push(person);
+      }
+    });
+
+    return [maleNames, femaleNames];
+  }, [people, born, died]);
 
   return (
-    <form className="border rounded-4 p-4" onSubmit={handleSubmit}>
+    <form
+      className="border rounded-4 p-4"
+      onSubmit={handleSubmit}
+    >
       <div className="row mb-3">
         <span className="fs-3">New person</span>
       </div>
@@ -171,7 +195,10 @@ const NewPerson: React.FC<Props> = ({
               }))}
             />
 
-            <label className="form-check-label" htmlFor="sexRadio1">
+            <label
+              className="form-check-label"
+              htmlFor="sexRadio1"
+            >
               Male
             </label>
 
@@ -190,7 +217,10 @@ const NewPerson: React.FC<Props> = ({
               }))}
             />
 
-            <label className="form-check-label" htmlFor="sexRadio2">
+            <label
+              className="form-check-label"
+              htmlFor="sexRadio2"
+            >
               Female
             </label>
           </div>
@@ -248,14 +278,19 @@ const NewPerson: React.FC<Props> = ({
         <div className="col">
           <select
             className="form-select"
-            value={motherName}
+            value={motherName || ''}
             disabled={born === 0}
             onChange={({ target }) => setNewPerson(prevState => ({
               ...prevState,
               motherName: target.value,
             }))}
           >
-            <option value="" disabled>Mother</option>
+            <option
+              value=""
+              disabled
+            >
+              Mother
+            </option>
 
             {timeAppropriateFemaleNames.map(femaleName => (
               <option
@@ -271,14 +306,19 @@ const NewPerson: React.FC<Props> = ({
         <div className="col">
           <select
             className="form-select"
-            value={fatherName}
+            value={fatherName || ''}
             disabled={born === 0}
             onChange={({ target }) => setNewPerson(prevState => ({
               ...prevState,
               fatherName: target.value,
             }))}
           >
-            <option value="" disabled>Father</option>
+            <option
+              value=""
+              disabled
+            >
+              Father
+            </option>
 
             {timeAppropriateMaleNames.map(maleName => (
               <option

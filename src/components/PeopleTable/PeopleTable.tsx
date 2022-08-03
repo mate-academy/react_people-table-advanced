@@ -7,20 +7,32 @@ import './PeopleTable.scss';
 import PersonRow from '../PersonRow';
 
 import PersonEnum from '../../enums/PersonEnum';
+import getSearchWith from '../../utils/getSearchWith';
 
 type Props = {
   people: Person[];
-  onSortChange: (sortBy: PersonEnum | '') => void;
 };
 
 const PeopleTable: React.FC<Props> = ({
   people,
-  onSortChange,
 }) => {
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const sortOrder = searchParams.get('sortOrder');
   const sortBy = searchParams.get('sortBy');
+
+  const handleSortChange = (sortByQuery: PersonEnum | '') => {
+    let appliedSortOrder = sortOrder;
+
+    if (sortBy !== sortByQuery) {
+      appliedSortOrder = 'desc';
+    }
+
+    setSearchParams(getSearchWith({
+      sortBy: sortByQuery,
+      sortOrder: appliedSortOrder === 'asc' ? 'desc' : 'asc',
+    }, searchParams));
+  };
 
   return (
     <table
@@ -32,7 +44,7 @@ const PeopleTable: React.FC<Props> = ({
           <th
             className="PeopleTable__header-row"
             scope="col"
-            onClick={() => onSortChange('')}
+            onClick={() => handleSortChange('')}
           >
             #
           </th>
@@ -47,7 +59,7 @@ const PeopleTable: React.FC<Props> = ({
               sortOrder === 'desc' && sortBy === PersonEnum.Name,
             })}
             scope="col"
-            onClick={() => onSortChange(PersonEnum.Name)}
+            onClick={() => handleSortChange(PersonEnum.Name)}
           >
             Name
           </th>
@@ -62,7 +74,7 @@ const PeopleTable: React.FC<Props> = ({
               sortOrder === 'desc' && sortBy === PersonEnum.Sex,
             })}
             scope="col"
-            onClick={() => onSortChange(PersonEnum.Sex)}
+            onClick={() => handleSortChange(PersonEnum.Sex)}
           >
             Sex
           </th>
@@ -77,7 +89,7 @@ const PeopleTable: React.FC<Props> = ({
               sortOrder === 'desc' && sortBy === PersonEnum.Born,
             })}
             scope="col"
-            onClick={() => onSortChange(PersonEnum.Born)}
+            onClick={() => handleSortChange(PersonEnum.Born)}
           >
             Born
           </th>
@@ -92,7 +104,7 @@ const PeopleTable: React.FC<Props> = ({
               sortOrder === 'desc' && sortBy === PersonEnum.Died,
             })}
             scope="col"
-            onClick={() => onSortChange(PersonEnum.Died)}
+            onClick={() => handleSortChange(PersonEnum.Died)}
           >
             Died
           </th>
