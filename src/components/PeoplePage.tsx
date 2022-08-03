@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
 import classNames from 'classnames';
-import { Link, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
 import { getPeople } from '../api';
 import { Person } from '../types/Person';
+import { PersonLink } from './PersonLink';
 
 export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);
@@ -11,7 +12,20 @@ export const PeoplePage = () => {
 
   useEffect(() => {
     getPeople()
-      .then(setPeople);
+      .then(peopleFromServer => {
+        const preparedPeople = peopleFromServer.map(p => ({ ...p }));
+
+        preparedPeople.forEach(person => {
+          Object.assign(person, {
+            mother: preparedPeople.find(m => m.name === person.motherName)
+              || null,
+            father: preparedPeople.find(f => f.name === person.fatherName)
+              || null,
+          });
+        });
+
+        setPeople(preparedPeople);
+      });
   }, []);
 
   const visiblePeople = people;
@@ -93,18 +107,20 @@ export const PeoplePage = () => {
                     })}
                   >
                     <td>
-                      <Link to={`/people/${person.slug}`}>
-                        {person.name}
-                      </Link>
+                      <PersonLink person={person} />
                     </td>
                     <td>{person.sex}</td>
                     <td>{person.born}</td>
                     <td>{person.died}</td>
                     <td>
-                      {person.motherName}
+                      {person.mother ? (
+                        <PersonLink person={person.mother} />
+                      ) : person.motherName}
                     </td>
                     <td>
-                      {person.fatherName}
+                      {person.father ? (
+                        <PersonLink person={person.father} />
+                      ) : person.fatherName}
                     </td>
                   </tr>
                 ))}
