@@ -145,13 +145,13 @@ export const PeopleTable = () => {
         />
         {value}
         {isSortReversed === 'asc' && value === isSortedBy && (
-          <img src="../../../../images/sort_asc.png" alt="sortAsc" />
+          <img src="images/sort_asc.png" alt="sortAsc" />
         )}
         {isSortReversed === 'desc' && value === isSortedBy && (
-          <img src="../../../../images/sort_desc.png" alt="sortDesc" />
+          <img src="images/sort_desc.png" alt="sortDesc" />
         )}
         {value !== isSortedBy && (
-          <img src="../../../../images/sort_both.png" alt="notSorted" />
+          <img src="images/sort_both.png" alt="notSorted" />
         )}
       </label>
     </th>
