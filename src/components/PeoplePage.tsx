@@ -40,7 +40,9 @@ export const PeoplePage = () => {
   };
 
   function getSearchWith(params: Params): string {
-    const copy = new URLSearchParams(searchParams.toString());
+    const copy = new URLSearchParams(
+      searchParams.toString(), // ?query=abc&sex=m
+    );
 
     // eslint-disable-next-line no-restricted-syntax
     for (const key of Object.keys(params)) {
