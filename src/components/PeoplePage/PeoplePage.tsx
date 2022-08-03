@@ -65,10 +65,6 @@ export const PeoplePage: React.FC = () => {
                 people={people}
               />
             </div>
-
-            <div className="column">
-              f
-            </div>
           </div>
 
           <div className="column">
