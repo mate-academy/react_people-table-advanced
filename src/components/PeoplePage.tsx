@@ -8,9 +8,11 @@ import { PersonLink } from './PersonLink';
 
 export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const sex = searchParams.get('sex');
+  const query = searchParams.get('query') || '';
+
   const { slug } = useParams();
 
   useEffect(() => {
@@ -33,6 +35,25 @@ export const PeoplePage = () => {
 
   const visiblePeople = people;
 
+  type Params = {
+    [key: string]: string,
+  };
+
+  function getSearchWith(params: Params): string {
+    const copy = new URLSearchParams(searchParams.toString());
+
+    // eslint-disable-next-line no-restricted-syntax
+    for (const key of Object.keys(params)) {
+      if (params[key]) {
+        copy.set(key, params[key]);
+      } else {
+        copy.delete(key);
+      }
+    }
+
+    return copy.toString();
+  }
+
   return (
     <>
       <h1 className="title">People page</h1>
@@ -48,21 +69,21 @@ export const PeoplePage = () => {
 
               <p className="panel-tabs">
                 <Link
-                  to={{ search: '' }}
+                  to={{ search: getSearchWith({ sex: '' }) }}
                   className={classNames({ 'is-active': !sex })}
                 >
                   All
                 </Link>
 
                 <Link
-                  to={{ search: '?sex=m' }}
+                  to={{ search: getSearchWith({ sex: 'm' }) }}
                   className={classNames({ 'is-active': sex === 'm' })}
                 >
                   Male
                 </Link>
 
                 <Link
-                  to={{ search: '?sex=f' }}
+                  to={{ search: getSearchWith({ sex: 'f' }) }}
                   className={classNames({ 'is-active': sex === 'f' })}
                 >
                   Female
@@ -75,6 +96,10 @@ export const PeoplePage = () => {
                     className="input"
                     type="text"
                     placeholder="Search"
+                    value={query}
+                    onChange={event => setSearchParams(
+                      getSearchWith({ query: event.target.value }),
+                    )}
                   />
                   <span className="icon is-left">
                     <i className="fas fa-search" aria-hidden="true" />
