@@ -1,1 +1,39 @@
 // styles go here
+
+.App {
+  margin: 0 20px;
+}
+
+.nav {
+  width: 400px;
+  color: cornflowerblue;
+  background-color: darkseagreen;
+}
+
+.PeopleTable {
+  border-collapse: collapse;
+  .Person:hover {
+    background-color: #00d1b26b;
+  }
+
+  &__column-title {
+    text-transform: capitalize;
+
+    & img {
+      transform: translate(0, 25%);
+    }
+
+    &--sortable:hover {
+      cursor: pointer;
+      background-color: rgba(120, 218, 75, 0.49);
+    }
+  }
+}
+
+.name-filters {
+  display: flex;
+  flex-direction: column;
+  width: 30%;
+  gap: 5px;
+  padding: 5px 0;
+}
