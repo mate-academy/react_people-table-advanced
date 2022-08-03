@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import classNames from 'classnames';
-import { useParams } from 'react-router-dom';
+import { Link, useParams, useSearchParams } from 'react-router-dom';
 
 import { getPeople } from '../api';
 import { Person } from '../types/Person';
@@ -8,6 +8,9 @@ import { PersonLink } from './PersonLink';
 
 export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);
+  const [searchParams] = useSearchParams();
+
+  const sex = searchParams.get('sex');
   const { slug } = useParams();
 
   useEffect(() => {
@@ -44,9 +47,26 @@ export const PeoplePage = () => {
               </p>
 
               <p className="panel-tabs">
-                <a className="is-active" href="#/people">All</a>
-                <a className="" href="#/people?sex=m">Male</a>
-                <a className="" href="#/people?sex=f">Female</a>
+                <Link
+                  to={{ search: '' }}
+                  className={classNames({ 'is-active': !sex })}
+                >
+                  All
+                </Link>
+
+                <Link
+                  to={{ search: '?sex=m' }}
+                  className={classNames({ 'is-active': sex === 'm' })}
+                >
+                  Male
+                </Link>
+
+                <Link
+                  to={{ search: '?sex=f' }}
+                  className={classNames({ 'is-active': sex === 'f' })}
+                >
+                  Female
+                </Link>
               </p>
 
               <div className="panel-block">
