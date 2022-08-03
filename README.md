@@ -1,13 +1,5 @@
 # React - People table
-- Replace `<your_account>` with your Github username in the
-  [DEMO LINK](https://<your_account>.github.io/react_people-table-advanced/)
-- Follow the [React task guideline](https://github.com/mate-academy/react_task-guideline#react-tasks-guideline)
 
-## If you don't use **Typescript**
-1. Rename `.tsx` files to `.jsx`
-1. use `eslint-config-react` in `.eslintrs.js` 
-
-## Advanced tasks
 Using code from previous task implement next tasks:
 
 1. Implement `PersonName` component rendering the name as a link to a person using its `slug` property
@@ -58,3 +50,11 @@ Using code from previous task implement next tasks:
     - make `mother` and `father` field optional
     - update the list of `mothers` and `fathers` according to the entered `born` year (they must be alive)
     (selects should be empty and disabled before the born year was entered)
+
+
+## Instructions
+
+- Implement a solution following the [React task guideline](https://github.com/mate-academy/react_task-guideline#react-tasks-guideline).
+- Use the [React TypeScript cheat sheet](https://mate-academy.github.io/fe-program/js/extra/react-typescript).
+- Open one more terminal and run tests with `npm test` to ensure your solution is correct.
+- Replace `<your_account>` with your Github username in the [DEMO LINK](https://<your_account>.github.io/react_people-table-advanced/) and add it to the PR description.
