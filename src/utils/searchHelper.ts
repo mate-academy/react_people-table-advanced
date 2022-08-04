@@ -15,7 +15,9 @@ export function getSearchWith(
   paramsToUpdate: SearchParams, // it's our custom type
 ): string {
   // we copy currentParams by creating new from a string representation
-  const newParams = new URLSearchParams(currentParams.toString());
+  const newParams = new URLSearchParams(
+    currentParams.toString(),
+  );
 
   Object.entries(paramsToUpdate)
     .forEach(([key, value]) => {
@@ -24,7 +26,10 @@ export function getSearchWith(
       } else if (Array.isArray(value)) {
         // we delete the key to remove old values
         newParams.delete(key);
-        value.forEach(part => newParams.append(key, part));
+
+        value.forEach(part => {
+          newParams.append(key, part);
+        });
       } else {
         newParams.set(key, value);
       }

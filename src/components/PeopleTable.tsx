@@ -32,14 +32,12 @@ export const PeopleTable: FC<Props> = ({ people }) => {
           </th>
 
           <th>
-            Mother
-            <SortLink field="motherName" />
+            Died
+            <SortLink field="died" />
           </th>
 
-          <th>
-            Father
-            <SortLink field="fatherName" />
-          </th>
+          <th>Mother</th>
+          <th>Father</th>
         </tr>
       </thead>
 
@@ -56,6 +54,7 @@ export const PeopleTable: FC<Props> = ({ people }) => {
             </td>
             <td>{person.sex}</td>
             <td>{person.born}</td>
+            <td>{person.died}</td>
             <td>
               {person.mother ? (
                 <PersonLink person={person.mother} />

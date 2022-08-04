@@ -7,15 +7,12 @@ import { Loader } from './Loader';
 import { PeopleTable } from './PeopleTable';
 import { Person } from '../types';
 
-function getCentury(person: Person) {
-  return Math.ceil(person.born / 100);
-}
-
 export const PeoplePage = () => {
   const [loaded, setLoaded] = useState(false);
   const [people, setPeople] = useState<Person[]>([]);
   const [searchParams] = useSearchParams();
 
+  // ?sort=name&order=desc&centuries=17&centuries=19
   const sex = searchParams.get('sex');
   const query = searchParams.get('query');
   const centuries = searchParams.getAll('centuries');
@@ -51,16 +48,20 @@ export const PeoplePage = () => {
   }
 
   if (centuries.length > 0) {
+    const getCentury = (person: Person) => Math.ceil(person.born / 100);
+
     visiblePeople = visiblePeople.filter(
-      person => centuries.includes(getCentury(person).toString()),
+      person => centuries.includes(
+        getCentury(person).toString(),
+      ),
     );
   }
 
   if (query) {
     const lowerQuery = query.toLocaleLowerCase();
 
-    visiblePeople = visiblePeople.filter(({ name, motherName, fatherName }) => {
-      return [name, motherName || '', fatherName || '']
+    visiblePeople = visiblePeople.filter(p => {
+      return [p.name, p.motherName || '', p.fatherName || '']
         .join('\n')
         .toLocaleLowerCase()
         .includes(lowerQuery);
@@ -73,8 +74,11 @@ export const PeoplePage = () => {
         case 'name':
         case 'sex':
           return a[sortField].localeCompare(b[sortField]);
+
         case 'born':
-          return a.born - b.born;
+        case 'died':
+          return a[sortField] - b[sortField];
+
         default:
           return 0;
       }
