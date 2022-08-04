@@ -146,7 +146,6 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
                   : sortOrder === 'asc' && sortBy === 'name'
                     ? <img src="images/sort_asc.png" alt="Sort ascending" />
                     : <img src="images/sort_desc.png" alt="Sort" />
-
               }
             </th>
             <th
