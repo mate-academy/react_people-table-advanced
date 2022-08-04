@@ -1,0 +1,117 @@
+import { useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
+
+import { getPeople } from '../../api';
+import { PeopleFilters } from '../PeopleFilter';
+import { Loader } from '../Loader';
+import { PeopleTable } from '../PeopleTable';
+import { Person } from '../../types/Person';
+
+export const PeoplePage = () => {
+  const [loaded, setLoaded] = useState(false);
+  const [people, setPeople] = useState<Person[]>([]);
+  const [searchParams] = useSearchParams();
+
+  const sex = searchParams.get('sex');
+  const query = searchParams.get('query');
+  const centuries = searchParams.getAll('centuries');
+  const sortField = searchParams.get('sort');
+  const isReversed = searchParams.get('order') === 'desc';
+
+  useEffect(() => {
+    setLoaded(false);
+
+    getPeople()
+      .then(peopleFromServer => {
+        const preparedPeople = peopleFromServer.map(p => ({ ...p }));
+
+        preparedPeople.forEach(person => {
+          Object.assign(person, {
+            mother: preparedPeople.find(m => m.name === person.motherName)
+              || null,
+            father: preparedPeople.find(f => f.name === person.fatherName)
+              || null,
+          });
+        });
+
+        setPeople(preparedPeople);
+      })
+      .finally(() => setLoaded(true));
+  }, []);
+
+  let visiblePeople = [...people];
+
+  if (sex) {
+    visiblePeople = visiblePeople.filter(person => person.sex === sex);
+  }
+
+  if (centuries.length > 0) {
+    const getCentury = (person: Person) => Math.ceil(person.born / 100);
+
+    visiblePeople = visiblePeople.filter(
+      person => centuries.includes(
+        getCentury(person).toString(),
+      ),
+    );
+  }
+
+  if (query) {
+    const lowerQuery = query.toLocaleLowerCase();
+
+    visiblePeople = visiblePeople.filter(p => {
+      return [p.name, p.motherName || '', p.fatherName || '']
+        .join('\n')
+        .toLocaleLowerCase()
+        .includes(lowerQuery);
+    });
+  }
+
+  if (sortField) {
+    visiblePeople.sort((a, b) => {
+      switch (sortField) {
+        case 'name':
+        case 'sex':
+          return a[sortField].localeCompare(b[sortField]);
+
+        case 'born':
+        case 'died':
+          return a[sortField] - b[sortField];
+
+        default:
+          return 0;
+      }
+    });
+
+    if (isReversed) {
+      visiblePeople.reverse();
+    }
+  }
+
+  return (
+    <>
+      <h1 className="title">People page</h1>
+
+      <div className="block">
+        <div className="columns is-desktop is-flex-direction-row-reverse">
+          {loaded && (
+            <div className="column is-7-tablet is-narrow-desktop">
+              <PeopleFilters />
+            </div>
+          )}
+
+          <div className="column">
+            <div className="box table-container">
+              {!loaded && (
+                <Loader />
+              )}
+
+              {loaded && (
+                <PeopleTable people={visiblePeople} />
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+};
