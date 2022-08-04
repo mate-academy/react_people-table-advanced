@@ -7,6 +7,7 @@ import { Person } from '../../../types/Person';
 import { Loader } from '../../Loader';
 import { getPeople } from '../../../api/people';
 import { PersonRow } from '../PersonRow/PersonRow';
+import { NewPerson } from '../NewPerson/NewPerson';
 
 export const PeopleTable = () => {
   const [people, setPeople] = useState<Person[]>([]);
@@ -50,6 +51,20 @@ export const PeopleTable = () => {
     }, 500),
     [],
   );
+
+  const [isFormVisible, setFormVisibility] = useState(true);
+
+  const handleFormVisibility = () => {
+    if (isFormVisible) {
+      searchParams.set('form', `${isFormVisible}`);
+    } else {
+      searchParams.delete('form');
+    }
+
+    setFormVisibility(!isFormVisible);
+
+    navigation(`?${searchParams}`, { replace: true });
+  };
 
   const handleSlugChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setQuery(event.target.value);
@@ -167,8 +182,25 @@ export const PeopleTable = () => {
     people.length === 0
       ? <Loader />
       : (
-        <>
-          <div style={{ width: '600px' }}>
+        <div className="is-flex is-flex-direction-column">
+          {!location.search.includes('form') && (
+            <button
+              type="button"
+              className="button is-info"
+              onClick={handleFormVisibility}
+            >
+              New person form
+            </button>
+          )}
+          {location.search.includes('form') && (
+            <NewPerson
+              people={people}
+              onSetPeople={setPeople}
+              onFormVisible={handleFormVisibility}
+            />
+          )}
+          <div className="is-flex is-align-items-center">
+            Filter:
             <input
               type="text"
               className="input is-rounded"
@@ -200,7 +232,7 @@ export const PeopleTable = () => {
               })}
             </tbody>
           </table>
-        </>
+        </div>
       )
   );
 };

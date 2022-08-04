@@ -23,7 +23,7 @@ export const PersonInfo: React.FC<Props> = ({ person }) => {
       <th>
         {person.father
           ? (<PersonLink person={person.father} />)
-          : (person.motherName)}
+          : (person.fatherName)}
       </th>
     </>
   );
