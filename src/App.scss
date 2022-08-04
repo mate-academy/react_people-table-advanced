@@ -1,1 +1,33 @@
 // styles go here
+.App {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  &__nav {
+    display: flex;
+    justify-items: center;
+    align-items: center;
+    margin: 20px auto 0;
+    gap: 30px;
+  }
+  &__not-text {
+    text-align: center;
+    font-size: 64px;
+    color: white;
+  }
+  &__not-found {
+    width: 100vw;
+    height: 100vh;
+    background-image: url("https://cdn.dicionariopopular.com/imagens/giphy-1.gif");
+  }
+}
+
+.input {
+  margin: 20px 0;
+}
+
+.arrows {
+  display: flex;
+  gap: 10px;
+}
