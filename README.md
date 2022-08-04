@@ -1,4 +1,4 @@
-# React - People table
+# React People Table (Advanced)
 
 Using code from previous task implement next tasks:
 
