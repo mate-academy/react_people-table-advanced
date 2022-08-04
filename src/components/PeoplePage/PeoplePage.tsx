@@ -1,200 +1,117 @@
 import { useEffect, useState } from 'react';
-import classNames from 'classnames';
-import { useParams, useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 
 import { getPeople } from '../../api';
+import { PeopleFilters } from '../PeopleFilter';
+import { Loader } from '../Loader';
+import { PeopleTable } from '../PeopleTable';
 import { Person } from '../../types/Person';
-import { PersonLink } from '../PersonLink';
-import './PeoplePage.scss';
-import { PeopleFilter } from '../PeopleFilter';
-import { PeopleSort } from '../PeopleSort';
 
-export const PeoplePage: React.FC = () => {
+export const PeoplePage = () => {
+  const [loaded, setLoaded] = useState(false);
   const [people, setPeople] = useState<Person[]>([]);
-  const [visiblePeople, setVisiblePeople] = useState([...people]);
-  const [preparedPeople, setPreparedPeople] = useState<Person[]>(visiblePeople);
-  const { slug } = useParams();
+  const [searchParams] = useSearchParams();
 
-  const [searchParams, setSearchParams] = useSearchParams();
-  const sortBy = searchParams.get('sortBy');
-
-  const filterPeople = (newPeople: Person[]) => {
-    setVisiblePeople(newPeople);
-  };
-
-  const sortPeople = (newPeople: Person[]) => {
-    if (JSON.stringify(visiblePeople) !== JSON.stringify(newPeople)) {
-      setPreparedPeople(newPeople);
-    } else {
-      setPreparedPeople(visiblePeople);
-    }
-  };
+  const sex = searchParams.get('sex');
+  const query = searchParams.get('query');
+  const centuries = searchParams.getAll('centuries');
+  const sortField = searchParams.get('sort');
+  const isReversed = searchParams.get('order') === 'desc';
 
   useEffect(() => {
+    setLoaded(false);
+
     getPeople()
       .then(peopleFromServer => {
-        const copiedPeople = peopleFromServer
-          .map(p => ({ ...p }));
+        const preparedPeople = peopleFromServer.map(p => ({ ...p }));
 
-        copiedPeople.forEach(person => {
+        preparedPeople.forEach(person => {
           Object.assign(person, {
-            mother: copiedPeople.find(m => m.name === person.motherName)
+            mother: preparedPeople.find(m => m.name === person.motherName)
               || null,
-            father: copiedPeople.find(f => f.name === person.fatherName)
+            father: preparedPeople.find(f => f.name === person.fatherName)
               || null,
           });
         });
 
-        setPeople(copiedPeople);
-      });
+        setPeople(preparedPeople);
+      })
+      .finally(() => setLoaded(true));
   }, []);
+
+  let visiblePeople = [...people];
+
+  if (sex) {
+    visiblePeople = visiblePeople.filter(person => person.sex === sex);
+  }
+
+  if (centuries.length > 0) {
+    const getCentury = (person: Person) => Math.ceil(person.born / 100);
+
+    visiblePeople = visiblePeople.filter(
+      person => centuries.includes(
+        getCentury(person).toString(),
+      ),
+    );
+  }
+
+  if (query) {
+    const lowerQuery = query.toLocaleLowerCase();
+
+    visiblePeople = visiblePeople.filter(p => {
+      return [p.name, p.motherName || '', p.fatherName || '']
+        .join('\n')
+        .toLocaleLowerCase()
+        .includes(lowerQuery);
+    });
+  }
+
+  if (sortField) {
+    visiblePeople.sort((a, b) => {
+      switch (sortField) {
+        case 'name':
+        case 'sex':
+          return a[sortField].localeCompare(b[sortField]);
+
+        case 'born':
+        case 'died':
+          return a[sortField] - b[sortField];
+
+        default:
+          return 0;
+      }
+    });
+
+    if (isReversed) {
+      visiblePeople.reverse();
+    }
+  }
 
   return (
     <>
       <h1 className="title">People page</h1>
-      {visiblePeople.length}
 
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
-          <div className="column is-4-desktop">
-            <div className="column">
-              <PeopleFilter
-                setSearchParams={setSearchParams}
-                searchParams={searchParams}
-                filterPeople={filterPeople}
-                people={people}
-              />
+          {loaded && (
+            <div className="column is-7-tablet is-narrow-desktop">
+              <PeopleFilters />
             </div>
-          </div>
+          )}
 
           <div className="column">
-            <table className="table is-striped is-narrow box">
-              <thead>
-                <tr>
-                  <th>
-                    <span>Name</span>
-                    <PeopleSort
-                      sortPeople={sortPeople}
-                      visiblePeople={visiblePeople}
-                      searchParams={searchParams}
-                      by="name"
-                      setSearchParams={setSearchParams}
-                      sortBy={sortBy}
-                    />
-                  </th>
-                  <th>
-                    <span>Sex</span>
-                    <PeopleSort
-                      sortPeople={sortPeople}
-                      visiblePeople={visiblePeople}
-                      searchParams={searchParams}
-                      by="sex"
-                      setSearchParams={setSearchParams}
-                      sortBy={sortBy}
-                    />
-                  </th>
-                  <th>
-                    <span>Born</span>
-                    <PeopleSort
-                      sortPeople={sortPeople}
-                      visiblePeople={visiblePeople}
-                      searchParams={searchParams}
-                      by="born"
-                      setSearchParams={setSearchParams}
-                      sortBy={sortBy}
-                    />
-                  </th>
-                  <th>
-                    <span>Died</span>
-                    <PeopleSort
-                      sortPeople={sortPeople}
-                      visiblePeople={visiblePeople}
-                      searchParams={searchParams}
-                      by="died"
-                      setSearchParams={setSearchParams}
-                      sortBy={sortBy}
-                    />
-                  </th>
-                  <th>
-                    <span>Mother</span>
-                    <PeopleSort
-                      sortPeople={sortPeople}
-                      visiblePeople={visiblePeople}
-                      searchParams={searchParams}
-                      by="motherName"
-                      setSearchParams={setSearchParams}
-                      sortBy={sortBy}
-                    />
-                  </th>
-                  <th>
-                    <span>Father</span>
-                    <PeopleSort
-                      sortPeople={sortPeople}
-                      visiblePeople={visiblePeople}
-                      searchParams={searchParams}
-                      by="fatherName"
-                      setSearchParams={setSearchParams}
-                      sortBy={sortBy}
-                    />
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {preparedPeople.length === 0 ? visiblePeople.map(person => (
-                  <tr
-                    key={person.slug}
-                    className={classNames('person', {
-                      'has-background-warning': person.slug === slug,
-                    })}
-                  >
-                    <td>
-                      <PersonLink person={person} />
-                    </td>
-                    <td>{person.sex}</td>
-                    <td>{person.born}</td>
-                    <td>{person.died}</td>
-                    <td>
-                      {person.mother ? (
-                        <PersonLink person={person.mother} />
-                      ) : person.motherName}
-                    </td>
-                    <td>
-                      {person.father ? (
-                        <PersonLink person={person.father} />
-                      ) : person.fatherName}
-                    </td>
-                  </tr>
-                )) : preparedPeople.map((person: Person) => (
-                  <tr
-                    key={person.slug}
-                    className={classNames('person', {
-                      'has-background-warning': person.slug === slug,
-                    })}
-                  >
-                    <td>
-                      <PersonLink person={person} />
-                    </td>
-                    <td>{person.sex}</td>
-                    <td>{person.born}</td>
-                    <td>{person.died}</td>
-                    <td>
-                      {person.mother ? (
-                        <PersonLink person={person.mother} />
-                      ) : person.motherName}
-                    </td>
-                    <td>
-                      {person.father ? (
-                        <PersonLink person={person.father} />
-                      ) : person.fatherName}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+            <div className="box table-container">
+              {!loaded && (
+                <Loader />
+              )}
+
+              {loaded && (
+                <PeopleTable people={visiblePeople} />
+              )}
+            </div>
           </div>
         </div>
       </div>
     </>
-
   );
 };
