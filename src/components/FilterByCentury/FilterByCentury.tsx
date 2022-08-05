@@ -9,6 +9,18 @@ export const FilterByCentury: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const centuries = searchParams.getAll('centuries');
 
+  const onCenturyFilter = (centuryForFilter: string) => {
+    setSearchParams(
+      getSearchWith(searchParams, {
+        centuries: centuries.includes(centuryForFilter)
+          ? centuries.filter(selectedCentury => {
+            return selectedCentury !== centuryForFilter;
+          })
+          : [...centuries, centuryForFilter],
+      }),
+    );
+  };
+
   return (
     <div className="panel-block is-flex-direction-column">
       <div className="buttons is-justify-content-center">
@@ -22,15 +34,7 @@ export const FilterByCentury: React.FC = () => {
                 { 'is-success': centuries.includes(century) },
               )
             }
-            onClick={() => setSearchParams(
-              getSearchWith(searchParams, {
-                centuries: centuries.includes(century)
-                  ? centuries.filter(selectedCentury => {
-                    return selectedCentury !== century;
-                  })
-                  : [...centuries, century],
-              }),
-            )}
+            onClick={() => onCenturyFilter(century)}
           >
             {century}
           </button>
