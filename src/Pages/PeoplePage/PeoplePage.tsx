@@ -6,54 +6,68 @@ import { TableContent } from '../TableContent/TableContent';
 import './PeoplePage.scss';
 
 export const PeoplePage: React.FC = () => {
+  const [searcParams, setSearchParams] = useSearchParams();
   const { slug } = useParams();
-  const [searchParams, setSearchParams] = useSearchParams();
   const [serverResponse, setServerResponse] = useState<People[]>([]);
-  const [query, setQuery] = useState('');
   const [people, setPeople] = useState<People[]>([]);
+
+  const filter = (data: People[], query: string): People[] => {
+    return data
+      .filter(el => {
+        const queryLC = query.toLowerCase();
+
+        let check = false;
+
+        if (el.name.toLowerCase().includes(queryLC)) {
+          check = true;
+        }
+
+        if (el.fatherName) {
+          if (el.fatherName.toLowerCase().includes(queryLC)) {
+            check = true;
+          }
+        }
+
+        if (el.motherName) {
+          if (el.motherName.toLowerCase().includes(queryLC)) {
+            check = true;
+          }
+        }
+
+        return check;
+      });
+  };
 
   useEffect(() => {
     fetchFunction()
       .then(res => {
-        if (res.data !== null) {
-          setServerResponse([...res.data]);
+        if (res.data) {
+          setServerResponse(res.data);
 
-          // dublicate
+          const searchFilter = searcParams.get('query');
 
-          const search = searchParams.get('query');
-
-          if (search) {
-            setPeople(
-              // eslint-disable-next-line max-len
-              [...res.data].filter(el => el.name.toLowerCase().includes(search)),
-            );
+          if (searchFilter) {
+            setPeople(filter(res.data, searchFilter));
           } else {
-            setPeople([...res.data]);
+            setPeople(res.data);
           }
-        } else {
-          // eslint-disable-next-line no-console
-          console.warn(res.responseError.message);
         }
+      })
+      .catch(err => {
+        // eslint-disable-next-line no-console
+        console.warn(`${err.message}`);
       });
   }, []);
 
-  useEffect(() => {
-    const search = searchParams.get('query');
-
-    if (search) {
-      setQuery(search.toLowerCase());
+  const searchHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.value === '') {
+      setSearchParams({ });
+      setPeople(serverResponse);
     } else {
-      setQuery('');
+      setSearchParams({ query: e.target.value.toLowerCase() });
+      setPeople(filter(serverResponse, e.target.value));
     }
-  }, [searchParams]);
-
-  useEffect(() => {
-    if (query !== '') {
-      setPeople(
-        [...serverResponse].filter(el => el.name.toLowerCase().includes(query)),
-      );
-    }
-  }, [query]);
+  };
 
   return (
     <>
@@ -63,9 +77,9 @@ export const PeoplePage: React.FC = () => {
         data-cy="filterInput"
         placeholder="Search..."
         onChange={(e) => {
-          setSearchParams({ query: e.target.value });
+          searchHandler(e);
         }}
-        value={query}
+        value={`${searcParams.get('query') || ''}`}
       />
       <table className="table  is-hoverable table-position">
         <thead>
