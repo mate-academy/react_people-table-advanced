@@ -1,1 +1,5 @@
-// styles go here
+.on-hover {
+  &:hover {
+    background-color: hsl(48, 100%, 96%);
+  }
+}
