@@ -1,23 +1,30 @@
-import { FetchResult } from '../types/FetchResult';
+import { People } from '../types/People';
 
 const API = 'https://mate-academy.github.io/react_people-table/api/people.json';
 
-export const fetchFunction = async (): Promise<FetchResult> => {
-  const result: FetchResult = {
-    data: null,
-    responseError: {
-      error: null,
-      message: null,
-    },
-  };
-
+export const fetchFunction = async (): Promise<People[]> => {
   const res = await fetch(API);
 
+  let result: People[] = [];
+
   if (!res.ok) {
-    result.responseError.error = 'Error';
-    result.responseError.message = `${res.status} ${res.statusText}`;
+    throw new Error(`${res.status} ${res.statusText}`);
   } else {
-    result.data = await res.json();
+    result = await res.json();
+
+    result = result.map(el => {
+      const newObject = { ...el };
+
+      if (newObject.fatherName === null) {
+        newObject.fatherName = '';
+      }
+
+      if (newObject.motherName === null) {
+        newObject.motherName = '';
+      }
+
+      return newObject;
+    });
   }
 
   return result;

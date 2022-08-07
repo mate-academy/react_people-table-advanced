@@ -1,3 +1,4 @@
+import { useSearchParams } from 'react-router-dom';
 import { People } from '../../types/People';
 import './TableContent.scss';
 
@@ -6,8 +7,20 @@ type Props = {
   slug: string | undefined;
 };
 
+const tableTitles = [
+  'name',
+  'sex',
+  'born',
+  'died',
+  'father',
+  'mother',
+  'slug'];
+
 export const TableContent: React.FC<Props> = ({ person, slug }) => {
+  const [searchParams] = useSearchParams();
+
   let background = '';
+  const sortBy = searchParams.get('sortBy');
 
   if (slug && person.slug === slug) {
     switch (person.sex) {
@@ -26,13 +39,37 @@ export const TableContent: React.FC<Props> = ({ person, slug }) => {
   return (
 
     <tr className={`person ${background}`}>
-      <td>{person.name}</td>
-      <td>{person.sex}</td>
-      <td>{person.born}</td>
-      <td>{person.died}</td>
-      <td>{person?.fatherName && person.fatherName.split(' ')[0]}</td>
-      <td>{person?.motherName && person.motherName.split(' ')[0]}</td>
-      <td>{person.slug}</td>
+      {
+        tableTitles.map(el => {
+          let backgroundTable = '';
+
+          if (sortBy === el) {
+            backgroundTable = 'highlighted';
+          }
+
+          if (el === 'father') {
+            return (
+              <td className={backgroundTable} key={el}>
+                {person.fatherName.split(' ')[0]}
+              </td>
+            );
+          }
+
+          if (el === 'mother') {
+            return (
+              <td className={backgroundTable} key={el}>
+                {person.motherName.split(' ')[0]}
+              </td>
+            );
+          }
+
+          return (
+            <td className={backgroundTable} key={el}>
+              {person[el as keyof People]}
+            </td>
+          );
+        })
+      }
     </tr>
   );
 };

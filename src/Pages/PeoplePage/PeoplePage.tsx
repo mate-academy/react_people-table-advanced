@@ -3,69 +3,71 @@ import { useEffect, useState } from 'react';
 import { fetchFunction } from '../../api/fetchFunction';
 import { People } from '../../types/People';
 import { TableContent } from '../TableContent/TableContent';
+import { TableHead } from '../TableHead/TableHead';
+import { filter } from '../utils/utils';
+import sortFoo from '../../utils/utils';
 import './PeoplePage.scss';
 
 export const PeoplePage: React.FC = () => {
-  const [searcParams, setSearchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const { slug } = useParams();
   const [serverResponse, setServerResponse] = useState<People[]>([]);
   const [people, setPeople] = useState<People[]>([]);
 
-  const filter = (data: People[], query: string): People[] => {
-    return data
-      .filter(el => {
-        const queryLC = query.toLowerCase();
+  // eslint-disable-next-line max-len
+  const updateHandler = (array: People[], inputQuery: string | undefined = undefined) => {
+    let searchFilter = null;
+    let sortOrder = searchParams.get('sortOrder');
 
-        let check = false;
+    if (sortOrder === null) {
+      sortOrder = 'asc';
+    }
 
-        if (el.name.toLowerCase().includes(queryLC)) {
-          check = true;
-        }
+    if (inputQuery) {
+      searchFilter = inputQuery;
+    } else {
+      searchFilter = searchParams.get('query');
+    }
 
-        if (el.fatherName) {
-          if (el.fatherName.toLowerCase().includes(queryLC)) {
-            check = true;
-          }
-        }
+    const searchSortBy = searchParams.get('sortBy');
 
-        if (el.motherName) {
-          if (el.motherName.toLowerCase().includes(queryLC)) {
-            check = true;
-          }
-        }
-
-        return check;
-      });
+    if (searchFilter) {
+      setPeople(sortFoo(filter(array, searchFilter), searchSortBy, sortOrder));
+    } else {
+      setPeople(sortFoo(array, searchSortBy, sortOrder));
+    }
   };
 
   useEffect(() => {
     fetchFunction()
       .then(res => {
-        if (res.data) {
-          setServerResponse(res.data);
-
-          const searchFilter = searcParams.get('query');
-
-          if (searchFilter) {
-            setPeople(filter(res.data, searchFilter));
-          } else {
-            setPeople(res.data);
-          }
+        if (res.length > 0) {
+          setServerResponse(res);
+          updateHandler(res);
         }
       })
       .catch(err => {
         // eslint-disable-next-line no-console
         console.warn(`${err.message}`);
       });
-  }, []);
+  }, [searchParams]);
 
-  const searchHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.value === '') {
-      setSearchParams({ });
-      setPeople(serverResponse);
+  const inputHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+    searchParams.set('query', e.target.value.toLowerCase());
+    setSearchParams(searchParams);
+
+    updateHandler(serverResponse, e.target.value);
+  };
+
+  const reverseAscendingOrder = () => {
+    const sortOrder = searchParams.get('sortOrder');
+
+    if (sortOrder === null || sortOrder === 'asc') {
+      searchParams.set('sortOrder', 'desc');
+      setSearchParams(searchParams);
     } else {
-      setSearchParams({ query: e.target.value.toLowerCase() });
-      setPeople(filter(serverResponse, e.target.value));
+      searchParams.set('sortOrder', 'asc');
+      setSearchParams(searchParams);
     }
   };
 
@@ -77,21 +79,22 @@ export const PeoplePage: React.FC = () => {
         data-cy="filterInput"
         placeholder="Search..."
         onChange={(e) => {
-          searchHandler(e);
+          inputHandler(e);
         }}
-        value={`${searcParams.get('query') || ''}`}
+        value={`${searchParams.get('query') || ''}`}
       />
-      <table className="table  is-hoverable table-position">
+      <button
+        type="button"
+        className="button button-position"
+        onClick={() => {
+          reverseAscendingOrder();
+        }}
+      >
+        Descending Order
+      </button>
+      <table className="table is-hoverable table-position">
         <thead>
-          <tr className="person">
-            <th>Name</th>
-            <th>Sex</th>
-            <th>Born</th>
-            <th>Died</th>
-            <th>Father</th>
-            <th>Mother</th>
-            <th>Slug</th>
-          </tr>
+          <TableHead />
         </thead>
         <tbody>
           {
@@ -103,15 +106,7 @@ export const PeoplePage: React.FC = () => {
           }
         </tbody>
         <tfoot>
-          <tr className="person">
-            <th>Name</th>
-            <th>Sex</th>
-            <th>Born</th>
-            <th>Died</th>
-            <th>Father</th>
-            <th>Mother</th>
-            <th>Slug</th>
-          </tr>
+          <TableHead />
         </tfoot>
       </table>
     </>
