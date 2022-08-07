@@ -1,0 +1,55 @@
+table {
+  font-size: 14px;
+}
+
+.sorted-column {
+  cursor: pointer;
+  position: relative;
+
+  &::after {
+    position: absolute;
+    right: 0;
+    content: "";
+    height: 24px;
+    width: 16px;
+    background-image: url(../../images/sort_both.png);
+    background-repeat: no-repeat;
+    background-position: center;
+    filter: contrast(0);
+  }
+
+  &__asc {
+    background-color: hsl(171, 100%, 41%);
+
+    &::after {
+      position: absolute;
+      right: 0;
+      content: "";
+      height: 24px;
+      width: 16px;
+      background-image: url(../../images/sort_asc.png);
+      background-repeat: no-repeat;
+      filter: contrast(1);
+    }
+  }
+
+  &__desc {
+    background-color: hsl(171, 100%, 41%);
+
+    &::after {
+      position: absolute;
+      right: 0;
+      content: "";
+      height: 24px;
+      width: 16px;
+      background-image: url(../../images/sort_desc.png);
+      background-repeat: no-repeat;
+      background-position: center;
+      filter: contrast(1);
+    }
+  }
+}
+
+td {
+  min-width: 80px;
+}

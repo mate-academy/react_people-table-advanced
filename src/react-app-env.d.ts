@@ -1,6 +1,5 @@
 /// <reference types="react-scripts" />
 
-
 interface FormFields {
   name: string,
   sex: string,
