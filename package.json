@@ -7,10 +7,14 @@
   "license": "GPL-3.0",
   "dependencies": {
     "@cypress/react": "^5.12.4",
-    "bulma": "^0.9.3",
+    "@fortawesome/fontawesome-free": "^6.1.2",
+    "bulma": "^0.9.4",
+    "classnames": "^2.3.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
-    "react-scripts": "^4.0.3"
+    "react-router-dom": "^6.3.0",
+    "react-scripts": "^4.0.3",
+    "react-scroll-into-view": "^1.12.0"
   },
   "devDependencies": {
     "@cypress/webpack-dev-server": "^1.8.4",
