@@ -1,7 +1,7 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
-import { isLoading, finishLoading } from '../store';
+import { selectors, actions } from '../store';
 
 type Props = {
   title: string;
@@ -9,19 +9,16 @@ type Props = {
 };
 
 export const Finish: React.FC<Props> = ({ title, message }) => {
-  const dispatch = useDispatch(); // it is a link to `store.dispatch` method
-  const loading = useSelector(isLoading); // we pass a link to selector function here
+  // it is a link to `store.dispatch` method
+  const dispatch = useDispatch();
+  const loading = useSelector(selectors.isLoading);
 
   const handleClick = () => {
-    // action creator returns an action object
-    // { type: 'FINISH_LOADING', message: 'the value of a message prop' }
-    const action = finishLoading(message);
-
-    // we dispatch an action to Redux
-    dispatch(action);
-
-    // it could be shortened to
-    // dispatch(finishLoading(message));
+    // action creator returns an action that must be dispatched
+    // { type: 'FINISH_LOADING', message: 'some text' }
+    dispatch(
+      actions.finishLoading(message),
+    );
   };
 
   return (
