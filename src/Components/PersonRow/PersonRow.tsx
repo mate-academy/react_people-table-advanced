@@ -51,13 +51,12 @@ export const PersonRow: React.FC<Props> = React.memo(({
         {mother ? (
           <NavLink
             to={{
-              pathname: `/people/${person.slug}`,
+              pathname: `/people/${mother.slug}`,
               search: location.search,
             }}
             className={classNames(
               {
-                person__male: person.sex === 'm',
-                person__female: person.sex === 'f',
+                person__female: mother.sex === 'f',
               },
             )}
           >
@@ -71,13 +70,12 @@ export const PersonRow: React.FC<Props> = React.memo(({
         {father ? (
           <NavLink
             to={{
-              pathname: `/people/${person.slug}`,
+              pathname: `/people/${father.slug}`,
               search: location.search,
             }}
             className={classNames(
               {
-                person__male: person.sex === 'm',
-                person__female: person.sex === 'f',
+                person__male: father.sex === 'm',
               },
             )}
           >
