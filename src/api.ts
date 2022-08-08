@@ -1,4 +1,4 @@
-import { Person } from './react-app-env';
+import { Person } from './types/Person';
 
 export const BASE_URL
 = 'https://mate-academy.github.io/react_people-table/api/people.json';
