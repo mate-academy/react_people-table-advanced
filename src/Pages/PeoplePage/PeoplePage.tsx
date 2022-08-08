@@ -6,6 +6,7 @@ import { TableContent } from '../TableContent/TableContent';
 import { TableHead } from '../TableHead/TableHead';
 import { filter } from '../utils/utils';
 import sortFoo from '../../utils/utils';
+import { useDebounce } from '../../customHooks/useDebounce';
 import './PeoplePage.scss';
 
 export const PeoplePage: React.FC = () => {
@@ -13,6 +14,8 @@ export const PeoplePage: React.FC = () => {
   const { slug } = useParams();
   const [serverResponse, setServerResponse] = useState<People[]>([]);
   const [people, setPeople] = useState<People[]>([]);
+  const [search, setSearch] = useState('');
+  const debounceValue: string = useDebounce<string>(search, 500);
 
   // eslint-disable-next-line max-len
   const updateHandler = (array: People[], inputQuery: string | undefined = undefined) => {
@@ -52,11 +55,11 @@ export const PeoplePage: React.FC = () => {
       });
   }, [searchParams]);
 
-  const inputHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-    searchParams.set('query', e.target.value.toLowerCase());
+  const inputHandler = (value: string) => {
+    searchParams.set('query', value.toLowerCase());
     setSearchParams(searchParams);
 
-    updateHandler(serverResponse, e.target.value);
+    updateHandler(serverResponse, value);
   };
 
   const reverseAscendingOrder = () => {
@@ -71,6 +74,10 @@ export const PeoplePage: React.FC = () => {
     }
   };
 
+  useEffect(() => {
+    inputHandler(search);
+  }, [debounceValue]);
+
   return (
     <>
       <h1 className="title">People Page</h1>
@@ -79,9 +86,9 @@ export const PeoplePage: React.FC = () => {
         data-cy="filterInput"
         placeholder="Search..."
         onChange={(e) => {
-          inputHandler(e);
+          setSearch(e.target.value);
         }}
-        value={`${searchParams.get('query') || ''}`}
+        value={search}
       />
       <button
         type="button"
@@ -90,7 +97,7 @@ export const PeoplePage: React.FC = () => {
           reverseAscendingOrder();
         }}
       >
-        Descending Order
+        Reverse sorting order
       </button>
       <table className="table is-hoverable table-position">
         <thead>
