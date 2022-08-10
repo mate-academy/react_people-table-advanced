@@ -1,6 +1,7 @@
 import { useSelector } from 'react-redux';
+import 'bulma/css/bulma.css';
+import '@fortawesome/fontawesome-free/css/all.css';
 
-import './App.scss';
 import { Start } from './components/Start';
 import { Finish } from './components/Finish';
 
