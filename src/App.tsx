@@ -15,9 +15,10 @@ export const App: React.FC = () => {
 
         <Routes>
           <Route path="/" element={<HomePage />} />
-          <Route path="/people" element={<PeoplePage />} />
-          <Route path="/people/:slug" element={<PeoplePage />} />
-          <Route path="/people/new" element={<NewPerson />} />
+          <Route path="/people" element={<PeoplePage />}>
+            <Route path=":slug" element={<PeoplePage />} />
+          </Route>
+          <Route path="people/new" element={<NewPerson />} />
           <Route path="*" element={<h1>Error 404: Page not found</h1>} />
         </Routes>
       </div>

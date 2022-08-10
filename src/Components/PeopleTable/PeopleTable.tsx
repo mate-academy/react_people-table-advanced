@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import classNames from 'classnames';
 import { Person } from '../../Types/Person';
@@ -15,7 +15,7 @@ export const PeopleTable: React.FC<Props> = React.memo(({ people }) => {
   const sortBy = searchParams.get('sortBy') || '';
   const sortOrder = searchParams.get('sortOrder') || '';
 
-  const handleSortChange = (event: React.MouseEvent) => {
+  const handleSortChange = useCallback((event: React.MouseEvent) => {
     const value = event.currentTarget.textContent?.toLowerCase();
 
     if (value && sortOrder === '') {
@@ -29,11 +29,11 @@ export const PeopleTable: React.FC<Props> = React.memo(({ people }) => {
     if (value && sortOrder === 'asc') {
       setSearchParams({ query, sortBy: value, sortOrder: 'desc' });
     }
-  };
+  }, [sortOrder, sortBy, query]);
 
-  const findParent = (name: string): Person | undefined => {
+  const findParent = useCallback((name: string): Person | undefined => {
     return people.find(person => person.name === name);
-  };
+  }, [people]);
 
   return (
     <table className="table table-hover">

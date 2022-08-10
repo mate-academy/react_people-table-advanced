@@ -71,6 +71,14 @@ export const PeoplePage: React.FC = React.memo(() => {
   return (
     <div className="container">
       <div className="inputs">
+        <button
+          className="btn btn-outline-info"
+          type="button"
+          onClick={() => navigate('/people/new')}
+        >
+          Add a new person
+        </button>
+
         <input
           className="form-control"
           type="text"
@@ -79,14 +87,6 @@ export const PeoplePage: React.FC = React.memo(() => {
           value={inputQuery || ''}
           onChange={handleQueryChange}
         />
-
-        <button
-          className="btn btn-outline-info"
-          type="button"
-          onClick={() => navigate('/people/new')}
-        >
-          Add a new person
-        </button>
       </div>
 
       <PeopleTable people={sortTable()} />

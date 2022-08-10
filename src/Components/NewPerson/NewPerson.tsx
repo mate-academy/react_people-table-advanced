@@ -8,12 +8,15 @@ import { Person } from '../../Types/Person';
 
 export const NewPerson: React.FC = React.memo(() => {
   const { people, setPeople } = useContext(PeopleContext);
-  const [name, setName] = useState('');
-  const [sex, setSex] = useState('');
-  const [born, setBorn] = useState(0);
-  const [died, setDied] = useState(0);
-  const [fatherName, setFatherName] = useState('');
-  const [motherName, setMotherName] = useState('');
+  const [newPerson, setNewPerson] = useState<Person>({
+    name: '',
+    sex: '',
+    born: 0,
+    died: 0,
+    fatherName: '',
+    motherName: '',
+    slug: '',
+  });
   const [emptyNameError, setEmptyNameError] = useState(false);
   const [invalidNameError, setInvalidNameError] = useState(false);
   const [lifePeriodError, setLifePeriodError] = useState(false);
@@ -22,10 +25,19 @@ export const NewPerson: React.FC = React.memo(() => {
   const nameValidation = /^[a-zA-Z ]{3,30}$/;
 
   useEffect(() => {
+    const { born, died } = newPerson;
+
     if (died && born) {
       setLifePeriodError(died - born >= 150);
     }
-  }, [born, died]);
+  }, [newPerson.born, newPerson.died]);
+
+  const handleNewPersonData = (field: string, value: string | number) => {
+    setNewPerson({
+      ...newPerson,
+      [field]: value,
+    });
+  };
 
   const onEmptyNameError = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
@@ -34,6 +46,8 @@ export const NewPerson: React.FC = React.memo(() => {
   };
 
   const onInvalidNameError = () => {
+    const { name } = newPerson;
+
     setInvalidNameError(name.length > 0 && !nameValidation.test(name));
   };
 
@@ -44,30 +58,30 @@ export const NewPerson: React.FC = React.memo(() => {
   };
 
   const clearForm = () => {
-    setName('');
-    setSex('');
-    setBorn(0);
-    setDied(0);
-    setFatherName('');
-    setMotherName('');
+    setNewPerson({
+      name: '',
+      sex: '',
+      born: 0,
+      died: 0,
+      fatherName: '',
+      motherName: '',
+      slug: '',
+    });
   };
 
   const onFormSubmit = (event: FormEvent) => {
+    const { name, born } = newPerson;
+
     event.preventDefault();
 
     const slug = `${name.split(' ').join('-')}-${born}`;
 
-    const newPerson: Person = {
-      name,
-      sex,
-      born,
-      died,
-      fatherName,
-      motherName,
+    const personToAdd: Person = {
+      ...newPerson,
       slug,
     };
 
-    setPeople([...people, newPerson]);
+    setPeople([...people, personToAdd]);
     clearForm();
     navigate('/people/');
   };
@@ -80,9 +94,9 @@ export const NewPerson: React.FC = React.memo(() => {
             className="form-control"
             type="text"
             placeholder="Name"
-            value={name}
+            value={newPerson.name}
             onChange={(event) => {
-              setName(event.target.value);
+              handleNewPersonData('name', event.target.value);
               setEmptyNameError(false);
             }}
             onBlur={(event) => {
@@ -112,8 +126,8 @@ export const NewPerson: React.FC = React.memo(() => {
             type="radio"
             name="sex"
             value="m"
-            checked={sex === 'm'}
-            onChange={(event) => setSex(event.target.value)}
+            checked={newPerson.sex === 'm'}
+            onChange={(event) => handleNewPersonData('sex', event.target.value)}
             className="form-check-input mt-0"
           />
         </label>
@@ -125,33 +139,39 @@ export const NewPerson: React.FC = React.memo(() => {
             type="radio"
             name="sex"
             value="f"
-            checked={sex === 'f'}
-            onChange={(event) => setSex(event.target.value)}
+            checked={newPerson.sex === 'f'}
+            onChange={(event) => handleNewPersonData('sex', event.target.value)}
             className="form-check-input mt-0"
           />
         </label>
 
         <label className="form__field">
+          Born
           <input
             type="number"
             placeholder="Born year"
-            value={born}
+            value={newPerson.born}
             min={1400}
             max={new Date().getFullYear()}
-            onChange={(event) => setBorn(Number(event.target.value))}
+            onChange={(event) => {
+              handleNewPersonData('born', Number(event.target.value));
+            }}
             className="form-control"
           />
         </label>
 
         <label>
+          Died
           <input
             type="number"
             placeholder="Death year"
-            disabled={!born}
-            value={died}
-            min={born}
+            disabled={!newPerson.born}
+            value={newPerson.died}
+            min={newPerson.born}
             max={new Date().getFullYear()}
-            onChange={(event) => setDied(Number(event.target.value))}
+            onChange={(event) => {
+              handleNewPersonData('died', Number(event.target.value));
+            }}
             className="form-control"
           />
           {lifePeriodError && (
@@ -163,13 +183,15 @@ export const NewPerson: React.FC = React.memo(() => {
 
         <label>
           <select
-            disabled={!born}
-            value={fatherName}
-            onChange={event => setFatherName(event.target.value)}
+            disabled={!newPerson.born}
+            value={newPerson.fatherName}
+            onChange={event => {
+              handleNewPersonData('fatherName', event.target.value);
+            }}
             className="form-select"
           >
             <option value="" disabled>Choose a father</option>
-            {getFilteredPeople('m', born).map(person => (
+            {getFilteredPeople('m', newPerson.born).map(person => (
               <option
                 key={person.slug}
                 value={person.name}
@@ -182,13 +204,15 @@ export const NewPerson: React.FC = React.memo(() => {
 
         <label>
           <select
-            disabled={!born}
-            value={motherName}
-            onChange={event => setMotherName(event.target.value)}
+            disabled={!newPerson.born}
+            value={newPerson.motherName}
+            onChange={event => {
+              handleNewPersonData('motherName', event.target.value);
+            }}
             className="form-select"
           >
             <option value="" disabled>Choose a mother</option>
-            {getFilteredPeople('f', born).map(person => (
+            {getFilteredPeople('f', newPerson.born).map(person => (
               <option
                 key={person.slug}
                 value={person.name}
