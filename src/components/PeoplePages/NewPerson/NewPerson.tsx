@@ -54,15 +54,13 @@ export const NewPerson: FC<Props> = ({
     setMotherName('');
   };
 
-  const handleErrors = () => {
-    if (!name) {
-      hasNameError(true);
-    }
-
+  const handleBornError = () => {
     if (+born < 1400 || +born > 2022) {
       hasBornError(true);
     }
+  };
 
+  const handleDiedError = () => {
     if (+died < 1400 || +died > 2022) {
       hasDiedError(true);
     }
@@ -100,9 +98,11 @@ export const NewPerson: FC<Props> = ({
                     'is-danger': nameError,
                   })}
                   placeholder="name"
-                  onBlur={handleErrors}
+                  onBlur={({ target }) => (
+                    !target.value && hasNameError(true)
+                  )}
                   onChange={({ target }) => {
-                    setName(target.value);
+                    setName(target.value.replace(/[^\w\s-]+$/, ''));
                     hasNameError(false);
                   }}
                 />
@@ -147,17 +147,14 @@ export const NewPerson: FC<Props> = ({
                 <span>
                   Born in:
                   <input
-                    type="text"
+                    type="number"
                     className={classNames('input', {
                       'is-danger': bornError || ageError,
                     })}
                     value={born}
-                    onBlur={handleErrors}
+                    onBlur={handleBornError}
                     onChange={({ target }) => {
-                      setBorn(target.value
-                        .split('')
-                        .filter(digit => '1234567890'.includes(digit))
-                        .join(''));
+                      setBorn(target.value);
                       hasBornError(false);
                       hasAgeError(false);
                     }}
@@ -174,17 +171,14 @@ export const NewPerson: FC<Props> = ({
                 <span>
                   Died in:
                   <input
-                    type="text"
+                    type="number"
                     className={classNames('input', {
                       'is-danger': diedError || ageError,
                     })}
                     value={died}
-                    onBlur={handleErrors}
+                    onBlur={handleDiedError}
                     onChange={({ target }) => {
-                      setDied(target.value
-                        .split('')
-                        .filter(digit => '1234567890'.includes(digit))
-                        .join(''));
+                      setDied(target.value);
                       hasDiedError(false);
                       hasAgeError(false);
                     }}
@@ -209,7 +203,9 @@ export const NewPerson: FC<Props> = ({
                   type="text"
                   className="input"
                   value={fatherName}
-                  onChange={({ target }) => setFatherName(target.value)}
+                  onChange={({ target }) => {
+                    setFatherName(target.value.replace(/[^\w\s-]+$/, ''));
+                  }}
                 />
               </span>
             </p>
@@ -221,7 +217,9 @@ export const NewPerson: FC<Props> = ({
                   type="text"
                   className="input"
                   value={motherName}
-                  onChange={({ target }) => setMotherName(target.value)}
+                  onChange={({ target }) => {
+                    setMotherName(target.value.replace(/[^\w\s-]+$/, ''));
+                  }}
                 />
               </span>
             </p>

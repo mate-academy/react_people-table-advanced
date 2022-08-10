@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import classnames from 'classnames';
-import debounse from 'lodash/debounce';
+import debounce from 'lodash/debounce';
 import './PeopleTable.scss';
 import { Person } from '../../../types/Person';
 import { Loader } from '../../Loader';
@@ -36,20 +36,20 @@ export const PeopleTable = () => {
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
 
-  const appliedQuery = searchParams.get('slug') || '';
+  const appliedQuery = searchParams.get('query') || '';
   const [query, setQuery] = useState(appliedQuery);
 
   const applyQuery = useCallback(
-    debounse((newQuery: string) => {
+    debounce((newQuery: string) => {
       if (newQuery) {
-        searchParams.set('slug', newQuery);
+        searchParams.set('query', newQuery);
       } else {
-        searchParams.delete('slug');
+        searchParams.delete('query');
       }
 
       navigation(`?${searchParams}`, { replace: true });
     }, 500),
-    [],
+    [location.pathname],
   );
 
   const [isFormVisible, setFormVisibility] = useState(true);
@@ -66,7 +66,7 @@ export const PeopleTable = () => {
     navigation(`?${searchParams}`, { replace: true });
   };
 
-  const handleSlugChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleQueryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setQuery(event.target.value);
     applyQuery(event.target.value);
   };
@@ -206,7 +206,7 @@ export const PeopleTable = () => {
               className="input is-rounded"
               placeholder="Search"
               value={query}
-              onChange={handleSlugChange}
+              onChange={handleQueryChange}
             />
           </div>
           <table className="table">
