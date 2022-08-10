@@ -1,0 +1,28 @@
+.table {
+  border-collapse: collapse;
+
+  &__sort {
+    &::after {
+      content: "";
+      height: 19px;
+      width: 19px;
+      display: inline-block;
+      position: relative;
+      background-image: url("../../images/sort_both.png");
+      background-repeat: no-repeat;
+      background-size: contain;
+    }
+
+    &--asc {
+      &::after {
+        background-image: url("../../images/sort_asc.png");
+      }
+    }
+
+    &--desc {
+      &::after {
+        background-image: url("../../images/sort_desc.png");
+      }
+    }
+  }
+}
