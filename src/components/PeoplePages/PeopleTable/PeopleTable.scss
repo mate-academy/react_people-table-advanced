@@ -1,0 +1,10 @@
+.table {
+  &__label {
+    cursor: pointer;
+  }
+
+  &__radio {
+    -webkit-appearance: none;
+    appearance: none;
+  }
+}
