@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-const NotFoundPage: React.FC = () => {
+export const NotFoundPage: React.FC = () => {
   return (
     <div className="NotFoundPage">
       <div className="d-grid gap-5">
@@ -20,5 +20,3 @@ const NotFoundPage: React.FC = () => {
     </div>
   );
 };
-
-export default NotFoundPage;

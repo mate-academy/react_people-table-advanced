@@ -1,7 +1,7 @@
 import React from 'react';
 import { NavLink, Outlet } from 'react-router-dom';
 
-const Header: React.FC = () => {
+export const Header: React.FC = () => {
   return (
     <>
       <header className="border bg-light">
@@ -17,5 +17,3 @@ const Header: React.FC = () => {
     </>
   );
 };
-
-export default Header;

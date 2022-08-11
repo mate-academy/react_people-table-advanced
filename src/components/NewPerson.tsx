@@ -1,16 +1,15 @@
-import React, { useMemo, useState } from 'react';
+import React, { useContext, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router';
 import classNames from 'classnames';
-import PersonEnum from '../enums/PersonEnum';
 
-type Props = {
-  people: Person[];
-  onNewPersonSubmit: (newPerson: Person) => void
-};
+import { AppContext } from '../context';
+
+import PersonEnum from '../enums/PersonEnum';
+import { actions as peopleActions } from '../state';
 
 const initialPerson: Person = {
   name: '',
-  sex: 'm',
+  sex: '',
   born: 0,
   died: 0,
   fatherName: '',
@@ -20,10 +19,10 @@ const initialPerson: Person = {
   father: null,
 };
 
-const NewPerson: React.FC<Props> = ({
-  people,
-  onNewPersonSubmit,
-}) => {
+export const NewPerson: React.FC = () => {
+  const { state, dispatch } = useContext(AppContext);
+  const { people } = state;
+
   const navigate = useNavigate();
 
   const minYear = 1400;
@@ -34,49 +33,85 @@ const NewPerson: React.FC<Props> = ({
   const [invalidFields, setInvalidFields] = useState<string[]>([]);
 
   const handleNameInput = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setNewPerson(prevState => ({
-      ...prevState,
-      name: event.target.value,
-    }));
+    setNewPerson(prevState => (
+      {
+        ...prevState,
+        name: event.target.value,
+      }
+    ));
 
-    setInvalidFields(prevState => ([
-      ...prevState.filter(field => field !== PersonEnum.Name),
-    ]));
+    setInvalidFields(prevState => (
+      [
+        ...prevState.filter(field => field !== PersonEnum.Name),
+      ]
+    ));
+  };
+
+  const handleSexInput = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = event.target.value as 'm' | 'f';
+
+    setNewPerson(prevState => (
+      {
+        ...prevState,
+        sex: value,
+      }
+    ));
+
+    setInvalidFields(prevState => (
+      [
+        ...prevState.filter(field => field !== PersonEnum.Sex),
+      ]
+    ));
   };
 
   const handleBornInput = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setNewPerson(prevState => ({
-      ...prevState,
-      born: Number(event.target.value),
-    }));
+    setNewPerson(prevState => (
+      {
+        ...prevState,
+        born: Number(event.target.value),
+      }
+    ));
 
-    setInvalidFields(prevState => ([
-      ...prevState.filter(field => field !== PersonEnum.Born),
-    ]));
+    setInvalidFields(prevState => (
+      [
+        ...prevState.filter(field => field !== PersonEnum.Born),
+      ]
+    ));
   };
 
   const handleDiedInput = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setNewPerson(prevState => ({
-      ...prevState,
-      died: Number(event.target.value),
-    }));
+    setNewPerson(prevState => (
+      {
+        ...prevState,
+        died: Number(event.target.value),
+      }
+    ));
 
-    setInvalidFields(prevState => ([
-      ...prevState.filter(field => field !== PersonEnum.Died),
-    ]));
+    setInvalidFields(prevState => (
+      [
+        ...prevState.filter(field => field !== PersonEnum.Died),
+      ]
+    ));
   };
 
   const validate = (): boolean => {
     const {
       name,
+      sex,
       born,
       died,
     } = newPerson;
 
     const toInvalidate: string[] = [];
 
-    if ((/[^a-zA-Z\s]|(^$)/g).test(name)) {
+    if ((
+      /[^a-zA-Z\s]|(^$)/g
+    ).test(name)) {
       toInvalidate.push(PersonEnum.Name);
+    }
+
+    if (sex === '') {
+      toInvalidate.push(PersonEnum.Sex);
     }
 
     if (born < minYear
@@ -91,10 +126,12 @@ const NewPerson: React.FC<Props> = ({
       toInvalidate.push(PersonEnum.Died);
     }
 
-    setInvalidFields(prevState => ([
-      ...prevState,
-      ...toInvalidate,
-    ]));
+    setInvalidFields(prevState => (
+      [
+        ...prevState,
+        ...toInvalidate,
+      ]
+    ));
 
     return toInvalidate.length === 0;
   };
@@ -106,15 +143,14 @@ const NewPerson: React.FC<Props> = ({
       return;
     }
 
-    const slug = (`${newPerson.name} ${newPerson.born}`)
+    const slug = (
+      `${newPerson.name} ${newPerson.born}`
+    )
       .toLowerCase()
       .split(' ')
       .join('-');
 
-    onNewPersonSubmit({
-      ...newPerson,
-      slug,
-    });
+    dispatch(peopleActions.addPerson({ ...newPerson, slug }));
 
     setNewPerson(initialPerson);
 
@@ -147,7 +183,7 @@ const NewPerson: React.FC<Props> = ({
     });
 
     return [maleNames, femaleNames];
-  }, [people, born, died]);
+  }, [born, died]);
 
   return (
     <form
@@ -176,7 +212,7 @@ const NewPerson: React.FC<Props> = ({
             <label htmlFor="nameInput">Name</label>
 
             <div className="invalid-feedback">
-              Name is required and should contain only letters and spaces
+              This field is required and should contain only letters and spaces
             </div>
           </div>
         </div>
@@ -187,12 +223,13 @@ const NewPerson: React.FC<Props> = ({
               type="radio"
               id="sexRadio1"
               name="sexRadio"
-              className="form-check-input"
+              className={classNames({
+                'form-check-input': true,
+                'is-invalid': invalidFields.includes(PersonEnum.Sex),
+              })}
+              value="m"
               checked={sex === 'm'}
-              onChange={() => setNewPerson(prevState => ({
-                ...prevState,
-                sex: 'm',
-              }))}
+              onChange={handleSexInput}
             />
 
             <label
@@ -201,7 +238,6 @@ const NewPerson: React.FC<Props> = ({
             >
               Male
             </label>
-
           </div>
 
           <div className="form-check">
@@ -209,12 +245,13 @@ const NewPerson: React.FC<Props> = ({
               type="radio"
               id="sexRadio2"
               name="sexRadio"
-              className="form-check-input"
+              className={classNames({
+                'form-check-input': true,
+                'is-invalid': invalidFields.includes(PersonEnum.Sex),
+              })}
+              value="f"
               checked={sex === 'f'}
-              onChange={() => setNewPerson(prevState => ({
-                ...prevState,
-                sex: 'f',
-              }))}
+              onChange={handleSexInput}
             />
 
             <label
@@ -223,6 +260,10 @@ const NewPerson: React.FC<Props> = ({
             >
               Female
             </label>
+
+            <div className="invalid-feedback">
+              This field is required
+            </div>
           </div>
         </div>
       </div>
@@ -245,7 +286,7 @@ const NewPerson: React.FC<Props> = ({
             <label htmlFor="bornInput">Born</label>
 
             <div className="invalid-feedback">
-              {`Min year: ${minYear}. Max year: ${currentYear}. Max age: 150`}
+              This field is required
             </div>
           </div>
         </div>
@@ -257,7 +298,8 @@ const NewPerson: React.FC<Props> = ({
               id="diedInput"
               className={classNames({
                 'form-control': true,
-                'is-invalid': invalidFields.includes(PersonEnum.Died),
+                'is-invalid': invalidFields.includes(PersonEnum.Died)
+                  && born !== 0,
               })}
               placeholder="Died"
               value={born === 0 ? '' : died}
@@ -280,10 +322,12 @@ const NewPerson: React.FC<Props> = ({
             className="form-select"
             value={motherName || ''}
             disabled={born === 0}
-            onChange={({ target }) => setNewPerson(prevState => ({
-              ...prevState,
-              motherName: target.value,
-            }))}
+            onChange={({ target }) => setNewPerson(prevState => (
+              {
+                ...prevState,
+                motherName: target.value,
+              }
+            ))}
           >
             <option
               value=""
@@ -308,10 +352,12 @@ const NewPerson: React.FC<Props> = ({
             className="form-select"
             value={fatherName || ''}
             disabled={born === 0}
-            onChange={({ target }) => setNewPerson(prevState => ({
-              ...prevState,
-              fatherName: target.value,
-            }))}
+            onChange={({ target }) => setNewPerson(prevState => (
+              {
+                ...prevState,
+                fatherName: target.value,
+              }
+            ))}
           >
             <option
               value=""
@@ -342,5 +388,3 @@ const NewPerson: React.FC<Props> = ({
     </form>
   );
 };
-
-export default NewPerson;

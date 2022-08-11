@@ -4,7 +4,7 @@ import classNames from 'classnames';
 
 import './PeopleTable.scss';
 
-import PersonRow from '../PersonRow';
+import { PersonRow } from '../PersonRow';
 
 import PersonEnum from '../../enums/PersonEnum';
 import getSearchWith from '../../utils/getSearchWith';
@@ -13,7 +13,7 @@ type Props = {
   people: Person[];
 };
 
-const PeopleTable: React.FC<Props> = ({
+export const PeopleTable: React.FC<Props> = ({
   people,
 }) => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -137,5 +137,3 @@ const PeopleTable: React.FC<Props> = ({
     </table>
   );
 };
-
-export default PeopleTable;
