@@ -1,0 +1,33 @@
+.PeopleTable {
+  &__header-row {
+    position: relative;
+  }
+}
+
+.sortable {
+  cursor: pointer;
+  user-select: none;
+
+  &::after {
+    content: "";
+
+    position: absolute;
+    top: 0;
+    bottom: 0;
+
+    height: 19px;
+    width: 19px;
+    transform: translateY(50%);
+
+    background-image: url(../../images/sort_both.png);
+    background-repeat: no-repeat;
+  }
+
+  &--asc::after {
+    background-image: url(../../images/sort_asc.png);
+  }
+
+  &--desc::after {
+    background-image: url(../../images/sort_desc.png);
+  }
+}
