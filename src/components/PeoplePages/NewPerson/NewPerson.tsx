@@ -20,10 +20,16 @@ export const NewPerson: FC<Props> = ({
   const [fatherName, setFatherName] = useState('');
   const [motherName, setMotherName] = useState('');
 
-  const [nameError, hasNameError] = useState(false);
-  const [bornError, hasBornError] = useState(false);
-  const [diedError, hasDiedError] = useState(false);
-  const [ageError, hasAgeError] = useState(false);
+  const [hasNameError, setNameError] = useState(false);
+  const [hasBornError, setBornError] = useState(false);
+  const [hasDiedError, setDiedError] = useState(false);
+  const [hasAgeError, setAgeError] = useState(false);
+  const disableButton = () => {
+    return hasNameError
+      || hasBornError
+      || hasDiedError
+      || hasAgeError;
+  };
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
@@ -56,19 +62,25 @@ export const NewPerson: FC<Props> = ({
 
   const handleBornError = () => {
     if (+born < 1400 || +born > 2022) {
-      hasBornError(true);
+      setBornError(true);
     }
   };
 
   const handleDiedError = () => {
     if (+died < 1400 || +died > 2022) {
-      hasDiedError(true);
+      setDiedError(true);
     }
 
-    if (+died - +born > 150 || died < born) {
-      hasAgeError(true);
+    if (+died - +born > 150 || +died < +born) {
+      setAgeError(true);
     }
   };
+
+  const paretnFilterCallback = (parent: Person, parentSex: 'f' | 'm') => (
+    parent.sex === parentSex
+    && parent.born + 16 <= +born && parent.born > +born - 100
+    && parent.died >= +born
+  );
 
   return (
     <form
@@ -95,19 +107,19 @@ export const NewPerson: FC<Props> = ({
                   type="text"
                   value={name}
                   className={classNames('input', {
-                    'is-danger': nameError,
+                    'is-danger': hasNameError,
                   })}
                   placeholder="name"
                   onBlur={({ target }) => (
-                    !target.value && hasNameError(true)
+                    !target.value && setNameError(true)
                   )}
                   onChange={({ target }) => {
                     setName(target.value.replace(/[^\w\s-]+$/, ''));
-                    hasNameError(false);
+                    setNameError(false);
                   }}
                 />
               </span>
-              {nameError && (
+              {hasNameError && (
                 <span>Enter the name</span>
               )}
             </div>
@@ -122,6 +134,7 @@ export const NewPerson: FC<Props> = ({
                     className="radio"
                     value="f"
                     onChange={() => setSex('f')}
+                    required
                   />
                   female
                 </label>
@@ -133,7 +146,7 @@ export const NewPerson: FC<Props> = ({
                     className="radio"
                     value="m"
                     onChange={() => setSex('m')}
-                    checked={sex === 'm'}
+                    required
                   />
                   male
                 </label>
@@ -149,19 +162,19 @@ export const NewPerson: FC<Props> = ({
                   <input
                     type="number"
                     className={classNames('input', {
-                      'is-danger': bornError || ageError,
+                      'is-danger': hasBornError || hasAgeError,
                     })}
                     value={born}
                     onBlur={handleBornError}
                     onChange={({ target }) => {
                       setBorn(target.value);
-                      hasBornError(false);
-                      hasAgeError(false);
+                      setBornError(false);
+                      setAgeError(false);
                     }}
                   />
                 </span>
               </p>
-              {bornError && (
+              {hasBornError && (
                 <span>Enter birth year (between 1400 and 2022)</span>
               )}
             </div>
@@ -173,25 +186,25 @@ export const NewPerson: FC<Props> = ({
                   <input
                     type="number"
                     className={classNames('input', {
-                      'is-danger': diedError || ageError,
+                      'is-danger': hasDiedError || hasAgeError,
                     })}
                     value={died}
                     onBlur={handleDiedError}
                     onChange={({ target }) => {
                       setDied(target.value);
-                      hasDiedError(false);
-                      hasAgeError(false);
+                      setDiedError(false);
+                      setAgeError(false);
                     }}
                     disabled={!born}
                   />
                 </span>
               </p>
-              {diedError && (
+              {hasDiedError && (
                 <span>Enter death year (between 1400 and 2022)</span>
               )}
             </div>
           </div>
-          {ageError && (
+          {hasAgeError && (
             <span>Years difference can not be more 150 or less 0</span>
           )}
 
@@ -199,28 +212,62 @@ export const NewPerson: FC<Props> = ({
             <p className="panel-block">
               <span>
                 Father:
-                <input
-                  type="text"
-                  className="input"
+                <select
+                  name="fatherName"
+                  className="select"
                   value={fatherName}
-                  onChange={({ target }) => {
-                    setFatherName(target.value.replace(/[^\w\s-]+$/, ''));
-                  }}
-                />
+                  onChange={({ target }) => setFatherName(target.value)}
+                >
+                  <option
+                    value=""
+                    disabled={!!fatherName}
+                  >
+                    Choose a father
+                  </option>
+                  {people
+                    .filter(person => paretnFilterCallback(person, 'm'))
+                    .map(father => {
+                      return (
+                        <option
+                          key={father.slug}
+                          value={father.name}
+                        >
+                          {father.name}
+                        </option>
+                      );
+                    })}
+                </select>
               </span>
             </p>
 
             <p className="panel-block">
               <span>
                 Mother:
-                <input
-                  type="text"
-                  className="input"
+                <select
+                  name="motherName"
+                  className="select"
                   value={motherName}
-                  onChange={({ target }) => {
-                    setMotherName(target.value.replace(/[^\w\s-]+$/, ''));
-                  }}
-                />
+                  onChange={({ target }) => setMotherName(target.value)}
+                >
+                  <option
+                    value=""
+                    disabled={!!motherName}
+                  >
+                    Choose a mother
+                  </option>
+                  {people
+                    .filter(person => paretnFilterCallback(person, 'f'))
+                    .map(mother => {
+                      return (
+                        <option
+                          key={mother.slug}
+                          value={mother.name}
+                        >
+                          {mother.name}
+                        </option>
+                      );
+                    })}
+                </select>
               </span>
             </p>
           </div>
@@ -229,7 +276,7 @@ export const NewPerson: FC<Props> = ({
             <button
               type="submit"
               className="button is-link is-outlined is-fullwidth"
-              disabled={!name || !born || !died || ageError}
+              disabled={disableButton()}
             >
               Add new person
             </button>
