@@ -1,32 +1,38 @@
 import { NavLink } from 'react-router-dom';
-import classNames from 'classnames';
-
-const applyClassNames = ({ isActive } : { isActive: boolean }) => (
-  classNames(
-    'navbar-item',
-    { 'has-background-grey-lighter': isActive },
-  )
-);
+import './Navbar.scss';
+import { applyClassNames } from '../../utils/applyClassNames';
 
 export const Navbar = () => {
   return (
     <nav
       data-cy="nav"
-      className="navbar is-fixed-top has-shadow"
+      className="navbar has-shadow default__navbar"
       role="navigation"
       aria-label="main navigation"
     >
       <div className="container">
         <div className="navbar-brand">
           <NavLink
-            className={applyClassNames}
+            className={({ isActive }) => (
+              applyClassNames(
+                isActive,
+                'has-background-grey-lighter',
+                'navbar-item',
+              )
+            )}
             to="/"
           >
             Home
           </NavLink>
 
           <NavLink
-            className={applyClassNames}
+            className={({ isActive }) => (
+              applyClassNames(
+                isActive,
+                'has-background-grey-lighter',
+                'navbar-item',
+              )
+            )}
             to="/people"
           >
             People
