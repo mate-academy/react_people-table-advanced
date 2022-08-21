@@ -3,31 +3,36 @@ import { NavLink } from 'react-router-dom';
 import classNames from 'classnames';
 
 export const Navbar: FC = () => (
-  <nav className="navbar is-fixed-top has-background-light" data-cy="nav">
-    <div className="navbar-menu">
-      <div className="navbar-start">
+  <nav
+    data-cy="nav"
+    className="navbar is-fixed-top has-shadow"
+    role="navigation"
+    aria-label="main navigation"
+  >
+    <div className="container">
+      <div className="navbar-brand">
         <NavLink
-          to="/"
           className={({ isActive }) => (
             classNames(
               'navbar-item',
-              { isActive },
+              { 'has-background-grey-lighter': isActive },
             )
           )}
+          to="/"
         >
-          Home
+          Home page
         </NavLink>
 
         <NavLink
-          to="/tabs"
           className={({ isActive }) => (
             classNames(
               'navbar-item',
-              { isActive },
+              { 'has-background-grey-lighter': isActive },
             )
           )}
+          to="people"
         >
-          Tabs
+          People page
         </NavLink>
       </div>
     </div>

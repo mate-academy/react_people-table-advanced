@@ -1,5 +1,6 @@
 import { FC } from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
+import 'bulma';
 import './App.scss';
 import { NotFoundPage } from './components/NotFoundPage';
 import { HomePage } from './components/HomePage';
