@@ -1,11 +1,21 @@
-import React from 'react';
-
+import { FC } from 'react';
+import { Navigate, Route, Routes } from 'react-router-dom';
 import './App.scss';
+import { NotFoundPage } from './components/NotFoundPage';
+import { HomePage } from './components/HomePage';
+import { PeoplePage } from './components/PeoplePage';
+import { Navbar } from './components/Navbar';
 
-const App: React.FC = () => (
+export const App: FC = () => (
   <div className="App">
-    <h1>People table</h1>
+    <Navbar />
+    <Routes>
+      <Route path="/" element={<HomePage />} />
+      <Route path="home" element={<Navigate to="/" replace />} />
+      <Route path="people" element={<PeoplePage />}>
+        <Route path=":slug" element={<PeoplePage />} />
+      </Route>
+      <Route path="*" element={<NotFoundPage />} />
+    </Routes>
   </div>
 );
-
-export default App;
