@@ -2,6 +2,8 @@
 
 > Here is [the working example](https://mate-academy.github.io/react_people-table-advanced/)
 
+> Sorting and filtering tests are not implemented yet
+
 Using code from the [React People Table](https://github.com/mate-academy/react_people-table-basics#react-people-table)
 implement the ability to filter and sort people in the table.
 
