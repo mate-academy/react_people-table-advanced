@@ -1,0 +1,36 @@
+.sorting-title {
+  cursor: pointer;
+  position: relative;
+
+  &::after {
+    position: absolute;
+    right: 0;
+    content: "";
+    height: 24px;
+    width: 16px;
+    background-repeat: no-repeat;
+    background-position: center;
+  }
+}
+
+.hidden {
+  visibility: hidden;
+}
+
+.sort-both {
+  &::after {
+    background-image: url(../../images/sort_both.png);
+  }
+}
+
+.sort-asc {
+  &::after {
+    background-image: url(../../images/sort_asc.png);
+  }
+}
+
+.sort-desc {
+  &::after {
+    background-image: url(../../images/sort_desc.png);
+  }
+}
