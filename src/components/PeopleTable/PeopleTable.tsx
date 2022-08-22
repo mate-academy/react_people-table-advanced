@@ -1,49 +1,62 @@
 import {
   ChangeEvent, FC, useCallback, useMemo, useState,
 } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import debounce from 'lodash.debounce';
+import classNames from 'classnames';
 import { Person } from '../../types';
 import { PersonRow } from '../PersonRow';
+import { SortBy } from '../../types/SortBy';
+
+import './PeopleTable.scss';
+import { filterPeople, sortPeople } from '../../helpers';
 
 interface Props {
   people: Person[];
 }
 
 export const PeopleTable: FC<Props> = ({ people }) => {
-  const navigation = useNavigate();
-  const { search, pathname } = useLocation();
-  const searchParams = new URLSearchParams(search);
+  const [searchParams, setSearchParams] = useSearchParams();
   const appliedQuery = searchParams.get('query') || '';
-  const [query, setQuery] = useState(appliedQuery);
-  // const [sortedBy, setSortedBy] = useState('');
-  // const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
+  const [inputQuery, setInputQuery] = useState(appliedQuery);
+  const sortBy = searchParams.get('sortBy') || '';
+  const sortOrder = searchParams.get('sortOrder') || '';
 
   const applyQuery = useCallback(
-    debounce((newQuery: string) => {
-      if (newQuery) {
-        searchParams.set('query', newQuery);
+    debounce((query: string) => {
+      if (query || sortBy || sortOrder) {
+        setSearchParams({ query, sortBy, sortOrder });
       } else {
-        searchParams.delete('query');
+        setSearchParams({});
       }
-
-      navigation(`?${searchParams}`, { replace: true });
     }, 500),
-    [pathname],
+    [],
   );
 
   const handleQueryChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setQuery(event.target.value);
+    setInputQuery(event.target.value);
     applyQuery(event.target.value);
   };
 
-  const visiblePeople = useMemo(() => {
-    const lowerQuery = appliedQuery.toLowerCase();
+  const handleSortChange = (sortByQuery: SortBy | '') => {
+    let appliedSortOrder = sortOrder;
 
-    return people.filter(({ name, motherName, fatherName }) => (
-      (name + motherName + fatherName).toLowerCase().includes(lowerQuery)
-    ));
-  }, [appliedQuery]);
+    if (sortBy !== sortByQuery) {
+      appliedSortOrder = 'desc';
+    }
+
+    setSearchParams({
+      query: appliedQuery,
+      sortBy: sortByQuery,
+      sortOrder: appliedSortOrder === 'asc' ? 'desc' : 'asc',
+    });
+  };
+
+  const visiblePeople = useMemo(() => {
+    const filtered = filterPeople(people, appliedQuery);
+
+    return sortPeople(filtered, sortOrder, sortBy);
+  }, [appliedQuery, sortBy, sortOrder]);
 
   return (
     <>
@@ -53,7 +66,7 @@ export const PeopleTable: FC<Props> = ({ people }) => {
           type="text"
           className="input"
           placeholder="Search"
-          value={query}
+          value={inputQuery}
           onChange={handleQueryChange}
         />
       </div>
@@ -64,10 +77,19 @@ export const PeopleTable: FC<Props> = ({ people }) => {
       >
         <thead>
           <tr>
-            <th>Name</th>
-            <th>Sex</th>
-            <th>Born</th>
-            <th>Died</th>
+            {['Name', 'Sex', 'Born', 'Died'].map(head => (
+              <th
+                key={head}
+                className={classNames(
+                  'PeopleTable__header-row sort-arrow', {
+                    [`sort-arrow--${sortOrder}`]: sortBy === head.toLowerCase(),
+                  },
+                )}
+                onClick={() => handleSortChange(head.toLowerCase() as SortBy)}
+              >
+                {head}
+              </th>
+            ))}
             <th>Mother</th>
             <th>Father</th>
           </tr>
