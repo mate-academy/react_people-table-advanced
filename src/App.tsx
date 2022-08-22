@@ -6,6 +6,7 @@ import { NotFoundPage } from './components/NotFoundPage';
 import { HomePage } from './components/HomePage';
 import { PeoplePage } from './components/PeoplePage';
 import { Navbar } from './components/Navbar';
+import { NewPerson } from './components/NewPerson';
 
 export const App: FC = () => (
   <div className="App">
@@ -16,6 +17,7 @@ export const App: FC = () => (
       <Route path="people" element={<PeoplePage />}>
         <Route path=":slug" element={<PeoplePage />} />
       </Route>
+      <Route path="people/new" element={<NewPerson />} />
       <Route path="*" element={<NotFoundPage />} />
     </Routes>
   </div>

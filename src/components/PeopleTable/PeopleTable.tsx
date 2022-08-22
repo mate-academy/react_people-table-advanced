@@ -1,7 +1,7 @@
 import {
   ChangeEvent, FC, useCallback, useMemo, useState,
 } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import debounce from 'lodash.debounce';
 import classNames from 'classnames';
 import { Person } from '../../types';
@@ -30,7 +30,7 @@ export const PeopleTable: FC<Props> = ({ people }) => {
         setSearchParams({});
       }
     }, 500),
-    [],
+    [sortBy, sortOrder],
   );
 
   const handleQueryChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -60,11 +60,17 @@ export const PeopleTable: FC<Props> = ({ people }) => {
 
   return (
     <>
-      <div className="is-flex is-align-items-center">
-        Filter:
+      <div className="inputs-block is-flex is-flex-direction-column m-auto">
+        <Link
+          className="button is-primary is-rounded m-2"
+          to="/people/new"
+        >
+          Add a new person
+        </Link>
+
         <input
           type="text"
-          className="input"
+          className="input is-primary is-rounded m-2"
           placeholder="Search"
           value={inputQuery}
           onChange={handleQueryChange}
