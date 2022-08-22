@@ -7,18 +7,21 @@ import { HomePage } from './components/HomePage';
 import { PeoplePage } from './components/PeoplePage';
 import { Navbar } from './components/Navbar';
 import { NewPerson } from './components/NewPerson';
+import { PeopleProvider } from './components/PeopleContext';
 
 export const App: FC = () => (
-  <div className="App">
-    <Navbar />
-    <Routes>
-      <Route path="/" element={<HomePage />} />
-      <Route path="home" element={<Navigate to="/" replace />} />
-      <Route path="people" element={<PeoplePage />}>
-        <Route path=":slug" element={<PeoplePage />} />
-      </Route>
-      <Route path="people/new" element={<NewPerson />} />
-      <Route path="*" element={<NotFoundPage />} />
-    </Routes>
-  </div>
+  <PeopleProvider>
+    <div className="App">
+      <Navbar />
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="home" element={<Navigate to="/" replace />} />
+        <Route path="people" element={<PeoplePage />}>
+          <Route path=":slug" element={<PeoplePage />} />
+        </Route>
+        <Route path="people/new" element={<NewPerson />} />
+        <Route path="*" element={<NotFoundPage />} />
+      </Routes>
+    </div>
+  </PeopleProvider>
 );
