@@ -15,9 +15,38 @@ export const PeopleTable = ({ people }: Props) => {
 
   const sortBy = useMemo(() => searchParams.get('sort'), [searchParams]);
   const order = useMemo(() => searchParams.get('order'), [searchParams]);
+  const sex = useMemo(() => searchParams.get('sex'), [searchParams]);
+  const query = useMemo(() => searchParams.get('query'), [searchParams]);
+  const century = useMemo(() => searchParams.getAll('century'), [searchParams]);
 
-  const visiblePeople = useMemo(() => (
-    [...people].sort((a, b) => {
+  const getCentury = useCallback((year: number) => (
+    Math.trunc(year / 100) - 1
+  ), []);
+
+  const visiblePeople = useMemo(() => {
+    let filteredPeople = [...people];
+
+    if (sex) {
+      filteredPeople = filteredPeople.filter(person => person.sex === sex);
+    }
+
+    if (query) {
+      const queryToLower = query.toLowerCase();
+
+      filteredPeople = filteredPeople
+        .filter(({ name, motherName, fatherName }) => (
+          name.toLowerCase().includes(queryToLower)
+          || motherName?.toLowerCase().includes(queryToLower)
+          || fatherName?.toLowerCase().includes(queryToLower)
+        ));
+    }
+
+    if (century.length > 0) {
+      filteredPeople = filteredPeople
+        .filter(({ born }) => century.includes(String(getCentury(born))));
+    }
+
+    return [...filteredPeople].sort((a, b) => {
       switch (sortBy) {
         case 'name':
           return order
@@ -34,8 +63,8 @@ export const PeopleTable = ({ people }: Props) => {
         default:
           return 0;
       }
-    })
-  ), [people, sortBy, order]);
+    });
+  }, [people, sortBy, order, sex, query, century]);
 
   const findParent = useCallback((name: string | null) => (
     name ? visiblePeople.find(person => person.name === name) : null

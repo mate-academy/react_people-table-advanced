@@ -10,6 +10,7 @@ export const FilterPanel = () => {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const sex = useMemo(() => searchParams.get('sex'), [searchParams]);
+  const searchQuery = useMemo(() => searchParams.get('query'), [searchParams]);
   const century = useMemo(() => searchParams.getAll('century'), [searchParams]);
   const setCenturies = (param: string) => {
     if (century.includes(param)) {
@@ -31,7 +32,7 @@ export const FilterPanel = () => {
     [],
   );
 
-  const [searchValue, setSearchValue] = useState('');
+  const [searchValue, setSearchValue] = useState(searchQuery || '');
 
   const handleSearchPerson = (event: ChangeEvent<HTMLInputElement>) => {
     setSearchValue(event.target.value);
