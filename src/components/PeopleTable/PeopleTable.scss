@@ -1,0 +1,38 @@
+.table {
+  border-collapse: collapse;
+  width: 100%;
+
+  &__sort-btn {
+    background-color: white;
+    border: none;
+    position: relative;
+    top: 4px;
+    cursor: pointer;
+  }
+
+  &__sort {
+    cursor: pointer;
+
+    &::after {
+      content: "";
+      height: 16px;
+      width: 16px;
+      display: inline-block;
+      position: relative;
+      background-image: url("../../images/sort_both.png");
+      cursor: pointer;
+    }
+
+    &--asc {
+      &::after {
+        background-image: url("../../images/sort_asc.png");
+      }
+    }
+
+    &--desc {
+      &::after {
+        background-image: url("../../images/sort_desc.png");
+      }
+    }
+  }
+}

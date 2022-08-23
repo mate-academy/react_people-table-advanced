@@ -1,0 +1,1 @@
+export { NotfoundPage } from './NotfoundPage';
