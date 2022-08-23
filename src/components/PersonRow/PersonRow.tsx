@@ -38,22 +38,14 @@ export const PersonRow: FC<Props> = ({ person }) => {
       <td>{born}</td>
       <td>{died}</td>
       <td>
-        {mother ? (
-          <PersonName
-            person={mother}
-          />
-        ) : (
-          <p style={{ fontWeight: 'bold' }}>{motherName || '-'}</p>
-        )}
+        {mother
+          ? (<PersonName person={mother} />)
+          : (<p style={{ fontWeight: 'bold' }}>{motherName || '-'}</p>)}
       </td>
       <td>
-        {father ? (
-          <PersonName
-            person={father}
-          />
-        ) : (
-          <p style={{ fontWeight: 'bold' }}>{fatherName || '-'}</p>
-        )}
+        {father
+          ? (<PersonName person={father} />)
+          : (<p style={{ fontWeight: 'bold' }}>{fatherName || '-'}</p>)}
       </td>
     </tr>
   );

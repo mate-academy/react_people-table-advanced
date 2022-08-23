@@ -1,5 +1,5 @@
 import {
-  FC, FormEvent, memo, useContext, useMemo, useState,
+  FC, FormEvent, useContext, useMemo, useState,
 } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { PeopleContext } from '../PeopleContext';
@@ -16,7 +16,7 @@ const defaultPerson = {
   slug: '',
 };
 
-export const NewPerson: FC = memo(() => {
+export const NewPerson: FC = () => {
   const { people, setPeople } = useContext(PeopleContext);
   const [newPerson, setNewPerson] = useState(defaultPerson);
   const [errorMessage, setErrorMessage] = useState('');
@@ -45,8 +45,10 @@ export const NewPerson: FC = memo(() => {
       return false;
     }
 
-    if (newPerson.died - newPerson.born > 150) {
-      setErrorMessage('died - born should be >= 0 and < 150');
+    const age = newPerson.died - newPerson.born;
+
+    if (age > 150 || age < 0) {
+      setErrorMessage('Age should be more than 0 and less than 150');
 
       return false;
     }
@@ -187,4 +189,4 @@ export const NewPerson: FC = memo(() => {
       </button>
     </form>
   );
-});
+};
