@@ -12,7 +12,6 @@ export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [hasError, setHasError] = useState(false);
-  const [isNoPeople, setIsNoPeople] = useState(false);
   const [searchParams] = useSearchParams();
 
   const sortBy = searchParams.get('sortBy') as keyof Person;
@@ -34,16 +33,15 @@ export const PeoplePage = () => {
             .find(({ name }) => name === person.fatherName),
         }));
 
-        setIsNoPeople(!preparedPeople.length);
         setPeople(preparedPeople);
       })
       .catch(() => setHasError(true))
       .finally(() => setIsLoading(false));
   }, []);
 
-  let preparedPeople = sortPeople(people, sortBy, sortOrder);
+  let visiblePeople = sortPeople(people, sortBy, sortOrder);
 
-  preparedPeople = filterPeople(people, query, sex, centuries);
+  visiblePeople = filterPeople(people, query, sex, centuries);
 
   return (
     <>
@@ -52,7 +50,7 @@ export const PeoplePage = () => {
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
           <div className="column is-7-tablet is-narrow-desktop">
-            {!isNoPeople && !isLoading && (
+            {people.length > 0 && !isLoading && (
               <PeopleFilters />
             )}
           </div>
@@ -67,17 +65,17 @@ export const PeoplePage = () => {
                 </p>
               )}
 
-              {isNoPeople && (
+              {people.length === 0 && !isLoading && (
                 <p data-cy="noPeopleMessage">
                   There are no people on the server
                 </p>
               )}
 
               {!isLoading && (
-                <PeopleTable people={preparedPeople} />
+                <PeopleTable people={visiblePeople} />
               )}
 
-              {preparedPeople.length === 0 && !isLoading && !isNoPeople && (
+              {visiblePeople.length === 0 && people.length > 0 && (
                 <p>There are no people matching the current search criteria</p>
               )}
             </div>
