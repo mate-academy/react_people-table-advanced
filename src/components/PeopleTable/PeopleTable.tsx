@@ -1,6 +1,6 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useMemo } from 'react';
 import classNames from 'classnames';
-import { useSearchParams } from 'react-router-dom';
+import { useParams, useSearchParams } from 'react-router-dom';
 import { Person } from '../../types';
 import { PersonLink } from '../PersonLink';
 import { SearchLink } from '../SearchLink';
@@ -10,7 +10,7 @@ interface Props {
 }
 
 export const PeopleTable = ({ people }: Props) => {
-  const [selectedPerson, setSelectedPerson] = useState('');
+  const { slug } = useParams();
   const [searchParams] = useSearchParams();
 
   const sortBy = useMemo(() => searchParams.get('sort'), [searchParams]);
@@ -100,13 +100,12 @@ export const PeopleTable = ({ people }: Props) => {
               data-cy="person"
               key={person.slug}
               className={classNames({
-                'has-background-warning': selectedPerson === person.slug,
+                'has-background-warning': slug === person.slug,
               })}
             >
               <td>
                 <PersonLink
                   person={person}
-                  onSelectedPerson={setSelectedPerson}
                 />
               </td>
               <td>{person.sex}</td>
@@ -116,7 +115,6 @@ export const PeopleTable = ({ people }: Props) => {
                 {person.mother ? (
                   <PersonLink
                     person={person.mother}
-                    onSelectedPerson={setSelectedPerson}
                   />
                 ) : person.motherName}
               </td>
@@ -124,7 +122,6 @@ export const PeopleTable = ({ people }: Props) => {
                 {person.father ? (
                   <PersonLink
                     person={person.father}
-                    onSelectedPerson={setSelectedPerson}
                   />
                 ) : person.fatherName}
               </td>

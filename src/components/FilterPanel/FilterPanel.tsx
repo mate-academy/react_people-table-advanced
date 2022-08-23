@@ -1,14 +1,42 @@
-import { NavLink, useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
+import debounce from 'lodash.debounce';
 import classNames from 'classnames';
-import { useMemo } from 'react';
-import { applyClassNames } from '../../utils/applyClassNames';
-import { deleteClassName } from '../../utils/deleteClassName';
+import {
+  ChangeEvent, useCallback, useMemo, useState,
+} from 'react';
 import { SearchLink } from '../SearchLink';
 
 export const FilterPanel = () => {
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const sex = useMemo(() => searchParams.get('sex'), [searchParams]);
+  const century = useMemo(() => searchParams.getAll('century'), [searchParams]);
+  const setCenturies = (param: string) => {
+    if (century.includes(param)) {
+      return [...century];
+    }
+
+    return [...century, param];
+  };
+
+  const applySearchParams = useCallback(
+    debounce((query: string) => {
+      if (query) {
+        setSearchParams({ query });
+      } else {
+        searchParams.delete('query');
+        setSearchParams(searchParams);
+      }
+    }, 500),
+    [],
+  );
+
+  const [searchValue, setSearchValue] = useState('');
+
+  const handleSearchPerson = (event: ChangeEvent<HTMLInputElement>) => {
+    setSearchValue(event.target.value);
+    applySearchParams(event.target.value);
+  };
 
   return (
     <nav className="panel">
@@ -42,6 +70,8 @@ export const FilterPanel = () => {
             placeholder="Search value"
             data-cy="NameFilter"
             className="input"
+            value={searchValue}
+            onChange={handleSearchPerson}
           />
           <span className="icon is-left">
             <i className="fas fa-search" aria-hidden />
@@ -51,96 +81,79 @@ export const FilterPanel = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            <NavLink
-              to="people"
+            <SearchLink
+              params={{ century: setCenturies('16') }}
               data-cy="century"
-              className={({ isActive }) => (
-                applyClassNames(
-                  isActive,
-                  'is-info',
-                  'button mr-1',
-                )
+              className={classNames(
+                'button mr-1',
+                { 'is-info': century.includes('16') },
               )}
             >
               16
-            </NavLink>
-            <NavLink
-              to="people"
+            </SearchLink>
+            <SearchLink
+              params={{ century: setCenturies('17') }}
               data-cy="century"
-              className={({ isActive }) => (
-                applyClassNames(
-                  isActive,
-                  'is-info',
-                  'button mr-1',
-                )
+              className={classNames(
+                'button mr-1',
+                { 'is-info': century.includes('17') },
               )}
             >
               17
-            </NavLink>
-            <NavLink
-              to="people"
+            </SearchLink>
+            <SearchLink
+              params={{ century: setCenturies('18') }}
               data-cy="century"
-              className={({ isActive }) => (
-                applyClassNames(
-                  isActive,
-                  'is-info',
-                  'button mr-1',
-                )
+              className={classNames(
+                'button mr-1',
+                { 'is-info': century.includes('18') },
               )}
             >
               18
-            </NavLink>
-            <NavLink
-              to="people"
+            </SearchLink>
+            <SearchLink
+              params={{ century: setCenturies('19') }}
               data-cy="century"
-              className={({ isActive }) => (
-                applyClassNames(
-                  isActive,
-                  'is-info',
-                  'button mr-1',
-                )
+              className={classNames(
+                'button mr-1',
+                { 'is-info': century.includes('19') },
               )}
             >
               19
-            </NavLink>
-            <NavLink
-              to="people"
+            </SearchLink>
+            <SearchLink
+              params={{ century: setCenturies('20') }}
               data-cy="century"
-              className={({ isActive }) => (
-                applyClassNames(
-                  isActive,
-                  'is-info',
-                  'button mr-1',
-                )
+              className={classNames(
+                'button mr-1',
+                { 'is-info': century.includes('20') },
               )}
             >
               20
-            </NavLink>
+            </SearchLink>
           </div>
           <div className="level-right ml-4">
-            <NavLink
-              to="people"
+            <SearchLink
+              params={{ century: null }}
               data-cy="centuryAll"
-              className={({ isActive }) => (
-                deleteClassName(
-                  isActive,
-                  'is-outlined',
-                  'button is-success',
-                )
+              className={classNames(
+                'button is-success',
+                { 'is-outlined': century.length > 0 },
               )}
             >
               All
-            </NavLink>
+            </SearchLink>
           </div>
         </div>
       </div>
       <div className="panel-block">
-        <NavLink
-          to="/people"
+        <SearchLink
+          params={{ sex: null, century: null, query: null }}
           className="button is-link is-outlined is-fullwidth"
+          onClick={() => setSearchValue('')}
         >
           Reset all filters
-        </NavLink>
+        </SearchLink>
       </div>
     </nav>
   );

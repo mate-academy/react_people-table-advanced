@@ -1,18 +1,21 @@
 import classNames from 'classnames';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { Person } from '../../types';
 
 interface Props {
   person: Person;
-  onSelectedPerson: (selectedPerson: string) => void;
 }
 
-export const PersonLink = ({ person, onSelectedPerson }: Props) => {
+export const PersonLink = ({ person }: Props) => {
+  const { search } = useLocation();
+
   return (
     <Link
-      to={`/people/${person.slug}`}
+      to={{
+        pathname: `/people/${person.slug}`,
+        search,
+      }}
       className={classNames({ 'has-text-danger': person.sex === 'f' })}
-      onClick={() => onSelectedPerson(person.slug)}
     >
       {person.name}
     </Link>
