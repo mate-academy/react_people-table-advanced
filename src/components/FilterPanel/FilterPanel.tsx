@@ -17,7 +17,7 @@ export const FilterPanel = () => {
         </NavLink>
 
         <NavLink
-          to="/people"
+          to="/people/?sex=m"
           className={({ isActive }) => (
             applyClassNames(isActive, 'is-active')
           )}
@@ -26,7 +26,7 @@ export const FilterPanel = () => {
         </NavLink>
 
         <NavLink
-          to="/people"
+          to="/people/?sex=f"
           className={({ isActive }) => (
             applyClassNames(isActive, 'is-active')
           )}
