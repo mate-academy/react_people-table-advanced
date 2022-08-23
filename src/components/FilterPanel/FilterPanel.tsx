@@ -1,38 +1,39 @@
-import { NavLink } from 'react-router-dom';
+import { NavLink, useSearchParams } from 'react-router-dom';
+import classNames from 'classnames';
+import { useMemo } from 'react';
 import { applyClassNames } from '../../utils/applyClassNames';
 import { deleteClassName } from '../../utils/deleteClassName';
+import { SearchLink } from '../SearchLink';
 
 export const FilterPanel = () => {
+  const [searchParams] = useSearchParams();
+
+  const sex = useMemo(() => searchParams.get('sex'), [searchParams]);
+
   return (
     <nav className="panel">
       <p className="panel-heading">Filter</p>
       <p className="panel-tabs" data-cy="SexFilter">
-        <NavLink
-          to="/people"
-          className={({ isActive }) => (
-            applyClassNames(isActive, 'is-active')
-          )}
+        <SearchLink
+          params={{ sex: null }}
+          className={classNames({ 'is-active': !sex })}
         >
           All
-        </NavLink>
+        </SearchLink>
 
-        <NavLink
-          to="/people/?sex=m"
-          className={({ isActive }) => (
-            applyClassNames(isActive, 'is-active')
-          )}
+        <SearchLink
+          params={{ sex: 'm' }}
+          className={classNames({ 'is-active': sex === 'm' })}
         >
           Male
-        </NavLink>
+        </SearchLink>
 
-        <NavLink
-          to="/people/?sex=f"
-          className={({ isActive }) => (
-            applyClassNames(isActive, 'is-active')
-          )}
+        <SearchLink
+          params={{ sex: 'f' }}
+          className={classNames({ 'is-active': sex === 'f' })}
         >
           Female
-        </NavLink>
+        </SearchLink>
       </p>
       <div className="panel-block">
         <p className="control has-icons-left">
