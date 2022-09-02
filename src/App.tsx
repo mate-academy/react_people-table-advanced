@@ -1,6 +1,8 @@
 import { PeoplePage } from './components/PeoplePage';
 import { Navbar } from './components/Navbar';
 
+import './App.scss';
+
 export const App = () => {
   return (
     <div data-cy="app">
