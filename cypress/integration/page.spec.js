@@ -19,8 +19,17 @@ const page = {
   },
 };
 
-describe('Page', () => {
+let failed = false;
+
+Cypress.on('fail', (e) => {
+  failed = true;
+  throw e;
+});
+
+describe('', () => {
   beforeEach(() => {
+    if (failed) Cypress.runner.stop();
+
     page.mockTodos();
     cy.visit('/');
   });
