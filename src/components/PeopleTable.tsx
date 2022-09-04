@@ -112,7 +112,6 @@ export const PeopleTable: FC<Props> = (props) => {
                 to={{
                   pathname: `${parentPath}${person.slug}`,
                   search: location.search,
-                  hash: `${parentPath}${person.slug}`,
                 }}
                 style={{ color: person.sex === 'f' ? 'red' : 'blue' }}
               >
