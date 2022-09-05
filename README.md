@@ -1,18 +1,15 @@
 # React + Redux list of TODOs
 
-> This tasks will help you understand how to use the main concepts of the Redux.
+You are given an `app` folder with already implemented `store` and `hooks`.
+Use them to implement [Dynamic list of TODOs](https://github.com/mate-academy/react_dynamic-list-of-todos#react-dynamic-list-of-todos)
+using the Redux. It should look and work identically, so use the same markup.
 
-Remplement the [Dynamic list of TODOs](https://github.com/mate-academy/react_dynamic-list-of-todos#react-dynamic-list-of-todos)
-using the Redux. It should look and work idetically so use the same markup.
-
-- learn and remove all the demo code (if you don't need it);
-- create `store/loading.ts` to control the Loader shown when opening the modal (just a `boolean` not an object);
-- create `store/currentTodo.ts` to control a selected todo (`Todo` or `null`);
-- use `combineReducers` in the `store/index.ts` with `loading` and `currentTodo` parts;
-- all the selectors must be added to the `store/index.ts` because they get the `RootState` not a part of it;
-
-## (*) Optional tasks
-- add the `loadTodo` thunk to the `store/index.ts` and use it in the `App`;
+- `features/currentTodo` contains a sample of all the required types;
+- implement `features/filter` storing `query` and `status`;
+- implement `features/todos` storing an array of todos;
+- load the todos in the `App` on page load (don't use Redux Thunk for now);
+- `useAppSelector` already aware of RootState so you can write selectors in your
+components (no need to write them in the store file)
 
 ## Instructions
 - Replace `<your_account>` with your Github username in the [DEMO LINK](https://<your_account>.github.io/react_redux-list-of-todos/)
