@@ -1,33 +1,95 @@
-import { PeopleFilters } from './PeopleFilters';
+import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
+import { getPeople } from '../api';
+import { Person } from '../types';
 import { Loader } from './Loader';
+import { PeopleFilters } from './PeopleFilters';
 import { PeopleTable } from './PeopleTable';
 
+// export const PeoplePage = () => {
+//   return (
+//     <>
+//       <h1 className="title">People Page</h1>
+
+//       <div className="block">
+//         <div className="columns is-desktop is-flex-direction-row-reverse">
+//           <div className="column is-7-tablet is-narrow-desktop">
+//             <PeopleFilters />
+//           </div>
+
+//           <div className="column">
+//             <div className="box table-container">
+//               <Loader />
+
+//               <p data-cy="peopleLoadingError">Something went wrong</p>
+
+//               <p data-cy="noPeopleMessage">
+//                 There are no people on the server
+//               </p>
+
+//               <p>There are no people matching the current search criteria</p>
+
+//               <PeopleTable />
+//             </div>
+//           </div>
+//         </div>
+//       </div>
+//     </>
+//   );
+// };
+
 export const PeoplePage = () => {
+  const [people, setPeople] = useState<Person[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [hasError, setHasError] = useState(false);
+  const { personSlug } = useParams();
+
+  useEffect(() => {
+    getPeople()
+      .then(res => {
+        setPeople(res);
+        setIsLoading(false);
+        setIsLoaded(true);
+      })
+      .catch(() => {
+        setHasError(true);
+        setIsLoading(false);
+      });
+  }, []);
+
   return (
     <>
       <h1 className="title">People Page</h1>
-
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
-          <div className="column is-7-tablet is-narrow-desktop">
-            <PeopleFilters />
-          </div>
-
-          <div className="column">
-            <div className="box table-container">
-              <Loader />
-
-              <p data-cy="peopleLoadingError">Something went wrong</p>
-
-              <p data-cy="noPeopleMessage">
-                There are no people on the server
+          {isLoading
+            && <Loader />}
+          {hasError
+            && (
+              <p data-cy="peopleLoadingError" className="has-text-danger">
+                Something went wrong
               </p>
+            )}
 
-              <p>There are no people matching the current search criteria</p>
+          {people.length === 0 && !hasError && isLoaded
+            && (
+              <p data-cy="noPeopleMessage" className="has-text-danger">
+                no people
+              </p>
+            )}
 
-              <PeopleTable />
-            </div>
-          </div>
+          {isLoaded
+            && (
+              <div className="column is-7-tablet is-narrow-desktop">
+                <PeopleFilters />
+              </div>
+            )}
+
+          {isLoaded && people.length > 0
+            && (
+              <PeopleTable people={people} selectedSlug={personSlug} />
+            )}
         </div>
       </div>
     </>
