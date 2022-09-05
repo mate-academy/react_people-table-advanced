@@ -1,29 +1,54 @@
-import { useSelector } from 'react-redux';
+/* eslint-disable max-len */
+import React, { useEffect } from 'react';
 import 'bulma/css/bulma.css';
 import '@fortawesome/fontawesome-free/css/all.css';
 
-import { Start } from './components/Start';
-import { Finish } from './components/Finish';
+import { TodoList } from './components/TodoList';
+import { TodoFilter } from './components/TodoFilter';
+import { TodoModal } from './components/TodoModal';
+import { Loader } from './components/Loader';
 
-import { selectors } from './store';
+import { getTodos } from './api';
+import { useAppDispatch, useAppSelector } from './app/hooks';
+import { actions as todosActions } from './features/todos';
 
-export const App = () => {
-  // `useSelector` connects our component to the Redux store
-  // and rerenders it after every dispatched action
-  const loading = useSelector(selectors.isLoading);
+export const App: React.FC = () => {
+  const dispatch = useAppDispatch();
+  const selectedTodo = useAppSelector(state => state.currentTodo);
+  const todos = useAppSelector(state => state.todos);
 
-  // we do not call a selector with (), just pass a link to it
-  const message = useSelector(selectors.getMessage) || 'Ready!';
+  useEffect(() => {
+    getTodos()
+      .then(todosFromServer => dispatch(
+        todosActions.setTodos(todosFromServer),
+      ));
+  }, []);
 
   return (
-    <div className="App">
-      <h1>Redux list of todos</h1>
-      <h2>{loading ? 'Loading...' : message}</h2>
+    <>
+      <div className="section">
+        <div className="container">
+          <div className="box">
+            <h1 className="title">Todos:</h1>
 
-      {/* these buttons are used only for the demo */}
-      <Start title="Start loading" />
-      <Finish title="Succeed" message="Loaded successfully!" />
-      <Finish title="Fail" message="Error occurred." />
-    </div>
+            <div className="block">
+              <TodoFilter />
+            </div>
+
+            <div className="block">
+              {todos.length > 0 ? (
+                <TodoList />
+              ) : (
+                <Loader />
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {selectedTodo && (
+        <TodoModal />
+      )}
+    </>
   );
 };
