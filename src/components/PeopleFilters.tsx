@@ -4,11 +4,8 @@ import { getSearchWith } from '../utils/searchHelper';
 
 export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-
   const query = searchParams.get('query') || '';
-
   const centuries = searchParams.getAll('centuries') || [];
-
   const sex = searchParams.get('sex') || '';
 
   const onQueryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
