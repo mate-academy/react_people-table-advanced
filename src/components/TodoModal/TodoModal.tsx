@@ -23,8 +23,13 @@ export const TodoModal: React.FC = () => {
 
         <div className="modal-card-body">
           <p className="block" data-cy="modal-title">fugiat veniam minus</p>
+
           <p className="block" data-cy="modal-user">
+            {/* For not completed */}
             <strong className="has-text-danger">Planned</strong>
+
+            {/* For completed */}
+            <strong className="has-text-success">Done</strong>
             {' by '}
             <a href="mailto:Sincere@april.biz">Leanne Graham</a>
           </p>
