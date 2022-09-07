@@ -1,5 +1,5 @@
 import {
-  FC, useEffect, useState,
+  FC, useCallback, useEffect, useState,
 } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { PeopleFilters } from './PeopleFilters';
@@ -41,7 +41,7 @@ export const PeoplePage: FC = () => {
 
   const activateSort = (param: boolean) => setIsActiveSort(param);
 
-  const updateSearch = (
+  const updateSearch = useCallback((
     params: { [key: string]: string[] | string | null },
   ) => {
     Object.entries(params).forEach(([key, value]) => {
@@ -58,7 +58,7 @@ export const PeoplePage: FC = () => {
       }
     });
     setSearchParams(searchParams);
-  };
+  }, []);
 
   const preparedPeople = filtredPeople(
     people, query, sexFilter, centuries, order, sort,
