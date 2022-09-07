@@ -10,7 +10,6 @@ export const PeopleFilters: FC<Props> = (props) => {
   const { updateSearch } = props;
   const [searchParams] = useSearchParams();
   const [queryInput, setQueryInput] = useState('');
-  // const query = searchParams.get('query') || null;
   const sexFilter = searchParams.get('sexFilter') || null;
   const centuries = searchParams.getAll('centuries') || [];
 

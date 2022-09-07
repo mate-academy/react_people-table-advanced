@@ -63,15 +63,11 @@ export const PeopleTable: FC<Props> = (props) => {
                     if (!isActiveSort && !order) {
                       updateSearch({ sort: `${sortByType}` });
                       activateSort(true);
-
-                      // return;
                     }
 
                     if (isActiveSort && sort === sortByType) {
                       updateSearch({ order: 'desc', sort: `${sortByType}` });
                       activateSort(false);
-
-                      // return;
                     }
 
                     if (!isActiveSort && sort === sortByType && order) {
