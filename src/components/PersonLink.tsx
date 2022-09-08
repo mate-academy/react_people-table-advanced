@@ -62,9 +62,6 @@ export const PersonLink: React.FC<Props> = ({ people, person, isSelected }) => {
         {father
           ? (
             <Link
-              className={classNames(
-                { 'has-text-danger': father.sex === 'f' },
-              )}
               to={`../${father.slug}`}
             >
               {person.fatherName || '-'}

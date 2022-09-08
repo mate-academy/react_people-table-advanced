@@ -1,4 +1,3 @@
-// import { PeoplePage } from './components/PeoplePage';
 import { Outlet } from 'react-router-dom';
 import { Navbar } from './components/Navbar';
 
