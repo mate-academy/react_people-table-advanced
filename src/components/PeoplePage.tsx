@@ -39,7 +39,7 @@ export const PeoplePage = () => {
               </p>
             )}
 
-          {people.length === 0 && !hasError && !isLoading
+          {!people.length && !hasError && !isLoading
             && (
               <p data-cy="noPeopleMessage" className="has-text-danger">
                 no people
@@ -53,7 +53,7 @@ export const PeoplePage = () => {
               </div>
             )}
 
-          {!isLoading && people.length > 0
+          {!isLoading && people.length
             && (
               <PeopleTable people={people} selectedSlug={personSlug} />
             )}
