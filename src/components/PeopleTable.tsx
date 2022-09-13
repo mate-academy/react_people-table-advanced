@@ -27,21 +27,18 @@ export const PeopleTable: React.FC<Props> = ({
   const query = (searchParams.get('query') || '').toLowerCase();
 
   const visiblePeople = useMemo(() => [...people].sort((a, b) => {
-    if (sortBy) {
-      const [personA, personB] = order === 'asc'
-        ? [a, b]
-        : [b, a];
+    switch (sortBy) {
+      case 'name':
+      case 'sex':
+        return a[sortBy].localeCompare(b[sortBy]);
 
-      if (sortBy === 'name' || sortBy === 'sex') {
-        return personA[sortBy].localeCompare(personB[sortBy]);
-      }
+      case 'born':
+      case 'died':
+        return a[sortBy] - (b[sortBy]);
 
-      if (sortBy === 'born' || sortBy === 'died') {
-        return personA[sortBy] - personB[sortBy];
-      }
+      default:
+        return 0;
     }
-
-    return 0;
   }).filter(person => ((person.name.toLowerCase().includes(query)
         || person.fatherName?.toLowerCase().includes(query)
         || person.motherName?.toLowerCase().includes(query))

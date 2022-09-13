@@ -77,7 +77,7 @@ export const PeopleFilters = () => {
                 key={centurie}
                 data-cy="century"
                 className={
-                  classNames('button mr-1', 
+                  classNames('button mr-1',
                     { 'is-info': centuries.includes(centurie) })
                 }
                 params={{
