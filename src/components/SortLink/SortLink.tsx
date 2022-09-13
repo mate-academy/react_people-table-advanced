@@ -12,13 +12,17 @@ export const SortLink: React.FC<TProps> = ({ field }) => {
   const sort = searchParams.get('sort') || '';
   const order = searchParams.get('order') || '';
 
+  const isNotSorted = sort !== field;
+  const isSortedAsc = sort === field && !order;
+  const isSortedDesc = sort === field && order;
+
   return (
     <SearchLink
       params={{
-        sort: sort !== field || (sort === field && !order)
+        sort: isNotSorted || isSortedAsc
           ? field
           : null,
-        order: sort === field && !order
+        order: isSortedAsc
           ? 'desc'
           : null,
       }}
@@ -27,9 +31,9 @@ export const SortLink: React.FC<TProps> = ({ field }) => {
         <i className={classNames(
           'fas',
           {
-            'fa-sort': sort !== field,
-            'fa-sort-up': sort === field && !order,
-            'fa-sort-down': sort === field && order,
+            'fa-sort': isNotSorted,
+            'fa-sort-up': isSortedAsc,
+            'fa-sort-down': isSortedDesc,
           },
         )}
         />
