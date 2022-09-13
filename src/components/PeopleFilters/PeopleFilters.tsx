@@ -1,3 +1,4 @@
+import { ChangeEvent } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import classNames from 'classnames';
 
@@ -9,6 +10,14 @@ export const PeopleFilters = () => {
   const query = searchParams.get('query') || '';
   const sex = searchParams.get('sex') || '';
   const centuries = searchParams.getAll('centuries') || [];
+
+  const handleQueryChange = (event: ChangeEvent<HTMLInputElement>) => (
+    setSearchParams(
+      getSearchWith(searchParams, {
+        query: event.target.value || null,
+      }),
+    )
+  );
 
   return (
     <nav className="panel">
@@ -51,11 +60,7 @@ export const PeopleFilters = () => {
             className="input"
             placeholder="Search"
             value={query}
-            onChange={(event) => setSearchParams(
-              getSearchWith(searchParams, {
-                query: event.target.value || null,
-              }),
-            )}
+            onChange={handleQueryChange}
           />
 
           <span className="icon is-left">
