@@ -1,0 +1,19 @@
+.mainDiv {
+  display: flex;
+}
+
+.photo {
+  width: 25vw;
+  height: 50vh;
+  background-size: auto 50vh;
+  background-repeat: no-repeat;
+  background-position: left;
+}
+
+.male {
+  background-image: url(https://cdn8.picryl.com/photo/2016/05/15/portret-van-bernardus-knipperdolling-aa7d19-1600.jpg);
+}
+
+.female {
+  background-image: url(https://static2.lot-art.com/public/upl/30/After-Rembrandt-Portrait-of-a-woman-charcoal-and_1589323486_2669.jpg);
+}

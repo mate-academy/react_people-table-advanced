@@ -1,12 +1,61 @@
+import classNames from 'classnames';
+import { Link, useSearchParams } from 'react-router-dom';
+import { updateSearch } from '../utils/MyImplementationOfSearchHelper';
+
+/*
+type Props = {
+  updateURL: (params:
+  { [key:string]:string[] | string | null }) => string,
+};
+*/
+
 export const PeopleFilters = () => {
+  const [searchParams] = useSearchParams();
+
+  console.log(searchParams.toString());
+
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        <a className="is-active" href="#/people">All</a>
-        <a className="" href="#/people?sex=m">Male</a>
-        <a className="" href="#/people?sex=f">Female</a>
+        {/* <a className="is-active" href="#/people">All</a> */}
+        <Link
+          className={
+            classNames({ 'is-active': searchParams.get('sex') === null })
+          }
+          to={{
+            search: updateSearch({ sex: null }),
+          }}
+        >
+          All
+        </Link>
+        <Link
+          className={
+            classNames({
+              'is-active': searchParams.toString().includes('sex=m'),
+            })
+          }
+          to={{
+            search: updateSearch({ sex: 'm' }),
+          }}
+        >
+          Male
+        </Link>
+        <Link
+          className={
+            classNames({
+              'is-active': searchParams.toString().includes('sex=f'),
+            })
+          }
+          to={{
+            search: updateSearch({ sex: 'f' }),
+          }}
+        >
+          Female
+        </Link>
+        {/* <Link className="" to="#/people?sex=m">Male</Link> */}
+        {/* <Link className="" to="#/people?sex=f">Female</Link> */}
       </p>
 
       <div className="panel-block">
