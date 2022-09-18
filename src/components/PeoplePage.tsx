@@ -37,20 +37,73 @@ export const PeoplePage: React.FC = () => {
     loadPeople();
   }, []);
 
-  const filteredPeople = loadedPeople.filter(
-    (person) => {
-      switch (searchParams.get('sex')) {
-        case 'm':
-          return person.sex === 'm';
-          break;
-        case 'f':
-          return person.sex === 'f';
-          break;
-        default:
-          return true;
+  const filteredPeople = () => {
+    let res = loadedPeople.filter(
+      (person) => {
+        switch (searchParams.get('sex')) {
+          case 'm':
+            return person.sex === 'm';
+            break;
+          case 'f':
+            return person.sex === 'f';
+            break;
+          default:
+            return true;
+        }
+      },
+    );
+
+    if (searchParams.get('sort') !== null) {
+      // const sortKey = searchParams.get('sort');
+
+      if (searchParams.get('sort') === 'name') {
+        res = res.sort((a, b) => {
+          if (searchParams.get('order') === 'desc') {
+            return ((b.name).localeCompare(a.name));
+          }
+
+          return ((a.name).localeCompare(b.name));
+        });
+      } else if (searchParams.get('sort') === 'sex') {
+        res = res.sort((a, b) => {
+          if (searchParams.get('order') === 'desc') {
+            return ((b.sex).localeCompare(a.sex));
+          }
+
+          return ((a.sex).localeCompare(b.sex));
+        });
+      } else if (searchParams.get('sort') === 'born') {
+        res = res.sort((a, b) => {
+          if (searchParams.get('order') === 'desc') {
+            return ((b.born) - (a.born));
+          }
+
+          return ((a.born) - (b.born));
+        });
+      } else if (searchParams.get('sort') === 'died') {
+        res = res.sort((a, b) => {
+          if (searchParams.get('order') === 'desc') {
+            return ((b.died) - (a.died));
+          }
+
+          return ((a.died) - (b.died));
+        });
       }
-    },
-  );
+      /*
+      else {
+        res = res.sort((a, b) => {
+          if (searchParams.get('order') === 'desc') {
+            return b[sortKey] - a[sortKey];
+          }
+
+          return a[sortKey] - b[sortKey];
+        });
+      }
+      */
+    }
+
+    return res;
+  };
 
   return (
     <>
@@ -86,7 +139,7 @@ export const PeoplePage: React.FC = () => {
                 && (
                   <PeopleTable
                     allPeople={loadedPeople}
-                    people={filteredPeople}
+                    people={filteredPeople()}
                     slug={id}
                   />
                 )}
