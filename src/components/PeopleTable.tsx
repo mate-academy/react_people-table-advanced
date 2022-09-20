@@ -25,13 +25,13 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
   let diedValue = 0;
 
   const handleMotherFind = (motherName: string | undefined) => {
-    const mother = people.find(person => person.name === motherName)?.slug;
+    const mother = people.find(person => person.name === motherName);
 
     return mother;
   };
 
   const handleFatherFind = (fatherName: string | undefined) => {
-    const father = people.find(person => person.name === fatherName)?.slug;
+    const father = people.find(person => person.name === fatherName);
 
     return father;
   };

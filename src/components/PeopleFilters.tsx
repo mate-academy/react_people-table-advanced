@@ -2,18 +2,32 @@ import classNames from 'classnames';
 import { Link, useSearchParams } from 'react-router-dom';
 import { getSearchWith } from '../utils/searchHelper';
 import { SearchLink } from './SearchLink';
+import { centuriesEnum } from '../utils/centuriesEnum';
 
 export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const query = searchParams.get('query') || '';
   const centuries = searchParams.getAll('centuries') || [];
   const sex = searchParams.get('sex') || '';
+  let newCenturies: string[] = [];
 
   const onInputChange = (inputValue: string) => {
     const newParams = getSearchWith(searchParams,
       { query: inputValue || null });
 
     setSearchParams(newParams);
+  };
+
+  const inclusion = (element: string) => {
+    const isIncludes = centuries.includes(element);
+
+    if (isIncludes) {
+      newCenturies = centuries.filter(century => century !== element);
+    } else {
+      newCenturies = [...centuries, element];
+    }
+
+    return isIncludes;
   };
 
   return (
@@ -69,21 +83,19 @@ export const PeopleFilters = () => {
             data-cy="CenturyFilter"
           >
             <div className="level-left">
-              {['16', '17', '18', '19', '20'].map(element => (
+              {centuriesEnum.map(element => (
                 <Link
                   key={element}
                   data-cy="century"
                   className={classNames(
                     'button mr-1',
                     {
-                      'is-info': centuries.includes(element),
+                      'is-info': inclusion(element),
                     },
                   )}
                   to={{
                     search: getSearchWith(searchParams, {
-                      centuries: centuries.includes(element)
-                        ? centuries.filter(century => century !== element)
-                        : [...centuries, element],
+                      centuries: newCenturies,
                     }),
                   }}
                 >
@@ -98,7 +110,7 @@ export const PeopleFilters = () => {
                 className="button is-success is-outline"
                 to={{
                   search: getSearchWith(searchParams, {
-                    centuries: ['16', '17', '18', '19', '20'],
+                    centuries: centuriesEnum,
                   }),
                 }}
               >

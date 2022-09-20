@@ -3,8 +3,8 @@ import { Person } from '../types/Person';
 
 type Props = {
   person: Person,
-  onMotherFind: (motherName: string | undefined) => string | undefined,
-  onFatherFind: (fatherName:string | undefined) => string | undefined,
+  onMotherFind: (motherName?: string) => Person | undefined,
+  onFatherFind: (fatherName?: string) => Person | undefined,
 };
 
 export const PersonLink: React.FC<Props> = ({
@@ -47,7 +47,7 @@ export const PersonLink: React.FC<Props> = ({
         ? (
           <td>
             <Link
-              to={`/people/${motherAsPerson}`}
+              to={`/people/${motherAsPerson.slug}`}
               className="has-text-danger"
             >
               {person.motherName}
@@ -58,7 +58,7 @@ export const PersonLink: React.FC<Props> = ({
       {fatherAsPerson
         ? (
           <td>
-            <Link to={`/people/${fatherAsPerson}`}>
+            <Link to={`/people/${fatherAsPerson.slug}`}>
               {person.fatherName}
             </Link>
           </td>
