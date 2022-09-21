@@ -38,8 +38,8 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
               <SortLink field="died" />
             </span>
           </th>
-          <th> Mother </th>
-          <th> Father </th>
+          <th>Mother</th>
+          <th>Father</th>
         </tr>
       </thead>
 
