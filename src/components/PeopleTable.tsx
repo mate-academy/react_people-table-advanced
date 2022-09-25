@@ -89,34 +89,34 @@ export const PeopleTable: React.FC<Props> = ({ allPeople, people, slug }) => {
   };
 
   return (
-    people.length > 0
-      ? (
-        <table
-          data-cy="peopleTable"
-          className="table is-striped is-hoverable is-narrow is-fullwidth"
-        >
-          <thead>
-            <tr>
-              {thGenerator('Name')}
-              {thGenerator('Sex')}
-              {thGenerator('Born')}
-              {thGenerator('Died')}
-              <th>Mother</th>
-              <th>Father</th>
-            </tr>
-          </thead>
+    <>
+      <table
+        data-cy="peopleTable"
+        className="table is-striped is-hoverable is-narrow is-fullwidth"
+      >
+        <thead>
+          <tr>
+            {thGenerator('Name')}
+            {thGenerator('Sex')}
+            {thGenerator('Born')}
+            {thGenerator('Died')}
+            <th>Mother</th>
+            <th>Father</th>
+          </tr>
+        </thead>
 
-          <tbody>
-            {people.map(person => (
-              personRowRender(person)
-            ))}
-          </tbody>
-        </table>
-      )
-      : (
-        <p data-cy="noPeopleMessage">
-          There are no people on the server
-        </p>
-      )
+        <tbody>
+          {people.map(person => (
+            personRowRender(person)
+          ))}
+        </tbody>
+      </table>
+      {(people.length === 0
+        && (
+          <p>
+            There are no people matching the current search criteria
+          </p>
+        ))}
+    </>
   );
 };

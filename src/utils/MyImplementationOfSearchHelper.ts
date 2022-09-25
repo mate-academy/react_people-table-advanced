@@ -9,10 +9,17 @@ export function updateSearch(params:{
     if (value === null) {
       searchParams.delete(key);
     } else if (Array.isArray(value)) {
-      searchParams.delete(key);
-      value.forEach(part => {
-        searchParams.append(key, part);
-      });
+      if (searchParams.getAll(key).includes(value[0])) {
+        const newArrParams = [...searchParams.getAll(key)
+          .filter((cent) => cent !== value[0])];
+
+        searchParams.delete(key);
+        newArrParams.forEach(part => {
+          searchParams.append(key, part);
+        });
+      } else {
+        searchParams.append(key, value[0]);
+      }
     } else if (key === 'sort' && !searchParams.get('sort')) {
       searchParams.set(key, value);
     } else if (key === 'sort' && (searchParams.get('sort')) === value) {

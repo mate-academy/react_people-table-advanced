@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 // eslint-disable-next-line object-curly-newline, max-len
-import { useLocation, useParams, useSearchParams } from 'react-router-dom';
+import { useParams, useSearchParams } from 'react-router-dom';
 import { getPeople } from '../api';
 import { Person } from '../types';
 import { PeopleFilters } from './PeopleFilters';
@@ -15,8 +15,6 @@ export const PeoplePage: React.FC = () => {
   const [searchParams] = useSearchParams();
 
   const { id = '' } = useParams();
-  const location = useLocation();
-  // const parentPath = useResolvedPath('../').pathname;
 
   const loadPeople = () => {
     setLoading(true);
@@ -51,55 +49,52 @@ export const PeoplePage: React.FC = () => {
             return true;
         }
       },
+    ).filter(
+      (person) => {
+        if (searchParams.getAll('centuries').length === 0) {
+          return true;
+        }
+
+        const centuries = searchParams.getAll('centuries');
+
+        return centuries.includes(Math.ceil(person.born / 100).toString());
+      },
+    ).filter(
+      (person) => {
+        const query = searchParams.get('query');
+
+        if (query === null) {
+          return true;
+        }
+
+        const names = `${person.name}${person.fatherName}${person.motherName}`.toLowerCase();
+
+        return names.includes(query.toLowerCase());
+      },
     );
 
-    if (searchParams.get('sort') !== null) {
-      // const sortKey = searchParams.get('sort');
+    const sortKey = searchParams.get('sort');
 
-      if (searchParams.get('sort') === 'name') {
-        res = res.sort((a, b) => {
-          if (searchParams.get('order') === 'desc') {
-            return ((b.name).localeCompare(a.name));
-          }
+    if (sortKey) {
+      res = res.sort((a, b) => {
+        let elA = a[sortKey as keyof Person];
+        let elB = b[sortKey as keyof Person];
 
-          return ((a.name).localeCompare(b.name));
-        });
-      } else if (searchParams.get('sort') === 'sex') {
-        res = res.sort((a, b) => {
-          if (searchParams.get('order') === 'desc') {
-            return ((b.sex).localeCompare(a.sex));
-          }
+        if (searchParams.get('order') === 'desc') {
+          elA = b[sortKey as keyof Person];
+          elB = a[sortKey as keyof Person];
+        }
 
-          return ((a.sex).localeCompare(b.sex));
-        });
-      } else if (searchParams.get('sort') === 'born') {
-        res = res.sort((a, b) => {
-          if (searchParams.get('order') === 'desc') {
-            return ((b.born) - (a.born));
-          }
+        if (typeof elA === 'string' && typeof elB === 'string') {
+          return elA.localeCompare(elB);
+        }
 
-          return ((a.born) - (b.born));
-        });
-      } else if (searchParams.get('sort') === 'died') {
-        res = res.sort((a, b) => {
-          if (searchParams.get('order') === 'desc') {
-            return ((b.died) - (a.died));
-          }
+        if (typeof elA === 'number' && typeof elB === 'number') {
+          return elA - elB;
+        }
 
-          return ((a.died) - (b.died));
-        });
-      }
-      /*
-      else {
-        res = res.sort((a, b) => {
-          if (searchParams.get('order') === 'desc') {
-            return b[sortKey] - a[sortKey];
-          }
-
-          return a[sortKey] - b[sortKey];
-        });
-      }
-      */
+        return 0;
+      });
     }
 
     return res;
@@ -111,10 +106,12 @@ export const PeoplePage: React.FC = () => {
 
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
-          <div className="column is-7-tablet is-narrow-desktop">
-            <PeopleFilters />
-          </div>
-
+          {(requestStatus)
+            && (
+              <div className="column is-7-tablet is-narrow-desktop">
+                <PeopleFilters />
+              </div>
+            )}
           <div className="column">
             <div className="box table-container">
               {loading && <Loader />}
@@ -124,18 +121,7 @@ export const PeoplePage: React.FC = () => {
                   Something went wrong
                 </p>
               )}
-
-              <h1 className="title">
-                {location.pathname}
-                <br />
-                {location.search}
-                <br />
-                Search Params - &#160;
-                {searchParams.toString()}
-              </h1>
-              <p>There are no people matching the current search criteria</p>
-
-              {requestStatus
+              {(requestStatus)
                 && (
                   <PeopleTable
                     allPeople={loadedPeople}
