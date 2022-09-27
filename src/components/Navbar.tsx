@@ -1,3 +1,5 @@
+import { NavigationLink } from './NavigationLink';
+
 export const Navbar = () => {
   return (
     <nav
@@ -8,15 +10,13 @@ export const Navbar = () => {
     >
       <div className="container">
         <div className="navbar-brand">
-          <a className="navbar-item" href="#/">Home</a>
+          <NavigationLink to="/" text="Home" />
 
-          <a
+          <NavigationLink
+            to="/people"
             aria-current="page"
-            className="navbar-item has-background-grey-lighter"
-            href="#/people"
-          >
-            People
-          </a>
+            text="People"
+          />
         </div>
       </div>
     </nav>
