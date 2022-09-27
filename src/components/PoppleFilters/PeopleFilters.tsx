@@ -8,8 +8,10 @@ import { getSearchWith } from '../../utils/searchHelper';
 export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const query = searchParams.get('query') || '';
-  const sex = searchParams.get('sex') || '';
-  const centuries = searchParams.getAll('centuries') || [];
+  const sex = searchParams.get('sex');
+  const centuries = searchParams.getAll('centuries');
+
+  const centuriesArray = ['16', '17', '18', '19', '20'];
 
   const handleQueryChange = (event: ChangeEvent<HTMLInputElement>) => (
     setSearchParams(
@@ -72,7 +74,7 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            {['16', '17', '18', '19', '20'].map(century => (
+            {centuriesArray.map(century => (
               <SearchLink
                 params={{
                   centuries: centuries.includes(century)
@@ -93,11 +95,13 @@ export const PeopleFilters = () => {
           <div className="level-right ml-4">
             <SearchLink
               params={{
-                centuries: null,
+                centuries: centuries.length === centuriesArray.length
+                  ? null
+                  : [...centuriesArray],
               }}
               className={classNames(
                 'button is-success',
-                { 'is-outlined': centuries.length },
+                { 'is-outlined': centuries.length !== centuriesArray.length },
               )}
             >
               All
