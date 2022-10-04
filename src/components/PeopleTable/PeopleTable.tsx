@@ -1,19 +1,18 @@
 import classNames from 'classnames';
+import React, { useMemo } from 'react';
 import { Link, useLocation, useSearchParams } from 'react-router-dom';
 import { Person } from '../../types';
 import { PersonalLink } from '../PersonalLink/PersonalLink';
 import { SortOption } from '../SortOption/SortOption';
 
 type Props = {
-  people: Person[] | null;
-  noPeople: boolean;
+  people: Person[];
   selectedPerson: string;
 };
 
 export const PeopleTable: React.FC<Props> = (
   {
     people,
-    noPeople,
     selectedPerson,
   },
 ) => {
@@ -21,51 +20,45 @@ export const PeopleTable: React.FC<Props> = (
   const [searchParams] = useSearchParams();
   const sort = searchParams.get('sort') || '';
 
-  if (!people) {
-    return null;
-  }
+  const sortPeople = () => {
+    if (location.search.includes('desc')) {
+      people.sort((p1, p2) => {
+        switch (sort) {
+          case 'name':
+          case 'sex':
+            return p2[sort].localeCompare(p1[sort]);
+          case 'born':
+          case 'died':
+            return p2[sort] - p1[sort];
 
-  if (noPeople) {
-    return (
-      <p data-cy="noPeopleMessage">
-        There are no people on the server
-      </p>
-    );
-  }
+          default:
+            return 0;
+        }
+      });
+    } else {
+      people.sort((p1, p2) => {
+        switch (sort) {
+          case 'name':
+          case 'sex':
+            return p1[sort].localeCompare(p2[sort]);
+          case 'born':
+          case 'died':
+            return p1[sort] - p2[sort];
 
-  if (location.search.includes('desc')) {
-    people.sort((p1, p2) => {
-      switch (sort) {
-        case 'name':
-        case 'sex':
-          return p2[sort].localeCompare(p1[sort]);
-        case 'born':
-        case 'died':
-          return p2[sort] - p1[sort];
+          default:
+            return 0;
+        }
+      });
+    }
 
-        default:
-          return 0;
-      }
-    });
-  } else {
-    people.sort((p1, p2) => {
-      switch (sort) {
-        case 'name':
-        case 'sex':
-          return p1[sort].localeCompare(p2[sort]);
-        case 'born':
-        case 'died':
-          return p1[sort] - p2[sort];
+    return people;
+  };
 
-        default:
-          return 0;
-      }
-    });
-  }
+  const sortedPeople = useMemo(sortPeople, [people, location.search]);
 
   return (
     <>
-      {people.length === 0
+      {sortedPeople.length === 0
         ? (
           <p data-cy="noPeopleMatchingMessage">
             There are no people matching the current search criteria
@@ -88,7 +81,7 @@ export const PeopleTable: React.FC<Props> = (
             </thead>
 
             <tbody>
-              {people.map(person => (
+              {sortedPeople.map(person => (
                 <tr
                   data-cy="person"
                   key={person.name}

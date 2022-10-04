@@ -15,25 +15,37 @@ export const SortOption: React.FC<Props> = ({ option }) => {
         className="is-flex is-flex-wrap-nowrap"
       >
         {option}
-        {location.search.includes(`sort=${option.toLowerCase()}&order=desc`)
+        {location.search.includes('&order=desc')
           ? (
             <SearchLink
               params={
-                {
-                  sort: null,
-                  order: null,
-                }
+                location.search.includes(`sort=${option.toLowerCase()}`)
+                  ? {
+                    sort: null,
+                    order: null,
+                  }
+                  : {
+                    sort: option.toLowerCase(),
+                    order: null,
+                  }
               }
             >
               <span className="icon">
-                <i className="fas fa-sort-down" />
+                <i className={classNames(
+                  'fas fa-sort',
+                  {
+                    'fa-sort-down':
+                    location.search.includes('&order=desc' && `sort=${option.toLowerCase()}`),
+                  },
+                )}
+                />
               </span>
             </SearchLink>
           )
           : (
             <SearchLink
               params={
-                location.search.includes(option.toLowerCase())
+                location.search.includes(`=${option.toLowerCase()}`)
                   ? {
                     sort: option.toLowerCase(),
                     order: 'desc',
@@ -49,7 +61,7 @@ export const SortOption: React.FC<Props> = ({ option }) => {
                   'fas fa-sort',
                   {
                     'fa-sort-up':
-                    location.search.includes(option.toLowerCase()),
+                    location.search.includes(`=${option.toLowerCase()}`),
                   },
                 )}
                 />

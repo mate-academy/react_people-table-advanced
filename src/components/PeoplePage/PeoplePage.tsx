@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useLocation, useParams, useSearchParams } from 'react-router-dom';
 import { getPeople } from '../../api';
 import { Person } from '../../types';
@@ -21,10 +21,9 @@ const updatePeople = (loadPeople: Person[]) => {
 };
 
 export const PeoplePage = () => {
-  const [people, setPeople] = useState<Person[] | null>(null);
-  const [hasError, setHasError] = useState<boolean>(false);
+  const [people, setPeople] = useState<Person[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [noPeople, setNoPeople] = useState<boolean>(false);
+  const [hasError, setHasError] = useState<boolean>(false);
   const { slug = '' } = useParams();
   const [searchParams] = useSearchParams();
   const sex = searchParams.get('sex') || '';
@@ -47,15 +46,7 @@ export const PeoplePage = () => {
     loadData();
   }, []);
 
-  const filterPeople = () => {
-    if (!people) {
-      return null;
-    }
-
-    if (people.length === 0) {
-      setNoPeople(true);
-    }
-
+  const filterPeople = useCallback(() => {
     let filteredPeople = [...people];
 
     if (location.search.includes('sex=')) {
@@ -78,9 +69,7 @@ export const PeoplePage = () => {
     }
 
     return filteredPeople;
-  };
-
-  const filteredPeople = useMemo(filterPeople, [location.search, people]);
+  }, [people, location.search]);
 
   return (
     <>
@@ -92,34 +81,47 @@ export const PeoplePage = () => {
             ? <Loader />
             : (
               <>
-                <div className="column is-7-tablet is-narrow-desktop">
-                  <PeopleFilter
-                    sex={sex}
-                    query={query}
-                    centuries={centuries}
-                  />
-                </div>
-
-                <div className="column">
-                  <div className="box table-container">
-                    {hasError
-                      ? (
-                        <p
-                          data-cy="peopleLoadingError"
-                          className="has-text-danger"
-                        >
-                          Something went wrong
+                {people.length === 0
+                  ? (
+                    <div className="column">
+                      <div className="box table-container">
+                        <p data-cy="noPeopleMessage">
+                          There are no people on the server
                         </p>
-                      )
-                      : (
-                        <PeopleTable
-                          people={filteredPeople}
-                          noPeople={noPeople}
-                          selectedPerson={slug}
+                      </div>
+                    </div>
+                  )
+                  : (
+                    <>
+                      <div className="column is-7-tablet is-narrow-desktop">
+                        <PeopleFilter
+                          sex={sex}
+                          query={query}
+                          centuries={centuries}
                         />
-                      )}
-                  </div>
-                </div>
+                      </div>
+                      <div className="column">
+                        <div className="box table-container">
+                          {hasError
+                            ? (
+                              <p
+                                data-cy="peopleLoadingError"
+                                className="has-text-danger"
+                              >
+                                Something went wrong
+                              </p>
+                            )
+                            : (
+                              <PeopleTable
+                                people={filterPeople()}
+                                selectedPerson={slug}
+                              />
+                            )}
+                        </div>
+                      </div>
+
+                    </>
+                  )}
               </>
             )}
         </div>
