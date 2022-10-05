@@ -29,7 +29,7 @@ export const PeoplePage = () => {
   const sex = searchParams.get('sex') || '';
   const query = searchParams.get('query') || '';
   const centuries = searchParams.getAll('centuries') || [];
-  const location = useLocation();
+  const { search } = useLocation();
 
   useEffect(() => {
     const loadData = async () => {
@@ -49,18 +49,18 @@ export const PeoplePage = () => {
   const filterPeople = useCallback(() => {
     let filteredPeople = [...people];
 
-    if (location.search.includes('sex=')) {
+    if (search.includes('sex=')) {
       filteredPeople = filteredPeople.filter(person => person.sex === sex);
     }
 
-    if (location.search.includes('centuries')) {
+    if (search.includes('centuries')) {
       filteredPeople
         = filteredPeople.filter(person => centuries.includes(String(
           Math.floor(person.born / 100) + 1,
         )));
     }
 
-    if (location.search.includes('query')) {
+    if (search.includes('query')) {
       filteredPeople
         = filteredPeople.filter(person => person.name
           .toLowerCase().includes(query.toLowerCase())
@@ -69,7 +69,7 @@ export const PeoplePage = () => {
     }
 
     return filteredPeople;
-  }, [people, location.search]);
+  }, [people, search]);
 
   return (
     <>
@@ -119,7 +119,6 @@ export const PeoplePage = () => {
                             )}
                         </div>
                       </div>
-
                     </>
                   )}
               </>

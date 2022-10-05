@@ -16,12 +16,12 @@ export const PeopleTable: React.FC<Props> = (
     selectedPerson,
   },
 ) => {
-  const location = useLocation();
+  const { search } = useLocation();
   const [searchParams] = useSearchParams();
   const sort = searchParams.get('sort') || '';
 
   const sortPeople = () => {
-    if (location.search.includes('desc')) {
+    if (search.includes('desc')) {
       people.sort((p1, p2) => {
         switch (sort) {
           case 'name':
@@ -54,7 +54,7 @@ export const PeopleTable: React.FC<Props> = (
     return people;
   };
 
-  const sortedPeople = useMemo(sortPeople, [people, location.search]);
+  const sortedPeople = useMemo(sortPeople, [people, search]);
 
   return (
     <>
@@ -105,7 +105,7 @@ export const PeopleTable: React.FC<Props> = (
                             to={
                               {
                                 pathname: `/people/${person.mother.slug}`,
-                                search: location.search,
+                                search,
                               }
                             }
                           >
@@ -123,7 +123,7 @@ export const PeopleTable: React.FC<Props> = (
                             to={
                               {
                                 pathname: `/people/${person.father.slug}`,
-                                search: location.search,
+                                search,
                               }
                             }
                           >

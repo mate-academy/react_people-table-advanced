@@ -7,7 +7,7 @@ type Props = {
 };
 
 export const PageNavLink: React.FC<Props> = ({ to, text }) => {
-  const location = useLocation();
+  const { search } = useLocation();
 
   return (
     <NavLink
@@ -21,7 +21,7 @@ export const PageNavLink: React.FC<Props> = ({ to, text }) => {
         pathname: to,
         search: text === 'Home'
           ? ''
-          : location.search,
+          : search,
       }}
     >
       {text}

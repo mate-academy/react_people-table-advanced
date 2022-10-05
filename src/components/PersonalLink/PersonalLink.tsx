@@ -7,7 +7,7 @@ type Props = {
 };
 
 export const PersonalLink: React.FC<Props> = ({ person }) => {
-  const location = useLocation();
+  const { search } = useLocation();
 
   return (
     <>
@@ -17,7 +17,7 @@ export const PersonalLink: React.FC<Props> = ({ person }) => {
             className={classNames({ 'has-text-danger': person.sex === 'f' })}
             to={{
               pathname: `/people/${person.slug}`,
-              search: location.search,
+              search,
             }}
           >
             {person.name}
