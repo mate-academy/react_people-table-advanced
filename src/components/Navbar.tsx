@@ -1,24 +1,17 @@
-export const Navbar = () => {
-  return (
-    <nav
-      data-cy="nav"
-      className="navbar is-fixed-top has-shadow"
-      role="navigation"
-      aria-label="main navigation"
-    >
-      <div className="container">
-        <div className="navbar-brand">
-          <a className="navbar-item" href="#/">Home</a>
+import { PageNavLink } from './PageNavLink';
 
-          <a
-            aria-current="page"
-            className="navbar-item has-background-grey-lighter"
-            href="#/people"
-          >
-            People
-          </a>
-        </div>
+export const Navbar = () => (
+  <nav
+    data-cy="nav"
+    className="navbar is-fixed-top has-shadow"
+    role="navigation"
+    aria-label="main navigation"
+  >
+    <div className="container">
+      <div className="navbar-brand">
+        <PageNavLink to="/" text="Home" />
+        <PageNavLink to="people" text="People" />
       </div>
-    </nav>
-  );
-};
+    </div>
+  </nav>
+);
