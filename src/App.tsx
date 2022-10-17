@@ -2,10 +2,10 @@ import './App.scss';
 import {
   Navigate, Route, Routes,
 } from 'react-router-dom';
+import { NavBar } from './components/NavBar';
 import { HomePage } from './components/HomePage';
 import { PeoplePage } from './components/PeoplePage';
 import { NotFoundPage } from './components/NotFoundPage';
-import { NavBar } from './components/NavBar';
 
 export const App = () => {
   return (
