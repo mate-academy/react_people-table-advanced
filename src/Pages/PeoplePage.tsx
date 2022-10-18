@@ -5,12 +5,16 @@ import { PeopleTable } from '../components/PeopleTable';
 import { Person } from '../types';
 import { Loader } from '../components/Loader';
 import { PeopleFilters } from '../components/PeopleFilters';
+import { NoPeopleError } from '../components/NoPeopleError';
+import { ConnectionError } from '../components/ConnectionError';
 
 export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);
   const { slug = '' } = useParams();
   const [loading, setLoading] = useState(true);
   const [dropError, setDropError] = useState(false);
+
+  const readyToLoad = !loading && !dropError;
 
   useEffect(() => {
     getPeople()
@@ -19,45 +23,41 @@ export const PeoplePage = () => {
       .finally(() => setLoading(false));
   }, []);
 
+  if (loading) {
+    return <Loader />;
+  }
+
+  if (dropError) {
+    return <ConnectionError />;
+  }
+
   return (
     <>
       <h1 className="title">People Page</h1>
 
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
-          {!loading && !dropError && (
+          {readyToLoad && (
             <div className="column is-7-tablet is-narrow-desktop">
               <PeopleFilters />
             </div>
           )}
           <div className="column">
             <div className="box table-container">
-              {!loading && !dropError && !people.length && (
-                <p data-cy="noPeopleMessage">
-                  There are no people on the server
-                </p>
+              {readyToLoad && !people.length && (
+                <NoPeopleError />
               )}
 
-              {!loading && !dropError && people.length && (
+              {readyToLoad && people.length && (
                 <PeopleTable
                   people={people}
                   selectedPerson={slug}
                 />
               )}
-
-              {loading && <Loader /> }
-              {dropError && (
-                <p data-cy="peopleLoadingError" className="has-text-danger">
-                  Something went wrong
-                </p>
-              )}
             </div>
-
           </div>
-
         </div>
       </div>
-
     </>
   );
 };

@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import { useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { Person } from '../../types';
 import { PersonLink } from '../PersonLink';
@@ -22,28 +22,30 @@ export const PeopleTable: React.FC<Props> = ({ people, selectedPerson }) => {
   const query = searchParams.get('query') || '';
   const centuries = searchParams.getAll('centuries') || [];
 
-  let visiblePeople = [...people].sort((person1, person2) => {
-    switch (sort) {
-      case 'name':
-        return order
-          ? person2.name.localeCompare(person1.name)
-          : person1.name.localeCompare(person2.name);
-      case 'sex':
-        return order
-          ? person2.sex.localeCompare(person1.sex)
-          : person1.sex.localeCompare(person2.sex);
-      case 'born':
-        return order
-          ? person2.born - person1.born
-          : person1.born - person2.born;
-      case 'died':
-        return order
-          ? person2.died - person1.died
-          : person1.died - person2.died;
-      default:
-        return 0;
-    }
-  });
+  let visiblePeople = useMemo(() => {
+    return [...people].sort((person1, person2) => {
+      switch (sort) {
+        case 'name':
+          return order
+            ? person2.name.localeCompare(person1.name)
+            : person1.name.localeCompare(person2.name);
+        case 'sex':
+          return order
+            ? person2.sex.localeCompare(person1.sex)
+            : person1.sex.localeCompare(person2.sex);
+        case 'born':
+          return order
+            ? person2.born - person1.born
+            : person1.born - person2.born;
+        case 'died':
+          return order
+            ? person2.died - person1.died
+            : person1.died - person2.died;
+        default:
+          return 0;
+      }
+    });
+  }, [sort, order]);
 
   if (personsGender) {
     visiblePeople = visiblePeople.filter(({ sex }) => sex === personsGender);
