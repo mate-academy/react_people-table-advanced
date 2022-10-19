@@ -4,6 +4,7 @@ import { Link, useSearchParams } from 'react-router-dom';
 import { Person } from '../../types';
 import { PersonLink } from '../PersonLink';
 import { SearchLink } from '../SearchLink';
+import { headers } from '../../utils/headers';
 
 type Props = {
   people: Person[]
@@ -22,7 +23,7 @@ export const PeopleTable: React.FC<Props> = ({ people, selectedPerson }) => {
   const query = searchParams.get('query') || '';
   const centuries = searchParams.getAll('centuries') || [];
 
-  let visiblePeople = useMemo(() => {
+  const visiblePeople = useMemo(() => {
     return [...people].sort((person1, person2) => {
       switch (sort) {
         case 'name':
@@ -44,36 +45,42 @@ export const PeopleTable: React.FC<Props> = ({ people, selectedPerson }) => {
         default:
           return 0;
       }
-    });
-  }, [sort, order]);
+    }).filter(({
+      sex, name, fatherName, motherName, born,
+    }) => (!personsGender || sex === personsGender)
+      && (!centuries.length
+        || centuries.includes((born + 100).toString().slice(0, 2)))
+      && (name.toLocaleLowerCase().includes(query.toLocaleLowerCase())
+      || fatherName?.toLocaleLowerCase().includes(query.toLocaleLowerCase())
+      || motherName?.toLocaleLowerCase().includes(query.toLocaleLowerCase())
+      ));
+  }, [sort, order, personsGender, centuries, query]);
 
-  if (personsGender) {
-    visiblePeople = visiblePeople.filter(({ sex }) => sex === personsGender);
-  }
+  // if (personsGender) {
+  //   visiblePeople = visiblePeople.filter(({ sex }) => sex === personsGender);
+  // }
 
-  if (query) {
-    visiblePeople = visiblePeople.filter(({ name, fatherName, motherName }) => (
-      name.toLocaleLowerCase().includes(query.toLocaleLowerCase())
-          || fatherName?.toLocaleLowerCase().includes(
-            query.toLocaleLowerCase(),
-          )
-          || motherName?.toLocaleLowerCase().includes(
-            query.toLocaleLowerCase(),
-          )
-    ));
-  }
+  // if (query) {
+  //   visiblePeople = visiblePeople.filter(({ name, fatherName, motherName }) => (
+  //     name.toLocaleLowerCase().includes(query.toLocaleLowerCase())
+  //         || fatherName?.toLocaleLowerCase().includes(
+  //           query.toLocaleLowerCase(),
+  //         )
+  //         || motherName?.toLocaleLowerCase().includes(
+  //           query.toLocaleLowerCase(),
+  //         )
+  //   ));
+  // }
 
-  if (centuries.length) {
-    visiblePeople = visiblePeople.filter(({ born }) => (
-      centuries.includes((born + 100).toString().slice(0, 2))
-    ));
-  }
-
-  const headers = ['name', 'sex', 'born', 'died'];
+  // if (centuries.length) {
+  //   visiblePeople = visiblePeople.filter(({ born }) => (
+  //     centuries.includes((born + 100).toString().slice(0, 2))
+  //   ));
+  // }
 
   const getPersonByParent = useCallback((personsParent: string | null) => {
     return visiblePeople.find(person => person.name === personsParent);
-  }, []);
+  }, [visiblePeople]);
 
   return (
     <table

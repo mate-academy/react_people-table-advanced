@@ -2,14 +2,13 @@ import classNames from 'classnames';
 import { Link, useSearchParams } from 'react-router-dom';
 import { getSearchWith } from '../../utils/searchHelper';
 import { SearchLink } from '../SearchLink';
+import { centuryArray } from '../../utils/centuryArray';
 
 export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const sex = searchParams.get('sex') || '';
   const query = searchParams.get('query') || '';
   const centuries = searchParams.getAll('centuries') || [];
-
-  const centuryArray = ['16', '17', '18', '19', '20'];
 
   return (
     <nav className="panel">
