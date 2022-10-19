@@ -3,9 +3,9 @@ import { useSearchParams } from 'react-router-dom';
 import { getSearchWith } from '../utils/searchHelper';
 import { SearchLink } from './SearchLink';
 
-export const PeopleFilters = () => {
-  const centuriesValues = ['16', '17', '18', '19', '20'];
+const centuriesValues = ['16', '17', '18', '19', '20'];
 
+export const PeopleFilters = () => {
   const [searchParams, setSearhParams] = useSearchParams();
   const query = searchParams.get('query') || '';
   const sex = searchParams.get('sex');

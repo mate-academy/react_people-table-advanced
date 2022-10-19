@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
 import { PeopleFilters } from './PeopleFilters';
 import { Loader } from './Loader';
@@ -34,7 +34,7 @@ export const PeoplePage = () => {
     loadPeople();
   }, []);
 
-  const filterTable = () => {
+  const visiblePeople = useMemo(() => {
     let sortedPeople = [...people];
 
     if (query !== null) {
@@ -58,9 +58,9 @@ export const PeoplePage = () => {
     }
 
     return sortedPeople;
-  };
+  }, [people, query, centuries, sex]);
 
-  const visiblePeople = filterTable();
+  const noErrors = !loadingError && !isLoading;
 
   return (
     <>
@@ -84,17 +84,17 @@ export const PeoplePage = () => {
                 </p>
               )}
 
-              {!people.length && !loadingError && !isLoading && (
+              {!people.length && noErrors && (
                 <p data-cy="noPeopleMessage">
                   There are no people on the server
                 </p>
               )}
 
-              {visiblePeople.length === 0 && !loadingError && !isLoading && (
+              {!visiblePeople.length && noErrors && (
                 <p>There are no people matching the current search criteria</p>
               )}
 
-              {!!visiblePeople.length && !loadingError && !isLoading && (
+              {!!visiblePeople.length && noErrors && (
                 <PeopleTable
                   people={people}
                   visiblePeople={visiblePeople}
