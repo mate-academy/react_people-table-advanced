@@ -23,8 +23,39 @@ export const PeopleTable: React.FC<Props> = ({ people, selectedPerson }) => {
   const query = searchParams.get('query') || '';
   const centuries = searchParams.getAll('centuries') || [];
 
+  const filter = () => {
+    return [...people].filter(({
+      sex, name, fatherName, motherName, born,
+    }) => {
+      const century = (born + 100).toString().slice(0, 2);
+      const isName = name.toLocaleLowerCase().includes(
+        query.toLocaleLowerCase(),
+      );
+      const isFatcherName = fatherName?.toLocaleLowerCase().includes(
+        query.toLocaleLowerCase(),
+      );
+      const isMotherName = motherName?.toLocaleLowerCase().includes(
+        query.toLocaleLowerCase(),
+      );
+
+      if (personsGender) {
+        return sex === personsGender;
+      }
+
+      if (query) {
+        return isName || isFatcherName || isMotherName;
+      }
+
+      if (centuries.length) {
+        return centuries.includes(century);
+      }
+
+      return [...people];
+    });
+  };
+
   const visiblePeople = useMemo(() => {
-    return [...people].sort((person1, person2) => {
+    return filter().sort((person1, person2) => {
       switch (sort) {
         case 'name':
           return order
@@ -45,38 +76,8 @@ export const PeopleTable: React.FC<Props> = ({ people, selectedPerson }) => {
         default:
           return 0;
       }
-    }).filter(({
-      sex, name, fatherName, motherName, born,
-    }) => (!personsGender || sex === personsGender)
-      && (!centuries.length
-        || centuries.includes((born + 100).toString().slice(0, 2)))
-      && (name.toLocaleLowerCase().includes(query.toLocaleLowerCase())
-      || fatherName?.toLocaleLowerCase().includes(query.toLocaleLowerCase())
-      || motherName?.toLocaleLowerCase().includes(query.toLocaleLowerCase())
-      ));
+    });
   }, [sort, order, personsGender, centuries, query]);
-
-  // if (personsGender) {
-  //   visiblePeople = visiblePeople.filter(({ sex }) => sex === personsGender);
-  // }
-
-  // if (query) {
-  //   visiblePeople = visiblePeople.filter(({ name, fatherName, motherName }) => (
-  //     name.toLocaleLowerCase().includes(query.toLocaleLowerCase())
-  //         || fatherName?.toLocaleLowerCase().includes(
-  //           query.toLocaleLowerCase(),
-  //         )
-  //         || motherName?.toLocaleLowerCase().includes(
-  //           query.toLocaleLowerCase(),
-  //         )
-  //   ));
-  // }
-
-  // if (centuries.length) {
-  //   visiblePeople = visiblePeople.filter(({ born }) => (
-  //     centuries.includes((born + 100).toString().slice(0, 2))
-  //   ));
-  // }
 
   const getPersonByParent = useCallback((personsParent: string | null) => {
     return visiblePeople.find(person => person.name === personsParent);
