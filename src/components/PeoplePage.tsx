@@ -1,8 +1,62 @@
+import { useEffect, useMemo, useState } from 'react';
+import { useParams, useSearchParams } from 'react-router-dom';
 import { PeopleFilters } from './PeopleFilters';
 import { Loader } from './Loader';
 import { PeopleTable } from './PeopleTable';
+import { getPeople } from '../api';
+import { Person } from '../types/Person';
 
 export const PeoplePage = () => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [isPeople, setIsPeople] = useState<Person[]>([]);
+  const [isError, setError] = useState(false);
+  const [searchParams] = useSearchParams();
+  const query = searchParams.get('query') || '';
+  const centuries = searchParams.getAll('centuries') || [];
+  const sex = searchParams.get('sex');
+  const { slug } = useParams();
+
+  useEffect(() => {
+    (async () => {
+      try {
+        setIsLoading(true);
+        const data = await getPeople();
+
+        setIsPeople(data);
+      } catch {
+        setError(true);
+      } finally {
+        setIsLoading(false);
+      }
+    })();
+  }, []);
+
+  const visiblePeople = useMemo(() => {
+    let sortedPeople = isPeople;
+
+    if (query) {
+      sortedPeople = sortedPeople.filter(person => {
+        return person.name.toLowerCase().includes(query.toLowerCase())
+          || person.motherName?.toLowerCase().includes(query.toLowerCase())
+          || person.fatherName?.toLowerCase().includes(query.toLowerCase());
+      });
+    }
+
+    if (sex) {
+      sortedPeople = sortedPeople.filter(person => {
+        return person.sex === sex;
+      });
+    }
+
+    if (centuries.length > 0) {
+      sortedPeople = sortedPeople.filter(person => {
+        return centuries.includes((Math.ceil(person.born / 100)).toString());
+      });
+    }
+
+    return sortedPeople;
+  }, [isPeople, query, centuries, sex]);
+
   return (
     <>
       <h1 className="title">People Page</h1>
@@ -10,22 +64,40 @@ export const PeoplePage = () => {
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
           <div className="column is-7-tablet is-narrow-desktop">
-            <PeopleFilters />
+            {!isLoading && isPeople.length > 0 && (
+              <PeopleFilters />
+            )}
           </div>
 
           <div className="column">
             <div className="box table-container">
-              <Loader />
+              {isLoading && (
+                <Loader />
+              )}
 
-              <p data-cy="peopleLoadingError">Something went wrong</p>
+              {isError && (
+                <p data-cy="peopleLoadingError" className="has-text-danger">
+                  Something went wrong
+                </p>
+              )}
 
-              <p data-cy="noPeopleMessage">
-                There are no people on the server
-              </p>
+              {!isPeople.length && !isLoading && !isError && (
+                <p data-cy="noPeopleMessage">
+                  There are no people on the server
+                </p>
+              )}
+              { !isLoading && !isError && visiblePeople.length === 0 && (
+                <p>There are no people matching the current search criteria</p>
+              )}
 
-              <p>There are no people matching the current search criteria</p>
+              {isPeople.length > 0 && !isLoading && (
+                <PeopleTable
+                  people={isPeople}
+                  visiblePeople={visiblePeople}
+                  slug={slug}
+                />
+              )}
 
-              <PeopleTable />
             </div>
           </div>
         </div>
