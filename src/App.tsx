@@ -2,12 +2,13 @@ import React from 'react';
 import {
   Navigate, Route, Routes,
 } from 'react-router-dom';
-import { PeoplePage } from './components/PeoplePage';
-import { Navbar } from './components/Navbar';
 
 import './App.scss';
+
 import { HomePage } from './components/HomePage/HomePage';
 import { PageNotFound } from './components/PageNotFound/PageNotFound';
+import { PeoplePage } from './components/PeoplePage';
+import { Navbar } from './components/Navbar';
 
 export const App: React.FC = () => {
   return (
@@ -21,7 +22,7 @@ export const App: React.FC = () => {
 
             <Route path="/people">
               <Route index element={<PeoplePage />} />
-              <Route path="/people/:personSlug" element={<PeoplePage />} />
+              <Route path=":personSlug" element={<PeoplePage />} />
             </Route>
 
             <Route path="/home" element={<Navigate replace to="/" />} />
