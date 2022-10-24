@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import { FC } from 'react';
+import { FC, useCallback } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Person } from '../types/Person';
 import { PersonalLink } from './PersonLink';
@@ -7,10 +7,9 @@ import { SearchLink } from './SearchLink';
 
 type Props = {
   people: Person[];
-  visiblePeople: Person[];
   slug: string | undefined;
 };
-export const PeopleTable: FC<Props> = ({ people, visiblePeople, slug }) => {
+export const PeopleTable: FC<Props> = ({ people, slug }) => {
   const [searchParams] = useSearchParams();
   const sort = searchParams.get('sort');
   const order = searchParams.get('order');
@@ -25,8 +24,8 @@ export const PeopleTable: FC<Props> = ({ people, visiblePeople, slug }) => {
     return <PersonalLink person={findName} />;
   };
 
-  const sortFilter = () => {
-    const setVisiblePeople = visiblePeople;
+  const sortFilter = useCallback((setVisiblePeople: Person[]) => {
+    // const setVisiblePeople = visiblePeople;
 
     switch (sort) {
       case 'name':
@@ -58,7 +57,7 @@ export const PeopleTable: FC<Props> = ({ people, visiblePeople, slug }) => {
     }
 
     return setVisiblePeople;
-  };
+  }, [sort, order]);
 
   const sortSearchLink = (value: string) => {
     return (
@@ -116,7 +115,7 @@ export const PeopleTable: FC<Props> = ({ people, visiblePeople, slug }) => {
       </thead>
 
       <tbody>
-        {sortFilter().map(person => (
+        {sortFilter([...people]).map(person => (
           <tr
             key={person.slug}
             data-cy="person"
