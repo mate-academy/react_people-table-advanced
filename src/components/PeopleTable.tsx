@@ -68,7 +68,14 @@ export const PeopleTable: FC<Props> = ({ people, slug }) => {
         }}
       >
         <span className="icon">
-          <i className="fas fa-sort" />
+          <i
+            className={classNames(
+              'fas',
+              { 'fa-sort': sort !== value },
+              { 'fa-sort-up': sort === value && order === null },
+              { 'fa-sort-down': sort === value && order === 'desc' },
+            )}
+          />
         </span>
       </SearchLink>
     );
