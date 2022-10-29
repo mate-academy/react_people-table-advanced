@@ -11,12 +11,12 @@ type Props = {
 };
 
 export const PeopleTable:React.FC<Props> = ({ people }) => {
-  const { slug } = useParams();
-  const isSelected = (peop: Person) => peop.slug === slug;
+  const { slugParams } = useParams();
+  const isSelected = (slug: string) => slug === slugParams;
   const location = useLocation();
 
   const [searchParams] = useSearchParams();
-  const sex = searchParams.get('sex') || null;
+  const sexParams = searchParams.get('sex') || null;
   const query = searchParams.get('query') || '';
   const sort = searchParams.get('sort');
   const order = searchParams.get('order');
@@ -25,20 +25,23 @@ export const PeopleTable:React.FC<Props> = ({ people }) => {
   let newPeople = [...people];
 
   const filtersOnSex = () => {
-    if (sex) {
-      newPeople = newPeople.filter(a => a.sex === sex);
+    if (sexParams) {
+      newPeople = newPeople.filter(person => person.sex === sexParams);
     }
   };
 
   const filterOnQuery = () => {
     newPeople = newPeople.filter(
-      a => a.name.toLocaleLowerCase().includes(query.toLocaleLowerCase())
-        || a.motherName?.toLocaleLowerCase().includes(
-          query.toLocaleLowerCase(),
-        )
-        || a.fatherName?.toLocaleLowerCase().includes(
-          query.toLocaleLowerCase(),
-        ),
+      person => {
+        const includesName = person.name.toLocaleLowerCase()
+          .includes(query.toLocaleLowerCase());
+        const includesMotherName = person.motherName?.toLocaleLowerCase()
+          .includes(query.toLocaleLowerCase());
+        const includesFatherName = person.fatherName?.toLocaleLowerCase()
+          .includes(query.toLocaleLowerCase());
+
+        return includesName || includesMotherName || includesFatherName;
+      },
     );
   };
 
@@ -53,22 +56,30 @@ export const PeopleTable:React.FC<Props> = ({ people }) => {
   const sortByParams = () => {
     switch (sort) {
       case 'name':
-        newPeople = newPeople.sort((a, b) => a.name.localeCompare(b.name));
+        newPeople = newPeople.sort(
+          (person1, person2) => person1.name.localeCompare(person2.name),
+        );
 
         return;
 
       case 'sex':
-        newPeople = newPeople.sort((a, b) => a.sex.localeCompare(b.sex));
+        newPeople = newPeople.sort(
+          (person1, person2) => person1.sex.localeCompare(person2.sex),
+        );
 
         return;
 
       case 'born':
-        newPeople = newPeople.sort((a, b) => +a.born - +b.born);
+        newPeople = newPeople.sort(
+          (person1, person2) => Number(person1.born) - Number(person2.born),
+        );
 
         return;
 
       case 'died':
-        newPeople = newPeople.sort((a, b) => +a.died - +b.died);
+        newPeople = newPeople.sort(
+          (person1, person2) => Number(person1.died) - Number(person2.died),
+        );
 
         break;
       default:
@@ -197,30 +208,40 @@ export const PeopleTable:React.FC<Props> = ({ people }) => {
       </thead>
 
       <tbody>
-        {newPeople.map(a => (
+        {newPeople.map(({
+          slug,
+          name,
+          sex,
+          motherName,
+          mother,
+          fatherName,
+          father,
+          died,
+          born,
+        }) => (
           <tr
             data-cy="person"
-            key={a.slug}
+            key={slug}
             className={classNames(
-              { 'has-background-warning': isSelected(a) },
+              { 'has-background-warning': isSelected(slug) },
             )}
           >
             <td>
               <Link
-                className={classNames({ 'has-text-danger': a.sex === 'f' })}
+                className={classNames({ 'has-text-danger': sex === 'f' })}
                 to={{
-                  pathname: `/people/${a.slug}`,
+                  pathname: `/people/${slug}`,
                   search: location.search,
                 }}
               >
-                {a.name}
+                {name}
               </Link>
             </td>
-            <td>{a.sex}</td>
-            <td>{a.born}</td>
-            <td>{a.died}</td>
-            <td>{a.mother ? <Link className="has-text-danger" to={`/people/${a.mother.slug}`}>{a.motherName}</Link> : a.motherName || '-'}</td>
-            <td>{a.father ? <Link to={`/people/${a.father.slug}`}>{a.fatherName}</Link> : a.fatherName || '-'}</td>
+            <td>{sex}</td>
+            <td>{born}</td>
+            <td>{died}</td>
+            <td>{mother ? <Link className="has-text-danger" to={`/people/${mother.slug}`}>{motherName}</Link> : motherName || '-'}</td>
+            <td>{father ? <Link to={`/people/${father.slug}`}>{fatherName}</Link> : fatherName || '-'}</td>
           </tr>
         ))}
       </tbody>

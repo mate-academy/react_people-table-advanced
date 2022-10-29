@@ -1,19 +1,20 @@
 import classNames from 'classnames';
+import React from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { SearchLink } from './SearchLink';
 
-export const PeopleFilters = () => {
+export const PeopleFilters: React.FC = () => {
   const listCenturies = ['16', '17', '18', '19', '20'];
   const [searchParams, setSearchParams] = useSearchParams();
   const sex = searchParams.get('sex') || null;
   const query = searchParams.get('query') || '';
   const centuries = searchParams.getAll('centuries') || [];
 
-  const createQuery = (quer: string) => {
-    if (quer === '') {
+  const createQuery = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.value === '') {
       searchParams.delete('query');
     } else {
-      searchParams.set('query', quer);
+      searchParams.set('query', event.target.value);
     }
 
     setSearchParams(searchParams);
@@ -52,9 +53,7 @@ export const PeopleFilters = () => {
             className="input"
             placeholder="Search"
             value={query}
-            onChange={(event) => {
-              createQuery(event.target.value);
-            }}
+            onChange={createQuery}
           />
 
           <span className="icon is-left">
@@ -66,23 +65,27 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            {listCenturies.map(centurie => (
-              <SearchLink
-                params={{
-                  centuries: centuries.includes(centurie)
-                    ? centuries.filter(cent => cent !== centurie)
-                    : [...centuries, centurie],
-                }}
-                key={centurie}
-                data-cy="century"
-                className={classNames(
-                  'button mr-1',
-                  { 'is-info': centuries.includes(centurie) },
-                )}
-              >
-                {centurie}
-              </SearchLink>
-            ))}
+            {listCenturies.map(centurie => {
+              const customParam = {
+                centuries: centuries.includes(centurie)
+                  ? centuries.filter(cent => cent !== centurie)
+                  : [...centuries, centurie],
+              };
+
+              return (
+                <SearchLink
+                  params={customParam}
+                  key={centurie}
+                  data-cy="century"
+                  className={classNames(
+                    'button mr-1',
+                    { 'is-info': centuries.includes(centurie) },
+                  )}
+                >
+                  {centurie}
+                </SearchLink>
+              );
+            })}
           </div>
 
           <div className="level-right ml-4">

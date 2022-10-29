@@ -1,22 +1,26 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { PeopleFilters } from './PeopleFilters';
 import { Loader } from './Loader';
 import { PeopleTable } from './PeopleTable';
 import { getPeople } from '../api';
 import { Person } from '../types/Person';
 
-export const PeoplePage = () => {
+export const PeoplePage: React.FC = () => {
   const [people, setPeople] = useState<Person[]>([]);
   const [error, setError] = useState(false);
   const [load, setLoad] = useState(false);
 
   const loadPeople = async () => {
     setLoad(true);
-    const person = await getPeople();
-    const peoples = person.map(one => ({
-      ...one,
-      mother: person.find(a => a.name === one.motherName),
-      father: person.find(a => a.name === one.fatherName),
+    const peoplesFromServer = await getPeople();
+    const peoples = peoplesFromServer.map(peopleFromServer => ({
+      ...peopleFromServer,
+      mother: peoplesFromServer.find(
+        person => person.name === peopleFromServer.motherName,
+      ),
+      father: peoplesFromServer.find(
+        person => person.name === peopleFromServer.fatherName,
+      ),
     }));
 
     try {
