@@ -1,4 +1,12 @@
-export const Navbar = () => {
+import classNames from 'classnames';
+import { FC } from 'react';
+import { NavLink } from 'react-router-dom';
+
+type Props = {
+  handlerClickOnPeopleTable: () => void,
+};
+
+export const Navbar:FC<Props> = ({ handlerClickOnPeopleTable }) => {
   return (
     <nav
       data-cy="nav"
@@ -8,15 +16,27 @@ export const Navbar = () => {
     >
       <div className="container">
         <div className="navbar-brand">
-          <a className="navbar-item" href="#/">Home</a>
+          <NavLink
+            className={({ isActive }) => classNames(
+              'navbar-item',
+              { 'has-background-grey-lighter': isActive },
+            )}
+            to="/"
+          >
+            Home
+          </NavLink>
 
-          <a
+          <NavLink
+            className={({ isActive }) => classNames(
+              'navbar-item',
+              { 'has-background-grey-lighter': isActive },
+            )}
+            to="people"
+            onClick={handlerClickOnPeopleTable}
             aria-current="page"
-            className="navbar-item has-background-grey-lighter"
-            href="#/people"
           >
             People
-          </a>
+          </NavLink>
         </div>
       </div>
     </nav>
