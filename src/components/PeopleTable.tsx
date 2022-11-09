@@ -121,6 +121,24 @@ export const PeopleTable: React.FC<Props> = ({
           const mother = persons
             .find(person => person.name === motherName);
 
+          const parentOnServer = (
+            parent: Person | undefined,
+            parentName: string | null,
+          ) => (
+            parent
+              ? (
+                <td>
+                  <Link
+                    to={`${getPersoneInfo(parent)}`}
+                    className="has-text-danger"
+                  >
+                    {parentName || '-'}
+                  </Link>
+                </td>
+              )
+              : <td>{parentName || '-'}</td>
+          );
+
           return (
             <tr
               data-cy="person"
@@ -144,31 +162,10 @@ export const PeopleTable: React.FC<Props> = ({
               <td>{born}</td>
               <td>{died}</td>
               {
-                mother
-                  ? (
-                    <td>
-                      <Link
-                        to={`${getPersoneInfo(mother)}`}
-                        className="has-text-danger"
-                      >
-                        {motherName || '-'}
-                      </Link>
-                    </td>
-                  )
-                  : <td>{motherName || '-'}</td>
+                parentOnServer(mother, motherName)
               }
               {
-                father
-                  ? (
-                    <td>
-                      <Link
-                        to={`${getPersoneInfo(father)}`}
-                      >
-                        {fatherName || '-'}
-                      </Link>
-                    </td>
-                  )
-                  : <td>{fatherName || '-'}</td>
+                parentOnServer(father, fatherName)
               }
             </tr>
           );

@@ -12,6 +12,7 @@ export const PeoplePage = () => {
   const [persons, setPersons] = useState<Person[] | null>(null);
   const [personsRender, setPersonsRender] = useState<Person[] | null>(null);
   const [searchParams, setSearchParams] = useSearchParams();
+  const [personsErrors, setPersonsErrors] = useState(false);
 
   const query = searchParams.get('query') || '';
   const sex = searchParams.get('sex') || '';
@@ -24,8 +25,12 @@ export const PeoplePage = () => {
       .then(people => {
         setPersons(people);
         setPersonsRender(people);
+        setPersonsErrors(false);
       })
-      .catch();
+      .catch(() => {
+        // setPersons([]);
+        setPersonsErrors(true);
+      });
   }, []);
 
   useEffect(() => {
@@ -93,21 +98,24 @@ export const PeoplePage = () => {
           <div className="column">
             <div className="box table-container">
 
-              {/* <p data-cy="peopleLoadingError">Something went wrong</p>
-
-              <p data-cy="noPeopleMessage">
-                There are no people on the server
-              </p>
-
-              <p>There are no people matching the current
-               search criteria</p> */}
-
-              {(!persons && <Loader />)
-              || (personsRender && (
-                <PeopleTable
-                  persons={personsRender}
-                  searchParams={searchParams}
-                />
+              {((!persons && <Loader />) || (personsErrors && (
+                <p data-cy="peopleLoadingError">Something went wrong</p>
+              )))
+              || ((persons?.length === 0 && (
+                <p data-cy="noPeopleMessage">
+                  There are no people on the server
+                </p>
+              )) || (personsRender?.length !== 0
+                ? (personsRender && (
+                  <PeopleTable
+                    persons={personsRender}
+                    searchParams={searchParams}
+                  />
+                )) : (
+                  <p>
+                    There are no people matching the current search criteria
+                  </p>
+                )
               )) }
             </div>
           </div>
