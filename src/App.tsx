@@ -4,10 +4,9 @@ import {
   Navigate,
 } from 'react-router-dom';
 
-import { Navbar } from './components/Navbar';
-
 import './App.scss';
 import { PeoplePage } from './components/PeoplePage';
+import { Navbar } from './components/Navbar';
 
 export const App = () => {
   return (
