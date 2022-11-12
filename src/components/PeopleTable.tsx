@@ -86,7 +86,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
           >
             <td>
               <NavLink
-                to={`/people/${person.slug}`}
+                to={`/people/${person.slug}?${searchParams}`}
                 className={() => classNames(
                   'link',
                   { 'has-text-danger': person.sex === 'f' },
