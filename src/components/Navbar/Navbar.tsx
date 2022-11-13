@@ -1,3 +1,5 @@
+import { PageNavBar } from '../PageNavBar';
+
 export const Navbar = () => {
   return (
     <nav
@@ -8,15 +10,8 @@ export const Navbar = () => {
     >
       <div className="container">
         <div className="navbar-brand">
-          <a className="navbar-item" href="#/">Home</a>
-
-          <a
-            aria-current="page"
-            className="navbar-item has-background-grey-lighter"
-            href="#/people"
-          >
-            People
-          </a>
+          <PageNavBar to="/" text="Home" />
+          <PageNavBar to="people" text="People" />
         </div>
       </div>
     </nav>
