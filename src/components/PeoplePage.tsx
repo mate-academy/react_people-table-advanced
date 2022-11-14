@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { PeopleFilters } from './PeopleFilters';
 import { Loader } from './Loader';
@@ -18,7 +18,8 @@ export const PeoplePage = () => {
   const order = searchParams.get('order') || '';
   const sex = searchParams.get('sex') || '';
   const query = searchParams.get('query') || '';
-  const centuries = searchParams.get('centuries') || '';
+  const centuries = useMemo(() => (
+    searchParams.getAll('centuries')), [searchParams]);
 
   const loadPeople = async () => {
     setIsLoading(true);
@@ -49,7 +50,7 @@ export const PeoplePage = () => {
         return true;
       })
       .filter(person => {
-        if (centuries) {
+        if (centuries.length > 0) {
           const livedIn = Math.ceil(person.born / 100);
 
           return centuries.includes(`${livedIn}`);
@@ -93,7 +94,13 @@ export const PeoplePage = () => {
     }
 
     setVisiblePeople(newVisiblePeople);
-  }, [sortBy, order, sex, centuries, query]);
+  }, [
+    sortBy,
+    order,
+    sex,
+    centuries,
+    query,
+  ]);
 
   return (
     <>
