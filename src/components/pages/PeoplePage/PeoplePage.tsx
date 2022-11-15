@@ -26,7 +26,7 @@ export const PeoplePage: React.FC = () => {
 
   useEffect(() => {
     handleLoadPeople();
-  });
+  }, []);
 
   return (
     <div className="container">
