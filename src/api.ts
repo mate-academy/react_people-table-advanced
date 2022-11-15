@@ -7,9 +7,20 @@ function wait(delay: number) {
   return new Promise(resolve => setTimeout(resolve, delay));
 }
 
-export async function getPeople(): Promise<Person[]> {
-  // keep this delay for testing purpose
-  return wait(500)
-    .then(() => fetch(API_URL))
-    .then(response => response.json());
-}
+export const getPeople = async (): Promise<Person[]> => {
+  await wait(500);
+
+  let response;
+
+  try {
+    response = await fetch(API_URL);
+
+    if (!response.ok) {
+      throw new Error('People not found');
+    }
+  } catch (error) {
+    throw new Error('Can\'t fatch people from server');
+  }
+
+  return response.json();
+};
