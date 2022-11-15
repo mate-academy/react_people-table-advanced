@@ -57,17 +57,17 @@ export const PeopleTable: FC<Props> = ({
 
   const sortPeople = (visiblePeople: ModifiedPerson[] | null) => {
     if (visiblePeople) {
-      return visiblePeople.sort((personA, personB) => {
+      return [...visiblePeople].sort((personA, personB) => {
         switch (sortType) {
           case 'born':
           case 'died':
-            return orderType
+            return !orderType
               ? personA[sortType] - personB[sortType]
               : personB[sortType] - personA[sortType];
 
           case 'name':
           case 'sex':
-            return orderType
+            return !orderType
               ? personA[sortType].localeCompare(personB[sortType])
               : personB[sortType].localeCompare(personA[sortType]);
 
@@ -84,7 +84,8 @@ export const PeopleTable: FC<Props> = ({
     (type: string) => sortType === type && !orderType, [orderType, sortType],
   );
   const sortingType = useCallback(
-    (type: string) => sortType !== type || sortingDirection(type), [sortType],
+    (type: string) => sortType !== type || (sortType === type && !orderType),
+    [orderType, sortType],
   );
   const shouldSort = useCallback(
     (type: string) => (sortType !== type), [sortType],
@@ -113,8 +114,8 @@ export const PeopleTable: FC<Props> = ({
 
     visiblePeople = sortPeople(visiblePeople);
 
-    setPeopleList(visiblePeople);
-  }, [people, centuries, sexFilter, queryFilter]);
+    setPeopleList(() => visiblePeople);
+  }, [people, centuries, sexFilter, queryFilter, sortType, orderType]);
 
   return (
     <>
