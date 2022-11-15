@@ -61,6 +61,9 @@ export const PeopleTable: React.FC<Props> = ({
   const sort = searchParams.get('sort') || '';
   const order = searchParams.get('order') || '';
 
+  const search = window.location.hash
+    .slice(window.location.hash.lastIndexOf('?'));
+
   return (
     <table
       data-cy="peopleTable"
@@ -124,13 +127,16 @@ export const PeopleTable: React.FC<Props> = ({
           const parentOnServer = (
             parent: Person | undefined,
             parentName: string | null,
+            sexParent: string,
           ) => (
             parent
               ? (
                 <td>
                   <Link
-                    to={`${getPersoneInfo(parent)}`}
-                    className="has-text-danger"
+                    to={`${getPersoneInfo(parent)}${search}`}
+                    className={classNames(
+                      { 'has-text-danger': sexParent === 'f' },
+                    )}
                   >
                     {parentName || '-'}
                   </Link>
@@ -149,7 +155,7 @@ export const PeopleTable: React.FC<Props> = ({
             >
               <td>
                 <Link
-                  to={`${getPersoneInfo(persone)}`}
+                  to={`${getPersoneInfo(persone)}${search}`}
                   className={classNames(
                     { 'has-text-danger': sex === 'f' },
                   )}
@@ -162,10 +168,10 @@ export const PeopleTable: React.FC<Props> = ({
               <td>{born}</td>
               <td>{died}</td>
               {
-                parentOnServer(mother, motherName)
+                parentOnServer(mother, motherName, 'f')
               }
               {
-                parentOnServer(father, fatherName)
+                parentOnServer(father, fatherName, 'm')
               }
             </tr>
           );
