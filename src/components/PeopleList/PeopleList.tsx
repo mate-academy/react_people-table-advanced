@@ -65,41 +65,42 @@ export const PeopleList: FC = () => {
   return (
     <div className="container">
       <PeoplePage />
+      <div className="box table-container">
 
-      <div className="block">
-        <div className="columns is-desktop is-flex-direction-row-reverse">
-          {isLoading && <Loader />}
+        <div className="block">
+          <div className="columns is-desktop is-flex-direction-row-reverse">
+            {isLoading && <Loader />}
 
-          {hasError && (
-            <p data-cy="peopleLoadingError" className="has-text-danger">
-              Something went wrong
-            </p>
-          )}
+            {hasError && (
+              <p data-cy="peopleLoadingError" className="has-text-danger">
+                Something went wrong
+              </p>
+            )}
 
-          {isNoPeople && (
-            <p data-cy="noPeopleMessage">
-              There are no people on the server
-            </p>
-          )}
+            {isNoPeople && (
+              <p data-cy="noPeopleMessage">
+                There are no people on the server
+              </p>
+            )}
 
-          {isPeople
-            && (
-              <>
-                <div className="column is-7-tablet is-narrow-desktop">
-                  <PeopleFilters />
-                </div>
+            {isPeople
+              && (
+                <>
+                  <div className="column is-7-tablet is-narrow-desktop">
+                    <PeopleFilters />
+                  </div>
 
-                <div className="column">
-                  <div className="box table-container">
+                  <div className="column">
+
                     <PeopleTable
                       people={people}
                       personLink={personLink}
                     />
                   </div>
-                </div>
 
-              </>
-            )}
+                </>
+              )}
+          </div>
         </div>
       </div>
 
