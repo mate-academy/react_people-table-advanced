@@ -30,7 +30,7 @@ export const Navbar = () => {
 
           <NavLink
             to={{
-              pathname: parentPath,
+              pathname: parentPath.includes('people') ? parentPath : 'people',
               search: searchParams.toString(),
             }}
             className={({ isActive }) => (
