@@ -1,3 +1,4 @@
+import { useCallback } from 'react';
 import classNames from 'classnames';
 import { useSearchParams } from 'react-router-dom';
 import { SearchLink } from '../SearchLink';
@@ -12,12 +13,14 @@ export const PeopleFilters = () => {
   const currentSex = searchParams.get('sex');
   const currentQuery = searchParams.get('query');
 
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const newQuery = event.target.value || null;
-    const newSearchParams = getSearchWith(searchParams, { query: newQuery });
+  const handleInputChange = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      const newQuery = event.target.value || null;
+      const newSearchParams = getSearchWith(searchParams, { query: newQuery });
 
-    setSearchParams(newSearchParams);
-  };
+      setSearchParams(newSearchParams);
+    }, [searchParams],
+  );
 
   return (
     <nav className="panel">
