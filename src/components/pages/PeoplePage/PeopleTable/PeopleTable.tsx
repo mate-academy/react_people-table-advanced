@@ -32,42 +32,48 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
   }, [people]);
 
   useEffect(() => {
-    const filteredAndSortedPeople = people.filter(person => {
-      if (sex) {
-        return person.sex === sex;
-      }
+    let filteredAndSortedPeople = [...people];
 
-      return person;
-    }).filter(person => {
-      if (query) {
+    if (sex) {
+      filteredAndSortedPeople = filteredAndSortedPeople.filter(
+        person => person.sex === sex,
+      );
+    }
+
+    if (query) {
+      filteredAndSortedPeople = filteredAndSortedPeople.filter(person => {
         const lowerQuery = query.toLowerCase();
         const personNames = person.name
               + person.fatherName + person.motherName;
 
         return personNames.toLowerCase().includes(lowerQuery);
-      }
+      });
+    }
 
-      return person;
-    }).filter(person => {
-      if (centuries.length) {
+    if (centuries.length) {
+      filteredAndSortedPeople = filteredAndSortedPeople.filter(person => {
         const personCentury = Math.ceil(person.born / 100);
 
         return centuries.includes(personCentury.toString());
-      }
+      });
+    }
 
-      return person;
-    }).sort((prev, current) => {
-      switch (sortBy) {
-        case 'sex':
-        case 'name':
-          return prev[sortBy].localeCompare(current[sortBy]);
-        case 'born':
-        case 'died':
-          return prev[sortBy] - current[sortBy];
-        default:
-          return 0;
-      }
-    });
+    if (sortBy) {
+      filteredAndSortedPeople = filteredAndSortedPeople.sort(
+        (prev, current) => {
+          switch (sortBy) {
+            case 'sex':
+            case 'name':
+              return prev[sortBy].localeCompare(current[sortBy]);
+            case 'born':
+            case 'died':
+              return prev[sortBy] - current[sortBy];
+            default:
+              return 0;
+          }
+        },
+      );
+    }
 
     if (order) {
       filteredAndSortedPeople.reverse();
@@ -75,6 +81,9 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
 
     setFilteredPeople(filteredAndSortedPeople);
   }, [searchParams]);
+
+  const noSortParams = !sortBy || !order;
+  const noSortOrder = sortBy && !order;
 
   return (
     <table
@@ -92,16 +101,18 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
                     Name
                     <SearchLink
                       params={{
-                        sort: !sortBy || !order ? 'name' : null,
-                        order: sortBy && !order ? 'desc' : null,
+                        sort: noSortParams ? 'name' : null,
+                        order: noSortOrder ? 'desc' : null,
                       }}
                     >
                       <span className="icon">
-                        {sortBy !== 'name' && <i className="fas fa-sort" />}
-                        {sortBy === 'name'
-                          && !order && <i className="fas fa-sort-down" />}
-                        {sortBy === 'name'
-                          && order && <i className="fas fa-sort-up" />}
+                        <i className={classNames(
+                          'fas',
+                          { 'fa-sort': sortBy !== 'name' },
+                          { 'fa-sort-down': sortBy === 'name' && !order },
+                          { 'fa-sort-up': sortBy === 'name' && order },
+                        )}
+                        />
                       </span>
                     </SearchLink>
                   </span>
@@ -112,16 +123,18 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
                     Sex
                     <SearchLink
                       params={{
-                        sort: !sortBy || !order ? 'sex' : null,
-                        order: sortBy && !order ? 'desc' : null,
+                        sort: noSortParams ? 'sex' : null,
+                        order: noSortOrder ? 'desc' : null,
                       }}
                     >
                       <span className="icon">
-                        {sortBy !== 'sex' && <i className="fas fa-sort" />}
-                        {sortBy === 'sex'
-                          && !order && <i className="fas fa-sort-down" />}
-                        {sortBy === 'sex'
-                          && order && <i className="fas fa-sort-up" />}
+                        <i className={classNames(
+                          'fas',
+                          { 'fa-sort': sortBy !== 'sex' },
+                          { 'fa-sort-down': sortBy === 'sex' && !order },
+                          { 'fa-sort-up': sortBy === 'sex' && order },
+                        )}
+                        />
                       </span>
                     </SearchLink>
                   </span>
@@ -132,16 +145,18 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
                     Born
                     <SearchLink
                       params={{
-                        sort: !sortBy || !order ? 'born' : null,
-                        order: sortBy && !order ? 'desc' : null,
+                        sort: noSortParams ? 'born' : null,
+                        order: noSortOrder ? 'desc' : null,
                       }}
                     >
                       <span className="icon">
-                        {sortBy !== 'born' && <i className="fas fa-sort" />}
-                        {sortBy === 'born'
-                          && !order && <i className="fas fa-sort-down" />}
-                        {sortBy === 'born'
-                          && order && <i className="fas fa-sort-up" />}
+                        <i className={classNames(
+                          'fas',
+                          { 'fa-sort': sortBy !== 'born' },
+                          { 'fa-sort-down': sortBy === 'born' && !order },
+                          { 'fa-sort-up': sortBy === 'born' && order },
+                        )}
+                        />
                       </span>
                     </SearchLink>
                   </span>
@@ -157,11 +172,13 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
                       }}
                     >
                       <span className="icon">
-                        {sortBy !== 'died' && <i className="fas fa-sort" />}
-                        {sortBy === 'died'
-                          && !order && <i className="fas fa-sort-down" />}
-                        {sortBy === 'died'
-                          && order && <i className="fas fa-sort-up" />}
+                        <i className={classNames(
+                          'fas',
+                          { 'fa-sort': sortBy !== 'died' },
+                          { 'fa-sort-down': sortBy === 'died' && !order },
+                          { 'fa-sort-up': sortBy === 'died' && order },
+                        )}
+                        />
                       </span>
                     </SearchLink>
                   </span>

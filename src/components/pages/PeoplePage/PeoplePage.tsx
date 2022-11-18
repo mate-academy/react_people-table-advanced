@@ -16,7 +16,6 @@ export const PeoplePage: React.FC = () => {
       const peopleFromServer = await getPeople();
 
       setPeople(peopleFromServer);
-      setIsLoading(false);
     } catch {
       setHasError(true);
     } finally {
