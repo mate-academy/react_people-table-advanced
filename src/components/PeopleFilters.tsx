@@ -4,6 +4,8 @@ import { Link, useResolvedPath, useSearchParams } from 'react-router-dom';
 import { getSearchWith } from '../utils/searchHelper';
 import { SearchLink } from './SearchLink';
 
+const centuriesArray = [16, 17, 18, 19, 20];
+
 export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const parentPath = useResolvedPath('../').pathname;
@@ -64,24 +66,28 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            {[16, 17, 18, 19, 20].map(century => (
-              <SearchLink
-                data-cy="century"
-                key={century}
-                className={classNames(
-                  'button',
-                  'mr-1',
-                  { 'is-info': centuries.includes(century.toString()) },
-                )}
-                params={{
-                  centuries: centuries.includes(century.toString())
-                    ? centuries.filter(c => c !== century.toString())
-                    : [...centuries, century.toString()],
-                }}
-              >
-                {century}
-              </SearchLink>
-            ))}
+            {centuriesArray.map(century => {
+              const centuryN = century.toString();
+
+              return (
+                <SearchLink
+                  data-cy="century"
+                  key={century}
+                  className={classNames(
+                    'button',
+                    'mr-1',
+                    { 'is-info': centuries.includes(centuryN) },
+                  )}
+                  params={{
+                    centuries: centuries.includes(centuryN)
+                      ? centuries.filter(c => c !== centuryN)
+                      : [...centuries, centuryN],
+                  }}
+                >
+                  {century}
+                </SearchLink>
+              );
+            })}
           </div>
 
           <div className="level-right ml-4">

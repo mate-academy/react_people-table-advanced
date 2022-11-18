@@ -9,7 +9,7 @@ import { PeopleFilters } from './PeopleFilters';
 export const PeoplePage = () => {
   const { slug = '' } = useParams();
   const [searchParams] = useSearchParams();
-  const [people, setPeople] = useState<Person[] | null>(null);
+  const [people, setPeople] = useState<Person[]>([]);
   const [isLoadingError, setIsLoadingError] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
 
@@ -59,37 +59,32 @@ export const PeoplePage = () => {
     });
   }, [people, searchParams]);
 
-  const getPeopleWithParents = () => {
-    setPeople((prev) => {
-      if (!prev) {
-        return null;
-      }
-
-      return prev.map((person) => {
-        return {
-          ...person,
-          mother: prev.find((mother) => mother.name === person.motherName),
-          father: prev.find((father) => father.name === person.fatherName),
-        };
-      });
+  const getPeopleWithParents = (prev: Person[]) => {
+    return prev.map((person) => {
+      return {
+        ...person,
+        mother: prev.find((mother) => mother.name === person.motherName),
+        father: prev.find((father) => father.name === person.fatherName),
+      };
     });
   };
 
-  const getPeopleList = () => {
-    getPeople()
-      .then((result) => setPeople(result))
-      .then(() => getPeopleWithParents())
-      .catch(() => setIsLoadingError(true))
-      .finally(() => setIsLoaded(true));
+  const getPeopleList = async () => {
+    try {
+      const peopleList = await getPeople();
+      const peopleWithParents = getPeopleWithParents(peopleList);
+
+      setPeople(peopleWithParents);
+    } catch {
+      setIsLoadingError(true);
+    } finally {
+      setIsLoaded(true);
+    }
   };
 
   useEffect(() => {
     getPeopleList();
   }, []);
-
-  useEffect(() => {
-
-  }, [searchParams]);
 
   return (
     <>
@@ -103,14 +98,14 @@ export const PeoplePage = () => {
 
           <div className="column">
             <div className="box table-container">
-              {!people && <Loader /> }
+              {(!people.length && !isLoaded) && <Loader /> }
 
               {filteredPeople.length > 0
                 && (
                   <PeopleTable people={filteredPeople} selectedSlug={slug} />
                 )}
 
-              {(people && filteredPeople.length === 0) && (
+              {(people.length > 0 && !filteredPeople.length) && (
                 <p>
                   There are no people matching the current search criteria
                 </p>
@@ -122,7 +117,7 @@ export const PeoplePage = () => {
                 </p>
               )}
 
-              {(isLoaded && !people) && (
+              {(isLoaded && !people.length) && (
                 <p data-cy="noPeopleMessage">
                   There are no people on the server
                 </p>

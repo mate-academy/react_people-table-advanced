@@ -86,7 +86,7 @@ export const PeopleTable: FC<Props> = ({ people, selectedSlug }) => {
                     <i
                       className={classNames(
                         'fas',
-                        { 'fa-sort': !sort },
+                        { 'fa-sort': sort !== parametr },
                         {
                           'fa-sort-up':
                           sort === parametr.toLowerCase() && !order,
