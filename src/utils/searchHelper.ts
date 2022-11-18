@@ -22,6 +22,7 @@ export function getSearchWith(
   //   centuries: ['16', '19'], ['centuries', ['16', '19']]
   // }
   //
+
   // - params with the `null` value are deleted;
   // - string value is set to given param key;
   // - array of strings adds several params with the same key;
