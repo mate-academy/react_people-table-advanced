@@ -1,4 +1,12 @@
+import classNames from 'classnames';
+import React from 'react';
+import { NavLink, useLocation, useSearchParams } from 'react-router-dom';
+
 export const Navbar = () => {
+  const [searchParams] = useSearchParams();
+  const location = useLocation();
+  const parentPath = location.pathname;
+
   return (
     <nav
       data-cy="nav"
@@ -8,15 +16,32 @@ export const Navbar = () => {
     >
       <div className="container">
         <div className="navbar-brand">
-          <a className="navbar-item" href="#/">Home</a>
+          <NavLink
+            to="/"
+            className={({ isActive }) => (
+              classNames(
+                'navbar-item',
+                { 'has-background-grey-lighter': isActive },
+              )
+            )}
+          >
+            Home
+          </NavLink>
 
-          <a
-            aria-current="page"
-            className="navbar-item has-background-grey-lighter"
-            href="#/people"
+          <NavLink
+            to={{
+              pathname: parentPath.includes('people') ? parentPath : 'people',
+              search: searchParams.toString(),
+            }}
+            className={({ isActive }) => (
+              classNames(
+                'navbar-item',
+                { 'has-background-grey-lighter': isActive },
+              )
+            )}
           >
             People
-          </a>
+          </NavLink>
         </div>
       </div>
     </nav>
