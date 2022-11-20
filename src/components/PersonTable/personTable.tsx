@@ -1,21 +1,20 @@
 import classNames from 'classnames';
 import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { getPeople } from '../../api';
+// import { getPeople } from '../../api';
 import { Person } from '../../types';
-import { Loader } from '../Loader';
+// import { Loader } from '../Loader';
 import { PersonInfo } from '../PersonInfo';
 import { SearchLink } from '../Search/SearchLink';
 
 type Props = {
-  selectedPerson: string;
+  selectedPerson: string,
+  peopleFromServer?: Person[],
 };
 
-export const PersonTable: React.FC<Props> = ({ selectedPerson = '' }) => {
-  const [peopleFromServer, setPeopleFromServer]
-    = useState<Person[] | undefined>();
-  const [isError, setIsError] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+export const PersonTable: React.FC<Props> = ({
+  selectedPerson = '', peopleFromServer,
+}) => {
   const [visiblePeople, setVisiblePeople] = useState<Person[]>();
   const [searchParams] = useSearchParams();
   const sort = searchParams.get('sort') || '';
@@ -27,47 +26,6 @@ export const PersonTable: React.FC<Props> = ({ selectedPerson = '' }) => {
   const titles = ['Name', 'Sex', 'Born', 'Died'];
 
   const isSelected = (person: Person) => selectedPerson === person.slug;
-
-  const getParents = (people: Person[]) => {
-    return people.map(child => {
-      const childFather = people.find(
-        father => father.name === child.fatherName,
-      );
-
-      const childMother = people.find(
-        mother => mother.name === child.motherName,
-      );
-
-      const fatherName = child.fatherName ? child.fatherName : '-';
-      const motherName = child.motherName ? child.motherName : '-';
-
-      return {
-        ...child,
-        father: childFather,
-        mother: childMother,
-        fatherName,
-        motherName,
-      };
-    });
-  };
-
-  const loadPeople = async () => {
-    setIsError(false);
-    setIsLoading(true);
-    const loadedPeole = await getPeople();
-
-    try {
-      if ('Error' in loadedPeole) {
-        throw new Error();
-      }
-
-      setPeopleFromServer(getParents(loadedPeole));
-    } catch {
-      setIsError(true);
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   const switchPeopleSort = (sortParam: string, a: Person, b: Person) => {
     switch (sortParam) {
@@ -221,17 +179,9 @@ export const PersonTable: React.FC<Props> = ({ selectedPerson = '' }) => {
     </p>
   );
 
-  const errorOrTable = isError ? (
-    <p data-cy="peopleLoadingError" className="has-text-danger">
-      Something went wrong
-    </p>
-  ) : (
-    table
-  );
-
   useEffect(() => {
-    loadPeople();
-  }, []);
+    setVisiblePeople(peopleFromServer);
+  }, [peopleFromServer]);
 
   useEffect(() => {
     setVisiblePeople(getVisiblePeople(sort));
@@ -240,7 +190,7 @@ export const PersonTable: React.FC<Props> = ({ selectedPerson = '' }) => {
   return (
     <div className="column">
       <div className="box table-container">
-        { isLoading ? <Loader /> : errorOrTable }
+        { table }
       </div>
     </div>
   );
