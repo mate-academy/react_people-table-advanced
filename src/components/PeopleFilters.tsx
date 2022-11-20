@@ -4,14 +4,14 @@ import { Link, useResolvedPath, useSearchParams } from 'react-router-dom';
 import { getSearchWith } from '../utils/searchHelper';
 import { SearchLink } from './SearchLink';
 
-const centuriesArray = [16, 17, 18, 19, 20];
+const centuries = [16, 17, 18, 19, 20];
 
 export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const parentPath = useResolvedPath('../').pathname;
   const query = searchParams.get('query') || '';
   const sex = searchParams.get('sex') || null;
-  const centuries = searchParams.getAll('centuries') || [];
+  const centuriesParam = searchParams.getAll('centuries') || [];
 
   const onQueryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchParams(
@@ -66,7 +66,7 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            {centuriesArray.map(century => {
+            {centuries.map(century => {
               const centuryN = century.toString();
 
               return (
@@ -76,12 +76,12 @@ export const PeopleFilters = () => {
                   className={classNames(
                     'button',
                     'mr-1',
-                    { 'is-info': centuries.includes(centuryN) },
+                    { 'is-info': centuriesParam.includes(centuryN) },
                   )}
                   params={{
-                    centuries: centuries.includes(centuryN)
-                      ? centuries.filter(c => c !== centuryN)
-                      : [...centuries, centuryN],
+                    centuries: centuriesParam.includes(centuryN)
+                      ? centuriesParam.filter(c => c !== centuryN)
+                      : [...centuriesParam, centuryN],
                   }}
                 >
                   {century}
@@ -96,7 +96,7 @@ export const PeopleFilters = () => {
               className={classNames(
                 'button',
                 'is-success',
-                { 'is-outlined': centuries.length },
+                { 'is-outlined': centuriesParam.length },
               )}
               params={{
                 centuries: null,

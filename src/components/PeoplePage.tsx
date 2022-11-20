@@ -11,7 +11,7 @@ export const PeoplePage = () => {
   const [searchParams] = useSearchParams();
   const [people, setPeople] = useState<Person[]>([]);
   const [isLoadingError, setIsLoadingError] = useState(false);
-  const [isLoaded, setIsLoaded] = useState(false);
+  const [isLoader, setIsLoader] = useState(false);
 
   const isValidByQuery = (person: Person, query: string) => {
     const normalizedQuery = query.toLowerCase();
@@ -70,6 +70,7 @@ export const PeoplePage = () => {
   };
 
   const getPeopleList = async () => {
+    setIsLoader(true);
     try {
       const peopleList = await getPeople();
       const peopleWithParents = getPeopleWithParents(peopleList);
@@ -78,7 +79,7 @@ export const PeoplePage = () => {
     } catch {
       setIsLoadingError(true);
     } finally {
-      setIsLoaded(true);
+      setIsLoader(false);
     }
   };
 
@@ -98,7 +99,7 @@ export const PeoplePage = () => {
 
           <div className="column">
             <div className="box table-container">
-              {(!people.length && !isLoaded) && <Loader /> }
+              {(!people.length && isLoader) && <Loader /> }
 
               {filteredPeople.length > 0
                 && (
@@ -117,7 +118,7 @@ export const PeoplePage = () => {
                 </p>
               )}
 
-              {(isLoaded && !people.length) && (
+              {(!isLoader && !people.length) && (
                 <p data-cy="noPeopleMessage">
                   There are no people on the server
                 </p>
