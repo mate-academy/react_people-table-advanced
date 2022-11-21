@@ -11,7 +11,7 @@ export const PeoplePage = () => {
   const [isError, setIsError] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [peopleFromServer, setPeopleFromServer]
-    = useState<Person[] | undefined>();
+    = useState<Person[] | null>(null);
 
   const getParents = (people: Person[]) => {
     return people.map(child => {
@@ -38,6 +38,7 @@ export const PeoplePage = () => {
 
   const loadPeople = async () => {
     setIsError(false);
+
     const loadedPeole = await getPeople();
 
     try {
@@ -57,11 +58,7 @@ export const PeoplePage = () => {
     loadPeople();
   }, []);
 
-  const errorOrTable = isError ? (
-    <p data-cy="peopleLoadingError" className="has-text-danger column">
-      Something went wrong
-    </p>
-  ) : (
+  const content = (
     <>
       <div className="column is-7-tablet is-narrow-desktop">
         <PeopleFilters />
@@ -74,13 +71,21 @@ export const PeoplePage = () => {
     </>
   );
 
+  const errorMessage = (
+    <p data-cy="peopleLoadingError" className="has-text-danger column">
+      Something went wrong
+    </p>
+  );
+
+  const errorOrContent = isError ? errorMessage : content;
+
   return (
     <>
       <h1 className="title">People Page</h1>
 
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
-          { isLoading ? <Loader /> : errorOrTable }
+          { isLoading ? <Loader /> : errorOrContent }
         </div>
       </div>
     </>

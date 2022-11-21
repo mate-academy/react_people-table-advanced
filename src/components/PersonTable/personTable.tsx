@@ -1,21 +1,19 @@
 import classNames from 'classnames';
 import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-// import { getPeople } from '../../api';
 import { Person } from '../../types';
-// import { Loader } from '../Loader';
 import { PersonInfo } from '../PersonInfo';
 import { SearchLink } from '../Search/SearchLink';
 
 type Props = {
   selectedPerson: string,
-  peopleFromServer?: Person[],
+  peopleFromServer: Person[] | null,
 };
 
 export const PersonTable: React.FC<Props> = ({
   selectedPerson = '', peopleFromServer,
 }) => {
-  const [visiblePeople, setVisiblePeople] = useState<Person[]>();
+  const [visiblePeople, setVisiblePeople] = useState<Person[] | null>(null);
   const [searchParams] = useSearchParams();
   const sort = searchParams.get('sort') || '';
   const order = searchParams.get('order') || '';
@@ -46,8 +44,17 @@ export const PersonTable: React.FC<Props> = ({
     return centuries.includes(Math.ceil(person.born / 100).toString());
   };
 
+  const filteringPeople = (
+    callback: (person: Person) => boolean | undefined,
+    people: Person[] | null,
+  ) => {
+    const filteredPeople = people?.filter(callback);
+
+    return filteredPeople || null;
+  };
+
   const getVisiblePeople = (sortParam: string) => {
-    let people: Person[] | undefined;
+    let people: Person[] | null = null;
 
     if (peopleFromServer) {
       people = [...peopleFromServer];
@@ -60,7 +67,7 @@ export const PersonTable: React.FC<Props> = ({
     }
 
     if (query) {
-      people = people?.filter(person => {
+      const callback = (person: Person) => {
         const fatherName = person.fatherName && person.fatherName.toLowerCase();
         const motherName = person.motherName && person.motherName.toLowerCase();
         const normalizedQuery = query.toLowerCase();
@@ -71,15 +78,21 @@ export const PersonTable: React.FC<Props> = ({
           || fatherName?.includes(normalizedQuery)
           || motherName?.includes(normalizedQuery)
         );
-      });
+      };
+
+      people = filteringPeople(callback, people);
     }
 
     if (sex) {
-      people = people?.filter(person => person.sex === sex);
+      const callback = (person: Person) => person.sex === sex;
+
+      people = filteringPeople(callback, people);
     }
 
     if (centuries.length) {
-      people = people?.filter(person => isTheSameCentury(person));
+      const callback = (person: Person) => isTheSameCentury(person);
+
+      people = filteringPeople(callback, people);
     }
 
     return people;
