@@ -58,34 +58,32 @@ export const PeoplePage = () => {
     loadPeople();
   }, []);
 
-  const content = (
-    <>
-      <div className="column is-7-tablet is-narrow-desktop">
-        <PeopleFilters />
-      </div>
-
-      <PersonTable
-        selectedPerson={personSlug}
-        peopleFromServer={peopleFromServer}
-      />
-    </>
-  );
-
-  const errorMessage = (
-    <p data-cy="peopleLoadingError" className="has-text-danger column">
-      Something went wrong
-    </p>
-  );
-
-  const errorOrContent = isError ? errorMessage : content;
-
   return (
     <>
       <h1 className="title">People Page</h1>
 
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
-          { isLoading ? <Loader /> : errorOrContent }
+          {isLoading && <Loader />}
+
+          {!isLoading && isError && (
+            <p data-cy="peopleLoadingError" className="has-text-danger column">
+              Something went wrong
+            </p>
+          )}
+
+          {!isLoading && !isError && (
+            <>
+              <div className="column is-7-tablet is-narrow-desktop">
+                <PeopleFilters />
+              </div>
+
+              <PersonTable
+                selectedPerson={personSlug}
+                peopleFromServer={peopleFromServer}
+              />
+            </>
+          )}
         </div>
       </div>
     </>
