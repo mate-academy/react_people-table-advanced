@@ -10,6 +10,7 @@ import { SearchLink } from './SearchLink';
 import { getSortedPeople } from './getSortedPeople';
 
 export const PeoplePage = () => {
+  // eslint-disable-next-line no-unused-vars
   const [searchParams] = useSearchParams();
   const [people, setPeople] = useState<Person[]>([]);
   const [filteredPeople, setFilteredPeople] = useState<Person[]>([]);
