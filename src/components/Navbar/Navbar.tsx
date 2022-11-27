@@ -19,7 +19,7 @@ export const Navbar: FC = () => {
           <PageNavLink to="/" text="Home" />
           <PageNavLink
             to={{
-              pathname: parentPath,
+              pathname: parentPath.includes('people') ? parentPath : 'people',
               search: searchParams.toString(),
             }}
             text="People"
