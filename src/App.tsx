@@ -1,11 +1,12 @@
+import React from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
 import './App.scss';
-import { Navbar } from './components/Navbar/Navbar';
+import { Navbar } from './components/Navbar';
 import { HomePage } from './pages/HomePage';
 import { NotFoundPage } from './pages/NotFoundPage';
 import { PeoplePage } from './pages/PeoplePage';
 
-export const App = () => {
+export const App: React.FC = () => {
   return (
     <div data-cy="app">
       <Navbar />

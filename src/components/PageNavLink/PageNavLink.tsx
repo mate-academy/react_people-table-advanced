@@ -3,7 +3,7 @@ import { FC } from 'react';
 import { NavLink } from 'react-router-dom';
 
 type Props = {
-  to: string,
+  to: string | { pathname: string; search: string; },
   text: string,
 };
 

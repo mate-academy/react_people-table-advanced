@@ -1,11 +1,12 @@
+import { FC } from 'react';
 import classNames from 'classnames';
 import { Link, useResolvedPath, useSearchParams } from 'react-router-dom';
 import { getSearchWith } from '../../utils/searchHelper';
 import { SearchLink } from '../SearchLink';
 
-const centuriesButton = ['16', '17', '18', '19', '20'];
+const centuriesDefault = ['16', '17', '18', '19', '20'];
 
-export const PeopleFilters = () => {
+export const PeopleFilters: FC = () => {
   const [searchParams, setSeachParams] = useSearchParams();
   const query = searchParams.get('query') || '';
   const sex = searchParams.get('sex') || '';
@@ -65,7 +66,7 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            {centuriesButton.map(cent => (
+            {centuriesDefault.map(cent => (
               <SearchLink
                 data-cy="century"
                 key={cent}
