@@ -1,17 +1,17 @@
-/* eslint-disable no-console */
 import classNames from 'classnames';
 import { FC, useContext } from 'react';
-import { Link } from 'react-router-dom';
 import { Person } from '../types';
 import { ParentLink } from './PeopleLinks/ParentLink';
 import { PersonLink } from './PeopleLinks/PersonLink';
 import { slugContext } from './slugContext';
+import { SearchLink } from './SearchLink';
 
 type Props = {
   people: Person[],
+  visiblePeople: Person[],
 };
 
-export const PeopleTable: FC<Props> = ({ people }) => {
+export const PeopleTable: FC<Props> = ({ people, visiblePeople }) => {
   const { selectedSlug } = useContext(slugContext);
 
   return (
@@ -26,11 +26,13 @@ export const PeopleTable: FC<Props> = ({ people }) => {
               <th key={title}>
                 <span className="is-flex is-flex-wrap-nowrap">
                   {title}
-                  <Link to={`#/people?sort=${title.toLowerCase()}`}>
+                  <SearchLink
+                    params={{ sort: title.toLowerCase() }}
+                  >
                     <span className="icon">
                       <i className="fas fa-sort" />
                     </span>
-                  </Link>
+                  </SearchLink>
                 </span>
               </th>
             ))}
@@ -40,7 +42,7 @@ export const PeopleTable: FC<Props> = ({ people }) => {
           </tr>
         </thead>
         <tbody>
-          {people && people.map((person) => {
+          {visiblePeople.map((person) => {
             const {
               name, sex, born, died, fatherName, motherName, slug,
             } = person;

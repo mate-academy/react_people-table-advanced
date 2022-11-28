@@ -1,6 +1,12 @@
 import classNames from 'classnames';
-import { Link, useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import { getSearchWith } from '../utils/searchHelper';
+import { SearchLink } from './SearchLink';
+
+// type Props = {
+//   setVisiblePeople: React.Dispatch<React.SetStateAction<Person[] | null>>,
+//   people: Person[] | null,
+// };
 
 export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -12,7 +18,7 @@ export const PeopleFilters = () => {
     setSearchParams(
       getSearchWith(
         searchParams,
-        { query: event.target.value || null, sex, centuries },
+        { query: event.target.value || null },
       ),
     );
   };
@@ -22,36 +28,30 @@ export const PeopleFilters = () => {
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        <Link
+        <SearchLink
           className={classNames(
             { 'is-active': !sex },
           )}
-          to={{
-            search: getSearchWith(searchParams, { sex: null }),
-          }}
+          params={{ sex: null }}
         >
           All
-        </Link>
-        <Link
+        </SearchLink>
+        <SearchLink
           className={classNames(
             { 'is-active': sex === 'm' },
           )}
-          to={{
-            search: getSearchWith(searchParams, { sex: 'm' }),
-          }}
+          params={{ sex: 'm' }}
         >
           Male
-        </Link>
-        <Link
+        </SearchLink>
+        <SearchLink
           className={classNames(
             { 'is-active': sex === 'f' },
           )}
-          to={{
-            search: getSearchWith(searchParams, { sex: 'f' }),
-          }}
+          params={{ sex: 'f' }}
         >
           Female
-        </Link>
+        </SearchLink>
       </p>
 
       <div className="panel-block">
@@ -75,7 +75,7 @@ export const PeopleFilters = () => {
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
             {['16', '17', '18', '19', '20'].map(century => (
-              <Link
+              <SearchLink
                 key={century}
                 data-cy="century"
                 className={classNames(
@@ -83,45 +83,38 @@ export const PeopleFilters = () => {
                   'mr-1',
                   { 'is-info': centuries.includes(century) },
                 )}
-                to={{
-                  search: getSearchWith(searchParams, {
-                    centuries: centuries.includes(century)
-                      ? centuries.filter(cent => cent !== century)
-                      : [...centuries, century],
-                  }),
+                params={{
+                  centuries: centuries.includes(century)
+                    ? centuries.filter(cent => cent !== century)
+                    : [...centuries, century],
                 }}
               >
                 {century}
-              </Link>
+              </SearchLink>
             ))}
           </div>
 
           <div className="level-right ml-4">
-            <Link
+            <SearchLink
               data-cy="centuryALL"
               className="button is-success is-outlined"
-              to={{
-                search: getSearchWith(searchParams, { centuries: null }),
-              }}
+              params={{ centuries: null }}
             >
               All
-            </Link>
+            </SearchLink>
           </div>
         </div>
       </div>
 
       <div className="panel-block">
-        <Link
+        <SearchLink
           className="button is-link is-outlined is-fullwidth"
-          to={{
-            search: getSearchWith(
-              searchParams,
-              { centuries: null, sex: null, query: null },
-            ),
+          params={{
+            centuries: null, sex: null, query: null, sort: null,
           }}
         >
           Reset all filters
-        </Link>
+        </SearchLink>
       </div>
     </nav>
   );

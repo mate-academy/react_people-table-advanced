@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useSearchParams } from 'react-router-dom';
 import { PeopleFilters } from './PeopleFilters';
 import { PeopleTable } from './PeopleTable';
 import { getPeople } from '../api';
@@ -8,14 +8,39 @@ import { Loader } from './Loader';
 
 export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[] | null>(null);
+  const [visiblePeople, setVisiblePeople] = useState<Person[] | null>(null);
   const [isPeopleLoading, setIsPeopleLoading] = useState(true);
   const [isErrorShowing, setIsErrorShowing] = useState(false);
   const location = useLocation();
+  const [searchParams] = useSearchParams();
+  // const centuries = searchParams.getAll('centuries') || [];
+  // const sex = searchParams.get('sex') || '';
+  const query = searchParams.get('query') || '';
+  const arePeopleRendered = visiblePeople && people && visiblePeople.length > 0;
+
+  function hasQuery(el: string | null) {
+    if (el) {
+      return el.toLowerCase().includes(query.toLowerCase());
+    }
+
+    return false;
+  }
+
+  useEffect(() => {
+    if (people) {
+      setVisiblePeople(people.filter(person => {
+        const { name, fatherName, motherName } = person;
+
+        return hasQuery(name) || hasQuery(fatherName) || hasQuery(motherName);
+      }));
+    }
+  }, [query]);
 
   useEffect(() => {
     getPeople()
       .then((data) => {
         setPeople(data);
+        setVisiblePeople(data);
         setIsPeopleLoading(false);
       })
       .catch(() => {
@@ -40,7 +65,9 @@ export const PeoplePage = () => {
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
           <div className="column is-7-tablet is-narrow-desktop">
-            {!isPeopleLoading && <PeopleFilters />}
+            {!isPeopleLoading && (
+              <PeopleFilters />
+            )}
           </div>
 
           <div className="column">
@@ -55,11 +82,19 @@ export const PeoplePage = () => {
                 </p>
               )}
 
-              {/* <p>There are no people matching the current search criteria</p> */}
+              {visiblePeople?.length === 0
+                ? (
+                  <p>
+                    There are no people matching the current search criteria
+                  </p>
+                )
+                : ''}
 
               {isPeopleLoading
                 ? <Loader />
-                : (people && <PeopleTable people={people} />)}
+                : (arePeopleRendered && (
+                  <PeopleTable people={people} visiblePeople={visiblePeople} />
+                ))}
             </div>
           </div>
         </div>
