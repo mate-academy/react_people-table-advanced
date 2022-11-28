@@ -1,4 +1,11 @@
+import classNames from 'classnames';
+import { NavLink } from 'react-router-dom';
+import { useContext } from 'react';
+import { slugContext } from './slugContext';
+
 export const Navbar = () => {
+  const { setSelectedSlug } = useContext(slugContext);
+
   return (
     <nav
       data-cy="nav"
@@ -8,15 +15,29 @@ export const Navbar = () => {
     >
       <div className="container">
         <div className="navbar-brand">
-          <a className="navbar-item" href="#/">Home</a>
+          <NavLink
+            className={({ isActive }) => classNames(
+              'navbar-item',
+              { 'has-background-grey-lighter': isActive },
+            )}
+            to="/"
+            onClick={() => (setSelectedSlug
+              ? setSelectedSlug('')
+              : '')}
+          >
+            Home
+          </NavLink>
 
-          <a
+          <NavLink
             aria-current="page"
-            className="navbar-item has-background-grey-lighter"
-            href="#/people"
+            className={({ isActive }) => classNames(
+              'navbar-item',
+              { 'has-background-grey-lighter': isActive },
+            )}
+            to="/people"
           >
             People
-          </a>
+          </NavLink>
         </div>
       </div>
     </nav>
