@@ -1,22 +1,15 @@
-// import React from 'react';
 import { useCallback } from 'react';
 import classNames from 'classnames';
-import {
-  Link,
-  // Link,
-  useSearchParams,
-} from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { SearchLink } from '../SearchLink';
-import { SortLink } from '../SortLink';
+import { FilterLink } from '../FilterLink';
 import { centuries } from '../../utils/centuries';
 import { getSearchWith } from '../../utils/searchHelper';
-// import { SearchLink } from '../SearchLink';
 
 export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  // const sex = searchParams.get('sex') || null;
-  const centuriesSearchParams = searchParams.getAll('centuries') || [];
-  const querySearchParams = searchParams.get('query') || '';
+  const centuriesParams = searchParams.getAll('centuries') || [];
+  const queryParams = searchParams.get('query') || '';
 
   const handleChangeQuery = useCallback((
     event: React.ChangeEvent<HTMLInputElement>,
@@ -31,15 +24,15 @@ export const PeopleFilters = () => {
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        <SortLink gender={null}>
+        <FilterLink gender={null}>
           All
-        </SortLink>
-        <SortLink gender="m">
+        </FilterLink>
+        <FilterLink gender="m">
           Male
-        </SortLink>
-        <SortLink gender="f">
+        </FilterLink>
+        <FilterLink gender="f">
           Female
-        </SortLink>
+        </FilterLink>
       </p>
 
       <div className="panel-block">
@@ -49,7 +42,7 @@ export const PeopleFilters = () => {
             type="search"
             className="input"
             placeholder="Search"
-            value={querySearchParams}
+            value={queryParams}
             onChange={handleChangeQuery}
           />
 
@@ -66,14 +59,14 @@ export const PeopleFilters = () => {
               <SearchLink
                 data-cy="century"
                 params={{
-                  centuries: centuriesSearchParams.includes(century)
-                    ? centuriesSearchParams.filter(cen => cen !== century)
-                    : [...centuriesSearchParams, century],
+                  centuries: centuriesParams.includes(century)
+                    ? centuriesParams.filter(cen => cen !== century)
+                    : [...centuriesParams, century],
                 }}
                 className={classNames(
                   'button',
                   'mr-1',
-                  { 'is-info': centuriesSearchParams.includes(century) },
+                  { 'is-info': centuriesParams.includes(century) },
                 )}
                 key={century}
               >
@@ -89,7 +82,7 @@ export const PeopleFilters = () => {
               className={classNames(
                 'button',
                 'is-success',
-                { 'is-outlined': centuriesSearchParams.length },
+                { 'is-outlined': centuriesParams.length },
               )}
             >
               All

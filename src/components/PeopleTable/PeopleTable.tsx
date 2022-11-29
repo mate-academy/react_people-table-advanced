@@ -1,34 +1,32 @@
 import React, { useCallback, useMemo } from 'react';
 import classNames from 'classnames';
-import { Link, useParams, useSearchParams } from 'react-router-dom';
+import { useParams, useSearchParams } from 'react-router-dom';
 import { Loader } from '../Loader';
 import { PersonLink } from '../PersonLink';
 import { ErrorMassege } from '../../types/ErrorMassege';
 import { Error } from '../../types/Error';
 import { Person } from '../../types';
-import { getSearchWith } from '../../utils/searchHelper';
-// import { sorting } from '../../utils/sorting';
+import { SortLink } from '../SortLink';
+import { SortBy } from '../../types/SortBy';
 
 type Props = {
   people: Person[],
   isLoading: boolean,
   isError: Error,
-  // setIsError: (error: Error) => void,
 };
 
 export const PeopleTable: React.FC<Props> = ({
   people,
   isLoading,
   isError,
-  // setIsError,
 }) => {
   const { personData = '' } = useParams();
   const [searchParams] = useSearchParams();
   const sex = searchParams.get('sex') || null;
-  const centuriesSearchParams = searchParams.getAll('centuries') || [];
-  const querySearchParams = searchParams.get('query') || '';
-  const sortingSearchParams = searchParams.get('sort') || '';
-  // const [sortedParams, setSortedParams] = useState({ param: '', call: 0});
+  const centuriesParams = searchParams.getAll('centuries') || [];
+  const queryParams = searchParams.get('query') || '';
+  const sortingParams = searchParams.get('sort') || '';
+  const sortOrder = searchParams.get('order') || '';
 
   const displayError = useCallback((error: Error) => {
     switch (error.notification) {
@@ -69,17 +67,17 @@ export const PeopleTable: React.FC<Props> = ({
       visible = visible.filter(person => person.sex === sex);
     }
 
-    if (centuriesSearchParams.length > 0) {
+    if (centuriesParams.length) {
       visible = visible.filter(person => {
         const bornInCentury = (Math.floor(person.born / 100) + 1).toString();
 
-        return centuriesSearchParams.includes(bornInCentury);
+        return centuriesParams.includes(bornInCentury);
       });
     }
 
-    if (querySearchParams.length !== 0) {
+    if (queryParams.length) {
       visible = visible.filter(person => {
-        const checkQuery = querySearchParams.toLowerCase();
+        const checkQuery = queryParams.toLowerCase();
 
         const isFittedName = person.name.toLowerCase().includes(checkQuery);
         const isFittedMotherName = person.motherName
@@ -93,34 +91,32 @@ export const PeopleTable: React.FC<Props> = ({
       });
     }
 
-    // if (sortingSearchParams) {
-    //   visible = sorting(visible, sortingSearchParams);
-    // }
-    // console.log(sortingSearchParams);
+    if (sortingParams.length) {
+      const sortedList = [...visible].sort((person1, person2) => {
+        switch (sortingParams) {
+          case SortBy.Name:
+          case SortBy.Sex:
 
-    // if (sortingSearchParams.length) {
-    //   if (sortedParams.call === 0) {
-    //     setSortedParams({ param: sortingSearchParams, call: 1});
-    //   } else if (sortedParams.call === 1) {
-    //     if (sortedParams.param === sortingSearchParams) {
-    //       setSortedParams(params => ({
-    //         ...params,
-    //         call: params.call + 1,
-    //       }));
-    //     }
-    //   } else if (sortedParams.call === 2) {
-    //     setSortedParams({ param: '', call: 0 });
-    //   }
-    // }
+            return person1[sortingParams].localeCompare(person2[sortingParams]);
+          case SortBy.Born:
+          case SortBy.Died:
 
-    // console.log(sortingSearchParams);
+            return person1[sortingParams] - person2[sortingParams];
+
+          default:
+            return 0;
+        }
+      });
+
+      visible = sortOrder ? sortedList.reverse() : sortedList;
+    }
 
     return visible;
   }, [sex,
     people,
-    centuriesSearchParams,
-    querySearchParams,
-    sortingSearchParams,
+    centuriesParams,
+    queryParams,
+    sortingParams,
   ]);
 
   return (
@@ -138,64 +134,20 @@ export const PeopleTable: React.FC<Props> = ({
         >
           <thead>
             <tr>
-              {/* <th>
-                <span className="is-flex is-flex-wrap-nowrap">
-                  Name
-                  <a href="#/people?sort=name">
-                    <span className="icon">
-                      <i className="fas fa-sort" />
-                    </span>
-                  </a>
-                </span>
-              </th> */}
-
               <th>
-                <span className="is-flex is-flex-wrap-nowrap">
-                  Name
-                  <Link
-                    // href="#/people?sort=name"
-                    to={{
-                      search: getSearchWith(searchParams, { sort: 'name' }),
-                    }}
-                  >
-                    <span className="icon">
-                      <i className="fas fa-sort" />
-                    </span>
-                  </Link>
-                </span>
+                <SortLink title={SortBy.Name} />
               </th>
 
               <th>
-                <span className="is-flex is-flex-wrap-nowrap">
-                  Sex
-                  <a href="#/people?sort=sex">
-                    <span className="icon">
-                      <i className="fas fa-sort" />
-                    </span>
-                  </a>
-                </span>
+                <SortLink title={SortBy.Sex} />
               </th>
 
               <th>
-                <span className="is-flex is-flex-wrap-nowrap">
-                  Born
-                  <a href="#/people?sort=born&amp;order=desc">
-                    <span className="icon">
-                      <i className="fas fa-sort-down" />
-                    </span>
-                  </a>
-                </span>
+                <SortLink title={SortBy.Born} />
               </th>
 
               <th>
-                <span className="is-flex is-flex-wrap-nowrap">
-                  Died
-                  <a href="#/people?sort=died">
-                    <span className="icon">
-                      <i className="fas fa-sort" />
-                    </span>
-                  </a>
-                </span>
+                <SortLink title={SortBy.Died} />
               </th>
 
               <th>Mother</th>

@@ -2,16 +2,15 @@ import React, {
   useCallback,
   useEffect,
   useMemo,
-  // useMemo,
   useState,
 } from 'react';
-// import { useSearchParams } from 'react-router-dom';
 import { PeopleFilters } from '../components/PeopleFilters';
 import { PeopleTable } from '../components/PeopleTable';
 import { getPeople } from '../api';
 import { ErrorMassege } from '../types/ErrorMassege';
 import { Person } from '../types';
 import { Error } from '../types/Error';
+// import { Loader } from '../components/Loader';
 
 export const PeoplePage: React.FC = () => {
   const [people, setPeople] = useState<Person[]>([]);
@@ -23,21 +22,9 @@ export const PeoplePage: React.FC = () => {
 
   const displayFilterBar = useMemo(() => {
     return !isLoading
-      && (isError.notification !== ErrorMassege.Empty)
-      && (isError.notification !== ErrorMassege.Load);
-  }, []);
-  // const [isLoaded, setIsLoaded] = useState(false);
-  // const [searchParams] = useSearchParams();
-
-  // const sex = searchParams.get('sex') || null;
-
-  // const visiblePeople = useMemo(() => {
-  //   if (!sex) {
-  //     return people;
-  //   }
-
-  //   return people.filter(person => person.sex === sex);
-  // }, [sex, people]);
+      && isError.notification !== ErrorMassege.Empty
+      && isError.notification !== ErrorMassege.Load;
+  }, [isLoading, isError]);
 
   const handleLoadPeople = useCallback(async () => {
     setIsLoading(true);
@@ -79,7 +66,6 @@ export const PeoplePage: React.FC = () => {
                 people={people}
                 isLoading={isLoading}
                 isError={isError}
-                // setIsError={setIsError}
               />
             </div>
           </div>
