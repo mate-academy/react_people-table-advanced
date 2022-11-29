@@ -1,6 +1,5 @@
-import { useCallback } from 'react';
 import classNames from 'classnames';
-import { Link, useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import { SearchLink } from '../SearchLink';
 import { FilterLink } from '../FilterLink';
 import { centuries } from '../../utils/centuries';
@@ -11,13 +10,13 @@ export const PeopleFilters = () => {
   const centuriesParams = searchParams.getAll('centuries') || [];
   const queryParams = searchParams.get('query') || '';
 
-  const handleChangeQuery = useCallback((
+  const handleChangeQuery = (
     event: React.ChangeEvent<HTMLInputElement>,
   ) => {
     setSearchParams(
       getSearchWith(searchParams, { query: event.target.value || null }),
     );
-  }, []);
+  };
 
   return (
     <nav className="panel">
@@ -92,14 +91,16 @@ export const PeopleFilters = () => {
       </div>
 
       <div className="panel-block">
-        <Link
-          className="button is-link is-outlined is-fullwidth"
-          to={{
-            search: '',
+        <SearchLink
+          params={{
+            sex: null,
+            query: null,
+            centuries: [],
           }}
+          className="button is-link is-outlined is-fullwidth"
         >
           Reset all filters
-        </Link>
+        </SearchLink>
       </div>
     </nav>
   );

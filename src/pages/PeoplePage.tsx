@@ -10,7 +10,6 @@ import { getPeople } from '../api';
 import { ErrorMassege } from '../types/ErrorMassege';
 import { Person } from '../types';
 import { Error } from '../types/Error';
-// import { Loader } from '../components/Loader';
 
 export const PeoplePage: React.FC = () => {
   const [people, setPeople] = useState<Person[]>([]);
