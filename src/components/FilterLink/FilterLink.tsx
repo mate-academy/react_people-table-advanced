@@ -1,4 +1,5 @@
 import React from 'react';
+import classNames from 'classnames';
 import { Link, useSearchParams } from 'react-router-dom';
 import { getSearchWith } from '../../utils/searchHelper';
 
@@ -19,7 +20,9 @@ export const FilterLink: React.FC<Props> = ({
       to={{
         search: getSearchWith(searchParams, { sex: gender }),
       }}
-      className={sex === gender ? 'is-active' : ''}
+      className={classNames({
+        'is-active': sex === gender,
+      })}
     >
       {children}
     </Link>

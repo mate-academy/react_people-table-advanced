@@ -1,6 +1,6 @@
-import { ErrorMassege } from './ErrorMassege';
+import { ErrorMessage } from './ErrorMessage';
 
 export interface Error {
   status: boolean,
-  notification: ErrorMassege,
+  notification: ErrorMessage,
 }

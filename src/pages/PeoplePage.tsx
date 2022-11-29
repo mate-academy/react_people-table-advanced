@@ -7,7 +7,7 @@ import React, {
 import { PeopleFilters } from '../components/PeopleFilters';
 import { PeopleTable } from '../components/PeopleTable';
 import { getPeople } from '../api';
-import { ErrorMassege } from '../types/ErrorMassege';
+import { ErrorMessage } from '../types/ErrorMessage';
 import { Person } from '../types';
 import { Error } from '../types/Error';
 
@@ -15,14 +15,14 @@ export const PeoplePage: React.FC = () => {
   const [people, setPeople] = useState<Person[]>([]);
   const [isError, setIsError] = useState<Error>({
     status: false,
-    notification: ErrorMassege.None,
+    notification: ErrorMessage.None,
   });
   const [isLoading, setIsLoading] = useState(false);
 
   const displayFilterBar = useMemo(() => {
     return !isLoading
-      && isError.notification !== ErrorMassege.Empty
-      && isError.notification !== ErrorMassege.Load;
+      && isError.notification !== ErrorMessage.Empty
+      && isError.notification !== ErrorMessage.Load;
   }, [isLoading, isError]);
 
   const handleLoadPeople = useCallback(async () => {
@@ -32,12 +32,12 @@ export const PeoplePage: React.FC = () => {
       const peopleFromServer = await getPeople();
 
       if (peopleFromServer.length === 0) {
-        setIsError({ status: true, notification: ErrorMassege.Empty });
+        setIsError({ status: true, notification: ErrorMessage.Empty });
       }
 
       setPeople([...peopleFromServer]);
     } catch {
-      setIsError({ status: true, notification: ErrorMassege.Load });
+      setIsError({ status: true, notification: ErrorMessage.Load });
     } finally {
       setIsLoading(false);
     }

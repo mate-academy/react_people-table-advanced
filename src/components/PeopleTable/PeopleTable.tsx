@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import { useParams, useSearchParams } from 'react-router-dom';
 import { Loader } from '../Loader';
 import { PersonLink } from '../PersonLink';
-import { ErrorMassege } from '../../types/ErrorMassege';
+import { ErrorMessage } from '../../types/ErrorMessage';
 import { Error } from '../../types/Error';
 import { Person } from '../../types';
 import { SortLink } from '../SortLink';
@@ -30,14 +30,14 @@ export const PeopleTable: React.FC<Props> = ({
 
   const displayError = useCallback((error: Error) => {
     switch (error.notification) {
-      case ErrorMassege.Load:
+      case ErrorMessage.Load:
         return (
           <p data-cy="peopleLoadingError" className="has-text-danger">
             {error.notification}
           </p>
         );
 
-      case ErrorMassege.Empty:
+      case ErrorMessage.Empty:
         return (
           <p data-cy="noPeopleMessage">
             {error.notification}
@@ -124,9 +124,11 @@ export const PeopleTable: React.FC<Props> = ({
       {isLoading
         ? <Loader />
         : (isError.status && displayError(isError))}
+
       {(!isLoading && !isError.status && !visiblePeople.length) && (
-        `${ErrorMassege.Search}`
+        `${ErrorMessage.Search}`
       )}
+
       {(!isLoading && !isError.status && visiblePeople.length !== 0) && (
         <table
           data-cy="peopleTable"
