@@ -24,7 +24,7 @@ export const PeoplePage: React.FC = () => {
     try {
       const peopleFromServer = await getPeople();
 
-      if (peopleFromServer.length === 0) {
+      if (!peopleFromServer.length) {
         setHasErrorEmpty(true);
       }
 

@@ -47,11 +47,7 @@ export const PeopleTable: React.FC<Props> = ({
 
   const getCorrectSearchParams: (tableHeader: string) =>
   SearchParams = (tableHeader) => {
-    if (!sort) {
-      return { sort: tableHeader, order: null };
-    }
-
-    if (sort !== tableHeader) {
+    if (!sort || sort !== tableHeader) {
       return { sort: tableHeader, order: null };
     }
 
@@ -69,29 +65,32 @@ export const PeopleTable: React.FC<Props> = ({
     >
       <thead>
         <tr>
+          {tableHeaders.map(tableHeader => {
+            const sortedKey = tableHeader.toLowerCase();
 
-          {tableHeaders.map(tableHeader => (
-            <th key={tableHeader}>
-              <span className="is-flex is-flex-wrap-nowrap">
-                {tableHeader}
-                <SearchLink
-                  params={getCorrectSearchParams(tableHeader.toLowerCase())}
-                >
-                  <span className="icon">
-                    <i className={classNames('fas',
-                      { 'fa-sort': !sort || sort !== tableHeader }, {
-                        'fa-sort-up': sort === tableHeader.toLowerCase()
-                        && order,
-                      }, {
-                        'fa-sort-down': sort === tableHeader.toLowerCase()
-                      && !order,
-                      })}
-                    />
-                  </span>
-                </SearchLink>
-              </span>
-            </th>
-          ))}
+            return (
+              <th key={tableHeader}>
+                <span className="is-flex is-flex-wrap-nowrap">
+                  {tableHeader}
+                  <SearchLink
+                    params={getCorrectSearchParams(sortedKey)}
+                  >
+                    <span className="icon">
+                      <i className={classNames('fas',
+                        { 'fa-sort': !sort || sort !== sortedKey }, {
+                          'fa-sort-up': sort === sortedKey
+                          && order,
+                        }, {
+                          'fa-sort-down': sort === sortedKey
+                        && !order,
+                        })}
+                      />
+                    </span>
+                  </SearchLink>
+                </span>
+              </th>
+            );
+          })}
           <th>Mother</th>
           <th>Father</th>
         </tr>
