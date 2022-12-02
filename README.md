@@ -1,5 +1,7 @@
 # React People Table - Filterging and Sorting
 
+[DEMOLINK](https://thevovchik.github.io/react_people-table-advanced/)
+
 1. All the filters and sort params saved as URL Search Params, so you could share the link to show exactly what you see.
 1. Search params are kept when navigating within the `People` page (when selecting a person or clicking the `People` link).
 1. The sidebar with the filters appear only when people are loaded.
