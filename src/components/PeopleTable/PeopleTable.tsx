@@ -99,7 +99,12 @@ export const PeopleTable: React.FC<Props> = ({
       <tbody>
         {sortedPeople.map(person => {
           const {
-            sex, born, died, fatherName, motherName, slug,
+            sex,
+            born,
+            died,
+            fatherName,
+            motherName,
+            slug,
           } = person;
 
           return (

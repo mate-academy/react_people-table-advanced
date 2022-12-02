@@ -47,8 +47,8 @@ export const PeoplePage: React.FC = () => {
     const motherName = person.motherName?.toLowerCase() || '';
 
     return normalizedName.includes(normalizedQuery)
-    || fatherName.includes(normalizedQuery)
-    || motherName.includes(normalizedQuery);
+      || fatherName.includes(normalizedQuery)
+      || motherName.includes(normalizedQuery);
   };
 
   const validateByCenturies = (person: Person, centuriesData: string[]) => {
