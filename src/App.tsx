@@ -1,9 +1,11 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
 import { useState } from 'react';
-import { PeoplePage } from './components/PeoplePage';
 import { Navbar } from './components/Navbar';
 import './App.scss';
 import { slugContext } from './components/slugContext';
+import { PeoplePage } from './components/Pages/PeoplePage';
+import { HomePage } from './components/Pages/HomePage';
+import { NotFoundPage } from './components/Pages/NotFoundPage';
 
 export const App = () => {
   const [selectedSlug, setSelectedSlug] = useState('');
@@ -19,7 +21,7 @@ export const App = () => {
               <Route
                 path="/"
                 element={(
-                  <h1 className="title">Home Page</h1>
+                  <HomePage />
                 )}
               />
               <Route
@@ -39,7 +41,7 @@ export const App = () => {
               <Route
                 path="*"
                 element={(
-                  <h1 className="title">Page not found</h1>
+                  <NotFoundPage />
                 )}
               />
             </Routes>

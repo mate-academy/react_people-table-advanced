@@ -1,12 +1,8 @@
+/* eslint-disable no-console */
 import classNames from 'classnames';
 import { useSearchParams } from 'react-router-dom';
 import { getSearchWith } from '../utils/searchHelper';
-import { SearchLink } from './SearchLink';
-
-// type Props = {
-//   setVisiblePeople: React.Dispatch<React.SetStateAction<Person[] | null>>,
-//   people: Person[] | null,
-// };
+import { SearchLink } from './Links/SearchLink';
 
 export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -110,7 +106,10 @@ export const PeopleFilters = () => {
         <SearchLink
           className="button is-link is-outlined is-fullwidth"
           params={{
-            centuries: null, sex: null, query: null, sort: null,
+            centuries: null,
+            sex: null,
+            query: null,
+            sort: null,
           }}
         >
           Reset all filters

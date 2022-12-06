@@ -1,22 +1,21 @@
-import { useEffect, useState } from 'react';
-import { useLocation, useSearchParams } from 'react-router-dom';
-import { PeopleFilters } from './PeopleFilters';
-import { PeopleTable } from './PeopleTable';
-import { getPeople } from '../api';
-import { Person } from '../types/Person';
-import { Loader } from './Loader';
+import { useEffect, useMemo, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
+import { PeopleFilters } from '../PeopleFilters';
+import { PeopleTable } from '../PeopleTable';
+import { getPeople } from '../../api';
+import { Person } from '../../types/Person';
+import { Loader } from '../Loader';
 
 export const PeoplePage = () => {
-  const [people, setPeople] = useState<Person[] | null>(null);
-  const [visiblePeople, setVisiblePeople] = useState<Person[] | null>(null);
   const [isPeopleLoading, setIsPeopleLoading] = useState(true);
   const [isErrorShowing, setIsErrorShowing] = useState(false);
-  const location = useLocation();
+
+  const [people, setPeople] = useState<Person[] | null>(null);
+  const [visiblePeople, setVisiblePeople] = useState<Person[]>([]);
   const [searchParams] = useSearchParams();
-  // const centuries = searchParams.getAll('centuries') || [];
-  // const sex = searchParams.get('sex') || '';
+  const sex = searchParams.get('sex') || '';
   const query = searchParams.get('query') || '';
-  const arePeopleRendered = visiblePeople && people && visiblePeople.length > 0;
+  const centuries = searchParams.getAll('centuries') || [];
 
   function hasQuery(el: string | null) {
     if (el) {
@@ -25,16 +24,6 @@ export const PeoplePage = () => {
 
     return false;
   }
-
-  useEffect(() => {
-    if (people) {
-      setVisiblePeople(people.filter(person => {
-        const { name, fatherName, motherName } = person;
-
-        return hasQuery(name) || hasQuery(fatherName) || hasQuery(motherName);
-      }));
-    }
-  }, [query]);
 
   useEffect(() => {
     getPeople()
@@ -49,18 +38,43 @@ export const PeoplePage = () => {
       });
   }, []);
 
+  const filteredPeople = useMemo(() => {
+    let peopleToSet: Person[] = visiblePeople;
+
+    if (query) {
+      peopleToSet = peopleToSet.filter(person => {
+        const { name, fatherName, motherName } = person;
+
+        return hasQuery(name) || hasQuery(fatherName) || hasQuery(motherName);
+      });
+    }
+
+    if (sex) {
+      peopleToSet = peopleToSet.filter(el => el.sex === sex);
+    }
+
+    if (centuries.length > 0) {
+      peopleToSet = peopleToSet.filter(person => {
+        const centuriesPersonLived = [
+          Math.ceil(person.born / 100),
+          Math.ceil(person.died / 100),
+        ];
+
+        return centuries.includes(centuriesPersonLived[0].toString())
+          || centuries.includes(centuriesPersonLived[1].toString());
+      });
+    }
+
+    return peopleToSet;
+  }, [query, sex, centuries]);
+
+  const arePeopleRendered = filteredPeople
+  && people
+  && filteredPeople.length > 0;
+
   return (
     <>
       <h1 className="title">People Page</h1>
-
-      <h1 className="has-text-info">
-        {location.pathname}
-      </h1>
-      <h1 className="has-text-danger">
-        {location.search}
-      </h1>
-      <br />
-      <br />
 
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
@@ -82,7 +96,7 @@ export const PeoplePage = () => {
                 </p>
               )}
 
-              {visiblePeople?.length === 0
+              {filteredPeople.length === 0 && !isPeopleLoading
                 ? (
                   <p>
                     There are no people matching the current search criteria
@@ -93,7 +107,10 @@ export const PeoplePage = () => {
               {isPeopleLoading
                 ? <Loader />
                 : (arePeopleRendered && (
-                  <PeopleTable people={people} visiblePeople={visiblePeople} />
+                  <PeopleTable
+                    people={people}
+                    filteredPeople={filteredPeople}
+                  />
                 ))}
             </div>
           </div>

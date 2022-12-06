@@ -1,18 +1,77 @@
 import classNames from 'classnames';
-import { FC, useContext } from 'react';
+import {
+  FC, useContext, useMemo,
+} from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { Person } from '../types';
-import { ParentLink } from './PeopleLinks/ParentLink';
-import { PersonLink } from './PeopleLinks/PersonLink';
+import { ParentLink } from './Links/ParentLink';
+import { PersonLink } from './Links/PersonLink';
 import { slugContext } from './slugContext';
-import { SearchLink } from './SearchLink';
+import { SearchLink } from './Links/SearchLink';
 
 type Props = {
   people: Person[],
-  visiblePeople: Person[],
+  filteredPeople: Person[],
 };
 
-export const PeopleTable: FC<Props> = ({ people, visiblePeople }) => {
+export const PeopleTable: FC<Props> = ({
+  people,
+  filteredPeople,
+}) => {
   const { selectedSlug } = useContext(slugContext);
+  const [searchParams] = useSearchParams();
+  const sortBy = searchParams.get('sort') || '';
+  const order = searchParams.get('order') || '';
+
+  const getCorrectSortParams = (title: string) => {
+    if (sortBy !== title && !sortBy) {
+      return { sort: title, order: null };
+    }
+
+    if (sortBy === title && order !== 'desc') {
+      return { sort: title, order: 'desc' };
+    }
+
+    if (sortBy !== title && !order) {
+      return { sort: title, order: null };
+    }
+
+    return { sort: null, order: null };
+  };
+
+  const sortPeople = (
+    peopleToSort: Person[],
+    sortKey: string | null,
+    sortOrder: string | null,
+  ) => {
+    const callback = (person1: Person, person2: Person) => {
+      switch (sortKey) {
+        case 'name':
+        case 'sex':
+          return sortOrder === 'desc'
+            ? person2[sortKey].localeCompare(person1[sortKey])
+            : person1[sortKey].localeCompare(person2[sortKey]);
+        case 'born':
+        case 'died':
+          return sortOrder === 'desc'
+            ? +person2[sortKey] - +person1[sortKey]
+            : +person1[sortKey] - +person2[sortKey];
+
+        default:
+          return 0;
+      }
+    };
+
+    return peopleToSort.sort(callback);
+  };
+
+  const sortedPeople = useMemo(() => {
+    if (!sortBy) {
+      return filteredPeople;
+    }
+
+    return sortPeople([...filteredPeople], sortBy, order);
+  }, [sortBy, order, filteredPeople]);
 
   return (
     <>
@@ -27,10 +86,17 @@ export const PeopleTable: FC<Props> = ({ people, visiblePeople }) => {
                 <span className="is-flex is-flex-wrap-nowrap">
                   {title}
                   <SearchLink
-                    params={{ sort: title.toLowerCase() }}
+                    params={getCorrectSortParams(title.toLowerCase())}
                   >
                     <span className="icon">
-                      <i className="fas fa-sort" />
+                      <i
+                        className={classNames(
+                          'fas',
+                          'fa-sort',
+                          { 'fa-sort-up': sortBy && !order },
+                          { 'fa-sort-down': order === 'desc' },
+                        )}
+                      />
                     </span>
                   </SearchLink>
                 </span>
@@ -42,7 +108,7 @@ export const PeopleTable: FC<Props> = ({ people, visiblePeople }) => {
           </tr>
         </thead>
         <tbody>
-          {visiblePeople.map((person) => {
+          {sortedPeople.map((person) => {
             const {
               name, sex, born, died, fatherName, motherName, slug,
             } = person;
