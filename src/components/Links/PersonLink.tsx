@@ -16,6 +16,8 @@ export const PersonLink: FC<PersonLinkProps> = ({
   const location = useLocation();
   const path = useResolvedPath('../').pathname;
 
+  const handleSetSlug = () => (setSelectedSlug && setSelectedSlug(slug));
+
   return (
     <Link
       to={{
@@ -25,9 +27,7 @@ export const PersonLink: FC<PersonLinkProps> = ({
       className={classNames(
         { 'has-text-danger': sex === 'f' },
       )}
-      onClick={() => (setSelectedSlug
-        ? (slug)
-        : '')}
+      onClick={handleSetSlug}
     >
       {name || '-'}
     </Link>

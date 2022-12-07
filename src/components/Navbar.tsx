@@ -6,6 +6,8 @@ import { slugContext } from './slugContext';
 export const Navbar = () => {
   const { setSelectedSlug } = useContext(slugContext);
 
+  const handleSetSlug = () => (setSelectedSlug && setSelectedSlug(''));
+
   return (
     <nav
       data-cy="nav"
@@ -21,9 +23,7 @@ export const Navbar = () => {
               { 'has-background-grey-lighter': isActive },
             )}
             to="/"
-            onClick={() => (setSelectedSlug
-              ? setSelectedSlug('')
-              : '')}
+            onClick={handleSetSlug}
           >
             Home
           </NavLink>

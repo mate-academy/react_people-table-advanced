@@ -17,6 +17,14 @@ export const ParentLink: FC<ParentProps> = ({
   const location = useLocation();
   const parentPath = useResolvedPath('../').pathname;
 
+  const handleSetSlug = () => {
+    if (selectedParent && setSelectedSlug) {
+      return setSelectedSlug(selectedParent.slug);
+    }
+
+    return setSelectedSlug && setSelectedSlug('');
+  };
+
   return (
     <Link
       to={{
@@ -26,13 +34,7 @@ export const ParentLink: FC<ParentProps> = ({
       className={classNames(
         { 'has-text-danger': sex === 'f' },
       )}
-      onClick={() => {
-        if (selectedParent && setSelectedSlug) {
-          return setSelectedSlug(selectedParent.slug);
-        }
-
-        return setSelectedSlug && setSelectedSlug('');
-      }}
+      onClick={handleSetSlug}
     >
       {parentName}
     </Link>

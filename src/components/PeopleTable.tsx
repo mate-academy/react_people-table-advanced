@@ -1,13 +1,9 @@
 import classNames from 'classnames';
-import {
-  FC, useContext, useMemo,
-} from 'react';
+import { FC, useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Person } from '../types';
-import { ParentLink } from './Links/ParentLink';
-import { PersonLink } from './Links/PersonLink';
-import { slugContext } from './slugContext';
 import { SearchLink } from './Links/SearchLink';
+import { PeopleContent } from './PeopleContent';
 
 type Props = {
   people: Person[],
@@ -18,7 +14,7 @@ export const PeopleTable: FC<Props> = ({
   people,
   filteredPeople,
 }) => {
-  const { selectedSlug } = useContext(slugContext);
+  const headers = ['Name', 'Sex', 'Born', 'Died'];
   const [searchParams] = useSearchParams();
   const sortBy = searchParams.get('sort') || '';
   const order = searchParams.get('order') || '';
@@ -81,89 +77,44 @@ export const PeopleTable: FC<Props> = ({
       >
         <thead>
           <tr>
-            {['Name', 'Sex', 'Born', 'Died'].map((title) => (
-              <th key={title}>
-                <span className="is-flex is-flex-wrap-nowrap">
-                  {title}
-                  <SearchLink
-                    params={getCorrectSortParams(title.toLowerCase())}
-                  >
-                    <span className="icon">
-                      <i
-                        className={classNames(
-                          'fas',
-                          'fa-sort',
-                          { 'fa-sort-up': sortBy && !order },
-                          { 'fa-sort-down': order === 'desc' },
-                        )}
-                      />
-                    </span>
-                  </SearchLink>
-                </span>
-              </th>
-            ))}
+            {headers.map((title) => {
+              const isCurrentArrowUp = sortBy && !order
+              && sortBy === title.toLowerCase();
+              const isCurrentArrawDown = order === 'desc'
+              && sortBy === title.toLowerCase();
+
+              return (
+                <th key={title}>
+                  <span className="is-flex is-flex-wrap-nowrap">
+                    {title}
+                    <SearchLink
+                      params={getCorrectSortParams(title.toLowerCase())}
+                    >
+                      <span className="icon">
+                        <i
+                          className={classNames(
+                            'fas',
+                            'fa-sort',
+                            { 'fa-sort-up': isCurrentArrowUp },
+                            { 'fa-sort-down': isCurrentArrawDown },
+                          )}
+                        />
+                      </span>
+                    </SearchLink>
+                  </span>
+                </th>
+              );
+            })}
 
             <th>Mother</th>
             <th>Father</th>
           </tr>
         </thead>
         <tbody>
-          {sortedPeople.map((person) => {
-            const {
-              name, sex, born, died, fatherName, motherName, slug,
-            } = person;
-
-            const selectedMother = people.find(el => {
-              return el.name === motherName;
-            });
-
-            const selectedFather = people.find(el => {
-              return el.name === fatherName;
-            });
-
-            return (
-              <tr
-                data-cy="person"
-                key={slug}
-                className={classNames(
-                  { 'has-background-warning': slug === selectedSlug },
-                )}
-              >
-                <td>
-                  <PersonLink
-                    slug={slug}
-                    sex={sex}
-                    name={name}
-                  />
-                </td>
-                <td>{sex}</td>
-                <td>{born}</td>
-                <td>{died}</td>
-                <td>
-                  {selectedMother
-                    ? (
-                      <ParentLink
-                        sex={sex}
-                        parentName={motherName}
-                        selectedParent={selectedMother}
-                      />
-                    )
-                    : <div>{motherName || '-'}</div>}
-                </td>
-                <td>
-                  {selectedMother
-                    ? (
-                      <ParentLink
-                        sex={sex}
-                        parentName={fatherName}
-                        selectedParent={selectedFather}
-                      />
-                    )
-                    : <div>{fatherName || '-'}</div>}
-                </td>
-              </tr>
-            );
-          })}
+          <PeopleContent
+            sortedPeople={sortedPeople}
+            people={people}
+          />
         </tbody>
       </table>
     </>

@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import classNames from 'classnames';
 import { useSearchParams } from 'react-router-dom';
 import { getSearchWith } from '../utils/searchHelper';
@@ -9,6 +8,7 @@ export const PeopleFilters = () => {
   const centuries = searchParams.getAll('centuries') || [];
   const sex = searchParams.get('sex') || '';
   const query = searchParams.get('query') || '';
+  const centuriesArr = ['16', '17', '18', '19', '20'];
 
   const onChangeQuery = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchParams(
@@ -70,24 +70,28 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            {['16', '17', '18', '19', '20'].map(century => (
-              <SearchLink
-                key={century}
-                data-cy="century"
-                className={classNames(
-                  'button',
-                  'mr-1',
-                  { 'is-info': centuries.includes(century) },
-                )}
-                params={{
-                  centuries: centuries.includes(century)
-                    ? centuries.filter(cent => cent !== century)
-                    : [...centuries, century],
-                }}
-              >
-                {century}
-              </SearchLink>
-            ))}
+            {centuriesArr.map(century => {
+              const correctCenturyParam = {
+                centuries: centuries.includes(century)
+                  ? centuries.filter(cent => cent !== century)
+                  : [...centuries, century],
+              };
+
+              return (
+                <SearchLink
+                  key={century}
+                  data-cy="century"
+                  className={classNames(
+                    'button',
+                    'mr-1',
+                    { 'is-info': centuries.includes(century) },
+                  )}
+                  params={correctCenturyParam}
+                >
+                  {century}
+                </SearchLink>
+              );
+            })}
           </div>
 
           <div className="level-right ml-4">
