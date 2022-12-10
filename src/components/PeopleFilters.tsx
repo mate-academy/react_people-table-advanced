@@ -18,11 +18,11 @@ export const PeopleFilters: FC<Props> = ({ people, setFilteredPeople }) => {
   const genderList = ['All', 'Male', 'Female'];
   const centuryList = ['16', '17', '18', '19', '20'];
 
-  useEffect(() => {
-    let listOfPeople = [...people];
+  const filterPeople = (peopleToFilter: Person[]) => {
+    let filteredPeople = [...peopleToFilter];
 
     if (sex) {
-      listOfPeople = listOfPeople.filter(person => person.sex === sex);
+      filteredPeople = filteredPeople.filter(person => person.sex === sex);
     }
 
     if (query) {
@@ -32,7 +32,7 @@ export const PeopleFilters: FC<Props> = ({ people, setFilteredPeople }) => {
           : null;
       };
 
-      listOfPeople = listOfPeople.filter(person => (
+      filteredPeople = filteredPeople.filter(person => (
         isContainQuery(person.name)
           || isContainQuery(person.motherName)
           || isContainQuery(person.fatherName)
@@ -40,15 +40,19 @@ export const PeopleFilters: FC<Props> = ({ people, setFilteredPeople }) => {
     }
 
     if (centuries.length) {
-      listOfPeople = listOfPeople.filter(person => {
+      filteredPeople = filteredPeople.filter(person => {
         const personBornCentury = Math.ceil(person.born / 100).toString();
 
         return centuries.includes(personBornCentury);
       });
     }
 
-    setFilteredPeople(listOfPeople);
-  }, [searchParams]);
+    return filteredPeople;
+  };
+
+  useEffect(() => {
+    setFilteredPeople(filterPeople(people));
+  }, [people, searchParams]);
 
   const onGenderSelect = (params: string) => {
     switch (params) {

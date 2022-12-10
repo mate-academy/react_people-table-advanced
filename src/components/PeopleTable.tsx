@@ -28,8 +28,8 @@ export const PeopleTable: FC<Props> = ({ people }) => {
     return parent ? <PersonLink person={parent} /> : parentName;
   };
 
-  useEffect(() => {
-    let listOfPeople = [...people].sort((person1, person2) => {
+  const sortPeople = (peopleToSort: Person[]) => {
+    const sortedListOfPeople = [...peopleToSort].sort((person1, person2) => {
       switch (sort) {
         case 'name':
         case 'sex':
@@ -42,8 +42,11 @@ export const PeopleTable: FC<Props> = ({ people }) => {
       }
     });
 
-    listOfPeople = order === 'desc' ? listOfPeople.reverse() : listOfPeople;
-    setSortedPeople(listOfPeople);
+    return order === 'desc' ? sortedListOfPeople.reverse() : sortedListOfPeople;
+  };
+
+  useEffect(() => {
+    setSortedPeople(sortPeople(people));
   }, [people, searchParams]);
 
   return (
