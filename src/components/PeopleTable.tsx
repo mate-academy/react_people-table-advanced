@@ -64,11 +64,11 @@ export const PeopleTable: React.FC<Props> = ({
     let visibleGroup = people;
 
     if (sex) {
-      return visibleGroup.filter(person => person.sex === sex);
+      visibleGroup = visibleGroup.filter(person => person.sex === sex);
     }
 
     if (centuriesParams.length) {
-      return visibleGroup.filter(person => {
+      visibleGroup = visibleGroup.filter(person => {
         const bornInCentury = (Math.floor(person.born / 100) + 1).toString();
 
         return centuriesParams.includes(bornInCentury);
@@ -76,7 +76,7 @@ export const PeopleTable: React.FC<Props> = ({
     }
 
     if (queryParams.length) {
-      return visibleGroup.filter(person => {
+      visibleGroup = visibleGroup.filter(person => {
         const checkQuery = queryParams.toLowerCase();
 
         const isFittedName = person.name.toLowerCase().includes(checkQuery);
