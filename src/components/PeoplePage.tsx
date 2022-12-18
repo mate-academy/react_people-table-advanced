@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { getPeople } from '../api';
 import { Person } from '../types';
+import { isIncludesQuery } from '../utils/functions';
 import { Loader } from './Loader';
 import { PeopleFilters } from './PeopleFilters';
 import { PeopleTable } from './PeopleTable';
@@ -53,10 +54,11 @@ export const PeoplePage = () => {
     if (query) {
       newPeope = newPeope.filter((person: Person) => {
         const queryLowerCase = query.toLowerCase();
+        const { name, fatherName, motherName } = person;
 
-        return person.name.toLowerCase().includes(queryLowerCase)
-          || person.fatherName?.toLowerCase().includes(queryLowerCase)
-          || person.motherName?.toLowerCase().includes(queryLowerCase);
+        return isIncludesQuery(name, queryLowerCase)
+          || isIncludesQuery(fatherName, queryLowerCase)
+          || isIncludesQuery(motherName, queryLowerCase);
       });
     }
 

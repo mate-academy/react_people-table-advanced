@@ -1,6 +1,5 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-// Utilites
 import classNames from 'classnames';
 
 interface Props {

@@ -4,6 +4,7 @@ import { useParams, useSearchParams } from 'react-router-dom';
 import { Person } from '../types';
 import PersonLink from './PersoneLink';
 import { SortLink } from './SortLink';
+import { SortTypes } from '../types/SortTypes';
 
 interface Props {
   people: Person[],
@@ -19,11 +20,11 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
   const handleSortPeople = () => {
     const sortPeople = [...people].sort((prevPerson, nextPersone) => {
       switch (sort) {
-        case 'name':
-        case 'sex':
+        case SortTypes.Name:
+        case SortTypes.Sex:
           return prevPerson[sort].localeCompare(nextPersone[sort]);
-        case 'born':
-        case 'died':
+        case SortTypes.Born:
+        case SortTypes.Died:
           return prevPerson[sort] - nextPersone[sort];
         default: {
           return 0;
