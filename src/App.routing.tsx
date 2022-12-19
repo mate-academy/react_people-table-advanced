@@ -1,6 +1,5 @@
 import React from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
-// Pages
 import { PeoplePage } from './components/PeoplePage';
 import HomePage from './components/HomePage';
 import NotFoundPage from './components/NotFoundPage';
@@ -13,7 +12,7 @@ const AppRouting: React.FC = () => {
 
       <Route path="/people">
         <Route index element={<PeoplePage />} />
-        <Route path=":personeSlug" element={<PeoplePage />} />
+        <Route path=":personSlug" element={<PeoplePage />} />
       </Route>
 
       <Route path="*" element={<NotFoundPage />} />

@@ -2,7 +2,7 @@ import React from 'react';
 import classNames from 'classnames';
 import { useParams, useSearchParams } from 'react-router-dom';
 import { Person } from '../types';
-import PersonLink from './PersoneLink';
+import PersonLink from './PersonLink';
 import { SortLink } from './SortLink';
 import { SortTypes } from '../types/SortTypes';
 
@@ -11,21 +11,21 @@ interface Props {
 }
 
 export const PeopleTable: React.FC<Props> = ({ people }) => {
-  const { personeSlug = '' } = useParams();
+  const { personSlug = '' } = useParams();
   const [searchParams] = useSearchParams();
 
   const sort = searchParams.get('sort');
   const order = searchParams.get('order');
 
   const handleSortPeople = () => {
-    const sortPeople = [...people].sort((prevPerson, nextPersone) => {
+    const sortPeople = [...people].sort((prevPerson, nextPerson) => {
       switch (sort) {
         case SortTypes.Name:
         case SortTypes.Sex:
-          return prevPerson[sort].localeCompare(nextPersone[sort]);
+          return prevPerson[sort].localeCompare(nextPerson[sort]);
         case SortTypes.Born:
         case SortTypes.Died:
-          return prevPerson[sort] - nextPersone[sort];
+          return prevPerson[sort] - nextPerson[sort];
         default: {
           return 0;
         }
@@ -66,7 +66,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
       </thead>
 
       <tbody>
-        {sortedPeople.map((persone: Person) => {
+        {sortedPeople.map((person: Person) => {
           const {
             sex,
             born,
@@ -76,18 +76,18 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
             slug,
             mother,
             father,
-          } = persone;
+          } = person;
 
           return (
             <tr
               data-cy="person"
               key={slug}
               className={classNames(
-                { 'has-background-warning': personeSlug === slug },
+                { 'has-background-warning': personSlug === slug },
               )}
             >
               <td>
-                <PersonLink person={persone} />
+                <PersonLink person={person} />
               </td>
               <td>{sex}</td>
               <td>{born}</td>

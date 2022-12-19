@@ -29,8 +29,8 @@ export const SortLink: React.FC<Props> = ({ title }) => {
         <span className="icon">
           <i className={classNames(
             'fas fa-sort',
-            { 'fa-sort-up': withoutOrder },
-            { 'fa-sort-down': withOrder },
+            { 'fa-sort-up': sortLowerCase === sort && order !== 'desc' },
+            { 'fa-sort-down': sortLowerCase === sort && order === 'desc' },
           )}
           />
         </span>

@@ -7,7 +7,7 @@ import { SearchLink } from './SearchLink';
 
 export const PeopleFilters: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const sex = searchParams.get('sex') || 'all';
+  const sex = searchParams.get('sex') || SexTypes.All;
   const query = searchParams.get('query') || '';
   const centuries = searchParams.getAll('centuries') || [];
 
