@@ -21,6 +21,10 @@ export const PeoplePage = () => {
       .finally(() => setIsLoading(false));
   }, []);
 
+  function isValueIncluded(element: string, value: string | null) {
+    return value?.toLowerCase().includes(element.toLowerCase());
+  }
+
   const filteredPeople = React.useMemo(() => {
     const sort = searchParams.get('sort');
     const order = searchParams.get('order');
@@ -36,9 +40,9 @@ export const PeoplePage = () => {
       return (
         (centuries.includes(`${Math.ceil(person.born / 100)}`) || centuries.length === 0)
         && (
-          person.name.toLowerCase().includes(query.toLowerCase())
-          || person.fatherName?.toLowerCase().includes(query.toLowerCase())
-          || person.motherName?.toLowerCase().includes(query.toLowerCase())
+          isValueIncluded(query, person.name)
+            || isValueIncluded(query, person.fatherName)
+            || isValueIncluded(query, person.motherName)
         )
         && (person.sex === sex || sex === null)
       );
