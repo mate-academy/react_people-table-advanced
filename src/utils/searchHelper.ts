@@ -28,7 +28,7 @@ export function getSearchWith(
 
   Object.entries(paramsToUpdate)
     .forEach(([key, value]) => {
-      if (value === null) {
+      if (value === null || value === '') {
         newParams.delete(key);
       } else if (Array.isArray(value)) {
         // we delete the key to remove old values
@@ -45,3 +45,15 @@ export function getSearchWith(
   // we return a string to use it inside links
   return newParams.toString();
 }
+
+export const getSearchParams = (
+  currentParams: URLSearchParams,
+): [string, string, string[], string, string] => (
+  [
+    currentParams.get('query') || '',
+    currentParams.get('sex') || '',
+    currentParams.getAll('centuries') || [],
+    currentParams.get('sort') || '',
+    currentParams.get('order') || '',
+  ]
+);
