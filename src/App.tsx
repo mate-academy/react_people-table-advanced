@@ -3,7 +3,7 @@ import './App.scss';
 import { HomePage } from './pages/HomePage';
 import { PeoplePage } from './pages/PeoplePage';
 import { NotFoundPage } from './pages/NotFoundPage';
-import { NavBar } from './components/NavBar';
+import { NavBar } from './components/NavBar/Navbar';
 
 export const App = () => {
   return (
