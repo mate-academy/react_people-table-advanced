@@ -2,7 +2,7 @@ import { FC } from 'react';
 import cn from 'classnames';
 import { useParams } from 'react-router-dom';
 import { Person } from '../../types';
-import { PersonLink } from '../PersonLink/PersonLink';
+import { PersonLink } from '../PersonLink';
 
 interface Props {
   person: Person,
