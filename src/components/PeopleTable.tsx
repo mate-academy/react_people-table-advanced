@@ -1,14 +1,28 @@
-import React from 'react';
+import React, { memo, useMemo } from 'react';
 import cn from 'classnames';
+import { useSearchParams } from 'react-router-dom';
 import { Person } from '../types/Person';
 import { PersonLink } from './PersonLink';
+import { SearchLink } from './SearchLink';
+import { SearchParams } from '../utils/searchHelper';
 
 type Props = {
   people: Person[];
   selectedUser: string;
 };
 
-export const PeopleTable: React.FC<Props> = ({ people, selectedUser }) => {
+const rowValues = {
+  Name: 'name',
+  Sex: 'sex',
+  Born: 'born',
+  Died: 'died',
+};
+
+export const PeopleTable: React.FC<Props> = memo(({ people, selectedUser }) => {
+  const [searchParams] = useSearchParams();
+  const sort = searchParams.get('sort');
+  const order = searchParams.get('order');
+
   const findParent = (name: string) => {
     const findedParent = people.find(human => human.name === name);
 
@@ -17,6 +31,53 @@ export const PeopleTable: React.FC<Props> = ({ people, selectedUser }) => {
       : name;
   };
 
+  const handleSetSorting = (value: string): SearchParams => {
+    if (!sort && !order) {
+      return { sort: value };
+    }
+
+    if (sort === value && !order) {
+      return {
+        sort: value,
+        order: 'desc',
+      };
+    }
+
+    return {
+      sort: null,
+      order: null,
+    };
+  };
+
+  const sortedPeople = useMemo(() => (
+    people.sort((first, second) => {
+      switch (sort) {
+        case 'name':
+          return order === 'desc'
+            ? second.name.localeCompare(first.name)
+            : first.name.localeCompare(second.name);
+
+        case 'sex':
+          return order === 'desc'
+            ? second.sex.localeCompare(first.sex)
+            : first.sex.localeCompare(second.sex);
+
+        case 'born':
+          return order === 'desc'
+            ? second.born - first.born
+            : first.born - second.born;
+
+        case 'died':
+          return order === 'desc'
+            ? second.died - first.died
+            : first.died - second.died;
+
+        default:
+          return 0;
+      }
+    })
+  ), [sort, order, people]);
+
   return (
     <table
       data-cy="peopleTable"
@@ -24,57 +85,34 @@ export const PeopleTable: React.FC<Props> = ({ people, selectedUser }) => {
     >
       <thead>
         <tr>
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Name
-              <a href="#/people?sort=name">
-                <span className="icon">
-                  <i className="fas fa-sort" />
-                </span>
-              </a>
-            </span>
-          </th>
-
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Sex
-              <a href="#/people?sort=sex">
-                <span className="icon">
-                  <i className="fas fa-sort" />
-                </span>
-              </a>
-            </span>
-          </th>
-
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Born
-              <a href="#/people?sort=born&amp;order=desc">
-                <span className="icon">
-                  <i className="fas fa-sort-up" />
-                </span>
-              </a>
-            </span>
-          </th>
-
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Died
-              <a href="#/people?sort=died">
-                <span className="icon">
-                  <i className="fas fa-sort" />
-                </span>
-              </a>
-            </span>
-          </th>
-
+          {Object.entries(rowValues).map(([key, value]) => (
+            <th key={value}>
+              <span className="is-flex is-flex-wrap-nowrap">
+                {key}
+                <SearchLink
+                  params={handleSetSorting(value)}
+                >
+                  <span className="icon">
+                    <i
+                      className={cn(
+                        'fas',
+                        { 'fa-sort': sort !== value },
+                        { 'fa-sort-up': sort === value && !order },
+                        { 'fa-sort-down': sort === value && order },
+                      )}
+                    />
+                  </span>
+                </SearchLink>
+              </span>
+            </th>
+          ))}
           <th>Mother</th>
           <th>Father</th>
         </tr>
       </thead>
 
       <tbody>
-        {people.map(person => (
+        {sortedPeople.map(person => (
           <tr
             data-cy="person"
             className={cn(
@@ -105,4 +143,4 @@ export const PeopleTable: React.FC<Props> = ({ people, selectedUser }) => {
       </tbody>
     </table>
   );
-};
+});

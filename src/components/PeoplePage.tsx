@@ -1,4 +1,9 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, {
+  useState,
+  useEffect,
+  useMemo,
+  memo,
+} from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
 
 import { PeopleFilters } from './PeopleFilters';
@@ -7,7 +12,7 @@ import { PeopleTable } from './PeopleTable';
 import { getPeople } from '../api';
 import { Person } from '../types/Person';
 
-export const PeoplePage: React.FC = () => {
+export const PeoplePage: React.FC = memo(() => {
   const [people, setPeople] = useState<Person[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
@@ -99,4 +104,4 @@ export const PeoplePage: React.FC = () => {
       </div>
     </>
   );
-};
+});

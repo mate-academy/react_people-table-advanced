@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import cn from 'classnames';
 import { useSearchParams } from 'react-router-dom';
 import { SearchLink } from './SearchLink';
@@ -21,7 +21,7 @@ const sexValues = {
 
 const centuriesValues = getAllCenturies(16, 20);
 
-export const PeopleFilters: React.FC = () => {
+export const PeopleFilters: React.FC = memo(() => {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const sex = searchParams.get('sex');
@@ -122,4 +122,4 @@ export const PeopleFilters: React.FC = () => {
       </div>
     </nav>
   );
-};
+});

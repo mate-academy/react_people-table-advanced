@@ -1,6 +1,7 @@
+import { memo } from 'react';
 import { PageNavLink } from './PageNavLink';
 
-export const Navbar = () => {
+export const Navbar = memo(() => {
   return (
     <nav
       data-cy="nav"
@@ -16,4 +17,4 @@ export const Navbar = () => {
       </div>
     </nav>
   );
-};
+});
