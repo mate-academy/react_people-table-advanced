@@ -28,12 +28,17 @@ export const PeoplePage = () => {
   const hasTable = people.length > 0;
   const hasPeopleMessage = !hasTable && !isLoading && !hasError;
 
+  const isIncludeName = (name: string | null) => (name
+    ? name.toLowerCase().includes(query.toLocaleLowerCase())
+    : false);
+  const isIncludeCenturies = (year: number) => centuries.includes(`${Math.round(year / 100)}`);
+
   const visiblePeople = people.filter(person => {
     const hasQuery = !query
       ? true
-      : person.name.toLowerCase().includes(query.toLocaleLowerCase())
-        || person.fatherName?.toLowerCase().includes(query.toLocaleLowerCase())
-        || person.motherName?.toLowerCase().includes(query.toLocaleLowerCase());
+      : isIncludeName(person.name)
+        || isIncludeName(person.fatherName)
+        || isIncludeName(person.motherName);
 
     const hasSexValue = !sexValue
       ? true
@@ -41,8 +46,7 @@ export const PeoplePage = () => {
 
     const hasCenturies = !centuries.length
       ? true
-      : centuries.includes(`${Math.round(person.born / 100)}`)
-        || centuries.includes(`${Math.round(person.died / 100)}`);
+      : isIncludeCenturies(person.born) || isIncludeCenturies(person.died);
 
     return hasQuery && hasSexValue && hasCenturies;
   });
