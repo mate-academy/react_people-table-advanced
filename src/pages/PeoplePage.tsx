@@ -97,9 +97,9 @@ export const PeoplePage = () => {
     if (centuriesParams.length) {
       visible = visible.filter(person => {
         const centuryBorn = (Math.floor(person.born / 100) + 1).toString();
-        
+
         return centuriesParams.includes(centuryBorn);
-      })
+      });
     }
 
     if (sexParam) {
@@ -120,7 +120,7 @@ export const PeoplePage = () => {
           return 0;
       }
     });
-    
+
     visible = orderParam ? sortedList.reverse() : sortedList;
 
     return visible;
