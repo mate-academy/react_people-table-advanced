@@ -1,4 +1,9 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { PeopleFilters } from '../components/PeopleFilters';
 import { Loader } from '../components/Loader';
@@ -66,14 +71,14 @@ export const PeoplePage: React.FC = React.memo(() => {
     );
   }, [query, searchParams]);
 
-  const visiblePeople = getVisiblePeople(
+  const visiblePeople = useMemo(() => getVisiblePeople(
     people,
     sex,
     query,
     centuries,
     sort,
     order,
-  );
+  ), [people, sex, query, centuries, sort, order]);
 
   const isLoadedPeopleExist = isDataLoaded && visiblePeople.length !== 0;
   const isLoadedPeopleNotExist = isDataLoaded && !people.length;
