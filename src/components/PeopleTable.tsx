@@ -114,6 +114,7 @@ export const PeopleTable: React.FC<Props> = memo(({ people, selectedUser }) => {
       <tbody>
         {sortedPeople.map(person => (
           <tr
+            key={person.slug}
             data-cy="person"
             className={cn(
               { 'has-background-warning': selectedUser === person.slug },

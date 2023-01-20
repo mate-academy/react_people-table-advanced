@@ -78,19 +78,27 @@ export const PeoplePage: React.FC = memo(() => {
             <div className="box table-container">
               {isLoading && <Loader />}
 
-              {isError && (
+              {isError && isLoadingFinish && (
                 <p data-cy="peopleLoadingError">Something went wrong</p>
               )}
 
-              {isLoadingFinish && !people.length && (
-                <p data-cy="noPeopleMessage">
-                  There are no people on the server
-                </p>
-              )}
+              {isLoadingFinish
+                && people.length === 0
+                && !isError
+                && (
+                  <p data-cy="noPeopleMessage">
+                    There are no people on the server
+                  </p>
+                )}
 
-              {!visiblePeople.length && isLoadingFinish && (
-                <p>There are no people matching the current search criteria</p>
-              )}
+              {visiblePeople.length === 0
+                && isLoadingFinish
+                && !isError
+                && (
+                  <p>
+                    There are no people matching the current search criteria
+                  </p>
+                )}
 
               {visiblePeople.length > 0 && (
                 <PeopleTable

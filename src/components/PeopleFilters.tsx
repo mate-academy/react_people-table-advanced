@@ -45,6 +45,7 @@ export const PeopleFilters: React.FC = memo(() => {
       <p className="panel-tabs" data-cy="SexFilter">
         {Object.entries(sexValues).map(([key, value]) => (
           <SearchLink
+            key={value}
             params={{ sex: value }}
             className={cn(
               { 'is-active': sex === value },
@@ -77,6 +78,7 @@ export const PeopleFilters: React.FC = memo(() => {
           <div className="level-left">
             {centuriesValues.map(century => (
               <SearchLink
+                key={century}
                 params={{
                   centuries: centuries.includes(century)
                     ? centuries.filter(number => number !== century)
