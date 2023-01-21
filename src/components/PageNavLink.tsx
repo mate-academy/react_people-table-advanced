@@ -10,10 +10,10 @@ type Props = {
 export const PageNavLink:FC<Props> = ({ to, text }) => {
   return (
     <NavLink
-      //  aria-current="page"
       to={to}
-      className={({ isActive }) => classNames('navbar-item',
-        { 'has-background-grey-lighter': isActive })}
+      className={({ isActive }) => classNames('navbar-item', {
+        'has-background-grey-lighter': isActive,
+      })}
     >
       {text}
     </NavLink>

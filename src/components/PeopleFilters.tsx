@@ -4,6 +4,8 @@ import { SexType } from '../types/SexType';
 import { getSearchWith } from '../utils/searchHelper';
 import { SearchLink } from './SearchLink';
 
+const centuriesForButtoms = ['16', '17', '18', '19', '20'];
+
 export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const centuries = searchParams.getAll('centuries') || [];
@@ -54,11 +56,11 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            {['16', '17', '18', '19', '20'].map(century => (
+            {centuriesForButtoms.map(century => (
               <SearchLink
                 params={{
                   centuries: centuries.includes(century)
-                    ? centuries.filter(c => c !== century)
+                    ? centuries.filter(curCentury => curCentury !== century)
                     : [...centuries, century],
                 }}
                 data-cy="century"
