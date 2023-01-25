@@ -6,6 +6,7 @@ import { PeopleTable } from './PeopleTable';
 import { Person } from '../types';
 import { getPeople } from '../api';
 import { getSearchWith } from '../utils/searchHelper';
+import { SortType } from '../types/SortType';
 
 export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[] | null>(null);
@@ -66,16 +67,16 @@ export const PeoplePage = () => {
 
     visiblesPeople?.sort((p1, p2) => {
       switch (sort) {
-        case 'name':
+        case SortType.name:
           return p1.name.localeCompare(p2.name);
 
-        case 'sex':
+        case SortType.sex:
           return p1.sex.localeCompare(p2.sex);
 
-        case 'born':
+        case SortType.born:
           return p1.born - p2.born;
 
-        case 'died':
+        case SortType.died:
           return p1.died - p2.died;
 
         default:

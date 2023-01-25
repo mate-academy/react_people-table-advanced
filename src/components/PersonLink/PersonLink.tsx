@@ -7,7 +7,11 @@ interface Props {
 }
 
 export const PersonLink: React.FC<Props> = ({ persone }) => {
-  const { name, sex, slug } = persone as Person;
+  const {
+    name,
+    sex,
+    slug,
+  } = persone as Person;
   const parentPath = useResolvedPath('../').pathname;
   const location = useLocation();
 

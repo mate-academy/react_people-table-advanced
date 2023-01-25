@@ -25,7 +25,6 @@ export const App = () => {
               <Route index element={(<PeoplePage />)} />
               <Route path=":slug" element={(<PeoplePage />)} />
             </Route>
-
           </Routes>
         </div>
       </div>
