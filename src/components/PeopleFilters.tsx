@@ -14,6 +14,8 @@ export const PeopleFilters: React.FC<Props> = ({
   sex,
   centuries,
 }) => {
+  const centuriesValues = ['16', '17', '18', '19', '20'];
+
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
@@ -59,7 +61,7 @@ export const PeopleFilters: React.FC<Props> = ({
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            {['16', '17', '18', '19', '20'].map(century => (
+            {centuriesValues.map(century => (
               <SearchLink
                 key={century}
                 data-cy="century"

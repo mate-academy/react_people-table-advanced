@@ -3,15 +3,15 @@ import { Link, useLocation, useResolvedPath } from 'react-router-dom';
 import { Person } from '../../types';
 
 interface Props {
-  persone: Person | null,
+  person: Person,
 }
 
-export const PersonLink: React.FC<Props> = ({ persone }) => {
+export const PersonLink: React.FC<Props> = ({ person }) => {
   const {
     name,
     sex,
     slug,
-  } = persone as Person;
+  } = person;
   const parentPath = useResolvedPath('../').pathname;
   const location = useLocation();
 

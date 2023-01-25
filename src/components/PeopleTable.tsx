@@ -5,7 +5,7 @@ import { PersonLink } from './PersonLink';
 import { SearchLink } from './SearchLink';
 
 interface Props {
-  people: Person[] | null,
+  people: Person[],
   sort: string | null,
   order: string | null,
 }
@@ -36,7 +36,7 @@ export const PeopleTable: React.FC<Props> = ({
             const titleToLoewrCase = title.toLowerCase();
 
             return (
-              <th>
+              <th key={title}>
                 <span className="is-flex is-flex-wrap-nowrap">
                   {title}
                   <SearchLink
@@ -84,7 +84,7 @@ export const PeopleTable: React.FC<Props> = ({
                     return someName ? (
                       <td>
                         {somePersone
-                          ? <PersonLink persone={somePersone} />
+                          ? <PersonLink person={somePersone} />
                           : someName}
                       </td>
                     ) : <td>-</td>;
@@ -99,7 +99,7 @@ export const PeopleTable: React.FC<Props> = ({
               )}
             >
               <td>
-                <PersonLink persone={persone} />
+                <PersonLink person={persone} />
               </td>
               <td>{persone.sex}</td>
               <td>{born}</td>
