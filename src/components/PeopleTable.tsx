@@ -1,6 +1,6 @@
 import React, { memo, useMemo } from 'react';
 import cn from 'classnames';
-import { useSearchParams } from 'react-router-dom';
+import { useParams, useSearchParams } from 'react-router-dom';
 import { Person } from '../types/Person';
 import { PersonLink } from './PersonLink';
 import { SearchLink } from './SearchLink';
@@ -8,7 +8,6 @@ import { SearchParams } from '../utils/searchHelper';
 
 type Props = {
   people: Person[];
-  selectedUser: string;
 };
 
 const rowValues = {
@@ -18,21 +17,22 @@ const rowValues = {
   Died: 'died',
 };
 
-export const PeopleTable: React.FC<Props> = memo(({ people, selectedUser }) => {
+export const PeopleTable: React.FC<Props> = memo(({ people }) => {
+  const { selectedUser = '' } = useParams();
   const [searchParams] = useSearchParams();
   const sort = searchParams.get('sort');
   const order = searchParams.get('order');
 
   const findParent = (name: string) => {
-    const findedParent = people.find(human => human.name === name);
+    const parent = people.find(human => human.name === name);
 
-    return findedParent
-      ? <PersonLink person={findedParent} />
+    return parent
+      ? <PersonLink person={parent} />
       : name;
   };
 
-  const handleSetSorting = (value: string): SearchParams => {
-    if (!sort && !order) {
+  const setSorting = (value: string): SearchParams => {
+    if ((!sort && !order) || (sort !== value)) {
       return { sort: value };
     }
 
@@ -53,24 +53,16 @@ export const PeopleTable: React.FC<Props> = memo(({ people, selectedUser }) => {
     people.sort((first, second) => {
       switch (sort) {
         case 'name':
-          return order === 'desc'
-            ? second.name.localeCompare(first.name)
-            : first.name.localeCompare(second.name);
-
         case 'sex':
           return order === 'desc'
-            ? second.sex.localeCompare(first.sex)
-            : first.sex.localeCompare(second.sex);
+            ? second[sort].localeCompare(first[sort])
+            : first[sort].localeCompare(second[sort]);
 
         case 'born':
-          return order === 'desc'
-            ? second.born - first.born
-            : first.born - second.born;
-
         case 'died':
           return order === 'desc'
-            ? second.died - first.died
-            : first.died - second.died;
+            ? second[sort] - first[sort]
+            : first[sort] - second[sort];
 
         default:
           return 0;
@@ -90,7 +82,7 @@ export const PeopleTable: React.FC<Props> = memo(({ people, selectedUser }) => {
               <span className="is-flex is-flex-wrap-nowrap">
                 {key}
                 <SearchLink
-                  params={handleSetSorting(value)}
+                  params={setSorting(value)}
                 >
                   <span className="icon">
                     <i

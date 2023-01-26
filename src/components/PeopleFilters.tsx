@@ -4,13 +4,13 @@ import { useSearchParams } from 'react-router-dom';
 import { SearchLink } from './SearchLink';
 
 const getAllCenturies = (from: number, to: number) => {
-  const result = [];
+  const centuries = [];
 
   for (let i = from; i <= to; i += 1) {
-    result.push(i.toString());
+    centuries.push(i.toString());
   }
 
-  return result;
+  return centuries;
 };
 
 const sexValues = {

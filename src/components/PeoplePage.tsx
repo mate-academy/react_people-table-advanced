@@ -4,7 +4,7 @@ import React, {
   useMemo,
   memo,
 } from 'react';
-import { useParams, useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 
 import { PeopleFilters } from './PeopleFilters';
 import { Loader } from './Loader';
@@ -17,7 +17,6 @@ export const PeoplePage: React.FC = memo(() => {
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
   const [isLoadingFinish, setIsLoadingFinish] = useState(false);
-  const { selectedUser = '' } = useParams();
   const [searchParams] = useSearchParams();
 
   const sex = searchParams.get('sex');
@@ -64,6 +63,14 @@ export const PeoplePage: React.FC = memo(() => {
       return isSexMatch && isQueryMatch && isCenturyMatch;
     })), [people, sex, query, centuries]);
 
+  const isNoPeopleOnServer = useMemo(() => (
+    isLoadingFinish && !isError && !people.length
+  ), [isLoadingFinish, isError, people]);
+
+  const isNoPeopleMatchSearchParams = useMemo(() => (
+    visiblePeople.length === 0 && isLoadingFinish && !isError
+  ), [visiblePeople, isLoadingFinish, isError]);
+
   return (
     <>
       <h1 className="title">People Page</h1>
@@ -82,29 +89,20 @@ export const PeoplePage: React.FC = memo(() => {
                 <p data-cy="peopleLoadingError">Something went wrong</p>
               )}
 
-              {isLoadingFinish
-                && people.length === 0
-                && !isError
-                && (
-                  <p data-cy="noPeopleMessage">
-                    There are no people on the server
-                  </p>
-                )}
+              {isNoPeopleOnServer && (
+                <p data-cy="noPeopleMessage">
+                  There are no people on the server
+                </p>
+              )}
 
-              {visiblePeople.length === 0
-                && isLoadingFinish
-                && !isError
-                && (
-                  <p>
-                    There are no people matching the current search criteria
-                  </p>
-                )}
+              {isNoPeopleMatchSearchParams && (
+                <p>
+                  There are no people matching the current search criteria
+                </p>
+              )}
 
               {visiblePeople.length > 0 && (
-                <PeopleTable
-                  people={visiblePeople}
-                  selectedUser={selectedUser}
-                />
+                <PeopleTable people={visiblePeople} />
               )}
             </div>
           </div>
