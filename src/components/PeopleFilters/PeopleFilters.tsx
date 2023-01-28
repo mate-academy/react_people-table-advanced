@@ -11,36 +11,34 @@ interface Props {
   onQueryChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-export const PeopleFilters: React.FC<Props> = React.memo(
-  ({
-    sex,
-    query,
-    centuries,
-    onQueryChange,
-  }) => {
-    return (
-      <nav className="panel">
-        <p className="panel-heading">Filters</p>
+export const PeopleFilters: React.FC<Props> = React.memo(({
+  sex,
+  query,
+  centuries,
+  onQueryChange,
+}) => {
+  return (
+    <nav className="panel">
+      <p className="panel-heading">Filters</p>
 
-        <PeopleSexFilter sex={sex} />
+      <PeopleSexFilter sex={sex} />
 
-        <PeopleNameFilter query={query} onQueryChange={onQueryChange} />
+      <PeopleNameFilter query={query} onQueryChange={onQueryChange} />
 
-        <PeopleCenturyFilter centuries={centuries} />
+      <PeopleCenturyFilter centuries={centuries} />
 
-        <div className="panel-block">
-          <SearchLink
-            params={{
-              sex: null,
-              query: null,
-              centuries: null,
-            }}
-            className="button is-link is-outlined is-fullwidth"
-          >
-            Reset all filters
-          </SearchLink>
-        </div>
-      </nav>
-    );
-  },
-);
+      <div className="panel-block">
+        <SearchLink
+          params={{
+            sex: null,
+            query: null,
+            centuries: null,
+          }}
+          className="button is-link is-outlined is-fullwidth"
+        >
+          Reset all filters
+        </SearchLink>
+      </div>
+    </nav>
+  );
+});

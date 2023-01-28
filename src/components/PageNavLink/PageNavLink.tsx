@@ -12,16 +12,17 @@ interface Props {
   navTitle: string;
 }
 
-export const PageNavLink: React.FC<Props> = React.memo(
-  ({ to, navTitle }) => (
-    <NavLink
-      to={to}
-      className={({ isActive }) => cn(
-        'navbar-item',
-        { 'has-background-grey-lighter': isActive },
-      )}
-    >
-      {navTitle}
-    </NavLink>
-  ),
-);
+export const PageNavLink: React.FC<Props> = React.memo(({
+  to,
+  navTitle,
+}) => (
+  <NavLink
+    to={to}
+    className={({ isActive }) => cn(
+      'navbar-item',
+      { 'has-background-grey-lighter': isActive },
+    )}
+  >
+    {navTitle}
+  </NavLink>
+));

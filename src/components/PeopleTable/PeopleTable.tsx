@@ -1,7 +1,7 @@
 import React from 'react';
 import cn from 'classnames';
 import { Person } from '../../types';
-import { PersonInfo } from '../PersonInfo';
+import { PeopleTableRow } from '../PeopleTableRow';
 import { SearchLink } from '../SearchLink';
 import { SearchParams } from '../../utils/searchHelper';
 import { tableColumns } from './tableColumns';
@@ -66,7 +66,7 @@ export const PeopleTable: React.FC<Props> = React.memo(({
 
       <tbody>
         {people.map(person => (
-          <PersonInfo
+          <PeopleTableRow
             key={person.slug}
             person={person}
           />

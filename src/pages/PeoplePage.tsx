@@ -11,7 +11,8 @@ import { PeopleTable } from '../components/PeopleTable';
 import { Person } from '../types';
 import { getPeople } from '../api';
 import { getSearchWith } from '../utils/searchHelper';
-import { getVisiblePeople } from '../helpers';
+import { getVisiblePeople } from '../helpers/getVisiblePeople';
+import { getPreparedPeople } from '../helpers/getPreparedPeople';
 
 export const PeoplePage: React.FC = React.memo(() => {
   const [people, setPeople] = useState<Person[]>([]);
@@ -27,22 +28,7 @@ export const PeoplePage: React.FC = React.memo(() => {
     try {
       const loadedPeople = await getPeople();
 
-      const preparedPeople = loadedPeople.map(person => {
-        const mother = loadedPeople.find(mom => (
-          mom.name === person.motherName
-        ));
-        const father = loadedPeople.find(dad => (
-          dad.name === person.fatherName
-        ));
-
-        return (
-          {
-            ...person,
-            mother,
-            father,
-          }
-        );
-      });
+      const preparedPeople = getPreparedPeople(loadedPeople);
 
       setPeople(preparedPeople);
       setIsDataLoaded(true);

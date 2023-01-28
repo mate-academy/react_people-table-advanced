@@ -1,4 +1,4 @@
-import { Person } from './types';
+import { Person } from '../types';
 
 export const getVisiblePeople = (
   people: Person[],
