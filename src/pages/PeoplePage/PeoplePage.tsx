@@ -1,5 +1,5 @@
 import { useSearchParams } from 'react-router-dom';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { PeopleFilters } from '../../components/PeopleFilters';
 import { Loader } from '../../components/Loader';
 import { PeopleTable } from '../../components/PeopleTable';
@@ -13,6 +13,7 @@ export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);
   const [peopleLoadingError, setPeopleLoadingError] = useState(false);
   const [searchParams] = useSearchParams();
+
   const query = searchParams.get('query');
   const sex = searchParams.get('sex');
   const century = searchParams.getAll('century');
@@ -39,14 +40,26 @@ export const PeoplePage = () => {
     peopleFromServer();
   }, []);
 
-  const visiblePeople = getVisiblePeople(
+  const visiblePeople = useMemo(() => getVisiblePeople(
     people,
     query,
     sex,
     century,
     sort,
     order,
-  );
+  ), [
+    people,
+    query,
+    sex,
+    century,
+    sort,
+    order,
+  ]);
+
+  const shouldPeopleFilterAppear = !isLoading && !peopleLoadingError;
+  const noPeopleRecived = people.length === 0 && !isLoading;
+  const noSuitablePeople = visiblePeople.length === 0 && !isLoading;
+  const shouldPeopleTableAppear = !isLoading && visiblePeople.length !== 0;
 
   return (
     <>
@@ -54,7 +67,7 @@ export const PeoplePage = () => {
 
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
-          {!isLoading && (
+          {shouldPeopleFilterAppear && (
             <div className="column is-7-tablet is-narrow-desktop">
               <PeopleFilters />
             </div>
@@ -67,22 +80,20 @@ export const PeoplePage = () => {
               {peopleLoadingError
                 && <p data-cy="peopleLoadingError">Something went wrong</p>}
 
-              {people.length === 0 && !isLoading && (
+              {noPeopleRecived && (
                 <p data-cy="noPeopleMessage">
                   There are no people on the server
                 </p>
               )}
 
-              {visiblePeople.length === 0
-                && !isLoading
+              {noSuitablePeople
                 && (
                   <p>
                     There are no people matching the current search criteria
                   </p>
                 )}
 
-              {!isLoading
-                && visiblePeople.length !== 0
+              {shouldPeopleTableAppear
                 && (
                   <PeopleTable
                     people={visiblePeople}

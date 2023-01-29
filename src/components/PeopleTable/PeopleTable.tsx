@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import cn from 'classnames';
 import { useParams } from 'react-router-dom';
 import { Person } from '../../types';
@@ -19,7 +19,7 @@ export const PeopleTable:React.FC<Props> = React.memo(({
 }) => {
   const { slug } = useParams();
 
-  const getSortParams = (sortBy: string) => {
+  const getSortParams = useCallback((sortBy: string) => {
     if (sortBy === sort && !order) {
       return { sort: sortBy, order: 'desc' };
     }
@@ -29,7 +29,7 @@ export const PeopleTable:React.FC<Props> = React.memo(({
     }
 
     return { sort: null, order: null };
-  };
+  }, [sort, order]);
 
   return (
     <table
