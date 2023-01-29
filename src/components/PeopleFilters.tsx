@@ -2,6 +2,7 @@ import React, { memo } from 'react';
 import cn from 'classnames';
 import { useSearchParams } from 'react-router-dom';
 import { SearchLink } from './SearchLink';
+import { getSearchWith } from '../utils/searchHelper';
 
 const getAllCenturies = (from: number, to: number) => {
   const centuries = [];
@@ -26,16 +27,12 @@ export const PeopleFilters: React.FC = memo(() => {
 
   const sex = searchParams.get('sex');
   const centuries = searchParams.getAll('centuries');
-  const query = searchParams.get('query');
+  const query = searchParams.get('query') || '';
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.value) {
-      searchParams.set('query', event.target.value);
-    } else {
-      searchParams.delete('query');
-    }
-
-    setSearchParams(searchParams);
+    setSearchParams(getSearchWith(searchParams, {
+      query: event.target.value || null,
+    }));
   };
 
   return (
@@ -63,7 +60,7 @@ export const PeopleFilters: React.FC = memo(() => {
             type="search"
             className="input"
             placeholder="Search"
-            value={query || ''}
+            value={query}
             onChange={handleInputChange}
           />
 
@@ -97,7 +94,7 @@ export const PeopleFilters: React.FC = memo(() => {
 
           <div className="level-right ml-4">
             <SearchLink
-              params={{ centuries: [] }}
+              params={{ centuries: null }}
               data-cy="centuryALL"
               className={cn(
                 'button is-success',
@@ -115,7 +112,7 @@ export const PeopleFilters: React.FC = memo(() => {
           params={{
             query: null,
             sex: null,
-            centuries: [],
+            centuries: null,
           }}
           className="button is-link is-outlined is-fullwidth"
         >
