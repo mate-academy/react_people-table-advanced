@@ -1,14 +1,23 @@
-import { useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
 import { PeopleFilters } from '../../components/PeopleFilters';
 import { Loader } from '../../components/Loader';
 import { PeopleTable } from '../../components/PeopleTable';
 import { getPeople } from '../../api';
 import { Person } from '../../types';
+import { getPreparedPeople } from '../../helpers/getPreparedPeople';
+import { getVisiblePeople } from '../../helpers/getVisiblePeople';
 
 export const PeoplePage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [people, setPeople] = useState<Person[]>([]);
   const [peopleLoadingError, setPeopleLoadingError] = useState(false);
+  const [searchParams] = useSearchParams();
+  const query = searchParams.get('query');
+  const sex = searchParams.get('sex');
+  const century = searchParams.getAll('century');
+  const sort = searchParams.get('sort');
+  const order = searchParams.get('order');
 
   const peopleFromServer = async () => {
     setIsLoading(true);
@@ -16,16 +25,7 @@ export const PeoplePage = () => {
     try {
       const loadPeople = await getPeople();
 
-      const preparedPeople = loadPeople.map(person => {
-        const mother = loadPeople.find(mom => mom.name === person.motherName);
-        const father = loadPeople.find(dad => dad.name === person.fatherName);
-
-        return {
-          ...person,
-          mother,
-          father,
-        };
-      });
+      const preparedPeople = getPreparedPeople(loadPeople);
 
       setPeople(preparedPeople);
     } catch {
@@ -38,6 +38,15 @@ export const PeoplePage = () => {
   useEffect(() => {
     peopleFromServer();
   }, []);
+
+  const visiblePeople = getVisiblePeople(
+    people,
+    query,
+    sex,
+    century,
+    sort,
+    order,
+  );
 
   return (
     <>
@@ -64,9 +73,23 @@ export const PeoplePage = () => {
                 </p>
               )}
 
-              {/* <p>There are no people matching the current search criteria</p> */}
+              {visiblePeople.length === 0
+                && !isLoading
+                && (
+                  <p>
+                    There are no people matching the current search criteria
+                  </p>
+                )}
 
-              {!isLoading && <PeopleTable people={people} />}
+              {!isLoading
+                && visiblePeople.length !== 0
+                && (
+                  <PeopleTable
+                    people={visiblePeople}
+                    sort={sort}
+                    order={order}
+                  />
+                )}
             </div>
           </div>
         </div>
