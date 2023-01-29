@@ -18,7 +18,6 @@ React.FC<Props> = ({
   searchInput,
 }) => {
   const [searchParams] = useSearchParams();
-  const location = useLocation();
   const centuries = searchParams.getAll('centuries') || [];
   const { search } = useLocation();
 
@@ -34,24 +33,20 @@ React.FC<Props> = ({
 
   return (
     <nav className="panel">
-      <p>
-        {location.pathname}
-        {location.search}
-      </p>
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
         <SearchLink
           className={classNames({
-            'is-active': search === '',
+            'is-active': !search.includes('?sex='),
           })}
-          params={{ sex: 'all' }}
+          params={{ sex: null }}
         >
           All
         </SearchLink>
         <SearchLink
           className={classNames({
-            'is-active': search === '?sex=m',
+            'is-active': search.includes('?sex=m'),
           })}
           params={{ sex: 'm' }}
         >

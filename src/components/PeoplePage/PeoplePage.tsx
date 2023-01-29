@@ -40,25 +40,25 @@ export const PeoplePage = () => {
   };
 
   const centuries = searchParams.getAll('centuries') || [];
-  const sex = searchParams.get('sex') || [];
+  const sex = searchParams.get('sex') || '';
 
-  const filterCentury = () => {
+  const filterSearch = () => {
     const sortedPeople = [...people];
 
     return sortedPeople.filter(
       (person: Person) => {
         if (centuries.length > 0) {
-          if (sex !== 'all') {
+          if (sex) {
             return centuries.includes(String(Math.ceil(person.born / 100)))
             && person.sex === sex
             && person.name.toLowerCase().includes(searchInput.toLowerCase());
           }
 
           return centuries.includes(String(Math.ceil(person.born / 100)))
-           && person.name.toLowerCase().includes(searchInput.toLowerCase());
+          && person.name.toLowerCase().includes(searchInput.toLowerCase());
         }
 
-        if (sex === 'f' || sex === 'm') {
+        if (sex) {
           return person.sex === sex
           && person.name.toLowerCase().includes(searchInput.toLowerCase());
         }
@@ -69,11 +69,11 @@ export const PeoplePage = () => {
     );
   };
 
-  let result = filterCentury();
+  let result = filterSearch();
   const [visiblePeople, setVisiblePeople] = useState(result);
 
   useEffect(() => {
-    result = filterCentury();
+    result = filterSearch();
   }, [visiblePeople]);
 
   useEffect(() => {
@@ -112,7 +112,7 @@ export const PeoplePage = () => {
               }
 
               {
-                !visiblePeople.length && !isLoading && !isError
+                !result.length && !isLoading && !isError
                 && (
                   <p>
                     There are no people matching the current search criteria
@@ -120,7 +120,7 @@ export const PeoplePage = () => {
                 )
               }
 
-              { !!visiblePeople.length
+              { !!result.length
               && !isLoading
               && !isListEmpty
               && (
