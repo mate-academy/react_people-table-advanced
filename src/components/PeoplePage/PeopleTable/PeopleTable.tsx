@@ -96,7 +96,6 @@ export const PeopleTable: React.FC<Props>
             <span className="is-flex is-flex-wrap-nowrap">
               Name
               <SearchLink
-                // to="#/people?sort=name"
                 params={{ sort: 'name' }}
                 onClick={() => sortByValue('name', clickName, setClickName)}
               >
@@ -111,7 +110,6 @@ export const PeopleTable: React.FC<Props>
             <span className="is-flex is-flex-wrap-nowrap">
               Sex
               <SearchLink
-                // to="#/people?sort=sex"
                 params={{ sort: 'sex' }}
                 onClick={() => sortByValue('sex', clickSex, setClickSex)}
               >
@@ -126,7 +124,6 @@ export const PeopleTable: React.FC<Props>
             <span className="is-flex is-flex-wrap-nowrap">
               Born
               <SearchLink
-                // href="#/people?sort=born&amp;order=desc"
                 params={{ sort: 'born' }}
                 onClick={() => sortByValue('born', clickBorn, setClickBorn)}
               >
@@ -141,7 +138,6 @@ export const PeopleTable: React.FC<Props>
             <span className="is-flex is-flex-wrap-nowrap">
               Died
               <SearchLink
-                // href="#/people?sort=died"
                 params={{ sort: 'died' }}
                 onClick={() => sortByValue('died', clickDied, setClickDied)}
               >

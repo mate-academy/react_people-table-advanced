@@ -3,6 +3,7 @@ import { useSearchParams } from 'react-router-dom';
 import { PeopleFilters } from './PeopleFilter/PeopleFilters';
 import { Loader } from '../Loader';
 import { PeopleTable } from './PeopleTable/PeopleTable';
+import { Person } from '../../types';
 
 export const PeoplePage = () => {
   const [people, setPeople] = useState([]);
@@ -25,7 +26,6 @@ export const PeoplePage = () => {
       const result = await response.json();
 
       setPeople(result);
-      // setVisiblePeople(result);
       setIsError(false);
 
       if (result.length === 0) {
@@ -46,7 +46,7 @@ export const PeoplePage = () => {
     const sortedPeople = [...people];
 
     return sortedPeople.filter(
-      (person: any) => {
+      (person: Person) => {
         if (centuries.length > 0) {
           if (sex !== 'all') {
             return centuries.includes(String(Math.ceil(person.born / 100)))
@@ -75,12 +75,10 @@ export const PeoplePage = () => {
   useEffect(() => {
     result = filterCentury();
   }, [visiblePeople]);
-  // console.log(result, 'result');
 
   useEffect(() => {
     getPeople();
   }, []);
-  // console.log(visiblePeople);
 
   return (
     <>
@@ -91,7 +89,6 @@ export const PeoplePage = () => {
           <div className="column is-7-tablet is-narrow-desktop">
             {!!people.length && (
               <PeopleFilters
-                visiblePeople={result}
                 people={people}
                 setVisiblePeople={setVisiblePeople}
                 searchInput={searchInput}
