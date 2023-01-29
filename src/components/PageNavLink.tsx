@@ -3,8 +3,13 @@ import cn from 'classnames';
 
 import { NavLink } from 'react-router-dom';
 
+type ToObject = {
+  pathname: string;
+  search: string;
+};
+
 type Props = {
-  to: string;
+  to: ToObject | string;
   text: string;
 };
 
