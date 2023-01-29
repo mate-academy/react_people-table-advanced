@@ -13,10 +13,7 @@ export const PeopleTable: React.FC<Props>
 = ({ visiblePeople }) => {
   const slugUrl = useParams();
   const [sortType, setSortType] = useState('');
-  const [clickName, setClickName] = useState(0);
-  const [clickSex, setClickSex] = useState(0);
-  const [clickBorn, setClickBorn] = useState(0);
-  const [clickDied, setClickDied] = useState(0);
+  const [clickValue, setClickValue] = useState(0);
 
   const isSelected = (personSlug: string) => {
     return personSlug === slugUrl.slug;
@@ -56,6 +53,8 @@ export const PeopleTable: React.FC<Props>
     }
   };
 
+  console.log(sortType);
+
   const setSortedPeople = () => {
     const sortedPeople = [...visiblePeople];
 
@@ -92,62 +91,33 @@ export const PeopleTable: React.FC<Props>
     >
       <thead>
         <tr>
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Name
-              <SearchLink
-                params={{ sort: 'name' }}
-                onClick={() => sortByValue('name', clickName, setClickName)}
-              >
-                <span className="icon">
-                  <i className="fas fa-sort" />
+          {
+            ['name', 'sex', 'born', 'died'].map((value) => (
+              <th key={value}>
+                <span className="is-flex is-flex-wrap-nowrap">
+                  {value[0].toUpperCase() + value.slice(1)}
+                  <SearchLink
+                    params={{ sort: value }}
+                    onClick={() => {
+                      sortByValue(value, clickValue, setClickValue);
+                    }}
+                  >
+                    <span className="icon">
+                      <i
+                        className={classNames('fas fa-sort', {
+                          'fa-sort-up': clickValue === 1
+                          && sortType.includes(value),
+                          'fa-sort-down': clickValue === 2
+                          && sortType.includes(value),
+                        })}
+                      />
+                    </span>
+                  </SearchLink>
                 </span>
-              </SearchLink>
-            </span>
-          </th>
 
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Sex
-              <SearchLink
-                params={{ sort: 'sex' }}
-                onClick={() => sortByValue('sex', clickSex, setClickSex)}
-              >
-                <span className="icon">
-                  <i className="fas fa-sort" />
-                </span>
-              </SearchLink>
-            </span>
-          </th>
-
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Born
-              <SearchLink
-                params={{ sort: 'born' }}
-                onClick={() => sortByValue('born', clickBorn, setClickBorn)}
-              >
-                <span className="icon">
-                  <i className="fas fa-sort-up" />
-                </span>
-              </SearchLink>
-            </span>
-          </th>
-
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Died
-              <SearchLink
-                params={{ sort: 'died' }}
-                onClick={() => sortByValue('died', clickDied, setClickDied)}
-              >
-                <span className="icon">
-                  <i className="fas fa-sort" />
-                </span>
-              </SearchLink>
-            </span>
-          </th>
-
+              </th>
+            ))
+          }
           <th>Mother</th>
           <th>Father</th>
         </tr>
