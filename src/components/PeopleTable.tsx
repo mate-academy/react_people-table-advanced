@@ -1,9 +1,22 @@
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
+import { useMemo } from 'react';
 import { usePeople } from '../hooks/usePeople';
 import { PeopleItem } from './PeopleItem';
+import { Person } from '../types';
+import { sortByKey } from '../utils/sortByKey';
 
 export const PeopleTable = () => {
+  const [searchParams] = useSearchParams();
+
+  const sort: keyof Person | null = searchParams.get('sort') as keyof Person;
+  const order: 'desc' | null = searchParams.get('order') as 'desc' | null;
+
   const { people } = usePeople();
+
+  const sortedPeople = useMemo(
+    () => sortByKey(people, sort, order),
+    [people, sort, order],
+  );
 
   return (
     <table
@@ -62,7 +75,7 @@ export const PeopleTable = () => {
       </thead>
 
       <tbody>
-        {people.map(person => (
+        {sortedPeople.map(person => (
           <PeopleItem
             key={person.slug}
             person={person}

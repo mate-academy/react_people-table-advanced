@@ -98,7 +98,7 @@ export const PeopleFilters = () => {
             <Link
               data-cy="centuryALL"
               className="button is-success is-outlined"
-              to="/"
+              to="/people"
             >
               All
             </Link>
@@ -109,7 +109,7 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <Link
           className="button is-link is-outlined is-fullwidth"
-          to="/"
+          to="/people"
         >
           Reset all filters
         </Link>
