@@ -9,10 +9,9 @@ export const PeopleFilters = () => {
   const centuriesParams = searchParams.getAll('centuries') || [];
 
   const onSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setSearchParams({ query: e.target.value });
-    if (e.target.value === '') {
-      setSearchParams({});
-    }
+    const query = { query: e.target.value || null };
+
+    setSearchParams(getSearchWith(searchParams, query));
   };
 
   const setCenturies = (century: string) => {
