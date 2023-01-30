@@ -11,7 +11,7 @@ export const PeopleFilters = () => {
       >
         <Link
           className="is-active"
-          to="#/people"
+          to="/people"
         >
           All
         </Link>
