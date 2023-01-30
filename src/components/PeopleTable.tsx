@@ -41,110 +41,116 @@ export const PeopleTable: FC<Props> = memo(({ people }) => {
   ), [filteredPeople, sort, order]);
 
   return (
-    <table
-      data-cy="peopleTable"
-      className="table is-striped is-hoverable is-narrow is-fullwidth"
-    >
-      <thead>
-        <tr>
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Name
-              <SearchLink params={onSort(SortParam.Name)}>
-                <span className="icon">
-                  <i className={cn('fas', {
-                    'fa-sort': sort !== SortParam.Name,
-                    'fa-sort-up': sort === SortParam.Name && !order,
-                    'fa-sort-down': sort === SortParam.Name && order,
-                  })}
-                  />
+    <>
+      {sortedPeople.length === 0 ? (
+        <p>There are no people matching the current search criteria</p>
+      ) : (
+        <table
+          data-cy="peopleTable"
+          className="table is-striped is-hoverable is-narrow is-fullwidth"
+        >
+          <thead>
+            <tr>
+              <th>
+                <span className="is-flex is-flex-wrap-nowrap">
+                  Name
+                  <SearchLink params={onSort(SortParam.Name)}>
+                    <span className="icon">
+                      <i className={cn('fas', {
+                        'fa-sort': sort !== SortParam.Name,
+                        'fa-sort-up': sort === SortParam.Name && !order,
+                        'fa-sort-down': sort === SortParam.Name && order,
+                      })}
+                      />
+                    </span>
+                  </SearchLink>
                 </span>
-              </SearchLink>
-            </span>
-          </th>
+              </th>
 
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Sex
-              <SearchLink params={onSort(SortParam.Sex)}>
-                <span className="icon">
-                  <i className={cn('fas', {
-                    'fa-sort': sort !== SortParam.Sex,
-                    'fa-sort-up': sort === SortParam.Sex && !order,
-                    'fa-sort-down': sort === SortParam.Sex && order,
-                  })}
-                  />
+              <th>
+                <span className="is-flex is-flex-wrap-nowrap">
+                  Sex
+                  <SearchLink params={onSort(SortParam.Sex)}>
+                    <span className="icon">
+                      <i className={cn('fas', {
+                        'fa-sort': sort !== SortParam.Sex,
+                        'fa-sort-up': sort === SortParam.Sex && !order,
+                        'fa-sort-down': sort === SortParam.Sex && order,
+                      })}
+                      />
+                    </span>
+                  </SearchLink>
                 </span>
-              </SearchLink>
-            </span>
-          </th>
+              </th>
 
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Born
-              <SearchLink params={onSort(SortParam.Born)}>
-                <span className="icon">
-                  <i className={cn('fas', {
-                    'fa-sort': sort !== SortParam.Born,
-                    'fa-sort-up': sort === SortParam.Born && !order,
-                    'fa-sort-down': sort === SortParam.Born && order,
-                  })}
-                  />
+              <th>
+                <span className="is-flex is-flex-wrap-nowrap">
+                  Born
+                  <SearchLink params={onSort(SortParam.Born)}>
+                    <span className="icon">
+                      <i className={cn('fas', {
+                        'fa-sort': sort !== SortParam.Born,
+                        'fa-sort-up': sort === SortParam.Born && !order,
+                        'fa-sort-down': sort === SortParam.Born && order,
+                      })}
+                      />
+                    </span>
+                  </SearchLink>
                 </span>
-              </SearchLink>
-            </span>
-          </th>
+              </th>
 
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Died
-              <SearchLink params={onSort(SortParam.Died)}>
-                <span className="icon">
-                  <i className={cn('fas', {
-                    'fa-sort': sort !== SortParam.Died,
-                    'fa-sort-up': sort === SortParam.Died && !order,
-                    'fa-sort-down': sort === SortParam.Died && order,
-                  })}
-                  />
+              <th>
+                <span className="is-flex is-flex-wrap-nowrap">
+                  Died
+                  <SearchLink params={onSort(SortParam.Died)}>
+                    <span className="icon">
+                      <i className={cn('fas', {
+                        'fa-sort': sort !== SortParam.Died,
+                        'fa-sort-up': sort === SortParam.Died && !order,
+                        'fa-sort-down': sort === SortParam.Died && order,
+                      })}
+                      />
+                    </span>
+                  </SearchLink>
                 </span>
-              </SearchLink>
-            </span>
-          </th>
+              </th>
 
-          <th>Mother</th>
-          <th>Father</th>
-        </tr>
-      </thead>
+              <th>Mother</th>
+              <th>Father</th>
+            </tr>
+          </thead>
 
-      <tbody>
-        {sortedPeople.map(person => (
-          <tr
-            key={person.slug}
-            data-cy="person"
-            className={cn(
-              { 'has-background-warning': person.slug === slug },
-            )}
-          >
-            <td>
-              <PersonLink person={person} />
-            </td>
+          <tbody>
+            {sortedPeople.map(person => (
+              <tr
+                key={person.slug}
+                data-cy="person"
+                className={cn(
+                  { 'has-background-warning': person.slug === slug },
+                )}
+              >
+                <td>
+                  <PersonLink person={person} />
+                </td>
 
-            <td>{person.sex}</td>
-            <td>{person.born}</td>
-            <td>{person.died}</td>
-            <td>
-              {person.mother
-                ? <PersonLink person={person.mother} />
-                : person.motherName || '-'}
-            </td>
-            <td>
-              {person.father
-                ? <PersonLink person={person.father} />
-                : person.fatherName || '-'}
-            </td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
+                <td>{person.sex}</td>
+                <td>{person.born}</td>
+                <td>{person.died}</td>
+                <td>
+                  {person.mother
+                    ? <PersonLink person={person.mother} />
+                    : person.motherName || '-'}
+                </td>
+                <td>
+                  {person.father
+                    ? <PersonLink person={person.father} />
+                    : person.fatherName || '-'}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
+    </>
   );
 });
