@@ -9,7 +9,9 @@ interface FilterParams {
 
 type FilterBy = (params: FilterParams) => Person[];
 
-export const filterBy: FilterBy = ({ people, query, sex, centuries }) => {
+export const filterBy: FilterBy = ({
+  people, query, sex, centuries,
+}) => {
   const cleanedQuery = query?.trim().toLowerCase();
 
   return [...people]

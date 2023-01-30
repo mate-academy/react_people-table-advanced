@@ -5,6 +5,7 @@ import { PeopleItem } from './PeopleItem';
 import { Person } from '../types';
 import { sortByKey } from '../utils/sortByKey';
 import { filterBy } from '../utils/filterBy';
+import { Loader } from './Loader';
 
 export const PeopleTable = () => {
   const [searchParams] = useSearchParams();
@@ -15,7 +16,15 @@ export const PeopleTable = () => {
   const query = searchParams.get('query') || null;
   const centuries = searchParams.getAll('centuries');
 
-  const { people } = usePeople();
+  const {
+    // prettier-ignore
+    people,
+    isLoading,
+    isFetching,
+    isError,
+  } = usePeople();
+
+  const noPeople = !isLoading && !isFetching && !isError && people.length < 1;
 
   const sortedPeople = useMemo(
     () => sortByKey(people, sort, order),
@@ -30,6 +39,22 @@ export const PeopleTable = () => {
       centuries,
     });
   }, [people, query, sex, centuries]);
+
+  if (isLoading || isFetching) {
+    return <Loader />;
+  }
+
+  if (isError) {
+    return <p data-cy="peopleLoadingError">Something went wrong</p>;
+  }
+
+  if (noPeople) {
+    return <p data-cy="noPeopleMessage">There are no people on the server</p>;
+  }
+
+  if (filteredPeople.length < 1) {
+    return <p>There are no people matching the current search criteria</p>;
+  }
 
   return (
     <table

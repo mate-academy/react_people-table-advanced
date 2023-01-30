@@ -1,18 +1,9 @@
 import { PeopleFilters } from '../components/PeopleFilters';
-import { Loader } from '../components/Loader';
 import { PeopleTable } from '../components/PeopleTable';
 import { usePeople } from '../hooks/usePeople';
 
 export const PeoplePage = () => {
-  const {
-    // prettier-ignore
-    people,
-    isLoading,
-    isError,
-    isFetching,
-  } = usePeople();
-
-  const noPeople = !isLoading && !isFetching && !isError && people.length < 1;
+  const { people } = usePeople();
 
   return (
     <>
@@ -28,20 +19,6 @@ export const PeoplePage = () => {
 
           <div className="column">
             <div className="box table-container">
-              {(isLoading || isFetching) && <Loader />}
-
-              {isError && (
-                <p data-cy="peopleLoadingError">Something went wrong</p>
-              )}
-
-              {noPeople && (
-                <p data-cy="noPeopleMessage">
-                  There are no people on the server
-                </p>
-              )}
-
-              <p>There are no people matching the current search criteria</p>
-
               <PeopleTable />
             </div>
           </div>
