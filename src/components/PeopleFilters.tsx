@@ -1,7 +1,29 @@
 import { Link, useSearchParams } from 'react-router-dom';
+import cn from 'classnames';
+import { ChangeEvent } from 'react';
+import { getSearchWith } from '../utils/searchHelper';
 
 export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
+  const possibleCenturies = ['16', '17', '18', '19', '20'];
+  const centuriesParams = searchParams.getAll('centuries') || [];
+
+  const onSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setSearchParams({ query: e.target.value });
+    if (e.target.value === '') {
+      setSearchParams({});
+    }
+  };
+
+  const setCenturies = (century: string) => {
+    if (centuriesParams.includes(century)) {
+      const updatedCentury = centuriesParams.filter(c => c !== century);
+
+      return { centuries: updatedCentury };
+    }
+
+    return { centuries: [...centuriesParams, century] };
+  };
 
   return (
     <nav className="panel">
@@ -12,19 +34,25 @@ export const PeopleFilters = () => {
         data-cy="SexFilter"
       >
         <Link
-          className="is-active"
+          className={cn({
+            'is-active': searchParams.get('sex') === null,
+          })}
           to="/people"
         >
           All
         </Link>
         <Link
-          className=""
+          className={cn({
+            'is-active': searchParams.get('sex') === 'm',
+          })}
           to="?sex=m"
         >
           Male
         </Link>
         <Link
-          className=""
+          className={cn({
+            'is-active': searchParams.get('sex') === 'f',
+          })}
           to="?sex=f"
         >
           Female
@@ -39,7 +67,7 @@ export const PeopleFilters = () => {
             className="input"
             placeholder="Search"
             value={searchParams.get('query') || ''}
-            onChange={e => setSearchParams({ query: e.target.value })}
+            onChange={onSearchChange}
           />
 
           <span className="icon is-left">
@@ -57,51 +85,27 @@ export const PeopleFilters = () => {
           data-cy="CenturyFilter"
         >
           <div className="level-left">
-            <Link
-              data-cy="century"
-              className="button mr-1"
-              to="?centuries=16"
-            >
-              16
-            </Link>
-
-            <Link
-              data-cy="century"
-              className="button mr-1 is-info"
-              to="?centuries=17"
-            >
-              17
-            </Link>
-
-            <Link
-              data-cy="century"
-              className="button mr-1 is-info"
-              to="?centuries=18"
-            >
-              18
-            </Link>
-
-            <Link
-              data-cy="century"
-              className="button mr-1 is-info"
-              to="?centuries=19"
-            >
-              19
-            </Link>
-
-            <Link
-              data-cy="century"
-              className="button mr-1"
-              to="?centuries=20"
-            >
-              20
-            </Link>
+            {possibleCenturies.map(century => (
+              <Link
+                data-cy="century"
+                className={cn('button mr-1', {
+                  'is-info': centuriesParams.includes(century),
+                })}
+                to={{
+                  search: getSearchWith(searchParams, setCenturies(century)),
+                }}
+              >
+                {century}
+              </Link>
+            ))}
           </div>
 
           <div className="level-right ml-4">
             <Link
               data-cy="centuryALL"
-              className="button is-success is-outlined"
+              className={cn('button is-success', {
+                'is-outlined': centuriesParams.length > 0,
+              })}
               to="/people"
             >
               All
