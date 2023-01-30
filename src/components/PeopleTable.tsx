@@ -1,8 +1,11 @@
-import { FC, memo } from 'react';
+import { FC, memo, useMemo } from 'react';
 import cn from 'classnames';
 import { useParams, useSearchParams } from 'react-router-dom';
 import { Person } from '../types';
+import { SortParam } from '../types/SortParam';
 import { PersonLink } from './PersonLink';
+import { SearchLink } from './SearchLink';
+import { FilterPeople, sortPeople } from '../utils/PreparePeopleHelper';
 
 interface Props {
   people: Person[];
@@ -13,21 +16,29 @@ export const PeopleTable: FC<Props> = memo(({ people }) => {
   const [searchParams] = useSearchParams();
   const gender = searchParams.get('sex');
   const query = searchParams.get('query');
+  const sort = searchParams.get('sort');
+  const order = searchParams.get('order');
   const century = searchParams.getAll('century');
 
-  const filteredPeople = people.filter(person => {
-    const genderFilter = gender ? person.sex === gender : true;
-    const queryFilter = query
-      ? person.name.toLowerCase().includes(query.toLowerCase())
-        || person.motherName?.toLowerCase().includes(query.toLowerCase())
-        || person.fatherName?.toLowerCase().includes(query.toLowerCase())
-      : true;
-    const centuryFilter = century.length
-      ? century.includes(Math.ceil(person.born / 100).toString())
-      : true;
+  const onSort = (sortName: SortParam) => {
+    if (sort !== sortName) {
+      return { sort: sortName, order: null };
+    }
 
-    return genderFilter && queryFilter && centuryFilter;
-  });
+    if (sort === sortName && !order) {
+      return { sort: sortName, order: 'desc' };
+    }
+
+    return { sort: null, order: null };
+  };
+
+  const filteredPeople = useMemo(() => FilterPeople(
+    people, gender, query, century,
+  ), [people, gender, query, century]);
+
+  const sortedPeople = useMemo(() => sortPeople(
+    filteredPeople, sort, order,
+  ), [filteredPeople, sort, order]);
 
   return (
     <table
@@ -39,44 +50,64 @@ export const PeopleTable: FC<Props> = memo(({ people }) => {
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Name
-              <a href="#/people?sort=name">
+              <SearchLink params={onSort(SortParam.Name)}>
                 <span className="icon">
-                  <i className="fas fa-sort" />
+                  <i className={cn('fas', {
+                    'fa-sort': sort !== SortParam.Name,
+                    'fa-sort-up': sort === SortParam.Name && !order,
+                    'fa-sort-down': sort === SortParam.Name && order,
+                  })}
+                  />
                 </span>
-              </a>
+              </SearchLink>
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Sex
-              <a href="#/people?sort=sex">
+              <SearchLink params={onSort(SortParam.Sex)}>
                 <span className="icon">
-                  <i className="fas fa-sort" />
+                  <i className={cn('fas', {
+                    'fa-sort': sort !== SortParam.Sex,
+                    'fa-sort-up': sort === SortParam.Sex && !order,
+                    'fa-sort-down': sort === SortParam.Sex && order,
+                  })}
+                  />
                 </span>
-              </a>
+              </SearchLink>
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Born
-              <a href="#/people?sort=born&amp;order=desc">
+              <SearchLink params={onSort(SortParam.Born)}>
                 <span className="icon">
-                  <i className="fas fa-sort-up" />
+                  <i className={cn('fas', {
+                    'fa-sort': sort !== SortParam.Born,
+                    'fa-sort-up': sort === SortParam.Born && !order,
+                    'fa-sort-down': sort === SortParam.Born && order,
+                  })}
+                  />
                 </span>
-              </a>
+              </SearchLink>
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Died
-              <a href="#/people?sort=died">
+              <SearchLink params={onSort(SortParam.Died)}>
                 <span className="icon">
-                  <i className="fas fa-sort" />
+                  <i className={cn('fas', {
+                    'fa-sort': sort !== SortParam.Died,
+                    'fa-sort-up': sort === SortParam.Died && !order,
+                    'fa-sort-down': sort === SortParam.Died && order,
+                  })}
+                  />
                 </span>
-              </a>
+              </SearchLink>
             </span>
           </th>
 
@@ -86,7 +117,7 @@ export const PeopleTable: FC<Props> = memo(({ people }) => {
       </thead>
 
       <tbody>
-        {filteredPeople.map(person => (
+        {sortedPeople.map(person => (
           <tr
             key={person.slug}
             data-cy="person"
