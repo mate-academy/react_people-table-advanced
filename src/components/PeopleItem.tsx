@@ -1,19 +1,28 @@
 import { FC } from 'react';
 import cn from 'classnames';
-import { Link } from 'react-router-dom';
+import { Link, useParams, useSearchParams } from 'react-router-dom';
 import { Person } from '../types';
 import { ParentItem } from './ParentItem';
+import { getSearchWith } from '../utils/searchHelper';
 
 type Props = {
   person: Person;
 };
 
 export const PeopleItem: FC<Props> = ({ person }) => {
+  const { slug } = useParams();
+  const [searchParams] = useSearchParams();
+
   return (
-    <tr data-cy="person">
+    <tr
+      data-cy="person"
+      className={cn({
+        'has-background-warning': slug === person.slug,
+      })}
+    >
       <td>
         <Link
-          to={`${person.slug}`}
+          to={`/people/${person.slug}/?${getSearchWith(searchParams, {})}`}
           className={cn({
             'has-text-danger': person.sex === 'f',
           })}

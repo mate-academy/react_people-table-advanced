@@ -1,11 +1,13 @@
 import { Link, useSearchParams } from 'react-router-dom';
 import { useMemo } from 'react';
+import cn from 'classnames';
 import { usePeople } from '../hooks/usePeople';
 import { PeopleItem } from './PeopleItem';
 import { Person } from '../types';
 import { sortByKey } from '../utils/sortByKey';
 import { filterBy } from '../utils/filterBy';
 import { Loader } from './Loader';
+import { getSearchWith } from '../utils/searchHelper';
 
 export const PeopleTable = () => {
   const [searchParams] = useSearchParams();
@@ -25,6 +27,18 @@ export const PeopleTable = () => {
   } = usePeople();
 
   const noPeople = !isLoading && !isFetching && !isError && people.length < 1;
+
+  const sortBy = (sortWith: keyof Person) => {
+    if (sort !== sortWith) {
+      return { sort: sortWith, order: null };
+    }
+
+    if (sort === sortWith && order !== 'desc') {
+      return { sort: sortWith, order: 'desc' };
+    }
+
+    return { sort: null, order: null };
+  };
 
   const sortedPeople = useMemo(
     () => sortByKey(people, sort, order),
@@ -66,9 +80,19 @@ export const PeopleTable = () => {
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Name
-              <Link to="?sort=name">
+              <Link
+                to={{
+                  search: getSearchWith(searchParams, sortBy('name')),
+                }}
+              >
                 <span className="icon">
-                  <i className="fas fa-sort" />
+                  <i
+                    className={cn('fas', {
+                      'fa-sort': sort !== 'name',
+                      'fa-sort-up': sort === 'name' && order !== 'desc',
+                      'fa-sort-down': sort === 'name' && order === 'desc',
+                    })}
+                  />
                 </span>
               </Link>
             </span>
@@ -77,9 +101,19 @@ export const PeopleTable = () => {
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Sex
-              <Link to="?sort=sex">
+              <Link
+                to={{
+                  search: getSearchWith(searchParams, sortBy('sex')),
+                }}
+              >
                 <span className="icon">
-                  <i className="fas fa-sort" />
+                  <i
+                    className={cn('fas', {
+                      'fa-sort': sort !== 'sex',
+                      'fa-sort-up': sort === 'sex' && order !== 'desc',
+                      'fa-sort-down': sort === 'sex' && order === 'desc',
+                    })}
+                  />
                 </span>
               </Link>
             </span>
@@ -88,9 +122,19 @@ export const PeopleTable = () => {
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Born
-              <Link to="?sort=born&amp;order=desc">
+              <Link
+                to={{
+                  search: getSearchWith(searchParams, sortBy('born')),
+                }}
+              >
                 <span className="icon">
-                  <i className="fas fa-sort-up" />
+                  <i
+                    className={cn('fas', {
+                      'fa-sort': sort !== 'born',
+                      'fa-sort-up': sort === 'born' && order !== 'desc',
+                      'fa-sort-down': sort === 'born' && order === 'desc',
+                    })}
+                  />
                 </span>
               </Link>
             </span>
@@ -99,9 +143,19 @@ export const PeopleTable = () => {
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Died
-              <Link to="?sort=died">
+              <Link
+                to={{
+                  search: getSearchWith(searchParams, sortBy('died')),
+                }}
+              >
                 <span className="icon">
-                  <i className="fas fa-sort" />
+                  <i
+                    className={cn('fas', {
+                      'fa-sort': sort !== 'died',
+                      'fa-sort-up': sort === 'died' && order !== 'desc',
+                      'fa-sort-down': sort === 'died' && order === 'desc',
+                    })}
+                  />
                 </span>
               </Link>
             </span>
