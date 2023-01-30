@@ -44,7 +44,9 @@ export const PeopleFilters = () => {
           className={cn({
             'is-active': searchParams.get('sex') === 'm',
           })}
-          to="?sex=m"
+          to={{
+            search: getSearchWith(searchParams, { sex: 'm' }),
+          }}
         >
           Male
         </Link>
@@ -52,7 +54,9 @@ export const PeopleFilters = () => {
           className={cn({
             'is-active': searchParams.get('sex') === 'f',
           })}
-          to="?sex=f"
+          to={{
+            search: getSearchWith(searchParams, { sex: 'f' }),
+          }}
         >
           Female
         </Link>
