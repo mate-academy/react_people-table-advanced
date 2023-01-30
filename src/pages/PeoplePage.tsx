@@ -4,7 +4,15 @@ import { PeopleTable } from '../components/PeopleTable';
 import { usePeople } from '../hooks/usePeople';
 
 export const PeoplePage = () => {
-  const { people, isLoading, isError } = usePeople();
+  const {
+    // prettier-ignore
+    people,
+    isLoading,
+    isError,
+    isFetching,
+  } = usePeople();
+
+  const noPeople = !isLoading && !isFetching && !isError && people.length < 1;
 
   return (
     <>
@@ -20,12 +28,13 @@ export const PeoplePage = () => {
 
           <div className="column">
             <div className="box table-container">
-              {isLoading && <Loader />}
+              {(isLoading || isFetching) && <Loader />}
+
               {isError && (
                 <p data-cy="peopleLoadingError">Something went wrong</p>
               )}
 
-              {people.length < 1 && (
+              {noPeople && (
                 <p data-cy="noPeopleMessage">
                   There are no people on the server
                 </p>
