@@ -13,6 +13,7 @@ export const PeopleTable = () => {
   const order: 'desc' | null = searchParams.get('order') as 'desc' | null;
   const sex = searchParams.get('sex') as 'f' | 'm' | null;
   const query = searchParams.get('query') || null;
+  const centuries = searchParams.getAll('centuries');
 
   const { people } = usePeople();
 
@@ -21,10 +22,14 @@ export const PeopleTable = () => {
     [people, sort, order],
   );
 
-  const filteredPeople = useMemo(
-    () => filterBy({ people: sortedPeople, query, sex }),
-    [people, query, sex],
-  );
+  const filteredPeople = useMemo(() => {
+    return filterBy({
+      people: sortedPeople,
+      query,
+      sex,
+      centuries,
+    });
+  }, [people, query, sex, centuries]);
 
   return (
     <table
