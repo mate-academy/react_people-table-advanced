@@ -1,6 +1,8 @@
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 
 export const PeopleFilters = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
+
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
@@ -36,6 +38,8 @@ export const PeopleFilters = () => {
             type="search"
             className="input"
             placeholder="Search"
+            value={searchParams.get('query') || ''}
+            onChange={e => setSearchParams({ query: e.target.value })}
           />
 
           <span className="icon is-left">
