@@ -1,5 +1,5 @@
 import './App.scss';
-import { Route, Routes } from 'react-router-dom';
+import { Navigate, Route, Routes } from 'react-router-dom';
 import { PageLayout } from './components/layout/PageLayout';
 import { HomePage } from './pages/HomePage';
 import { PeoplePage } from './pages/PeoplePage';
@@ -17,6 +17,10 @@ export const App = () => {
           <Route
             index
             element={<HomePage />}
+          />
+          <Route
+            path="home"
+            element={<Navigate to="/" />}
           />
           <Route
             path="people"
