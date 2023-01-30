@@ -4,6 +4,7 @@ import { PageLayout } from './components/layout/PageLayout';
 import { HomePage } from './pages/HomePage';
 import { PeoplePage } from './pages/PeoplePage';
 import { NotFoundPage } from './pages/NotFoundPage';
+import { PeopleLayout } from './components/layout/PeopleLayout';
 
 export const App = () => {
   return (
@@ -19,8 +20,17 @@ export const App = () => {
           />
           <Route
             path="people"
-            element={<PeoplePage />}
-          />
+            element={<PeopleLayout />}
+          >
+            <Route
+              index
+              element={<PeoplePage />}
+            />
+            <Route
+              path=":slug"
+              element={<PeoplePage />}
+            />
+          </Route>
           <Route
             path="*"
             element={<NotFoundPage />}
