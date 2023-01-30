@@ -1,12 +1,32 @@
+import { Link } from 'react-router-dom';
+
 export const PeopleFilters = () => {
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
 
-      <p className="panel-tabs" data-cy="SexFilter">
-        <a className="is-active" href="#/people">All</a>
-        <a className="" href="#/people?sex=m">Male</a>
-        <a className="" href="#/people?sex=f">Female</a>
+      <p
+        className="panel-tabs"
+        data-cy="SexFilter"
+      >
+        <Link
+          className="is-active"
+          to="#/people"
+        >
+          All
+        </Link>
+        <Link
+          className=""
+          to="?sex=m"
+        >
+          Male
+        </Link>
+        <Link
+          className=""
+          to="?sex=f"
+        >
+          Female
+        </Link>
       </p>
 
       <div className="panel-block">
@@ -19,74 +39,80 @@ export const PeopleFilters = () => {
           />
 
           <span className="icon is-left">
-            <i className="fas fa-search" aria-hidden="true" />
+            <i
+              className="fas fa-search"
+              aria-hidden="true"
+            />
           </span>
         </p>
       </div>
 
       <div className="panel-block">
-        <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
+        <div
+          className="level is-flex-grow-1 is-mobile"
+          data-cy="CenturyFilter"
+        >
           <div className="level-left">
-            <a
+            <Link
               data-cy="century"
               className="button mr-1"
-              href="#/people?centuries=16"
+              to="?centuries=16"
             >
               16
-            </a>
+            </Link>
 
-            <a
+            <Link
               data-cy="century"
               className="button mr-1 is-info"
-              href="#/people?centuries=17"
+              to="?centuries=17"
             >
               17
-            </a>
+            </Link>
 
-            <a
+            <Link
               data-cy="century"
               className="button mr-1 is-info"
-              href="#/people?centuries=18"
+              to="?centuries=18"
             >
               18
-            </a>
+            </Link>
 
-            <a
+            <Link
               data-cy="century"
               className="button mr-1 is-info"
-              href="#/people?centuries=19"
+              to="?centuries=19"
             >
               19
-            </a>
+            </Link>
 
-            <a
+            <Link
               data-cy="century"
               className="button mr-1"
-              href="#/people?centuries=20"
+              to="?centuries=20"
             >
               20
-            </a>
+            </Link>
           </div>
 
           <div className="level-right ml-4">
-            <a
+            <Link
               data-cy="centuryALL"
               className="button is-success is-outlined"
-              href="#/people"
+              to="/"
             >
               All
-            </a>
+            </Link>
           </div>
         </div>
       </div>
 
       <div className="panel-block">
-        <a
+        <Link
           className="button is-link is-outlined is-fullwidth"
-          href="#/people"
+          to="/"
         >
           Reset all filters
-        </a>
+        </Link>
       </div>
     </nav>
   );

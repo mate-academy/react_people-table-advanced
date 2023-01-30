@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import { usePeople } from '../hooks/usePeople';
 import { PeopleItem } from './PeopleItem';
 
@@ -14,44 +15,44 @@ export const PeopleTable = () => {
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Name
-              <a href="#/people?sort=name">
+              <Link to="?sort=name">
                 <span className="icon">
                   <i className="fas fa-sort" />
                 </span>
-              </a>
+              </Link>
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Sex
-              <a href="#/people?sort=sex">
+              <Link to="?sort=sex">
                 <span className="icon">
                   <i className="fas fa-sort" />
                 </span>
-              </a>
+              </Link>
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Born
-              <a href="#/people?sort=born&amp;order=desc">
+              <Link to="?sort=born&amp;order=desc">
                 <span className="icon">
                   <i className="fas fa-sort-up" />
                 </span>
-              </a>
+              </Link>
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Died
-              <a href="#/people?sort=died">
+              <Link to="?sort=died">
                 <span className="icon">
                   <i className="fas fa-sort" />
                 </span>
-              </a>
+              </Link>
             </span>
           </th>
 

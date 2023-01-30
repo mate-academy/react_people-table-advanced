@@ -1,5 +1,6 @@
 import { FC } from 'react';
 import cn from 'classnames';
+import { Link } from 'react-router-dom';
 import { Person } from '../types';
 import { ParentItem } from './ParentItem';
 
@@ -11,14 +12,14 @@ export const PeopleItem: FC<Props> = ({ person }) => {
   return (
     <tr data-cy="person">
       <td>
-        <a
-          href={`#/people/${person.slug}`}
+        <Link
+          to={`${person.slug}`}
           className={cn({
             'has-text-danger': person.sex === 'f',
           })}
         >
           {person.name}
-        </a>
+        </Link>
       </td>
       <td>{person.sex}</td>
       <td>{person.born}</td>
