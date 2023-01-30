@@ -1,8 +1,9 @@
+import { memo } from 'react';
 import { PeopleFilters } from '../components/PeopleFilters';
 import { PeopleTable } from '../components/PeopleTable';
 import { usePeople } from '../hooks/usePeople';
 
-export const PeoplePage = () => {
+export const PeoplePage = memo(() => {
   const { people } = usePeople();
 
   return (
@@ -20,4 +21,4 @@ export const PeoplePage = () => {
       </div>
     </>
   );
-};
+});
