@@ -1,8 +1,8 @@
 import React, { memo } from 'react';
 import cn from 'classnames';
 import { useSearchParams } from 'react-router-dom';
-import { SearchLink } from './SearchLink';
-import { getSearchWith } from '../utils/searchHelper';
+import { SearchLink } from '../SearchLink/SearchLink';
+import { getSearchWith } from '../../utils/searchHelper';
 
 const getAllCenturies = (from: number, to: number) => {
   const centuries = [];

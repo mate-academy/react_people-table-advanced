@@ -1,7 +1,7 @@
 import React, { memo } from 'react';
 import cn from 'classnames';
 import { Link, useLocation } from 'react-router-dom';
-import { Person } from '../types/Person';
+import { Person } from '../../types/Person';
 
 type Props = {
   person: Person;

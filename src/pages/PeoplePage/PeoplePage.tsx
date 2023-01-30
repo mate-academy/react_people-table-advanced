@@ -6,11 +6,11 @@ import React, {
 } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
-import { PeopleFilters } from './PeopleFilters';
-import { Loader } from './Loader';
-import { PeopleTable } from './PeopleTable';
-import { getPeople } from '../api';
-import { Person } from '../types/Person';
+import { PeopleFilters } from '../../components/PeopleFilters/PeopleFilters';
+import { Loader } from '../../components/Loader';
+import { PeopleTable } from '../../components/PeopleTable/PeopleTable';
+import { getPeople } from '../../api';
+import { Person } from '../../types/Person';
 
 export const PeoplePage: React.FC = memo(() => {
   const [people, setPeople] = useState<Person[]>([]);

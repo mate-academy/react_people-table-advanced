@@ -1,6 +1,6 @@
 import { memo } from 'react';
 import { useLocation } from 'react-router-dom';
-import { PageNavLink } from './PageNavLink';
+import { PageNavLink } from '../PageNavLink/PageNavLink';
 
 export const Navbar = memo(() => {
   const location = useLocation();

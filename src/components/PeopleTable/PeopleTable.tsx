@@ -1,10 +1,10 @@
 import React, { memo, useMemo } from 'react';
 import cn from 'classnames';
 import { useParams, useSearchParams } from 'react-router-dom';
-import { Person } from '../types/Person';
-import { PersonLink } from './PersonLink';
-import { SearchLink } from './SearchLink';
-import { SearchParams } from '../utils/searchHelper';
+import { Person } from '../../types/Person';
+import { PersonLink } from '../PeopleLink/PersonLink';
+import { SearchLink } from '../SearchLink/SearchLink';
+import { SearchParams } from '../../utils/searchHelper';
 
 type Props = {
   people: Person[];
