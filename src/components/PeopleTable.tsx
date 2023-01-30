@@ -1,6 +1,9 @@
+import { usePeople } from '../hooks/usePeople';
 import { PeopleItem } from './PeopleItem';
 
 export const PeopleTable = () => {
+  const { people } = usePeople();
+
   return (
     <table
       data-cy="peopleTable"
@@ -58,7 +61,12 @@ export const PeopleTable = () => {
       </thead>
 
       <tbody>
-        <PeopleItem />
+        {people.map(person => (
+          <PeopleItem
+            key={person.slug}
+            person={person}
+          />
+        ))}
       </tbody>
     </table>
   );

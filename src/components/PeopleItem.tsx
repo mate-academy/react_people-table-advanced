@@ -1,16 +1,30 @@
-export function PeopleItem() {
+import { FC } from 'react';
+import cn from 'classnames';
+import { Person } from '../types';
+import { ParentItem } from './ParentItem';
+
+type Props = {
+  person: Person;
+};
+
+export const PeopleItem: FC<Props> = ({ person }) => {
   return (
     <tr data-cy="person">
       <td>
-        <a href="#/people/pieter-haverbeke-1602">Pieter Haverbeke</a>
+        <a
+          href={`#/people/${person.slug}`}
+          className={cn({
+            'has-text-danger': person.sex === 'f',
+          })}
+        >
+          {person.name}
+        </a>
       </td>
-      <td>m</td>
-      <td>1602</td>
-      <td>1642</td>
-      <td>-</td>
-      <td>
-        <a href="#/people/lieven-van-haverbeke-1570">Lieven van Haverbeke</a>
-      </td>
+      <td>{person.sex}</td>
+      <td>{person.born}</td>
+      <td>{person.died}</td>
+      <ParentItem parent={person.mother} />
+      <ParentItem parent={person.father} />
     </tr>
   );
-}
+};
