@@ -1,16 +1,17 @@
 import classNames from 'classnames';
-import { useSearchParams } from 'react-router-dom';
+import { useParams, useSearchParams } from 'react-router-dom';
 import { Person, SortTypes } from '../types';
 import { PersonLink } from './PersonLink';
 import { TableHeaderLink } from './TableHeaderLink';
 
 type Props = {
   people: Person[];
-  slug: string;
 };
 
-export const PeopleTable: React.FC<Props> = ({ people, slug }) => {
+export const PeopleTable: React.FC<Props> = ({ people }) => {
   const [searchParams] = useSearchParams();
+
+  const { slug = '' } = useParams();
 
   const sort = searchParams.get('sort');
   const order = searchParams.get('order');
@@ -36,59 +37,78 @@ export const PeopleTable: React.FC<Props> = ({ people, slug }) => {
 
   const handleSort = () => {
     const peopleCopy = [...people];
-    let result;
 
     switch (sort) {
       case SortTypes.born:
       case SortTypes.died:
-        result = peopleCopy.sort((a, b) => a[sort] - b[sort]);
-
-        return !order ? result : result.reverse();
+        return !order
+          ? peopleCopy.sort((a, b) => a[sort] - b[sort])
+          : peopleCopy.sort((a, b) => b[sort] - a[sort]);
 
       case SortTypes.name:
       case SortTypes.sex:
-        result = peopleCopy.sort((a, b) => a[sort].localeCompare(b[sort]));
-
-        return !order ? result : result.reverse();
+        return !order
+          ? peopleCopy.sort((a, b) => a[sort].localeCompare(b[sort]))
+          : peopleCopy.sort((a, b) => b[sort].localeCompare(a[sort]));
 
       default:
         return peopleCopy;
     }
   };
 
+  // const handleFilter = () => {
+  //   let result = handleSort();
+
+  //   if (centuries.length) {
+  //     result = result.filter(
+  //       person => {
+  //         const bornCentury = Math.ceil(person.born / 100);
+
+  //         return centuries.includes(String(bornCentury));
+  //       },
+  //     );
+  //   }
+
+  //   if (sex) {
+  //     result = result.filter(person => person.sex === sex);
+  //   }
+
+  //   if (query) {
+  //     result = result.filter(
+  //       person => person.name.toLowerCase().includes(query.toLowerCase())
+  //         || person.motherName?.toLowerCase().includes(query.toLowerCase())
+  //         || person.fatherName?.toLowerCase().includes(query.toLowerCase()),
+  //     );
+  //   }
+
+  //   return result;
+  // };
+
   const handleFilter = () => {
-    let result = handleSort();
-
-    if (centuries.length > 0) {
-      result = result.filter(
-        person => {
-          const bornCentury = Math.ceil(person.born / 100);
-
-          return centuries.includes(String(bornCentury));
-        },
+    if (centuries.length) {
+      return handleSort().filter(
+        person => centuries.includes(String(Math.ceil(person.born / 100))),
       );
     }
 
     if (sex) {
-      result = result.filter(person => person.sex === sex);
+      return handleSort().filter(person => person.sex === sex);
     }
 
     if (query) {
-      result = result.filter(
+      return handleSort().filter(
         person => person.name.toLowerCase().includes(query.toLowerCase())
           || person.motherName?.toLowerCase().includes(query.toLowerCase())
           || person.fatherName?.toLowerCase().includes(query.toLowerCase()),
       );
     }
 
-    return result;
+    return handleSort();
   };
-
-  const visiblePeople = handleFilter();
 
   return (
     <>
-      {visiblePeople.length > 0 ? (
+      {handleFilter().length ? (
         <table
           data-cy="peopleTable"
           className="table is-striped is-hoverable is-narrow is-fullwidth"
@@ -105,7 +125,7 @@ export const PeopleTable: React.FC<Props> = ({ people, slug }) => {
           </thead>
 
           <tbody>
-            {visiblePeople.map(person => (
+            {handleFilter().map(person => (
               <tr
                 key={person.slug}
                 data-cy="person"

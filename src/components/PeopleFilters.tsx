@@ -3,45 +3,54 @@ import { useSearchParams } from 'react-router-dom';
 import { SearchLink } from './SearchLink';
 import { getSearchWith } from '../utils/searchHelper';
 
+const centuriesNames = ['16', '17', '18', '19', '20'];
+
 export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const sex = searchParams.get('sex');
   const query = searchParams.get('query') || '';
   const centuries = searchParams.getAll('centuries');
 
-  const centuriesNames = ['16', '17', '18', '19', '20'];
-
-  const handleQuary = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleUpdateQuary = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchParams(
       getSearchWith(searchParams, { query: e.target.value || null }),
     );
   };
+
+  const getSearchLinks = (sexType: string | null) => [
+    {
+      name: 'All',
+      sex: null,
+      isActive: !sexType,
+    },
+    {
+      name: 'Male',
+      sex: 'm',
+      isActive: sexType === 'm',
+    },
+    {
+      name: 'Female',
+      sex: 'f',
+      isActive: sexType === 'f',
+    },
+  ];
 
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        <SearchLink
-          params={{ sex: null }}
-          className={classNames({ 'is-active': !sex })}
-        >
-          All
-        </SearchLink>
-
-        <SearchLink
-          params={{ sex: 'm' }}
-          className={classNames({ 'is-active': sex === 'm' })}
-        >
-          Male
-        </SearchLink>
-
-        <SearchLink
-          params={{ sex: 'f' }}
-          className={classNames({ 'is-active': sex === 'f' })}
-        >
-          Female
-        </SearchLink>
+        {
+          getSearchLinks(sex).map(({ name, sex: linkSex, isActive }) => (
+            <SearchLink
+              key={name}
+              params={{ sex: linkSex }}
+              className={classNames({ 'is-active': isActive })}
+            >
+              {name}
+            </SearchLink>
+          ))
+        }
       </p>
 
       <div className="panel-block">
@@ -52,7 +61,7 @@ export const PeopleFilters = () => {
             className="input"
             placeholder="Search"
             value={query}
-            onChange={(e) => handleQuary(e)}
+            onChange={handleUpdateQuary}
           />
 
           <span className="icon is-left">
@@ -66,6 +75,7 @@ export const PeopleFilters = () => {
           <div className="level-left">
             {centuriesNames.map(century => (
               <SearchLink
+                key={century}
                 params={{
                   centuries: centuries.includes(century)
                     ? centuries.filter(c => c !== century)
@@ -85,7 +95,7 @@ export const PeopleFilters = () => {
                 data-cy="centuryALL"
                 className={classNames(
                   'button is-success',
-                  { 'is-outlined': centuries.length !== 0 },
+                  { 'is-outlined': !!centuries.length },
                 )}
                 params={{ centuries: null }}
               >

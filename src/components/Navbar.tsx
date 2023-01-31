@@ -15,9 +15,7 @@ export const Navbar = () => {
             to="/"
             className={({ isActive }) => classNames(
               'navbar-item',
-              {
-                'has-background-grey-lighter': isActive,
-              },
+              { 'has-background-grey-lighter': isActive },
             )}
           >
             Home
@@ -28,9 +26,7 @@ export const Navbar = () => {
             to="/people"
             className={({ isActive }) => classNames(
               'navbar-item',
-              {
-                'has-background-grey-lighter': isActive,
-              },
+              { 'has-background-grey-lighter': isActive },
             )}
           >
             People

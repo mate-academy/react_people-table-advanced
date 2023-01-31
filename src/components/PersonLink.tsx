@@ -14,7 +14,6 @@ export const PersonLink: React.FC<Props> = ({ person }) => {
     <Link
       to={{ search: location.search, pathname: parentPath }}
       className={classNames({ 'has-text-danger': person.sex === 'f' })}
-      style={person.sex === 'f' ? { color: 'red' } : {}}
     >
       {person.name}
     </Link>
