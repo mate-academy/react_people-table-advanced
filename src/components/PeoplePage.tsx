@@ -182,7 +182,7 @@ export const PeoplePage: FC = () => {
                 )
               )}
 
-              {!hasMatchedPeople && (
+              {!isLoading && !isError && !hasMatchedPeople && (
                 <p>There are no people matching the current search criteria</p>
               )}
 
