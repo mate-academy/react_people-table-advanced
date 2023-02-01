@@ -5,13 +5,12 @@ import { SearchLink } from '../../SearchLink';
 
 type Props = {
   people: Person[],
-  setVisiblePeople: (value: Person[] | any) => void,
-  setSearchInput: (value: string) => void,
   searchInput: string,
+  setSearchInput: (value: string) => void,
+  setVisiblePeople: (value: Person[]) => void,
 };
 
-export const PeopleFilters:
-React.FC<Props> = ({
+export const PeopleFilters:React.FC<Props> = ({
   people,
   setVisiblePeople,
   setSearchInput,
@@ -20,6 +19,12 @@ React.FC<Props> = ({
   const [searchParams] = useSearchParams();
   const centuries = searchParams.getAll('centuries') || [];
   const { search } = useLocation();
+  const centuriesArray = ['16', '17', '18', '19', '20'];
+  const centuriesToParams = (century: string) => {
+    return centuries.includes(century)
+      ? centuries.filter(el => el !== century)
+      : [...centuries, century];
+  };
 
   const filterByInput = (input: string = searchInput) => {
     setSearchInput(input);
@@ -82,27 +87,21 @@ React.FC<Props> = ({
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            {
-              ['16', '17', '18', '19', '20'].map((century) => {
-                return (
-                  <SearchLink
-                    key={century}
-                    data-cy="century"
-                    className={classNames('button mr-1', {
-                      'is-info':
+            {centuriesArray.map((century) => {
+              return (
+                <SearchLink
+                  key={century}
+                  data-cy="century"
+                  className={classNames('button mr-1', {
+                    'is-info':
                       centuries.includes(century.toString()),
-                    })}
-                    params={{
-                      centuries: centuries.includes(century)
-                        ? centuries.filter(el => el !== century)
-                        : [...centuries, century],
-                    }}
-                  >
-                    {century}
-                  </SearchLink>
-                );
-              })
-            }
+                  })}
+                  params={{ centuries: centuriesToParams(century) }}
+                >
+                  {century}
+                </SearchLink>
+              );
+            })}
 
           </div>
 

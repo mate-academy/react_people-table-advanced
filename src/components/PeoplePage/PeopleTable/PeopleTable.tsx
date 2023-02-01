@@ -39,21 +39,19 @@ export const PeopleTable: React.FC<Props>
     setClick: (value: number) => void,
   ) => {
     setClick(click + 1);
-    if (click === 0) {
-      setSortType(`${value}Asc`);
-    }
-
-    if (click === 1) {
-      setSortType(`${value}Desc`);
-    }
-
-    if (click === 2) {
-      setSortType('default');
-      setClick(0);
+    switch (click) {
+      case 0:
+        setSortType(`${value}Asc`);
+        break;
+      case 1:
+        setSortType(`${value}Desc`);
+        break;
+      default:
+        setSortType('default');
+        setClick(0);
+        break;
     }
   };
-
-  console.log(sortType);
 
   const setSortedPeople = () => {
     const sortedPeople = [...visiblePeople];
@@ -124,41 +122,42 @@ export const PeopleTable: React.FC<Props>
       </thead>
 
       <tbody>
-        {
-          visibleAndSortedPeople.map((person: Person) => {
-            const {
-              born,
-              died,
-              sex,
-              motherName,
-              fatherName,
-              slug,
-            } = person;
+        {visibleAndSortedPeople.map((person: Person) => {
+          const {
+            born,
+            died,
+            sex,
+            motherName,
+            fatherName,
+            slug,
+          } = person;
 
-            return (
-              <tr
-                data-cy="person"
-                key={slug}
-                className={classNames(
-                  { 'has-background-warning': isSelected(slug) },
-                )}
-              >
-                <td>
-                  <PersonLink person={person} />
-                </td>
-                <td>{sex}</td>
-                <td>{born}</td>
-                <td>{died}</td>
-                <td>
-                  {getParent(motherName)}
-                </td>
-                <td>
-                  {getParent(fatherName)}
-                </td>
-              </tr>
-            );
-          })
-        }
+          const mother = getParent(motherName);
+          const father = getParent(fatherName);
+
+          return (
+            <tr
+              data-cy="person"
+              key={slug}
+              className={classNames(
+                { 'has-background-warning': isSelected(slug) },
+              )}
+            >
+              <td>
+                <PersonLink person={person} />
+              </td>
+              <td>{sex}</td>
+              <td>{born}</td>
+              <td>{died}</td>
+              <td>
+                {mother}
+              </td>
+              <td>
+                {father}
+              </td>
+            </tr>
+          );
+        })}
       </tbody>
     </table>
   );

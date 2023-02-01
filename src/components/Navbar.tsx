@@ -18,7 +18,6 @@ export const Navbar = () => {
             to="/"
           >
             Home
-
           </NavLink>
 
           <NavLink

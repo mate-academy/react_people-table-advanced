@@ -28,7 +28,7 @@ export const PeoplePage = () => {
       setPeople(result);
       setIsError(false);
 
-      if (result.length === 0) {
+      if (!result.length) {
         setIsListEmpty(true);
       } else {
         setIsListEmpty(false);
@@ -41,6 +41,14 @@ export const PeoplePage = () => {
 
   const centuries = searchParams.getAll('centuries') || [];
   const sex = searchParams.get('sex') || '';
+  const checkSex = (person: Person) => person.sex === sex;
+  const checkCentury = (person: Person) => {
+    return centuries.includes(String(Math.ceil(person.born / 100)));
+  };
+
+  const checkName = (person: Person) => {
+    return person.name.toLowerCase().includes(searchInput.toLowerCase());
+  };
 
   const filterSearch = () => {
     const sortedPeople = [...people];
@@ -49,28 +57,28 @@ export const PeoplePage = () => {
       (person: Person) => {
         if (centuries.length > 0) {
           if (sex) {
-            return centuries.includes(String(Math.ceil(person.born / 100)))
-            && person.sex === sex
-            && person.name.toLowerCase().includes(searchInput.toLowerCase());
+            return checkCentury(person)
+            && checkSex(person)
+            && checkName(person);
           }
 
-          return centuries.includes(String(Math.ceil(person.born / 100)))
-          && person.name.toLowerCase().includes(searchInput.toLowerCase());
+          return checkCentury(person)
+          && checkName(person);
         }
 
         if (sex) {
-          return person.sex === sex
-          && person.name.toLowerCase().includes(searchInput.toLowerCase());
+          return checkSex(person)
+          && checkName(person);
         }
 
         return person
-        && person.name.toLowerCase().includes(searchInput.toLowerCase());
+        && checkName(person);
       },
     );
   };
 
   let result = filterSearch();
-  const [visiblePeople, setVisiblePeople] = useState(result);
+  const [visiblePeople, setVisiblePeople] = useState<Person[]>(result);
 
   useEffect(() => {
     result = filterSearch();
@@ -90,9 +98,9 @@ export const PeoplePage = () => {
             {!!people.length && (
               <PeopleFilters
                 people={people}
-                setVisiblePeople={setVisiblePeople}
-                searchInput={searchInput}
                 setSearchInput={setSearchInput}
+                searchInput={searchInput}
+                setVisiblePeople={setVisiblePeople}
               />
             )}
           </div>
@@ -103,22 +111,18 @@ export const PeoplePage = () => {
               {!isLoading && isError && (
                 <p data-cy="peopleLoadingError">Something went wrong</p>)}
 
-              {
-                isListEmpty && (
-                  <p data-cy="noPeopleMessage">
-                    There are no people on the server
-                  </p>
-                )
-              }
+              {isListEmpty && (
+                <p data-cy="noPeopleMessage">
+                  There are no people on the server
+                </p>
+              )}
 
-              {
-                !result.length && !isLoading && !isError
+              {!result.length && !isLoading && !isError
                 && (
                   <p>
                     There are no people matching the current search criteria
                   </p>
-                )
-              }
+                )}
 
               { !!result.length
               && !isLoading
