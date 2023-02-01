@@ -1,7 +1,8 @@
 import cn from 'classnames';
 import { FC, memo } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { Person } from '../types';
+import { PersonLink } from './PersonLink';
 
 interface Props {
   person: Person
@@ -9,7 +10,7 @@ interface Props {
 
 export const PersonItem: FC<Props> = memo(({ person }) => {
   const {
-    name, sex, born, died, motherName, fatherName, mother, father, slug,
+    sex, born, died, motherName, fatherName, mother, father, slug,
   } = person;
   const { slug: selectedPersonSlug } = useParams();
 
@@ -18,32 +19,18 @@ export const PersonItem: FC<Props> = memo(({ person }) => {
       data-cy="person"
       className={cn({ 'has-background-warning': selectedPersonSlug === slug })}
     >
-      <td>
-        <Link
-          to={`../${slug}`}
-          className={cn({ 'has-text-danger': sex === 'f' })}
-        >
-          {name}
-        </Link>
-      </td>
+      <td><PersonLink person={person} /></td>
       <td>{sex}</td>
       <td>{born}</td>
       <td>{died}</td>
       <td>
         {mother
-          ? (
-            <Link
-              to={mother.slug}
-              className="has-text-danger"
-            >
-              {motherName}
-            </Link>
-          )
+          ? <PersonLink person={mother} />
           : motherName || '-'}
       </td>
       <td>
         {father
-          ? <Link to={father.slug}>{fatherName}</Link>
+          ? <PersonLink person={father} />
           : fatherName || '-'}
       </td>
     </tr>

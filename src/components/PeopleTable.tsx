@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, memo } from 'react';
 import { Person } from '../types';
 import { PersonItem } from './PersonItem';
 
@@ -6,7 +6,7 @@ interface Props {
   people: Person[]
 }
 
-export const PeopleTable: FC<Props> = ({ people }) => {
+export const PeopleTable: FC<Props> = memo(({ people }) => {
   return (
     <table
       data-cy="peopleTable"
@@ -72,4 +72,4 @@ export const PeopleTable: FC<Props> = ({ people }) => {
       </tbody>
     </table>
   );
-};
+});
