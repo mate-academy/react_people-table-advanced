@@ -56,54 +56,32 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
     }
   };
 
-  // const handleFilter = () => {
-  //   let result = handleSort();
-
-  //   if (centuries.length) {
-  //     result = result.filter(
-  //       person => {
-  //         const bornCentury = Math.ceil(person.born / 100);
-
-  //         return centuries.includes(String(bornCentury));
-  //       },
-  //     );
-  //   }
-
-  //   if (sex) {
-  //     result = result.filter(person => person.sex === sex);
-  //   }
-
-  //   if (query) {
-  //     result = result.filter(
-  //       person => person.name.toLowerCase().includes(query.toLowerCase())
-  //         || person.motherName?.toLowerCase().includes(query.toLowerCase())
-  //         || person.fatherName?.toLowerCase().includes(query.toLowerCase()),
-  //     );
-  //   }
-
-  //   return result;
-  // };
-
   const handleFilter = () => {
+    let result = handleSort();
+
     if (centuries.length) {
-      return handleSort().filter(
-        person => centuries.includes(String(Math.ceil(person.born / 100))),
+      result = result.filter(
+        person => {
+          const bornCentury = Math.ceil(person.born / 100);
+
+          return centuries.includes(String(bornCentury));
+        },
       );
     }
 
     if (sex) {
-      return handleSort().filter(person => person.sex === sex);
+      result = result.filter(person => person.sex === sex);
     }
 
     if (query) {
-      return handleSort().filter(
+      result = result.filter(
         person => person.name.toLowerCase().includes(query.toLowerCase())
           || person.motherName?.toLowerCase().includes(query.toLowerCase())
           || person.fatherName?.toLowerCase().includes(query.toLowerCase()),
       );
     }
 
-    return handleSort();
+    return result;
   };
 
   return (
