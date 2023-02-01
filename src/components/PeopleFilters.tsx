@@ -51,9 +51,6 @@ export const PeopleFilters = memo(() => {
         >
           Female
         </SearchLink>
-        {/* <a className="is-active" href="#/people">All</a> */}
-        {/* <a className="" href="#/people?sex=m">Male</a> */}
-        {/* <a className="" href="#/people?sex=f">Female</a> */}
       </p>
 
       <div className="panel-block">

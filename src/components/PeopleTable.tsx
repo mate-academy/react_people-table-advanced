@@ -5,7 +5,7 @@ import { Person } from '../types';
 import { SortParam } from '../types/SortParam';
 import { PersonLink } from './PersonLink';
 import { SearchLink } from './SearchLink';
-import { FilterPeople, sortPeople } from '../utils/PreparePeopleHelper';
+import { filterPeople, sortPeople } from '../utils/PreparePeopleHelper';
 
 interface Props {
   people: Person[];
@@ -32,13 +32,18 @@ export const PeopleTable: FC<Props> = memo(({ people }) => {
     return { sort: null, order: null };
   };
 
-  const filteredPeople = useMemo(() => FilterPeople(
-    people, gender, query, century,
-  ), [people, gender, query, century]);
+  const filteredPeople = useMemo(() => filterPeople({
+    people,
+    gender,
+    query,
+    century,
+  }), [people, gender, query, century]);
 
-  const sortedPeople = useMemo(() => sortPeople(
-    filteredPeople, sort, order,
-  ), [filteredPeople, sort, order]);
+  const sortedPeople = useMemo(() => sortPeople({
+    filteredPeople,
+    sort,
+    order,
+  }), [filteredPeople, sort, order]);
 
   return (
     <>

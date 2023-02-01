@@ -1,19 +1,21 @@
 import { Person } from '../types';
 import { SortParam } from '../types/SortParam';
 
-type FilterPeopleType = (
+type FilterArgs = {
   people: Person[],
   gender: string | null,
   query: string | null,
   century: string[],
-) => Person[];
+};
+type FilterPeopleType = (args: FilterArgs) => Person[];
 
-export const FilterPeople: FilterPeopleType = (
-  people,
-  gender,
-  query,
-  century,
-) => {
+export const filterPeople: FilterPeopleType = (args) => {
+  const {
+    people,
+    gender,
+    query,
+    century,
+  } = args;
   let readyPeopleArr = people;
 
   if (gender || query || century.length) {
@@ -35,15 +37,19 @@ export const FilterPeople: FilterPeopleType = (
   return readyPeopleArr;
 };
 
-type SortPeopleType = (
-  people: Person[],
+type SortArgs = {
+  filteredPeople: Person[],
   sort: string | null,
   order: string | null,
-) => Person[];
+};
 
-export const sortPeople: SortPeopleType = (people, sort, order) => {
+type SortPeopleType = (args: SortArgs) => Person[];
+
+export const sortPeople: SortPeopleType = (args) => {
+  const { filteredPeople, sort, order } = args;
+
   if (sort) {
-    people.sort((a: Person, b: Person) => {
+    filteredPeople.sort((a: Person, b: Person) => {
       switch (sort) {
         case SortParam.Name:
         case SortParam.Sex:
@@ -59,5 +65,5 @@ export const sortPeople: SortPeopleType = (people, sort, order) => {
     });
   }
 
-  return order ? people.reverse() : people;
+  return order ? filteredPeople.reverse() : filteredPeople;
 };
