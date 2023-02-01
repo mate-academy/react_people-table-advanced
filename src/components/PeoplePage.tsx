@@ -4,6 +4,7 @@ import { Loader } from './Loader';
 import { PeopleTable } from './PeopleTable';
 import { Person } from '../types';
 import { getPeople } from '../api';
+import { getParents } from '../utils/getParents';
 
 export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);
@@ -15,7 +16,15 @@ export const PeoplePage = () => {
 
   const fetchPeople = () => {
     setLoading(true);
-    getPeople().then(setPeople)
+    getPeople()
+      .then(response => {
+        const preparedPeople = response.map(person => ({
+          ...person,
+          ...getParents(person, response),
+        }));
+
+        setPeople(preparedPeople);
+      })
       .catch(() => setError(true))
       .finally(() => setLoading(false));
   };
@@ -56,7 +65,7 @@ export const PeoplePage = () => {
 
         <div className="column">
           <div className="box table-container">
-            <PeopleTable />
+            <PeopleTable people={visiblePeople} />
           </div>
         </div>
       </div>
