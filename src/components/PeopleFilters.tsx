@@ -9,9 +9,9 @@ export const PeopleFilters = () => {
   const centuriesParams = searchParams.getAll('centuries') || [];
 
   const onSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const query = { query: e.target.value || null };
+    const query = e.target.value || null;
 
-    setSearchParams(getSearchWith(searchParams, query));
+    setSearchParams(getSearchWith(searchParams, { query }));
   };
 
   const setCenturies = (century: string) => {
