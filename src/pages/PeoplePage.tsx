@@ -1,9 +1,4 @@
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-} from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { PeopleFilters } from '../components/PeopleFilters';
 import { Loader } from '../components/Loader';
@@ -11,16 +6,26 @@ import { PeopleTable } from '../components/PeopleTable';
 import { Person } from '../types';
 import { getPeople } from '../api';
 import { getSearchWith } from '../utils/searchHelper';
-import { getVisiblePeople } from '../helpers/getVisiblePeople';
 import { getPreparedPeople } from '../helpers/getPreparedPeople';
+import { useGetSearchParams } from '../controllers/useGetSearchParams';
+import { useVisiblePeople } from '../controllers/useVisiblePeople';
 
 export const PeoplePage: React.FC = React.memo(() => {
   const [people, setPeople] = useState<Person[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isDataLoaded, setIsDataLoaded] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
-
   const [searchParams, setSearchParams] = useSearchParams();
+  const visiblePeopleParams = useGetSearchParams(searchParams);
+  const visiblePeople = useVisiblePeople(people, visiblePeopleParams);
+
+  const {
+    sex,
+    query,
+    centuries,
+    sort,
+    order,
+  } = visiblePeopleParams;
 
   const loadPeople = async () => {
     setIsLoading(true);
@@ -43,12 +48,6 @@ export const PeoplePage: React.FC = React.memo(() => {
     loadPeople();
   }, []);
 
-  const sex = searchParams.get('sex');
-  const query = searchParams.get('query') || '';
-  const centuries = searchParams.getAll('centuries');
-  const sort = searchParams.get('sort');
-  const order = searchParams.get('order');
-
   const handleQueryChange = useCallback((
     event: React.ChangeEvent<HTMLInputElement>,
   ) => {
@@ -56,15 +55,6 @@ export const PeoplePage: React.FC = React.memo(() => {
       getSearchWith(searchParams, { query: event.target.value || null }),
     );
   }, [query, searchParams]);
-
-  const visiblePeople = useMemo(() => getVisiblePeople(
-    people,
-    sex,
-    query,
-    centuries,
-    sort,
-    order,
-  ), [people, sex, query, centuries, sort, order]);
 
   const isLoadedPeopleExist = isDataLoaded && visiblePeople.length !== 0;
   const isLoadedPeopleNotExist = isDataLoaded && !people.length;

@@ -4,7 +4,7 @@ import { Navbar } from './components/Navbar';
 
 import './App.scss';
 
-export const App: React.FC = React.memo(() => {
+export const App: React.FC = () => {
   return (
     <div data-cy="app">
       <Navbar />
@@ -16,4 +16,4 @@ export const App: React.FC = React.memo(() => {
       </div>
     </div>
   );
-});
+};
