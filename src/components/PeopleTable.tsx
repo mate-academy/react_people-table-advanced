@@ -1,47 +1,37 @@
-import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import React from 'react';
+import { useParams, useSearchParams } from 'react-router-dom';
 import cn from 'classnames';
-import { getPeople } from '../api';
+
 import { Person } from '../types';
 import { PersonLink } from './PersonLink';
+import { sortFields } from '../types/PeopleSortFields';
+import { SearchLink } from './SearchLink';
 
-export const PeopleTable: React.FC = () => {
-  const [people, setPeople] = useState<Person[]>([]);
-  const [, setIsLoading] = useState(false);
-  const [, setErrorMessage] = useState('');
+type Props = {
+  people: Person[],
+};
 
+export const PeopleTable: React.FC<Props> = ({ people }) => {
   const { slug } = useParams();
+  const [searchParams] = useSearchParams();
 
-  const loadedPeople = async () => {
-    setIsLoading(true);
+  // const query = searchParams.get('query');
+  // const sex = searchParams.get('sex');
+  const sort = searchParams.get('sort');
+  const order = searchParams.get('order');
+  // const century = searchParams.getAll('century');
 
-    try {
-      const loadPeople = await getPeople();
-
-      const peopleWithParents = loadPeople.map(person => {
-        const father = loadPeople.find(f => f.name === person.fatherName);
-        const mother = loadPeople.find(m => m.name === person.motherName);
-
-        return (
-          {
-            ...person,
-            father,
-            mother,
-          }
-        );
-      });
-
-      setPeople(peopleWithParents);
-    } catch (error) {
-      setErrorMessage('Something went wrong');
-    } finally {
-      setIsLoading(false);
+  const onChangeSortParams = (sortName: string) => {
+    if (sort !== sortName) {
+      return { sort: sortName, order: null };
     }
-  };
 
-  useEffect(() => {
-    loadedPeople();
-  }, []);
+    if (sort === sortName && !order) {
+      return { sort: sortName, order: 'desc' };
+    }
+
+    return { sort: null, order: null };
+  };
 
   return (
     <table
@@ -50,49 +40,32 @@ export const PeopleTable: React.FC = () => {
     >
       <thead>
         <tr>
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Name
-              <a href="#/people?sort=name">
-                <span className="icon">
-                  <i className="fas fa-sort" />
-                </span>
-              </a>
-            </span>
-          </th>
-
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Sex
-              <a href="#/people?sort=sex">
-                <span className="icon">
-                  <i className="fas fa-sort" />
-                </span>
-              </a>
-            </span>
-          </th>
-
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Born
-              <a href="#/people?sort=born&amp;order=desc">
-                <span className="icon">
-                  <i className="fas fa-sort-up" />
-                </span>
-              </a>
-            </span>
-          </th>
-
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Died
-              <a href="#/people?sort=died">
-                <span className="icon">
-                  <i className="fas fa-sort" />
-                </span>
-              </a>
-            </span>
-          </th>
+          {sortFields.map(sortField => (
+            <th>
+              <span className="is-flex is-flex-wrap-nowrap">
+                {
+                  sortField.fieldName[0]
+                    .toUpperCase() + sortField.fieldName.slice(1)
+                }
+                <SearchLink params={onChangeSortParams(sortField.fieldName)}>
+                  <span className="icon">
+                    <i
+                      className={cn('fas',
+                        {
+                          'fa-sort': sortField.fieldName !== sort,
+                        },
+                        {
+                          'fa-sort-up': sortField.fieldName === sort && !order,
+                        },
+                        {
+                          'fa-sort-down': sortField.fieldName === sort && order,
+                        })}
+                    />
+                  </span>
+                </SearchLink>
+              </span>
+            </th>
+          ))}
 
           <th>Mother</th>
           <th>Father</th>
