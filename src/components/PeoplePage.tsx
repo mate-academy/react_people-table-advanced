@@ -8,10 +8,10 @@ import { getParents } from '../utils/getParents';
 
 export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);
+  const [visiblePeople, setVisiblePeople] = useState(people);
   const [isLoading, setLoading] = useState(false);
   const [hasError, setError] = useState(false);
 
-  const visiblePeople = people;
   let visibleElement = null;
 
   const fetchPeople = () => {
@@ -24,6 +24,7 @@ export const PeoplePage = () => {
         }));
 
         setPeople(preparedPeople);
+        setVisiblePeople(preparedPeople);
       })
       .catch(() => setError(true))
       .finally(() => setLoading(false));
@@ -60,7 +61,10 @@ export const PeoplePage = () => {
     default: visibleElement = (
       <div className="columns is-desktop is-flex-direction-row-reverse">
         <div className="column is-7-tablet is-narrow-desktop">
-          <PeopleFilters />
+          <PeopleFilters
+            people={people}
+            setPeople={setVisiblePeople}
+          />
         </div>
 
         <div className="column">

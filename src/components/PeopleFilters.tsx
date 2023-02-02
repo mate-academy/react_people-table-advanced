@@ -1,12 +1,60 @@
-export const PeopleFilters = () => {
+import cn from 'classnames';
+import { Link, useLocation, useSearchParams } from 'react-router-dom';
+import { Person } from '../types';
+
+type Props = {
+  people: Person[]
+  setPeople: React.Dispatch<React.SetStateAction<Person[]>>
+};
+
+type Sex = 'm' | 'f';
+
+export const PeopleFilters = ({ people, setPeople }: Props) => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const { search } = useLocation();
+
+  const filterBySex = (sex?: Sex) => () => {
+    if (!sex) {
+      searchParams.delete('sex');
+      setSearchParams(searchParams);
+      setPeople(people);
+
+      return;
+    }
+
+    const filteredPeople = people.filter(person => (
+      person.sex === sex
+    ));
+
+    searchParams.set('sex', sex);
+    setSearchParams(searchParams);
+
+    setPeople(filteredPeople);
+  };
+
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        <a className="is-active" href="#/people">All</a>
-        <a className="" href="#/people?sex=m">Male</a>
-        <a className="" href="#/people?sex=f">Female</a>
+        <Link
+          className={cn({ 'is-active': !search.includes('sex') })}
+          to={`/people${search}`}
+          onMouseDown={filterBySex()}
+        >
+          All
+        </Link>
+
+        {(['m', 'f'] as Sex[]).map(sex => (
+          <Link
+            key={sex}
+            className={cn({ 'is-active': searchParams.get('sex') === sex })}
+            to={`/people${search}`}
+            onMouseDown={filterBySex(sex)}
+          >
+            {sex === 'm' ? 'Male' : 'Female'}
+          </Link>
+        ))}
       </p>
 
       <div className="panel-block">
@@ -81,12 +129,12 @@ export const PeopleFilters = () => {
       </div>
 
       <div className="panel-block">
-        <a
+        <Link
           className="button is-link is-outlined is-fullwidth"
-          href="#/people"
+          to="/people"
         >
           Reset all filters
-        </a>
+        </Link>
       </div>
     </nav>
   );

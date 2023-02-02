@@ -13,7 +13,7 @@ export const NavigationLink: React.FC<Props> = ({ path }) => {
 
   return (
     <NavLink
-      to={path === 'home' ? '/' : `/${path}`}
+      to={path === 'home' ? '' : `${path}`}
       onClick={() => setCurrent(path)}
       aria-current={current === path && 'page'}
       className={({ isActive }) => (
