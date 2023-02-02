@@ -1,10 +1,11 @@
 import cn from 'classnames';
+import { memo } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { getSearchWith } from '../utils/searchHelper';
 import { CenturyLink } from './CenturyLink';
 import { SearchLink } from './SearchLink';
 
-export const PeopleFilters = () => {
+export const PeopleFilters = memo(() => {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const onSearchInputChange = (
@@ -71,6 +72,7 @@ export const PeopleFilters = () => {
           <div className="level-left">
             {CENTURIES.map(century => (
               <CenturyLink
+                key={century}
                 century={century}
                 selectedCenturies={selectedCenturies}
               />
@@ -103,4 +105,4 @@ export const PeopleFilters = () => {
       </div>
     </nav>
   );
-};
+});

@@ -1,23 +1,22 @@
 import cn from 'classnames';
 import { FC, memo } from 'react';
-import { useParams } from 'react-router-dom';
 import { Person } from '../types';
 import { PersonLink } from './PersonLink';
 
 interface Props {
   person: Person
+  isSelected: boolean
 }
 
-export const PersonItem: FC<Props> = memo(({ person }) => {
+export const PersonItem: FC<Props> = memo(({ person, isSelected }) => {
   const {
-    sex, born, died, motherName, fatherName, mother, father, slug,
+    sex, born, died, motherName, fatherName, mother, father,
   } = person;
-  const { slug: selectedPersonSlug } = useParams();
 
   return (
     <tr
       data-cy="person"
-      className={cn({ 'has-background-warning': selectedPersonSlug === slug })}
+      className={cn({ 'has-background-warning': isSelected })}
     >
       <td><PersonLink person={person} /></td>
       <td>{sex}</td>

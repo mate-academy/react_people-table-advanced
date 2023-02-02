@@ -1,5 +1,5 @@
 import cn from 'classnames';
-import { FC } from 'react';
+import { FC, memo } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Person } from '../types';
 
@@ -7,7 +7,7 @@ type Props = {
   person: Person;
 };
 
-export const PersonLink: FC<Props> = ({ person }) => {
+export const PersonLink: FC<Props> = memo(({ person }) => {
   const { search } = useLocation();
 
   return (
@@ -18,4 +18,4 @@ export const PersonLink: FC<Props> = ({ person }) => {
       {person.name}
     </Link>
   );
-};
+});

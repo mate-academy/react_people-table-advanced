@@ -1,6 +1,7 @@
-import { FC, memo } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { FC, memo, useMemo } from 'react';
+import { useParams, useSearchParams } from 'react-router-dom';
 import { Person } from '../types';
+import { getSortedPeople } from '../utils/getSortedPeople';
 import { PersonItem } from './PersonItem';
 import { SortLink } from './SortLink';
 
@@ -10,40 +11,14 @@ interface Props {
 
 export const PeopleTable: FC<Props> = memo(({ people }) => {
   const [searchParams] = useSearchParams();
+  const { slug: selectedSlug } = useParams();
 
   const sort = searchParams.get('sort') || '';
   const order = searchParams.get('order') || '';
 
-  const getSortedPeople = () => {
-    const sortedPeoople = [...people];
-
-    switch (sort) {
-      case 'name':
-        sortedPeoople.sort((a, b) => a.name.localeCompare(b.name));
-        break;
-
-      case 'sex':
-        sortedPeoople.sort((a, b) => a.sex.localeCompare(b.sex));
-        break;
-
-      case 'born':
-        sortedPeoople.sort((a, b) => a.born - b.born);
-        break;
-
-      case 'died':
-        sortedPeoople.sort((a, b) => a.died - b.died);
-        break;
-
-      default:
-        break;
-    }
-
-    return order === 'desc'
-      ? sortedPeoople.reverse()
-      : sortedPeoople;
-  };
-
-  const sortedPeoople = getSortedPeople();
+  const sortedPeoople = useMemo(() => {
+    return getSortedPeople(people, sort, order);
+  }, [people, sort, order]);
 
   return (
     <table
@@ -55,28 +30,44 @@ export const PeopleTable: FC<Props> = memo(({ people }) => {
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Name
-              <SortLink parametrValue="name" />
+              <SortLink
+                parametrValue="name"
+                sort={sort}
+                order={order}
+              />
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Sex
-              <SortLink parametrValue="sex" />
+              <SortLink
+                parametrValue="sex"
+                sort={sort}
+                order={order}
+              />
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Born
-              <SortLink parametrValue="born" />
+              <SortLink
+                parametrValue="born"
+                sort={sort}
+                order={order}
+              />
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Died
-              <SortLink parametrValue="died" />
+              <SortLink
+                parametrValue="died"
+                sort={sort}
+                order={order}
+              />
             </span>
           </th>
 
@@ -88,7 +79,11 @@ export const PeopleTable: FC<Props> = memo(({ people }) => {
       <tbody>
 
         {sortedPeoople.map(person => (
-          <PersonItem key={person.slug} person={person} />
+          <PersonItem
+            key={person.slug}
+            person={person}
+            isSelected={selectedSlug === person.slug}
+          />
         ))}
 
       </tbody>
