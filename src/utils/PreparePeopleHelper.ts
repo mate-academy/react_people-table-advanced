@@ -20,12 +20,18 @@ export const filterPeople: FilterPeopleType = (args) => {
 
   if (gender || query || century.length) {
     readyPeopleArr = people.filter(person => {
-      const genderFilter = gender ? person.sex === gender : true;
-      const queryFilter = query
-        ? person.name.toLowerCase().includes(query.toLowerCase())
-        || person.motherName?.toLowerCase().includes(query.toLowerCase())
-        || person.fatherName?.toLowerCase().includes(query.toLowerCase())
+      const genderFilter = gender
+        ? person.sex === gender
         : true;
+
+      const queryInLowCase = query?.toLowerCase();
+
+      const queryFilter = queryInLowCase
+        ? person.name.toLowerCase().includes(queryInLowCase)
+        || person.motherName?.toLowerCase().includes(queryInLowCase)
+        || person.fatherName?.toLowerCase().includes(queryInLowCase)
+        : true;
+
       const centuryFilter = century.length
         ? century.includes(Math.ceil(person.born / 100).toString())
         : true;
@@ -65,5 +71,7 @@ export const sortPeople: SortPeopleType = (args) => {
     });
   }
 
-  return order ? filteredPeople.reverse() : filteredPeople;
+  return order
+    ? filteredPeople.reverse()
+    : filteredPeople;
 };

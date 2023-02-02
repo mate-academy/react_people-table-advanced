@@ -27,7 +27,7 @@ export const PeoplePage = memo(() => {
       });
 
       setPeople(peopleWithParents);
-    } catch (e) {
+    } catch {
       setIsError(true);
     } finally {
       setIsLoading(false);
