@@ -1,5 +1,5 @@
-import React from 'react';
-import { useParams, useSearchParams } from 'react-router-dom';
+import React, { memo, useCallback } from 'react';
+import { useParams } from 'react-router-dom';
 import cn from 'classnames';
 
 import { Person } from '../types';
@@ -8,30 +8,32 @@ import { sortFields } from '../types/PeopleSortFields';
 import { SearchLink } from './SearchLink';
 
 type Props = {
-  people: Person[],
+  visiblePeople: Person[],
+  sort: string | null,
+  order: string | null,
 };
 
-export const PeopleTable: React.FC<Props> = ({ people }) => {
+export const PeopleTable: React.FC<Props> = memo(({
+  visiblePeople,
+  sort,
+  order,
+}) => {
   const { slug } = useParams();
-  const [searchParams] = useSearchParams();
 
-  // const query = searchParams.get('query');
-  // const sex = searchParams.get('sex');
-  const sort = searchParams.get('sort');
-  const order = searchParams.get('order');
-  // const century = searchParams.getAll('century');
+  const onChangeSortParams = useCallback(
+    (sortName: string) => {
+      if (sort !== sortName) {
+        return { sort: sortName, order: null };
+      }
 
-  const onChangeSortParams = (sortName: string) => {
-    if (sort !== sortName) {
-      return { sort: sortName, order: null };
-    }
+      if (sort === sortName && !order) {
+        return { sort: sortName, order: 'desc' };
+      }
 
-    if (sort === sortName && !order) {
-      return { sort: sortName, order: 'desc' };
-    }
-
-    return { sort: null, order: null };
-  };
+      return { sort: null, order: null };
+    },
+    [sort, order],
+  );
 
   return (
     <table
@@ -47,7 +49,9 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
                   sortField.fieldName[0]
                     .toUpperCase() + sortField.fieldName.slice(1)
                 }
-                <SearchLink params={onChangeSortParams(sortField.fieldName)}>
+                <SearchLink
+                  params={onChangeSortParams(sortField.fieldName)}
+                >
                   <span className="icon">
                     <i
                       className={cn('fas',
@@ -55,10 +59,12 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
                           'fa-sort': sortField.fieldName !== sort,
                         },
                         {
-                          'fa-sort-up': sortField.fieldName === sort && !order,
+                          'fa-sort-up': sortField.fieldName === sort
+                                && !order,
                         },
                         {
-                          'fa-sort-down': sortField.fieldName === sort && order,
+                          'fa-sort-down': sortField.fieldName === sort
+                                && order,
                         })}
                     />
                   </span>
@@ -73,7 +79,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
       </thead>
 
       <tbody>
-        {people.map(person => (
+        {visiblePeople.map(person => (
           <tr
             data-cy="person"
             key={person.slug}
@@ -104,4 +110,4 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
       </tbody>
     </table>
   );
-};
+});
