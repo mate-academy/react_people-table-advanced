@@ -9,19 +9,13 @@ export const getSortedPeople = (
 
   switch (sort) {
     case 'name':
-      sortedPeoople.sort((a, b) => a.name.localeCompare(b.name));
-      break;
-
     case 'sex':
-      sortedPeoople.sort((a, b) => a.sex.localeCompare(b.sex));
+      sortedPeoople.sort((a, b) => a[sort].localeCompare(b[sort]));
       break;
 
     case 'born':
-      sortedPeoople.sort((a, b) => a.born - b.born);
-      break;
-
     case 'died':
-      sortedPeoople.sort((a, b) => a.died - b.died);
+      sortedPeoople.sort((a, b) => a[sort] - b[sort]);
       break;
 
     default:
