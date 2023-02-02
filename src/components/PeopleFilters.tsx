@@ -12,23 +12,53 @@ type Sex = 'm' | 'f';
 export const PeopleFilters = ({ people, setPeople }: Props) => {
   const [searchParams, setSearchParams] = useSearchParams();
   const { search } = useLocation();
+  const query = searchParams.get('query') || '';
 
-  const filterBySex = (sex?: Sex) => () => {
+  const testPersonByQuery = (person: Person) => {
+    const queryCaseIns = RegExp(query, 'i');
+
+    return queryCaseIns.test(person.name)
+    || queryCaseIns.test(person.motherName || '')
+    || queryCaseIns.test(person.fatherName || '');
+  };
+
+  const getFilteredPeople = (sex: Sex | null) => (
+    people.filter(person => (
+      (sex ? person.sex === sex : true)
+      && testPersonByQuery(person)
+    ))
+  );
+
+  const filterBySex = (sex: Sex | null) => () => {
+    const filteredPeople = getFilteredPeople(sex);
+
     if (!sex) {
       searchParams.delete('sex');
       setSearchParams(searchParams);
-      setPeople(people);
+      setPeople(filteredPeople);
 
       return;
     }
 
-    const filteredPeople = people.filter(person => (
-      person.sex === sex
-    ));
-
     searchParams.set('sex', sex);
     setSearchParams(searchParams);
+    setPeople(filteredPeople);
+  };
 
+  const handleQuery = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const sex = searchParams.get('sex') as Sex | null;
+    const filteredPeople = getFilteredPeople(sex);
+
+    if (!e.target.value) {
+      searchParams.delete('query');
+      setSearchParams(searchParams);
+      setPeople(filteredPeople);
+
+      return;
+    }
+
+    searchParams.set('query', e.target.value);
+    setSearchParams(searchParams);
     setPeople(filteredPeople);
   };
 
@@ -40,7 +70,7 @@ export const PeopleFilters = ({ people, setPeople }: Props) => {
         <Link
           className={cn({ 'is-active': !search.includes('sex') })}
           to={`/people${search}`}
-          onMouseDown={filterBySex()}
+          onMouseDown={filterBySex(null)}
         >
           All
         </Link>
@@ -64,6 +94,8 @@ export const PeopleFilters = ({ people, setPeople }: Props) => {
             type="search"
             className="input"
             placeholder="Search"
+            value={query}
+            onChange={handleQuery}
           />
 
           <span className="icon is-left">

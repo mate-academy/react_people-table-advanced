@@ -53,11 +53,6 @@ export const PeoplePage = () => {
         </p>
       ); break;
 
-    case visiblePeople.length === 0:
-      visibleElement = (
-        <p>There are no people matching the current search criteria</p>
-      ); break;
-
     default: visibleElement = (
       <div className="columns is-desktop is-flex-direction-row-reverse">
         <div className="column is-7-tablet is-narrow-desktop">
@@ -69,7 +64,15 @@ export const PeoplePage = () => {
 
         <div className="column">
           <div className="box table-container">
-            <PeopleTable people={visiblePeople} />
+            {visiblePeople.length === 0
+              ? (
+                <p>There are no people matching the current search criteria</p>
+              )
+              : (
+                <PeopleTable
+                  people={visiblePeople}
+                />
+              )}
           </div>
         </div>
       </div>

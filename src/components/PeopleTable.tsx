@@ -21,10 +21,10 @@ export const PeopleTable = ({ people }: Props) => {
   const [searchParams, setSearchParams] = useSearchParams();
   const { search } = useLocation();
 
-  const visiblePeople = [...people];
   const params: Params[] = ['name', 'sex', 'born', 'died'];
   const order = searchParams.get('order');
   const sort = searchParams.get('sort');
+  const visiblePeople = [...people];
 
   const sortPeople = () => {
     visiblePeople.sort((a, b) => {
