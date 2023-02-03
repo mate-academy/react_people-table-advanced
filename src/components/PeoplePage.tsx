@@ -13,8 +13,8 @@ export const PeoplePage = () => {
   const [hasError, setError] = useState(false);
   const [searchParams] = useSearchParams();
 
-  const query = searchParams.get('query') || '';
   const centuries = searchParams.getAll('centuries');
+  const query = searchParams.get('query') || '';
   const sex = searchParams.get('sex') || '';
 
   let visibleElement = null;
@@ -47,12 +47,12 @@ export const PeoplePage = () => {
     setLoading(true);
     getPeople()
       .then(response => {
-        const preparedPeople = response.map(person => ({
+        const peopleWithParents = response.map(person => ({
           ...person,
           ...getParents(person, response),
         }));
 
-        setPeople(preparedPeople);
+        setPeople(peopleWithParents);
       })
       .catch(() => setError(true))
       .finally(() => setLoading(false));
