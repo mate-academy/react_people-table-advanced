@@ -1,18 +1,16 @@
-import { useEffect, useMemo, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 import { PeopleFilters } from '../components/PeopleFilters';
 import { Loader } from '../components/Loader';
 import { PeopleTable } from '../components/PeopleTable';
 import { Person } from '../types';
 import { getPeople } from '../api';
 import { getPreperedPeople } from '../utils/getPreperedPeople';
-import { getFilteredPeople } from '../utils/getFilteredPeople';
+import { useFilteredPeople } from '../customHooks/useFilteredPeople';
 
 export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);
   const [errorMessage, setErrorMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [searchParams] = useSearchParams();
 
   useEffect(() => {
     setIsLoading(true);
@@ -23,15 +21,7 @@ export const PeoplePage = () => {
       .finally(() => setIsLoading(false));
   }, []);
 
-  const query = searchParams.get('query')?.toLowerCase() ?? '';
-  const selectedSex = searchParams.get('sex');
-  const selectedCenturies = useMemo(() => {
-    return searchParams.getAll('centuries');
-  }, [searchParams]);
-
-  const visiblePeople = useMemo(() => {
-    return getFilteredPeople(people, query, selectedCenturies, selectedSex);
-  }, [people, query, selectedCenturies, selectedSex]);
+  const visiblePeople = useFilteredPeople(people);
 
   return (
     <>

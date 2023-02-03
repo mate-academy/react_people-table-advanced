@@ -4,6 +4,7 @@ import { Link, useSearchParams } from 'react-router-dom';
 import { getSearchWith } from '../utils/searchHelper';
 import { CenturyLink } from './CenturyLink';
 import { SearchLink } from './SearchLink';
+import CENTURIES from '../data/CENTURIES.json';
 
 export const PeopleFilters = memo(() => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -16,8 +17,6 @@ export const PeopleFilters = memo(() => {
       { query: event.target.value || null },
     ));
   };
-
-  const CENTURIES = ['16', '17', '18', '19', '20'];
 
   const query = searchParams.get('query') || '';
   const selectedSex = searchParams.get('sex');

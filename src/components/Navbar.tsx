@@ -1,4 +1,4 @@
-import { MainNavLink } from './Loader/MainNavLink';
+import { MainNavLink } from './MainNavLink';
 
 export const Navbar = () => {
   return (
