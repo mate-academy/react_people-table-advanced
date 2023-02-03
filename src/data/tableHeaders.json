@@ -1,0 +1,29 @@
+[{
+  "id": 1,
+  "title": "Name",
+  "sortParametr": "name"
+},
+{
+  "id": 2,
+  "title": "Sex",
+  "sortParametr": "sex"
+},
+{
+  "id": 3,
+  "title": "Born",
+  "sortParametr": "born"
+},
+{
+  "id": 4,
+  "title": "Died",
+  "sortParametr": "died"
+},
+{
+  "id": 5,
+  "title": "Mother"
+},
+{
+  "id": 6,
+  "title": "Father"
+}
+]
