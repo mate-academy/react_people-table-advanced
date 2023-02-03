@@ -17,8 +17,6 @@ export const PeoplePage = () => {
   const query = searchParams.get('query') || '';
   const sex = searchParams.get('sex') || '';
 
-  let visibleElement = null;
-
   const filterByQuery = (person: Person) => {
     const queryCaseIns = RegExp(query, 'i');
 
@@ -62,54 +60,48 @@ export const PeoplePage = () => {
     fetchPeople();
   }, []);
 
-  switch (true) {
-    case isLoading:
-      visibleElement = <Loader />;
-      break;
-
-    case hasError:
-      visibleElement = (
-        <p data-cy="peopleLoadingError">
-          Something went wrong
-        </p>
-      ); break;
-
-    case people.length === 0:
-      visibleElement = (
-        <p data-cy="noPeopleMessage">
-          There are no people on the server
-        </p>
-      ); break;
-
-    default: visibleElement = (
-      <div className="columns is-desktop is-flex-direction-row-reverse">
-        <div className="column is-7-tablet is-narrow-desktop">
-          <PeopleFilters />
-        </div>
-
-        <div className="column">
-          <div className="box table-container">
-            {visiblePeople.length === 0
-              ? (
-                <p>There are no people matching the current search criteria</p>
-              )
-              : (
-                <PeopleTable
-                  people={visiblePeople}
-                />
-              )}
-          </div>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <>
       <h1 className="title">People Page</h1>
 
       <div className="block">
-        {visibleElement}
+        {isLoading
+          ? <Loader />
+          : ((
+            hasError && (
+              <p data-cy="peopleLoadingError">
+                Something went wrong
+              </p>
+            )
+          )
+          || (
+            !people.length && (
+              <p data-cy="noPeopleMessage">
+                There are no people on the server
+              </p>
+            )
+          ))}
+        <div className="columns is-desktop is-flex-direction-row-reverse">
+          <div className="column is-7-tablet is-narrow-desktop">
+            <PeopleFilters />
+          </div>
+
+          <div className="column">
+            <div className="box table-container">
+              {!visiblePeople.length
+                ? (
+                  <p>
+                    There are no people matching the current search criteria
+                  </p>
+                )
+                : (
+                  <PeopleTable
+                    people={visiblePeople}
+                  />
+                )}
+            </div>
+          </div>
+        </div>
       </div>
     </>
   );
