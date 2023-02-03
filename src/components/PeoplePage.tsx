@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { PeopleFilters } from './PeopleFilters';
 import { Loader } from './Loader';
 import { PeopleTable } from './PeopleTable';
@@ -8,11 +9,39 @@ import { getParents } from '../utils/getParents';
 
 export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);
-  const [visiblePeople, setVisiblePeople] = useState(people);
   const [isLoading, setLoading] = useState(false);
   const [hasError, setError] = useState(false);
+  const [searchParams] = useSearchParams();
+
+  const query = searchParams.get('query') || '';
+  const centuries = searchParams.getAll('centuries');
+  const sex = searchParams.get('sex') || '';
 
   let visibleElement = null;
+
+  const filterByQuery = (person: Person) => {
+    const queryCaseIns = RegExp(query, 'i');
+
+    return queryCaseIns.test(person.name)
+    || queryCaseIns.test(person.motherName || '')
+    || queryCaseIns.test(person.fatherName || '');
+  };
+
+  const filterByCentury = (person: Person) => (
+    centuries.length
+      ? centuries.includes(Math.ceil(person.born / 100).toString())
+      : true
+  );
+
+  const filterBySex = (person: Person) => (
+    sex ? person.sex === sex : true
+  );
+
+  const visiblePeople = people.filter(person => (
+    filterBySex(person)
+    && filterByQuery(person)
+    && filterByCentury(person)
+  ));
 
   const fetchPeople = () => {
     setLoading(true);
@@ -24,7 +53,6 @@ export const PeoplePage = () => {
         }));
 
         setPeople(preparedPeople);
-        setVisiblePeople(preparedPeople);
       })
       .catch(() => setError(true))
       .finally(() => setLoading(false));
@@ -56,10 +84,7 @@ export const PeoplePage = () => {
     default: visibleElement = (
       <div className="columns is-desktop is-flex-direction-row-reverse">
         <div className="column is-7-tablet is-narrow-desktop">
-          <PeopleFilters
-            people={people}
-            setPeople={setVisiblePeople}
-          />
+          <PeopleFilters />
         </div>
 
         <div className="column">

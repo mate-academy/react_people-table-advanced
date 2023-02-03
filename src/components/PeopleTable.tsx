@@ -14,20 +14,20 @@ type Props = {
   people: Person[]
 };
 
-type Params = 'name' | 'sex' | 'born' | 'died';
+type Params = ['name', 'sex', 'born', 'died'];
 
 export const PeopleTable = ({ people }: Props) => {
   const { slug } = useParams();
   const [searchParams, setSearchParams] = useSearchParams();
   const { search } = useLocation();
 
-  const params: Params[] = ['name', 'sex', 'born', 'died'];
+  const params: Params = ['name', 'sex', 'born', 'died'];
   const order = searchParams.get('order');
   const sort = searchParams.get('sort');
-  const visiblePeople = [...people];
+  const orderedPeople = [...people];
 
   const sortPeople = () => {
-    visiblePeople.sort((a, b) => {
+    orderedPeople.sort((a, b) => {
       const [personA, personB] = order === 'desc'
         ? [b, a]
         : [a, b];
@@ -104,7 +104,7 @@ export const PeopleTable = ({ people }: Props) => {
       </thead>
 
       <tbody>
-        {(sort ? visiblePeople : people).map(person => (
+        {(sort ? orderedPeople : people).map(person => (
           <tr
             key={person.slug}
             data-cy="person"
