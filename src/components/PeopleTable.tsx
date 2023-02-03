@@ -4,8 +4,8 @@ import cn from 'classnames';
 
 import { Person } from '../types';
 import { PersonLink } from './PersonLink';
-import { sortFields } from '../types/PeopleSortFields';
 import { SearchLink } from './SearchLink';
+import { sortFields } from '../data/sortFields';
 
 type Props = {
   visiblePeople: Person[],

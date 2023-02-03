@@ -3,9 +3,10 @@ import { Link, useSearchParams } from 'react-router-dom';
 import cn from 'classnames';
 import { NameFilter } from './NameFilter/NameFilter';
 import { getSearchWith } from '../utils/searchHelper';
-import { SexSortValues } from '../types/SexSortValues';
+
 import { SearchLink } from './SearchLink';
 import { CenturyFilter } from './CenturyFilter/CenturyFilter';
+import { sortSexValues } from '../data/sortSexValues';
 
 export const PeopleFilters = memo(() => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -23,13 +24,13 @@ export const PeopleFilters = memo(() => {
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        {SexSortValues.map(value => (
+        {sortSexValues.map(value => (
           <SearchLink
             key={value.id}
             className={cn({
               'is-active': personSex === value.sex,
             })}
-            params={{ personSex: value.sex }}
+            params={{ sex: value.sex }}
           >
             {value.title}
           </SearchLink>
@@ -43,7 +44,7 @@ export const PeopleFilters = memo(() => {
       <div className="panel-block">
         <Link
           className="button is-link is-outlined is-fullwidth"
-          to="/people"
+          to={{ search: '' }}
         >
           Reset all filters
         </Link>

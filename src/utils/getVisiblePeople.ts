@@ -9,7 +9,7 @@ interface FilterFields {
   order: string | null,
 }
 
-export const visiblePeople = (fields: FilterFields) => {
+export const getVisiblePeople = (fields: FilterFields) => {
   const {
     people,
     sex,

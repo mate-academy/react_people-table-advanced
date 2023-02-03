@@ -5,13 +5,13 @@ import { SearchLink } from '../SearchLink';
 
 export const CenturyFilter = memo(() => {
   const [searchParams] = useSearchParams();
-  const century = searchParams.getAll('century') || [];
+  const centuries = searchParams.getAll('century');
 
   const onCenturyChange = (currentCentury: string) => {
     return {
-      century: century.includes(currentCentury)
-        ? century.filter(prevCentury => prevCentury !== currentCentury)
-        : [...century, currentCentury],
+      century: centuries.includes(currentCentury)
+        ? centuries.filter(prevCentury => prevCentury !== currentCentury)
+        : [...centuries, currentCentury],
     };
   };
 
@@ -24,7 +24,7 @@ export const CenturyFilter = memo(() => {
               data-cy="century"
               key={+centuryToShow}
               className={cn('button mr-1', {
-                'is-info': century.includes(centuryToShow),
+                'is-info': centuries.includes(centuryToShow),
               })}
               params={onCenturyChange(centuryToShow)}
             >
@@ -37,7 +37,7 @@ export const CenturyFilter = memo(() => {
           <SearchLink
             data-cy="centuryALL"
             className={cn('button is-success', {
-              'is-outlined': century.length > 0,
+              'is-outlined': centuries.length > 0,
             })}
             params={{ century: [] }}
           >

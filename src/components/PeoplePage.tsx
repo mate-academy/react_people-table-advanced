@@ -7,12 +7,12 @@ import { Loader } from './Loader';
 import { PeopleTable } from './PeopleTable';
 import { Person } from '../types';
 import { getPeople } from '../api';
-import { visiblePeople } from '../utils/visiblePeople';
+import { getVisiblePeople } from '../utils/getVisiblePeople';
 
 export const PeoplePage: React.FC = memo(() => {
   const [people, setPeople] = useState<Person[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [errorMessage, setErrorMessage] = useState(false);
+  const [isError, setIsError] = useState(false);
 
   const [searchParams] = useSearchParams();
 
@@ -22,7 +22,7 @@ export const PeoplePage: React.FC = memo(() => {
   const order = searchParams.get('order');
   const century = searchParams.getAll('century');
 
-  const loadedPeople = async () => {
+  const setLoadedPeople = async () => {
     setIsLoading(true);
 
     try {
@@ -44,17 +44,17 @@ export const PeoplePage: React.FC = memo(() => {
 
       setPeople(peopleWithParents);
     } catch (error) {
-      setErrorMessage(true);
+      setIsError(true);
     } finally {
       setIsLoading(false);
     }
   };
 
   useEffect(() => {
-    loadedPeople();
+    setLoadedPeople();
   }, []);
 
-  const filteredPeople = useMemo(() => visiblePeople({
+  const filteredPeople = useMemo(() => getVisiblePeople({
     people,
     query,
     sex,
@@ -77,7 +77,7 @@ export const PeoplePage: React.FC = memo(() => {
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
           <div className="column is-7-tablet is-narrow-desktop">
-            {!isLoading && (
+            {!isLoading && people.length && (
               <PeopleFilters />
             )}
           </div>
@@ -86,7 +86,7 @@ export const PeoplePage: React.FC = memo(() => {
             <div className="box table-container">
               {isLoading && <Loader />}
 
-              {errorMessage && (
+              {isError && (
                 <p data-cy="peopleLoadingError">Something went wrong</p>
               )}
 
@@ -100,7 +100,7 @@ export const PeoplePage: React.FC = memo(() => {
                 <p>There are no people matching the current search criteria</p>
               )}
 
-              {!errorMessage && !isLoading && (
+              {filteredPeople.length > 0 && !isLoading && (
                 <PeopleTable
                   visiblePeople={filteredPeople}
                   sort={sort}
