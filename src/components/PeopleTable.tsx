@@ -1,8 +1,9 @@
 import classNames from 'classnames';
 import { FC } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useSearchParams } from 'react-router-dom';
 import { Person } from '../types';
 import { PersonLink } from './PersonLink';
+import { SearchLink } from './SearchLink';
 
 type Props = {
   listOfPeople: Person[];
@@ -10,6 +11,13 @@ type Props = {
 
 export const PeopleTable: FC<Props> = ({ listOfPeople }) => {
   const { selectedSlug = '' } = useParams();
+  const [searchParams] = useSearchParams();
+
+  const sort = searchParams.get('sort');
+  const order = searchParams.get('order');
+  const query = searchParams.get('query');
+  const sex = searchParams.get('sex');
+  const centuries = searchParams.getAll('centuries');
 
   const list = listOfPeople.map(person => {
     const mother = listOfPeople.find(m => m.name === person.motherName);
@@ -22,6 +30,65 @@ export const PeopleTable: FC<Props> = ({ listOfPeople }) => {
     };
   });
 
+  let copyList = [...list];
+
+  const sortedlist = (sortlist: Person[]) => {
+    sortlist.sort((a, b) => {
+      let personA = a;
+      let personB = b;
+
+      if (order === 'desc') {
+        [personA, personB] = [personB, personA];
+      }
+
+      switch (sort) {
+        case 'name':
+        case 'sex':
+          return personA[sort].localeCompare(personB[sort]);
+        case 'born':
+        case 'died':
+          return personA[sort] - personB[sort];
+        default:
+          return 0;
+      }
+    });
+  };
+
+  const filterListOfPeople = (queryProps: string | null) => {
+    if (centuries.length) {
+      copyList = [...copyList].filter(person => (
+        centuries.includes((Math.floor(person.born / 100) + 1).toString())
+      ));
+    }
+
+    if (sex) {
+      copyList = [...copyList].filter(person => (person.sex === sex));
+    }
+
+    if (queryProps) {
+      copyList = [...copyList].filter(person => (
+        person.name.toLowerCase().includes(queryProps.toLowerCase())
+        || person.motherName?.toLowerCase().includes(queryProps.toLowerCase())
+        || person.fatherName?.toLowerCase().includes(queryProps.toLowerCase())
+      ));
+    }
+  };
+
+  filterListOfPeople(query);
+  sortedlist(copyList);
+
+  const linkParams = (availableSort: string) => {
+    if (availableSort === sort && order === 'desc') {
+      return { sort: null, order: null };
+    }
+
+    if (availableSort === sort) {
+      return { sort: availableSort, order: 'desc' };
+    }
+
+    return { sort: availableSort, order: null };
+  };
+
   return (
     <table
       data-cy="peopleTable"
@@ -32,44 +99,76 @@ export const PeopleTable: FC<Props> = ({ listOfPeople }) => {
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Name
-              <a href="#/people?sort=name">
+              <SearchLink
+                params={linkParams('name')}
+              >
                 <span className="icon">
-                  <i className="fas fa-sort" />
+                  <i
+                    className={classNames('fas fa-sort', {
+                      'fa-sort-down': sort === 'name',
+                      'fa-sort-up': order === 'desc'
+                        && sort === 'name',
+                    })}
+                  />
                 </span>
-              </a>
+              </SearchLink>
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Sex
-              <a href="#/people?sort=sex">
+              <SearchLink
+                params={linkParams('sex')}
+              >
                 <span className="icon">
-                  <i className="fas fa-sort" />
+                  <i
+                    className={classNames('fas fa-sort', {
+                      'fa-sort-down': sort === 'sex',
+                      'fa-sort-up': order === 'desc'
+                        && sort === 'sex',
+                    })}
+                  />
                 </span>
-              </a>
+              </SearchLink>
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Born
-              <a href="#/people?sort=born&amp;order=desc">
+              <SearchLink
+                params={linkParams('born')}
+              >
                 <span className="icon">
-                  <i className="fas fa-sort-up" />
+                  <i
+                    className={classNames('fas fa-sort', {
+                      'fa-sort-down': sort === 'born',
+                      'fa-sort-up': order === 'desc'
+                        && sort === 'born',
+                    })}
+                  />
                 </span>
-              </a>
+              </SearchLink>
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Died
-              <a href="#/people?sort=died">
+              <SearchLink
+                params={linkParams('died')}
+              >
                 <span className="icon">
-                  <i className="fas fa-sort" />
+                  <i
+                    className={classNames('fas fa-sort', {
+                      'fa-sort-down': sort === 'died',
+                      'fa-sort-up': order === 'desc'
+                        && sort === 'died',
+                    })}
+                  />
                 </span>
-              </a>
+              </SearchLink>
             </span>
           </th>
 
@@ -79,7 +178,7 @@ export const PeopleTable: FC<Props> = ({ listOfPeople }) => {
       </thead>
 
       <tbody>
-        {list.map(human => (
+        {copyList.map(human => (
 
           <tr
             data-cy="person"
