@@ -1,5 +1,5 @@
 import {
-  FC, memo, useEffect, useMemo, useState,
+  FC, memo, useEffect, useMemo, useState
 } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { getPeople } from '../../api';
@@ -22,6 +22,31 @@ export const PeoplePage: FC = memo(
     const sort = searchParams.get('sort');
     const order = searchParams.get('order');
     const century = searchParams.getAll('century');
+
+    const setLoadedPeople = async () => {
+      setLoading(true);
+
+      try {
+        const peopleFromServer = await getPeople();
+
+        const peopleWithParents
+          = peopleFromServer.map((person, _, array) => ({
+            ...person,
+            mother: getPersonByName(person.motherName, array),
+            father: getPersonByName(person.fatherName, array),
+          }));
+
+        setPeople(peopleWithParents);
+      } catch (error) {
+        setError(true);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    useEffect(() => {
+      setLoadedPeople();
+    }, []);
 
     useEffect(() => {
       setLoading(true);
@@ -60,8 +85,8 @@ export const PeoplePage: FC = memo(
       order,
     ]);
 
-    const isLoadedPeopleEmpty = people.length === 0 && !isError && !isLoading;
-    const shouldBePeopleRendered = people.length !== 0 && !isError;
+    const isLoadedPeopleEmpty = !people.length && !isError && !isLoading;
+    const shouldBePeopleRendered = people.length && !isLoading;
     const shouldBeFilterRendered = !isLoading && people.length;
 
     return (
@@ -88,6 +113,12 @@ export const PeoplePage: FC = memo(
                 {isLoadedPeopleEmpty && (
                   <p data-cy="noPeopleMessage">
                     There are no people on the server
+                  </p>
+                )}
+
+                {filteredPeople.length === 0 && !isLoading && (
+                  <p>
+                    There are no people matching the current search criteria
                   </p>
                 )}
 
