@@ -61,7 +61,8 @@ export const PeoplePage: FC = memo(
     ]);
 
     const isLoadedPeopleEmpty = people.length === 0 && !isError && !isLoading;
-    const shouldBeRendered = people.length !== 0 && !isError;
+    const shouldBePeopleRendered = people.length !== 0 && !isError;
+    const shouldBeFilterRendered = !isLoading && people.length;
 
     return (
       <>
@@ -70,7 +71,7 @@ export const PeoplePage: FC = memo(
         <div className="block">
           <div className="columns is-desktop is-flex-direction-row-reverse">
             <div className="column is-7-tablet is-narrow-desktop">
-              {isLoading || <PeopleFilters />}
+              {shouldBeFilterRendered && <PeopleFilters />}
             </div>
 
             <div className="column">
@@ -90,7 +91,7 @@ export const PeoplePage: FC = memo(
                   </p>
                 )}
 
-                {shouldBeRendered && (
+                {shouldBePeopleRendered && (
                   <PeopleTable
                     people={filteredPeople}
                     sort={sort}
