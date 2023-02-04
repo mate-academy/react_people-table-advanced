@@ -1,4 +1,9 @@
-import { Link, LinkProps, useSearchParams } from 'react-router-dom';
+import {
+  Link,
+  LinkProps,
+  useLocation,
+  useSearchParams,
+} from 'react-router-dom';
 import { getSearchWith, SearchParams } from '../utils/searchHelper';
 
 /**
@@ -19,6 +24,7 @@ export const SearchLink: React.FC<Props> = ({
   ...props // all usual Link props like `className`, `style` and `id`
 }) => {
   const [searchParams] = useSearchParams();
+  const location = useLocation();
 
   return (
     <Link
@@ -27,6 +33,7 @@ export const SearchLink: React.FC<Props> = ({
       // to={{ search: getSearchWith(searchParams, { centuries: ['16', '18'] }) }}
       to={{
         search: getSearchWith(searchParams, params),
+        pathname: location.pathname,
       }}
       {...props} // copy all the other props
     >

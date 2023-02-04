@@ -1,0 +1,16 @@
+.link {
+  color: #485fc7;
+  transition: color 0.3s;
+}
+
+.link:hover {
+  color: #485fc7aa;
+}
+
+.link--red {
+  color: #f14668;
+}
+
+.link--red:hover {
+  color: #f14668aa;
+}
