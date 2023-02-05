@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { getPeople } from '../api';
 import { Person } from '../types';
 import { PeopleTable } from '../components/PeopleTable';
+import { PeopleFilters } from '../components/PeopleFilters';
 
 export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);
@@ -31,11 +32,26 @@ export const PeoplePage = () => {
     <>
       <h1 className="title">People Page</h1>
 
-      <PeopleTable
-        people={people}
-        isLoading={isLoading}
-        error={error}
-      />
+      <div className="block">
+        <div className="columns is-desktop is-flex-direction-row-reverse">
+          <div className="column is-7-tablet is-narrow-desktop">
+            <PeopleFilters />
+          </div>
+
+          <div className="column">
+            <div className="box table-container">
+
+              {/* <p>There are no people matching the current search criteria</p> */}
+
+              <PeopleTable
+                people={people}
+                isLoading={isLoading}
+                error={error}
+              />
+            </div>
+          </div>
+        </div>
+      </div>
     </>
   );
 };
