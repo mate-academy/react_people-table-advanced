@@ -1,5 +1,5 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
-import { PeoplePage } from './components/PeoplePage';
+import { PeoplePage } from './Pages/PeoplePage';
 import { Layout } from './Layout';
 
 import './App.scss';

@@ -7,10 +7,11 @@ import {
 } from 'react';
 import classNames from 'classnames';
 import { useParams, useSearchParams } from 'react-router-dom';
-import { Person } from '../types/Person';
-import { sortBy } from '../utils/sortBy';
+import { Person } from '../../types/Person';
+import { sortBy } from '../../utils/sortBy';
 import { criteriaError } from './Errors';
-import { SearchLink } from './SearchLink';
+import { SearchLink } from '../SearchLink';
+import { PersonRow } from './PersonRow';
 
 type Props = {
   people: Person[];
@@ -22,7 +23,7 @@ export const PeopleTable: FC<Props> = memo(({ people, setErrors }) => {
   const searchString = searchParams.toString();
 
   const currentSortBy = searchParams.get('sortBy');
-  const isCurrentlyReversed = searchParams.get('reversed');
+  const isCurrentlyReversed = searchParams.get('order');
 
   const { slug } = useParams();
 
@@ -38,7 +39,16 @@ export const PeopleTable: FC<Props> = memo(({ people, setErrors }) => {
       }
 
       if (query?.length && !person.name.includes(query)) {
-        return false;
+        const lowerCaseQuery = query.toLowerCase();
+
+        if (!person.name.toLowerCase().includes(lowerCaseQuery)
+          && (!person.motherName
+              || !person.motherName.toLowerCase().includes(lowerCaseQuery))
+          && (!person.fatherName
+              || !person.fatherName.toLowerCase().includes(lowerCaseQuery))
+        ) {
+          return false;
+        }
       }
 
       if (centuryFltrs.length
@@ -66,16 +76,16 @@ export const PeopleTable: FC<Props> = memo(({ people, setErrors }) => {
   const handleSortClick = (nextSortBy: string) => {
     // First click
     if (!currentSortBy || nextSortBy !== currentSortBy) {
-      return { sortBy: nextSortBy, reversed: null };
+      return { sortBy: nextSortBy, order: null };
     }
 
     // Second click
     if (currentSortBy === nextSortBy && !isCurrentlyReversed) {
-      return { sortBy: nextSortBy, reversed: 'yes' };
+      return { sortBy: nextSortBy, order: 'desc' };
     }
 
     // Third click
-    return { sortBy: null, reversed: null };
+    return { sortBy: null, order: null };
   };
 
   const [visiblePeople, setVisiblePeople] = useState(() => {
@@ -224,51 +234,7 @@ export const PeopleTable: FC<Props> = memo(({ people, setErrors }) => {
 
       <tbody>
         {visiblePeople.map(person => (
-          <tr
-            key={person.slug}
-            data-cy="person"
-            className={classNames(
-              { 'has-background-warning': slug === person.slug },
-            )}
-          >
-            <td>
-              <a
-                className={`link${person.sex === 'f' ? ' link--red' : ''}`}
-                href={`#/people/${person.slug}${searchString.length ? `?${searchString}` : ''}`}
-              >
-                {person.name}
-              </a>
-            </td>
-            <td>{person.sex}</td>
-            <td>{person.born}</td>
-            <td>{person.died}</td>
-            {person.mother
-              ? (
-                <td>
-                  <a
-                    className="link link--red"
-                    href={`#/people/${person.mother.slug}${searchString.length ? `?${searchString}` : ''}`}
-                  >
-                    {person.motherName}
-                  </a>
-                </td>
-              ) : (
-                <td>{person.motherName || '-'}</td>
-              )}
-            {person.father
-              ? (
-                <td>
-                  <a
-                    className="link"
-                    href={`#/people/${person.father.slug}${searchString.length ? `?${searchString}` : ''}`}
-                  >
-                    {person.fatherName}
-                  </a>
-                </td>
-              ) : (
-                <td>{person.fatherName || '-'}</td>
-              )}
-          </tr>
+          <PersonRow person={person} searchString={searchString} slug={slug} />
         ))}
       </tbody>
     </table>

@@ -6,8 +6,8 @@ import {
 } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import classNames from 'classnames';
-import { SearchLink } from './SearchLink';
-import { debounce } from '../utils/debounce';
+import { SearchLink } from '../SearchLink';
+import { debounce } from '../../utils/debounce';
 
 type Props = {
   centuries: string[];
@@ -21,7 +21,12 @@ export const PeopleFilters: FC<Props> = memo(({ centuries }) => {
 
   const debouncedSetQuery = useCallback(
     debounce((newQuery: string) => {
-      searchParams.set('query', newQuery);
+      if (newQuery.length) {
+        searchParams.set('query', newQuery);
+      } else {
+        searchParams.delete('query');
+      }
+
       setSearchParams(searchParams);
     }, 300),
     [searchParams, setSearchParams],

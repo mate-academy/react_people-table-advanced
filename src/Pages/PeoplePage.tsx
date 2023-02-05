@@ -5,14 +5,14 @@ import {
   useEffect,
   ReactNode,
 } from 'react';
-import { PeopleFilters } from './PeopleFilters';
-import { Loader } from './Loader';
-import { PeopleTable } from './PeopleTable';
+import { PeopleFilters } from '../components/PeopleTable/PeopleFilters';
+import { Loader } from '../components/Loader';
+import { PeopleTable } from '../components/PeopleTable';
 import { PeopleData } from '../types';
 import { getPeople } from '../api';
-import './Table.css';
-import { noPeopleError, serverError } from './Errors';
+import { noPeopleError, serverError } from '../components/PeopleTable/Errors';
 import { assignKeyByIndex } from '../utils/assignKey';
+import './People.css';
 
 export const PeoplePage = memo(() => {
   const [peopleData, setPeopleData] = useState<PeopleData>({
