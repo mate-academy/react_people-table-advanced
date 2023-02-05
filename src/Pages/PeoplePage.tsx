@@ -62,16 +62,16 @@ export const PeoplePage = memo(() => {
 
   return (
     <>
-      <h1 className="title">People Page</h1>
-
+      <div className="d-flex">
+        <h1 className="title">People Page</h1>
+        <div className="is-7-tablet is-narrow-desktop">
+          {!loading && !!peopleData.people.length && (
+            <PeopleFilters centuries={peopleData.centuries} />
+          )}
+        </div>
+      </div>
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
-          <div className="column is-7-tablet is-narrow-desktop">
-            {!loading && !!peopleData.people.length && (
-              <PeopleFilters centuries={peopleData.centuries} />
-            )}
-          </div>
-
           <div className="column">
             <div className="box table-container">
               {loading && <Loader />}

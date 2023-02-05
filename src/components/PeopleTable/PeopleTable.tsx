@@ -5,12 +5,12 @@ import {
   ReactNode,
   useEffect,
 } from 'react';
-import classNames from 'classnames';
 import { useParams, useSearchParams } from 'react-router-dom';
+import classNames from 'classnames';
 import { Person } from '../../types/Person';
 import { sortBy } from '../../utils/sortBy';
-import { criteriaError } from './Errors';
 import { SearchLink } from '../SearchLink';
+import { criteriaError } from './Errors';
 import { PersonRow } from './PersonRow';
 
 type Props = {
@@ -19,20 +19,19 @@ type Props = {
 };
 
 export const PeopleTable: FC<Props> = memo(({ people, setErrors }) => {
+  const { slug } = useParams();
   const [searchParams] = useSearchParams();
   const searchString = searchParams.toString();
 
   const currentSortBy = searchParams.get('sortBy');
   const isCurrentlyReversed = searchParams.get('order');
 
-  const { slug } = useParams();
+  const sexFilter = searchParams.get('sex');
+  const query = searchParams.get('query');
+  const centuryFltrs = searchParams
+    .getAll('centuries').map(filter => parseInt(filter, 10));
 
   const filterPeople = (ppl: Person[]) => {
-    const centuryFltrs = searchParams
-      .getAll('centuries').map(filter => parseInt(filter, 10));
-    const sexFilter = searchParams.get('sex');
-    const query = searchParams.get('query');
-
     return ppl.filter(person => {
       if (sexFilter && sexFilter !== person.sex) {
         return false;
@@ -109,16 +108,6 @@ export const PeopleTable: FC<Props> = memo(({ people, setErrors }) => {
       setVisiblePeople([]);
     }
   }, [searchString, people]);
-
-  useEffect(() => {
-    setErrors(prev => {
-      if (visiblePeople.length === 0) {
-        return [...prev, criteriaError];
-      }
-
-      return prev.filter(err => err !== criteriaError);
-    });
-  }, []);
 
   return (
     <table
@@ -234,7 +223,12 @@ export const PeopleTable: FC<Props> = memo(({ people, setErrors }) => {
 
       <tbody>
         {visiblePeople.map(person => (
-          <PersonRow person={person} searchString={searchString} slug={slug} />
+          <PersonRow
+            key={person.slug}
+            person={person}
+            searchString={searchString}
+            slug={slug}
+          />
         ))}
       </tbody>
     </table>
