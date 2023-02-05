@@ -1,0 +1,58 @@
+.link {
+  color: #485fc7;
+  transition: color 0.3s;
+}
+
+.link:hover {
+  color: #485fc7aa;
+}
+
+.link--red {
+  color: #f14668;
+}
+
+.link--red:hover {
+  color: #f14668aa;
+}
+
+.filters {
+  overflow: hidden;
+  transition: max-height 0.3s;
+  position: absolute;
+  background-color: #ededed;
+  border: 1px solid #363636;
+  border-radius: 7px;
+}
+
+.filterButton {
+  float: right;
+  transition: background-color 0.3s;
+  border: 1px solid #363636;
+  border-radius: 7px;
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+.appear {
+  max-height: 100vh;
+}
+
+.disappear {
+  max-height: 0;
+}
+
+.d-flex {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.title {
+  margin: 10px;
+}
+
+@media screen and (max-width: 769px) {
+  .d-flex {
+    flex-direction: column;
+  }
+}
