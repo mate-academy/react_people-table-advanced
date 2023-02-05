@@ -19,9 +19,9 @@ export const PeoplePage = () => {
       setListOfPeople(data);
     } catch {
       setIsError(true);
+    } finally {
+      setIsLoading(false);
     }
-
-    setIsLoading(false);
   };
 
   useEffect(() => {
@@ -35,7 +35,7 @@ export const PeoplePage = () => {
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
           <div className="column is-7-tablet is-narrow-desktop">
-            <PeopleFilters />
+            { !isLoading && <PeopleFilters />}
           </div>
 
           <div className="column">
@@ -51,8 +51,6 @@ export const PeoplePage = () => {
                   There are no people on the server
                 </p>
               )}
-
-              {/* <p>There are no people matching the current search criteria</p> */}
 
               {listOfPeople.length > 0 && !isLoading && !isError && (
                 <PeopleTable listOfPeople={listOfPeople} />

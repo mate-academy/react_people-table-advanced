@@ -1,31 +1,21 @@
 import classNames from 'classnames';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import { getSearchWith } from '../utils/searchHelper';
 import { SearchLink } from './SearchLink';
 
 const availableCenturies = ['16', '17', '18', '19', '20'];
 
 export const PeopleFilters = () => {
-  const [searchParams] = useSearchParams();
-  const navigate = useNavigate();
+  const [searchParams, setSearhParams] = useSearchParams();
 
   const sex = searchParams.get('sex');
   const centuries = searchParams.getAll('centuries') || [];
   const query = searchParams.get('query') || '';
 
   const handleQueryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    let newQueryParams;
-
-    const newQuery = event.target.value;
-
-    if (newQuery) {
-      newQueryParams
-        = getSearchWith(searchParams, { query: newQuery });
-    } else {
-      newQueryParams = getSearchWith(searchParams, { query: null });
-    }
-
-    navigate({ search: newQueryParams });
+    setSearhParams(
+      getSearchWith(searchParams, { query: event.target.value || null }),
+    );
   };
 
   return (

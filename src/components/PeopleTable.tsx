@@ -15,7 +15,7 @@ export const PeopleTable: FC<Props> = ({ listOfPeople }) => {
 
   const sort = searchParams.get('sort');
   const order = searchParams.get('order');
-  const query = searchParams.get('query');
+  const query = searchParams.get('query') || '';
   const sex = searchParams.get('sex');
   const centuries = searchParams.getAll('centuries');
 
@@ -32,7 +32,7 @@ export const PeopleTable: FC<Props> = ({ listOfPeople }) => {
 
   let copyList = [...list];
 
-  const sortedlist = (sortlist: Person[]) => {
+  const sortOptions = (sortlist: Person[]) => {
     sortlist.sort((a, b) => {
       let personA = a;
       let personB = b;
@@ -54,28 +54,29 @@ export const PeopleTable: FC<Props> = ({ listOfPeople }) => {
     });
   };
 
-  const filterListOfPeople = (queryProps: string | null) => {
+  const filterListByPeopleFilters = () => {
     if (centuries.length) {
-      copyList = [...copyList].filter(person => (
+      copyList = copyList.filter(person => (
         centuries.includes((Math.floor(person.born / 100) + 1).toString())
       ));
     }
 
     if (sex) {
-      copyList = [...copyList].filter(person => (person.sex === sex));
+      copyList = copyList.filter(person => (person.sex === sex));
     }
 
-    if (queryProps) {
-      copyList = [...copyList].filter(person => (
-        person.name.toLowerCase().includes(queryProps.toLowerCase())
-        || person.motherName?.toLowerCase().includes(queryProps.toLowerCase())
-        || person.fatherName?.toLowerCase().includes(queryProps.toLowerCase())
+    if (query) {
+      copyList = copyList.filter(person => (
+        person.name.toLowerCase().includes(query.toLowerCase())
+        || person.motherName?.toLowerCase().includes(query.toLowerCase())
+        || person.fatherName?.toLowerCase().includes(query.toLowerCase())
       ));
     }
   };
 
-  filterListOfPeople(query);
-  sortedlist(copyList);
+  filterListByPeopleFilters();
+
+  sortOptions(copyList);
 
   const linkParams = (availableSort: string) => {
     if (availableSort === sort && order === 'desc') {
@@ -90,140 +91,143 @@ export const PeopleTable: FC<Props> = ({ listOfPeople }) => {
   };
 
   return (
-    <table
-      data-cy="peopleTable"
-      className="table is-striped is-hoverable is-narrow is-fullwidth"
-    >
-      <thead>
-        <tr>
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Name
-              <SearchLink
-                params={linkParams('name')}
-              >
-                <span className="icon">
-                  <i
-                    className={classNames('fas fa-sort', {
-                      'fa-sort-down': sort === 'name',
-                      'fa-sort-up': order === 'desc'
-                        && sort === 'name',
-                    })}
-                  />
-                </span>
-              </SearchLink>
-            </span>
-          </th>
-
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Sex
-              <SearchLink
-                params={linkParams('sex')}
-              >
-                <span className="icon">
-                  <i
-                    className={classNames('fas fa-sort', {
-                      'fa-sort-down': sort === 'sex',
-                      'fa-sort-up': order === 'desc'
-                        && sort === 'sex',
-                    })}
-                  />
-                </span>
-              </SearchLink>
-            </span>
-          </th>
-
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Born
-              <SearchLink
-                params={linkParams('born')}
-              >
-                <span className="icon">
-                  <i
-                    className={classNames('fas fa-sort', {
-                      'fa-sort-down': sort === 'born',
-                      'fa-sort-up': order === 'desc'
-                        && sort === 'born',
-                    })}
-                  />
-                </span>
-              </SearchLink>
-            </span>
-          </th>
-
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Died
-              <SearchLink
-                params={linkParams('died')}
-              >
-                <span className="icon">
-                  <i
-                    className={classNames('fas fa-sort', {
-                      'fa-sort-down': sort === 'died',
-                      'fa-sort-up': order === 'desc'
-                        && sort === 'died',
-                    })}
-                  />
-                </span>
-              </SearchLink>
-            </span>
-          </th>
-
-          <th>Mother</th>
-          <th>Father</th>
-        </tr>
-      </thead>
-
-      <tbody>
-        {copyList.map(human => (
-
-          <tr
-            data-cy="person"
-            key={human.slug}
-            className={classNames(
-              {
-                'has-background-warning': human.slug === selectedSlug,
-              },
-            )}
+    <>
+      {copyList.length
+        ? (
+          <table
+            data-cy="peopleTable"
+            className="table is-striped is-hoverable is-narrow is-fullwidth"
           >
-            <td>
-              <PersonLink
-                slug={human.slug}
-                name={human.name}
-                sex={human.sex}
-              />
-            </td>
-            <td>{human.sex}</td>
-            <td>{human.born}</td>
-            <td>{human.died}</td>
-            <td>
-              {human.mother ? (
-                <PersonLink
-                  slug={human.mother.slug}
-                  name={human.mother.name}
-                  sex={human.mother.sex}
-                />
-              ) : (
-                human.motherName || '-'
-              )}
-            </td>
-            <td>
-              {human.father ? (
-                <PersonLink
-                  slug={human.father.slug}
-                  name={human.father.name}
-                  sex={human.father.sex}
-                />
-              ) : (
-                human.fatherName || '-'
-              )}
-            </td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
+            <thead>
+              <tr>
+                <th>
+                  <span className="is-flex is-flex-wrap-nowrap">
+                    Name
+                    <SearchLink
+                      params={linkParams('name')}
+                    >
+                      <span className="icon">
+                        <i
+                          className={classNames('fas fa-sort', {
+                            'fa-sort-up': sort === 'name' && order !== 'desc',
+                            'fa-sort-down': order === 'desc' && sort === 'name',
+                          })}
+                        />
+                      </span>
+                    </SearchLink>
+                  </span>
+                </th>
+
+                <th>
+                  <span className="is-flex is-flex-wrap-nowrap">
+                    Sex
+                    <SearchLink
+                      params={linkParams('sex')}
+                    >
+                      <span className="icon">
+                        <i
+                          className={classNames('fas fa-sort', {
+                            'fa-sort-up': sort === 'sex' && order !== 'desc',
+                            'fa-sort-down': order === 'desc' && sort === 'sex',
+                          })}
+                        />
+                      </span>
+                    </SearchLink>
+                  </span>
+                </th>
+
+                <th>
+                  <span className="is-flex is-flex-wrap-nowrap">
+                    Born
+                    <SearchLink
+                      params={linkParams('born')}
+                    >
+                      <span className="icon">
+                        <i
+                          className={classNames('fas fa-sort', {
+                            'fa-sort-up': sort === 'born' && order !== 'desc',
+                            'fa-sort-down': order === 'desc' && sort === 'born',
+                          })}
+                        />
+                      </span>
+                    </SearchLink>
+                  </span>
+                </th>
+
+                <th>
+                  <span className="is-flex is-flex-wrap-nowrap">
+                    Died
+                    <SearchLink
+                      params={linkParams('died')}
+                    >
+                      <span className="icon">
+                        <i
+                          className={classNames('fas fa-sort', {
+                            'fa-sort-up': sort === 'died' && order !== 'desc',
+                            'fa-sort-down': order === 'desc' && sort === 'died',
+                          })}
+                        />
+                      </span>
+                    </SearchLink>
+                  </span>
+                </th>
+
+                <th>Mother</th>
+                <th>Father</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              {copyList.map(human => (
+
+                <tr
+                  data-cy="person"
+                  key={human.slug}
+                  className={classNames(
+                    {
+                      'has-background-warning': human.slug === selectedSlug,
+                    },
+                  )}
+                >
+                  <td>
+                    <PersonLink
+                      slug={human.slug}
+                      name={human.name}
+                      sex={human.sex}
+                    />
+                  </td>
+                  <td>{human.sex}</td>
+                  <td>{human.born}</td>
+                  <td>{human.died}</td>
+                  <td>
+                    {human.mother ? (
+                      <PersonLink
+                        slug={human.mother.slug}
+                        name={human.mother.name}
+                        sex={human.mother.sex}
+                      />
+                    ) : (
+                      human.motherName || '-'
+                    )}
+                  </td>
+                  <td>
+                    {human.father ? (
+                      <PersonLink
+                        slug={human.father.slug}
+                        name={human.father.name}
+                        sex={human.father.sex}
+                      />
+                    ) : (
+                      human.fatherName || '-'
+                    )}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        ) : (
+          <p>There are no people matching the current search criteria</p>
+        )}
+    </>
   );
 };

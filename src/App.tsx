@@ -1,11 +1,7 @@
-import { Navigate, Route, Routes } from 'react-router-dom';
-import { PeoplePage } from './components/PeoplePage';
+import { Outlet } from 'react-router-dom';
 import { Navbar } from './components/Navbar';
 
 import './App.scss';
-
-import { HomePage } from './components/HomePage';
-import { PageNotFound } from './components/PageNotFound';
 
 export const App = () => {
   return (
@@ -14,18 +10,7 @@ export const App = () => {
 
       <div className="section">
         <div className="container">
-          <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="home" element={<Navigate to="/" replace />} />
-            <Route path="people">
-              <Route index element={<PeoplePage />} />
-              <Route path=":selectedSlug" element={<PeoplePage />} />
-            </Route>
-            <Route
-              path="*"
-              element={<PageNotFound />}
-            />
-          </Routes>
+          <Outlet />
         </div>
       </div>
     </div>
