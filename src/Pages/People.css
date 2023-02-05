@@ -20,6 +20,8 @@
   transition: max-height 0.3s;
   position: absolute;
   background-color: #ededed;
+  border: 1px solid #363636;
+  border-radius: 7px;
 }
 
 .filterButton {
