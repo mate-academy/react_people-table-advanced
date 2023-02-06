@@ -5,8 +5,8 @@ import { PersonLink } from './PersonLink';
 
 type Props = {
   person: Person;
-  personMother: Person | undefined;
-  personFather: Person | undefined;
+  personMother?: Person;
+  personFather?: Person;
   isSelected: (person: Person) => boolean,
 };
 

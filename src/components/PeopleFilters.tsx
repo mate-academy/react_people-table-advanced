@@ -82,7 +82,8 @@ export const PeopleFilters: React.FC<Props> = ({
                 to={{
                   search: getSearchWith(searchParams, {
                     centuries: centuries.includes(century)
-                      ? centuries.filter(c => c !== century)
+                      ? centuries
+                        .filter(filteredCentury => filteredCentury !== century)
                       : [...centuries, century],
                   }),
                 }}
