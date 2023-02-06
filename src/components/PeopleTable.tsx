@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import { FC } from 'react';
+import { FC, useCallback, useEffect } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
 import { Person } from '../types';
 import { PersonLink } from './PersonLink';
@@ -8,6 +8,18 @@ import { SearchLink } from './SearchLink';
 type Props = {
   listOfPeople: Person[];
 };
+
+enum Order {
+  Desc = 'desc',
+  Asc = 'asc',
+}
+
+enum SortValues {
+  Name = 'name',
+  Sex = 'sex',
+  Born = 'born',
+  Died = 'died',
+}
 
 export const PeopleTable: FC<Props> = ({ listOfPeople }) => {
   const { selectedSlug = '' } = useParams();
@@ -37,16 +49,16 @@ export const PeopleTable: FC<Props> = ({ listOfPeople }) => {
       let personA = a;
       let personB = b;
 
-      if (order === 'desc') {
+      if (Order.Desc === order) {
         [personA, personB] = [personB, personA];
       }
 
       switch (sort) {
-        case 'name':
-        case 'sex':
+        case SortValues.Name:
+        case SortValues.Sex:
           return personA[sort].localeCompare(personB[sort]);
-        case 'born':
-        case 'died':
+        case SortValues.Born:
+        case SortValues.Died:
           return personA[sort] - personB[sort];
         default:
           return 0;
@@ -54,7 +66,15 @@ export const PeopleTable: FC<Props> = ({ listOfPeople }) => {
     });
   };
 
-  const filterListByPeopleFilters = () => {
+  const findQuery = (value: string | null) => {
+    if (!value) {
+      return false;
+    }
+
+    return value.toLowerCase().includes(query.toLowerCase());
+  };
+
+  const filterListByPeopleFilters = useCallback(() => {
     if (centuries.length) {
       copyList = copyList.filter(person => (
         centuries.includes((Math.floor(person.born / 100) + 1).toString())
@@ -66,20 +86,20 @@ export const PeopleTable: FC<Props> = ({ listOfPeople }) => {
     }
 
     if (query) {
-      copyList = copyList.filter(person => (
-        person.name.toLowerCase().includes(query.toLowerCase())
-        || person.motherName?.toLowerCase().includes(query.toLowerCase())
-        || person.fatherName?.toLowerCase().includes(query.toLowerCase())
+      copyList = copyList.filter(({ name, motherName, fatherName }) => (
+        findQuery(name) || findQuery(motherName) || findQuery(fatherName)
       ));
     }
-  };
+  }, [query, centuries, sex, copyList]);
 
-  filterListByPeopleFilters();
+  useEffect(() => {
+    filterListByPeopleFilters();
+  }, [filterListByPeopleFilters()]);
 
   sortOptions(copyList);
 
   const linkParams = (value: string) => {
-    if (value === sort && order === 'desc') {
+    if (value === sort && order === Order.Desc) {
       return { sort: null, order: null };
     }
 
@@ -109,8 +129,10 @@ export const PeopleTable: FC<Props> = ({ listOfPeople }) => {
                       <span className="icon">
                         <i
                           className={classNames('fas fa-sort', {
-                            'fa-sort-up': sort === 'name' && order !== 'desc',
-                            'fa-sort-down': order === 'desc' && sort === 'name',
+                            'fa-sort-up': sort === 'name'
+                              && order === Order.Asc,
+                            'fa-sort-down': order === Order.Desc
+                              && sort === 'name',
                           })}
                         />
                       </span>
@@ -127,8 +149,9 @@ export const PeopleTable: FC<Props> = ({ listOfPeople }) => {
                       <span className="icon">
                         <i
                           className={classNames('fas fa-sort', {
-                            'fa-sort-up': sort === 'sex' && order !== 'desc',
-                            'fa-sort-down': order === 'desc' && sort === 'sex',
+                            'fa-sort-up': sort === 'sex' && order === Order.Asc,
+                            'fa-sort-down': order === Order.Desc
+                              && sort === 'sex',
                           })}
                         />
                       </span>
@@ -145,8 +168,10 @@ export const PeopleTable: FC<Props> = ({ listOfPeople }) => {
                       <span className="icon">
                         <i
                           className={classNames('fas fa-sort', {
-                            'fa-sort-up': sort === 'born' && order !== 'desc',
-                            'fa-sort-down': order === 'desc' && sort === 'born',
+                            'fa-sort-up': sort === 'born'
+                              && order === Order.Asc,
+                            'fa-sort-down': order === Order.Desc
+                              && sort === 'born',
                           })}
                         />
                       </span>
@@ -163,8 +188,10 @@ export const PeopleTable: FC<Props> = ({ listOfPeople }) => {
                       <span className="icon">
                         <i
                           className={classNames('fas fa-sort', {
-                            'fa-sort-up': sort === 'died' && order !== 'desc',
-                            'fa-sort-down': order === 'desc' && sort === 'died',
+                            'fa-sort-up': sort === 'died'
+                              && order === Order.Asc,
+                            'fa-sort-down': order === Order.Desc
+                              && sort === 'died',
                           })}
                         />
                       </span>
