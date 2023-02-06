@@ -78,16 +78,16 @@ export const PeopleTable: FC<Props> = ({ listOfPeople }) => {
 
   sortOptions(copyList);
 
-  const linkParams = (availableSort: string) => {
-    if (availableSort === sort && order === 'desc') {
+  const linkParams = (value: string) => {
+    if (value === sort && order === 'desc') {
       return { sort: null, order: null };
     }
 
-    if (availableSort === sort) {
-      return { sort: availableSort, order: 'desc' };
+    if (value === sort) {
+      return { sort: value, order: 'desc' };
     }
 
-    return { sort: availableSort, order: null };
+    return { sort: value, order: null };
   };
 
   return (
