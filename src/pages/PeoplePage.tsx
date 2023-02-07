@@ -63,15 +63,13 @@ export const PeoplePage:React.FC = () => {
 
   SortPeople(visiblePeople, sortField, order);
 
-  const showTable = !isLoading
-    && didload
-    && !hasError
-    && visiblePeople.length > 0;
+  const showData = !isLoading
+  && didload
+  && !hasError;
 
-  const noSearchResult = !isLoading
-    && didload
-    && !hasError
-    && !visiblePeople.length;
+  const showTable = showData && visiblePeople.length > 0;
+
+  const noSearchResult = showData && !visiblePeople.length;
 
   return (
     <>
@@ -79,7 +77,7 @@ export const PeoplePage:React.FC = () => {
 
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
-          {showTable && (
+          {showData && (
             <div className="column is-7-tablet is-narrow-desktop">
               <PeopleFilters />
             </div>
