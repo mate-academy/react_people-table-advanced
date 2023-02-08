@@ -31,7 +31,7 @@ export const PersonLink: React.FC<Props> = ({
   const motherSlugOnList = motherName ? findPersonSlugOnList(motherName) : null;
   const fatherSlugOnList = fatherName ? findPersonSlugOnList(fatherName) : null;
 
-  const isItMother = people.some(human => human.motherName === name);
+  const isItMother = person.sex === 'f';
 
   return (
     <tr

@@ -1,64 +1,76 @@
-import { useParams } from 'react-router-dom';
+/* eslint-disable no-nested-ternary */
+import classNames from 'classnames';
+import { useParams, useSearchParams } from 'react-router-dom';
 
 import { Person } from '../types';
-import { Loader } from './Loader';
 import { PersonLink } from './PersonLink';
+import { SearchLink } from './SearchLink';
 
 type Props = {
   people: Person[],
-  isLoading: boolean,
-  error: boolean,
 };
 
-export const PeopleTable: React.FC<Props> = ({ people, isLoading, error }) => {
+export const PeopleTable: React.FC<Props> = ({ people }) => {
   const { personId = '' } = useParams();
-
-  const loadingOverSmoothly = !isLoading && !error;
+  const [searchParams] = useSearchParams();
+  const sortParams = [searchParams.get('sort'), searchParams.get('order')];
 
   return (
     <div className="block">
-      {isLoading && <Loader />}
+      <table
+        data-cy="peopleTable"
+        className="table is-striped is-hoverable is-narrow is-fullwidth"
+      >
+        <thead>
+          <tr>
+            {['Name', 'Sex', 'Born', 'Died'].map(sortingMethod => {
+              const filterName = sortingMethod.toLowerCase();
+              const isFilterAsc = sortParams.includes(filterName);
+              const isFilterDesc = sortParams.includes('desc');
 
-      {(loadingOverSmoothly && people.length > 0) && (
-        <table
-          data-cy="peopleTable"
-          className="table is-striped is-hoverable is-narrow is-fullwidth"
-        >
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Sex</th>
-              <th>Born</th>
-              <th>Died</th>
-              <th>Mother</th>
-              <th>Father</th>
-            </tr>
-          </thead>
+              return (
+                <th key={sortingMethod}>
+                  <span className="is-flex is-flex-wrap-nowrap">
+                    {sortingMethod}
+                    <SearchLink
+                      params={
+                        sortParams.every(param => param !== null) && isFilterAsc
+                          ? { sort: null, order: null }
+                          : isFilterAsc
+                            ? { order: 'desc' }
+                            : { sort: filterName, order: null }
+                      }
+                    >
+                      <span className="icon">
+                        <i className={classNames(
+                          'fas',
+                          { 'fa-sort': !isFilterAsc },
+                          { 'fa-sort-up': isFilterAsc && !isFilterDesc },
+                          { 'fa-sort-down': isFilterAsc && isFilterDesc },
+                        )}
+                        />
+                      </span>
+                    </SearchLink>
+                  </span>
+                </th>
+              );
+            })}
+            <th>Mother</th>
+            <th>Father</th>
+          </tr>
+        </thead>
 
-          <tbody>
-            {people.map(person => (
-              <PersonLink
-                key={person.slug}
-                person={person}
-                people={people}
-                selectedPerson={personId}
-              />
-            ))}
-          </tbody>
-        </table>
-      )}
-
-      {(loadingOverSmoothly && !people.length) && (
-        <p data-cy="noPeopleMessage">
-          There are no people on the server
-        </p>
-      )}
-
-      {(!isLoading && error) && (
-        <p data-cy="peopleLoadingError" className="has-text-danger">
-          Something went wrong
-        </p>
-      )}
+        <tbody>
+          {people.map(person => (
+            <PersonLink
+              key={person.slug}
+              person={person}
+              people={people}
+              selectedPerson={personId}
+            />
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 };

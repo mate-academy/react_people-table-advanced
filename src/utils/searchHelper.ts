@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 export type SearchParams = {
   [key: string]: string | string[] | null,
 };
@@ -41,6 +42,8 @@ export function getSearchWith(
         newParams.set(key, value);
       }
     });
+
+  // console.log('FUNCTION RESULT', newParams.toString());
 
   // we return a string to use it inside links
   return newParams.toString();

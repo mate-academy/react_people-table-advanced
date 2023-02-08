@@ -7,14 +7,17 @@
 Using code from the [React People Table](https://github.com/mate-academy/react_people-table-basics#react-people-table)
 implement the ability to filter and sort people in the table.
 
-1. All the filters and sort params should be saved as URL Search Params, so you could share the link to show exactly what you see.
-1. Keep search params when navigating within the `People` page (when selecting a person or clicking the `People` link).
-1. The sidebar with the filters should appear only when people are loaded.
+1. All the filters and sort params should be saved as URL Search Params, so you could share the link to show exactly what you see. <!-- OK -->
+1. Keep search params when navigating within the `People` page (when selecting a person or clicking the `People` link). <!-- OK -->
+1. The sidebar with the filters should appear only when people are loaded. <!-- OK -->
 1. `NameFilter` should update the `query` search param with the text from the input.
     - show only people with the `name`, `motherName` or `fatherName` that match the query case insensitive;
-    - if the input is empty there should not be `query` in the search params.
+    - if the input is empty there should not be `query` in the search params. <!-- OK -->
+Show no People if there is not match  <!-- OK -->
 1. `CenturyFilter` should allow to choose several centuries or all of them.
-    - add `centuries` search params using `append` method  `getAll` method;
+    - add `centuries` search params using `append` method  `getAll` method; <!-- OK -->
+
+
 1. Implement sorting by `name`, `sex`, `born` and `died` by clicking on arrows in a `th`;
     - the first click on a column sorts people by the selected field ascending (`a -> z` or `0 -> 9`);
     - the second click (when people are already sorted ascending by this field) reverses the order of sorting;
