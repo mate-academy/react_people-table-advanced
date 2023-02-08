@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
-import { getPeople } from '../api';
 import { Person } from '../types';
+import { getPeople } from '../api';
 import { PeopleTable } from '../components/PeopleTable';
 import { PeopleFilters } from '../components/PeopleFilters';
 import { Loader } from '../components/Loader';
@@ -10,7 +10,6 @@ import { Loader } from '../components/Loader';
 export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  // isLoading === true by default is done to avoid re-render glitches and blinks before useEffect and just right after it, and to show everything smoothly with Loader from the start
   const [error, setError] = useState(false);
 
   const fetch = async () => {
@@ -29,7 +28,6 @@ export const PeoplePage = () => {
 
   const query = urlParams.get('query');
   const centuries = urlParams.getAll('centuries');
-
   const sortAscParameter = urlParams.get('sort');
   const sortDescParameter = urlParams.get('order');
 
@@ -64,11 +62,13 @@ export const PeoplePage = () => {
       isCenturyMatch = true;
     }
 
-    switch (urlParams.get('sex')) {
-      case 'm': return (person.sex === 'm' && isQueryMatch && isCenturyMatch);
-      case 'f': return (person.sex === 'f' && isQueryMatch && isCenturyMatch);
+    const matchAll = isQueryMatch && isCenturyMatch;
 
-      default: return (person && isQueryMatch && isCenturyMatch);
+    switch (urlParams.get('sex')) {
+      case 'm': return (person.sex === 'm' && matchAll);
+      case 'f': return (person.sex === 'f' && matchAll);
+
+      default: return (person && matchAll);
     }
   });
 
@@ -142,7 +142,7 @@ export const PeoplePage = () => {
                 <PeopleTable people={sortedPeople} />
               )}
 
-              {people.length > 0 && !filteredPeople.length && (
+              {(people.length > 0 && !filteredPeople.length) && (
                 <p>There are no people matching the current search criteria</p>
               )}
             </div>

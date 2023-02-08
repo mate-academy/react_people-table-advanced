@@ -1,7 +1,7 @@
-/* eslint-disable no-console */
 import classNames from 'classnames';
 import React from 'react';
 import { useSearchParams } from 'react-router-dom';
+
 import { getSearchWith } from '../utils/searchHelper';
 import { SearchLink } from './SearchLink';
 
@@ -101,10 +101,6 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <SearchLink
           className="button is-link is-outlined is-fullwidth"
-          // className={classNames(
-          //   'button is-link is-fullwidth',
-          //   { 'is-outlined': centuries.length },
-          // )}
           params={{ sex: null, query: null, centuries: null }}
         >
           Reset all filters
