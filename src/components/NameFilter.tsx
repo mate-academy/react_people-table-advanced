@@ -26,7 +26,7 @@ export const NameFilter = () => {
 
   useEffect(() => {
     applyQuery();
-  }, [query, searchParams]);
+  }, [query]);
 
   return (
     <div className="panel-block">
