@@ -21,7 +21,6 @@ export const PeopleFilters = () => {
         <Link
           className="button is-link is-outlined is-fullwidth"
           to={{ pathname: '/people' }}
-        // to="#/people"
         >
           Reset all filters
         </Link>
