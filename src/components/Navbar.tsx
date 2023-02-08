@@ -1,3 +1,6 @@
+import { NavLink } from 'react-router-dom';
+import { makeActive } from './Helpers';
+
 export const Navbar = () => {
   return (
     <nav
@@ -8,15 +11,15 @@ export const Navbar = () => {
     >
       <div className="container">
         <div className="navbar-brand">
-          <a className="navbar-item" href="#/">Home</a>
+          <NavLink className={makeActive} to="/">Home</NavLink>
 
-          <a
+          <NavLink
             aria-current="page"
-            className="navbar-item has-background-grey-lighter"
-            href="#/people"
+            className={makeActive}
+            to="people"
           >
             People
-          </a>
+          </NavLink>
         </div>
       </div>
     </nav>
