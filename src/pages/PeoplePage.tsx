@@ -9,16 +9,18 @@ import { Loader } from '../components/Loader';
 
 export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isError, setIsError] = useState(false);
 
   const fetch = async () => {
+    setIsLoading(true);
+
     try {
       const peopleFromServer = await getPeople();
 
       setPeople(peopleFromServer);
     } catch {
-      setError(true);
+      setIsError(true);
     } finally {
       setIsLoading(false);
     }
@@ -28,7 +30,7 @@ export const PeoplePage = () => {
 
   const query = urlParams.get('query');
   const centuries = urlParams.getAll('centuries');
-  const sortAscParameter = urlParams.get('sort');
+  const sortAscParam = urlParams.get('sort') || '';
   const sortDescParameter = urlParams.get('order');
 
   const compareQueryMatch = (names: (string | null)[]) => {
@@ -65,44 +67,37 @@ export const PeoplePage = () => {
     const matchAll = isQueryMatch && isCenturyMatch;
 
     switch (urlParams.get('sex')) {
+      case null: return matchAll;
       case 'm': return (person.sex === 'm' && matchAll);
       case 'f': return (person.sex === 'f' && matchAll);
 
-      default: return (person && matchAll);
+      default: return person.sex === urlParams.get('sex') && matchAll;
     }
   });
 
   const sortedPeople = filteredPeople.sort((personA, personB) => {
-    type PersonFilter = Pick<Person, 'name' | 'sex' | 'born' | 'died'>;
+    const key = sortAscParam as keyof Person;
+    const paramHasStringType = typeof personA[key] === 'string';
 
-    const parameterA = personA[sortAscParameter as keyof PersonFilter];
-    const parameterB = personB[sortAscParameter as keyof PersonFilter];
+    switch (paramHasStringType) {
+      case true: {
+        if (sortDescParameter) {
+          return (personB[key] as string).localeCompare(personA[key] as string);
+        }
 
-    const dataTypeString = (
-      typeof parameterA === 'string' && typeof parameterB === 'string'
-    );
+        return (personA[key] as string).localeCompare(personB[key] as string);
+      }
 
-    const dataTypeNumber = (
-      typeof parameterA === 'number' && typeof parameterB === 'number'
-    );
+      case false: {
+        if (sortDescParameter) {
+          return (personB[key] as number) - (personA[key] as number);
+        }
 
-    if (sortDescParameter && dataTypeString) {
-      return parameterB.localeCompare(parameterA);
+        return (personA[key] as number) - (personB[key] as number);
+      }
+
+      default: return 1;
     }
-
-    if (sortDescParameter && dataTypeNumber) {
-      return parameterB - parameterA;
-    }
-
-    if (sortAscParameter && dataTypeString) {
-      return parameterA.localeCompare(parameterB);
-    }
-
-    if (sortAscParameter && dataTypeNumber) {
-      return parameterA - parameterB;
-    }
-
-    return 1;
   });
 
   useEffect(() => {
@@ -123,13 +118,13 @@ export const PeoplePage = () => {
             <div className="box table-container">
               {isLoading && <Loader />}
 
-              {(!isLoading && !error && !people.length) && (
+              {(!isLoading && !isError && !people.length) && (
                 <p data-cy="noPeopleMessage">
                   There are no people on the server
                 </p>
               )}
 
-              {(!isLoading && error) && (
+              {(!isLoading && isError) && (
                 <p
                   data-cy="peopleLoadingError"
                   className="has-text-danger"

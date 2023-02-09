@@ -7,7 +7,6 @@ export const App = () => {
   return (
     <div data-cy="app">
       <Navbar />
-
       <div className="section">
         <div className="container">
           <Outlet />
