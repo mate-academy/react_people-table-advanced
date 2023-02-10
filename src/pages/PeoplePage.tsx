@@ -71,9 +71,9 @@ export const PeoplePage = () => {
 
     const matchAll = isQueryMatch && isCenturyMatch;
 
-    return urlParams.get('sex') === null
-      ? matchAll
-      : sex === urlParams.get('sex') && matchAll;
+    return urlParams.get('sex')
+      ? sex === urlParams.get('sex') && matchAll
+      : matchAll;
   });
 
   const sortedPeople = filteredPeople.sort((personA, personB) => {
