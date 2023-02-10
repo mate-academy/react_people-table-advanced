@@ -50,7 +50,12 @@ export const PeoplePage = () => {
   };
 
   const filteredPeople = people.filter(person => {
-    const { name, motherName, fatherName } = person;
+    const {
+      name,
+      motherName,
+      fatherName,
+      sex,
+    } = person;
     const personCentury = (+person.born.toString().slice(0, 2) + 1).toString();
 
     let isQueryMatch;
@@ -66,13 +71,9 @@ export const PeoplePage = () => {
 
     const matchAll = isQueryMatch && isCenturyMatch;
 
-    switch (urlParams.get('sex')) {
-      case null: return matchAll;
-      case 'm': return (person.sex === 'm' && matchAll);
-      case 'f': return (person.sex === 'f' && matchAll);
-
-      default: return person.sex === urlParams.get('sex') && matchAll;
-    }
+    return urlParams.get('sex') === null
+      ? matchAll
+      : sex === urlParams.get('sex') && matchAll;
   });
 
   const sortedPeople = filteredPeople.sort((personA, personB) => {
@@ -80,21 +81,15 @@ export const PeoplePage = () => {
     const paramHasStringType = typeof personA[key] === 'string';
 
     switch (paramHasStringType) {
-      case true: {
-        if (sortDescParameter) {
-          return (personB[key] as string).localeCompare(personA[key] as string);
-        }
+      case true:
+        return sortDescParameter
+          ? (personB[key] as string).localeCompare(personA[key] as string)
+          : (personA[key] as string).localeCompare(personB[key] as string);
 
-        return (personA[key] as string).localeCompare(personB[key] as string);
-      }
-
-      case false: {
-        if (sortDescParameter) {
-          return (personB[key] as number) - (personA[key] as number);
-        }
-
-        return (personA[key] as number) - (personB[key] as number);
-      }
+      case false:
+        return sortDescParameter
+          ? (personB[key] as number) - (personA[key] as number)
+          : (personA[key] as number) - (personB[key] as number);
 
       default: return 1;
     }
