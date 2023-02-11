@@ -9,7 +9,15 @@ export const PeopleFilters = () => {
   const [searchParams, setSearchparams] = useSearchParams();
 
   const query = searchParams.get('query') || '';
-  const centuries = searchParams.getAll('centuries');
+  const centuriesParams = searchParams.getAll('centuries');
+
+  const gendersData = [
+    { sex: 'All', value: null },
+    { sex: 'Male', value: 'm' },
+    { sex: 'Female', value: 'f' },
+  ];
+
+  const centuriesData = ['16', '17', '18', '19', '20'];
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchparams(
@@ -23,11 +31,7 @@ export const PeopleFilters = () => {
 
       <p className="panel-tabs" data-cy="SexFilter">
 
-        {[
-          { sex: 'All', value: null },
-          { sex: 'Male', value: 'm' },
-          { sex: 'Female', value: 'f' },
-        ].map(parameter => {
+        {gendersData.map(parameter => {
           const { value, sex } = parameter;
 
           return (
@@ -64,18 +68,19 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            {['16', '17', '18', '19', '20'].map(century => (
+            {centuriesData.map(century => (
               <SearchLink
                 key={century}
                 data-cy="century"
                 params={{
-                  centuries: centuries.includes(century)
-                    ? centuries.filter(savedCentury => savedCentury !== century)
-                    : [century, ...centuries],
+                  centuries: centuriesParams.includes(century)
+                    ? centuriesParams.filter(
+                      savedCentury => savedCentury !== century,
+                    ) : [century, ...centuriesParams],
                 }}
                 className={classNames(
                   'button mr-1',
-                  { 'is-info': centuries.includes(century) },
+                  { 'is-info': centuriesParams.includes(century) },
                 )}
               >
                 {century}
@@ -88,7 +93,7 @@ export const PeopleFilters = () => {
               data-cy="centuryALL"
               className={classNames(
                 'button is-success',
-                { 'is-outlined': centuries.length },
+                { 'is-outlined': centuriesParams.length },
               )}
               params={{ centuries: null }}
             >

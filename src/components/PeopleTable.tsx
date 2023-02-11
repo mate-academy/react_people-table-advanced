@@ -15,6 +15,8 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
   const [searchParams] = useSearchParams();
   const sortParams = [searchParams.get('sort'), searchParams.get('order')];
 
+  const filtersData = ['Name', 'Sex', 'Born', 'Died'];
+
   return (
     <div className="block">
       <table
@@ -23,7 +25,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
       >
         <thead>
           <tr>
-            {['Name', 'Sex', 'Born', 'Died'].map(sortingMethod => {
+            {filtersData.map(sortingMethod => {
               const filterName = sortingMethod.toLowerCase();
               const isFilterAsc = sortParams.includes(filterName);
               const isFilterDesc = sortParams.includes('desc');
