@@ -13,3 +13,8 @@ export async function getPeople(): Promise<Person[]> {
     .then(() => fetch(API_URL))
     .then(response => response.json());
 }
+
+export enum Errors {
+  LOADING = 'Something went wrong',
+  EMPTY = 'There are no people on the server',
+}
