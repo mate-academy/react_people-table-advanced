@@ -1,12 +1,58 @@
-export const PeopleFilters = () => {
+import { useSearchParams, Link } from 'react-router-dom';
+import classNames from 'classnames';
+import { Filter } from '../types/Filter';
+
+type Props = {
+  setFilter: (value: Filter) => void,
+};
+
+export const PeopleFilters: React.FC<Props> = ({ setFilter }) => {
+  const [searchParams, setSearchParams] = useSearchParams();
+
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        <a className="is-active" href="#/people">All</a>
-        <a className="" href="#/people?sex=m">Male</a>
-        <a className="" href="#/people?sex=f">Female</a>
+        <Link
+          className={classNames(
+            { 'is-active': () => {} },
+          )}
+          to="/people"
+          onClick={() => {
+            setFilter(Filter.ALL);
+            searchParams.set('filter', Filter.ALL);
+            setSearchParams(searchParams);
+          }}
+        >
+          All
+        </Link>
+        <Link
+          className={classNames(
+            { 'is-active': () => {} },
+          )}
+          to="/people?sex=m"
+          onClick={() => {
+            setFilter(Filter.MALE);
+            searchParams.set('filter', Filter.MALE);
+            setSearchParams(searchParams);
+          }}
+        >
+          Male
+        </Link>
+        <Link
+          className={classNames(
+            { 'is-active': () => {} },
+          )}
+          to="/people?sex=f"
+          onClick={() => {
+            setFilter(Filter.FEMALE);
+            searchParams.set('filter', Filter.FEMALE);
+            setSearchParams(searchParams);
+          }}
+        >
+          Female
+        </Link>
       </p>
 
       <div className="panel-block">
@@ -27,55 +73,94 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            <a
+            <Link
               data-cy="century"
-              className="button mr-1"
-              href="#/people?centuries=16"
+              className={classNames(
+                'button mr-1',
+                { 'is-info': () => {} },
+              )}
+              to="#/people?centuries=16"
+              onClick={() => {
+                setFilter(Filter.SIXTEEN);
+                searchParams.set('filter', Filter.SIXTEEN);
+                setSearchParams(searchParams);
+              }}
             >
               16
-            </a>
-
-            <a
+            </Link>
+            <Link
               data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=17"
+              className={classNames(
+                'button mr-1',
+                { 'is-info': () => {} },
+              )}
+              to="#/people?centuries=17"
+              onClick={() => {
+                setFilter(Filter.SEVENTEEN);
+                searchParams.set('filter', Filter.SEVENTEEN);
+                setSearchParams(searchParams);
+              }}
             >
               17
-            </a>
-
-            <a
+            </Link>
+            <Link
               data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=18"
+              className={classNames(
+                'button mr-1',
+                { 'is-info': () => {} },
+              )}
+              to="#/people?centuries=18"
+              onClick={() => {
+                setFilter(Filter.EIGHTEEN);
+                searchParams.set('filter', Filter.EIGHTEEN);
+                setSearchParams(searchParams);
+              }}
             >
               18
-            </a>
-
-            <a
+            </Link>
+            <Link
               data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=19"
+              className={classNames(
+                'button mr-1',
+                { 'is-info': () => {} },
+              )}
+              to="#/people?centuries=19"
+              onClick={() => {
+                setFilter(Filter.NINETEEN);
+                searchParams.set('filter', Filter.NINETEEN);
+                setSearchParams(searchParams);
+              }}
             >
               19
-            </a>
-
-            <a
+            </Link>
+            <Link
               data-cy="century"
-              className="button mr-1"
-              href="#/people?centuries=20"
+              className={classNames(
+                'button mr-1',
+                { 'is-info': () => {} },
+              )}
+              to="#/people?centuries=20"
+              onClick={() => {
+                setFilter(Filter.TWENTY);
+                searchParams.set('filter', Filter.TWENTY);
+                setSearchParams(searchParams);
+              }}
             >
               20
-            </a>
+            </Link>
           </div>
 
           <div className="level-right ml-4">
-            <a
+            <Link
               data-cy="centuryALL"
-              className="button is-success is-outlined"
-              href="#/people"
+              className={classNames(
+                'button',
+                { 'is-success is-outlined': () => {} },
+              )}
+              to="/people"
             >
               All
-            </a>
+            </Link>
           </div>
         </div>
       </div>

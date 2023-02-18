@@ -5,6 +5,7 @@ import { Loader } from './Loader';
 import { PeopleTable } from './PeopleTable';
 import { Person } from '../types';
 import { Errors, getPeople } from '../api';
+import { Filter } from '../types/Filter';
 
 export const PeoplePage: React.FC = () => {
   const [people, setPeople] = useState<Person[]>([]);
@@ -13,6 +14,7 @@ export const PeoplePage: React.FC = () => {
   const [errorLoading, setErrorLoading] = useState('');
   const match = useMatch('/people/:personSlug');
   const personSlugSelected = match?.params.personSlug;
+  const [filter, setFilter] = useState(Filter.ALL);
 
   useEffect(() => {
     setIsLoading(true);
@@ -35,6 +37,28 @@ export const PeoplePage: React.FC = () => {
     && !errorLoading
     && people.length > 0;
 
+  const filteredPeople = people
+    .filter((person) => {
+      switch (filter) {
+        case Filter.FEMALE:
+          return person.sex === 'f';
+        case Filter.MALE:
+          return person.sex === 'm';
+        case Filter.SIXTEEN:
+          return (Math.floor(person.born / 100) + 1) === 16;
+        case Filter.SEVENTEEN:
+          return (Math.floor(person.born / 100) + 1) === 17;
+        case Filter.EIGHTEEN:
+          return (Math.floor(person.born / 100) + 1) === 18;
+        case Filter.NINETEEN:
+          return (Math.floor(person.born / 100) + 1) === 19;
+        case Filter.TWENTY:
+          return (Math.floor(person.born / 100) + 1) === 20;
+        default:
+          return person;
+      }
+    });
+
   return (
     <>
       <h1 className="title">People Page</h1>
@@ -42,7 +66,11 @@ export const PeoplePage: React.FC = () => {
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
           <div className="column is-7-tablet is-narrow-desktop">
-            <PeopleFilters />
+            {showTable && (
+              <PeopleFilters
+                setFilter={setFilter}
+              />
+            )}
           </div>
 
           <div className="column">
@@ -66,7 +94,7 @@ export const PeoplePage: React.FC = () => {
                 )}
               {showTable && (
                 <PeopleTable
-                  people={people}
+                  people={filteredPeople}
                   personSlugSelected={personSlugSelected}
                 />
               )}
