@@ -1,8 +1,15 @@
+import { FC, useState } from 'react';
 import { PeopleFilters } from './PeopleFilters';
-import { Loader } from './Loader';
 import { PeopleTable } from './PeopleTable';
+import { Person } from '../types';
 
-export const PeoplePage = () => {
+type Prop = {
+  people: Person[] | undefined;
+  selectedName: string;
+};
+export const PeoplePage: FC<Prop> = ({ selectedName, people }) => {
+  const [query, setQuery] = useState('');
+
   return (
     <>
       <h1 className="title">People Page</h1>
@@ -10,22 +17,17 @@ export const PeoplePage = () => {
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
           <div className="column is-7-tablet is-narrow-desktop">
-            <PeopleFilters />
+            <PeopleFilters query={query} setQuery={setQuery} />
           </div>
 
           <div className="column">
             <div className="box table-container">
-              <Loader />
-
-              <p data-cy="peopleLoadingError">Something went wrong</p>
-
-              <p data-cy="noPeopleMessage">
-                There are no people on the server
-              </p>
-
+              <PeopleTable
+                people={people}
+                selectedName={selectedName}
+                query={query}
+              />
               <p>There are no people matching the current search criteria</p>
-
-              <PeopleTable />
             </div>
           </div>
         </div>
