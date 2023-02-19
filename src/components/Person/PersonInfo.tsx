@@ -25,7 +25,6 @@ export const PersonInfo: React.FC<Props> = ({
     mother,
     father,
   } = person;
-
   const parentInfo = (
     parent: Person | undefined,
     parentName: string | null,
