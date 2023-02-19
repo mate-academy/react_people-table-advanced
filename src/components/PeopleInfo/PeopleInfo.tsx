@@ -1,14 +1,12 @@
 import classNames from 'classnames';
 import { Link } from 'react-router-dom';
 import { Person } from '../../types';
-import { getFather, getMother } from '../../utils/parents';
 
 interface Props {
   person: Person,
-  people: Person[],
 }
 
-export const PeopleInfo: React.FC<Props> = ({ person, people }) => (
+export const PeopleInfo: React.FC<Props> = ({ person }) => (
   <>
     <td>
       <Link
@@ -27,11 +25,11 @@ export const PeopleInfo: React.FC<Props> = ({ person, people }) => (
     <td>
       {person.motherName
         && (
-          getMother(people, person)
+          person.mother
             ? (
               <Link
                 className="has-text-danger"
-                to={`/people/${getMother(people, person)?.slug}`}
+                to={`/people/${person.mother.slug}`}
               >
                 {person.motherName}
               </Link>
@@ -45,10 +43,10 @@ export const PeopleInfo: React.FC<Props> = ({ person, people }) => (
     <td>
       {person.fatherName
         && (
-          getFather(people, person)
+          person.father
             ? (
               <Link
-                to={`/people/${getFather(people, person)?.slug}`}
+                to={`/people/${person.father.slug}`}
               >
                 {person.fatherName}
               </Link>

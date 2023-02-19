@@ -1,18 +1,19 @@
-import { useMatch } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import classNames from 'classnames';
 
 import { PeopleInfo } from '../PeopleInfo/PeopleInfo';
 import { Person } from '../../types';
 import { SortLink } from '../PeopleInfo/SortLink';
+import { getVisiblePeople } from '../../utils/visiblePeople';
 
 interface Props {
-  people: Person[],
+  people: Person[] | [],
 }
 
 export const PeopleTable: React.FC<Props> = ({ people }) => {
-  const match = useMatch('/people/:slug');
+  const { slug } = useParams<{ slug: string }>();
 
-  const selectedPersonSlug = match?.params.slug;
+  const visiblePeople = getVisiblePeople(people);
 
   return (
     <table
@@ -55,18 +56,17 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
       </thead>
 
       <tbody>
-        {people?.map(person => (
+        {visiblePeople.map(person => (
           <tr
             key={person.slug}
             data-cy="person"
             className={classNames({
               'has-background-warning':
-                person.slug === selectedPersonSlug,
+                person.slug === slug,
             })}
           >
             <PeopleInfo
               person={person}
-              people={people}
             />
           </tr>
         ))}
