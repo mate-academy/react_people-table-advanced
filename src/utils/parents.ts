@@ -1,15 +1,8 @@
 import { Person } from '../types';
 
-export const getMother = (
+export const getParent = (
   people: Person[],
-  person: Person,
+  parentName: string | null,
 ): Person | undefined => (
-  people.find(per => per.name === person.motherName)
-);
-
-export const getFather = (
-  people: Person[],
-  person: Person,
-): Person | undefined => (
-  people.find(per => per.name === person.fatherName)
+  people.find(person => person.name === parentName)
 );
