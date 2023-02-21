@@ -5,7 +5,7 @@ import { Loader } from '../Loader';
 import { PeopleTable } from '../PeopleTable';
 import { getPeople } from '../../api';
 import { Person } from '../../types';
-import { filteredPeople } from '../../utils/flteredPeopleList';
+import { getFilteredPeople } from '../../utils/flteredPeopleList';
 
 export const PeoplePage = () => {
   const [peopleList, setPeopleList] = useState<Person[] | null>(null);
@@ -14,6 +14,7 @@ export const PeoplePage = () => {
   const [searchParams] = useSearchParams();
 
   const listOfPeople = () => (peopleList ? [...peopleList] : []);
+  const list = listOfPeople();
 
   const sortParam = searchParams.get('sort');
   const orderParam = searchParams.get('order');
@@ -29,10 +30,12 @@ export const PeoplePage = () => {
 
   const sortPerson = (a: Person, b: Person) => {
     switch (sortParam) {
-      case 'name': return a.name.localeCompare(b.name);
-      case 'sex': return a.sex.localeCompare(b.sex);
-      case 'born': return a.born - b.born;
-      case 'died': return a.died - b.died;
+      case 'name':
+      case 'sex':
+        return a[sortParam].localeCompare(b[sortParam]);
+      case 'born':
+      case 'died':
+        return a[sortParam] - b[sortParam];
 
       default: return 0;
     }
@@ -40,11 +43,11 @@ export const PeoplePage = () => {
 
   const getSortedPeopleList = (): Person[] | null => {
     if (orderParam) {
-      return listOfPeople().sort((a, b) => sortPerson(a, b)).reverse();
+      return list.sort((a, b) => sortPerson(a, b)).reverse();
     }
 
     if (sortParam) {
-      return listOfPeople().sort((a, b) => sortPerson(a, b));
+      return list.sort((a, b) => sortPerson(a, b));
     }
 
     return peopleList;
@@ -59,15 +62,15 @@ export const PeoplePage = () => {
       const person = { ...item };
 
       if (item.fatherName || item.motherName) {
-        for (let i = 0; i < listOfPeople().length; i += 1) {
-          if (listOfPeople()[i].name === item.fatherName) {
-            person.father = { ...listOfPeople()[i] };
+        list.forEach((itemList) => {
+          if (itemList.name === item.fatherName) {
+            person.father = { ...itemList };
           }
 
-          if (listOfPeople()[i].name === item.motherName) {
-            person.mother = { ...listOfPeople()[i] };
+          if (itemList.name === item.motherName) {
+            person.mother = { ...itemList };
           }
-        }
+        });
       }
 
       return person;
@@ -75,7 +78,7 @@ export const PeoplePage = () => {
   };
 
   const currentPeopleList = addParentsData(getSortedPeopleList()
-    ?.filter((e) => filteredPeople(e, searchParams)));
+    ?.filter((person) => getFilteredPeople(person, searchParams)));
 
   useEffect(() => {
     getPeopleList();
@@ -105,13 +108,13 @@ export const PeoplePage = () => {
                 </p>
               )}
 
-              {peopleList?.length === 0 && (
+              {peopleList && !peopleList.length && (
                 <p data-cy="noPeopleMessage">
                   There are no people on the server
                 </p>
               )}
 
-              {currentPeopleList?.length === 0 && (
+              {currentPeopleList && !currentPeopleList.length && (
                 <p>There are no people matching the current search criteria</p>
               )}
 

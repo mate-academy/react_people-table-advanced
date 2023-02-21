@@ -1,6 +1,6 @@
 import { Person } from '../types';
 
-export const filteredPeople: React.FC<Person> = (currentPeople, search) => {
+export const getFilteredPeople: React.FC<Person> = (currentPeople, search) => {
   const queryParam = search.get('query');
 
   const filterSex = (person: Person) => {
