@@ -1,4 +1,5 @@
-import { Person, SortType } from '../types';
+import { SortType } from '../types/SortType';
+import { Person } from '../types/Person';
 
 export function sortedPeople(people: Person[], sort: string | number) {
   switch (sort) {

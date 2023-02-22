@@ -1,9 +1,9 @@
 import { FC } from 'react';
 import classNames from 'classnames';
 import { Link } from 'react-router-dom';
-import { Person } from '../types';
-import { PersonLink } from './PersonLink';
-import { getSearchWith } from '../utils/searchHelper';
+import { Person } from '../../types/Person';
+import { PersonLink } from '../PersonLink';
+import { getSearchWith } from '../../utils';
 
 type Props = {
   people: Person[];

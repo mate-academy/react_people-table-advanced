@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react';
 import { useMatch, useSearchParams } from 'react-router-dom';
-import { getPeople } from '../api';
-import { Loader } from './Loader';
-import { PeopleFilters } from './PeopleFilters';
-import { PeopleTable } from './PeopleTable';
-import { ErrorTypes, Person } from '../types';
-import { getCentry, sortedPeople } from '../utils';
+import { getPeople } from '../../api';
+import { Loader } from '../Loader';
+import { PeopleFilters } from '../PeopleFilters';
+import { PeopleTable } from '../PeopleTable';
+import { Person } from '../../types/Person';
+import { ErrorTypes } from '../../types/ErrorTypes';
+import { getCentry, sortedPeople } from '../../utils';
 
 export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);
@@ -22,28 +23,25 @@ export const PeoplePage = () => {
   const order = searchParams.get('order') || '';
   const centuries = searchParams.getAll('centuries') || [];
 
-  useEffect(() => {
-    async function fetchPerson() {
-      setIsLoading(true);
-      setIsPeopleLoaded(false);
-      setErrorNoteShown(false);
+  const fetchPerson = async () => {
+    setIsLoading(true);
+    setIsPeopleLoaded(false);
+    setErrorNoteShown(false);
+    try {
+      const peopleFromServer = await getPeople();
 
-      try {
-        const peopleFromServer = await getPeople();
-
-        setPeople(peopleFromServer);
-      } catch {
-        setErrorNoteShown(true);
-      } finally {
-        setIsLoading(false);
-        setIsPeopleLoaded(true);
-      }
+      setPeople(peopleFromServer);
+    } catch {
+      setErrorNoteShown(true);
+    } finally {
+      setIsLoading(false);
+      setIsPeopleLoaded(true);
     }
+  };
 
+  useEffect(() => {
     fetchPerson();
   }, []);
-
-  let visiblePeople;
 
   const getPeopleShow = () => {
     const copyPeople = [...people];
@@ -73,11 +71,7 @@ export const PeoplePage = () => {
     return copyPeople;
   };
 
-  visiblePeople = getPeopleShow();
-
-  if (order) {
-    visiblePeople = getPeopleShow().reverse();
-  }
+  const visiblePeople = order ? getPeopleShow() : getPeopleShow().reverse();
 
   const isPeopleListEmpty = people.length === 0;
   const isVisiblePeopleListEmpty = visiblePeople.length === 0;

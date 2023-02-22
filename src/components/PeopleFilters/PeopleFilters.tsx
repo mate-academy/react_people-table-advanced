@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import classNames from 'classnames';
 import { Link } from 'react-router-dom';
-import { getSearchWith } from '../utils/searchHelper';
+import { getSearchWith } from '../../utils/searchHelper';
 
 type Props = {
   query: string;
