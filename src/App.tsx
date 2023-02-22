@@ -19,15 +19,8 @@ export const App: React.FC = () => {
                 <h1 className="title">Home Page</h1>
               }
             />
-
             <Route
-              path="/people"
-              element={
-                <PeoplePage />
-              }
-            />
-            <Route
-              path="/people/:personSlug"
+              path="/people/:personSlug?"
               element={
                 <PeoplePage />
               }

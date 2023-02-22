@@ -1,58 +1,22 @@
-import { useSearchParams, Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import classNames from 'classnames';
+import { CenturyLink } from './CenturyLink';
+import { SexLink } from './sexLink';
 import { Filter } from '../types/Filter';
 
-type Props = {
-  setFilter: (value: Filter) => void,
-};
-
-export const PeopleFilters: React.FC<Props> = ({ setFilter }) => {
+export const PeopleFilters: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
+
+  const query = searchParams.get('query') || '';
 
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        <Link
-          className={classNames(
-            { 'is-active': () => {} },
-          )}
-          to="/people"
-          onClick={() => {
-            setFilter(Filter.ALL);
-            searchParams.set('filter', Filter.ALL);
-            setSearchParams(searchParams);
-          }}
-        >
-          All
-        </Link>
-        <Link
-          className={classNames(
-            { 'is-active': () => {} },
-          )}
-          to="/people?sex=m"
-          onClick={() => {
-            setFilter(Filter.MALE);
-            searchParams.set('filter', Filter.MALE);
-            setSearchParams(searchParams);
-          }}
-        >
-          Male
-        </Link>
-        <Link
-          className={classNames(
-            { 'is-active': () => {} },
-          )}
-          to="/people?sex=f"
-          onClick={() => {
-            setFilter(Filter.FEMALE);
-            searchParams.set('filter', Filter.FEMALE);
-            setSearchParams(searchParams);
-          }}
-        >
-          Female
-        </Link>
+        <SexLink sex={Filter.ALL} />
+        <SexLink sex={Filter.MALE} />
+        <SexLink sex={Filter.FEMALE} />
       </p>
 
       <div className="panel-block">
@@ -62,6 +26,14 @@ export const PeopleFilters: React.FC<Props> = ({ setFilter }) => {
             type="search"
             className="input"
             placeholder="Search"
+            value={query}
+            onChange={(event) => {
+              const newSearchParams = new URLSearchParams(searchParams
+                .toString());
+
+              newSearchParams.set('query', event.target.value);
+              setSearchParams(newSearchParams);
+            }}
           />
 
           <span className="icon is-left">
@@ -73,81 +45,11 @@ export const PeopleFilters: React.FC<Props> = ({ setFilter }) => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            <Link
-              data-cy="century"
-              className={classNames(
-                'button mr-1',
-                { 'is-info': () => {} },
-              )}
-              to="#/people?centuries=16"
-              onClick={() => {
-                setFilter(Filter.SIXTEEN);
-                searchParams.set('filter', Filter.SIXTEEN);
-                setSearchParams(searchParams);
-              }}
-            >
-              16
-            </Link>
-            <Link
-              data-cy="century"
-              className={classNames(
-                'button mr-1',
-                { 'is-info': () => {} },
-              )}
-              to="#/people?centuries=17"
-              onClick={() => {
-                setFilter(Filter.SEVENTEEN);
-                searchParams.set('filter', Filter.SEVENTEEN);
-                setSearchParams(searchParams);
-              }}
-            >
-              17
-            </Link>
-            <Link
-              data-cy="century"
-              className={classNames(
-                'button mr-1',
-                { 'is-info': () => {} },
-              )}
-              to="#/people?centuries=18"
-              onClick={() => {
-                setFilter(Filter.EIGHTEEN);
-                searchParams.set('filter', Filter.EIGHTEEN);
-                setSearchParams(searchParams);
-              }}
-            >
-              18
-            </Link>
-            <Link
-              data-cy="century"
-              className={classNames(
-                'button mr-1',
-                { 'is-info': () => {} },
-              )}
-              to="#/people?centuries=19"
-              onClick={() => {
-                setFilter(Filter.NINETEEN);
-                searchParams.set('filter', Filter.NINETEEN);
-                setSearchParams(searchParams);
-              }}
-            >
-              19
-            </Link>
-            <Link
-              data-cy="century"
-              className={classNames(
-                'button mr-1',
-                { 'is-info': () => {} },
-              )}
-              to="#/people?centuries=20"
-              onClick={() => {
-                setFilter(Filter.TWENTY);
-                searchParams.set('filter', Filter.TWENTY);
-                setSearchParams(searchParams);
-              }}
-            >
-              20
-            </Link>
+            <CenturyLink century="16" />
+            <CenturyLink century="17" />
+            <CenturyLink century="18" />
+            <CenturyLink century="19" />
+            <CenturyLink century="20" />
           </div>
 
           <div className="level-right ml-4">
@@ -155,7 +57,7 @@ export const PeopleFilters: React.FC<Props> = ({ setFilter }) => {
               data-cy="centuryALL"
               className={classNames(
                 'button',
-                { 'is-success is-outlined': () => {} },
+                { 'is-success is-outlined': () => { } },
               )}
               to="/people"
             >
