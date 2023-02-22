@@ -62,13 +62,13 @@ export const PeoplePage = () => {
       const person = { ...item };
 
       if (item.fatherName || item.motherName) {
-        list.forEach((itemList) => {
-          if (itemList.name === item.fatherName) {
-            person.father = { ...itemList };
+        list.forEach((listItem) => {
+          if (listItem.name === item.fatherName) {
+            person.father = { ...listItem };
           }
 
-          if (itemList.name === item.motherName) {
-            person.mother = { ...itemList };
+          if (listItem.name === item.motherName) {
+            person.mother = { ...listItem };
           }
         });
       }
