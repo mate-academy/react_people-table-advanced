@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 
+import { useParams, useSearchParams } from 'react-router-dom';
 import { PeopleFilters } from './PeopleFilters';
 import { Loader } from './Loader';
 import { PeopleTable } from './PeopleTable';
@@ -17,6 +18,10 @@ type PageState =
 export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>();
   const [pageState, setPageState] = useState<PageState>('loading');
+  const [urlSlug, setUrlSlug] = useState<string>();
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const { slug } = useParams();
 
   // Here it'll take the response from API and add father and mother to
   // each person, if they exist...
@@ -52,6 +57,10 @@ export const PeoplePage = () => {
       .catch(() => setPageState('error'));
   }, []);
 
+  useEffect(() => {
+    setUrlSlug(slug);
+  }, [slug]);
+
   return (
     <>
       <h1 className="title">People Page</h1>
@@ -60,7 +69,11 @@ export const PeoplePage = () => {
         <div className="columns is-desktop is-flex-direction-row-reverse">
           {pageState === 'showTable' && (
             <div className="column is-7-tablet is-narrow-desktop">
-              <PeopleFilters />
+              <PeopleFilters
+                urlSlug={urlSlug}
+                searchParams={searchParams}
+                setSearchParams={setSearchParams}
+              />
             </div>
           )}
 
@@ -91,7 +104,12 @@ export const PeoplePage = () => {
                     );
 
                   default:
-                    return <PeopleTable people={people} />;
+                    return (
+                      <PeopleTable
+                        people={people}
+                        searchParams={searchParams}
+                      />
+                    );
                 }
               })()}
             </div>

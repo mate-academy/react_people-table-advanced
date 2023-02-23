@@ -3,9 +3,12 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Person } from '../types';
 
-type Props = { people: Person[] | undefined };
+type Props = {
+  people: Person[] | undefined;
+  searchParams: URLSearchParams;
+};
 
-export const PeopleTable: React.FC<Props> = ({ people }) => {
+export const PeopleTable: React.FC<Props> = ({ people, searchParams }) => {
   const [slug, setSlug] = useState<string | null>();
   const selectedPerson = useParams();
 
@@ -95,7 +98,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
                   className={classNames({
                     'has-text-danger': person.sex === 'f',
                   })}
-                  href={`#/people/${person.slug}`}
+                  href={`#/people/${person.slug}?${searchParams}`}
                 >
                   {person.name}
                 </a>
@@ -107,7 +110,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
                 {person.mother ? (
                   <a
                     className="has-text-danger"
-                    href={`#/people/${person.mother.slug}`}
+                    href={`#/people/${person.mother.slug}?${searchParams}`}
                   >
                     {person.mother.name}
                   </a>
@@ -117,7 +120,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
               </td>
               <td>
                 {person.father ? (
-                  <a href={`#/people/${person.father.slug}`}>
+                  <a href={`#/people/${person.father.slug}?${searchParams}`}>
                     {person.father.name}
                   </a>
                 ) : (
