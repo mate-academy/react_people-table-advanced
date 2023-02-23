@@ -1,3 +1,1 @@
-export const NotFound = () => {
-  return <h2 className="title">Page not found</h2>;
-};
+export const NotFound = () => <h2 className="title">Page not found</h2>;

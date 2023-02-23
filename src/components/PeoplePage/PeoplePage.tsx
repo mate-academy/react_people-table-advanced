@@ -6,7 +6,7 @@ import { PeopleFilters } from '../PeopleFilters';
 import { PeopleTable } from '../PeopleTable';
 import { Person } from '../../types/Person';
 import { ErrorTypes } from '../../types/ErrorTypes';
-import { getCentry, sortedPeople } from '../../utils';
+import { getCentry, sortPeople } from '../../utils';
 
 export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);
@@ -43,29 +43,27 @@ export const PeoplePage = () => {
     fetchPerson();
   }, []);
 
-  const getPeopleShow = () => {
-    const copyPeople = [...people];
+  let copyPeople = [...people];
 
-    sortedPeople(copyPeople, sort);
+  const getPeopleShow = () => {
+    sortPeople(copyPeople, sort);
 
     if (sex === 'm') {
-      return copyPeople.filter((person) => person.sex === 'm');
+      copyPeople = copyPeople.filter((person) => person.sex === 'm');
     }
 
     if (sex === 'f') {
-      return copyPeople.filter((person) => person.sex === 'f');
+      copyPeople = copyPeople.filter((person) => person.sex === 'f');
     }
 
     if (query.trim()) {
-      return copyPeople.filter((person) => {
-        return person.name.toLowerCase().includes(query.trim().toLowerCase());
-      });
+      copyPeople = copyPeople.filter((person) => person.name.toLowerCase()
+        .includes(query.trim().toLowerCase()));
     }
 
     if (centuries.length) {
-      return copyPeople.filter((person) => {
-        return centuries.includes(getCentry(person.born).toString());
-      });
+      copyPeople = copyPeople.filter((person) => centuries
+        .includes(getCentry(person.born).toString()));
     }
 
     return copyPeople;
