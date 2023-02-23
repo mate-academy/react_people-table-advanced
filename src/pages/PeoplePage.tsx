@@ -59,9 +59,9 @@ export const PeoplePage = () => {
       : true;
 
     const isQueryFilter = query
-      ? people.name.toLowerCase().includes(query)
-          || people.motherName?.toLowerCase().includes(query)
-          || people.fatherName?.toLowerCase().includes(query)
+      ? people.name.toLowerCase().includes(query.toLowerCase())
+          || people.motherName?.toLowerCase().includes(query.toLowerCase())
+          || people.fatherName?.toLowerCase().includes(query.toLowerCase())
       : true;
 
     return isSexFilter && isCenturyFilter && isQueryFilter;
