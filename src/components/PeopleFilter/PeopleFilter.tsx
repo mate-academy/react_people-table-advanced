@@ -3,15 +3,16 @@ import { ChangeEvent } from 'react';
 import classNames from 'classnames';
 import { SearchLink } from '../SearchLink';
 import { centuries } from './filter.constants';
+import { SexSearchLink } from './SexSearchLink';
+import { CenturySearchLink } from './CenturySearchLink/CenturySearchLink';
 
 export const PeopleFilter = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const query = searchParams.get('query') || '';
-  const selectedSex = searchParams.get('sex');
   const selectedCenturies = searchParams.getAll('centuries');
 
   const handleQueryChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const { value } = event.target;
+    const value = event.target.value.trimStart();
 
     if (value) {
       searchParams.set('query', value);
@@ -27,30 +28,17 @@ export const PeopleFilter = () => {
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        <SearchLink
-          className={classNames({
-            'is-active': selectedSex === null,
-          })}
-          params={{ sex: null }}
-        >
+        <SexSearchLink sex={null}>
           All
-        </SearchLink>
-        <SearchLink
-          className={classNames({
-            'is-active': selectedSex === 'm',
-          })}
-          params={{ sex: 'm' }}
-        >
+        </SexSearchLink>
+
+        <SexSearchLink sex="m">
           Male
-        </SearchLink>
-        <SearchLink
-          className={classNames({
-            'is-active': selectedSex === 'f',
-          })}
-          params={{ sex: 'f' }}
-        >
+        </SexSearchLink>
+
+        <SexSearchLink sex="f">
           Female
-        </SearchLink>
+        </SexSearchLink>
       </p>
 
       <div className="panel-block">
@@ -73,27 +61,12 @@ export const PeopleFilter = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            {centuries.map(century => {
-              const isActive = selectedCenturies.includes(century);
+            {centuries.map(century => (
+              <CenturySearchLink key={century} century={century}>
+                {century}
+              </CenturySearchLink>
+            ))}
 
-              return (
-                <SearchLink
-                  key={century}
-                  data-cy="century"
-                  className={classNames(
-                    'button mr-1',
-                    { 'is-info': isActive },
-                  )}
-                  params={{
-                    centuries: isActive
-                      ? selectedCenturies.filter(c => c !== century)
-                      : [...selectedCenturies, century],
-                  }}
-                >
-                  {century}
-                </SearchLink>
-              );
-            })}
           </div>
 
           <div className="level-right ml-4">

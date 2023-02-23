@@ -1,47 +1,23 @@
-import { NavLink, useSearchParams } from 'react-router-dom';
-import classNames from 'classnames';
+import React from 'react';
+import { NavbarLink } from './NavbarLink';
 
-export const Navbar = () => {
-  const [searchParams] = useSearchParams();
+export const Navbar: React.FC = React.memo(() => (
+  <nav
+    data-cy="nav"
+    className="navbar is-fixed-top has-shadow"
+    role="navigation"
+    aria-label="main navigation"
+  >
+    <div className="container">
+      <div className="navbar-brand">
+        <NavbarLink to="/">
+          Home
+        </NavbarLink>
 
-  return (
-    <nav
-      data-cy="nav"
-      className="navbar is-fixed-top has-shadow"
-      role="navigation"
-      aria-label="main navigation"
-    >
-      <div className="container">
-        <div className="navbar-brand">
-          <NavLink
-            to="/"
-            className={({ isActive }) => (
-              classNames(
-                'navbar-item',
-                { 'has-background-grey-lighter': isActive },
-              )
-            )}
-          >
-            Home
-          </NavLink>
-
-          <NavLink
-            to={{
-              pathname: '/people',
-              search: searchParams.toString(),
-            }}
-            aria-current="page"
-            className={({ isActive }) => (
-              classNames(
-                'navbar-item',
-                { 'has-background-grey-lighter': isActive },
-              )
-            )}
-          >
-            People
-          </NavLink>
-        </div>
+        <NavbarLink to="/people" preserveParams>
+          People
+        </NavbarLink>
       </div>
-    </nav>
-  );
-};
+    </div>
+  </nav>
+));
