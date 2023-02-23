@@ -12,6 +12,8 @@ export const PeopleTable: React.FC<Props> = ({ people, searchParams }) => {
   const [slug, setSlug] = useState<string | null>();
   const selectedPerson = useParams();
 
+  const params = searchParams.toString() !== '' ? `?${searchParams}` : '';
+
   useEffect(() => {
     setSlug(selectedPerson.slug || null);
   }, [selectedPerson]);
@@ -98,7 +100,7 @@ export const PeopleTable: React.FC<Props> = ({ people, searchParams }) => {
                   className={classNames({
                     'has-text-danger': person.sex === 'f',
                   })}
-                  href={`#/people/${person.slug}?${searchParams}`}
+                  href={`#/people/${person.slug}${params}`}
                 >
                   {person.name}
                 </a>
@@ -110,7 +112,7 @@ export const PeopleTable: React.FC<Props> = ({ people, searchParams }) => {
                 {person.mother ? (
                   <a
                     className="has-text-danger"
-                    href={`#/people/${person.mother.slug}?${searchParams}`}
+                    href={`#/people/${person.mother.slug}${params}`}
                   >
                     {person.mother.name}
                   </a>
@@ -120,7 +122,7 @@ export const PeopleTable: React.FC<Props> = ({ people, searchParams }) => {
               </td>
               <td>
                 {person.father ? (
-                  <a href={`#/people/${person.father.slug}?${searchParams}`}>
+                  <a href={`#/people/${person.father.slug}${params}`}>
                     {person.father.name}
                   </a>
                 ) : (
