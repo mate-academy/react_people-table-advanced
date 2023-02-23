@@ -1,9 +1,18 @@
 import classNames from 'classnames';
+import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import { Person } from '../types';
 
 type Props = { people: Person[] | undefined };
 
 export const PeopleTable: React.FC<Props> = ({ people }) => {
+  const [slug, setSlug] = useState<string | null>();
+  const selectedPerson = useParams();
+
+  useEffect(() => {
+    setSlug(selectedPerson.slug || null);
+  }, [selectedPerson]);
+
   return (
     <table
       data-cy="peopleTable"
@@ -74,13 +83,19 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
           }
 
           return (
-            <tr key={person.slug} data-cy="person">
+            <tr
+              key={person.slug}
+              data-cy="person"
+              className={classNames({
+                'has-background-warning': slug === person.slug,
+              })}
+            >
               <td>
                 <a
                   className={classNames({
                     'has-text-danger': person.sex === 'f',
                   })}
-                  href="#/people/pieter-haverbeke-1602"
+                  href={`#/people/${person.slug}`}
                 >
                   {person.name}
                 </a>
@@ -92,7 +107,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
                 {person.mother ? (
                   <a
                     className="has-text-danger"
-                    href="#/people/lieven-van-haverbeke-1570"
+                    href={`#/people/${person.mother.slug}`}
                   >
                     {person.mother.name}
                   </a>
@@ -102,7 +117,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
               </td>
               <td>
                 {person.father ? (
-                  <a href="#/people/lieven-van-haverbeke-1570">
+                  <a href={`#/people/${person.father.slug}`}>
                     {person.father.name}
                   </a>
                 ) : (
