@@ -59,7 +59,7 @@ export const PeoplePage = () => {
 
   useEffect(() => {
     setUrlSlug(slug);
-  }, [slug]);
+  }, [searchParams, slug]);
 
   return (
     <>
