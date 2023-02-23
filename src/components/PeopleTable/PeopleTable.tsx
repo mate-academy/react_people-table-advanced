@@ -1,9 +1,10 @@
 import React, { useMemo } from 'react';
 import classNames from 'classnames';
 import { useSearchParams } from 'react-router-dom';
-import { Person } from '../types';
-import { PersonLink } from './PersonLink';
-import { SortLink } from './SortLink';
+import { Person } from '../../types';
+import { SortLink } from '../SortLink';
+import { PersonLink } from '../PersonLink';
+import { getFilteredPeople, getSortedPeople } from '../../utils';
 
 type Props = {
   people: Person[],
@@ -18,44 +19,19 @@ export const PeopleTable: React.FC<Props> = React.memo(
     const [searchParams] = useSearchParams();
     const sortBy = searchParams.get('sort') as keyof Person;
     const isReversed = searchParams.get('order') === 'desc';
-    const query = searchParams.get('query') || '';
+    const query = searchParams.get('query');
     const sexFilter = searchParams.get('sex');
     const centuryFilter = searchParams.getAll('centuries');
 
-    const queryRegEx = useMemo(() => new RegExp(query, 'i'), [query]);
+    const visiblePeople = useMemo(() => (
+      getFilteredPeople(people, query, sexFilter, centuryFilter)
+    ), [people, query, sexFilter, centuryFilter]);
 
-    const visiblePeople = [...people].filter(person => {
-      const {
-        name, motherName, fatherName, sex, born, died,
-      } = person;
-      const testString = name + (motherName || '') + (fatherName || '');
-      const isRightSex = sexFilter ? sexFilter === sex : true;
-      const hasDiedInCentury = centuryFilter.length
-        ? centuryFilter.includes(Math.ceil(died / 100).toString())
-        || centuryFilter.includes(Math.ceil(born / 100).toString())
-        : true;
+    const orderedPeople = useMemo(() => (
+      getSortedPeople(visiblePeople, sortBy, isReversed)
+    ), [visiblePeople, sortBy, isReversed]);
 
-      return queryRegEx.test(testString) && isRightSex && hasDiedInCentury;
-    });
-
-    visiblePeople.sort((a, b) => {
-      switch (sortBy) {
-        case 'name':
-        case 'sex':
-          return a[sortBy].localeCompare(b[sortBy]);
-        case 'born':
-        case 'died':
-          return a[sortBy] - b[sortBy];
-        default:
-          return 0;
-      }
-    });
-
-    if (isReversed) {
-      visiblePeople.reverse();
-    }
-
-    if (!visiblePeople.length) {
+    if (!orderedPeople.length) {
       return <p>There are no people matching the current search criteria</p>;
     }
 
@@ -99,7 +75,7 @@ export const PeopleTable: React.FC<Props> = React.memo(
           </tr>
         </thead>
         <tbody>
-          {visiblePeople.map(person => {
+          {orderedPeople.map(person => {
             const {
               slug, sex, motherName, fatherName, born, died,
             } = person;
@@ -115,7 +91,6 @@ export const PeopleTable: React.FC<Props> = React.memo(
                 key={slug}
                 data-cy="person"
                 className={classNames({
-
                   'has-background-warning': isSelected,
                 })}
               >

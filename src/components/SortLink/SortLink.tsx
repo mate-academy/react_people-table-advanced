@@ -1,8 +1,8 @@
 import React from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import classNames from 'classnames';
-import { Person } from '../types';
-import { getSearchWith } from '../utils/searchHelper';
+import { Person } from '../../types';
+import { getSearchWith } from '../../utils';
 
 type Props = {
   sort: keyof Person,

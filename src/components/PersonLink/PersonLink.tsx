@@ -1,7 +1,7 @@
 import React from 'react';
 import classNames from 'classnames';
 import { NavLink, useSearchParams } from 'react-router-dom';
-import { Person } from '../types';
+import { Person } from '../../types';
 
 type Props = {
   person: Person,
