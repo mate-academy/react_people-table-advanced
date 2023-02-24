@@ -55,6 +55,8 @@ export const PeoplePage = () => {
 
     const isQueryFilter = query
       ? people.name.toLowerCase().includes(query.toLowerCase())
+      || people.fatherName?.toLowerCase().includes(query.toLowerCase())
+      || people.motherName?.toLowerCase().includes(query.toLowerCase())
       : true;
 
     return isSexFilter && isCenturyFilter && isQueryFilter;
@@ -96,7 +98,7 @@ export const PeoplePage = () => {
                 <p>There are no people matching the current search criteria</p>
               )}
 
-              {!isLoading && (
+              {!isLoading && !isNoPeopleMatchingSearchCriteria && (
                 <PeopleTable
                   persons={visiblePeople}
                 />
