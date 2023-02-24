@@ -4,6 +4,7 @@ import { Person } from '../types/Person';
 import { SearchParams } from '../utils/searchHelper';
 import { PersonLink } from './PersonLink';
 import { SearchLink } from './SearchLink';
+import { SortType } from '../types/sortType';
 
 type Props = {
   persons: Person[];
@@ -35,13 +36,13 @@ export const PeopleTable: React.FC<Props> = ({ persons }) => {
 
   const sortPeople = persons.sort((first, second) => {
     switch (sort) {
-      case 'name':
-      case 'sex':
+      case SortType.Name:
+      case SortType.Sex:
         return order === 'desc'
           ? second[sort].localeCompare(first[sort])
           : first[sort].localeCompare(second[sort]);
-      case 'born':
-      case 'died':
+      case SortType.Born:
+      case SortType.Dies:
         return order === 'desc'
           ? second[sort] - first[sort]
           : first[sort] - second[sort];

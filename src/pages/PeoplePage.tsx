@@ -10,7 +10,6 @@ export const PeoplePage = () => {
   const [peoples, setPeoples] = useState<Person[]>([]);
   const [isLoading, setIsloading] = useState(false);
   const [isErorrOnLoadPeople, setIsErorrOnLoadPeople] = useState(false);
-  const [isNoPeopleOnServer, setIsNoPeopleOnServer] = useState(false);
 
   const [searchParams] = useSearchParams();
 
@@ -33,11 +32,7 @@ export const PeoplePage = () => {
         return { ...person, mother, father };
       });
 
-      if (result.length !== 0) {
-        setPeoples(personWithParents);
-      } else {
-        setIsNoPeopleOnServer(true);
-      }
+      setPeoples(personWithParents);
     } catch {
       setIsErorrOnLoadPeople(true);
     } finally {
@@ -60,8 +55,6 @@ export const PeoplePage = () => {
 
     const isQueryFilter = query
       ? people.name.toLowerCase().includes(query.toLowerCase())
-          || people.motherName?.toLowerCase().includes(query.toLowerCase())
-          || people.fatherName?.toLowerCase().includes(query.toLowerCase())
       : true;
 
     return isSexFilter && isCenturyFilter && isQueryFilter;
@@ -93,7 +86,7 @@ export const PeoplePage = () => {
                 </p>
               )}
 
-              {isNoPeopleOnServer && (
+              {peoples.length === 0 && (
                 <p data-cy="noPeopleMessage">
                   There are no people on the server
                 </p>

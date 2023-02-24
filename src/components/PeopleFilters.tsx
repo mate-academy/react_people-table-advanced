@@ -25,6 +25,12 @@ export const PeopleFilters = () => {
     }));
   };
 
+  const conditionForParamsCentury = (value: string) => {
+    return centuries.includes(value)
+      ? centuries.filter(number => number !== value)
+      : [...centuries, value];
+  };
+
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
@@ -67,11 +73,7 @@ export const PeopleFilters = () => {
               <SearchLink
                 data-cy="century"
                 key={century}
-                params={{
-                  centuries: centuries.includes(century)
-                    ? centuries.filter(number => number !== century)
-                    : [...centuries, century],
-                }}
+                params={{ centuries: conditionForParamsCentury(century) }}
                 className={classNames(
                   'button mr-1',
                   { 'is-info': centuries.includes(century) },
