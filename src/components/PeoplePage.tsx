@@ -7,11 +7,9 @@ import { getPeople } from '../api';
 import { Person } from '../types';
 
 export const PeoplePage = () => {
-  const [people, setPeople] = useState<Person[] | []>([]);
   const [isLoaderActive, setIsLoaderActive] = useState(true);
-  // const [isFilterActive, setIsFilterActive] = useState(false);
-  const [isFilterActive] = useState(false);
   const [isLoadingError, setIisLoadingError] = useState(false);
+  const [people, setPeople] = useState<Person[] | []>([]);
 
   const fetchPeople = async () => {
     try {
@@ -31,10 +29,6 @@ export const PeoplePage = () => {
     return people.length === 0 && !isLoaderActive;
   }, [people]);
 
-  const peopleArrayFilteredIsEmpty = useMemo(() => {
-    return people.length === 0 && isFilterActive;
-  }, [people, isFilterActive]);
-
   useEffect(() => {
     fetchPeople();
   }, []);
@@ -45,12 +39,11 @@ export const PeoplePage = () => {
 
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
-          <div className="column is-7-tablet is-narrow-desktop">
-            <PeopleFilters />
-            {/* // handleQuery={handleQuery}
-            // handleSex={handleSex}
-            // handleCentury={handleCentury} /> */}
-          </div>
+          {!isLoaderActive && (
+            <div className="column is-7-tablet is-narrow-desktop">
+              <PeopleFilters />
+            </div>
+          )}
 
           <div className="column">
             <div className="box table-container">
@@ -64,10 +57,6 @@ export const PeoplePage = () => {
                 >
                   Something went wrong
                 </p>
-              )}
-
-              {peopleArrayFilteredIsEmpty && (
-                <p>There are no people matching the current search criteria</p>
               )}
 
               {people.length > 0 && (
