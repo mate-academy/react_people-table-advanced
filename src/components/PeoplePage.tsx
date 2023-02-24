@@ -17,6 +17,7 @@ type PageState =
 
 export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>();
+  const [filteredList, setFilteredList] = useState<Person[]>();
   const [pageState, setPageState] = useState<PageState>('loading');
   const [urlSlug, setUrlSlug] = useState<string>();
   const [searchParams, setSearchParams] = useSearchParams();
@@ -45,6 +46,43 @@ export const PeoplePage = () => {
     return peopleList;
   };
 
+  const filter = (params: URLSearchParams) => {
+    const sex = params.get('sex');
+    const query = params.get('query');
+    const centuries = params.getAll('centuries');
+
+    setFilteredList(people);
+
+    if (sex) {
+      setFilteredList((current) => {
+        return current?.filter((person) => person.sex === sex);
+      });
+    }
+
+    if (query) {
+      setFilteredList((current) => current?.filter((person) => {
+        const searchQuery = query.toLocaleLowerCase();
+        const name = person.name.toLocaleLowerCase();
+        const motherName = String(person.motherName).toLocaleLowerCase();
+        const fatherName = String(person.fatherName).toLocaleLowerCase();
+
+        return (
+          name.includes(searchQuery)
+            || motherName.includes(searchQuery)
+            || fatherName.includes(searchQuery)
+        );
+      }));
+    }
+
+    if (centuries.length) {
+      setFilteredList((current) => current?.filter((person) => {
+        const personCentury = Math.ceil(person.born / 100);
+
+        return centuries.includes(String(personCentury));
+      }));
+    }
+  };
+
   useEffect(() => {
     getPeople()
       .then((response) => response)
@@ -52,14 +90,28 @@ export const PeoplePage = () => {
         const improvedList = addMotherAndFather(result);
 
         setPeople(improvedList);
-        setPageState('showTable');
+
+        if (result.length) {
+          setPageState('showTable');
+        } else {
+          setPageState('nothingFound');
+        }
       })
       .catch(() => setPageState('error'));
   }, []);
 
   useEffect(() => {
+    setFilteredList(people);
+    filter(searchParams);
+  }, [people]);
+
+  useEffect(() => {
     setUrlSlug(slug);
-  }, [searchParams, slug]);
+  }, [slug]);
+
+  useEffect(() => {
+    filter(searchParams);
+  }, [searchParams]);
 
   return (
     <>
@@ -106,7 +158,7 @@ export const PeoplePage = () => {
                   default:
                     return (
                       <PeopleTable
-                        people={people}
+                        people={filteredList}
                         searchParams={searchParams}
                       />
                     );
