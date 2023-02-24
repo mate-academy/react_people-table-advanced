@@ -83,6 +83,40 @@ export const PeoplePage = () => {
     }
   };
 
+  const sort = (params: URLSearchParams) => {
+    const sortBy = params.get('sort');
+    const orderBy = params.get('order');
+    const sortByText = sortBy === 'name' || sortBy === 'sex';
+
+    if (sortBy && orderBy === 'desc') {
+      setFilteredList((current) => current?.sort((a: Person, b: Person) => {
+        if (sortByText) {
+          return a[sortBy].localeCompare(b[sortBy]);
+        }
+
+        if (sortBy === 'born' || sortBy === 'died') {
+          return a[sortBy] - b[sortBy];
+        }
+
+        return 1;
+      }));
+    }
+
+    if (sortBy && !orderBy) {
+      setFilteredList((current) => current?.sort((a: Person, b: Person) => {
+        if (sortByText) {
+          return b[sortBy].localeCompare(a[sortBy]);
+        }
+
+        if (sortBy === 'born' || sortBy === 'died') {
+          return b[sortBy] - a[sortBy];
+        }
+
+        return 1;
+      }));
+    }
+  };
+
   useEffect(() => {
     getPeople()
       .then((response) => response)
@@ -90,6 +124,7 @@ export const PeoplePage = () => {
         const improvedList = addMotherAndFather(result);
 
         setPeople(improvedList);
+        setFilteredList(improvedList);
 
         if (result.length) {
           setPageState('showTable');
@@ -101,8 +136,8 @@ export const PeoplePage = () => {
   }, []);
 
   useEffect(() => {
-    setFilteredList(people);
     filter(searchParams);
+    sort(searchParams);
   }, [people]);
 
   useEffect(() => {
@@ -111,6 +146,7 @@ export const PeoplePage = () => {
 
   useEffect(() => {
     filter(searchParams);
+    sort(searchParams);
   }, [searchParams]);
 
   return (
@@ -160,6 +196,7 @@ export const PeoplePage = () => {
                       <PeopleTable
                         people={filteredList}
                         searchParams={searchParams}
+                        setSearchParams={setSearchParams}
                       />
                     );
                 }

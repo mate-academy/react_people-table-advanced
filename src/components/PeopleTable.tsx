@@ -1,18 +1,47 @@
 import classNames from 'classnames';
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 import { Person } from '../types';
+import { getSearchWith } from '../utils/searchHelper';
 
 type Props = {
   people: Person[] | undefined;
   searchParams: URLSearchParams;
+  setSearchParams: (value: string) => void;
 };
 
-export const PeopleTable: React.FC<Props> = ({ people, searchParams }) => {
+export const PeopleTable: React.FC<Props> = ({
+  people,
+  searchParams,
+  setSearchParams,
+}) => {
+  const location = useLocation().pathname;
   const [slug, setSlug] = useState<string | null>();
   const selectedPerson = useParams();
 
+  const order = searchParams.get('order');
+  const sort = searchParams.get('sort');
+
   const params = searchParams.toString() !== '' ? `?${searchParams}` : '';
+
+  const sortBy = (
+    name: string,
+    e: React.MouseEvent<HTMLAnchorElement, MouseEvent>,
+  ) => {
+    e.preventDefault();
+
+    if (name !== sort) {
+      setSearchParams(getSearchWith(searchParams, { sort: name }));
+
+      return;
+    }
+
+    if (!order) {
+      setSearchParams(getSearchWith(searchParams, { order: 'desc' }));
+    } else {
+      setSearchParams(getSearchWith(searchParams, { order: null }));
+    }
+  };
 
   useEffect(() => {
     setSlug(selectedPerson.slug || null);
@@ -28,9 +57,17 @@ export const PeopleTable: React.FC<Props> = ({ people, searchParams }) => {
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Name
-              <a href="#/people?sort=name">
+              <a
+                href={`#${location}${params}`}
+                onMouseDown={(e) => sortBy('name', e)}
+              >
                 <span className="icon">
-                  <i className="fas fa-sort" />
+                  <i
+                    className={classNames('fas fa-sort', {
+                      'fa-sort-up': !order && sort === 'name',
+                      'fa-sort-down': order && sort === 'name',
+                    })}
+                  />
                 </span>
               </a>
             </span>
@@ -39,9 +76,17 @@ export const PeopleTable: React.FC<Props> = ({ people, searchParams }) => {
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Sex
-              <a href="#/people?sort=sex">
+              <a
+                href={`#${location}${params}`}
+                onMouseDown={(e) => sortBy('sex', e)}
+              >
                 <span className="icon">
-                  <i className="fas fa-sort" />
+                  <i
+                    className={classNames('fas fa-sort', {
+                      'fa-sort-up': !order && sort === 'sex',
+                      'fa-sort-down': order && sort === 'sex',
+                    })}
+                  />
                 </span>
               </a>
             </span>
@@ -50,9 +95,17 @@ export const PeopleTable: React.FC<Props> = ({ people, searchParams }) => {
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Born
-              <a href="#/people?sort=born&amp;order=desc">
+              <a
+                href={`#${location}${params}`}
+                onMouseDown={(e) => sortBy('born', e)}
+              >
                 <span className="icon">
-                  <i className="fas fa-sort-up" />
+                  <i
+                    className={classNames('fas fa-sort', {
+                      'fa-sort-up': !order && sort === 'born',
+                      'fa-sort-down': order && sort === 'born',
+                    })}
+                  />
                 </span>
               </a>
             </span>
@@ -61,9 +114,17 @@ export const PeopleTable: React.FC<Props> = ({ people, searchParams }) => {
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Died
-              <a href="#/people?sort=died">
+              <a
+                href={`#${location}${params}`}
+                onMouseDown={(e) => sortBy('died', e)}
+              >
                 <span className="icon">
-                  <i className="fas fa-sort" />
+                  <i
+                    className={classNames('fas fa-sort', {
+                      'fa-sort-up': !order && sort === 'died',
+                      'fa-sort-down': order && sort === 'died',
+                    })}
+                  />
                 </span>
               </a>
             </span>
