@@ -27,7 +27,7 @@ export const getFilteredTodos = (
   }
 
   if (query) {
-    const lowerCaseQuery = query.trim().toLowerCase();
+    const lowerCaseQuery = query.toLocaleLowerCase();
 
     filteredPeople = filteredPeople.filter(person => {
       const lowerName = person.name.toLowerCase();
@@ -40,18 +40,20 @@ export const getFilteredTodos = (
     });
   }
 
-  filteredPeople.sort((personA, personB) => {
-    switch (sortParam) {
-      case 'name':
-      case 'sex':
-        return personA[sortParam].localeCompare(personB[sortParam]);
-      case 'born':
-      case 'died':
-        return personA[sortParam] - personB[sortParam];
-      default:
-        return 0;
-    }
-  });
+  if (sortParam) {
+    filteredPeople.sort((personA, personB) => {
+      switch (sortParam) {
+        case 'name':
+        case 'sex':
+          return personA[sortParam].localeCompare(personB[sortParam]);
+        case 'born':
+        case 'died':
+          return personA[sortParam] - personB[sortParam];
+        default:
+          return 0;
+      }
+    });
+  }
 
   if (isReversed) {
     filteredPeople.reverse();
