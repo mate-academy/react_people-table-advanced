@@ -1,14 +1,10 @@
 import { createRoot } from 'react-dom/client';
-import { HashRouter as Router } from 'react-router-dom';
+
+import { Root } from './components/Root';
 
 import 'bulma/css/bulma.css';
 import '@fortawesome/fontawesome-free/css/all.css';
 
-import { App } from './App';
+const root = createRoot(document.getElementById('root') as HTMLDivElement);
 
-createRoot(document.getElementById('root') as HTMLDivElement)
-  .render(
-    <Router>
-      <App />
-    </Router>,
-  );
+root.render(<Root />);
