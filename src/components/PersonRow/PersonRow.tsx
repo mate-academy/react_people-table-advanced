@@ -36,7 +36,6 @@ export const PersonRow: React.FC<Props> = React.memo(
             name={name}
             sex={sex}
             slug={slug}
-            selectedSlug={selectedSlug}
           />
         </td>
 
@@ -54,7 +53,6 @@ export const PersonRow: React.FC<Props> = React.memo(
               name={mother.name}
               sex={mother.sex}
               slug={mother.slug}
-              selectedSlug={selectedSlug}
             />
           ) : (
             motherName
@@ -69,7 +67,6 @@ export const PersonRow: React.FC<Props> = React.memo(
               name={father.name}
               sex={father.sex}
               slug={father.slug}
-              selectedSlug={selectedSlug}
             />
           ) : (
             fatherName

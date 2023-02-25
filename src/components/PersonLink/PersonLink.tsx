@@ -8,23 +8,20 @@ type Props = {
   name: string;
   sex: Sex;
   slug: string;
-  selectedSlug: string;
 };
 
 export const PersonLink: React.FC<Props> = ({
   name,
   sex,
   slug,
-  selectedSlug,
 }) => {
   const { search } = useLocation();
   const parentPath = useResolvedPath('../').pathname;
-  const peoplePath = useResolvedPath('..').pathname;
 
   return (
     <Link
       to={{
-        pathname: selectedSlug === slug ? peoplePath : parentPath + slug,
+        pathname: parentPath + slug,
         search,
       }}
       className={classNames({

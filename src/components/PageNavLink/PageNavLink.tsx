@@ -24,7 +24,7 @@ export const PageNavLink: React.FC<Props> = ({
   const path: To | string = saveParams
     ? {
       pathname: to,
-      search: search,
+      search,
     }
     : to;
 
