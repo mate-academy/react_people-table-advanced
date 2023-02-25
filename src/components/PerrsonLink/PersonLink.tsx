@@ -14,11 +14,12 @@ export const PersonLink: React.FC<Props> = React.memo(
         to={`/people/${person.slug}`}
         className={classNames('todo', {
           'has-text-danger': person.sex === 'f',
-          'has-text-grey': person.sex === 'm',
+          'has-text-blue': person.sex === 'm',
         })}
       >
         {person.name}
       </Link>
+
     </>
   ),
 );

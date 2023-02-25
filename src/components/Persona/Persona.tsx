@@ -27,7 +27,7 @@ export const Persona: React.FC<Props> = React.memo(
         <td>{person.sex}</td>
         <td>{person.born}</td>
         <td>{person.died}</td>
-
+        
         <td>
           {person.mother
             ? <PersonLink person={person.mother} />
