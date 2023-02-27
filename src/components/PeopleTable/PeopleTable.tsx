@@ -1,10 +1,9 @@
 import React, { useMemo } from 'react';
-import classNames from 'classnames';
 import { useSearchParams } from 'react-router-dom';
 import { Person } from '../../types';
 import { SortLink } from '../SortLink';
-import { PersonLink } from '../PersonLink';
 import { getFilteredPeople, getSortedPeople } from '../../utils';
+import { PersonRow } from './PersonRow';
 
 type Props = {
   people: Person[],
@@ -76,42 +75,10 @@ export const PeopleTable: React.FC<Props> = React.memo(
         </thead>
         <tbody>
           {orderedPeople.map(person => {
-            const {
-              slug, sex, motherName, fatherName, born, died,
-            } = person;
-
-            const isSelected = slug === selectedPersonSlug;
-            const mother = people.find(mom => mom.name === motherName);
-            const father = people.find(dad => dad.name === fatherName);
-            const formattedMotherName = !motherName ? '-' : motherName;
-            const formattedFatherName = !fatherName ? '-' : fatherName;
+            const isSelected = person.slug === selectedPersonSlug;
 
             return (
-              <tr
-                key={slug}
-                data-cy="person"
-                className={classNames({
-                  'has-background-warning': isSelected,
-                })}
-              >
-                <td>
-                  <PersonLink person={person} />
-                </td>
-
-                <td>{sex}</td>
-                <td>{born}</td>
-                <td>{died}</td>
-                <td>
-                  {!mother
-                    ? formattedMotherName
-                    : <PersonLink person={mother} />}
-                </td>
-                <td>
-                  {!father
-                    ? formattedFatherName
-                    : <PersonLink person={father} />}
-                </td>
-              </tr>
+              <PersonRow person={person} isSelected={isSelected} />
             );
           })}
         </tbody>

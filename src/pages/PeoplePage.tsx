@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import { Person } from '../types';
 import { getPeople } from '../api';
 import { Loader, PeopleFilter, PeopleTable } from '../components';
+import { getPreparedPeople } from '../utils/getPreparedPeople';
 
 export const PeoplePage = () => {
   const { person: selectedPersonSlug = '' } = useParams();
@@ -18,8 +19,9 @@ export const PeoplePage = () => {
     const fetchData = async () => {
       try {
         const peopleFromServer = await getPeople();
+        const preparedPeople = getPreparedPeople(peopleFromServer);
 
-        setPeople(peopleFromServer);
+        setPeople(preparedPeople);
       } catch {
         setHasError(true);
       } finally {
