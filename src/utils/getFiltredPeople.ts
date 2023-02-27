@@ -21,8 +21,9 @@ export function getFiltredPeople(
   }
 
   if (query) {
+    const preparedQuery = query.trim().toLowerCase();
+
     filtredPeople = people.filter(person => {
-      const preparedQuery = query.trim().toLowerCase();
       const preparedName = person.name.toLowerCase();
       const preparedMotherName = person.motherName?.toLowerCase();
       const preparedFatherName = person.fatherName?.toLowerCase();
