@@ -10,79 +10,81 @@ type Props = {
   selectedPersonSlug: string
 };
 
-export const PeopleTable: React.FC<Props> = React.memo(
-  ({
-    people,
-    selectedPersonSlug,
-  }) => {
-    const [searchParams] = useSearchParams();
-    const sortBy = searchParams.get('sort') as keyof Person;
-    const isReversed = searchParams.get('order') === 'desc';
-    const query = searchParams.get('query');
-    const sexFilter = searchParams.get('sex');
-    const centuryFilter = searchParams.getAll('centuries');
+export const PeopleTable: React.FC<Props> = ({
+  people,
+  selectedPersonSlug,
+}) => {
+  const [searchParams] = useSearchParams();
+  const sortBy = searchParams.get('sort') as keyof Person;
+  const isReversed = searchParams.get('order') === 'desc';
+  const query = searchParams.get('query');
+  const sexFilter = searchParams.get('sex');
+  const centuryFilter = searchParams.getAll('centuries');
 
-    const visiblePeople = useMemo(() => (
-      getFilteredPeople(people, query, sexFilter, centuryFilter)
-    ), [people, query, sexFilter, centuryFilter]);
+  const visiblePeople = useMemo(() => (
+    getFilteredPeople(people, query, sexFilter, centuryFilter)
+  ), [people, query, sexFilter, centuryFilter]);
 
-    const orderedPeople = useMemo(() => (
-      getSortedPeople(visiblePeople, sortBy, isReversed)
-    ), [visiblePeople, sortBy, isReversed]);
+  const orderedPeople = useMemo(() => (
+    getSortedPeople(visiblePeople, sortBy, isReversed)
+  ), [visiblePeople, sortBy, isReversed]);
 
-    if (!orderedPeople.length) {
-      return <p>There are no people matching the current search criteria</p>;
-    }
+  if (!orderedPeople.length) {
+    return <p>There are no people matching the current search criteria</p>;
+  }
 
-    return (
-      <table
-        data-cy="peopleTable"
-        className="table is-striped is-hoverable is-narrow is-fullwidth"
-      >
-        <thead>
-          <tr>
-            <th>
-              <span className="is-flex is-flex-wrap-nowrap">
-                Name
-                <SortLink sort="name" />
-              </span>
-            </th>
+  return (
+    <table
+      data-cy="peopleTable"
+      className="table is-striped is-hoverable is-narrow is-fullwidth"
+    >
+      <thead>
+        <tr>
+          <th>
+            <span className="is-flex is-flex-wrap-nowrap">
+              Name
+              <SortLink sort="name" />
+            </span>
+          </th>
 
-            <th>
-              <span className="is-flex is-flex-wrap-nowrap">
-                Sex
-                <SortLink sort="sex" />
-              </span>
-            </th>
+          <th>
+            <span className="is-flex is-flex-wrap-nowrap">
+              Sex
+              <SortLink sort="sex" />
+            </span>
+          </th>
 
-            <th>
-              <span className="is-flex is-flex-wrap-nowrap">
-                Born
-                <SortLink sort="born" />
-              </span>
-            </th>
+          <th>
+            <span className="is-flex is-flex-wrap-nowrap">
+              Born
+              <SortLink sort="born" />
+            </span>
+          </th>
 
-            <th>
-              <span className="is-flex is-flex-wrap-nowrap">
-                Died
-                <SortLink sort="died" />
-              </span>
-            </th>
+          <th>
+            <span className="is-flex is-flex-wrap-nowrap">
+              Died
+              <SortLink sort="died" />
+            </span>
+          </th>
 
-            <th>Mother</th>
-            <th>Father</th>
-          </tr>
-        </thead>
-        <tbody>
-          {orderedPeople.map(person => {
-            const isSelected = person.slug === selectedPersonSlug;
+          <th>Mother</th>
+          <th>Father</th>
+        </tr>
+      </thead>
+      <tbody>
+        {orderedPeople.map(person => {
+          const isSelected = person.slug === selectedPersonSlug;
 
-            return (
-              <PersonRow person={person} isSelected={isSelected} />
-            );
-          })}
-        </tbody>
-      </table>
-    );
-  },
-);
+          return (
+            <PersonRow
+              key={person.slug}
+              person={person}
+              isSelected={isSelected}
+            />
+          );
+        })}
+      </tbody>
+    </table>
+  );
+};

@@ -1,4 +1,4 @@
-import { ChangeEvent } from 'react';
+import { ChangeEvent, useCallback } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import classNames from 'classnames';
 
@@ -7,23 +7,23 @@ import { SexSearchLink } from './SexSearchLink';
 import { CenturySearchLink } from './CenturySearchLink';
 
 import { centuries } from './filter.constants';
+import { getSearchWith } from '../../utils';
 
 export const PeopleFilter = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const query = searchParams.get('query') || '';
   const selectedCenturies = searchParams.getAll('centuries');
 
-  const handleQueryChange = (event: ChangeEvent<HTMLInputElement>) => {
+  const handleQueryChange = useCallback((
+    event: ChangeEvent<HTMLInputElement>,
+  ) => {
     const value = event.target.value.trimStart();
+    const newQuery = !value ? null : value;
 
-    if (value) {
-      searchParams.set('query', value);
-    } else {
-      searchParams.delete('query');
-    }
-
-    setSearchParams(searchParams);
-  };
+    setSearchParams(
+      getSearchWith(searchParams, { query: newQuery }),
+    );
+  }, []);
 
   return (
     <nav className="panel">

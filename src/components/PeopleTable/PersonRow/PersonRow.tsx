@@ -8,7 +8,9 @@ type Props = {
   isSelected: boolean,
 };
 
-export const PersonRow: React.FC<Props> = ({ person, isSelected }) => {
+export const PersonRow: React.FC<Props> = React.memo(({
+  person, isSelected,
+}) => {
   const {
     sex, born, died, motherName, fatherName, mother, father,
   } = person;
@@ -42,4 +44,4 @@ export const PersonRow: React.FC<Props> = ({ person, isSelected }) => {
       </td>
     </tr>
   );
-};
+});

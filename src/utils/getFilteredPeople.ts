@@ -8,17 +8,6 @@ export const getFilteredPeople = (
 ) => {
   let filteredPeople = [...people];
 
-  if (query) {
-    const regex = new RegExp(query, 'i');
-
-    filteredPeople = filteredPeople
-      .filter(({ name, fatherName, motherName }) => (
-        regex.test(
-          `${name} ${fatherName || ''} ${motherName || ''}`,
-        )
-      ));
-  }
-
   if (sex) {
     filteredPeople = filteredPeople.filter((person) => {
       switch (sex) {
@@ -35,13 +24,22 @@ export const getFilteredPeople = (
   if (centuries.length) {
     const numberCenturies = centuries.map(Number);
 
-    filteredPeople = filteredPeople.filter(({ born, died }) => {
+    filteredPeople = filteredPeople.filter(({ born }) => {
       const bornCentury = Math.ceil(born / 100);
-      const diedCentury = Math.ceil(died / 100);
 
-      return numberCenturies.includes(bornCentury)
-        || numberCenturies.includes(diedCentury);
+      return numberCenturies.includes(bornCentury);
     });
+  }
+
+  if (query) {
+    const regex = new RegExp(query, 'i');
+
+    filteredPeople = filteredPeople
+      .filter(({ name, fatherName, motherName }) => (
+        regex.test(
+          `${name} ${fatherName || ''} ${motherName || ''}`,
+        )
+      ));
   }
 
   return filteredPeople;
