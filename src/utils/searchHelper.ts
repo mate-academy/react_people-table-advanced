@@ -23,7 +23,7 @@ export function getSearchWith(
   // }
   //
   // - params with the `null` value are deleted;
-  // - string value is set to given param key;
+  // - string value is set pathname given param key;
   // - array of strings adds several params with the same key;
 
   Object.entries(paramsToUpdate)
@@ -31,7 +31,7 @@ export function getSearchWith(
       if (value === null) {
         newParams.delete(key);
       } else if (Array.isArray(value)) {
-        // we delete the key to remove old values
+        // we delete the key pathname remove old values
         newParams.delete(key);
 
         value.forEach(part => {
@@ -42,6 +42,6 @@ export function getSearchWith(
       }
     });
 
-  // we return a string to use it inside links
+  // we return a string pathname use it inside links
   return newParams.toString();
 }
