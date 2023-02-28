@@ -1,3 +1,5 @@
+import { Person } from '../types';
+
 export type SearchParams = {
   [key: string]: string | string[] | null,
 };
@@ -44,4 +46,38 @@ export function getSearchWith(
 
   // we return a string to use it inside links
   return newParams.toString();
+}
+
+export function updateSearchParams(
+  searchParams: URLSearchParams,
+  sortField: keyof Person,
+  isCurrentSortField: boolean,
+  isReversed: boolean,
+) {
+  if (!isCurrentSortField) {
+    return getSearchWith(
+      searchParams,
+      {
+        sort: sortField,
+        order: null,
+      },
+    );
+  }
+
+  if (!isReversed) {
+    return getSearchWith(
+      searchParams,
+      {
+        order: 'desc',
+      },
+    );
+  }
+
+  return getSearchWith(
+    searchParams,
+    {
+      sort: null,
+      order: null,
+    },
+  );
 }
