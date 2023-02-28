@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { PeopleFilters } from './PeopleFilters';
 import { Loader } from './Loader';
 import { PeopleTable } from './PeopleTable';
-import { preparePeopleArray } from '../utils/preparePeopleArray';
+import { preparePeople } from '../utils/preparePeople';
 import { getPeople } from '../api';
 import { Person } from '../types';
 
@@ -15,7 +15,7 @@ export const PeoplePage = () => {
     try {
       let data = await getPeople();
 
-      data = preparePeopleArray(data);
+      data = preparePeople(data);
       setPeople(data);
       setIsLoaderActive(false);
     } catch {

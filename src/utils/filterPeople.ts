@@ -23,11 +23,11 @@ export const filterPeople = (
 
   if (query) {
     visiblePeople = visiblePeople.filter(person => {
-      const prepareQuery = query.toUpperCase();
+      const preparedQuery = query.toUpperCase();
 
-      return person.name.toUpperCase().includes(prepareQuery)
-        || person.fatherName?.toUpperCase().includes(prepareQuery)
-        || person.motherName?.toUpperCase().includes(prepareQuery);
+      return person.name.toUpperCase().includes(preparedQuery)
+        || person.fatherName?.toUpperCase().includes(preparedQuery)
+        || person.motherName?.toUpperCase().includes(preparedQuery);
     });
   }
 

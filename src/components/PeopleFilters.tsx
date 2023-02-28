@@ -3,18 +3,19 @@ import React from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { getSearchWith } from '../utils/getSearchWith';
 import { SearchLink } from './SearchLink';
+import { SexLink } from './SexFilter';
 
-const centuriesArr = ['16', '17', '18', '19', '20'];
+const possibleCenturies = ['16', '17', '18', '19', '20'];
 
 export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const query = searchParams.get('query') || '';
   const centuries = searchParams.getAll('centuries') || [];
-  const sex = searchParams.get('sex') || null;
 
   const onQueryChange = (event : React.ChangeEvent<HTMLInputElement>) => {
     setSearchParams(
-      getSearchWith(searchParams, { query: event.target.value || null }),
+      getSearchWith(searchParams,
+        { query: event.target.value.trimStart() || null }),
     );
   };
 
@@ -23,32 +24,9 @@ export const PeopleFilters = () => {
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        <SearchLink
-          params={{ sex: null }}
-          className={classNames(
-            { 'is-active': sex === null },
-          )}
-        >
-          All
-        </SearchLink>
-
-        <SearchLink
-          params={{ sex: 'm' }}
-          className={classNames(
-            { 'is-active': sex === 'm' },
-          )}
-        >
-          Male
-        </SearchLink>
-
-        <SearchLink
-          params={{ sex: 'f' }}
-          className={classNames(
-            { 'is-active': sex === 'f' },
-          )}
-        >
-          Female
-        </SearchLink>
+        <SexLink sexType={null} text="All" />
+        <SexLink sexType="m" text="Male" />
+        <SexLink sexType="f" text="Female" />
       </p>
 
       <div className="panel-block">
@@ -71,7 +49,7 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            {centuriesArr.map(century => (
+            {possibleCenturies.map(century => (
               <SearchLink
                 params={{
                   centuries: centuries.includes(century)
