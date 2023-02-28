@@ -8,14 +8,16 @@ export const getFilteredPeople = (
 ) => {
   let filteredPeople = [...people];
 
-  if (query) {
+  const preparedQuery = query?.toLowerCase();
+
+  if (preparedQuery) {
     filteredPeople = filteredPeople.filter(person => {
       return person.name.toLowerCase()
-        .includes(query.toLowerCase())
+        .includes(preparedQuery)
           || person.motherName?.toLowerCase()
-            .includes(query.toLowerCase())
+            .includes(preparedQuery)
           || person.fatherName?.toLowerCase()
-            .includes(query.toLowerCase());
+            .includes(preparedQuery);
     });
   }
 

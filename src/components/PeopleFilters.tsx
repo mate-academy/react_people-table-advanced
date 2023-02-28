@@ -3,15 +3,16 @@ import React from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { getSearchWith } from '../utils/searchHelper';
 import { SearchLink } from './SearchLink';
+import { SexSearchLink } from './SexSearchLink';
 
 export const PeopleFilters: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const query = searchParams.get('query') || '';
-  const sex = searchParams.get('sex');
   const centuries = searchParams.getAll('centuries') || [];
+  const filterCenturies = ['16', '17', '18', '19', '20'];
 
   const handleQueryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const newQuery = event.target.value || null;
+    const newQuery = event.target.value.trimStart() || null;
 
     setSearchParams(getSearchWith(searchParams, { query: newQuery }));
   };
@@ -21,32 +22,9 @@ export const PeopleFilters: React.FC = () => {
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        <SearchLink
-          className={classNames({
-            'is-active': sex === null,
-          })}
-          params={{ sex: null }}
-        >
-          All
-        </SearchLink>
-
-        <SearchLink
-          className={classNames({
-            'is-active': sex === 'm',
-          })}
-          params={{ sex: 'm' }}
-        >
-          Male
-        </SearchLink>
-
-        <SearchLink
-          className={classNames({
-            'is-active': sex === 'f',
-          })}
-          params={{ sex: 'f' }}
-        >
-          Female
-        </SearchLink>
+        <SexSearchLink sex={null} text="All" />
+        <SexSearchLink sex="m" text="Male" />
+        <SexSearchLink sex="f" text="Female" />
       </p>
 
       <div className="panel-block">
@@ -69,7 +47,7 @@ export const PeopleFilters: React.FC = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            {['16', '17', '18', '19', '20'].map(century => {
+            {filterCenturies.map(century => {
               const isActive = centuries.includes(century);
 
               return (

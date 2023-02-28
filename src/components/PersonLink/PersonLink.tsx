@@ -1,5 +1,5 @@
 import React from 'react';
-import { NavLink } from 'react-router-dom';
+import { Link, useLocation, useResolvedPath } from 'react-router-dom';
 
 import classNames from 'classnames';
 
@@ -10,16 +10,19 @@ type Props = {
 };
 
 export const PersonLink: React.FC<Props> = ({ person }) => {
+  const location = useLocation();
+  const parenthPath = useResolvedPath('../').pathname;
   const { slug, name, sex } = person;
 
   return (
-    <NavLink
-      to={`../${slug}`}
-      className={() => (
-        classNames({ 'has-text-danger': sex === 'f' })
-      )}
+    <Link
+      to={{
+        pathname: parenthPath + slug,
+        search: location.search,
+      }}
+      className={classNames({ 'has-text-danger': sex === 'f' })}
     >
       {name}
-    </NavLink>
+    </Link>
   );
 };

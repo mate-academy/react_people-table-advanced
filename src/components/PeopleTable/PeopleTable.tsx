@@ -5,8 +5,7 @@ import { Person } from '../../types';
 import { PersonLink } from '../PersonLink';
 import { getFilteredPeople } from '../../utils/getFilteredPeople';
 import { getSortedPeople } from '../../utils/getSortedPeople';
-import { SortBy } from '../../types/SortBy';
-import { SearchLink } from '../SearchLink';
+import { SortLink } from '../SortLink';
 
 type Props = {
   people: Person[],
@@ -34,39 +33,6 @@ export const PeopleTable: React.FC<Props> = React.memo(
       return <p>There are no people matching the current search criteria</p>;
     }
 
-    const updateSearchParams = (sortBy: SortBy) => {
-      if (!sort || sort !== sortBy) {
-        return ({
-          sort: sortBy,
-          order: null,
-        });
-      }
-
-      if (sort && !isReversed) {
-        return ({
-          sort: sortBy,
-          order: 'desc',
-        });
-      }
-
-      return ({
-        sort: null,
-        order: null,
-      });
-    };
-
-    const handleSortClass = (sortBy: SortBy) => {
-      if (sort === sortBy && !isReversed) {
-        return 'fas fa-sort-up';
-      }
-
-      if (sort === sortBy && isReversed) {
-        return 'fas fa-sort-down';
-      }
-
-      return 'fas fa-sort';
-    };
-
     return (
       <table
         data-cy="peopleTable"
@@ -77,52 +43,28 @@ export const PeopleTable: React.FC<Props> = React.memo(
             <th>
               <span className="is-flex is-flex-wrap-nowrap">
                 Name
-                <SearchLink
-                  params={updateSearchParams(SortBy.Name)}
-                >
-                  <span className="icon">
-                    <i className={handleSortClass(SortBy.Name)} />
-                  </span>
-                </SearchLink>
+                <SortLink sort="name" />
               </span>
             </th>
 
             <th>
               <span className="is-flex is-flex-wrap-nowrap">
                 Sex
-                <SearchLink
-                  params={updateSearchParams(SortBy.Sex)}
-                >
-                  <span className="icon">
-                    <i className={handleSortClass(SortBy.Sex)} />
-                  </span>
-                </SearchLink>
+                <SortLink sort="sex" />
               </span>
             </th>
 
             <th>
               <span className="is-flex is-flex-wrap-nowrap">
                 Born
-                <SearchLink
-                  params={updateSearchParams(SortBy.Born)}
-                >
-                  <span className="icon">
-                    <i className={handleSortClass(SortBy.Born)} />
-                  </span>
-                </SearchLink>
+                <SortLink sort="born" />
               </span>
             </th>
 
             <th>
               <span className="is-flex is-flex-wrap-nowrap">
                 Died
-                <SearchLink
-                  params={updateSearchParams(SortBy.Died)}
-                >
-                  <span className="icon">
-                    <i className={handleSortClass(SortBy.Died)} />
-                  </span>
-                </SearchLink>
+                <SortLink sort="died" />
               </span>
             </th>
             <th>Mother</th>
