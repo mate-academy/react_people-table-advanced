@@ -1,6 +1,6 @@
-import { Person } from '../types';
-import { PeopleFilters } from '../components/PeopleFilters';
-import { PeopleTable } from '../components/PeopleTable';
+import { Person } from '../../types';
+import { PeopleFilters } from '../../components/PeopleFilters';
+import { PeopleTable } from '../../components/Table/PeopleTable';
 
 interface Props {
   noDataOnServer: boolean,

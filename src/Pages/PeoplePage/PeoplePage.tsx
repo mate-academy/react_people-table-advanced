@@ -1,9 +1,9 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
-import { Loader } from '../components/Loader';
-import { Person } from '../types';
-import { getPeople } from '../api';
-import { getFilteredPeople, preparedPeople } from '../utils/dataHelpers';
+import { Loader } from '../../components/Loader';
+import { Person } from '../../types';
+import { getPeople } from '../../api';
+import { getFilteredPeople, preparedPeople } from '../../utils/dataHelpers';
 import { PeoplePageContent } from './PeoplePageContent';
 
 export const PeoplePage = () => {

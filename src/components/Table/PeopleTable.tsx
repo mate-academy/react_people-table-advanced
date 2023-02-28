@@ -1,5 +1,5 @@
 import { useSearchParams } from 'react-router-dom';
-import { Person } from '../types';
+import { Person } from '../../types';
 import { PeopleTableItem } from './PeopleTableItem';
 import { TableLabel } from './TableLabel';
 

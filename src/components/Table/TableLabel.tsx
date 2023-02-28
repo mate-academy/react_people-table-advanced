@@ -1,5 +1,5 @@
 import React from 'react';
-import { getSortParams } from '../utils/sortHelper';
+import { getSortParams } from '../../utils/sortHelper';
 import { SearchLink } from './SearchLink';
 import { TableIcon } from './TableIcon';
 

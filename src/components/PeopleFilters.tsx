@@ -2,7 +2,7 @@ import cn from 'classnames';
 import React from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { getSearchWith } from '../utils/searchHelper';
-import { SearchLink } from './SearchLink';
+import { SearchLink } from './Table/SearchLink';
 
 export const PeopleFilters = React.memo(() => {
   const [searchParams, setSearchParams] = useSearchParams();
