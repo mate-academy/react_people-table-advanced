@@ -5,10 +5,9 @@ import { Person } from '../../types';
 
 interface Props {
   person: Person
-  isSelected: (slug: string) => boolean
 }
 
-export const PersonLink: React.FC<Props> = ({ person, isSelected }) => {
+export const PersonLink: React.FC<Props> = ({ person }) => {
   const { name, sex, slug } = person;
   const location = useLocation();
   const parentPath = useResolvedPath('../').pathname;
@@ -16,7 +15,7 @@ export const PersonLink: React.FC<Props> = ({ person, isSelected }) => {
   return (
     <Link
       to={{
-        pathname: isSelected(person.slug) ? parentPath : parentPath + slug,
+        pathname: parentPath + slug,
         search: location.search,
       }}
       className={classNames({

@@ -75,19 +75,19 @@ export const PeopleTable: React.FC<Peops> = ({ people, personSlug }) => {
               })}
             >
               <td>
-                <PersonLink person={person} isSelected={isSelected} />
+                <PersonLink person={person} />
               </td>
               <td>{sex}</td>
               <td>{born}</td>
               <td>{died}</td>
               <td>
                 {mother
-                  ? <PersonLink person={mother} isSelected={isSelected} />
+                  ? <PersonLink person={mother} />
                   : motherName || '-'}
               </td>
               <td>
                 {father
-                  ? <PersonLink person={father} isSelected={isSelected} />
+                  ? <PersonLink person={father} />
                   : fatherName || '-'}
               </td>
             </tr>
