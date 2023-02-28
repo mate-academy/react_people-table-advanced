@@ -10,8 +10,8 @@ type Props = {
 };
 
 export const SexFilterLink: React.FC<Props> = ({
-  children,
   value,
+  children,
 }) => {
   const [searchParams] = useSearchParams();
   const sex = searchParams.get('sex') || SexFilterType.All;
