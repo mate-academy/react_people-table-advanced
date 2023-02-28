@@ -159,7 +159,7 @@ export const PeoplePage: FC = memo(() => {
                 </p>
               )}
 
-              {!!filteredAndSortedPeople.length && (
+              {!!people.length && (
                 <PeopleTable
                   people={filteredAndSortedPeople}
                   selectedPerson={selectedPerson}

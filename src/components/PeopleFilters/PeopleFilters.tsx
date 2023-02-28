@@ -69,6 +69,7 @@ export const PeopleFilters: FC = memo(() => {
             {centuries.map(century => (
               <SearchLink
                 data-cy="century"
+                key={century}
                 params={{
                   centuries: selectedCenturies.includes(century)
                     ? selectedCenturies.filter(c => c !== century)
