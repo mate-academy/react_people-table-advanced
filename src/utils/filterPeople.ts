@@ -8,7 +8,7 @@ export const filterPeople = (
   sort: string | null,
   order: string | null,
 ) => {
-  let filteredPeople = people;
+  let filteredPeople = [...people];
 
   if (sex) {
     filteredPeople = filteredPeople.filter(person => person.sex === sex);
@@ -32,24 +32,27 @@ export const filterPeople = (
     });
   }
 
-  if (sort !== null) {
+  if (sort) {
     filteredPeople.sort((person1, person2) => {
       switch (sort) {
         case 'name':
         case 'sex':
-          return order === 'desc'
-            ? person2[sort].localeCompare(person1[sort])
-            : person1[sort].localeCompare(person2[sort]);
+          return person1[sort].localeCompare(person2[sort]);
         case 'born':
         case 'died':
-          return order === 'desc'
-            ? person2[sort] - person1[sort]
-            : person1[sort] - person2[sort];
+          return person1[sort] - person2[sort];
         default:
           return 0;
       }
     });
   }
+
+  if (order) {
+    filteredPeople.reverse();
+  }
+
+  // eslint-disable-next-line no-console
+  console.log('filterd');
 
   return filteredPeople;
 };
