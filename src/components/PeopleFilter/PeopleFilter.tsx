@@ -17,12 +17,10 @@ export const PeopleFilter = () => {
   const handleQueryChange = useCallback((
     event: ChangeEvent<HTMLInputElement>,
   ) => {
-    const value = event.target.value.trimStart();
-    const newQuery = !value ? null : value;
+    const newQuery = event.target.value.trimStart() || null;
+    const newSearch = getSearchWith(searchParams, { query: newQuery });
 
-    setSearchParams(
-      getSearchWith(searchParams, { query: newQuery }),
-    );
+    setSearchParams(newSearch);
   }, []);
 
   return (

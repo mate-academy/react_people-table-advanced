@@ -10,11 +10,11 @@ export const Navbar: React.FC = React.memo(() => (
   >
     <div className="container">
       <div className="navbar-brand">
-        <NavbarLink to="/">
+        <NavbarLink pathname="/">
           Home
         </NavbarLink>
 
-        <NavbarLink to="/people" preserveParams>
+        <NavbarLink pathname="/people" preserveParams>
           People
         </NavbarLink>
       </div>

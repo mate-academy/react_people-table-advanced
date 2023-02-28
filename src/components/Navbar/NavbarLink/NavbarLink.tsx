@@ -1,25 +1,25 @@
 import React from 'react';
 import classNames from 'classnames';
-import { NavLink, useSearchParams } from 'react-router-dom';
+import { NavLink, useLocation } from 'react-router-dom';
 
 type Props = {
-  to: string,
+  pathname: string,
   preserveParams?: boolean,
   children?: React.ReactNode,
 };
 
 export const NavbarLink: React.FC<Props> = React.memo(({
-  to,
+  pathname,
   preserveParams = false,
   children,
 }) => {
-  const [searchParams] = useSearchParams();
-  const search = preserveParams ? searchParams.toString() : '';
+  const location = useLocation();
+  const search = preserveParams ? location.search : '';
 
   return (
     <NavLink
       to={{
-        pathname: to,
+        pathname,
         search,
       }}
       className={({ isActive }) => (

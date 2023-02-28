@@ -35,11 +35,15 @@ export const getFilteredPeople = (
     const regex = new RegExp(query, 'i');
 
     filteredPeople = filteredPeople
-      .filter(({ name, fatherName, motherName }) => (
-        regex.test(
-          `${name} ${fatherName || ''} ${motherName || ''}`,
-        )
-      ));
+      .filter(({ name, fatherName, motherName }) => {
+        const testString = `
+          ${name}
+          ${fatherName || ''}
+          ${motherName || ''}
+        `;
+
+        return regex.test(testString);
+      });
   }
 
   return filteredPeople;

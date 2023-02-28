@@ -15,8 +15,8 @@ export const PersonRow: React.FC<Props> = React.memo(({
     sex, born, died, motherName, fatherName, mother, father,
   } = person;
 
-  const formattedMotherName = !motherName ? '-' : motherName;
-  const formattedFatherName = !fatherName ? '-' : fatherName;
+  const displayedMotherName = !motherName ? '-' : motherName;
+  const displayedFatherName = !fatherName ? '-' : fatherName;
 
   return (
     <tr
@@ -34,12 +34,12 @@ export const PersonRow: React.FC<Props> = React.memo(({
       <td>{died}</td>
       <td>
         {!mother
-          ? formattedMotherName
+          ? displayedMotherName
           : <PersonLink person={mother} />}
       </td>
       <td>
         {!father
-          ? formattedFatherName
+          ? displayedFatherName
           : <PersonLink person={father} />}
       </td>
     </tr>

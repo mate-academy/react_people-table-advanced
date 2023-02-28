@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import {useParams, useSearchParams} from 'react-router-dom';
 import { Person } from '../../types';
 import { SortLink } from '../SortLink';
 import { getFilteredPeople, getSortedPeople } from '../../utils';
@@ -7,13 +7,12 @@ import { PersonRow } from './PersonRow';
 
 type Props = {
   people: Person[],
-  selectedPersonSlug: string
 };
 
 export const PeopleTable: React.FC<Props> = ({
   people,
-  selectedPersonSlug,
 }) => {
+  const { person: selectedPersonSlug = '' } = useParams();
   const [searchParams] = useSearchParams();
   const sortBy = searchParams.get('sort') as keyof Person;
   const isReversed = searchParams.get('order') === 'desc';

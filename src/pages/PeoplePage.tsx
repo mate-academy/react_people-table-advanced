@@ -1,13 +1,10 @@
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
 import { Person } from '../types';
 import { getPeople } from '../api';
 import { Loader, PeopleFilter, PeopleTable } from '../components';
 import { getPreparedPeople } from '../utils/getPreparedPeople';
 
 export const PeoplePage = () => {
-  const { person: selectedPersonSlug = '' } = useParams();
-
   const [people, setPeople] = useState<Person[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
@@ -59,7 +56,6 @@ export const PeoplePage = () => {
                     {isTableVisible && (
                       <PeopleTable
                         people={people}
-                        selectedPersonSlug={selectedPersonSlug}
                       />
                     )}
 
