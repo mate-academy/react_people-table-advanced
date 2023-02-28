@@ -14,7 +14,6 @@ export function getSearchWith(
   const newParams = new URLSearchParams(
     currentParams.toString(),
   );
-
   // Here is the example of paramsToUpdate
   // {
   //   sex: 'm',                ['sex', 'm']
