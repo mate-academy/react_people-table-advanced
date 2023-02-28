@@ -1,6 +1,5 @@
 import React from 'react';
-import { NavLink } from 'react-router-dom';
-import classNames from 'classnames';
+import { PageLink } from '../PageLink';
 
 export const NavBar: React.FC = React.memo(() => (
   <nav
@@ -11,21 +10,8 @@ export const NavBar: React.FC = React.memo(() => (
   >
     <div className="container">
       <div className="navbar-brand">
-        <NavLink
-          className={({ isActive }) => classNames('navbar-item',
-            { 'has-background-grey-lighter': isActive })}
-          to="/"
-        >
-          Home
-        </NavLink>
-
-        <NavLink
-          className={({ isActive }) => classNames('navbar-item',
-            { 'has-background-grey-lighter': isActive })}
-          to="/people"
-        >
-          People
-        </NavLink>
+        <PageLink to='/' text='Home' />
+        <PageLink to='/people' text='People' />
       </div>
     </div>
   </nav>
