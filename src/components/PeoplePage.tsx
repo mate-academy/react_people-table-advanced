@@ -121,7 +121,7 @@ export const PeoplePage = () => {
   const getAllCenturies = (peopleArray: Person[]) => {
     const centuries: string[] = [];
 
-    peopleArray.map((person) => {
+    peopleArray.forEach((person) => {
       return centuries.push(String(Math.ceil(person.born / 100)));
     });
 
