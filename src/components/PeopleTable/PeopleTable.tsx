@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import {useParams, useSearchParams} from 'react-router-dom';
+import { useParams, useSearchParams } from 'react-router-dom';
 import { Person } from '../../types';
 import { SortLink } from '../SortLink';
 import { getFilteredPeople, getSortedPeople } from '../../utils';
