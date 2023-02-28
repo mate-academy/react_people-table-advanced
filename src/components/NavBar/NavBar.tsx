@@ -2,7 +2,7 @@ import React from 'react';
 import { NavLink } from 'react-router-dom';
 import classNames from 'classnames';
 
-export const NavBar: React.FC = () => (
+export const NavBar: React.FC = React.memo(() => (
   <nav
     data-cy="nav"
     className="navbar is-fixed-top has-shadow"
@@ -29,4 +29,4 @@ export const NavBar: React.FC = () => (
       </div>
     </div>
   </nav>
-);
+));

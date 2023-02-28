@@ -6,50 +6,48 @@ import { Person } from '../../types/Person';
 type Props = {
   person: Person;
   selectedPerson: string;
-  mother: Person | null;
-  father: Person | null;
 };
 
-export const PersonLink: React.FC<Props> = ({
-  person,
-  selectedPerson,
-  mother,
-  father,
-}) => {
-  const {
-    name,
-    sex,
-    born,
-    died,
-    motherName,
-    fatherName,
-    slug,
-  } = person;
+export const PersonLink: React.FC<Props> = React.memo(
+  ({ person, selectedPerson }) => {
+    const {
+      name,
+      sex,
+      born,
+      died,
+      motherName,
+      fatherName,
+      slug,
+      mother,
+      father,
+    } = person;
 
-  return (
-    <tr
-      data-cy="person"
-      className={classNames({
-        'has-background-warning': slug === selectedPerson,
-      })}
-    >
-      <td>
-        <Link
-          to={`/people/${slug}`}
-          className={classNames({
-            'has-text-danger': sex === 'f',
-          })}
-        >
-          {name}
-        </Link>
-      </td>
+    const motherInfo = motherName || '-';
+    const fatherInfo = fatherName || '-';
 
-      <td>{sex}</td>
-      <td>{born}</td>
-      <td>{died}</td>
-      <td>
-        {mother
-          ? (
+    return (
+      <tr
+        data-cy="person"
+        className={classNames({
+          'has-background-warning': slug === selectedPerson,
+        })}
+      >
+        <td>
+          <Link
+            to={`/people/${slug}`}
+            className={classNames({
+              'has-text-danger': sex === 'f',
+            })}
+          >
+            {name}
+          </Link>
+        </td>
+
+        <td>{sex}</td>
+        <td>{born}</td>
+        <td>{died}</td>
+        <td>
+          {mother ? (
             <Link
               to={`/people/${mother.slug}`}
               className={classNames({
@@ -58,15 +56,18 @@ export const PersonLink: React.FC<Props> = ({
             >
               {mother.name}
             </Link>
-          )
-          : (motherName || '-')}
-      </td>
-
-      <td>
-        {father
-          ? <Link to={`/people/${father.slug}`}>{father.name}</Link>
-          : (fatherName || '-')}
-      </td>
-    </tr>
-  );
-};
+          ) : (
+            motherInfo
+          )}
+        </td>
+        <td>
+          {father ? (
+            <Link to={`/people/${father.slug}`}>{father.name}</Link>
+          ) : (
+            fatherInfo
+          )}
+        </td>
+      </tr>
+    );
+  },
+);

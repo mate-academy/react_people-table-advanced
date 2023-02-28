@@ -8,12 +8,15 @@ interface Props {
   selectedPerson: string;
 }
 
-export const PeopleTable: React.FC<Props> = ({ people, selectedPerson }) => {
+export const PeopleTable: React.FC<Props> = React.memo(({
+  people,
+  selectedPerson,
+}) => {
   const sortingFields = ['Name', 'Sex', 'Born', 'Died'];
 
-  const findParent = (name: string | null) => {
-    return people.find((person) => person.name === name) || null;
-  };
+  if (!people.length) {
+    return <p>There are no people matching the current search criteria</p>;
+  }
 
   return (
     <table
@@ -22,30 +25,23 @@ export const PeopleTable: React.FC<Props> = ({ people, selectedPerson }) => {
     >
       <thead>
         <tr>
-          {sortingFields.map(field =>
-              <SortLink field={field} key={field} />
-          )}
+          {sortingFields.map((field) => (
+            <SortLink field={field} key={field} />
+          ))}
           <th>Mother</th>
           <th>Father</th>
         </tr>
       </thead>
 
       <tbody>
-        {people.map((person) => {
-          const mother = findParent(person.motherName);
-          const father = findParent(person.fatherName);
-
-          return (
-            <PersonLink
-              person={person}
-              key={person.slug}
-              selectedPerson={selectedPerson}
-              mother={mother}
-              father={father}
-            />
-          );
-        })}
+        {people.map((person) => (
+          <PersonLink
+            person={person}
+            key={person.slug}
+            selectedPerson={selectedPerson}
+          />
+        ))}
       </tbody>
     </table>
   );
-};
+});

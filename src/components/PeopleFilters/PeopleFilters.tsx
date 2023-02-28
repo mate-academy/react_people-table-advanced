@@ -1,12 +1,13 @@
 import React from 'react';
 import { useSearchParams } from 'react-router-dom';
+import classNames from 'classnames';
 import { getSearchWith } from '../../utils/searchHelper';
 import { SearchLink } from '../SearchLink';
-import classNames from 'classnames';
+import { toggleCenturies } from '../../utils/toggleCenturies';
 
 const centuriesList = ['16', '17', '18', '19', '20'];
 
-export const PeopleFilters: React.FC = () => {
+export const PeopleFilters: React.FC = React.memo(() => {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const sex = searchParams.get('sex') || '';
@@ -16,13 +17,13 @@ export const PeopleFilters: React.FC = () => {
   const onQueryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchParams(getSearchWith(searchParams,
       { query: event.target.value || null }));
-  }
+  };
 
   const defaultSearchParams = {
     sex: null,
     query: null,
     centuries: null,
-  }
+  };
 
   return (
     <nav className="panel">
@@ -30,20 +31,20 @@ export const PeopleFilters: React.FC = () => {
 
       <p className="panel-tabs" data-cy="SexFilter">
         <SearchLink
-          className={classNames({ "is-active": !sex })}
+          className={classNames({ 'is-active': !sex })}
           params={{ sex: null }}
         >
           All
         </SearchLink>
         <SearchLink
-          className={classNames({ "is-active": sex === "m" })}
-          params={{ sex: "m" }}
+          className={classNames({ 'is-active': sex === 'm' })}
+          params={{ sex: 'm' }}
         >
           Male
         </SearchLink>
         <SearchLink
-          className={classNames({ "is-active": sex === "f" })}
-          params={{ sex: "f" }}
+          className={classNames({ 'is-active': sex === 'f' })}
+          params={{ sex: 'f' }}
         >
           Female
         </SearchLink>
@@ -73,13 +74,11 @@ export const PeopleFilters: React.FC = () => {
               <SearchLink
                 key={century}
                 data-cy="century"
-                className={classNames("button mr-1", {
-                  "is-info": centuries.includes(century),
+                className={classNames('button mr-1', {
+                  'is-info': centuries.includes(century),
                 })}
                 params={{
-                  centuries: centuries.includes(century)
-                    ? centuries.filter((selectedCentury) => selectedCentury !== century)
-                    : [...centuries, century],
+                  centuries: toggleCenturies(centuries, century),
                 }}
               >
                 {century}
@@ -111,4 +110,4 @@ export const PeopleFilters: React.FC = () => {
       </div>
     </nav>
   );
-};
+});

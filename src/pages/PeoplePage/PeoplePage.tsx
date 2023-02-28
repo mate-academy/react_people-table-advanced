@@ -6,35 +6,38 @@ import { getPeople } from '../../api';
 import { PeopleTable } from '../../components/PeopleTable';
 import { PeopleFilters } from '../../components/PeopleFilters';
 import { filterPeople } from '../../utils/filterPeople';
+import { extendPeople } from '../../utils/extendPeople';
 
-export const PeoplePage: React.FC = () => {
+export const PeoplePage: React.FC = React.memo(() => {
   const [people, setPeople] = useState<Person[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [isError, setIsError] = useState(false);
+  const [isFetchError, setIsFetchError] = useState(false);
 
   const { slug = '' } = useParams();
   const [searchParams] = useSearchParams();
 
-  const isServerEmpty = people.length === 0 && !isLoading && !isError;
-  const isDataLoaded = people.length > 0 && !isLoading && !isError;
+  const isServerEmpty = people.length === 0 && !isLoading && !isFetchError;
+  const isDataLoaded = people.length > 0 && !isLoading && !isFetchError;
 
   const filterParameters = {
-    sex: searchParams.get("sex") || "",
-    query: searchParams.get("query") || '',
-    centuries: searchParams.getAll("centuries") || [],
-    sort: searchParams.get("sort") || '',
-    order: searchParams.get("order") || '',
+    sex: searchParams.get('sex') || '',
+    query: searchParams.get('query') || '',
+    centuries: searchParams.getAll('centuries') || [],
+    sort: searchParams.get('sort') || '',
+    order: searchParams.get('order') || '',
     people,
-  }
+  };
 
   const loadPeopleFromServer = async () => {
     try {
       const loadedPeople = await getPeople();
 
-      setPeople(loadedPeople);
+      const peopleExtended = extendPeople(loadedPeople);
+
+      setPeople(peopleExtended);
       setIsLoading(false);
     } catch {
-      setIsError(true);
+      setIsFetchError(true);
     } finally {
       setIsLoading(false);
     }
@@ -53,7 +56,7 @@ export const PeoplePage: React.FC = () => {
       <h1 className="title">People Page</h1>
       {isLoading && <Loader />}
 
-      {isError && (
+      {isFetchError && (
         <p data-cy="peopleLoadingError" className="has-text-danger">
           Something went wrong
         </p>
@@ -82,4 +85,4 @@ export const PeoplePage: React.FC = () => {
       )}
     </>
   );
-};
+});
