@@ -8,38 +8,38 @@ import { PeopleTable } from './PeopleTable';
 import { Person } from '../types';
 import { getPeople } from '../api';
 
-type PageState =
-  | 'loading'
-  | 'error'
-  | 'nothingFound'
-  | 'changeFilter'
-  | 'showTable';
+enum PageState {
+  loading = 'Loading',
+  error = 'error',
+  nothingFound = 'nothingFound',
+  changeFilter = 'changeFilter',
+  showTable = 'showTable',
+}
 
 export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>();
   const [filteredList, setFilteredList] = useState<Person[]>();
-  const [pageState, setPageState] = useState<PageState>('loading');
+  const [pageState, setPageState] = useState<PageState>(PageState.loading);
   const [urlSlug, setUrlSlug] = useState<string>();
   const [searchParams, setSearchParams] = useSearchParams();
+  const [centuriesList, setCenturiesList] = useState<string[] | []>([]);
 
   const { slug } = useParams();
 
-  // Here it'll take the response from API and add father and mother to
-  // each person, if they exist...
   const addMotherAndFather = (response: Person[]): Person[] => {
     const peopleList = response.map((person) => {
-      const findMother = person.motherName
-        ? response.filter((p) => p.name === person.motherName)[0]
+      const personMother = person.motherName
+        ? response.find((p) => p.name === person.motherName)
         : null;
 
-      const findFather = person.fatherName
-        ? response.filter((p) => p.name === person.fatherName)[0]
+      const personFather = person.fatherName
+        ? response.find((p) => p.name === person.fatherName)
         : null;
 
       return {
         ...person,
-        ...(findFather && { father: findFather }),
-        ...(findMother && { mother: findMother }),
+        ...{ father: personFather },
+        ...{ mother: personMother },
       };
     });
 
@@ -87,6 +87,7 @@ export const PeoplePage = () => {
     const sortBy = params.get('sort');
     const orderBy = params.get('order');
     const sortByText = sortBy === 'name' || sortBy === 'sex';
+    const sortByInteger = sortBy === 'born' || sortBy === 'died';
 
     if (sortBy && orderBy === 'desc') {
       setFilteredList((current) => current?.sort((a: Person, b: Person) => {
@@ -94,7 +95,7 @@ export const PeoplePage = () => {
           return a[sortBy].localeCompare(b[sortBy]);
         }
 
-        if (sortBy === 'born' || sortBy === 'died') {
+        if (sortByInteger) {
           return a[sortBy] - b[sortBy];
         }
 
@@ -117,6 +118,16 @@ export const PeoplePage = () => {
     }
   };
 
+  const getAllCenturies = (peopleArray: Person[]) => {
+    const centuries: string[] = [];
+
+    peopleArray.map((person) => {
+      return centuries.push(String(Math.ceil(person.born / 100)));
+    });
+
+    return [...new Set(centuries)];
+  };
+
   useEffect(() => {
     getPeople()
       .then((response) => response)
@@ -125,29 +136,25 @@ export const PeoplePage = () => {
 
         setPeople(improvedList);
         setFilteredList(improvedList);
+        setCenturiesList(getAllCenturies(result));
 
         if (result.length) {
-          setPageState('showTable');
+          setPageState(PageState.showTable);
         } else {
-          setPageState('nothingFound');
+          setPageState(PageState.nothingFound);
         }
       })
-      .catch(() => setPageState('error'));
+      .catch(() => setPageState(PageState.error));
   }, []);
 
   useEffect(() => {
     filter(searchParams);
     sort(searchParams);
-  }, [people]);
+  }, [people, searchParams]);
 
   useEffect(() => {
     setUrlSlug(slug);
   }, [slug]);
-
-  useEffect(() => {
-    filter(searchParams);
-    sort(searchParams);
-  }, [searchParams]);
 
   return (
     <>
@@ -155,12 +162,13 @@ export const PeoplePage = () => {
 
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
-          {pageState === 'showTable' && (
+          {pageState === PageState.showTable && (
             <div className="column is-7-tablet is-narrow-desktop">
               <PeopleFilters
                 urlSlug={urlSlug}
                 searchParams={searchParams}
                 setSearchParams={setSearchParams}
+                centuriesList={centuriesList}
               />
             </div>
           )}
@@ -169,22 +177,22 @@ export const PeoplePage = () => {
             <div className="box table-container">
               {(() => {
                 switch (pageState) {
-                  case 'loading':
+                  case PageState.loading:
                     return <Loader />;
 
-                  case 'error':
+                  case PageState.error:
                     return (
                       <p data-cy="peopleLoadingError">Something went wrong</p>
                     );
 
-                  case 'nothingFound':
+                  case PageState.nothingFound:
                     return (
                       <p data-cy="noPeopleMessage">
                         There are no people on the server
                       </p>
                     );
 
-                  case 'changeFilter':
+                  case PageState.changeFilter:
                     return (
                       <p>
                         There are no people matching the current search criteria

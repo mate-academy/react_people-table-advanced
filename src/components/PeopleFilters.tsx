@@ -7,13 +7,13 @@ type Props = {
   urlSlug: string | undefined;
   searchParams: URLSearchParams;
   setSearchParams: (value: string) => void;
+  centuriesList: string[] | [];
 };
-
-const centuriesList: string[] = ['16', '17', '18', '19', '20'];
 
 export const PeopleFilters: React.FC<Props> = ({
   searchParams,
   setSearchParams,
+  centuriesList,
 }) => {
   const [searchInput, setSearchInput] = useState('');
 
