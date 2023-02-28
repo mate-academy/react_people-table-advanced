@@ -1,5 +1,7 @@
-export const Navbar = () => {
-  return (
+import { FC } from "react";
+import { PageNavLink } from "./PageNavLink";
+
+export const Navbar: FC = () => (
     <nav
       data-cy="nav"
       className="navbar is-fixed-top has-shadow"
@@ -8,17 +10,14 @@ export const Navbar = () => {
     >
       <div className="container">
         <div className="navbar-brand">
-          <a className="navbar-item" href="#/">Home</a>
+          <PageNavLink  to='/' text="Home" />
 
-          <a
+          <PageNavLink
             aria-current="page"
-            className="navbar-item has-background-grey-lighter"
-            href="#/people"
-          >
-            People
-          </a>
+            to='/people'
+            text="People"
+          />
         </div>
       </div>
     </nav>
   );
-};
