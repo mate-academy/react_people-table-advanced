@@ -4,6 +4,9 @@ import { useParams, useSearchParams } from 'react-router-dom';
 import { Person } from '../../types';
 import { PersonLink } from '../PersonLink';
 import { SearchLink } from '../SearchLink';
+import { getSortedPeople } from '../../utils/getSortedPeople';
+import { SortTypes } from '../../types/SortTypes';
+import { SortIcon } from '../SortIcon';
 
 type Props = {
   people: Person[]
@@ -17,8 +20,8 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
 
   const visiblePeople = [...people];
 
-  const getParamsWithSort = (sortBy: string) => {
-    if (sort !== sortBy) {
+  const getParamsWithSort = (sortBy: SortTypes) => {
+    if (sort as SortTypes !== sortBy) {
       return { sort: sortBy, order: null };
     }
 
@@ -29,28 +32,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
     return { sort: null, order: null };
   };
 
-  if (sort) {
-    visiblePeople.sort(
-      (a, b) => {
-        switch (sort) {
-          case 'name':
-          case 'sex':
-            return a[sort].localeCompare(b[sort]);
-
-          case 'born':
-          case 'died':
-            return a.born - b.born;
-
-          default:
-            return 0;
-        }
-      },
-    );
-  }
-
-  if (isReversed) {
-    visiblePeople.reverse();
-  }
+  getSortedPeople(visiblePeople, sort as SortTypes, isReversed);
 
   return (
     <table
@@ -59,82 +41,22 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
     >
       <thead>
         <tr>
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Name
-              <SearchLink
-                params={getParamsWithSort('name')}
-              >
-                <span className="icon">
-                  <i
-                    className={cn('fas', {
-                      'fa-sort': sort !== 'name',
-                      'fa-sort-up': sort === 'name' && !isReversed,
-                      'fa-sort-down': sort === 'name' && isReversed,
-                    })}
+          {Object.entries(SortTypes).map(([key, value]) => (
+            <th>
+              <span className="is-flex is-flex-wrap-nowrap">
+                {key}
+                <SearchLink
+                  params={getParamsWithSort(value)}
+                >
+                  <SortIcon
+                    sort={sort}
+                    isReversed={isReversed}
+                    sortType={value}
                   />
-                </span>
-              </SearchLink>
-            </span>
-          </th>
-
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Sex
-              <SearchLink
-                params={getParamsWithSort('sex')}
-              >
-                <span className="icon">
-                  <i
-                    className={cn('fas', {
-                      'fa-sort': sort !== 'sex',
-                      'fa-sort-up': sort === 'sex' && !isReversed,
-                      'fa-sort-down': sort === 'sex' && isReversed,
-                    })}
-                  />
-                </span>
-              </SearchLink>
-            </span>
-          </th>
-
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Born
-              <SearchLink
-                params={getParamsWithSort('born')}
-              >
-                <span className="icon">
-                  <i
-                    className={cn('fas', {
-                      'fa-sort': sort !== 'born',
-                      'fa-sort-up': sort === 'born' && !isReversed,
-                      'fa-sort-down': sort === 'born' && isReversed,
-                    })}
-                  />
-                </span>
-              </SearchLink>
-            </span>
-          </th>
-
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Died
-              <SearchLink
-                params={getParamsWithSort('died')}
-              >
-                <span className="icon">
-                  <i
-                    className={cn('fas', {
-                      'fa-sort': sort !== 'died',
-                      'fa-sort-up': sort === 'died' && !isReversed,
-                      'fa-sort-down': sort === 'died' && isReversed,
-                    })}
-                  />
-                </span>
-              </SearchLink>
-            </span>
-          </th>
-
+                </SearchLink>
+              </span>
+            </th>
+          ))}
           <th>Mother</th>
 
           <th>Father</th>

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import cn from 'classnames';
 import { useSearchParams } from 'react-router-dom';
 import { Person } from '../types';
@@ -7,19 +7,21 @@ import { PeopleTable } from '../components/PeopleTable';
 import { Loader } from '../components/Loader';
 import { prepareDataFromServer } from '../utils/prepereDataFromServer';
 import { PeopleFilters } from '../components/PeopleFilter';
+import { getFilteredPeople } from '../utils/getFilteredPeople';
 
 export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);
   const [isError, setIsError] = useState(false);
   const [isPeopleLoading, setIsPeopleLoading] = useState(true);
-  let visiblePeople = [...people];
 
   const [searchParams] = useSearchParams();
   const query = searchParams.get('query') || '';
   const centuries = searchParams.getAll('centuries') || [];
-  const sex = searchParams.get('sex');
+  const sex = searchParams.get('sex') || '';
 
-  const getPeopleFromServer = async () => {
+  const visiblePeople = getFilteredPeople([...people], query, sex, centuries);
+
+  const getPeopleFromServer = useCallback(async () => {
     try {
       setIsPeopleLoading(true);
 
@@ -31,47 +33,11 @@ export const PeoplePage = () => {
       setIsError(true);
       setIsPeopleLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
     getPeopleFromServer();
   }, []);
-
-  function centuryFromYear(year: number) {
-    return Math.floor((year + 99) / 100);
-  }
-
-  if (query) {
-    visiblePeople = visiblePeople.filter(person => {
-      const queryValue = query.toLowerCase();
-      const dataToSearch = (person.name
-        + person.motherName + person.fatherName).toLowerCase();
-
-      if (dataToSearch.includes(queryValue)) {
-        return person;
-      }
-
-      return null;
-    });
-  }
-
-  if (centuries.length) {
-    visiblePeople = visiblePeople.filter(person => {
-      const personCenturie = centuryFromYear(person.died);
-
-      if (centuries.find(c => +c === personCenturie)) {
-        return person;
-      }
-
-      return null;
-    });
-  }
-
-  if (sex) {
-    visiblePeople = visiblePeople.filter(person => (
-      person.sex === sex
-    ));
-  }
 
   return (
     <>
