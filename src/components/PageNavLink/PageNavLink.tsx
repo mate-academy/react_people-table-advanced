@@ -1,5 +1,5 @@
+import React, { memo } from 'react';
 import classNames from 'classnames';
-import { memo } from 'react';
 import { NavLink } from 'react-router-dom';
 
 type Props = {

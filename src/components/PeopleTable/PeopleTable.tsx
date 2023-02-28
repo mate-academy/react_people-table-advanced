@@ -1,5 +1,5 @@
 import { memo, useMemo } from 'react';
-import { useParams, useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import classNames from 'classnames';
 import { Person } from '../../types';
 import { SearchLink } from '../SearchLink';
@@ -10,15 +10,15 @@ import { PersonLink } from '../PersonLink';
 
 interface Props {
   people: Person[],
+  personSlug: string,
 }
 
-export const PeopleTable: React.FC<Props> = memo(({ people }) => {
+export const PeopleTable: React.FC<Props> = memo(({ people, personSlug }) => {
   const [searchParams] = useSearchParams();
-  const { selectedSlug = '' } = useParams();
+  const query = searchParams.get('query') || '';
 
   const sort = searchParams.get('sort') as keyof Person;
   const isReversed = searchParams.get('order') === 'desc';
-  const query = searchParams.get('query') || '';
   const sexFilter = searchParams.get('sex') || null;
   const centuries = searchParams.getAll('centuries');
 
@@ -150,7 +150,7 @@ export const PeopleTable: React.FC<Props> = memo(({ people }) => {
             slug,
           } = person;
 
-          // const hasSelected = slug === selectedSlug;
+          const hasSelected = slug === personSlug;
           const selectedMother = people.find(mom => mom.name === motherName);
           const selectedFather = people.find(dad => dad.name === fatherName);
 
@@ -158,9 +158,7 @@ export const PeopleTable: React.FC<Props> = memo(({ people }) => {
             <tr
               data-cy="person"
               key={slug}
-              className={classNames({
-                'has-background-warning': slug === selectedSlug,
-              })}
+              className={classNames({ 'has-background-warning': hasSelected })}
             >
               <td>
                 <PersonLink person={person} />

@@ -4,6 +4,7 @@ import React, {
   useEffect,
   useState,
 } from 'react';
+import { useParams } from 'react-router-dom';
 import { PeopleFilters } from '../components/PeopleFilters';
 import { getPeople } from '../api';
 import { Person } from '../types';
@@ -15,6 +16,7 @@ export const PeoplePage:React.FC = memo(() => {
   const [hasError, setHasError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isFetched, setIsFetched] = useState(false);
+  const { personSlug = '' } = useParams();
 
   const isTableVisible = isFetched && people.length;
   const isTableEmpty = isFetched && !people.length;
@@ -64,7 +66,10 @@ export const PeoplePage:React.FC = memo(() => {
                 </p>
               )}
 
-              <PeopleTable people={people} />
+              <PeopleTable
+                people={people}
+                personSlug={personSlug}
+              />
             </div>
           </div>
         </div>
