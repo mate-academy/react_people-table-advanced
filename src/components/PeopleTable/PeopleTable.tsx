@@ -2,8 +2,7 @@ import classNames from 'classnames';
 import { FC, useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Person } from '../../types';
-import { getFiltredPeople } from '../../utils/getFiltredPeople';
-import { getSortedPeople } from '../../utils/getSortedPeople';
+import { getVisiblePeople } from '../../utils/getVisiblePeople';
 import { PersonNavLink } from '../PersonNavLink';
 import { SortLink } from '../SortLink';
 
@@ -20,13 +19,9 @@ export const PeopleTable: FC<Props> = ({ people, selectedSlug }) => {
   const sort = searchParams.get('sort') as keyof Person;
   const isReversed = searchParams.get('order') === 'desc';
 
-  let preparedPeople = useMemo(() => (
-    getFiltredPeople(people, centuries, sexFilter, query)
-  ), [people, centuries, sexFilter, query]);
-
-  preparedPeople = useMemo(() => (
-    getSortedPeople(preparedPeople, sort, isReversed)
-  ), [preparedPeople, sort, isReversed]);
+  const preparedPeople = useMemo(() => (
+    getVisiblePeople(people, centuries, sexFilter, query, sort, isReversed)
+  ), [people, centuries, sexFilter, query, sort, isReversed]);
 
   if (preparedPeople.length === 0) {
     return (
@@ -75,9 +70,8 @@ export const PeopleTable: FC<Props> = ({ people, selectedSlug }) => {
       </thead>
 
       <tbody>
-        {preparedPeople?.map(person => {
+        {preparedPeople.map(person => {
           const {
-            name,
             sex,
             born,
             died,
@@ -99,11 +93,7 @@ export const PeopleTable: FC<Props> = ({ people, selectedSlug }) => {
               className={classNames({ 'has-background-warning': isSelected })}
             >
               <td>
-                <PersonNavLink
-                  name={name}
-                  sex={sex}
-                  slug={slug}
-                />
+                <PersonNavLink person={person} />
               </td>
               <td>{sex}</td>
               <td>{born}</td>
@@ -111,11 +101,7 @@ export const PeopleTable: FC<Props> = ({ people, selectedSlug }) => {
               <td>
                 {mother
                   ? (
-                    <PersonNavLink
-                      name={mother.name}
-                      sex={mother.sex}
-                      slug={mother.slug}
-                    />
+                    <PersonNavLink person={mother} />
                   ) : (
                     motherNameCell
                   )}
@@ -123,11 +109,7 @@ export const PeopleTable: FC<Props> = ({ people, selectedSlug }) => {
               <td>
                 {father
                   ? (
-                    <PersonNavLink
-                      name={father.name}
-                      sex={father.sex}
-                      slug={father.slug}
-                    />
+                    <PersonNavLink person={father} />
                   ) : (
                     fatherNameCell
                   )}

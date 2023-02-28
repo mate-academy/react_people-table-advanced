@@ -2,18 +2,21 @@ import classNames from 'classnames';
 import { FC } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { getSearchWith } from '../../utils/searchHelper';
+import { SexSearchLink } from '../SexSearchLink';
 
 export const PeopleFilters: FC = () => {
+  const avaibleCenturies = ['16', '17', '18', '19', '20'];
   const [searchParams, setSearchParams] = useSearchParams();
   const centuries = searchParams.getAll('centuries') || [];
-  const sex = searchParams.get('sex') || null;
   const query = searchParams.get('query') || '';
 
   const onQueryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const currentValue = event.target.value.trimStart() || null;
+
     setSearchParams(
       getSearchWith(
         searchParams,
-        { query: event.target.value || null },
+        { query: currentValue },
       ),
     );
   };
@@ -24,39 +27,9 @@ export const PeopleFilters: FC = () => {
         <p className="panel-heading">Filters</p>
 
         <p className="panel-tabs" data-cy="SexFilter">
-          <Link
-            to={{
-              search: getSearchWith(
-                searchParams,
-                { sex: null },
-              ),
-            }}
-            className={classNames({ 'is-active': sex === null })}
-          >
-            All
-          </Link>
-          <Link
-            to={{
-              search: getSearchWith(
-                searchParams,
-                { sex: 'm' },
-              ),
-            }}
-            className={classNames({ 'is-active': sex === 'm' })}
-          >
-            Male
-          </Link>
-          <Link
-            to={{
-              search: getSearchWith(
-                searchParams,
-                { sex: 'f' },
-              ),
-            }}
-            className={classNames({ 'is-active': sex === 'f' })}
-          >
-            Female
-          </Link>
+          <SexSearchLink sex={null} text="All" />
+          <SexSearchLink sex="m" text="Male" />
+          <SexSearchLink sex="f" text="Female" />
         </p>
 
         <div className="panel-block">
@@ -67,7 +40,7 @@ export const PeopleFilters: FC = () => {
               className="input"
               placeholder="Search"
               value={query}
-              onChange={(event) => onQueryChange(event)}
+              onChange={onQueryChange}
             />
 
             <span className="icon is-left">
@@ -82,7 +55,7 @@ export const PeopleFilters: FC = () => {
             data-cy="CenturyFilter"
           >
             <div className="level-left">
-              {['16', '17', '18', '19', '20'].map(century => (
+              {avaibleCenturies.map(century => (
                 <Link
                   to={{
                     search: getSearchWith(

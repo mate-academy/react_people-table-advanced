@@ -1,16 +1,16 @@
 import classNames from 'classnames';
 import { FC } from 'react';
 import { Link, useLocation, useResolvedPath } from 'react-router-dom';
+import { Person } from '../../types';
 
 type Props = {
-  name: string,
-  sex: string,
-  slug: string,
+  person: Person,
 };
 
-export const PersonNavLink: FC<Props> = ({ name, sex, slug }) => {
+export const PersonNavLink: FC<Props> = ({ person }) => {
   const location = useLocation();
   const parentPath = useResolvedPath('../').pathname;
+  const { name, slug, sex } = person;
 
   return (
     <Link

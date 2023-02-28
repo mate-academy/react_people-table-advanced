@@ -2,7 +2,7 @@ import { useLocation } from 'react-router-dom';
 import { PageNavLink } from '../PageNavLink';
 
 export const Navbar = () => {
-  const location = useLocation();
+  const { search } = useLocation();
 
   return (
     <nav
@@ -13,9 +13,18 @@ export const Navbar = () => {
     >
       <div className="container">
         <div className="navbar-brand">
-          <PageNavLink to="/" text="Home" />
           <PageNavLink
-            to={`/people${location.search}`}
+            to={{
+              pathname: '/',
+              search: '',
+            }}
+            text="Home"
+          />
+          <PageNavLink
+            to={{
+              pathname: '/people',
+              search,
+            }}
             text="People"
             aria-current="page"
           />
