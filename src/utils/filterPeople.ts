@@ -32,7 +32,7 @@ export const filterPeople = (
     });
   }
 
-  if (sort) {
+  if (sort !== null) {
     filteredPeople.sort((person1, person2) => {
       switch (sort) {
         case 'name':

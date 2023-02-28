@@ -7,12 +7,10 @@ import { getPeople } from '../../api';
 import { PeopleFilters } from '../PeopleFilters';
 import { setPeopleWithParents } from '../../utils/setPeopleWithParents';
 import { filterPeople } from '../../utils/filterPeople';
-import { Error } from '../../types/Error';
-import { ErrorMessage } from '../ErrorMessage';
 
 export const PeoplePage: React.FC = () => {
   const [people, setPeople] = useState<Person[]>([]);
-  const [error, setError] = useState<Error>(Error.NONE);
+  const [hasLoadingError, setHasLoadingError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
   const [searchParams] = useSearchParams();
@@ -27,31 +25,25 @@ export const PeoplePage: React.FC = () => {
       setIsLoading(true);
       const peopleFromServer = await getPeople();
 
-      if (peopleFromServer.length === 0) {
-        setError(Error.NOPEOPLE);
-      }
-
       const peopleWithParents = setPeopleWithParents(peopleFromServer);
 
       setPeople(peopleWithParents);
     } catch {
-      setError(Error.ONLOADING);
+      setHasLoadingError(true);
     } finally {
       setIsLoading(false);
     }
   }, []);
 
   useEffect(() => {
-    setError(Error.NONE);
+    setHasLoadingError(false);
     loadPeople();
   }, []);
 
   const visiblePeople
     = filterPeople(people, sex, query, centuries, sort, order);
 
-  if (visiblePeople.length === 0) {
-    setError(Error.NOMATCHES);
-  }
+  const noMatchingPeople = visiblePeople.length === 0 && !isLoading;
 
   return (
     <>
@@ -71,24 +63,7 @@ export const PeoplePage: React.FC = () => {
                 <Loader />
               )}
 
-              {error === Error.NONE
-                ? (
-                  <PeopleTable
-                    people={visiblePeople}
-                  />
-                )
-                : (
-                  <ErrorMessage error={error} />
-                )}
-            </div>
-          </div>
-        </div>
-      </div>
-    </>
-  );
-};
-
-/* {hasLoadingError && (
+              {hasLoadingError && (
                 <p data-cy="peopleLoadingError" className="has-text-danger">
                   Something went wrong
                 </p>
@@ -105,4 +80,16 @@ export const PeoplePage: React.FC = () => {
                 <p>
                   There are no people matching the current search criteria
                 </p>
-              )} */
+              )}
+
+              {visiblePeople.length > 0 && (
+                <PeopleTable people={visiblePeople} />
+              )}
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+};

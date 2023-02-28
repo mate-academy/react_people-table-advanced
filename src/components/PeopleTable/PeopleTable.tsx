@@ -19,14 +19,14 @@ export const PeopleTable: React.FC<Props> = (
   const order = searchParams.get('order') || null;
 
   const setSortingParams = (sortBy: string) => {
-    if (!sort || sort !== sortBy) {
+    if (sort === null || sort !== sortBy) {
       return {
         sort: sortBy,
         order: null,
       };
     }
 
-    if (sort === sortBy && !order) {
+    if (sort === sortBy && order === null) {
       return {
         sort: sortBy,
         order: 'desc',
