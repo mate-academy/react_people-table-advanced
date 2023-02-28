@@ -1,35 +1,95 @@
-import { PeopleFilters } from './PeopleFilters';
+import {
+  FC,
+  memo,
+  useCallback,
+  useEffect,
+  useState,
+}
+  from 'react';
+import { useParams } from 'react-router-dom';
+import { getPeople } from '../api';
+import { getPreparedPeople } from '../utils/getPreparedPeople';
+import { Person } from '../types';
 import { Loader } from './Loader';
 import { PeopleTable } from './PeopleTable';
+import { PeopleFilters } from './PeopleFilters';
 
-export const PeoplePage = () => {
+export const PeoplePage: FC = memo(() => {
+  const [people, setPeople] = useState<Person[] | []>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [hasError, setHasError] = useState(false);
+  const [filteredPeople, setFilteredPeople] = useState<Person[]>([]);
+
+  const { slug = '' } = useParams();
+
+  const noError = !isLoading && !hasError;
+  const noPeople = !people.length && noError;
+  const noFilteredPeople = !filteredPeople.length && noError;
+  const thereAreFilteredPeople = !!filteredPeople.length && noError;
+
+  const fetchPeople = useCallback(async () => {
+    try {
+      let data = await getPeople();
+
+      data = getPreparedPeople(data);
+      setPeople(data);
+      setIsLoading(false);
+    } catch {
+      setHasError(true);
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchPeople();
+  }, []);
+
   return (
     <>
       <h1 className="title">People Page</h1>
 
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
-          <div className="column is-7-tablet is-narrow-desktop">
-            <PeopleFilters />
-          </div>
+          {noError && (
+            <div className="column is-7-tablet is-narrow-desktop">
+              <PeopleFilters
+                people={people}
+                setFilteredPeople={setFilteredPeople}
+              />
+            </div>
+          )}
 
           <div className="column">
             <div className="box table-container">
-              <Loader />
+              {isLoading && <Loader />}
 
-              <p data-cy="peopleLoadingError">Something went wrong</p>
+              {hasError && (
+                <p data-cy="peopleLoadingError">
+                  Something went wrong
+                </p>
+              )}
 
-              <p data-cy="noPeopleMessage">
-                There are no people on the server
-              </p>
+              {noPeople && (
+                <p data-cy="noPeopleMessage">
+                  There are no people on the server
+                </p>
+              )}
 
-              <p>There are no people matching the current search criteria</p>
+              {noFilteredPeople && (
+                <p>There are no people matching the current search criteria</p>
+              )}
 
-              <PeopleTable />
+              {thereAreFilteredPeople && (
+                <PeopleTable
+                  people={filteredPeople}
+                  selectedSlug={slug}
+                />
+              )}
             </div>
           </div>
         </div>
       </div>
     </>
   );
-};
+});
