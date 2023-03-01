@@ -48,7 +48,7 @@ export const getFilteredPeople = (
     });
   }
 
-  if (centuries.length > 0) {
+  if (centuries.length) {
     filteredPeople = filteredPeople.filter(
       person => centuries.includes(String(Math.ceil(person.born / 100))),
     );

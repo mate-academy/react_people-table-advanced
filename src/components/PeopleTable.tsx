@@ -1,9 +1,9 @@
 import cn from 'classnames';
-import { memo, useCallback } from 'react';
+import { memo } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { Person } from '../types';
 import { SortType } from '../types/SortType';
-import { getSearchWith } from '../utils/searchHelper';
+import { getSearchSort } from '../utils/getSearchSort';
 import { PersonLink } from './PersonLink';
 
 type Props = {
@@ -20,25 +20,6 @@ export const PeopleTable: React.FC<Props> = memo(({
   isReversed,
 }) => {
   const [searchParams] = useSearchParams();
-
-  const getSearchSort = useCallback((sortType: string) => {
-    if (!sort) {
-      return getSearchWith(searchParams, {
-        sort: sortType,
-      });
-    }
-
-    if (!isReversed) {
-      return getSearchWith(searchParams, {
-        order: 'desc',
-      });
-    }
-
-    return getSearchWith(searchParams, {
-      order: null,
-      sort: null,
-    });
-  }, [sort, isReversed, searchParams]);
 
   return (
     <table
@@ -58,7 +39,12 @@ export const PeopleTable: React.FC<Props> = memo(({
                   {key}
                   <Link
                     to={{
-                      search: getSearchSort(value),
+                      search: getSearchSort(
+                        value,
+                        searchParams,
+                        sort,
+                        isReversed,
+                      ),
                     }}
                   >
                     <span className="icon">
@@ -66,7 +52,7 @@ export const PeopleTable: React.FC<Props> = memo(({
                         className={cn('fas', {
                           'fa-sort': !isSortSelected,
                           'fa-sort-up': isSortSelected && !isReversed,
-                          'fa-sort-down': isSortSelected && isReversed,
+                          'fa-sort-down': isSortSelected,
                         })}
                       />
                     </span>

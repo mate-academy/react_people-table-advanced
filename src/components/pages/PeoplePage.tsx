@@ -17,8 +17,7 @@ import { getFilteredPeople } from '../../utils/getFilteredPeople';
 export const PeoplePage: React.FC = memo(() => {
   const [people, setPeople] = useState<Person[]>([]);
   const [hasError, setHasError] = useState<boolean>(false);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [isLoaded, setIsLoaded] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const [searchParams] = useSearchParams();
   const query = searchParams.get('query') || '';
   const centuries = searchParams.getAll('centuries');
@@ -31,14 +30,12 @@ export const PeoplePage: React.FC = memo(() => {
   useEffect(() => {
     const fetchPeople = async () => {
       try {
-        setIsLoading(true);
         const peopleFromServer = await getPeople();
 
         setPeople(peopleFromServer);
       } catch {
         setHasError(true);
       } finally {
-        setIsLoaded(true);
         setIsLoading(false);
       }
     };
@@ -52,9 +49,9 @@ export const PeoplePage: React.FC = memo(() => {
     )
   ), [sex, centuries, query, people, sort, order]);
 
-  const hasPeople = isLoaded && people.length;
-  const noPeople = isLoaded && !people.length;
-  const noFilteredPeople = isLoaded && visiblePeople.length === 0;
+  const hasPeople = !isLoading && people.length;
+  const noPeople = !isLoading && !people.length;
+  const noFilteredPeople = !isLoading && !visiblePeople.length;
 
   return (
     <>
