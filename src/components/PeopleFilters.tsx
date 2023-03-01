@@ -2,6 +2,7 @@ import cn from 'classnames';
 import React from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { getSearchWith } from '../utils/searchHelper';
+import { SexFilterBar } from './SexFilterBar';
 import { SearchLink } from './Table/SearchLink';
 
 export const PeopleFilters = React.memo(() => {
@@ -24,35 +25,7 @@ export const PeopleFilters = React.memo(() => {
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
-
-      <p className="panel-tabs" data-cy="SexFilter">
-        <SearchLink
-          params={{ sex: null }}
-          className={cn({
-            'is-active': !sex,
-          })}
-        >
-          All
-        </SearchLink>
-
-        <SearchLink
-          params={{ sex: 'm' }}
-          className={cn({
-            'is-active': sex === 'm',
-          })}
-        >
-          Male
-        </SearchLink>
-
-        <SearchLink
-          params={{ sex: 'f' }}
-          className={cn({
-            'is-active': sex === 'f',
-          })}
-        >
-          Female
-        </SearchLink>
-      </p>
+      <SexFilterBar sex={sex} />
 
       <div className="panel-block">
         <p className="control has-icons-left">
