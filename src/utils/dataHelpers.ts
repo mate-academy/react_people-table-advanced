@@ -38,11 +38,11 @@ export const getFilteredPeople = (
 
   if (query) {
     filteredPeople = filteredPeople.filter(person => {
-      const trimedQuery = query.trim();
+      const trimedQuery = query.trimEnd();
 
-      return person.name.includes(trimedQuery)
-      || person.motherName?.includes(trimedQuery)
-      || person.fatherName?.includes(trimedQuery);
+      return person.name.toLowerCase().includes(trimedQuery)
+      || person.motherName?.toLowerCase().includes(trimedQuery)
+      || person.fatherName?.toLowerCase().includes(trimedQuery);
     });
   }
 

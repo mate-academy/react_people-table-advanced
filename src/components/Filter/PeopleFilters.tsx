@@ -14,7 +14,7 @@ export const PeopleFilters = React.memo(() => {
 
   const onQueryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const queryToApply = (event.target.value)
-      ? event.target.value.trimStart()
+      ? event.target.value.toLowerCase().trimStart()
       : null;
 
     setSearchParams(
