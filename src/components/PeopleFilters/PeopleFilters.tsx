@@ -3,6 +3,7 @@ import React, { ChangeEvent } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { SearchLink } from '../SearchLink';
 import { getSearchWith } from '../../utils/searchHelper';
+import { centuriesData } from '../../layoutData/centuries';
 
 export const PeopleFilters: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -77,7 +78,7 @@ export const PeopleFilters: React.FC = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            {['16', '17', '18', '19', '20'].map(century => (
+            {centuriesData.map(century => (
               <SearchLink
                 key={century}
                 data-cy="century"

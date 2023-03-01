@@ -1,6 +1,7 @@
 import classNames from 'classnames';
 import React from 'react';
 import { useSearchParams } from 'react-router-dom';
+import { sortParams } from '../../layoutData/sortParams';
 import { Person } from '../../types';
 import { SearchLink } from '../SearchLink';
 import { TablePerson } from '../TablePerson';
@@ -54,89 +55,32 @@ export const PeopleTable: React.FC<Props> = (
     >
       <thead>
         <tr>
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Name
-              <SearchLink
-                params={setSortingParams('name')}
-              >
-                <span className="icon">
-                  <i className={classNames(
-                    'fas',
-                    {
-                      'fa-sort': !sort || sort !== 'name',
-                      'fa-sort-up': sort === 'name' && !order,
-                      'fa-sort-down': sort === 'name' && order,
-                    },
-                  )}
-                  />
-                </span>
-              </SearchLink>
-            </span>
-          </th>
+          {sortParams.map(sortParam => {
+            const { title, sortBy } = sortParam;
 
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Sex
-              <SearchLink
-                params={setSortingParams('sex')}
-              >
-                <span className="icon">
-                  <i className={classNames(
-                    'fas',
-                    {
-                      'fa-sort': !sort || sort !== 'sex',
-                      'fa-sort-up': sort === 'sex' && !order,
-                      'fa-sort-down': sort === 'sex' && order,
-                    },
-                  )}
-                  />
+            return (
+              <th>
+                <span className="is-flex is-flex-wrap-nowrap">
+                  {title}
+                  <SearchLink
+                    params={setSortingParams(sortBy)}
+                  >
+                    <span className="icon">
+                      <i className={classNames(
+                        'fas',
+                        {
+                          'fa-sort': !sort || sort !== sortBy,
+                          'fa-sort-up': sort === sortBy && !order,
+                          'fa-sort-down': sort === sortBy && order,
+                        },
+                      )}
+                      />
+                    </span>
+                  </SearchLink>
                 </span>
-              </SearchLink>
-            </span>
-          </th>
-
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Born
-              <SearchLink
-                params={setSortingParams('born')}
-              >
-                <span className="icon">
-                  <i className={classNames(
-                    'fas',
-                    {
-                      'fa-sort': !sort || sort !== 'born',
-                      'fa-sort-up': sort === 'born' && !order,
-                      'fa-sort-down': sort === 'born' && order,
-                    },
-                  )}
-                  />
-                </span>
-              </SearchLink>
-            </span>
-          </th>
-
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Died
-              <SearchLink
-                params={setSortingParams('died')}
-              >
-                <span className="icon">
-                  <i className={classNames(
-                    'fas',
-                    {
-                      'fa-sort': !sort || sort !== 'died',
-                      'fa-sort-up': sort === 'died' && !order,
-                      'fa-sort-down': sort === 'died' && order,
-                    },
-                  )}
-                  />
-                </span>
-              </SearchLink>
-            </span>
-          </th>
+              </th>
+            );
+          })}
 
           <th>Mother</th>
           <th>Father</th>
