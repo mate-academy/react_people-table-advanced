@@ -59,15 +59,21 @@ export const PeopleFilters: React.FC<Props> = ({
     };
   }, [searchParams]);
 
+  enum Genders {
+    All = 'All',
+    Female = 'Female',
+    Male = 'Male',
+  }
+
   const handleSexSelect = (gender: string) => {
     switch (gender) {
-      case 'Female':
+      case (Genders.Female):
         return 'f';
 
-      case 'Male':
+      case (Genders.Male):
         return 'm';
 
-      case 'All':
+      case (Genders.All):
       default:
         return null;
     }
@@ -161,6 +167,7 @@ export const PeopleFilters: React.FC<Props> = ({
 
       <div className="panel-block">
         <SearchLink
+          className="button is-link is-outlined is-fullwidth"
           params={{
             centuries: null,
             sex: null,
