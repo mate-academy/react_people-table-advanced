@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
 import { Loader } from '../../components/Loader';
 import { Person } from '../../types';
@@ -32,8 +32,7 @@ export const PeoplePage = () => {
     fetchPeople();
   }, []);
 
-  const visiblePeople = useMemo(() => (
-    getFilteredPeople(searchParams, people)), [searchParams, people]);
+  const visiblePeople = getFilteredPeople(searchParams, people);
 
   return (
     <>

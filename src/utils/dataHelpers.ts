@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { Person } from '../types';
 
 export const preparedPeople = (people: Person []) => {
@@ -16,7 +17,7 @@ export const getFilteredPeople = (
 ) => {
   let filteredPeople = [...people];
   const sex = searchParams.get('sex');
-  const centuries = searchParams.get('centuries');
+  const centuries = searchParams.getAll('centuries');
   const query = searchParams.get('query');
   const sort = searchParams.get('sort');
   const order = searchParams.get('order');
@@ -29,7 +30,7 @@ export const getFilteredPeople = (
 
   if (centuries?.length) {
     filteredPeople = filteredPeople.filter(person => {
-      const century = String(Math.floor(person.born / 100));
+      const century = String(Math.floor(person.born / 100) + 1);
 
       return centuries.includes(century);
     });

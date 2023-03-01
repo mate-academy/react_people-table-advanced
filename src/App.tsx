@@ -4,11 +4,12 @@ import { PeoplePage } from './Pages/PeoplePage/PeoplePage';
 import { Navbar } from './components/Navbar';
 import { PageNotFound } from './Pages/PageNotFound';
 import { HomePage } from './Pages/HomePage';
+import navItems from './Data/navItems.json';
 
 export const App = () => {
   return (
     <div data-cy="app">
-      <Navbar />
+      <Navbar navItems={navItems} />
 
       <div className="section">
         <div className="container">

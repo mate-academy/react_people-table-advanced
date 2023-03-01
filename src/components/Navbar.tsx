@@ -1,8 +1,12 @@
-import cn from 'classnames';
 import React from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavItemType } from '../types/NavItemType';
+import { NavItem } from './NavItem';
 
-export const Navbar = React.memo(() => {
+interface Props {
+  navItems: NavItemType[]
+}
+
+export const Navbar: React.FC<Props> = React.memo(({ navItems }) => {
   return (
     <nav
       data-cy="nav"
@@ -12,24 +16,13 @@ export const Navbar = React.memo(() => {
     >
       <div className="container">
         <div className="navbar-brand">
-          <NavLink
-            to="/"
-            className={({ isActive }) => cn('navbar-item', {
-              'has-background-grey-lighter': isActive,
-            })}
-          >
-            Home
-          </NavLink>
-
-          <NavLink
-            to="/people"
-            aria-current="page"
-            className={({ isActive }) => cn('navbar-item', {
-              'has-background-grey-lighter': isActive,
-            })}
-          >
-            People
-          </NavLink>
+          {navItems.map(item => (
+            <NavItem
+              key={item.id}
+              navItem={item.title}
+              link={item.url}
+            />
+          ))}
         </div>
       </div>
     </nav>
