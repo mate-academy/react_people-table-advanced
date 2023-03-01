@@ -1,45 +1,47 @@
-import { FC } from 'react';
+import { FC, useMemo } from 'react';
+import classNames from 'classnames';
 import { useSearchParams } from 'react-router-dom';
 import { Person } from '../../types';
-import { PersonNavLink } from '../PersonNavLink';
+import { PersonLink } from '../PersonLink';
+import { getFilteredPeople } from '../../utils/filteredPeople';
+import { getSortedPeople } from '../../utils/sortedPeople';
+import { SortSearchLink } from '../SortSearchLink';
 
 type Props = {
   people: Person[];
+  selectedSlug: string,
 };
 
-export const PeopleTable: FC<Props> = ({ people }) => {
+export const PeopleTable: FC<Props> = ({ people, selectedSlug }) => {
   const [searchParams] = useSearchParams();
-  const currentQuery = searchParams.get('query');
-  const currentSex = searchParams.get('sex');
-  const currentCenturies = searchParams.getAll('centuries');
+  const currentQuery = searchParams.get('query') || '';
+  const currentSex = searchParams.get('sex') || null;
+  const currentCenturies = searchParams.getAll('centuries') || [];
+  const currentSort = searchParams.get('sort') || '';
+  const currentOrder = searchParams.get('order') || null;
 
-  const visiblePeopleName = people.filter(person => {
-    if (currentQuery) {
-      return person.name.toLowerCase().includes(currentQuery.toLowerCase());
-    }
+  const filteredPeople = useMemo(() => {
+    return getFilteredPeople(
+      people,
+      currentQuery,
+      currentSex,
+      currentCenturies,
+    );
+  }, [people, currentQuery, currentSex, currentCenturies]);
 
-    return true;
-  });
+  const preparedPeople = useMemo(() => {
+    return getSortedPeople(
+      filteredPeople,
+      currentSort as keyof Person,
+      currentOrder,
+    );
+  }, [filteredPeople, currentSort, currentOrder]);
 
-  const visiblePeopleSex = visiblePeopleName.filter(person => {
-    if (currentSex) {
-      return person.sex === currentSex;
-    }
-
-    return true;
-  });
-
-  const visiblePeopleCenturies = visiblePeopleSex.filter(person => {
-    const bornCentury = Math.ceil(person.born / 100);
-    const diedCentury = Math.ceil(person.died / 100);
-
-    if (currentCenturies.length) {
-      return currentCenturies.includes(bornCentury.toString())
-        || currentCenturies.includes(diedCentury.toString());
-    }
-
-    return true;
-  });
+  if (!filteredPeople.length) {
+    return (
+      <p>There are no people matching the current search criteria</p>
+    );
+  }
 
   return (
     <table
@@ -48,49 +50,10 @@ export const PeopleTable: FC<Props> = ({ people }) => {
     >
       <thead>
         <tr>
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Name
-              <a href="#/people?sort=name">
-                <span className="icon">
-                  <i className="fas fa-sort" />
-                </span>
-              </a>
-            </span>
-          </th>
-
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Sex
-              <a href="#/people?sort=sex">
-                <span className="icon">
-                  <i className="fas fa-sort" />
-                </span>
-              </a>
-            </span>
-          </th>
-
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Born
-              <a href="#/people?sort=born&amp;order=desc">
-                <span className="icon">
-                  <i className="fas fa-sort-up" />
-                </span>
-              </a>
-            </span>
-          </th>
-
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Died
-              <a href="#/people?sort=died">
-                <span className="icon">
-                  <i className="fas fa-sort" />
-                </span>
-              </a>
-            </span>
-          </th>
+          <SortSearchLink text="Name" />
+          <SortSearchLink text="Sex" />
+          <SortSearchLink text="Born" />
+          <SortSearchLink text="Died" />
 
           <th>Mother</th>
           <th>Father</th>
@@ -98,14 +61,17 @@ export const PeopleTable: FC<Props> = ({ people }) => {
       </thead>
 
       <tbody>
-        {visiblePeopleCenturies.map(person => {
+        {preparedPeople.map(person => {
           const {
             sex,
             born,
             died,
+            slug,
             motherName,
             fatherName,
           } = person;
+
+          const isSelected = slug === selectedSlug;
 
           const mother = people
             .find(personItem => personItem.name === person.motherName);
@@ -116,9 +82,13 @@ export const PeopleTable: FC<Props> = ({ people }) => {
           const personFatherName = fatherName || '-';
 
           return (
-            <tr data-cy="person">
+            <tr
+              data-cy="person"
+              key={slug}
+              className={classNames({ 'has-background-warning': isSelected })}
+            >
               <td>
-                <PersonNavLink person={person} />
+                <PersonLink person={person} />
               </td>
               <td>{sex}</td>
               <td>{born}</td>
@@ -126,7 +96,7 @@ export const PeopleTable: FC<Props> = ({ people }) => {
               <td>
                 {mother
                   ? (
-                    <PersonNavLink person={mother} />
+                    <PersonLink person={mother} />
                   ) : (
                     personMotherName
                   )}
@@ -134,7 +104,7 @@ export const PeopleTable: FC<Props> = ({ people }) => {
               <td>
                 {father
                   ? (
-                    <PersonNavLink person={father} />
+                    <PersonLink person={father} />
                   ) : (
                     personFatherName
                   )}
