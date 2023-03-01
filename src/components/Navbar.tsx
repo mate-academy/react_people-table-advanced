@@ -1,4 +1,7 @@
-export const Navbar = () => {
+import { memo } from 'react';
+import { NavLinkPage } from './NavLinkPage';
+
+export const Navbar: React.FC = memo(() => {
   return (
     <nav
       data-cy="nav"
@@ -8,17 +11,10 @@ export const Navbar = () => {
     >
       <div className="container">
         <div className="navbar-brand">
-          <a className="navbar-item" href="#/">Home</a>
-
-          <a
-            aria-current="page"
-            className="navbar-item has-background-grey-lighter"
-            href="#/people"
-          >
-            People
-          </a>
+          <NavLinkPage to="/" text="Home" />
+          <NavLinkPage to="/people" text="People" />
         </div>
       </div>
     </nav>
   );
-};
+});
