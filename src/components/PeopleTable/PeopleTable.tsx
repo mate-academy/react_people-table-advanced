@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
 import { Person } from '../../types';
 import { PersonLink } from '../PersonLink';
@@ -19,20 +19,22 @@ export const PeopleTable: React.FC<Props> = ({
   const peopleSort = searchParams.get('sort') || '';
   const order = searchParams.get('order') || '';
 
-  const sortedPeople = [...people].sort((a, b) => {
-    switch (peopleSort) {
-      case 'name':
-        return a.name.localeCompare(b.name);
-      case 'sex':
-        return a.sex.localeCompare(b.sex);
-      case 'born':
-        return a.born - b.born;
-      case 'died':
-        return a.died - b.died;
-      default:
-        return 0;
-    }
-  });
+  const sortedPeople = useMemo(() => (
+    [...people].sort((a, b) => {
+      switch (peopleSort) {
+        case 'name':
+          return a.name.localeCompare(b.name);
+        case 'sex':
+          return a.sex.localeCompare(b.sex);
+        case 'born':
+          return a.born - b.born;
+        case 'died':
+          return a.died - b.died;
+        default:
+          return 0;
+      }
+    })
+  ), [people, peopleSort]);
 
   if (order === 'desc') {
     sortedPeople.reverse();

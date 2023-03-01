@@ -1,4 +1,9 @@
-import { useEffect, useMemo, useState } from 'react';
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { getPeople } from '../../api';
 import { PeopleTable } from '../PeopleTable';
@@ -17,7 +22,7 @@ export const PeoplePage = () => {
   const queryFilter = searchParams.get('query') || '';
   const centuriesFilter = searchParams.getAll('centuries') || [];
 
-  const fetchPeople = async () => {
+  const fetchPeople = useCallback(async () => {
     try {
       setIsLoading(true);
       const newPeople = await getPeople();
@@ -28,7 +33,7 @@ export const PeoplePage = () => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
     fetchPeople();
@@ -67,7 +72,13 @@ export const PeoplePage = () => {
       : peopleFilteredByQuery
   ), [centuriesFilter, peopleFilteredByQuery]);
 
-  const isTableVisible = people.length !== 0 && !isError && !isLoading;
+  const isFiltersVisible = people.length !== 0 && !isError && !isLoading;
+  const isFilteredTableEmpty = (
+    peopleFilteredByCenturies.length === 0 && isFiltersVisible
+  );
+  const isTableVisible = (
+    peopleFilteredByCenturies.length !== 0 && isFiltersVisible
+  );
   const isTableEmpty = people.length === 0 && !isError && !isLoading;
 
   return (
@@ -76,7 +87,7 @@ export const PeoplePage = () => {
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
           {
-            isTableVisible && (
+            isFiltersVisible && (
               <div className="column is-7-tablet is-narrow-desktop">
                 <PeopleFilters />
               </div>
@@ -104,7 +115,7 @@ export const PeoplePage = () => {
               }
 
               {
-                false && (
+                isFilteredTableEmpty && (
                   <p>
                     There are no people matching the current search criteria
                   </p>

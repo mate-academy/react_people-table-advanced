@@ -10,7 +10,7 @@ type Props = {
 export const PersonLink: React.FC<Props> = ({ person }) => {
   const { sex, slug, name } = person;
 
-  const location = useLocation();
+  const { search } = useLocation();
   const parentPath = useResolvedPath('../').pathname;
 
   return (
@@ -20,7 +20,7 @@ export const PersonLink: React.FC<Props> = ({ person }) => {
       )}
       to={{
         pathname: parentPath + slug,
-        search: location.search,
+        search,
       }}
     >
       {name}

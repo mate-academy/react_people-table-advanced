@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import { ChangeEvent } from 'react';
+import { ChangeEvent, useCallback } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { getSearchWith } from '../../utils/searchHelper';
 import { SearchLink } from '../SearchLink';
@@ -13,19 +13,19 @@ export const PeopleFilters = () => {
   const query = searchParams.get('query') || '';
   const centuries = searchParams.getAll('centuries') || [];
 
-  const onInputChange = (event: ChangeEvent<HTMLInputElement>) => {
+  const onInputChange = useCallback((event: ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
 
     const params = getSearchWith(searchParams, { query: value || null });
 
     setSearchParams(params);
-  };
+  }, []);
 
-  const onInputDelete = () => {
+  const onInputDelete = useCallback(() => {
     const params = getSearchWith(searchParams, { query: null });
 
     setSearchParams(params);
-  };
+  }, []);
 
   return (
     <nav className="panel">
