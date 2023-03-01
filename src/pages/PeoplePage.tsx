@@ -9,6 +9,7 @@ import { PeopleFilters } from '../components/PeopleFilters';
 import { getPeople } from '../api';
 import { Person } from '../types';
 import { Loader } from '../components/Loader';
+import { preparedDataFromServer } from '../utils/preparedDataFromServer';
 import { PeopleTable } from '../components/PeopleTable';
 
 export const PeoplePage:React.FC = memo(() => {
@@ -27,7 +28,7 @@ export const PeoplePage:React.FC = memo(() => {
     try {
       const responsePeople = await getPeople();
 
-      setPeople(responsePeople);
+      setPeople(preparedDataFromServer(responsePeople));
       setIsFetched(true);
     } catch {
       setHasError(true);

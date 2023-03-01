@@ -150,15 +150,16 @@ export const PeopleTable: React.FC<Props> = memo(({ people, personSlug }) => {
             slug,
           } = person;
 
-          const hasSelected = slug === personSlug;
-          const selectedMother = people.find(mom => mom.name === motherName);
-          const selectedFather = people.find(dad => dad.name === fatherName);
+          const motherNameResult = motherName || '-';
+          const fatherNameResult = fatherName || '-';
 
           return (
             <tr
               data-cy="person"
               key={slug}
-              className={classNames({ 'has-background-warning': hasSelected })}
+              className={classNames({
+                'has-background-warning': slug === personSlug,
+              })}
             >
               <td>
                 <PersonLink person={person} />
@@ -169,15 +170,19 @@ export const PeopleTable: React.FC<Props> = memo(({ people, personSlug }) => {
               <td>{died}</td>
 
               <td>
-                {!selectedMother
-                  ? (motherName || '-')
-                  : <PersonLink person={selectedMother} />}
+                {person.mother
+                  ? (<PersonLink person={person.mother} />)
+                  : (
+                    motherNameResult
+                  )}
               </td>
 
               <td>
-                {!selectedFather
-                  ? (fatherName || '-')
-                  : <PersonLink person={selectedFather} />}
+                {person.father
+                  ? (<PersonLink person={person.father} />)
+                  : (
+                    fatherNameResult
+                  )}
               </td>
             </tr>
           );
