@@ -43,7 +43,24 @@ export const PeoplePage: React.FC = () => {
   const visiblePeople
     = filterPeople(people, sex, query, centuries, sort, order);
 
-  const noMatchingPeople = visiblePeople.length === 0 && !isLoading;
+  const noPeopleOnServer = people.length === 0
+    && !hasLoadingError && !isLoading;
+
+  if (hasLoadingError) {
+    return (
+      <p data-cy="peopleLoadingError" className="has-text-danger">
+        Something went wrong
+      </p>
+    );
+  }
+
+  if (noPeopleOnServer) {
+    return (
+      <p data-cy="noPeopleMessage">
+        There are no people on the server
+      </p>
+    );
+  }
 
   return (
     <>
@@ -59,33 +76,13 @@ export const PeoplePage: React.FC = () => {
 
           <div className="column">
             <div className="box table-container">
-              {isLoading && (
-                <Loader />
-              )}
-
-              {hasLoadingError && (
-                <p data-cy="peopleLoadingError" className="has-text-danger">
-                  Something went wrong
-                </p>
-              )}
-
-              {(people.length === 0
-                && !hasLoadingError && !isLoading) && (
-                <p data-cy="noPeopleMessage">
-                  There are no people on the server
-                </p>
-              )}
-
-              {noMatchingPeople && (
-                <p>
-                  There are no people matching the current search criteria
-                </p>
-              )}
-
-              {visiblePeople.length > 0 && (
-                <PeopleTable people={visiblePeople} />
-              )}
-
+              {isLoading
+                ? (
+                  <Loader />
+                )
+                : (
+                  <PeopleTable people={visiblePeople} />
+                )}
             </div>
           </div>
         </div>

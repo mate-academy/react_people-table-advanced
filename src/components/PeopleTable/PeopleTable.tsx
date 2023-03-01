@@ -39,6 +39,14 @@ export const PeopleTable: React.FC<Props> = (
     };
   };
 
+  if (people.length === 0) {
+    return (
+      <p>
+        There are no people matching the current search criteria
+      </p>
+    );
+  }
+
   return (
     <table
       data-cy="peopleTable"
