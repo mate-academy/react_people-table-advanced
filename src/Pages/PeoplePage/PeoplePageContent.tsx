@@ -1,5 +1,5 @@
 import { Person } from '../../types';
-import { PeopleFilters } from '../../components/PeopleFilters';
+import { PeopleFilters } from '../../components/Filter/PeopleFilters';
 import { PeopleTable } from '../../components/Table/PeopleTable';
 
 interface Props {

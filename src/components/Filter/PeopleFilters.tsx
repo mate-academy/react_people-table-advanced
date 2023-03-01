@@ -1,9 +1,9 @@
 import cn from 'classnames';
 import React from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { getSearchWith } from '../utils/searchHelper';
+import { getSearchWith } from '../../utils/searchHelper';
 import { SexFilterBar } from './SexFilterBar';
-import { SearchLink } from './Table/SearchLink';
+import { SearchLink } from '../Table/SearchLink';
 
 export const PeopleFilters = React.memo(() => {
   const [searchParams, setSearchParams] = useSearchParams();

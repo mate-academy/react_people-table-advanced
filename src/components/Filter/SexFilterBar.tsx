@@ -1,5 +1,5 @@
 import cn from 'classnames';
-import { SearchLink } from './Table/SearchLink';
+import { SearchLink } from '../Table/SearchLink';
 
 interface Props {
   sex: string | null,
