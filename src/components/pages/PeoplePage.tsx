@@ -5,7 +5,6 @@ import { Loader } from '../Loader';
 import { PeopleTable } from '../PeopleTable';
 import { getPeople } from '../../api';
 import { Person } from '../../types';
-import { getSearchWith } from '../../utils/searchHelper';
 import { filterPeople } from '../../utils/filterPeople';
 
 export const PeoplePage: React.FC = () => {
@@ -14,20 +13,10 @@ export const PeoplePage: React.FC = () => {
   const [isLoaded, setIsLoaded] = useState(false);
   const { slug = '' } = useParams();
 
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
   const query = searchParams.get('query') || '';
-  const centuries = searchParams.getAll('centuries') || [];
   const sex = searchParams.get('sex') || '';
-  const sort = searchParams.get('sort') || '';
-  const order = searchParams.get('order') || '';
-
-  const onQueryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { value } = event.target;
-
-    setSearchParams(
-      getSearchWith(searchParams, { query: value || null }),
-    );
-  };
+  const centuries = searchParams.getAll('centuries') || [];
 
   const handleLoadingPeople = async () => {
     try {
@@ -65,12 +54,7 @@ export const PeoplePage: React.FC = () => {
           <div className="block">
             <div className="columns is-desktop is-flex-direction-row-reverse">
               <div className="column is-7-tablet is-narrow-desktop">
-                <PeopleFilters
-                  query={query}
-                  centuries={centuries}
-                  sex={sex}
-                  onQueryChange={onQueryChange}
-                />
+                <PeopleFilters />
               </div>
 
               <div className="column">
@@ -81,8 +65,6 @@ export const PeoplePage: React.FC = () => {
                     <PeopleTable
                       persons={visiblePersons}
                       selectedSlug={slug}
-                      sort={sort}
-                      order={order}
                     />
                   )}
                 </div>

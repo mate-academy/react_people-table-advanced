@@ -1,5 +1,6 @@
 import classNames from 'classnames';
 import { useMemo } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { Person } from '../../types';
 import { sortPeople } from '../../utils/sortPeople';
 import { PersonInfo } from '../PersonInfo';
@@ -8,16 +9,16 @@ import { SearchLink } from '../SearchLink';
 type Props = {
   persons: Person[];
   selectedSlug: string;
-  sort: string;
-  order: string;
 };
 
 export const PeopleTable: React.FC<Props> = ({
   persons,
   selectedSlug,
-  sort,
-  order,
 }) => {
+  const [searchParams] = useSearchParams();
+  const sort = searchParams.get('sort') || '';
+  const order = searchParams.get('order') || '';
+
   const preparedPersons = useMemo(() => (
     sortPeople(persons, sort)
   ), [persons, sort]);
