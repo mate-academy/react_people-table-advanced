@@ -3,6 +3,8 @@ import { PeoplePage } from './components/PeoplePage';
 import { Navbar } from './components/Navbar';
 
 import './App.scss';
+import { NotFoundPage } from './components/NoFoundPage';
+import { HomePage } from './components/HomePage';
 
 export const App = () => {
   return (
@@ -16,12 +18,12 @@ export const App = () => {
               <Routes>
                 <Route
                   path="/"
-                  element={<h1 className="title">Home Page</h1>}
+                  element={<HomePage />}
                 />
                 <Route path="/home" element={<Navigate to="/" replace />} />
                 <Route
                   path="*"
-                  element={<h1 className="title">Page not found</h1>}
+                  element={<NotFoundPage />}
                 />
 
                 <Route path="people">

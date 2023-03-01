@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { PeopleFilters } from './PeopleFilters';
 import { Loader } from './Loader';
 import { PeopleTable } from './PeopleTable';
@@ -25,9 +25,7 @@ export const PeoplePage = () => {
     }
   };
 
-  const peopleArrayIsEmpty = useMemo(() => {
-    return people.length === 0 && !isLoaderActive;
-  }, [people]);
+  const peopleArrayIsEmpty = people.length === 0 && !isLoaderActive;
 
   useEffect(() => {
     fetchPeople();

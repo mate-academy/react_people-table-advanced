@@ -12,8 +12,10 @@ type SortPeopleType = (args: SortArgs) => Person[];
 export const sortPeople: SortPeopleType = (args) => {
   const { filteredPeople, sortBy, order } = args;
 
+  let visiblePeople = [...filteredPeople];
+
   if (sortBy) {
-    filteredPeople.sort((a: Person, b: Person) => {
+    visiblePeople = visiblePeople.sort((a: Person, b: Person) => {
       switch (sortBy) {
         case 'name':
         case 'sex':
@@ -30,8 +32,10 @@ export const sortPeople: SortPeopleType = (args) => {
   }
 
   if (order) {
-    return filteredPeople.reverse();
+    visiblePeople = visiblePeople.reverse();
+
+    return visiblePeople;
   }
 
-  return filteredPeople;
+  return visiblePeople;
 };
