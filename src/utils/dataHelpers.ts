@@ -38,7 +38,7 @@ export const getFilteredPeople = (
 
   if (query) {
     filteredPeople = filteredPeople.filter(person => {
-      const trimedQuery = query.trimEnd();
+      const trimedQuery = query.toLowerCase().trimEnd();
 
       return person.name.toLowerCase().includes(trimedQuery)
       || person.motherName?.toLowerCase().includes(trimedQuery)
