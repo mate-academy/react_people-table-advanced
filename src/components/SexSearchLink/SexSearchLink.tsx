@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import React from 'react';
+import React, { memo } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { SearchLink } from '../SearchLink';
 
@@ -8,7 +8,7 @@ type Props = {
   text: string,
 };
 
-export const SexSearchLink: React.FC<Props> = ({ sex, text }) => {
+export const SexSearchLink: React.FC<Props> = memo(({ sex, text }) => {
   const [searchParams] = useSearchParams();
   const currentSex = searchParams.get('sex') || null;
 
@@ -22,4 +22,4 @@ export const SexSearchLink: React.FC<Props> = ({ sex, text }) => {
       {text}
     </SearchLink>
   );
-};
+});

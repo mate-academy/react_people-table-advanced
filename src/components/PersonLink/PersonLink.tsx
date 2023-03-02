@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { Link, useLocation, useResolvedPath } from 'react-router-dom';
 
 import classNames from 'classnames';
@@ -9,7 +9,7 @@ type Props = {
   person: Person,
 };
 
-export const PersonLink: React.FC<Props> = ({ person }) => {
+export const PersonLink: React.FC<Props> = memo(({ person }) => {
   const location = useLocation();
   const parenthPath = useResolvedPath('../').pathname;
   const { slug, name, sex } = person;
@@ -25,4 +25,4 @@ export const PersonLink: React.FC<Props> = ({ person }) => {
       {name}
     </Link>
   );
-};
+});
