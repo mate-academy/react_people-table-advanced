@@ -1,5 +1,6 @@
 import { Person } from '../types/Person';
 import { FilterParameters } from '../types/FilterParameters';
+import { SortType } from '../types/SortType';
 
 const includesQuery = (
   name: string | null | undefined,
@@ -42,14 +43,14 @@ export const filterPeople = ({
 
   if (sort) {
     switch (sort) {
-      case 'name':
-      case 'sex':
+      case SortType.Name:
+      case SortType.Sex:
         visiblePeople = [...visiblePeople]
           .sort((a, b) => a[sort].localeCompare(b[sort]));
         break;
 
-      case 'born':
-      case 'died':
+      case SortType.Born:
+      case SortType.Died:
         visiblePeople = [...visiblePeople].sort((a, b) => +a[sort] - +b[sort]);
         break;
 

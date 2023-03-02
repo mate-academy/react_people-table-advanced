@@ -2,6 +2,7 @@ import React from 'react';
 import { Person } from '../../types/Person';
 import { PersonLink } from '../PersonLink';
 import { SortLink } from '../SortLink';
+import { SortType } from '../../types/SortType';
 
 interface Props {
   people: Person[];
@@ -12,7 +13,7 @@ export const PeopleTable: React.FC<Props> = React.memo(({
   people,
   selectedPerson,
 }) => {
-  const sortingFields = ['Name', 'Sex', 'Born', 'Died'];
+  // const sortingFields = ['Name', 'Sex', 'Born', 'Died'];
 
   if (!people.length) {
     return <p>There are no people matching the current search criteria</p>;
@@ -25,7 +26,7 @@ export const PeopleTable: React.FC<Props> = React.memo(({
     >
       <thead>
         <tr>
-          {sortingFields.map((field) => (
+          {Object.values(SortType).map((field: SortType) => (
             <SortLink field={field} key={field} />
           ))}
           <th>Mother</th>

@@ -21,7 +21,7 @@ export const SortLink: React.FC<Props> = ({ field }) => {
 
   return (
     <th key={field}>
-      <span className="is-flex is-flex-wrap-nowrap">
+      <span className="is-flex is-flex-wrap-nowrap capitalize">
         {field}
         <SearchLink params={params}>
           <span className="icon">

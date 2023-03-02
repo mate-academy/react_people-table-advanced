@@ -10,8 +10,8 @@ export const NavBar: React.FC = React.memo(() => (
   >
     <div className="container">
       <div className="navbar-brand">
-        <PageLink to='/' text='Home' />
-        <PageLink to='/people' text='People' />
+        <PageLink to="/" text="Home" />
+        <PageLink to="/people" text="People" />
       </div>
     </div>
   </nav>
