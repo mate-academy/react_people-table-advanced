@@ -1,7 +1,9 @@
 import classNames from 'classnames';
 import React from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { Person } from '../types';
 import { PersonNavLink } from '../PersonLink';
+import { SortPeopleLink } from './SortPeopleLink';
 
 type Props = {
   people: Person[],
@@ -9,7 +11,38 @@ type Props = {
 };
 
 export const PeopleTable: React.FC<Props> = ({ people, slug }) => {
-  if (!people.length) {
+  const [searchParams] = useSearchParams();
+  const sort = searchParams.get('sort') as keyof Person;
+  const reversedTable = searchParams.get('order') === 'desc';
+
+  const getSortedPeople = (sortBy: keyof Person) => {
+    const peopleCopy = [...people];
+
+    if (sortBy) {
+      peopleCopy.sort((a, b) => {
+        switch (sortBy) {
+          case 'name':
+          case 'sex':
+            return a[sortBy].localeCompare(b[sortBy]);
+          case 'born':
+          case 'died':
+            return a[sortBy] - b[sortBy];
+          default:
+            return 0;
+        }
+      });
+    }
+
+    if (reversedTable) {
+      peopleCopy.reverse();
+    }
+
+    return peopleCopy;
+  };
+
+  const sortedPeople = getSortedPeople(sort);
+
+  if (!sortedPeople.length) {
     return (
       <p data-cy="noPeopleMessage">
         There are no people on the server
@@ -24,17 +57,41 @@ export const PeopleTable: React.FC<Props> = ({ people, slug }) => {
     >
       <thead>
         <tr>
-          <th>Name</th>
-          <th>Sex</th>
-          <th>Born</th>
-          <th>Died</th>
+          <th>
+            <span className="is-flex is-flex-wrap-nowrap">
+              Name
+              <SortPeopleLink sortLine="name" />
+            </span>
+          </th>
+
+          <th>
+            <span className="is-flex is-flex-wrap-nowrap">
+              Sex
+              <SortPeopleLink sortLine="sex" />
+            </span>
+          </th>
+
+          <th>
+            <span className="is-flex is-flex-wrap-nowrap">
+              Born
+              <SortPeopleLink sortLine="born" />
+            </span>
+          </th>
+
+          <th>
+            <span className="is-flex is-flex-wrap-nowrap">
+              Died
+              <SortPeopleLink sortLine="died" />
+            </span>
+          </th>
+
           <th>Mother</th>
           <th>Father</th>
         </tr>
       </thead>
 
       <tbody>
-        {people.map((person) => {
+        {sortedPeople.map((person) => {
           const fatherObj = people
             .find(father => father.name === person.fatherName);
           const motherObj = people
