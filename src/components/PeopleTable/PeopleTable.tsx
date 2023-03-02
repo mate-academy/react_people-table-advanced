@@ -11,7 +11,6 @@ type Props = {
   selectedSlug: string
 };
 export const PeopleTable:React.FC<Props> = ({ people, selectedSlug }) => {
-  const noPeopleOnServer = people.length <= 0;
   const [searchParams] = useSearchParams();
 
   const currentQuery = searchParams.get('query') || '';
@@ -33,14 +32,6 @@ export const PeopleTable:React.FC<Props> = ({ people, selectedSlug }) => {
   if (!filterPeople.length) {
     return (
       <p>No people for this query, rewrite your querry</p>
-    );
-  }
-
-  if (noPeopleOnServer) {
-    return (
-      <p data-cy="noPeopleMessage">
-        There are no people on the server
-      </p>
     );
   }
 
