@@ -1,11 +1,11 @@
-import { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { PeopleFilters } from '../PeopleFilters';
 import { Loader } from '../Loader';
 import { getPeople } from '../../api';
 import { Person } from '../../types';
 import { PeopleTable } from '../PeopleTable';
 
-export const PeoplePage = () => {
+export const PeoplePage: React.FC = () => {
   const [people, setPeople] = useState<Person[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [hasError, setHasError] = useState(false);
