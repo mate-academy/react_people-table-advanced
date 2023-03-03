@@ -6,12 +6,12 @@ import { SortLink } from '../SortLink';
 
 type Props = {
   people: Person[];
-  selectedPerson: string | number;
+  selectedPersonSlug: string;
 };
 
 export const PeopleTable: FC<Props> = memo(({
   people,
-  selectedPerson,
+  selectedPersonSlug,
 }) => {
   if (!people.length) {
     return (
@@ -62,52 +62,36 @@ export const PeopleTable: FC<Props> = memo(({
       </thead>
 
       <tbody>
-        {people.map(person => {
-          return (
-            <tr
-              data-cy="person"
-              key={person.slug}
-              className={cn({
-                // eslint-disable-next-line
-                'has-background-warning': person.slug === selectedPerson,
-              })}
-            >
-              <td>
-                <PersonLink
-                  person={person}
-                />
-              </td>
+        {people.map(person => (
+          <tr
+            data-cy="person"
+            key={person.slug}
+            className={cn({
+              // eslint-disable-next-line
+              'has-background-warning': person.slug === selectedPersonSlug,
+            })}
+          >
+            <td>
+              <PersonLink person={person} />
+            </td>
 
-              <td>{person.sex}</td>
-              <td>{person.born}</td>
-              <td>{person.died}</td>
+            <td>{person.sex}</td>
+            <td>{person.born}</td>
+            <td>{person.died}</td>
 
+            <td>
               {person.mother
-                ? (
-                  <td>
-                    <PersonLink
-                      person={person.mother}
-                    />
-                  </td>
-                )
-                : (
-                  <td>{person.motherName || ('-')}</td>
-                )}
+                ? <PersonLink person={person.mother} />
+                : <>{person.motherName || ('-')}</>}
+            </td>
 
+            <td>
               {person.father
-                ? (
-                  <td>
-                    <PersonLink
-                      person={person.father}
-                    />
-                  </td>
-                )
-                : (
-                  <td>{person.fatherName || ('-')}</td>
-                )}
-            </tr>
-          );
-        })}
+                ? <PersonLink person={person.father} />
+                : <>{person.fatherName || ('-')}</>}
+            </td>
+          </tr>
+        ))}
       </tbody>
     </table>
   );

@@ -34,10 +34,14 @@ export const SortLink: FC<Props> = memo(({ currentColumnName }) => {
   };
 
   const changeSortingIcon = (columnName: string) => {
+    const noSorted = sortedBy !== columnName;
+    const sortedAsc = sortedBy === columnName && !ordered;
+    const sortedDesc = sortedBy === columnName && ordered;
+
     return cn('fas', {
-      'fa-sort': sortedBy !== columnName,
-      'fa-sort-up': sortedBy === columnName && !ordered,
-      'fa-sort-down': sortedBy === columnName && ordered,
+      'fa-sort': noSorted,
+      'fa-sort-up': sortedAsc,
+      'fa-sort-down': sortedDesc,
     });
   };
 

@@ -15,7 +15,7 @@ export const PeopleFilters: FC = memo(() => {
   const inputHandler = (event: ChangeEvent<HTMLInputElement>) => {
     const updatedSearchParams = getSearchWith(
       searchParams,
-      { query: event.target.value || null },
+      { query: event.target.value.trimStart() || null },
     );
 
     setSearchParams(updatedSearchParams);

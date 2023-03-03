@@ -11,6 +11,10 @@ import { Person } from '../../types/Person';
 import { PeopleTable } from '../../components/PeopleTable';
 import { preparePeople } from '../../utils/preparePeople';
 import { PeopleFilters } from '../../components/PeopleFilters';
+import { filterPeopleBySex } from '../../utils/filterPeopleBySex';
+import { filterPeopleByQuery } from '../../utils/filterPeopleByQuery';
+import { filterPeopleByCenturies } from '../../utils/filterPeopleByCenturies';
+import { sortPeople } from '../../utils/sortPeope';
 
 export const PeoplePage: FC = memo(() => {
   const [people, setPeople] = useState<Person[]>([]);
@@ -20,7 +24,7 @@ export const PeoplePage: FC = memo(() => {
   ] = useState<Person[]>([]);
   const [isPeopleLoading, setIsPeopleLoading] = useState(true);
   const [error, setError] = useState(false);
-  const { selectedPerson = 0 } = useParams();
+  const { selectedPersonSlug = '0' } = useParams();
   const [searchParams] = useSearchParams();
 
   const loadPeople = async () => {
@@ -41,92 +45,44 @@ export const PeoplePage: FC = memo(() => {
     loadPeople();
   }, []);
 
-  const filterPeopleBySex = (currentPeople: Person[]) => {
-    const selectedSex = searchParams.get('sex');
-    const currentPeopleFiltered = currentPeople.filter(person => (
-      person.sex === selectedSex
-    ));
-
-    return (
-      currentPeopleFiltered.length
-        ? currentPeopleFiltered
-        : people
-    );
-  };
-
-  const filterPeopleByQuery = (currentPeople: Person[]) => {
-    const lowerCaseInputQuery = searchParams
-      .get('query')?.toLowerCase().trimStart();
-
-    if (lowerCaseInputQuery) {
-      return currentPeople.filter(person => {
-        const compareString = (person.name
-          + person.motherName
-          + person.fatherName).toLowerCase();
-
-        return compareString.includes(lowerCaseInputQuery);
-      });
-    }
-
-    return currentPeople;
-  };
-
-  const filterPeopleByCenturies = (currentPeople: Person[]) => (
-    currentPeople.filter(person => (
-      searchParams.getAll('centuries')
-        .includes(Math.floor(person.born / 100 + 1).toString())
-    ))
-  );
-
-  const sortPeople = (currentPeople: Person[]) => {
-    const sortBy = searchParams.get('sort');
-    const order = searchParams.get('order');
-    const sortedPeople = [...currentPeople];
-
-    switch (sortBy) {
-      case 'name':
-      case 'sex': sortedPeople.sort((p1, p2) => {
-        if (order) {
-          return p2[sortBy].localeCompare(p1[sortBy]);
-        }
-
-        return p1[sortBy].localeCompare(p2[sortBy]);
-      });
-        break;
-
-      case 'born':
-      case 'died': sortedPeople.sort((p1, p2) => {
-        if (order) {
-          return Number(p2[sortBy]) - Number(p1[sortBy]);
-        }
-
-        return Number(p1[sortBy]) - Number(p2[sortBy]);
-      });
-        break;
-
-      default: return sortedPeople;
-    }
-
-    return sortedPeople;
+  const params = {
+    sex: searchParams.get('sex'),
+    query: searchParams.get('query'),
+    centuries: searchParams.getAll('centuries'),
+    sort: searchParams.get('sort'),
+    order: searchParams.get('order'),
   };
 
   useEffect(() => {
-    let currentFilteredPeople = people;
+    let currentFilteredPeople = [...people];
 
-    if (searchParams.get('sex')) {
-      currentFilteredPeople = filterPeopleBySex(currentFilteredPeople);
+    if (params.sex) {
+      currentFilteredPeople = filterPeopleBySex(
+        currentFilteredPeople,
+        params.sex,
+      );
     }
 
-    if (searchParams.get('query')) {
-      currentFilteredPeople = filterPeopleByQuery(currentFilteredPeople);
+    if (params.query) {
+      currentFilteredPeople = filterPeopleByQuery(
+        currentFilteredPeople,
+        params.query,
+      );
     }
 
-    if (searchParams.getAll('centuries').length) {
-      currentFilteredPeople = filterPeopleByCenturies(currentFilteredPeople);
+    if (params.centuries.length) {
+      currentFilteredPeople = filterPeopleByCenturies(
+        currentFilteredPeople,
+        params.centuries,
+      );
     }
 
-    if (searchParams.get('sort')) {
-      currentFilteredPeople = sortPeople(currentFilteredPeople);
+    if (params.sort) {
+      currentFilteredPeople = sortPeople(
+        currentFilteredPeople,
+        params.sort,
+        params.order,
+      );
     }
 
     setFilteredAndSortedPeople(currentFilteredPeople);
@@ -162,7 +118,7 @@ export const PeoplePage: FC = memo(() => {
               {!!people.length && (
                 <PeopleTable
                   people={filteredAndSortedPeople}
-                  selectedPerson={selectedPerson}
+                  selectedPersonSlug={selectedPersonSlug}
                 />
               )}
             </div>
