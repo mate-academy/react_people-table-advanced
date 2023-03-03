@@ -11,10 +11,7 @@ import { Person } from '../../types/Person';
 import { PeopleTable } from '../../components/PeopleTable';
 import { preparePeople } from '../../utils/preparePeople';
 import { PeopleFilters } from '../../components/PeopleFilters';
-import { filterPeopleBySex } from '../../utils/filterPeopleBySex';
-import { filterPeopleByQuery } from '../../utils/filterPeopleByQuery';
-import { filterPeopleByCenturies } from '../../utils/filterPeopleByCenturies';
-import { sortPeople } from '../../utils/sortPeope';
+import { filterAndSortPeople } from '../../utils/filterAndSortPeople';
 
 export const PeoplePage: FC = memo(() => {
   const [people, setPeople] = useState<Person[]>([]);
@@ -26,6 +23,13 @@ export const PeoplePage: FC = memo(() => {
   const [error, setError] = useState(false);
   const { selectedPersonSlug = '0' } = useParams();
   const [searchParams] = useSearchParams();
+  const params = {
+    sex: searchParams.get('sex'),
+    query: searchParams.get('query'),
+    centuries: searchParams.getAll('centuries'),
+    sort: searchParams.get('sort'),
+    order: searchParams.get('order'),
+  };
 
   const loadPeople = async () => {
     try {
@@ -45,45 +49,8 @@ export const PeoplePage: FC = memo(() => {
     loadPeople();
   }, []);
 
-  const params = {
-    sex: searchParams.get('sex'),
-    query: searchParams.get('query'),
-    centuries: searchParams.getAll('centuries'),
-    sort: searchParams.get('sort'),
-    order: searchParams.get('order'),
-  };
-
   useEffect(() => {
-    let currentFilteredPeople = [...people];
-
-    if (params.sex) {
-      currentFilteredPeople = filterPeopleBySex(
-        currentFilteredPeople,
-        params.sex,
-      );
-    }
-
-    if (params.query) {
-      currentFilteredPeople = filterPeopleByQuery(
-        currentFilteredPeople,
-        params.query,
-      );
-    }
-
-    if (params.centuries.length) {
-      currentFilteredPeople = filterPeopleByCenturies(
-        currentFilteredPeople,
-        params.centuries,
-      );
-    }
-
-    if (params.sort) {
-      currentFilteredPeople = sortPeople(
-        currentFilteredPeople,
-        params.sort,
-        params.order,
-      );
-    }
+    const currentFilteredPeople = filterAndSortPeople(people, params);
 
     setFilteredAndSortedPeople(currentFilteredPeople);
   }, [searchParams, people]);

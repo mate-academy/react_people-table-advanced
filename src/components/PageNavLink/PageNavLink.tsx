@@ -7,19 +7,13 @@ type Props = {
   name: string;
 };
 
-export const PageNavLink: FC<Props> = memo(({ to, name }) => {
-  const handlerActiveLink = (isActive: boolean) => {
-    return cn('navbar-item', {
+export const PageNavLink: FC<Props> = memo(({ to, name }) => (
+  <NavLink
+    to={to}
+    className={({ isActive }) => cn('navbar-item', {
       'has-background-grey-lighter': isActive,
-    });
-  };
-
-  return (
-    <NavLink
-      to={to}
-      className={({ isActive }) => handlerActiveLink(isActive)}
-    >
-      {name}
-    </NavLink>
-  );
-});
+    })}
+  >
+    {name}
+  </NavLink>
+));

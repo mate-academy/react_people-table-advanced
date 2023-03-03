@@ -66,22 +66,26 @@ export const PeopleFilters: FC = memo(() => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            {centuries.map(century => (
-              <SearchLink
-                data-cy="century"
-                key={century}
-                params={{
-                  centuries: selectedCenturies.includes(century)
-                    ? selectedCenturies.filter(c => c !== century)
-                    : [...selectedCenturies, century],
-                }}
-                className={cn('button mr-1', {
-                  'is-info': selectedCenturies.includes(century),
-                })}
-              >
-                {century}
-              </SearchLink>
-            ))}
+            {centuries.map(century => {
+              const isCenturySelected = selectedCenturies.includes(century);
+
+              return (
+                <SearchLink
+                  data-cy="century"
+                  key={century}
+                  params={{
+                    centuries: isCenturySelected
+                      ? selectedCenturies.filter(c => c !== century)
+                      : [...selectedCenturies, century],
+                  }}
+                  className={cn('button mr-1', {
+                    'is-info': isCenturySelected,
+                  })}
+                >
+                  {century}
+                </SearchLink>
+              );
+            })}
           </div>
 
           <div className="level-right ml-4">

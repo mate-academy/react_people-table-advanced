@@ -1,4 +1,4 @@
-import { Person } from '../types';
+import { Person } from '../types/Person';
 
 const findPeopleByName = (people: Person[], name: string | null) => {
   return people.find(p => p.name === name);

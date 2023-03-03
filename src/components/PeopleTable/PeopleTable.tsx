@@ -1,6 +1,6 @@
 import cn from 'classnames';
 import { FC, memo } from 'react';
-import { Person } from '../../types';
+import { Person } from '../../types/Person';
 import { PersonLink } from '../PersonLink';
 import { SortLink } from '../SortLink';
 
@@ -67,7 +67,6 @@ export const PeopleTable: FC<Props> = memo(({
             data-cy="person"
             key={person.slug}
             className={cn({
-              // eslint-disable-next-line
               'has-background-warning': person.slug === selectedPersonSlug,
             })}
           >
@@ -82,13 +81,13 @@ export const PeopleTable: FC<Props> = memo(({
             <td>
               {person.mother
                 ? <PersonLink person={person.mother} />
-                : <>{person.motherName || ('-')}</>}
+                : person.motherName || ('-')}
             </td>
 
             <td>
               {person.father
                 ? <PersonLink person={person.father} />
-                : <>{person.fatherName || ('-')}</>}
+                : person.fatherName || ('-')}
             </td>
           </tr>
         ))}
