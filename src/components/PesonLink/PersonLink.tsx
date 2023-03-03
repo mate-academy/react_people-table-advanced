@@ -10,7 +10,7 @@ type Props = {
 export const PersonLink = React.memo<Props>(({ person }) => {
   const { slug, name, sex } = person;
   const location = useLocation();
-  const rootPath = useResolvedPath('../').pathname;
+  const rootPath = useResolvedPath('/people/').pathname;
 
   return (
     <Link
