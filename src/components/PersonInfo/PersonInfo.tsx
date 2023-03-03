@@ -1,3 +1,4 @@
+import React from 'react';
 import classNames from 'classnames';
 import { Person } from '../../types';
 import { PersonLink } from '../PersonLink';
@@ -9,7 +10,7 @@ type Props = {
   selectedSlug: string;
 };
 
-export const PersonInfo: React.FC<Props> = ({
+export const PersonInfo: React.FC<Props> = React.memo(({
   person,
   personsFather,
   personsMother,
@@ -51,4 +52,4 @@ export const PersonInfo: React.FC<Props> = ({
       </td>
     </tr>
   );
-};
+});

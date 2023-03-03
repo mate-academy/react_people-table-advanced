@@ -1,5 +1,10 @@
 import { useParams, useSearchParams } from 'react-router-dom';
-import { useEffect, useMemo, useState } from 'react';
+import {
+  useEffect,
+  useMemo,
+  useState,
+  useCallback,
+} from 'react';
 import { PeopleFilters } from '../PeopleFilters';
 import { Loader } from '../Loader';
 import { PeopleTable } from '../PeopleTable';
@@ -18,7 +23,7 @@ export const PeoplePage: React.FC = () => {
   const sex = searchParams.get('sex') || '';
   const centuries = searchParams.getAll('centuries') || [];
 
-  const handleLoadingPeople = async () => {
+  const handleLoadingPeople = useCallback(() => async () => {
     try {
       const peoples = await getPeople();
 
@@ -27,7 +32,7 @@ export const PeoplePage: React.FC = () => {
     } catch (error) {
       setErrorMessage('Something went wrong');
     }
-  };
+  }, []);
 
   useEffect(() => {
     handleLoadingPeople();
