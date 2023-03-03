@@ -1,24 +1,19 @@
-export const Navbar = () => {
-  return (
-    <nav
-      data-cy="nav"
-      className="navbar is-fixed-top has-shadow"
-      role="navigation"
-      aria-label="main navigation"
-    >
-      <div className="container">
-        <div className="navbar-brand">
-          <a className="navbar-item" href="#/">Home</a>
+import React from 'react';
+import { NavLinkPage } from './NavLinkPage';
 
-          <a
-            aria-current="page"
-            className="navbar-item has-background-grey-lighter"
-            href="#/people"
-          >
-            People
-          </a>
-        </div>
+export const NavBar: React.FC = () => (
+  <nav
+    data-cy="nav"
+    className="navbar is-fixed-top has-shadow"
+    role="navigation"
+    aria-label="main navigation"
+  >
+    <div className="container">
+      <div className="navbar-brand">
+        <NavLinkPage to="/" text="Home" />
+
+        <NavLinkPage to="/people" text="People" />
       </div>
-    </nav>
-  );
-};
+    </div>
+  </nav>
+);
