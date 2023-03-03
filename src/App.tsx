@@ -1,6 +1,8 @@
 import './App.scss';
 import {
-  Navigate, Route, Routes,
+  Navigate,
+  Route,
+  Routes,
 } from 'react-router-dom';
 import { TablePage } from './Pages/TablePage';
 import { HomePage } from './Pages/HomePage';

@@ -63,26 +63,28 @@ export const PeopleFilters: React.FC = memo(() => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            {centuriesList.map(century => (
-              <SearchLink
-                key={century}
-                params={{
-                  centuries: (
-                    centuries.includes(century.toString())
-                      ? centuries.filter(time => time !== century.toString())
-                      : [...centuries, century]
-                  ),
-                }}
-                data-cy="century"
-                className={classNames(
-                  'button',
-                  'mr-1',
-                  { 'is-info': centuries.includes(century.toString()) },
-                )}
-              >
-                {century}
-              </SearchLink>
-            ))}
+            {centuriesList.map(century => {
+              const result = centuries.includes(century.toString())
+                ? centuries.filter(time => time !== century.toString())
+                : [...centuries, century];
+
+              return (
+                <SearchLink
+                  key={century}
+                  params={{
+                    centuries: result,
+                  }}
+                  data-cy="century"
+                  className={classNames(
+                    'button',
+                    'mr-1',
+                    { 'is-info': centuries.includes(century.toString()) },
+                  )}
+                >
+                  {century}
+                </SearchLink>
+              );
+            })}
           </div>
 
           <div className="level-right ml-4">

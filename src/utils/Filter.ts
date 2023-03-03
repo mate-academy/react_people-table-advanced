@@ -24,12 +24,8 @@ export const filtered = (
     );
   }
 
-  if (sex === 'm') {
-    filteredArray = filteredArray.filter(person => person.sex === 'm');
-  }
-
-  if (sex === 'f') {
-    filteredArray = filteredArray.filter(person => person.sex === 'f');
+  if (sex === 'm' || sex === 'f') {
+    filteredArray = filteredArray.filter(person => person.sex === sex);
   }
 
   if (centuries.length) {

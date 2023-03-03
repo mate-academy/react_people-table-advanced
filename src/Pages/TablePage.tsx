@@ -37,7 +37,7 @@ export const TablePage: React.FC = () => {
   }, []);
 
   const getArrayWithParents = useMemo(() => {
-    const result = [...peopleList].map(person => {
+    return [...peopleList].map(person => {
       const motherLink = peopleList
         .find(mother => mother.name === person.motherName);
       const fatherLink = peopleList
@@ -45,8 +45,6 @@ export const TablePage: React.FC = () => {
 
       return { ...person, mother: motherLink, father: fatherLink };
     });
-
-    return result;
   }, [peopleList]);
 
   const visibile = useMemo(() => (
