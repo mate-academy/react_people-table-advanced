@@ -16,7 +16,7 @@ export const PeoplePage = () => {
     try {
       const loadedPeople = await getPeople();
 
-      setIsLoading(true);
+      setIsLoading(false);
       setPeople(loadedPeople);
     } catch (error) {
       setHasError(true);
