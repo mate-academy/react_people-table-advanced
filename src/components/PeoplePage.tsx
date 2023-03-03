@@ -18,14 +18,13 @@ export const PeoplePage: FC = memo(() => {
   const [people, setPeople] = useState<Person[] | []>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
-  const [filteredPeople, setFilteredPeople] = useState<Person[]>([]);
 
   const { slug = '' } = useParams();
 
   const noError = !isLoading && !hasError;
   const noPeople = !people.length && noError;
-  const noFilteredPeople = !filteredPeople.length && noError;
-  const thereAreFilteredPeople = !!filteredPeople.length && noError;
+  const noFilteredPeople = !people.length && noError;
+  const thereAreFilteredPeople = !!people.length && noError;
 
   const fetchPeople = useCallback(async () => {
     try {
@@ -53,10 +52,7 @@ export const PeoplePage: FC = memo(() => {
         <div className="columns is-desktop is-flex-direction-row-reverse">
           {noError && (
             <div className="column is-7-tablet is-narrow-desktop">
-              <PeopleFilters
-                people={people}
-                setFilteredPeople={setFilteredPeople}
-              />
+              <PeopleFilters />
             </div>
           )}
 
@@ -82,7 +78,7 @@ export const PeoplePage: FC = memo(() => {
 
               {thereAreFilteredPeople && (
                 <PeopleTable
-                  people={filteredPeople}
+                  people={people}
                   selectedSlug={slug}
                 />
               )}

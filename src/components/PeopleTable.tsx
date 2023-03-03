@@ -3,12 +3,13 @@ import {
   FC,
   memo,
   useCallback,
-  useEffect,
-  useState,
+  useMemo,
 } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Person } from '../types';
 import { SortHeaders } from '../types/SortHeaders';
+import { getFilteredPeople } from '../utils/getFilteredPeople';
+import { getSortedPeople } from '../utils/getSortedPeople';
 import { PersonLink } from './PersonLink';
 import { SearchLink } from './SearchLink';
 
@@ -18,15 +19,13 @@ type Props = {
 };
 
 export const PeopleTable: FC<Props> = memo(({ people, selectedSlug }) => {
-  const [sortedPeople, setSortedPeople] = useState<Person[]>([]);
   const [searchParams] = useSearchParams();
 
-  const sort = searchParams.get('sort') || '';
-  const order = searchParams.get('order') || '';
-
-  const isSelected = useCallback((slug: string) => (
-    slug === selectedSlug
-  ), [selectedSlug]);
+  const sort = searchParams.get('sort') as keyof Person;
+  const isReversed = searchParams.get('order') === 'desc';
+  const query = searchParams.get('query');
+  const sexFilter = searchParams.get('sex');
+  const centuries = searchParams.getAll('centuries');
 
   const renderParent = useCallback((parentName: string | null) => {
     if (!parentName) {
@@ -42,41 +41,21 @@ export const PeopleTable: FC<Props> = memo(({ people, selectedSlug }) => {
     );
   }, []);
 
-  const sortPeople = useCallback((peopleToSort: Person[]) => {
-    const sortedListOfPeople = [...peopleToSort].sort((
-      firstPerson,
-      secondPerson,
-    ) => {
-      switch (sort) {
-        case SortHeaders.Name:
-        case SortHeaders.Sex:
-          return firstPerson[sort].localeCompare(secondPerson[sort]);
-        case SortHeaders.Born:
-        case SortHeaders.Died:
-          return firstPerson[sort] - secondPerson[sort];
-        default:
-          return 0;
-      }
-    });
+  const visiblePeople = useMemo(() => (
+    getFilteredPeople(people, query, sexFilter, centuries)
+  ), [people, query, sexFilter, centuries]);
 
-    return (
-      order === 'desc'
-        ? sortedListOfPeople.reverse()
-        : sortedListOfPeople
-    );
-  }, [searchParams]);
+  const sortedPeople = useMemo(() => (
+    getSortedPeople(visiblePeople, sort, isReversed)
+  ), [visiblePeople, sort, isReversed]);
 
   const hasValueAndOrder = useCallback((value: string) => (
-    sort === value && order
+    sort === value && isReversed
   ), [searchParams]);
 
   const hasValueNoOrder = useCallback((value: string) => (
-    sort === value && !order
+    sort === value && !isReversed
   ), [searchParams]);
-
-  useEffect(() => {
-    setSortedPeople(sortPeople(people));
-  }, [people, searchParams]);
 
   return (
     <table
@@ -134,7 +113,7 @@ export const PeopleTable: FC<Props> = memo(({ people, selectedSlug }) => {
             key={slug}
             data-cy="person"
             className={classNames(
-              { 'has-background-warning': isSelected(slug) },
+              { 'has-background-warning': slug === selectedSlug },
             )}
           >
             <td>

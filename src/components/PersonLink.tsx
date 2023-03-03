@@ -1,10 +1,10 @@
 import classNames from 'classnames';
 import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useResolvedPath } from 'react-router-dom';
 import { Person } from '../types';
 
 type Props = {
-  person: Partial<Person>;
+  person: Partial<Person>,
 };
 
 export const PersonLink: React.FC<Props> = React.memo(({ person }) => {
@@ -14,14 +14,16 @@ export const PersonLink: React.FC<Props> = React.memo(({ person }) => {
     name,
   } = person;
   const { search } = useLocation();
+  const parentPath = useResolvedPath('../').pathname;
+
   const isWoman = sex === 'f';
 
   return (
     <Link
-      to={({
-        pathname: `/people/${slug}`,
+      to={{
+        pathname: parentPath + slug,
         search,
-      })}
+      }}
       className={classNames({ 'has-text-danger': isWoman })}
     >
       {name}

@@ -2,63 +2,21 @@ import {
   FC,
   memo,
   useCallback,
-  useEffect,
 } from 'react';
 
 import { useSearchParams } from 'react-router-dom';
 import classNames from 'classnames';
-import { Person } from '../types';
 import { SexFilter } from '../types/SexFilter';
 import { getSearchWith } from '../utils/searchHelper';
 import { SearchLink } from './SearchLink';
 
-type Props = {
-  people: Person[];
-  setFilteredPeople: (people: Person[]) => void;
-};
-
-export const PeopleFilters: FC<Props> = memo(({
-  people,
-  setFilteredPeople,
-}) => {
+export const PeopleFilters: FC = memo(() => {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const sex = searchParams.get('sex') || null;
   const query = searchParams.get('query') || '';
   const centuries = searchParams.getAll('centuries') || [];
   const centuryList = ['16', '17', '18', '19', '20'];
-
-  const filterPeople = useCallback((peopleToFilter: Person[]) => {
-    let filteredPeople = [...peopleToFilter];
-
-    if (sex) {
-      filteredPeople = filteredPeople.filter(person => person.sex === sex);
-    }
-
-    if (query) {
-      const isContainQuery = (person: string | null) => {
-        return person
-          ? person.toLowerCase().includes(query.toLowerCase())
-          : null;
-      };
-
-      filteredPeople = filteredPeople.filter(person => (
-        isContainQuery(person.name)
-          || isContainQuery(person.fatherName)
-          || isContainQuery(person.motherName)
-      ));
-    }
-
-    if (centuries.length) {
-      filteredPeople = filteredPeople.filter(person => {
-        const personBornCentury = Math.ceil(person.born / 100).toString();
-
-        return centuries.includes(personBornCentury);
-      });
-    }
-
-    return filteredPeople;
-  }, [searchParams]);
 
   const handleQueryChange = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -67,10 +25,6 @@ export const PeopleFilters: FC<Props> = memo(({
       );
     }, [],
   );
-
-  useEffect(() => {
-    setFilteredPeople(filterPeople(people));
-  }, [people, searchParams]);
 
   return (
     <nav className="panel">
@@ -167,12 +121,12 @@ export const PeopleFilters: FC<Props> = memo(({
             query: null,
             centuries: null,
           }}
-          className="
-            button
-            is-link
-            is-outlined
-            is-fullwidth
-          "
+          className={classNames(
+            'button',
+            'is-link',
+            'is-fullwidth',
+            { 'is-outlined': centuries.length === 0 && !sex && !query },
+          )}
         >
           Reset all filters
         </SearchLink>

@@ -9,11 +9,11 @@ type Props = {
 
 export const NavLinkPage: React.FC<Props> = React.memo(({ to, text }) => (
   <NavLink
-    className={({ isActive }) => {
-      return classNames('navbar-item', {
+    className={({ isActive }) => (
+      classNames('navbar-item', {
         'has-background-grey-lighter': isActive,
-      });
-    }}
+      })
+    )}
     to={to}
   >
     {text}
