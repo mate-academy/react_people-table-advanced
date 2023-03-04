@@ -76,13 +76,11 @@ export const PeopleTable: React.FC<Props> = ({
       <tbody>
         {visiblePeople.map(person => {
           const {
-            sex, born, died, motherName, fatherName, slug,
+            sex, born, died, motherName, fatherName, slug, mother, father,
           } = person;
 
           const isSelected = slug === selectedPersonSlug;
 
-          const mother = people.find(parent => parent.name === motherName);
-          const father = people.find(parent => parent.name === fatherName);
           const personMotherName = motherName || '-';
           const personFatherName = fatherName || '-';
 
