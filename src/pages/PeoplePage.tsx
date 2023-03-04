@@ -5,32 +5,34 @@ import { Loader } from '../components/Loader';
 import { PeopleTable } from '../components/PeopleTable/PeopleTable';
 import { getPeople } from '../api';
 import { Person } from '../types';
+import { getPreparedPeople } from '../utils/getPreperedPeople';
 
 export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);
-  const [loadingHasError, setLoadingHasError] = useState(false);
+  const [hasLoadingError, setHasLoadingError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
   const { personSlug = '' } = useParams();
 
   const isTableVisible = Boolean(
-    people.length && !loadingHasError && !isLoading,
+    people.length && !hasLoadingError && !isLoading,
   );
 
-  const tableIsEmpty = Boolean(
-    !people.length && !loadingHasError && !isLoading,
+  const isTableEmpty = Boolean(
+    !people.length && !hasLoadingError && !isLoading,
   );
 
   const getPeopleFromServer = useCallback(async () => {
-    setLoadingHasError(false);
+    setHasLoadingError(false);
     setIsLoading(true);
 
     try {
       const peopleFromServer = await getPeople();
+      const preperedPeople = getPreparedPeople(peopleFromServer);
 
-      setPeople(peopleFromServer);
+      setPeople(preperedPeople);
     } catch {
-      setLoadingHasError(true);
+      setHasLoadingError(true);
     } finally {
       setIsLoading(false);
     }
@@ -54,11 +56,11 @@ export const PeoplePage = () => {
             <div className="box table-container">
               {isLoading && <Loader />}
 
-              {loadingHasError && (
+              {hasLoadingError && (
                 <p data-cy="peopleLoadingError">Something went wrong</p>
               )}
 
-              {tableIsEmpty && (
+              {isTableEmpty && (
                 <p data-cy="noPeopleMessage">
                   There are no people on the server
                 </p>

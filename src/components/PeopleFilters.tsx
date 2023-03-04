@@ -3,13 +3,15 @@ import cn from 'classnames';
 import React from 'react';
 import { getSearchWith } from '../utils/searchHelper';
 import { SearchLink } from './SearchLink';
+import { SexSearchLink } from './SexSearchLink';
 
 export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const centuries = searchParams.getAll('centuries') || [];
-  const sex = searchParams.get('sex') || null;
+  const centuries = searchParams.getAll('centuries');
   const query = searchParams.get('query') || '';
+
+  const centuriesForSearch = ['16', '17', '18', '19', '20'];
 
   const onQueryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchParams(
@@ -23,24 +25,9 @@ export const PeopleFilters = () => {
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        <Link
-          className={cn({ 'is-active': sex === null })}
-          to={{ search: getSearchWith(searchParams, { sex: null }) }}
-        >
-          All
-        </Link>
-        <Link
-          className={cn({ 'is-active': sex === 'm' })}
-          to={{ search: getSearchWith(searchParams, { sex: 'm' }) }}
-        >
-          Male
-        </Link>
-        <Link
-          className={cn({ 'is-active': sex === 'f' })}
-          to={{ search: getSearchWith(searchParams, { sex: 'f' }) }}
-        >
-          Female
-        </Link>
+        <SexSearchLink sex={null} text="All" />
+        <SexSearchLink sex="m" text="Male" />
+        <SexSearchLink sex="f" text="Female" />
       </p>
 
       <div className="panel-block">
@@ -51,7 +38,7 @@ export const PeopleFilters = () => {
             className="input"
             placeholder="Search"
             value={query}
-            onChange={(event) => onQueryChange(event)}
+            onChange={onQueryChange}
 
           />
 
@@ -64,7 +51,7 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            {['16', '17', '18', '19', '20'].map(century => (
+            {centuriesForSearch.map(century => (
               <SearchLink
                 key={century}
                 data-cy="century"
@@ -86,8 +73,8 @@ export const PeopleFilters = () => {
           <div className="level-right ml-4">
             <Link
               data-cy="century"
-              className={cn('button', 'mr-1', {
-                'is-info': centuries.length,
+              className={cn('button is-success', {
+                'is-outlined': centuries.length !== 0,
               })}
               to={{ search: getSearchWith(searchParams, { centuries: null }) }}
             >
