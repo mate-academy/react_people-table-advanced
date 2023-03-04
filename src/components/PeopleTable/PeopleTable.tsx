@@ -9,92 +9,96 @@ interface Peops {
   personSlug: string
 }
 
-export const PeopleTable: React.FC<Peops> = ({ people, personSlug }) => {
-  const isSelected = (slug: string) => slug === personSlug;
+export const PeopleTable: React.FC<Peops> = React.memo(
+  ({ people, personSlug }) => {
+    const isSelected = (slug: string) => slug === personSlug;
 
-  return (
-    <table
-      style={{ borderCollapse: 'collapse' }}
-      data-cy="peopleTable"
-      className="table is-striped is-hoverable is-narrow is-fullwidth"
-    >
-      <thead>
-        <tr>
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Name
-              <SortLink sortBy="name" />
-            </span>
-          </th>
+    return (
+      <table
+        style={{ borderCollapse: 'collapse' }}
+        data-cy="peopleTable"
+        className="table is-striped is-hoverable is-narrow is-fullwidth"
+      >
+        <thead>
+          <tr>
+            <th>
+              <span className="is-flex is-flex-wrap-nowrap">
+                Name
+                <SortLink sortBy="name" />
+              </span>
+            </th>
 
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Sex
-              <SortLink sortBy="sex" />
-            </span>
-          </th>
+            <th>
+              <span className="is-flex is-flex-wrap-nowrap">
+                Sex
+                <SortLink sortBy="sex" />
+              </span>
+            </th>
 
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Born
-              <SortLink sortBy="born" />
-            </span>
-          </th>
+            <th>
+              <span className="is-flex is-flex-wrap-nowrap">
+                Born
+                <SortLink sortBy="born" />
+              </span>
+            </th>
 
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Died
-              <SortLink sortBy="died" />
-            </span>
-          </th>
+            <th>
+              <span className="is-flex is-flex-wrap-nowrap">
+                Died
+                <SortLink sortBy="died" />
+              </span>
+            </th>
 
-          <th>Mother</th>
-          <th>Father</th>
-        </tr>
-      </thead>
+            <th>Mother</th>
+            <th>Father</th>
+          </tr>
+        </thead>
 
-      <tbody>
-        {people.map(person => {
-          const {
-            sex,
-            born,
-            died,
-            motherName,
-            mother,
-            fatherName,
-            father,
-            slug,
-          } = person;
+        <tbody>
+          {people.map(person => {
+            const {
+              sex,
+              born,
+              died,
+              motherName,
+              mother,
+              fatherName,
+              father,
+              slug,
+            } = person;
+            const dad = fatherName || '-';
+            const mom = motherName || '-';
 
-          return (
-            <tr
-              key={slug}
-              data-cy="person"
-              className={classNames({
-                'has-background-warning': isSelected(slug),
-              })}
-            >
-              <td>
-                <PersonLink person={person} />
-              </td>
-              <td>{sex}</td>
-              <td>{born}</td>
-              <td>{died}</td>
-              <td>
-                {mother
-                  ? <PersonLink person={mother} />
-                  : motherName || '-'}
-              </td>
-              <td>
-                {father
-                  ? <PersonLink person={father} />
-                  : fatherName || '-'}
-              </td>
-            </tr>
-          );
-        })}
+            return (
+              <tr
+                key={slug}
+                data-cy="person"
+                className={classNames({
+                  'has-background-warning': isSelected(slug),
+                })}
+              >
+                <td>
+                  <PersonLink person={person} />
+                </td>
+                <td>{sex}</td>
+                <td>{born}</td>
+                <td>{died}</td>
+                <td>
+                  {mother
+                    ? <PersonLink person={mother} />
+                    : mom}
+                </td>
+                <td>
+                  {father
+                    ? <PersonLink person={father} />
+                    : dad}
+                </td>
+              </tr>
+            );
+          })}
 
-      </tbody>
-    </table>
-  );
-};
+        </tbody>
+      </table>
+    );
+  },
+);
