@@ -1,3 +1,5 @@
+import { NavButton } from './NavButton';
+
 export const Navbar = () => {
   return (
     <nav
@@ -8,15 +10,9 @@ export const Navbar = () => {
     >
       <div className="container">
         <div className="navbar-brand">
-          <a className="navbar-item" href="#/">Home</a>
-
-          <a
-            aria-current="page"
-            className="navbar-item has-background-grey-lighter"
-            href="#/people"
-          >
-            People
-          </a>
+          <NavButton>Home</NavButton>
+          <NavButton>People</NavButton>
+          <NavButton>No page</NavButton>
         </div>
       </div>
     </nav>
