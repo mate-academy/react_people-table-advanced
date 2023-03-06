@@ -1,18 +1,19 @@
 import { Person } from '../types';
+import { SortBy } from '../types/sortBy';
 
-export function sortPeople(people: Person[], sortBy: string) {
+export function sortPeople(people: Person[], sortBy: SortBy) {
   return [...people].sort((a, b) => {
     switch (sortBy) {
-      case 'name':
+      case SortBy.Name:
         return a.name.localeCompare(b.name);
 
-      case 'sex':
+      case SortBy.Sex:
         return a.sex.localeCompare(b.sex);
 
-      case 'born':
+      case SortBy.Born:
         return a.born - b.born;
 
-      case 'died':
+      case SortBy.Died:
         return a.died - b.died;
 
       default:

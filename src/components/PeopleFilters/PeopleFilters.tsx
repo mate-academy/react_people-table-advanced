@@ -100,7 +100,7 @@ export const PeopleFilters: React.FC = () => {
               data-cy="centuryALL"
               className={classNames(
                 'button is-success',
-                { 'is-outlined': centuries.length !== 0 },
+                { 'is-outlined': centuries.length },
               )}
               params={{
                 centuries: null,

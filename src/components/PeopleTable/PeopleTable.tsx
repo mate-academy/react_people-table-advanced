@@ -2,6 +2,7 @@ import classNames from 'classnames';
 import { useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Person } from '../../types';
+import { SortBy } from '../../types/sortBy';
 import { sortPeople } from '../../utils/sortPeople';
 import { PersonInfo } from '../PersonInfo';
 import { SearchLink } from '../SearchLink';
@@ -20,7 +21,7 @@ export const PeopleTable: React.FC<Props> = ({
   const order = searchParams.get('order') || '';
 
   const preparedPersons = useMemo(() => (
-    sortPeople(persons, sort)
+    sortPeople(persons, sort as SortBy)
   ), [persons, sort]);
 
   if (order) {

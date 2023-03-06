@@ -10,7 +10,10 @@ export function filterPeople(
 
   return people.filter(person => {
     const {
-      name, fatherName, motherName, born,
+      name,
+      fatherName,
+      motherName,
+      born,
     } = person;
     const lowerName = name.toLowerCase();
     const lowerFatherName = fatherName?.toLowerCase();
@@ -20,7 +23,7 @@ export function filterPeople(
     const queryCondition = lowerName.includes(lowerQuery)
     || lowerFatherName?.includes(lowerQuery)
     || lowerMotherName?.includes(lowerQuery);
-    const centuryCondition = centuries.length > 0
+    const centuryCondition = centuries.length
       ? centuries.includes(centuryOfBirth)
       : true;
     const sexCondition = !sex
