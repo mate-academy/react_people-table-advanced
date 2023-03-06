@@ -2,8 +2,11 @@ import classNames from 'classnames';
 import React, { useMemo } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
 import { Person } from '../../types';
+import { sortPeople } from '../../utils/searchHelper';
 import { PersonLink } from '../PersonLink';
 import { SearchLink } from '../SearchLink';
+
+const sortValues = ['Name', 'Sex', 'Born', 'Died'];
 
 type Props = {
   people: Person[],
@@ -20,25 +23,8 @@ export const PeopleTable: React.FC<Props> = ({
   const order = searchParams.get('order') || '';
 
   const sortedPeople = useMemo(() => (
-    [...people].sort((a, b) => {
-      switch (peopleSort) {
-        case 'name':
-          return a.name.localeCompare(b.name);
-        case 'sex':
-          return a.sex.localeCompare(b.sex);
-        case 'born':
-          return a.born - b.born;
-        case 'died':
-          return a.died - b.died;
-        default:
-          return 0;
-      }
-    })
+    sortPeople(people, peopleSort, order)
   ), [people, peopleSort]);
-
-  if (order === 'desc') {
-    sortedPeople.reverse();
-  }
 
   return (
     <div className="block">
@@ -50,7 +36,7 @@ export const PeopleTable: React.FC<Props> = ({
           <thead>
             <tr>
               {
-                ['Name', 'Sex', 'Born', 'Died'].map((item) => {
+                sortValues.map((item) => {
                   const newSort = item.toLowerCase();
 
                   const sortValue = peopleSort === newSort ? null : newSort;

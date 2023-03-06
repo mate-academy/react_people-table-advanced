@@ -10,6 +10,7 @@ import { PeopleTable } from '../PeopleTable';
 import { Person } from '../../types';
 import { PeopleFilters } from '../PeopleFilters';
 import { Loader } from '../Loader';
+import { filterPeopleByParams } from '../../utils/searchHelper';
 
 export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);
@@ -39,45 +40,16 @@ export const PeoplePage = () => {
     fetchPeople();
   }, []);
 
-  const peopleFilteredBySex = useMemo(() => (
-    sexFilter
-      ? people.filter(({ sex }) => sex === sexFilter)
-      : people
-  ), [sexFilter, people]);
-
-  const peopleFilteredByQuery = useMemo(() => {
-    const normalizedFilter = queryFilter.trim().toLowerCase();
-
-    return queryFilter
-      ? peopleFilteredBySex.filter(({ name, fatherName, motherName }) => {
-        const father = fatherName || '';
-        const mother = motherName || '';
-
-        return (
-          name.toLowerCase().includes(normalizedFilter)
-          || father.toLowerCase().includes(normalizedFilter)
-          || mother.toLowerCase().includes(normalizedFilter)
-        );
-      })
-      : peopleFilteredBySex;
-  }, [queryFilter, peopleFilteredBySex]);
-
-  const peopleFilteredByCenturies = useMemo(() => (
-    centuriesFilter.length !== 0
-      ? peopleFilteredByQuery.filter(({ born }) => {
-        const century = Math.floor(born / 100) + 1;
-
-        return centuriesFilter.includes(century.toString());
-      })
-      : peopleFilteredByQuery
-  ), [centuriesFilter, peopleFilteredByQuery]);
+  const filteredPeople = useMemo(() => (
+    filterPeopleByParams(people, sexFilter, queryFilter, centuriesFilter)
+  ), [people, sexFilter, queryFilter, centuriesFilter]);
 
   const isFiltersVisible = people.length !== 0 && !isError && !isLoading;
   const isFilteredTableEmpty = (
-    peopleFilteredByCenturies.length === 0 && isFiltersVisible
+    filteredPeople.length === 0 && isFiltersVisible
   );
   const isTableVisible = (
-    peopleFilteredByCenturies.length !== 0 && isFiltersVisible
+    filteredPeople.length !== 0 && isFiltersVisible
   );
   const isTableEmpty = people.length === 0 && !isError && !isLoading;
 
@@ -100,33 +72,25 @@ export const PeoplePage = () => {
                 isLoading && <Loader />
               }
 
-              {
-                isError && (
-                  <p data-cy="peopleLoadingError">Something went wrong</p>
-                )
-              }
+              {isError && (
+                <p data-cy="peopleLoadingError">Something went wrong</p>
+              )}
 
-              {
-                isTableEmpty && (
-                  <p data-cy="noPeopleMessage">
-                    There are no people on the server
-                  </p>
-                )
-              }
+              { isTableEmpty && (
+                <p data-cy="noPeopleMessage">
+                  There are no people on the server
+                </p>
+              )}
 
-              {
-                isFilteredTableEmpty && (
-                  <p>
-                    There are no people matching the current search criteria
-                  </p>
-                )
-              }
+              {isFilteredTableEmpty && (
+                <p>
+                  There are no people matching the current search criteria
+                </p>
+              )}
 
-              {
-                isTableVisible && (
-                  <PeopleTable people={peopleFilteredByCenturies} />
-                )
-              }
+              {isTableVisible && (
+                <PeopleTable people={filteredPeople} />
+              )}
             </div>
           </div>
         </div>
