@@ -1,6 +1,6 @@
 import { Router } from './components/Router';
 import './App.scss';
-import { PageNavLink } from './components/PageNavLink';
+import { PageNavLink } from './pages/PeoplePage/PageNavLink';
 
 export const App = () => (
   <div data-cy="app">
