@@ -9,7 +9,7 @@ type Props = {
 
 export const PersonLink: React.FC<Props> = ({ person }) => {
   const location = useLocation();
-  const parentPath = useResolvedPath('../').pathname;
+  const parentPath = useResolvedPath('/people/').pathname;
 
   const {
     name,

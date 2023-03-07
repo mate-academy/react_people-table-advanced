@@ -1,3 +1,4 @@
+import { SortBy } from '../types/SortBy';
 import { Person } from '../types';
 
 export const getFilteredTodos = (
@@ -43,11 +44,11 @@ export const getFilteredTodos = (
   if (sortParam) {
     filteredPeople.sort((personA, personB) => {
       switch (sortParam) {
-        case 'name':
-        case 'sex':
+        case SortBy.Name:
+        case SortBy.Sex:
           return personA[sortParam].localeCompare(personB[sortParam]);
-        case 'born':
-        case 'died':
+        case SortBy.Born:
+        case SortBy.Died:
           return personA[sortParam] - personB[sortParam];
         default:
           return 0;

@@ -6,6 +6,7 @@ import { Person } from '../../types';
 import { PersonLink } from '../PersonLink';
 import { getFilteredTodos } from '../../utils/getFilteredPeople';
 import { SortLink } from '../SortLink';
+import { SortBy } from '../../types/SortBy';
 
 type Props = {
   people: Person[],
@@ -43,33 +44,14 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
     >
       <thead>
         <tr>
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Name
-              <SortLink sortBy="name" />
-            </span>
-          </th>
-
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Sex
-              <SortLink sortBy="sex" />
-            </span>
-          </th>
-
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Born
-              <SortLink sortBy="born" />
-            </span>
-          </th>
-
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Died
-              <SortLink sortBy="died" />
-            </span>
-          </th>
+          {Object.values(SortBy).map(sortName => (
+            <th>
+              <span className="is-flex is-flex-wrap-nowrap">
+                {sortName[0].toUpperCase() + sortName.slice(1)}
+                <SortLink sortBy={sortName} />
+              </span>
+            </th>
+          ))}
 
           <th>Mother</th>
           <th>Father</th>
