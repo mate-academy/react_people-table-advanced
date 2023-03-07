@@ -1,5 +1,5 @@
-/* eslint-disable no-console */
 import { Person } from '../types';
+import { Sort } from '../types/Sort';
 
 export const preparedPeople = (people: Person []) => {
   return people.map(person => {
@@ -49,19 +49,19 @@ export const getFilteredPeople = (
   if (sort) {
     filteredPeople.sort((person1, person2) => {
       switch (sort) {
-        case 'name':
+        case Sort.Name:
           return (!hasOrder)
             ? person1.name.localeCompare(person2.name)
             : person2.name.localeCompare(person1.name);
-        case 'sex':
+        case Sort.Sex:
           return (!hasOrder)
             ? person1.sex.localeCompare(person2.sex)
             : person2.sex.localeCompare(person1.sex);
-        case 'born':
+        case Sort.Born:
           return (!hasOrder)
             ? person1.born - person2.born
             : person2.born - person1.born;
-        case 'died':
+        case Sort.Died:
           return (!hasOrder)
             ? person1.died - person2.died
             : person2.died - person1.died;

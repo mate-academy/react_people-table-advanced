@@ -9,8 +9,8 @@ export const PeopleFilters = React.memo(() => {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const query = searchParams.get('query') || '';
-  const centuries = searchParams.getAll('centuries') || [];
-  const sex = searchParams.get('sex') || null;
+  const centuries = searchParams.getAll('centuries');
+  const sex = searchParams.get('sex') || '';
 
   const onQueryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const queryToApply = (event.target.value)
