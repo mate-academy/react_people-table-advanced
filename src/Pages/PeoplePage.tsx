@@ -30,7 +30,7 @@ export const PeoplePage = () => {
 
   const noPeopleOnServer = people.length === 0 && !loading && !hasError;
 
-  const isTableVisible = hasError && people.length;
+  const isTableVisible = !hasError && people.length;
 
   return (
     <>
