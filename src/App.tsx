@@ -1,20 +1,27 @@
-import { PeoplePage } from './components/PeoplePage';
-import { Navbar } from './components/Navbar';
-
+import { Router } from './components/Router';
 import './App.scss';
+import { PageNavLink } from './components/PageNavLink';
 
-export const App = () => {
-  return (
-    <div data-cy="app">
-      <Navbar />
-
-      <div className="section">
-        <div className="container">
-          <h1 className="title">Home Page</h1>
-          <h1 className="title">Page not found</h1>
-          <PeoplePage />
+export const App = () => (
+  <div data-cy="app">
+    <nav
+      data-cy="nav"
+      className="navbar is-fixed-top has-shadow"
+      role="navigation"
+      aria-label="main navigation"
+    >
+      <div className="container">
+        <div className="navbar-brand">
+          <PageNavLink to="/" text="Home" />
+          <PageNavLink to="/people" text="People" />
         </div>
       </div>
-    </div>
-  );
-};
+    </nav>
+
+    <main className="section">
+      <div className="container">
+        <Router />
+      </div>
+    </main>
+  </div>
+);
