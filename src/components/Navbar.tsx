@@ -2,20 +2,18 @@ import classNames from 'classnames';
 import { NavLink } from 'react-router-dom';
 
 export const Navbar = () => {
-  const setNavLink = (to: string, title: string) => {
-    return (
-      <NavLink
-        className={({ isActive }) => classNames(
-          'navbar-item', {
-            'has-background-grey-lighter': isActive,
-          },
-        )}
-        to={to}
-      >
-        {title}
-      </NavLink>
-    );
-  };
+  const setNavLink = (to: string, title: string) => (
+    <NavLink
+      className={({ isActive }) => classNames(
+        'navbar-item', {
+          'has-background-grey-lighter': isActive,
+        },
+      )}
+      to={to}
+    >
+      {title}
+    </NavLink>
+  );
 
   return (
     <nav

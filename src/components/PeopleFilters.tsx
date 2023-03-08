@@ -7,7 +7,7 @@ export const PeopleFilters = () => {
   const bornCenturies = ['16', '17', '18', '19', '20'];
   const [searchParams, setSearchParams] = useSearchParams();
   const query = searchParams.get('query') || '';
-  const centuries = searchParams.getAll('centuries') || [];
+  const centuries = searchParams.getAll('centuries');
   const sexTypes = ['All', 'Male', 'Female'];
   const sex = searchParams.get('sex') || '';
 

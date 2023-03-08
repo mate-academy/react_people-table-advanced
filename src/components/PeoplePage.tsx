@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
 import { getPeople } from '../api';
 import { Person } from '../types';
+import { getVisiblePeople } from '../utils/searchHelper';
 import { Loader } from './Loader';
 import { PeopleFilters } from './PeopleFilters';
 import { PeopleTable } from './PeopleTable';
@@ -33,47 +34,11 @@ export const PeoplePage = () => {
     getPeopleFromServer();
   }, []);
 
-  const getVisiblePeople = () => {
-    let visiblePeople = [...people];
-
-    if (query) {
-      const correctQuery = query.toLowerCase();
-
-      visiblePeople = visiblePeople
-        .filter(person => person.name.toLowerCase().includes(correctQuery)
-          || person.fatherName?.toLowerCase().includes(correctQuery)
-          || person.motherName?.toLowerCase().includes(correctQuery));
-    }
-
-    if (sex) {
-      switch (sex) {
-        case 'Male':
-          visiblePeople = visiblePeople.filter(person => person.sex === 'm');
-          break;
-        case 'Female':
-          visiblePeople = visiblePeople.filter(person => person.sex === 'f');
-          break;
-        default:
-          break;
-      }
-    }
-
-    if (centuries.length) {
-      visiblePeople = visiblePeople.filter(person => {
-        const bornCentury = Math.ceil(person.born / 100).toString();
-
-        return centuries.includes(bornCentury);
-      });
-    }
-
-    return visiblePeople;
-  };
-
-  const filteredPeople = getVisiblePeople();
-
   useEffect(() => {
-    getVisiblePeople();
-  }, [query, sex]);
+    getVisiblePeople(people, query, sex, centuries);
+  }, [query, sex, centuries]);
+
+  const filteredPeople = getVisiblePeople(people, query, sex, centuries);
 
   if (isError) {
     return (

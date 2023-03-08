@@ -1,10 +1,9 @@
+import { Navigate, Route, Routes } from 'react-router-dom';
 import { PeoplePage } from './components/PeoplePage';
 import { Navbar } from './components/Navbar';
 import { HomePage } from './components/HomePage/HomePage';
 
 import './App.scss';
-// eslint-disable-next-line import/order
-import { Navigate, Route, Routes } from 'react-router-dom';
 import { NotFoundPage } from './components/NotFoundPage';
 
 export const App = () => {
