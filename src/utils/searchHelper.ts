@@ -1,3 +1,5 @@
+import { Person } from '../types';
+
 export type SearchParams = {
   [key: string]: string | string[] | null,
 };
@@ -45,3 +47,78 @@ export function getSearchWith(
   // we return a string to use it inside links
   return newParams.toString();
 }
+
+export function getSearchWithSort(
+  searchParams: URLSearchParams,
+  sortField: keyof Person,
+  sortLine: boolean,
+  isReversed: boolean,
+) {
+  if (!sortLine) {
+    return getSearchWith(
+      searchParams,
+      {
+        sort: sortField,
+        order: null,
+      },
+    );
+  }
+
+  if (!isReversed) {
+    return getSearchWith(
+      searchParams,
+      {
+        order: 'desc',
+      },
+    );
+  }
+
+  return getSearchWith(
+    searchParams,
+    {
+      sort: null,
+      order: null,
+    },
+  );
+}
+
+export const getVisiblePeople = (
+  people: Person[],
+  query: string | null,
+  sex: string | null,
+  centuries: string[],
+) => {
+  let visiblePeople = [...people];
+
+  if (query) {
+    const correctQuery = query.toLowerCase();
+
+    visiblePeople = visiblePeople
+      .filter(person => person.name.toLowerCase().includes(correctQuery)
+        || person.fatherName?.toLowerCase().includes(correctQuery)
+        || person.motherName?.toLowerCase().includes(correctQuery));
+  }
+
+  if (sex) {
+    switch (sex) {
+      case 'Male':
+        visiblePeople = visiblePeople.filter(person => person.sex === 'm');
+        break;
+      case 'Female':
+        visiblePeople = visiblePeople.filter(person => person.sex === 'f');
+        break;
+      default:
+        break;
+    }
+  }
+
+  if (centuries.length) {
+    visiblePeople = visiblePeople.filter(person => {
+      const bornCentury = Math.ceil(person.born / 100).toString();
+
+      return centuries.includes(bornCentury);
+    });
+  }
+
+  return visiblePeople;
+};
