@@ -1,11 +1,12 @@
-import classNames from "classnames";
-import { FC } from "react";
-import { useSearchParams } from "react-router-dom";
-import { SearchLink } from "./SearchLink";
+import classNames from 'classnames';
+import { FC } from 'react';
+import { useSearchParams } from 'react-router-dom';
+import { getParamsWithSort } from '../utils/getParamsWithSort';
+import { SearchLink } from './SearchLink';
 
 type Props = {
   field: string
-}
+};
 
 export const SortLink: FC<Props> = ({ field }) => {
   const [searchParams] = useSearchParams();
@@ -14,44 +15,22 @@ export const SortLink: FC<Props> = ({ field }) => {
 
   const preparedField = field.toLocaleLowerCase();
 
-  const getParamsWithSort = () => {
-    if (sortField !== preparedField) {
-      return {
-        sort: preparedField,
-        order: null,
-      };
-    }
-
-    if (!isReverse) {
-      return {
-        sort: preparedField,
-        order: 'desc',
-      }
-    }
-
-    return {
-      sort: null,
-      order: null,
-    }
-  };
-
-  const params = getParamsWithSort();
+  const params = getParamsWithSort(sortField, preparedField, isReverse);
 
   return (
     <th>
       <span className="is-flex is-flex-wrap-nowrap">
         {field}
-        <SearchLink params={params} >
+        <SearchLink params={params}>
           <span className="icon">
             <i className={classNames('fas',
-              {'fa-sort': sortField !== preparedField},
-              {'fa-sort-up': sortField === preparedField && !isReverse},
-              {'fa-sort-down': sortField === preparedField && isReverse}
-            )} />
+              { 'fa-sort': sortField !== preparedField },
+              { 'fa-sort-up': sortField === preparedField && !isReverse },
+              { 'fa-sort-down': sortField === preparedField && isReverse })}
+            />
           </span>
         </SearchLink>
       </span>
     </th>
-  )
-
-}
+  );
+};

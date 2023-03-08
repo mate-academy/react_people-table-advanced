@@ -1,6 +1,6 @@
 import classNames from 'classnames';
-import { FC } from "react";
-import { NavLink } from "react-router-dom";
+import { FC } from 'react';
+import { NavLink } from 'react-router-dom';
 
 type Props = {
   to: string,
@@ -10,9 +10,9 @@ type Props = {
 export const PageNavLink: FC<Props> = ({ to, text }) => (
   <NavLink
     className={({ isActive }) => classNames('navbar-item',
-    { 'has-background-grey-lighter': isActive })}
+      { 'has-background-grey-lighter': isActive })}
     to={to}
   >
     {text}
   </NavLink>
-)
+);

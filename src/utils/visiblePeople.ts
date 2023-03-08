@@ -1,4 +1,4 @@
-import { Person } from "../types";
+import { Person } from '../types';
 
 export const visiblePeople = (
   people: Person[],
@@ -14,7 +14,8 @@ export const visiblePeople = (
     preparePeople = preparePeople.filter(person => {
       return (person.name.toLocaleLowerCase().includes(preparedQuery)
         || person.motherName?.toLocaleLowerCase().includes(preparedQuery)
-        || person.fatherName?.toLocaleLowerCase().includes(preparedQuery))});
+        || person.fatherName?.toLocaleLowerCase().includes(preparedQuery));
+    });
   }
 
   if (sex) {
@@ -23,13 +24,13 @@ export const visiblePeople = (
 
   const getCentury = (born: number) => {
     return (Math.floor((born - 1) / 100) + 1).toString();
-  }
+  };
 
   if (centuries.length) {
-    preparePeople = preparePeople.filter(person=> centuries.includes(getCentury(person.born)));
+    preparePeople = preparePeople.filter(person => (
+      centuries.includes(getCentury(person.born))
+    ));
   }
 
-
-
   return preparePeople;
-}
+};

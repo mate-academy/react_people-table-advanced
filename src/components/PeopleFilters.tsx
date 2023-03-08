@@ -1,8 +1,8 @@
-import classNames from "classnames";
-import { ChangeEvent, FC } from "react";
-import { useSearchParams } from "react-router-dom";
-import { getSearchWith } from "../utils/searchHelper";
-import { SearchLink } from "./SearchLink";
+import classNames from 'classnames';
+import { ChangeEvent, FC } from 'react';
+import { useSearchParams } from 'react-router-dom';
+import { getSearchWith } from '../utils/searchHelper';
+import { SearchLink } from './SearchLink';
 
 export const PeopleFilters: FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -16,13 +16,12 @@ export const PeopleFilters: FC = () => {
     const preparedQuery = getSearchWith(
       searchParams,
       {
-        query: currentValue
-      }
+        query: currentValue,
+      },
     );
 
     setSearchParams(preparedQuery);
   };
-  
 
   return (
     <nav className="panel">
@@ -30,7 +29,7 @@ export const PeopleFilters: FC = () => {
 
       <p className="panel-tabs" data-cy="SexFilter">
         <SearchLink
-          className={classNames({ "is-active": currentSex === null })}
+          className={classNames({ 'is-active': currentSex === null })}
           params={{
             sex: null,
           }}
@@ -39,7 +38,7 @@ export const PeopleFilters: FC = () => {
         </SearchLink>
 
         <SearchLink
-          className={classNames({ "is-active": currentSex === 'm' })}
+          className={classNames({ 'is-active': currentSex === 'm' })}
           params={{
             sex: 'm',
           }}
@@ -48,7 +47,7 @@ export const PeopleFilters: FC = () => {
         </SearchLink>
 
         <SearchLink
-          className={classNames({ "is-active": currentSex === 'f' })}
+          className={classNames({ 'is-active': currentSex === 'f' })}
           params={{
             sex: 'f',
           }}
@@ -77,18 +76,18 @@ export const PeopleFilters: FC = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            {['16', '17', '18','19', '20'].map(century => (
+            {['16', '17', '18', '19', '20'].map(century => (
               <SearchLink
                 key={century}
                 data-cy="century"
                 className={classNames('button', 'mr-1',
-                 { "is-info": currentCenturies.includes(century) }
-                )}
+                  { 'is-info': currentCenturies.includes(century) })}
                 params={{
                   centuries: currentCenturies.includes(century)
-                   ? currentCenturies.filter(c => c !== century)
-                   : [...currentCenturies, century]
-              }}>
+                    ? currentCenturies.filter(c => c !== century)
+                    : [...currentCenturies, century],
+                }}
+              >
                 {century}
               </SearchLink>
             ))}
@@ -98,8 +97,7 @@ export const PeopleFilters: FC = () => {
             <SearchLink
               data-cy="centuryALL"
               className={classNames('button', 'is-success',
-                { 'is-outlined': Boolean(currentCenturies.length) }
-              )}
+                { 'is-outlined': Boolean(currentCenturies.length) })}
               params={{
                 centuries: [],
               }}
@@ -112,14 +110,14 @@ export const PeopleFilters: FC = () => {
 
       <div className="panel-block">
         <SearchLink
-            className={classNames('button', 'is-link', 'is-outlined', 'is-fullwidth')}
-            params={{
-              sex: null,
-              centuries: null,
-              query: null,
-            }}
-          >
-            Reset all filters
+          className="button is-link is-outlined is-fullwidth"
+          params={{
+            sex: null,
+            centuries: null,
+            query: null,
+          }}
+        >
+          Reset all filters
         </SearchLink>
       </div>
     </nav>

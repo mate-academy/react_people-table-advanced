@@ -1,7 +1,7 @@
+import { FC, useEffect, useState } from 'react';
 import { PeopleFilters } from './PeopleFilters';
 import { Loader } from './Loader';
 import { PeopleTable } from './PeopleTable';
-import { FC, useEffect, useState } from 'react';
 import { Person } from '../types';
 import { getPeople } from '../api';
 import { preparePeople } from '../utils/preparePeople';
@@ -15,7 +15,7 @@ export const PeoplePage: FC = () => {
     try {
       const allPeople = await getPeople();
 
-      const preparedPeople = preparePeople(allPeople)
+      const preparedPeople = preparePeople(allPeople);
 
       setPeople(preparedPeople);
     } catch {
@@ -29,7 +29,7 @@ export const PeoplePage: FC = () => {
     fetchPeople();
   }, []);
 
-  const emplyServer = !Boolean(people.length) && !isLoading && !isFetchError;
+  const emplyServer = !people.length && !isLoading && !isFetchError;
   const isVisiblePeopleTable = Boolean(people.length) && !isLoading;
 
   return (
@@ -39,7 +39,7 @@ export const PeoplePage: FC = () => {
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
           <div className="column is-7-tablet is-narrow-desktop">
-             {isVisiblePeopleTable && <PeopleFilters /> }
+            {isVisiblePeopleTable && <PeopleFilters /> }
           </div>
 
           <div className="column">

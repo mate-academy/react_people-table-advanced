@@ -1,27 +1,27 @@
-import { Person } from "../types";
+import { Person } from '../types';
 
 export const sortBy = (
   people: Person[],
-  sortBy: keyof Person,
+  sortByField: keyof Person,
   reverse: boolean,
-  ) => {
+) => {
   const sortPeople = [...people];
 
-  if (sortBy) {
+  if (sortByField) {
     sortPeople.sort((a, b) => {
-      switch (sortBy) {
+      switch (sortByField) {
         case 'name':
         case 'sex':
-          return a[sortBy].localeCompare(b[sortBy]);
+          return a[sortByField].localeCompare(b[sortByField]);
 
         case 'born':
         case 'died':
-          return a[sortBy] - b[sortBy];
+          return a[sortByField] - b[sortByField];
 
         default:
-         return  0;
+          return 0;
       }
-    })
+    });
   }
 
   if (reverse) {
@@ -29,4 +29,4 @@ export const sortBy = (
   }
 
   return sortPeople;
-}
+};

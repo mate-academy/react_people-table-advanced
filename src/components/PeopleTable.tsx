@@ -1,15 +1,15 @@
-import classNames from "classnames";
-import { FC } from "react";
-import { useParams, useSearchParams } from "react-router-dom";
-import { Person } from "../types";
-import { sortBy } from "../utils/sortBy";
-import { visiblePeople } from "../utils/visiblePeople";
-import { PersonLink } from "./PersonLink";
-import { SortLink } from "./SortLink";
+import classNames from 'classnames';
+import { FC } from 'react';
+import { useParams, useSearchParams } from 'react-router-dom';
+import { Person } from '../types';
+import { sortBy } from '../utils/sortBy';
+import { visiblePeople } from '../utils/visiblePeople';
+import { PersonLink } from './PersonLink';
+import { SortLink } from './SortLink';
 
 type Props = {
   people: Person[],
-}
+};
 
 export const PeopleTable: FC<Props> = ({ people }) => {
   const { personSlug } = useParams();
@@ -21,15 +21,17 @@ export const PeopleTable: FC<Props> = ({ people }) => {
   const sortByField = searchParams.get('sort') as keyof Person;
   const isReverse = searchParams.get('order') === 'desc';
 
-  const filterPeople = visiblePeople(people, currentQuery, currentSex, currentCenturies);
-  const sortPeople = sortBy(filterPeople, sortByField, isReverse)
+  const filterPeople = visiblePeople(
+    people, currentQuery, currentSex, currentCenturies,
+  );
+  const sortPeople = sortBy(filterPeople, sortByField, isReverse);
 
   const sortField = ['Name', 'Sex', 'Born', 'Died'];
 
   if (!filterPeople.length) {
     return (
       <p>There are no people matching the current search criteria</p>
-    )
+    );
   }
 
   return (
@@ -81,22 +83,20 @@ export const PeopleTable: FC<Props> = ({ people }) => {
               <td>
                 {mother
                   ? (
-                    <PersonLink person={person.mother}/>
+                    <PersonLink person={person.mother} />
                   )
-                  : preparedMotherName
-                }
+                  : preparedMotherName}
 
               </td>
               <td>
                 {father
-                    ? (
-                      <PersonLink person={person.father}/>
-                    )
-                    : preparedFatherName
-                  }
+                  ? (
+                    <PersonLink person={person.father} />
+                  )
+                  : preparedFatherName}
               </td>
             </tr>
-          )
+          );
         })}
       </tbody>
     </table>
