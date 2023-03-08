@@ -1,8 +1,37 @@
+import { FC, useEffect, useState } from 'react';
 import { PeopleFilters } from './PeopleFilters';
 import { Loader } from './Loader';
 import { PeopleTable } from './PeopleTable';
+import { Person } from '../types';
+import { getPeople } from '../api';
+import { preparePeople } from '../utils/preparePeople';
 
-export const PeoplePage = () => {
+export const PeoplePage: FC = () => {
+  const [people, setPeople] = useState<Person[]>([]);
+  const [isFetchError, setIsFetchError] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+
+  const fetchPeople = async () => {
+    try {
+      const allPeople = await getPeople();
+
+      const preparedPeople = preparePeople(allPeople);
+
+      setPeople(preparedPeople);
+    } catch {
+      setIsFetchError(true);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchPeople();
+  }, []);
+
+  const emplyServer = !people.length && !isLoading && !isFetchError;
+  const isVisiblePeopleTable = Boolean(people.length) && !isLoading;
+
   return (
     <>
       <h1 className="title">People Page</h1>
@@ -10,22 +39,26 @@ export const PeoplePage = () => {
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
           <div className="column is-7-tablet is-narrow-desktop">
-            <PeopleFilters />
+            {isVisiblePeopleTable && <PeopleFilters /> }
           </div>
 
           <div className="column">
             <div className="box table-container">
-              <Loader />
+              {isLoading && <Loader />}
 
-              <p data-cy="peopleLoadingError">Something went wrong</p>
+              {isFetchError && (
+                <p data-cy="peopleLoadingError">Something went wrong</p>
+              )}
 
-              <p data-cy="noPeopleMessage">
-                There are no people on the server
-              </p>
+              {emplyServer && (
+                <p data-cy="noPeopleMessage">
+                  There are no people on the server
+                </p>
+              )}
 
-              <p>There are no people matching the current search criteria</p>
-
-              <PeopleTable />
+              {isVisiblePeopleTable && (
+                <PeopleTable people={people} />
+              )}
             </div>
           </div>
         </div>
