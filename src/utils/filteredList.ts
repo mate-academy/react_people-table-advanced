@@ -21,7 +21,7 @@ export const filteredList = (
     const queryInsensetive = caseInsensitive(query || '');
 
     const isNameContainsQuery = () => {
-      return !centuriesParams?.length
+      return !queryInsensetive
       || caseInsensitive(name).includes(queryInsensetive)
       || caseInsensitive(mother).includes(queryInsensetive)
       || caseInsensitive(father).includes(queryInsensetive);

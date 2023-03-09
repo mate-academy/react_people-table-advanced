@@ -16,6 +16,7 @@ export const PeopleFilters: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const sexParams = searchParams.get(Search.sex);
   const centuriesParams = searchParams.getAll(Search.centuries) || [];
+  const queryParams = searchParams.get(Search.query) || '';
   const inputRef = useRef<HTMLInputElement>(null);
   const location = useLocation();
 
@@ -101,6 +102,7 @@ export const PeopleFilters: React.FC = () => {
             className="input"
             placeholder="Search"
             ref={inputRef}
+            value={queryParams}
             onChange={onQueryParamsUpdate}
           />
 

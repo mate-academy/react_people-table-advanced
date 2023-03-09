@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { PeopleFilters } from './PeopleFilters';
 import { Loader } from './Loader';
@@ -15,7 +15,6 @@ export const PeoplePage: React.FC = () => {
   const [people, setPeople] = useState<Person[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isErrorResponse, setIsErrorResponse] = useState(false);
-  const [orderedPeople, setOrderedPeople] = useState<Person[]>(people);
   const [searchParams] = useSearchParams();
 
   const sexParams = searchParams.get(Search.sex);
@@ -24,16 +23,14 @@ export const PeoplePage: React.FC = () => {
   const sortParams = searchParams.get(Search.sort);
   const orderParams = searchParams.get(Search.order);
 
-  const peopleModify = () => {
-    setOrderedPeople(
-      filteredList(
-        sortedList(people, orderParams, sortParams),
-        sexParams,
-        queryParams,
-        centuriesParams,
-      ),
+  const orderedPeople = useMemo(() => {
+    return filteredList(
+      sortedList(people, orderParams, sortParams),
+      sexParams,
+      queryParams,
+      centuriesParams,
     );
-  };
+  }, [people, searchParams]);
 
   const handleResponse = (resp: Person[]) => {
     setIsLoading(false);
@@ -50,10 +47,6 @@ export const PeoplePage: React.FC = () => {
       .catch(() => setIsErrorResponse(true))
       .finally(() => setIsLoading(false));
   }, []);
-
-  useEffect(() => {
-    peopleModify();
-  }, [searchParams, people]);
 
   const isLoaded = !isLoading && !isErrorResponse;
   const isNoPeopleOnServer = isLoaded && !people.length;
