@@ -4,33 +4,38 @@ import { Link, useLocation, useResolvedPath } from 'react-router-dom';
 import { Person } from '../types';
 
 type Props = {
-  name?: string,
-  hasParent?: Person,
+  personName?: string,
+  parent?: Person,
 };
 
 export const PersonLink: React.FC<Props> = ({
-  name,
-  hasParent,
+  personName,
+  parent,
 }) => {
   const parentPath = useResolvedPath('../').pathname;
   const location = useLocation();
+  const {
+    name,
+    sex,
+    slug,
+  } = parent || {};
 
   return (
     <td>
-      {hasParent ? (
+      {parent ? (
         <Link
           to={{
-            pathname: `${parentPath}${hasParent.slug}`,
+            pathname: `${parentPath}${slug}`,
             search: location.search,
           }}
           className={classNames(
-            { 'has-text-danger': hasParent.sex === 'f' },
+            { 'has-text-danger': sex === 'f' },
           )}
         >
-          {hasParent.name}
+          {name}
         </Link>
       ) : (
-        name
+        personName
       )}
     </td>
   );

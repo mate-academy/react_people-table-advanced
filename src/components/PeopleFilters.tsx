@@ -1,6 +1,10 @@
 import classNames from 'classnames';
-import React from 'react';
-import { useSearchParams } from 'react-router-dom';
+import React, { useRef } from 'react';
+import {
+  NavLink,
+  useSearchParams,
+  useLocation,
+} from 'react-router-dom';
 
 import { Filter } from '../types/Filter';
 import { Search } from '../types/Search';
@@ -10,10 +14,14 @@ import { SearchLink } from './SearchLink';
 
 export const PeopleFilters: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const sex = searchParams.get('sex');
-  const centuries = searchParams.getAll('centuries') || [];
+  const sexParams = searchParams.get(Search.sex);
+  const centuriesParams = searchParams.getAll(Search.centuries) || [];
+  const inputRef = useRef<HTMLInputElement>(null);
+  const location = useLocation();
 
-  const filteredSexParamsUpdate = (filterType?: Filter): SearchParams => {
+  const filteredSexParamsUpdate = (
+    filterType?: Filter,
+  ): SearchParams => {
     switch (filterType) {
       case Filter.female:
         return { sex: Filter.female };
@@ -25,26 +33,15 @@ export const PeopleFilters: React.FC = () => {
   };
 
   const checkDuplication = (century: Filter) => {
-    return centuries.includes(century)
-      ? centuries.filter(current => current !== century)
-      : [...centuries, century];
+    return centuriesParams.includes(century)
+      ? centuriesParams.filter(current => current !== century)
+      : [...centuriesParams, century];
   };
 
-  const filterCenturiesParamsUpdate = (filterType?: Filter):SearchParams => {
-    switch (filterType) {
-      case Filter.sixteenth:
-        return { centuries: checkDuplication(Filter.sixteenth) };
-      case Filter.seventeenth:
-        return { centuries: checkDuplication(Filter.seventeenth) };
-      case Filter.eighteenth:
-        return { centuries: checkDuplication(Filter.eighteenth) };
-      case Filter.nineteenth:
-        return { centuries: checkDuplication(Filter.nineteenth) };
-      case Filter.twentieth:
-        return { centuries: checkDuplication(Filter.twentieth) };
-      default:
-        return { centuries: [] };
-    }
+  const filtercenturiesParamsUpdate = (filterType?: Filter):SearchParams => {
+    const centuries = filterType ? checkDuplication(filterType) : [];
+
+    return { centuries };
   };
 
   const onQueryParamsUpdate = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -59,15 +56,21 @@ export const PeopleFilters: React.FC = () => {
     setSearchParams(searchParams);
   };
 
+  const resetQuery = () => {
+    if (inputRef.current) {
+      inputRef.current.value = '';
+    }
+  };
+
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
 
-      <p className="panel-tabs" data-cy="SexFilter">
+      <p className="panel-tabs" data-cy="sexParamsFilter">
         <SearchLink
           params={filteredSexParamsUpdate()}
           className={classNames(
-            { 'is-active': sex === null },
+            { 'is-active': sexParams === null },
           )}
         >
           All
@@ -75,7 +78,7 @@ export const PeopleFilters: React.FC = () => {
         <SearchLink
           params={filteredSexParamsUpdate(Filter.male)}
           className={classNames(
-            { 'is-active': sex === Filter.male },
+            { 'is-active': sexParams === Filter.male },
           )}
         >
           Male
@@ -83,7 +86,7 @@ export const PeopleFilters: React.FC = () => {
         <SearchLink
           params={filteredSexParamsUpdate(Filter.female)}
           className={classNames(
-            { 'is-active': sex === Filter.female },
+            { 'is-active': sexParams === Filter.female },
           )}
         >
           Female
@@ -97,6 +100,7 @@ export const PeopleFilters: React.FC = () => {
             type="search"
             className="input"
             placeholder="Search"
+            ref={inputRef}
             onChange={onQueryParamsUpdate}
           />
 
@@ -111,12 +115,12 @@ export const PeopleFilters: React.FC = () => {
           <div className="level-left">
             {Object.values(Filter).slice(2).map(century => (
               <SearchLink
-                params={filterCenturiesParamsUpdate(century)}
+                params={filtercenturiesParamsUpdate(century)}
                 key={century}
                 className={classNames(
                   'button',
                   'mr-1',
-                  { 'is-info': centuries.includes(century) },
+                  { 'is-info': centuriesParams.includes(century) },
                 )}
               >
                 {century}
@@ -126,11 +130,11 @@ export const PeopleFilters: React.FC = () => {
 
           <div className="level-right ml-4">
             <SearchLink
-              params={filterCenturiesParamsUpdate()}
+              params={filtercenturiesParamsUpdate()}
               className={classNames(
                 'button',
                 'is-success',
-                { 'is-outlined': centuries },
+                { 'is-outlined': centuriesParams },
               )}
             >
               All
@@ -140,12 +144,18 @@ export const PeopleFilters: React.FC = () => {
       </div>
 
       <div className="panel-block">
-        <a
-          className="button is-link is-outlined is-fullwidth"
-          href="#/people"
+        <NavLink
+          to={location.pathname}
+          className={(fulfilled) => classNames(
+            'button',
+            'is-link',
+            'is-outlined',
+            { 'is-fullwidth': fulfilled },
+          )}
+          onClick={() => resetQuery()}
         >
           Reset all filters
-        </a>
+        </NavLink>
       </div>
     </nav>
   );

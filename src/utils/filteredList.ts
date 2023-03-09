@@ -6,24 +6,34 @@ const caseInsensitive = (word: string) => word.split('').map(l => {
 
 export const filteredList = (
   people: Person[],
-  sex: string | null,
+  sexParams: string | null,
   query: string | null,
-  centuries: string[] | null,
+  centuriesParams: string[] | null,
 ) => people?.filter(
   person => {
     const father = person.father?.name || '';
     const mother = person.mother?.name || '';
-    const { name } = person;
+    const {
+      name,
+      born,
+      sex,
+    } = person;
     const queryInsensetive = caseInsensitive(query || '');
 
-    return (sex ? person.sex === sex : true)
-      && (query
-        ? caseInsensitive(name).includes(queryInsensetive)
-          || caseInsensitive(mother).includes(queryInsensetive)
-          || caseInsensitive(father).includes(queryInsensetive)
-        : true)
-      && (centuries?.length
-        ? centuries.includes(`${Math.ceil(person.born / 100)}`)
-        : true);
+    const isNameContainsQuery = () => {
+      return !centuriesParams?.length
+      || caseInsensitive(name).includes(queryInsensetive)
+      || caseInsensitive(mother).includes(queryInsensetive)
+      || caseInsensitive(father).includes(queryInsensetive);
+    };
+
+    const isPeopleBirthCentury = () => {
+      return !centuriesParams?.length
+      || centuriesParams?.includes(`${Math.ceil(born / 100)}`);
+    };
+
+    const isSelectedSex = () => !sexParams || sex === sexParams;
+
+    return isSelectedSex() && isNameContainsQuery() && isPeopleBirthCentury();
   },
 );

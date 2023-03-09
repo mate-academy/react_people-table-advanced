@@ -7,7 +7,7 @@ export const sortedList = (
   sort: string | null,
 ) => {
   const sortNumbers = (type: Sort.born | Sort.died) => {
-    return people.sort((personA, personB) => {
+    return [...people].sort((personA, personB) => {
       return order
         ? personA[type] - personB[type]
         : personB[type] - personA[type];
@@ -15,7 +15,7 @@ export const sortedList = (
   };
 
   const sortStrings = (type: Sort.name | Sort.sex) => {
-    return people.sort((personA, personB) => {
+    return [...people].sort((personA, personB) => {
       return order
         ? personB[type].localeCompare(personA[type])
         : personA[type].localeCompare(personB[type]);
@@ -24,15 +24,11 @@ export const sortedList = (
 
   switch (sort) {
     case Sort.born:
-      return sortNumbers(Sort.born);
     case Sort.died:
-      return sortNumbers(Sort.died);
+      return sortNumbers(sort);
     case Sort.name:
-      return sortStrings(Sort.name);
     case Sort.sex:
-      return sortStrings(Sort.sex);
-    case null:
-      return people;
+      return sortStrings(sort);
     default:
       return people;
   }

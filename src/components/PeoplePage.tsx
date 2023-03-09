@@ -18,6 +18,23 @@ export const PeoplePage: React.FC = () => {
   const [orderedPeople, setOrderedPeople] = useState<Person[]>(people);
   const [searchParams] = useSearchParams();
 
+  const sexParams = searchParams.get(Search.sex);
+  const centuriesParams = searchParams.getAll(Search.centuries);
+  const queryParams = searchParams.get(Search.query);
+  const sortParams = searchParams.get(Search.sort);
+  const orderParams = searchParams.get(Search.order);
+
+  const peopleModify = () => {
+    setOrderedPeople(
+      filteredList(
+        sortedList(people, orderParams, sortParams),
+        sexParams,
+        queryParams,
+        centuriesParams,
+      ),
+    );
+  };
+
   const handleResponse = (resp: Person[]) => {
     setIsLoading(false);
     if (isErrorResponse) {
@@ -25,7 +42,6 @@ export const PeoplePage: React.FC = () => {
     }
 
     setPeople(resp);
-    setOrderedPeople(resp);
   };
 
   useEffect(() => {
@@ -36,26 +52,13 @@ export const PeoplePage: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    const sex = searchParams.get(Search.sex);
-    const centuries = searchParams.getAll(Search.centuries);
-    const query = searchParams.get(Search.query);
-    const sort = searchParams.get(Search.sort);
-    const order = searchParams.get(Search.order);
+    peopleModify();
+  }, [searchParams, people]);
 
-    setOrderedPeople(
-      filteredList(
-        sortedList(people, order, sort),
-        sex,
-        query,
-        centuries,
-      ),
-    );
-  }, [searchParams]);
-
-  const isNoPeopleOnServer = !isLoading && !people.length && !isErrorResponse;
-  const isNoPeopleMatch
-  = !isLoading && !orderedPeople.length && !isErrorResponse;
   const isLoaded = !isLoading && !isErrorResponse;
+  const isNoPeopleOnServer = isLoaded && !people.length;
+  const isNoPeopleMatch = isLoaded && !orderedPeople.length;
+  const isPeopleTable = isLoaded && !isNoPeopleMatch && !isNoPeopleOnServer;
 
   return (
     <>
@@ -64,7 +67,7 @@ export const PeoplePage: React.FC = () => {
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
           <div className="column is-7-tablet is-narrow-desktop">
-            {!isLoading && !isErrorResponse && (
+            {isLoaded && (
               <PeopleFilters />
             )}
           </div>
@@ -87,7 +90,7 @@ export const PeoplePage: React.FC = () => {
                 <p>There are no people matching the current search criteria</p>
               )}
 
-              {isLoaded && (
+              {isPeopleTable && (
                 <PeopleTable
                   orderedPeople={orderedPeople}
                 />
