@@ -134,7 +134,8 @@ export const PeopleTable: React.FC<Props> = ({
   const getParent = (person: Person) => {
     return listPeople
       .find(
-        (el: Person) => el.name === person.fatherName,
+        (el: Person) => el.name === person.fatherName
+          || el.name === person.motherName,
       );
   };
 
@@ -251,29 +252,31 @@ export const PeopleTable: React.FC<Props> = ({
                 <td>{person.born}</td>
                 <td>{person.died}</td>
                 <td>
-                  {getParent(person) ? (
+                  {getParent(person) && person.motherName ? (
                     <Link
-                      className="has-text-danger"
+                      className={classNames('', {
+                        'has-text-danger': person.motherName,
+                      })}
                       to={
                         createSlug(
                           person.motherName as string,
                         )
                       }
                     >
-                      {person.motherName}
+                      {person.motherName || '-'}
                     </Link>
                   ) : emptyName(person, 'f')}
 
                 </td>
                 <td>
-                  {getParent(person) ? (
+                  {getParent(person) && person.fatherName ? (
                     <Link to={
                       createSlug(
                         person.fatherName as string,
                       )
                     }
                     >
-                      {person.fatherName}
+                      {person.fatherName || '-'}
                     </Link>
                   ) : emptyName(person, 'm')}
 

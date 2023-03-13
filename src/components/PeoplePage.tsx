@@ -16,7 +16,6 @@ export const PeoplePage = () => {
         setError(true);
       }
 
-      console.log(res);
       setListPeople(res);
     }).catch(() => setError(true));
   }, []);
