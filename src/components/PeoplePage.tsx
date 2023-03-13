@@ -18,6 +18,7 @@ export const PeoplePage: React.FC = () => {
   const [searchParams] = useSearchParams();
   const sex = searchParams.get('sex');
   const centuries = searchParams.get('centuries');
+  const query = searchParams.get('query');
 
   useEffect(() => {
     setIsLoading(true);
@@ -66,6 +67,15 @@ export const PeoplePage: React.FC = () => {
         default:
           return person;
       }
+    })
+    .filter((person) => {
+      const input = query?.toLocaleLowerCase().trim();
+      const name = person.name.toLocaleLowerCase();
+      const mothersName = person.motherName?.toLocaleLowerCase();
+      const fathersName = person.fatherName?.toLocaleLowerCase();
+
+      // eslint-disable-next-line max-len
+      return name.includes(input) || mothersName?.includes(input) || name.includes(fathersName);
     });
 
   return (
