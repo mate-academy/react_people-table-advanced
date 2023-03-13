@@ -143,18 +143,6 @@ export const PeopleTable: React.FC<Props> = ({
     return slug.replaceAll('-', ' ').toLowerCase().includes(name.toLowerCase());
   };
 
-  const emptyName = (person: Person, sexParent: string) => {
-    if (sexParent === 'f' && person.motherName) {
-      return person.motherName;
-    }
-
-    if (sexParent === 'm' && person.fatherName) {
-      return person.fatherName;
-    }
-
-    return '-';
-  };
-
   const createSlug = (name:string) => {
     const parent = listPeople.filter((el: Person) => el.name === name)[0];
 
@@ -265,7 +253,7 @@ export const PeopleTable: React.FC<Props> = ({
                     >
                       {person.motherName || '-'}
                     </Link>
-                  ) : emptyName(person, 'f')}
+                  ) : person.motherName || '-'}
 
                 </td>
                 <td>
@@ -278,7 +266,7 @@ export const PeopleTable: React.FC<Props> = ({
                     >
                       {person.fatherName || '-'}
                     </Link>
-                  ) : emptyName(person, 'm')}
+                  ) : person.fatherName || '-'}
 
                 </td>
               </tr>
