@@ -5,7 +5,7 @@ import { Filter } from '../types/Filter';
 
 export const SexLink: React.FC<{ sex: Sex }> = ({ sex }) => {
   const [searchParams] = useSearchParams();
-  const currentSex = searchParams.get(('sex') || null);
+  const currentSex = searchParams.get(('sex')) || 'all';
 
   const getSearchWith = () => {
     searchParams.set('sex', sex);

@@ -8,6 +8,13 @@ export const PeopleFilters: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const query = searchParams.get('query') || '';
+  const centuries = searchParams.getAll('centuries');
+
+  const handleClearCenturies = () => {
+    searchParams.delete('centuries');
+
+    return searchParams.toString();
+  };
 
   return (
     <nav className="panel">
@@ -57,9 +64,9 @@ export const PeopleFilters: React.FC = () => {
               data-cy="centuryALL"
               className={classNames(
                 'button',
-                { 'is-success is-outlined': () => { } },
+                { 'is-success is-outlined': centuries.length === 0 },
               )}
-              to="/people"
+              to={{ search: handleClearCenturies() }}
             >
               All
             </Link>
@@ -68,12 +75,12 @@ export const PeopleFilters: React.FC = () => {
       </div>
 
       <div className="panel-block">
-        <a
+        <Link
           className="button is-link is-outlined is-fullwidth"
-          href="#/people"
+          to="#/people"
         >
           Reset all filters
-        </a>
+        </Link>
       </div>
     </nav>
   );

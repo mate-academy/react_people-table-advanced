@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useMatch } from 'react-router-dom';
+import { useMatch, useSearchParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { PeopleFilters } from './PeopleFilters';
 import { Loader } from './Loader';
@@ -15,6 +15,9 @@ export const PeoplePage: React.FC = () => {
   const [errorLoading, setErrorLoading] = useState('');
   const match = useMatch('/people/:personSlug');
   const personSlugSelected = match?.params.personSlug;
+  const [searchParams] = useSearchParams();
+  const sex = searchParams.get('sex');
+  const centuries = searchParams.get('centuries');
 
   useEffect(() => {
     setIsLoading(true);
@@ -36,6 +39,34 @@ export const PeoplePage: React.FC = () => {
     && isLoaded
     && !errorLoading
     && people.length > 0;
+
+  const visiblePeople = people
+    .filter((person) => {
+      switch (sex) {
+        case 'm':
+          return person.sex === 'm';
+        case 'f':
+          return person.sex === 'f';
+        default:
+          return person;
+      }
+    })
+    .filter((person) => {
+      switch (centuries) {
+        case '16':
+          return person.born <= 1599;
+        case '17':
+          return (person.born >= 1600 && person.born <= 1699);
+        case '18':
+          return (person.born >= 1700 && person.born <= 1799);
+        case '19':
+          return (person.born >= 1800 && person.born <= 1899);
+        case '20':
+          return (person.born >= 1900 && person.born <= 1999);
+        default:
+          return person;
+      }
+    });
 
   return (
     <>
@@ -70,7 +101,7 @@ export const PeoplePage: React.FC = () => {
                 )}
               {showTable && (
                 <PeopleTable
-                  people={people}
+                  people={visiblePeople}
                   personSlugSelected={personSlugSelected}
                 />
               )}
