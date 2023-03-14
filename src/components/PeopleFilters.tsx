@@ -7,7 +7,9 @@ import { SearchLink } from './SearchLink';
 export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [search, setSearch] = useState('');
-  const [listCentury] = useState(['16', '17', '18', '19', '20']);
+  const listCentury = ['16', '17', '18', '19', '20'];
+  const sex = searchParams.get('sex');
+  const query = searchParams.get('query');
 
   const onChangeSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
     searchParams.set('query', event.target.value);
@@ -21,10 +23,10 @@ export const PeopleFilters = () => {
   };
 
   useEffect(() => {
-    if (!searchParams.get('query')) {
+    if (!query) {
       setSearch('');
     }
-  }, [searchParams.get('query')]);
+  }, [query]);
 
   return (
     <nav className="panel">
@@ -32,8 +34,8 @@ export const PeopleFilters = () => {
 
       <p className="panel-tabs" data-cy="SexFilter">
         <SearchLink
-          className={classNames('', {
-            'is-active': !searchParams.get('sex'),
+          className={classNames({
+            'is-active': !sex,
           })}
           params={{ sex: null }}
         >
@@ -77,7 +79,7 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            {listCentury.map((el: string) => (
+            {listCentury.map((el) => (
               <FilterCentury
                 value={el}
                 key={el}
