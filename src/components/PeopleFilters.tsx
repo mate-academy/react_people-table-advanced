@@ -43,7 +43,7 @@ export const PeopleFilters = () => {
         </SearchLink>
         <SearchLink
           className={classNames('', {
-            'is-active': searchParams.get('sex') === 'm',
+            'is-active': sex === 'm',
           })}
           params={{ sex: 'm' }}
         >
@@ -51,7 +51,7 @@ export const PeopleFilters = () => {
         </SearchLink>
         <SearchLink
           className={classNames('', {
-            'is-active': searchParams.get('sex') === 'f',
+            'is-active': sex === 'f',
           })}
           params={{ sex: 'f' }}
         >
