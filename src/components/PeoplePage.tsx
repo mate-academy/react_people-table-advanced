@@ -1,14 +1,18 @@
 /* eslint-disable no-console */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useMatch, useSearchParams } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import {
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
+// import debounce from 'lodash.debounce';
 import { PeopleFilters } from './PeopleFilters';
 import { Loader } from './Loader';
 import { PeopleTable } from './PeopleTable';
 import { Person } from '../types';
 import { Errors, getPeople } from '../api';
-
-// export const centuriesByDefault = ['16', '17', '18', '19', '20'];
+import { baseCenturies } from '../utils/searchHelper';
 
 export const PeoplePage: React.FC = () => {
   const [people, setPeople] = useState<Person[]>([]);
@@ -20,9 +24,15 @@ export const PeoplePage: React.FC = () => {
   const [searchParams] = useSearchParams();
   const sex = searchParams.get('sex');
   const centuries = searchParams
-    .getAll('centuries') || ['16', '17', '18', '19', '20'];
+    .getAll('centuries') || baseCenturies;
   const query = searchParams.get('query');
-  // console.log(query);
+
+  // const debouncedQuery = useCallback(
+  //   debounce(
+  //     setSearchParams,
+  //     1000,
+  //   ), [],
+  // );
 
   useEffect(() => {
     setIsLoading(true);
@@ -45,42 +55,42 @@ export const PeoplePage: React.FC = () => {
     && !errorLoading
     && people.length > 0;
 
-  const visiblePeople = people
-    .filter((person) => {
-      switch (sex) {
-        case 'm':
-          return person.sex === 'm';
-        case 'f':
-          return person.sex === 'f';
-        default:
-          return person;
-      }
-    })
-    .filter((person) => {
-      // console.log(centuries);
+  const peopleByCentury = useMemo(() => (
+    centuries.length
+      ? people.filter((person) => (
+        centuries.includes(Math.ceil(person.born / 100).toString())))
+      : people
+  ), [centuries]);
 
-      return centuries.length
-        ? (centuries.includes(Math.ceil(person.born / 100).toString()))
-        : (true);
-    })
-    .filter((person) => {
-      const input = query?.toLocaleLowerCase().trim();
+  const peopleByGender = useMemo(() => (
+    sex
+      ? peopleByCentury.filter((person) => {
+        switch (sex) {
+          case 'm':
+            return person.sex === 'm';
+          case 'f':
+            return person.sex === 'f';
+          default:
+            return person;
+        }
+      })
+      : peopleByCentury
+  ), [sex, peopleByCentury]);
 
-      if (!input) {
-        return true;
-      }
+  const visiblePeople = useMemo(() => (
+    query
+      ? peopleByGender.filter((person) => {
+        const input = query.toLocaleLowerCase().trim();
 
-      const name = person.name.toLocaleLowerCase();
-      const mothersName = person.motherName?.toLocaleLowerCase();
-      const fathersName = person.fatherName?.toLocaleLowerCase();
+        const name = person.name.toLocaleLowerCase();
+        const mothersName = person.motherName?.toLocaleLowerCase();
+        const fathersName = person.fatherName?.toLocaleLowerCase();
 
-      // eslint-disable-next-line max-len
-      return name.includes(input) || mothersName?.includes(input) || fathersName?.includes(input);
-    });
-
-  //     const peopleByCentury = centuries.length ? people.filter(...) : people;
-  // const peopleByGender = gender ? peopleByCentury.filter(..) : peopleByCentury;
-  // const visiblePeople = query ? peopleByGender.filter(..) : peopleByGender;
+        return name.includes(input)
+          || mothersName?.includes(input) || fathersName?.includes(input);
+      })
+      : peopleByGender
+  ), [query, peopleByGender]);
 
   return (
     <>

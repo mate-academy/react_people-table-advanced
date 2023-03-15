@@ -1,4 +1,6 @@
-import { Link, useSearchParams } from 'react-router-dom';
+import classNames from 'classnames';
+import { useSearchParams } from 'react-router-dom';
+import { SearchLink } from './SearchLink';
 
 type Props = {
   field: 'name' | 'sex' | 'born' | 'died',
@@ -6,28 +8,27 @@ type Props = {
 
 export const SortLink: React.FC<Props> = ({ field }) => {
   const [searchParams] = useSearchParams();
+  const sortField = searchParams.get('sort') || '';
+  const isReversed = searchParams.get('order') === 'desc';
 
-  // const sortField = searchParams.get('sort') || '';
-  // const isReversed = searchParams.get('order') === 'desc';
-
-  const handleSort = () => {
-    return searchParams.toString();
+  const params = {
+    sort: (field === sortField && isReversed) ? null : field,
+    order: (field === sortField && !isReversed) ? 'desc' : null,
   };
 
   searchParams.set('sort', field);
 
   return (
-    <th>
-      <span className="is-flex is-flex-wrap-nowrap">
-        {field}
-        <Link to={{ search: handleSort() }}>
-          <span className="icon">
-            <i className="fas fa-sort" />
-          </span>
-        </Link>
+    <SearchLink params={params}>
+      <span className="icon">
+        <i className={classNames(
+          'fas',
+          { 'fa-sort': sortField !== field },
+          { 'fa-sort-up': sortField === field && !isReversed },
+          { 'fa-sort-down': sortField === field && isReversed },
+        )}
+        />
       </span>
-    </th>
+    </SearchLink>
   );
 };
-
-// "#/people?sort=name"

@@ -1,15 +1,25 @@
 import { Link, useSearchParams } from 'react-router-dom';
 import classNames from 'classnames';
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { CenturyLink } from './CenturyLink';
 import { SexLink } from './sexLink';
 import { Filter } from '../types/Filter';
 import { SearchLink } from './SearchLink';
+import { baseCenturies } from '../utils/searchHelper';
+
+// type PeopleFilterProps = {
+//   debounce: (value: string) => void,
+// };
 
 export const PeopleFilters: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const query = searchParams.get('query') || '';
   const centuries = searchParams.getAll('centuries');
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    inputRef.current?.focus();
+  }, []);
 
   return (
     <nav className="panel">
@@ -34,9 +44,11 @@ export const PeopleFilters: React.FC = () => {
                 .toString());
 
               newSearchParams.set('query', event.target.value);
+              // debounce(event.target.value);
 
               setSearchParams(newSearchParams);
             }}
+            ref={inputRef}
           />
 
           <span className="icon is-left">
@@ -48,11 +60,9 @@ export const PeopleFilters: React.FC = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            <CenturyLink century="16" />
-            <CenturyLink century="17" />
-            <CenturyLink century="18" />
-            <CenturyLink century="19" />
-            <CenturyLink century="20" />
+            {baseCenturies.map((century) => (
+              <CenturyLink century={century} />
+            ))}
           </div>
 
           <div className="level-right ml-4">

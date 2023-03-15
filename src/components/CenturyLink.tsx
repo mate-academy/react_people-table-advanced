@@ -1,10 +1,11 @@
 import classNames from 'classnames';
 import { Link, useSearchParams } from 'react-router-dom';
+import { baseCenturies } from '../utils/searchHelper';
 
 export const CenturyLink: React.FC<{ century: string }> = ({ century }) => {
   const [searchParams] = useSearchParams();
   const centuries
-    = searchParams.getAll('centuries') || ['16', '17', '18', '19', '20'];
+    = searchParams.getAll('centuries') || baseCenturies;
 
   const getSearch = () => {
     const newSearchParams = new URLSearchParams(searchParams.toString());

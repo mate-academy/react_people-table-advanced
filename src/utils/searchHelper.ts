@@ -45,3 +45,5 @@ export function getSearchWith(
   // we return a string to use it inside links
   return newParams.toString();
 }
+
+export const baseCenturies = ['16', '17', '18', '19', '20'];
