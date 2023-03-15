@@ -1,36 +1,15 @@
 import { Link, useSearchParams } from 'react-router-dom';
 import classNames from 'classnames';
-import { useEffect, useState } from 'react';
+import React from 'react';
 import { CenturyLink } from './CenturyLink';
 import { SexLink } from './sexLink';
 import { Filter } from '../types/Filter';
+import { SearchLink } from './SearchLink';
 
 export const PeopleFilters: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const [query, setQuery] = useState('');
-
-  // const searchQuery = searchParams.get('query') || '';
+  const query = searchParams.get('query') || '';
   const centuries = searchParams.getAll('centuries');
-  // console.log(centuries);
-  // console.log(searchParams.toString());
-
-  useEffect(() => {
-    // console.log(searchParams.toString());
-
-    if (query) {
-      searchParams.set('query', query);
-    } else {
-      searchParams.delete('query');
-    }
-
-    setSearchParams(searchParams);
-  }, [query]);
-
-  const handleClearCenturies = () => {
-    searchParams.delete('centuries');
-
-    return searchParams.toString();
-  };
 
   return (
     <nav className="panel">
@@ -51,19 +30,13 @@ export const PeopleFilters: React.FC = () => {
             placeholder="Search"
             value={query}
             onChange={(event) => {
-              setQuery(event.target.value);
+              const newSearchParams = new URLSearchParams(searchParams
+                .toString());
+
+              newSearchParams.set('query', event.target.value);
+
+              setSearchParams(newSearchParams);
             }}
-            // onChange={(event) => {
-            //   const newSearchParams = new URLSearchParams(searchParams
-            //     .toString());
-
-            //   newSearchParams.set('query', event.target.value);
-            //   console.log(newSearchParams.toString());
-
-            //   setSearchParams(newSearchParams);
-
-          //   // return newSearchParams.toString();
-          // }}
           />
 
           <span className="icon is-left">
@@ -83,16 +56,16 @@ export const PeopleFilters: React.FC = () => {
           </div>
 
           <div className="level-right ml-4">
-            <Link
+            <SearchLink
               data-cy="centuryALL"
               className={classNames(
                 'button',
                 { 'is-success is-outlined': centuries.length === 0 },
               )}
-              to={{ search: handleClearCenturies() }}
+              params={{ centuries: null }}
             >
               All
-            </Link>
+            </SearchLink>
           </div>
         </div>
       </div>
