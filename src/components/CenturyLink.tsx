@@ -4,7 +4,7 @@ import { Link, useSearchParams } from 'react-router-dom';
 export const CenturyLink: React.FC<{ century: string }> = ({ century }) => {
   const [searchParams] = useSearchParams();
   const centuries
-    = searchParams.getAll('centuries') || [];
+    = searchParams.getAll('centuries') || ['16', '17', '18', '19', '20'];
 
   const getSearch = () => {
     const newSearchParams = new URLSearchParams(searchParams.toString());

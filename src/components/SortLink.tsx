@@ -10,17 +10,17 @@ export const SortLink: React.FC<Props> = ({ field }) => {
   // const sortField = searchParams.get('sort') || '';
   // const isReversed = searchParams.get('order') === 'desc';
 
-  const getSort = () => {
-    searchParams.set('sort', field);
-
+  const handleSort = () => {
     return searchParams.toString();
   };
+
+  searchParams.set('sort', field);
 
   return (
     <th>
       <span className="is-flex is-flex-wrap-nowrap">
         {field}
-        <Link to={{ search: getSort() }}>
+        <Link to={{ search: handleSort() }}>
           <span className="icon">
             <i className="fas fa-sort" />
           </span>

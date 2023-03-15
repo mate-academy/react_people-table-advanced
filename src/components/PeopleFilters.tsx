@@ -1,14 +1,30 @@
 import { Link, useSearchParams } from 'react-router-dom';
 import classNames from 'classnames';
+import { useEffect, useState } from 'react';
 import { CenturyLink } from './CenturyLink';
 import { SexLink } from './sexLink';
 import { Filter } from '../types/Filter';
 
 export const PeopleFilters: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
+  const [query, setQuery] = useState('');
 
-  const query = searchParams.get('query') || '';
+  // const searchQuery = searchParams.get('query') || '';
   const centuries = searchParams.getAll('centuries');
+  // console.log(centuries);
+  // console.log(searchParams.toString());
+
+  useEffect(() => {
+    // console.log(searchParams.toString());
+
+    if (query) {
+      searchParams.set('query', query);
+    } else {
+      searchParams.delete('query');
+    }
+
+    setSearchParams(searchParams);
+  }, [query]);
 
   const handleClearCenturies = () => {
     searchParams.delete('centuries');
@@ -35,12 +51,19 @@ export const PeopleFilters: React.FC = () => {
             placeholder="Search"
             value={query}
             onChange={(event) => {
-              const newSearchParams = new URLSearchParams(searchParams
-                .toString());
-
-              newSearchParams.set('query', event.target.value);
-              setSearchParams(newSearchParams);
+              setQuery(event.target.value);
             }}
+            // onChange={(event) => {
+            //   const newSearchParams = new URLSearchParams(searchParams
+            //     .toString());
+
+            //   newSearchParams.set('query', event.target.value);
+            //   console.log(newSearchParams.toString());
+
+            //   setSearchParams(newSearchParams);
+
+          //   // return newSearchParams.toString();
+          // }}
           />
 
           <span className="icon is-left">

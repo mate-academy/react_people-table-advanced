@@ -8,6 +8,8 @@ import { PeopleTable } from './PeopleTable';
 import { Person } from '../types';
 import { Errors, getPeople } from '../api';
 
+// export const centuriesByDefault = ['16', '17', '18', '19', '20'];
+
 export const PeoplePage: React.FC = () => {
   const [people, setPeople] = useState<Person[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -17,8 +19,10 @@ export const PeoplePage: React.FC = () => {
   const personSlugSelected = match?.params.personSlug;
   const [searchParams] = useSearchParams();
   const sex = searchParams.get('sex');
-  const centuries = searchParams.get('centuries');
+  const centuries = searchParams
+    .getAll('centuries') || ['16', '17', '18', '19', '20'];
   const query = searchParams.get('query');
+  // console.log(query);
 
   useEffect(() => {
     setIsLoading(true);
@@ -53,30 +57,30 @@ export const PeoplePage: React.FC = () => {
       }
     })
     .filter((person) => {
-      switch (centuries) {
-        case '16':
-          return person.born <= 1599;
-        case '17':
-          return (person.born >= 1600 && person.born <= 1699);
-        case '18':
-          return (person.born >= 1700 && person.born <= 1799);
-        case '19':
-          return (person.born >= 1800 && person.born <= 1899);
-        case '20':
-          return (person.born >= 1900 && person.born <= 1999);
-        default:
-          return person;
-      }
+      // console.log(centuries);
+
+      return centuries.length
+        ? (centuries.includes(Math.ceil(person.born / 100).toString()))
+        : (true);
     })
     .filter((person) => {
       const input = query?.toLocaleLowerCase().trim();
+
+      if (!input) {
+        return true;
+      }
+
       const name = person.name.toLocaleLowerCase();
       const mothersName = person.motherName?.toLocaleLowerCase();
       const fathersName = person.fatherName?.toLocaleLowerCase();
 
       // eslint-disable-next-line max-len
-      return name.includes(input) || mothersName?.includes(input) || name.includes(fathersName);
+      return name.includes(input) || mothersName?.includes(input) || fathersName?.includes(input);
     });
+
+  //     const peopleByCentury = centuries.length ? people.filter(...) : people;
+  // const peopleByGender = gender ? peopleByCentury.filter(..) : peopleByCentury;
+  // const visiblePeople = query ? peopleByGender.filter(..) : peopleByGender;
 
   return (
     <>
@@ -115,8 +119,9 @@ export const PeoplePage: React.FC = () => {
                   personSlugSelected={personSlugSelected}
                 />
               )}
-
-              <p>There are no people matching the current search criteria</p>
+              {!visiblePeople.length && (
+                <p>There are no people matching the current search criteria</p>
+              )}
             </div>
           </div>
         </div>
