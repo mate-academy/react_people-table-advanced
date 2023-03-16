@@ -7,13 +7,18 @@ import { Filter } from '../types/Filter';
 import { SearchLink } from './SearchLink';
 import { baseCenturies } from '../utils/searchHelper';
 
-// type PeopleFilterProps = {
-//   debounce: (value: string) => void,
-// };
+type PeopleFilterProps = {
+  setQuery: (event: string) => void
+  query: string
+  debouncedQuery: (value: string) => void
+};
 
-export const PeopleFilters: React.FC = () => {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const query = searchParams.get('query') || '';
+export const PeopleFilters: React.FC<PeopleFilterProps> = ({
+  setQuery,
+  query,
+  debouncedQuery,
+}) => {
+  const [searchParams] = useSearchParams();
   const centuries = searchParams.getAll('centuries');
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -40,13 +45,8 @@ export const PeopleFilters: React.FC = () => {
             placeholder="Search"
             value={query}
             onChange={(event) => {
-              const newSearchParams = new URLSearchParams(searchParams
-                .toString());
-
-              newSearchParams.set('query', event.target.value);
-              // debounce(event.target.value);
-
-              setSearchParams(newSearchParams);
+              setQuery(event.target.value);
+              debouncedQuery(event.target.value);
             }}
             ref={inputRef}
           />

@@ -1,7 +1,9 @@
 import classNames from 'classnames';
 import React from 'react';
+// import { useSearchParams } from 'react-router-dom';
 import { Person } from '../types';
 import { PersonLink } from './PersonLink';
+import { SortLink } from './SortLink';
 
 type Props = {
   people: Person[]
@@ -15,6 +17,26 @@ export const PeopleTable: React.FC<Props> = ({
   const getParent = (name: string | null) => (
     people.find((parent) => parent.name === name) || null
   );
+  // const [searchParams] = useSearchParams();
+  const visiblePeople = people;
+  // const sortField = searchParams.get('sort') || '';
+  // const isReversed = searchParams.get('order') === 'desc';
+  // const visiblePeople = people.sort((a, b) => {
+  //   if (sortField as string) {
+  //     const sortNumber = (a[sortField as keyof Person])
+  //       .localeCompare(b[sortField as keyof Person]);
+
+  //     return isReversed ? (sortNumber * -1) : sortNumber;
+  //   }
+
+  //   if (typeof sortField === 'number') {
+  //     const sortNumber = (a[sortField] - b[sortField]);
+
+  //     return isReversed ? (sortNumber * -1) : sortNumber;
+  //   }
+
+  //   return 0;
+  // });
 
   return (
     <table
@@ -26,44 +48,28 @@ export const PeopleTable: React.FC<Props> = ({
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Name
-              <a href="#/people?sort=name">
-                <span className="icon">
-                  <i className="fas fa-sort" />
-                </span>
-              </a>
+              <SortLink field="name" />
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Sex
-              <a href="#/people?sort=sex">
-                <span className="icon">
-                  <i className="fas fa-sort" />
-                </span>
-              </a>
+              <SortLink field="sex" />
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Born
-              <a href="#/people?sort=born&amp;order=desc">
-                <span className="icon">
-                  <i className="fas fa-sort-up" />
-                </span>
-              </a>
+              <SortLink field="born" />
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Died
-              <a href="#/people?sort=died">
-                <span className="icon">
-                  <i className="fas fa-sort" />
-                </span>
-              </a>
+              <SortLink field="died" />
             </span>
           </th>
 
@@ -73,7 +79,7 @@ export const PeopleTable: React.FC<Props> = ({
       </thead>
 
       <tbody>
-        {people.map((person) => {
+        {visiblePeople.map((person) => {
           const {
             slug,
             sex,

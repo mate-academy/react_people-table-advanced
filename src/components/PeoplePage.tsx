@@ -2,11 +2,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useMatch, useSearchParams } from 'react-router-dom';
 import {
+  useCallback,
   useEffect,
   useMemo,
   useState,
 } from 'react';
-// import debounce from 'lodash.debounce';
+import debounce from 'lodash.debounce';
 import { PeopleFilters } from './PeopleFilters';
 import { Loader } from './Loader';
 import { PeopleTable } from './PeopleTable';
@@ -21,18 +22,27 @@ export const PeoplePage: React.FC = () => {
   const [errorLoading, setErrorLoading] = useState('');
   const match = useMatch('/people/:personSlug');
   const personSlugSelected = match?.params.personSlug;
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const sex = searchParams.get('sex');
   const centuries = searchParams
     .getAll('centuries') || baseCenturies;
-  const query = searchParams.get('query');
+  const [query, setQuery] = useState('');
+  const textQuery = searchParams.get('query') || '';
 
-  // const debouncedQuery = useCallback(
-  //   debounce(
-  //     setSearchParams,
-  //     1000,
-  //   ), [],
-  // );
+  const debouncedQuery = useCallback(
+    debounce(() => {
+      if (query) {
+        const newSearchParams = new URLSearchParams(searchParams
+          .toString());
+
+        newSearchParams.set('query', query);
+      } else {
+        searchParams.delete('query');
+      }
+
+      setSearchParams(searchParams);
+    }, 1000), [query],
+  );
 
   useEffect(() => {
     setIsLoading(true);
@@ -60,7 +70,7 @@ export const PeoplePage: React.FC = () => {
       ? people.filter((person) => (
         centuries.includes(Math.ceil(person.born / 100).toString())))
       : people
-  ), [centuries]);
+  ), [centuries, people]);
 
   const peopleByGender = useMemo(() => (
     sex
@@ -78,9 +88,9 @@ export const PeoplePage: React.FC = () => {
   ), [sex, peopleByCentury]);
 
   const visiblePeople = useMemo(() => (
-    query
+    textQuery
       ? peopleByGender.filter((person) => {
-        const input = query.toLocaleLowerCase().trim();
+        const input = textQuery.toLocaleLowerCase().trim();
 
         const name = person.name.toLocaleLowerCase();
         const mothersName = person.motherName?.toLocaleLowerCase();
@@ -100,7 +110,11 @@ export const PeoplePage: React.FC = () => {
         <div className="columns is-desktop is-flex-direction-row-reverse">
           <div className="column is-7-tablet is-narrow-desktop">
             {showTable && (
-              <PeopleFilters />
+              <PeopleFilters
+                setQuery={setQuery}
+                query={query}
+                debouncedQuery={debouncedQuery}
+              />
             )}
           </div>
 
