@@ -10,13 +10,11 @@ import { baseCenturies } from '../utils/searchHelper';
 type PeopleFilterProps = {
   setQuery: (event: string) => void
   query: string
-  debouncedQuery: (value: string) => void
 };
 
 export const PeopleFilters: React.FC<PeopleFilterProps> = ({
   setQuery,
   query,
-  debouncedQuery,
 }) => {
   const [searchParams] = useSearchParams();
   const centuries = searchParams.getAll('centuries');
@@ -46,7 +44,6 @@ export const PeopleFilters: React.FC<PeopleFilterProps> = ({
             value={query}
             onChange={(event) => {
               setQuery(event.target.value);
-              debouncedQuery(event.target.value);
             }}
             ref={inputRef}
           />

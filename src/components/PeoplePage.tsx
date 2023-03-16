@@ -2,7 +2,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useMatch, useSearchParams } from 'react-router-dom';
 import {
-  useCallback,
   useEffect,
   useMemo,
   useState,
@@ -27,9 +26,9 @@ export const PeoplePage: React.FC = () => {
   const centuries = searchParams
     .getAll('centuries') || baseCenturies;
   const [query, setQuery] = useState('');
-  const textQuery = searchParams.get('query') || '';
+  const textQuery = searchParams.get('query');
 
-  const debouncedQuery = useCallback(
+  useEffect(() => {
     debounce(() => {
       if (query) {
         const newSearchParams = new URLSearchParams(searchParams
@@ -41,8 +40,8 @@ export const PeoplePage: React.FC = () => {
       }
 
       setSearchParams(searchParams);
-    }, 1000), [query],
-  );
+    }, 1000);
+  }, [query]);
 
   useEffect(() => {
     setIsLoading(true);
@@ -100,7 +99,7 @@ export const PeoplePage: React.FC = () => {
           || mothersName?.includes(input) || fathersName?.includes(input);
       })
       : peopleByGender
-  ), [query, peopleByGender]);
+  ), [textQuery, peopleByGender]);
 
   return (
     <>
@@ -113,7 +112,6 @@ export const PeoplePage: React.FC = () => {
               <PeopleFilters
                 setQuery={setQuery}
                 query={query}
-                debouncedQuery={debouncedQuery}
               />
             )}
           </div>

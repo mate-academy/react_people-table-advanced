@@ -1,6 +1,6 @@
 import classNames from 'classnames';
 import React from 'react';
-// import { useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import { Person } from '../types';
 import { PersonLink } from './PersonLink';
 import { SortLink } from './SortLink';
@@ -17,26 +17,27 @@ export const PeopleTable: React.FC<Props> = ({
   const getParent = (name: string | null) => (
     people.find((parent) => parent.name === name) || null
   );
-  // const [searchParams] = useSearchParams();
-  const visiblePeople = people;
-  // const sortField = searchParams.get('sort') || '';
-  // const isReversed = searchParams.get('order') === 'desc';
-  // const visiblePeople = people.sort((a, b) => {
-  //   if (sortField as string) {
-  //     const sortNumber = (a[sortField as keyof Person])
-  //       .localeCompare(b[sortField as keyof Person]);
+  const [searchParams] = useSearchParams();
+  const sortfield = searchParams.get('sort') || '';
+  const isReversed = searchParams.get('order') === 'desc';
 
-  //     return isReversed ? (sortNumber * -1) : sortNumber;
-  //   }
+  const newPeople = [...people].sort((a, b) => {
+    switch (sortfield) {
+      case 'name':
+      case 'sex':
+        return a[sortfield].localeCompare(b[sortfield]);
+      case 'born':
+      case 'died':
+        return a[sortfield] - b[sortfield];
 
-  //   if (typeof sortField === 'number') {
-  //     const sortNumber = (a[sortField] - b[sortField]);
+      default:
+        return 0;
+    }
+  });
 
-  //     return isReversed ? (sortNumber * -1) : sortNumber;
-  //   }
+  const sortedPeople = !sortfield ? people : newPeople;
 
-  //   return 0;
-  // });
+  const visiblePeople = isReversed ? sortedPeople.reverse() : sortedPeople;
 
   return (
     <table
