@@ -61,7 +61,6 @@ export const PeoplePage: React.FC = () => {
   );
 
   const queryHandler = (event: ChangeEvent<HTMLInputElement>) => {
-    console.log(event);
     setQuery(event.target.value);
     applyQuery(event.target.value);
   };
