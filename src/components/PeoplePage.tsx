@@ -28,10 +28,10 @@ export const PeoplePage: React.FC = () => {
   useEffect(() => {
     debounce(() => {
       if (query) {
-        const newSearchParams = new URLSearchParams(searchParams
-          .toString());
+        // const newSearchParams = new URLSearchParams(searchParams
+        //   .toString());
 
-        newSearchParams.set('query', query);
+        searchParams.set('query', query);
       } else {
         searchParams.delete('query');
       }
@@ -69,7 +69,7 @@ export const PeoplePage: React.FC = () => {
         centuries.push(century);
       }
 
-      return centuries;
+      return centuries.sort();
     }, []),
     [people],
   );
@@ -125,6 +125,7 @@ export const PeoplePage: React.FC = () => {
               <PeopleFilters
                 setQuery={setQuery}
                 query={query}
+                baseCenturies={baseCenturies}
               />
             )}
           </div>

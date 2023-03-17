@@ -1,11 +1,10 @@
 import classNames from 'classnames';
 import { Link, useSearchParams } from 'react-router-dom';
-import { baseCenturies } from '../utils/searchHelper';
 
-export const CenturyLink: React.FC<{ century: string }> = ({ century }) => {
+export const CenturyLink: React.FC<{ century: number }> = ({ century }) => {
   const [searchParams] = useSearchParams();
   const centuries
-    = searchParams.getAll('centuries') || baseCenturies;
+    = (searchParams.getAll('centuries')).map((element) => Number(element));
 
   const getSearch = () => {
     const newSearchParams = new URLSearchParams(searchParams.toString());
@@ -16,7 +15,7 @@ export const CenturyLink: React.FC<{ century: string }> = ({ century }) => {
     newSearchParams.delete('centuries');
 
     newCenturies.forEach((cntry) => {
-      newSearchParams.append('centuries', cntry);
+      newSearchParams.append('centuries', (cntry).toString());
     });
 
     return newSearchParams.toString();

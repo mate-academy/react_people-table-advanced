@@ -5,16 +5,17 @@ import { CenturyLink } from './CenturyLink';
 import { SexLink } from './sexLink';
 import { Filter } from '../types/Filter';
 import { SearchLink } from './SearchLink';
-import { baseCenturies } from '../utils/searchHelper';
 
 type PeopleFilterProps = {
   setQuery: (event: string) => void
   query: string
+  baseCenturies: number[]
 };
 
 export const PeopleFilters: React.FC<PeopleFilterProps> = ({
   setQuery,
   query,
+  baseCenturies,
 }) => {
   const [searchParams] = useSearchParams();
   const centuries = searchParams.getAll('centuries');
