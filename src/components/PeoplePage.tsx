@@ -12,7 +12,6 @@ import { Loader } from './Loader';
 import { PeopleTable } from './PeopleTable';
 import { Person } from '../types';
 import { Errors, getPeople } from '../api';
-import { baseCenturies } from '../utils/searchHelper';
 
 export const PeoplePage: React.FC = () => {
   const [people, setPeople] = useState<Person[]>([]);
@@ -23,8 +22,6 @@ export const PeoplePage: React.FC = () => {
   const personSlugSelected = match?.params.personSlug;
   const [searchParams, setSearchParams] = useSearchParams();
   const sex = searchParams.get('sex');
-  const centuries = searchParams
-    .getAll('centuries') || baseCenturies;
   const [query, setQuery] = useState('');
   const textQuery = searchParams.get('query');
 
@@ -63,6 +60,22 @@ export const PeoplePage: React.FC = () => {
     && isLoaded
     && !errorLoading
     && people.length > 0;
+
+  const baseCenturies: number[] = useMemo(
+    () => people.reduce((centuries: number[], person) => {
+      const century = Math.ceil(person.born / 100);
+
+      if (!centuries.includes(century)) {
+        centuries.push(century);
+      }
+
+      return centuries;
+    }, []),
+    [people],
+  );
+
+  const centuries = searchParams
+    .getAll('centuries') || baseCenturies;
 
   const peopleByCentury = useMemo(() => (
     centuries.length
