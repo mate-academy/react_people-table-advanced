@@ -2,6 +2,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useMatch, useSearchParams } from 'react-router-dom';
 import {
+  ChangeEvent,
+  useCallback,
   useEffect,
   useMemo,
   useState,
@@ -23,22 +25,7 @@ export const PeoplePage: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const sex = searchParams.get('sex');
   const [query, setQuery] = useState('');
-  const textQuery = searchParams.get('query');
-
-  useEffect(() => {
-    debounce(() => {
-      if (query) {
-        // const newSearchParams = new URLSearchParams(searchParams
-        //   .toString());
-
-        searchParams.set('query', query);
-      } else {
-        searchParams.delete('query');
-      }
-
-      setSearchParams(searchParams);
-    }, 1000);
-  }, [query]);
+  const [debouncedQuery, setDebouncedQuery] = useState('');
 
   useEffect(() => {
     setIsLoading(true);
@@ -55,6 +42,29 @@ export const PeoplePage: React.FC = () => {
         setIsLoading(false)
       ));
   }, []);
+
+  useEffect(() => {
+    debounce(() => {
+      if (debouncedQuery) {
+        searchParams.set('query', debouncedQuery);
+      } else {
+        searchParams.delete('query');
+      }
+
+      setSearchParams(searchParams);
+    }, 1000);
+  }, [debouncedQuery]);
+
+  const applyQuery = useCallback(
+    debounce(setDebouncedQuery, 1000),
+    [debouncedQuery],
+  );
+
+  const queryHandler = (event: ChangeEvent<HTMLInputElement>) => {
+    console.log(event);
+    setQuery(event.target.value);
+    applyQuery(event.target.value);
+  };
 
   const showTable = !isLoading
     && isLoaded
@@ -100,9 +110,9 @@ export const PeoplePage: React.FC = () => {
   ), [sex, peopleByCentury]);
 
   const visiblePeople = useMemo(() => (
-    textQuery
+    debouncedQuery
       ? peopleByGender.filter((person) => {
-        const input = textQuery.toLocaleLowerCase().trim();
+        const input = debouncedQuery.toLocaleLowerCase().trim();
 
         const name = person.name.toLocaleLowerCase();
         const mothersName = person.motherName?.toLocaleLowerCase();
@@ -112,7 +122,7 @@ export const PeoplePage: React.FC = () => {
           || mothersName?.includes(input) || fathersName?.includes(input);
       })
       : peopleByGender
-  ), [textQuery, peopleByGender]);
+  ), [debouncedQuery, peopleByGender]);
 
   return (
     <>
@@ -123,7 +133,7 @@ export const PeoplePage: React.FC = () => {
           <div className="column is-7-tablet is-narrow-desktop">
             {showTable && (
               <PeopleFilters
-                setQuery={setQuery}
+                queryHandler={queryHandler}
                 query={query}
                 baseCenturies={baseCenturies}
               />

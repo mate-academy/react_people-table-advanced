@@ -1,19 +1,19 @@
 import { Link, useSearchParams } from 'react-router-dom';
 import classNames from 'classnames';
-import React, { useEffect, useRef } from 'react';
+import React, { ChangeEvent, useEffect, useRef } from 'react';
 import { CenturyLink } from './CenturyLink';
 import { SexLink } from './sexLink';
 import { Filter } from '../types/Filter';
 import { SearchLink } from './SearchLink';
 
 type PeopleFilterProps = {
-  setQuery: (event: string) => void
+  queryHandler: (event: ChangeEvent<HTMLInputElement>) => void
   query: string
   baseCenturies: number[]
 };
 
 export const PeopleFilters: React.FC<PeopleFilterProps> = ({
-  setQuery,
+  queryHandler,
   query,
   baseCenturies,
 }) => {
@@ -43,9 +43,7 @@ export const PeopleFilters: React.FC<PeopleFilterProps> = ({
             className="input"
             placeholder="Search"
             value={query}
-            onChange={(event) => {
-              setQuery(event.target.value);
-            }}
+            onChange={queryHandler}
             ref={inputRef}
           />
 
