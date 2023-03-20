@@ -1,7 +1,7 @@
-import { CenturiesFilter } from '../CenturiesFilter';
+import { CenturiesFilter } from '../CenturiesFilter/CenturiesFilter';
 import { QueryFilter } from '../QueryFilter/QueryFilter';
-import { ResetFilters } from '../ResetFilters';
-import { SexFilter } from '../SexFilter';
+import { ResetFilters } from '../ResetFilters/ResetFilters';
+import { SexFilter } from '../SexFilter/SexFilter';
 
 export const PeopleFilters = () => {
   return (
