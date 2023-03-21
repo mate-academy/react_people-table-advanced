@@ -1,8 +1,69 @@
+import { useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { PeopleFilters } from './PeopleFilters';
-import { Loader } from './Loader';
 import { PeopleTable } from './PeopleTable';
+import { Person } from '../types';
+import { getPeople } from '../api';
 
 export const PeoplePage = () => {
+  const [isLoading, setIsLoading] = useState(true);
+  const [wasLoaded, setWasLoaded] = useState(false);
+  const [hasLoadingError, setHasLoadingError] = useState(false);
+  const [peopleFromServer, setPeopleFromServer] = useState<Person[]>([]);
+  const [searchParams] = useSearchParams();
+
+  useEffect(() => {
+    getPeople()
+      .then(people => {
+        setPeopleFromServer(people);
+        setWasLoaded(true);
+      })
+      .catch(() => setHasLoadingError(true))
+      .finally(() => setIsLoading(false));
+  }, []);
+
+  const filteredSex = searchParams.get('sex');
+  const filteredCenturies = searchParams.getAll('centuries');
+  const filteredQuery = searchParams.get('query');
+
+  const filteredByGender = filteredSex
+    ? peopleFromServer.filter(({ sex }) => sex === filteredSex)
+    : peopleFromServer;
+
+  const filteredByCentury = filteredCenturies.length
+    ? filteredByGender.filter(({ born }) => {
+      const century = Math.ceil(born / 100);
+
+      return filteredCenturies.includes(String(century));
+    })
+    : filteredByGender;
+
+  const filteredByQuery = filteredQuery
+    ? filteredByCentury.filter(({ name }) => name.toLocaleLowerCase()
+      .includes(filteredQuery.toLowerCase().trim()))
+    : filteredByCentury;
+
+  const sort = searchParams.get('sort');
+  const isReversed = searchParams.get('order');
+
+  const sortedPeople = filteredByQuery.sort((a, b) => {
+    switch (sort) {
+      case 'name':
+      case 'sex':
+        return a[sort].localeCompare(b[sort]);
+      case 'born':
+      case 'died':
+        return a[sort] - b[sort];
+
+      default:
+        return 0;
+    }
+  });
+
+  const displayedPeople = isReversed ? sortedPeople.reverse() : sortedPeople;
+
+  const hasNoPeople = wasLoaded && peopleFromServer.length === 0;
+
   return (
     <>
       <h1 className="title">People Page</h1>
@@ -15,17 +76,14 @@ export const PeoplePage = () => {
 
           <div className="column">
             <div className="box table-container">
-              <Loader />
 
-              <p data-cy="peopleLoadingError">Something went wrong</p>
+              <PeopleTable
+                isLoading={isLoading}
+                hasNoPeople={hasNoPeople}
+                hasLoadingError={hasLoadingError}
+                displayedPeople={displayedPeople}
+              />
 
-              <p data-cy="noPeopleMessage">
-                There are no people on the server
-              </p>
-
-              <p>There are no people matching the current search criteria</p>
-
-              <PeopleTable />
             </div>
           </div>
         </div>
