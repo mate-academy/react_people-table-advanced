@@ -40,7 +40,7 @@ export const PeopleTable: React.FC<Props> = ({ personId, peoples }) => {
       );
     }
 
-    if (centuries) {
+    if (centuries.length) {
       preparetedPeoples = preparetedPeoples.filter((p) => {
         const centurie = Math.ceil(p.born / 100).toString();
 
