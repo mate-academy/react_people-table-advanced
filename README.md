@@ -1,6 +1,6 @@
-# React People Table (Advanced) - Filtering and Sorting
+# React People Table
 
-React application with two pages and is built using technologies such as Router, TypeScript, JavaScript, REST API, and Bulma. The People page of the app displays a table of people's information that has been fetched from a server. The app provides a user-friendly interface that allows for sorting, selecting, and filtering the displayed data.
+React application developed by using technologies such as  React Router, TypeScript, JavaScript, REST API, and Bulma. The People page of the app displays a table of people's information fetched from the server. The app provides a user-friendly interface that allows for sorting, selecting, and filtering the displayed data.
 
 ## Technologies
 
