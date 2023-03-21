@@ -7,8 +7,8 @@ export const CenturiesFilltering = () => {
   const [searchParams] = useSearchParams();
   const centuries = searchParams.getAll('centuries') || [];
   const centuriesArr = ['16', '17', '18', '19', '20'];
-
-  return (
+  
+   return (
     <div className="panel-block">
       <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
         <div className="level-left">

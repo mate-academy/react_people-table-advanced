@@ -23,7 +23,7 @@ export const PeopleTable: React.FC<Props> = ({ personId, peoples }) => {
   const query = searchParams.get('query');
   const sexType = searchParams.get('sex');
   const order = searchParams.get('order');
-  const centuries = searchParams.get('centuries');
+  const centuries = searchParams.getAll('centuries');
 
   const prepareTodos = () => {
     let preparetedPeoples = peoples.filter(
