@@ -8,8 +8,6 @@ import {
 import { useSearchParams } from 'react-router-dom';
 import { SearchLink } from './SearchLink';
 
-// move to Utils
-
 function debounce(callback: Dispatch<SetStateAction<string>>, delay: number) {
   let timerId = 0;
 
