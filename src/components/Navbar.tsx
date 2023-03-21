@@ -12,7 +12,6 @@ export const Navbar = () => {
         <div className="navbar-brand">
           <NavButton>Home</NavButton>
           <NavButton>People</NavButton>
-          <NavButton>No page</NavButton>
         </div>
       </div>
     </nav>

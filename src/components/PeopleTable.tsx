@@ -3,21 +3,23 @@ import { useMatch } from 'react-router-dom';
 import { Person } from '../types';
 import { Loader } from './Loader';
 import { PersonLink } from './PersonLink';
+import { SortButton } from './SortButton';
 
 type Props = {
   isLoading: boolean,
+  hasNoPeople: boolean,
   hasLoadingError: boolean,
   displayedPeople: Person[],
 };
 
 export const PeopleTable: React.FC<Props> = ({
   isLoading,
+  hasNoPeople,
   hasLoadingError,
   displayedPeople,
 }) => {
   const match = useMatch('/people/:slug');
   const activeSlug = match?.params.slug;
-
   const getPersonByName = (name: string | null) => {
     return displayedPeople
       .find(person => person.name === name);
@@ -35,11 +37,17 @@ export const PeopleTable: React.FC<Props> = ({
     );
   }
 
-  if (!displayedPeople.length) {
+  if (hasNoPeople) {
     return (
       <p data-cy="noPeopleMessage">
-        There are no people on the server
+        There is no people from the server
       </p>
+    );
+  }
+
+  if (!displayedPeople.length) {
+    return (
+      <p>There are no people matching the current search criteria</p>
     );
   }
 
@@ -53,44 +61,28 @@ export const PeopleTable: React.FC<Props> = ({
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Name
-              <a href="#/people?sort=name">
-                <span className="icon">
-                  <i className="fas fa-sort" />
-                </span>
-              </a>
+              <SortButton param="name" />
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Sex
-              <a href="#/people?sort=sex">
-                <span className="icon">
-                  <i className="fas fa-sort" />
-                </span>
-              </a>
+              <SortButton param="sex" />
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Born
-              <a href="#/people?sort=born&amp;order=desc">
-                <span className="icon">
-                  <i className="fas fa-sort-up" />
-                </span>
-              </a>
+              <SortButton param="born" />
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Died
-              <a href="#/people?sort=died">
-                <span className="icon">
-                  <i className="fas fa-sort" />
-                </span>
-              </a>
+              <SortButton param="died" />
             </span>
           </th>
 

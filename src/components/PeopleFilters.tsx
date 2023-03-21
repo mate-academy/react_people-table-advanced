@@ -1,19 +1,23 @@
 /* eslint-disable no-console */
 import cn from 'classnames';
-import { useCallback, useEffect, useState } from 'react';
-import { Link, useSearchParams } from 'react-router-dom';
+import {
+  Dispatch,
+  SetStateAction,
+  useCallback, useEffect, useState,
+} from 'react';
+import { useSearchParams } from 'react-router-dom';
+import { SearchLink } from './SearchLink';
 
 // move to Utils
 
-// eslint-disable-next-line @typescript-eslint/ban-types
-function debounce(callback: Function, delay: number) {
+function debounce(callback: Dispatch<SetStateAction<string>>, delay: number) {
   let timerId = 0;
 
   return (...args: unknown[]) => {
     window.clearTimeout(timerId);
 
     timerId = window.setTimeout(() => {
-      callback(...args);
+      callback([...args].join());
     }, delay);
   };
 }
@@ -23,22 +27,22 @@ const placeholderCenturies = ['16', '17', '18', '19', '20'];
 export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [query, setQuery] = useState('');
+  const sex = searchParams.get('sex');
   const [appliedQuery, setAppliedQuery] = useState(
     searchParams.get('query') || '',
   );
 
   const queryWrapper = useCallback(
-    debounce(setAppliedQuery, 1000),
+    debounce(setAppliedQuery,
+      1000),
     [],
   );
 
   useEffect(() => {
-    switch (appliedQuery.length) {
-      case 0:
-        searchParams.delete('query');
-        break;
-      default:
-        searchParams.set('query', appliedQuery);
+    if (appliedQuery) {
+      searchParams.set('query', appliedQuery);
+    } else {
+      searchParams.delete('query');
     }
 
     setSearchParams(searchParams);
@@ -56,9 +60,24 @@ export const PeopleFilters = () => {
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        <a className="is-active" href="#/people">All</a>
-        <a className="" href="#/people?sex=m">Male</a>
-        <a className="" href="#/people?sex=f">Female</a>
+        <SearchLink
+          className={cn({ 'is-active': !sex })}
+          params={{ sex: null }}
+        >
+          All
+        </SearchLink>
+        <SearchLink
+          className={cn({ 'is-active': sex === 'm' })}
+          params={{ sex: 'm' }}
+        >
+          Male
+        </SearchLink>
+        <SearchLink
+          className={cn({ 'is-active': sex === 'f' })}
+          params={{ sex: 'f' }}
+        >
+          Female
+        </SearchLink>
       </p>
 
       <div className="panel-block">
@@ -81,37 +100,23 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            {placeholderCenturies.map(century => {
-              const centuries = searchParams.getAll('century');
+            {placeholderCenturies.map((century) => {
+              const centuries = searchParams.getAll('centuries');
               const hasCentury = centuries.includes(century);
 
-              const getSearch = () => {
-                const newSearchParams = new URLSearchParams(searchParams
-                  .toString());
-                const newCenturies = hasCentury
-                  ? centuries.filter((newCentury) => newCentury !== century)
-                  : [...centuries, century];
-
-                newSearchParams.delete('century');
-
-                newCenturies.forEach((singleCentury) => {
-                  newSearchParams.append('century', singleCentury);
-                });
-
-                return newSearchParams.toString();
-              };
-
               return (
-                <Link
+                <SearchLink
                   data-cy="century"
-                  className={cn(
-                    'button mr-1',
-                    { 'is-info': centuries.includes(century) },
-                  )}
-                  to={{ search: getSearch() }}
+                  key={century}
+                  className={cn('button mr-1', { 'is-info': hasCentury })}
+                  params={{
+                    centuries: hasCentury
+                      ? centuries.filter((c) => c !== century)
+                      : [...centuries, century],
+                  }}
                 >
                   {century}
-                </Link>
+                </SearchLink>
               );
             })}
           </div>
@@ -129,10 +134,7 @@ export const PeopleFilters = () => {
       </div>
 
       <div className="panel-block">
-        <a
-          className="button is-link is-outlined is-fullwidth"
-          href="#/people"
-        >
+        <a className="button is-link is-outlined is-fullwidth" href="#/people">
           Reset all filters
         </a>
       </div>
