@@ -7,26 +7,26 @@ import { getPeople } from '../api';
 
 export const PeoplePage = () => {
   const [listPeople, setListPeople] = useState<Person[]>([]);
-  const [notFound, setNotFound] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(false);
+  const [isNotFound, setIsNotFound] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isError, setIsError] = useState(false);
 
   useEffect(() => {
-    setLoading(true);
+    setIsLoading(true);
     getPeople()
       .then((res: Person[]) => {
         if (!res.length) {
-          setError(true);
+          setIsError(true);
         }
 
         setListPeople(res);
       })
-      .catch(() => setError(true))
-      .finally(() => setLoading(false));
+      .catch(() => setIsError(true))
+      .finally(() => setIsLoading(false));
   }, []);
 
   const handleSetNotFound = useCallback((value: boolean) => {
-    setNotFound(value);
+    setIsNotFound(value);
   }, []);
 
   return (
@@ -43,21 +43,21 @@ export const PeoplePage = () => {
 
           <div className="column">
             <div className="box table-container">
-              {loading ? (
+              {isLoading ? (
                 <Loader />
               ) : (
                 <>
-                  {error && (
+                  {isError && (
                     <p data-cy="peopleLoadingError">
                       Something went wrong
                     </p>
                   )}
-                  {!listPeople.length && error && (
+                  {!listPeople.length && isError && (
                     <p data-cy="noPeopleMessage">
                       There are no people on the server
                     </p>
                   )}
-                  {notFound && (
+                  {isNotFound && (
                     <p>
                       There are no people matching the current search criteria
                     </p>

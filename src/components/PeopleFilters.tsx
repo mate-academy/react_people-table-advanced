@@ -4,7 +4,7 @@ import { useSearchParams } from 'react-router-dom';
 import { FilterOfCentury } from './FilterOfCentury';
 import { SearchLink } from './SearchLink';
 
-const listCentury = ['16', '17', '18', '19', '20'];
+const centuriesList = ['16', '17', '18', '19', '20'];
 
 export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -95,7 +95,7 @@ export const PeopleFilters = () => {
           data-cy="CenturyFilter"
         >
           <div className="level-left">
-            {listCentury.map((element) => (
+            {centuriesList.map((element) => (
               <FilterOfCentury
                 value={element}
                 key={element}

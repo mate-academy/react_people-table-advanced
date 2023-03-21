@@ -30,6 +30,34 @@ type Props = {
   setNotFound: (empty: boolean) => void
 };
 
+const filterPeople = (array: Person[], filter: {
+  sex: string | null,
+  query: string | null,
+  centuries: string[] | null
+}) => {
+  let copy = [...array];
+
+  const filterQuery = filter.query?.toLowerCase();
+
+  if (filter.sex) {
+    copy = copy.filter((person: Person) => person.sex === filter.sex);
+  }
+
+  if (filterQuery) {
+    copy = copy.filter((person: Person) => {
+      return person.name.toLowerCase().includes(filterQuery)
+        || person.motherName?.toLowerCase().includes(filterQuery)
+        || person.fatherName?.toLowerCase().includes(filterQuery);
+    });
+  }
+
+  if (filter.centuries?.length) {
+    copy = copy.filter((person: Person) => filter.centuries?.includes(`${1 + Math.trunc(person.born / 100)}`));
+  }
+
+  return copy;
+};
+
 export const PeopleTable: React.FC<Props> = ({
   listPeople,
   setNotFound,
@@ -60,36 +88,6 @@ export const PeopleTable: React.FC<Props> = ({
       'fa-sort-down': searchParams.get(SearchParams.Order)
         && searchParams.get(SearchParams.Sort) === type,
     };
-  };
-
-  const filterBy = (array: Person[],
-    filter: {
-      sex: string | null,
-      query: string | null,
-      centuries: string[] | null
-    }) => {
-    let copy = [...array];
-
-    if (filter.sex) {
-      copy = copy.filter((person: Person) => person.sex === filter.sex);
-    }
-
-    if (filter.query) {
-      copy = copy.filter((person: Person) => {
-        return person.name.toLowerCase()
-          ?.includes(filter.query?.toLowerCase() as string)
-          || person.motherName?.toLowerCase()
-            .includes(filter.query?.toLowerCase() as string)
-          || person.fatherName?.toLowerCase()
-            .includes(filter.query?.toLowerCase() as string);
-      });
-    }
-
-    if (filter.centuries?.length) {
-      copy = copy.filter((person: Person) => filter.centuries?.includes(`${1 + Math.trunc(person.born / 100)}`));
-    }
-
-    return copy;
   };
 
   const sortUp = (type: TypeSort,
@@ -156,7 +154,7 @@ export const PeopleTable: React.FC<Props> = ({
   };
 
   useEffect(() => {
-    if (!filterBy(renderList, { sex, query, centuries }).length) {
+    if (!filterPeople(renderList, { sex, query, centuries }).length) {
       setNotFound(true);
     } else {
       setNotFound(false);
@@ -164,7 +162,7 @@ export const PeopleTable: React.FC<Props> = ({
   }, [search]);
 
   return (
-    filterBy(renderList, { sex, query, centuries }).length ? (
+    filterPeople(renderList, { sex, query, centuries }).length ? (
       <table
         data-cy="peopleTable"
         className="table is-striped is-hoverable is-narrow is-fullwidth"
@@ -229,7 +227,7 @@ export const PeopleTable: React.FC<Props> = ({
         </thead>
 
         <tbody>
-          {filterBy(renderList, { sex, query, centuries })
+          {filterPeople(renderList, { sex, query, centuries })
             .map((person: Person) => (
               <tr
                 data-cy="person"
