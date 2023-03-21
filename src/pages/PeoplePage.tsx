@@ -140,7 +140,7 @@ export const PeoplePage = () => {
 
               {people
                 && !!people.length
-                && visiblePeople.length > 0
+                && !!visiblePeople.length
                 && <PeopleTable people={visiblePeople} slug={slug} />}
 
             </div>
