@@ -1,4 +1,6 @@
-export interface Person {
+import { Person } from './Person';
+
+export interface ExtendedPerson {
   name: string,
   sex: string,
   born: number,
