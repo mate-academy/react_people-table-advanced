@@ -5,23 +5,31 @@ import { PeopleTable } from './PeopleTable';
 import { Person } from '../types';
 import { getPeople } from '../api';
 
+function isNetworkError(error: Error) {
+  const message = error.message.toLowerCase();
+
+  return message.includes('network')
+    || message.includes('connection')
+    || message.includes('offline');
+}
+
 export const PeoplePage = () => {
   const [listPeople, setListPeople] = useState<Person[]>([]);
   const [isNotFound, setIsNotFound] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [isError, setIsError] = useState(false);
+  const [fetchError, setFetchError] = useState<Error | null>(null);
 
   useEffect(() => {
     setIsLoading(true);
     getPeople()
       .then((res: Person[]) => {
         if (!res.length) {
-          setIsError(true);
+          setIsNotFound(true);
         }
 
         setListPeople(res);
       })
-      .catch(() => setIsError(true))
+      .catch((err: Error) => setFetchError(err))
       .finally(() => setIsLoading(false));
   }, []);
 
@@ -43,30 +51,37 @@ export const PeoplePage = () => {
 
           <div className="column">
             <div className="box table-container">
-              {isLoading ? (
-                <Loader />
-              ) : (
-                <>
-                  {isError && (
-                    <p data-cy="peopleLoadingError">
-                      Something went wrong
-                    </p>
-                  )}
-                  {!listPeople.length && isError && (
-                    <p data-cy="noPeopleMessage">
-                      There are no people on the server
-                    </p>
-                  )}
-                  {isNotFound && (
-                    <p>
-                      There are no people matching the current search criteria
-                    </p>
-                  )}
-                  <PeopleTable
-                    listPeople={listPeople}
-                    setNotFound={handleSetNotFound}
-                  />
-                </>
+              {isLoading && <Loader />}
+
+              {fetchError && (
+                <p data-cy="peopleLoadingError">
+                  {isNetworkError(fetchError)
+                    ? 'Network error. Please check your internet connection'
+                    : `Something went wrong: ${fetchError.message}`}
+                </p>
+              )}
+
+              {!isNotFound
+                && listPeople?.length === 0
+                && !fetchError
+                && !isLoading
+                && (
+                  <p data-cy="noPeopleMessage">
+                    There are no people on the server
+                  </p>
+                )}
+
+              {isNotFound && !fetchError && (
+                <p>
+                  There are no people matching the current search criteria
+                </p>
+              )}
+
+              {listPeople?.length > 0 && (
+                <PeopleTable
+                  listPeople={listPeople}
+                  setNotFound={handleSetNotFound}
+                />
               )}
             </div>
           </div>
