@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import { PeopleFilters } from '../../components/PeopleFilters';
 import { PeopleTable } from '../../components/PeopleTable';
-import { Filter, Order, Sex, Parameters } from '../../types';
+import {
+  Filter, Order, Sex, Parameters,
+} from '../../types';
 
 const initialParameters: Parameters = {
   filter: Filter.None,
