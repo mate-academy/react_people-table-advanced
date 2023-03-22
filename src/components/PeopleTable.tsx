@@ -1,9 +1,9 @@
 import React from 'react';
-import { Link, useParams, useSearchParams } from 'react-router-dom';
+import { useParams, useSearchParams } from 'react-router-dom';
 import classNames from 'classnames';
 import { Person, SortType } from '../types';
 import { PersonLink } from './PersonLink';
-import { getSearchWith } from '../utils/searchHelper';
+import { SearchLink } from './SearchLink';
 
 type Props = {
   people: Person[];
@@ -48,12 +48,8 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Name
-              <Link
-                to={{
-                  search: getSearchWith(
-                    searchParams, getNewSearch(sort, order, SortType.Name),
-                  ),
-                }}
+              <SearchLink
+                params={getNewSearch(sort, order, SortType.Name)}
               >
                 <span className="icon">
                   <i className={classNames(
@@ -67,45 +63,36 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
                   )}
                   />
                 </span>
-              </Link>
+              </SearchLink>
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Sex
-              <Link
-                to={{
-                  search: getSearchWith(
-                    searchParams, getNewSearch(sort, order, SortType.Sex),
-                  ),
-                }}
+              <SearchLink
+                params={getNewSearch(sort, order, SortType.Sex)}
               >
                 <span className="icon">
                   <i className={classNames(
-                    'fas',
-                    { 'fa-sort': sort !== SortType.Sex },
-                    { 'fa-sort-up': sort === SortType.Sex && !order },
+                    'fas fa-sort',
                     {
+                      'fa-sort-up': sort === SortType.Sex && !order,
                       'fa-sort-down': sort === SortType.Sex
                     && order === 'desc',
                     },
                   )}
                   />
                 </span>
-              </Link>
+              </SearchLink>
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Born
-              <Link
-                to={{
-                  search: getSearchWith(
-                    searchParams, getNewSearch(sort, order, SortType.Born),
-                  ),
-                }}
+              <SearchLink
+                params={getNewSearch(sort, order, SortType.Born)}
               >
                 <span className="icon">
                   <i className={classNames(
@@ -119,19 +106,15 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
                   )}
                   />
                 </span>
-              </Link>
+              </SearchLink>
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Died
-              <Link
-                to={{
-                  search: getSearchWith(
-                    searchParams, getNewSearch(sort, order, SortType.Died),
-                  ),
-                }}
+              <SearchLink
+                params={getNewSearch(sort, order, SortType.Died)}
               >
                 <span className="icon">
                   <i className={classNames(
@@ -145,7 +128,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
                   )}
                   />
                 </span>
-              </Link>
+              </SearchLink>
             </span>
           </th>
 

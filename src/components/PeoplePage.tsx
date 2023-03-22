@@ -46,20 +46,20 @@ function sortPeople(
   sort: string | null,
   order: string | null,
 ) {
-  let sorted = [...people];
+  const sorted = [...people];
 
   if (sort) {
     switch (sort) {
       case SortType.Name:
       case SortType.Sex:
-        sorted = sorted.sort((prevPerson, nextPerson) => (
+        sorted.sort((prevPerson, nextPerson) => (
           prevPerson[sort].localeCompare(nextPerson[sort])
         ));
         break;
 
       case SortType.Born:
       case SortType.Died:
-        sorted = sorted.sort((prevPerson, nextPerson) => (
+        sorted.sort((prevPerson, nextPerson) => (
           prevPerson[sort] - nextPerson[sort]
         ));
         break;
@@ -92,10 +92,20 @@ export const PeoplePage = () => {
 
   useEffect(() => {
     setIsLoading(true);
-    getPeople()
-      .then(setPeople)
-      .catch(() => setIsError(true))
-      .finally(() => setIsLoading(false));
+
+    const getPeopleFromServer = async () => {
+      try {
+        const peopleFromServer = await getPeople();
+
+        setPeople(peopleFromServer);
+      } catch {
+        setIsError(true);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    getPeopleFromServer();
   }, []);
 
   const filteredPeople = useMemo(() => {
