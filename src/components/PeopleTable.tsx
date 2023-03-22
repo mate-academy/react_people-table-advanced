@@ -13,6 +13,8 @@ const AVAILABLE_FILTER_TYPES = ['name', 'sex', 'born', 'died'];
 
 export const PeopleTable: React.FC = () => {
   const [people, setPeople] = useState<ExtendedPerson[] | null>(null);
+  const [filteredPeople, setFilteredPeople]
+    = useState<ExtendedPerson[]>([]);
   const [error, setError] = useState(false);
   const [searchParams] = useSearchParams();
   const filter = searchParams.get('sort') || '';
@@ -29,12 +31,22 @@ export const PeopleTable: React.FC = () => {
       .catch(() => setError(true));
   }, []);
 
+  useEffect(() => {
+    setFilteredPeople(
+      filterPeople(people, filter, order, query, centuries, sex),
+    );
+  }, [filter, order, sex, centuries]);
+
   if (error) {
     return (
       <p data-cy="peopleLoadingError" className="has-text-danger">
         Something went wrong
       </p>
     );
+  }
+
+  if (filteredPeople.length === 0) {
+    return <p>There are no people matching the current search criteria</p>;
   }
 
   if (!people) {
@@ -106,14 +118,7 @@ export const PeopleTable: React.FC = () => {
         </thead>
 
         <tbody>
-          {filterPeople(
-            people,
-            filter,
-            order,
-            query,
-            centuries,
-            sex,
-          ).map(person => (
+          {filteredPeople.map(person => (
             <PersonCell
               person={person}
             />

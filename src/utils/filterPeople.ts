@@ -1,14 +1,14 @@
 import { ExtendedPerson } from '../types';
 
 export const filterPeople = (
-  people: ExtendedPerson[],
+  people: ExtendedPerson[] | null,
   filter: string,
   order: string | null,
   query: string,
   centuries: string[] = [],
   sex: string,
 ): ExtendedPerson[] => {
-  let visiblePeople = [...people];
+  let visiblePeople = [...people || []];
 
   switch (filter) {
     case 'sex':
