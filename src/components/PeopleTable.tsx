@@ -54,6 +54,7 @@ export const PeopleTable:React.FC<Props> = ({
       <tbody>
         {!people.length && (
           <p>There are no people matching the current search criteria</p>)}
+
         {people.map(person => {
           return (
             <PersonInfo

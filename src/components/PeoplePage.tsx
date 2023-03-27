@@ -16,17 +16,21 @@ export const PeoplePage = () => {
     setIsLoading(true);
     getPeople()
       .then(result => {
-        const peopleFromServer = result.map(pep => ({ ...pep }));
+        const peopleFromServerWithParents = result.map(person => ({
+          ...person,
+          mother: null,
+          father: null,
+        }));
 
-        peopleFromServer.forEach(person => {
-          Object.assign(person, {
-            mother: peopleFromServer.find(m => m.name === person.motherName)
-                || null,
-            father: peopleFromServer.find(f => f.name === person.fatherName)
-                || null,
-          });
-        });
-        setPeople(peopleFromServer);
+        const peopleWithParents = peopleFromServerWithParents.map(person => ({
+          ...person,
+          mother: peopleFromServerWithParents
+            .find(m => m.name === person.motherName) || null,
+          father: peopleFromServerWithParents
+            .find(f => f.name === person.fatherName) || null,
+        }));
+
+        setPeople(peopleWithParents);
       })
       .catch(() => {
         setError(true);

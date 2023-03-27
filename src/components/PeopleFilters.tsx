@@ -8,6 +8,13 @@ export const PeopleFilters = () => {
   const sex = searchParams.get('sex');
   const query = searchParams.get('query') || '';
   const centuries = searchParams.getAll('centuries') || [];
+  const handleNameInput = (e:React.ChangeEvent<HTMLInputElement>) => {
+    setsearchParams(
+      getSearchWith(
+        searchParams, { query: e.target.value || null },
+      ),
+    );
+  };
 
   return (
     <nav className="panel">
@@ -44,11 +51,7 @@ export const PeopleFilters = () => {
             className="input"
             placeholder="Search"
             value={query}
-            onChange={(e) => setsearchParams(
-              getSearchWith(
-                searchParams, { query: e.target.value || null },
-              ),
-            )}
+            onChange={handleNameInput}
           />
 
           <span className="icon is-left">
