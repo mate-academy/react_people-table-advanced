@@ -1,8 +1,8 @@
 import { useSearchParams } from 'react-router-dom';
 import { FC } from 'react';
 import classNames from 'classnames';
-import { SearchLink } from '../SearchLink';
-import { SexFilterType } from '../../enums/SexFilterType';
+import { SearchLink } from './SearchLink';
+import { SexFilterType } from '../enums/SexFilterType';
 
 type Props = {
   title: string;
@@ -10,11 +10,7 @@ type Props = {
   sexValue: string | null;
 };
 
-const SexFilterOption: FC<Props> = ({
-  title,
-  isSelected,
-  sexValue,
-}) => {
+const SexFilterOption: FC<Props> = ({ title, isSelected, sexValue }) => {
   return (
     <SearchLink
       className={classNames({ 'is-active': isSelected })}
@@ -31,11 +27,7 @@ export const SexFilter = () => {
 
   return (
     <p className="panel-tabs" data-cy="SexFilter">
-      <SexFilterOption
-        title="All"
-        isSelected={!sex}
-        sexValue={null}
-      />
+      <SexFilterOption title="All" isSelected={!sex} sexValue={null} />
 
       <SexFilterOption
         title="Male"

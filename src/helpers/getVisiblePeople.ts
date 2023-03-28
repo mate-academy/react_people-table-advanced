@@ -1,4 +1,5 @@
 import { SexFilterType } from '../enums/SexFilterType';
+import { SortType } from '../enums/SortType';
 import { Person } from '../types';
 
 const isQueryInValues = (query: string, values: string[]): boolean => {
@@ -15,20 +16,22 @@ const getCentury = (year: number): number => {
   return century;
 };
 
-export const getFilteredPeople = (
+export const getVisiblePeople = (
   people: Person[],
   sexFilter: SexFilterType,
   query: string,
   centuries: number[],
+  sortType: SortType,
+  order: string | null,
 ): Person[] => {
-  let filteredPeople = [...people];
+  let visiblePeople = [...people];
 
   if (sexFilter !== SexFilterType.All) {
-    filteredPeople = filteredPeople.filter(({ sex }) => sex === sexFilter);
+    visiblePeople = visiblePeople.filter(({ sex }) => sex === sexFilter);
   }
 
   if (centuries.length > 0) {
-    filteredPeople = filteredPeople.filter(
+    visiblePeople = visiblePeople.filter(
       ({ born }) => centuries.includes(getCentury(born)),
     );
   }
@@ -40,11 +43,7 @@ export const getFilteredPeople = (
       .filter(Boolean)
       .join(' ');
 
-    return people.filter(({
-      name,
-      fatherName,
-      motherName,
-    }) => {
+    return people.filter(({ name, fatherName, motherName }) => {
       return isQueryInValues(normalizedQuery, [
         name,
         motherName ?? '',
@@ -53,5 +52,27 @@ export const getFilteredPeople = (
     });
   }
 
-  return filteredPeople;
+  if (sortType !== SortType.None) {
+    visiblePeople = visiblePeople.sort(
+      (currentPerson: Person, nextPerson: Person) => {
+        switch (sortType) {
+          case SortType.Sex:
+          case SortType.Name:
+            return currentPerson[sortType].localeCompare(nextPerson[sortType]);
+          case SortType.Born:
+          case SortType.Died:
+            return currentPerson[sortType] - nextPerson[sortType];
+
+          default:
+            return 0;
+        }
+      },
+    );
+  }
+
+  if (order) {
+    visiblePeople.reverse();
+  }
+
+  return visiblePeople;
 };

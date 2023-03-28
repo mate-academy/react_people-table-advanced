@@ -14,9 +14,8 @@ import { SortType } from '../enums/SortType';
 
 import { findPerson } from '../helpers/findPerson';
 import { getSexFilterType } from '../helpers/getSexFilterType';
-import { getFilteredPeople } from '../helpers/getFilteredPeople';
-import { getSortedPeople } from '../helpers/getSortedPeople';
 import { getSortType } from '../helpers/getSortType';
+import { getVisiblePeople } from '../helpers/getVisiblePeople';
 
 export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);
@@ -67,22 +66,16 @@ export const PeoplePage = () => {
       .finally(() => setIsLoading(false));
   }, []);
 
-  const filteredPeople = useMemo(() => {
-    return getFilteredPeople(
+  const visiblePeople = useMemo(() => {
+    return getVisiblePeople(
       people,
       sexFilter,
       query,
-      centuries.map(century => Number(century)),
-    );
-  }, [people, sexFilter, query, centuries.length]);
-
-  const sortedPeople = useMemo(() => {
-    return getSortedPeople(
-      filteredPeople,
+      centuries.map((century) => Number(century)),
       sortType,
       order,
     );
-  }, [filteredPeople, sortType]);
+  }, [people, sexFilter, query, centuries.length, sortType, order]);
 
   return (
     <div className="container">
@@ -114,7 +107,7 @@ export const PeoplePage = () => {
                 <Loader />
               ) : (
                 <PeopleTable
-                  people={sortedPeople}
+                  people={visiblePeople}
                   selectedPersonSlug={selectedPersonSlug}
                 />
               )}

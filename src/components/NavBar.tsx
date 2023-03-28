@@ -1,4 +1,4 @@
-import { PageNavLink } from '../PageNavLink';
+import { PageNavLink } from './PageNavLink';
 
 export const NavBar = () => {
   return (
