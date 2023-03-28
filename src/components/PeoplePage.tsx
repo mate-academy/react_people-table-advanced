@@ -1,5 +1,3 @@
-/* eslint-disable no-console */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useMatch, useSearchParams } from 'react-router-dom';
 import {
   ChangeEvent,
@@ -60,7 +58,7 @@ export const PeoplePage: React.FC = () => {
     [debouncedQuery],
   );
 
-  const queryHandler = (event: ChangeEvent<HTMLInputElement>) => {
+  const searchPeopleHandler = (event: ChangeEvent<HTMLInputElement>) => {
     setQuery(event.target.value);
     applyQuery(event.target.value);
   };
@@ -86,16 +84,16 @@ export const PeoplePage: React.FC = () => {
   const centuries = searchParams
     .getAll('centuries') || baseCenturies;
 
-  const peopleByCentury = useMemo(() => (
+  const filteredPeopleByCentury = useMemo(() => (
     centuries.length
       ? people.filter((person) => (
         centuries.includes(Math.ceil(person.born / 100).toString())))
       : people
   ), [centuries, people]);
 
-  const peopleByGender = useMemo(() => (
+  const filteredPeopleByGender = useMemo(() => (
     sex
-      ? peopleByCentury.filter((person) => {
+      ? filteredPeopleByCentury.filter((person) => {
         switch (sex) {
           case 'm':
             return person.sex === 'm';
@@ -105,12 +103,12 @@ export const PeoplePage: React.FC = () => {
             return person;
         }
       })
-      : peopleByCentury
-  ), [sex, peopleByCentury]);
+      : filteredPeopleByCentury
+  ), [sex, filteredPeopleByCentury]);
 
-  const visiblePeople = useMemo(() => (
+  const FilteredPeopleBySearhQuery = useMemo(() => (
     debouncedQuery
-      ? peopleByGender.filter((person) => {
+      ? filteredPeopleByGender.filter((person) => {
         const input = debouncedQuery.toLocaleLowerCase().trim();
 
         const name = person.name.toLocaleLowerCase();
@@ -120,8 +118,8 @@ export const PeoplePage: React.FC = () => {
         return name.includes(input)
           || mothersName?.includes(input) || fathersName?.includes(input);
       })
-      : peopleByGender
-  ), [debouncedQuery, peopleByGender]);
+      : filteredPeopleByGender
+  ), [debouncedQuery, filteredPeopleByGender]);
 
   return (
     <>
@@ -132,7 +130,7 @@ export const PeoplePage: React.FC = () => {
           <div className="column is-7-tablet is-narrow-desktop">
             {showTable && (
               <PeopleFilters
-                queryHandler={queryHandler}
+                queryHandler={searchPeopleHandler}
                 query={query}
                 baseCenturies={baseCenturies}
               />
@@ -160,11 +158,11 @@ export const PeoplePage: React.FC = () => {
                 )}
               {showTable && (
                 <PeopleTable
-                  people={visiblePeople}
+                  people={FilteredPeopleBySearhQuery}
                   personSlugSelected={personSlugSelected}
                 />
               )}
-              {!visiblePeople.length && (
+              {!FilteredPeopleBySearhQuery.length && (
                 <p>There are no people matching the current search criteria</p>
               )}
             </div>

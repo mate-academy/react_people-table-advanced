@@ -3,8 +3,8 @@ import { Link, useSearchParams } from 'react-router-dom';
 
 export const CenturyLink: React.FC<{ century: number }> = ({ century }) => {
   const [searchParams] = useSearchParams();
-  const centuries
-    = (searchParams.getAll('centuries')).map((element) => Number(element));
+  const centuries = (searchParams.getAll('centuries'))
+    .map((element) => Number(element));
 
   const getSearch = () => {
     const newSearchParams = new URLSearchParams(searchParams.toString());

@@ -7,7 +7,7 @@ export const SexLink: React.FC<{ sex: Sex }> = ({ sex }) => {
   const [searchParams] = useSearchParams();
   const currentSex = searchParams.get(('sex')) || 'all';
 
-  const getSearchWith = () => {
+  const getSearchWithSex = () => {
     searchParams.set('sex', sex);
 
     return searchParams.toString();
@@ -19,7 +19,7 @@ export const SexLink: React.FC<{ sex: Sex }> = ({ sex }) => {
         { 'is-active': currentSex === sex },
       )}
       to={{
-        search: getSearchWith(),
+        search: getSearchWithSex(),
       }}
     >
       {sex === Filter.ALL && ('All')}
