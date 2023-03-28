@@ -36,6 +36,7 @@ export const PeoplePage = () => {
     ? formatArrayOfPeoples(peoples, searchParams)
     : peoples;
   const isInitialPeoplesEmpty = peoples && !peoples.length;
+  const isFilteredPeoplesEmpty = !filteredPeoples?.length && peoples?.length;
 
   return (
     <>
@@ -65,7 +66,7 @@ export const PeoplePage = () => {
                 <NoPeopleMessage />
               )}
 
-              {(!filteredPeoples?.length) && (
+              {isFilteredPeoplesEmpty && (
                 <p>There are no people matching the current search criteria</p>
               )}
 
