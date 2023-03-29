@@ -39,7 +39,7 @@ export const PeoplePage: React.FC = () => {
   }, []);
 
   const filteredList = useMemo(() => {
-    let filteredPeople = people;
+    let filteredPeople = people && [...people];
 
     if (sex && filteredPeople) {
       filteredPeople = filteredPeople.filter(person => person.sex === sex);
@@ -47,7 +47,11 @@ export const PeoplePage: React.FC = () => {
 
     if (query && filteredPeople) {
       filteredPeople = filteredPeople
-        .filter(person => person.name.toLowerCase().includes(query));
+        .filter(person => (
+          person.name.toLowerCase().includes(query)
+          || person.motherName?.toLowerCase().includes(query)
+          || person.fatherName?.toLowerCase().includes(query)
+        ));
     }
 
     if (centuries.length && filteredPeople) {
