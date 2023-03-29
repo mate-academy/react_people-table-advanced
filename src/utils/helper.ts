@@ -56,11 +56,11 @@ const filterByQueryCallback = (person: Person, query: string) => {
   const formattedFatherName = fatherName?.toLowerCase();
   const formattedName = name.toLowerCase();
 
-  const isMomSearched = formattedMotherName?.includes(formattedValue);
-  const isDadSearched = formattedFatherName?.includes(query);
-  const isPersonSearched = formattedName.includes(query);
+  const isMomFound = formattedMotherName?.includes(formattedValue);
+  const isDadFound = formattedFatherName?.includes(query);
+  const isPersonFound = formattedName.includes(query);
 
-  return isDadSearched || isMomSearched || isPersonSearched;
+  return isMomFound || isDadFound || isPersonFound;
 };
 
 export const filterByQuery = (peoples: Person[], query: string) => {

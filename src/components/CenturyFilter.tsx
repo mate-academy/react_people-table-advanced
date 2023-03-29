@@ -15,6 +15,12 @@ export const CenturyFilter: React.FC = () => {
         {centuryArray.map(century => {
           const stringCentury = String(century);
           const isActive = searchCentury.includes(stringCentury);
+          const searchLinkParams = searchCentury.includes(stringCentury)
+            ? {
+              centuries: searchCentury
+                .filter(item => item !== stringCentury),
+            }
+            : { centuries: [...searchCentury, stringCentury] };
 
           return (
             <SearchLink
@@ -23,12 +29,7 @@ export const CenturyFilter: React.FC = () => {
               className={classNames('button', 'mr-1', {
                 'is-info': isActive,
               })}
-              params={searchCentury.includes(stringCentury)
-                ? {
-                  centuries: searchCentury
-                    .filter(item => item !== stringCentury),
-                }
-                : { centuries: [...searchCentury, stringCentury] }}
+              params={searchLinkParams}
             >
               {stringCentury}
             </SearchLink>

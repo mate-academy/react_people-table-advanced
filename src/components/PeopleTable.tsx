@@ -79,9 +79,9 @@ export const PeopleTable: React.FC<PeopleTableProps> = ({
             <tr
               key={slug}
               data-cy="person"
-              className={isPersonSelected
-                ? 'has-background-warning'
-                : ''}
+              className={classNames({
+                'has-background-warning': isPersonSelected,
+              })}
             >
               <td>
                 <PersonLink person={person} />

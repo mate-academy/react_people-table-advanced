@@ -1,8 +1,8 @@
 import classNames from 'classnames';
-import { NavLink } from 'react-router-dom';
+import { NavLink, To } from 'react-router-dom';
 
 type PageNavLinkProps = {
-  to: string;
+  to: To;
   text: string;
 };
 
