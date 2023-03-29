@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import classNames from 'classnames';
 import { Person } from '../types';
 import { PersonLink } from './PersonLink';
@@ -16,10 +16,15 @@ export const PeopleTable: React.FC<Props> = ({
   people,
   searchParams,
 }) => {
-  const isSelected = (person: Person) => person.slug === slug;
+  const isSelected = useCallback((person: Person) => (
+    person.slug === slug
+  ), [slug]);
 
-  const getPersonLinkByName = (parentName: string | null) => {
-    const parent = people && people.find(person => person.name === parentName);
+  const getPersonLinkByName = useCallback((
+    peopleArray: Person[],
+    parentName: string | null,
+  ) => {
+    const parent = peopleArray.find(person => person.name === parentName);
 
     if (parent) {
       return (
@@ -28,7 +33,7 @@ export const PeopleTable: React.FC<Props> = ({
     }
 
     return parentName || '-';
-  };
+  }, [people]);
 
   const getSortParams = (name: string) => {
     let sort = `${name.toLowerCase()}` || null;
@@ -72,24 +77,23 @@ export const PeopleTable: React.FC<Props> = ({
       <thead>
         <tr>
           {columns.map(({ name, sortable }) => (
-            sortable ? (
-              <th key={name}>
-                <span className="is-flex is-flex-wrap-nowrap">
-                  {name}
-                  <SearchLink
-                    params={getSortParams(name)}
-                  >
-                    <span className="icon">
-                      <i
-                        className={classNames('fas', changeSortIcon(name))}
-                      />
-                    </span>
-                  </SearchLink>
-                </span>
-              </th>
-            ) : (
-              <th key={name}>{name}</th>
-            )
+            <th key={name}>
+              {sortable
+                ? (
+                  <span className="is-flex is-flex-wrap-nowrap">
+                    {name}
+                    <SearchLink params={getSortParams(name)}>
+                      <span className="icon">
+                        <i
+                          className={classNames('fas', changeSortIcon(name))}
+                        />
+                      </span>
+                    </SearchLink>
+                  </span>
+                ) : (
+                  name
+                )}
+            </th>
           ))}
         </tr>
       </thead>
@@ -110,8 +114,8 @@ export const PeopleTable: React.FC<Props> = ({
             <td>{person.sex}</td>
             <td>{person.born}</td>
             <td>{person.died}</td>
-            <td>{getPersonLinkByName(person.motherName)}</td>
-            <td>{getPersonLinkByName(person.fatherName)}</td>
+            <td>{getPersonLinkByName(people, person.motherName)}</td>
+            <td>{getPersonLinkByName(people, person.fatherName)}</td>
           </tr>
         ))}
       </tbody>

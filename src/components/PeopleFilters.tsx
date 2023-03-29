@@ -19,6 +19,17 @@ export const PeopleFilters: React.FC<Props> = ({
   setSearchParams,
 }) => {
   const location = useLocation();
+  const resetAllParams = {
+    sex: null,
+    query: null,
+    centuries: null,
+  };
+
+  const getSelectedCenturyParams = (century: string) => ({
+    centuries: centuries.includes(century)
+      ? centuries.filter(c => c !== century)
+      : [...centuries, century],
+  });
 
   const onQueryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchParams(
@@ -82,14 +93,10 @@ export const PeopleFilters: React.FC<Props> = ({
               <SearchLink
                 key={century}
                 data-cy="century"
+                params={getSelectedCenturyParams(century)}
                 className={classNames('button', 'mr-1', {
                   'is-info': centuries.includes(century),
                 })}
-                params={{
-                  centuries: centuries.includes(century)
-                    ? centuries.filter(c => c !== century)
-                    : [...centuries, century],
-                }}
               >
                 {century}
               </SearchLink>
@@ -113,11 +120,7 @@ export const PeopleFilters: React.FC<Props> = ({
       <div className="panel-block">
         <SearchLink
           className="button is-link is-outlined is-fullwidth"
-          params={{
-            sex: null,
-            query: null,
-            centuries: null,
-          }}
+          params={resetAllParams}
         >
           Reset all filters
         </SearchLink>

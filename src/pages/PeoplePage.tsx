@@ -17,6 +17,7 @@ export const PeoplePage: React.FC = () => {
   const sort = searchParams.get('sort') || [];
   const order = searchParams.get('order') || null;
   const { slug = '' } = useParams();
+  const flag = order === 'desc';
 
   const getPeopleFromServer = async () => {
     try {
@@ -76,26 +77,19 @@ export const PeoplePage: React.FC = () => {
     filteredList && filteredList.sort((a, b) => {
       switch (sort) {
         case 'name':
-          return order === 'desc'
-            ? b.name.localeCompare(a.name)
-            : a.name.localeCompare(b.name);
+          return (flag ? -1 : 1) * a.name.localeCompare(b.name);
 
         case 'sex':
-          return order === 'desc'
-            ? b.sex.localeCompare(a.sex)
-            : a.sex.localeCompare(b.sex);
+          return (flag ? -1 : 1) * a.sex.localeCompare(b.sex);
 
         case 'born':
-          return order === 'desc'
-            ? b.born - a.born
-            : a.born - b.born;
+          return (flag ? -1 : 1) * (a.born - b.born);
 
         case 'died':
-          return order === 'desc'
-            ? b.died - a.died
-            : a.died - b.died;
+          return (flag ? -1 : 1) * (a.died - b.died);
 
-        default: break;
+        default:
+          break;
       }
 
       return 0;
