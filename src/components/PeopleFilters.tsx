@@ -22,21 +22,27 @@ export const PeopleFilters: FC<Props> = ({
       <p className="panel-tabs" data-cy="SexFilter">
         <SearchLink
           params={{ sex: null }}
-          className={!sex ? 'is-active' : ''}
+          className={classNames(
+            { 'is-active': !sex },
+          )}
         >
           All
         </SearchLink>
 
         <SearchLink
           params={{ sex: 'm' }}
-          className={sex === 'm' ? 'is-active' : ''}
+          className={classNames(
+            { 'is-active': !sex },
+          )}
         >
           Male
         </SearchLink>
 
         <SearchLink
           params={{ sex: 'f' }}
-          className={sex === 'f' ? 'is-active' : ''}
+          className={classNames(
+            { 'is-active': !sex },
+          )}
         >
           Female
         </SearchLink>

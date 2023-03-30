@@ -9,6 +9,7 @@ import { useSearchParams } from 'react-router-dom';
 import { getPeople } from '../../api';
 import { Person } from '../../types';
 import { getSearchWith } from '../../utils/searchHelper';
+import { SortOrder } from '../../utils/SortOrder';
 import { Loader } from '../Loader';
 import { PeopleFilters } from '../PeopleFilters';
 import { PeopleTable } from '../PeopleTable';
@@ -47,7 +48,7 @@ const filterPeople = (
 const sortPeople = (
   people: Person[],
   sort: string,
-  order: string,
+  order: SortOrder,
 ): Person[] => {
   const sortedPeople = [...people];
 
@@ -68,7 +69,7 @@ const sortPeople = (
       break;
   }
 
-  if (order) {
+  if (order === SortOrder.DESC) {
     sortedPeople.reverse();
   }
 
@@ -133,7 +134,7 @@ export const PeoplePage = () => {
 
   const preparedPeople = useMemo(() => {
     const filtered = filterPeople(people, sex, query, centuries);
-    const sorted = sortPeople(filtered, sort, order);
+    const sorted = sortPeople(filtered, sort, order as SortOrder);
 
     return sorted;
   }, [people, sex, query, centuries, sort, order]);
@@ -174,7 +175,7 @@ export const PeoplePage = () => {
                 : (
                   <PeopleTable
                     people={preparedPeople}
-                    sort={sort}
+                    sort={sort as SortOrder}
                     order={order}
                   />
                 )}

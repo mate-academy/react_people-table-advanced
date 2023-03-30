@@ -2,12 +2,13 @@ import classNames from 'classnames';
 import { FC } from 'react';
 import { useParams } from 'react-router-dom';
 import { Person } from '../../types';
+import { SortOrder } from '../../utils/SortOrder';
 import { SearchLink } from '../SearchLink';
 import { TableLink } from '../TableLink';
 
 type Props = {
   people: Person[];
-  sort: string;
+  sort: SortOrder;
   order: string;
 };
 
@@ -24,17 +25,19 @@ export const PeopleTable: FC<Props> = ({ people, sort, order }) => {
           {['Name', 'Sex', 'Born', 'Died'].map(columnName => {
             const tagName = columnName.toLowerCase();
 
+            const isSameField = sort === tagName;
+
             return (
               <th key={columnName}>
                 <span className="is-flex is-flex-wrap-nowrap">
                   {columnName}
                   <SearchLink
                     params={{
-                      sort: sort !== tagName || (sort === tagName && !order)
+                      sort: !isSameField || (isSameField && !order)
                         ? tagName
                         : null,
-                      order: sort === tagName && !order
-                        ? 'desc'
+                      order: isSameField && !order
+                        ? SortOrder.DESC
                         : null,
                     }}
                   >
@@ -42,8 +45,9 @@ export const PeopleTable: FC<Props> = ({ people, sort, order }) => {
                       <i className={classNames(
                         'fas fa-sort',
                         {
-                          'fa-sort-up': sort === tagName && !order,
-                          'fa-sort-down': sort === tagName && order === 'desc',
+                          'fa-sort-up': isSameField && !order,
+                          'fa-sort-down': isSameField
+                            && order === SortOrder.DESC,
                         },
                       )}
                       />
