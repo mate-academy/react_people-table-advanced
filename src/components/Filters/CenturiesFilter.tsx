@@ -9,6 +9,10 @@ const CenturiesFilter = () => {
   const [searchParams] = useSearchParams();
   const centuries = searchParams.getAll('centuries') || [];
 
+  const checkCentury = (century: string) => {
+    return centuries.includes(century);
+  };
+
   return (
     <div className="panel-block">
       <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
@@ -20,10 +24,10 @@ const CenturiesFilter = () => {
               className={cn(
                 'button',
                 'mr-1',
-                { 'is-info': centuries.includes(century) },
+                { 'is-info': checkCentury(century) },
               )}
               params={{
-                centuries: centuries.includes(century)
+                centuries: checkCentury(century)
                   ? centuries.filter(currCentury => currCentury !== century)
                   : [...centuries, century],
               }}

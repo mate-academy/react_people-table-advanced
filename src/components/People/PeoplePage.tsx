@@ -13,9 +13,9 @@ import { PeopleTable } from './PeopleTable';
 
 export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);
-  const [isLoading, setLoading] = useState(true);
-  const [isError, setError] = useState(false);
-  const [isHaveNotPeople, setHaveNotPeople] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isError, setIsError] = useState(false);
+  const [isHaveNotPeople, setIsHaveNotPeople] = useState(false);
 
   const { personSlug = '' } = useParams();
   const [searchParams] = useSearchParams();
@@ -29,13 +29,13 @@ export const PeoplePage = () => {
     getPeople()
       .then(res => {
         if (!res.length) {
-          setHaveNotPeople(true);
+          setIsHaveNotPeople(true);
         } else {
           setPeople(res);
         }
       })
-      .catch(() => setError(true))
-      .finally(() => setLoading(false));
+      .catch(() => setIsError(true))
+      .finally(() => setIsLoading(false));
   }, []);
 
   const filteredPeople = useMemo(() => {

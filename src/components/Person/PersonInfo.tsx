@@ -14,6 +14,14 @@ type Props = {
 };
 
 const PersonInfo: React.FC<Props> = ({
+  person: {
+    slug,
+    sex,
+    born,
+    died,
+    fatherName,
+    motherName,
+  },
   person,
   personSlug,
   parents: { father, mother },
@@ -21,7 +29,7 @@ const PersonInfo: React.FC<Props> = ({
   <tr
     data-cy="person"
     className={classNames(
-      { 'has-background-warning': personSlug === person.slug },
+      { 'has-background-warning': personSlug === slug },
     )}
   >
     <td>
@@ -29,18 +37,18 @@ const PersonInfo: React.FC<Props> = ({
         person={person}
       />
     </td>
-    <td>{person.sex}</td>
-    <td>{person.born}</td>
-    <td>{person.died}</td>
+    <td>{sex}</td>
+    <td>{born}</td>
+    <td>{died}</td>
     <td>
       {mother
         ? <PersonLink person={mother} />
-        : person.motherName || '-'}
+        : motherName || '-'}
     </td>
     <td>
       {father
         ? <PersonLink person={father} />
-        : person.fatherName || '-'}
+        : fatherName || '-'}
     </td>
   </tr>
 );

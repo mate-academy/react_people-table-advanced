@@ -1,4 +1,5 @@
 import { Person } from '../types';
+import { SortEnum } from '../types/SortEnum';
 
 export function sortPeople(
   people: Person[],
@@ -8,15 +9,15 @@ export function sortPeople(
   let sortedPeople = people;
 
   switch (sort) {
-    case 'name':
-    case 'sex':
+    case SortEnum.NAME:
+    case SortEnum.SEX:
       sortedPeople = [...people].sort((x, y) => {
         return x[sort].localeCompare(y[sort]);
       });
 
       break;
-    case 'born':
-    case 'died':
+    case SortEnum.BORN:
+    case SortEnum.DIED:
       sortedPeople = [...people].sort((x, y) => {
         return +x[sort] - +y[sort];
       });

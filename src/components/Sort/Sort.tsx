@@ -2,12 +2,13 @@ import cn from 'classnames';
 import { useSearchParams } from 'react-router-dom';
 
 import { SearchLink } from '../../utils/SearchLink';
+import { SortEnum } from '../../types/SortEnum';
 
 const sortList = [
-  { name: 'Name', shortName: 'name' },
-  { name: 'Sex', shortName: 'sex' },
-  { name: 'Born', shortName: 'born' },
-  { name: 'Died', shortName: 'died' },
+  { name: 'Name', shortName: SortEnum.NAME },
+  { name: 'Sex', shortName: SortEnum.SEX },
+  { name: 'Born', shortName: SortEnum.BORN },
+  { name: 'Died', shortName: SortEnum.DIED },
 ];
 
 const Sort = () => {
