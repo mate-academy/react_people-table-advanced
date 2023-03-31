@@ -1,5 +1,6 @@
 import classNames from 'classnames';
 import { FC } from 'react';
+import { useParams } from 'react-router-dom';
 import { PersonLink } from './PersonLink';
 import { Person } from '../types';
 import { SortLink } from './SortLink';
@@ -8,11 +9,10 @@ import { getSortType } from '../helpers/getSortType';
 
 type Props = {
   people: Person[];
-  selectedPersonSlug?: string;
 };
 
-export const PeopleTable: FC<Props> = ({ people, selectedPersonSlug = '' }) => {
-  const isSelected = ({ slug }: Person) => slug === selectedPersonSlug;
+export const PeopleTable: FC<Props> = ({ people }) => {
+  const { slug: selectedPersonSlug = '' } = useParams();
 
   return (
     <table
@@ -57,7 +57,7 @@ export const PeopleTable: FC<Props> = ({ people, selectedPersonSlug = '' }) => {
               data-cy="person"
               key={slug}
               className={classNames({
-                'has-background-warning': isSelected(person),
+                'has-background-warning': selectedPersonSlug === slug,
               })}
             >
               <td>

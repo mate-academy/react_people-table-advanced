@@ -1,4 +1,4 @@
-import { useParams, useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import { useEffect, useMemo, useState } from 'react';
 
 import { Loader } from '../components/Loader';
@@ -33,12 +33,11 @@ export const PeoplePage = () => {
   const sortType = getSortType(searchParams.get('sort') || SortType.None);
   const order = searchParams.get('order') || '';
 
-  const { slug: selectedPersonSlug = '' } = useParams();
-
   useEffect(() => {
-    setIsLoading(true);
-    getPeople()
-      .then((fetchedPeople) => {
+    (async () => {
+      try {
+        setIsLoading(true);
+        const fetchedPeople = await getPeople();
         const isEmptyResponse = !fetchedPeople.length;
 
         if (isEmptyResponse !== hasNoDataError) {
@@ -61,9 +60,12 @@ export const PeoplePage = () => {
             return currentPerson;
           }),
         );
-      })
-      .catch(() => setHasLoadingError(true))
-      .finally(() => setIsLoading(false));
+      } catch (err) {
+        setHasLoadingError(true);
+      } finally {
+        setIsLoading(false);
+      }
+    })();
   }, []);
 
   const visiblePeople = useMemo(() => {
@@ -106,10 +108,7 @@ export const PeoplePage = () => {
               {isLoading ? (
                 <Loader />
               ) : (
-                <PeopleTable
-                  people={visiblePeople}
-                  selectedPersonSlug={selectedPersonSlug}
-                />
+                <PeopleTable people={visiblePeople} />
               )}
             </div>
           </div>

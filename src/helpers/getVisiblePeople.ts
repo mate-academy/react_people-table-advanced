@@ -3,7 +3,9 @@ import { SortType } from '../enums/SortType';
 import { Person } from '../types';
 
 const isQueryInValues = (query: string, values: string[]): boolean => {
-  return values.some((value) => value.toLowerCase().includes(query));
+  return values.some(
+    (value) => value.toLowerCase().includes(query),
+  );
 };
 
 const getCentury = (year: number): number => {
@@ -59,6 +61,7 @@ export const getVisiblePeople = (
           case SortType.Sex:
           case SortType.Name:
             return currentPerson[sortType].localeCompare(nextPerson[sortType]);
+
           case SortType.Born:
           case SortType.Died:
             return currentPerson[sortType] - nextPerson[sortType];
