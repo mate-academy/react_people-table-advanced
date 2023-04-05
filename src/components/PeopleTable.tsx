@@ -66,142 +66,145 @@ export const PeopleTable: React.FC<Props> = ({
     return <Loader />;
   }
 
-  if (data.length === 0) {
-    <p>There are no people matching the current search criteria</p>;
-  }
-
   return (
-    <table
-      data-cy="peopleTable"
-      className="table is-striped is-hoverable is-narrow is-fullwidth"
-    >
-      <thead>
-        <tr>
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Name
-              <SearchLink
-                params={{
-                  sort: setProperParamsSort('name'),
-                  order: setProperParamsOrder('name'),
-                }}
-              >
-                <span className="icon">
-                  <i
-                    className={classNames('fas', getIconClassNames('name'))}
-                  />
+    <>
+      {data.length === 0 ? (
+        <p>There are no people matching the current search criteria</p>
+      ) : (
+        <table
+          data-cy="peopleTable"
+          className="table is-striped is-hoverable is-narrow is-fullwidth"
+        >
+          <thead>
+            <tr>
+              <th>
+                <span className="is-flex is-flex-wrap-nowrap">
+                  Name
+                  <SearchLink
+                    params={{
+                      sort: setProperParamsSort('name'),
+                      order: setProperParamsOrder('name'),
+                    }}
+                  >
+                    <span className="icon">
+                      <i
+                        className={classNames('fas', getIconClassNames('name'))}
+                      />
+                    </span>
+                  </SearchLink>
                 </span>
-              </SearchLink>
-            </span>
-          </th>
+              </th>
 
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Sex
-              <SearchLink
-                params={{
-                  sort: setProperParamsSort('sex'),
-                  order: setProperParamsOrder('sex'),
-                }}
-              >
-                <span className="icon">
-                  <i
-                    className={classNames('fas', getIconClassNames('sex'))}
-                  />
+              <th>
+                <span className="is-flex is-flex-wrap-nowrap">
+                  Sex
+                  <SearchLink
+                    params={{
+                      sort: setProperParamsSort('sex'),
+                      order: setProperParamsOrder('sex'),
+                    }}
+                  >
+                    <span className="icon">
+                      <i
+                        className={classNames('fas', getIconClassNames('sex'))}
+                      />
+                    </span>
+                  </SearchLink>
                 </span>
-              </SearchLink>
-            </span>
-          </th>
+              </th>
 
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Born
-              <SearchLink
-                params={{
-                  sort: setProperParamsSort('born'),
-                  order: setProperParamsOrder('born'),
-                }}
-              >
-                <span className="icon">
-                  <i
-                    className={classNames('fas', getIconClassNames('born'))}
-                  />
+              <th>
+                <span className="is-flex is-flex-wrap-nowrap">
+                  Born
+                  <SearchLink
+                    params={{
+                      sort: setProperParamsSort('born'),
+                      order: setProperParamsOrder('born'),
+                    }}
+                  >
+                    <span className="icon">
+                      <i
+                        className={classNames('fas', getIconClassNames('born'))}
+                      />
+                    </span>
+                  </SearchLink>
                 </span>
-              </SearchLink>
-            </span>
-          </th>
+              </th>
 
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Died
-              <SearchLink
-                params={{
-                  sort: setProperParamsSort('died'),
-                  order: setProperParamsOrder('died'),
-                }}
-              >
-                <span className="icon">
-                  <i
-                    className={classNames('fas', getIconClassNames('died'))}
-                  />
+              <th>
+                <span className="is-flex is-flex-wrap-nowrap">
+                  Died
+                  <SearchLink
+                    params={{
+                      sort: setProperParamsSort('died'),
+                      order: setProperParamsOrder('died'),
+                    }}
+                  >
+                    <span className="icon">
+                      <i
+                        className={classNames('fas', getIconClassNames('died'))}
+                      />
+                    </span>
+                  </SearchLink>
                 </span>
-              </SearchLink>
-            </span>
-          </th>
+              </th>
 
-          <th>Mother</th>
-          <th>Father</th>
-        </tr>
-      </thead>
+              <th>Mother</th>
+              <th>Father</th>
+            </tr>
+          </thead>
 
-      <tbody>
-        {data.map((item) => (
-          <tr
-            key={item.slug}
-            data-cy="person"
-            className={classNames({
-              'has-background-warning': item.slug === personId,
-            })}
-          >
-            <td>
-              <Link
-                to={{
-                  pathname: `/people/${item.slug}`,
-                  search: location.search,
-                }}
+          <tbody>
+            {data.map((item) => (
+              <tr
+                key={item.slug}
+                data-cy="person"
                 className={classNames({
-                  'has-text-danger': femaleNames.has(item.name),
+                  'has-background-warning': item.slug === personId,
                 })}
               >
-                {item.name}
-              </Link>
-            </td>
+                <td>
+                  <Link
+                    to={{
+                      pathname: `/people/${item.slug}`,
+                      search: location.search,
+                    }}
+                    className={classNames({
+                      'has-text-danger': femaleNames.has(item.name),
+                    })}
+                  >
+                    {item.name}
+                  </Link>
+                </td>
 
-            <td>{item.sex}</td>
-            <td>{item.born}</td>
-            <td>{item.died}</td>
-            <td>
-              {item.motherName && peopleMap.has(item.motherName) ? (
-                <Link
-                  to={`/people/${peopleMap.get(item.motherName)?.slug}`}
-                  className="has-text-danger"
-                >
-                  {item.motherName}
-                </Link>
-              ) : (
-                item.motherName || '-'
-              )}
-            </td>
-            <td>
-              {item.fatherName && peopleMap.has(item.fatherName) ? (
-                <Link to={`/people/${peopleMap.get(item.fatherName)?.slug}`}>{item.fatherName}</Link>
-              ) : (
-                item.fatherName || '-'
-              )}
-            </td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
+                <td>{item.sex}</td>
+                <td>{item.born}</td>
+                <td>{item.died}</td>
+                <td>
+                  {item.motherName && peopleMap.has(item.motherName) ? (
+                    <Link
+                      to={`/people/${peopleMap.get(item.motherName)?.slug}`}
+                      className="has-text-danger"
+                    >
+                      {item.motherName}
+                    </Link>
+                  ) : (
+                    item.motherName || '-'
+                  )}
+                </td>
+                <td>
+                  {item.fatherName && peopleMap.has(item.fatherName) ? (
+                    <Link to={`/people/${peopleMap.get(item.fatherName)?.slug}`}>{item.fatherName}</Link>
+                  ) : (
+                    item.fatherName || '-'
+                  )}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
+    </>
+
   );
 };
