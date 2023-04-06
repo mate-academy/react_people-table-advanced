@@ -13,6 +13,6 @@ There you can fetch users, filter and sort them by different criteria
 - Fetch
 - Webpack
 
-[DEMO LINK](https://max-rozzhalovets.github.io/react_todo-app-with-api/)
+[DEMO LINK](https://max-rozzhalovets.github.io/react_people-table-advanced/)
 
 Hope you enjoy it, have a good day!
