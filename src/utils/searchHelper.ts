@@ -1,3 +1,5 @@
+import { Person } from '../types';
+
 export type SearchParams = {
   [key: string]: string | string[] | null,
 };
@@ -45,3 +47,72 @@ export function getSearchWith(
   // we return a string to use it inside links
   return newParams.toString();
 }
+
+export const filterPeopleByParams = (
+  people: Person[],
+  sexFilter: string,
+  queryFilter: string,
+  centuriesFilter: string[],
+) => {
+  let filteredPeople = [...people];
+
+  if (sexFilter) {
+    filteredPeople = filteredPeople.filter(({ sex }) => sex === sexFilter);
+  }
+
+  if (queryFilter) {
+    const normalizedFilter = queryFilter.trim().toLowerCase();
+
+    filteredPeople = filteredPeople.filter(({
+      name,
+      fatherName,
+      motherName,
+    }) => {
+      const father = fatherName || '';
+      const mother = motherName || '';
+
+      return (
+        name.toLowerCase().includes(normalizedFilter)
+        || father.toLowerCase().includes(normalizedFilter)
+        || mother.toLowerCase().includes(normalizedFilter)
+      );
+    });
+  }
+
+  if (centuriesFilter.length) {
+    filteredPeople = filteredPeople.filter(({ born }) => {
+      const century = Math.floor(born / 100) + 1;
+
+      return centuriesFilter.includes(century.toString());
+    });
+  }
+
+  return filteredPeople;
+};
+
+export const sortPeople = (
+  people: Person[],
+  peopleSort: string,
+  order: string,
+) => {
+  const sortedPeople = [...people].sort((a, b) => {
+    switch (peopleSort) {
+      case 'name':
+        return a.name.localeCompare(b.name);
+      case 'sex':
+        return a.sex.localeCompare(b.sex);
+      case 'born':
+        return a.born - b.born;
+      case 'died':
+        return a.died - b.died;
+      default:
+        return 0;
+    }
+  });
+
+  if (order === 'desc') {
+    sortedPeople.reverse();
+  }
+
+  return sortedPeople;
+};
