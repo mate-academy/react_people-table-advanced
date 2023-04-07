@@ -32,8 +32,11 @@ export const PeopleTable: React.FC<Props> = ({
   );
 
   const setProperParamsSort = (param: string) => {
-    if (!searchParams.get('sort')
-      || (searchParams.get('sort') === param && !searchParams.get('order'))) {
+    if (!searchParams.get('sort') || searchParams.get('sort') !== param) {
+      return param;
+    }
+
+    if (searchParams.get('sort') === param && !searchParams.get('order')) {
       return param;
     }
 
@@ -205,6 +208,5 @@ export const PeopleTable: React.FC<Props> = ({
         </table>
       )}
     </>
-
   );
 };
