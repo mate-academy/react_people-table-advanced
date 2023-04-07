@@ -53,10 +53,10 @@ export const PeoplePage = () => {
   const sortedPeople = useMemo(() => {
     if (sortName) {
       return [...visiblePeople].sort((a, b) => {
-        const curr = a[sortName];
-        const next = b[sortName];
+        const curr = a[sortName as keyof typeof a];
+        const next = b[sortName as keyof typeof b];
 
-        if (typeof curr === 'string') {
+        if (typeof curr === 'string' && typeof next === 'string') {
           if (order === 'desc') {
             return next.localeCompare(curr);
           }
@@ -64,11 +64,15 @@ export const PeoplePage = () => {
           return curr.localeCompare(next);
         }
 
-        if (order === 'desc') {
-          return next - curr;
+        if (typeof curr === 'number' && typeof next === 'number') {
+          if (order === 'desc') {
+            return next - curr;
+          }
+
+          return curr - next;
         }
 
-        return curr - next;
+        return 0;
       });
     }
 

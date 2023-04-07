@@ -19,30 +19,6 @@ export const PeopleTable: React.FC<Props> = ({
   const order = searchParams.get('order');
 
   const columnWithSort = ['name', 'sex', 'born', 'died'];
-  // const sortedPeople = useMemo(() => {
-  //   if (sortName) {
-  //     return [...people].sort((a, b) => {
-  //       const curr = a[sortName];
-  //       const next = b[sortName];
-
-  //       if (typeof curr === 'string') {
-  //         if (order === 'desc') {
-  //           return next.localeCompare(curr);
-  //         }
-
-  //         return curr.localeCompare(next);
-  //       }
-
-  //       if (order === 'desc') {
-  //         return next - curr;
-  //       }
-
-  //       return curr - next;
-  //     });
-  //   }
-
-  //   return people;
-  // }, [sortName, order]);
 
   return (
     <table
