@@ -28,6 +28,8 @@ export const PeoplePage = () => {
       .catch(() => setIsError(true))
       .finally(() => setIsLoading(false));
   }, []);
+  const containsIgnoreCase = (text: string, queryText: string) => (
+    text.toLowerCase().includes(queryText));
 
   const visiblePeople = useMemo(() => {
     const filteredArray = (currentGender)
@@ -41,10 +43,15 @@ export const PeoplePage = () => {
     if (query !== '' && query !== null) {
       const normalizedQuery = query.toLowerCase();
 
-      return filteredByCentury.filter(person => (
-        person.name.toLowerCase().includes(normalizedQuery)
-          || person.motherName?.toLowerCase().includes(normalizedQuery)
-          || person.fatherName?.toLowerCase().includes(normalizedQuery)));
+      return filteredByCentury.filter(person => {
+        const { name, motherName, fatherName } = person;
+
+        return containsIgnoreCase(name, normalizedQuery)
+          || (motherName
+            && containsIgnoreCase(motherName, normalizedQuery))
+          || (fatherName
+            && containsIgnoreCase(fatherName, normalizedQuery));
+      });
     }
 
     return filteredByCentury;
@@ -96,7 +103,7 @@ export const PeoplePage = () => {
               {isLoading
                 ? <Loader />
                 : (
-                  <div className="box table-container">
+                  <>
                     {isError && (
                       <p
                         data-cy="peopleLoadingError"
@@ -123,7 +130,7 @@ export const PeoplePage = () => {
                           personId={selectedPersonId}
                         />
                       )}
-                  </div>
+                  </>
                 )}
             </div>
           </div>

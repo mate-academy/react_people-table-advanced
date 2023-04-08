@@ -10,6 +10,16 @@ export const PeopleFilters:React.FC = () => {
   const currentGender = searchParams.get('sex');
   const pickedCenturies = searchParams.getAll('centuries');
   const [query, setQuery] = useState('');
+  const handleQueryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setQuery(e.target.value);
+    if (e.target.value.trim() === '') {
+      searchParams.delete('query');
+    } else {
+      searchParams.set('query', e.target.value.trim());
+    }
+
+    setSearchParams(searchParams);
+  };
 
   return (
     <nav className="panel">
@@ -23,6 +33,7 @@ export const PeopleFilters:React.FC = () => {
         >
           All
         </SearchLink>
+
         <SearchLink
           className={
             cn({
@@ -33,6 +44,7 @@ export const PeopleFilters:React.FC = () => {
         >
           Male
         </SearchLink>
+
         <SearchLink
           className={
             cn({ 'is-active': currentGender === 'f' })
@@ -50,16 +62,7 @@ export const PeopleFilters:React.FC = () => {
             type="search"
             className="input"
             value={query}
-            onChange={(e) => {
-              setQuery(e.target.value);
-              if (e.target.value.trim() === '') {
-                searchParams.delete('query');
-              } else {
-                searchParams.set('query', e.target.value.trim());
-              }
-
-              setSearchParams(searchParams);
-            }}
+            onChange={handleQueryChange}
             placeholder="Search"
           />
 
@@ -116,6 +119,7 @@ export const PeopleFilters:React.FC = () => {
             sex: null,
             order: null,
             centuries: null,
+            sort: null,
           }}
         >
           Reset all filters
