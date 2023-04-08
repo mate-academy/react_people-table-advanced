@@ -8,6 +8,12 @@ export const CenturiesFilltering = () => {
   const centuries = searchParams.getAll('centuries') || [];
   const centuriesArr = ['16', '17', '18', '19', '20'];
 
+  const centurieFiltering = (centurie: string) => {
+    return centuries.includes(centurie)
+    ? centuries.filter((c) => c !== centurie)
+    : [...centuries, centurie];
+  }
+
   return (
     <div className="panel-block">
       <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
@@ -21,9 +27,7 @@ export const CenturiesFilltering = () => {
                 { 'is-info': centuries.includes(centurie) },
               )}
               params={{
-                centuries: centuries.includes(centurie)
-                  ? centuries.filter((c) => c !== centurie)
-                  : [...centuries, centurie],
+                centuries: centurieFiltering(centurie)
               }}
             >
               {centurie}
@@ -37,7 +41,7 @@ export const CenturiesFilltering = () => {
             className={classNames(
               'button',
               'is-success',
-              { 'is-outlined': centuries.length !== 0 },
+              { 'is-outlined': centuries.length },
             )}
             params={{ centuries: null }}
           >

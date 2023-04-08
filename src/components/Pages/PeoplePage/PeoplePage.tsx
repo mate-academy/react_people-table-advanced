@@ -37,19 +37,18 @@ export const PeoplePage = () => {
       <h1 className="title">People Page</h1>
       <div className="block flex">
         <div className="box table-container" style={{ width: '100%' }}>
+          {isError ? (
+            <p data-cy="peopleLoadingError" className="has-text-danger">
+              Something went wrong
+            </p>
+          ) : (
+            <PeopleTable personId={peopleId} peoples={peoples} />
+          )}
+
           {isLoader ? (
             <Loader />
-
           ) : (
             <>
-              {isError ? (
-                <p data-cy="peopleLoadingError" className="has-text-danger">
-                  Something went wrong
-                </p>
-              ) : (
-                <PeopleTable personId={peopleId} peoples={peoples} />
-              )}
-
               {!peoples.length && (
                 <p data-cy="noPeopleMessage">
                   There are no people on the server
