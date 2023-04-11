@@ -1,4 +1,4 @@
-export interface PersonType {
+export interface Person {
   name: string,
   sex: string,
   born: number,
@@ -6,8 +6,8 @@ export interface PersonType {
   fatherName: string | null,
   motherName: string | null,
   slug: string,
-  mother?: PersonType,
-  father?: PersonType,
+  mother?: Person,
+  father?: Person,
 }
 
 export enum SortType {

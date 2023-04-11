@@ -3,15 +3,15 @@ import { useMatch, useSearchParams } from 'react-router-dom';
 import { PeopleFilters } from './PeopleFilters';
 import { Loader } from './Loader';
 import { PeopleTable } from './PeopleTable';
-import { PersonType, SortType } from '../types/Person';
+import { Person, SortType } from '../types/Person';
 import { getPeople } from '../api';
 
 function filterPeople(
-  people: PersonType[],
+  people: Person[],
   sex: string | null,
   query: string | null,
   centuries: string[],
-): PersonType[] {
+): Person[] {
   let filtered = [...people];
 
   if (sex) {
@@ -28,7 +28,7 @@ function filterPeople(
   }
 
   if (centuries.length > 0) {
-    const getCentury = (person: PersonType) => {
+    const getCentury = (person: Person) => {
       return Math.ceil(person.born / 100).toString();
     };
 
@@ -41,7 +41,7 @@ function filterPeople(
 }
 
 function sortPeople(
-  people: PersonType[],
+  people: Person[],
   sort: string | null,
   order: string | null,
 ) {
@@ -79,7 +79,7 @@ export const PeoplePage: React.FC = () => {
   const match = useMatch('people/:slug');
   const selectedPersonSlug = match?.params.slug;
 
-  const [people, setPeople] = useState<PersonType[]>([]);
+  const [people, setPeople] = useState<Person[]>([]);
   const [isPeopleLoading, setIsPeopleLoading] = useState(false);
   const [isError, setIsError] = useState(false);
   const [isNoPeople, setIsNoPeople] = useState(false);

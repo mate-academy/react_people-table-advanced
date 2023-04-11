@@ -65,7 +65,9 @@ export const PeopleFilters: React.FC = () => {
               <SearchLink
                 params={{
                   centuries: centuries.includes(century)
-                    ? centuries.filter(cent => cent !== century)
+                    ? centuries.filter(currentCentury => {
+                      return currentCentury !== century;
+                    })
                     : [...centuries, century],
                 }}
                 key={century}

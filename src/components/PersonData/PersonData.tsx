@@ -1,19 +1,19 @@
 import React from 'react';
 import classNames from 'classnames';
-import { PersonType } from '../../types';
+import { Person } from '../../types';
 
 type Props = {
-  person: PersonType;
+  person: Person;
   selectedPersonSlug: string;
-  isMother: PersonType | null;
-  isFather: PersonType | null;
+  mother: Person | null;
+  father: Person | null;
 };
 
-export const Person: React.FC<Props> = ({
+export const PersonData: React.FC<Props> = ({
   person,
   selectedPersonSlug,
-  isMother,
-  isFather,
+  mother,
+  father,
 }) => {
   const {
     name,
@@ -27,7 +27,6 @@ export const Person: React.FC<Props> = ({
 
   return (
     <tr
-      key={slug}
       data-cy="person"
       className={classNames(
         {
@@ -50,25 +49,25 @@ export const Person: React.FC<Props> = ({
       <td>{born}</td>
       <td>{died}</td>
       <td>
-        {isMother
+        {mother
           ? (
             <a
-              href={`#/people/${isMother.slug}`}
+              href={`#/people/${mother.slug}`}
               className="has-text-danger"
             >
-              {isMother.name}
+              {mother.name}
             </a>
           )
           : motherName || '-'}
       </td>
 
       <td>
-        {isFather
+        {father
           ? (
             <a
-              href={`#/people/${isFather.slug}`}
+              href={`#/people/${father.slug}`}
             >
-              {isFather.name}
+              {father.name}
             </a>
           )
           : fatherName || '-'}

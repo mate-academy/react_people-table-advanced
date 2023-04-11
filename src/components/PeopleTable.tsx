@@ -1,12 +1,12 @@
 import React from 'react';
 import { useSearchParams } from 'react-router-dom';
 import classNames from 'classnames';
-import { PersonType, SortType } from '../types/Person';
-import { Person } from './Person';
+import { Person, SortType } from '../types/Person';
+import { PersonData } from './PersonData';
 import { SearchLink } from './SearchLink';
 
 type Props = {
-  people: PersonType[];
+  people: Person[];
   selectedPersonSlug: string;
 };
 
@@ -135,20 +135,20 @@ export const PeopleTable: React.FC<Props> = ({
 
       <tbody>
         {people.map(person => {
-          const isMother = people.find(personSearch => {
+          const mother = people.find(personSearch => {
             return personSearch.name === person.motherName;
           }) || null;
 
-          const isFather = people.find(personSearch => {
+          const father = people.find(personSearch => {
             return personSearch.name === person.fatherName;
           }) || null;
 
           return (
-            <Person
+            <PersonData
               person={person}
               selectedPersonSlug={selectedPersonSlug}
-              isMother={isMother}
-              isFather={isFather}
+              mother={mother}
+              father={father}
             />
           );
         })}

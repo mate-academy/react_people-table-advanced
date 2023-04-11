@@ -17,7 +17,7 @@ export const App: React.FC = () => {
           <Routes>
             <Route
               path="/"
-              element={(<HomePage />)}
+              element={<HomePage />}
             />
 
             <Route
@@ -29,17 +29,17 @@ export const App: React.FC = () => {
 
             <Route
               path="/people"
-              element={(<PeoplePage />)}
+              element={<PeoplePage />}
             />
 
             <Route
               path="/people/:slug"
-              element={(<PeoplePage />)}
+              element={<PeoplePage />}
             />
 
             <Route
               path="*"
-              element={(<PageNotFound />)}
+              element={<PageNotFound />}
             />
           </Routes>
         </div>
