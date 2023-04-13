@@ -1,16 +1,10 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import classNames from 'classnames';
 import { Person } from '../types';
 import { PersonInfo } from './PersonInfo';
 import { getSearchWith } from '../utils/searchHelper';
-
-enum SortBy {
-  Name = 'name',
-  Sex = 'sex',
-  Born = 'born',
-  Died = 'died',
-}
+import { SortBy } from '../types/SortBy';
 
 type Props = {
   allPeople: Person[];
@@ -24,50 +18,83 @@ export const PeopleTable: React.FC<Props> = ({ allPeople }) => {
   const sort = searchParams.get('sort');
   const order = searchParams.get('order');
 
-  let copyPeople = [...allPeople];
-
-  if (sex) {
-    copyPeople = copyPeople.filter(person => person.sex === sex);
-  }
-
-  if (centuries.length) {
-    copyPeople = copyPeople
-      .filter(person => centuries
-        .includes(String(Math.ceil(person.born / 100))));
-  }
-
-  if (query) {
-    const queryLowerCase = query.toLocaleLowerCase();
-
-    copyPeople = copyPeople.filter(person => (
-      person.name.toLocaleLowerCase().includes(queryLowerCase)
-        || person.fatherName?.toLocaleLowerCase().includes(queryLowerCase)
-        || person.motherName?.toLocaleLowerCase().includes(queryLowerCase)
-    ));
-  }
-
-  if (sort) {
-    switch (sort) {
-      case SortBy.Name:
-      case SortBy.Sex:
-        copyPeople.sort((prev, curr) => prev[sort].localeCompare(curr[sort]));
-        break;
-
-      case SortBy.Died:
-      case SortBy.Born:
-        copyPeople.sort((prev, curr) => prev[sort] - curr[sort]);
-        break;
-
-      default:
-        throw new Error('Unable to sort people');
+  const handleSetSort = useCallback((value: string) => {
+    if (sort === value && order === null) {
+      return getSearchWith(searchParams,
+        { sort: value, order: 'desc' });
     }
-  }
 
-  if (order) {
-    copyPeople = copyPeople.reverse();
-  }
+    if (sort === value && order === 'desc') {
+      return getSearchWith(searchParams,
+        { sort: null, order: null });
+    }
 
-  if (!copyPeople.length) {
+    return getSearchWith(searchParams,
+      { sort: value });
+  }, [sort, order, sex, query, centuries]);
+
+  const filteredPeople = useCallback((people: Person[]) => {
+    let copyPeople = [...people];
+
+    if (sex) {
+      copyPeople = copyPeople.filter(person => person.sex === sex);
+    }
+
+    if (centuries.length) {
+      copyPeople = copyPeople
+        .filter(person => centuries
+          .includes(String(Math.ceil(person.born / 100))));
+    }
+
+    if (query) {
+      const queryLowerCase = query.toLocaleLowerCase();
+
+      copyPeople = copyPeople.filter(person => (
+        person.name.toLocaleLowerCase().includes(queryLowerCase)
+          || person.fatherName?.toLocaleLowerCase().includes(queryLowerCase)
+          || person.motherName?.toLocaleLowerCase().includes(queryLowerCase)
+      ));
+    }
+
+    return copyPeople;
+  }, [sort, order, sex, query, centuries]);
+
+  const sortedPeople = useCallback((people: Person[]) => {
+    let copyPeople = [...people];
+
+    if (sort) {
+      switch (sort) {
+        case SortBy.Name:
+        case SortBy.Sex:
+          copyPeople.sort((prev, curr) => prev[sort].localeCompare(curr[sort]));
+          break;
+
+        case SortBy.Died:
+        case SortBy.Born:
+          copyPeople.sort((prev, curr) => prev[sort] - curr[sort]);
+          break;
+
+        default:
+          throw new Error('Unable to sort people');
+      }
+    }
+
+    if (order) {
+      copyPeople = copyPeople.reverse();
+    }
+
+    return copyPeople;
+  }, [sort, order, sex, query, centuries]);
+
+  const handleGetFilteredAndSortedPeople = () => {
+    const filtered = filteredPeople(allPeople);
+
+    return sortedPeople(filtered);
+  };
+
+  const filteredAndSortedPeople = handleGetFilteredAndSortedPeople();
+
+  if (!filteredAndSortedPeople.length) {
     return (
       <p
         className="has-text-primary is-size-5"
@@ -85,28 +112,13 @@ export const PeopleTable: React.FC<Props> = ({ allPeople }) => {
       <thead>
         <tr>
           {Object.entries(SortBy).map(([key, value]) => {
-            const handleSetSort = () => {
-              if (sort === value && order === null) {
-                return getSearchWith(searchParams,
-                  { sort: value, order: 'desc' });
-              }
-
-              if (sort === value && order === 'desc') {
-                return getSearchWith(searchParams,
-                  { sort: null, order: null });
-              }
-
-              return getSearchWith(searchParams,
-                { sort: value });
-            };
-
             return (
               <th key={value}>
                 <span className="is-flex is-flex-wrap-nowrap">
                   {key}
                   <Link
                     to={{
-                      search: handleSetSort(),
+                      search: handleSetSort(value),
                     }}
                   >
                     <span className="icon">
@@ -129,10 +141,10 @@ export const PeopleTable: React.FC<Props> = ({ allPeople }) => {
       </thead>
 
       <tbody>
-        {copyPeople.map(person => (
+        {filteredAndSortedPeople.map(person => (
           <PersonInfo
             key={person.slug}
-            allPeople={copyPeople}
+            allPeople={filteredAndSortedPeople}
             person={person}
           />
         ))}

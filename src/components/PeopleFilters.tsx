@@ -1,29 +1,26 @@
 import classNames from 'classnames';
+import React, { useCallback } from 'react';
 import {
   Link,
   useSearchParams,
 } from 'react-router-dom';
 import { getSearchWith } from '../utils/searchHelper';
+import { filterByCentury } from '../constant';
+import { FilterBySex } from '../types/FilterBySex';
 
-enum FilterBySex {
-  All = '',
-  Male = 'm',
-  Female = 'f',
-}
-
-const filterByCentury = ['16', '17', '18', '19', '20'];
-
-export const PeopleFilters = () => {
+export const PeopleFilters: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const sex = searchParams.get('sex') || '';
   const centuries = searchParams.getAll('centuries') || [];
   const query = searchParams.get('query') || '';
 
-  const handleChangeQuery = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchParams(
-      getSearchWith(searchParams, { query: event.target.value || null }),
-    );
-  };
+  const handleChangeQuery = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      setSearchParams(
+        getSearchWith(searchParams, { query: event.target.value || null }),
+      );
+    }, [sex, query, centuries],
+  );
 
   return (
     <nav className="panel">
@@ -92,9 +89,7 @@ export const PeopleFilters = () => {
                 { 'is-success': !centuries.length },
               )}
               to={{
-                search: getSearchWith(searchParams, {
-                  centuries: null,
-                }),
+                search: getSearchWith(searchParams, { centuries: null }),
               }}
             >
               All
