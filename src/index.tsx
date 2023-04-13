@@ -1,14 +1,18 @@
 import { createRoot } from 'react-dom/client';
 import { HashRouter as Router } from 'react-router-dom';
 
+// eslint-disable-next-line
+import { SearchParamsProvider } from './components/SearchParamsContext/SearchParamsContext';
+import { App } from './App';
+
 import 'bulma/css/bulma.css';
 import '@fortawesome/fontawesome-free/css/all.css';
-
-import { App } from './App';
 
 createRoot(document.getElementById('root') as HTMLDivElement)
   .render(
     <Router>
-      <App />
+      <SearchParamsProvider>
+        <App />
+      </SearchParamsProvider>
     </Router>,
   );
