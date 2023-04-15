@@ -1,3 +1,5 @@
+import { CustomNavLink } from './CustomNavLink';
+
 export const Navbar = () => {
   return (
     <nav
@@ -8,15 +10,13 @@ export const Navbar = () => {
     >
       <div className="container">
         <div className="navbar-brand">
-          <a className="navbar-item" href="#/">Home</a>
+          <CustomNavLink to="/">
+            Home
+          </CustomNavLink>
 
-          <a
-            aria-current="page"
-            className="navbar-item has-background-grey-lighter"
-            href="#/people"
-          >
+          <CustomNavLink to="/people">
             People
-          </a>
+          </CustomNavLink>
         </div>
       </div>
     </nav>
