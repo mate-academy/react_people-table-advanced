@@ -1,5 +1,5 @@
-import classNames from "classnames";
-import { NavLink } from "react-router-dom";
+import classNames from 'classnames';
+import { NavLink } from 'react-router-dom';
 
 export const Navbar = () => {
   return (
@@ -11,10 +11,10 @@ export const Navbar = () => {
     >
       <div className="container">
         <div className="navbar-brand">
-          <NavLink 
+          <NavLink
             className={({ isActive }) => classNames('navbar-item', {
               'has-background-grey-lighter': isActive,
-            })} 
+            })}
             to="/"
           >
             Home
