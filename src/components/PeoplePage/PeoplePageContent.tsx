@@ -55,6 +55,14 @@ export const PeoplePageContent: React.FC = () => {
 
   let visiblePeople = peopleFilterFunction(people, searchParams);
 
+  if (!visiblePeople.length) {
+    return (
+      <p data-cy="noPeopleMessage">
+        There are no people matching the current search criteria
+      </p>
+    );
+  }
+
   switch (sort) {
     case 'name':
       visiblePeople.sort((personA, personB) => (
@@ -89,7 +97,7 @@ export const PeoplePageContent: React.FC = () => {
       return getSearchWith(searchParams, { sort: sortBy, order: null });
     }
 
-    if (order === null) {
+    if (!order) {
       return getSearchWith(searchParams, { order: 'desc' });
     }
 

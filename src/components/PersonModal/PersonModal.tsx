@@ -31,7 +31,6 @@ export const PersonModal: React.FC<Props> = ({
   return (
     <tr data-cy="person" className={tableRowClasses}>
       <td>
-        {/* <Link to={`/people/${slug}`} className={linkClasses}> */}
         <Link
           to={{
             pathname: `/people/${slug}`,
