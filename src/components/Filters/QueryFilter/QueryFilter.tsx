@@ -1,6 +1,6 @@
 import { FC } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { getSearchWith } from '../../utils/searchHelper';
+import { getSearchWith } from '../../../utils/searchHelper';
 
 export type Props = {
   query: string | null,

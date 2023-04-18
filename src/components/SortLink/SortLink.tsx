@@ -2,8 +2,8 @@ import { FC } from 'react';
 import classNames from 'classnames';
 import { useSearchParams } from 'react-router-dom';
 
-import { SearchLink } from './SearchLink';
-import { getTypeOfSort } from '../helpers';
+import { SearchLink } from '../SearchLink';
+import { getTypeOfSort } from '../../helpers';
 
 type Props = {
   typeOfSort: string | null,

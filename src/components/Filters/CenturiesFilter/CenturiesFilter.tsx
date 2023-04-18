@@ -1,6 +1,6 @@
 import classNames from 'classnames';
 import { FC } from 'react';
-import { SearchLink } from '../SearchLink';
+import { SearchLink } from '../../SearchLink';
 
 export type Props = {
   centuries: string[],

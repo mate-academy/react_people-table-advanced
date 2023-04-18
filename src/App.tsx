@@ -1,9 +1,9 @@
 import React from 'react';
 import { Routes, Navigate, Route } from 'react-router-dom';
-import { PeoplePage } from './components/People/PeoplePage';
+import { PeoplePage } from './components/People/PeoplePage/PeoplePage';
 import { Navbar } from './components/Nav/Navbar';
-import { HomePage } from './components/HomePage';
-import { NotFoundPage } from './components/NotFoundPage';
+import { HomePage } from './components/HomePage/HomePage';
+import { NotFoundPage } from './components/NotFoundPage/NotFoundPage';
 import './App.scss';
 
 export const App: React.FC = () => {

@@ -1,12 +1,12 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
 
-import { PeopleFilters } from '../Filters/PeopleFilters';
-import { Loader } from '../Loader';
-import { PeopleTable } from './PeopleTable';
-import { Person } from '../../types';
-import { getPeople } from '../../api';
-import { filterPeople, sortPeople } from '../../helpers';
+import { PeopleFilters } from '../PeopleFilters';
+import { Loader } from '../../Loader';
+import { PeopleTable } from '../PeopleTable';
+import { Person } from '../../../types';
+import { getPeople } from '../../../api';
+import { filterPeople, sortPeople } from '../../../helpers';
 
 export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);

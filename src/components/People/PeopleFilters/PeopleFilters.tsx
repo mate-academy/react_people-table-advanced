@@ -1,8 +1,8 @@
 import { FC } from 'react';
-import { SexFilter } from './SexFilter';
-import { QueryFilter } from './QueryFilter';
-import { CenturiesFilter } from './CenturiesFilter';
-import { SearchLink } from '../SearchLink';
+import { SexFilter } from '../../Filters/SexFilter';
+import { QueryFilter } from '../../Filters/QueryFilter';
+import { CenturiesFilter } from '../../Filters/CenturiesFilter';
+import { SearchLink } from '../../SearchLink';
 
 export type Props = {
   sex: string | null,

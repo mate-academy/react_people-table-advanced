@@ -1,4 +1,4 @@
-import { NavlinkPage } from './NavlinkPage';
+import { NavlinkPage } from '../NavlinkPage';
 
 export const Navbar = () => {
   return (
