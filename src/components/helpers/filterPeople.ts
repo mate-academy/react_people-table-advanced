@@ -1,11 +1,16 @@
 import { Person } from '../../types';
+import { FilterParams } from '../../types/FilterParams';
 
 export const filterPeople = (
-  sex: string | null,
-  query: string | null,
-  centuries: string[],
-  people: Person[],
+  filterParams: FilterParams,
 ): Person[] => {
+  const {
+    sex,
+    query,
+    centuries,
+    people,
+  } = filterParams;
+
   let filteredPeople;
 
   switch (true) {
@@ -31,7 +36,7 @@ export const filterPeople = (
       break;
 
     default:
-      filteredPeople = [...people];
+      return people;
   }
 
   return filteredPeople;

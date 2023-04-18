@@ -17,12 +17,12 @@ export const PeopleTable: React.FC<Props> = ({
   const sort = searchParams.get('sort') || null;
   const order = searchParams.get('order') || null;
 
-  const getSortType = (sortType: SortType) => (
-    {
+  const getSortType = (sortType: SortType) => {
+    return {
       sort: sort === sortType && order ? null : sortType,
       order: sort === sortType && !order ? 'desc' : null,
-    }
-  );
+    };
+  };
 
   const classNamesSort = (sortType: SortType) => (
     classNames(
@@ -37,8 +37,11 @@ export const PeopleTable: React.FC<Props> = ({
   return (
     <table
       data-cy="peopleTable"
-      className="table is-striped
-          is-hoverable is-narrow is-fullwidth"
+      className="table
+          is-striped
+          is-hoverable
+          is-narrow
+          is-fullwidth"
     >
       <thead>
         <tr>

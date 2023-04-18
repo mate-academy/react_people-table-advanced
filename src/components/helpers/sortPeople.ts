@@ -6,20 +6,22 @@ export const sortPeople = (
   sortType: string | null,
   order: string | null,
 ) => {
+  const sortedPeople = [...people];
+
   switch (sortType) {
     case SortType.Name:
     case SortType.Sex:
-      people.sort((a, b) => a[sortType].localeCompare(b[sortType]));
+      sortedPeople.sort((a, b) => a[sortType].localeCompare(b[sortType]));
       break;
 
     case SortType.Born:
     case SortType.Died:
-      people.sort((a, b) => +a[sortType] - +b[sortType]);
+      sortedPeople.sort((a, b) => +a[sortType] - +b[sortType]);
       break;
 
     default:
-      break;
+      return people;
   }
 
-  return order === 'desc' ? people.reverse() : people;
+  return order === 'desc' ? sortedPeople.reverse() : sortedPeople;
 };

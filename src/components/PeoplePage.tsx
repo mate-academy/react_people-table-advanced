@@ -39,7 +39,9 @@ export const PeoplePage = () => {
   }, [fetchPeople]);
 
   const filteredPeople = useCallback(() => (
-    filterPeople(sex, query, centuries, people)),
+    filterPeople({
+      sex, query, centuries, people,
+    })),
   [sex, query, centuries, people]);
 
   const sortedPeople = useCallback(() => (
