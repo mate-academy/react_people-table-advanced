@@ -11,32 +11,27 @@ export const filterPeople = (
     people,
   } = filterParams;
 
-  let filteredPeople;
+  let filteredPeople = [...people];
 
-  switch (true) {
-    case Boolean(sex):
-      filteredPeople = people.filter(person => person.sex === sex);
-      break;
+  if (sex) {
+    filteredPeople = people.filter(person => person.sex === sex);
+  }
 
-    case Boolean(query):
-      filteredPeople = people.filter(person => {
-        const { name, fatherName, motherName } = person;
-        const check = (name + fatherName + motherName).toLowerCase();
+  if (query) {
+    filteredPeople = filteredPeople.filter(person => {
+      const { name, fatherName, motherName } = person;
+      const check = (name + fatherName + motherName).toLowerCase();
 
-        return query && check.includes(query.toLowerCase());
-      });
-      break;
+      return query && check.includes(query.toLowerCase());
+    });
+  }
 
-    case centuries.length > 0:
-      filteredPeople = people.filter(person => {
-        const century = Math.ceil(person.born / 100);
+  if (centuries.length > 0) {
+    filteredPeople = filteredPeople.filter(person => {
+      const century = Math.ceil(person.born / 100);
 
-        return centuries.includes(century.toString());
-      });
-      break;
-
-    default:
-      return people;
+      return centuries.includes(century.toString());
+    });
   }
 
   return filteredPeople;
