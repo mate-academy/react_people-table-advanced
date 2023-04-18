@@ -31,7 +31,7 @@ export const PeoplePage: React.FC = () => {
       order,
       sort,
     )
-  ), [sex, query, centuries, order, sort]);
+  ), [people, sex, query, centuries, order, sort]);
 
   const getPeopleFromServer = async () => {
     try {

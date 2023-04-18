@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import { SearchLink } from '../SearchLink';
 
 export const CenturyFilter:React.FC = () => {
-  const ages = ['16', '17', '18', '19', '20'];
+  const centuryList = ['16', '17', '18', '19', '20'];
   const [searchParams] = useSearchParams();
   const centuries = searchParams.getAll('centuries') || [];
 
@@ -11,7 +11,7 @@ export const CenturyFilter:React.FC = () => {
     <div className="panel-block">
       <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
         <div className="level-left">
-          {ages.map(century => (
+          {centuryList.map(century => (
             <SearchLink
               key={century}
               params={{

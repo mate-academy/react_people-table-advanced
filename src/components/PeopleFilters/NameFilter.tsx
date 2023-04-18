@@ -1,7 +1,7 @@
 import { useSearchParams } from 'react-router-dom';
 import { getSearchWith } from '../../utils/searchHelper';
 
-export const NameFilter:React.FC = () => {
+export const NameFilter: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const query = searchParams.get('query') || '';
 

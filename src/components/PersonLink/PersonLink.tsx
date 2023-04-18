@@ -7,6 +7,7 @@ type Props = {
 };
 
 export const PersonLink: React.FC<Props> = ({ person }) => {
+  const { name } = person;
   const location = useLocation();
   const parentPath = useResolvedPath('../').pathname;
 
@@ -20,7 +21,7 @@ export const PersonLink: React.FC<Props> = ({ person }) => {
         'has-text-danger': person.sex === 'f',
       })}
     >
-      {person.name}
+      {name}
     </Link>
   );
 };
