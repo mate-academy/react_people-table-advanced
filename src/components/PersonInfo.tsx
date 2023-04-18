@@ -1,12 +1,12 @@
 import React from 'react';
 import {
-  Link,
   useLocation,
   useParams,
   useResolvedPath,
 } from 'react-router-dom';
 import classNames from 'classnames';
 import { Person } from '../types';
+import { PersonLink } from './PersonLink';
 
 type Props = {
   person: Person;
@@ -28,10 +28,10 @@ export const PersonInfo: React.FC<Props> = ({ person, allPeople }) => {
   const parentPath = useResolvedPath('../').pathname;
 
   const isSelected = person.slug === personId;
-  const findFather = allPeople.find(human => (
+  const foundFather = allPeople.find(human => (
     human.name === person.fatherName
   ));
-  const findMother = allPeople.find(human => (
+  const foundMother = allPeople.find(human => (
     human.name === person.motherName
   ));
 
@@ -43,49 +43,38 @@ export const PersonInfo: React.FC<Props> = ({ person, allPeople }) => {
       })}
     >
       <td>
-        <Link
-          to={{
-            pathname: parentPath + slug,
-            search: location.search,
-          }}
-          className={classNames({
-            'has-text-danger': sex === 'f',
-          })}
-        >
-          {name}
-        </Link>
+        <PersonLink
+          pathname={parentPath + slug}
+          search={location.search}
+          name={name}
+          sex={sex}
+        />
       </td>
 
       <td>{sex}</td>
       <td>{born}</td>
       <td>{died}</td>
       <td>
-        {findMother ? (
-          <Link
-            className="has-text-danger"
-            to={{
-              pathname: parentPath + findMother.slug,
-              search: location.search,
-            }}
-          >
-            {motherName}
-          </Link>
+        {foundMother ? (
+          <PersonLink
+            pathname={parentPath + foundMother.slug}
+            search={location.search}
+            name={foundMother.name}
+            sex="f"
+          />
         ) : (
           motherName || '-'
         )}
       </td>
 
       <td>
-        {findFather ? (
-          <Link
-            to={{
-              pathname: parentPath + findFather.slug,
-              search: location.search,
-            }}
-          >
-
-            {fatherName}
-          </Link>
+        {foundFather ? (
+          <PersonLink
+            pathname={parentPath + foundFather.slug}
+            search={location.search}
+            name={foundFather.name}
+            sex="m"
+          />
         ) : (
           fatherName || '-'
         )}

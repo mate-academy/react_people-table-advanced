@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { PeopleFilters } from './PeopleFilters';
 import { Loader } from './Loader';
 import { PeopleTable } from './PeopleTable';
@@ -12,7 +12,7 @@ export const PeoplePage = () => {
   const [error, setError] = useState('');
   const [wasRequest, setWasRequest] = useState(false);
 
-  const loadPeople = async () => {
+  const loadPeople = useCallback(async () => {
     try {
       const people = await getPeople();
 
@@ -22,7 +22,7 @@ export const PeoplePage = () => {
     } finally {
       setWasRequest(true);
     }
-  };
+  }, []);
 
   useEffect(() => {
     loadPeople();
