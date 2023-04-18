@@ -1,5 +1,4 @@
-import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useCallback, useEffect, useState } from 'react';
 
 import { PeopleFilters } from '../components/PeopleFilters';
 import { Loader } from '../components/Loader';
@@ -12,9 +11,7 @@ export const PeoplePage = () => {
   const [isLoaded, setIsLoaded] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
-  const { slug } = useParams();
-
-  const loadPeopleFromServer = async () => {
+  const loadPeopleFromServer = useCallback(async () => {
     try {
       const peopleFromServer = await getPeople();
 
@@ -24,7 +21,7 @@ export const PeoplePage = () => {
     } finally {
       setIsLoaded(true);
     }
-  };
+  }, []);
 
   useEffect(() => {
     loadPeopleFromServer();
@@ -48,23 +45,20 @@ export const PeoplePage = () => {
                 <Loader />
               )}
 
-              {isLoaded && errorMessage && (
+              {errorMessage && (
                 <p data-cy="peopleLoadingError" className="has-text-danger">
                   Something went wrong
                 </p>
               )}
 
-              {/* <p data-cy="noPeopleMessage">
-                There are no people on the server
-              </p> */}
+              {isLoaded && !people.length && !errorMessage && (
+                <p data-cy="noPeopleMessage">
+                  There are no people on the server
+                </p>
+              )}
 
-              {/* <p>There are no people matching the current search criteria</p> */}
-
-              {isLoaded && !errorMessage && (
-                <PeopleTable
-                  people={people}
-                  selectedPersonSlug={slug}
-                />
+              {isLoaded && people.length && !errorMessage && (
+                <PeopleTable people={people} />
               )}
             </div>
           </div>
