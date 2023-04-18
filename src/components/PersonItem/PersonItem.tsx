@@ -1,6 +1,6 @@
 import React from 'react';
 import classNames from 'classnames';
-import { Person } from '../../types';
+import { Person } from '../../types/Person';
 import { PersonLink } from '../PersonLink';
 
 type Props = {

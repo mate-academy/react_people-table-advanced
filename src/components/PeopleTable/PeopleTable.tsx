@@ -1,7 +1,9 @@
 import { useParams } from 'react-router-dom';
 import React from 'react';
-import { Person } from '../../types';
+import { Person } from '../../types/Person';
 import { PersonItem } from '../PersonItem';
+import { SortType } from '../../types/SortType';
+import { SortLink } from '../PeopleFilter/SortLink';
 
 type Props = {
   people: Person[];
@@ -17,10 +19,14 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
     >
       <thead>
         <tr>
-          <th>Name</th>
-          <th>Sex</th>
-          <th>Born</th>
-          <th>Died</th>
+          {Object.values(SortType).map(sorType => (
+            <th key={sorType}>
+              <span className="is-flex is-flex-wrap-nowrap">
+                {sorType.charAt(0).toUpperCase() + sorType.slice(1)}
+                <SortLink sortOption={sorType} />
+              </span>
+            </th>
+          ))}
           <th>Mother</th>
           <th>Father</th>
         </tr>

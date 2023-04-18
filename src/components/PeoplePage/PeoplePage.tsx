@@ -1,20 +1,19 @@
 import { useEffect, useState } from 'react';
 
-import { PeopleFilters } from './PeopleFilters';
-import { PeopleTable } from './PeopleTable';
-import { Loader } from './Loader';
+import { PeopleFilter } from '../PeopleFilter';
+import { PeopleTable } from '../PeopleTable';
+import { Loader } from '../Loader';
 
-import { Person } from '../types/Person';
-import { getPeopleWithParents } from '../api';
+import { Person } from '../../types/Person';
+import { getPeopleWithParents } from '../../api';
 
 export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
   const [isInitialized, setIsInitialized] = useState(false);
 
   useEffect(() => {
-    setIsLoading(true);
     setIsInitialized(true);
 
     getPeopleWithParents()
@@ -33,7 +32,7 @@ export const PeoplePage = () => {
         <div className="columns is-desktop is-flex-direction-row-reverse">
           {!isLoading && (
             <div className="column is-7-tablet is-narrow-desktop">
-              <PeopleFilters />
+              <PeopleFilter />
             </div>
           )}
 

@@ -1,6 +1,6 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
 
-import { PeoplePage } from './components/PeoplePage';
+import { PeoplePage } from './components/PeoplePage/PeoplePage';
 import { MainNav } from './components/MainNav';
 import { NotFoundPage } from './components/NotFoundPage';
 
