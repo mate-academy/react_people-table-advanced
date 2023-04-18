@@ -1,11 +1,11 @@
 import { FC } from 'react';
 import classNames from 'classnames';
 
-import { Person } from '../types';
-import { findParent } from '../helpers';
+import { Person } from '../../types';
+import { findParent } from '../../helpers';
 import { PeopleLink } from './PeopleLink';
-import { SortType } from '../enums/SortType';
-import { SortLink } from './SortLink';
+import { SortType } from '../../enums/SortType';
+import { SortLink } from '../SortLink';
 
 type Props = {
   people: Person[],

@@ -2,7 +2,7 @@ import { FC } from 'react';
 import classNames from 'classnames';
 import { Link } from 'react-router-dom';
 
-import { Person } from '../types/Person';
+import { Person } from '../../types/Person';
 
 export type Props = {
   person: Person,

@@ -2,7 +2,7 @@ import { FC } from 'react';
 import { SexFilter } from './SexFilter';
 import { QueryFilter } from './QueryFilter';
 import { CenturiesFilter } from './CenturiesFilter';
-import { SearchLink } from './SearchLink';
+import { SearchLink } from '../SearchLink';
 
 export type Props = {
   sex: string | null,
