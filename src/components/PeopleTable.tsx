@@ -1,11 +1,11 @@
 import { useContext } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import classNames from 'classnames';
 
 import { Person } from '../types/Person';
-import { getSearchWith } from '../utils/searchHelper';
 import { SearchParamsContext } from './SearchParamsContext';
 import { PersonLink } from './PersonLink';
+import { SortTypeLink } from './SortTypeLink';
 
 const sortTypes = ['Name', 'Sex', 'Born', 'Died'];
 
@@ -83,42 +83,11 @@ export const PeopleTable: React.FC<Props> = ({
         >
           <thead>
             <tr>
-              {sortTypes.map(name => {
-                const nameLowercased = name.toLowerCase();
-                const isCurrentSortType = sort === nameLowercased;
-
-                return (
-                  <th key={name}>
-                    <span className="is-flex is-flex-wrap-nowrap">
-                      {name}
-                      <Link
-                        to={{
-                          search: getSearchWith(
-                            searchParams,
-                            {
-                              sort: isCurrentSortType && order
-                                ? null : nameLowercased,
-                              order: isCurrentSortType && !order
-                                ? 'desc' : null,
-                            },
-                          ),
-                        }}
-                      >
-                        <span className="icon">
-                          <i
-                            className={classNames(
-                              'fas',
-                              { 'fa-sort': !isCurrentSortType },
-                              { 'fa-sort-up': isCurrentSortType && !order },
-                              { 'fa-sort-down': isCurrentSortType && order },
-                            )}
-                          />
-                        </span>
-                      </Link>
-                    </span>
-                  </th>
-                );
-              })}
+              {sortTypes.map(name => (
+                <th key={name}>
+                  <SortTypeLink name={name} />
+                </th>
+              ))}
 
               <th>Mother</th>
               <th>Father</th>

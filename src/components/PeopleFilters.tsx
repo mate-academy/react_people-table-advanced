@@ -19,7 +19,6 @@ export const PeopleFilters = () => {
   const centuries = searchParams.getAll('centuries');
 
   const handleQueryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    window.console.log('handle method');
     setSearchParams(getSearchWith(
       searchParams,
       { query: event.currentTarget.value || null },
@@ -34,38 +33,6 @@ export const PeopleFilters = () => {
         <SexFilterLink value={Sex.All} text="All" />
         <SexFilterLink value={Sex.Male} text="Male" />
         <SexFilterLink value={Sex.Female} text="Female" />
-        {/* <Link
-          className={classNames(
-            { 'is-active': sex === null },
-          )}
-          to={{
-            search: getSearchWith(searchParams, { sex: null }),
-          }}
-        >
-          All
-        </Link>
-
-        <Link
-          className={classNames(
-            { 'is-active': sex === 'm' },
-          )}
-          to={{
-            search: getSearchWith(searchParams, { sex: 'm' }),
-          }}
-        >
-          Male
-        </Link>
-
-        <Link
-          className={classNames(
-            { 'is-active': sex === 'f' },
-          )}
-          to={{
-            search: getSearchWith(searchParams, { sex: 'f' }),
-          }}
-        >
-          Female
-        </Link> */}
       </p>
 
       <div className="panel-block">
