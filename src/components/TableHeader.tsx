@@ -1,31 +1,27 @@
-import classNames from 'classnames';
 import { useSearchParams } from 'react-router-dom';
-import { SortByPersonInfo } from '../types/typesSorts/SortByPersonInfo';
+
+import classNames from 'classnames';
+
 import { SearchLink } from './SearchLink';
+
+import {
+  SortByPersonInfo,
+  SortOrder,
+} from '../types/typesSorts/SortByPersonInfo';
+
+import {
+  getSortingSearchParams,
+  getSortOrder,
+  getSortType,
+} from '../utils/sortHelpers';
 
 export const TableHeader: React.FC = () => {
   const [searchParams] = useSearchParams();
 
-  const sortBy = searchParams.get('sort');
-  const sortOrder = searchParams.get('order');
+  const sortBy = searchParams.get('sort') || SortByPersonInfo.NONE;
+  const sortOrder = searchParams.get('order') || SortOrder.ASC;
 
-  const getSearchParams = (type: SortByPersonInfo) => {
-    const isSorted = sortBy === type;
-    const isReversed = sortOrder === 'desc';
-
-    const sort = isSorted && isReversed
-      ? null
-      : type;
-
-    const order = isSorted && !isReversed
-      ? 'desc'
-      : null;
-
-    return {
-      sort,
-      order,
-    };
-  };
+  // console.log('im rendered');
 
   return (
     <thead>
@@ -36,13 +32,19 @@ export const TableHeader: React.FC = () => {
             const isSorted = sortBy === type;
             const isReversed = sortOrder === 'desc';
 
+            const displayText = `${type[0].toUpperCase()}${type.slice(1)}`;
+
             return (
               <th key={type}>
                 <span className="is-flex is-flex-wrap-nowrap">
-                  {`${type[0].toUpperCase()}${type.slice(1)}`}
+                  {displayText}
 
                   <SearchLink
-                    params={getSearchParams(type)}
+                    params={getSortingSearchParams(
+                      type,
+                      getSortType(sortBy),
+                      getSortOrder(sortOrder),
+                    )}
                   >
                     <span className="icon">
                       <i

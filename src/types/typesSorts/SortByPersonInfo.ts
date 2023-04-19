@@ -5,3 +5,8 @@ export enum SortByPersonInfo {
   BORN = 'born',
   DIED = 'died',
 }
+
+export enum SortOrder {
+  ASC = '',
+  DESC = 'desc',
+}

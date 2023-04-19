@@ -1,17 +1,17 @@
 import {
-  Link, useLocation, useResolvedPath,
+  Link, useLocation,
 } from 'react-router-dom';
+
 import classNames from 'classnames';
+
 import { Person } from '../types';
 
 interface Props {
   person: Person;
-  selectedSlug: string,
 }
 
 export const PersonLink: React.FC<Props> = ({
   person,
-  selectedSlug,
 }) => {
   const {
     name,
@@ -19,14 +19,13 @@ export const PersonLink: React.FC<Props> = ({
     slug,
   } = person;
 
-  const location = useLocation();
-  const parentPath = useResolvedPath('../').pathname;
+  const { search } = useLocation();
 
   return (
     <Link
       to={{
-        pathname: slug === selectedSlug ? parentPath : parentPath + slug,
-        search: location.search,
+        pathname: `/people/${slug}`,
+        search,
       }}
       className={classNames({
         'has-text-danger': sex === 'f',

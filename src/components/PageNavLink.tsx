@@ -1,5 +1,6 @@
-import classNames from 'classnames';
 import { NavLink } from 'react-router-dom';
+
+import classNames from 'classnames';
 
 interface Props {
   to: string;
