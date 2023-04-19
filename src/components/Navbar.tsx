@@ -1,4 +1,6 @@
-export const Navbar = () => {
+import { PageNavLink } from './PageNavLink';
+
+export const Navbar: React.FC = () => {
   return (
     <nav
       data-cy="nav"
@@ -8,15 +10,13 @@ export const Navbar = () => {
     >
       <div className="container">
         <div className="navbar-brand">
-          <a className="navbar-item" href="#/">Home</a>
+          <PageNavLink to="/" text="Home" />
 
-          <a
+          <PageNavLink
+            to="/people"
+            text="People"
             aria-current="page"
-            className="navbar-item has-background-grey-lighter"
-            href="#/people"
-          >
-            People
-          </a>
+          />
         </div>
       </div>
     </nav>
