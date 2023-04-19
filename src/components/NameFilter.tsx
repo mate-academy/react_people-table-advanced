@@ -7,7 +7,10 @@ export const NameFilter = () => {
 
   const handleQueryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchParams(
-      getSearchWith(searchParams, { query: event.target.value || null }),
+      getSearchWith(
+        searchParams,
+        { query: event.target.value.trimStart() || null },
+      ),
     );
   };
 
