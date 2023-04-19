@@ -81,15 +81,13 @@ export const PeopleFilters: React.FC = () => {
 
       <div className="panel-block">
         <div
-          className="
-            level
-            is-flex-grow-1
-            is-mobile"
+          className="level is-flex-grow-1 is-mobile"
           data-cy="CenturyFilter"
         >
           <div className="level-left">
             {['16', '17', '18', '19', '20'].map(century => (
               <SearchLink
+                key={century}
                 data-cy="century"
                 className={classNames(
                   'button',
@@ -125,11 +123,7 @@ export const PeopleFilters: React.FC = () => {
 
       <div className="panel-block">
         <Link
-          className="
-            button
-            is-link
-            is-outlined
-            is-fullwidth"
+          className="button is-link is-outlined is-fullwidth"
           to={{ search: resetAllFilters() }}
         >
           Reset all filters
