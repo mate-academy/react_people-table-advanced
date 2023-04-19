@@ -1,11 +1,9 @@
 import { useContext } from 'react';
-import { useParams } from 'react-router-dom';
-import classNames from 'classnames';
 
 import { Person } from '../types/Person';
 import { SearchParamsContext } from './SearchParamsContext';
-import { PersonLink } from './PersonLink';
 import { SortTypeLink } from './SortTypeLink';
+import { PersonInfo } from './PersonInfo';
 
 const sortTypes = ['Name', 'Sex', 'Born', 'Died'];
 
@@ -17,8 +15,6 @@ export const PeopleTable: React.FC<Props> = ({
   people,
 }) => {
   let visiblePeople = [...people];
-
-  const { slug: selectedPersonSlug } = useParams();
 
   const { searchParams } = useContext(SearchParamsContext);
 
@@ -95,79 +91,9 @@ export const PeopleTable: React.FC<Props> = ({
           </thead>
 
           <tbody>
-            {visiblePeople.map(person => {
-              const {
-                sex,
-                born,
-                died,
-                fatherName,
-                motherName,
-                slug,
-              } = person;
-
-              const isSelected = slug === selectedPersonSlug;
-
-              let father: Person | undefined;
-              let mother: Person | undefined;
-
-              if (fatherName) {
-                father = people.find(({ name: personName }) => (
-                  personName === fatherName
-                ));
-              }
-
-              if (motherName) {
-                mother = people.find(({ name: personName }) => (
-                  personName === motherName
-                ));
-              }
-
-              return (
-                <tr
-                  key={slug}
-                  data-cy="person"
-                  className={classNames(
-                    { 'has-background-warning': isSelected },
-                  )}
-                >
-                  <td>
-                    <PersonLink person={person} />
-                  </td>
-
-                  <td>
-                    {sex}
-                  </td>
-
-                  <td>
-                    {born}
-                  </td>
-
-                  <td>
-                    {died}
-                  </td>
-
-                  <td>
-                    {mother
-                      ? (
-                        <PersonLink person={mother} />
-                      )
-                      : (
-                        motherName || '-'
-                      )}
-                  </td>
-
-                  <td>
-                    {father
-                      ? (
-                        <PersonLink person={father} />
-                      )
-                      : (
-                        fatherName || '-'
-                      )}
-                  </td>
-                </tr>
-              );
-            })}
+            {visiblePeople.map(person => (
+              <PersonInfo key={person.slug} person={person} />
+            ))}
           </tbody>
         </table>
       )

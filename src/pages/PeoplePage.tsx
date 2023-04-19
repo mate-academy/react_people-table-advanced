@@ -14,8 +14,25 @@ export const PeoplePage = () => {
   const loadPeopleFromServer = useCallback(async () => {
     try {
       const peopleFromServer = await getPeople();
+      const processedPeople = peopleFromServer.map(person => {
+        const { motherName, fatherName } = person;
+        const personCopy = { ...person };
 
-      setPeople(peopleFromServer);
+        const mother = peopleFromServer.find(({ name }) => motherName === name);
+        const father = peopleFromServer.find(({ name }) => fatherName === name);
+
+        if (mother) {
+          personCopy.mother = mother;
+        }
+
+        if (father) {
+          personCopy.father = father;
+        }
+
+        return personCopy;
+      });
+
+      setPeople(processedPeople);
     } catch {
       setErrorMessage('Something went wrong');
     } finally {
@@ -47,7 +64,7 @@ export const PeoplePage = () => {
 
               {errorMessage && (
                 <p data-cy="peopleLoadingError" className="has-text-danger">
-                  Something went wrong
+                  {errorMessage}
                 </p>
               )}
 
