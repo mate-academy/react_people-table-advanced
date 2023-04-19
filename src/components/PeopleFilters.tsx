@@ -1,7 +1,7 @@
 import classNames from 'classnames';
 import { URLSearchParamsInit } from 'react-router-dom';
 import { getSearchWith } from '../utils/searchHelper';
-import { centuriesList } from '../constants';
+import { centuriesList } from '../utils/constants';
 import { SearchLink } from './SearchLink';
 
 type Props = {

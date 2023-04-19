@@ -1,5 +1,5 @@
-import { Person } from './types';
-import { SortType } from './types/SortType';
+import { Person } from '../types';
+import { SortType } from '../types/SortType';
 
 export const getPersonParents = (person: Person, people: Person[]): Person => {
   const { fatherName, motherName } = person;

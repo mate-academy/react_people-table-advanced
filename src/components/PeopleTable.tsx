@@ -5,7 +5,7 @@ import { Person } from '../types';
 import { PersonLink } from './PersonLink';
 import { SearchLink } from './SearchLink';
 import { SortType } from '../types/SortType';
-import { getSortedPeople } from '../helpers';
+import { getSortedPeople } from '../utils/helpers';
 
 type Props = {
   people: Person[];

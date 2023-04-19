@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { Loader } from './Loader';
-import { PeopleTable } from './PeopleTable';
+import { Loader } from '../components/Loader';
+import { PeopleTable } from '../components/PeopleTable';
 import { getPeople } from '../api';
 import { Person } from '../types';
-import { getFilteredPeople, getPersonParents } from '../helpers';
-import { PeopleFilters } from './PeopleFilters';
+import { getFilteredPeople, getPersonParents } from '../utils/helpers';
+import { PeopleFilters } from '../components/PeopleFilters';
 
 export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);
@@ -45,13 +45,15 @@ export const PeoplePage = () => {
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
           <div className="column is-7-tablet is-narrow-desktop">
-            <PeopleFilters
-              searchParams={serachParams}
-              onSetSearchParams={setSearchParams}
-              query={query}
-              sex={sex}
-              centuries={centuries}
-            />
+            {(!isLoading && !hasError) && (
+              <PeopleFilters
+                searchParams={serachParams}
+                onSetSearchParams={setSearchParams}
+                query={query}
+                sex={sex}
+                centuries={centuries}
+              />
+            )}
           </div>
 
           <div className="column">
