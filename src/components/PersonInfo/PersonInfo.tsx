@@ -8,6 +8,10 @@ type Props = {
   person: Person,
 };
 
+type Params = {
+  personSlug?: string,
+};
+
 export const PersonInfo: FC<Props> = ({
   person,
 }) => {
@@ -21,7 +25,7 @@ export const PersonInfo: FC<Props> = ({
     mother,
     father,
   } = person;
-  const { personSlug = '' } = useParams();
+  const { personSlug = '' } = useParams<Params>();
 
   return (
     <tr

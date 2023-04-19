@@ -1,4 +1,8 @@
-import { ChangeEvent, FC, useCallback } from 'react';
+import {
+  ChangeEvent,
+  FC,
+  useCallback,
+} from 'react';
 import classNames from 'classnames';
 import { URLSearchParams } from 'url';
 import { getSearchWith } from '../../utils/helpers';
@@ -20,9 +24,9 @@ export const PeopleFilters: FC<Props> = ({
   searchParams,
   setSearchParams,
 }) => {
-  const handleChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
+  const handleChange = useCallback((event: ChangeEvent<HTMLInputElement>) => {
     setSearchParams(
-      getSearchWith(searchParams, { query: e.target.value || null }),
+      getSearchWith(searchParams, { query: event.target.value || null }),
     );
   }, [searchParams]);
 
