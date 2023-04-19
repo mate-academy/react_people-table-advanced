@@ -29,8 +29,14 @@ export const getFilteredPeople = (
   const validQuery = query.toLowerCase().trim();
 
   if (query) {
-    tempCopyOfPeople = tempCopyOfPeople.filter(person => (
-      person.name.toLowerCase().includes(validQuery)
+    tempCopyOfPeople = tempCopyOfPeople.filter(({
+      name,
+      motherName,
+      fatherName,
+    }) => (
+      name.toLowerCase().includes(validQuery)
+        || motherName?.toLowerCase().includes(validQuery)
+        || fatherName?.toLowerCase().includes(validQuery)
     ));
   }
 
