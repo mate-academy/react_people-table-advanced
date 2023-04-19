@@ -5,9 +5,8 @@ import { Loader } from '../components/Loader';
 import { PeopleTable } from '../components/PeopleTable';
 import { Person } from '../types';
 import { getPeople } from '../api';
-// import { FilterBySex } from '../types/typesFilters/FilterBySex';
-// import { FilterBySex } from '../types/typesFilters/FilterBySex';
-// import { SortByPersonInfo } from '../types/typesSorts/SortByPersonInfo';
+import { FilterBySex } from '../types/typesFilters/FilterBySex';
+import { SortByPersonInfo } from '../types/typesSorts/SortByPersonInfo';
 
 export enum ErrorType {
   NONE = '',
@@ -15,12 +14,57 @@ export enum ErrorType {
   NOPEOPLE = 'There are no people on the server',
 }
 
+const getSortType = (type: string) : SortByPersonInfo => {
+  switch (type) {
+    case SortByPersonInfo.NAME:
+      return SortByPersonInfo.NAME;
+
+    case SortByPersonInfo.SEX:
+      return SortByPersonInfo.SEX;
+
+    case SortByPersonInfo.BORN:
+      return SortByPersonInfo.BORN;
+
+    case SortByPersonInfo.DIED:
+      return SortByPersonInfo.DIED;
+
+    default:
+      return SortByPersonInfo.NONE;
+  }
+};
+
+const getTypeBySex = (type: string): FilterBySex => {
+  switch (type) {
+    case FilterBySex.MAN:
+      return FilterBySex.MAN;
+
+    case FilterBySex.WOMAN:
+      return FilterBySex.WOMAN;
+
+    default:
+      return FilterBySex.ALL;
+  }
+};
+
 const doNormalize = (text: string): string => (text.toLocaleLowerCase());
+
+const getCentryByBorn = (year: number): number => {
+  let century = Math.ceil(year / 100);
+
+  if (year % 100 === 0) {
+    century -= 1;
+  }
+
+  return century;
+};
 
 const getVisiblePeople = (
   people: Person[],
   query: string | null,
-  // sex:,
+  sex: FilterBySex,
+  centuries: number[],
+  sortType: SortByPersonInfo,
+  order: string,
 ) => {
   let copyPeople = [...people];
 
@@ -42,9 +86,36 @@ const getVisiblePeople = (
     });
   }
 
-  // if (sex) {
-  //   copyPeople = copyPeople.filter(person => person.sex === sex);
-  // }
+  if (sex) {
+    copyPeople = copyPeople.filter(person => person.sex === sex);
+  }
+
+  if (centuries.length > 0) {
+    copyPeople = copyPeople.filter(person => (
+      centuries.includes(getCentryByBorn(person.born))
+    ));
+  }
+
+  if (sortType) {
+    copyPeople.sort((currentPerson, nextPerson) => {
+      switch (sortType) {
+        case SortByPersonInfo.NAME:
+        case SortByPersonInfo.SEX:
+          return currentPerson[sortType].localeCompare(nextPerson[sortType]);
+
+        case SortByPersonInfo.BORN:
+        case SortByPersonInfo.DIED:
+          return currentPerson[sortType] - nextPerson[sortType];
+
+        default:
+          return 0;
+      }
+    });
+  }
+
+  if (order) {
+    copyPeople.reverse();
+  }
 
   return copyPeople;
 };
@@ -56,10 +127,10 @@ export const PeoplePage = () => {
 
   const [searchParams] = useSearchParams();
   const queryParams = searchParams.get('query');
-  // const sex = searchParams.get('sex') || FilterBySex.ALL;
-  // const centuries = searchParams.getAll('centuries');
-  // const sort = searchParams.get('sort');
-  // const order = searchParams.get('order');
+  const sex = searchParams.get('sex') || FilterBySex.ALL;
+  const centuries = searchParams.getAll('centuries') || [];
+  const sort = searchParams.get('sort') || SortByPersonInfo.NONE;
+  const order = searchParams.get('order') || '';
 
   useEffect(() => {
     const fetchPeople = async () => {
@@ -104,7 +175,14 @@ export const PeoplePage = () => {
   const isLoadError = errorMessage === ErrorType.LOAD;
   const areNotPeopleError = errorMessage === ErrorType.NOPEOPLE;
 
-  const visiblePeople = getVisiblePeople(people, queryParams);
+  const visiblePeople = getVisiblePeople(
+    people,
+    queryParams,
+    getTypeBySex(sex),
+    centuries.map(centry => +centry),
+    getSortType(sort),
+    order,
+  );
 
   return (
     <>

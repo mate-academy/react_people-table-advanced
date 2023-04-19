@@ -3,7 +3,6 @@ import { useSearchParams } from 'react-router-dom';
 import { SortByPersonInfo } from '../types/typesSorts/SortByPersonInfo';
 import { SearchLink } from './SearchLink';
 
-
 export const TableHeader: React.FC = () => {
   const [searchParams] = useSearchParams();
 
@@ -53,8 +52,9 @@ export const TableHeader: React.FC = () => {
                             'fa-sort': !isSorted,
                             'fa-sort-up': isSorted && !isReversed,
                             'fa-sort-down': isSorted && isReversed,
-                          }
-                        )} />
+                          },
+                        )}
+                      />
                     </span>
                   </SearchLink>
                 </span>
