@@ -6,7 +6,7 @@ import { getSearchWith, SearchParams } from '../utils/searchHelper';
  * along with the custom `params` prop that we use for updating the search
  */
 type Props = Omit<LinkProps, 'to'> & {
-  params: SearchParams,
+  params: SearchParams;
 };
 
 /**
