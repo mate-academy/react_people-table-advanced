@@ -49,9 +49,11 @@ export const filterPeople = (
       motherName,
       fatherName,
     }) => {
-      const availableResults = (name + motherName + fatherName).toLowerCase();
+      const availableResults = [name, motherName, fatherName];
 
-      return availableResults.includes(query.toLowerCase());
+      return availableResults.some(
+        personName => personName?.toLowerCase().includes(query.toLowerCase()),
+      );
     });
   }
 

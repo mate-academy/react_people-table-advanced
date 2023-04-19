@@ -3,6 +3,7 @@ import classNames from 'classnames';
 import { URLSearchParams } from 'url';
 import { getSearchWith } from '../../utils/helpers';
 import { SearchLink } from '../SearchLink';
+import { CENTURIES_LIST } from '../../utils/constants';
 
 type Props = {
   sex: string;
@@ -19,8 +20,6 @@ export const PeopleFilters: FC<Props> = ({
   searchParams,
   setSearchParams,
 }) => {
-  const centuriesList = ['16', '17', '18', '19', '20'];
-
   const handleChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     setSearchParams(
       getSearchWith(searchParams, { query: e.target.value || null }),
@@ -74,7 +73,7 @@ export const PeopleFilters: FC<Props> = ({
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            {centuriesList.map(century => (
+            {CENTURIES_LIST.map(century => (
               <SearchLink
                 params={{
                   centuries: centuries.includes(century)
@@ -95,7 +94,7 @@ export const PeopleFilters: FC<Props> = ({
           <div className="level-right ml-4">
             <SearchLink
               data-cy="centuryALL"
-              params={{ centuries: [] }}
+              params={{ centuries: null }}
               className={classNames(
                 'button is-success',
                 { 'is-outlined': centuries.length !== 0 },
@@ -115,7 +114,7 @@ export const PeopleFilters: FC<Props> = ({
           )}
           params={{
             sex: null,
-            centuries: [],
+            centuries: null,
             query: null,
           }}
         >

@@ -10,12 +10,13 @@ import { PeopleTable } from '../components/PeopleTable';
 import { Person } from '../types';
 import { PeopleFilters } from '../components/PeopleFilters';
 import { filterPeople, getParent, sortPeople } from '../utils/helpers';
+import { Errors } from '../types/Errors';
+import { ErrorNotification } from '../components/ErrorNotification';
 
 export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [hasLoadingError, setHasError] = useState(false);
-  const [hasDataError, setHasDataError] = useState(false);
 
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -28,10 +29,6 @@ export const PeoplePage = () => {
   const loadPeople = async () => {
     try {
       const loadedPeople = await getPeople();
-
-      if (!loadedPeople.length) {
-        setHasDataError(true);
-      }
 
       const peopleWithParents = loadedPeople.map(person => ({
         ...person,
@@ -58,6 +55,38 @@ export const PeoplePage = () => {
     return sortedPeople;
   }, [people, sex, query, centuries, sort, order]);
 
+  let pageContent = null;
+
+  if (hasLoadingError) {
+    pageContent = (
+      <ErrorNotification
+        message={Errors.SERVER_ERROR}
+        dataCy="peopleLoadingError"
+      />
+    );
+  } else if (people.length === 0) {
+    pageContent = (
+      <ErrorNotification
+        message={Errors.DATA_ERROR}
+        dataCy="noPeopleMessage"
+      />
+    );
+  } else if (visiblePeople.length === 0) {
+    pageContent = (
+      <ErrorNotification
+        message={Errors.SEARCH_ERROR}
+      />
+    );
+  } else {
+    pageContent = (
+      <PeopleTable
+        people={visiblePeople}
+        sort={sort}
+        order={order}
+      />
+    );
+  }
+
   return (
     <>
       <h1 className="title">People Page</h1>
@@ -80,33 +109,7 @@ export const PeoplePage = () => {
             <div className="box table-container">
               {isLoading
                 ? <Loader />
-                : (
-                  <>
-                    {hasLoadingError && (
-                      <p data-cy="peopleLoadingError">Something went wrong</p>
-                    )}
-
-                    {hasDataError && (
-                      <p data-cy="noPeopleMessage">
-                        There are no people on the server
-                      </p>
-                    )}
-
-                    {visiblePeople.length <= 0 && (
-                      <p>
-                        There are no people matching the current search criteria
-                      </p>
-                    )}
-
-                    {!hasLoadingError && visiblePeople.length > 0 && (
-                      <PeopleTable
-                        people={visiblePeople}
-                        sort={sort}
-                        order={order}
-                      />
-                    )}
-                  </>
-                )}
+                : pageContent}
             </div>
           </div>
         </div>
