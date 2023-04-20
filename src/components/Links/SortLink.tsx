@@ -10,7 +10,7 @@ type Props = {
 export const SortLink: React.FC<Props> = ({ sortFilter }) => {
   const [searchParams] = useSearchParams();
   const sort = searchParams.get(FilterType.SORT) || null;
-  const order = searchParams.get(FilterType.ORDER);
+  const order = searchParams.get(FilterType.ORDER) || null;
 
   return (
     <SearchLink params={{

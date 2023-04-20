@@ -1,14 +1,9 @@
 import { SortType } from '../types/SortType';
-import { Person } from '../types/Person';
+import { Options } from '../types/Options';
 
-export const FilteredPeople = (
-  people: Person[],
-  sex: string | null,
-  query: string | null,
-  centuries: string[],
-  order: string | null,
-  sort: string | null,
-) => {
+export const filterPeople = ({
+  people, sex, query, centuries, order, sort,
+}: Options) => {
   let filteredPeople = [...people];
 
   if (sex) {

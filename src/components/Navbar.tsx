@@ -20,7 +20,7 @@ export const Navbar = () => {
           </NavLink>
 
           <NavLink
-            to="people"
+            to="/people"
             aria-current="page"
             className={({ isActive }) => classNames('navbar-item',
               { 'has-background-grey-lighter': isActive })}

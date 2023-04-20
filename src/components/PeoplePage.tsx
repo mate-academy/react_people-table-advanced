@@ -5,7 +5,7 @@ import { Loader } from './Loader';
 import { PeopleTable } from './PeopleTable';
 import { Person } from '../types';
 import { getPeople } from '../api';
-import { FilteredPeople } from './FilteredPeople';
+import { filterPeople } from './FilteredPeople';
 import { FilterType } from '../types/FilterType';
 
 export const PeoplePage = () => {
@@ -23,14 +23,14 @@ export const PeoplePage = () => {
   const sort = searchParams.get(FilterType.SORT) || null;
 
   const visiblePeople: Person[] = useMemo(() => (
-    FilteredPeople(
+    filterPeople({
       people,
       sex,
       query,
       centuries,
       order,
       sort,
-    )
+    })
   ), [people, sex, query, centuries, order, sort]);
 
   useEffect(() => {
