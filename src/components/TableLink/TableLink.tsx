@@ -1,6 +1,6 @@
 import classNames from 'classnames';
 import { FC } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { Person } from '../../types';
 
 type Props = {
@@ -14,9 +14,14 @@ export const TableLink: FC<Props> = ({ person }) => {
     slug,
   } = person;
 
+  const [searchParams] = useSearchParams();
+
   return (
     <Link
-      to={`/people/${slug}`}
+      to={{
+        pathname: `/people/${slug}`,
+        search: searchParams.toString(),
+      }}
       className={classNames({
         'has-text-danger': sex === 'f',
       })}

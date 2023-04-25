@@ -20,17 +20,19 @@ const filterPeople = (
   query: string,
   centuries: string[],
 ): Person[] => {
-  let newPeople = [...people];
+  let newPeople = people;
 
   if (sex) {
     newPeople = newPeople.filter(person => person.sex === sex);
   }
 
   if (query) {
+    const lowerQuery = query.toLocaleLowerCase();
+
     newPeople = newPeople.filter(person => (
-      person.name.includes(query)
-      || person.motherName?.includes(query)
-      || person.fatherName?.includes(query)
+      person.name.toLocaleLowerCase().includes(lowerQuery)
+      || person.motherName?.toLocaleLowerCase().includes(lowerQuery)
+      || person.fatherName?.toLocaleLowerCase().includes(lowerQuery)
     ));
   }
 
@@ -86,7 +88,7 @@ export const PeoplePage = () => {
     setLoaded(false);
     setError(false);
 
-    const getPeopleFromSever = async () => {
+    const getPeopleFromServer = async () => {
       try {
         const peopleFromServer = await getPeople();
 
@@ -117,7 +119,7 @@ export const PeoplePage = () => {
       }
     };
 
-    getPeopleFromSever();
+    getPeopleFromServer();
   }, []);
 
   const query = searchParams.get('query') || '';
@@ -127,6 +129,8 @@ export const PeoplePage = () => {
   const order = searchParams.get('order') || '';
 
   const onQueryChange = useCallback((event: ChangeEvent<HTMLInputElement>) => {
+    // const lowerCased = event.target.value.toLocaleLowerCase();
+
     setSearchParams(
       getSearchWith(searchParams, { query: event.target.value || null }),
     );
@@ -175,8 +179,8 @@ export const PeoplePage = () => {
                 : (
                   <PeopleTable
                     people={preparedPeople}
-                    sort={sort as SortOrder}
-                    order={order}
+                    sort={sort}
+                    order={order as SortOrder}
                   />
                 )}
             </div>

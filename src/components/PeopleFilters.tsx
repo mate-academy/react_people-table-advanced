@@ -32,7 +32,7 @@ export const PeopleFilters: FC<Props> = ({
         <SearchLink
           params={{ sex: 'm' }}
           className={classNames(
-            { 'is-active': !sex },
+            { 'is-active': sex === 'm' },
           )}
         >
           Male
@@ -41,7 +41,7 @@ export const PeopleFilters: FC<Props> = ({
         <SearchLink
           params={{ sex: 'f' }}
           className={classNames(
-            { 'is-active': !sex },
+            { 'is-active': sex === 'f' },
           )}
         >
           Female

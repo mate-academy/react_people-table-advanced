@@ -8,8 +8,8 @@ import { TableLink } from '../TableLink';
 
 type Props = {
   people: Person[];
-  sort: SortOrder;
-  order: string;
+  sort: string;
+  order: SortOrder;
 };
 
 export const PeopleTable: FC<Props> = ({ people, sort, order }) => {
