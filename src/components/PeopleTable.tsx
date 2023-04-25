@@ -39,7 +39,7 @@ export const PeopleTable: React.FC<Props> = ({
 
   if (currentCenturiesFilter.length) {
     visiblePeople = visiblePeople.filter(({ born, died }) => {
-      const bornCentury = Math.ceil(born / 1000);
+      const bornCentury = Math.ceil(born / 100);
       const diedCentury = Math.ceil(died / 100);
       const personLifeCenturies = [bornCentury, diedCentury];
 
