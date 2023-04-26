@@ -10,15 +10,13 @@ type Props = Omit<LinkProps, 'to'> & {
 
 export const SorterLink: FC<Props> = ({ sort }) => {
   const [searchParams] = useSearchParams();
-  const currentSort = searchParams.get('sort') || '';
-  const currentSortOrder = searchParams.get('order') || '';
-  
+  const currentSort = searchParams.get('sort');
+  const currentSortOrder = searchParams.get('order');
 
   const newParams = {
     sort: (sort === currentSort && currentSortOrder) ? null : sort,
     order: (sort === currentSort && !currentSortOrder) ? 'desc' : null,
   };
-
 
   return (
     <SearchLink

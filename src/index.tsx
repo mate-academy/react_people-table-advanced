@@ -16,18 +16,18 @@ createRoot(document.getElementById('root') as HTMLDivElement)
   .render(
     <HashRouter>
       <Routes>
-        <Route path={PageRouters.home} element={<App />}>
+        <Route path={PageRouters.Home} element={<App />}>
           <Route index element={<HomePage />} />
           <Route
             path="home"
-            element={<Navigate to={PageRouters.home} replace />}
+            element={<Navigate to={PageRouters.Home} replace />}
           />
-          <Route path={PageRouters.people}>
+          <Route path={PageRouters.People}>
             <Route index element={<PeoplePage />} />
             <Route path=":slug" element={<PeoplePage />} />
           </Route>
 
-          <Route path={PageRouters.notFound} element={<ErrorPage />} />
+          <Route path={PageRouters.NotFound} element={<ErrorPage />} />
         </Route>
       </Routes>
     </HashRouter>,

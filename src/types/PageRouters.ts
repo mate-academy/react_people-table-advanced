@@ -1,5 +1,5 @@
 export enum PageRouters {
-  home = '/',
-  people = '/people',
-  notFound = '*',
+  Home = '/',
+  People = '/people',
+  NotFound = '*',
 }

@@ -10,8 +10,8 @@ export const Navbar = () => (
   >
     <div className="container">
       <div className="navbar-brand">
-        <PageNavLink to={PageRouters.home} text="Home" />
-        <PageNavLink to={PageRouters.people} text="People" />
+        <PageNavLink to={PageRouters.Home} text="Home" />
+        <PageNavLink to={PageRouters.People} text="People" />
       </div>
     </div>
   </nav>

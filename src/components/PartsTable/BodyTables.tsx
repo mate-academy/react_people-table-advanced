@@ -36,7 +36,7 @@ export const BodyTables: FC<Props> = ({ visiblePeople, selectedSlug }) => (
         >
           <td>
             <Link
-              to={`${PageRouters.people}/${slug}`}
+              to={`${PageRouters.People}/${slug}`}
               className={classNames(
                 { 'has-text-danger': sex === 'f' },
               )}

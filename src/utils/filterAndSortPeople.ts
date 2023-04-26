@@ -3,7 +3,7 @@ import { SortBy } from '../types/SortBy';
 
 export const filterAndSortPeople = (
   people: Person[],
-  querty: string | null,
+  query: string | null,
   filterSex: string | null,
   centuries: string[],
   sortType: SortBy | string,
@@ -11,11 +11,11 @@ export const filterAndSortPeople = (
 ) => {
   let visiblePeople = people;
 
-  if (querty) {
+  if (query) {
     visiblePeople = visiblePeople.filter(person => {
-      return person.name.toLowerCase().includes(querty.toLowerCase())
-      || person.motherName?.toLowerCase().includes(querty.toLowerCase())
-      || person.fatherName?.toLowerCase().includes(querty.toLowerCase());
+      return person.name.toLowerCase().includes(query.toLowerCase())
+      || person.motherName?.toLowerCase().includes(query.toLowerCase())
+      || person.fatherName?.toLowerCase().includes(query.toLowerCase());
     });
   }
 
