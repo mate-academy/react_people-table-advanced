@@ -33,15 +33,15 @@ export const PeopleTable: React.FC<Props> = ({ allPeople }) => {
       { sort: value });
   }, [sort, order, sex, query, centuries]);
 
-  const filteredPeople = useCallback((people: Person[]) => {
-    let copyPeople = [...people];
+  const filterPeople = useCallback((people: Person[]) => {
+    let copiedPeople = [...people];
 
     if (sex) {
-      copyPeople = copyPeople.filter(person => person.sex === sex);
+      copiedPeople = copiedPeople.filter(person => person.sex === sex);
     }
 
     if (centuries.length) {
-      copyPeople = copyPeople
+      copiedPeople = copiedPeople
         .filter(person => centuries
           .includes(String(Math.ceil(person.born / 100))));
     }
@@ -49,29 +49,31 @@ export const PeopleTable: React.FC<Props> = ({ allPeople }) => {
     if (query) {
       const queryLowerCase = query.toLocaleLowerCase();
 
-      copyPeople = copyPeople.filter(person => (
+      copiedPeople = copiedPeople.filter(person => (
         person.name.toLocaleLowerCase().includes(queryLowerCase)
           || person.fatherName?.toLocaleLowerCase().includes(queryLowerCase)
           || person.motherName?.toLocaleLowerCase().includes(queryLowerCase)
       ));
     }
 
-    return copyPeople;
+    return copiedPeople;
   }, [sort, order, sex, query, centuries]);
 
-  const sortedPeople = useCallback((people: Person[]) => {
-    let copyPeople = [...people];
+  const sortPeople = useCallback((people: Person[]) => {
+    let copiedPeople = [...people];
 
     if (sort) {
       switch (sort) {
         case SortBy.Name:
         case SortBy.Sex:
-          copyPeople.sort((prev, curr) => prev[sort].localeCompare(curr[sort]));
+          copiedPeople.sort((prev, curr) => (
+            prev[sort].localeCompare(curr[sort])
+          ));
           break;
 
         case SortBy.Died:
         case SortBy.Born:
-          copyPeople.sort((prev, curr) => prev[sort] - curr[sort]);
+          copiedPeople.sort((prev, curr) => prev[sort] - curr[sort]);
           break;
 
         default:
@@ -80,16 +82,16 @@ export const PeopleTable: React.FC<Props> = ({ allPeople }) => {
     }
 
     if (order) {
-      copyPeople = copyPeople.reverse();
+      copiedPeople = copiedPeople.reverse();
     }
 
-    return copyPeople;
+    return copiedPeople;
   }, [sort, order, sex, query, centuries]);
 
   const handleGetFilteredAndSortedPeople = () => {
-    const filtered = filteredPeople(allPeople);
+    const filtered = filterPeople(allPeople);
 
-    return sortedPeople(filtered);
+    return sortPeople(filtered);
   };
 
   const filteredAndSortedPeople = handleGetFilteredAndSortedPeople();
@@ -144,7 +146,6 @@ export const PeopleTable: React.FC<Props> = ({ allPeople }) => {
         {filteredAndSortedPeople.map(person => (
           <PersonInfo
             key={person.slug}
-            allPeople={filteredAndSortedPeople}
             person={person}
           />
         ))}

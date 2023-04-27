@@ -16,7 +16,27 @@ export const PeoplePage = () => {
     try {
       const people = await getPeople();
 
-      setAllPeople(people);
+      const addedLinkToPeople = people.map(person => {
+        const copiedPerson = { ...person };
+        const foundFather = people.find(human => (
+          human.name === person.fatherName
+        ));
+        const foundMother = people.find(human => (
+          human.name === person.motherName
+        ));
+
+        if (foundFather) {
+          copiedPerson.father = foundFather;
+        }
+
+        if (foundMother) {
+          copiedPerson.mother = foundMother;
+        }
+
+        return copiedPerson;
+      });
+
+      setAllPeople(addedLinkToPeople);
     } catch {
       setError('Unable to upload people');
     } finally {

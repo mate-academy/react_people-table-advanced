@@ -10,10 +10,9 @@ import { PersonLink } from './PersonLink';
 
 type Props = {
   person: Person;
-  allPeople: Person[];
 };
 
-export const PersonInfo: React.FC<Props> = ({ person, allPeople }) => {
+export const PersonInfo: React.FC<Props> = ({ person }) => {
   const {
     slug,
     name,
@@ -22,18 +21,14 @@ export const PersonInfo: React.FC<Props> = ({ person, allPeople }) => {
     sex,
     motherName,
     fatherName,
+    mother,
+    father,
   } = person;
   const { personId } = useParams();
   const location = useLocation();
   const parentPath = useResolvedPath('../').pathname;
 
   const isSelected = person.slug === personId;
-  const foundFather = allPeople.find(human => (
-    human.name === person.fatherName
-  ));
-  const foundMother = allPeople.find(human => (
-    human.name === person.motherName
-  ));
 
   return (
     <tr
@@ -55,11 +50,11 @@ export const PersonInfo: React.FC<Props> = ({ person, allPeople }) => {
       <td>{born}</td>
       <td>{died}</td>
       <td>
-        {foundMother ? (
+        {mother ? (
           <PersonLink
-            pathname={parentPath + foundMother.slug}
+            pathname={parentPath + mother.slug}
             search={location.search}
-            name={foundMother.name}
+            name={mother.name}
             sex="f"
           />
         ) : (
@@ -68,11 +63,11 @@ export const PersonInfo: React.FC<Props> = ({ person, allPeople }) => {
       </td>
 
       <td>
-        {foundFather ? (
+        {father ? (
           <PersonLink
-            pathname={parentPath + foundFather.slug}
+            pathname={parentPath + father.slug}
             search={location.search}
-            name={foundFather.name}
+            name={father.name}
             sex="m"
           />
         ) : (

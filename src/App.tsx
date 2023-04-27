@@ -8,7 +8,7 @@ import { PeoplePage } from './components/PeoplePage';
 import { Navbar } from './components/Navbar';
 import './App.scss';
 import { HomePage } from './components/HomePage';
-import { PageNotFount } from './components/PageNotFount';
+import { PageNotFound } from './components/PageNotFound';
 
 export const App = () => {
   return (
@@ -26,7 +26,7 @@ export const App = () => {
               <Route path=":personId" element={<PeoplePage />} />
             </Route>
 
-            <Route path="*" element={<PageNotFount />} />
+            <Route path="*" element={<PageNotFound />} />
           </Routes>
         </div>
       </div>
