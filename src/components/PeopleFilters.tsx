@@ -83,6 +83,7 @@ export const PeopleFilters: FC<Props> = ({
                 }}
                 data-cy="century"
                 className={classNames(
+                  'button mr-1',
                   { 'is-info': centuries.includes(century) },
                 )}
               >

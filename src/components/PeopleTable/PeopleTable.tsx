@@ -12,12 +12,12 @@ const titleList = [
   { name: 'Died', link: 'died' },
 ];
 
-type Props = {
+export interface Props {
   people: Person[],
   sort: string,
   order: string,
   searchParams: URLSearchParams,
-};
+}
 
 export const PeopleTable: FC<Props> = ({
   people,
@@ -83,7 +83,7 @@ export const PeopleTable: FC<Props> = ({
         {people.map(person => (
           <tr
             data-cy="person"
-            key={person.slug}
+            key={person.name}
             className={classNames(
               { 'has-background-warning': person.slug === selectedSlug },
             )}

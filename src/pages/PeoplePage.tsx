@@ -17,7 +17,7 @@ export const PeoplePage: FC = () => {
   const query = searchParams.get('query') || '';
   const sort = searchParams.get('sort') || '';
   const order = searchParams.get('order') || '';
-  const centuries = searchParams.getAll('century') || '';
+  const centuries = searchParams.getAll('centuries') || '';
   const sex = searchParams.get('sex') || '';
 
   const loadPeople = async () => {
