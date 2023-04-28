@@ -1,6 +1,6 @@
 import { FC } from 'react';
 import cn from 'classnames';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { Person } from '../types';
 
 type Props = {
@@ -12,6 +12,8 @@ export const PersonLink: FC<Props> = ({
   person,
   isSelected,
 }) => {
+  const location = useLocation();
+  const isPepoleLocation = location.pathname === '/people';
   const {
     name,
     sex,
@@ -32,7 +34,12 @@ export const PersonLink: FC<Props> = ({
       case !!parentLink:
         return (
           <Link
-            to={`../${parentLink?.slug}`}
+            to={{
+              pathname: isPepoleLocation
+                ? `./${parentLink?.slug}`
+                : `../${parentLink?.slug}`,
+              search: location.search,
+            }}
             className={cn({ 'has-text-danger': parentLink?.sex === 'f' })}
           >
             {parentLink?.name}
@@ -54,7 +61,12 @@ export const PersonLink: FC<Props> = ({
     >
       <td>
         <Link
-          to={`../${slug}`}
+          to={{
+            pathname: isPepoleLocation
+              ? `./${slug}`
+              : `../${slug}`,
+            search: location.search,
+          }}
           className={cn({ 'has-text-danger': sex === 'f' })}
         >
           {name}
