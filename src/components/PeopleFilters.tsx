@@ -6,13 +6,13 @@ import { getSearchWith } from '../utils/searchHelper';
 export const PeopleFilters: FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const activeCenturies = searchParams.getAll('centuries');
-  const order = searchParams.get('order') || '';
+  const query = searchParams.get('query') || '';
 
   const centuries = [16, 17, 18, 19, 20];
 
   const onChangeSearch = (e: ChangeEvent<HTMLInputElement>) => {
     setSearchParams(
-      getSearchWith(searchParams, { order: e.target.value || null }),
+      getSearchWith(searchParams, { query: e.target.value || null }),
     );
   };
 
@@ -50,7 +50,7 @@ export const PeopleFilters: FC = () => {
             type="search"
             className="input"
             placeholder="Search"
-            value={order}
+            value={query}
             onChange={onChangeSearch}
           />
 
@@ -91,7 +91,11 @@ export const PeopleFilters: FC = () => {
           <div className="level-right ml-4">
             <Link
               data-cy="centuryALL"
-              className="button is-success is-outlined"
+              className={cn(
+                'button',
+                'is-success',
+                { 'is-outlined': activeCenturies.length },
+              )}
               to={{ search: getSearchWith(searchParams, { centuries: [] }) }}
             >
               All

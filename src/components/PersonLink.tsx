@@ -1,6 +1,6 @@
 import { FC } from 'react';
-import cn from 'classnames';
 import { Link, useLocation } from 'react-router-dom';
+import cn from 'classnames';
 import { Person } from '../types';
 
 type Props = {
