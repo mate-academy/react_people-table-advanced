@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 /* eslint-disable max-len */
 import axios from 'axios';
 import {
@@ -34,10 +33,17 @@ const PeoplePage = () => {
         signal: controller.signal,
       });
 
-      console.log(isMounted, data);
       if (isMounted) {
         if (data.length) {
-          setPeopleData(data);
+          const dataWithParents = data.map(person => {
+            return {
+              ...person,
+              mother: data.find(human => human.name === person.motherName),
+              father: data.find(human => human.name === person.fatherName),
+            };
+          });
+
+          setPeopleData(dataWithParents);
         }
       }
     } catch {
@@ -89,13 +95,13 @@ const PeoplePage = () => {
                 </p>
               )}
 
-              {!peopleData.length && !isLoading && (
+              {!peopleData.length && !isLoading && !isError && (
                 <p data-cy="noPeopleMessage">
                   There are no people on the server
                 </p>
               )}
 
-              {!isLoading && !visiblePersons.length && (
+              {!isLoading && !visiblePersons.length && !isError && (
                 <p>There are no people matching the current search criteria</p>)}
 
               {peopleData.length > 0 && <PeopleTable people={visiblePersons} slug={slug} />}
