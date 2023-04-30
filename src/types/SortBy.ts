@@ -3,4 +3,4 @@ export enum SortBy {
   sex = 'sex',
   born = 'born',
   died = 'died',
-};
+}

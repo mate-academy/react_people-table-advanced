@@ -26,7 +26,7 @@ export const PersonLink: FC<Props> = ({
     slug,
   } = person;
 
-  const parent = (
+  const renderParentLink = (
     parentName: string | null,
     parentLink: Person | null = null,
   ) => {
@@ -77,10 +77,10 @@ export const PersonLink: FC<Props> = ({
       <td>{born}</td>
       <td>{died}</td>
       <td>
-        {parent(motherName, mother)}
+        {renderParentLink(motherName, mother)}
       </td>
       <td>
-        {parent(fatherName, father)}
+        {renderParentLink(fatherName, father)}
       </td>
     </tr>
   );

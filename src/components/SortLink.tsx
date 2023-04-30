@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, useCallback } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import cn from 'classnames';
 import { SortBy } from '../types/SortBy';
@@ -14,25 +14,27 @@ export const SortLink: FC<Props> = ({ sortBy, isSortingNow }) => {
   const currentSort = searchParams.get('sort');
   const currentOrder = searchParams.get('order');
 
-  const handleSortParams = (type: SortBy) => {
-    const newSearchParams = { sort: type, order: currentOrder };
+  const handleSortParams = useCallback(
+    (type: SortBy) => {
+      const newSearchParams = { sort: type, order: currentOrder };
 
-    if (type !== currentSort && currentOrder) {
-      newSearchParams.order = null;
+      if (type !== currentSort && currentOrder) {
+        newSearchParams.order = null;
+
+        return getSearchWith(searchParams, newSearchParams);
+      }
+
+      if (currentOrder) {
+        return getSearchWith(searchParams, { sort: null, order: null });
+      }
+
+      if (currentSort === type) {
+        return getSearchWith(searchParams, { order: 'desc' });
+      }
 
       return getSearchWith(searchParams, newSearchParams);
-    }
-
-    if (currentOrder) {
-      return getSearchWith(searchParams, { sort: null, order: null });
-    }
-
-    if (currentSort === type) {
-      return getSearchWith(searchParams, { order: 'desc' });
-    }
-
-    return getSearchWith(searchParams, newSearchParams);
-  };
+    }, [searchParams],
+  );
 
   return (
     <Link to={{ search: handleSortParams(sortBy) }}>
