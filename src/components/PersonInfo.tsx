@@ -67,7 +67,11 @@ export const PersonInfo: React.FC<Props> = ({ person, slug }) => {
       <td>
         {father ? (
           <Link
-            to={`../${father.slug}`}
+            to={{
+              pathname: isSelectedPerson(father.slug)
+                ? parentPath : parentPath + father.slug,
+              search: location.search,
+            }}
           >
             {father.name}
           </Link>

@@ -1,12 +1,19 @@
+import { useSearchParams } from 'react-router-dom';
 import { Person } from '../types';
 import { PersonInfo } from './PersonInfo';
+import { SearchLink } from './SearchLink';
+import { SortType } from '../types/SortType';
 
 type Props = {
   people: Person[],
   slug: string,
 };
 
-export const PeopleTable:React.FC<Props> = ({ people, slug }) => {
+export const PeopleTable: React.FC<Props> = ({ people, slug }) => {
+  const [searchParams] = useSearchParams();
+  const order = searchParams.get('order') || null;
+  const sort = searchParams.get('sort') || null;
+
   return (
     <table
       data-cy="peopleTable"
@@ -17,44 +24,60 @@ export const PeopleTable:React.FC<Props> = ({ people, slug }) => {
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Name
-              <a href="#/people?sort=name">
+              <SearchLink params={{
+                sort: sort === SortType.NAME && order ? null : SortType.NAME,
+                order: sort === SortType.NAME && !order ? 'desc' : null,
+              }}
+              >
                 <span className="icon">
                   <i className="fas fa-sort" />
                 </span>
-              </a>
+              </SearchLink>
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Sex
-              <a href="#/people?sort=sex">
+              <SearchLink params={{
+                sort: sort === SortType.SEX && order ? null : SortType.SEX,
+                order: sort === SortType.SEX && !order ? 'desc' : null,
+              }}
+              >
                 <span className="icon">
                   <i className="fas fa-sort" />
                 </span>
-              </a>
+              </SearchLink>
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Born
-              <a href="#/people?sort=born&amp;order=desc">
+              <SearchLink params={{
+                sort: sort === SortType.BORN && order ? null : SortType.BORN,
+                order: sort === SortType.BORN && !order ? 'desc' : null,
+              }}
+              >
                 <span className="icon">
                   <i className="fas fa-sort-up" />
                 </span>
-              </a>
+              </SearchLink>
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Died
-              <a href="#/people?sort=died">
+              <SearchLink params={{
+                sort: sort === SortType.DIED && order ? null : SortType.DIED,
+                order: sort === SortType.DIED && !order ? 'desc' : null,
+              }}
+              >
                 <span className="icon">
                   <i className="fas fa-sort" />
                 </span>
-              </a>
+              </SearchLink>
             </span>
           </th>
 
@@ -62,7 +85,6 @@ export const PeopleTable:React.FC<Props> = ({ people, slug }) => {
           <th>Father</th>
         </tr>
       </thead>
-
       <tbody>
         {people.map(person => (
           <PersonInfo

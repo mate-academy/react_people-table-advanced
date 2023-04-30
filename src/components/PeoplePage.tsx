@@ -20,6 +20,8 @@ const PeoplePage = () => {
   const query = serachParams.get('query') || '';
   const sex = serachParams.get('sex') || '';
   const centuries = serachParams.getAll('centuries') || [];
+  const sort = serachParams.get('sort') || '';
+  const order = serachParams.get('order') || '';
 
   const { slug = '' } = useParams();
 
@@ -64,7 +66,8 @@ const PeoplePage = () => {
   }, []);
 
   const visiblePersons = useMemo(() => {
-    return filterPeople(query, sex, centuries, peopleData);
+    return filterPeople(query,
+      sex, centuries, sort, order, peopleData);
   }, [query, sex, centuries]);
 
   return (

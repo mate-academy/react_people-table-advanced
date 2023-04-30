@@ -37,9 +37,7 @@ export const PeopleFilters: React.FC<Props> = ({
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
-
       <p className="panel-tabs" data-cy="SexFilter">
-
         <SearchLink
           params={{ sex: null }}
           className={classNames(
@@ -65,7 +63,6 @@ export const PeopleFilters: React.FC<Props> = ({
           {Sex.FEMALE}
         </SearchLink>
       </p>
-
       <div className="panel-block">
         <p className="control has-icons-left">
           <input
@@ -82,7 +79,6 @@ export const PeopleFilters: React.FC<Props> = ({
           </span>
         </p>
       </div>
-
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
@@ -101,7 +97,6 @@ export const PeopleFilters: React.FC<Props> = ({
                 {century}
               </SearchLink>
             ))}
-
             <div className="level-right ml-4">
               <SearchLink
                 params={{
@@ -120,7 +115,6 @@ export const PeopleFilters: React.FC<Props> = ({
           </div>
         </div>
       </div>
-
       <div className="panel-block">
         <SearchLink
           params={{

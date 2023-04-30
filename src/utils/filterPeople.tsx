@@ -1,10 +1,13 @@
 import { Person } from '../types';
+import { SortType } from '../types/SortType';
 
 const normalizer = (text: string) => text.toLowerCase();
 
 export const filterPeople = (searchQuery: string,
   sex: string,
   century: string[],
+  sort: string,
+  order:string,
   people: Person[]) => {
   const query = normalizer(searchQuery).trim();
   let peopleToFilter = [...people];
@@ -33,6 +36,33 @@ export const filterPeople = (searchQuery: string,
 
   if (sex) {
     peopleToFilter = peopleToFilter.filter(person => person.sex === sex);
+  }
+
+  if (sort) {
+    peopleToFilter = peopleToFilter.sort((
+      personA, personB,
+    ) => {
+      switch (sort) {
+        case SortType.NAME:
+          return personA.name.localeCompare(personB.name);
+
+        case SortType.SEX:
+          return personA.sex.localeCompare(personB.sex);
+
+        case SortType.BORN:
+          return personA.born - personB.born;
+
+        case SortType.DIED:
+          return personA.died - personB.died;
+
+        default:
+          throw new Error('The sort type is not defined');
+      }
+    });
+  }
+
+  if (order) {
+    peopleToFilter.reverse();
   }
 
   return peopleToFilter;

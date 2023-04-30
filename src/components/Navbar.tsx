@@ -18,9 +18,7 @@ export const Navbar = () => {
             to="/"
           >
             Home
-
           </NavLink>
-
           <NavLink
             aria-current="page"
             className={({ isActive }) => classNames('navbar-item', {
