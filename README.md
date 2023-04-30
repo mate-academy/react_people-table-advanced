@@ -4,7 +4,7 @@
 
 > Sorting and filtering tests are not implemented yet
 
-Using code from the [React People Table](https://github.com/mate-academy/react_people-table-basics#react-people-table)
+Using code from the [React People Table](https://github.com/miamarichka/react_people-table-basics#react-people-table)
 implement the ability to filter and sort people in the table.
 
 1. All the filters and sort params should be saved as URL Search Params, so you could share the link to show exactly what you see.

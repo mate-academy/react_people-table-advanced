@@ -1,8 +1,75 @@
+/* eslint-disable max-len */
+import axios from 'axios';
+import {
+  useEffect, useMemo, useRef, useState,
+} from 'react';
+import { useParams, useSearchParams } from 'react-router-dom';
 import { PeopleFilters } from './PeopleFilters';
 import { Loader } from './Loader';
 import { PeopleTable } from './PeopleTable';
+import { Person } from '../types';
+import { filterPeople } from '../utils/filterPeople';
 
-export const PeoplePage = () => {
+const PeoplePage = () => {
+  const [peopleData, setPeopleData] = useState<Person[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isError, setIsError] = useState(false);
+  const isMounted = useRef(false);
+
+  const [serachParams, setSearchParams] = useSearchParams();
+  const query = serachParams.get('query') || '';
+  const sex = serachParams.get('sex') || '';
+  const centuries = serachParams.getAll('centuries') || [];
+  const sort = serachParams.get('sort') || '';
+  const order = serachParams.get('order') || '';
+
+  const { slug = '' } = useParams();
+
+  const getPeopleFromServer = async () => {
+    const controller = new AbortController();
+
+    try {
+      setIsLoading(true);
+      setIsError(false);
+      const { data } = await axios.get<Person[]>('https://mate-academy.github.io/react_people-table/api/people.json', {
+        signal: controller.signal,
+      });
+
+      if (isMounted) {
+        if (data.length) {
+          const dataWithParents = data.map(person => {
+            return {
+              ...person,
+              mother: data.find(human => human.name === person.motherName),
+              father: data.find(human => human.name === person.fatherName),
+            };
+          });
+
+          setPeopleData(dataWithParents);
+        }
+      }
+    } catch {
+      setIsError(true);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    isMounted.current = true;
+    setTimeout(getPeopleFromServer, 500);
+
+    return () => {
+      setPeopleData([]);
+      isMounted.current = false;
+    };
+  }, []);
+
+  const visiblePersons = useMemo(() => {
+    return filterPeople(query,
+      sex, centuries, sort, order, peopleData);
+  }, [query, sex, centuries]);
+
   return (
     <>
       <h1 className="title">People Page</h1>
@@ -10,22 +77,37 @@ export const PeoplePage = () => {
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
           <div className="column is-7-tablet is-narrow-desktop">
-            <PeopleFilters />
+            {peopleData.length > 0 && (
+              <PeopleFilters
+                searchParams={serachParams}
+                setSearchParams={setSearchParams}
+                query={query}
+                sex={sex}
+                centuries={centuries}
+              />
+            )}
           </div>
 
           <div className="column">
             <div className="box table-container">
-              <Loader />
+              {isLoading && <Loader />}
 
-              <p data-cy="peopleLoadingError">Something went wrong</p>
+              {isError && !isLoading && (
+                <p data-cy="peopleLoadingError" className="has-text-danger">
+                  Something went wrong
+                </p>
+              )}
 
-              <p data-cy="noPeopleMessage">
-                There are no people on the server
-              </p>
+              {!peopleData.length && !isLoading && !isError && (
+                <p data-cy="noPeopleMessage">
+                  There are no people on the server
+                </p>
+              )}
 
-              <p>There are no people matching the current search criteria</p>
+              {!isLoading && !visiblePersons.length && !isError && (
+                <p>There are no people matching the current search criteria</p>)}
 
-              <PeopleTable />
+              {peopleData.length > 0 && <PeopleTable people={visiblePersons} slug={slug} />}
             </div>
           </div>
         </div>
@@ -33,3 +115,5 @@ export const PeoplePage = () => {
     </>
   );
 };
+
+export default PeoplePage;
