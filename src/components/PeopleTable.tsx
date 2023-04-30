@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, useMemo } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
 import { Person } from '../types';
 import { PersonLink } from './PersonLink';
@@ -19,59 +19,65 @@ export const PeopleTable: FC<Props> = ({ people }) => {
   const sort = searchParams.get('sort');
   const order = searchParams.get('order');
 
-  const filteredPeople = people.filter(person => {
-    if (sex && person.sex !== sex) {
-      return false;
-    }
-
-    if (centuries.length) {
-      const century = Math.ceil(person.born / 100);
-
-      if (!centuries.includes(`${century}`)) {
+  const filteredPeople = useMemo(() => {
+    return people.filter(person => {
+      if (sex && person.sex !== sex) {
         return false;
       }
+
+      if (centuries.length) {
+        const century = Math.ceil(person.born / 100);
+
+        if (!centuries.includes(`${century}`)) {
+          return false;
+        }
+      }
+
+      if (query
+        && !(
+          person.name.toLowerCase().includes(query)
+          || person.motherName?.toLowerCase().includes(query)
+          || person.fatherName?.toLowerCase().includes(query)
+        )
+      ) {
+        return false;
+      }
+
+      return true;
+    });
+  }, [people, query, sort, order]);
+
+  const sortedPeople = useMemo(() => {
+    if (!sort) {
+      return filteredPeople;
     }
 
-    if (query
-      && !(
-        person.name.toLowerCase().includes(query)
-        || person.motherName?.toLowerCase().includes(query)
-        || person.fatherName?.toLowerCase().includes(query)
-      )
-    ) {
-      return false;
-    }
+    const sorted = [...filteredPeople];
 
-    return true;
-  });
-
-  const onSort = () => {
     switch (sort) {
       case SortBy.name:
       case SortBy.sex:
-        filteredPeople.sort((person1, person2) => person1[sort]
+        sorted.sort((person1, person2) => person1[sort]
           .localeCompare(person2[sort]));
         break;
 
       case SortBy.born:
       case SortBy.died:
-        filteredPeople
+        sorted
           .sort((person1, person2) => person1[sort] - person2[sort]);
         break;
 
       default:
-        filteredPeople.sort((person1, person2) => person1.slug
+        sorted.sort((person1, person2) => person1.slug
           .localeCompare(person2.slug));
     }
 
     if (order) {
-      filteredPeople.reverse();
+      sorted.reverse();
     }
-  };
 
-  if (sort) {
-    onSort();
-  }
+    return sorted;
+  }, [order, sort, filteredPeople, searchParams]);
 
   return (
     !filteredPeople.length ? (
@@ -129,7 +135,7 @@ export const PeopleTable: FC<Props> = ({ people }) => {
         </thead>
 
         <tbody>
-          {filteredPeople.map(person => (
+          {sortedPeople.map(person => (
             <PersonLink
               key={person.slug}
               person={person}

@@ -1,11 +1,9 @@
 import { FC } from 'react';
 import {
-  // NavLink,
   Navigate,
   Route,
   Routes,
 } from 'react-router-dom';
-// import cn from 'classnames';
 import { Navbar } from './components/Navbar';
 import { HomePage } from './pages/HomePage';
 import { PeoplePage } from './pages/PeoplePage';
