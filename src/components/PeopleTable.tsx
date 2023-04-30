@@ -74,66 +74,70 @@ export const PeopleTable: FC<Props> = ({ people }) => {
   }
 
   return (
-    <table
-      data-cy="peopleTable"
-      className="table is-striped is-hoverable is-narrow is-fullwidth"
-    >
-      <thead>
-        <tr>
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Name
-              <SortLink
-                sortBy={SortBy.name}
-                isSortingNow={SortBy.name === sort}
-              />
-            </span>
-          </th>
+    !filteredPeople.length ? (
+      <p>There are no people matching the current search criteria</p>
+    ) : (
+      <table
+        data-cy="peopleTable"
+        className="table is-striped is-hoverable is-narrow is-fullwidth"
+      >
+        <thead>
+          <tr>
+            <th>
+              <span className="is-flex is-flex-wrap-nowrap">
+                Name
+                <SortLink
+                  sortBy={SortBy.name}
+                  isSortingNow={SortBy.name === sort}
+                />
+              </span>
+            </th>
 
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Sex
-              <SortLink
-                sortBy={SortBy.sex}
-                isSortingNow={SortBy.sex === sort}
-              />
-            </span>
-          </th>
+            <th>
+              <span className="is-flex is-flex-wrap-nowrap">
+                Sex
+                <SortLink
+                  sortBy={SortBy.sex}
+                  isSortingNow={SortBy.sex === sort}
+                />
+              </span>
+            </th>
 
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Born
-              <SortLink
-                sortBy={SortBy.born}
-                isSortingNow={SortBy.born === sort}
-              />
-            </span>
-          </th>
+            <th>
+              <span className="is-flex is-flex-wrap-nowrap">
+                Born
+                <SortLink
+                  sortBy={SortBy.born}
+                  isSortingNow={SortBy.born === sort}
+                />
+              </span>
+            </th>
 
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Died
-              <SortLink
-                sortBy={SortBy.died}
-                isSortingNow={SortBy.died === sort}
-              />
-            </span>
-          </th>
+            <th>
+              <span className="is-flex is-flex-wrap-nowrap">
+                Died
+                <SortLink
+                  sortBy={SortBy.died}
+                  isSortingNow={SortBy.died === sort}
+                />
+              </span>
+            </th>
 
-          <th>Mother</th>
-          <th>Father</th>
-        </tr>
-      </thead>
+            <th>Mother</th>
+            <th>Father</th>
+          </tr>
+        </thead>
 
-      <tbody>
-        {filteredPeople.map(person => (
-          <PersonLink
-            key={person.slug}
-            person={person}
-            isSelected={slug === person.slug}
-          />
-        ))}
-      </tbody>
-    </table>
+        <tbody>
+          {filteredPeople.map(person => (
+            <PersonLink
+              key={person.slug}
+              person={person}
+              isSelected={slug === person.slug}
+            />
+          ))}
+        </tbody>
+      </table>
+    )
   );
 };
