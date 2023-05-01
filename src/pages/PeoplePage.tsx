@@ -8,17 +8,17 @@ import { PeopleFilters } from '../components/PeopleFilters';
 
 export const PeoplePage: FC = () => {
   const [people, setPeople] = useState<Person[]>([]);
-  const [isLoader, setIsLoader] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [errLoad, setErrLoad] = useState(false);
   const isPeoplePage = useMatch('/people');
 
   useEffect(() => {
     if (isPeoplePage) {
-      setIsLoader(true);
+      setIsLoading(true);
       getPeople()
         .then(result => setPeople(result))
         .catch(() => setErrLoad(true))
-        .finally(() => setIsLoader(false));
+        .finally(() => setIsLoading(false));
     }
   }, [isPeoplePage]);
 
@@ -46,7 +46,7 @@ export const PeoplePage: FC = () => {
 
           <div className="column">
             <div className="box table-container">
-              {isLoader && <Loader />}
+              {isLoading && <Loader />}
 
               {errLoad && (
                 <p
@@ -57,7 +57,7 @@ export const PeoplePage: FC = () => {
                 </p>
               )}
 
-              {!isLoader && !errLoad && !people.length && (
+              {!isLoading && !errLoad && !people.length && (
                 <p data-cy="noPeopleMessage">
                   There are no people on the server
                 </p>

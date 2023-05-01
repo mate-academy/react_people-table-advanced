@@ -15,10 +15,10 @@ export const SortLink: FC<Props> = ({ sortBy, isSortingNow }) => {
   const currentOrder = searchParams.get('order');
 
   const handleSortParams = useCallback(
-    (type: SortBy) => {
-      const newSearchParams = { sort: type, order: currentOrder };
+    () => {
+      const newSearchParams = { sort: sortBy, order: currentOrder };
 
-      if (type !== currentSort && currentOrder) {
+      if (sortBy !== currentSort && currentOrder) {
         newSearchParams.order = null;
 
         return getSearchWith(searchParams, newSearchParams);
@@ -28,7 +28,7 @@ export const SortLink: FC<Props> = ({ sortBy, isSortingNow }) => {
         return getSearchWith(searchParams, { sort: null, order: null });
       }
 
-      if (currentSort === type) {
+      if (currentSort === sortBy) {
         return getSearchWith(searchParams, { order: 'desc' });
       }
 
@@ -37,7 +37,7 @@ export const SortLink: FC<Props> = ({ sortBy, isSortingNow }) => {
   );
 
   return (
-    <Link to={{ search: handleSortParams(sortBy) }}>
+    <Link to={{ search: handleSortParams() }}>
       <span className="icon">
         <i className={cn(
           'fas',
