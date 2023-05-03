@@ -26,10 +26,13 @@ export const PeoplePage: React.FC = () => {
   const centuries = searchParams.getAll('centuries') || '';
   const sex = searchParams.get('sex') || '';
 
-  const showError = (error: ErrorType) => {
-    setIsError(error);
-    setTimeout(() => setIsError(ErrorType.NONE), 3000);
-  };
+  useEffect(() => {
+    const showError = setTimeout((error: ErrorType) => setIsError(error), 3000);
+
+    return () => {
+      clearTimeout(showError);
+    };
+  }, []);
 
   useEffect(() => {
     setIsLoading(true);
@@ -53,7 +56,7 @@ export const PeoplePage: React.FC = () => {
 
         setPeople(personWithParents);
       })
-      .catch(() => showError(ErrorType.LOAD))
+      .catch(() => setIsError(ErrorType.LOAD))
       .finally(() => setIsLoading(false));
   }, []);
 
@@ -98,13 +101,13 @@ export const PeoplePage: React.FC = () => {
                 </p>
               )}
 
-              {!isLoading && people && !people.length && (
+              {!people.length && !isError && !isLoading && (
                 <p data-cy="noPeopleMessage">
                   There are no people on the server
                 </p>
               )}
 
-              {!sortedPeople.length && !isLoading && (
+              {!sortedPeople.length && !isLoading && !isError && (
                 <p>
                   There are no people matching the current search criteria
                 </p>

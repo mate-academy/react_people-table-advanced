@@ -86,7 +86,7 @@ export const PeopleFilters: React.FC<Props> = ({
               className={classNames(
                 'button',
                 'is-success',
-                { 'is-outlined': centuries.length !== 0 },
+                { 'is-outlined': centuries.length },
               )}
             >
               All
