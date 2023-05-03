@@ -110,7 +110,7 @@ export const PeoplePage: React.FC = () => {
                 </p>
               )}
 
-              {!isLoading && !isError && (
+              {!isLoading && !isError && !!sortedPeople.length && (
                 <PeopleTable
                   people={sortedPeople}
                   sort={sort}
