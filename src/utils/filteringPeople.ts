@@ -38,4 +38,4 @@ export const filteringPeople = (
   }
 
   return filteredPeople;
-}
+};
