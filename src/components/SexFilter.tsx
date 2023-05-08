@@ -2,7 +2,7 @@ import { FC } from 'react';
 import classNames from 'classnames';
 import { useSearchParams } from 'react-router-dom';
 import { SearchLink } from './SearchLink';
-import { SEXES } from '../SORTING_ORDER';
+import { SEXES } from '../constants';
 
 export const SexFilter: FC = () => {
   const [searchParams] = useSearchParams();

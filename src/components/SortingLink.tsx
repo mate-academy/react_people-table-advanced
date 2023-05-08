@@ -3,7 +3,7 @@ import { useSearchParams } from 'react-router-dom';
 import classNames from 'classnames';
 import { SearchLink } from './SearchLink';
 import { SortingCell } from '../types/sortingCell';
-import { DESC_ORDER } from '../SORTING_ORDER';
+import { DESC_ORDER } from '../constants';
 
 type Props = {
   cellType: SortingCell;

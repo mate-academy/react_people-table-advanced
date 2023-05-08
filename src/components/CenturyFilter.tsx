@@ -2,7 +2,7 @@ import { FC } from 'react';
 import classNames from 'classnames';
 import { useSearchParams } from 'react-router-dom';
 import { SearchLink } from './SearchLink';
-import { CENTURIES } from '../SORTING_ORDER';
+import { CENTURIES } from '../constants';
 
 export const CenturyFilter: FC = () => {
   const [searchParams] = useSearchParams();
