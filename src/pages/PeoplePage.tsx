@@ -5,7 +5,7 @@ import { Loader } from '../components/Loader';
 import { PeopleTable } from '../components/PeopleTable';
 import { Person } from '../types';
 import { getPeople } from '../api';
-import {DESC_ORDER, SortingCells} from '../constants';
+import { DESC_ORDER, SortingCells } from '../constants';
 
 export const PeoplePage = () => {
   const [searchParams] = useSearchParams();
@@ -102,20 +102,19 @@ export const PeoplePage = () => {
                 </p>
               )}
 
-              {!people.length && (
-                !error && !isLoading && (
-                  <p data-cy="noPeopleMessage">
-                    There are no people on the server
-                  </p>
-                ))}
+              {!people.length && !error && !isLoading && (
+                <p data-cy="noPeopleMessage">
+                  There are no people on the server
+                </p>
+              )}
 
-              {!people.length && !filteredPeople.length
+              {!filteredPeople.length && !isLoading
                 ? (
                   <p>
                     There are no people matching the current search criteria
                   </p>
                 )
-                : <PeopleTable people={filteredPeople} />}
+                : (!!people.length && <PeopleTable people={filteredPeople} />)}
 
             </div>
           </div>
