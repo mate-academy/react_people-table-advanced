@@ -11,7 +11,7 @@ export type Props = {
 export const PersonLink: FC<Props> = ({ to, text, sex }) => (
   <NavLink
     to={`../${to}`}
-    className={sex === 'f' ? classNames('has-text-danger') : ''}
+    className={classNames({ 'has-text-danger': sex === 'f' })}
   >
     {text}
   </NavLink>

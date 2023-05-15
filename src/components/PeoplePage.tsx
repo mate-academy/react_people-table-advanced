@@ -4,10 +4,11 @@ import {
 import { useParams, useSearchParams } from 'react-router-dom';
 import { Person } from '../types';
 import { getPeople } from '../api';
-import { PeaopleTable } from './PeopleTable';
+import { PeopleTable } from './PeopleTable';
 import { Loader } from './Loader';
 import { PeopleFilters } from './PeopleFilters';
 import { getSearchWith } from '../utils/searchHelper';
+import { SortOption } from '../types/SortOption';
 
 export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);
@@ -108,14 +109,14 @@ export const PeoplePage = () => {
     }
 
     switch (sort) {
-      case 'name':
-      case 'sex':
+      case SortOption.Name:
+      case SortOption.Sex:
         sortedPeople = sortedPeople
           .sort((personA, personB) => (personA[sort]
             .localeCompare(personB[sort]) * sortDirection));
         break;
-      case 'born':
-      case 'died':
+      case SortOption.Born:
+      case SortOption.Died:
         sortedPeople = sortedPeople
           .sort((
             personA,
@@ -182,7 +183,7 @@ export const PeoplePage = () => {
               {isInPorcess
                 ? <Loader />
                 : (filterAndSortPeople().length > 0 && !isInPorcess) && (
-                  <PeaopleTable
+                  <PeopleTable
                     people={filterAndSortPeople()}
                     link={slug}
                     sort={sort}

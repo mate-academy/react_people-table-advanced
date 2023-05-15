@@ -11,7 +11,7 @@ interface Props {
   order: string
 }
 
-export const PeaopleTable: FC<Props> = ({
+export const PeopleTable: FC<Props> = ({
   people, link = '', sort, order,
 }) => {
   const isSelected = (person: Person) => person.slug === link;
@@ -38,7 +38,7 @@ export const PeaopleTable: FC<Props> = ({
                           ? null
                           : param.toLowerCase(),
                         order: isSelectedSortType && !order
-                          ? 'decs'
+                          ? 'desc'
                           : null,
                       }}
                     >
