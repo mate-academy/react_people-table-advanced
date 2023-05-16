@@ -11,7 +11,7 @@ export const Parent: React.FC<Props> = ({ parent, parentName }) => {
     <>
       {!!parent && <PersonLink person={parent} />}
       {!!parentName && !parent && `${parentName}`}
-      {!parentName && '-'}
+      {!parentName && (<span>-</span>)}
     </>
   );
 };
