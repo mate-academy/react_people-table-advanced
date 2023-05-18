@@ -9,6 +9,8 @@ import { API_URL } from '../../constants/apiUrl';
 export const PeoplePage: FC = () => {
   const { people, isLoading, errorMessage } = useFetch(API_URL);
   const [searchParams] = useSearchParams();
+  const gender = searchParams.get('sex') || null;
+  const query = searchParams.get('query') || null;
 
   const getPerent = (parentName: string | null) => {
     if (parentName) {
@@ -26,18 +28,23 @@ export const PeoplePage: FC = () => {
     };
   }) : [];
 
-  const visiblePeople = peopleWithPerents.filter(({ sex }) => {
-    switch (searchParams.get('sex')) {
-      case 'm':
-        return sex === 'm';
+  const visiblePeople = peopleWithPerents.filter(({
+    sex,
+    name,
+    motherName,
+    fatherName,
+  }) => {
+    const sexFilter = !gender
+    || (gender === 'm' && sex === 'm')
+    || (gender === 'f' && sex === 'f')
+    || (gender === null && true);
 
-      case 'f':
-        return sex === 'f';
+    const queryFilter = !query
+    || [name, motherName, fatherName].some(checkedName => (
+      checkedName?.toLowerCase().includes(query.toLowerCase())
+    ));
 
-      case null:
-      default:
-        return true;
-    }
+    return sexFilter && queryFilter;
   });
 
   return (
