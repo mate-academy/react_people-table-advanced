@@ -5,6 +5,8 @@ import { Loader } from '../Loader';
 import { PeopleTable } from '../PeopleTable/PeopleTable';
 import { PeopleFilters } from '../PeopleFilters/PeopleFilters';
 import { API_URL } from '../../constants/apiUrl';
+// eslint-disable-next-line max-len
+import { filterByCenturies, filterByGender, filterByQuery } from '../../utils/filterFunctions';
 
 export const PeoplePage: FC = () => {
   const { people, isLoading, errorMessage } = useFetch(API_URL);
@@ -31,30 +33,6 @@ export const PeoplePage: FC = () => {
     };
   }) : [];
 
-  const filterByGender = (sexParam: string | null, sexProp: string) => {
-    return !sexParam || (sexParam === sexProp);
-  };
-
-  const filterByQuery = (
-    queryParam: string | null,
-    names: (string | null)[],
-  ) => {
-    return !queryParam
-      || names.some(checkedName => {
-        const lowerCaseName = checkedName?.toLowerCase();
-        const lowerCaseQuery = queryParam.toLowerCase();
-
-        return lowerCaseName && lowerCaseName.includes(lowerCaseQuery);
-      });
-  };
-
-  const filterByCenturies = (centuriesParam: string[], bornProp: number) => {
-    const bornCentury = Math.floor(bornProp / 100) + 1;
-
-    return centuriesParam.length === 0
-      || centuriesParam.includes(bornCentury.toString());
-  };
-
   const visiblePeople = peopleWithPerents.filter(({
     sex,
     name,
@@ -73,39 +51,30 @@ export const PeoplePage: FC = () => {
   });
 
   visiblePeople.sort((a, b) => {
-    if (sort === 'name') {
-      if (order === 'desc') {
-        return b.name.localeCompare(a.name);
-      }
+    switch (sort) {
+      case 'name':
+        return order === 'desc'
+          ? b.name.localeCompare(a.name)
+          : a.name.localeCompare(b.name);
 
-      return a.name.localeCompare(b.name);
+      case 'sex':
+        return order === 'desc'
+          ? b.sex.localeCompare(a.sex)
+          : a.sex.localeCompare(b.sex);
+
+      case 'born':
+        return order === 'desc'
+          ? b.born - a.born
+          : a.born - b.born;
+
+      case 'died':
+        return order === 'desc'
+          ? b.died - a.died
+          : a.died - b.died;
+
+      default:
+        return 0;
     }
-
-    if (sort === 'sex') {
-      if (order === 'desc') {
-        return b.sex.localeCompare(a.sex);
-      }
-
-      return a.sex.localeCompare(b.sex);
-    }
-
-    if (sort === 'born') {
-      if (order === 'desc') {
-        return b.born - a.born;
-      }
-
-      return a.born - b.born;
-    }
-
-    if (sort === 'died') {
-      if (order === 'desc') {
-        return b.died - a.died;
-      }
-
-      return a.died - b.died;
-    }
-
-    return 0;
   });
 
   return (
