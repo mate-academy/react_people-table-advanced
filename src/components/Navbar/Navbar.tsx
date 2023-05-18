@@ -1,7 +1,10 @@
 import { FC } from 'react';
+import { useLocation } from 'react-router-dom';
 import { NavbarLink } from './NavbarLink';
 
 export const Navbar: FC = () => {
+  const location = useLocation();
+
   return (
     <nav
       data-cy="nav"
@@ -12,7 +15,13 @@ export const Navbar: FC = () => {
       <div className="container">
         <div className="navbar-brand">
           <NavbarLink to="/" text="Home" />
-          <NavbarLink to="/people" text="People" />
+          <NavbarLink
+            to={{
+              pathname: '/people',
+              search: location.search,
+            }}
+            text="People"
+          />
         </div>
       </div>
     </nav>

@@ -3,7 +3,7 @@ import { NavLink } from 'react-router-dom';
 import cn from 'classnames';
 
 interface Props {
-  to: string;
+  to: string | { pathname: string; search: string; };
   text: string;
 }
 
