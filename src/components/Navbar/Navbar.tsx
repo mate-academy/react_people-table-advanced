@@ -1,6 +1,6 @@
 import { FC } from 'react';
 import { useLocation } from 'react-router-dom';
-import { NavbarLink } from './NavbarLink';
+import { NavbarLink } from '../NavbarLink';
 
 export const Navbar: FC = () => {
   const location = useLocation();

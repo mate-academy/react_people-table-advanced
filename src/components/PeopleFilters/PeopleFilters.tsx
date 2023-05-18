@@ -1,8 +1,8 @@
 import { FC } from 'react';
 import cn from 'classnames';
 import { useSearchParams } from 'react-router-dom';
-import { getSearchWith } from '../utils/searchHelper';
-import { SearchLink } from './SearchLink';
+import { getSearchWith } from '../../utils/searchHelper';
+import { SearchLink } from '../SearchLink/SearchLink';
 
 export const PeopleFilters: FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
