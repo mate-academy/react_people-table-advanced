@@ -11,6 +11,7 @@ export const PeoplePage: FC = () => {
   const [searchParams] = useSearchParams();
   const gender = searchParams.get('sex') || null;
   const query = searchParams.get('query') || null;
+  const centuries = searchParams.getAll('centuries') || [];
 
   const getPerent = (parentName: string | null) => {
     if (parentName) {
@@ -33,6 +34,7 @@ export const PeoplePage: FC = () => {
     name,
     motherName,
     fatherName,
+    born,
   }) => {
     const sexFilter = !gender
     || (gender === 'm' && sex === 'm')
@@ -44,7 +46,11 @@ export const PeoplePage: FC = () => {
       checkedName?.toLowerCase().includes(query.toLowerCase())
     ));
 
-    return sexFilter && queryFilter;
+    const centuriesFilter = centuries.length === 0 || (
+      centuries && centuries.includes((Math.floor(born / 100) + 1).toString())
+    );
+
+    return sexFilter && queryFilter && centuriesFilter;
   });
 
   return (
@@ -73,9 +79,13 @@ export const PeoplePage: FC = () => {
                 </p>
               )}
 
-              {/* <p>There are no people matching the current search criteria</p> */}
+              {!isLoading && visiblePeople.length === 0 && (
+                <p>There are no people matching the current search criteria</p>
+              )}
 
-              {people && (<PeopleTable people={visiblePeople} />)}
+              {visiblePeople.length !== 0 && (
+                <PeopleTable people={visiblePeople} />
+              )}
             </div>
           </div>
         </div>
