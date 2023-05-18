@@ -22,9 +22,6 @@ export const App = () => {
             </Route>
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
-          {/* <h1 className="title">Home Page</h1>
-          <h1 className="title">Page not found</h1>
-          <PeoplePage /> */}
         </div>
       </main>
     </div>

@@ -1,4 +1,5 @@
 import { FC } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { useFetch } from '../../custom-hooks/useFetch';
 import { Loader } from '../Loader';
 import { PeopleTable } from '../PeopleTable/PeopleTable';
@@ -7,6 +8,7 @@ import { API_URL } from '../../constants/apiUrl';
 
 export const PeoplePage: FC = () => {
   const { people, isLoading, errorMessage } = useFetch(API_URL);
+  const [searchParams] = useSearchParams();
 
   const getPerent = (parentName: string | null) => {
     if (parentName) {
@@ -24,6 +26,20 @@ export const PeoplePage: FC = () => {
     };
   }) : [];
 
+  const visiblePeople = peopleWithPerents.filter(({ sex }) => {
+    switch (searchParams.get('sex')) {
+      case 'm':
+        return sex === 'm';
+
+      case 'f':
+        return sex === 'f';
+
+      case null:
+      default:
+        return true;
+    }
+  });
+
   return (
     <>
       <h1 className="title">People Page</h1>
@@ -31,7 +47,7 @@ export const PeoplePage: FC = () => {
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
           <div className="column is-7-tablet is-narrow-desktop">
-            <PeopleFilters />
+            {people && <PeopleFilters />}
           </div>
 
           <div className="column">
@@ -52,7 +68,7 @@ export const PeoplePage: FC = () => {
 
               {/* <p>There are no people matching the current search criteria</p> */}
 
-              {people && (<PeopleTable people={peopleWithPerents} />)}
+              {people && (<PeopleTable people={visiblePeople} />)}
             </div>
           </div>
         </div>
