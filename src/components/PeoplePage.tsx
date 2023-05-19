@@ -1,18 +1,18 @@
 import { useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { PeopleFilters } from './PeopleFilters';
 import { Loader } from './Loader';
 import { PeopleTable } from './PeopleTable';
 import { getPeople } from '../api';
 import { Person } from '../types';
-import { ErrorType } from '../utils/ErrorType';
 
 export const PeoplePage = () => {
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [people, setPeople] = useState<Person[]>([]);
-  const [error, setError] = useState('');
+  const [isError, setIsError] = useState(false);
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const getData = async () => {
-    setIsLoading(true);
     try {
       const peopleFromServer = await getPeople();
       const peopleWithParents: Person[] = peopleFromServer.map(person => {
@@ -30,7 +30,7 @@ export const PeoplePage = () => {
 
       setPeople(peopleWithParents);
     } catch {
-      setError(ErrorType.DataLoadingError);
+      setIsError(true);
     } finally {
       setIsLoading(false);
     }
@@ -43,37 +43,43 @@ export const PeoplePage = () => {
   return (
     <>
       <h1 className="title">People Page</h1>
-      {isLoading ? (
-        <Loader />
-      ) : (
-        <div className="block">
-          <div className="columns is-desktop is-flex-direction-row-reverse">
-            <>
+      <div className="block">
+        <div className="columns is-desktop is-flex-direction-row-reverse">
+          <>
+            {!isLoading && (
               <div className="column is-7-tablet is-narrow-desktop">
-                <PeopleFilters setPeople={setPeople} />
+                <PeopleFilters
+                  searchParams={searchParams}
+                  setSearchParams={setSearchParams}
+                />
               </div>
+            )}
 
-              <div className="column">
-                <div className="box table-container">
-                  {!!error.length && (
-                    <p data-cy="peopleLoadingError">Something went wrong</p>
-                  )}
+            <div className="column">
+              <div className="box table-container">
+                {isError && (
+                  <p data-cy="peopleLoadingError">Something went wrong</p>
+                )}
 
-                  {!people.length && (
-                    <p data-cy="noPeopleMessage">
-                      There are no people on the server
-                    </p>
-                  )}
+                {!people.length && !isLoading && (
+                  <p data-cy="noPeopleMessage">
+                    There are no people on the server
+                  </p>
+                )}
 
-                  {/* <p>There are no people matching the current search criteria</p> */}
-
-                  <PeopleTable people={people} />
-                </div>
+                {isLoading ? (
+                  <Loader />
+                ) : (
+                  <PeopleTable
+                    initialPeople={people}
+                    searchParams={searchParams}
+                  />
+                )}
               </div>
-            </>
-          </div>
+            </div>
+          </>
         </div>
-      )}
+      </div>
     </>
   );
 };

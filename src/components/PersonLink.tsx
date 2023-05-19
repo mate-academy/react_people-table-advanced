@@ -1,6 +1,6 @@
 import classNames from 'classnames';
 import { FC } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useLocation } from 'react-router-dom';
 
 interface Props {
   name: string;
@@ -9,9 +9,14 @@ interface Props {
 }
 
 export const PersonLink: FC<Props> = ({ name, slug, sex }) => {
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+
+  const updatedUrl = `${slug}?${queryParams.toString()}`;
+
   return (
     <NavLink
-      to={slug}
+      to={updatedUrl}
       className={
         classNames(
           {
@@ -24,5 +29,3 @@ export const PersonLink: FC<Props> = ({ name, slug, sex }) => {
     </NavLink>
   );
 };
-
-export default PersonLink;

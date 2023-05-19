@@ -1,4 +1,6 @@
-import { Route, Routes } from 'react-router-dom';
+import {
+  Navigate, Outlet, Route, Routes,
+} from 'react-router-dom';
 import { PeoplePage } from './components/PeoplePage';
 import { Navbar } from './components/Navbar';
 import './App.scss';
@@ -15,8 +17,9 @@ export const App = () => {
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="people" element={<PeoplePage />}>
-              <Route path=":slug" />
+              <Route path=":slug" element={<Outlet />} />
             </Route>
+            <Route path="home" element={<Navigate to="/" replace />} />
             <Route path="*" element={<PageNotFound />} />
           </Routes>
         </div>
