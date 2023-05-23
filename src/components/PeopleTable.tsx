@@ -1,73 +1,78 @@
 import React, { FC } from 'react';
+import classNames from 'classnames';
 import { useSearchParams } from 'react-router-dom';
 import { Person } from '../types';
 import { Human } from './Human';
+import { SearchLink } from './SearchLink';
+import { SearchParams } from '../utils/searchHelper';
 
 interface Props {
   people: Person[];
 }
 
 export const PeopleTable: FC<Props> = React.memo(({ people }) => {
-  const [search] = useSearchParams();
-  const searchSex = search.get('sex');
-  const query = search.get('query') || '';
-  const choiceCenturies = search.getAll('centuries');
-
-  const visiblePeople = people.filter(({
-    name, sex, born,
-  }) => {
-    const filterSex = searchSex === sex || searchSex === null;
-
-    const lowerName = name.toLowerCase();
-    const lowerQuery = query.toLowerCase().trim();
-    const filterName = lowerName.includes(lowerQuery);
-
-    const personCenturies = Math.round(born / 100).toString();
-    const filterCenturies = choiceCenturies.length === 0
-      || choiceCenturies.includes(personCenturies);
-
-    return filterSex && filterName && filterCenturies;
-  });
+  const [searchParams] = useSearchParams();
+  const sort = searchParams.get('sort');
+  const order = searchParams.get('order');
 
   return (
-    <>
-      {visiblePeople.length
-        ? (
-          <table
-            data-cy="peopleTable"
-            className="table is-striped is-hoverable is-narrow is-fullwidth"
-          >
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Sex</th>
-                <th>Born</th>
-                <th>Died</th>
-                <th>Mother</th>
-                <th>Father</th>
-              </tr>
-            </thead>
+    <table
+      data-cy="peopleTable"
+      className="table is-striped is-hoverable is-narrow is-fullwidth"
+    >
+      <thead>
+        <tr>
+          {['Name', 'Sex', 'Born', 'Died'].map(columnName => {
+            const lowerColumnName = columnName.toLowerCase();
+            const isThisColumn = sort === lowerColumnName;
 
-            <tbody>
-              {visiblePeople.map(person => {
-                const human = {
-                  ...person,
-                  father: people.find(({ name }) => (
-                    name === person.fatherName
-                  )),
-                  mother: people.find(({ name }) => (
-                    name === person.motherName
-                  )),
-                };
+            const params: SearchParams = {
+              ...(!isThisColumn && { sort: lowerColumnName, order: null }),
+              ...(isThisColumn && !order && { order: 'desc' }),
+              ...(isThisColumn && order && { sort: null, order: null }),
+            };
 
-                return (
-                  <Human key={person.name} person={human} />
-                );
-              })}
-            </tbody>
-          </table>
-        )
-        : 'There are no people matching the current search criteria'}
-    </>
+            return (
+              <th key={columnName}>
+                <span className="is-flex is-flex-wrap-nowrap">
+                  {columnName}
+                  <SearchLink params={params}>
+                    <span className="icon">
+                      <i className={classNames('fas', {
+                        'fa-sort': !isThisColumn,
+                        'fa-sort-up': isThisColumn && !order,
+                        'fa-sort-down': isThisColumn && order,
+                      })}
+                      />
+                    </span>
+                  </SearchLink>
+                </span>
+              </th>
+            );
+          })}
+
+          <th>Mother</th>
+          <th>Father</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        {people.map(person => {
+          const human = {
+            ...person,
+            father: people.find(({ name }) => (
+              name === person.fatherName
+            )),
+            mother: people.find(({ name }) => (
+              name === person.motherName
+            )),
+          };
+
+          return (
+            <Human key={person.name} person={human} />
+          );
+        })}
+      </tbody>
+    </table>
   );
 });
