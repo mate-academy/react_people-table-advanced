@@ -86,12 +86,6 @@ export const PeoplePage = () => {
                 </p>
               )}
 
-              {false && (
-                <p>
-                  There are no people matching the current search criteria
-                </p>
-              )}
-
               {hasTable && (
                 <PeopleTable
                   people={visiblePeople}
