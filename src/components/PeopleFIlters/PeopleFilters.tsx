@@ -1,6 +1,8 @@
 import cn from 'classnames';
 import { Link, useSearchParams } from 'react-router-dom';
 import { getSearchWith } from '../../utils/searchHelper';
+import { NameFilterPanel } from '../NameFilterPanel';
+import { SexFilterPanel } from '../SexFilterPanel';
 
 export const PeopleFilters: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -20,49 +22,9 @@ export const PeopleFilters: React.FC = () => {
     <nav className="panel">
       <p className="panel-heading">Filters</p>
 
-      <p className="panel-tabs" data-cy="SexFilter">
-        <Link
-          className={cn({ 'is-active': !sex })}
-          to={{
-            search: getSearchWith(searchParams, { sex: null }),
-          }}
-        >
-          All
-        </Link>
-        <Link
-          className={cn({ 'is-active': sex === 'm' })}
-          to={{
-            search: getSearchWith(searchParams, { sex: 'm' }),
-          }}
-        >
-          Male
-        </Link>
-        <Link
-          className={cn({ 'is-active': sex === 'f' })}
-          to={{
-            search: getSearchWith(searchParams, { sex: 'f' }),
-          }}
-        >
-          Female
-        </Link>
-      </p>
+      <SexFilterPanel sex={sex} searchParams={searchParams} />
 
-      <div className="panel-block">
-        <p className="control has-icons-left">
-          <input
-            data-cy="NameFilter"
-            type="search"
-            className="input"
-            placeholder="Search"
-            value={query || ''}
-            onChange={handleQueryChange}
-          />
-
-          <span className="icon is-left">
-            <i className="fas fa-search" aria-hidden="true" />
-          </span>
-        </p>
-      </div>
+      <NameFilterPanel query={query} onQueryChange={handleQueryChange} />
 
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
