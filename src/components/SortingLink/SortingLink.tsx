@@ -18,7 +18,7 @@ export const SortingLink: React.FC<Props> = ({
   searchParams,
 }) => {
   const formattedSortType = sortType[0].toUpperCase()
-              + sortType.slice(1);
+    + sortType.slice(1);
 
   const {
     sortingParams,

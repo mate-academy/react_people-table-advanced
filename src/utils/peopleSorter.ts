@@ -47,6 +47,7 @@ export const getSortingInfo = (
 
   const isFirstClick = !isSortedByCurrentType && !isDescOrdered;
   const isSecondClick = isSortedByCurrentType && !isDescOrdered;
+  const isThirdClick = isSortedByCurrentType && isDescOrdered;
 
   if (isFirstClick) {
     return { sortingParams: { sort: sortType, order: null }, clicks: 1 };
@@ -56,5 +57,9 @@ export const getSortingInfo = (
     return { sortingParams: { sort: sortType, order: 'desc' }, clicks: 2 };
   }
 
-  return { sortingParams: { sort: null, order: null }, clicks: 3 };
+  if (isThirdClick) {
+    return { sortingParams: { sort: null, order: null }, clicks: 3 };
+  }
+
+  return { sortingParams: { sort: null, order: null }, clicks: 1 };
 };
