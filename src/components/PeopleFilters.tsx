@@ -4,6 +4,7 @@ import { SearchLink } from './SearchLink';
 import { getSearchWith } from '../utils/searchHelper';
 
 export const PeopleFilters = () => {
+  const centuries = ['16', '17', '18', '19', '20'];
   const [searchParams, setSearchParams] = useSearchParams();
   const sexFilter = searchParams.get('sex');
   const centuryFilter = searchParams.getAll('centuries');
@@ -63,7 +64,7 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            {['16', '17', '18', '19', '20'].map(century => (
+            {centuries.map(century => (
               <SearchLink
                 key={century}
                 data-cy="century"
