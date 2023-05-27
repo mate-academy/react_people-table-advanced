@@ -2,14 +2,14 @@ import { Navigate, Route, Routes } from 'react-router-dom';
 import { PeoplePage } from './pages/PeoplePage';
 import { HomePage } from './pages/HomePage';
 import { NotFoundPage } from './pages/NotFoundPage';
-import { NavBar } from './components/NavBar';
+import { Navbar } from './components/Navbar';
 
 import './App.scss';
 
 export const App = () => {
   return (
     <div data-cy="app">
-      <NavBar />
+      <Navbar />
 
       <div className="section">
         <div className="container">
