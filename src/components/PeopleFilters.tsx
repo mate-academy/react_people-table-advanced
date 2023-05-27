@@ -9,6 +9,11 @@ type SearchGetter = (
   params: { [key: string]: string[] | string | null }
 ) => string;
 
+const centuriesList = Array.from(
+  { length: centFilterLength },
+  (_, index) => String(index + firstCentury),
+);
+
 export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const sex = searchParams.get('sex') || '';
@@ -21,15 +26,21 @@ export const PeopleFilters = () => {
     Object.entries(params).forEach(([key, value]) => {
       if (value === null) {
         updatedSearchParams.delete(key);
-      } else if (Array.isArray(value)) {
+
+        return;
+      }
+
+      if (Array.isArray(value)) {
         updatedSearchParams.delete(key);
 
         value.forEach(entry => {
           updatedSearchParams.append(key, entry);
         });
-      } else {
-        updatedSearchParams.set(key, value);
+
+        return;
       }
+
+      updatedSearchParams.set(key, value);
     });
 
     return updatedSearchParams.toString();
@@ -100,27 +111,28 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            {Array.from(
-              { length: centFilterLength },
-              (_, index) => String(index + firstCentury),
-            ).map(century => (
-              <Link
-                data-cy="century"
-                to={{
-                  search: getSearchWith({
-                    centuries: centuries.includes(century)
-                      ? centuries.filter(cntr => cntr !== century)
-                      : [...centuries, century],
-                  }),
-                }}
-                className={cn('button', 'mr-1', {
-                  'is-info': centuries.includes(century),
-                })}
-                key={century}
-              >
-                {century}
-              </Link>
-            ))}
+            {centuriesList.map(century => {
+              const isChosenCentury = centuries.includes(century);
+
+              return (
+                <Link
+                  data-cy="century"
+                  to={{
+                    search: getSearchWith({
+                      centuries: isChosenCentury
+                        ? centuries.filter(cntr => cntr !== century)
+                        : [...centuries, century],
+                    }),
+                  }}
+                  className={cn('button', 'mr-1', {
+                    'is-info': isChosenCentury,
+                  })}
+                  key={century}
+                >
+                  {century}
+                </Link>
+              );
+            })}
           </div>
 
           <div className="level-right ml-4">

@@ -5,10 +5,10 @@ import { Person } from '../types';
 import { PersonItem } from './PersonItem';
 
 export type Props = {
-  peopleList: Person[];
+  people: Person[];
 };
 
-export const PeopleTable: FC<Props> = ({ peopleList }) => {
+export const PeopleTable: FC<Props> = ({ people }) => {
   const [searchParams] = useSearchParams();
   const sort = searchParams.get('sort') || '';
   const order = searchParams.get('order') || '';
@@ -128,7 +128,7 @@ export const PeopleTable: FC<Props> = ({ peopleList }) => {
       </thead>
 
       <tbody>
-        {peopleList.map(person => (
+        {people.map(person => (
           <PersonItem person={person} key={person.slug} />
         ))}
       </tbody>
