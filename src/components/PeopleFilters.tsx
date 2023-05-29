@@ -22,6 +22,10 @@ export const PeopleFilters: FC<Props> = memo(({ sex }) => {
   const query = searchParams.get('query') || '';
   const centuries = searchParams.getAll('centuries') || [];
 
+  const isCurrentCentries = useCallback((centurie: string) => {
+    centuries.includes(centurie);
+  }, [centuries]);
+
   const handleCenturies = useCallback((num: string) => {
     if (centuries.includes(num)) {
       return centuries.filter(centurie => centurie !== num);
@@ -94,7 +98,7 @@ export const PeopleFilters: FC<Props> = memo(({ sex }) => {
                 data-cy="century"
                 key={currentCenturie}
                 className={classNames('button mr-1', {
-                  'is-info': centuries.includes(currentCenturie),
+                  'is-info': isCurrentCentries(currentCenturie),
                 })}
                 params={{ centuries: handleCenturies(currentCenturie) }}
               >

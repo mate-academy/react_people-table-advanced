@@ -1,5 +1,4 @@
 import {
-  memo,
   useCallback,
   useEffect,
   useMemo,
@@ -13,14 +12,9 @@ import { Person } from '../types';
 import { PeopleTable } from './PeopleTable';
 import { Sex } from '../types/SexEnum';
 import { SortType } from '../types/SortEnum';
+import { toFindParents } from '../utils/findParents';
 
-const toFindParents = (people: Person[], personName: string | null) => {
-  const personParent = people.find(({ name }) => name === personName);
-
-  return personParent;
-};
-
-export const PeoplePage = memo(() => {
+export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);
   const [error, setError] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -37,13 +31,11 @@ export const PeoplePage = memo(() => {
     try {
       const allPeople = await getPeople();
       const peopleWithParents = allPeople.map((person) => {
-        return (
-          {
-            ...person,
-            mother: toFindParents(allPeople, person.motherName),
-            father: toFindParents(allPeople, person.fatherName),
-          }
-        );
+        return ({
+          ...person,
+          mother: toFindParents(allPeople, person.motherName),
+          father: toFindParents(allPeople, person.fatherName),
+        });
       });
 
       if (allPeople.length) {
@@ -58,10 +50,6 @@ export const PeoplePage = memo(() => {
     }
   }, []);
 
-  useEffect(() => {
-    getPeopleFromServer();
-  }, []);
-
   const filterBySex = useCallback((personSex: string) => {
     return !sex
       ? true
@@ -74,14 +62,13 @@ export const PeoplePage = memo(() => {
     motherName: string | null,
   ) => {
     return name.toLowerCase().includes(query)
-    || fatherName?.toLowerCase().includes(query)
-    || motherName?.toLowerCase().includes(query);
+      || fatherName?.toLowerCase().includes(query)
+      || motherName?.toLowerCase().includes(query);
   }, [query]);
 
   const filterByCenturies = useCallback((year: number) => {
     return !centuries.length
-      ? true
-      : centuries.includes(String(Math.round(year / 100)));
+      || centuries.includes(String(Math.round(year / 100)));
   }, [centuries]);
 
   const toSortByType = useCallback((filteredPeople: Person[]) => {
@@ -120,6 +107,10 @@ export const PeoplePage = memo(() => {
     return toSortByType(filteredPeople);
   }, [people, sex, query, centuries]);
 
+  useEffect(() => {
+    getPeopleFromServer();
+  }, []);
+
   return (
     <>
       <h1 className="title">People Page</h1>
@@ -128,9 +119,7 @@ export const PeoplePage = memo(() => {
         <div className="columns is-desktop is-flex-direction-row-reverse">
           {people.length !== 0 && (
             <div className="column is-7-tablet is-narrow-desktop">
-              <PeopleFilters
-                sex={sex}
-              />
+              <PeopleFilters sex={sex} />
             </div>
           )}
 
@@ -171,4 +160,4 @@ export const PeoplePage = memo(() => {
       </div>
     </>
   );
-});
+};

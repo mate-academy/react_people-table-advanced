@@ -43,26 +43,30 @@ export const PeopleTable: FC<Props> = memo(({
           >
             <thead>
               <tr>
-                {tableColumn.map(columnName => (
-                  <th key={columnName}>
-                    <span className="is-flex is-flex-wrap-nowrap">
-                      {columnName}
-                      <SearchLink
-                        params={handleSortParams(columnName.toLowerCase())}
-                      >
-                        <span className="icon">
-                          <i className={classNames('fas fa-sort', {
-                            'fa-sort-up': columnName.toLowerCase() === sort
-                              && !order,
-                            'fa-sort-down': columnName.toLowerCase() === sort
-                              && order,
-                          })}
-                          />
-                        </span>
-                      </SearchLink>
-                    </span>
-                  </th>
-                ))}
+                {tableColumn.map(columnName => {
+                  const isSortUp = columnName.toLowerCase() === sort && !order;
+                  const isSortDown = columnName.toLowerCase() === sort && order;
+
+                  return (
+                    <th key={columnName}>
+                      <span className="is-flex is-flex-wrap-nowrap">
+                        {columnName}
+
+                        <SearchLink
+                          params={handleSortParams(columnName.toLowerCase())}
+                        >
+                          <span className="icon">
+                            <i className={classNames('fas fa-sort', {
+                              'fa-sort-up': isSortUp,
+                              'fa-sort-down': isSortDown,
+                            })}
+                            />
+                          </span>
+                        </SearchLink>
+                      </span>
+                    </th>
+                  );
+                })}
 
                 <th>Mother</th>
                 <th>Father</th>
