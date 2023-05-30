@@ -32,10 +32,11 @@ export const TableHeader: FC<Props> = ({ name }) => {
         {name}
         <SearchLink params={getSearchParams(tableHeadName)}>
           <span className="icon">
-            <i className={classNames('fas',
-              { 'fa-sort': sort !== tableHeadName },
-              { 'fas fa-sort-up': sort === tableHeadName && !order },
-              { 'fas fa-sort-down': sort === tableHeadName && order })}
+            <i className={classNames('fas', {
+              'fa-sort': sort !== tableHeadName,
+              'fas fa-sort-up': sort === tableHeadName && !order,
+              'fas fa-sort-down': sort === tableHeadName && order,
+            })}
             />
           </span>
         </SearchLink>

@@ -5,19 +5,20 @@ import { SearchLink } from './SearchLink';
 import { getSearchWith } from '../utils/searchHelper';
 
 export const PeopleFilters = () => {
+  const CENTURIES = ['16', '17', '18', '19', '20'];
   const [searchParams, setSearchParams] = useSearchParams();
 
   const sex = searchParams.get('sex') || null;
   const query = searchParams.get('query') || '';
   const centuries = searchParams.getAll('centuries') || [];
 
-  const handleQuery = useCallback(
-    (event: React.ChangeEvent<HTMLInputElement>) => {
-      setSearchParams(
-        getSearchWith(searchParams, { query: event.target.value || null }),
-      );
-    }, [query],
-  );
+  const handleQuery = useCallback((
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    setSearchParams(
+      getSearchWith(searchParams, { query: event.target.value || null }),
+    );
+  }, [query]);
 
   const handleCenturyParams = useCallback((century: string) => (
     {
@@ -74,7 +75,7 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            {['16', '17', '18', '19', '20'].map(century => (
+            {CENTURIES.map(century => (
               <SearchLink
                 data-cy="century"
                 key={century}

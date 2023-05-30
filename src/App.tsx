@@ -5,6 +5,7 @@ import { Navbar } from './components/Navbar';
 
 import './App.scss';
 import { PageNotFound } from './components/PageNotFound';
+import { HomePage } from './components/HomePage';
 
 export const App = () => {
   return (
@@ -14,7 +15,7 @@ export const App = () => {
       <div className="section">
         <div className="container">
           <Routes>
-            <Route path="/" element={<h1 className="title">Home Page</h1>} />
+            <Route path="/" element={<HomePage />} />
             <Route path="/home" element={<Navigate to="/" replace />} />
 
             <Route path="/people">

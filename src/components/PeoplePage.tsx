@@ -1,4 +1,9 @@
-import { useCallback, useEffect, useState } from 'react';
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { PeopleFilters } from './PeopleFilters';
 import { Loader } from './Loader';
@@ -18,7 +23,7 @@ export const PeoplePage = () => {
   const query = searchParams.get('query') || '';
   const centuries = searchParams.getAll('centuries');
 
-  const fetchPeople = async () => {
+  const fetchPeople = useCallback(async () => {
     try {
       const fetchedPeople = await getPeople();
 
@@ -40,7 +45,7 @@ export const PeoplePage = () => {
     }
 
     setIsLoading(false);
-  };
+  }, []);
 
   const filterByQuery = useCallback(((person: Person) => {
     const preparedQuery = query.toLowerCase();
@@ -64,32 +69,34 @@ export const PeoplePage = () => {
     return centuries.length ? centuries.includes(personsBornCentury) : true;
   }), [centuries]);
 
-  const visiblePeople = people.filter(person => {
-    return filterByQuery(person)
-    && filterBySex(person)
-    && filterByCentury(person);
-  });
+  const visiblePeople = useMemo(() => {
+    return people
+      .filter(person => {
+        return filterByQuery(person)
+        && filterBySex(person)
+        && filterByCentury(person);
+      })
+      .sort((first, second) => {
+        switch (sort) {
+          case 'name':
+          case 'sex':
+            return (order === 'desc'
+              ? second[sort].localeCompare(first[sort])
+              : first[sort].localeCompare(second[sort])
+            );
 
-  visiblePeople.sort((first, second) => {
-    switch (sort) {
-      case 'name':
-      case 'sex':
-        return (order === 'desc'
-          ? second[sort].localeCompare(first[sort])
-          : first[sort].localeCompare(second[sort])
-        );
+          case 'born':
+          case 'died':
+            return (order === 'desc'
+              ? second[sort] - first[sort]
+              : first[sort] - second[sort]
+            );
 
-      case 'born':
-      case 'died':
-        return (order === 'desc'
-          ? second[sort] - first[sort]
-          : first[sort] - second[sort]
-        );
-
-      default:
-        return 0;
-    }
-  });
+          default:
+            return 0;
+        }
+      });
+  }, [people, sort, order, filterByQuery, filterBySex, filterByCentury]);
 
   useEffect(() => {
     fetchPeople();
