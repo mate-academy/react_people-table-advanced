@@ -1,12 +1,78 @@
-export const PeopleFilters = () => {
+import React from 'react';
+import { NavLink } from 'react-router-dom';
+import cn from 'classnames';
+
+interface Props {
+  sexFilterHandler: (value: string) => void,
+  setCurrentQuery: (value: string) => void,
+  query: string,
+  deleteQuery: () => void,
+  handleCenturySelection: (value: number) => void,
+  selecetedCentury: number[],
+  allCenturySelection: () => void,
+  resetEveryThing: () => void,
+}
+
+export const PeopleFilters: React.FC<Props> = ({
+  sexFilterHandler,
+  setCurrentQuery,
+  query,
+  deleteQuery,
+  handleCenturySelection,
+  selecetedCentury,
+  allCenturySelection,
+  resetEveryThing,
+}) => {
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        <a className="is-active" href="#/people">All</a>
-        <a className="" href="#/people?sex=m">Male</a>
-        <a className="" href="#/people?sex=f">Female</a>
+        <NavLink
+          className={({ isActive }) => (
+            cn(
+              'navbar-item',
+              {
+                'is-active': isActive,
+              },
+            )
+          )}
+          to="#/people"
+          onClick={() => sexFilterHandler('All')}
+          role="button"
+        >
+          All
+        </NavLink>
+        <NavLink
+          className={({ isActive }) => (
+            cn(
+              'navbar-item',
+              {
+                'is-active': isActive,
+              },
+            )
+          )}
+          to="#/people?sex=m"
+          onClick={() => sexFilterHandler('Male')}
+          role="button"
+        >
+          Male
+        </NavLink>
+        <NavLink
+          className={({ isActive }) => (
+            cn(
+              'navbar-item',
+              {
+                'is-active': isActive,
+              },
+            )
+          )}
+          to="#/people?sex=f"
+          onClick={() => sexFilterHandler('Female')}
+          role="button"
+        >
+          Female
+        </NavLink>
       </p>
 
       <div className="panel-block">
@@ -16,10 +82,18 @@ export const PeopleFilters = () => {
             type="search"
             className="input"
             placeholder="Search"
+            value={query}
+            onChange={(event) => {
+              setCurrentQuery(event.target.value);
+            }}
           />
 
           <span className="icon is-left">
-            <i className="fas fa-search" aria-hidden="true" />
+            <i
+              className="fas fa-search"
+              aria-hidden="true"
+              onClick={deleteQuery}
+            />
           </span>
         </p>
       </div>
@@ -27,66 +101,83 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            <a
+            <NavLink
               data-cy="century"
-              className="button mr-1"
-              href="#/people?centuries=16"
+              className={selecetedCentury.includes(15)
+                ? 'button mr-1 is-info'
+                : 'button mr-1'}
+              to="#/people?centuries=16"
+              onClick={() => handleCenturySelection(15)}
             >
               16
-            </a>
+            </NavLink>
 
-            <a
+            <NavLink
               data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=17"
+              className={selecetedCentury.includes(16)
+                ? 'button mr-1 is-info'
+                : 'button mr-1'}
+              to="#/people?centuries=17"
+              onClick={() => handleCenturySelection(16)}
             >
               17
-            </a>
+            </NavLink>
 
-            <a
+            <NavLink
               data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=18"
+              className={selecetedCentury.includes(17)
+                ? 'button mr-1 is-info'
+                : 'button mr-1'}
+              to="#/people?centuries=18"
+              onClick={() => handleCenturySelection(17)}
             >
               18
-            </a>
+            </NavLink>
 
-            <a
+            <NavLink
               data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=19"
+              className={selecetedCentury.includes(18)
+                ? 'button mr-1 is-info'
+                : 'button mr-1'}
+              to="#/people?centuries=19"
+              onClick={() => handleCenturySelection(18)}
             >
               19
-            </a>
+            </NavLink>
 
-            <a
+            <NavLink
               data-cy="century"
-              className="button mr-1"
-              href="#/people?centuries=20"
+              className={selecetedCentury.includes(19)
+                ? 'button mr-1 is-info'
+                : 'button mr-1'}
+              to="#/people?centuries=20"
+              onClick={() => handleCenturySelection(19)}
             >
               20
-            </a>
+            </NavLink>
           </div>
 
           <div className="level-right ml-4">
-            <a
+            <NavLink
               data-cy="centuryALL"
               className="button is-success is-outlined"
-              href="#/people"
+              to="#/people"
+              onClick={() => allCenturySelection()}
             >
               All
-            </a>
+            </NavLink>
           </div>
         </div>
       </div>
 
       <div className="panel-block">
-        <a
+        <NavLink
           className="button is-link is-outlined is-fullwidth"
-          href="#/people"
+          to="#/people"
+          onClick={resetEveryThing}
         >
           Reset all filters
-        </a>
+        </NavLink>
       </div>
     </nav>
   );

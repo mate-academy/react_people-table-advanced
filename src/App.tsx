@@ -1,18 +1,111 @@
+import React, { useState, useEffect } from 'react';
+import { Routes, Route } from 'react-router-dom';
 import { PeoplePage } from './components/PeoplePage';
 import { Navbar } from './components/Navbar';
-
+import { HomePage } from './components/homePage';
+import { PageNotFound } from './components/pageNotFound';
+import { Person, NewPerson } from './types';
+import { getPeople } from './api';
 import './App.scss';
 
-export const App = () => {
+export const App: React.FC = () => {
+  const [people, setPeople] = useState<Person[]>([]);
+  const [newPeople, setNewPeople] = useState<NewPerson[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [sexFilter, setSexFilter] = useState('All');
+  const [query, setQuery] = useState('');
+  const [isError, setIsError] = useState(false);
+
+  const sexFilterHandler = (value:string) => {
+    setSexFilter(value);
+  };
+
+  const deleteQuery = () => {
+    setQuery('');
+  };
+
+  async function peopleArr() {
+    try {
+      const fetchedData = await getPeople();
+
+      setLoading(false);
+      setPeople(fetchedData);
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('Error occurred:', error);
+      setIsError(true);
+    }
+  }
+
+  useEffect(() => {
+    peopleArr();
+
+    const updatedPeople = people.map((person, index) => {
+      return {
+        ...person,
+        index: index + 1,
+      };
+    });
+
+    setNewPeople(updatedPeople);
+  });
+
   return (
     <div data-cy="app">
       <Navbar />
 
       <div className="section">
         <div className="container">
-          <h1 className="title">Home Page</h1>
-          <h1 className="title">Page not found</h1>
-          <PeoplePage />
+          <Routes>
+            <Route path="*" element={<PageNotFound />} />
+            <Route path="/" element={<HomePage />} />
+            <Route
+              path="/people"
+              element={(
+                <PeoplePage
+                  people={newPeople}
+                  loading={loading}
+                  sexFilter={sexFilter}
+                  sexFilterHandler={sexFilterHandler}
+                  query={query}
+                  setQuery={setQuery}
+                  deleteQuery={deleteQuery}
+                  isError={isError}
+                />
+              )}
+            >
+              <Route
+                path={`:${sexFilter}`}
+                element={(
+                  <PeoplePage
+                    people={newPeople}
+                    loading={loading}
+                    sexFilter={sexFilter}
+                    sexFilterHandler={sexFilterHandler}
+                    query={query}
+                    setQuery={setQuery}
+                    deleteQuery={deleteQuery}
+                    isError={isError}
+                  />
+                )}
+              />
+              <Route
+                path={`:${query}`}
+                element={(
+                  <PeoplePage
+                    people={newPeople}
+                    loading={loading}
+                    sexFilter={sexFilter}
+                    sexFilterHandler={sexFilterHandler}
+                    query={query}
+                    setQuery={setQuery}
+                    deleteQuery={deleteQuery}
+                    isError={isError}
+                  />
+                )}
+              />
+            </Route>
+          </Routes>
         </div>
       </div>
     </div>
