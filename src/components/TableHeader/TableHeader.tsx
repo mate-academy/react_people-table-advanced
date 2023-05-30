@@ -14,7 +14,7 @@ export const TableHeader: FC<Props> = ({ title }) => {
   const sortValue = title.toLowerCase();
 
   const getParams = (searchParam: string) => {
-    if (sort === null && order === null) {
+    if (!sort && !order) {
       return { sort: searchParam, order: null };
     }
 
