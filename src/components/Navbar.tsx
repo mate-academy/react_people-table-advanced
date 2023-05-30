@@ -1,3 +1,5 @@
+import { MenuLink } from './MenuLink';
+
 export const Navbar = () => {
   return (
     <nav
@@ -8,15 +10,8 @@ export const Navbar = () => {
     >
       <div className="container">
         <div className="navbar-brand">
-          <a className="navbar-item" href="#/">Home</a>
-
-          <a
-            aria-current="page"
-            className="navbar-item has-background-grey-lighter"
-            href="#/people"
-          >
-            People
-          </a>
+          <MenuLink to="/" text="Home" />
+          <MenuLink to="people" text="People" />
         </div>
       </div>
     </nav>
