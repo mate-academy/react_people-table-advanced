@@ -40,6 +40,7 @@ export const PeoplePage: FC = () => {
   const loadPeople = async () => {
     setIsLoading(true);
     setIsError(false);
+
     try {
       const peopleResponse = await getPeople();
 
@@ -81,17 +82,17 @@ export const PeoplePage: FC = () => {
                 </p>
               )}
 
-              {!visiblePeople && !isError && !isLoading && (
+              {!people.length && !isError && !isLoading && (
                 <p data-cy="noPeopleMessage">
                   There are no people on the server
                 </p>
               )}
 
-              {!visiblePeople.length && !isLoading && (
+              {!visiblePeople.length && people.length > 0 && (
                 <p>There are no people matching the current search criteria</p>
               )}
 
-              {visiblePeople.length > 0 && (
+              {visiblePeople.length > 0 && !isLoading && (
                 <PeopleTable
                   people={visiblePeople}
                   sort={sort}

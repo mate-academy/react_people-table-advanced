@@ -18,9 +18,6 @@ export const PeopleTable: FC<Props> = ({ people, sort, order }) => {
   const { slug: selectedSlug } = useParams();
   const [searchParams] = useSearchParams();
 
-  // const sort = searchParams.get(FilterType.SORT) || null;
-  // const order = searchParams.get(FilterType.ORDER) || null;
-
   return (
     <table
       data-cy="peopleTable"
