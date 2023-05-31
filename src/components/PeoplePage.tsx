@@ -88,7 +88,7 @@ export const PeoplePage: React.FC<Props> = ({
   };
 
   const updatedPeople = people.map((child) => {
-    if (child.motherName === null && child.fatherName === null) {
+    if (!child.motherName && !child.fatherName) {
       return {
         ...child,
         motherName: '-',
@@ -96,14 +96,14 @@ export const PeoplePage: React.FC<Props> = ({
       };
     }
 
-    if (child.fatherName === null) {
+    if (!child.fatherName) {
       return {
         ...child,
         fatherName: '-',
       };
     }
 
-    if (child.motherName === null) {
+    if (!child.motherName) {
       return {
         ...child,
         motherName: '-',
@@ -151,62 +151,36 @@ export const PeoplePage: React.FC<Props> = ({
     setIsfiltered(true);
   }, [query, sexFilter, selectedCentury]);
 
+  const filterAscOrDesc = () => {
+    return filteredPeople.sort((elem1, elem2) => {
+      switch (propName) {
+        case 'name':
+        case 'sex':
+          return sortOrder === 'asc'
+            ? elem1[propName].localeCompare(elem2[propName])
+            : elem2[propName].localeCompare(elem1[propName]);
+
+        case 'born':
+        case 'died':
+          return sortOrder === 'asc'
+            ? elem1[propName] - elem2[propName]
+            : elem2[propName] - elem1[propName];
+
+        default:
+          return elem1.index - elem2.index;
+      }
+    });
+  };
+
+  const filterOg = () => {
+    return filteredPeople.sort((elem1, elem2) => elem1.index - elem2.index);
+  };
+
   useEffect(() => {
     if (sortOrder === 'og') {
-      filteredPeople.sort((elem1, elem2) => elem1.index - elem2.index);
+      filterOg();
     } else {
-      filteredPeople.sort((elem1, elem2) => {
-        switch (propName) {
-          case 'name':
-            if (sortOrder === 'asc') {
-              return elem1.name.localeCompare(elem2.name);
-            }
-
-            if (sortOrder === 'desc') {
-              return elem2.name.localeCompare(elem1.name);
-            }
-
-            break;
-
-          case 'sex':
-            if (sortOrder === 'asc') {
-              return elem1.sex.localeCompare(elem2.sex);
-            }
-
-            if (sortOrder === 'desc') {
-              return elem2.sex.localeCompare(elem1.sex);
-            }
-
-            break;
-
-          case 'born':
-            if (sortOrder === 'asc') {
-              return elem1.born - elem2.born;
-            }
-
-            if (sortOrder === 'desc') {
-              return elem2.born - elem1.born;
-            }
-
-            break;
-
-          case 'died':
-            if (sortOrder === 'asc') {
-              return elem1.died - elem2.died;
-            }
-
-            if (sortOrder === 'desc') {
-              return elem2.died - elem1.died;
-            }
-
-            break;
-
-          default:
-            return 0;
-        }
-
-        return elem1.index - elem2.index;
-      });
+      filterAscOrDesc();
     }
   }, [propName, sortOrder, clickCount]);
 

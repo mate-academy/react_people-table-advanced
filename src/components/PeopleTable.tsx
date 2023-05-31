@@ -15,7 +15,6 @@ export const PeopleTable: React.FC<Props> = ({
   propName,
 }) => {
   const [selectedName, setSelectedName] = useState('');
-
   const handleSelection
   = (event: React.MouseEvent<HTMLAnchorElement>, name: string) => {
     event.preventDefault();
@@ -50,7 +49,6 @@ export const PeopleTable: React.FC<Props> = ({
               </a>
             </span>
           </th>
-
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Sex
@@ -71,7 +69,6 @@ export const PeopleTable: React.FC<Props> = ({
               </a>
             </span>
           </th>
-
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Born
@@ -92,7 +89,6 @@ export const PeopleTable: React.FC<Props> = ({
               </a>
             </span>
           </th>
-
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Died
@@ -113,7 +109,6 @@ export const PeopleTable: React.FC<Props> = ({
               </a>
             </span>
           </th>
-
           <th>Mother</th>
           <th>Father</th>
         </tr>

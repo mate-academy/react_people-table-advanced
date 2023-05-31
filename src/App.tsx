@@ -3,7 +3,7 @@ import { Routes, Route } from 'react-router-dom';
 import { PeoplePage } from './components/PeoplePage';
 import { Navbar } from './components/Navbar';
 import { HomePage } from './components/homePage';
-import { PageNotFound } from './components/pageNotFound';
+import { PageNotFound } from './components/PageNotFound';
 import { Person, NewPerson } from './types';
 import { getPeople } from './api';
 import './App.scss';
@@ -24,7 +24,7 @@ export const App: React.FC = () => {
     setQuery('');
   };
 
-  async function peopleArr() {
+  async function fetchPeople() {
     try {
       const fetchedData = await getPeople();
 
@@ -38,7 +38,7 @@ export const App: React.FC = () => {
   }
 
   useEffect(() => {
-    peopleArr();
+    fetchPeople();
 
     const updatedPeople = people.map((person, index) => {
       return {
