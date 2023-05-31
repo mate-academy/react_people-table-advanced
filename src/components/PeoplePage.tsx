@@ -1,4 +1,6 @@
-import { FC, useEffect, useState } from 'react';
+import {
+  FC, useCallback, useEffect, useMemo, useState,
+} from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Loader } from './Loader';
 import { Person } from '../types';
@@ -17,7 +19,7 @@ export const PeoplePage: FC = () => {
   const sort = search.get('sort');
   const order = search.get('order');
 
-  const loadPeople = async () => {
+  const loadPeople = useCallback(async () => {
     setIsLoading(true);
 
     try {
@@ -29,13 +31,13 @@ export const PeoplePage: FC = () => {
     }
 
     setIsLoading(false);
-  };
+  }, []);
 
   useEffect(() => {
     loadPeople();
   }, []);
 
-  const visiblePeople = people.filter(({
+  const visiblePeople = useMemo(() => people.filter(({
     name, sex, born,
   }) => {
     const filterSex = searchSex === sex || searchSex === null;
@@ -49,7 +51,7 @@ export const PeoplePage: FC = () => {
       || choiceCenturies.includes(personCenturies);
 
     return filterSex && filterName && filterCenturies;
-  });
+  }), [searchSex, query, choiceCenturies]);
 
   if (sort) {
     visiblePeople.sort((person1, person2) => {

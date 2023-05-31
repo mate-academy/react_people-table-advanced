@@ -3,6 +3,13 @@ import { useSearchParams } from 'react-router-dom';
 import { SearchLink } from './SearchLink';
 import { getSearchWith } from '../utils/searchHelper';
 
+const sexOptions = [{ name: 'All', sex: null },
+  { name: 'Male', sex: 'm' },
+  { name: 'Female', sex: 'f' },
+];
+
+const centuriesOptions = ['16', '17', '18', '19', '20'];
+
 export const PeopleFilters = () => {
   const [searchParams, setSerchParams] = useSearchParams();
   const sex = searchParams.get('sex') || null;
@@ -14,10 +21,7 @@ export const PeopleFilters = () => {
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        {[{ name: 'All', sex: null },
-          { name: 'Male', sex: 'm' },
-          { name: 'Female', sex: 'f' },
-        ].map(type => (
+        {sexOptions.map(type => (
           <SearchLink
             key={type.name}
             className={classNames({ 'is-active': type.sex === sex })}
@@ -53,22 +57,26 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            {['16', '17', '18', '19', '20'].map(centurie => (
-              <SearchLink
-                key={centurie}
-                data-cy="century"
-                className={classNames('button mr-1', {
-                  'is-info': centuries.includes(centurie),
-                })}
-                params={{
-                  centuries: centuries.includes(centurie)
-                    ? centuries.filter(c => c !== centurie)
-                    : [...centuries, centurie],
-                }}
-              >
-                {centurie}
-              </SearchLink>
-            ))}
+            {centuriesOptions.map(centurie => {
+              const isSelected = centuries.includes(centurie);
+
+              return (
+                <SearchLink
+                  key={centurie}
+                  data-cy="century"
+                  className={classNames('button mr-1', {
+                    'is-info': isSelected,
+                  })}
+                  params={{
+                    centuries: isSelected
+                      ? centuries.filter(c => c !== centurie)
+                      : [...centuries, centurie],
+                  }}
+                >
+                  {centurie}
+                </SearchLink>
+              );
+            })}
           </div>
 
           <div className="level-right ml-4">
