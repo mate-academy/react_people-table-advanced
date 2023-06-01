@@ -5,7 +5,7 @@ import { PeopleFilters } from './PeopleFilters';
 import { Loader } from './Loader';
 import { PeopleTable } from './PeopleTable';
 import { NewPerson } from '../types';
-import { FilterType, SortType } from './enum';
+import { FilterType, SortType, PropName } from './enum';
 
 interface Props {
   people: NewPerson[],
@@ -155,15 +155,15 @@ export const PeoplePage: React.FC<Props> = ({
   const filterAscOrDesc = () => {
     return filteredPeople.sort((elem1, elem2) => {
       switch (propName) {
-        case 'name':
-        case 'sex':
-          return sortOrder === 'asc'
+        case PropName.Name:
+        case PropName.Sex:
+          return sortOrder === SortType.asc
             ? elem1[propName].localeCompare(elem2[propName])
             : elem2[propName].localeCompare(elem1[propName]);
 
-        case 'born':
-        case 'died':
-          return sortOrder === 'asc'
+        case PropName.Born:
+        case PropName.Died:
+          return sortOrder === SortType.asc
             ? elem1[propName] - elem2[propName]
             : elem2[propName] - elem1[propName];
 
