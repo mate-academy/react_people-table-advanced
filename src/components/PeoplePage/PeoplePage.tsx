@@ -30,27 +30,27 @@ export const PeoplePage = memo(() => {
   const order = searchParams.get('order');
   const sort = searchParams.get('sort');
 
-  const loadPeople = useCallback(async () => {
-    setIsLoading(true);
-
-    try {
-      const peopleFromServer = await getPeople();
-
-      const peopleWithParents = peopleFromServer.map((person) => ({
-        ...person,
-        mother: findParent(peopleFromServer, person.motherName),
-        father: findParent(peopleFromServer, person.fatherName),
-      }));
-
-      setPeople(peopleWithParents);
-    } catch {
-      setErrorMessage('Failed to load people');
-    } finally {
-      setIsLoading(false);
-    }
-  }, []);
-
   useEffect(() => {
+    const loadPeople = async () => {
+      setIsLoading(true);
+
+      try {
+        const peopleFromServer = await getPeople();
+
+        const peopleWithParents = peopleFromServer.map((person) => ({
+          ...person,
+          mother: findParent(peopleFromServer, person.motherName),
+          father: findParent(peopleFromServer, person.fatherName),
+        }));
+
+        setPeople(peopleWithParents);
+      } catch {
+        setErrorMessage('Failed to load people');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
     loadPeople();
   }, []);
 
