@@ -6,17 +6,18 @@ import { HomePage } from './components/homePage';
 import { PageNotFound } from './components/PageNotFound';
 import { Person, NewPerson } from './types';
 import { getPeople } from './api';
+import { FilterType } from './components/enum';
 import './App.scss';
 
 export const App: React.FC = () => {
   const [people, setPeople] = useState<Person[]>([]);
   const [newPeople, setNewPeople] = useState<NewPerson[]>([]);
   const [loading, setLoading] = useState(true);
-  const [sexFilter, setSexFilter] = useState('All');
+  const [sexFilter, setSexFilter] = useState(FilterType.All);
   const [query, setQuery] = useState('');
   const [isError, setIsError] = useState(false);
 
-  const sexFilterHandler = (value:string) => {
+  const sexFilterHandler = (value: FilterType) => {
     setSexFilter(value);
   };
 
@@ -24,22 +25,24 @@ export const App: React.FC = () => {
     setQuery('');
   };
 
-  async function fetchPeople() {
-    try {
-      const fetchedData = await getPeople();
+  useEffect(() => {
+    const fetchPeople = async () => {
+      try {
+        const fetchedData = await getPeople();
 
-      setLoading(false);
-      setPeople(fetchedData);
-    } catch (error) {
-      // eslint-disable-next-line no-console
-      console.error('Error occurred:', error);
-      setIsError(true);
-    }
-  }
+        setLoading(false);
+        setPeople(fetchedData);
+      } catch (error) {
+        // eslint-disable-next-line no-console
+        console.error('Error occurred:', error);
+        setIsError(true);
+      }
+    };
+
+    fetchPeople();
+  }, []);
 
   useEffect(() => {
-    fetchPeople();
-
     const updatedPeople = people.map((person, index) => {
       return {
         ...person,
@@ -48,7 +51,7 @@ export const App: React.FC = () => {
     });
 
     setNewPeople(updatedPeople);
-  });
+  }, [people]); //
 
   return (
     <div data-cy="app">
@@ -86,6 +89,7 @@ export const App: React.FC = () => {
                     setQuery={setQuery}
                     deleteQuery={deleteQuery}
                     isError={isError}
+
                   />
                 )}
               />
@@ -101,6 +105,7 @@ export const App: React.FC = () => {
                     setQuery={setQuery}
                     deleteQuery={deleteQuery}
                     isError={isError}
+
                   />
                 )}
               />

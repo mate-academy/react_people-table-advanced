@@ -1,9 +1,10 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import cn from 'classnames';
+import { FilterType } from './enum';
 
 interface Props {
-  sexFilterHandler: (value: string) => void,
+  sexFilterHandler: (value: FilterType) => void,
   setCurrentQuery: (value: string) => void,
   query: string,
   deleteQuery: () => void,
@@ -38,7 +39,7 @@ export const PeopleFilters: React.FC<Props> = ({
             )
           )}
           to="#/people"
-          onClick={() => sexFilterHandler('All')}
+          onClick={() => sexFilterHandler(FilterType.All)}
           role="button"
         >
           All
@@ -53,7 +54,7 @@ export const PeopleFilters: React.FC<Props> = ({
             )
           )}
           to="#/people?sex=m"
-          onClick={() => sexFilterHandler('Male')}
+          onClick={() => sexFilterHandler(FilterType.Male)}
           role="button"
         >
           Male
@@ -68,7 +69,7 @@ export const PeopleFilters: React.FC<Props> = ({
             )
           )}
           to="#/people?sex=f"
-          onClick={() => sexFilterHandler('Female')}
+          onClick={() => sexFilterHandler(FilterType.Female)}
           role="button"
         >
           Female

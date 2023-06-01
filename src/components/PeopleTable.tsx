@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { Person } from '../types';
+import { SortType } from './enum';
 
 interface Props {
   people: Person[],
   handleSort: (value: string) => void,
-  sortOrder: string,
+  sortOrder: SortType,
   propName: string,
 }
 
@@ -37,13 +38,13 @@ export const PeopleTable: React.FC<Props> = ({
                 onClick={() => handleSort('name')}
               >
                 <span className="icon">
-                  {sortOrder === 'asc' && propName === 'name'
-                  && <i className="fas fa-sort-down" />}
-                  {sortOrder === 'desc' && propName === 'name'
-                   && <i className="fas fa-sort-up" />}
-                  {!['asc', 'desc'].includes(sortOrder)
+                  {sortOrder === SortType.asc && propName === 'name'
+                  && <i className="fas fa-sort-up" />}
+                  {sortOrder === SortType.desc && propName === 'name'
+                   && <i className="fas fa-sort-down" />}
+                  {![SortType.asc, SortType.desc].includes(sortOrder)
                    && <i className="fas fa-sort" />}
-                  {['asc', 'desc'].includes(sortOrder)
+                  {[SortType.asc, SortType.desc].includes(sortOrder)
                    && propName !== 'name' && (<i className="fas fa-sort" />)}
                 </span>
               </a>
@@ -57,13 +58,13 @@ export const PeopleTable: React.FC<Props> = ({
                 onClick={() => handleSort('sex')}
               >
                 <span className="icon">
-                  {sortOrder === 'asc' && propName === 'sex'
-                  && <i className="fas fa-sort-down" />}
-                  {sortOrder === 'desc' && propName === 'sex'
-                   && <i className="fas fa-sort-up" />}
-                  {!['asc', 'desc'].includes(sortOrder)
+                  {sortOrder === SortType.asc && propName === 'sex'
+                  && <i className="fas fa-sort-up" />}
+                  {sortOrder === SortType.desc && propName === 'sex'
+                   && <i className="fas fa-sort-down" />}
+                  {![SortType.asc, SortType.desc].includes(sortOrder)
                    && <i className="fas fa-sort" />}
-                  {['asc', 'desc'].includes(sortOrder)
+                  {[SortType.asc, SortType.desc].includes(sortOrder)
                    && propName !== 'sex' && (<i className="fas fa-sort" />)}
                 </span>
               </a>
@@ -77,13 +78,13 @@ export const PeopleTable: React.FC<Props> = ({
                 onClick={() => handleSort('born')}
               >
                 <span className="icon">
-                  {sortOrder === 'asc' && propName === 'born'
-                  && <i className="fas fa-sort-down" />}
-                  {sortOrder === 'desc' && propName === 'born'
-                   && <i className="fas fa-sort-up" />}
-                  {!['asc', 'desc'].includes(sortOrder)
+                  {sortOrder === SortType.asc && propName === 'born'
+                  && <i className="fas fa-sort-up" />}
+                  {sortOrder === SortType.desc && propName === 'born'
+                   && <i className="fas fa-sort-down" />}
+                  {![SortType.asc, SortType.desc].includes(sortOrder)
                    && <i className="fas fa-sort" />}
-                  {['asc', 'desc'].includes(sortOrder)
+                  {[SortType.asc, SortType.desc].includes(sortOrder)
                    && propName !== 'born' && (<i className="fas fa-sort" />)}
                 </span>
               </a>
@@ -97,13 +98,13 @@ export const PeopleTable: React.FC<Props> = ({
                 onClick={() => handleSort('died')}
               >
                 <span className="icon">
-                  {sortOrder === 'asc' && propName === 'icon'
-                  && <i className="fas fa-sort-down" />}
-                  {sortOrder === 'desc' && propName === 'icon'
-                   && <i className="fas fa-sort-up" />}
-                  {!['asc', 'desc'].includes(sortOrder)
+                  {sortOrder === SortType.asc && propName === 'icon'
+                  && <i className="fas fa-sort-up" />}
+                  {sortOrder === SortType.desc && propName === 'icon'
+                   && <i className="fas fa-sort-down" />}
+                  {![SortType.asc, SortType.desc].includes(sortOrder)
                    && <i className="fas fa-sort" />}
-                  {['asc', 'desc'].includes(sortOrder)
+                  {[SortType.asc, SortType.desc].includes(sortOrder)
                    && propName !== 'icon' && (<i className="fas fa-sort" />)}
                 </span>
               </a>

@@ -5,12 +5,13 @@ import { PeopleFilters } from './PeopleFilters';
 import { Loader } from './Loader';
 import { PeopleTable } from './PeopleTable';
 import { NewPerson } from '../types';
+import { FilterType, SortType } from './enum';
 
 interface Props {
   people: NewPerson[],
   loading: boolean,
-  sexFilter: string,
-  sexFilterHandler: (value: string) => void,
+  sexFilter: FilterType,
+  sexFilterHandler: (value: FilterType) => void,
   setQuery: (value: string) => void,
   query: string,
   deleteQuery: () => void,
@@ -28,7 +29,7 @@ export const PeoplePage: React.FC<Props> = ({
   isError,
 }) => {
   const [propName, setPropName] = useState('');
-  const [sortOrder, setSortOrder] = useState('og');
+  const [sortOrder, setSortOrder] = useState(SortType.og);
   const [clickCount, setClickCount] = useState(0);
   const [selectedCentury, setSelectedCentury]
   = useState<number[]>([15, 16, 17, 18, 19]);
@@ -43,25 +44,25 @@ export const PeoplePage: React.FC<Props> = ({
     setClickCount(clickCount + 1);
     if (propName === column) {
       if (clickCount === 1) {
-        setSortOrder('asc');
+        setSortOrder(SortType.asc);
       }
 
       if (clickCount === 2) {
-        setSortOrder('desc');
+        setSortOrder(SortType.desc);
       }
     }
 
     if (clickCount === 3) {
       setPropName(column);
       setClickCount(1);
-      setSortOrder('og');
+      setSortOrder(SortType.og);
     }
   };
 
   const resetEveryThing = () => {
     setSelectedCentury([15, 16, 17, 18, 19]);
     setQuery('');
-    sexFilterHandler('All');
+    sexFilterHandler(FilterType.All);
   };
 
   const setCurrentQuery = (currentQuery: string) => {
@@ -127,16 +128,16 @@ export const PeoplePage: React.FC<Props> = ({
       const centurie = Math.floor(person.born / 100);
 
       switch (sexFilter) {
-        case 'All':
+        case FilterType.All:
         default:
           return functionality && selectedCentury.includes(centurie);
-        case 'Male':
+        case FilterType.Male:
           return (
             person.sex === 'm'
             && functionality
             && selectedCentury.includes(centurie)
           );
-        case 'Female':
+        case FilterType.Female:
           return (
             person.sex === 'f'
             && functionality
