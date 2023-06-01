@@ -1,5 +1,6 @@
 import {
-  memo, useCallback, useEffect, useState,
+  FC,
+  memo, useEffect, useState,
 } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { PeopleFilters } from './PeopleFilters';
@@ -13,7 +14,7 @@ const findParent = (people: Person[], parentName: string | null) => {
   return people.find(parent => parent.name === parentName);
 };
 
-export const PeoplePage = memo(() => {
+export const PeoplePage: FC = memo(() => {
   const [people, setPeople] = useState<Person[]>([]);
   const [loadingError, setLoadingError] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -23,27 +24,27 @@ export const PeoplePage = memo(() => {
   const centuries = searchParams.getAll('centuries') || [];
   const query = searchParams.get('query') || '';
 
-  const loadPeople = useCallback(async () => {
-    try {
-      const peopleFromServer = await getPeople();
-
-      const formattedPeople = peopleFromServer.map(person => {
-        return {
-          ...person,
-          mother: findParent(peopleFromServer, person.motherName),
-          father: findParent(peopleFromServer, person.fatherName),
-        };
-      });
-
-      setPeople(formattedPeople);
-    } catch {
-      setLoadingError(true);
-    } finally {
-      setIsLoading(false);
-    }
-  }, []);
-
   useEffect(() => {
+    const loadPeople = async () => {
+      try {
+        const peopleFromServer = await getPeople();
+
+        const formattedPeople = peopleFromServer.map(person => {
+          return {
+            ...person,
+            mother: findParent(peopleFromServer, person.motherName),
+            father: findParent(peopleFromServer, person.fatherName),
+          };
+        });
+
+        setPeople(formattedPeople);
+      } catch {
+        setLoadingError(true);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
     loadPeople();
     setPeople([]);
   }, []);

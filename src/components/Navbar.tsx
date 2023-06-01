@@ -1,6 +1,7 @@
+import { FC } from 'react';
 import { PageNavLink } from './PageNavLink';
 
-export const Navbar = () => {
+export const Navbar: FC = () => {
   return (
     <nav
       data-cy="nav"
