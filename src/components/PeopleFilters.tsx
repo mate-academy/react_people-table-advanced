@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import classNames from 'classnames';
 import React from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
@@ -112,7 +113,7 @@ export const PeopleFilters: React.FC<Props> = ({
             <Link
               data-cy="centuryALL"
               className="button is-success is-outlined"
-              to="#/people"
+              to="#"
               onClick={() => deleteCenturies()}
             >
               All
