@@ -31,7 +31,6 @@ export function getSearchWith(
       if (value === null) {
         newParams.delete(key);
       } else if (Array.isArray(value)) {
-        // we delete the key to remove old values
         newParams.delete(key);
 
         value.forEach(part => {
@@ -42,6 +41,5 @@ export function getSearchWith(
       }
     });
 
-  // we return a string to use it inside links
   return newParams.toString();
 }
