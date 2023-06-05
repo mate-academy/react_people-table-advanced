@@ -8,7 +8,9 @@ import {
 import { useParams, useSearchParams } from 'react-router-dom';
 import { PeopleTable } from '../../components/PeopleTable';
 import { Person } from '../../types';
-import { filterPeople, getPeople, sortPeople } from '../../api';
+import { getPeople } from '../../api';
+import { sortPeople } from '../../utils/sortPeople';
+import { filterPeople } from '../../utils/filterPeople';
 import { Loader } from '../../components/Loader';
 import { PeopleFilters } from '../../components/PeopleFilters';
 import { getSearchWith } from '../../utils/searchHelper';
@@ -87,7 +89,7 @@ export const PeoplePage: FC = () => {
 
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
-          {people.length > 0 && (
+          {!!people.length && (
             <div className="column is-7-tablet is-narrow-desktop">
               <PeopleFilters
                 sex={sex}
@@ -118,7 +120,7 @@ export const PeoplePage: FC = () => {
                 <p>There are no people matching the current search criteria</p>
               )}
 
-              {filteredPeople.length > 0 && (
+              {!!filteredPeople.length && (
                 <PeopleTable
                   people={sortedPeople}
                   slug={slug}
