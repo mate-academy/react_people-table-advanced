@@ -28,8 +28,13 @@ export const PeoplePage: FC = () => {
   const sort = searchParams.get('sort') || '';
   const order = searchParams.get('order') || '';
 
-  const findPerson = useCallback((name: string, fetchedPeople: Person[]) => {
-    return fetchedPeople.find(person => person.name === name);
+  const findPerson = useCallback((
+    name: string | null,
+    fetchedPeople: Person[],
+  ) => {
+    return !name
+      ? null
+      : fetchedPeople.find(person => person.name === name) || null;
   }, []);
 
   useEffect(() => {
@@ -46,12 +51,8 @@ export const PeoplePage: FC = () => {
         const peopleWithParents = fetchedPeople.map(person => {
           return {
             ...person,
-            mother: person.motherName
-              ? findPerson(person.motherName, fetchedPeople)
-              : null,
-            father: person.fatherName
-              ? findPerson(person.fatherName, fetchedPeople)
-              : null,
+            mother: findPerson(person.motherName, fetchedPeople),
+            father: findPerson(person.fatherName, fetchedPeople),
           };
         });
 
