@@ -37,42 +37,44 @@ export const PeoplePage: FC = () => {
     loadPeople();
   }, []);
 
-  const visiblePeople = useMemo(() => people.filter(({
-    name, sex, born,
-  }) => {
-    const filterSex = searchSex === sex || searchSex === null;
+  const visiblePeople = useMemo(() => {
+    const filteredPeople = people.filter(({ name, sex, born }) => {
+      const filterSex = searchSex === sex || searchSex === null;
 
-    const lowerName = name.toLowerCase();
-    const lowerQuery = query.toLowerCase().trim();
-    const filterName = lowerName.includes(lowerQuery);
+      const lowerName = name.toLowerCase();
+      const lowerQuery = query.toLowerCase().trim();
+      const filterName = lowerName.includes(lowerQuery);
 
-    const personCenturies = Math.round(born / 100).toString();
-    const filterCenturies = choiceCenturies.length === 0
-      || choiceCenturies.includes(personCenturies);
+      const personCenturies = Math.round(born / 100).toString();
+      const filterCenturies = choiceCenturies.length === 0
+        || choiceCenturies.includes(personCenturies);
 
-    return filterSex && filterName && filterCenturies;
-  }), [searchSex, query, choiceCenturies]);
-
-  if (sort) {
-    visiblePeople.sort((person1, person2) => {
-      switch (sort) {
-        case 'born':
-          return person1[sort] - person2[sort];
-        case 'died':
-          return person1[sort] - person2[sort];
-        case 'name':
-          return person1[sort].localeCompare(person2[sort]);
-        case 'sex':
-          return person1[sort].localeCompare(person2[sort]);
-        default:
-          return 0;
-      }
+      return filterSex && filterName && filterCenturies;
     });
-  }
 
-  if (order) {
-    visiblePeople.reverse();
-  }
+    if (sort) {
+      filteredPeople.sort((person1, person2) => {
+        switch (sort) {
+          case 'born':
+            return person1[sort] - person2[sort];
+          case 'died':
+            return person1[sort] - person2[sort];
+          case 'name':
+            return person1[sort].localeCompare(person2[sort]);
+          case 'sex':
+            return person1[sort].localeCompare(person2[sort]);
+          default:
+            return 0;
+        }
+      });
+    }
+
+    if (order) {
+      filteredPeople.reverse();
+    }
+
+    return filteredPeople;
+  }, [searchSex, query, choiceCenturies, order, sort]);
 
   const arePeople = people.length > 0;
   const areVisiblePeople = visiblePeople.length > 0;
