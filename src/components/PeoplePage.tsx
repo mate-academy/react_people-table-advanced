@@ -19,11 +19,11 @@ export const PeoplePage = () => {
 
           <div className="column">
             <div className="box table-container">
-              {loading && <Loader />}
 
               {error
                 && <p data-cy="peopleLoadingError">Something went wrong</p>}
 
+              {loading && <Loader />}
               {!loading && !isPeople && !error
                 ? (
                   <p data-cy="noPeopleMessage">
