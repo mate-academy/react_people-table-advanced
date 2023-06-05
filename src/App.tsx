@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
 import { PeoplePage } from './components/PeoplePage';
 import { Navbar } from './components/Navbar';
@@ -14,7 +14,7 @@ export const App = () => {
   const [isError, setIsError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  const getPeopleData = async () => {
+  const getPeopleData = useCallback(async () => {
     setIsLoading(true);
     setIsError(false);
     try {
@@ -26,11 +26,11 @@ export const App = () => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
     getPeopleData();
-  }, []);
+  }, [getPeopleData]);
 
   return (
     <div data-cy="app">

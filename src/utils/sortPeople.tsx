@@ -2,11 +2,11 @@ import { SortParam } from '../types/SortParam';
 import { Person } from '../types';
 
 export const sortPeople = (
-  people: Person[], sortBy: string, order: string,
+  people: Person[], sortBy: string, sortOrder: string,
 ) => {
   const descOrder = 'desc';
 
-  const isReversed = order === descOrder;
+  const isReversed = sortOrder === descOrder;
   let resultOfSort: Person[];
 
   switch (sortBy) {

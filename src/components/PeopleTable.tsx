@@ -16,18 +16,18 @@ export const PeopleTable: React.FC<Props> = ({
   people,
   selectedPerson = '',
   sort,
-  order,
+  order = 'asc',
 }) => {
-  const getSortParams = (column: string) => {
-    if (column === sort && !order) {
-      return { sort: column, order: 'desc' };
-    }
+  const getSortParams = (searchColumn: string) => {
+    if (searchColumn === sort) {
+      if (order === 'asc') {
+        return { sort: searchColumn, order: 'desc' };
+      }
 
-    if (column === sort && order) {
       return { sort: null, order: null };
     }
 
-    return { sort: column, order: null };
+    return { sort: searchColumn, order: 'asc' };
   };
 
   return (
@@ -37,13 +37,13 @@ export const PeopleTable: React.FC<Props> = ({
     >
       <thead>
         <tr>
-          {searchColumnParams.map((column: string) => {
-            const formattedColumn = column.toLowerCase();
+          {searchColumnParams.map((searchColumn: string) => {
+            const formattedColumn = searchColumn.toLowerCase();
 
             return (
-              <th key={column}>
+              <th key={searchColumn}>
                 <span className="is-flex is-flex-wrap-nowrap">
-                  {column}
+                  {searchColumn}
                   <SearchLink params={getSortParams(formattedColumn)}>
                     <span className="icon">
                       <i

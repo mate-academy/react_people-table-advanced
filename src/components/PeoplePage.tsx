@@ -22,7 +22,7 @@ export const PeoplePage: React.FC<Props> = ({ people, isLoading, isError }) => {
   const sex = searchParams.get('sex') as PersonSex || PersonSex.All;
   const centuries = searchParams.getAll('centuries') || [];
 
-  const sort = searchParams.get('sort') || '';
+  const sort = searchParams.get('sort') ?? '';
   const order = searchParams.get('order') || '';
 
   const onQueryChange = (event: React.ChangeEvent<HTMLInputElement>) => {

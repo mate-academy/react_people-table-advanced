@@ -4,16 +4,18 @@ export const filterPeople = (
   people: Person[], query: string, sex: string, centuries: string[],
 ) => {
   const peopleIncludesQuery = people
-    .filter(person => person.name.toLowerCase().includes(query)
-      || person.motherName?.toLowerCase().includes(query)
-      || person.fatherName?.toLowerCase().includes(query));
+    .filter(({
+      name, motherName, fatherName,
+    }) => name.toLowerCase().includes(query)
+    || motherName?.toLowerCase().includes(query)
+      || fatherName?.toLowerCase().includes(query));
 
   const peopleFilteredBySex = peopleIncludesQuery
-    .filter(person => person.sex.includes(sex));
+    .filter(({ sex: PersonSex }) => PersonSex.includes(sex));
 
   const peopleFilteredByCentury = peopleFilteredBySex
-    .filter(person => centuries
-      .includes((Math.floor(person.born / 100) + 1).toString()));
+    .filter(({ born }) => centuries
+      .includes((Math.floor(born / 100) + 1).toString()));
 
   return centuries.length
     ? peopleFilteredByCentury
