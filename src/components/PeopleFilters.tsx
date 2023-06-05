@@ -8,7 +8,7 @@ const arrayOfCenturies = ['16', '17', '18', '19', '20'];
 
 type Props = {
   query: string,
-  sex: string,
+  sex: PersonSex,
   centuries: string[],
   onQueryChange: (event: React.ChangeEvent<HTMLInputElement>) => void,
   searchParams: URLSearchParams,

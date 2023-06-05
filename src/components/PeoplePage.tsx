@@ -19,7 +19,7 @@ export const PeoplePage: React.FC<Props> = ({ people, isLoading, isError }) => {
 
   const [searchParams, setSearchParams] = useSearchParams();
   const query = searchParams.get('query') || '';
-  const sex = searchParams.get('sex') || PersonSex.All;
+  const sex = searchParams.get('sex') as PersonSex || PersonSex.All;
   const centuries = searchParams.getAll('centuries') || [];
 
   const sort = searchParams.get('sort') || '';

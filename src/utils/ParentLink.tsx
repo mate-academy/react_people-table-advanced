@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import classNames from 'classnames';
 import { Person } from '../types';
+import { PersonSex } from '../types/PersonSex';
 
 export const findParent = (people: Person[], parentName: string | null) => {
   const parent = people.find(person => person.name === parentName);
@@ -9,7 +10,7 @@ export const findParent = (people: Person[], parentName: string | null) => {
     return (
       <Link
         className={classNames({
-          'has-text-danger': parent.sex === 'f',
+          'has-text-danger': parent.sex === PersonSex.Female,
         })}
         to={`/people/${parent.slug}`}
       >
