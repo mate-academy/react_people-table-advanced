@@ -5,12 +5,13 @@ export enum FilterType {
 }
 
 export enum SortType {
-  og = 'og',
+  original = 'original',
   asc = 'asc',
   desc = 'desc',
 }
 
 export enum PropName {
+  None = '',
   Name = 'name',
   Sex = 'sex',
   Born = 'born',

@@ -1,7 +1,6 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import cn from 'classnames';
-import { FilterType } from './enum';
+import { FilterType } from '../types/enum';
 
 interface Props {
   sexFilterHandler: (value: FilterType) => void,
@@ -12,6 +11,7 @@ interface Props {
   selecetedCentury: number[],
   allCenturySelection: () => void,
   resetEveryThing: () => void,
+  sexFilter: string,
 }
 
 export const PeopleFilters: React.FC<Props> = ({
@@ -23,6 +23,7 @@ export const PeopleFilters: React.FC<Props> = ({
   selecetedCentury,
   allCenturySelection,
   resetEveryThing,
+  sexFilter,
 }) => {
   return (
     <nav className="panel">
@@ -30,14 +31,9 @@ export const PeopleFilters: React.FC<Props> = ({
 
       <p className="panel-tabs" data-cy="SexFilter">
         <NavLink
-          className={({ isActive }) => (
-            cn(
-              'navbar-item',
-              {
-                'is-active': isActive,
-              },
-            )
-          )}
+          className={sexFilter === FilterType.All
+            ? 'is-active'
+            : ''}
           to="#/people"
           onClick={() => sexFilterHandler(FilterType.All)}
           role="button"
@@ -45,14 +41,9 @@ export const PeopleFilters: React.FC<Props> = ({
           All
         </NavLink>
         <NavLink
-          className={({ isActive }) => (
-            cn(
-              'navbar-item',
-              {
-                'is-active': isActive,
-              },
-            )
-          )}
+          className={sexFilter === FilterType.Male
+            ? 'is-active'
+            : ''}
           to="#/people?sex=m"
           onClick={() => sexFilterHandler(FilterType.Male)}
           role="button"
@@ -60,14 +51,9 @@ export const PeopleFilters: React.FC<Props> = ({
           Male
         </NavLink>
         <NavLink
-          className={({ isActive }) => (
-            cn(
-              'navbar-item',
-              {
-                'is-active': isActive,
-              },
-            )
-          )}
+          className={sexFilter === FilterType.Female
+            ? 'is-active'
+            : ''}
           to="#/people?sex=f"
           onClick={() => sexFilterHandler(FilterType.Female)}
           role="button"
@@ -161,9 +147,11 @@ export const PeopleFilters: React.FC<Props> = ({
           <div className="level-right ml-4">
             <NavLink
               data-cy="centuryALL"
-              className="button is-success is-outlined"
+              className={selecetedCentury.length === 0
+                ? 'button is-success'
+                : 'button is-outlined'}
               to="#/people"
-              onClick={() => allCenturySelection()}
+              onClick={allCenturySelection}
             >
               All
             </NavLink>

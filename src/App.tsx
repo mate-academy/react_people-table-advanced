@@ -6,7 +6,7 @@ import { HomePage } from './components/homePage';
 import { PageNotFound } from './components/PageNotFound';
 import { Person, NewPerson } from './types';
 import { getPeople } from './api';
-import { FilterType } from './components/enum';
+import { FilterType } from './types/enum';
 import './App.scss';
 
 export const App: React.FC = () => {
@@ -25,20 +25,20 @@ export const App: React.FC = () => {
     setQuery('');
   };
 
+  const fetchPeople = async () => {
+    try {
+      const fetchedData = await getPeople();
+
+      setLoading(false);
+      setPeople(fetchedData);
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('Error occurred:', error);
+      setIsError(true);
+    }
+  };
+
   useEffect(() => {
-    const fetchPeople = async () => {
-      try {
-        const fetchedData = await getPeople();
-
-        setLoading(false);
-        setPeople(fetchedData);
-      } catch (error) {
-        // eslint-disable-next-line no-console
-        console.error('Error occurred:', error);
-        setIsError(true);
-      }
-    };
-
     fetchPeople();
   }, []);
 
@@ -51,7 +51,7 @@ export const App: React.FC = () => {
     });
 
     setNewPeople(updatedPeople);
-  }, [people]); //
+  }, [people]);
 
   return (
     <div data-cy="app">
@@ -74,6 +74,7 @@ export const App: React.FC = () => {
                   setQuery={setQuery}
                   deleteQuery={deleteQuery}
                   isError={isError}
+                  fetchPeople={fetchPeople}
                 />
               )}
             >
@@ -89,7 +90,7 @@ export const App: React.FC = () => {
                     setQuery={setQuery}
                     deleteQuery={deleteQuery}
                     isError={isError}
-
+                    fetchPeople={fetchPeople}
                   />
                 )}
               />
@@ -105,7 +106,7 @@ export const App: React.FC = () => {
                     setQuery={setQuery}
                     deleteQuery={deleteQuery}
                     isError={isError}
-
+                    fetchPeople={fetchPeople}
                   />
                 )}
               />

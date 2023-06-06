@@ -5,7 +5,7 @@ import { PeopleFilters } from './PeopleFilters';
 import { Loader } from './Loader';
 import { PeopleTable } from './PeopleTable';
 import { NewPerson } from '../types';
-import { FilterType, SortType, PropName } from './enum';
+import { FilterType, SortType, PropName } from '../types/enum';
 
 interface Props {
   people: NewPerson[],
@@ -16,6 +16,7 @@ interface Props {
   query: string,
   deleteQuery: () => void,
   isError: boolean,
+  fetchPeople: () => Promise<void>;
 }
 
 export const PeoplePage: React.FC<Props> = ({
@@ -27,22 +28,23 @@ export const PeoplePage: React.FC<Props> = ({
   query,
   deleteQuery,
   isError,
+  fetchPeople,
 }) => {
-  const [propName, setPropName] = useState('');
-  const [sortOrder, setSortOrder] = useState(SortType.og);
+  const [sortField, setsortField] = useState<string | null>(null);
+  const [sortOrder, setSortOrder] = useState(SortType.original);
   const [clickCount, setClickCount] = useState(0);
   const [selectedCentury, setSelectedCentury]
-  = useState<number[]>([15, 16, 17, 18, 19]);
+  = useState<number[]>([]);
   const [isFiltered, setIsfiltered] = useState(false);
 
   const allCenturySelection = () => {
-    setSelectedCentury([15, 16, 17, 18, 19]);
+    setSelectedCentury([]);
   };
 
   const handleSort = (column: string) => {
-    setPropName(column);
+    setsortField(column);
     setClickCount(clickCount + 1);
-    if (propName === column) {
+    if (sortField === column) {
       if (clickCount === 1) {
         setSortOrder(SortType.asc);
       }
@@ -53,14 +55,14 @@ export const PeoplePage: React.FC<Props> = ({
     }
 
     if (clickCount === 3) {
-      setPropName(column);
+      setsortField(column);
       setClickCount(1);
-      setSortOrder(SortType.og);
+      setSortOrder(SortType.original);
     }
   };
 
   const resetEveryThing = () => {
-    setSelectedCentury([15, 16, 17, 18, 19]);
+    setSelectedCentury([]);
     setQuery('');
     sexFilterHandler(FilterType.All);
   };
@@ -69,7 +71,7 @@ export const PeoplePage: React.FC<Props> = ({
     setQuery(currentQuery);
   };
 
-  const handleCenturySelection = (century : number) => {
+  const handleCenturySelection = (century: number) => {
     if (selectedCentury.includes(century) && selectedCentury.length === 5) {
       const filtered = selectedCentury.filter((number) => {
         return number === century;
@@ -130,22 +132,30 @@ export const PeoplePage: React.FC<Props> = ({
       switch (sexFilter) {
         case FilterType.All:
         default:
-          return functionality && selectedCentury.includes(centurie);
+          return selectedCentury.length === 0
+            ? functionality
+            : functionality && selectedCentury.includes(centurie);
         case FilterType.Male:
           return (
-            person.sex === 'm'
-            && functionality
-            && selectedCentury.includes(centurie)
+            selectedCentury.length === 0
+              ? (person.sex === 'm'
+              && functionality)
+              : (person.sex === 'm'
+              && functionality
+              && selectedCentury.includes(centurie))
           );
         case FilterType.Female:
           return (
-            person.sex === 'f'
-            && functionality
-            && selectedCentury.includes(centurie)
+            selectedCentury.length === 0
+              ? (person.sex === 'f'
+              && functionality)
+              : (person.sex === 'f'
+              && functionality
+              && selectedCentury.includes(centurie))
           );
       }
     }),
-    [sexFilter, query, loading, selectedCentury],
+    [sexFilter, query, loading, selectedCentury, fetchPeople],
   );
 
   useEffect(() => {
@@ -154,18 +164,18 @@ export const PeoplePage: React.FC<Props> = ({
 
   const filterAscOrDesc = () => {
     return filteredPeople.sort((elem1, elem2) => {
-      switch (propName) {
+      switch (sortField) {
         case PropName.Name:
         case PropName.Sex:
           return sortOrder === SortType.asc
-            ? elem1[propName].localeCompare(elem2[propName])
-            : elem2[propName].localeCompare(elem1[propName]);
+            ? elem1[sortField].localeCompare(elem2[sortField])
+            : elem2[sortField].localeCompare(elem1[sortField]);
 
         case PropName.Born:
         case PropName.Died:
           return sortOrder === SortType.asc
-            ? elem1[propName] - elem2[propName]
-            : elem2[propName] - elem1[propName];
+            ? elem1[sortField] - elem2[sortField]
+            : elem2[sortField] - elem1[sortField];
 
         default:
           return elem1.index - elem2.index;
@@ -178,12 +188,12 @@ export const PeoplePage: React.FC<Props> = ({
   };
 
   useEffect(() => {
-    if (sortOrder === 'og') {
+    if (sortOrder === 'original') {
       filterOg();
     } else {
       filterAscOrDesc();
     }
-  }, [propName, sortOrder, clickCount]);
+  }, [sortField, sortOrder, clickCount]);
 
   return (
     <>
@@ -201,6 +211,7 @@ export const PeoplePage: React.FC<Props> = ({
               allCenturySelection={allCenturySelection}
               selecetedCentury={selectedCentury}
               resetEveryThing={resetEveryThing}
+              sexFilter={sexFilter}
             />
           </div>
 
@@ -214,7 +225,7 @@ export const PeoplePage: React.FC<Props> = ({
                   people={filteredPeople}
                   handleSort={handleSort}
                   sortOrder={sortOrder}
-                  propName={propName}
+                  sortField={sortField}
                 />
               )}
 

@@ -1,25 +1,24 @@
+import { NavLink } from 'react-router-dom';
 import React, { useState } from 'react';
 import { Person } from '../types';
-import { SortType, PropName } from './enum';
+import { SortType, PropName } from '../types/enum';
 
 interface Props {
   people: Person[],
   handleSort: (value: string) => void,
   sortOrder: SortType,
-  propName: string,
+  sortField: string | null,
 }
 
 export const PeopleTable: React.FC<Props> = ({
   people,
   handleSort,
   sortOrder,
-  propName,
+  sortField,
 }) => {
-  const [selectedName, setSelectedName] = useState('');
+  const [selectedName, setSelectedName] = useState<string | null>(null);
   const handleSelection
-  = (event: React.MouseEvent<HTMLAnchorElement>, name: string) => {
-    event.preventDefault();
-
+  = (name: string | null) => {
     setSelectedName(name);
   };
 
@@ -38,14 +37,14 @@ export const PeopleTable: React.FC<Props> = ({
                 onClick={() => handleSort(PropName.Name)}
               >
                 <span className="icon">
-                  {sortOrder === SortType.asc && propName === PropName.Name
+                  {sortOrder === SortType.asc && sortField === PropName.Name
                   && <i className="fas fa-sort-up" />}
-                  {sortOrder === SortType.desc && propName === PropName.Name
+                  {sortOrder === SortType.desc && sortField === PropName.Name
                    && <i className="fas fa-sort-down" />}
                   {![SortType.asc, SortType.desc].includes(sortOrder)
                    && <i className="fas fa-sort" />}
                   {[SortType.asc, SortType.desc].includes(sortOrder)
-                   && propName !== PropName.Name
+                   && sortField !== PropName.Name
                    && (<i className="fas fa-sort" />)}
                 </span>
               </a>
@@ -59,14 +58,14 @@ export const PeopleTable: React.FC<Props> = ({
                 onClick={() => handleSort(PropName.Sex)}
               >
                 <span className="icon">
-                  {sortOrder === SortType.asc && propName === PropName.Sex
+                  {sortOrder === SortType.asc && sortField === PropName.Sex
                   && <i className="fas fa-sort-up" />}
-                  {sortOrder === SortType.desc && propName === PropName.Sex
+                  {sortOrder === SortType.desc && sortField === PropName.Sex
                    && <i className="fas fa-sort-down" />}
                   {![SortType.asc, SortType.desc].includes(sortOrder)
                    && <i className="fas fa-sort" />}
                   {[SortType.asc, SortType.desc].includes(sortOrder)
-                   && propName !== PropName.Sex
+                   && sortField !== PropName.Sex
                    && (<i className="fas fa-sort" />)}
                 </span>
               </a>
@@ -80,14 +79,14 @@ export const PeopleTable: React.FC<Props> = ({
                 onClick={() => handleSort(PropName.Born)}
               >
                 <span className="icon">
-                  {sortOrder === SortType.asc && propName === PropName.Born
+                  {sortOrder === SortType.asc && sortField === PropName.Born
                   && <i className="fas fa-sort-up" />}
-                  {sortOrder === SortType.desc && propName === PropName.Born
+                  {sortOrder === SortType.desc && sortField === PropName.Born
                    && <i className="fas fa-sort-down" />}
                   {![SortType.asc, SortType.desc].includes(sortOrder)
                    && <i className="fas fa-sort" />}
                   {[SortType.asc, SortType.desc].includes(sortOrder)
-                   && propName !== PropName.Born
+                   && sortField !== PropName.Born
                    && (<i className="fas fa-sort" />)}
                 </span>
               </a>
@@ -101,14 +100,14 @@ export const PeopleTable: React.FC<Props> = ({
                 onClick={() => handleSort(PropName.Died)}
               >
                 <span className="icon">
-                  {sortOrder === SortType.asc && propName === PropName.Died
+                  {sortOrder === SortType.asc && sortField === PropName.Died
                   && <i className="fas fa-sort-up" />}
-                  {sortOrder === SortType.desc && propName === PropName.Died
+                  {sortOrder === SortType.desc && sortField === PropName.Died
                    && <i className="fas fa-sort-down" />}
                   {![SortType.asc, SortType.desc].includes(sortOrder)
                    && <i className="fas fa-sort" />}
                   {[SortType.asc, SortType.desc].includes(sortOrder)
-                   && propName !== PropName.Died
+                   && sortField !== PropName.Died
                     && (<i className="fas fa-sort" />)}
                 </span>
               </a>
@@ -130,18 +129,18 @@ export const PeopleTable: React.FC<Props> = ({
                 : ''}
             >
               <td>
-                <a
-                  href={person.slug}
+                <NavLink
+                  to={person.slug}
                   className={person.sex === 'f'
                     ? ('has-text-danger')
                     : ''}
                   role="button"
-                  onClick={(event) => {
-                    handleSelection(event, person.name);
+                  onClick={() => {
+                    handleSelection(person.name);
                   }}
                 >
                   {person.name}
-                </a>
+                </NavLink>
               </td>
               <td>{person.sex}</td>
               <td>{person.born}</td>
@@ -149,12 +148,15 @@ export const PeopleTable: React.FC<Props> = ({
               <td>
                 {person.mother
                   ? (
-                    <a
-                      href={person.mother?.slug}
+                    <NavLink
+                      to={person.mother?.slug}
                       className="has-text-danger"
+                      onClick={() => {
+                        handleSelection(person.mother?.name || null);
+                      }}
                     >
                       {person.mother.name}
-                    </a>
+                    </NavLink>
                   ) : (
                     <p>
                       {person.motherName}
@@ -164,11 +166,14 @@ export const PeopleTable: React.FC<Props> = ({
               <td>
                 {person.father
                   ? (
-                    <a
-                      href={person.father?.slug}
+                    <NavLink
+                      to={person.father?.slug}
+                      onClick={() => {
+                        handleSelection(person.father?.name || null);
+                      }}
                     >
                       {person.father.name}
-                    </a>
+                    </NavLink>
                   ) : (
                     <p>
                       {person.fatherName}
