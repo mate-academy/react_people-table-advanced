@@ -49,24 +49,24 @@ export const PeoplePage: React.FC<Props> = ({
 
           <div className="column">
             <div className="box table-container">
-          {isLoading && (
-            <Loader />
-          )}
+              {isLoading && (
+                <Loader />
+              )}
 
-          {isError && (
-            <p data-cy="peopleLoadingError" className="has-text-danger">
-              Something went wrong
-            </p>
-          )}
+              {isError && (
+                <p data-cy="peopleLoadingError" className="has-text-danger">
+                  Something went wrong
+                </p>
+              )}
 
-          {(!isLoading && !isError) && (
-            <PeopleTable
-              activePerson={activePerson}
-              setActivePerson={setActivePerson}
-              people={people}
-            />
-          )}
-        </div>
+              {(!isLoading && !isError) && (
+                <PeopleTable
+                  activePerson={activePerson}
+                  setActivePerson={setActivePerson}
+                  people={people}
+                />
+              )}
+            </div>
           </div>
         </div>
       </div>

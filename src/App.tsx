@@ -32,7 +32,7 @@ export const PageNavLink: React.FC<Props> = ({ to, text }) => (
 
 export const App = () => {
   const [activePerson, setActivePerson] = useState<Person | null>(null);
-  
+
   return (
     <div data-cy="app">
       <Navbar />
