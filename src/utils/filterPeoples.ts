@@ -1,6 +1,6 @@
 import { Person } from '../types';
 
-export const filteredPeoples = (
+export const filterPeoples = (
   peoples: Person[],
   sex: string | null,
   centuries: string[],
@@ -9,7 +9,7 @@ export const filteredPeoples = (
   let prePeoples = [...peoples];
 
   if (query) {
-    prePeoples = peoples.filter((person) => {
+    prePeoples = prePeoples.filter((person) => {
       const names = person.name + person.motherName + person.fatherName;
 
       return names.toUpperCase().includes(query.toUpperCase().trim());
@@ -17,11 +17,11 @@ export const filteredPeoples = (
   }
 
   if (sex) {
-    prePeoples = peoples.filter(person => person.sex === sex);
+    prePeoples = prePeoples.filter(person => person.sex === sex);
   }
 
   if (centuries.length > 0) {
-    prePeoples = peoples.filter(person => {
+    prePeoples = prePeoples.filter(person => {
       return centuries.includes(Math.ceil(person.born / 100).toString());
     });
   }

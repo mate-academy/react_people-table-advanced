@@ -1,9 +1,9 @@
 import { useSearchParams } from 'react-router-dom';
 import classNames from 'classnames';
 import { FC } from 'react';
-import { getSearchWith } from '../utils/searchHelper';
+import { getSearchWith } from '../utils';
 import { SearchLink } from './SearchLink';
-import { Filter } from '../utils/Filter';
+import { Filter } from '../types';
 
 type Props = {
   query: string;
@@ -17,6 +17,7 @@ export const PeopleFilters: FC<Props> = ({
   sex,
 }) => {
   const [searchParams, setSearchParams] = useSearchParams();
+  const centuriesList = ['16', '17', '18', '19', '20'];
   const onChangeQuery = (e: React.ChangeEvent<HTMLInputElement>) => {
     const targetValue = e.target.value;
 
@@ -24,12 +25,6 @@ export const PeopleFilters: FC<Props> = ({
       getSearchWith(searchParams, { query: targetValue || null }),
     );
   };
-
-  // const onChangeCentury = (e: React.ChangeEvent<HTMLLinkElement>) => {
-  //   setSearchParams(
-  //     getSearchWith(searchParams, {centuries: e.target.})
-  //   )
-  // };
 
   return (
     <nav className="panel">
@@ -43,14 +38,14 @@ export const PeopleFilters: FC<Props> = ({
           All
         </SearchLink>
         <SearchLink
-          params={{ sex: Filter.MALE }}
-          className={classNames({ 'is-active': sex === Filter.MALE })}
+          params={{ sex: Filter.Male }}
+          className={classNames({ 'is-active': sex === Filter.Male })}
         >
           Male
         </SearchLink>
         <SearchLink
-          params={{ sex: Filter.FEMALE }}
-          className={classNames({ 'is-active': sex === Filter.FEMALE })}
+          params={{ sex: Filter.Female }}
+          className={classNames({ 'is-active': sex === Filter.Female })}
         >
           Female
         </SearchLink>
@@ -77,51 +72,20 @@ export const PeopleFilters: FC<Props> = ({
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
 
-            {['16', '17', '18', '19', '20'].map(item => (
+            {centuriesList.map(century => (
               <SearchLink
+                key={century}
                 params={{
-                  centuries: centuries.includes(item)
-                    ? centuries.filter(el => el !== item)
-                    : [...centuries, item],
+                  centuries: centuries.includes(century)
+                    ? centuries.filter(el => el !== century)
+                    : [...centuries, century],
                 }}
                 className={classNames('button mr-1',
-                  { 'is-info': centuries.includes(item) })}
+                  { 'is-info': centuries.includes(century) })}
               >
-                {item}
+                {century}
               </SearchLink>
             ))}
-
-            {/* <a
-              data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=17"
-            >
-              17
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=18"
-            >
-              18
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=19"
-            >
-              19
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1"
-              href="#/people?centuries=20"
-            >
-              20
-            </a> */}
           </div>
 
           <div className="level-right ml-4">

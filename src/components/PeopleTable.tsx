@@ -3,14 +3,18 @@ import classNames from 'classnames';
 import { useParams } from 'react-router-dom';
 import { Person } from '../types';
 import { PersonLink } from './PersonLink';
+import { SearchLink } from './SearchLink';
 
 type Props = {
   peoples: Person[] | null;
+  sort: string | null;
+  order: boolean | null;
 };
 
-export const PeopleTable: FC<Props> = ({ peoples }) => {
+export const PeopleTable: FC<Props> = ({ peoples, sort, order }) => {
   const { slug = '' } = useParams();
   const isSelected = (person: Person) => person.slug === slug;
+  const namingList = ['Name', 'Sex', 'Born', 'Died'];
 
   return (
     <table
@@ -19,49 +23,32 @@ export const PeopleTable: FC<Props> = ({ peoples }) => {
     >
       <thead>
         <tr>
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Name
-              <a href="#/people?sort=name">
-                <span className="icon">
-                  <i className="fas fa-sort" />
-                </span>
-              </a>
-            </span>
-          </th>
+          {namingList.map(name => {
+            const lowerName = name.toLowerCase();
 
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Sex
-              <a href="#/people?sort=sex">
-                <span className="icon">
-                  <i className="fas fa-sort" />
-                </span>
-              </a>
-            </span>
-          </th>
+            const params = {
+              sort: (sort === lowerName && order) ? null : lowerName,
+              order: (sort === lowerName && !order) ? 'desc' : null,
+            };
 
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Born
-              <a href="#/people?sort=born&amp;order=desc">
-                <span className="icon">
-                  <i className="fas fa-sort-up" />
-                </span>
-              </a>
-            </span>
-          </th>
+            const styled = {
+              'fa-sort-up': sort === lowerName && !order,
+              'fa-sort-down': sort === lowerName && order,
+            };
 
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Died
-              <a href="#/people?sort=died">
-                <span className="icon">
-                  <i className="fas fa-sort" />
+            return (
+              <th>
+                <span className="is-flex is-flex-wrap-nowrap">
+                  {name}
+                  <SearchLink params={params}>
+                    <span className="icon">
+                      <i className={classNames('fas fa-sort', styled)} />
+                    </span>
+                  </SearchLink>
                 </span>
-              </a>
-            </span>
-          </th>
+              </th>
+            );
+          })}
 
           <th>Mother</th>
           <th>Father</th>
