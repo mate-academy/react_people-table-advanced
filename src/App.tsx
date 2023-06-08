@@ -7,7 +7,7 @@ import {
 } from 'react-router-dom';
 import { PeoplePage } from './components/PeoplePage';
 import { Navbar } from './components/Navbar';
-import { HomePage } from './components/homePage';
+import { HomePage } from './components/HomePage';
 import { PageNotFound } from './components/PageNotFound';
 import { Person, NewPerson } from './types';
 import { getPeople } from './api';
