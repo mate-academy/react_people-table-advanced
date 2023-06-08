@@ -70,9 +70,7 @@ export const PeopleFilters: React.FC<Props> = ({
             className="input"
             placeholder="Search"
             value={query}
-            onChange={(event) => {
-              setCurrentQuery(event.target.value);
-            }}
+            onChange={(event) => setCurrentQuery(event.target.value)}
           />
 
           <span className="icon is-left">

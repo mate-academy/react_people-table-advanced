@@ -1,5 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Routes, Route } from 'react-router-dom';
+import {
+  Routes,
+  Route,
+  useLocation,
+  Navigate,
+} from 'react-router-dom';
 import { PeoplePage } from './components/PeoplePage';
 import { Navbar } from './components/Navbar';
 import { HomePage } from './components/homePage';
@@ -16,6 +21,9 @@ export const App: React.FC = () => {
   const [sexFilter, setSexFilter] = useState(FilterType.All);
   const [query, setQuery] = useState('');
   const [isError, setIsError] = useState(false);
+  const location = useLocation();
+
+  const isHomePage = location.pathname.endsWith('/home');
 
   const sexFilterHandler = (value: FilterType) => {
     setSexFilter(value);
@@ -59,6 +67,7 @@ export const App: React.FC = () => {
 
       <div className="section">
         <div className="container">
+          {isHomePage && <Navigate to="/" replace />}
           <Routes>
             <Route path="*" element={<PageNotFound />} />
             <Route path="/" element={<HomePage />} />

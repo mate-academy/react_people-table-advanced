@@ -1,4 +1,4 @@
-import { NavLink } from 'react-router-dom';
+import { NavLink, useLocation } from 'react-router-dom';
 import React, { useState } from 'react';
 import { Person } from '../types';
 import { SortType, PropName } from '../types/enum';
@@ -16,11 +16,13 @@ export const PeopleTable: React.FC<Props> = ({
   sortOrder,
   sortField,
 }) => {
-  const [selectedName, setSelectedName] = useState<string | null>(null);
+  const [propName, setpropName] = useState<string | null>(null);
   const handleSelection
   = (name: string | null) => {
-    setSelectedName(name);
+    setpropName(name);
   };
+
+  const location = useLocation().pathname.toString().slice(8);
 
   return (
     <table
@@ -124,7 +126,8 @@ export const PeopleTable: React.FC<Props> = ({
           return (
             <tr
               key={person.name}
-              className={selectedName === person.name
+              className={propName === person.name
+                 && location === person.slug
                 ? 'has-background-warning'
                 : ''}
             >
@@ -135,9 +138,7 @@ export const PeopleTable: React.FC<Props> = ({
                     ? ('has-text-danger')
                     : ''}
                   role="button"
-                  onClick={() => {
-                    handleSelection(person.name);
-                  }}
+                  onClick={() => handleSelection(person.name)}
                 >
                   {person.name}
                 </NavLink>
