@@ -3,6 +3,7 @@ import classNames from 'classnames';
 import { Person } from '../types';
 import { TableLink } from './TableLink';
 import { SortTableLink } from './SortTableLink';
+import { Sort } from '../types/Sort';
 
 type Props = {
   people: Person[];
@@ -41,19 +42,19 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
       <thead>
         <tr>
           <th>
-            <SortTableLink name="name" />
+            <SortTableLink name={Sort.Name} />
           </th>
 
           <th>
-            <SortTableLink name="sex" />
+            <SortTableLink name={Sort.Sex} />
           </th>
 
           <th>
-            <SortTableLink name="born" />
+            <SortTableLink name={Sort.Born} />
           </th>
 
           <th>
-            <SortTableLink name="died" />
+            <SortTableLink name={Sort.Died} />
           </th>
 
           <th>Mother</th>

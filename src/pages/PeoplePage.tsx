@@ -5,6 +5,7 @@ import { Person } from '../types/Person';
 import { Loader } from '../components/Loader';
 import { PeopleTable } from '../components/PeopleTable';
 import { PeopleFilters } from '../components/PeopleFilters';
+import { Sort } from '../types/Sort';
 
 export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[] | null>(null);
@@ -42,13 +43,13 @@ export const PeoplePage = () => {
 
     if (sortParams) {
       switch (sortParams) {
-        case 'born':
-        case 'died':
+        case Sort.Born:
+        case Sort.Died:
           copyPeople.sort((a, b) => a[sortParams] - b[sortParams]);
           break;
 
-        case 'name':
-        case 'sex':
+        case Sort.Name:
+        case Sort.Sex:
           copyPeople.sort((a, b) => a[sortParams].localeCompare(b[sortParams]));
           break;
 

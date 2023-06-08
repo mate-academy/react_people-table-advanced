@@ -9,13 +9,14 @@ type Props = {
 export const FilterSexLink: React.FC<Props> = ({ name }) => {
   const [searchParams] = useSearchParams();
   const sexParams = searchParams.get('sex');
+  const allValue = 'All';
   let params = null;
 
-  if (name !== 'All') {
+  if (name !== allValue) {
     params = name[0].toLocaleLowerCase();
   }
 
-  const isActive = (!sexParams && name === 'All') || params === sexParams;
+  const isActive = (!sexParams && name === allValue) || params === sexParams;
 
   return (
     <Link
