@@ -1,4 +1,5 @@
 import classNames from 'classnames';
+import { useMemo } from 'react';
 import { Person } from '../../types/Person';
 import { PersonLink } from '../PersonLink';
 import { SearchLink } from '../SearchLink';
@@ -16,7 +17,7 @@ export const PeopleTable: React.FC<Props> = ({
   sort,
   order,
 }) => {
-  const sortItems = ['Name', 'Sex', 'Born', 'Died'];
+  const sortItems = useMemo(() => ['Name', 'Sex', 'Born', 'Died'], []);
 
   const getParentLayout = (
     parentName: string | null,

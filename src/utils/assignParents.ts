@@ -1,9 +1,9 @@
 import { Person } from '../types/Person';
 
 export const assignParents = (people: Person[]) => {
-  const peopleWithParents: Person[] = people.map(person => {
-    const personWithParents = { ...person };
+  people.forEach(person => {
     const mother = people.find(parent => parent.name === person.motherName);
+    const personWithParents = person;
 
     if (mother) {
       personWithParents.mother = mother;
@@ -17,6 +17,4 @@ export const assignParents = (people: Person[]) => {
 
     return personWithParents;
   });
-
-  return peopleWithParents;
 };

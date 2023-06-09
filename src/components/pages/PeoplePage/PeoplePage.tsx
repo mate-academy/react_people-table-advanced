@@ -27,9 +27,10 @@ export const PeoplePage = () => {
       setArePeopleLoading(true);
 
       const peopleFromServer = await getPeople();
-      const peopleWithParents = assignParents(peopleFromServer);
 
-      setPeople(peopleWithParents);
+      assignParents(peopleFromServer);
+
+      setPeople(peopleFromServer);
       setArePeopleLoaded(true);
     } catch {
       setHasLoadingError(true);
