@@ -55,13 +55,13 @@ export const PeoplePage = () => {
     );
   };
 
-  function compareValues(valueA: string | number, valueB: string | number) {
-    if (typeof valueA === 'string' && typeof valueB === 'string') {
-      return valueA.localeCompare(valueB);
+  function compareValues(a: string | number, b: string | number) {
+    if (typeof a === 'string' && typeof b === 'string') {
+      return a.localeCompare(b);
     }
 
-    if (typeof valueA === 'number' && typeof valueB === 'number') {
-      return valueA - valueB;
+    if (typeof a === 'number' && typeof b === 'number') {
+      return a - b;
     }
 
     return 0;
@@ -96,32 +96,50 @@ export const PeoplePage = () => {
 
     if (sortField && filteredPeopleList) {
       filteredPeopleList = filteredPeopleList.sort((a, b) => {
-        const valueA
-          = sortField === 'born'
-            ? a.born
-            : sortField === 'died'
-              ? a.died
-              : sortField === 'name'
-                ? a.name
-                : sortField === 'sex'
-                  ? a.sex
-                  : a[sortField];
-        const valueB
-          = sortField === 'born'
-            ? b.born
-            : sortField === 'died'
-              ? b.died
-              : sortField === 'name'
-                ? b.name
-                : sortField === 'sex'
-                  ? b.sex
-                  : b[sortField];
+        let firstValue;
+        let secondValue;
 
-        if (sortOrder === 'desc') {
-          return compareValues(valueB, valueA);
+        switch (sortField) {
+          case 'born':
+            firstValue = a.born;
+            break;
+          case 'died':
+            firstValue = a.died;
+            break;
+          case 'name':
+            firstValue = a.name;
+            break;
+          case 'sex':
+            firstValue = a.sex;
+            break;
+          default:
+            firstValue = a[sortField];
+            break;
         }
 
-        return compareValues(valueA, valueB);
+        switch (sortField) {
+          case 'born':
+            secondValue = b.born;
+            break;
+          case 'died':
+            secondValue = b.died;
+            break;
+          case 'name':
+            secondValue = b.name;
+            break;
+          case 'sex':
+            secondValue = b.sex;
+            break;
+          default:
+            secondValue = b[sortField];
+            break;
+        }
+
+        if (sortOrder === 'desc') {
+          return compareValues(secondValue, firstValue);
+        }
+
+        return compareValues(firstValue, secondValue);
       });
     }
 
@@ -219,7 +237,7 @@ export const PeoplePage = () => {
 
           {isLoading ? (
             <Loader />
-          ) : people?.length === 0 ? (
+          ) : !people?.length ? (
             <p data-cy="noPeopleMessage">There are no people on the server</p>
           ) : (
             <table
