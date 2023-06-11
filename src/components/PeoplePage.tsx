@@ -2,7 +2,6 @@ import React, {
   useMemo, useState, useEffect,
 } from 'react';
 import { PeopleFilters } from './PeopleFilters';
-import { Loader } from './Loader';
 import { PeopleTable } from './PeopleTable';
 import { NewPerson } from '../types';
 import { FilterType, SortType, PropName } from '../types/enum';
@@ -33,60 +32,50 @@ export const PeoplePage: React.FC<Props> = ({
   const [sortField, setsortField] = useState<string | null>(null);
   const [sortOrder, setSortOrder] = useState(SortType.original);
   const [clickCount, setClickCount] = useState(0);
-  const [selectedCentury, setSelectedCentury]
+  const [activeCenturies, setactiveCenturies]
   = useState<number[]>([]);
   const [isFiltered, setIsfiltered] = useState(false);
 
   const allCenturySelection = () => {
-    setSelectedCentury([]);
+    setactiveCenturies([]);
   };
 
   const handleSort = (column: string) => {
     setsortField(column);
     setClickCount(clickCount + 1);
-    if (sortField === column) {
-      if (clickCount === 1) {
-        setSortOrder(SortType.asc);
-      }
-
-      if (clickCount === 2) {
-        setSortOrder(SortType.desc);
-      }
-    }
-
-    if (clickCount === 3) {
-      setsortField(column);
-      setClickCount(1);
-      setSortOrder(SortType.original);
-    }
   };
 
   const resetEveryThing = () => {
-    setSelectedCentury([]);
+    setactiveCenturies([]);
     setQuery('');
     sexFilterHandler(FilterType.All);
+    localStorage.setItem('query', '');
   };
 
   const setCurrentQuery = (currentQuery: string) => {
+    localStorage.setItem('query', currentQuery);
+
     setQuery(currentQuery);
   };
 
   const handleCenturySelection = (century: number) => {
-    if (selectedCentury.includes(century) && selectedCentury.length === 5) {
-      const filtered = selectedCentury.filter((number) => {
+    const includesCenturie = activeCenturies.includes(century);
+
+    if (includesCenturie && activeCenturies.length === 5) {
+      const filtered = activeCenturies.filter((number) => {
         return number === century;
       });
 
-      setSelectedCentury(filtered);
-    } else if (!selectedCentury.includes(century)
-    && selectedCentury.length !== 5) {
-      setSelectedCentury([...selectedCentury, century]);
-    } else if (selectedCentury.includes(century)) {
-      const filtered = selectedCentury.filter((number) => {
+      setactiveCenturies(filtered);
+    } else if (!includesCenturie
+    && activeCenturies.length !== 5) {
+      setactiveCenturies([...activeCenturies, century]);
+    } else if (includesCenturie) {
+      const filtered = activeCenturies.filter((number) => {
         return number !== century;
       });
 
-      setSelectedCentury(filtered);
+      setactiveCenturies(filtered);
     }
   };
 
@@ -132,37 +121,37 @@ export const PeoplePage: React.FC<Props> = ({
       switch (sexFilter) {
         case FilterType.All:
         default:
-          return selectedCentury.length === 0
+          return activeCenturies.length === 0
             ? functionality
-            : functionality && selectedCentury.includes(centurie);
+            : functionality && activeCenturies.includes(centurie);
         case FilterType.Male:
           return (
-            selectedCentury.length === 0
+            activeCenturies.length === 0
               ? (person.sex === 'm'
               && functionality)
               : (person.sex === 'm'
               && functionality
-              && selectedCentury.includes(centurie))
+              && activeCenturies.includes(centurie))
           );
         case FilterType.Female:
           return (
-            selectedCentury.length === 0
+            activeCenturies.length === 0
               ? (person.sex === 'f'
               && functionality)
               : (person.sex === 'f'
               && functionality
-              && selectedCentury.includes(centurie))
+              && activeCenturies.includes(centurie))
           );
       }
     }),
-    [sexFilter, query, loading, selectedCentury, fetchPeople],
+    [sexFilter, query, loading, activeCenturies, fetchPeople],
   );
 
   useEffect(() => {
     setIsfiltered(true);
-  }, [query, sexFilter, selectedCentury]);
+  }, [query, sexFilter, activeCenturies]);
 
-  const filterAscOrDesc = () => {
+  const sortingAscOrDesc = useMemo(() => {
     return filteredPeople.sort((elem1, elem2) => {
       switch (sortField) {
         case PropName.Name:
@@ -181,24 +170,26 @@ export const PeoplePage: React.FC<Props> = ({
           return elem1.index - elem2.index;
       }
     });
-  };
-
-  const filterOg = () => {
-    return filteredPeople.sort((elem1, elem2) => elem1.index - elem2.index);
-  };
+  }, [filteredPeople, sortField, sortOrder]);
 
   useEffect(() => {
-    if (sortOrder === 'original') {
-      filterOg();
-    } else {
-      filterAscOrDesc();
+    if (sortField === null) {
+      return;
     }
-  }, [sortField, sortOrder, clickCount]);
+
+    if (clickCount === 1) {
+      setSortOrder(SortType.asc);
+    } else if (clickCount === 2) {
+      setSortOrder(SortType.desc);
+    } else if (clickCount === 3) {
+      setsortField(null);
+      setClickCount(0);
+      setSortOrder(SortType.original);
+    }
+  }, [sortField, clickCount, setSortOrder, setsortField, setClickCount]);
 
   return (
     <>
-      <h1 className="title">People Page</h1>
-
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
           <div className="column is-7-tablet is-narrow-desktop">
@@ -209,7 +200,7 @@ export const PeoplePage: React.FC<Props> = ({
               deleteQuery={deleteQuery}
               handleCenturySelection={handleCenturySelection}
               allCenturySelection={allCenturySelection}
-              selecetedCentury={selectedCentury}
+              activeCenturies={activeCenturies}
               resetEveryThing={resetEveryThing}
               sexFilter={sexFilter}
             />
@@ -218,16 +209,12 @@ export const PeoplePage: React.FC<Props> = ({
           <div className="column">
             <div className="box table-container">
 
-              {loading ? (
-                <Loader />
-              ) : (
-                <PeopleTable
-                  people={filteredPeople}
-                  handleSort={handleSort}
-                  sortOrder={sortOrder}
-                  sortField={sortField}
-                />
-              )}
+              <PeopleTable
+                people={sortingAscOrDesc}
+                handleSort={handleSort}
+                sortOrder={sortOrder}
+                sortField={sortField}
+              />
 
               {isFiltered && filteredPeople.length === 0 && !isError && (
                 <p>There are no people matching the current search criteria</p>

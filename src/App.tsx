@@ -12,6 +12,7 @@ import { PageNotFound } from './components/PageNotFound';
 import { Person, NewPerson } from './types';
 import { getPeople } from './api';
 import { FilterType } from './types/enum';
+import { Loader } from './components/Loader';
 import './App.scss';
 
 export const App: React.FC = () => {
@@ -31,6 +32,7 @@ export const App: React.FC = () => {
 
   const deleteQuery = () => {
     setQuery('');
+    localStorage.setItem('query', '');
   };
 
   const fetchPeople = async () => {
@@ -47,6 +49,12 @@ export const App: React.FC = () => {
   };
 
   useEffect(() => {
+    const savedQuery = localStorage.getItem('query');
+
+    if (savedQuery) {
+      setQuery(savedQuery);
+    }
+
     fetchPeople();
   }, []);
 
@@ -67,25 +75,30 @@ export const App: React.FC = () => {
 
       <div className="section">
         <div className="container">
+          <h1 className="title">People Page</h1>
           {isHomePage && <Navigate to="/" replace />}
           <Routes>
             <Route path="*" element={<PageNotFound />} />
             <Route path="/" element={<HomePage />} />
             <Route
               path="/people"
-              element={(
-                <PeoplePage
-                  people={newPeople}
-                  loading={loading}
-                  sexFilter={sexFilter}
-                  sexFilterHandler={sexFilterHandler}
-                  query={query}
-                  setQuery={setQuery}
-                  deleteQuery={deleteQuery}
-                  isError={isError}
-                  fetchPeople={fetchPeople}
-                />
-              )}
+              element={
+                loading ? (
+                  <Loader />
+                ) : (
+                  <PeoplePage
+                    people={newPeople}
+                    loading={loading}
+                    sexFilter={sexFilter}
+                    sexFilterHandler={sexFilterHandler}
+                    query={query}
+                    setQuery={setQuery}
+                    deleteQuery={deleteQuery}
+                    isError={isError}
+                    fetchPeople={fetchPeople}
+                  />
+                )
+              }
             >
               <Route
                 path={`:${sexFilter}`}
