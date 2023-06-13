@@ -79,12 +79,21 @@ export const PeopleContextProvider = ({
 
   const peopleWithParents
     = useMemo(() => people.map(person => {
-      const mother = people.find((motherPerson) => {
-        return motherPerson.name === person.motherName;
-      });
-      const father = people.find((fatherPerson) => {
-        return fatherPerson.name === person.fatherName;
-      });
+      const findParentByName = (parentName: string) => {
+        return people
+          .find(parentPerson => parentPerson.name === parentName);
+      };
+
+      let mother;
+      let father;
+
+      if (person.motherName) {
+        mother = findParentByName(person.motherName);
+      }
+
+      if (person.fatherName) {
+        father = findParentByName(person.fatherName);
+      }
 
       return {
         ...person,
