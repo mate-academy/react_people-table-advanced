@@ -73,20 +73,23 @@ export const PeoplePage = () => {
       switch (sortBy) {
         case 'name':
           filteredPeople = filteredPeople
-            .sort((personA, personB) => personA.name
-              .localeCompare(personB.name));
+            .sort((firstPerson, secondPerson) => firstPerson.name
+              .localeCompare(secondPerson.name));
           break;
         case 'sex':
           filteredPeople = filteredPeople
-            .sort((personA, personB) => personA.sex.localeCompare(personB.sex));
+            .sort((firstPerson, secondPerson) => firstPerson.sex
+              .localeCompare(secondPerson.sex));
           break;
         case 'born':
           filteredPeople = filteredPeople
-            .sort((personA, personB) => personA.born - personB.born);
+            .sort((firstPerson, secondPerson) => firstPerson.born
+              - secondPerson.born);
           break;
         case 'died':
           filteredPeople = filteredPeople
-            .sort((personA, personB) => personA.died - personB.died);
+            .sort((firstPerson, secondPerson) => firstPerson.died
+              - secondPerson.died);
           break;
         default:
           break;
@@ -132,7 +135,7 @@ export const PeoplePage = () => {
                   </p>
                 )}
 
-              {!isLoading && !hasError && visiblePeople.length === 0
+              {!isLoading && !hasError && !visiblePeople.length
               && (
                 <p>
                   There are no people matching the current search criteria
