@@ -1,8 +1,8 @@
 import { Link, useParams } from 'react-router-dom';
 import classNames from 'classnames';
+import { useCallback } from 'react';
 import { Person } from '../../types';
 import { SearchLink } from '../SearchLink/SearchLink';
-import { useCallback } from 'react';
 
 type PeopleTableProps = {
   people: Person[];
@@ -103,8 +103,29 @@ export const PeopleTable: React.FC<PeopleTableProps> = ({
                 </td>
                 <td>{person.born}</td>
                 <td>{person.died}</td>
-                <td>{findMother() ? person.motherName : '-'}</td>
-                <td>{findFather() ? person.fatherName : '-'}</td>
+
+
+                <td>
+                  <Link
+                    to={`/people/${person.slug}`}
+                    className={classNames({
+                      'has-text-danger': person.sex === 'm',
+                    })}
+                  >
+                    {findMother() ? person.motherName : '-'}
+                  </Link>
+                </td>
+
+                <td>
+                  <Link
+                    to={`/people/${person.slug}`}
+                    className={classNames({
+                      'has-text-danger': person.sex === 'f',
+                    })}
+                  >
+                    {findFather() ? person.fatherName : '-'}
+                  </Link>
+                </td>
               </tr>
             );
           })}
