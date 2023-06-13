@@ -7,8 +7,8 @@ import { PersonLink } from '../PersonLink/PersonLink';
 
 type PeopleTableProps = {
   people: Person[];
-  sortType: string | null;
-  order: string | null;
+  sortType: string | '';
+  order: string | '';
 };
 
 export const PeopleTable: React.FC<PeopleTableProps> = ({
@@ -19,9 +19,9 @@ export const PeopleTable: React.FC<PeopleTableProps> = ({
   const { slug } = useParams<{ slug: string }>();
   const headName = ['Name', 'Sex', 'Born', 'Died'];
 
-  const isSelected = useCallback(
-    (person: Person) => person.slug === slug, [slug],
-  );
+  const isSelected = useCallback((person: Person) => person.slug === slug, [
+    slug,
+  ]);
 
   const handleSort = useCallback((name: string) => {
     if (name === sortType && !order) {
@@ -34,6 +34,14 @@ export const PeopleTable: React.FC<PeopleTableProps> = ({
 
     return { sort: name, order: null };
   }, [order, sortType]);
+
+  const findMother = useCallback((person: Person): Person | undefined => {
+    return people.find((mother) => mother.name === person.motherName);
+  }, [people]);
+
+  const findFather = useCallback((person: Person): Person | undefined => {
+    return people.find((father) => father.name === person.fatherName);
+  }, [people]);
 
   return (
     <>
@@ -72,18 +80,8 @@ export const PeopleTable: React.FC<PeopleTableProps> = ({
         <tbody>
           {people.map((person) => {
             const selected = isSelected(person);
-
-            const findMother
-              = (): Person | undefined => {
-                return people
-                  .find((mother) => mother.name === person.motherName);
-              };
-
-            const findFather
-              = (): Person | undefined => {
-                return people
-                  .find((father) => father.name === person.fatherName);
-              };
+            const mother = findMother(person);
+            const father = findFather(person);
 
             return (
               <tr
@@ -99,20 +97,16 @@ export const PeopleTable: React.FC<PeopleTableProps> = ({
                 <td>{person.died}</td>
 
                 <td>
-                  {findMother() ? (
-                    <PersonLink
-                      person={findMother()!}
-                    />
+                  {mother ? (
+                    <PersonLink person={mother} />
                   ) : (
                     person.motherName || '-'
                   )}
                 </td>
 
                 <td>
-                  {findFather() ? (
-                    <PersonLink
-                      person={findFather()!}
-                    />
+                  {father ? (
+                    <PersonLink person={father} />
                   ) : (
                     person.fatherName || '-'
                   )}

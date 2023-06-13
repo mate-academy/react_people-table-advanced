@@ -15,9 +15,9 @@ export const PeoplePage = () => {
   const [isLoading, setLoading] = useState(false);
   const sex = searchParams.get('sex');
   const query = searchParams.get('query') || '';
-  const centuries = searchParams.getAll('centuries') || null;
-  const sortType = searchParams.get('sort');
-  const order = searchParams.get('order') || null;
+  const centuries = searchParams.getAll('centuries') || [];
+  const sortType = searchParams.get('sort') || '';
+  const order = searchParams.get('order') || '';
 
   const getAllPeople = async () => {
     setLoading(true);
