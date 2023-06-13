@@ -92,7 +92,7 @@ export const PeopleTable: React.FC<PeopleTableProps> = ({
                 className={classNames({ 'has-background-warning': selected })}
               >
                 <td>
-                  <PersonLink person={person} isSelected={isSelected} />
+                  <PersonLink person={person} />
                 </td>
                 <td>{person.sex}</td>
                 <td>{person.born}</td>
@@ -102,7 +102,6 @@ export const PeopleTable: React.FC<PeopleTableProps> = ({
                   {findMother() ? (
                     <PersonLink
                       person={findMother()!}
-                      isSelected={isSelected}
                     />
                   ) : (
                     person.motherName || '-'
@@ -113,7 +112,6 @@ export const PeopleTable: React.FC<PeopleTableProps> = ({
                   {findFather() ? (
                     <PersonLink
                       person={findFather()!}
-                      isSelected={isSelected}
                     />
                   ) : (
                     person.fatherName || '-'
