@@ -17,7 +17,7 @@ export const PersonalLink: FC<PropsPersonalLink> = ({ person }) => {
   const isSelected = slug === selectedSlug;
 
   const motherFragment
-    = mother !== undefined
+    = mother
       ? (
         <Link
           to={mother.slug}
@@ -33,7 +33,7 @@ export const PersonalLink: FC<PropsPersonalLink> = ({ person }) => {
         </p>
       );
 
-  const fatherFragment = father !== undefined
+  const fatherFragment = father
     ? (
       <Link
         to={father.slug}

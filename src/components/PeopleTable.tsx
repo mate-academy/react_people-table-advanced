@@ -5,7 +5,7 @@ import { SearchLink } from './SearchLink';
 
 export const PeopleTable = () => {
   const {
-    filteredPeople, people, HandleClickSort, order, sortField,
+    filteredPeople, people, handleClickSort, order, sortField,
   } = usePeopleContext();
 
   if (!filteredPeople.length && people.length) {
@@ -27,7 +27,7 @@ export const PeopleTable = () => {
                   sort: 'name',
                   order: order === 'asc' ? 'desc' : null,
                 }}
-                onClick={() => HandleClickSort('name')}
+                onClick={() => handleClickSort('name')}
               >
                 <span className="icon">
                   <i className={classNames('fas fa-sort', {
@@ -48,7 +48,7 @@ export const PeopleTable = () => {
                   sort: 'sex',
                   order: order === 'asc' ? 'desc' : null,
                 }}
-                onClick={() => HandleClickSort('sex')}
+                onClick={() => handleClickSort('sex')}
               >
                 <span className="icon">
                   <i className={classNames('fas fa-sort', {
@@ -69,7 +69,7 @@ export const PeopleTable = () => {
                   sort: 'born',
                   order: order === 'asc' ? 'desc' : null,
                 }}
-                onClick={() => HandleClickSort('born')}
+                onClick={() => handleClickSort('born')}
               >
                 <span className="icon">
                   <i className={classNames('fas fa-sort', {
@@ -90,7 +90,7 @@ export const PeopleTable = () => {
                   sort: 'died',
                   order: order === 'asc' ? 'desc' : null,
                 }}
-                onClick={() => HandleClickSort('died')}
+                onClick={() => handleClickSort('died')}
               >
                 <span className="icon">
                   <i className={classNames('fas fa-sort', {

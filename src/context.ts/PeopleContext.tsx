@@ -20,7 +20,7 @@ interface PeopleContextInterface {
   handleQuery(word: string): void;
   peopleWithParents: Person[];
   filteredPeople: Person[];
-  HandleClickSort(field: string): void;
+  handleClickSort(field: string): void;
   order: string;
   sortField: string;
 }
@@ -36,7 +36,7 @@ export const PeopleContext = createContext<PeopleContextInterface>({
   centuries: [],
   handleQuery: () => { },
   peopleWithParents: [],
-  HandleClickSort: () => { },
+  handleClickSort: () => { },
   order: '',
   sortField: '',
 });
@@ -136,7 +136,7 @@ export const PeopleContextProvider = ({
     return newPeople;
   }, [peopleWithParents, people, centuries, sortField, searchParams, order]);
 
-  const HandleClickSort = useCallback((field: string) => {
+  const handleClickSort = useCallback((field: string) => {
     if (sortField === field) {
       if (order === '') {
         setOrder('asc');
@@ -169,7 +169,7 @@ export const PeopleContextProvider = ({
       handleQuery,
       peopleWithParents,
       filteredPeople,
-      HandleClickSort,
+      handleClickSort,
       order,
       sortField,
 

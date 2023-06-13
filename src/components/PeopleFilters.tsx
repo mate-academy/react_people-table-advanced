@@ -1,4 +1,5 @@
 import classNames from 'classnames';
+import { useCallback } from 'react';
 import { SearchLink } from './SearchLink';
 import { usePeopleContext } from '../context.ts/PeopleContext';
 
@@ -6,6 +7,12 @@ export const PeopleFilters = () => {
   const {
     centuries, handleQuery, query, gender, setQuery,
   } = usePeopleContext();
+
+  const getCenturies = useCallback((age: string) => {
+    return centuries.includes(age)
+      ? centuries.filter(centur => centur !== age)
+      : centuries.concat([age]);
+  }, [centuries]);
 
   return (
     <nav className="panel">
@@ -62,9 +69,7 @@ export const PeopleFilters = () => {
                 ? 'button mr-1 is-info'
                 : 'button mr-1'}
               params={{
-                centuries: centuries.includes('16')
-                  ? centuries.filter(centur => centur !== '16')
-                  : centuries.concat(['16']),
+                centuries: getCenturies('16'),
               }}
             >
               16
@@ -76,9 +81,7 @@ export const PeopleFilters = () => {
                 ? 'button mr-1 is-info'
                 : 'button mr-1'}
               params={{
-                centuries: centuries.includes('17')
-                  ? centuries.filter(century => century !== '17')
-                  : [...centuries, '17'],
+                centuries: getCenturies('17'),
               }}
             >
               17
@@ -90,9 +93,7 @@ export const PeopleFilters = () => {
                 ? 'button mr-1 is-info'
                 : 'button mr-1'}
               params={{
-                centuries: centuries.includes('18')
-                  ? centuries.filter(centur => centur !== '18')
-                  : centuries.concat(['18']),
+                centuries: getCenturies('18'),
               }}
             >
               18
@@ -104,9 +105,7 @@ export const PeopleFilters = () => {
                 ? 'button mr-1 is-info'
                 : 'button mr-1'}
               params={{
-                centuries: centuries.includes('19')
-                  ? centuries.filter(centur => centur !== '19')
-                  : centuries.concat(['19']),
+                centuries: getCenturies('19'),
               }}
             >
               19
@@ -118,9 +117,7 @@ export const PeopleFilters = () => {
                 ? 'button mr-1 is-info'
                 : 'button mr-1'}
               params={{
-                centuries: centuries.includes('20')
-                  ? centuries.filter(centur => centur !== '20')
-                  : centuries.concat(['20']),
+                centuries: getCenturies('20'),
               }}
             >
               20
