@@ -2,6 +2,7 @@ import { Link, useParams } from 'react-router-dom';
 import classNames from 'classnames';
 import { Person } from '../../types';
 import { SearchLink } from '../SearchLink/SearchLink';
+import { useCallback } from 'react';
 
 type PeopleTableProps = {
   people: Person[];
@@ -17,17 +18,17 @@ export const PeopleTable: React.FC<PeopleTableProps> = ({
   const { slug } = useParams();
   const headName = ['Name', 'Sex', 'Born', 'Died'];
 
-  const handleSort = (name: string) => {
+  const handleSort = useCallback((name: string) => {
     if (name === sortType && !order) {
-      return { sortType: name, order: 'desc' };
+      return { sort: name, order: 'desc' };
     }
 
     if (name === sortType && order) {
-      return { sortType: null, order: null };
+      return { sort: null, order: null };
     }
 
-    return { sortType: name, order: null };
-  };
+    return { sort: name, order: null };
+  }, [order, sortType]);
 
   return (
     <>
