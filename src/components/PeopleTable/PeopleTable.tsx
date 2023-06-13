@@ -1,8 +1,9 @@
-import { Link, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import classNames from 'classnames';
 import { useCallback } from 'react';
 import { Person } from '../../types';
 import { SearchLink } from '../SearchLink/SearchLink';
+import { PersonLink } from '../PersonLink/PersonLink';
 
 type PeopleTableProps = {
   people: Person[];
@@ -15,8 +16,12 @@ export const PeopleTable: React.FC<PeopleTableProps> = ({
   sortType,
   order,
 }) => {
-  const { slug } = useParams();
+  const { slug } = useParams<{ slug: string }>();
   const headName = ['Name', 'Sex', 'Born', 'Died'];
+
+  const isSelected = useCallback(
+    (person: Person) => person.slug === slug, [slug],
+  );
 
   const handleSort = useCallback((name: string) => {
     if (name === sortType && !order) {
@@ -39,25 +44,18 @@ export const PeopleTable: React.FC<PeopleTableProps> = ({
         <thead>
           <tr>
             {headName.map((name) => (
-              <th
-                key={name}
-              >
-                <span
-                  className="is-flex is-flex-wrap-nowrap"
-                >
+              <th key={name}>
+                <span className="is-flex is-flex-wrap-nowrap">
                   {name}
 
-                  <SearchLink
-                    params={handleSort(name.toLowerCase())}
-
-                  >
+                  <SearchLink params={handleSort(name.toLowerCase())}>
                     <span className="icon">
                       <i
                         className={classNames('fas fa-sort', {
                           'fa-sort-up':
-                          sortType === name.toLowerCase() && !order,
+                            sortType === name.toLowerCase() && !order,
                           'fa-sort-down':
-                          sortType === name.toLowerCase() && order,
+                            sortType === name.toLowerCase() && order,
                         })}
                       />
                     </span>
@@ -73,58 +71,53 @@ export const PeopleTable: React.FC<PeopleTableProps> = ({
 
         <tbody>
           {people.map((person) => {
-            const isSelected = slug === person.slug;
-            const findMother = (): Person | undefined => {
-              return people.find((mother) => mother.name === person.motherName);
-            };
+            const selected = isSelected(person);
 
-            const findFather = (): Person | undefined => {
-              return people.find((father) => father.name === person.fatherName);
-            };
+            const findMother
+              = (): Person | undefined => {
+                return people
+                  .find((mother) => mother.name === person.motherName);
+              };
+
+            const findFather
+              = (): Person | undefined => {
+                return people
+                  .find((father) => father.name === person.fatherName);
+              };
 
             return (
               <tr
                 data-cy="person"
                 key={person.slug}
-                className={classNames({ 'has-background-warning': isSelected })}
+                className={classNames({ 'has-background-warning': selected })}
               >
                 <td>
-                  <Link
-                    to={`/people/${person.slug}`}
-                    className={classNames({
-                      'has-text-danger': person.sex === 'f',
-                    })}
-                  >
-                    {person.name}
-                  </Link>
+                  <PersonLink person={person} isSelected={isSelected} />
                 </td>
-                <td>
-                  {person.sex}
-                </td>
+                <td>{person.sex}</td>
                 <td>{person.born}</td>
                 <td>{person.died}</td>
 
-
                 <td>
-                  <Link
-                    to={`/people/${person.slug}`}
-                    className={classNames({
-                      'has-text-danger': person.sex === 'm',
-                    })}
-                  >
-                    {findMother() ? person.motherName : '-'}
-                  </Link>
+                  {findMother() ? (
+                    <PersonLink
+                      person={findMother()!}
+                      isSelected={isSelected}
+                    />
+                  ) : (
+                    person.motherName || '-'
+                  )}
                 </td>
 
                 <td>
-                  <Link
-                    to={`/people/${person.slug}`}
-                    className={classNames({
-                      'has-text-danger': person.sex === 'f',
-                    })}
-                  >
-                    {findFather() ? person.fatherName : '-'}
-                  </Link>
+                  {findFather() ? (
+                    <PersonLink
+                      person={findFather()!}
+                      isSelected={isSelected}
+                    />
+                  ) : (
+                    person.fatherName || '-'
+                  )}
                 </td>
               </tr>
             );
