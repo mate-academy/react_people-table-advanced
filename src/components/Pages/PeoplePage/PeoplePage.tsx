@@ -10,8 +10,10 @@ export const PeoplePage = () => {
   const [peopleList, setPeopleList] = useState<Person[]>([]);
   const [showError, setShowError] = useState(false);
   const [showNoPeopleOnTheServer, setShowNoPeopleOnTheServer] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false);
 
   useEffect(() => {
+    setIsProcessing(true);
     getPeople()
       .then((response) => {
         setPeopleList(setPerson(response));
@@ -19,7 +21,8 @@ export const PeoplePage = () => {
           setShowNoPeopleOnTheServer(true);
         }
       })
-      .catch(() => setShowError(true));
+      .catch(() => setShowError(true))
+      .finally(() => setIsProcessing(false));
   }, []);
 
   return (
@@ -43,7 +46,7 @@ export const PeoplePage = () => {
 
           <div className="column">
             <div className="box table-container">
-              {!peopleList.length && <Loader />}
+              {isProcessing && <Loader />}
 
               {showError
               && <p data-cy="peopleLoadingError">Something went wrong</p>}
