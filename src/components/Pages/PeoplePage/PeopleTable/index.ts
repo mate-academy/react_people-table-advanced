@@ -1,2 +1,2 @@
-export * from './PeopleItem';
+export * from './PersonBlock';
 export * from './TableHeaderItem';

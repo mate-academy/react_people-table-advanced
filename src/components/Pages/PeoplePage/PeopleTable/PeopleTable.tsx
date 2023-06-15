@@ -3,7 +3,7 @@ import { useLocation, useSearchParams } from 'react-router-dom';
 import { useEffect, useMemo, useState } from 'react';
 import { Person } from '../../../../types';
 import { SearchParamsTypes } from '../../../../types/SearchParamsTypes';
-import { TableHeaderItem, PeopleItem } from './index';
+import { TableHeaderItem, PersonBlock } from './index';
 
 import { filterPeople, sortsPeople } from '../../../../utils';
 
@@ -61,7 +61,7 @@ export const PeopleTable: React.FC<Props> = ({ peopleList }) => {
               </thead>
               <tbody>
                 {sortList.map((person) => (
-                  <PeopleItem key={person.name} person={person} />
+                  <PersonBlock key={person.name} person={person} />
                 ))}
               </tbody>
             </table>
