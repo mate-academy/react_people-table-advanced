@@ -1,3 +1,29 @@
 iframe {
   display: none;
 }
+
+.has-background-warning,
+.navbar-item,
+.button {
+  transition: all 0.5s;
+}
+
+.fade-enter {
+  opacity: 0;
+}
+
+.fade-enter-active {
+  opacity: 1;
+  transition: opacity 500ms;
+}
+
+.item-enter {
+  opacity: 0;
+  transform: translateX(100px);
+}
+
+.item-enter-active {
+  opacity: 1;
+  transition: all 500ms;
+  transform: translateX(0);
+}
