@@ -1,4 +1,3 @@
-import classNames from 'classnames';
 import { FC } from 'react';
 import { NavLink } from 'react-router-dom';
 
@@ -11,8 +10,9 @@ export const NavPageLink:FC<Props> = ({ to, text }) => {
   return (
     <NavLink
       to={to}
-      className={({ isActive }) => classNames('navbar-item',
-        { 'has-background-grey-lighter': isActive })}
+      className={({ isActive }) => (
+        isActive ? 'has-background-grey-lighter navbar-item' : 'navbar-item'
+      )}
       aria-current="page"
     >
       {text}

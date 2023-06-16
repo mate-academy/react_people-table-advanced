@@ -12,7 +12,7 @@ type Props = {
   order: string;
 };
 
-const tableColumn = ['Name', 'Sex', 'Born', 'Died'];
+const tableColumns = ['Name', 'Sex', 'Born', 'Died'];
 
 export const PeopleTable:FC<Props> = ({
   people, selectedSlug, sort, order,
@@ -36,7 +36,7 @@ export const PeopleTable:FC<Props> = ({
     >
       <thead>
         <tr>
-          {tableColumn.map(columnName => (
+          {tableColumns.map(columnName => (
             <th key={columnName}>
               <span className="is-flex is-flex-wrap-nowrap">
                 {columnName}

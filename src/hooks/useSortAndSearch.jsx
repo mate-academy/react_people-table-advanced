@@ -1,18 +1,24 @@
 import { useMemo } from 'react';
-import { SortSex } from '../types/SortSex';
+import { Gender } from '../types/SortSex';
 import { Sort } from '../types/Sort';
 
-export const useSortAndSearch = (people, sex, centuries, query, sort) => {
+export const useSortAndSearch = (
+  people,
+  sex,
+  centuries,
+  query,
+  sort,
+  order,
+) => {
   const modifiedPeople = useMemo(() => {
     return (people
       .filter(person => {
         switch (sex) {
-          case SortSex.female:
+          case Gender.Female:
             return person.sex === 'f';
-          case SortSex.male:
+          case Gender.Male:
             return person.sex === 'm';
           default:
-          case SortSex.all:
             return person;
         }
       })
@@ -33,21 +39,20 @@ export const useSortAndSearch = (people, sex, centuries, query, sort) => {
 
       .sort((a, b) => {
         switch (sort) {
-          case Sort.name:
+          case Sort.Name:
             return (a.name?.localeCompare(b.name));
-          case Sort.sex:
+          case Sort.Sex:
             return (a.sex?.localeCompare(b.sex));
-          case Sort.born:
+          case Sort.Born:
             return (a.born - b.born);
-          case Sort.died:
+          case Sort.Died:
             return (a.died - b.died);
           default:
-          case Sort.none:
             return 0;
         }
       })
     );
   }, [people, sex, query, centuries, sort]);
 
-  return modifiedPeople;
+  return order ? modifiedPeople.reverse() : modifiedPeople;
 };

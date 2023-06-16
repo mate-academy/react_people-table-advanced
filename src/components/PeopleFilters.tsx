@@ -1,15 +1,17 @@
 import classNames from 'classnames';
 import { FC } from 'react';
 import { Link } from 'react-router-dom';
-import { SortSex } from '../types/SortSex';
+import { Gender } from '../types/SortSex';
 import { SearchLink } from './SearchLink';
 
 type Props = {
   centuries: string[];
   query: string;
-  sex: string;
+  sex: Gender;
   onQueryChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
 };
+
+const centuriesData = ['16', '17', '18', '19', '20'];
 
 export const PeopleFilters:FC<Props> = ({
   centuries, query, onQueryChange, sex,
@@ -20,20 +22,20 @@ export const PeopleFilters:FC<Props> = ({
 
       <p className="panel-tabs" data-cy="SexFilter">
         <SearchLink
-          className={classNames({ 'is-active': sex === SortSex.all })}
-          params={{ sex: null }}
+          className={classNames({ 'is-active': sex === Gender.All })}
+          params={{ sex: Gender.All }}
         >
           All
         </SearchLink>
         <SearchLink
-          className={classNames({ 'is-active': sex === SortSex.male })}
-          params={{ sex: 'm' }}
+          className={classNames({ 'is-active': sex === Gender.Male })}
+          params={{ sex: Gender.Male }}
         >
           Male
         </SearchLink>
         <SearchLink
-          className={classNames({ 'is-active': sex === SortSex.female })}
-          params={{ sex: 'f' }}
+          className={classNames({ 'is-active': sex === Gender.Female })}
+          params={{ sex: Gender.Female }}
         >
           Female
         </SearchLink>
@@ -59,7 +61,7 @@ export const PeopleFilters:FC<Props> = ({
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            {['16', '17', '18', '19', '20'].map(century => (
+            {centuriesData.map(century => (
               <SearchLink
                 params={{
                   centuries: centuries.includes(century)

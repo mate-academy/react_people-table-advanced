@@ -5,11 +5,12 @@ import { Loader } from '../components/Loader';
 import { PeopleTable } from '../components/PeopleTable';
 import { Person } from '../types/Person';
 import { getPeople } from '../api';
-import { Error, NoPeopleMessage } from '../components/Error';
+import { NoPeopleMessage } from '../components/NoPeopleMessage';
 import { useSortAndSearch } from '../hooks/useSortAndSearch';
 import { getSearchWith } from '../utils/searchHelper';
-import { SortSex } from '../types/SortSex';
+import { Gender } from '../types/SortSex';
 import { Sort } from '../types/Sort';
+import { Error } from '../components/Error';
 
 export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);
@@ -18,9 +19,9 @@ export const PeoplePage = () => {
   const { personSlug = '' } = useParams();
   const [searchParams, setSearchParams] = useSearchParams();
   const centuries = searchParams.getAll('centuries') || [];
-  const sex = searchParams.get('sex') || SortSex.all;
+  const sex = searchParams.get('sex') || Gender.All;
   const query = searchParams.get('query') || '';
-  const sort = searchParams.get('sort') || Sort.none;
+  const sort = searchParams.get('sort') || Sort.None;
   const order = searchParams.get('order') || '';
 
   async function fetchPeople() {
@@ -48,11 +49,8 @@ export const PeoplePage = () => {
     centuries,
     query,
     sort,
+    order,
   );
-
-  if (order) {
-    sortedAndSearchedPeople.reverse();
-  }
 
   const onQueryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchParams(
@@ -84,7 +82,7 @@ export const PeoplePage = () => {
                 centuries={centuries}
                 query={query}
                 onQueryChange={onQueryChange}
-                sex={sex}
+                sex={sex as Gender}
               />
             </div>
           )}
