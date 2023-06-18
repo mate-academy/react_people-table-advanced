@@ -1,30 +1,31 @@
 import React from 'react';
-import { NavLink } from 'react-router-dom';
+import { SearchLink } from './SearchLink'; // Import the SearchLink component
 
 interface Props {
-  handleCenturySelection: (value: number) => void,
-  activeCenturies: number[]
+  handleCenturySelection: (value: number[]) => void;
+  activeCenturies: number[];
 }
 
 export const FilterCenturies: React.FC<Props> = ({
   handleCenturySelection,
   activeCenturies,
 }) => {
-  const centuries = [16, 17, 18, 19, 20];
+  const centuries = [15, 16, 17, 18, 19];
 
   return (
     <div className="level-left">
       {centuries.map((number) => (
-        <NavLink
+        <SearchLink
           key={number}
           data-cy="century"
-          className={activeCenturies.includes(number - 1)
-            ? 'button mr-1 is-info' : 'button mr-1'}
-          to={`#/people?centuries=${number}`}
-          onClick={() => handleCenturySelection(number - 1)}
+          className={`button mr-1 ${
+            activeCenturies.includes(number) ? 'is-info' : ''
+          }`}
+          params={{ centuries: [String(number)] }}
+          onClick={() => handleCenturySelection([number])}
         >
-          {number}
-        </NavLink>
+          {number + 1}
+        </SearchLink>
       ))}
     </div>
   );

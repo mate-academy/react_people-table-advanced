@@ -29,27 +29,28 @@ export const PeoplePage: React.FC<Props> = ({
   isError,
   fetchPeople,
 }) => {
-  const [sortField, setsortField] = useState<string | null>(null);
-  const [sortOrder, setSortOrder] = useState(SortType.original);
+  const [sortField, setSortField] = useState<string | null>(null);
+  const [sortOrder, setSortOrder] = useState(SortType.Original);
   const [clickCount, setClickCount] = useState(0);
-  const [activeCenturies, setactiveCenturies]
-  = useState<number[]>([]);
+  const [activeCenturies, setActiveCentury]
+  = useState<number[]>([0]);
   const [isFiltered, setIsfiltered] = useState(false);
 
   const allCenturySelection = () => {
-    setactiveCenturies([]);
+    setActiveCentury([0]);
   };
 
   const handleSort = (column: string) => {
-    setsortField(column);
+    setSortField(column);
     setClickCount(clickCount + 1);
   };
 
   const resetEveryThing = () => {
-    setactiveCenturies([]);
+    setActiveCentury([0]);
     setQuery('');
     sexFilterHandler(FilterType.All);
     localStorage.setItem('query', '');
+    localStorage.setItem('activeCenturies', '');
   };
 
   const setCurrentQuery = (currentQuery: string) => {
@@ -58,24 +59,38 @@ export const PeoplePage: React.FC<Props> = ({
     setQuery(currentQuery);
   };
 
-  const handleCenturySelection = (century: number) => {
-    const includesCenturie = activeCenturies.includes(century);
+  const handleCenturySelection = (century: number[]) => {
+    const singleCentury = century.pop();
 
-    if (includesCenturie && activeCenturies.length === 5) {
+    const includesCenturie
+     = activeCenturies.includes(singleCentury || 0);
+
+    if (includesCenturie && activeCenturies.length === 6) {
       const filtered = activeCenturies.filter((number) => {
-        return number === century;
+        return number === singleCentury;
       });
 
-      setactiveCenturies(filtered);
+      setActiveCentury(filtered);
+      localStorage.setItem(
+        'activeCenturies', JSON.stringify(filtered),
+      );
     } else if (!includesCenturie
-    && activeCenturies.length !== 5) {
-      setactiveCenturies([...activeCenturies, century]);
+    && activeCenturies.length !== 6) {
+      setActiveCentury([...activeCenturies, singleCentury || 0]);
+      localStorage.setItem(
+        'activeCenturies', JSON.stringify(
+          [...activeCenturies, singleCentury || 0],
+        ),
+      );
     } else if (includesCenturie) {
       const filtered = activeCenturies.filter((number) => {
-        return number !== century;
+        return number !== singleCentury || 0;
       });
 
-      setactiveCenturies(filtered);
+      setActiveCentury(filtered);
+      localStorage.setItem(
+        'activeCenturies', JSON.stringify(filtered),
+      );
     }
   };
 
@@ -121,7 +136,7 @@ export const PeoplePage: React.FC<Props> = ({
       switch (sexFilter) {
         case FilterType.All:
         default:
-          return activeCenturies.length === 0
+          return activeCenturies.length === 2
             ? functionality
             : functionality && activeCenturies.includes(centurie);
         case FilterType.Male:
@@ -156,13 +171,13 @@ export const PeoplePage: React.FC<Props> = ({
       switch (sortField) {
         case PropName.Name:
         case PropName.Sex:
-          return sortOrder === SortType.asc
+          return sortOrder === SortType.Asc
             ? elem1[sortField].localeCompare(elem2[sortField])
             : elem2[sortField].localeCompare(elem1[sortField]);
 
         case PropName.Born:
         case PropName.Died:
-          return sortOrder === SortType.asc
+          return sortOrder === SortType.Asc
             ? elem1[sortField] - elem2[sortField]
             : elem2[sortField] - elem1[sortField];
 
@@ -178,15 +193,25 @@ export const PeoplePage: React.FC<Props> = ({
     }
 
     if (clickCount === 1) {
-      setSortOrder(SortType.asc);
+      setSortOrder(SortType.Asc);
     } else if (clickCount === 2) {
-      setSortOrder(SortType.desc);
+      setSortOrder(SortType.Desc);
     } else if (clickCount === 3) {
-      setsortField(null);
+      setSortField(null);
       setClickCount(0);
-      setSortOrder(SortType.original);
+      setSortOrder(SortType.Original);
     }
-  }, [sortField, clickCount, setSortOrder, setsortField, setClickCount]);
+  }, [sortField, clickCount, setSortOrder, setSortField, setClickCount]);
+
+  useEffect(() => {
+    const savedQuery = localStorage.getItem('activeCenturies');
+
+    if (savedQuery) {
+      setActiveCentury(prevActiveCenturies => {
+        return [...prevActiveCenturies, ...JSON.parse(savedQuery)];
+      });
+    }
+  }, []);
 
   return (
     <>

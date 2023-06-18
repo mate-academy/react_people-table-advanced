@@ -1,5 +1,5 @@
-import React from 'react';
-import { NavLink } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { NavLink, useSearchParams } from 'react-router-dom';
 import { FilterType } from '../types/enum';
 import { FilterCenturies } from './FilterCenturies';
 import { FilterSex } from './FilterSex';
@@ -9,7 +9,7 @@ interface Props {
   setCurrentQuery: (value: string) => void,
   query: string,
   deleteQuery: () => void,
-  handleCenturySelection: (value: number) => void,
+  handleCenturySelection: (value: number[]) => void,
   activeCenturies: number[],
   allCenturySelection: () => void,
   resetEveryThing: () => void,
@@ -27,6 +27,15 @@ export const PeopleFilters: React.FC<Props> = ({
   resetEveryThing,
   sexFilter,
 }) => {
+  const [searchParams] = useSearchParams();
+  const activeCenturiesFromParams = searchParams.getAll('centuries');
+
+  useEffect(() => {
+    const centuriesArray = activeCenturiesFromParams.map(Number);
+
+    handleCenturySelection(centuriesArray);
+  }, []);
+
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
@@ -49,6 +58,7 @@ export const PeopleFilters: React.FC<Props> = ({
 
           <span className="icon is-left">
             <i
+              role="button"
               className="fas fa-search"
               aria-hidden="true"
               onClick={deleteQuery}
@@ -67,7 +77,7 @@ export const PeopleFilters: React.FC<Props> = ({
           <div className="level-right ml-4">
             <NavLink
               data-cy="centuryALL"
-              className={activeCenturies.length === 0
+              className={activeCenturies.length === 2
                 ? 'button is-success'
                 : 'button is-outlined'}
               to="#/people"

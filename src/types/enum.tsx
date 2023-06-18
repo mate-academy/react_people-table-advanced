@@ -5,9 +5,9 @@ export enum FilterType {
 }
 
 export enum SortType {
-  original = 'original',
-  asc = 'asc',
-  desc = 'desc',
+  Original = 'original',
+  Asc = 'asc',
+  Desc = 'desc',
 }
 
 export enum PropName {
