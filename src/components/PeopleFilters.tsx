@@ -28,10 +28,10 @@ export const PeopleFilters: React.FC<Props> = ({
   sexFilter,
 }) => {
   const [searchParams] = useSearchParams();
-  const activeCenturiesParams = searchParams.getAll('centuries');
+  const activeCenturiesFormParams = searchParams.getAll('centuries');
 
   useEffect(() => {
-    const centuriesArray = activeCenturiesParams.map(Number);
+    const centuriesArray = activeCenturiesFormParams.map(Number);
 
     handleCenturySelection(centuriesArray);
   }, []);
