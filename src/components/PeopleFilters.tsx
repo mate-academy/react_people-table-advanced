@@ -1,12 +1,45 @@
+import { useCallback } from 'react';
+import cn from 'classnames';
+import { useSearchParams } from 'react-router-dom';
+import { getSearchWith } from '../utils/searchHelper';
+import { SearchLink } from './SearchLink';
+
+const arrayOfCenturies = ['16', '17', '18', '19', '20'];
+const sexParams = [{ All: null }, { Male: 'm' }, { Female: 'f' }];
+
 export const PeopleFilters = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const sex = searchParams.get('sex') || null;
+  const centuries = searchParams.getAll('centuries') || [];
+  const query = searchParams.get('query') || '';
+
+  const onQueryChange
+  = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchParams(
+      getSearchWith(searchParams, { query: event.target.value || null }),
+    );
+  }, []);
+
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        <a className="is-active" href="#/people">All</a>
-        <a className="" href="#/people?sex=m">Male</a>
-        <a className="" href="#/people?sex=f">Female</a>
+        {sexParams.map(param => {
+          const name = Object.keys(param)[0];
+          const value = Object.values(param)[0];
+
+          return (
+            <SearchLink
+              key={name}
+              params={{ sex: value }}
+              className={cn({ 'is-active': sex === value })}
+            >
+              {name}
+            </SearchLink>
+          );
+        })}
       </p>
 
       <div className="panel-block">
@@ -16,6 +49,10 @@ export const PeopleFilters = () => {
             type="search"
             className="input"
             placeholder="Search"
+            value={query}
+            onChange={(event) => {
+              onQueryChange(event);
+            }}
           />
 
           <span className="icon is-left">
@@ -27,55 +64,36 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            <a
-              data-cy="century"
-              className="button mr-1"
-              href="#/people?centuries=16"
-            >
-              16
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=17"
-            >
-              17
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=18"
-            >
-              18
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=19"
-            >
-              19
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1"
-              href="#/people?centuries=20"
-            >
-              20
-            </a>
+            {arrayOfCenturies.map(century => (
+              <SearchLink
+                data-cy="century"
+                key={century}
+                params={{
+                  centuries: centuries.includes(century)
+                    ? centuries.filter(num => num !== century)
+                    : [...centuries, century],
+                }}
+                className={cn(
+                  'button mr-1',
+                  { 'is-info': centuries.includes(`${century}`) },
+                )}
+              >
+                {century}
+              </SearchLink>
+            ))}
           </div>
 
           <div className="level-right ml-4">
-            <a
+            <SearchLink
               data-cy="centuryALL"
-              className="button is-success is-outlined"
-              href="#/people"
+              params={{ centuries: null }}
+              className={cn(
+                'button is-success',
+                { 'is-outlined': centuries.length },
+              )}
             >
               All
-            </a>
+            </SearchLink>
           </div>
         </div>
       </div>

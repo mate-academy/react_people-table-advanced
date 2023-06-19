@@ -1,15 +1,15 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { PeopleFilters } from './PeopleFilters';
-import { Loader } from './Loader';
-import { PeopleTable } from './PeopleTable';
-import { Person } from '../types';
-import { getPeople } from '../api';
+import { PeopleFilters } from '../../components/PeopleFilters';
+import { Loader } from '../../components/Loader';
+import { PeopleTable } from '../../components/PeopleTable';
+import { Person } from '../../types';
+import { getPeople } from '../../api';
 
 export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);
   const [isError, setIsError] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   const { userUrl = '' } = useParams();
 
@@ -26,6 +26,8 @@ export const PeoplePage = () => {
       }
     };
 
+    setIsLoading(true);
+
     peopleGetter();
   }, []);
 
@@ -38,7 +40,6 @@ export const PeoplePage = () => {
 
         <div className="column">
           <div className="box table-container">
-
             {isError && (
               <p data-cy="peopleLoadingError" className="has-text-danger">
                 Something went wrong
