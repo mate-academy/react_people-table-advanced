@@ -9,7 +9,9 @@ import { getPeople } from '../../api';
 export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);
   const [isError, setIsError] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+
+  const [isPageLoading, setIsPageLoading] = useState(false);
 
   const { userUrl = '' } = useParams();
 
@@ -23,6 +25,7 @@ export const PeoplePage = () => {
         setIsError(true);
       } finally {
         setIsLoading(false);
+        setIsPageLoading(true);
       }
     };
 
@@ -46,14 +49,15 @@ export const PeoplePage = () => {
               </p>
             )}
 
-            {(!people.length && !isLoading) && (
+            {(!people.length && isPageLoading) && (
               <p data-cy="noPeopleMessage">
                 There are no people on the server
               </p>
             )}
 
             {isLoading ? <Loader /> : (
-              <PeopleTable people={people} selectedUser={userUrl} />
+              isPageLoading
+                && <PeopleTable people={people} selectedUser={userUrl} />
             )}
           </div>
         </div>
