@@ -14,6 +14,7 @@ export const PeoplePage = () => {
   const [noPeopleMsg, setNoPeopleMsg] = useState(false);
   const [showTable, setShowTable] = useState(false);
   const [errorMsg, setErrorMsg] = useState(false);
+  const centuryList = ['16', '17', '18', '19', '20'];
 
   const [searchParams] = useSearchParams();
 
@@ -30,8 +31,6 @@ export const PeoplePage = () => {
   const sortedPeople = useMemo(() => {
     return sortPeople(filteredPeople, order, sort);
   }, [filteredPeople, sort, order]);
-
-  const visiblePeople = sortedPeople;
 
   const loadPeople = async () => {
     try {
@@ -72,12 +71,13 @@ export const PeoplePage = () => {
 
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
-          {(people.length !== 0) && (
+          {!!people.length && (
             <div className="column is-7-tablet is-narrow-desktop">
               <PeopleFilters
                 query={query}
                 sex={sex}
                 centuries={centuries}
+                centuryList={centuryList}
               />
             </div>
           )}
@@ -97,8 +97,7 @@ export const PeoplePage = () => {
                   There are no people on the server
                 </p>
               )}
-
-              {(people.length === 0 && !errorMsg && !loading) && (
+              {(!people.length && !errorMsg && !loading) && (
                 <p>
                   There are no people matching the current search criteria
                 </p>
@@ -106,7 +105,7 @@ export const PeoplePage = () => {
 
               {showTable && (
                 <PeopleTable
-                  people={visiblePeople}
+                  people={sortedPeople}
                   sort={sort}
                   order={order}
                 />

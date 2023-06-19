@@ -9,17 +9,18 @@ type Props = {
   query: string,
   sex: string | null,
   centuries: string[],
+  centuryList: string [],
 };
 
 export const PeopleFilters: FC<Props> = ({
   query,
   sex,
   centuries,
+  centuryList,
 }) => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const centuryList = ['16', '17', '18', '19', '20'];
 
-  const onQueryChage = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const onQueryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchParams(
       getSearchWith(searchParams, { query: event.target.value || null }),
     );
@@ -58,7 +59,7 @@ export const PeopleFilters: FC<Props> = ({
             className="input"
             placeholder="Search"
             value={query}
-            onChange={onQueryChage}
+            onChange={onQueryChange}
           />
 
           <span className="icon is-left">

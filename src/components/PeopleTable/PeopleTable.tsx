@@ -78,13 +78,11 @@ export const PeopleTable: FC<Props> = ({
             <td>{person.died}</td>
             <td>
               {person.mother
-              // eslint-disable-next-line max-len
                 ? <PersonLink person={person.mother} isSelected={isSelected} />
                 : person.motherName}
             </td>
             <td>
               {person.father
-              // eslint-disable-next-line max-len
                 ? <PersonLink person={person.father} isSelected={isSelected} />
                 : person.fatherName}
             </td>
