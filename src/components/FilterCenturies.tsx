@@ -1,5 +1,5 @@
 import React from 'react';
-import { SearchLink } from './SearchLink'; // Import the SearchLink component
+import { SearchLink } from './SearchLink';
 
 interface Props {
   handleCenturySelection: (value: number[]) => void;
@@ -19,7 +19,8 @@ export const FilterCenturies: React.FC<Props> = ({
           key={number}
           data-cy="century"
           className={`button mr-1 ${
-            activeCenturies.includes(number) ? 'is-info' : ''
+            activeCenturies.includes(number)
+            && activeCenturies.length < 5 ? 'is-info' : ''
           }`}
           params={{ centuries: [String(number)] }}
           onClick={() => handleCenturySelection([number])}

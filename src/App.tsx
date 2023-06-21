@@ -76,8 +76,10 @@ export const App: React.FC = () => {
       <div className="section">
         <div className="container">
           <h1 className="title">People Page</h1>
-          {isHomePage && <Navigate to="/" replace />}
           <Routes>
+            {isHomePage && (
+              <Route path="home" element={<Navigate to="/" replace />} />
+            )}
             <Route path="*" element={<PageNotFound />} />
             <Route path="/" element={<HomePage />} />
             <Route
@@ -95,7 +97,6 @@ export const App: React.FC = () => {
                     setQuery={setQuery}
                     deleteQuery={deleteQuery}
                     isError={isError}
-                    fetchPeople={fetchPeople}
                   />
                 )
               }
@@ -112,7 +113,6 @@ export const App: React.FC = () => {
                     setQuery={setQuery}
                     deleteQuery={deleteQuery}
                     isError={isError}
-                    fetchPeople={fetchPeople}
                   />
                 )}
               />
@@ -128,7 +128,6 @@ export const App: React.FC = () => {
                     setQuery={setQuery}
                     deleteQuery={deleteQuery}
                     isError={isError}
-                    fetchPeople={fetchPeople}
                   />
                 )}
               />

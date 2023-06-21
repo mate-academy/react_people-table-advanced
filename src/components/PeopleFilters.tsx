@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { NavLink, useSearchParams } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import { FilterType } from '../types/enum';
 import { FilterCenturies } from './FilterCenturies';
 import { FilterSex } from './FilterSex';
@@ -14,6 +14,8 @@ interface Props {
   allCenturySelection: () => void,
   resetEveryThing: () => void,
   sexFilter: string,
+  setActiveCenturies: (value: number[]) => void,
+  searchParams: URLSearchParams,
 }
 
 export const PeopleFilters: React.FC<Props> = ({
@@ -26,14 +28,16 @@ export const PeopleFilters: React.FC<Props> = ({
   allCenturySelection,
   resetEveryThing,
   sexFilter,
+  setActiveCenturies,
+  searchParams,
 }) => {
-  const [searchParams] = useSearchParams();
-  const activeCenturiesFormParams = searchParams.getAll('centuries');
-
   useEffect(() => {
-    const centuriesArray = activeCenturiesFormParams.map(Number);
+    const activeCenturiesFromParams = searchParams.get('centuries');
+    const centuriesArray = activeCenturiesFromParams
+      ? activeCenturiesFromParams.split(',').map(Number)
+      : [];
 
-    handleCenturySelection(centuriesArray);
+    setActiveCenturies(centuriesArray);
   }, []);
 
   return (
@@ -77,7 +81,7 @@ export const PeopleFilters: React.FC<Props> = ({
           <div className="level-right ml-4">
             <NavLink
               data-cy="centuryALL"
-              className={activeCenturies.length === 2
+              className={activeCenturies.length === 5
                 ? 'button is-success'
                 : 'button is-outlined'}
               to="#/people"
