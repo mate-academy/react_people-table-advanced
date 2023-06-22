@@ -41,6 +41,7 @@ export const PeoplePage: React.FC<Props> = ({
     = activeCenturies.includes(centuries[centuries.length - 1]);
 
     if (activeCenturies.length === 1 && includesCenturie) {
+      localStorage.clear();
       setActiveCenturies([15, 16, 17, 18, 19]);
       setSearchParams({ centuries: [15, 16, 17, 18, 19].join(',') });
 
@@ -77,16 +78,19 @@ export const PeoplePage: React.FC<Props> = ({
       setActiveCenturies(emptyArray);
       setSearchParams({ centuries: emptyArray.join(',') });
 
-      setActiveCenturies(centuries);
-      setSearchParams({ centuries: centuries.join(',') });
+      setActiveCenturies([15, 16, 17, 18, 19]);
+      setSearchParams({ centuries: [15, 16, 17, 18, 19].join(',') });
 
-      localStorage.setItem('activeCenturies', JSON.stringify(centuries));
+      localStorage.setItem('activeCenturies',
+        JSON.stringify([15, 16, 17, 18, 19]));
     }
   };
 
   const allCenturySelection = () => {
     setActiveCenturies([15, 16, 17, 18, 19]);
     setSearchParams({ centuries: [15, 16, 17, 18, 19].join(',') });
+    localStorage.setItem('activeCenturies',
+      JSON.stringify([15, 16, 17, 18, 19]));
   };
 
   const handleSort = (column: string) => {
@@ -99,7 +103,8 @@ export const PeoplePage: React.FC<Props> = ({
     setQuery('');
     sexFilterHandler(FilterType.All);
     localStorage.setItem('query', '');
-    localStorage.setItem('activeCenturies', '');
+    localStorage.setItem('activeCenturies',
+      JSON.stringify([15, 16, 17, 18, 19]));
   };
 
   const setCurrentQuery = (currentQuery: string) => {
@@ -211,17 +216,12 @@ export const PeoplePage: React.FC<Props> = ({
   }, [sortField, clickCount, setSortOrder, setSortField, setClickCount]);
 
   useEffect(() => {
-    const savedQuery = localStorage.getItem('activeCenturies');
+    const savedCenturies = localStorage.getItem('activeCenturies');
 
-    if (savedQuery) {
-      setActiveCenturies(prevActiveCenturies => {
-        return [...prevActiveCenturies, ...JSON.parse(savedQuery)];
-      });
+    if (savedCenturies) {
+      setActiveCenturies(JSON.parse(savedCenturies));
 
-      setSearchParams({ centuries: savedQuery });
-    } else {
-      setActiveCenturies([15, 16, 17, 18, 19]);
-      setSearchParams({ centuries: [15, 16, 17, 18, 19].join(',') });
+      setSearchParams({ centuries: savedCenturies });
     }
   }, []);
 

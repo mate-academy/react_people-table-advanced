@@ -34,7 +34,7 @@ export const PeopleFilters: React.FC<Props> = ({
   useEffect(() => {
     const activeCenturiesFromParams = searchParams.get('centuries');
     const centuriesArray = activeCenturiesFromParams
-      ? activeCenturiesFromParams.split(',').map(Number)
+      ? activeCenturiesFromParams.split(',').map((century) => Number(century))
       : [];
 
     setActiveCenturies(centuriesArray);
