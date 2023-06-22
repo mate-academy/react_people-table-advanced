@@ -1,0 +1,33 @@
+.button {
+  &_container {
+    display: flex;
+    align-items: center;
+    box-sizing: content-box;
+    padding: 7px;
+  }
+
+  &__sort {
+    display: inline;
+    background: none;
+    border: none;
+    vertical-align: middle;
+    font-family: Font Awesome 6 Free, sans-serif;
+    font-weight: 700;
+    font-size: 1em;
+  }
+
+  &__filter {
+    background: none;
+    border: none;
+    font-size: 1em;
+    font-weight: 400;
+    padding: 0;
+  }
+
+  &__reset {
+    padding: 0;
+    width: 100%;
+    border: none;
+    background: none;
+  }
+}
