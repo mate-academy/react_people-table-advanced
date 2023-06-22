@@ -216,12 +216,12 @@ export const PeoplePage: React.FC<Props> = ({
   }, [sortField, clickCount, setSortOrder, setSortField, setClickCount]);
 
   useEffect(() => {
-    const savedCenturies = localStorage.getItem('activeCenturies');
+    const currentCenturies = localStorage.getItem('activeCenturies');
 
-    if (savedCenturies) {
-      setActiveCenturies(JSON.parse(savedCenturies));
+    if (currentCenturies) {
+      setActiveCenturies(JSON.parse(currentCenturies));
 
-      setSearchParams({ centuries: savedCenturies });
+      setSearchParams({ centuries: currentCenturies });
     }
   }, []);
 
