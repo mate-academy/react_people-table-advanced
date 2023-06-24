@@ -1,13 +1,11 @@
 import classnames from 'classnames';
 import {
-  Link, useSearchParams,
+  useSearchParams,
 } from 'react-router-dom';
+import { SearchLink } from './SearchLink';
 
 export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  // const parentPath = useResolvedPath('../').pathname;
-  // const location = useLocation();
-
   const sex = searchParams.get('sex') || null;
   const query = searchParams.get('query') || '';
   const centuries = searchParams.getAll('centuries') || [];
@@ -27,14 +25,8 @@ export const PeopleFilters = () => {
       }
     });
 
-    // setSearchParams(searchParams);
-
     return searchParams.toString();
   }
-
-  // const onSexChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-  //   updateSearch({ sex: event.target.value || null });
-  // };
 
   const onQueryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchParams(getSearchWith({ query: event.target.value || null }));
@@ -45,36 +37,30 @@ export const PeopleFilters = () => {
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        <Link
+        <SearchLink
           className={classnames(
-            { 'is-active': sex === null },
+            { 'is-active': sex === null || sex === '' },
           )}
-          to={{
-            search: getSearchWith({ sex: null }),
-          }}
+          params={{ sex: null }}
         >
           All
-        </Link>
-        <Link
+        </SearchLink>
+        <SearchLink
           className={classnames(
             { 'is-active': sex === 'm' },
           )}
-          to={{
-            search: getSearchWith({ sex: 'm' }),
-          }}
+          params={{ sex: 'm' }}
         >
           Male
-        </Link>
-        <Link
+        </SearchLink>
+        <SearchLink
           className={classnames(
             { 'is-active': sex === 'f' },
           )}
-          to={{
-            search: getSearchWith({ sex: 'f' }),
-          }}
+          params={{ sex: 'f' }}
         >
           Female
-        </Link>
+        </SearchLink>
       </p>
 
       <div className="panel-block">
@@ -83,6 +69,7 @@ export const PeopleFilters = () => {
             data-cy="NameFilter"
             type="search"
             defaultValue={query}
+            value={query}
             onChange={onQueryChange}
             className="input"
             placeholder="Search"
@@ -98,13 +85,11 @@ export const PeopleFilters = () => {
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
             {['16', '17', '18', '19', '20'].map(century => (
-              <Link
-                to={{
-                  search: getSearchWith({
-                    centuries: centuries.includes(century)
-                      ? centuries.filter(c => c !== century)
-                      : [...centuries, century],
-                  }),
+              <SearchLink
+                params={{
+                  centuries: centuries.includes(century)
+                    ? centuries.filter(c => c !== century)
+                    : [...centuries, century],
                 }}
                 data-cy="century"
                 key={century}
@@ -117,32 +102,36 @@ export const PeopleFilters = () => {
                 }
               >
                 {century}
-              </Link>
+              </SearchLink>
             ))}
           </div>
 
           <div className="level-right ml-4">
-            <button
+            <SearchLink
               type="button"
               data-cy="centuryALL"
               className="button is-success is-outlined"
-              onClick={() => {
-                getSearchWith({ centuries: null });
+              params={{
+                centuries: null,
               }}
             >
               All
-            </button>
+            </SearchLink>
           </div>
         </div>
       </div>
 
       <div className="panel-block">
-        <a
+        <SearchLink
           className="button is-link is-outlined is-fullwidth"
-          href="#/people"
+          params={{
+            query: null,
+            centuries: null,
+            sex: null,
+          }}
         >
           Reset all filters
-        </a>
+        </SearchLink>
       </div>
     </nav>
   );

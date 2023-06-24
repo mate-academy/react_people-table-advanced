@@ -15,6 +15,11 @@ export const PeoplePage: React.FC<Props> = ({ slugPerson }) => {
   const [people, setPeople] = useState<Person[]>([]);
   const [error, setError] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [
+    visiblePeople, setVisiblePeople,
+  ] = useState<Person[]>([]);
+
+  const location = useLocation();
 
   const loadPeople = async () => {
     setIsLoading(true);
@@ -33,17 +38,12 @@ export const PeoplePage: React.FC<Props> = ({ slugPerson }) => {
     loadPeople();
   }, []);
 
-  /// //// fsaf
-
-  const location = useLocation();
+  useEffect(() => {
+    setVisiblePeople(people);
+  }, [people.length || visiblePeople.length || location.search]);
 
   return (
     <>
-      <h1 className="title">
-        {location.pathname}
-        {location.search}
-      </h1>
-
       <h1 className="title">People Page</h1>
 
       <div className="block">
@@ -67,9 +67,17 @@ export const PeoplePage: React.FC<Props> = ({ slugPerson }) => {
                 </p>
               )}
 
-              {/* <p>There are no people matching the current search criteria</p> */}
-
-              <PeopleTable people={people} slugPerson={slugPerson} />
+              {visiblePeople.length > 0 && (
+                <PeopleTable
+                  people={people}
+                  slugPerson={slugPerson}
+                  visiblePeople={visiblePeople}
+                  setVisiblePeople={setVisiblePeople}
+                />
+              )}
+              {visiblePeople.length === 0 && (
+                <p>There are no people matching the current search criteria</p>
+              )}
             </div>
           </div>
         </div>
