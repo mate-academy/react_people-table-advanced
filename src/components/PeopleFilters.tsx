@@ -3,12 +3,12 @@ import { NavLink } from 'react-router-dom';
 import { FilterType } from '../types/enum';
 import { FilterCenturies } from './FilterCenturies';
 import { FilterSex } from './FilterSex';
+import { SearchLink } from './SearchLink';
 
 interface Props {
   sexFilterHandler: (value: FilterType) => void,
-  setCurrentQuery: (value: string) => void,
+  setCurrentQuery: (e: React.ChangeEvent<HTMLInputElement>) => void,
   query: string,
-  deleteQuery: () => void,
   handleCenturySelection: (value: number[]) => void,
   activeCenturies: number[],
   allCenturySelection: () => void,
@@ -16,13 +16,13 @@ interface Props {
   sexFilter: string,
   setActiveCenturies: (value: number[]) => void,
   searchParams: URLSearchParams,
+  deleteSearch: () => void,
 }
 
 export const PeopleFilters: React.FC<Props> = ({
   sexFilterHandler,
   setCurrentQuery,
   query,
-  deleteQuery,
   handleCenturySelection,
   activeCenturies,
   allCenturySelection,
@@ -30,6 +30,7 @@ export const PeopleFilters: React.FC<Props> = ({
   sexFilter,
   setActiveCenturies,
   searchParams,
+  deleteSearch,
 }) => {
   useEffect(() => {
     const activeCenturiesFromParams = searchParams.get('centuries');
@@ -57,7 +58,7 @@ export const PeopleFilters: React.FC<Props> = ({
             className="input"
             placeholder="Search"
             value={query}
-            onChange={(event) => setCurrentQuery(event.target.value)}
+            onChange={(event) => setCurrentQuery(event)}
           />
 
           <span className="icon is-left">
@@ -65,7 +66,7 @@ export const PeopleFilters: React.FC<Props> = ({
               role="button"
               className="fas fa-search"
               aria-hidden="true"
-              onClick={deleteQuery}
+              onClick={deleteSearch}
             />
           </span>
         </p>
@@ -79,16 +80,16 @@ export const PeopleFilters: React.FC<Props> = ({
           />
 
           <div className="level-right ml-4">
-            <NavLink
+            <SearchLink
               data-cy="centuryALL"
               className={activeCenturies.length === 5
                 ? 'button is-success'
                 : 'button is-outlined'}
-              to="#/people"
+              params={{ centuries: [String([15, 16, 17, 18, 19])] }}
               onClick={allCenturySelection}
             >
               All
-            </NavLink>
+            </SearchLink>
           </div>
         </div>
       </div>

@@ -25,7 +25,7 @@ export const FilterSex: React.FC<Props> = ({
         return (
           <SearchLink
             className={sexFilter === sexFilterMapping[sex] ? 'is-active' : ''}
-            params={{ centuries: [String(sex)] }}
+            params={{ sex: [String(sex)] }}
             onClick={() => sexFilterHandler(sexFilterMapping[sex])}
             role="button"
             key={sex}

@@ -1,40 +1,38 @@
-import { useSearchParams } from 'react-router-dom';
+import {
+  useSearchParams,
+} from 'react-router-dom';
 import React, {
   useMemo, useState, useEffect,
 } from 'react';
 import { PeopleFilters } from './PeopleFilters';
 import { PeopleTable } from './PeopleTable';
-import { NewPerson } from '../types';
+import { Person, NewPerson } from '../types';
 import { FilterType, SortType, PropName } from '../types/enum';
 
 interface Props {
-  people: NewPerson[],
+  people: Person[],
   loading: boolean,
-  sexFilter: FilterType,
-  sexFilterHandler: (value: FilterType) => void,
-  setQuery: (value: string) => void,
-  query: string,
-  deleteQuery: () => void,
   isError: boolean,
 }
 
 export const PeoplePage: React.FC<Props> = ({
   people,
   loading,
-  sexFilter,
-  sexFilterHandler,
-  setQuery,
-  query,
-  deleteQuery,
   isError,
 }) => {
   const [sortField, setSortField] = useState<string | null>(null);
   const [sortOrder, setSortOrder] = useState(SortType.Original);
   const [clickCount, setClickCount] = useState(0);
+  const [newPeople, setNewPeople] = useState<NewPerson[]>([]);
   const [activeCenturies, setActiveCenturies]
   = useState<number[]>([15, 16, 17, 18, 19]);
-  const [isFiltered, setIsFiltered] = useState(false);
   const [searchParams, setSearchParams] = useSearchParams();
+  const [isFiltered, setIsFiltered] = useState(false);
+  const firstLoad = searchParams.get('firstLoad') || '0';
+  const query = searchParams.get('query') || '';
+  const sexFilter = searchParams.get('sex') || 'All';
+  const selectedCenturies
+  = searchParams.get('centuries') || '[15, 16, 17, 18, 19]';
 
   const handleCenturySelection = (centuries: number[]) => {
     const includesCenturie
@@ -44,14 +42,9 @@ export const PeoplePage: React.FC<Props> = ({
       localStorage.clear();
       setActiveCenturies([15, 16, 17, 18, 19]);
       setSearchParams({ centuries: [15, 16, 17, 18, 19].join(',') });
-
-      localStorage.setItem('activeCenturies',
-        JSON.stringify([15, 16, 17, 18, 19]));
     } else if (activeCenturies.length === 5) {
       setActiveCenturies(centuries);
       setSearchParams({ centuries: centuries.join(',') });
-
-      localStorage.setItem('activeCenturies', JSON.stringify(centuries));
     } else if (activeCenturies.length < 5
       && activeCenturies.length > 0
       && !includesCenturie) {
@@ -60,7 +53,6 @@ export const PeoplePage: React.FC<Props> = ({
       setSearchParams({ centuries: updatedCenturies.join(',') });
 
       setActiveCenturies(updatedCenturies);
-      localStorage.setItem('activeCenturies', JSON.stringify(updatedCenturies));
     } else if (activeCenturies.length < 5
       && activeCenturies.length > 0
       && includesCenturie) {
@@ -70,8 +62,6 @@ export const PeoplePage: React.FC<Props> = ({
 
       setActiveCenturies(filtered);
       setSearchParams({ centuries: filtered.join(',') });
-
-      localStorage.setItem('activeCenturies', JSON.stringify(filtered));
     } else if (activeCenturies.length === 5 && includesCenturie) {
       const emptyArray: number[] = [];
 
@@ -80,17 +70,12 @@ export const PeoplePage: React.FC<Props> = ({
 
       setActiveCenturies([15, 16, 17, 18, 19]);
       setSearchParams({ centuries: [15, 16, 17, 18, 19].join(',') });
-
-      localStorage.setItem('activeCenturies',
-        JSON.stringify([15, 16, 17, 18, 19]));
     }
   };
 
   const allCenturySelection = () => {
     setActiveCenturies([15, 16, 17, 18, 19]);
     setSearchParams({ centuries: [15, 16, 17, 18, 19].join(',') });
-    localStorage.setItem('activeCenturies',
-      JSON.stringify([15, 16, 17, 18, 19]));
   };
 
   const handleSort = (column: string) => {
@@ -98,19 +83,38 @@ export const PeoplePage: React.FC<Props> = ({
     setClickCount(clickCount + 1);
   };
 
-  const resetEveryThing = () => {
-    setActiveCenturies([15, 16, 17, 18, 19]);
-    setQuery('');
-    sexFilterHandler(FilterType.All);
-    localStorage.setItem('query', '');
-    localStorage.setItem('activeCenturies',
-      JSON.stringify([15, 16, 17, 18, 19]));
+  const sexFilterHandler = (value: FilterType) => {
+    setSearchParams({ sex: value });
   };
 
-  const setCurrentQuery = (currentQuery: string) => {
-    localStorage.setItem('query', currentQuery);
+  const resetEveryThing = () => {
+    setActiveCenturies([15, 16, 17, 18, 19]);
+    sexFilterHandler(FilterType.All);
+    setSearchParams({ centuries: [15, 16, 17, 18, 19].join(',') });
+    setSearchParams({ query: '' });
+  };
 
-    setQuery(currentQuery);
+  const setCurrentQuery = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const searchedName = (e.target as HTMLInputElement).value;
+
+    if (searchedName) {
+      searchParams.set('query', searchedName);
+      const params = { query: (searchedName) };
+
+      window.history.pushState(null, JSON.stringify(params));
+    } else {
+      searchParams.delete('query');
+    }
+
+    setSearchParams(searchParams);
+  };
+
+  const deleteSearch = () => {
+    const newParams = new URLSearchParams(searchParams);
+
+    newParams.delete('query');
+
+    setSearchParams(newParams);
   };
 
   const updatedPeople = people.map((child) => {
@@ -147,7 +151,7 @@ export const PeoplePage: React.FC<Props> = ({
   });
 
   const filteredPeople: NewPerson[] = useMemo(() => {
-    return updatedPeople.filter((person) => {
+    return newPeople.filter((person) => {
       const functionality
       = person.name.toLowerCase().includes(query.toLowerCase().trim());
       const century = Math.floor(person.born / 100);
@@ -155,28 +159,28 @@ export const PeoplePage: React.FC<Props> = ({
       switch (sexFilter) {
         case FilterType.All:
         default:
-          return activeCenturies.length === 5
+          return selectedCenturies.length === 5
             ? functionality
-            : functionality && activeCenturies.includes(century);
+            : functionality && selectedCenturies.includes(century.toString());
         case FilterType.Male:
-          return activeCenturies.length === 5
+          return selectedCenturies.length === 5
             ? functionality && person.sex === 'm'
             : functionality
-            && activeCenturies.includes(century)
+            && selectedCenturies.includes(century.toString())
             && person.sex === 'm';
         case FilterType.Female:
-          return activeCenturies.length === 5
+          return selectedCenturies.length === 5
             ? functionality && person.sex === 'f'
             : functionality
-            && activeCenturies.includes(century)
+            && selectedCenturies.includes(century.toString())
             && person.sex === 'f';
       }
     });
-  }, [updatedPeople, activeCenturies, query, sexFilter, loading]);
+  }, [updatedPeople, selectedCenturies, query, sexFilter, loading]);
 
   useEffect(() => {
     setIsFiltered(true);
-  }, [query, sexFilter, activeCenturies]);
+  }, [query, sexFilter, selectedCenturies]);
 
   const sortingAscOrDesc = useMemo(() => {
     return filteredPeople.sort((elem1, elem2) => {
@@ -216,14 +220,27 @@ export const PeoplePage: React.FC<Props> = ({
   }, [sortField, clickCount, setSortOrder, setSortField, setClickCount]);
 
   useEffect(() => {
-    const savedCenturies = localStorage.getItem('activeCenturies');
+    const setedCentuires = searchParams.get('centurise');
 
-    if (savedCenturies) {
-      setActiveCenturies(JSON.parse(savedCenturies));
+    if (setedCentuires === null && firstLoad === '0') {
+      setSearchParams({ centuries: [15, 16, 17, 18, 19].join(',') });
+      setSearchParams({ sex: FilterType.All });
+      setSearchParams({ firstLoad: '1' });
 
-      setSearchParams({ centuries: savedCenturies });
+      setActiveCenturies([15, 16, 17, 18, 19]);
     }
   }, []);
+
+  useEffect(() => {
+    const indexedPeople = people.map((person, index) => {
+      return {
+        ...person,
+        index: index + 1,
+      };
+    });
+
+    setNewPeople(indexedPeople);
+  }, [people]);
 
   return (
     <>
@@ -234,7 +251,6 @@ export const PeoplePage: React.FC<Props> = ({
               sexFilterHandler={sexFilterHandler}
               setCurrentQuery={setCurrentQuery}
               query={query}
-              deleteQuery={deleteQuery}
               handleCenturySelection={handleCenturySelection}
               allCenturySelection={allCenturySelection}
               activeCenturies={activeCenturies}
@@ -242,6 +258,7 @@ export const PeoplePage: React.FC<Props> = ({
               sexFilter={sexFilter}
               setActiveCenturies={setActiveCenturies}
               searchParams={searchParams}
+              deleteSearch={deleteSearch}
             />
           </div>
 
@@ -253,6 +270,8 @@ export const PeoplePage: React.FC<Props> = ({
                 handleSort={handleSort}
                 sortOrder={sortOrder}
                 sortField={sortField}
+                searchParams={searchParams}
+                setSearchParams={setSearchParams}
               />
 
               {isFiltered && filteredPeople.length === 0 && !isError && (

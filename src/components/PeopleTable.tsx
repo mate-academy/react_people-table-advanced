@@ -1,13 +1,18 @@
-import { NavLink, useLocation } from 'react-router-dom';
-import React, { useState } from 'react';
+import React, {
+  SetStateAction,
+  Dispatch,
+} from 'react';
 import { Person } from '../types';
 import { SortType, PropName } from '../types/enum';
+import { SearchLink } from './SearchLink';
 
 interface Props {
   people: Person[],
   handleSort: (value: string) => void,
   sortOrder: SortType,
   sortField: string | null,
+  searchParams: URLSearchParams,
+  setSearchParams: Dispatch<SetStateAction<URLSearchParams>>,
 }
 
 export const PeopleTable: React.FC<Props> = ({
@@ -15,13 +20,18 @@ export const PeopleTable: React.FC<Props> = ({
   handleSort,
   sortOrder,
   sortField,
+  searchParams,
+  setSearchParams,
 }) => {
-  const [propName, setPropName] = useState<string | null>(null);
-  const handleSelection = (sortName: string | null) => {
-    setPropName(sortName);
+  const handleSelection = (slug: string | '') => {
+    if (slug) {
+      searchParams.set('slug', slug);
+
+      setSearchParams(searchParams);
+    }
   };
 
-  const location = useLocation().pathname.toString().slice(8);
+  const location = searchParams.get('slug');
 
   return (
     <table
@@ -125,22 +135,21 @@ export const PeopleTable: React.FC<Props> = ({
           return (
             <tr
               key={person.name}
-              className={propName === person.name
-                 && location === person.slug
+              className={location === person.slug
                 ? 'has-background-warning'
                 : ''}
             >
               <td>
-                <NavLink
-                  to={person.slug}
+                <SearchLink
+                  params={{ slug: [String(person.slug)] }}
                   className={person.sex === 'f'
                     ? ('has-text-danger')
                     : ''}
                   role="button"
-                  onClick={() => handleSelection(person.name)}
+                  onClick={() => handleSelection(person.slug)}
                 >
                   {person.name}
-                </NavLink>
+                </SearchLink>
               </td>
               <td>{person.sex}</td>
               <td>{person.born}</td>
@@ -148,15 +157,15 @@ export const PeopleTable: React.FC<Props> = ({
               <td>
                 {person.mother
                   ? (
-                    <NavLink
-                      to={person.mother?.slug}
+                    <SearchLink
+                      params={{ slug: [String(person.mother?.slug)] }}
                       className="has-text-danger"
                       onClick={() => {
-                        handleSelection(person.mother?.name || null);
+                        handleSelection(person.mother?.slug || '');
                       }}
                     >
                       {person.mother.name}
-                    </NavLink>
+                    </SearchLink>
                   ) : (
                     <p>
                       {person.motherName}
@@ -166,14 +175,14 @@ export const PeopleTable: React.FC<Props> = ({
               <td>
                 {person.father
                   ? (
-                    <NavLink
-                      to={person.father?.slug}
+                    <SearchLink
+                      params={{ slug: [String(person.father?.slug)] }}
                       onClick={() => {
-                        handleSelection(person.father?.name || null);
+                        handleSelection(person.father?.slug || '');
                       }}
                     >
                       {person.father.name}
-                    </NavLink>
+                    </SearchLink>
                   ) : (
                     <p>
                       {person.fatherName}
