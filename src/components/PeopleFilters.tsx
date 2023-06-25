@@ -17,6 +17,7 @@ interface Props {
   setActiveCenturies: (value: number[]) => void,
   searchParams: URLSearchParams,
   deleteSearch: () => void,
+  selectedCenturies: string,
 }
 
 export const PeopleFilters: React.FC<Props> = ({
@@ -31,6 +32,7 @@ export const PeopleFilters: React.FC<Props> = ({
   setActiveCenturies,
   searchParams,
   deleteSearch,
+  selectedCenturies,
 }) => {
   useEffect(() => {
     const activeCenturiesFromParams = searchParams.get('centuries');
@@ -82,7 +84,7 @@ export const PeopleFilters: React.FC<Props> = ({
           <div className="level-right ml-4">
             <SearchLink
               data-cy="centuryALL"
-              className={activeCenturies.length === 5
+              className={selectedCenturies.split(',').length === 5
                 ? 'button is-success'
                 : 'button is-outlined'}
               params={{ centuries: [String([15, 16, 17, 18, 19])] }}

@@ -254,6 +254,7 @@ export const PeoplePage: React.FC<Props> = ({
               handleCenturySelection={handleCenturySelection}
               allCenturySelection={allCenturySelection}
               activeCenturies={activeCenturies}
+              selectedCenturies={selectedCenturies}
               resetEveryThing={resetEveryThing}
               sexFilter={sexFilter}
               setActiveCenturies={setActiveCenturies}
