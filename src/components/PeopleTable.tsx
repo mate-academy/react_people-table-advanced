@@ -1,4 +1,4 @@
-import { FC, useEffect } from 'react';
+import { FC } from 'react';
 import classNames from 'classnames';
 import {
   Link, useLocation, useResolvedPath, useSearchParams,
@@ -10,89 +10,26 @@ import { SearchLink } from './SearchLink';
 type Props = {
   people: Person[],
   slugPerson: string | undefined,
-  visiblePeople: Person[],
-  setVisiblePeople: React.Dispatch<React.SetStateAction<Person[]>>
 };
 
 export const PeopleTable: FC<Props> = ({
-  people, slugPerson, setVisiblePeople, visiblePeople,
+  people, slugPerson,
 }) => {
   const location = useLocation();
   const parentPath = useResolvedPath('../').pathname;
   const [seachParams] = useSearchParams();
   const sort = seachParams.get('sort');
   const order = seachParams.get('order');
-  const sexParam = seachParams.get('sex');
-  const centuriesParams = seachParams.getAll('centuries') || [];
-  const queryParam = seachParams.get('query') || '';
-
-  function handleFiltering(peopleFromSever: Person[]) {
-    let peopleResult = [...peopleFromSever];
-
-    // filtering by sex
-    switch (sexParam) {
-      case 'f':
-        peopleResult = peopleResult.filter(p => p.sex === 'f');
-        break;
-      case 'm':
-        peopleResult = peopleResult.filter(p => p.sex === 'm');
-        break;
-      default:
-        break;
-    }
-    // end filtering by sex
-
-    // filtering by century
-    if (centuriesParams.length > 0) {
-      const resultArr: Person[] = [];
-
-      centuriesParams.forEach((cent) => {
-        peopleResult.forEach(per => {
-          if (per.born >= +`${cent}00` && per.died <= +`${+cent + 1}00`) {
-            resultArr.push(per);
-          }
-        });
-      });
-      peopleResult = resultArr;
-    }
-    // end filtering by century
-
-    // filtering by query
-    if (queryParam !== '') {
-      peopleResult = peopleResult.filter(
-        p => {
-          return p.name.toLocaleLowerCase().includes(
-            queryParam.toLocaleLowerCase(),
-          );
-        },
-      );
-    }
-    // end filtering by query
-
-    return peopleResult;
-  }
-
-  const handleSorting = (peopleForSort: Person[]) => {
-    switch (sort) {
-      case 'name':
-        return peopleForSort.sort((a, b) => (a.name.localeCompare(b.name)));
-
-      case 'sex':
-        return peopleForSort.sort((a, b) => (a.sex.localeCompare(b.sex)));
-
-      case 'born':
-        return peopleForSort.sort((a, b) => (a.born - b.born));
-
-      case 'died':
-        return peopleForSort.sort((a, b) => (a.died - b.died));
-
-      default:
-        return peopleForSort;
-    }
-  };
 
   const getQueryParams = (sortName: string) => {
-    if (sort === sortName || sortName === 'born') {
+    if (sort === sortName && order === 'desc') {
+      return {
+        sort: null,
+        order: null,
+      };
+    }
+
+    if (sort === sortName) {
       return {
         sort: sortName,
         order: 'desc',
@@ -104,16 +41,6 @@ export const PeopleTable: FC<Props> = ({
       order: null,
     };
   };
-
-  let peopleForFiltering = handleFiltering(visiblePeople);
-
-  peopleForFiltering = order === 'desc'
-    ? handleSorting(peopleForFiltering).reverse()
-    : handleSorting(peopleForFiltering);
-
-  useEffect(() => {
-    setVisiblePeople(visiblePeople);
-  }, [visiblePeople.length]);
 
   return (
     <>
@@ -131,7 +58,21 @@ export const PeopleTable: FC<Props> = ({
                     params={getQueryParams('name')}
                   >
                     <span className="icon">
-                      <i className="fas fa-sort" />
+                      <i
+                        className={
+                          classNames(
+                            'fas fa-sort',
+                            {
+                              'fa-sort-up':
+                              sort === 'name' && order !== 'desc',
+                            },
+                            {
+                              'fa-sort-down':
+                               order === 'desc' && sort === 'name',
+                            },
+                          )
+                        }
+                      />
                     </span>
                   </SearchLink>
                 </span>
@@ -144,7 +85,23 @@ export const PeopleTable: FC<Props> = ({
                     params={getQueryParams('sex')}
                   >
                     <span className="icon">
-                      <i className="fas fa-sort" />
+                      <i
+                        className={
+                          classNames(
+                            'fas fa-sort',
+                            {
+                              'fa-sort-up':
+                              sort === 'sex' && order !== 'desc',
+                            },
+                            {
+                              'fa-sort-down':
+                               order === 'desc' && sort === 'sex',
+                            },
+                          )
+                        }
+                      />
+                      {' '}
+
                     </span>
                   </SearchLink>
                 </span>
@@ -157,7 +114,23 @@ export const PeopleTable: FC<Props> = ({
                     params={getQueryParams('born')}
                   >
                     <span className="icon">
-                      <i className="fas fa-sort-up" />
+                      <i
+                        className={
+                          classNames(
+                            'fas fa-sort',
+                            {
+                              'fa-sort-up':
+                              sort === 'born' && order !== 'desc',
+                            },
+                            {
+                              'fa-sort-down':
+                               order === 'desc' && sort === 'born',
+                            },
+                          )
+                        }
+                      />
+                      {' '}
+
                     </span>
                   </SearchLink>
                 </span>
@@ -170,7 +143,23 @@ export const PeopleTable: FC<Props> = ({
                     params={getQueryParams('died')}
                   >
                     <span className="icon">
-                      <i className="fas fa-sort" />
+                      <i
+                        className={
+                          classNames(
+                            'fas fa-sort',
+                            {
+                              'fa-sort-up':
+                              sort === 'died' && order !== 'desc',
+                            },
+                            {
+                              'fa-sort-down':
+                               order === 'desc' && sort === 'died',
+                            },
+                          )
+                        }
+                      />
+                      {' '}
+
                     </span>
                   </SearchLink>
                 </span>
@@ -182,7 +171,7 @@ export const PeopleTable: FC<Props> = ({
           </thead>
 
           <tbody>
-            {peopleForFiltering.map((person: Person) => {
+            {people.map((person: Person) => {
               const {
                 name,
                 sex,

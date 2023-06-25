@@ -24,26 +24,20 @@ export const App: FC = () => {
                 <Route
                   index
                   element={(
-                    <>
-                      <PeoplePage slugPerson={match?.params.slug} />
-                    </>
+                    <PeoplePage slugPerson={match?.params.slug} />
                   )}
                 />
                 <Route
                   path=":slugPerson"
                   element={(
-                    <>
-                      <PeoplePage slugPerson={match?.params.slug} />
-                    </>
+                    <PeoplePage slugPerson={match?.params.slug} />
                   )}
                 />
               </Route>
               <Route
                 path="*"
                 element={(
-                  <>
-                    <h1 className="title">Page not found</h1>
-                  </>
+                  <h1 className="title">Page not found</h1>
                 )}
               />
             </Routes>
