@@ -6,6 +6,7 @@ import { getPeople } from '../api';
 import { Loader } from './Loader';
 import { PeopleTable } from './PeopleTable';
 import { Person } from '../types';
+import { SortEnum } from '../types/SortEnum';
 
 type Props = {
   slugPerson: string | undefined,
@@ -70,16 +71,12 @@ export const PeoplePage: React.FC<Props> = ({ slugPerson }) => {
 
   const handleSorting = (peopleForSort: Person[]) => {
     switch (sort) {
-      case 'name':
-        return peopleForSort.sort((a, b) => (a.name.localeCompare(b.name)));
-
-      case 'sex':
+      case SortEnum.name:
+      case SortEnum.sex:
         return peopleForSort.sort((a, b) => (a.sex.localeCompare(b.sex)));
 
-      case 'born':
-        return peopleForSort.sort((a, b) => (a.born - b.born));
-
-      case 'died':
+      case SortEnum.born:
+      case SortEnum.died:
         return peopleForSort.sort((a, b) => (a.died - b.died));
 
       default:
