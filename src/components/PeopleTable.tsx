@@ -182,10 +182,10 @@ export const PeopleTable: FC<Props> = ({
                 slug,
               } = person;
               const mother = people.find(
-                (child) => (child.motherName === person.name),
+                (p) => (p.name === motherName),
               );
               const father = people.find(
-                (child) => (child.fatherName === person.name),
+                (p) => (p.name === fatherName),
               );
 
               return (
