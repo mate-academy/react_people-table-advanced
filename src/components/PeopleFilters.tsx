@@ -1,6 +1,7 @@
 import { Link, useSearchParams } from 'react-router-dom';
 import classNames from 'classnames';
 import { SearchLink } from './SearchLink';
+import { useCenturies } from '../hooks/useCenturies';
 
 type Props = {
   filterBySex: string;
@@ -14,6 +15,7 @@ export const PeopleFilters: React.FC<Props> = ({
   filterQuery,
 }) => {
   const [searchParams, setSearchParams] = useSearchParams();
+  const [ceturyIsSelected, getCenturyParams] = useCenturies();
 
   const onChangeQuery = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
@@ -27,18 +29,6 @@ export const PeopleFilters: React.FC<Props> = ({
 
     searchParams.set('query', value);
     setSearchParams(searchParams);
-  };
-
-  const ceturyIsSelected = (century: string) => {
-    return filterByCenturies.includes(century);
-  };
-
-  const getCenturyParams = (century: string) => {
-    return {
-      centuries: filterByCenturies.includes(century)
-        ? filterByCenturies.filter(c => c !== century)
-        : [...filterByCenturies, century],
-    };
   };
 
   return (

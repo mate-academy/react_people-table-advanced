@@ -1,57 +1,21 @@
 import classNames from 'classnames';
 import { Person } from '../types';
+
 import { PersonLink } from './PersonLink';
 import { SearchLink } from './SearchLink';
-import { SearchParams } from '../utils/searchHelper';
+
+import { useArrowClassName } from '../hooks/useArrowClassName';
+import { useSortParams } from '../hooks/useSortParams';
 
 type Props = {
   people: Person[];
   selectedPerson: string;
-  sortBy: string;
-  sortOrder: string;
 };
 
 export const PeopleTable: React.FC<Props> = ({
   people,
   selectedPerson,
-  sortBy,
-  sortOrder,
 }) => {
-  const getSortParams = (paramName: string): SearchParams => {
-    switch (true) {
-      case sortBy === paramName && !!sortOrder:
-        return {
-          sort: null,
-          order: null,
-        };
-
-      case sortBy !== paramName:
-        return {
-          sort: paramName,
-        };
-
-      case sortBy === paramName:
-        return {
-          order: 'desc',
-        };
-
-      default:
-        return {
-          sort: null,
-          order: null,
-        };
-    }
-  };
-
-  const getArrowClassName = (paramName: string) => {
-    return classNames(
-      'fas',
-      { 'fa-sort': sortBy !== paramName },
-      { 'fa-sort-up': sortBy === paramName && !sortOrder },
-      { 'fa-sort-down': sortBy === paramName && !!sortOrder },
-    );
-  };
-
   return (
     <table
       data-cy="peopleTable"
@@ -62,9 +26,9 @@ export const PeopleTable: React.FC<Props> = ({
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Name
-              <SearchLink params={getSortParams('name')}>
+              <SearchLink params={useSortParams('name')}>
                 <span className="icon">
-                  <i className={getArrowClassName('name')} />
+                  <i className={useArrowClassName('name')} />
                 </span>
               </SearchLink>
             </span>
@@ -73,9 +37,9 @@ export const PeopleTable: React.FC<Props> = ({
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Sex
-              <SearchLink params={getSortParams('sex')}>
+              <SearchLink params={useSortParams('sex')}>
                 <span className="icon">
-                  <i className={getArrowClassName('sex')} />
+                  <i className={useArrowClassName('sex')} />
                 </span>
               </SearchLink>
             </span>
@@ -84,9 +48,9 @@ export const PeopleTable: React.FC<Props> = ({
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Born
-              <SearchLink params={getSortParams('born')}>
+              <SearchLink params={useSortParams('born')}>
                 <span className="icon">
-                  <i className={getArrowClassName('born')} />
+                  <i className={useArrowClassName('born')} />
                 </span>
               </SearchLink>
             </span>
@@ -95,9 +59,9 @@ export const PeopleTable: React.FC<Props> = ({
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Died
-              <SearchLink params={getSortParams('died')}>
+              <SearchLink params={useSortParams('died')}>
                 <span className="icon">
-                  <i className={getArrowClassName('died')} />
+                  <i className={useArrowClassName('died')} />
                 </span>
               </SearchLink>
             </span>

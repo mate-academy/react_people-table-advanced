@@ -9,8 +9,8 @@ import { Person } from '../types';
 
 import { getPeople } from '../api';
 import { getPeopleWithParents } from '../utils/peopleModifier';
-import { normalize } from '../utils/normailze';
-import { getCenturyFromYear } from '../utils/getCentury';
+import { normalize } from '../utils/normailzer';
+import { getCenturyFromYear } from '../utils/getCenturyString';
 
 enum ErrorType {
   none,
@@ -179,8 +179,6 @@ export const PeoplePage = () => {
                         <PeopleTable
                           people={sortedWithOrder}
                           selectedPerson={slug}
-                          sortBy={sortBy}
-                          sortOrder={sortOrder}
                         />
                       )}
                   </>
