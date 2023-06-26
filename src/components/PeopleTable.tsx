@@ -6,6 +6,9 @@ import {
 
 import { Person } from '../types';
 import { SearchLink } from './SearchLink';
+import { OrderEnum } from '../types/OrderEnum';
+import { SortEnum } from '../types/SortEnum';
+import { SexEnum } from '../types/SexEnum';
 
 type Props = {
   people: Person[],
@@ -22,7 +25,7 @@ export const PeopleTable: FC<Props> = ({
   const order = seachParams.get('order');
 
   const getQueryParams = (sortName: string) => {
-    if (sort === sortName && order === 'desc') {
+    if (sort === sortName && order === OrderEnum.desc) {
       return {
         sort: null,
         order: null,
@@ -32,7 +35,7 @@ export const PeopleTable: FC<Props> = ({
     if (sort === sortName) {
       return {
         sort: sortName,
-        order: 'desc',
+        order: OrderEnum.desc,
       };
     }
 
@@ -55,7 +58,7 @@ export const PeopleTable: FC<Props> = ({
                 <span className="is-flex is-flex-wrap-nowrap">
                   Name
                   <SearchLink
-                    params={getQueryParams('name')}
+                    params={getQueryParams(SortEnum.name)}
                   >
                     <span className="icon">
                       <i
@@ -64,11 +67,13 @@ export const PeopleTable: FC<Props> = ({
                             'fas fa-sort',
                             {
                               'fa-sort-up':
-                              sort === 'name' && order !== 'desc',
+                              sort === SortEnum.name
+                              && order !== OrderEnum.asc,
                             },
                             {
                               'fa-sort-down':
-                               order === 'desc' && sort === 'name',
+                               order === OrderEnum.desc
+                               && sort === SortEnum.name,
                             },
                           )
                         }
@@ -82,7 +87,7 @@ export const PeopleTable: FC<Props> = ({
                 <span className="is-flex is-flex-wrap-nowrap">
                   Sex
                   <SearchLink
-                    params={getQueryParams('sex')}
+                    params={getQueryParams(SortEnum.sex)}
                   >
                     <span className="icon">
                       <i
@@ -91,11 +96,12 @@ export const PeopleTable: FC<Props> = ({
                             'fas fa-sort',
                             {
                               'fa-sort-up':
-                              sort === 'sex' && order !== 'desc',
+                              sort === SortEnum.sex && order !== OrderEnum.asc,
                             },
                             {
                               'fa-sort-down':
-                               order === 'desc' && sort === 'sex',
+                              order === OrderEnum.desc
+                              && sort === SortEnum.sex,
                             },
                           )
                         }
@@ -111,7 +117,7 @@ export const PeopleTable: FC<Props> = ({
                 <span className="is-flex is-flex-wrap-nowrap">
                   Born
                   <SearchLink
-                    params={getQueryParams('born')}
+                    params={getQueryParams(SortEnum.born)}
                   >
                     <span className="icon">
                       <i
@@ -120,11 +126,12 @@ export const PeopleTable: FC<Props> = ({
                             'fas fa-sort',
                             {
                               'fa-sort-up':
-                              sort === 'born' && order !== 'desc',
+                              sort === SortEnum.born && order !== OrderEnum.asc,
                             },
                             {
                               'fa-sort-down':
-                               order === 'desc' && sort === 'born',
+                               order === OrderEnum.desc
+                               && sort === SortEnum.born,
                             },
                           )
                         }
@@ -140,7 +147,7 @@ export const PeopleTable: FC<Props> = ({
                 <span className="is-flex is-flex-wrap-nowrap">
                   Died
                   <SearchLink
-                    params={getQueryParams('died')}
+                    params={getQueryParams(SortEnum.died)}
                   >
                     <span className="icon">
                       <i
@@ -149,11 +156,12 @@ export const PeopleTable: FC<Props> = ({
                             'fas fa-sort',
                             {
                               'fa-sort-up':
-                              sort === 'died' && order !== 'desc',
+                              sort === SortEnum.died && order !== OrderEnum.asc,
                             },
                             {
                               'fa-sort-down':
-                               order === 'desc' && sort === 'died',
+                               order === OrderEnum.desc
+                               && sort === SortEnum.died,
                             },
                           )
                         }
@@ -204,7 +212,7 @@ export const PeopleTable: FC<Props> = ({
                         search: location.search,
                       }}
                       className={classNames(
-                        { 'has-text-danger': sex === 'f' },
+                        { 'has-text-danger': sex === SexEnum.female },
                       )}
                     >
                       {name}

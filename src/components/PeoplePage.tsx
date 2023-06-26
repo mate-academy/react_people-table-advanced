@@ -7,6 +7,8 @@ import { Loader } from './Loader';
 import { PeopleTable } from './PeopleTable';
 import { Person } from '../types';
 import { SortEnum } from '../types/SortEnum';
+import { SexEnum } from '../types/SexEnum';
+import { OrderEnum } from '../types/OrderEnum';
 
 type Props = {
   slugPerson: string | undefined,
@@ -28,11 +30,11 @@ export const PeoplePage: React.FC<Props> = ({ slugPerson }) => {
 
     // filtering by sex
     switch (sexParam) {
-      case 'f':
-        peopleResult = peopleResult.filter(p => p.sex === 'f');
+      case SexEnum.female:
+        peopleResult = peopleResult.filter(p => p.sex === SexEnum.female);
         break;
-      case 'm':
-        peopleResult = peopleResult.filter(p => p.sex === 'm');
+      case SexEnum.male:
+        peopleResult = peopleResult.filter(p => p.sex === SexEnum.male);
         break;
       default:
         break;
@@ -86,7 +88,7 @@ export const PeoplePage: React.FC<Props> = ({ slugPerson }) => {
 
   let visiblePeople = handleFiltering(people);
 
-  visiblePeople = order === 'desc'
+  visiblePeople = order === OrderEnum.desc
     ? handleSorting(visiblePeople).reverse()
     : handleSorting(visiblePeople);
 

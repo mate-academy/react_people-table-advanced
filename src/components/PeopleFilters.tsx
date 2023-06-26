@@ -3,6 +3,7 @@ import {
   useSearchParams,
 } from 'react-router-dom';
 import { SearchLink } from './SearchLink';
+import { SexEnum } from '../types/SexEnum';
 
 export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -47,17 +48,17 @@ export const PeopleFilters = () => {
         </SearchLink>
         <SearchLink
           className={classnames(
-            { 'is-active': sex === 'm' },
+            { 'is-active': sex === SexEnum.male },
           )}
-          params={{ sex: 'm' }}
+          params={{ sex: SexEnum.male }}
         >
           Male
         </SearchLink>
         <SearchLink
           className={classnames(
-            { 'is-active': sex === 'f' },
+            { 'is-active': sex === SexEnum.female },
           )}
-          params={{ sex: 'f' }}
+          params={{ sex: SexEnum.female }}
         >
           Female
         </SearchLink>
