@@ -1,24 +1,22 @@
-import { useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import classNames from 'classnames';
 import { SearchLink } from './SearchLink';
 
 type Props = {
-  filterBySex: string | null;
+  filterBySex: string;
   filterByCenturies: string[];
+  filterQuery: string;
 };
 
 export const PeopleFilters: React.FC<Props> = ({
   filterBySex,
   filterByCenturies,
+  filterQuery,
 }) => {
-  const [filterQuery, setFilterQuery] = useState('');
   const [searchParams, setSearchParams] = useSearchParams();
 
   const onChangeQuery = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
-
-    setFilterQuery(value);
 
     if (!value) {
       searchParams.delete('query');
@@ -50,7 +48,7 @@ export const PeopleFilters: React.FC<Props> = ({
       <p className="panel-tabs" data-cy="SexFilter">
         <SearchLink
           params={{ sex: null }}
-          className={classNames({ 'is-active': filterBySex === null })}
+          className={classNames({ 'is-active': !filterBySex })}
         >
           All
         </SearchLink>
@@ -168,12 +166,15 @@ export const PeopleFilters: React.FC<Props> = ({
       </div>
 
       <div className="panel-block">
-        <a
+        <Link
           className="button is-link is-outlined is-fullwidth"
-          href="#/people"
+          to={{
+            pathname: '/people',
+            search: '',
+          }}
         >
           Reset all filters
-        </a>
+        </Link>
       </div>
     </nav>
   );

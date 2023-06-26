@@ -7,8 +7,8 @@ import { SearchParams } from '../utils/searchHelper';
 type Props = {
   people: Person[];
   selectedPerson: string;
-  sortBy: string | null;
-  sortOrder: string | null;
+  sortBy: string;
+  sortOrder: string;
 };
 
 export const PeopleTable: React.FC<Props> = ({

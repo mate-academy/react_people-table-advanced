@@ -25,10 +25,10 @@ export const PeoplePage = () => {
 
   const [searchParams] = useSearchParams();
 
-  const sortBy = searchParams.get('sort');
-  const sortOrder = searchParams.get('order');
-  const filterBySex = searchParams.get('sex');
-  const filterQuery = searchParams.get('query');
+  const sortBy = searchParams.get('sort') || '';
+  const sortOrder = searchParams.get('order') || '';
+  const filterBySex = searchParams.get('sex') || '';
+  const filterQuery = searchParams.get('query') || '';
   const filterByCenturies = searchParams.getAll('centuries');
 
   const { slug = '' } = useParams();
@@ -53,68 +53,8 @@ export const PeoplePage = () => {
     }
   };
 
-  const sortedPeople = useMemo(() => {
-    const copy = [...people];
-
-    switch (sortBy) {
-      case 'name':
-        return copy.sort((a, b) => a.name.localeCompare(b.name));
-
-      case 'sex':
-        return copy.sort((a, b) => a.sex.localeCompare(b.sex));
-
-      case 'born':
-        return copy.sort((a, b) => a.born - b.born);
-
-      case 'died':
-        return copy.sort((a, b) => a.died - b.died);
-
-      default:
-        return people;
-    }
-  }, [sortBy, people]);
-
-  const sortedWithOrder = useMemo(() => {
-    switch (sortOrder) {
-      case 'desc':
-        return [...sortedPeople].reverse();
-
-      case null:
-      default:
-        return sortedPeople;
-    }
-  }, [sortOrder, sortedPeople]);
-
-  const filteredBySex = useMemo(() => {
-    switch (filterBySex) {
-      case 'm':
-        return sortedWithOrder.filter(person => person.sex === 'm');
-
-      case 'f':
-        return sortedWithOrder.filter(person => person.sex === 'f');
-
-      case null:
-      default:
-        return sortedWithOrder;
-    }
-  }, [filterBySex, sortedWithOrder]);
-
-  const filterByCentury = useMemo(() => {
-    if (!filterByCenturies.length) {
-      return filteredBySex;
-    }
-
-    return filteredBySex.filter(person => {
-      return filterByCenturies.includes(getCenturyFromYear(person.born));
-    });
-  }, [filteredBySex, filterByCenturies]);
-
   const filteredWithQuery = useMemo(() => {
-    if (!filterQuery) {
-      return filterByCentury;
-    }
-
-    return filterByCentury.filter(({ name, motherName, fatherName }) => {
+    return people.filter(({ name, motherName, fatherName }) => {
       const query = normalize(filterQuery);
 
       const values = [
@@ -129,7 +69,64 @@ export const PeoplePage = () => {
 
       return false;
     });
-  }, [filterQuery, filterByCentury]);
+  }, [filterQuery, people]);
+
+  const filteredBySex = useMemo(() => {
+    switch (filterBySex) {
+      case 'm':
+        return filteredWithQuery.filter(person => person.sex === 'm');
+
+      case 'f':
+        return filteredWithQuery.filter(person => person.sex === 'f');
+
+      case '':
+      default:
+        return filteredWithQuery;
+    }
+  }, [filterBySex, filteredWithQuery]);
+
+  const filteredByCentury = useMemo(() => {
+    if (!filterByCenturies.length) {
+      return filteredBySex;
+    }
+
+    return filteredBySex.filter(person => {
+      return filterByCenturies.includes(getCenturyFromYear(person.born));
+    });
+  }, [filteredBySex, filterByCenturies]);
+
+  const sortedPeople = useMemo(() => {
+    const copy = [...filteredByCentury];
+
+    switch (sortBy) {
+      case 'name':
+        return copy.sort((a, b) => a.name.localeCompare(b.name));
+
+      case 'sex':
+        return copy.sort((a, b) => a.sex.localeCompare(b.sex));
+
+      case 'born':
+        return copy.sort((a, b) => a.born - b.born);
+
+      case 'died':
+        return copy.sort((a, b) => a.died - b.died);
+
+      case '':
+      default:
+        return filteredByCentury;
+    }
+  }, [sortBy, filteredByCentury]);
+
+  const sortedWithOrder = useMemo(() => {
+    switch (sortOrder) {
+      case 'desc':
+        return [...sortedPeople].reverse();
+
+      case '':
+      default:
+        return sortedPeople;
+    }
+  }, [sortOrder, sortedPeople]);
 
   useEffect(() => {
     loadPeople();
@@ -146,6 +143,7 @@ export const PeoplePage = () => {
               <PeopleFilters
                 filterBySex={filterBySex}
                 filterByCenturies={filterByCenturies}
+                filterQuery={filterQuery}
               />
             </div>
           )}
@@ -171,7 +169,7 @@ export const PeoplePage = () => {
                       </p>
                     )}
 
-                    {!filteredWithQuery.length
+                    {!sortedWithOrder.length
                       ? (
                         <p>
                           There are no people
@@ -179,7 +177,7 @@ export const PeoplePage = () => {
                         </p>
                       ) : (
                         <PeopleTable
-                          people={filteredWithQuery}
+                          people={sortedWithOrder}
                           selectedPerson={slug}
                           sortBy={sortBy}
                           sortOrder={sortOrder}
