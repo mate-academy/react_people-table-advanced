@@ -18,6 +18,20 @@ enum ErrorType {
   noPeopleOnServer,
 }
 
+enum FilterBySex {
+  none = '',
+  male = 'm',
+  female = 'f',
+}
+
+enum SortBy {
+  none = '',
+  name = 'name',
+  sex = 'sex',
+  born = 'born',
+  died = 'died',
+}
+
 export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);
   const [isLoaded, setIsLoaded] = useState(false);
@@ -63,23 +77,19 @@ export const PeoplePage = () => {
         normalize(fatherName),
       ];
 
-      if (values.some(value => value.includes(query))) {
-        return true;
-      }
-
-      return false;
+      return values.some(value => value.includes(query));
     });
   }, [filterQuery, people]);
 
   const filteredBySex = useMemo(() => {
     switch (filterBySex) {
-      case 'm':
+      case FilterBySex.male:
         return filteredWithQuery.filter(person => person.sex === 'm');
 
-      case 'f':
+      case FilterBySex.female:
         return filteredWithQuery.filter(person => person.sex === 'f');
 
-      case '':
+      case FilterBySex.none:
       default:
         return filteredWithQuery;
     }
@@ -99,19 +109,19 @@ export const PeoplePage = () => {
     const copy = [...filteredByCentury];
 
     switch (sortBy) {
-      case 'name':
+      case SortBy.name:
         return copy.sort((a, b) => a.name.localeCompare(b.name));
 
-      case 'sex':
+      case SortBy.sex:
         return copy.sort((a, b) => a.sex.localeCompare(b.sex));
 
-      case 'born':
+      case SortBy.born:
         return copy.sort((a, b) => a.born - b.born);
 
-      case 'died':
+      case SortBy.died:
         return copy.sort((a, b) => a.died - b.died);
 
-      case '':
+      case SortBy.none:
       default:
         return filteredByCentury;
     }
