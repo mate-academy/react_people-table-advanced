@@ -1,6 +1,7 @@
 import React, {
   SetStateAction,
   Dispatch,
+  useEffect,
 } from 'react';
 import { Person } from '../types';
 import { SortType, PropName } from '../types/enum';
@@ -32,6 +33,14 @@ export const PeopleTable: React.FC<Props> = ({
   };
 
   const location = searchParams.get('slug');
+
+  useEffect(() => {
+    const slug = searchParams.get('slug');
+
+    if (slug !== null) {
+      handleSelection(slug);
+    }
+  }, []);
 
   return (
     <table
@@ -164,7 +173,7 @@ export const PeopleTable: React.FC<Props> = ({
                         handleSelection(person.mother?.slug || '');
                       }}
                     >
-                      {person.mother.name}
+                      {person.mother?.name}
                     </SearchLink>
                   ) : (
                     <p>

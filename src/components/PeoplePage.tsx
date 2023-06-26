@@ -117,7 +117,7 @@ export const PeoplePage: React.FC<Props> = ({
     setSearchParams(newParams);
   };
 
-  const updatedPeople = people.map((child) => {
+  const peopleWithParents = newPeople.map((child) => {
     if (!child.motherName && !child.fatherName) {
       return {
         ...child,
@@ -151,7 +151,7 @@ export const PeoplePage: React.FC<Props> = ({
   });
 
   const filteredPeople: NewPerson[] = useMemo(() => {
-    return newPeople.filter((person) => {
+    return peopleWithParents.filter((person) => {
       const functionality
       = person.name.toLowerCase().includes(query.toLowerCase().trim());
       const century = Math.floor(person.born / 100);
@@ -176,7 +176,7 @@ export const PeoplePage: React.FC<Props> = ({
             && person.sex === 'f';
       }
     });
-  }, [updatedPeople, selectedCenturies, query, sexFilter, loading]);
+  }, [peopleWithParents, selectedCenturies, query, sexFilter, loading]);
 
   useEffect(() => {
     setIsFiltered(true);
@@ -244,6 +244,7 @@ export const PeoplePage: React.FC<Props> = ({
 
   return (
     <>
+      <h1 className="title">People Page</h1>
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
           <div className="column is-7-tablet is-narrow-desktop">

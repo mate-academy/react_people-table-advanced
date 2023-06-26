@@ -35,14 +35,13 @@ export const App: React.FC = () => {
 
   useEffect(() => {
     fetchPeople();
-  });
+  }, []);
 
   return (
     <div data-cy="app">
       <Navbar />
       <div className="section">
         <div className="container">
-          <h1 className="title">People Page</h1>
           <Routes>
             { isHomePage && (
               <Route path="home" element={<Navigate to="/" replace />} />
