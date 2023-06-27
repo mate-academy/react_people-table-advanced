@@ -1,3 +1,5 @@
+import { PageNavLink } from './PageNavLink';
+
 export const Navbar = () => {
   return (
     <nav
@@ -8,15 +10,35 @@ export const Navbar = () => {
     >
       <div className="container">
         <div className="navbar-brand">
-          <a className="navbar-item" href="#/">Home</a>
+          <PageNavLink to="/home" text="Home" />
+          <PageNavLink to="/people" text="People" />
 
-          <a
+          {/* <NavLink
+            className={classNames(
+              'navbar-item',
+              {
+                'has-background-grey-lighter':
+                location.pathname.includes('/home'),
+              },
+            )}
+            to="/home"
+          >
+            Home
+          </NavLink>
+
+          <NavLink
             aria-current="page"
-            className="navbar-item has-background-grey-lighter"
-            href="#/people"
+            className={classNames(
+              'navbar-item',
+              {
+                'has-background-grey-lighter':
+                location.pathname.includes('/people'),
+              },
+            )}
+            to="/people"
           >
             People
-          </a>
+          </NavLink> */}
         </div>
       </div>
     </nav>
