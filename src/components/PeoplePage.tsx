@@ -58,7 +58,7 @@ export const PeoplePage: React.FC<{}> = () => {
   }
 
   if (sorting) {
-    switch(sorting) {
+    switch (sorting) {
       case 'name':
       case 'sex':
         visiblePeople = visiblePeople.sort((a, b) => {
@@ -68,7 +68,7 @@ export const PeoplePage: React.FC<{}> = () => {
       case 'born':
       case 'died':
         visiblePeople = visiblePeople.sort((a, b) => {
-          return a[sorting] - b [sorting];
+          return a[sorting] - b[sorting];
         });
         break;
       default:

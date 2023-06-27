@@ -1,9 +1,8 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useSearchParams } from 'react-router-dom';
 import classNames from 'classnames';
 import { Person } from '../types';
 import { PersonLink } from './PersonLink';
-import { getSearchWith } from '../utils/searchHelper';
 import { SearchLink } from './SearchLink';
 
 interface Props {
@@ -11,7 +10,7 @@ interface Props {
 }
 
 export const PeopleTable: React.FC<Props> = ({ people }) => {
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
   const sorting = searchParams.get('sort') || null;
   const order = searchParams.get('order') || null;
 

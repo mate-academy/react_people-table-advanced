@@ -69,8 +69,7 @@ export const PeopleFilters: React.FC<Props> = ({
               <Link
                 data-cy="century"
                 className={classNames('button mr-1',
-                  { 'is-info': centuries.includes(century) },
-                )}
+                  { 'is-info': centuries.includes(century) })}
                 to={
                   {
                     search: getSearchWith(searchParams, {
