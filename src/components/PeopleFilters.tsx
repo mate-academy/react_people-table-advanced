@@ -10,7 +10,6 @@ type Props = {
 };
 
 export const PeopleFilters: React.FC<Props> = () => {
-  // const [query, setQuery] = useState('');
   const [serchParams, setSearchParams] = useSearchParams();
   const query = serchParams.get('query') || '';
   const sex = serchParams.get('sex') || '';
@@ -23,25 +22,6 @@ export const PeopleFilters: React.FC<Props> = () => {
       { query: event.target.value || null },
     ));
   };
-
-  // const filtredPeople = useMemo(() => {
-  //   const toFilter = people.filter(item => {
-  //     switch (sex) {
-  //       case 'm':
-  //         return item.sex === 'm';
-  //       case 'f':
-  //         return item.sex === 'f';
-  //       default:
-  //         return item;
-  //     }
-  //   });
-
-  //   return toFilter;
-  // }, [sex, people]);
-
-  // useEffect(() => {
-  //   setFiltredPeople(filtredPeople);
-  // }, [filtredPeople]);
 
   return (
     <nav className="panel">

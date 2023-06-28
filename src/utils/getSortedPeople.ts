@@ -4,7 +4,6 @@ export const getSortedPeople = (
   people: Person[],
   searchParams: URLSearchParams,
 ) => {
-  // let sortedPeople = [...people];
   const sort = searchParams.get('sort');
   const order = searchParams.get('order');
 

@@ -2,11 +2,14 @@ import { Person } from '../types/Person';
 
 export const getFiltredPeople = (
   people: Person[],
-  searchParams: URLSearchParams,
+  // searchParams: URLSearchParams,
+  sex: string,
+  query: string,
+  centuries: string[],
 ) => {
-  const query = searchParams.get('query') || '';
-  const sex = searchParams.get('sex') || '';
-  const centuries = searchParams.getAll('centuries');
+  // const query = searchParams.get('query') || '';
+  // const sex = searchParams.get('sex') || '';
+  // const centuries = searchParams.getAll('centuries');
   let filtredPeople = [...people];
 
   if (sex) {

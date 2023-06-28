@@ -17,19 +17,19 @@ export const PeopleTable: React.FC<Props> = ({
   selectPeopleSlug,
 }) => {
   const [searchParams] = useSearchParams();
+  const sort = searchParams.get('sort');
+  const order = searchParams.get('order');
   const query = searchParams.get('query') || '';
   const sex = searchParams.get('sex') || '';
   const centuries = searchParams.getAll('centuries');
-  const sort = searchParams.get('sort');
-  const order = searchParams.get('order');
 
   const filteredPeople = useMemo(() => {
-    return getFiltredPeople(people, searchParams);
-  }, [people, query, sex, centuries]);
+    return getFiltredPeople(people, sex, query, centuries);
+  }, [people, searchParams]);
 
   const sortedPeople = useMemo(() => {
     return getSortedPeople(filteredPeople, searchParams);
-  }, [sort, order, filteredPeople]);
+  }, [searchParams, filteredPeople]);
 
   return (
     <table
