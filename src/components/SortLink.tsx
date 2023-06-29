@@ -1,9 +1,10 @@
 import classNames from 'classnames';
 import { useSearchParams } from 'react-router-dom';
 import { SearchLink } from './SearchLink';
+import { SortType } from '../types';
 
 type Props = {
-  field: string,
+  field: SortType | null,
 };
 
 export const SortLink: React.FC<Props> = ({ field }) => {

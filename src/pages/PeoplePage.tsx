@@ -6,6 +6,7 @@ import { PeopleTable } from '../components/PeopleTable';
 import { getPeople } from '../api';
 import { Person } from '../types';
 import { getSearchWith } from '../utils/searchHelper';
+import { SortType } from '../types/SortType';
 
 export const PeoplePage: React.FC = () => {
   const [people, setPeople] = useState<Person[]>([]);
@@ -19,10 +20,14 @@ export const PeoplePage: React.FC = () => {
   const sort = searchParams.get('sort');
   const isReversed = searchParams.get('order') === 'desc';
 
+  const includesQuery = (str: string | null, word: string) => {
+    return str?.toLowerCase().includes(word.toLowerCase().trim());
+  };
+
   let visiblePeople = people.filter(person => {
-    return person.name.toLowerCase().includes(query.toLowerCase().trim())
-      || person.fatherName?.toLowerCase().includes(query.toLowerCase().trim())
-      || person.motherName?.toLowerCase().includes(query.toLowerCase().trim());
+    return includesQuery(person.name, query)
+      || includesQuery(person.fatherName, query)
+      || includesQuery(person.motherName, query);
   });
 
   const onQueryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -66,12 +71,12 @@ export const PeoplePage: React.FC = () => {
   if (sort) {
     visiblePeople.sort((a, b) => {
       switch (sort) {
-        case 'name':
-        case 'sex':
+        case SortType.Name:
+        case SortType.Sex:
           return a[sort].localeCompare(b[sort]);
 
-        case 'born':
-        case 'died':
+        case SortType.Born:
+        case SortType.Died:
           return a[sort] - b[sort];
 
         default:
@@ -91,7 +96,7 @@ export const PeoplePage: React.FC = () => {
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
           <div className="column is-7-tablet is-narrow-desktop">
-            {!isLoading && people.length !== 0 && (
+            {!isLoading && !!people.length && (
               <PeopleFilters
                 query={query}
                 onQueryChange={onQueryChange}

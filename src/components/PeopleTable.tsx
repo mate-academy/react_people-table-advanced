@@ -1,4 +1,5 @@
 import { Person } from '../types';
+import { SortType } from '../types/SortType';
 import { PersonRow } from './PersonRow';
 import { SortLink } from './SortLink';
 
@@ -21,28 +22,28 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Name
-              <SortLink field="name" />
+              <SortLink field={SortType.Name} />
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Sex
-              <SortLink field="sex" />
+              <SortLink field={SortType.Sex} />
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Born
-              <SortLink field="born" />
+              <SortLink field={SortType.Born} />
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Died
-              <SortLink field="died" />
+              <SortLink field={SortType.Died} />
             </span>
           </th>
 
