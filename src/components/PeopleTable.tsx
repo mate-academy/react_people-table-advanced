@@ -1,16 +1,24 @@
+/* eslint-disable max-len */
 import classNames from 'classnames';
 import { Person } from '../types';
 import { PersonCard } from './PersonCard';
+import { SearchLink } from './SearchLink';
 
 type Props = {
   peopleList: Person[],
   selectedSlug: string | undefined,
+  sort: string | null,
+  order: string | null,
 };
 
 export const PeopleTable: React.FC<Props> = ({
   peopleList,
   selectedSlug,
+  sort,
+  order,
 }) => {
+  const sortTypes = ['Name', 'Sex', 'Born', 'Died'];
+
   return (
     <table
       data-cy="peopleTable"
@@ -18,50 +26,30 @@ export const PeopleTable: React.FC<Props> = ({
     >
       <thead>
         <tr>
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Name
-              <a href="#/people?sort=name">
-                <span className="icon">
-                  <i className="fas fa-sort" />
-                </span>
-              </a>
-            </span>
-          </th>
-
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Sex
-              <a href="#/people?sort=sex">
-                <span className="icon">
-                  <i className="fas fa-sort" />
-                </span>
-              </a>
-            </span>
-          </th>
-
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Born
-              <a href="#/people?sort=born&amp;order=desc">
-                <span className="icon">
-                  <i className="fas fa-sort-up" />
-                </span>
-              </a>
-            </span>
-          </th>
-
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Died
-              <a href="#/people?sort=died">
-                <span className="icon">
-                  <i className="fas fa-sort" />
-                </span>
-              </a>
-            </span>
-          </th>
-
+          {sortTypes.map(type => (
+            <th key={type}>
+              <span className="is-flex is-flex-wrap-nowrap">
+                {type}
+                <SearchLink
+                  params={{
+                    sort: (sort === type.toLocaleLowerCase() && order) ? null : type.toLocaleLowerCase(),
+                    order: (sort === type.toLocaleLowerCase() && !order) ? 'desc' : null,
+                  }}
+                >
+                  <span className="icon">
+                    <i
+                      className={classNames('fas fa-sort', {
+                        'fa-sort-up': (sort === type.toLocaleLowerCase()
+                          && !order),
+                        'fa-sort-down': (sort === type.toLocaleLowerCase()
+                          && order),
+                      })}
+                    />
+                  </span>
+                </SearchLink>
+              </span>
+            </th>
+          ))}
           <th>Mother</th>
           <th>Father</th>
         </tr>

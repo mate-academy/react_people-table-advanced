@@ -4,12 +4,18 @@ import { useSearchParams } from 'react-router-dom';
 import { SearchLink } from './SearchLink';
 import { getSearchWith } from '../utils/searchHelper';
 
-export const PeopleFilters = () => {
-  const [searchParams, setSearchParams] = useSearchParams();
+type Props = {
+  sex: string | null,
+  query: string,
+  centuries: string[],
+};
 
-  const sex = searchParams.get('sex') || '';
-  const query = searchParams.get('query') || '';
-  const centuries = searchParams.getAll('centuries') || [];
+export const PeopleFilters: React.FC<Props> = ({
+  sex,
+  query,
+  centuries,
+}) => {
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const onQueryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchParams(getSearchWith(searchParams, { query: event.target.value || null }));
