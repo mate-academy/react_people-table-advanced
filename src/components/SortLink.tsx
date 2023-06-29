@@ -1,7 +1,7 @@
 import classNames from 'classnames';
 import { useSearchParams } from 'react-router-dom';
 import { SearchLink } from './SearchLink';
-import { SortType } from '../types';
+import { SortType } from '../types/SortType';
 
 type Props = {
   field: SortType | null,
