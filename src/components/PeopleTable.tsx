@@ -1,20 +1,31 @@
-import classNames from 'classnames';
+import cn from 'classnames';
 import { Person } from '../types';
 import { PersonLink } from './PersonLink';
-import { SortTypeLink } from './SortTypeLink';
+import { SearchLink } from './SearchLink';
 
 type Props = {
   sortedPeople: Person[],
   slug: string,
+  sort: string | null,
+  order: string,
 };
 
-export const PeopleTable: React. FC<Props> = ({ slug, sortedPeople }) => {
+export const PeopleTable: React. FC<Props> = ({
+  slug, sortedPeople, sort, order,
+}) => {
   const isSelected = (person: Person) => person.slug === slug;
   const fieldName = ['Name', 'Sex', 'Born', 'Died'];
+  const getSortParams = (field: string) => {
+    if (field === sort) {
+      if (order === 'asc') {
+        return { sort: field, order: 'desc' };
+      }
 
-  if (!sortedPeople.length) {
-    return <p>There are no people matching the current search criteria</p>;
-  }
+      return { sort: null, order: null };
+    }
+
+    return { sort: field, order: 'asc' };
+  };
 
   return (
     <table
@@ -23,9 +34,29 @@ export const PeopleTable: React. FC<Props> = ({ slug, sortedPeople }) => {
     >
       <thead>
         <tr>
-          {fieldName.map(field => (
-            <SortTypeLink key={field} title={field} />
-          ))}
+          {fieldName.map(field => {
+            const lowerCaseField = field.toLowerCase();
+            const sameTitle = sort === lowerCaseField;
+
+            return (
+              <th key={field}>
+                <span className="is-flex is-flex-wrap-nowrap">
+                  {field}
+                  <SearchLink params={getSortParams(lowerCaseField)}>
+                    <span className="icon">
+                      <i className={cn(
+                        'fas fa-sort',
+                        { 'fa-sort': !sameTitle },
+                        { 'fa-sort-up': sameTitle && !order },
+                        { 'fa-sort-down': sameTitle && order },
+                      )}
+                      />
+                    </span>
+                  </SearchLink>
+                </span>
+              </th>
+            );
+          })}
 
           <th>Mother</th>
           <th>Father</th>
@@ -43,7 +74,7 @@ export const PeopleTable: React. FC<Props> = ({ slug, sortedPeople }) => {
             <tr
               data-cy="person"
               key={person.slug}
-              className={classNames(
+              className={cn(
                 { 'has-background-warning': isSelected(person) },
               )}
             >

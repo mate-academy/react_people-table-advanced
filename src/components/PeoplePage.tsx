@@ -7,26 +7,28 @@ import { Person } from '../types';
 import { getPeople } from '../api';
 import { FilterForPeople } from './FilterForPeople';
 import { SortForPeople } from './SortForPeople';
+import { getSearchWith } from '../utils/searchHelper';
 
 export const PeoplePage: React. FC = () => {
   const { slug = '' } = useParams();
   const [people, setPeople] = useState<Person[]>([]);
   const [isError, setIsError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [searchParams] = useSearchParams();
+
+  const [searchParams, setSearchParams] = useSearchParams();
   const sex = searchParams.get('sex');
   const query = searchParams.get('query') || '';
   const centuries = searchParams.getAll('centuries');
-  const sortByField = searchParams.get('sort');
-  const isReversed = searchParams.get('order') === 'desc';
+  const sort = searchParams.get('sort');
+  const order = searchParams.get('order') || '';
 
   const filteredPeople = useMemo(() => {
     return FilterForPeople(people, sex, query, centuries);
   }, [people, sex, query, centuries]);
 
   const sortedPeople = useMemo(() => {
-    return SortForPeople(filteredPeople, sortByField, isReversed);
-  }, [filteredPeople, sortByField, isReversed]);
+    return SortForPeople(filteredPeople, sort, order);
+  }, [filteredPeople, sort, order]);
 
   useEffect(() => {
     const loadPeople = async () => {
@@ -45,6 +47,12 @@ export const PeoplePage: React. FC = () => {
     loadPeople();
   }, []);
 
+  const onQueryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchParams(
+      getSearchWith(searchParams, { query: event.target.value || null }),
+    );
+  };
+
   return (
     <>
       <h1 className="title">People Page</h1>
@@ -52,8 +60,14 @@ export const PeoplePage: React. FC = () => {
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
           <div className="column is-7-tablet is-narrow-desktop">
-            {!!people.length && !isError
-            && <PeopleFilters query={query} sex={sex} centuries={centuries} />}
+            {!!people.length && (
+              <PeopleFilters
+                query={query}
+                sex={sex}
+                centuries={centuries}
+                onQueryChange={onQueryChange}
+              />
+            )}
           </div>
 
           <div className="column">
@@ -72,10 +86,16 @@ export const PeoplePage: React. FC = () => {
                 </p>
               )}
 
-              {!!people.length && (
+              {!filteredPeople.length && !isLoading && !isError && (
+                <p>There are no people matching the current search criteria</p>
+              )}
+
+              {!!filteredPeople.length && (
                 <PeopleTable
                   sortedPeople={sortedPeople}
                   slug={slug}
+                  sort={sort}
+                  order={order}
                 />
               )}
             </div>

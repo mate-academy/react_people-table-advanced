@@ -1,22 +1,22 @@
-import { useSearchParams } from 'react-router-dom';
-import classNames from 'classnames';
-import { getSearchWith } from '../utils/searchHelper';
+import cn from 'classnames';
 import { SearchLink } from './SearchLink';
 
 type Props = {
-  query: string
-  sex: string | null
-  centuries: string[]
+  query: string,
+  sex: string | null,
+  centuries: string[],
+  onQueryChange: (event: React.ChangeEvent<HTMLInputElement>) => void
 };
 
-export const PeopleFilters: React.FC<Props> = ({ query, sex, centuries }) => {
-  const [searchParams, setSearchParams] = useSearchParams();
+export const PeopleFilters: React.FC<Props> = ({
+  query, sex, centuries, onQueryChange,
+}) => {
   const centuriesArray = ['16', '17', '18', '19', '20'];
 
-  const onQueryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchParams(
-      getSearchWith(searchParams, { query: event.target.value || null }),
-    );
+  const changeCentury = (century: string) => {
+    return centuries.includes(century)
+      ? centuries.filter(currCentury => currCentury !== century)
+      : [...centuries, century];
   };
 
   return (
@@ -25,19 +25,19 @@ export const PeopleFilters: React.FC<Props> = ({ query, sex, centuries }) => {
 
       <p className="panel-tabs" data-cy="SexFilter">
         <SearchLink
-          className={classNames({ 'is-active': sex === null })}
+          className={cn({ 'is-active': sex === null })}
           params={{ sex: null }}
         >
           All
         </SearchLink>
         <SearchLink
-          className={classNames({ 'is-active': sex === 'm' })}
+          className={cn({ 'is-active': sex === 'm' })}
           params={{ sex: 'm' }}
         >
           Male
         </SearchLink>
         <SearchLink
-          className={classNames({ 'is-active': sex === 'f' })}
+          className={cn({ 'is-active': sex === 'f' })}
           params={{ sex: 'f' }}
         >
           Female
@@ -68,14 +68,11 @@ export const PeopleFilters: React.FC<Props> = ({ query, sex, centuries }) => {
               <SearchLink
                 key={century}
                 data-cy="century"
-                className={classNames(
-                  'button mr-1',
-                  { 'is-info': centuries.includes(century) },
-                )}
+                className={cn('button mr-1', {
+                  'is-info': centuries.includes(century),
+                })}
                 params={{
-                  centuries: centuries.includes(century)
-                    ? centuries.filter(c => c !== century)
-                    : [...centuries, century],
+                  centuries: changeCentury(century),
                 }}
               >
                 {century}
@@ -86,10 +83,9 @@ export const PeopleFilters: React.FC<Props> = ({ query, sex, centuries }) => {
           <div className="level-right ml-4">
             <SearchLink
               data-cy="centuryALL"
-              className={classNames(
-                'button', 'is-success',
-                { 'is-outlined': !!centuries.length },
-              )}
+              className={cn('button', 'is-success', {
+                'is-outlined': !!centuries.length,
+              })}
               params={{ centuries: null }}
             >
               All

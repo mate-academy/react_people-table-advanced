@@ -1,30 +1,33 @@
 import { Person } from '../types';
+import { SortType } from '../types/SortType';
 
 export const SortForPeople = (
   filteredPeople: Person[],
-  sortByField: string | null,
-  isReversed: boolean,
+  sort: string | null,
+  order: string,
 ) => {
   const copyPeople = [...filteredPeople];
 
-  if (sortByField) {
-    copyPeople.sort((a, b) => {
-      switch (sortByField) {
-        case 'name':
-        case 'sex':
-          return a[sortByField].localeCompare(b[sortByField]);
+  copyPeople.sort((a, b) => {
+    switch (sort) {
+      case SortType.NAME:
+        return a.name.localeCompare(b.name);
 
-        case 'born':
-        case 'died':
-          return a[sortByField] - b[sortByField];
+      case SortType.SEX:
+        return a.sex.localeCompare(b.sex);
 
-        default:
-          return 0;
-      }
-    });
-  }
+      case SortType.BORN:
+        return a.born - b.born;
 
-  if (isReversed) {
+      case SortType.DIED:
+        return a.died - b.died;
+
+      default:
+        return 0;
+    }
+  });
+
+  if (order === 'desc') {
     copyPeople.reverse();
   }
 
