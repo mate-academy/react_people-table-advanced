@@ -1,4 +1,3 @@
-/* eslint-disable max-len */
 import { Person } from '../types';
 
 export const sortPeople = (
@@ -6,29 +5,21 @@ export const sortPeople = (
   order: string | null,
   sort: string | null,
 ) => {
-  let sortedPeople = [...people];
+  const sortedPeople = [...people].sort((prev, cur) => {
+    switch (sort) {
+      case ('name'):
+      case ('sex'):
 
-  switch (sort) {
-    case ('name'):
-    case ('sex'):
-      if (order) {
-        sortedPeople = sortedPeople.sort((prevPerson, currentPerson) => currentPerson[sort].localeCompare(prevPerson[sort]));
-      } else if (!order) {
-        sortedPeople = sortedPeople.sort((prevPerson, currentPerson) => prevPerson[sort].localeCompare(currentPerson[sort]));
-      }
+        return prev[sort].localeCompare(cur[sort]);
+      case ('born'):
+      case ('died'):
 
-      return sortedPeople;
-    case ('born'):
-    case ('died'):
-      if (order) {
-        sortedPeople = sortedPeople.sort((prevPerson, currentPerson) => currentPerson[sort] - prevPerson[sort]);
-      } else if (!order) {
-        sortedPeople = sortedPeople.sort((prevPerson, currentPerson) => prevPerson[sort] - currentPerson[sort]);
-      }
+        return prev[sort] - cur[sort];
 
-      return sortedPeople;
+      default:
+        return 0;
+    }
+  });
 
-    default:
-      return sortedPeople;
-  }
+  return order ? sortedPeople.reverse() : sortedPeople;
 };

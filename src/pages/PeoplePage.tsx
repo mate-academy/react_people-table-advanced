@@ -1,4 +1,3 @@
-/* eslint-disable max-len */
 import { useState, useEffect, useMemo } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
 import { PeopleFilters } from '../components/PeopleFilters';
@@ -49,8 +48,6 @@ export const PeoplePage = () => {
     return sortPeople(filteredPeople, order, sort);
   }, [sort, order, filteredPeople]);
 
-  const visiblePeopleList = sortedPeople;
-
   return (
     <>
       <h1 className="title">People Page</h1>
@@ -83,12 +80,12 @@ export const PeoplePage = () => {
                 </p>
               )}
 
-              {(visiblePeopleList.length === 0 && !isLoadingError && !isLoading) && (
+              {(!sortedPeople.length && !isLoadingError && !isLoading) && (
                 <p>There are no people matching the current search criteria</p>
               )}
 
               <PeopleTable
-                peopleList={visiblePeopleList}
+                peopleList={sortedPeople}
                 selectedSlug={selectedSlug}
                 sort={sort}
                 order={order}

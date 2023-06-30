@@ -1,4 +1,3 @@
-/* eslint-disable max-len */
 import { Person } from '../types';
 import { PersonLink } from './PersonLink';
 
@@ -25,12 +24,19 @@ export const PersonCard: React.FC<Props> = ({ person, peopleList }) => {
     return peopleList.some(human => human.name === father);
   };
 
+  const findMother = (human: string | undefined) => {
+    return peopleList.find(mother => mother.name === human);
+  };
+
+  const findFather = (human: string | undefined) => {
+    return peopleList.find(father => father.name === human);
+  };
+
   return (
     <>
       <PersonLink
         person={person}
         name={name}
-        sex={sex}
       />
       <td>{sex}</td>
       <td>{born}</td>
@@ -39,9 +45,8 @@ export const PersonCard: React.FC<Props> = ({ person, peopleList }) => {
       {(motherName && checkMother(motherName))
         && (
           <PersonLink
-            person={peopleList.find(mother => mother.name === motherName)}
+            person={findMother(motherName)}
             name={person.motherName}
-            sex="m"
           />
         )}
       {motherName && !checkMother(motherName)
@@ -50,9 +55,8 @@ export const PersonCard: React.FC<Props> = ({ person, peopleList }) => {
       {(fatherName && checkFather(fatherName))
         && (
           <PersonLink
-            person={peopleList.find(father => father.name === fatherName)}
+            person={findFather(fatherName)}
             name={person.fatherName}
-            sex="f"
           />
         )}
       {fatherName && !checkFather(fatherName)

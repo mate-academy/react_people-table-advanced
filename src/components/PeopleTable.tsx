@@ -1,4 +1,3 @@
-/* eslint-disable max-len */
 import classNames from 'classnames';
 import { Person } from '../types';
 import { PersonCard } from './PersonCard';
@@ -19,6 +18,22 @@ export const PeopleTable: React.FC<Props> = ({
 }) => {
   const sortTypes = ['Name', 'Sex', 'Born', 'Died'];
 
+  const checkSortParam = (sortValue: string | null, sortTypeValue: string) => {
+    if (sortValue === sortTypeValue.toLocaleLowerCase() && order) {
+      return null;
+    }
+
+    return sortTypeValue.toLocaleLowerCase();
+  };
+
+  const checkOrderParam = (sortValue: string | null, sortTypeValue: string) => {
+    if (sortValue === sortTypeValue.toLocaleLowerCase() && !order) {
+      return 'desc';
+    }
+
+    return null;
+  };
+
   return (
     <table
       data-cy="peopleTable"
@@ -32,8 +47,8 @@ export const PeopleTable: React.FC<Props> = ({
                 {type}
                 <SearchLink
                   params={{
-                    sort: (sort === type.toLocaleLowerCase() && order) ? null : type.toLocaleLowerCase(),
-                    order: (sort === type.toLocaleLowerCase() && !order) ? 'desc' : null,
+                    sort: (checkSortParam(sort, type)),
+                    order: (checkOrderParam(sort, type)),
                   }}
                 >
                   <span className="icon">

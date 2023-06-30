@@ -1,4 +1,3 @@
-/* eslint-disable max-len */
 import { Person } from '../types';
 
 export const filterPeople = (
@@ -13,12 +12,15 @@ export const filterPeople = (
     filteredPeople = filteredPeople.filter(person => {
       const suitableNames = person.name + person.fatherName + person.motherName;
 
-      return suitableNames.toLocaleLowerCase().includes(query.toLocaleLowerCase().trim());
+      return suitableNames.toLocaleLowerCase()
+        .includes(query.toLocaleLowerCase().trim());
     });
   }
 
-  if (centuries.length !== 0) {
-    filteredPeople = filteredPeople.filter(person => centuries.includes(Math.ceil(person.born / 100).toString()));
+  if (centuries.length) {
+    filteredPeople = filteredPeople.filter(
+      person => centuries.includes(Math.ceil(person.born / 100).toString()),
+    );
   }
 
   if (sex) {
