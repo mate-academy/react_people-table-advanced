@@ -2,10 +2,10 @@ import { Person } from '../types';
 
 export const FilterForPeople = (
   people: Person[],
-  query: string | null,
-  sex: string | null,
+  sex: string,
+  query: string,
   centuries: string[],
-) : Person[] => {
+) => {
   let copyPeople = [...people];
   const queryForFilter = query?.toLowerCase();
 
