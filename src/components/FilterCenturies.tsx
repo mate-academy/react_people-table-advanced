@@ -18,11 +18,9 @@ export const FilterCenturies: React.FC<Props> = ({
         <SearchLink
           key={number}
           data-cy="century"
-          className={`button mr-1 ${
-            activeCenturies.includes(number)
-            && activeCenturies.length < 5 ? 'is-info' : ''
-          }`}
-          params={{ centuries: [String(number)] }}
+          className={`button mr-1 ${activeCenturies.includes(number)
+            && activeCenturies.length < 5 ? 'is-info' : ''}`}
+          params={{ centuries: String([...activeCenturies, number]) }}
           onClick={() => handleCenturySelection([number])}
         >
           {number + 1}

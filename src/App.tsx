@@ -9,7 +9,7 @@ import { PeoplePage } from './components/PeoplePage';
 import { Navbar } from './components/Navbar';
 import { HomePage } from './components/HomePage';
 import { PageNotFound } from './components/PageNotFound';
-import { Person } from './types';
+import { Person, NewPerson } from './types';
 import { getPeople } from './api';
 import { Loader } from './components/Loader';
 import './App.scss';
@@ -18,6 +18,7 @@ export const App: React.FC = () => {
   const [people, setPeople] = useState<Person[]>([]);
   const [loading, setLoading] = useState(true);
   const [isError, setIsError] = useState(false);
+  const [newPeople, setNewPeople] = useState<NewPerson[]>([]);
   const location = useLocation();
 
   const isHomePage = location.pathname.endsWith('/home');
@@ -37,6 +38,17 @@ export const App: React.FC = () => {
     fetchPeople();
   }, []);
 
+  useEffect(() => {
+    const indexedPeople = people.map((person, index) => {
+      return {
+        ...person,
+        index: index + 1,
+      };
+    });
+
+    setNewPeople(indexedPeople);
+  }, [people]);
+
   return (
     <div data-cy="app">
       <Navbar />
@@ -54,7 +66,7 @@ export const App: React.FC = () => {
                   <Loader />
                 ) : (
                   <PeoplePage
-                    people={people}
+                    newPeople={newPeople}
                     loading={loading}
                     isError={isError}
                   />
