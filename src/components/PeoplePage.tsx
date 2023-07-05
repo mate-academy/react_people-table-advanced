@@ -169,10 +169,6 @@ export const PeoplePage: React.FC<Props> = ({
     setIsFiltered(true);
   }, [query, sexFilter, selectedCenturies]);
 
-  useEffect(() => {
-    setSearchParams({ centuries: activeCenturies.join(',') });
-  }, []);
-
   const sortingAscOrDesc = useMemo(() => {
     return filteredPeople.sort((elem1, elem2) => {
       switch (sortField) {

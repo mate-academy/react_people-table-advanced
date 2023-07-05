@@ -85,7 +85,7 @@ export const PeopleFilters: React.FC<Props> = ({
               className={activeCenturies.length === 5
                 ? 'button is-success'
                 : 'button is-outlined'}
-              params={{ centuries: [String([15, 16, 17, 18, 19])] }}
+              params={{ centuries: String() }}
               onClick={allCenturySelection}
             >
               All
