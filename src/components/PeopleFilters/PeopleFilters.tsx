@@ -90,6 +90,7 @@ export const PeopleFilters: React.FC<Props> = ({
   const reset = () => {
     setSelectedLink(Sex.All);
     resetFilters();
+    setQuery('');
 
     setSearchParams(
       getSearchWith(searchParams, {
