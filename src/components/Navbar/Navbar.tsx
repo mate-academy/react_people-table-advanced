@@ -1,7 +1,13 @@
 import { NavLink } from 'react-router-dom';
-import cn from 'classnames';
+import classNames from 'classnames';
 
 export const Navbar = () => {
+  const navLinkClasses = (
+    { isActive }: { isActive: boolean },
+  ) => classNames('navbar-item', {
+    'has-background-grey-lighter': isActive,
+  });
+
   return (
     <nav
       data-cy="nav"
@@ -13,18 +19,14 @@ export const Navbar = () => {
         <div className="navbar-brand">
           <NavLink
             to="/"
-            className={({ isActive }) => cn('navbar-item', {
-              'has-background-grey-lighter': isActive,
-            })}
+            className={navLinkClasses}
           >
             Home
           </NavLink>
 
           <NavLink
             to="/people"
-            className={({ isActive }) => cn('navbar-item', {
-              'has-background-grey-lighter': isActive,
-            })}
+            className={navLinkClasses}
             aria-current="page"
           >
             People

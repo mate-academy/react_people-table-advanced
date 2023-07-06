@@ -1,14 +1,14 @@
 import { FC } from 'react';
-import cn from 'classnames';
+import classNames from 'classnames';
 import { Person } from '../../types';
 import { PersonLink } from '../PersonLink/PersonLink';
 
-interface Props {
+interface PeopleTableBodyProps {
   person: Person;
   selectedPersonSlug: string;
 }
 
-export const PeopleTableBody: FC<Props> = ({
+export const PeopleTableBody: FC<PeopleTableBodyProps> = ({
   person,
   selectedPersonSlug,
 }) => {
@@ -23,12 +23,14 @@ export const PeopleTableBody: FC<Props> = ({
     father,
   } = person;
 
+  const personRowClasses = classNames({
+    'has-background-warning': selectedPersonSlug === slug,
+  });
+
   return (
     <tr
       data-cy="person"
-      className={cn({
-        'has-background-warning': selectedPersonSlug === slug,
-      })}
+      className={personRowClasses}
     >
       <td>
         <PersonLink person={person} />
@@ -39,24 +41,12 @@ export const PeopleTableBody: FC<Props> = ({
       <td>
         {mother
           ? <PersonLink person={mother} />
-          : (
-            <>
-              {motherName
-                ? `${motherName}`
-                : '-'}
-            </>
-          )}
+          : motherName || '-'}
       </td>
       <td>
         {father
           ? <PersonLink person={father} />
-          : (
-            <>
-              {fatherName
-                ? `${fatherName}`
-                : '-'}
-            </>
-          )}
+          : fatherName || '-'}
       </td>
     </tr>
   );

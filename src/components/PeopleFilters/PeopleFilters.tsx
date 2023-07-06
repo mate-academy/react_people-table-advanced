@@ -1,6 +1,6 @@
 import { ChangeEvent, FC, memo } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import cn from 'classnames';
+import classNames from 'classnames';
 
 import { getSearchWith } from '../../utils/searchHelper';
 import { SearchLink } from '../SearchLink/SearchLink';
@@ -47,20 +47,30 @@ export const PeopleFilters: FC = memo(() => {
     centuries: null,
   });
 
+  const searchLinkAllClasses = classNames('button is-success', {
+    'is-outlined': centuries.length !== 0,
+  });
+
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        {sexItems.map((item) => (
-          <SearchLink
-            key={item.sex}
-            params={changeSexParams(item.sex)}
-            className={cn({ 'is-active': sex === item.sex })}
-          >
-            {item.label}
-          </SearchLink>
-        ))}
+        {sexItems.map((item) => {
+          const searchSexLinkClasses = classNames(
+            { 'is-active': sex === item.sex },
+          );
+
+          return (
+            <SearchLink
+              key={item.sex}
+              params={changeSexParams(item.sex)}
+              className={searchSexLinkClasses}
+            >
+              {item.label}
+            </SearchLink>
+          );
+        })}
       </p>
 
       <div className="panel-block">
@@ -83,27 +93,29 @@ export const PeopleFilters: FC = memo(() => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            {centuriesItems.map((century) => (
-              <SearchLink
-                key={century}
-                params={changeCenturyParams(century)}
-                data-cy="century"
-                className={cn('button mr-1', {
-                  'is-info': centuries.includes(century.toString()),
-                })}
-              >
-                {century}
-              </SearchLink>
-            ))}
+            {centuriesItems.map((century) => {
+              const searchLinkItemClasses = classNames('button mr-1', {
+                'is-info': centuries.includes(century.toString()),
+              });
+
+              return (
+                <SearchLink
+                  key={century}
+                  params={changeCenturyParams(century)}
+                  data-cy="century"
+                  className={searchLinkItemClasses}
+                >
+                  {century}
+                </SearchLink>
+              );
+            })}
           </div>
 
           <div className="level-right ml-4">
             <SearchLink
               params={resetCenturyParams()}
               data-cy="centuryALL"
-              className={cn('button is-success', {
-                'is-outlined': centuries.length !== 0,
-              })}
+              className={searchLinkAllClasses}
             >
               All
             </SearchLink>

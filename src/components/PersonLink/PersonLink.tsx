@@ -1,13 +1,13 @@
 import { Link, useSearchParams } from 'react-router-dom';
-import cn from 'classnames';
+import classNames from 'classnames';
 import { FC } from 'react';
 import { Person } from '../../types';
 
-interface Props {
+interface PersonLinkProps {
   person: Person;
 }
 
-export const PersonLink: FC<Props> = ({ person }) => {
+export const PersonLink: FC<PersonLinkProps> = ({ person }) => {
   const [searchParams] = useSearchParams();
   const {
     name,
@@ -15,12 +15,16 @@ export const PersonLink: FC<Props> = ({ person }) => {
     slug,
   } = person;
 
+  const FEMALE = 'f';
+
+  const linkClasses = classNames('has-text-link', {
+    'has-text-danger': sex === FEMALE,
+  });
+
   return (
     <Link
       to={`/people/${slug}?${searchParams}`}
-      className={cn('has-text-link', {
-        'has-text-danger': sex === 'f',
-      })}
+      className={linkClasses}
     >
       {name}
     </Link>

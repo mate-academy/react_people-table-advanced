@@ -3,12 +3,12 @@ import { Person } from '../../types';
 import { PeopleTableHead } from '../PeopleTableHead/PeopleTableHead';
 import { PeopleTableBody } from '../PeopleTableBody/PeopleTableBody';
 
-interface Props {
+interface PeopleTableProps {
   peoples: Person[];
   selectedPersonSlug: string;
 }
 
-export const PeopleTable: FC<Props> = ({
+export const PeopleTable: FC<PeopleTableProps> = ({
   peoples,
   selectedPersonSlug,
 }) => {

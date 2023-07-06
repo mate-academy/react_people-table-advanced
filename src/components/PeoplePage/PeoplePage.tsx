@@ -5,12 +5,12 @@ import { PeopleFilters } from '../PeopleFilters/PeopleFilters';
 import { Loader } from '../Loader';
 import { PeopleTable } from '../PeopleTable/PeopleTable';
 import { Person } from '../../types';
-import { getFullDetailsOfPerson } from '../../utils/helpers';
+import { getFullDetailsOfPeople, sortedPeoples } from '../../utils/helpers';
 import { getPeople } from '../../api';
 import { OrderByType, SortBy } from '../../types/OrderAndSortTypes';
 
 export const PeoplePage: FC = () => {
-  const [peoples, setPeoples] = useState<Person[]>([]);
+  const [people, setPeople] = useState<Person[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
   const { slug = '' } = useParams();
@@ -22,7 +22,7 @@ export const PeoplePage: FC = () => {
   const sort = searchParams.get('sort') || '';
   const order = searchParams.get('order') || '';
 
-  const visiblePeoples = peoples.filter(person => {
+  const preparedPeople = people.filter(person => {
     const {
       name,
       sex: personSex,
@@ -31,49 +31,30 @@ export const PeoplePage: FC = () => {
       mother,
     } = person;
 
-    const visibleBySearch = [name, father?.name, mother?.name]
+    const preparedBySearch = [name, father?.name, mother?.name]
       .some(n => n?.toLowerCase().trim().includes(query.toLowerCase()));
 
-    const visibleBySex = sex === '' || personSex === sex;
+    const preparedBySex = sex === '' || personSex === sex;
 
     const century = Math.ceil(born / 100);
-    const visibleByCenturies = centuries.length === 0
+    const preparedByCenturies = centuries.length === 0
       || centuries.includes(century.toString());
 
-    return visibleBySearch && visibleBySex && visibleByCenturies;
+    return preparedBySearch && preparedBySex && preparedByCenturies;
   });
 
-  const sortedPeoples = (
-    arr: Person[],
-    sortBy: SortBy,
-    orderBy: OrderByType,
-  ) => {
-    return arr.sort((a, b) => {
-      switch (sortBy) {
-        case SortBy.SEX:
-        case SortBy.NAME:
-          return orderBy === 'asc'
-            ? a[sortBy].localeCompare(b[sortBy])
-            : b[sortBy].localeCompare(a[sortBy]);
-
-        case SortBy.BORN:
-        case SortBy.DIED:
-          return orderBy === 'asc'
-            ? a[sortBy] - b[sortBy]
-            : b[sortBy] - a[sortBy];
-
-        default:
-          return 0;
-      }
-    });
-  };
+  const visiblePeople = sortedPeoples(
+    preparedPeople,
+    sort as SortBy,
+    order as OrderByType,
+  );
 
   useEffect(() => {
     setIsLoading(true);
 
     getPeople()
       .then(person => {
-        setPeoples(getFullDetailsOfPerson(person));
+        setPeople(getFullDetailsOfPeople(person));
         setIsLoading(false);
       })
       .catch(() => {
@@ -84,11 +65,11 @@ export const PeoplePage: FC = () => {
       });
   }, [isError]);
 
-  const isPeopleTableVisible = !isLoading && !isError && peoples.length > 0;
-  const isNoPeopleOnServer = !isLoading && !isError && !peoples.length;
+  const isPeopleTableVisible = !isLoading && !isError && people.length > 0;
+  const isNoPeopleOnServer = !isLoading && !isError && !people.length;
   const isErrorOnServer = !isLoading && isError;
   const isNoMatching = !isLoading
-    && !isError && !visiblePeoples.length && query;
+    && !isError && !preparedPeople.length && query;
 
   return (
     <>
@@ -124,11 +105,7 @@ export const PeoplePage: FC = () => {
 
                     {isPeopleTableVisible && (
                       <PeopleTable
-                        peoples={sortedPeoples(
-                          visiblePeoples,
-                          sort as SortBy,
-                          order as OrderByType,
-                        )}
+                        peoples={visiblePeople}
                         selectedPersonSlug={slug}
                       />
                     )}

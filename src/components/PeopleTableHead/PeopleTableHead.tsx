@@ -1,6 +1,6 @@
 import { FC } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import cn from 'classnames';
+import classNames from 'classnames';
 import { SearchLink } from '../SearchLink/SearchLink';
 import { OrderByType, SortBy } from '../../types/OrderAndSortTypes';
 
@@ -11,30 +11,33 @@ export const PeopleTableHead: FC = () => {
   const sort = searchParams.get('sort') || '';
   const order = searchParams.get('order') || '';
 
-  const changeSortAndOrder = (sortByV: SortBy, orderByV: OrderByType) => {
-    const lowercaseSort = sortByV.toLowerCase();
+  const changeSortAndOrder = (sortBy: SortBy, orderBy: OrderByType) => {
+    const lowercaseSort = sortBy.toLowerCase();
+    const EMPTY = '';
+    const ASCENDING = 'asc';
+    const DESCENDING = 'desc';
 
-    switch (orderByV) {
-      case '':
+    switch (orderBy) {
+      case EMPTY:
         return {
           sort: lowercaseSort || null,
-          order: 'asc',
+          order: ASCENDING,
         };
 
-      case 'asc':
+      case ASCENDING:
         return {
           sort: lowercaseSort || null,
-          order: sort === lowercaseSort ? 'desc' : 'asc',
+          order: sort === lowercaseSort ? DESCENDING : ASCENDING,
         };
 
-      case 'desc':
+      case DESCENDING:
         return {
-          sort: sort === lowercaseSort ? '' || null : lowercaseSort,
-          order: sort === lowercaseSort ? '' || null : 'asc',
+          sort: sort === lowercaseSort ? EMPTY || null : lowercaseSort,
+          order: sort === lowercaseSort ? EMPTY || null : ASCENDING,
         };
 
       default:
-        throw new Error(`Wrong order, cannot be defined - ${orderByV}`);
+        throw new Error(`Wrong order, cannot be defined - ${orderBy}`);
     }
   };
 
@@ -43,6 +46,11 @@ export const PeopleTableHead: FC = () => {
       <tr>
         {sortByValues.map(value => {
           const lowercaseValue = value.toLowerCase();
+
+          const iconClasses = classNames('fas fa-sort', {
+            'fa-sort-up': order === 'asc' && lowercaseValue === sort,
+            'fa-sort-down': order === 'desc' && lowercaseValue === sort,
+          });
 
           return (
             <th key={value}>
@@ -56,12 +64,7 @@ export const PeopleTableHead: FC = () => {
                 >
                   <span className="icon">
                     <i
-                      className={cn('fas fa-sort', {
-                        'fa-sort-up': order === 'asc'
-                          && lowercaseValue === sort,
-                        'fa-sort-down': order === 'desc'
-                          && lowercaseValue === sort,
-                      })}
+                      className={iconClasses}
                     />
                   </span>
                 </SearchLink>
