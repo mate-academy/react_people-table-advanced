@@ -1,13 +1,17 @@
 import { Person } from '../types';
 
+interface Params {
+  sex: string | null,
+  query: string | null,
+  centuries: string[],
+}
+
 export function getFilteredPeople(
   people: Person[],
-  searchParams: URLSearchParams,
+  params: Params,
 ) {
   let filteredPeople = [...people];
-  const sex = searchParams.get('sex');
-  const query = searchParams.get('query')?.toLowerCase();
-  const centuries = searchParams.getAll('centuries');
+  const { sex, query, centuries } = params;
 
   if (sex) {
     filteredPeople = filteredPeople.filter(person => person.sex === sex);

@@ -13,7 +13,7 @@ export const PersonLink: React.FC<Props> = ({ person }) => {
   return (
     <Link
       to={{
-        pathname: parentPath + person.slug,
+        pathname: `${parentPath}${person.slug}`,
         search: location.search,
       }}
       className={classNames({ 'has-text-danger': person.sex === 'f' })}

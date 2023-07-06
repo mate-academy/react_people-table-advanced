@@ -1,12 +1,16 @@
 import { Person } from '../types';
 
+interface Params {
+  sort: string | null,
+  order: string | null,
+}
+
 export function getSortedPeople(
   people: Person[],
-  searchParams: URLSearchParams,
+  params: Params,
 ) {
   let sortedPeople = [...people];
-  const sort = searchParams.get('sort');
-  const order = searchParams.get('order');
+  const { sort, order } = params;
 
   if (sort === 'name' || sort === 'sex') {
     sortedPeople.sort((a, b) => a[sort].localeCompare(b[sort]));

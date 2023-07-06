@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Loader } from '../Loader';
 import { Person } from '../../types';
@@ -17,12 +17,19 @@ export const PeoplePage = () => {
   const [searchParams] = useSearchParams();
   const sort = searchParams.get('sort');
   const order = searchParams.get('order');
+  const sex = searchParams.get('sex');
+  const query = searchParams.get('query')?.toLowerCase() || null;
+  const centuries = searchParams.getAll('centuries');
 
   const loadPeople = async () => {
     try {
       setLoading(true);
       setError(ErrorTypes.None);
       const peopleFromServer = await getPeople();
+
+      if (!peopleFromServer.length) {
+        setError(ErrorTypes.Empty);
+      }
 
       setPeople(peopleFromServer.map(person => ({
         ...person,
@@ -33,10 +40,6 @@ export const PeoplePage = () => {
           father => father.name === person.fatherName,
         ),
       })));
-
-      if (!peopleFromServer) {
-        setError(ErrorTypes.Empty);
-      }
 
       setShowTable(true);
     } catch {
@@ -50,8 +53,12 @@ export const PeoplePage = () => {
     loadPeople();
   }, []);
 
-  const filteredPeople = getFilteredPeople(people, searchParams);
-  const sortedPeople = getSortedPeople(filteredPeople, searchParams);
+  const filteredPeople = useMemo(() => (
+    getFilteredPeople(people, { sex, query, centuries })
+  ), [people, sex, query, centuries]);
+  const sortedPeople = useMemo(() => (
+    getSortedPeople(filteredPeople, { sort, order })
+  ), [filteredPeople, sort, order]);
 
   return (
     <>
