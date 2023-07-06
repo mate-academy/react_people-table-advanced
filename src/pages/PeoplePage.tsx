@@ -59,10 +59,6 @@ export const PeoplePage = () => {
   }, [deepCopyOfPeople]);
 
   useEffect(() => {
-    setFilteredPeople(deepCopyOfPeople);
-  }, [peopleFromServer]);
-
-  useEffect(() => {
     setFilteredPeople(applyFilters(filterValue));
   }, [deepCopyOfPeople, filterValue]);
 
