@@ -5,19 +5,22 @@ import classNames from 'classnames';
 import { Centuries } from 'enums/Centuries';
 import { Sex } from 'enums/Sex';
 
-import { Filter } from 'types/Filter';
 import { getSearchWith } from 'utils/searchHelper';
 
 const listOfCenturies = Object.values(Centuries);
 
 type Props = {
-  handleFilter: (value: Filter | string[]) => void;
+  handleFilterSex: (value: Sex) => void;
   handleQuery: (value: string) => void;
+  handleSelectCentury: (value: string[]) => void;
+  resetFilters: () => void;
 };
 
 export const PeopleFilters: React.FC<Props> = ({
-  handleFilter,
+  handleFilterSex,
   handleQuery,
+  handleSelectCentury,
+  resetFilters,
 }) => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [selectedLink, setSelectedLink] = useState(Sex.All);
@@ -27,7 +30,7 @@ export const PeopleFilters: React.FC<Props> = ({
 
   const handleSelectSex = (
     e: React.MouseEvent<HTMLAnchorElement>,
-    value: Filter,
+    value: Sex,
   ) => {
     e.preventDefault();
 
@@ -37,8 +40,8 @@ export const PeopleFilters: React.FC<Props> = ({
       }),
     );
 
-    setSelectedLink(value as Sex);
-    handleFilter(value);
+    setSelectedLink(value);
+    handleFilterSex(value);
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -71,14 +74,14 @@ export const PeopleFilters: React.FC<Props> = ({
       }),
     );
 
-    handleFilter(arrOfCenturies);
+    handleSelectCentury(arrOfCenturies);
   };
 
-  const resetFilters = () => {
+  const resetCenturies = () => {
+    handleSelectCentury([]);
+
     setSearchParams(
       getSearchWith(searchParams, {
-        query: null,
-        sex: null,
         centuries: null,
       }),
     );
@@ -86,10 +89,15 @@ export const PeopleFilters: React.FC<Props> = ({
 
   const reset = () => {
     setSelectedLink(Sex.All);
-    handleFilter(Sex.All);
-    handleQuery('');
-    setQuery('');
     resetFilters();
+
+    setSearchParams(
+      getSearchWith(searchParams, {
+        query: null,
+        sex: null,
+        centuries: null,
+      }),
+    );
   };
 
   return (
@@ -166,9 +174,12 @@ export const PeopleFilters: React.FC<Props> = ({
           <div className="level-right ml-4">
             <button
               data-cy="centuryALL"
-              className="button is-success is-outlined"
+              className={classNames('button', {
+                'is-outlined': !centuries.length,
+                'is-success': centuries.length,
+              })}
               type="button"
-              onClick={resetFilters}
+              onClick={resetCenturies}
             >
               All
             </button>

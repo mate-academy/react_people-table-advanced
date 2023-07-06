@@ -1,4 +1,9 @@
-import { useEffect, useMemo, useState } from 'react';
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 
 import { PeopleFilters } from 'components/PeopleFilters';
 import { PeopleTable } from 'components/PeopleTable';
@@ -6,21 +11,60 @@ import { Loader } from 'components/Loader';
 import { getPeople } from 'api';
 import { Person } from 'types';
 import { Sex } from 'enums/Sex';
-import { Filter } from 'types/Filter';
+
+interface IFilter {
+  query: string;
+  sex: Sex;
+  centuries: string[];
+}
 
 export const PeoplePage = () => {
   const [peopleFromServer, setPeopleFromServer] = useState<Person[]>([]);
   const [hasError, setHasError] = useState(false);
   const [filteredPeople, setFilteredPeople] = useState<Person[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [filterValue, setFilterValue] = useState<IFilter>({
+    sex: Sex.All,
+    query: '',
+    centuries: [],
+  });
 
   const deepCopyOfPeople: Person[] = useMemo(() => (
     JSON.parse(JSON.stringify(peopleFromServer))
   ), [peopleFromServer]);
 
+  const applyFilters = useCallback((filters: IFilter): Person[] => {
+    const { sex, query, centuries } = filters;
+
+    return deepCopyOfPeople.filter((person) => {
+      const {
+        name, fatherName, motherName, sex: personSex, born,
+      } = person;
+
+      const isSexMatch = sex === Sex.All || personSex === sex;
+      const isQueryMatch = !query
+      || [name, fatherName, motherName].some((value) => (
+        value?.toLowerCase().includes(query.toLowerCase())
+      ));
+      const isCenturyMatch = centuries.length === 0
+      || centuries.some(
+        (century) => (
+          born <= parseInt(century, 10) * 100
+          && born > (parseInt(century, 10) - 1) * 100
+        ),
+      );
+
+      return isSexMatch && isQueryMatch && isCenturyMatch;
+    });
+  }, [deepCopyOfPeople]);
+
   useEffect(() => {
     setFilteredPeople(deepCopyOfPeople);
   }, [peopleFromServer]);
+
+  useEffect(() => {
+    setFilteredPeople(applyFilters(filterValue));
+  }, [deepCopyOfPeople, filterValue]);
 
   const fetchData = async () => {
     try {
@@ -39,65 +83,24 @@ export const PeoplePage = () => {
     setIsLoading(true);
   }, []);
 
-  const handleFilter = (value: Filter | string[]) => {
-    const isSex = Object.values(Sex).includes(value as Sex);
-    let arrayOfPeople: Person[] = [];
+  const handleFilterSex = (value: Sex) => {
+    setFilterValue((currFilters) => ({ ...currFilters, sex: value }));
+  };
 
-    if (isSex) {
-      arrayOfPeople = deepCopyOfPeople.filter((person) => {
-        if (value === Sex.All) {
-          return person.sex;
-        }
-
-        return person.sex === value;
-      });
-
-      setFilteredPeople(arrayOfPeople);
-    }
-
-    if (Array.isArray(value)) {
-      arrayOfPeople = deepCopyOfPeople.filter(({ born }) => {
-        const matchingCenturies = value.filter((val) => {
-          const century = parseInt(val, 10) * 100;
-          const previousCentury = century - 100;
-
-          if (born <= century && born > previousCentury) {
-            return true;
-          }
-
-          return false;
-        });
-
-        return matchingCenturies.length > 0;
-      });
-
-      setFilteredPeople(arrayOfPeople);
-    }
-
-    if (!Array.isArray(value) && !isSex) {
-      setFilteredPeople(deepCopyOfPeople);
-    }
+  const handleSelectCentury = (value: string[]) => {
+    setFilterValue((currFilter) => ({ ...currFilter, centuries: value }));
   };
 
   const handleQuery = (query: string) => {
-    let arrayOfPeople: Person[] = [];
+    setFilterValue((currFilter) => ({ ...currFilter, query }));
+  };
 
-    arrayOfPeople = deepCopyOfPeople.filter((person) => {
-      const { name, fatherName, motherName } = person;
-      const valuesToSearch = [name, fatherName, motherName];
-      const isExists = valuesToSearch
-        .some(value => (
-          value && value.toLowerCase().includes(query.toLowerCase())
-        ));
-
-      if (isExists) {
-        return true;
-      }
-
-      return false;
+  const resetFilers = () => {
+    setFilterValue({
+      centuries: [],
+      sex: Sex.All,
+      query: '',
     });
-
-    setFilteredPeople(arrayOfPeople);
   };
 
   if (!peopleFromServer.length && isLoading) {
@@ -112,8 +115,10 @@ export const PeoplePage = () => {
         <div className="columns is-desktop is-flex-direction-row-reverse">
           <div className="column is-7-tablet is-narrow-desktop">
             <PeopleFilters
-              handleFilter={handleFilter}
+              handleFilterSex={handleFilterSex}
               handleQuery={handleQuery}
+              handleSelectCentury={handleSelectCentury}
+              resetFilters={resetFilers}
             />
           </div>
 
