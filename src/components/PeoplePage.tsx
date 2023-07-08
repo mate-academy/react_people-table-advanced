@@ -31,6 +31,7 @@ export const PeoplePage: React.FC<Props> = ({
   const sexFilter = searchParams.get('sex') || 'All';
   const selectedCenturies
   = searchParams.get('centuries') || '[15, 16, 17, 18, 19]';
+  const [currentUrl, setCurrentURl] = useState<number[]>([]);
 
   const handleCenturySelection = (centuries: number[]) => {
     const includesCenturie
@@ -76,7 +77,6 @@ export const PeoplePage: React.FC<Props> = ({
 
   const resetEveryThing = () => {
     setActiveCenturies([15, 16, 17, 18, 19]);
-    sexFilterHandler(FilterType.All);
     setSearchParams({ centuries: [15, 16, 17, 18, 19].join(',') });
     setSearchParams({ query: '' });
   };
@@ -208,10 +208,40 @@ export const PeoplePage: React.FC<Props> = ({
 
   useEffect(() => {
     if (selectedCenturies === '[15, 16, 17, 18, 19]') {
-      setSearchParams({ sex: FilterType.All });
       setActiveCenturies([15, 16, 17, 18, 19]);
     }
   }, []);
+
+  useEffect(() => {
+    const actualUrl = window.location.href;
+
+    const urlstr = actualUrl.toString().split('=');
+
+    const filteredStrings = urlstr.map((str) => {
+      const filteredStr = str.replace(/[^0-9]/g, '');
+
+      return filteredStr;
+    }).filter((str) => str !== '3000').map(Number);
+
+    if (filteredStrings.length > 1) {
+      setActiveCenturies(filteredStrings);
+      setCurrentURl(filteredStrings);
+    }
+  }, []);
+
+  useEffect(() => {
+    const currentLocation = window.location.href;
+
+    const locationStr = currentLocation.toString().split('=');
+
+    const filteredStrings = locationStr.map((str) => {
+      const filteredStr = str.replace(/[^0-9]/g, '');
+
+      return filteredStr;
+    }).filter((str) => str !== '3000').map(Number);
+
+    setCurrentURl(filteredStrings);
+  }, [activeCenturies]);
 
   return (
     <>
@@ -231,6 +261,7 @@ export const PeoplePage: React.FC<Props> = ({
               setActiveCenturies={setActiveCenturies}
               searchParams={searchParams}
               deleteSearch={deleteSearch}
+              currentUrl={currentUrl}
             />
           </div>
 

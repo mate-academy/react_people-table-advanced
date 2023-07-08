@@ -3,7 +3,7 @@ import { FilterType } from '../types/enum';
 import { SearchLink } from './SearchLink';
 
 interface Props {
-  sexFilter: string,
+  sexFilter: string | null,
   sexFilterHandler: (value: FilterType) => void,
 }
 
@@ -25,7 +25,7 @@ export const FilterSex: React.FC<Props> = ({
         return (
           <SearchLink
             className={sexFilter === sexFilterMapping[sex] ? 'is-active' : ''}
-            params={{ sex: [String(sex)] }}
+            params={{ sex: sex === FilterType.All ? null : [String(sex)] }}
             onClick={() => sexFilterHandler(sexFilterMapping[sex])}
             role="button"
             key={sex}

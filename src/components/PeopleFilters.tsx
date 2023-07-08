@@ -13,10 +13,11 @@ interface Props {
   activeCenturies: number[],
   allCenturySelection: () => void,
   resetEveryThing: () => void,
-  sexFilter: string,
+  sexFilter: string | null,
   setActiveCenturies: (value: number[]) => void,
   searchParams: URLSearchParams,
   deleteSearch: () => void,
+  currentUrl: number[],
 }
 
 export const PeopleFilters: React.FC<Props> = ({
@@ -31,6 +32,7 @@ export const PeopleFilters: React.FC<Props> = ({
   setActiveCenturies,
   searchParams,
   deleteSearch,
+  currentUrl,
 }) => {
   useEffect(() => {
     const activeCenturiesFromParams = searchParams.get('centuries');
@@ -77,6 +79,8 @@ export const PeopleFilters: React.FC<Props> = ({
           <FilterCenturies
             handleCenturySelection={handleCenturySelection}
             activeCenturies={activeCenturies}
+            // selectedCenturies={selectedCenturies}
+            currentUrl={currentUrl}
           />
 
           <div className="level-right ml-4">
@@ -85,7 +89,7 @@ export const PeopleFilters: React.FC<Props> = ({
               className={activeCenturies.length === 5
                 ? 'button is-success'
                 : 'button is-outlined'}
-              params={{ centuries: String() }}
+              params={{ centuries: null }}
               onClick={allCenturySelection}
             >
               All
