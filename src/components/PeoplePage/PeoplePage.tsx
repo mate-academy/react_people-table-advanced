@@ -11,7 +11,7 @@ import { getSortedPeople } from '../../utils/getSortedPeople';
 
 export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<ErrorTypes>(ErrorTypes.None);
   const [showTable, setShowTable] = useState(false);
   const [searchParams] = useSearchParams();
@@ -23,7 +23,7 @@ export const PeoplePage = () => {
 
   const loadPeople = async () => {
     try {
-      setLoading(true);
+      setIsLoading(true);
       setError(ErrorTypes.None);
       const peopleFromServer = await getPeople();
 
@@ -45,7 +45,7 @@ export const PeoplePage = () => {
     } catch {
       setError(ErrorTypes.Load);
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
 
@@ -71,7 +71,7 @@ export const PeoplePage = () => {
 
           <div className="column">
             <div className="box table-container">
-              {loading && <Loader />}
+              {isLoading && <Loader />}
 
               {error === ErrorTypes.Load && (
                 <p data-cy="peopleLoadingError" className="has-text-danger">

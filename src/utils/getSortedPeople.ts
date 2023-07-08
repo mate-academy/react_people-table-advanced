@@ -12,12 +12,17 @@ export function getSortedPeople(
   let sortedPeople = [...people];
   const { sort, order } = params;
 
-  if (sort === 'name' || sort === 'sex') {
-    sortedPeople.sort((a, b) => a[sort].localeCompare(b[sort]));
-  }
-
-  if (sort === 'born' || sort === 'died') {
-    sortedPeople.sort((a, b) => +a[sort] - +b[sort]);
+  switch (sort) {
+    case 'name':
+    case 'sex':
+      sortedPeople.sort((a, b) => a[sort].localeCompare(b[sort]));
+      break;
+    case 'born':
+    case 'died':
+      sortedPeople.sort((a, b) => +a[sort] - +b[sort]);
+      break;
+    default:
+      break;
   }
 
   if (order) {
