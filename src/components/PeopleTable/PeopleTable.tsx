@@ -11,24 +11,22 @@ interface PeopleTableProps {
 export const PeopleTable: FC<PeopleTableProps> = ({
   peoples,
   selectedPersonSlug,
-}) => {
-  return (
-    <table
-      data-cy="peopleTable"
-      className="table is-striped is-hoverable is-narrow is-fullwidth"
-    >
-      <PeopleTableHead />
+}) => (
+  <table
+    data-cy="peopleTable"
+    className="table is-striped is-hoverable is-narrow is-fullwidth"
+  >
+    <PeopleTableHead />
 
-      <tbody>
-        {peoples.map(person => (
-          <PeopleTableBody
-            key={person.slug}
-            person={person}
-            selectedPersonSlug={selectedPersonSlug}
-          />
-        ))}
-      </tbody>
+    <tbody>
+      {peoples.map(person => (
+        <PeopleTableBody
+          key={person.slug}
+          person={person}
+          selectedPersonSlug={selectedPersonSlug}
+        />
+      ))}
+    </tbody>
 
-    </table>
-  );
-};
+  </table>
+);

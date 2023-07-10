@@ -3,8 +3,7 @@ import { useSearchParams } from 'react-router-dom';
 import classNames from 'classnames';
 import { SearchLink } from '../SearchLink/SearchLink';
 import { OrderByType, SortBy } from '../../types/OrderAndSortTypes';
-
-const sortByValues = ['Name', 'Sex', 'Born', 'Died'];
+import { sortByValues } from '../../utils/constants';
 
 export const PeopleTableHead: FC = () => {
   const [searchParams] = useSearchParams();

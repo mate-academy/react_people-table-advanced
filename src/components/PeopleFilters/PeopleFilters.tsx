@@ -4,14 +4,7 @@ import classNames from 'classnames';
 
 import { getSearchWith } from '../../utils/searchHelper';
 import { SearchLink } from '../SearchLink/SearchLink';
-
-const sexItems = [
-  { sex: '', label: 'All' },
-  { sex: 'm', label: 'Male' },
-  { sex: 'f', label: 'Female' },
-];
-
-const centuriesItems = ['16', '17', '18', '19', '20'];
+import { centuriesItems, sexOptions } from '../../utils/constants';
 
 export const PeopleFilters: FC = memo(() => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -19,17 +12,13 @@ export const PeopleFilters: FC = memo(() => {
   const sex = searchParams.get('sex') || '';
   const centuries = searchParams.getAll('centuries') || [];
 
-  const onQueryChange = (event: ChangeEvent<HTMLInputElement>) => {
+  const handleQueryChange = (event: ChangeEvent<HTMLInputElement>) => {
     const updatedSearch = getSearchWith(
       searchParams, { query: event.target.value || null },
     );
 
     setSearchParams(updatedSearch);
   };
-
-  const changeSexParams = (item: string) => ({
-    sex: item || null,
-  });
 
   const changeCenturyParams = (century: string) => ({
     centuries: centuries.includes(century)
@@ -56,7 +45,7 @@ export const PeopleFilters: FC = memo(() => {
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        {sexItems.map((item) => {
+        {sexOptions.map((item) => {
           const searchSexLinkClasses = classNames(
             { 'is-active': sex === item.sex },
           );
@@ -64,7 +53,7 @@ export const PeopleFilters: FC = memo(() => {
           return (
             <SearchLink
               key={item.sex}
-              params={changeSexParams(item.sex)}
+              params={{ sex: item.sex || null }}
               className={searchSexLinkClasses}
             >
               {item.label}
@@ -81,7 +70,7 @@ export const PeopleFilters: FC = memo(() => {
             className="input"
             placeholder="Search"
             value={query}
-            onChange={onQueryChange}
+            onChange={handleQueryChange}
           />
 
           <span className="icon is-left">
