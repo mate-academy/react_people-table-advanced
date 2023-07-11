@@ -1,8 +1,14 @@
+// import { useSearchParams } from 'react-router-dom';
 import { PeopleFilters } from './PeopleFilters';
-import { Loader } from './Loader';
-import { PeopleTable } from './PeopleTable';
+import { PeopleList } from './PeopleList';
 
 export const PeoplePage = () => {
+  // const [searchParams, setSearchParams] = useSearchParams();
+  // const sort = searchParams.get('sort');
+  // const centuries = searchParams.get('centuries');
+  // const sex = searchParams.get('sex');
+  // const query = searchParams.get('query');
+
   return (
     <>
       <h1 className="title">People Page</h1>
@@ -14,19 +20,7 @@ export const PeoplePage = () => {
           </div>
 
           <div className="column">
-            <div className="box table-container">
-              <Loader />
-
-              <p data-cy="peopleLoadingError">Something went wrong</p>
-
-              <p data-cy="noPeopleMessage">
-                There are no people on the server
-              </p>
-
-              <p>There are no people matching the current search criteria</p>
-
-              <PeopleTable />
-            </div>
+            <PeopleList />
           </div>
         </div>
       </div>
