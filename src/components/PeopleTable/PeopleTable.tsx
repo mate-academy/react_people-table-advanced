@@ -31,6 +31,20 @@ export const PeopleTable: React.FC<PropsPeopleTable> = ({
     return people.find((person: Person) => person.name === parentName);
   }, []);
 
+  const setNewParamsForSort = (sortValue: string) => {
+    return sort === sortValue && order === 'desc'
+      ? {
+        sort: null,
+        order: null,
+      }
+      : {
+        sort: sortValue,
+        order: sort === sortValue
+          ? 'desc'
+          : null,
+      };
+  };
+
   return (
     <table
       data-cy="peopleTable"
@@ -45,18 +59,7 @@ export const PeopleTable: React.FC<PropsPeopleTable> = ({
                   {sortLink.name}
                 </p>
                 <SearchLink
-                  params={searchParams.get('sort') === sortLink.value
-                    && searchParams.get('order') === 'desc'
-                    ? {
-                      sort: null,
-                      order: null,
-                    }
-                    : {
-                      sort: sortLink.value,
-                      order: searchParams.get('sort') === sortLink.value
-                        ? 'desc'
-                        : null,
-                    }}
+                  params={setNewParamsForSort(sortLink.value)}
                 >
                   <span className="icon">
                     <i

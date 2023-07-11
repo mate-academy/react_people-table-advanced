@@ -14,6 +14,71 @@ export const PeoplePage = () => {
   const [isLoader, setIsLoader] = useState(true);
   const [searchParams] = useSearchParams();
 
+  const filterPeople = (
+    sex: string | null,
+    query: string | null,
+    centuries: number[] | null,
+    peopleList: Person[],
+  ) => {
+    let newFilteredPeople = [...peopleList];
+
+    if (sex) {
+      newFilteredPeople = newFilteredPeople
+        .filter(person => person.sex === sex);
+    }
+
+    if (query) {
+      newFilteredPeople = newFilteredPeople.filter(person => person.name
+        .toLowerCase().includes(query));
+    }
+
+    if (centuries?.length) {
+      newFilteredPeople = newFilteredPeople.filter(
+        person => centuries.includes(Math.ceil(person.born / 100)),
+      );
+    }
+
+    return newFilteredPeople;
+  };
+
+  const sortPeople = (
+    sort: string | null,
+    order: string | null,
+    peopleList: Person[],
+  ) => {
+    let sortedPeople = [...peopleList];
+
+    switch (sort) {
+      case 'name':
+        sortedPeople = sortedPeople.sort((a, b) => a.name.toLowerCase()
+          .localeCompare(b.name.toLowerCase()));
+        break;
+
+      case 'sex':
+        sortedPeople = sortedPeople.sort(
+          (a, b) => a.sex.localeCompare(b.sex),
+        );
+        break;
+
+      case 'born':
+        sortedPeople = sortedPeople.sort((a, b) => a.born - b.born);
+        break;
+
+      case 'died':
+        sortedPeople = sortedPeople.sort((a, b) => a.died - b.died);
+        break;
+
+      default:
+        break;
+    }
+
+    if (order) {
+      sortedPeople = [...sortedPeople].reverse();
+    }
+
+    return setFilteredPeople(sortedPeople);
+  };
+
   useEffect(() => {
     getPeople()
       .then(res => {
@@ -39,56 +104,9 @@ export const PeoplePage = () => {
     if (people) {
       let newPeopleList = [...people];
 
-      if (sex) {
-        newPeopleList = newPeopleList.filter(person => person.sex === sex);
-      }
+      newPeopleList = filterPeople(sex, query, centuries, newPeopleList);
 
-      if (query) {
-        newPeopleList = newPeopleList.filter(person => person.name
-          .toLowerCase().includes(query));
-      }
-
-      if (centuries.length) {
-        newPeopleList = newPeopleList.filter(
-          person => centuries.includes(Math.ceil(person.born / 100)),
-        );
-      }
-
-      if (!sort) {
-        setFilteredPeople(newPeopleList);
-      }
-
-      if (sort) {
-        switch (sort) {
-          case 'name':
-            newPeopleList = newPeopleList.sort((a, b) => a.name.toLowerCase()
-              .localeCompare(b.name.toLowerCase()));
-            break;
-
-          case 'sex':
-            newPeopleList = newPeopleList.sort(
-              (a, b) => a.sex.localeCompare(b.sex),
-            );
-            break;
-
-          case 'born':
-            newPeopleList = newPeopleList.sort((a, b) => a.born - b.born);
-            break;
-
-          case 'died':
-            newPeopleList = newPeopleList.sort((a, b) => a.died - b.died);
-            break;
-
-          default:
-            break;
-        }
-
-        if (order) {
-          newPeopleList = [...newPeopleList].reverse();
-        }
-      }
-
-      setFilteredPeople(newPeopleList);
+      sortPeople(sort, order, newPeopleList);
     }
   }, [searchParams]);
 

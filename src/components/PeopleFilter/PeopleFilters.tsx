@@ -11,6 +11,8 @@ const genderFilter = [
   { name: GenderFilter.FEMALE, value: 'f' },
 ];
 
+const linkCenturies = ['16', '17', '18', '19', '20'];
+
 export const PeopleFilters: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [
@@ -25,6 +27,23 @@ export const PeopleFilters: React.FC = () => {
     setSearchParams(getSearchWith(searchParams, {
       query: e.target.value.toLowerCase() || null,
     }));
+  };
+
+  const filterCenturies = (centenary: string) => {
+    return centuries.includes(centenary)
+      ? [...centuries.filter(century => century !== centenary)]
+      : [...centuries, centenary];
+  };
+
+  const handleCenturyAndFilterChange = (
+    newCentury: string[] = [],
+    gender: null | GenderFilter = null,
+  ) => {
+    setCenturies(newCentury);
+
+    if (gender) {
+      setFilterByGender(gender);
+    }
   };
 
   return (
@@ -66,29 +85,25 @@ export const PeopleFilters: React.FC = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            {['16', '17', '18', '19', '20'].map(centenary => (
-              <SearchLink
-                key={centenary}
-                data-cy="century"
-                className={classNames('button mr-1', {
-                  'is-info': centuries?.includes(centenary),
-                })}
-                params={{
-                  century: centuries.includes(centenary)
-                    ? [...centuries.filter(century => century !== centenary)]
-                    : [...centuries, centenary],
-                }}
-                onClick={() => {
-                  setCenturies(prevCenturies => {
-                    return centuries.includes(centenary)
-                      ? [...centuries.filter(century => century !== centenary)]
-                      : [...prevCenturies, centenary];
-                  });
-                }}
-              >
-                {centenary}
-              </SearchLink>
-            ))}
+            {linkCenturies.map(centenary => {
+              const newCenturies = filterCenturies(centenary);
+
+              return (
+                <SearchLink
+                  key={centenary}
+                  data-cy="century"
+                  className={classNames('button mr-1', {
+                    'is-info': centuries?.includes(centenary),
+                  })}
+                  params={{
+                    century: newCenturies,
+                  }}
+                  onClick={() => handleCenturyAndFilterChange(newCenturies)}
+                >
+                  {centenary}
+                </SearchLink>
+              );
+            })}
           </div>
 
           <div className="level-right ml-4">
@@ -96,7 +111,7 @@ export const PeopleFilters: React.FC = () => {
               data-cy="centuryALL"
               className="button is-success is-outlined"
               params={{ century: null }}
-              onClick={() => setCenturies([])}
+              onClick={() => handleCenturyAndFilterChange()}
             >
               All
             </SearchLink>
@@ -112,10 +127,7 @@ export const PeopleFilters: React.FC = () => {
             century: null,
             query: null,
           }}
-          onClick={() => {
-            setCenturies([]);
-            setFilterByGender(GenderFilter.ALL);
-          }}
+          onClick={() => handleCenturyAndFilterChange([], GenderFilter.ALL)}
         >
           Reset all filters
         </SearchLink>
