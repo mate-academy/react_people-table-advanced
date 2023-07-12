@@ -1,16 +1,21 @@
 import { FC } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useSearchParams } from 'react-router-dom';
+import classNames from 'classnames';
 import { Person } from '../types';
 import { PersonLink } from './PersonLink';
+import { SortOptions } from '../types/SortOptions';
+import { SearchLink } from './SearchLink';
+import { SortDirections } from '../types/SortDirections';
 
 export type Props = {
   people: Person[],
 };
 
-const tableHeads = ['Name', 'Sex', 'Born', 'Died', 'Mother', 'Father'];
-
 export const PeopleTable: FC<Props> = ({ people }) => {
   const { slug } = useParams();
+  const [searchParams] = useSearchParams();
+  const sort = searchParams.get('sort') || '';
+  const order = searchParams.get('order') || '';
 
   return (
     <table
@@ -19,9 +24,31 @@ export const PeopleTable: FC<Props> = ({ people }) => {
     >
       <thead>
         <tr>
-          {tableHeads.map(th => (
-            <th key={th}>{th}</th>
+          {Object.entries(SortOptions).map(([key, value]) => (
+            <th key={value}>
+              <span className="is-flex is-flex-wrap-nowrap">
+                {key}
+                <SearchLink
+                  params={{
+                    sort: sort && order ? null : value,
+                    order: sort && !order ? SortDirections.DESC : null,
+                  }}
+                >
+                  <span className="icon">
+                    <i
+                      className={classNames('fas fa-sort', {
+                        'fa-sort-up': sort === value && !order,
+                        'fa-sort-down': sort === value && order,
+                      })}
+                    />
+                  </span>
+                </SearchLink>
+              </span>
+            </th>
           ))}
+
+          <th>Mother</th>
+          <th>Father</th>
         </tr>
       </thead>
 
