@@ -1,6 +1,6 @@
 import classNames from 'classnames';
 import { useSearchParams } from 'react-router-dom';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { SearchLink } from '../SearchLink';
 import { GenderFilter } from '../../types/GenderFilter';
 import { getSearchWith } from '../../utils/searchHelper';
@@ -29,11 +29,13 @@ export const PeopleFilters: React.FC = () => {
     }));
   };
 
-  const filterCenturies = (centenary: string) => {
-    return centuries.includes(centenary)
-      ? [...centuries.filter(century => century !== centenary)]
-      : [...centuries, centenary];
-  };
+  const filterCenturies = useMemo(() => {
+    return (centenary: string) => {
+      return centuries.includes(centenary)
+        ? [...centuries.filter(century => century !== centenary)]
+        : [...centuries, centenary];
+    };
+  }, []);
 
   const handleCenturyAndFilterChange = (
     newCentury: string[] = [],

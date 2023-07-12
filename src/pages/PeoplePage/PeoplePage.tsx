@@ -46,26 +46,26 @@ export const PeoplePage = () => {
     order: string | null,
     peopleList: Person[],
   ) => {
-    let sortedPeople = [...peopleList];
+    const sortedPeople = [...peopleList];
 
     switch (sort) {
       case 'name':
-        sortedPeople = sortedPeople.sort((a, b) => a.name.toLowerCase()
+        sortedPeople.sort((a, b) => a.name.toLowerCase()
           .localeCompare(b.name.toLowerCase()));
         break;
 
       case 'sex':
-        sortedPeople = sortedPeople.sort(
+        sortedPeople.sort(
           (a, b) => a.sex.localeCompare(b.sex),
         );
         break;
 
       case 'born':
-        sortedPeople = sortedPeople.sort((a, b) => a.born - b.born);
+        sortedPeople.sort((a, b) => a.born - b.born);
         break;
 
       case 'died':
-        sortedPeople = sortedPeople.sort((a, b) => a.died - b.died);
+        sortedPeople.sort((a, b) => a.died - b.died);
         break;
 
       default:
@@ -73,7 +73,7 @@ export const PeoplePage = () => {
     }
 
     if (order) {
-      sortedPeople = [...sortedPeople].reverse();
+      sortedPeople.reverse();
     }
 
     return setFilteredPeople(sortedPeople);
