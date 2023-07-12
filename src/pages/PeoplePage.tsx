@@ -38,7 +38,7 @@ export const PeoplePage: FC = () => {
               {hasError
                 && <p data-cy="peopleLoadingError">Something went wrong</p>}
 
-              {!people.length && (
+              {!people.length && !isLoading && (
                 <p data-cy="noPeopleMessage">
                   There are no people on the server
                 </p>
