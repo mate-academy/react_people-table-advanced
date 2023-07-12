@@ -1,12 +1,54 @@
-export const PeopleFilters = () => {
+import classNames from 'classnames';
+import React from 'react';
+
+interface Props {
+  query: string;
+  setQuery: CallableFunction;
+  onReset: CallableFunction;
+  gender: string;
+  handleGenderFilter: CallableFunction;
+}
+
+export const PeopleFilters: React.FC<Props> = ({
+  query,
+  setQuery,
+  gender,
+  handleGenderFilter,
+  onReset,
+}) => {
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        <a className="is-active" href="#/people">All</a>
-        <a className="" href="#/people?sex=m">Male</a>
-        <a className="" href="#/people?sex=f">Female</a>
+        <a
+          className={classNames({
+            'is-active': gender === 'all',
+          })}
+          href="#/people"
+          onClick={() => handleGenderFilter('all')}
+        >
+          All
+        </a>
+
+        <a
+          className={classNames({
+            'is-active': gender === 'm',
+          })}
+          href="#/people?sex=m"
+          onClick={() => handleGenderFilter('m')}
+        >
+          Male
+        </a>
+        <a
+          className={classNames({
+            'is-active': gender === 'f',
+          })}
+          href="#/people?sex=f"
+          onClick={() => handleGenderFilter('f')}
+        >
+          Female
+        </a>
       </p>
 
       <div className="panel-block">
@@ -16,6 +58,8 @@ export const PeopleFilters = () => {
             type="search"
             className="input"
             placeholder="Search"
+            value={query}
+            onChange={(event) => setQuery(event.target.value)}
           />
 
           <span className="icon is-left">
@@ -84,6 +128,7 @@ export const PeopleFilters = () => {
         <a
           className="button is-link is-outlined is-fullwidth"
           href="#/people"
+          onClick={() => onReset()}
         >
           Reset all filters
         </a>
