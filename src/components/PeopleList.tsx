@@ -1,13 +1,41 @@
 import { useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
+import cn from 'classnames';
 import { Loader } from './Loader';
 import { getPeople } from '../api';
 import { Person } from '../types';
 import { PersonRow } from './PersonRow';
+import { SearchLink } from './SearchLink';
 
 export const PeopleList = () => {
   const [people, setPeople] = useState<Person[]>([]);
   const [loadingError, setLoadingError] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
+
+  const [searchParams] = useSearchParams();
+  const sort = searchParams.get('sort') || '';
+  const order = searchParams.get('order') || '';
+  const centuries = searchParams.getAll('centuries') || [];
+  const sex = searchParams.get('sex') || '';
+  const query = searchParams.get('query') || '';
+
+  const getNewSearchParams = (text: string) => {
+    if (sort !== text && order === '') {
+      return { sort: text, order: null };
+    }
+
+    if (sort === text && order === '') {
+      return { sort: text, order: 'desc' };
+    }
+
+    if (sort !== text && 'desc') {
+      return { sort: text, order: null };
+    }
+
+    return { sort: null, order: null };
+  };
+
+  const sortInfo = ['Name', 'Sex', 'Born', 'Died'];
 
   const getPreparedPeople = (loadedPeople: Person[]) => {
     return loadedPeople.map(person => {
@@ -37,7 +65,61 @@ export const PeopleList = () => {
     fetchData();
   }, []);
 
+  const getSortedPeople = (startPeople: Person[]) => {
+    let updatedPeople = startPeople;
+
+    if (sort) {
+      switch (sort) {
+        case 'name':
+        case 'sex':
+          updatedPeople = updatedPeople.sort((person1, person2) => (
+            person1[sort].toLowerCase()
+              .localeCompare(person2[sort].toLowerCase())
+          ));
+          break;
+
+        case 'born':
+        case 'died':
+          updatedPeople = updatedPeople.sort((person1, person2) => (
+            person1[sort] - person2[sort]
+          ));
+          break;
+
+        default:
+          break;
+      }
+    }
+
+    if (order) {
+      return updatedPeople.reverse();
+    }
+
+    return updatedPeople;
+  };
+
+  const getFilteredPeople = (sortedPeople: Person[]) => {
+    let updatedPeople = sortedPeople;
+
+    if (query) {
+      updatedPeople = updatedPeople.filter(person => person.name.toLowerCase()
+        .includes(query.toLowerCase()));
+    }
+
+    if (centuries.length > 0) {
+      updatedPeople = updatedPeople.filter(person => centuries
+        .includes(`${Math.ceil(person.born / 100)}`));
+    }
+
+    if (sex) {
+      updatedPeople = updatedPeople.filter(person => person.sex === sex);
+    }
+
+    return updatedPeople;
+  };
+
   const preparedPeople = getPreparedPeople(people);
+  const sortedPeople = getSortedPeople(preparedPeople);
+  const visiblePeople = getFilteredPeople(sortedPeople);
 
   const emptyData = isLoaded && people.length < 1 && !loadingError;
   const failedFetch = loadingError;
@@ -60,63 +142,46 @@ export const PeopleList = () => {
             There are no people on the server
           </p>
         )}
-        {!isLoaded ? <Loader /> : (
+
+        {(isLoaded && visiblePeople.length < 1) && (
+          <p>There are no people matching the current search criteria</p>
+        )}
+        {!isLoaded ? <Loader /> : visiblePeople.length > 0 && (
           <table
             data-cy="peopleTable"
             className="table is-striped is-hoverable is-narrow is-fullwidth"
           >
             <thead>
               <tr>
-                <th>
-                  <span className="is-flex is-flex-wrap-nowrap">
-                    Name
-                    <a href="#/people?sort=name">
-                      <span className="icon">
-                        <i className="fas fa-sort" />
-                      </span>
-                    </a>
-                  </span>
-                </th>
-
-                <th>
-                  <span className="is-flex is-flex-wrap-nowrap">
-                    Sex
-                    <a href="#/people?sort=sex">
-                      <span className="icon">
-                        <i className="fas fa-sort" />
-                      </span>
-                    </a>
-                  </span>
-                </th>
-
-                <th>
-                  <span className="is-flex is-flex-wrap-nowrap">
-                    Born
-                    <a href="#/people?sort=born&amp;order=desc">
-                      <span className="icon">
-                        <i className="fas fa-sort-up" />
-                      </span>
-                    </a>
-                  </span>
-                </th>
-
-                <th>
-                  <span className="is-flex is-flex-wrap-nowrap">
-                    Died
-                    <a href="#/people?sort=died">
-                      <span className="icon">
-                        <i className="fas fa-sort-down" />
-                      </span>
-                    </a>
-                  </span>
-                </th>
-
+                {sortInfo.map(element => (
+                  <th key={element}>
+                    <span className="is-flex is-flex-wrap-nowrap">
+                      {element}
+                      <SearchLink
+                        params={
+                          getNewSearchParams(element.toLowerCase())
+                        }
+                      >
+                        <span className="icon">
+                          <i className={cn('fas', {
+                            'fa-sort': sort !== element.toLowerCase(),
+                            'fa-sort-up': sort === element.toLowerCase()
+                            && !order,
+                            'fa-sort-down': sort === element.toLowerCase()
+                            && order,
+                          })}
+                          />
+                        </span>
+                      </SearchLink>
+                    </span>
+                  </th>
+                ))}
                 <th>Mother</th>
                 <th>Father</th>
               </tr>
             </thead>
             <tbody>
-              {preparedPeople.map(person => (
+              {visiblePeople.map(person => (
                 <PersonRow
                   key={person.slug}
                   person={person}

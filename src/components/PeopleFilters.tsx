@@ -11,8 +11,9 @@ export const PeopleFilters = () => {
 
   const centuriesList = ['16', '17', '18', '19', '20'];
   const changeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
+    getSearchWith(searchParams, { query: null });
     const paramsToUpdate = {
-      query: event.target.value,
+      query: event.target.value || null,
     };
 
     const newParams = getSearchWith(searchParams, paramsToUpdate);
@@ -102,18 +103,11 @@ export const PeopleFilters = () => {
       </div>
 
       <div className="panel-block">
-        {/* <a
-          className="button is-link is-outlined is-fullwidth"
-          href="#/people"
-        >
-          Reset all filters
-        </a> */}
-
         <SearchLink
           params={{
             centuries: [],
-            query: '',
-            sex: '',
+            query: null,
+            sex: null,
           }}
           data-cy="centuryALL"
           className="button is-link is-outlined is-fullwidth"
