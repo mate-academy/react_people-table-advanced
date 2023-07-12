@@ -1,5 +1,5 @@
 import React from 'react';
-import cn from 'classnames';
+import classnames from 'classnames';
 
 import { Person } from '../../types';
 import { PersonLink } from '../PersonLink';
@@ -29,7 +29,7 @@ export const PersonInfo: React.FC<Props> = ({
   return (
     <tr
       data-cy="person"
-      className={cn({ 'has-background-warning': isSelected })}
+      className={classnames({ 'has-background-warning': isSelected })}
     >
       <td>
         <PersonLink person={person} />

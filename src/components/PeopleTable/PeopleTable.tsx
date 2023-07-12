@@ -1,6 +1,6 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
-import cn from 'classnames';
+import classnames from 'classnames';
 
 import { Person } from '../../types';
 import { PersonInfo } from '../PersonInfo';
@@ -14,6 +14,7 @@ type Props = {
 
 export const PeopleTable: React.FC<Props> = ({ people, sort, order }) => {
   const { slug = '' } = useParams();
+  const tableTitles = ['Name', 'Sex', 'Born', 'Died'];
 
   const handleSortChange = (value: string) => {
     const isFirstClick = sort !== value;
@@ -46,7 +47,7 @@ export const PeopleTable: React.FC<Props> = ({ people, sort, order }) => {
     >
       <thead>
         <tr>
-          {['Name', 'Sex', 'Born', 'Died'].map(title => {
+          {tableTitles.map(title => {
             const value = title.toLowerCase();
 
             return (
@@ -58,7 +59,7 @@ export const PeopleTable: React.FC<Props> = ({ people, sort, order }) => {
                   >
                     <span className="icon">
                       <i
-                        className={cn('fas', {
+                        className={classnames('fas', {
                           'fa-sort': sort !== value,
                           'fa-sort-up': sort === value && order === null,
                           'fa-sort-down': sort === value && order === 'desc',

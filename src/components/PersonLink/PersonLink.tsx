@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
-import cn from 'classnames';
+import classnames from 'classnames';
 
 import { Person } from '../../types';
 
@@ -18,7 +18,7 @@ export const PersonLink: React.FC<Props> = ({ person }) => {
         pathname: `/people/${slug}`,
         search: location.search,
       }}
-      className={cn({ 'has-text-danger': sex === 'f' })}
+      className={classnames({ 'has-text-danger': sex === 'f' })}
     >
       {name}
     </NavLink>

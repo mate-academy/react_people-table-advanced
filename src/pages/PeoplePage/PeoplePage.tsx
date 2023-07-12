@@ -4,7 +4,7 @@ import { useSearchParams } from 'react-router-dom';
 import { Loader } from '../../components/Loader';
 import { PeopleTable } from '../../components/PeopleTable';
 import { getPeople } from '../../api';
-import { Person } from '../../types';
+import { Person, Sex } from '../../types';
 import { PeopleFilters } from '../../components/PeopleFilters';
 import { filterPeople, preparePeople, sortPeople } from '../../utils/helpers';
 
@@ -15,7 +15,8 @@ export const PeoplePage: React.FC = () => {
 
   const [searchParams] = useSearchParams();
 
-  const sex = searchParams.get('sex') || null;
+  const sexParam: string | null = searchParams.get('sex');
+  const sex: Sex | null = sexParam !== null ? sexParam as Sex : null;
   const query = searchParams.get('query') || null;
   const centuries = searchParams.getAll('centuries') || [];
   const sort = searchParams.get('sort') || null;
@@ -39,7 +40,7 @@ export const PeoplePage: React.FC = () => {
     && people.length > 0
     && sortedPeople.length === 0;
   const isPeopleTabVisible = isLoaded && !isError && sortedPeople.length > 0;
-  const isFilterFisible = isNoPeopleVisible || isPeopleTabVisible;
+  const isFilterVisible = isNoPeopleVisible || isPeopleTabVisible;
 
   return (
     <>
@@ -48,7 +49,7 @@ export const PeoplePage: React.FC = () => {
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
           <div className="column is-7-tablet is-narrow-desktop">
-            {isFilterFisible && (
+            {isFilterVisible && (
               <PeopleFilters sex={sex} query={query} centuries={centuries} />
             )}
           </div>

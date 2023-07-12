@@ -1,18 +1,23 @@
 import React from 'react';
 import { useSearchParams } from 'react-router-dom';
-import cn from 'classnames';
+import classnames from 'classnames';
 
 import { getSearchWith } from '../../utils/searchHelper';
 import { SearchLink } from '../SearchLink/SearchLink';
+import { Sex } from '../../types';
 
 type Props = {
-  sex: string | null;
+  sex: Sex | null;
   query: string | null;
   centuries: string[];
 };
 
 export const PeopleFilters: React.FC<Props> = ({ sex, query, centuries }) => {
   const [searchParams, setSearchParams] = useSearchParams();
+
+  const centuriesForFilter = ['16', '17', '18', '19', '20'];
+
+  const isNotCurrentCentury = (c: string, century: string) => c !== century;
 
   const onQueryChage = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchParams(
@@ -26,19 +31,19 @@ export const PeopleFilters: React.FC<Props> = ({ sex, query, centuries }) => {
 
       <p className="panel-tabs" data-cy="SexFilter">
         <SearchLink
-          className={cn({ 'is-active': sex === null })}
+          className={classnames({ 'is-active': sex === null })}
           params={{ sex: null }}
         >
           All
         </SearchLink>
         <SearchLink
-          className={cn({ 'is-active': sex === 'm' })}
+          className={classnames({ 'is-active': sex === Sex.MALE })}
           params={{ sex: 'm' }}
         >
           Male
         </SearchLink>
         <SearchLink
-          className={cn({ 'is-active': sex === 'f' })}
+          className={classnames({ 'is-active': sex === Sex.FEMALE })}
           params={{ sex: 'f' }}
         >
           Female
@@ -65,16 +70,16 @@ export const PeopleFilters: React.FC<Props> = ({ sex, query, centuries }) => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            {['16', '17', '18', '19', '20'].map(century => (
+            {centuriesForFilter.map(century => (
               <SearchLink
                 key={century}
                 data-cy="century"
-                className={cn('button mr-1', {
+                className={classnames('button mr-1', {
                   'is-info': centuries.includes(century),
                 })}
                 params={{
                   centuries: centuries.includes(century)
-                    ? centuries.filter(c => c !== century)
+                    ? centuries.filter(c => isNotCurrentCentury(c, century))
                     : [...centuries, century],
                 }}
               >
