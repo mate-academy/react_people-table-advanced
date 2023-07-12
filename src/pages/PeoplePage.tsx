@@ -1,47 +1,29 @@
 import React, { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Loader } from '../components/Loader';
-import { Person } from '../types';
+import { Person, Sex } from '../types';
 import { getPeople } from '../api';
 import { PeopleTable } from '../components/PeopleTable';
-import { getVisiblePeople } from '../helpers/helpers';
+import {
+  getVisiblePeople,
+  getPeopleFiltered,
+  getPeopleSorted,
+} from '../helpers/helpers';
 import { PeopleFilters } from '../components/PeopleFilters';
 
 export const PeoplePage: React.FC = () => {
   const [people, setPeople] = useState<Person[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<null | string>(null);
-  const [searchParams, setSearchParams] = useSearchParams();
-  const [query, setQuery] = useState<string>('');
-  const [gender, setGender] = useState('all');
 
-  const handleGenderFilter = (sex: string) => {
-    setGender(sex);
-    if (gender !== 'all') {
-      searchParams.append('sex', gender);
-    } else {
-      searchParams.delete('sex');
-    }
+  const [searchParams] = useSearchParams();
 
-    setSearchParams(searchParams);
-  };
-
-  const handleQueryChange = (newQuery: string) => {
-    const normalizedQuery = newQuery.toLowerCase();
-
-    if (normalizedQuery) {
-      searchParams.set('query', normalizedQuery);
-    } else {
-      searchParams.delete('sex');
-    }
-
-    setQuery(normalizedQuery);
-    setSearchParams(searchParams);
-  };
-
-  const resetAllFilters = () => {
-    setQuery('');
-  };
+  const sexP: string | null = searchParams.get('sex');
+  const sex: Sex | null = sexP !== null ? sexP as Sex : null;
+  const query = searchParams.get('query') || null;
+  const centuries = searchParams.getAll('centuries') || [];
+  const order = searchParams.get('order') || null;
+  const sort = searchParams.get('sort') || null;
 
   useEffect(() => {
     const fetchPeople = async () => {
@@ -64,21 +46,10 @@ export const PeoplePage: React.FC = () => {
   }, []);
 
   const peopleWithParents = getVisiblePeople(people);
-  const visiblePeople = peopleWithParents
-    .filter(person => {
-      if (gender !== 'all') {
-        return person.sex === gender;
-      }
-
-      return person;
-    })
-    .filter(person => {
-      const { name, fatherName, motherName } = person;
-
-      return name.toLowerCase().includes(query)
-        || fatherName?.toLowerCase().includes(query)
-        || motherName?.toLowerCase().includes(query);
-    });
+  const filteredPeople = getPeopleFiltered(
+    peopleWithParents, sex, query, centuries,
+  );
+  const sortedPeople = getPeopleSorted(filteredPeople, order, sort);
 
   return (
     <>
@@ -87,13 +58,14 @@ export const PeoplePage: React.FC = () => {
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
           <div className="column is-7-tablet is-narrow-desktop">
-            <PeopleFilters
-              query={query}
-              setQuery={handleQueryChange}
-              onReset={resetAllFilters}
-              gender={gender}
-              handleGenderFilter={handleGenderFilter}
-            />
+            {!isLoading && !errorMessage && people.length > 0 && (
+              <PeopleFilters
+                sex={sex}
+                query={query}
+                centuries={centuries}
+              />
+            )}
+
           </div>
 
           <div className="column">
@@ -110,10 +82,22 @@ export const PeoplePage: React.FC = () => {
                 </p>
               )}
 
-              {visiblePeople.length === 0 ? (
-                <p>There are no people matching the current search criteria</p>
-              ) : (
-                <PeopleTable people={visiblePeople} />
+              {!isLoading
+              && !errorMessage
+              && people.length > 0
+              && filteredPeople.length === 0
+              && (
+                <p>
+                  There are no people matching the current search criteria
+                </p>
+              )}
+
+              {!isLoading && !errorMessage && filteredPeople.length > 0 && (
+                <PeopleTable
+                  people={sortedPeople}
+                  order={order}
+                  sort={sort}
+                />
               )}
             </div>
           </div>

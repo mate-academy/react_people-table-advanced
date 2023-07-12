@@ -1,7 +1,7 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import classNames from 'classnames';
-import { Person } from '../types';
+import { Person, Sex } from '../types';
 
 interface Props {
   person: Person;
@@ -10,12 +10,10 @@ interface Props {
 export const PersonLink: React.FC<Props> = ({ person }) => {
   const { slug, name, sex } = person;
 
-  const FEMALE = 'f';
-
   return (
     <NavLink
       to={`../${slug}`}
-      className={classNames({ 'has-text-danger': sex === FEMALE })}
+      className={classNames({ 'has-text-danger': sex === Sex.Female })}
     >
       {name}
     </NavLink>
