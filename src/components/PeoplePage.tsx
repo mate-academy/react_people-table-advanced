@@ -1,8 +1,48 @@
-import { PeopleFilters } from './PeopleFilters';
+import { useEffect, useState } from 'react';
+// import { useMatch } from 'react-router-dom';
 import { Loader } from './Loader';
+import { getPeople } from '../api';
+import { Person } from '../types';
+// import { PersonLink } from './PersonLink';
+import { PeopleFilters } from './PeopleFilters';
 import { PeopleTable } from './PeopleTable';
 
 export const PeoplePage = () => {
+  const [isPeopleLoadingError, setIsPeopleLoadingError] = useState(false);
+  const [isNoPeopleMessage, setIsNoPeopleMessage] = useState(false);
+  const [people, setPeople] = useState<Person[]>([]);
+  const [isDataLoading, setIsDataLoading] = useState(false);
+
+  const findPerson = (personName: string | null, peopleData: Person[]) => {
+    return peopleData.find(person => person.name === personName);
+  };
+
+  // const match = useMatch('/people/:slug');
+
+  useEffect(() => {
+    setIsDataLoading(true);
+    getPeople()
+      .then((res) => {
+        setPeople(res.map(pers => ({
+          ...pers,
+          motherName: pers.motherName || '-',
+          fatherName: pers.fatherName || '-',
+          mother: findPerson(pers.motherName, res),
+          father: findPerson(pers.fatherName, res),
+        })));
+
+        if (!res) {
+          setIsNoPeopleMessage(true);
+        }
+      })
+      .catch(() => {
+        setIsPeopleLoadingError(true);
+      })
+      .finally(() => {
+        setIsDataLoading(false);
+      });
+  }, []);
+
   return (
     <>
       <h1 className="title">People Page</h1>
@@ -15,17 +55,25 @@ export const PeoplePage = () => {
 
           <div className="column">
             <div className="box table-container">
-              <Loader />
+              {isDataLoading && <Loader />}
 
-              <p data-cy="peopleLoadingError">Something went wrong</p>
+              {isPeopleLoadingError && (
+                <p data-cy="peopleLoadingError" className="has-text-danger">
+                  Something went wrong
+                </p>
+              )}
 
-              <p data-cy="noPeopleMessage">
-                There are no people on the server
-              </p>
+              {isNoPeopleMessage && (
+                <p data-cy="noPeopleMessage">
+                  There are no people on the server
+                </p>
+              )}
 
-              <p>There are no people matching the current search criteria</p>
+              {!people && (
+                <p>There are no people matching the current search criteria</p>
+              )}
 
-              <PeopleTable />
+              {people && <PeopleTable people={people} />}
             </div>
           </div>
         </div>
