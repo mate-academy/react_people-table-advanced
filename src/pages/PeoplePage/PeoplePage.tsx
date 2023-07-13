@@ -1,5 +1,5 @@
 import { useSearchParams } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { PeopleFilters } from '../../components/PeopleFilter/PeopleFilters';
 import { Loader } from '../../components/Loader';
 import { PeopleTable } from '../../components/PeopleTable';
@@ -46,12 +46,19 @@ export const PeoplePage = () => {
 
     if (sort) {
       sortedPeople.sort((a, b) => {
-        if (typeof a[sort] === 'string') {
-          return a[sort].toLowerCase()
-            .localeCompare(b[sort].toLowerCase());
+        const value1 = a[sort];
+        const value2 = b[sort];
+
+        if (typeof value1 === 'string' && typeof value2 === 'string') {
+          return value1.toLowerCase()
+            .localeCompare(value2.toLowerCase());
         }
 
-        return a[sort] - b[sort];
+        if (typeof value1 === 'number' && typeof value2 === 'number') {
+          return value1 - value2;
+        }
+
+        return 0;
       });
     }
 

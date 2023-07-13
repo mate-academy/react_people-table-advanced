@@ -1,3 +1,4 @@
+import React from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
 import { PeoplePage } from '../PeoplePage';
 import { PageError } from '../PageError';
