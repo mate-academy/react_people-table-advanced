@@ -1,6 +1,6 @@
 import classNames from 'classnames';
 import { useSearchParams } from 'react-router-dom';
-import { useMemo, useState } from 'react';
+import React, { useMemo, useRef, useState } from 'react';
 import { SearchLink } from '../SearchLink';
 import { GenderFilter } from '../../types/GenderFilter';
 import { getSearchWith } from '../../utils/searchHelper';
@@ -22,6 +22,11 @@ export const PeopleFilters: React.FC = () => {
     centuries, setCenturies,
   ] = useState(searchParams.getAll('century') || []);
   const query = searchParams.get('query');
+  const resetValues = useRef({
+    sex: null,
+    century: null,
+    query: null,
+  });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchParams(getSearchWith(searchParams, {
@@ -65,7 +70,7 @@ export const PeopleFilters: React.FC = () => {
               params={{ sex: value }}
               onClick={() => setFilterByGender(name)}
             >
-              {gender.name}
+              {name}
             </SearchLink>
           );
         })}
@@ -128,11 +133,7 @@ export const PeopleFilters: React.FC = () => {
       <div className="panel-block">
         <SearchLink
           className="button is-link is-outlined is-fullwidth"
-          params={{
-            sex: null,
-            century: null,
-            query: null,
-          }}
+          params={resetValues.current}
           onClick={() => handleCenturyAndFilterChange([], GenderFilter.ALL)}
         >
           Reset all filters

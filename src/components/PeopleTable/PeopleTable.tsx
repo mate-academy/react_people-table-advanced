@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import React, { useCallback } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
 import classNames from 'classnames';
 import { Person } from '../../types';
@@ -62,7 +62,7 @@ export const PeopleTable: React.FC<PropsPeopleTable> = ({
                     {name}
                   </p>
                   <SearchLink
-                    params={setNewParamsForSort(sortLink.value)}
+                    params={setNewParamsForSort(value)}
                   >
                     <span className="icon">
                       <i
@@ -88,12 +88,12 @@ export const PeopleTable: React.FC<PropsPeopleTable> = ({
       <tbody>
         {filteredPeople.map(person => {
           const {
-            name, 
-            slug, 
-            motherName, 
-            fatherName, 
-            sex, 
-            born, 
+            name,
+            slug,
+            motherName,
+            fatherName,
+            sex,
+            born,
             died,
           } = person;
           const personMother = findParentOfPerson(motherName);
