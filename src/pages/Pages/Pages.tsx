@@ -9,7 +9,7 @@ export const Pages = () => (
     <Route path="*" element={<PageError />} />
     <Route path="people">
       <Route index element={<PeoplePage />} />
-      <Route path=":slug" element={<PeoplePage />} />
+      <Route path=":personSlug" element={<PeoplePage />} />
     </Route>
   </Routes>
 );

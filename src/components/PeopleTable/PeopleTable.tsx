@@ -22,7 +22,7 @@ export const PeopleTable: React.FC<PropsPeopleTable> = ({
   people,
   filteredPeople,
 }) => {
-  const { slug } = useParams();
+  const { personSlug } = useParams();
   const [searchParams] = useSearchParams();
   const sort = searchParams.get('sort');
   const order = searchParams.get('order');
@@ -52,29 +52,33 @@ export const PeopleTable: React.FC<PropsPeopleTable> = ({
     >
       <thead>
         <tr>
-          {sortLinks.map(sortLink => (
-            <th key={sortLink.name}>
-              <span className="is-flex is-flex-wrap-nowrap">
-                <p>
-                  {sortLink.name}
-                </p>
-                <SearchLink
-                  params={setNewParamsForSort(sortLink.value)}
-                >
-                  <span className="icon">
-                    <i
-                      className={classNames('fas', {
-                        'fa-sort': sort !== sortLink.value || sort,
-                        'fa-sort-up': sort === sortLink.value && order === null,
-                        'fa-sort-down': sort === sortLink.value
-                          && order === 'desc',
-                      })}
-                    />
-                  </span>
-                </SearchLink>
-              </span>
-            </th>
-          ))}
+          {sortLinks.map(sortLink => {
+            const { name, value } = sortLink;
+
+            return (
+              <th key={name}>
+                <span className="is-flex is-flex-wrap-nowrap">
+                  <p>
+                    {name}
+                  </p>
+                  <SearchLink
+                    params={setNewParamsForSort(sortLink.value)}
+                  >
+                    <span className="icon">
+                      <i
+                        className={classNames('fas', {
+                          'fa-sort': sort !== value || sort,
+                          'fa-sort-up': sort === value && order === null,
+                          'fa-sort-down': sort === value
+                            && order === 'desc',
+                        })}
+                      />
+                    </span>
+                  </SearchLink>
+                </span>
+              </th>
+            );
+          })}
 
           <th>Mother</th>
           <th>Father</th>
@@ -83,25 +87,28 @@ export const PeopleTable: React.FC<PropsPeopleTable> = ({
 
       <tbody>
         {filteredPeople.map(person => {
-          const personMother = findParentOfPerson(person.motherName);
-          const personFather = findParentOfPerson(person.fatherName);
+          const {
+            name, slug, motherName, fatherName, sex, born, died,
+          } = person;
+          const personMother = findParentOfPerson(motherName);
+          const personFather = findParentOfPerson(fatherName);
 
           return (
             <tr
-              key={person.name}
+              key={name}
               data-cy="person"
               className={classNames({
-                'has-background-warning': slug === person.slug,
+                'has-background-warning': personSlug === slug,
               })}
             >
               <td>
                 <PersonLink person={person} />
               </td>
 
-              <td>{person.sex}</td>
-              <td>{person.born}</td>
-              <td>{person.died}</td>
-              {person.motherName
+              <td>{sex}</td>
+              <td>{born}</td>
+              <td>{died}</td>
+              {motherName
                 ? (
                   <td>
                     {personMother
@@ -110,12 +117,12 @@ export const PeopleTable: React.FC<PropsPeopleTable> = ({
                           person={personMother}
                         />
                       )
-                      : person.motherName}
+                      : motherName}
                   </td>
                 )
                 : <td>-</td>}
 
-              {person.fatherName
+              {fatherName
                 ? (
                   <td>
                     {personFather
@@ -124,7 +131,7 @@ export const PeopleTable: React.FC<PropsPeopleTable> = ({
                           person={personFather}
                         />
                       )
-                      : person.fatherName}
+                      : fatherName}
                   </td>
                 )
                 : <td>-</td>}

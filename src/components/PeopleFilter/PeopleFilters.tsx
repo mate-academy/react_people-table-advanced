@@ -53,18 +53,22 @@ export const PeopleFilters: React.FC = () => {
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        {genderFilter.map(gender => (
-          <SearchLink
-            key={gender.name}
-            className={classNames({
-              'is-active': filterByGender === gender.name,
-            })}
-            params={{ sex: gender.value }}
-            onClick={() => setFilterByGender(gender.name)}
-          >
-            {gender.name}
-          </SearchLink>
-        ))}
+        {genderFilter.map(gender => {
+          const { name, value } = gender;
+
+          return (
+            <SearchLink
+              key={name}
+              className={classNames({
+                'is-active': filterByGender === name,
+              })}
+              params={{ sex: value }}
+              onClick={() => setFilterByGender(name)}
+            >
+              {gender.name}
+            </SearchLink>
+          );
+        })}
       </p>
 
       <div className="panel-block">

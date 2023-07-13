@@ -14,12 +14,10 @@ export const PeoplePage = () => {
   const [isLoader, setIsLoader] = useState(true);
   const [searchParams] = useSearchParams();
 
-  const filterPeople = (
-    sex: string | null,
-    query: string | null,
-    centuries: number[] | null,
-    peopleList: Person[],
-  ) => {
+  const filterPeople = (peopleList: Person[]) => {
+    const query = searchParams.get('query');
+    const sex = searchParams.get('sex');
+    const centuries = searchParams.getAll('century').map(century => +century);
     let newFilteredPeople = [...peopleList];
 
     if (sex) {
@@ -41,35 +39,20 @@ export const PeoplePage = () => {
     return newFilteredPeople;
   };
 
-  const sortPeople = (
-    sort: string | null,
-    order: string | null,
-    peopleList: Person[],
-  ) => {
+  const sortPeople = (peopleList: Person[]) => {
+    const sort = searchParams.get('sort');
+    const order = searchParams.get('order');
     const sortedPeople = [...peopleList];
 
-    switch (sort) {
-      case 'name':
-        sortedPeople.sort((a, b) => a.name.toLowerCase()
-          .localeCompare(b.name.toLowerCase()));
-        break;
+    if (sort) {
+      sortedPeople.sort((a, b) => {
+        if (typeof a[sort] === 'string') {
+          return a[sort].toLowerCase()
+            .localeCompare(b[sort].toLowerCase());
+        }
 
-      case 'sex':
-        sortedPeople.sort(
-          (a, b) => a.sex.localeCompare(b.sex),
-        );
-        break;
-
-      case 'born':
-        sortedPeople.sort((a, b) => a.born - b.born);
-        break;
-
-      case 'died':
-        sortedPeople.sort((a, b) => a.died - b.died);
-        break;
-
-      default:
-        break;
+        return a[sort] - b[sort];
+      });
     }
 
     if (order) {
@@ -95,18 +78,11 @@ export const PeoplePage = () => {
   }, []);
 
   useEffect(() => {
-    const sort = searchParams.get('sort');
-    const order = searchParams.get('order');
-    const query = searchParams.get('query');
-    const sex = searchParams.get('sex');
-    const centuries = searchParams.getAll('century').map(century => +century);
-
     if (people) {
       let newPeopleList = [...people];
 
-      newPeopleList = filterPeople(sex, query, centuries, newPeopleList);
-
-      sortPeople(sort, order, newPeopleList);
+      newPeopleList = filterPeople(newPeopleList);
+      sortPeople(newPeopleList);
     }
   }, [searchParams]);
 
