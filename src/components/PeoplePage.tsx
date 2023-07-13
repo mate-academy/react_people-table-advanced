@@ -11,6 +11,7 @@ export const PeoplePage = () => {
   const [isPeopleLoadingError, setIsPeopleLoadingError] = useState(false);
   const [isNoPeopleMessage, setIsNoPeopleMessage] = useState(false);
   const [people, setPeople] = useState<Person[]>([]);
+  const [peopleVisible, setPeopleVisible] = useState<Person[]>([]);
   const [isDataLoading, setIsDataLoading] = useState(false);
 
   const findPerson = (personName: string | null, peopleData: Person[]) => {
@@ -24,6 +25,14 @@ export const PeoplePage = () => {
     getPeople()
       .then((res) => {
         setPeople(res.map(pers => ({
+          ...pers,
+          motherName: pers.motherName || '-',
+          fatherName: pers.fatherName || '-',
+          mother: findPerson(pers.motherName, res),
+          father: findPerson(pers.fatherName, res),
+        })));
+
+        setPeopleVisible(res.map(pers => ({
           ...pers,
           motherName: pers.motherName || '-',
           fatherName: pers.fatherName || '-',
@@ -69,11 +78,11 @@ export const PeoplePage = () => {
                 </p>
               )}
 
-              {!people && (
+              {!peopleVisible && people && (
                 <p>There are no people matching the current search criteria</p>
               )}
 
-              {people && <PeopleTable people={people} />}
+              {peopleVisible && <PeopleTable people={peopleVisible} />}
             </div>
           </div>
         </div>
