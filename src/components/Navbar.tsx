@@ -1,4 +1,10 @@
-export const Navbar = () => {
+import { NavLink, useLocation, useParams } from 'react-router-dom';
+import classNames from 'classnames';
+
+export const Navbar: React.FC = () => {
+  const location = useLocation();
+  const { slug } = useParams();
+
   return (
     <nav
       data-cy="nav"
@@ -8,15 +14,25 @@ export const Navbar = () => {
     >
       <div className="container">
         <div className="navbar-brand">
-          <a className="navbar-item" href="#/">Home</a>
-
-          <a
-            aria-current="page"
-            className="navbar-item has-background-grey-lighter"
-            href="#/people"
+          <NavLink
+            className={({ isActive }) => classNames('navbar-item', {
+              'has-background-grey-lighter': isActive,
+            })}
+            to="/"
           >
             People
-          </a>
+          </NavLink>
+          <NavLink
+            className={({ isActive }) => classNames('navbar-item', {
+              'has-background-grey-lighter': isActive,
+            })}
+            to={{
+              pathname: slug ? `/people/${slug}` : '/people',
+              search: location.search,
+            }}
+          >
+            People
+          </NavLink>
         </div>
       </div>
     </nav>
