@@ -88,7 +88,13 @@ export const PeopleTable: React.FC<PropsPeopleTable> = ({
       <tbody>
         {filteredPeople.map(person => {
           const {
-            name, slug, motherName, fatherName, sex, born, died,
+            name, 
+            slug, 
+            motherName, 
+            fatherName, 
+            sex, 
+            born, 
+            died,
           } = person;
           const personMother = findParentOfPerson(motherName);
           const personFather = findParentOfPerson(fatherName);
