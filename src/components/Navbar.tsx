@@ -32,7 +32,7 @@ export const Navbar = () => {
             }
             to="/people"
           >
-            People Page
+            People
           </NavLink>
         </div>
       </div>

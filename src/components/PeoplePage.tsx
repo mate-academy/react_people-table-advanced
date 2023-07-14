@@ -59,7 +59,7 @@ export const PeoplePage = () => {
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
           <div className="column is-7-tablet is-narrow-desktop">
-            <PeopleFilters />
+            {!isDataLoading && <PeopleFilters />}
           </div>
 
           <div className="column">
@@ -82,7 +82,8 @@ export const PeoplePage = () => {
                 <p>There are no people matching the current search criteria</p>
               )}
 
-              {peopleVisible && <PeopleTable people={peopleVisible} />}
+              {peopleVisible && !isDataLoading
+                && <PeopleTable people={peopleVisible} />}
             </div>
           </div>
         </div>

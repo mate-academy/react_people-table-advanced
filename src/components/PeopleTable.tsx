@@ -3,6 +3,7 @@ import classnames from 'classnames';
 import { useMatch } from 'react-router-dom';
 import { Person } from '../types';
 import { PersonLink } from './PersonLink';
+import { SearchLink } from './SearchLink';
 
 type Props = {
   people: Person[],
@@ -22,12 +23,19 @@ export const PeopleTable:FC<Props> = ({
         <tr>
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
-              Name
+              <SearchLink
+                params={{ sort: 'name' }}
+              >
+                <span className="icon">
+                  <i className="fas fa-sort" />
+                </span>
+              </SearchLink>
+              {/* Name
               <a href="#/people?sort=name">
                 <span className="icon">
                   <i className="fas fa-sort" />
                 </span>
-              </a>
+              </a> */}
             </span>
           </th>
 
