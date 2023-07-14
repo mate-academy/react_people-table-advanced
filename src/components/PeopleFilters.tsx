@@ -76,7 +76,7 @@ export const PeopleFilters: FC<Props> = ({
             type="search"
             className="input"
             placeholder="Search"
-            value={query || ''}
+            value={query}
             onChange={handleChangeQuery}
           />
 
@@ -94,7 +94,7 @@ export const PeopleFilters: FC<Props> = ({
                 key={century}
                 params={getSelectedCenturies(century)}
                 data-cy="century"
-                className={classNames('button', 'mr-1', {
+                className={classNames('button mr-1', {
                   'is-info': centuries.includes(century),
                 })}
               >

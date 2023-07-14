@@ -44,3 +44,11 @@ export const columns = [
   { name: 'Mother', sortable: false },
   { name: 'Father', sortable: false },
 ];
+
+export enum SearchParameters {
+  Centuries = 'centuries',
+  Query = 'query',
+  Sex = 'sex',
+  Sort = 'sort',
+  Order = 'order',
+}

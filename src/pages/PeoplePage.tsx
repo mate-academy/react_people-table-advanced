@@ -7,7 +7,7 @@ import { useSearchParams } from 'react-router-dom';
 import { PeopleFilters } from '../components/PeopleFilters';
 import { Person } from '../types';
 import { getPeople } from '../api';
-import { ErrorType, compareValues } from '../utils/helpers';
+import { ErrorType, compareValues, SearchParameters } from '../utils/helpers';
 import { RenderTable } from '../components/RenderTable';
 
 export const PeoplePage = () => {
@@ -16,11 +16,11 @@ export const PeoplePage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [searchParams] = useSearchParams();
 
-  const centuries = searchParams.getAll('centuries');
-  const query = searchParams.get('query') || '';
-  const sex = searchParams.get('sex') || '';
-  const sort = searchParams.get('sort') || [];
-  const order = searchParams.get('order') || null;
+  const centuries = searchParams.getAll(SearchParameters.Centuries);
+  const query = searchParams.get(SearchParameters.Query) || '';
+  const sex = searchParams.get(SearchParameters.Sex) || '';
+  const sort = searchParams.get(SearchParameters.Sort) || [];
+  const order = searchParams.get(SearchParameters.Order) || null;
   const flag = order === 'desc';
 
   const getPeopleFromServer = async () => {
