@@ -14,9 +14,27 @@ export type SearchParams = {
   [key: string]: string | string[] | null,
 };
 
+type SortValues = string | number;
+
 export const getCentury = (value: number) => (
   (+value.toString().slice(0, 2) + 1).toString()
 );
+
+export const compareValues = (
+  a: SortValues,
+  b: SortValues,
+  flag: boolean,
+) => {
+  if (typeof a === 'string' && typeof b === 'string') {
+    return (flag ? -1 : 1) * a.localeCompare(b);
+  }
+
+  if (typeof a === 'number' && typeof b === 'number') {
+    return (flag ? -1 : 1) * (a - b);
+  }
+
+  return 0;
+};
 
 export const columns = [
   { name: 'Name', sortable: true },

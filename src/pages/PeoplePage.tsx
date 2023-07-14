@@ -7,7 +7,7 @@ import { useSearchParams } from 'react-router-dom';
 import { PeopleFilters } from '../components/PeopleFilters';
 import { Person } from '../types';
 import { getPeople } from '../api';
-import { ErrorType } from '../utils/helpers';
+import { ErrorType, compareValues } from '../utils/helpers';
 import { RenderTable } from '../components/RenderTable';
 
 export const PeoplePage = () => {
@@ -69,6 +69,31 @@ export const PeoplePage = () => {
     return filteredPeople;
   }, [sex, query, centuries]);
 
+  const sortedList = useMemo(() => {
+    if (!filteredList) {
+      return null;
+    }
+
+    return filteredList.sort((a, b) => {
+      switch (sort) {
+        case 'name':
+          return compareValues(a.name, b.name, flag);
+
+        case 'sex':
+          return compareValues(a.sex, b.sex, flag);
+
+        case 'born':
+          return compareValues(a.born, b.born, flag);
+
+        case 'died':
+          return compareValues(a.died, b.died, flag);
+
+        default:
+          return 0;
+      }
+    });
+  }, [sort, filteredList, flag]);
+
   useEffect(() => {
     if (filteredList && !filteredList.length) {
       setErrorType(ErrorType.SEARCH);
@@ -76,29 +101,6 @@ export const PeoplePage = () => {
       setErrorType(null);
     }
   }, [filteredList]);
-
-  const sortedList = useMemo(() => (
-    filteredList && filteredList.sort((a, b) => {
-      switch (sort) {
-        case 'name':
-          return (flag ? -1 : 1) * a.name.localeCompare(b.name);
-
-        case 'sex':
-          return (flag ? -1 : 1) * a.sex.localeCompare(b.sex);
-
-        case 'born':
-          return (flag ? -1 : 1) * (a.born - b.born);
-
-        case 'died':
-          return (flag ? -1 : 1) * (a.died - b.died);
-
-        default:
-          break;
-      }
-
-      return 0;
-    })
-  ), [sort, filteredList, flag]);
 
   return (
     <>
@@ -109,7 +111,6 @@ export const PeoplePage = () => {
           {people && (
             <div className="column is-7-tablet is-narrow-desktop">
               <PeopleFilters
-                sex={sex}
                 query={query}
                 centuries={centuries}
               />
