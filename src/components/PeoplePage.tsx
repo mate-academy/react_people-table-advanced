@@ -5,11 +5,11 @@ import { getPeople } from '../api';
 import { PeopleFilters } from './PeopleFilters';
 import { Loader } from './Loader';
 import { PeopleTable } from './PeopleTable';
-import { findPersons } from '../utils/FindPerson';
+import { findParrentsForEachPerson } from '../utils/FindPerson';
 import { SortOptions } from '../types/SortOptions';
 import { SortDirections } from '../types/SortDirections';
-import { SortingPeople } from '../utils/SortPeople';
-import { FilteringPeople } from '../utils/FilterPeople';
+import { sortPeople } from '../utils/SortPeople';
+import { filterPeople } from '../utils/FilterPeople';
 
 export const PeoplePage = () => {
   const [dataPersons, setDataPersons] = useState<Person[]>([]);
@@ -27,7 +27,7 @@ export const PeoplePage = () => {
       try {
         const loadedPeople = await getPeople();
 
-        setDataPersons(findPersons(loadedPeople));
+        setDataPersons(findParrentsForEachPerson(loadedPeople));
       } catch {
         setLoadError(true);
       } finally {
@@ -39,11 +39,11 @@ export const PeoplePage = () => {
   }, []);
 
   const filteredPeople = useMemo(() => {
-    return FilteringPeople(dataPersons, query, sex, centuries);
+    return filterPeople(dataPersons, query, sex, centuries);
   }, [dataPersons, query, sex, centuries]);
 
   const sortedPeople = useMemo(() => {
-    return SortingPeople(filteredPeople, sort, order);
+    return sortPeople(filteredPeople, sort, order);
   }, [filteredPeople, sort, order]);
 
   return (

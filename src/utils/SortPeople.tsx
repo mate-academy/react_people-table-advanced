@@ -2,7 +2,7 @@ import { Person } from '../types/Person';
 import { SortOptions } from '../types/SortOptions';
 import { SortDirections } from '../types/SortDirections';
 
-export const SortingPeople = (
+export const sortPeople = (
   people: Person[],
   option: SortOptions | null,
   direction: SortDirections | null,

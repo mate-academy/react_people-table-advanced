@@ -1,6 +1,6 @@
 import { Person } from '../types';
 
-export const findPersons = (persons: Person[]) => {
+export const findParrentsForEachPerson = (persons: Person[]) => {
   return persons.map(person => ({
     ...person,
     mother: persons.find(mom => mom.name === person.motherName),
