@@ -13,6 +13,30 @@ export const PeopleTable: React.FC<Props> = ({ people, selectedPerson }) => {
   const sortValue = searchParams.get('sort') || '';
   const sortOrder = searchParams.get('order') || '';
 
+  const getSortValue = (name: string) => {
+    return sortOrder === 'desc' && sortValue === name
+      ? null
+      : name;
+  };
+
+  const getSortOrder = (name: string) => {
+    return sortValue === name && sortOrder !== 'desc'
+      ? 'desc'
+      : null;
+  };
+
+  const getSortIcon = (name: string) => {
+    if (!sortOrder && sortValue === name) {
+      return <i className="fa-solid fa-sort-up" />;
+    }
+
+    if (sortOrder === 'desc' && sortValue === name) {
+      return <i className="fa-solid fa-sort-down" />;
+    }
+
+    return <i className="fas fa-sort" />;
+  };
+
   return (
     <table
       data-cy="peopleTable"
@@ -25,16 +49,12 @@ export const PeopleTable: React.FC<Props> = ({ people, selectedPerson }) => {
               Name
               <SearchLink
                 params={{
-                  sort: sortOrder === 'desc' && sortValue === 'name'
-                    ? null
-                    : 'name',
-                  order: sortValue === 'name' && sortOrder !== 'desc'
-                    ? 'desc'
-                    : null,
+                  sort: getSortValue('name'),
+                  order: getSortOrder('name'),
                 }}
               >
                 <span className="icon">
-                  <i className="fas fa-sort" />
+                  {getSortIcon('name')}
                 </span>
               </SearchLink>
             </span>
@@ -45,16 +65,12 @@ export const PeopleTable: React.FC<Props> = ({ people, selectedPerson }) => {
               Sex
               <SearchLink
                 params={{
-                  sort: sortOrder === 'desc' && sortValue === 'sex'
-                    ? null
-                    : 'sex',
-                  order: sortValue === 'sex' && sortOrder !== 'desc'
-                    ? 'desc'
-                    : null,
+                  sort: getSortValue('sex'),
+                  order: getSortOrder('sex'),
                 }}
               >
                 <span className="icon">
-                  <i className="fas fa-sort" />
+                  {getSortIcon('sex')}
                 </span>
               </SearchLink>
             </span>
@@ -65,16 +81,12 @@ export const PeopleTable: React.FC<Props> = ({ people, selectedPerson }) => {
               Born
               <SearchLink
                 params={{
-                  sort: sortOrder === 'desc' && sortValue === 'born'
-                    ? null
-                    : 'born',
-                  order: sortValue === 'born' && sortOrder !== 'desc'
-                    ? 'desc'
-                    : null,
+                  sort: getSortValue('born'),
+                  order: getSortOrder('born'),
                 }}
               >
                 <span className="icon">
-                  <i className="fas fa-sort" />
+                  {getSortIcon('born')}
                 </span>
               </SearchLink>
             </span>
@@ -85,16 +97,12 @@ export const PeopleTable: React.FC<Props> = ({ people, selectedPerson }) => {
               Died
               <SearchLink
                 params={{
-                  sort: sortOrder === 'desc' && sortValue === 'died'
-                    ? null
-                    : 'died',
-                  order: sortValue === 'died' && sortOrder !== 'desc'
-                    ? 'desc'
-                    : null,
+                  sort: getSortValue('died'),
+                  order: getSortOrder('died'),
                 }}
               >
                 <span className="icon">
-                  <i className="fas fa-sort" />
+                  {getSortIcon('died')}
                 </span>
               </SearchLink>
             </span>

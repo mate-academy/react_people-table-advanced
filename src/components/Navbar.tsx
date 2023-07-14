@@ -20,7 +20,7 @@ export const Navbar: React.FC = () => {
             })}
             to="/"
           >
-            People
+            Home
           </NavLink>
           <NavLink
             className={({ isActive }) => classNames('navbar-item', {
