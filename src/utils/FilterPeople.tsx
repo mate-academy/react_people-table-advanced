@@ -6,10 +6,10 @@ export const filterPeople = (
   sex: string,
   centuries: string[],
 ) => {
-  const filteredPeople = [...people];
+  let filteredPeople = [...people];
 
   if (query) {
-    filteredPeople.filter(person => {
+    filteredPeople = filteredPeople.filter(person => {
       const preparedQuery = query.toLowerCase().trim();
 
       return person.name.toLowerCase().includes(preparedQuery)
@@ -19,11 +19,11 @@ export const filterPeople = (
   }
 
   if (sex) {
-    filteredPeople.filter(person => person.sex === sex);
+    filteredPeople = filteredPeople.filter(person => person.sex === sex);
   }
 
   if (centuries.length) {
-    filteredPeople.filter(person => {
+    filteredPeople = filteredPeople.filter(person => {
       return centuries.includes(Math.ceil(person.born / 100).toString());
     });
   }
