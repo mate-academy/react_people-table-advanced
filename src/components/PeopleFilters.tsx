@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import classNames from 'classnames';
 import { SearchLink } from './SearchLink';
@@ -19,6 +20,14 @@ export const PeopleFilters = () => {
       ),
     );
   };
+
+  const centuriesValue = useMemo(() => (
+    (item: string) => {
+      return centuriesArray.includes(item)
+        ? centuriesArray.filter(c => c !== item)
+        : [...centuriesArray, item];
+    }
+  ), [centuries, centuriesArray]);
 
   return (
     <nav className="panel">
@@ -73,9 +82,7 @@ export const PeopleFilters = () => {
                   'is-info': centuriesArray.includes(century),
                 })}
                 params={{
-                  [SearchParams.centuries]: centuriesArray.includes(century)
-                    ? centuriesArray.filter(c => c !== century)
-                    : [...centuriesArray, century],
+                  [SearchParams.centuries]: centuriesValue(century),
                 }}
               >
                 {century}
