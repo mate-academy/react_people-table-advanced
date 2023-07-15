@@ -36,7 +36,7 @@ export const PersonItem: React.FC<Props> = ({ person, selectedPerson }) => {
             />
           </td>
         )
-        : <td>{person.motherName ? person.motherName : '-'}</td>}
+        : <td>{person.motherName || '-'}</td>}
       {person.father
         ? (
           <td>
@@ -47,7 +47,7 @@ export const PersonItem: React.FC<Props> = ({ person, selectedPerson }) => {
             />
           </td>
         )
-        : <td>{person.fatherName ? person.fatherName : '-'}</td>}
+        : <td>{person.fatherName || '-'}</td>}
     </tr>
   );
 };

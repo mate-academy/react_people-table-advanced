@@ -11,6 +11,7 @@ import { PeopleTable } from './PeopleTable';
 import { getPeople } from '../api';
 import { Person } from '../types';
 import { getVisiblePeople } from '../utils/getVisiblePeople';
+import { SearchParams } from '../utils/enums';
 
 export const PeoplePage = () => {
   const [searchParams] = useSearchParams();
@@ -18,13 +19,19 @@ export const PeoplePage = () => {
   const [isLoaded, setIsLoaded] = useState(false);
   const [isError, setIsError] = useState(false);
   const { slug } = useParams();
-  const sex = searchParams.get('sex') || '';
-  const query = searchParams.get('query') || '';
-  const centuries = searchParams.getAll('centuries') || [];
-  const sort = searchParams.get('sort') || '';
-  const order = searchParams.get('order') || '';
+  const sex = searchParams.get(SearchParams.sex) || '';
+  const query = searchParams.get(SearchParams.query) || '';
+  const centuries = searchParams.getAll(SearchParams.centuries) || [];
+  const sort = searchParams.get(SearchParams.sort) || '';
+  const order = searchParams.get(SearchParams.order) || '';
   const visiblePeople = useMemo(
-    () => getVisiblePeople([sex, query, centuries, sort, order, people]),
+    () => getVisiblePeople(people, {
+      sex,
+      query,
+      centuries,
+      sort,
+      order,
+    }),
     [people, query, sex, centuries, sort, order],
   );
 

@@ -1,9 +1,21 @@
 import { Person } from '../types';
 
-type Params = [string, string, string[], string, string, Person[]];
+type Params = {
+  sex: string,
+  query: string,
+  centuries: string[],
+  sort: string,
+  order: string,
+};
 
-export function getVisiblePeople(params: Params) {
-  const [sex, query, centuries, sort, order, people] = params;
+export function getVisiblePeople(people: Person[], params: Params) {
+  const {
+    sex,
+    query,
+    centuries,
+    sort,
+    order,
+  } = params;
   let copyPeople = [...people];
 
   if (sex) {

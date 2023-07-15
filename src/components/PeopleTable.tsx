@@ -2,6 +2,7 @@ import { useSearchParams } from 'react-router-dom';
 import { Person } from '../types';
 import { PersonItem } from './PersonItem';
 import { SearchLink } from './SearchLink';
+import { SearchParams } from '../utils/enums';
 
 type Props = {
   people: Person[];
@@ -10,8 +11,8 @@ type Props = {
 
 export const PeopleTable: React.FC<Props> = ({ people, selectedPerson }) => {
   const [searchParams] = useSearchParams();
-  const sortValue = searchParams.get('sort') || '';
-  const sortOrder = searchParams.get('order') || '';
+  const sortValue = searchParams.get(SearchParams.sort) || '';
+  const sortOrder = searchParams.get(SearchParams.order) || '';
 
   const getSortValue = (name: string) => {
     return sortOrder === 'desc' && sortValue === name
@@ -49,8 +50,8 @@ export const PeopleTable: React.FC<Props> = ({ people, selectedPerson }) => {
               Name
               <SearchLink
                 params={{
-                  sort: getSortValue('name'),
-                  order: getSortOrder('name'),
+                  [SearchParams.sort]: getSortValue('name'),
+                  [SearchParams.order]: getSortOrder('name'),
                 }}
               >
                 <span className="icon">
@@ -65,8 +66,8 @@ export const PeopleTable: React.FC<Props> = ({ people, selectedPerson }) => {
               Sex
               <SearchLink
                 params={{
-                  sort: getSortValue('sex'),
-                  order: getSortOrder('sex'),
+                  [SearchParams.sort]: getSortValue('sex'),
+                  [SearchParams.order]: getSortOrder('sex'),
                 }}
               >
                 <span className="icon">
@@ -81,8 +82,8 @@ export const PeopleTable: React.FC<Props> = ({ people, selectedPerson }) => {
               Born
               <SearchLink
                 params={{
-                  sort: getSortValue('born'),
-                  order: getSortOrder('born'),
+                  [SearchParams.sort]: getSortValue('born'),
+                  [SearchParams.order]: getSortOrder('born'),
                 }}
               >
                 <span className="icon">
@@ -97,8 +98,8 @@ export const PeopleTable: React.FC<Props> = ({ people, selectedPerson }) => {
               Died
               <SearchLink
                 params={{
-                  sort: getSortValue('died'),
-                  order: getSortOrder('died'),
+                  [SearchParams.sort]: getSortValue('died'),
+                  [SearchParams.order]: getSortOrder('died'),
                 }}
               >
                 <span className="icon">
