@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, useState } from 'react';
 import { useMatch, useSearchParams } from 'react-router-dom';
 import classNames from 'classnames';
 import { Person } from '../types';
@@ -17,8 +17,8 @@ export const PeopleTable:FC<Props> = ({
   const [searchParams] = useSearchParams();
   const sort = searchParams.get('sort') || '';
   const order = searchParams.get('order') || '';
-
-  let visiblePeople = [...people];
+  const [visiblePeople, setVisiblePeople] = useState([...people]);
+  // let visiblePeople = [...people];
 
   const sortByParam = (param: string) => {
     if (param === 'name') {
@@ -42,18 +42,18 @@ export const PeopleTable:FC<Props> = ({
 
   const sortPeople = (sortParam: string): SearchParams => {
     if (sort === sortParam && !order) {
-      visiblePeople = sortByParam(sortParam).reverse();
+      setVisiblePeople(sortByParam(sortParam).reverse());
 
       return { order: 'desc' };
     }
 
     if (sort !== sortParam && !order) {
-      visiblePeople = sortByParam(sortParam);
+      setVisiblePeople(sortByParam(sortParam));
 
       return { sort: sortParam };
     }
 
-    visiblePeople = [...people];
+    setVisiblePeople([...people]);
 
     return { order: null, sort: null };
   };
