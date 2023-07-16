@@ -5,10 +5,13 @@ import 'bulma/css/bulma.css';
 import '@fortawesome/fontawesome-free/css/all.css';
 
 import { App } from './App';
+import { ContextProvider } from './components/Context/ContextProvider';
 
 createRoot(document.getElementById('root') as HTMLDivElement)
   .render(
-    <Router>
-      <App />
-    </Router>,
+    <ContextProvider>
+      <Router>
+        <App />
+      </Router>
+    </ContextProvider>,
   );
