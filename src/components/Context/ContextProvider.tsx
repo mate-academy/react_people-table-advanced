@@ -6,7 +6,7 @@ import {
 } from 'react';
 import { getPeople } from '../../api';
 import {
-  findPersonByName,
+  prepareData,
 } from '../../utils/Helper';
 import { Person } from '../../types';
 
@@ -30,21 +30,13 @@ type Props = {
 
 export const ContextProvider: FC<Props> = ({ children }) => {
   const [people, setPeople] = useState<Person[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [hasError, setHasError] = useState<boolean>(false);
 
   useEffect(() => {
     try {
-      getPeople().then(data => data.map((person, _, array) => {
-        const mother = findPersonByName(person.motherName, array);
-        const father = findPersonByName(person.fatherName, array);
-
-        return {
-          ...person,
-          mother,
-          father,
-        };
-      }))
+      setIsLoading(true);
+      getPeople().then(prepareData)
         .then(setPeople)
         .finally(() => setIsLoading(false));
     } catch {

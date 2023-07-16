@@ -11,7 +11,18 @@ export const findPersonByName = (
   return people.find(({ name }) => name === nameToFind) || null;
 };
 
-const chackPersonBySexCondition = (
+export const prepareData = (data: Person[]) => data.map((person, _, array) => {
+  const mother = findPersonByName(person.motherName, array);
+  const father = findPersonByName(person.fatherName, array);
+
+  return {
+    ...person,
+    mother,
+    father,
+  };
+});
+
+const checkPersonBySexCondition = (
   sex: string | null,
   person: Person,
 ): boolean => {
@@ -22,7 +33,7 @@ const chackPersonBySexCondition = (
   return person.sex === sex;
 };
 
-const chackPersonByCenturiesCondition = (
+const checkPersonByCenturiesCondition = (
   centuries: string[],
   person: Person,
 ): boolean => {
@@ -37,7 +48,7 @@ const caseInsensitiveCompare = (str1: string, str2: string) => {
   return str1.toLowerCase().includes(str2.toLocaleLowerCase());
 };
 
-const chackPersonBySearchQuery = (
+const checkPersonBySearchQuery = (
   query: string,
   person: Person,
 ): boolean => {
@@ -84,12 +95,12 @@ export const getFilteredPeople = (
   const order = searchParams.get('order');
 
   const filteredPeople = people.filter(person => {
-    const sexCondition = chackPersonBySexCondition(sex, person);
-    const centuriesCondition = chackPersonByCenturiesCondition(
+    const sexCondition = checkPersonBySexCondition(sex, person);
+    const centuriesCondition = checkPersonByCenturiesCondition(
       centuries,
       person,
     );
-    const searchQueryCondition = chackPersonBySearchQuery(query, person);
+    const searchQueryCondition = checkPersonBySearchQuery(query, person);
 
     return sexCondition && centuriesCondition && searchQueryCondition;
   });

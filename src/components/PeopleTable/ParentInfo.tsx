@@ -1,7 +1,7 @@
 import { FC } from 'react';
-import { Link, useLocation } from 'react-router-dom';
 import classNames from 'classnames';
 import { Person } from '../../types';
+import { SearchLink } from '../SearchLink';
 
 type Props = {
   parent: Person | null | undefined;
@@ -9,23 +9,23 @@ type Props = {
 };
 
 export const ParentInfo: FC<Props> = ({ parent, name }) => {
-  const location = useLocation();
+  const isMale = parent?.sex === 'm';
+  const isFemale = parent?.sex === 'f';
+
+  const parentInfoClassNames = classNames('', {
+    'has-text-info': isMale,
+    'has-text-danger': isFemale,
+  });
 
   return (
     <>
       {parent ? (
-        <Link
-          to={{
-            pathname: `/people/${parent.slug}`,
-            search: location.search,
-          }}
-          className={classNames('', {
-            'has-text-info': parent.sex === 'm',
-            'has-text-danger': parent.sex === 'f',
-          })}
-        >
-          {parent.name || '-'}
-        </Link>
+        <SearchLink
+          params={{ personSlug: parent.slug }}
+          className={parentInfoClassNames}
+          title={parent.name || '-'}
+        />
+
       ) : (
         <p>{name || '-'}</p>
       )}

@@ -2,7 +2,7 @@ import {
   FC,
 } from 'react';
 import classNames from 'classnames';
-import { Link, useParams, useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import { ParentInfo } from './ParentInfo';
 import { Person } from '../../types';
 import { SearchLink } from '../SearchLink';
@@ -13,11 +13,11 @@ type Props = {
 };
 
 export const PeopleTable: FC<Props> = ({ visiblePeople }) => {
-  const { personSlug } = useParams();
   const [searchParams] = useSearchParams();
 
   const sort = searchParams.get('sort');
   const order = searchParams.get('order');
+  const personSlug = searchParams.get('personSlug');
 
   const handleSortOrder = (currentSortType: string | null) => {
     if ((!sort && !order) || (sort && sort !== currentSortType)) {
@@ -89,15 +89,14 @@ export const PeopleTable: FC<Props> = ({ visiblePeople }) => {
             })}
           >
             <td>
-              <Link
-                to={`/people/${slug}`}
+              <SearchLink
+                params={{ personSlug: slug }}
                 className={classNames('', {
                   'has-text-danger': sex === 'f',
                   'has-text-info': sex === 'm',
                 })}
-              >
-                {name}
-              </Link>
+                title={name}
+              />
             </td>
             <td>{sex}</td>
             <td>{born}</td>

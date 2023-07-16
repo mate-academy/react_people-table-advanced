@@ -6,6 +6,7 @@ import { PeoplePage } from './pages/PeoplePage';
 import './App.scss';
 import { Layout } from './pages/Layout';
 import { Home } from './pages/Home';
+import { ErrorPage } from './pages/ErrorPage';
 
 export const App: FC = () => {
   return (
@@ -14,10 +15,8 @@ export const App: FC = () => {
         <Route path="/" element={<Layout />}>
           <Route index element={<Home />} />
           <Route path="/home" element={<Navigate to="/" />} />
-          <Route path="/people" element={<PeoplePage />}>
-            <Route path="/people/:personSlug" element={<PeoplePage />} />
-          </Route>
-          <Route path="*" element={<h1 className="title">Page not found</h1>} />
+          <Route path="/people" element={<PeoplePage />} />
+          <Route path="*" element={<ErrorPage />} />
         </Route>
       </Routes>
     </div>

@@ -7,11 +7,8 @@ export const PeopleFilters = () => {
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
-
       <SexFilter />
-
       <SearchBar />
-
       <AgeFilter />
       <ResetButton />
     </nav>
