@@ -18,45 +18,45 @@ export const PeopleTable:FC<Props> = ({
   const sort = searchParams.get('sort') || '';
   const order = searchParams.get('order') || '';
   // const [visiblePeople, setVisiblePeople] = useState([...people]);
-  let visiblePeople = [...people];
+  // let visiblePeople = [...people];
 
-  const sortByParam = (param: string) => {
-    if (param === 'name') {
-      return [...people].sort((a, b) => a.name.localeCompare(b.name));
-    }
+  // const sortByParam = (param: string) => {
+  //   if (param === 'name') {
+  //     return [...people].sort((a, b) => a.name.localeCompare(b.name));
+  //   }
 
-    if (param === 'sex') {
-      return [...people].sort((a, b) => a.sex.localeCompare(b.sex));
-    }
+  //   if (param === 'sex') {
+  //     return [...people].sort((a, b) => a.sex.localeCompare(b.sex));
+  //   }
 
-    if (param === 'born') {
-      return [...people].sort((a, b) => a.born - b.born);
-    }
+  //   if (param === 'born') {
+  //     return [...people].sort((a, b) => a.born - b.born);
+  //   }
 
-    if (param === 'died') {
-      return [...people].sort((a, b) => a.died - b.died);
-    }
+  //   if (param === 'died') {
+  //     return [...people].sort((a, b) => a.died - b.died);
+  //   }
 
-    return [...people];
-  };
+  //   return [...people];
+  // };
 
   const sortPeople = (sortParam: string): SearchParams => {
+    if (sort !== sortParam) {
+      // setVisiblePeople(sortByParam(sortParam));
+      // visiblePeople = sortByParam(sortParam);
+
+      return { sort: sortParam, order: null };
+    }
+
     if (sort === sortParam && !order) {
       // setVisiblePeople(sortByParam(sortParam).reverse());
-      visiblePeople = sortByParam(sortParam).reverse();
+      // visiblePeople = sortByParam(sortParam).reverse();
 
       return { order: 'desc' };
     }
 
-    if (sort !== sortParam && !order) {
-      // setVisiblePeople(sortByParam(sortParam));
-      visiblePeople = sortByParam(sortParam);
-
-      return { sort: sortParam };
-    }
-
     // setVisiblePeople([...people]);
-    visiblePeople = [...people];
+    // visiblePeople = [...people];
 
     return { order: null, sort: null };
   };
@@ -150,7 +150,7 @@ export const PeopleTable:FC<Props> = ({
       </thead>
 
       <tbody>
-        {visiblePeople.map(person => (
+        {people.map(person => (
           <tr
             data-cy="person"
             key={person.slug}
