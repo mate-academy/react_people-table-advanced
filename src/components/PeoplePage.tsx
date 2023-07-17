@@ -4,7 +4,7 @@ import { Loader } from './Loader';
 import { getPeople } from '../api';
 import { Person } from '../types';
 // import { PersonLink } from './PersonLink';
-import { PeopleFilters } from './PeopleFilters';
+// import { PeopleFilters } from './PeopleFilters';
 import { PeopleTable } from './PeopleTable';
 
 export const PeoplePage = () => {
@@ -43,6 +43,8 @@ export const PeoplePage = () => {
         if (!res) {
           setIsNoPeopleMessage(true);
         }
+
+        // console.log(res);
       })
       .catch(() => {
         setIsPeopleLoadingError(true);
@@ -59,7 +61,7 @@ export const PeoplePage = () => {
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
           <div className="column is-7-tablet is-narrow-desktop">
-            {!isDataLoading && <PeopleFilters />}
+            {/* {!isDataLoading && <PeopleFilters />} */}
           </div>
 
           <div className="column">
