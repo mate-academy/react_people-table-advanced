@@ -1,14 +1,15 @@
 import classNames from 'classnames';
 import { useSearchParams } from 'react-router-dom';
-import { useState } from 'react';
+// import { useState } from 'react';
 import { SearchLink } from './SearchLink';
-import { getSearchWith } from '../utils/searchHelper';
+import { SearchParams, getSearchWith } from '../utils/searchHelper';
 
 export const PeopleFilters = () => {
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const sex = searchParams.get('sex') || 'all';
   const centuries = searchParams.getAll('centuries') || [];
-  const [input, setInput] = useState('');
+  const query = searchParams.get('query') || '';
+  // const [input, setInput] = useState('');
 
   const handleCenturiesChange = (ch: string) => {
     if (ch === 'all') {
@@ -38,9 +39,18 @@ export const PeopleFilters = () => {
     return ({ sex: null });
   };
 
+  const setSearchWith = (params: SearchParams) => {
+    const search = getSearchWith(searchParams, params);
+
+    setSearchParams(search);
+  };
+
   const handleQueryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setInput(event.target.value);
-    getSearchWith(searchParams, { query: input });
+    // setInput(event.target.value);
+    setSearchWith({ query: event.target.value || null });
+    // getSearchWith(searchParams, { query: event.target.value });
+
+    // return ({ query: event.target.value });
   };
 
   return (
@@ -81,7 +91,7 @@ export const PeopleFilters = () => {
             type="search"
             className="input"
             placeholder="Search"
-            value={input}
+            value={query}
             onChange={handleQueryChange}
           />
 
