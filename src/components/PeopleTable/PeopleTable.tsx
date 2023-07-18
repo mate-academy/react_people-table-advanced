@@ -12,9 +12,10 @@ type Props = {
   order: string | null;
 };
 
+const tableTitles = ['Name', 'Sex', 'Born', 'Died'];
+
 export const PeopleTable: React.FC<Props> = ({ people, sort, order }) => {
   const { slug = '' } = useParams();
-  const tableTitles = ['Name', 'Sex', 'Born', 'Died'];
 
   const handleSortChange = (value: string) => {
     const isFirstClick = sort !== value;

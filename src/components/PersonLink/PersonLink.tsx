@@ -2,7 +2,7 @@ import React from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import classnames from 'classnames';
 
-import { Person } from '../../types';
+import { Person, Sex } from '../../types';
 
 type Props = {
   person: Person;
@@ -18,7 +18,7 @@ export const PersonLink: React.FC<Props> = ({ person }) => {
         pathname: `/people/${slug}`,
         search: location.search,
       }}
-      className={classnames({ 'has-text-danger': sex === 'f' })}
+      className={classnames({ 'has-text-danger': sex === Sex.FEMALE })}
     >
       {name}
     </NavLink>

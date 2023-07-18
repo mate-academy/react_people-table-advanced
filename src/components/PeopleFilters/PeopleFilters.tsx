@@ -12,10 +12,10 @@ type Props = {
   centuries: string[];
 };
 
+const centuriesForFilter = ['16', '17', '18', '19', '20'];
+
 export const PeopleFilters: React.FC<Props> = ({ sex, query, centuries }) => {
   const [searchParams, setSearchParams] = useSearchParams();
-
-  const centuriesForFilter = ['16', '17', '18', '19', '20'];
 
   const isNotCurrentCentury = (c: string, century: string) => c !== century;
 
@@ -38,13 +38,13 @@ export const PeopleFilters: React.FC<Props> = ({ sex, query, centuries }) => {
         </SearchLink>
         <SearchLink
           className={classnames({ 'is-active': sex === Sex.MALE })}
-          params={{ sex: 'm' }}
+          params={{ sex: Sex.MALE }}
         >
           Male
         </SearchLink>
         <SearchLink
           className={classnames({ 'is-active': sex === Sex.FEMALE })}
-          params={{ sex: 'f' }}
+          params={{ sex: Sex.FEMALE }}
         >
           Female
         </SearchLink>
