@@ -3,6 +3,7 @@ import classNames from 'classnames';
 import { useSearchParams } from 'react-router-dom';
 
 import { SearchLink } from '../SearchLink';
+import { SortOrder } from '../../types/SortOrder';
 
 type Props = {
   th: string;
@@ -11,11 +12,11 @@ type Props = {
 export const TableHead: React.FC<Props> = ({ th }) => {
   const [searchParams] = useSearchParams();
   const sort = searchParams.get('sort') || '';
-  const isReversed = searchParams.get('order') === 'desc';
+  const isReversed = searchParams.get('order') === SortOrder.Desc;
 
   const setParams = (sortType: string) => ({
     sort: sort === sortType && isReversed ? null : sortType,
-    order: sort === sortType && !isReversed ? 'desc' : null,
+    order: sort === sortType && !isReversed ? SortOrder.Desc : null,
   });
 
   const formattedTh = th.toLowerCase();

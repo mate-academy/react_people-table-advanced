@@ -78,7 +78,7 @@ export const PeoplePage: React.FC = () => {
         <div className="columns is-desktop is-flex-direction-row-reverse">
           <div className="column is-7-tablet is-narrow-desktop">
             {!loading && people.length > 0
-            && hasError === ErrorNames.None && (
+              && hasError === ErrorNames.None && (
               <PeopleFilters
                 sex={sex as Sex}
                 handleSexChange={handleSexChange}
@@ -92,34 +92,36 @@ export const PeoplePage: React.FC = () => {
 
           <div className="column">
             <div className="box table-container">
-              {loading && (
+              {loading ? (
                 <Loader />
-              )}
+              ) : (
+                <>
+                  {hasError !== ErrorNames.None && (
+                    <p data-cy="peopleLoadingError" className="has-text-danger">
+                      Something went wrong
+                    </p>
+                  )}
 
-              {!loading && hasError !== ErrorNames.None && (
-                <p data-cy="peopleLoadingError" className="has-text-danger">
-                  Something went wrong
-                </p>
-              )}
+                  {people.length === 0
+                    && hasError === ErrorNames.None && (
+                    <p data-cy="noPeopleMessage">
+                      {ErrorNames.NoPeopleFromServer}
+                    </p>
+                  )}
 
-              {!loading && people.length === 0
-              && hasError === ErrorNames.None && (
-                <p data-cy="noPeopleMessage">
-                  {ErrorNames.NoPeopleFromServer}
-                </p>
-              )}
+                  {people.length > 0
+                    && hasError === ErrorNames.None && (
+                    <PeopleTable
+                      people={sortedPeople}
+                    />
+                  )}
 
-              {!loading && people.length > 0
-              && hasError === ErrorNames.None && (
-                <PeopleTable
-                  people={sortedPeople}
-                />
-              )}
-
-              {!loading && filteredPeople.length === 0 && (
-                <p>
-                  {ErrorNames.NoFilteredPeople}
-                </p>
+                  {filteredPeople.length === 0 && (
+                    <p>
+                      {ErrorNames.NoFilteredPeople}
+                    </p>
+                  )}
+                </>
               )}
             </div>
           </div>
