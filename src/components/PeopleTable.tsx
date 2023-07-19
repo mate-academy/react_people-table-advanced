@@ -17,7 +17,7 @@ export const PeopleTable: FC<Props> = ({
   const [searchParams] = useSearchParams();
   const sort = searchParams.get('sort');
   const order = searchParams.get('order');
-  const { slug = '' } = useParams();
+  const { slug } = useParams();
 
   const sortParams = (sortParam: string) => {
     if (order && sort) {
@@ -154,7 +154,6 @@ export const PeopleTable: FC<Props> = ({
             </tr>
           ))
         }
-
       </tbody>
     </table>
   );
