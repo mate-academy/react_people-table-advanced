@@ -1,6 +1,5 @@
 import classNames from 'classnames';
 import { useSearchParams } from 'react-router-dom';
-// import { useState } from 'react';
 import { SearchLink } from './SearchLink';
 import { SearchParams, getSearchWith } from '../utils/searchHelper';
 
@@ -9,7 +8,6 @@ export const PeopleFilters = () => {
   const sex = searchParams.get('sex') || 'all';
   const centuries = searchParams.getAll('centuries') || [];
   const query = searchParams.get('query') || '';
-  // const [input, setInput] = useState('');
 
   const handleCenturiesChange = (ch: string) => {
     if (ch === 'all') {
@@ -46,11 +44,7 @@ export const PeopleFilters = () => {
   };
 
   const handleQueryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    // setInput(event.target.value);
     setSearchWith({ query: event.target.value || null });
-    // getSearchWith(searchParams, { query: event.target.value });
-
-    // return ({ query: event.target.value });
   };
 
   return (

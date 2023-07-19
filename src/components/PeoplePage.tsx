@@ -1,10 +1,8 @@
 import { useEffect, useMemo, useState } from 'react';
-// import { useMatch } from 'react-router-dom';
 import { useSearchParams } from 'react-router-dom';
 import { Loader } from './Loader';
 import { getPeople } from '../api';
 import { Person } from '../types';
-// import { PersonLink } from './PersonLink';
 import { PeopleFilters } from './PeopleFilters';
 import { PeopleTable } from './PeopleTable';
 
@@ -12,7 +10,6 @@ export const PeoplePage = () => {
   const [isPeopleLoadingError, setIsPeopleLoadingError] = useState(false);
   const [isNoPeopleMessage, setIsNoPeopleMessage] = useState(false);
   const [people, setPeople] = useState<Person[]>([]);
-  // const [peopleVisible, setPeopleVisible] = useState<Person[]>([]);
   const [isDataLoading, setIsDataLoading] = useState(false);
   const [searchParams] = useSearchParams();
   const sort = searchParams.get('sort') || '';
@@ -55,7 +52,8 @@ export const PeoplePage = () => {
 
   const filterByCenturies = (data: Person[]) => {
     if (centuries.length > 0) {
-      return data.filter(person => centuries.includes(String(person.born)));
+      return data.filter(person => (
+        centuries.includes(String(Math.ceil(person.born / 100)))));
     }
 
     return data;
@@ -63,9 +61,11 @@ export const PeoplePage = () => {
 
   const filterByQuery = (data: Person[]) => {
     if (query.trim().length > 0) {
-      return data.filter(person => person.name.includes(query)
-        || `${person.fatherName}`.includes(query)
-        || `${person.motherName}`.includes(query));
+      return data.filter(person => (
+        person.name.toLocaleLowerCase().includes(query.toLocaleLowerCase())
+      )
+        || `${(person.fatherName || '-').toLocaleLowerCase()}`.includes(query.toLocaleLowerCase())
+        || `${(person.motherName || '-').toLocaleLowerCase()}`.includes(query.toLocaleLowerCase()));
     }
 
     return data;
@@ -85,14 +85,12 @@ export const PeoplePage = () => {
 
   const peopleVisible = useMemo(
     () => sortAndFilter(),
-    [people, sort, order],
+    [people, sort, order, sex, centuries, query],
   );
 
   const findPerson = (personName: string | null, peopleData: Person[]) => {
     return peopleData.find(person => person.name === personName);
   };
-
-  // const match = useMatch('/people/:slug');
 
   useEffect(() => {
     setIsDataLoading(true);
@@ -109,8 +107,6 @@ export const PeoplePage = () => {
         if (!res) {
           setIsNoPeopleMessage(true);
         }
-
-        // console.log(res);
       })
       .catch(() => {
         setIsPeopleLoadingError(true);
