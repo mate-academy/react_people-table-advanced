@@ -104,7 +104,7 @@ export const PeoplePage = () => {
           father: findPerson(pers.fatherName, res),
         })));
 
-        if (!res) {
+        if (res.length === 0) {
           setIsNoPeopleMessage(true);
         }
       })
