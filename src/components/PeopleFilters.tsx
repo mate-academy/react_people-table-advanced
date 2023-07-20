@@ -8,12 +8,6 @@ const enum Sex {
   F = 'f',
 }
 
-// type Props = {
-//   sex: string | null,
-//   query: string,
-//   centuries: string[],
-//   handlerQueryChange: (event: React.ChangeEvent<HTMLInputElement>) => void,
-// };
 const visibleCenturies = ['16', '17', '18', '19', '20'];
 
 export const PeopleFilters = () => {

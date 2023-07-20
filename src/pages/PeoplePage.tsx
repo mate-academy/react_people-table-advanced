@@ -1,15 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
 import { Person } from '../types';
 import { getPeople } from '../api';
 import { Loader } from '../components/Loader';
 import { PeopleFilters } from '../components/PeopleFilters';
 import { PeopleTable } from '../components/PeopleTable';
-
-// const enum Sex {
-//   M = 'm',
-//   F = 'f',
-// }
 
 type Query = string;
 type Centuries = number[];
@@ -18,6 +13,24 @@ type FilterBy = {
   sex: string,
   query: Query,
   centuries: Centuries,
+};
+
+type SortBy = 'Name' | 'Sex' | 'Born' | 'Died';
+
+const comparePersons = (person1: Person, person2: Person, sortBy: SortBy) => {
+  switch (sortBy) {
+    case 'Name':
+      return person1.name.localeCompare(person2.name);
+    case 'Sex':
+      return person1.sex.localeCompare(person2.sex);
+    case 'Born':
+      return person1.born - person2.born;
+    case 'Died':
+      return person1.died - person2.died;
+
+    default:
+      return 0;
+  }
 };
 
 function yearToCentury(year: number):number {
@@ -71,7 +84,24 @@ export const PeoplePage: React.FC = () => {
     .getAll('centuries')
     .map(c => Number(c)) ?? [];
 
-  const visiblePersons = getFilteredPersons(persons, { sex, query, centuries });
+  const sort = searchParams.get('sort') ?? '';
+  const order = searchParams.get('order') ?? '';
+
+  const filtered = useMemo(() => {
+    return getFilteredPersons(persons, { sex, query, centuries });
+  }, [persons, sex, query, centuries]);
+
+  const sorted = useMemo(() => {
+    return [...filtered].sort((person1, person2) => (
+      comparePersons(person1, person2, sort as SortBy)
+    ));
+  }, [filtered, sort]);
+
+  const visiblePersons = useMemo(() => {
+    return order === 'desc'
+      ? [...sorted].reverse()
+      : sorted;
+  }, [sorted, order]);
 
   useEffect(() => {
     setIsLoading(true);

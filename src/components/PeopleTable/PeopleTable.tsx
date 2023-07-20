@@ -1,6 +1,10 @@
 import classNames from 'classnames';
+import { useSearchParams } from 'react-router-dom';
 import { Person } from '../../types';
 import { PersonLink } from '../PersonLink';
+import { SearchLink } from '../SearchLink';
+
+const ORDER_DESC = 'desc';
 
 type Props = {
   persons: Person[],
@@ -8,6 +12,9 @@ type Props = {
 };
 
 export const PeopleTable: React.FC<Props> = ({ persons, selected }) => {
+  const [searchParams] = useSearchParams();
+  const sort = searchParams.get('sort') ?? '';
+  const order = searchParams.get('order') ?? '';
   const getPerson = (name: string | null) => {
     const finded = persons.find(people => people.name === name);
 
@@ -23,10 +30,36 @@ export const PeopleTable: React.FC<Props> = ({ persons, selected }) => {
     >
       <thead>
         <tr>
-          <th>Name</th>
-          <th>Sex</th>
-          <th>Born</th>
-          <th>Died</th>
+          {['Name', 'Sex', 'Born', 'Died'].map(th => (
+            <th>
+              <SearchLink
+                key={th}
+                params={{
+                  sort: sort === th && order === ORDER_DESC
+                    ? null
+                    : th,
+                  order: sort === th && order !== ORDER_DESC
+                    ? ORDER_DESC
+                    : null,
+                }}
+              >
+                {th}
+
+                <span className="icon">
+                  <i
+                    className={classNames(
+                      'fas',
+                      {
+                        'fa-sort': sort !== th,
+                        'fa-sort-up': sort === th && order !== ORDER_DESC,
+                        'fa-sort-down': sort === th && order === ORDER_DESC,
+                      },
+                    )}
+                  />
+                </span>
+              </SearchLink>
+            </th>
+          ))}
           <th>Mother</th>
           <th>Father</th>
         </tr>
