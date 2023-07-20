@@ -2,7 +2,7 @@ import { FC } from 'react';
 import classNames from 'classnames';
 import { useParams, useSearchParams } from 'react-router-dom';
 import { Person } from '../types';
-import { PersonLink } from './PersonLink';
+import { PersonInfo } from './PersonInfo';
 import { SearchLink } from './SearchLink';
 
 type Props = {
@@ -23,20 +23,20 @@ export const PeopleTable: FC<Props> = ({
     if (order && sort) {
       return {
         sort: null,
-        order: null,
+        order: 'desc',
       };
     }
 
     if (sort) {
       return {
         sort: sortParam,
-        order: 'desc',
+        order: 'asc',
       };
     }
 
     return {
       sort: sortParam,
-      order: null,
+      order: 'asc',
     };
   };
 
@@ -121,39 +121,13 @@ export const PeopleTable: FC<Props> = ({
       </thead>
 
       <tbody>
-        {
-          people.map(person => (
-            <tr
-              data-cy="person"
-              key={person.slug}
-              className={classNames({
-                'has-background-warning': slug === person.slug,
-              })}
-            >
-              <td>
-                <PersonLink person={person} />
-              </td>
-
-              <td>{person.sex}</td>
-              <td>{person.born}</td>
-              <td>{person.died}</td>
-              <td>
-                {
-                  person.motherName
-                    ? findParent(person.motherName)
-                    : '-'
-                }
-              </td>
-              <td>
-                {
-                  person.fatherName
-                    ? findParent(person.fatherName)
-                    : '-'
-                }
-              </td>
-            </tr>
-          ))
-        }
+        {people.map((person) => (
+          <PersonInfo
+            key={slug}
+            person={person}
+            findParent={findParent}
+          />
+        ))}
       </tbody>
     </table>
   );

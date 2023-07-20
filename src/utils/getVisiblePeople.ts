@@ -36,7 +36,7 @@ export const getVisiblePeople = (
     });
   }
 
-  if (centuries.length > 0) {
+  if (centuries.length) {
     visiblePeople = visiblePeople.filter(person => {
       const century = Math.ceil(person.born / 100).toString();
 

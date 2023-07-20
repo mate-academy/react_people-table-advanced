@@ -86,7 +86,7 @@ export const PeopleFilters = () => {
             <SearchLink
               data-cy="centuryALL"
               className={classNames('button is-success', {
-                'is-outlined': centuryFilter.length > 0,
+                'is-outlined': !!centuryFilter.length,
               })}
               params={{
                 centuries: null,

@@ -95,7 +95,7 @@ export const PeoplePage = () => {
                     </p>
                   )}
 
-                  {visiblePeople.length > 0 && (
+                  {!!visiblePeople.length && (
                     <PeopleTable
                       people={visiblePeople}
                       findParent={findParent}
