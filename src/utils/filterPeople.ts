@@ -33,7 +33,7 @@ export const filterAndSortPeople = (people: Person[], params: Params) => {
   if (params.sortField) {
     const order = params.sortOrder ? -1 : 1;
 
-    initial = initial.toSorted((p1, p2) => {
+    initial = [...initial].sort((p1, p2) => {
       switch (params.sortField) {
         case SortField.Born:
         case SortField.Died:
