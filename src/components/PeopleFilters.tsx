@@ -85,11 +85,13 @@ export const PeopleFilters = () => {
           <div className="level-right ml-4">
             <SearchLink
               data-cy="centuryALL"
-              className={classNames('button is-success', {
-                'is-outlined': !!centuryFilter.length,
-              })}
+              className={classNames('button',
+                { 'is-success': centuryFilter.length === centuries.length },
+                'is-outlined')}
               params={{
-                centuries: null,
+                centuries: centuryFilter.length === centuries.length
+                  ? null
+                  : centuries,
               }}
             >
               All
