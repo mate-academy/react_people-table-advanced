@@ -19,23 +19,18 @@ export const PeoplePage = () => {
   const query = searchParams.get('query') || '';
 
   const sortByParam = () => {
-    if (sort === 'name') {
-      return [...people].sort((a, b) => a.name.localeCompare(b.name));
+    switch (sort) {
+      case 'name':
+        return [...people].sort((a, b) => a.name.localeCompare(b.name));
+      case 'sex':
+        return [...people].sort((a, b) => a.sex.localeCompare(b.sex));
+      case 'born':
+        return [...people].sort((a, b) => a.born - b.born);
+      case 'died':
+        return [...people].sort((a, b) => a.born - b.born);
+      default:
+        return [...people];
     }
-
-    if (sort === 'sex') {
-      return [...people].sort((a, b) => a.sex.localeCompare(b.sex));
-    }
-
-    if (sort === 'born') {
-      return [...people].sort((a, b) => a.born - b.born);
-    }
-
-    if (sort === 'died') {
-      return [...people].sort((a, b) => a.died - b.died);
-    }
-
-    return [...people];
   };
 
   const filterBySex = (data: Person[]) => {

@@ -100,8 +100,7 @@ export const PeopleFilters = () => {
             <SearchLink
               params={handleCenturiesChange('16')}
               className={classNames(
-                'button',
-                'mr-1',
+                'button mr-1',
                 { 'is-info': centuries.includes('16') },
               )}
               data-cy="century"
@@ -111,8 +110,7 @@ export const PeopleFilters = () => {
             <SearchLink
               params={handleCenturiesChange('17')}
               className={classNames(
-                'button',
-                'mr-1',
+                'button mr-1',
                 { 'is-info': centuries.includes('17') },
               )}
               data-cy="century"
@@ -122,8 +120,7 @@ export const PeopleFilters = () => {
             <SearchLink
               params={handleCenturiesChange('18')}
               className={classNames(
-                'button',
-                'mr-1',
+                'button mr-1',
                 { 'is-info': centuries.includes('18') },
               )}
               data-cy="century"
@@ -133,8 +130,7 @@ export const PeopleFilters = () => {
             <SearchLink
               params={handleCenturiesChange('19')}
               className={classNames(
-                'button',
-                'mr-1',
+                'button mr-1',
                 { 'is-info': centuries.includes('19') },
               )}
 
@@ -144,8 +140,7 @@ export const PeopleFilters = () => {
             <SearchLink
               params={handleCenturiesChange('20')}
               className={classNames(
-                'button',
-                'mr-1',
+                'button mr-1',
                 { 'is-info': centuries.includes('20') },
               )}
               data-cy="century"
@@ -158,8 +153,7 @@ export const PeopleFilters = () => {
             <SearchLink
               params={handleCenturiesChange('all')}
               className={classNames(
-                'button',
-                'is-success',
+                'button is-success',
                 { 'is-outlined': centuries.length > 0 },
               )}
               data-cy="centuryALL"
