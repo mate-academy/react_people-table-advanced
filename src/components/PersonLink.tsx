@@ -10,19 +10,15 @@ type Props = {
 export const PersonLink: FC<Props> = ({ person }) => {
   const { search } = useLocation();
 
-  const getTextColor = (sex: PersonSex) => (
-    classNames({
-      'has-text-danger': sex === PersonSex.Female,
-    })
-  );
-
   return (
     <Link
       to={{
         pathname: `/people/${person.slug}`,
         search,
       }}
-      className={getTextColor(person.sex as PersonSex)}
+      className={classNames({
+        'has-text-danger': person.sex === PersonSex.Female,
+      })}
     >
       {person.name}
     </Link>
