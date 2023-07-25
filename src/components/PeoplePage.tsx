@@ -5,6 +5,7 @@ import { getPeople } from '../api';
 import { Person } from '../types';
 import { PeopleFilters } from './PeopleFilters';
 import { PeopleTable } from './PeopleTable';
+import { SearchConst, SortingCells, SearchSexParams } from './constants';
 
 export const PeoplePage = () => {
   const [isPeopleLoadingError, setIsPeopleLoadingError] = useState(false);
@@ -12,21 +13,21 @@ export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);
   const [isDataLoading, setIsDataLoading] = useState(false);
   const [searchParams] = useSearchParams();
-  const sort = searchParams.get('sort') || '';
-  const order = searchParams.get('order') || '';
-  const sex = searchParams.get('sex') || 'all';
-  const centuries = searchParams.getAll('centuries') || [];
-  const query = searchParams.get('query') || '';
+  const sort = searchParams.get(SearchConst.SORT) || '';
+  const order = searchParams.get(SearchConst.ORDER) || '';
+  const sex = searchParams.get(SearchConst.SEX) || SearchConst.ALL;
+  const centuries = searchParams.getAll(SearchConst.ALL) || [];
+  const query = searchParams.get(SearchConst.QUERY) || '';
 
   const sortByParam = () => {
     switch (sort) {
-      case 'name':
+      case SortingCells.NAME:
         return [...people].sort((a, b) => a.name.localeCompare(b.name));
-      case 'sex':
+      case SortingCells.SEX:
         return [...people].sort((a, b) => a.sex.localeCompare(b.sex));
-      case 'born':
+      case SortingCells.BORN:
         return [...people].sort((a, b) => a.born - b.born);
-      case 'died':
+      case SortingCells.DIED:
         return [...people].sort((a, b) => a.born - b.born);
       default:
         return [...people];
@@ -34,12 +35,12 @@ export const PeoplePage = () => {
   };
 
   const filterBySex = (data: Person[]) => {
-    if (sex === 'f') {
-      return data.filter(person => person.sex === 'f');
+    if (sex === SearchSexParams.FEMALE) {
+      return data.filter(person => person.sex === SearchSexParams.FEMALE);
     }
 
-    if (sex === 'm') {
-      return data.filter(person => person.sex === 'm');
+    if (sex === SearchSexParams.MAN) {
+      return data.filter(person => person.sex === SearchSexParams.MAN);
     }
 
     return data;

@@ -2,15 +2,16 @@ import classNames from 'classnames';
 import { useSearchParams } from 'react-router-dom';
 import { SearchLink } from './SearchLink';
 import { SearchParams, getSearchWith } from '../utils/searchHelper';
+import { SearchConst, SearchSexParams } from './constants';
 
 export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const sex = searchParams.get('sex') || 'all';
-  const centuries = searchParams.getAll('centuries') || [];
-  const query = searchParams.get('query') || '';
+  const sex = searchParams.get(SearchConst.SEX) || SearchConst.ALL;
+  const centuries = searchParams.getAll(SearchConst.CENTURIES) || [];
+  const query = searchParams.get(SearchConst.QUERY) || '';
 
   const handleCenturiesChange = (ch: string) => {
-    if (ch === 'all') {
+    if (ch === SearchConst.ALL) {
       return { centuries: [] };
     }
 
@@ -22,19 +23,16 @@ export const PeopleFilters = () => {
   };
 
   const handleSexChange = (param: string) => {
-    if (param === 'all') {
-      return ({ sex: null });
+    switch (param) {
+      case SearchSexParams.ALL:
+        return ({ sex: null });
+      case SearchSexParams.FEMALE:
+        return ({ sex: SearchSexParams.FEMALE });
+      case SearchSexParams.MAN:
+        return ({ sex: SearchSexParams.MAN });
+      default:
+        return ({ sex: null });
     }
-
-    if (param === 'f') {
-      return ({ sex: 'f' });
-    }
-
-    if (param === 'm') {
-      return ({ sex: 'm' });
-    }
-
-    return ({ sex: null });
   };
 
   const setSearchWith = (params: SearchParams) => {
@@ -53,25 +51,25 @@ export const PeopleFilters = () => {
 
       <p className="panel-tabs" data-cy="SexFilter">
         <SearchLink
-          params={handleSexChange('all')}
+          params={handleSexChange(SearchSexParams.ALL)}
           className={classNames(
-            { 'is-active': sex === 'all' },
+            { 'is-active': sex === SearchSexParams.ALL },
           )}
         >
           All
         </SearchLink>
         <SearchLink
-          params={handleSexChange('m')}
+          params={handleSexChange(SearchSexParams.MAN)}
           className={classNames(
-            { 'is-active': sex === 'm' },
+            { 'is-active': sex === SearchSexParams.MAN },
           )}
         >
           Male
         </SearchLink>
         <SearchLink
-          params={handleSexChange('f')}
+          params={handleSexChange(SearchSexParams.FEMALE)}
           className={classNames(
-            { 'is-active': sex === 'f' },
+            { 'is-active': sex === SearchSexParams.FEMALE },
           )}
         >
           Female
