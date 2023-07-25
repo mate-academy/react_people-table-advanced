@@ -1,6 +1,6 @@
 import { FC } from 'react';
 import classNames from 'classnames';
-import { useParams, useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import { Person } from '../types';
 import { PersonInfo } from './PersonInfo';
 import { SearchLink } from './SearchLink';
@@ -17,7 +17,6 @@ export const PeopleTable: FC<Props> = ({
   const [searchParams] = useSearchParams();
   const sort = searchParams.get('sort');
   const order = searchParams.get('order');
-  const { slug } = useParams();
 
   const sortParams = (sortParam: string) => {
     if (order && sort) {
@@ -123,7 +122,7 @@ export const PeopleTable: FC<Props> = ({
       <tbody>
         {people.map((person) => (
           <PersonInfo
-            key={slug}
+            key={person.slug}
             person={person}
             findParent={findParent}
           />
