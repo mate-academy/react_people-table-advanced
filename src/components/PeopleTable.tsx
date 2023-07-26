@@ -22,20 +22,20 @@ export const PeopleTable: FC<Props> = ({
     if (order && sort) {
       return {
         sort: null,
-        order: 'desc',
+        order: null,
       };
     }
 
     if (sort) {
       return {
         sort: sortParam,
-        order: 'asc',
+        order: 'desc',
       };
     }
 
     return {
       sort: sortParam,
-      order: 'asc',
+      order: null,
     };
   };
 
