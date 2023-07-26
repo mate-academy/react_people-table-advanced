@@ -4,6 +4,7 @@ import classNames from 'classnames';
 import { Person } from '../types';
 import { PersonLink } from './PersonLink';
 import { SearchLink } from './SearchLink';
+
 import { SearchParams } from '../utils/searchHelper';
 
 type Props = {

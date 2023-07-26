@@ -16,19 +16,17 @@ export const PeoplePage = () => {
   const sort = searchParams.get(SearchConst.SORT) || '';
   const order = searchParams.get(SearchConst.ORDER) || '';
   const sex = searchParams.get(SearchConst.SEX) || SearchConst.ALL;
-  const centuries = searchParams.getAll(SearchConst.ALL) || [];
+  const centuries = searchParams.getAll(SearchConst.CENTURIES) || [];
   const query = searchParams.get(SearchConst.QUERY) || '';
 
   const sortByParam = () => {
     switch (sort) {
       case SortingCells.NAME:
-        return [...people].sort((a, b) => a.name.localeCompare(b.name));
       case SortingCells.SEX:
-        return [...people].sort((a, b) => a.sex.localeCompare(b.sex));
-      case SortingCells.BORN:
-        return [...people].sort((a, b) => a.born - b.born);
+        return [...people].sort((a, b) => a[sort].localeCompare(b[sort]));
       case SortingCells.DIED:
-        return [...people].sort((a, b) => a.born - b.born);
+      case SortingCells.BORN:
+        return [...people].sort((a, b) => a[sort] - b[sort]);
       default:
         return [...people];
     }
