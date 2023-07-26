@@ -1,16 +1,11 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { PeopleFilters } from './PeopleFilters';
-import { Loader } from './Loader';
-import { PeopleTable } from './PeopleTable';
+import { PeopleFilters } from '../components/PeopleFilters';
+import { Loader } from '../components/Loader/Loader';
+import { PeopleTable } from '../components/PeopleTable';
 import { getPeople } from '../api';
 import { Person } from '../types';
 import { getSearchWith } from '../utils/searchHelper';
-
-const SORT_BY_NAME = 'name';
-const SORT_BY_SEX = 'sex';
-const SORT_BY_BORN = 'born';
-const SORT_BY_DIED = 'died';
 
 export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);
@@ -76,22 +71,22 @@ export const PeoplePage = () => {
 
     if (sortBy) {
       switch (sortBy) {
-        case SORT_BY_NAME:
+        case 'name':
           filteredPeople = filteredPeople
             .sort((firstPerson, secondPerson) => firstPerson.name
               .localeCompare(secondPerson.name));
           break;
-        case SORT_BY_SEX:
+        case 'sex':
           filteredPeople = filteredPeople
             .sort((firstPerson, secondPerson) => firstPerson.sex
               .localeCompare(secondPerson.sex));
           break;
-        case SORT_BY_BORN:
+        case 'born':
           filteredPeople = filteredPeople
             .sort((firstPerson, secondPerson) => firstPerson.born
               - secondPerson.born);
           break;
-        case SORT_BY_DIED:
+        case 'died':
           filteredPeople = filteredPeople
             .sort((firstPerson, secondPerson) => firstPerson.died
               - secondPerson.died);
