@@ -6,20 +6,25 @@ import { Loader } from './Loader';
 import { PeopleTable } from './PeopleTable';
 import { PeopleFilters } from './PeopleFilters';
 
-type SortBy = 'Name' | 'Sex' | 'Born' | 'Died';
+enum SortType {
+  NAME = 'Name',
+  SEX = 'Sex',
+  BORN = 'Born',
+  DIED = 'Died',
+};
 
-const comparePeople = (person1: Person, person2: Person, sortBy: SortBy) => {
+const comparePeople = (person1: Person, person2: Person, sortBy: SortType) => {
   switch (sortBy) {
-    case 'Name':
+    case SortType.NAME:
       return person1.name.localeCompare(person2.name);
 
-    case 'Sex':
+    case SortType.SEX:
       return person1.sex.localeCompare(person2.sex);
 
-    case 'Born':
+    case SortType.BORN:
       return person1.born - person2.born;
 
-    case 'Died':
+    case SortType.DIED:
       return person1.died - person2.died;
 
     default:
@@ -60,7 +65,6 @@ const filteredPeople = (
 
 export const PeoplePage: React.FC = () => {
   const [people, setPeople] = useState<Person[]>([]);
-
   const [isDataLoading, setIsDataLoading] = useState<boolean>(false);
   const [isTableEmpty, setIsTableEmpty] = useState<boolean>(false);
   const [isDataFetched, setIsDataFetched] = useState<boolean>(false);
@@ -89,13 +93,13 @@ export const PeoplePage: React.FC = () => {
     return {
       ...person,
 
-      motherName: person.motherName ? person.motherName : '-',
+      motherName: person.motherName || '-',
       mother: people
-        .filter(p => person.motherName === p.name)[0] || null,
+        .find(p => person.motherName === p.name),
 
-      fatherName: person.fatherName ? person.fatherName : '-',
+      fatherName: person.fatherName || '-',
       father: people
-        .filter(p => person.fatherName === p.name)[0] || null,
+        .find(p => person.fatherName === p.name),
     };
   });
 
@@ -116,7 +120,7 @@ export const PeoplePage: React.FC = () => {
 
   const sorted = useMemo(() => {
     return [...filtered].sort((person1, person2) => (
-      comparePeople(person1, person2, sort as SortBy)
+      comparePeople(person1, person2, sort as SortType)
     ));
   }, [filtered, sort]);
 

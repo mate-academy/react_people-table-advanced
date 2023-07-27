@@ -22,9 +22,9 @@ export const Root = () => (
           <Route index element={<PeoplePage />} />
           <Route path=":slug" element={<PeoplePage />} />
         </Route>
-      </Route>
 
-      <Route path="*" element={<NotFoundPage />} />
+        <Route path="*" element={<NotFoundPage />} />
+      </Route>
     </Routes>
   </Router>
 );
