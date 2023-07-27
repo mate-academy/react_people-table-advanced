@@ -11,6 +11,9 @@ type Props = {
 
 export const PersonInfo: React.FC<Props> = ({ person, findParent }) => {
   const { slug } = useParams();
+  const {
+    sex, born, died, motherName, fatherName,
+  } = person;
 
   return (
     <tr
@@ -24,20 +27,20 @@ export const PersonInfo: React.FC<Props> = ({ person, findParent }) => {
         <PersonLink person={person} />
       </td>
 
-      <td>{person.sex}</td>
-      <td>{person.born}</td>
-      <td>{person.died}</td>
+      <td>{sex}</td>
+      <td>{born}</td>
+      <td>{died}</td>
       <td>
         {
-          person.motherName
-            ? findParent(person.motherName)
+          motherName
+            ? findParent(motherName)
             : '-'
         }
       </td>
       <td>
         {
-          person.fatherName
-            ? findParent(person.fatherName)
+          fatherName
+            ? findParent(fatherName)
             : '-'
         }
       </td>

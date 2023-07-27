@@ -3,8 +3,9 @@ import { useSearchParams } from 'react-router-dom';
 import { SearchLink } from './SearchLink';
 import { getSearchWith } from '../utils/searchHelper';
 
+const centuries = ['16', '17', '18', '19', '20'];
+
 export const PeopleFilters = () => {
-  const centuries = ['16', '17', '18', '19', '20'];
   const [searchParams, setSearchParams] = useSearchParams();
   const sexFilter = searchParams.get('sex');
   const centuryFilter = searchParams.getAll('centuries');
@@ -64,22 +65,26 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            {centuries.map(century => (
-              <SearchLink
-                key={century}
-                data-cy="century"
-                className={classNames('button mr-1', {
-                  'is-info': centuryFilter.includes(century),
-                })}
-                params={{
-                  centuries: centuryFilter.includes(century)
-                    ? centuryFilter.filter(num => num !== century)
-                    : [...centuryFilter, century],
-                }}
-              >
-                {century}
-              </SearchLink>
-            ))}
+            {centuries.map(century => {
+              const filteredCenturies = centuryFilter.includes(century)
+                ? centuryFilter.filter(num => num !== century)
+                : [...centuryFilter, century];
+
+              return (
+                <SearchLink
+                  key={century}
+                  data-cy="century"
+                  className={classNames('button mr-1', {
+                    'is-info': centuryFilter.includes(century),
+                  })}
+                  params={{
+                    centuries: filteredCenturies,
+                  }}
+                >
+                  {century}
+                </SearchLink>
+              );
+            })}
           </div>
 
           <div className="level-right ml-4">
