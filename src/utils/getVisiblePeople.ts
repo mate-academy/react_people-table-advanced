@@ -1,12 +1,11 @@
 import { Person } from '../types';
-import { Sort } from '../types/Sort';
 import { sortPeople } from './sortPeople';
 
 interface Params {
-  sex: 'f' | 'm',
+  sex: string,
   query: string,
   centuries: string[],
-  sort: Sort,
+  sort: string,
   order: string,
 }
 

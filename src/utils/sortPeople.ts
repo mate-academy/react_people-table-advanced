@@ -1,26 +1,25 @@
 import { Person } from '../types';
-import { Sort } from '../types/Sort';
 
-export const sortPeople = (sortParam: Sort, people: Person[]) => {
+export const sortPeople = (sortParam: string, people: Person[]) => {
   const copy = [...people];
 
   switch (sortParam) {
-    case Sort.Name:
+    case 'name':
       return copy.sort((personA, personB) => (
         personA.name.localeCompare(personB.name)
       ));
 
-    case Sort.Sex:
+    case 'sex':
       return copy.sort((personA, personB) => (
         personA.sex.localeCompare(personB.sex)
       ));
 
-    case Sort.Born:
+    case 'born':
       return copy.sort((personA, personB) => (
         personA.born - personB.born
       ));
 
-    case Sort.Died:
+    case 'died':
       return copy.sort((personA, personB) => (
         personA.died - personB.died
       ));
