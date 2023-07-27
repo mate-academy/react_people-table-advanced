@@ -11,7 +11,7 @@ enum SortType {
   SEX = 'Sex',
   BORN = 'Born',
   DIED = 'Died',
-};
+}
 
 const comparePeople = (person1: Person, person2: Person, sortBy: SortType) => {
   switch (sortBy) {
