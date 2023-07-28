@@ -7,24 +7,24 @@ import { PeopleTable } from './PeopleTable';
 import { PeopleFilters } from './PeopleFilters';
 
 enum SortType {
-  NAME = 'Name',
-  SEX = 'Sex',
-  BORN = 'Born',
-  DIED = 'Died',
+  Name = 'Name',
+  Sex = 'Sex',
+  Born = 'Born',
+  Died = 'Died',
 }
 
 const comparePeople = (person1: Person, person2: Person, sortBy: SortType) => {
   switch (sortBy) {
-    case SortType.NAME:
+    case SortType.Name:
       return person1.name.localeCompare(person2.name);
 
-    case SortType.SEX:
+    case SortType.Sex:
       return person1.sex.localeCompare(person2.sex);
 
-    case SortType.BORN:
+    case SortType.Born:
       return person1.born - person2.born;
 
-    case SortType.DIED:
+    case SortType.Died:
       return person1.died - person2.died;
 
     default:
