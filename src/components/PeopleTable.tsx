@@ -27,7 +27,7 @@ export const PeopleTable: React.FC<State> = ({ people }) => {
       <thead>
         <tr>
           {['Name', 'Sex', 'Born', 'Died'].map(th => (
-            <th>
+            <th className={th}>
               <span className="is-flex is-flex-wrap-nowrap">
                 {th}
                 <SearchLink

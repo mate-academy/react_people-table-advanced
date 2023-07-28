@@ -76,7 +76,7 @@ export const PeopleFilters: React.FC = () => {
                   'is-info': centuries.includes(century),
                 })}
                 params={{
-                  centuries: centuries.includes(century)
+                  century: centuries.includes(century)
                     ? centuries.filter(c => century !== c)
                     : [...centuries, century],
                 }}
