@@ -1,9 +1,9 @@
+import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import { PeopleFilters } from './PeopleFilters';
 import { Loader } from './Loader';
 import { PeopleTable } from './PeopleTable';
 import { Person } from '../types';
-import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
 import { getPeople } from '../api';
 
 const getPreparedPeople = (people: Person[]): Person[] => {
@@ -52,7 +52,7 @@ export const PeoplePage = () => {
               {isLoading && (
                 <Loader />
               )}
-              
+
               {isError && (
                 <p data-cy="peopleLoadingError">
                   Something went wrong

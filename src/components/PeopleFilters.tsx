@@ -14,26 +14,7 @@ export const PeopleFilters: React.FC = () => {
 
     params.set('query', event.target.value);
     setSearchParams(params);
-  }
-
-  // const clearCenturies = () => {
-  //   const params = new URLSearchParams(searchParams);
-
-  //   params.delete('centuries');
-  //   setSearchParams(params);
-  // }
-
-  // const toggleCentury = (century: string) => {
-  //   const params = new URLSearchParams(searchParams);
-  //   const newCenturies = centuries.includes(century)
-  //     ? centuries.filter(c => c !== century)
-  //     : [...centuries, century];
-
-  //   params.delete('centuries');
-
-  //   newCenturies.forEach(c => params.append('centuries', c));
-  //   setSearchParams(params);
-  // }
+  };
 
   return (
     <nav className="panel">

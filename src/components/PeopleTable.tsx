@@ -1,14 +1,14 @@
-import React from "react";
+import React from 'react';
 import { useSearchParams } from 'react-router-dom';
 import classNames from 'classnames';
-import { Person } from "../types";
-import { PersonItem } from "./PersonItem/PersonItem";
+import { Person } from '../types';
+import { PersonItem } from './PersonItem/PersonItem';
 import { SearchLink } from './SearchLink';
 
 type Props = {
   people: Person[];
   slug: string | undefined;
-}
+};
 
 export const PeopleTable: React.FC<Props> = ({ people, slug }) => {
   const [searchParams] = useSearchParams();
@@ -64,7 +64,7 @@ export const PeopleTable: React.FC<Props> = ({ people, slug }) => {
     }
 
     return newPeople;
-  }
+  };
 
   const calculateOrder = (value: string) => {
     if (sort === value) {
@@ -108,11 +108,13 @@ export const PeopleTable: React.FC<Props> = ({ people, slug }) => {
                   }}
                 >
                   <span className="icon">
-                    <i className={classNames('fas', {
-                      'fa-sort-down': sort === column && order === 'desc',
-                      'fa-sort-up': sort === column && order !== 'desc',
-                      'fa-sort': sort !== column
-                    })} />
+                    <i
+                      className={classNames('fas', {
+                        'fa-sort-down': sort === column && order === 'desc',
+                        'fa-sort-up': sort === column && order !== 'desc',
+                        'fa-sort': sort !== column,
+                      })}
+                    />
                   </span>
                 </SearchLink>
               </span>
