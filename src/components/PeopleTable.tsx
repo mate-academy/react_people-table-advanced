@@ -22,7 +22,6 @@ export const PeopleTable: FC<Props> = ({ people }) => {
   const handleSort = (peopleForView: Person[], sortParam = '') => {
     if (sortParam.length) {
       return peopleForView.sort((a: Person, b: Person) => {
-        // eslint-disable-next-line default-case
         switch (sortParam) {
           case ('name'):
           case ('sex'):
@@ -34,6 +33,8 @@ export const PeopleTable: FC<Props> = ({ people }) => {
             return !order
               ? a[sortParam] - b[sortParam]
               : b[sortParam] - a[sortParam];
+          default:
+            return 0;
         }
       });
     }

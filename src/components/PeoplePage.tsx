@@ -56,8 +56,8 @@ export const PeoplePage = () => {
     return people.filter(person => person.sex === sexValue);
   };
 
-  const filteringByCenturies = (people: Person[], centuriesValues: string[]
-  | []) => {
+  const filteringByCenturies = (people: Person[],
+    centuriesValues: string[]) => {
     if (!centuriesValues.length) {
       return people;
     }
