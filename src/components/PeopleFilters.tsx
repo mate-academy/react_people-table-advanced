@@ -9,13 +9,14 @@ export const PeopleFilters = () => {
   const query = searchParams.get('query') || '';
   const centuries = searchParams.getAll('centuries') || [];
 
-  const handleSearchNameFilter = (ev: React.ChangeEvent<HTMLInputElement>) => {
+  const handleSearchNameFilter = (event:
+  React.ChangeEvent<HTMLInputElement>) => {
     const params = new URLSearchParams(searchParams);
 
-    if (ev.target.value.length === 0) {
+    if (!event.target.value.length) {
       params.delete('query');
     } else {
-      params.set('query', ev.target.value);
+      params.set('query', event.target.value);
     }
 
     setSearchParams(params);

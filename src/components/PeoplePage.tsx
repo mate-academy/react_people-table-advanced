@@ -69,17 +69,12 @@ export const PeoplePage = () => {
     });
   };
 
-  const peopleFilteredByQuery = useMemo(() => {
-    return filteringByQuery(peopleFromServer, query);
-  }, [query, peopleFromServer]);
+  const filteredPeople = useMemo(() => {
+    const peopleFilteredByQuery = filteringByQuery(peopleFromServer, query);
+    const peopleFilteredBySex = filteringBySex(peopleFilteredByQuery, sex);
 
-  const peopleFilteredBySex = useMemo(() => {
-    return filteringBySex(peopleFilteredByQuery, sex);
-  }, [sex, peopleFilteredByQuery]);
-
-  const peopleFilteredByCentury = useMemo(() => {
     return filteringByCenturies(peopleFilteredBySex, centuries);
-  }, [centuries, peopleFilteredBySex]);
+  }, [query, sex, centuries, peopleFromServer]);
 
   return (
     <>
@@ -103,8 +98,8 @@ export const PeoplePage = () => {
                       There are no people on the server
                     </p>
                   )}
-                  {peopleFilteredByCentury.length
-                    ? <PeopleTable people={peopleFilteredByCentury} />
+                  {filteredPeople.length
+                    ? <PeopleTable people={filteredPeople} />
                     : (
                       <p>
                         There are no people matching the current search
