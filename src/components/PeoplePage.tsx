@@ -118,7 +118,9 @@ export const PeoplePage = () => {
 
     if (query) {
       filtered = filtered.filter((person) => person.name.toLowerCase()
-        .includes(query.toLowerCase()));
+        .includes(query.toLowerCase())
+          || person.fatherName?.toLowerCase().includes(query.toLowerCase())
+          || person.motherName?.toLowerCase().includes(query.toLowerCase()));
     }
 
     if (!sortField) {
@@ -157,7 +159,7 @@ export const PeoplePage = () => {
                   </p>
                 )}
 
-              {!people.length && !isLoading && (
+              {!filteredPeople.length && !isLoading && (
                 <p>There are no people matching the current search criteria</p>
               )}
 
@@ -167,7 +169,7 @@ export const PeoplePage = () => {
                     There are no people on the server
                   </p>
                 ) : (
-                  !isLoading && isDataFetched
+                  !isLoading && isDataFetched && filteredPeople.length > 0
                     && (
                       <PeopleTable
                         people={filteredPeople}
