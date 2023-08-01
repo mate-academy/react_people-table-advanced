@@ -1,41 +1,24 @@
-import { useSearchParams } from 'react-router-dom';
 import cn from 'classnames';
 import { SearchLink } from './SearchLink';
+// import { getSearchWith } from '../utils/searchHelper';
 
-export const PeopleFilters: React.FC = () => {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const sex = searchParams?.get('sex');
-  const centuries = searchParams?.getAll('centuries') || [];
-  const centuriesArr: string[] = ['16', '17', '18', '19', '20'];
-  const query = searchParams?.get('query') || '';
+interface Props {
+  searchParams: URLSearchParams;
+  setSearchParams: (params: URLSearchParams) => void;
+  sex: string | null;
+  centuries: string[];
+  query: string;
+  centuriesArr: string[];
+}
 
-  function updateSearchParams(event: React.ChangeEvent<HTMLInputElement>) {
-    const params = new URLSearchParams(searchParams);
-
-    params.set('query', event.target.value);
-    setSearchParams(params);
-  }
-
-  function toggleCentury(cent: string) {
-    const params = new URLSearchParams(searchParams);
-
-    const newCentury = centuries.includes(cent)
-      ? centuries.filter(century => century !== cent)
-      : [...centuries, cent];
-
-    // params.delete('centuries');
-
-    newCentury.forEach(century => params.append('centuries', century));
-    setSearchParams(params);
-  }
-
-  function handleResetFilters() {
-    const params = new URLSearchParams(searchParams);
-
-    params.delete('centuries' && 'sex' && 'query');
-    setSearchParams(params);
-  }
-
+export const PeopleFilters: React.FC<Props> = ({
+  searchParams,
+  setSearchParams,
+  sex,
+  centuries,
+  query,
+  centuriesArr,
+}) => {
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
@@ -69,7 +52,14 @@ export const PeopleFilters: React.FC = () => {
             className="input"
             placeholder="Search"
             value={query}
-            onChange={updateSearchParams}
+            onChange={(event) => {
+              const newSearchParams = new URLSearchParams(
+                searchParams.toString(),
+              );
+
+              newSearchParams.set('query', event.target.value || '');
+              setSearchParams(newSearchParams);
+            }}
           />
 
           <span className="icon is-left">
@@ -82,24 +72,27 @@ export const PeopleFilters: React.FC = () => {
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
             {centuriesArr.map((century) => (
-              <a
-                key={century}
+              <SearchLink
+                params={{
+                  centuries: centuries.includes(century)
+                    ? centuries.filter((cen) => cen !== century)
+                    : [...centuries, century],
+                }}
+                className={cn('button', 'mr-1',
+                  { 'is-info': centuries.includes(century) })}
                 data-cy="century"
-                className={cn('button mr-1', {
-                  'is-info': centuries.includes(century),
-                })}
-                href={`#/people?centuries=${century}`}
-                onClick={() => toggleCentury(century)}
               >
                 {century}
-              </a>
+              </SearchLink>
             ))}
           </div>
 
           <div className="level-right ml-4">
             <SearchLink
               data-cy="centuryALL"
-              className="button is-success is-outlined"
+              className={cn('button is-success', {
+                'is-outlined': centuries.length,
+              })}
               params={{ centuries: null }}
             >
               All
@@ -109,13 +102,17 @@ export const PeopleFilters: React.FC = () => {
       </div>
 
       <div className="panel-block">
-        <a
+        <SearchLink
           className="button is-link is-outlined is-fullwidth"
-          href="#/people"
-          onClick={handleResetFilters}
+          params={{
+            query: null,
+            sex: null,
+            centuries: null,
+          }}
+
         >
           Reset all filters
-        </a>
+        </SearchLink>
       </div>
     </nav>
   );

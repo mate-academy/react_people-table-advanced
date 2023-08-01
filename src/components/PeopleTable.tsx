@@ -1,93 +1,22 @@
-import React, { useState, useMemo } from 'react';
-import { useParams, NavLink, useSearchParams } from 'react-router-dom';
+import React from 'react';
+import { useParams, NavLink } from 'react-router-dom';
 import cn from 'classnames';
 import { Person } from '../types';
 
 interface Props {
   people: Person[];
+  sortField: string | null;
+  sortOrder: 'asc' | 'desc';
+  onSortClick: (field: keyof Person) => void;
 }
 
-export const PeopleTable: React.FC<Props> = ({ people }) => {
+export const PeopleTable: React.FC<Props> = React.memo(({
+  people,
+  onSortClick,
+  sortField,
+  sortOrder,
+}) => {
   const { slug } = useParams();
-
-  type SortField = keyof Person;
-
-  const [searchParams] = useSearchParams();
-
-  const [sortField, setSortField] = useState<string | null>(
-    searchParams.get('sort') || null,
-  );
-  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>(
-    searchParams.get('order') === 'desc' ? 'desc' : 'asc',
-  );
-
-  const handleSortClick = (field: SortField) => {
-    if (sortField === field) {
-      setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
-    } else {
-      setSortField(field);
-      setSortOrder('asc');
-    }
-  };
-
-  const sortByField = (
-    arr: Person[],
-    field: keyof Person,
-    order: 'asc' | 'desc',
-  ) => {
-    return [...arr].sort((a: Person, b: Person): number => {
-      let aValue: number | string | null = null;
-      let bValue: number | string | null = null;
-
-      if (field === 'born' || field === 'died') {
-        aValue = a[field];
-        bValue = b[field];
-      } else {
-        aValue = a[field] as string | null;
-        bValue = b[field] as string | null;
-      }
-
-      if (aValue === null && bValue === null) {
-        return 0;
-      }
-
-      if (aValue === null) {
-        return order === 'asc' ? -1 : 1;
-      }
-
-      if (bValue === null) {
-        return order === 'asc' ? 1 : -1;
-      }
-
-      if (typeof aValue === 'number' && typeof bValue === 'number') {
-        return order === 'asc' ? aValue - bValue : bValue - aValue;
-      }
-
-      return order === 'asc'
-        ? aValue.toString().localeCompare(bValue.toString())
-        : bValue.toString().localeCompare(aValue.toString());
-    });
-  };
-
-  const sortedPeople = useMemo(() => {
-    if (!sortField) {
-      return people;
-    }
-
-    return sortByField(people, sortField as SortField, sortOrder);
-  }, [people, sortField, sortOrder]);
-
-  const getSortIcon = (field: string, order: 'asc' | 'desc') => {
-    return (
-      <span className="icon">
-        {sortField === field && sortOrder === order ? (
-          <i className="fas fa-sort-up" />
-        ) : (
-          <i className="fas fa-sort" />
-        )}
-      </span>
-    );
-  };
 
   return (
     <table
@@ -101,10 +30,16 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
               Name
               <a
                 href="#/people?sort=name"
-                onClick={() => handleSortClick('name')}
+                onClick={() => onSortClick('name')}
               >
                 <span className="icon">
-                  {getSortIcon('name', 'asc')}
+                  <i className={cn('fas',
+                    {
+                      'fa-sort': !sortField && !sortOrder,
+                      'fa-sort-up': sortOrder === 'asc',
+                      'fa-sort-down': sortOrder === 'desc',
+                    })}
+                  />
                 </span>
               </a>
             </span>
@@ -115,10 +50,16 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
               Sex
               <a
                 href="#/people?sort=sex"
-                onClick={() => handleSortClick('sex')}
+                onClick={() => onSortClick('sex')}
               >
                 <span className="icon">
-                  {getSortIcon('sex', 'asc')}
+                  <i className={cn('fas',
+                    {
+                      'fa-sort': !sortField && !sortOrder,
+                      'fa-sort-up': sortOrder === 'asc',
+                      'fa-sort-down': sortOrder === 'desc',
+                    })}
+                  />
                 </span>
               </a>
             </span>
@@ -131,10 +72,16 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
               Born
               <a
                 href="#/people?sort=born&amp;order=desc"
-                onClick={() => handleSortClick('born')}
+                onClick={() => onSortClick('born')}
               >
                 <span className="icon">
-                  {getSortIcon('born', 'desc')}
+                  <i className={cn('fas',
+                    {
+                      'fa-sort': !sortField && !sortOrder,
+                      'fa-sort-up': sortOrder === 'asc',
+                      'fa-sort-down': sortOrder === 'desc',
+                    })}
+                  />
                 </span>
               </a>
             </span>
@@ -145,10 +92,16 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
               Died
               <a
                 href="#/people?sort=died"
-                onClick={() => handleSortClick('died')}
+                onClick={() => onSortClick('died')}
               >
                 <span className="icon">
-                  {getSortIcon('died', 'asc')}
+                  <i className={cn('fas',
+                    {
+                      'fa-sort': !sortField && !sortOrder,
+                      'fa-sort-up': sortOrder === 'asc',
+                      'fa-sort-down': sortOrder === 'desc',
+                    })}
+                  />
                 </span>
               </a>
             </span>
@@ -160,7 +113,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
       </thead>
 
       <tbody>
-        {sortedPeople.map(person => (
+        {people.map(person => (
           <tr
             data-cy="person"
             key={person.name}
@@ -210,4 +163,4 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
       </tbody>
     </table>
   );
-};
+});
