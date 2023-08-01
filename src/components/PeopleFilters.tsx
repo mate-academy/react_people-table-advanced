@@ -1,6 +1,5 @@
 import cn from 'classnames';
 import { SearchLink } from './SearchLink';
-// import { getSearchWith } from '../utils/searchHelper';
 
 interface Props {
   searchParams: URLSearchParams;

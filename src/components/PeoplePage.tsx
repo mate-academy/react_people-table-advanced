@@ -13,14 +13,10 @@ export const PeoplePage = () => {
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
-  // const location = useLocation();
-
   const sex = searchParams?.get('sex');
   const centuries = searchParams?.getAll('centuries') || [];
   const query = searchParams?.get('query') || '';
   const centuriesArr: string[] = ['16', '17', '18', '19', '20'];
-
-  // type SortField = keyof Person;
 
   const [sortField, setSortField] = useState<keyof Person | null>(
     searchParams.get('sort') as keyof Person | null,
