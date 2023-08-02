@@ -2,11 +2,13 @@ import React from 'react';
 import { useParams, NavLink } from 'react-router-dom';
 import cn from 'classnames';
 import { Person } from '../types';
+import { SortAndFilter } from '../types/SortAndFilter';
+import { SearchLink } from './SearchLink';
 
 interface Props {
   people: Person[];
   sortField: string | null;
-  sortOrder: 'asc' | 'desc';
+  sortOrder: 'asc' | 'desc' | null;
   onSortClick: (field: keyof Person) => void;
 }
 
@@ -18,6 +20,30 @@ export const PeopleTable: React.FC<Props> = React.memo(({
 }) => {
   const { slug } = useParams();
 
+  const calculateOrder = (column: string) => {
+    if (sortField === column) {
+      return sortOrder === 'asc' ? 'desc' : 'asc';
+    }
+
+    return 'asc';
+  };
+
+  const calculateColumn = (column: string) => {
+    if (sortField === column) {
+      return sortOrder === 'desc' ? '' : column;
+    }
+
+    return column;
+  };
+
+  const getClassIcon = (column: string) => {
+    if (sortField === column) {
+      return sortOrder === 'desc' ? 'fas fa-sort-down' : 'fas fa-sort-up';
+    }
+
+    return 'fas fa-sort';
+  };
+
   return (
     <table
       data-cy="peopleTable"
@@ -28,40 +54,34 @@ export const PeopleTable: React.FC<Props> = React.memo(({
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Name
-              <a
-                href="#/people?sort=name"
-                onClick={() => onSortClick('name')}
+              <SearchLink
+                params={{
+                  sort: calculateColumn(SortAndFilter.NAME) || null,
+                  order: calculateOrder(SortAndFilter.NAME) || null,
+                }}
+                onClick={() => onSortClick(SortAndFilter.NAME)}
               >
                 <span className="icon">
-                  <i className={cn('fas',
-                    {
-                      'fa-sort': !sortField && !sortOrder,
-                      'fa-sort-up': sortOrder === 'asc',
-                      'fa-sort-down': sortOrder === 'desc',
-                    })}
-                  />
+                  <i className={getClassIcon(SortAndFilter.NAME)} />
                 </span>
-              </a>
+              </SearchLink>
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Sex
-              <a
-                href="#/people?sort=sex"
-                onClick={() => onSortClick('sex')}
+              <SearchLink
+                params={{
+                  sort: calculateColumn(SortAndFilter.SEX) || null,
+                  order: calculateOrder(SortAndFilter.SEX) || null,
+                }}
+                onClick={() => onSortClick(SortAndFilter.SEX)}
               >
                 <span className="icon">
-                  <i className={cn('fas',
-                    {
-                      'fa-sort': !sortField && !sortOrder,
-                      'fa-sort-up': sortOrder === 'asc',
-                      'fa-sort-down': sortOrder === 'desc',
-                    })}
-                  />
+                  <i className={getClassIcon(SortAndFilter.SEX)} />
                 </span>
-              </a>
+              </SearchLink>
             </span>
           </th>
 
@@ -70,40 +90,34 @@ export const PeopleTable: React.FC<Props> = React.memo(({
               className="is-flex is-flex-wrap-nowrap"
             >
               Born
-              <a
-                href="#/people?sort=born&amp;order=desc"
-                onClick={() => onSortClick('born')}
+              <SearchLink
+                params={{
+                  sort: calculateColumn(SortAndFilter.BORN) || null,
+                  order: calculateOrder(SortAndFilter.BORN) || null,
+                }}
+                onClick={() => onSortClick(SortAndFilter.BORN)}
               >
                 <span className="icon">
-                  <i className={cn('fas',
-                    {
-                      'fa-sort': !sortField && !sortOrder,
-                      'fa-sort-up': sortOrder === 'asc',
-                      'fa-sort-down': sortOrder === 'desc',
-                    })}
-                  />
+                  <i className={getClassIcon(SortAndFilter.BORN)} />
                 </span>
-              </a>
+              </SearchLink>
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Died
-              <a
-                href="#/people?sort=died"
-                onClick={() => onSortClick('died')}
+              <SearchLink
+                params={{
+                  sort: calculateColumn(SortAndFilter.DIED) || null,
+                  order: calculateOrder(SortAndFilter.DIED) || null,
+                }}
+                onClick={() => onSortClick(SortAndFilter.DIED)}
               >
                 <span className="icon">
-                  <i className={cn('fas',
-                    {
-                      'fa-sort': !sortField && !sortOrder,
-                      'fa-sort-up': sortOrder === 'asc',
-                      'fa-sort-down': sortOrder === 'desc',
-                    })}
-                  />
+                  <i className={getClassIcon(SortAndFilter.DIED)} />
                 </span>
-              </a>
+              </SearchLink>
             </span>
           </th>
 
