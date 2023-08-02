@@ -4,7 +4,10 @@ import { PeopleFilters } from './PeopleFilters';
 import { Loader } from './Loader';
 import { PeopleTable } from './PeopleTable';
 import { Person } from '../types';
+import { SortAndFilter } from '../types/SortAndFilter';
 import { getPeople } from '../api';
+
+const CENTURIES_ARR: string[] = ['16', '17', '18', '19', '20'];
 
 export const PeoplePage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -13,16 +16,15 @@ export const PeoplePage = () => {
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
-  const sex = searchParams?.get('sex');
-  const centuries = searchParams?.getAll('centuries') || [];
-  const query = searchParams?.get('query') || '';
-  const centuriesArr: string[] = ['16', '17', '18', '19', '20'];
+  const sex = searchParams?.get(SortAndFilter.SEX);
+  const centuries = searchParams?.getAll(SortAndFilter.CENTURIES) || [];
+  const query = searchParams?.get(SortAndFilter.QUERY) || '';
 
   const [sortField, setSortField] = useState<keyof Person | null>(
-    searchParams.get('sort') as keyof Person | null,
+    searchParams.get(SortAndFilter.SORT) as keyof Person | null,
   );
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>(
-    searchParams.get('order') === 'desc' ? 'desc' : 'asc',
+    searchParams.get(SortAndFilter.ORDER) === 'desc' ? 'desc' : 'asc',
   );
 
   const fetchData = async () => {
@@ -51,8 +53,8 @@ export const PeoplePage = () => {
 
   const preparedPeopleWithParents = people.map((person) => ({
     ...person,
-    mother: people.find((p) => p.name === (person.motherName || '-')),
-    father: people.find((p) => p.name === (person.fatherName || '-')),
+    mother: people.find((p) => p.name === (person.motherName)),
+    father: people.find((p) => p.name === (person.fatherName)),
   }));
 
   const handleSortClick = (field: keyof Person) => {
@@ -144,7 +146,7 @@ export const PeoplePage = () => {
                 sex={sex}
                 centuries={centuries}
                 query={query}
-                centuriesArr={centuriesArr}
+                centuriesArr={CENTURIES_ARR}
               />
             </div>
           )}

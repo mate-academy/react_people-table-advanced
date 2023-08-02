@@ -77,7 +77,7 @@ export const PeopleFilters: React.FC<Props> = ({
                     ? centuries.filter((cen) => cen !== century)
                     : [...centuries, century],
                 }}
-                className={cn('button', 'mr-1',
+                className={cn('button mr-1',
                   { 'is-info': centuries.includes(century) })}
                 data-cy="century"
               >
