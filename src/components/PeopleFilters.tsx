@@ -1,5 +1,6 @@
 import cn from 'classnames';
 import { SearchLink } from './SearchLink';
+import { SortAndFilter } from '../types/SortAndFilter';
 
 interface Props {
   searchParams: URLSearchParams;
@@ -56,7 +57,9 @@ export const PeopleFilters: React.FC<Props> = ({
                 searchParams.toString(),
               );
 
-              newSearchParams.set('query', event.target.value || '');
+              newSearchParams.set(
+                SortAndFilter.QUERY, event.target.value || '',
+              );
               setSearchParams(newSearchParams);
             }}
           />
