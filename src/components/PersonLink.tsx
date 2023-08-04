@@ -1,6 +1,6 @@
 import React from 'react';
-import classNames from 'classnames';
 import { Link, useParams } from 'react-router-dom';
+import classNames from 'classnames';
 
 import { Person } from '../types/Person';
 

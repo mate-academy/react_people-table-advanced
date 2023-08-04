@@ -4,11 +4,11 @@ import { useSearchParams } from 'react-router-dom';
 import { getPeople } from '../api';
 
 import { Person } from '../types/Person';
+import { Sort } from '../types/Sort';
 
 import { Loader } from '../components/Loader';
 import { PeopleTable } from '../components/PeopleTable';
 import { PeopleFilters } from '../components/PeopleFilters';
-import { Sort } from '../types/Sort';
 
 export const People: React.FC = () => {
   const [people, setPeople] = useState<Person[] | null>(null);
