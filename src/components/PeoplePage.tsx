@@ -36,7 +36,7 @@ export const PeoplePage = () => {
       sort,
       order,
     });
-  }, [query, sex, centuries, sort, order]);
+  }, [people, query, sex, centuries, sort, order]);
 
   return (
     <>
@@ -66,7 +66,13 @@ export const PeoplePage = () => {
                     </p>
                   )}
 
-                  {!errorMessage && people.length > 0 && (
+                  {!errorMessage && preparedPeople.length === 0 && (
+                    <p data-cy="noPeopleMessage">
+                      There are no people matching the current search criteria
+                    </p>
+                  )}
+
+                  {!errorMessage && preparedPeople.length > 0 && (
                     <PeopleTable people={preparedPeople} />
                   )}
                 </>
