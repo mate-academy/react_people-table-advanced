@@ -47,7 +47,7 @@ export const People: React.FC<Props> = ({
       newSortOrder = SortOrders.DESC;
     }
 
-    return { sort: sortColumn, order: newSortOrder };
+    return { sort: newSortOrder ? sortColumn : null, order: newSortOrder };
   };
 
   return (
