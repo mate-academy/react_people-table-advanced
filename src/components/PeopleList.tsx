@@ -5,6 +5,7 @@ import { Person } from '../types/Person';
 import { PersonLink } from './PersonLink';
 import { SearchLink } from './SearchLink';
 import { SortType, getSortParams } from '../utils/sortHelpers';
+import { SearchKey } from '../utils/searchHelper';
 
 type Props = {
   people: Person[];
@@ -13,8 +14,8 @@ type Props = {
 export const PeopleList: React.FC<Props> = ({ people }) => {
   const { personSlug } = useParams();
   const [searchParams] = useSearchParams();
-  const curSort = searchParams.get('sort') || '';
-  const curOrder = searchParams.get('order') || '';
+  const curSort = searchParams.get(SearchKey.SORT) || '';
+  const curOrder = searchParams.get(SearchKey.ORDER) || '';
 
   return (
     <table

@@ -6,6 +6,7 @@ import { PeopleFilters } from '../components/PeopleFilters';
 import { getPeople } from '../api';
 import { Person } from '../types/Person';
 import { SortType, checkQuery } from '../utils/sortHelpers';
+import { SearchKey } from '../utils/searchHelper';
 
 const getParent = (personList: Person[], parentName: string | null) => {
   return personList.find(({ name }) => name === parentName);
@@ -18,11 +19,11 @@ export const PeoplePage = () => {
 
   const [searchParams] = useSearchParams();
 
-  const query = searchParams.get('query') || '';
-  const chosenSex = searchParams.get('sex') || '';
-  const centuries = searchParams.getAll('centuries') || [];
-  const sort = searchParams.get('sort') || '';
-  const order = searchParams.get('order') || '';
+  const query = searchParams.get(SearchKey.QUERY) || '';
+  const chosenSex = searchParams.get(SearchKey.SEX) || '';
+  const centuries = searchParams.getAll(SearchKey.CENTURIES) || [];
+  const sort = searchParams.get(SearchKey.SORT) || '';
+  const order = searchParams.get(SearchKey.ORDER) || '';
 
   const loadPeople = async () => {
     setIsLoading(true);

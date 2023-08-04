@@ -1,6 +1,8 @@
 import { useSearchParams } from 'react-router-dom';
 import classNames from 'classnames';
-import { SearchParams, getSearchWith } from '../utils/searchHelper';
+import {
+  SearchKey, SearchParams, SexType, getSearchWith,
+} from '../utils/searchHelper';
 import { SearchLink } from './SearchLink';
 
 const centuryOptions = ['16', '17', '18', '19', '20'];
@@ -8,9 +10,9 @@ const centuryOptions = ['16', '17', '18', '19', '20'];
 export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const query = searchParams.get('query') || '';
-  const sex = searchParams.get('sex') || '';
-  const centuries = searchParams.getAll('centuries') || [];
+  const query = searchParams.get(SearchKey.QUERY) || '';
+  const sex = searchParams.get(SearchKey.SEX) || '';
+  const centuries = searchParams.getAll(SearchKey.CENTURIES) || [];
 
   function setSearchWith(params: SearchParams) {
     const search = getSearchWith(searchParams, params);
@@ -28,20 +30,20 @@ export const PeopleFilters = () => {
 
       <p className="panel-tabs" data-cy="SexFilter">
         <SearchLink
-          params={{ sex: null }}
+          params={{ [SearchKey.SEX]: null }}
           className={classNames({ 'is-active': !sex })}
         >
           All
         </SearchLink>
         <SearchLink
-          params={{ sex: 'm' }}
-          className={classNames({ 'is-active': sex === 'm' })}
+          params={{ [SearchKey.SEX]: SexType.MALE }}
+          className={classNames({ 'is-active': sex === SexType.MALE })}
         >
           Male
         </SearchLink>
         <SearchLink
-          params={{ sex: 'f' }}
-          className={classNames({ 'is-active': sex === 'f' })}
+          params={{ [SearchKey.SEX]: SexType.FEMALE }}
+          className={classNames({ 'is-active': sex === SexType.FEMALE })}
         >
           Female
         </SearchLink>
