@@ -6,17 +6,17 @@ import { Person } from '../types';
 
 type Props = {
   person: Person;
-  people: Person[];
+  people: Person[] | null;
 };
 
 export const PersonLink: React.FC<Props> = ({ person, people }) => {
   const { slug } = useParams();
 
-  const mother = people.find(human => (
+  const mother = people?.find(human => (
     human.name === person.motherName
   ));
 
-  const father = people.find(human => (
+  const father = people?.find(human => (
     human.name === person.fatherName
   ));
 
