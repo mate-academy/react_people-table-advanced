@@ -2,7 +2,7 @@ import React from 'react';
 import classNames from 'classnames';
 import { Link, useParams } from 'react-router-dom';
 
-import { Person } from '../types';
+import { Person } from '../types/Person';
 
 type Props = {
   person: Person;

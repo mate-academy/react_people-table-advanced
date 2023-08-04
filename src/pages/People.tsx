@@ -3,7 +3,7 @@ import { useSearchParams } from 'react-router-dom';
 
 import { getPeople } from '../api';
 
-import { Person } from '../types';
+import { Person } from '../types/Person';
 
 import { Loader } from '../components/Loader';
 import { PeopleTable } from '../components/PeopleTable';
