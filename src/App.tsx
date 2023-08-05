@@ -2,9 +2,8 @@ import {
   Navigate, Route, Routes,
 } from 'react-router-dom';
 import './App.scss';
-import { TablePage } from './pages/TablePage';
 import { Navbar } from './components/Navbar';
-import { PeoplePage } from './components/PeoplePage';
+import { PeoplePage } from './pages/PeoplePage';
 
 export const App = () => {
   return (
@@ -20,7 +19,7 @@ export const App = () => {
 
             <Route path="people">
               <Route index element={<PeoplePage />} />
-              <Route path=":selectedSlug" element={<TablePage />} />
+              <Route path=":selectedSlug" element={<PeoplePage />} />
             </Route>
 
             <Route
