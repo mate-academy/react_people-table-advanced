@@ -1,4 +1,16 @@
-export const PeopleTable = () => {
+import { useParams } from 'react-router-dom';
+import classNames from 'classnames';
+
+import { Person } from '../types';
+import { PersonLink } from './PersonLink';
+
+type Props = {
+  people: Person[];
+};
+
+export const PeopleTable: React.FC<Props> = ({ people }) => {
+  const { slug } = useParams();
+
   return (
     <table
       data-cy="peopleTable"
@@ -56,6 +68,31 @@ export const PeopleTable = () => {
       </thead>
 
       <tbody>
+        {people.map((person) => (
+          <tr
+            key={person.slug}
+            data-cy="person"
+            className={classNames({
+              'has-background-warning': slug === person.slug,
+            })}
+          >
+            <PersonLink person={person} />
+
+            <td>{person.sex}</td>
+            <td>{person.born}</td>
+            <td>{person.died}</td>
+            {person.mother
+              ? <PersonLink person={person.mother} />
+              : (<td>{person.motherName || '-'}</td>)}
+
+            {person.father
+              ? <PersonLink person={person.father} />
+              : (<td>{person.fatherName || '-'}</td>)}
+          </tr>
+        ))}
+      </tbody>
+
+      {/* <tbody>
         <tr data-cy="person">
           <td>
             <a href="#/people/pieter-haverbeke-1602">Pieter Haverbeke</a>
@@ -677,7 +714,7 @@ export const PeopleTable = () => {
             <a href="#/people/carolus-haverbeke-1832">Carolus Haverbeke</a>
           </td>
         </tr>
-      </tbody>
+      </tbody> */}
     </table>
   );
 };

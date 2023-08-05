@@ -1,4 +1,4 @@
-export const PeopleFilters = () => {
+export const PeopleFilters: React.FC = () => {
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
