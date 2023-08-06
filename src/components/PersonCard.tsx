@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import classNames from 'classnames';
 import { useParams } from 'react-router-dom';
 import { Person } from '../types';
@@ -12,8 +12,13 @@ type Props = {
 export const PersonCard: React.FC<Props> = ({ person, people }) => {
   const { slug } = useParams();
 
-  const mother = people.find((p) => p.name === person.motherName);
-  const father = people.find((p) => p.name === person.fatherName);
+  const mother = useMemo(() => people.find(
+    (p) => p.name === person.motherName,
+  ), [people, person.motherName]);
+
+  const father = useMemo(() => people.find(
+    (p) => p.name === person.fatherName,
+  ), [people, person.fatherName]);
 
   return (
     <tr

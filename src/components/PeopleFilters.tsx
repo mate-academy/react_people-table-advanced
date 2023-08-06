@@ -52,7 +52,8 @@ export const PeopleFilters: React.FC<Props> = ({
               sex: value !== SexFilter.All ? value : null,
             }}
             className={classNames({
-              'is-active': sex === value || (!sex && value === SexFilter.All),
+              'is-active': sex === value
+                || (!sex && value === SexFilter.All),
             })}
           >
             {label}
