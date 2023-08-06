@@ -1,6 +1,8 @@
+import { useSearchParams } from 'react-router-dom';
 import { Person } from '../../types';
 import { Loader } from '../Loader';
 import { PersonInfo } from '../PersonInfo';
+import { SortLink } from '../SortLink/SortLink';
 
 type Props = {
   people: Person[];
@@ -15,6 +17,13 @@ export const PeopleTable: React.FC<Props> = ({
   isLoading,
   selectedSlug,
 }) => {
+  const [searchParams] = useSearchParams();
+
+  const sort = searchParams.get('sort') || '';
+  const order = searchParams.get('order') || '';
+
+  const tableHeaders = ['Name', 'Sex', 'Born', 'Died'];
+
   return (
 
     <div className="box table-container">
@@ -41,7 +50,14 @@ export const PeopleTable: React.FC<Props> = ({
         >
           <thead>
             <tr>
-              <th>
+              {tableHeaders.map(header => (
+                <SortLink
+                  fieldName={header}
+                  isActive={header.toLowerCase() === sort}
+                  isDesc={!!order}
+                />
+              ))}
+              {/* <th>
                 <span className="is-flex is-flex-wrap-nowrap">
                   Name
                   <a href="#/people?sort=name">
@@ -81,7 +97,7 @@ export const PeopleTable: React.FC<Props> = ({
                     </span>
                   </a>
                 </span>
-              </th>
+              </th> */}
 
               <th>Mother</th>
               <th>Father</th>
