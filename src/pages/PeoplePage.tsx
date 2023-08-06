@@ -15,17 +15,39 @@ import { Gender } from '../types/SortSex';
 import { Sort } from '../types/Sort';
 import { Person } from '../types/Person';
 
+enum SearchParams {
+  Centuries = 'centuries',
+  Sex = 'sex',
+  Query = 'query',
+  SortParam = 'sort',
+  Order = 'order',
+}
+
+const DefaultSearchParams = {
+  [SearchParams.Centuries]: [],
+  [SearchParams.Sex]: Gender.All,
+  [SearchParams.Query]: '',
+  [SearchParams.SortParam]: Sort.None,
+  [SearchParams.Order]: '',
+};
+
 export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isError, setIsError] = useState<boolean>(false);
   const { personSlug = '' } = useParams();
   const [searchParams, setSearchParams] = useSearchParams();
-  const centuries = searchParams.getAll('centuries') || [];
-  const sex = searchParams.get('sex') || Gender.All;
-  const query = searchParams.get('query') || '';
-  const sort = searchParams.get('sort') || Sort.None;
-  const order = searchParams.get('order') || '';
+  const centuries = searchParams
+    .getAll(SearchParams.Centuries)
+    || DefaultSearchParams[SearchParams.Centuries];
+  const sex = searchParams
+    .get(SearchParams.Sex) || DefaultSearchParams[SearchParams.Sex];
+  const query = searchParams
+    .get(SearchParams.Query) || DefaultSearchParams[SearchParams.Query];
+  const sort = searchParams
+    .get(SearchParams.SortParam) || DefaultSearchParams[SearchParams.SortParam];
+  const order = searchParams
+    .get(SearchParams.Order) || DefaultSearchParams[SearchParams.Order];
 
   async function fetchPeople() {
     setIsError(false);
