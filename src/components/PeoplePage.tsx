@@ -1,3 +1,4 @@
+import { useSearchParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { PeopleFilters } from './PeopleFilters';
 import { Loader } from './Loader';
@@ -5,14 +6,21 @@ import { PeopleTable } from './PeopleTable';
 import { Person } from '../types';
 import { getPeople } from '../api';
 import { getPeopleWithParent } from '../utils/getPeopleWithParent';
+import { getFilteredPeople } from '../utils/getFilteredPeople';
 
 export const PeoplePage: React.FC = () => {
   const [people, setPeople] = useState<Person[]>([]);
-  const [processing, setProcessing] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(false);
 
-  useEffect(() => {
-    setProcessing(true);
+  const [searchParams] = useSearchParams();
+
+  const sex = searchParams.get('sex') || '';
+  const query = searchParams.get('query') || '';
+  const centuries = searchParams.getAll('centuries') || [];
+
+  const preparedPeople = () => {
+    setIsLoading(true);
     setError(false);
 
     getPeople()
@@ -20,7 +28,15 @@ export const PeoplePage: React.FC = () => {
         setPeople(getPeopleWithParent(fetchedPeople));
       })
       .catch(() => setError(true))
-      .finally(() => setProcessing(false));
+      .finally(() => setIsLoading(false));
+  };
+
+  const visiblePeople = getFilteredPeople({
+    people, sex, query, centuries,
+  });
+
+  useEffect(() => {
+    preparedPeople();
   }, []);
 
   return (
@@ -29,13 +45,15 @@ export const PeoplePage: React.FC = () => {
 
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
-          <div className="column is-7-tablet is-narrow-desktop">
-            <PeopleFilters />
-          </div>
+          {!isLoading && !error && (
+            <div className="column is-7-tablet is-narrow-desktop">
+              <PeopleFilters />
+            </div>
+          )}
 
           <div className="column">
             <div className="box table-container">
-              {processing && <Loader />}
+              {isLoading && <Loader />}
 
               {error && (
                 <p data-cy="peopleLoadingError">
@@ -43,16 +61,20 @@ export const PeoplePage: React.FC = () => {
                 </p>
               )}
 
-              {!processing && !people.length && !error && (
+              {!isLoading && !people.length && !error && (
                 <p data-cy="noPeopleMessage">
                   There are no people on the server
                 </p>
               )}
 
-              <p>There are no people matching the current search criteria</p>
+              {!visiblePeople.length && !isLoading && (
+                <p>
+                  There are no people matching the current search criteria
+                </p>
+              )}
 
-              {!processing && people.length && !error && (
-                <PeopleTable people={people} />
+              {!isLoading && people.length && !error && (
+                <PeopleTable people={visiblePeople} />
               )}
             </div>
           </div>
