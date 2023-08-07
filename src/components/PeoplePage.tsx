@@ -42,7 +42,11 @@ export const PeoplePage: React.FC = () => {
   const centuriesClickHandler = (someSenturies: string): void => {
     const params = new URLSearchParams(searchParams);
 
-    params.set('centuries', someSenturies);
+    if (centuries === someSenturies) {
+      params.set('centuries', '');
+    } else {
+      params.set('centuries', someSenturies);
+    }
 
     setSearchParams(params);
   };
