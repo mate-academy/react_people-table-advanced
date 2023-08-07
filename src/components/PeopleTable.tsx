@@ -91,40 +91,48 @@ export const PeopleTable: React.FC<Props> = ({
   };
 
   return (
-    <table
-      data-cy="peopleTable"
-      className="table is-striped is-hoverable is-narrow is-fullwidth"
-    >
-      <thead>
-        <tr>
-          {['Name', 'Sex', 'Born', 'Died'].map((column) => (
-            <th key={column}>
-              <span className="is-flex is-flex-wrap-nowrap">
-                {column}
-                <SearchLink
-                  params={{
-                    sort: calculateColumn(column) || null,
-                    order: calculateOrder(column) || null,
-                  }}
-                >
-                  <span className="icon">
-                    <i className={calculateIcon(column)} />
+    <>
+      {preparedPeople.length === 0 ? (
+        <p>
+          There are no people matching the current search criteria
+        </p>
+      ) : (
+        <table
+          data-cy="peopleTable"
+          className="table is-striped is-hoverable is-narrow is-fullwidth"
+        >
+          <thead>
+            <tr>
+              {['Name', 'Sex', 'Born', 'Died'].map((column) => (
+                <th key={column}>
+                  <span className="is-flex is-flex-wrap-nowrap">
+                    {column}
+                    <SearchLink
+                      params={{
+                        sort: calculateColumn(column) || null,
+                        order: calculateOrder(column) || null,
+                      }}
+                    >
+                      <span className="icon">
+                        <i className={calculateIcon(column)} />
+                      </span>
+                    </SearchLink>
                   </span>
-                </SearchLink>
-              </span>
-            </th>
-          ))}
+                </th>
+              ))}
 
-          <th>Mother</th>
-          <th>Father</th>
-        </tr>
-      </thead>
+              <th>Mother</th>
+              <th>Father</th>
+            </tr>
+          </thead>
 
-      <tbody>
-        {preparedPeople.map((person) => (
-          <Person key={person.slug} person={person} />
-        ))}
-      </tbody>
-    </table>
+          <tbody>
+            {preparedPeople.map((person) => (
+              <Person key={person.slug} person={person} />
+            ))}
+          </tbody>
+        </table>
+      )}
+    </>
   );
 };

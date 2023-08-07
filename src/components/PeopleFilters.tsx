@@ -1,3 +1,4 @@
+import { useCallback } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import cn from 'classnames';
 import { SearchParams, getSearchWith } from '../utils/searchHelper';
@@ -10,8 +11,10 @@ export const PeopleFilters = () => {
   const query = searchParams.get('query');
   const centuries = searchParams.getAll('centuries');
 
-  const setSearchWith = (params: SearchParams) => setSearchParams(
-    getSearchWith(searchParams, params),
+  const setSearchWith = useCallback(
+    (params: SearchParams) => setSearchParams(
+      getSearchWith(searchParams, params),
+    ), [searchParams, setSearchParams],
   );
 
   return (
