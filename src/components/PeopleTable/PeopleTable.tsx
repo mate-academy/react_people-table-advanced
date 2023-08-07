@@ -4,6 +4,7 @@ import { Person } from '../../types';
 
 import { PersonLink } from '../PersonLink/PersonLink';
 import { TableHead } from '../TableHead/TableHead';
+import { ErrorNames } from '../../types/ErrorNames';
 
 type Props = {
   people: Person[],
@@ -21,6 +22,14 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
       }),
     };
   });
+
+  if (prepairedPeople.length === 0) {
+    return (
+      <p>
+        {ErrorNames.NoFilteredPeople}
+      </p>
+    );
+  }
 
   return (
     <table

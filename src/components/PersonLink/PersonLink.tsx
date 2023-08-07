@@ -3,6 +3,7 @@ import classNames from 'classnames';
 import { Link, useParams } from 'react-router-dom';
 
 import { Person } from '../../types';
+import { Sex } from '../../types/Sex';
 
 type Props = {
   person: Person,
@@ -38,7 +39,7 @@ export const PersonLink: React.FC<Props> = ({ person }) => {
             to=".."
             className={classNames(
               {
-                'has-text-danger': sex === 'f',
+                'has-text-danger': sex === Sex.F,
               },
             )}
           >
@@ -49,7 +50,7 @@ export const PersonLink: React.FC<Props> = ({ person }) => {
             to={`../${slug}`}
             className={classNames(
               {
-                'has-text-danger': sex === 'f',
+                'has-text-danger': sex === Sex.F,
               },
             )}
           >

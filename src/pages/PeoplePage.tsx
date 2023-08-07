@@ -15,6 +15,7 @@ import { sortPeople } from '../utils/sortPeople';
 import { Loader } from '../components/Loader';
 import { PeopleTable } from '../components/PeopleTable/PeopleTable';
 import { PeopleFilters } from '../components/PeopleFilters';
+import { SearchParams } from '../types/SearchParams';
 
 export const PeoplePage: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -31,11 +32,11 @@ export const PeoplePage: React.FC = () => {
       .finally(() => setLoading(false));
   }, []);
 
-  const sex = searchParams.get('sex') || Sex.None;
-  const query = searchParams.get('query') || '';
-  const centuries = searchParams.getAll('centuries') || [];
-  const sortType = searchParams.get('sort') || null;
-  const isReversed = searchParams.get('order') === SortOrder.Desc;
+  const sex = searchParams.get(SearchParams.Sex) || Sex.None;
+  const query = searchParams.get(SearchParams.Query) || '';
+  const centuries = searchParams.getAll(SearchParams.Centuries) || [];
+  const sortType = searchParams.get(SearchParams.Sort) || null;
+  const isReversed = searchParams.get(SearchParams.Order) === SortOrder.Desc;
 
   const handleSexChange = (
     event: React.MouseEvent<HTMLAnchorElement, MouseEvent>,
@@ -114,12 +115,6 @@ export const PeoplePage: React.FC = () => {
                     <PeopleTable
                       people={sortedPeople}
                     />
-                  )}
-
-                  {filteredPeople.length === 0 && (
-                    <p>
-                      {ErrorNames.NoFilteredPeople}
-                    </p>
                   )}
                 </>
               )}
