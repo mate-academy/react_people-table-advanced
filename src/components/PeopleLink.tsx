@@ -10,77 +10,75 @@ type Props = {
 export const PeopleLink: React.FC<Props> = ({ person, onFindPerson }) => {
   const { personSlug } = useParams();
   const [searchParams] = useSearchParams();
+  const {
+    slug,
+    name,
+    sex,
+    born,
+    died,
+    fatherName,
+    motherName,
+  } = person;
+
+  const mother = motherName ? onFindPerson(motherName) : null;
+  const father = fatherName ? onFindPerson(fatherName) : null;
 
   return (
     <tr
       data-cy="person"
       className={classNames({
-        'has-background-warning': personSlug === person.slug,
+        'has-background-warning': personSlug === slug,
       })}
     >
       <td>
         <Link
           to={{
-            pathname: `/people/${person.slug}`,
+            pathname: `/people/${slug}`,
             search: searchParams.toString(),
           }}
           className={classNames({
-            'has-text-danger': person.sex === 'f',
+            'has-text-danger': sex === 'f',
           })}
         >
-          {person.name}
+          {name}
         </Link>
       </td>
 
-      <td>{person.sex}</td>
-      <td>{person.born}</td>
-      <td>{person.died}</td>
+      <td>{sex}</td>
+      <td>{born}</td>
+      <td>{died}</td>
       <td>
-        {person.motherName !== null
-        && onFindPerson(person.motherName) !== undefined
-        && (
+        {mother ? (
           <Link
             className="has-text-danger"
             to={{
               pathname: `/people/${
-                onFindPerson(person.motherName)?.slug || ''
+                mother.slug || ''
               }`,
               search: searchParams.toString(),
             }}
           >
-            {person.motherName}
+            {motherName}
           </Link>
+        ) : (
+          motherName || '-'
         )}
-
-        {person.motherName !== null
-        && onFindPerson(person.motherName) === undefined && (
-          `${person.motherName}`
-        )}
-
-        {!person.motherName && '-'}
       </td>
       <td>
-        {person.fatherName !== null
-        && onFindPerson(person.fatherName) !== undefined
-        && (
+        {father ? (
           <Link
             to={{
               pathname: `/people/${
-                onFindPerson(person.fatherName)?.slug || ''
+                father.slug || ''
               }`,
               search: searchParams.toString(),
             }}
           >
-            {person.fatherName}
+            {fatherName}
           </Link>
+        ) : (
+          fatherName || '-'
         )}
-
-        {person.fatherName !== null
-        && onFindPerson(person.fatherName) === undefined && (
-          `${person.fatherName}`
-        )}
-
-        {!person.fatherName && '-'}
       </td>
     </tr>
   );
