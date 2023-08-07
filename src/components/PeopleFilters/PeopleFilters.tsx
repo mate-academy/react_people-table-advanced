@@ -3,17 +3,10 @@ import { useSearchParams } from 'react-router-dom';
 import { SexFilter } from '../../types/SexFilter';
 import { SexFilterItem } from '../SexFilterItem/SexFilterItem';
 import { SearchLink } from '../SearchLink';
-
-const centuryFilters = ['16', '17', '18', '19', '20'];
-const sexFilters = [
-  { title: 'All', value: SexFilter.ALL },
-  { title: 'Male', value: SexFilter.MALE },
-  { title: 'Female', value: SexFilter.FEMALE },
-];
+import { centuryFilters, sexFilters } from '../../data';
 
 export const PeopleFilters: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  // const { personSlug } = useParams();
 
   const centuries = searchParams.getAll('centuries') || [];
   const query = searchParams.get('query') || '';
@@ -102,7 +95,7 @@ export const PeopleFilters: React.FC = () => {
               className={cn('button', 'is-success', {
                 'is-outlined': centuries.length,
               })}
-              params={{ centuries: [] }}
+              params={{ centuries: null }}
             >
               All
             </SearchLink>

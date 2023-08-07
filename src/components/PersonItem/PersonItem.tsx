@@ -50,31 +50,30 @@ export const PersonItem: React.FC<Props> = ({
       <td>{sex}</td>
       <td>{born}</td>
       <td>{died}</td>
-      {mother ? (
-        <td>
-          <Link
-            to={`/people/${mother.slug}?${searchParams.toString()}`}
-            className={cn({
-              'has-text-danger': mother.sex === 'f',
-            })}
-          >
-            {mother.name}
-          </Link>
-        </td>
-      ) : (
-        <td>{motherName || '-'}</td>
-      )}
-      {father ? (
-        <td>
+      <td>
+        {mother
+          ? (
+            <Link
+              to={`/people/${mother.slug}?${searchParams.toString()}`}
+              className={cn({
+                'has-text-danger': mother.sex === 'f',
+              })}
+            >
+              {mother.name}
+            </Link>
+          ) : (motherName || '-')}
+      </td>
+      <td>
+        {father ? (
           <Link
             to={`/people/${father.slug}?${searchParams.toString()}`}
           >
             {father.name}
           </Link>
-        </td>
-      ) : (
-        <td>{fatherName || '-'}</td>
-      )}
+        ) : (
+          (fatherName || '-')
+        )}
+      </td>
     </tr>
   );
 };

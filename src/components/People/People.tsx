@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import React from 'react';
 import { useSearchParams } from 'react-router-dom';
 import classNames from 'classnames';
@@ -6,15 +5,7 @@ import { Person } from '../../types/Person';
 import { PersonItem } from '../PersonItem/PersonItem';
 import { SearchLink } from '../SearchLink';
 import { SortColumns } from '../../utils/SortColumns';
-import { getSortOrder } from '../../utils/functions';
-import { SortOrders } from '../../utils/SortOrders';
-
-const sortingLinks = [
-  { title: 'Name', value: SortColumns.NAME },
-  { title: 'Sex', value: SortColumns.SEX },
-  { title: 'Born', value: SortColumns.BORN },
-  { title: 'Died', value: SortColumns.DIED },
-];
+import { sortingLinks } from '../../data';
 
 interface Props {
   people: Person[],
@@ -39,15 +30,16 @@ export const People: React.FC<Props> = ({
   };
 
   const handleOnSort = (sortColumn: SortColumns) => {
-    let newSortOrder: SortOrders | null = SortOrders.DEFAULT;
+    let isShouldBeReversed: boolean | null = null;
 
-    if (!sort || sort === sortColumn) {
-      newSortOrder = getSortOrder(order as SortOrders);
-    } else {
-      newSortOrder = SortOrders.DESC;
+    if (sort && !order) {
+      isShouldBeReversed = true;
     }
 
-    return { sort: newSortOrder ? sortColumn : null, order: newSortOrder };
+    return {
+      sort: (sort && order) ? null : sortColumn,
+      order: isShouldBeReversed ? 'desc' : null,
+    };
   };
 
   return (
@@ -69,12 +61,9 @@ export const People: React.FC<Props> = ({
                   <span className="icon">
                     <i
                       className={classNames('fas', {
-                        'fa-sort': sort !== value
-                          || order === SortOrders.DEFAULT,
-                        'fa-sort-up': sort === value
-                        && order === SortOrders.DESC,
-                        'fa-sort-down': sort === value
-                        && order === SortOrders.ASC,
+                        'fa-sort': sort !== value,
+                        'fa-sort-up': sort === value && !order,
+                        'fa-sort-down': sort === value && order,
                       })}
                     />
                   </span>

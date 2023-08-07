@@ -1,30 +1,18 @@
 import { Person } from '../types';
 import { SortColumns } from './SortColumns';
-import { SortOrders } from './SortOrders';
-
-export function getSortOrder(oldSortOrder: SortOrders) {
-  switch (oldSortOrder) {
-    case (SortOrders.DEFAULT):
-      return SortOrders.DESC;
-    case (SortOrders.DESC):
-      return SortOrders.ASC;
-    default:
-      return null;
-  }
-}
 
 export function sortPeopleBy(
   people: Person[],
   sortFilter: SortColumns,
-  sortOrder: string,
+  isOrderReversed: boolean,
 ): Person[] {
   const peopleResult = people;
 
   switch (sortFilter) {
     case (SortColumns.NAME): {
       peopleResult.sort((person1: Person, person2: Person) => {
-        return person2[SortColumns.NAME]
-          .localeCompare(person1[SortColumns.NAME]);
+        return person1[SortColumns.NAME]
+          .localeCompare(person2[SortColumns.NAME]);
       });
 
       break;
@@ -32,8 +20,8 @@ export function sortPeopleBy(
 
     case (SortColumns.SEX): {
       peopleResult.sort((person1: Person, person2: Person) => {
-        return person2[SortColumns.SEX]
-          .localeCompare(person1[SortColumns.SEX]);
+        return person1[SortColumns.SEX]
+          .localeCompare(person2[SortColumns.SEX]);
       });
 
       break;
@@ -41,7 +29,7 @@ export function sortPeopleBy(
 
     case (SortColumns.BORN): {
       peopleResult.sort((person1: Person, person2: Person) => {
-        return person2[SortColumns.BORN] - (person1[SortColumns.BORN]);
+        return person1[SortColumns.BORN] - (person2[SortColumns.BORN]);
       });
 
       break;
@@ -49,7 +37,7 @@ export function sortPeopleBy(
 
     case (SortColumns.DIED): {
       peopleResult.sort((person1: Person, person2: Person) => {
-        return person2[SortColumns.DIED] - (person1[SortColumns.DIED]);
+        return person1[SortColumns.DIED] - (person2[SortColumns.DIED]);
       });
 
       break;
@@ -59,7 +47,7 @@ export function sortPeopleBy(
       break;
   }
 
-  if (sortOrder === SortOrders.DESC) {
+  if (isOrderReversed) {
     peopleResult.reverse();
   }
 

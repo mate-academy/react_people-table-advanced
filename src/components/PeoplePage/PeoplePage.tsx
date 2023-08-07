@@ -7,7 +7,6 @@ import { Loader } from '../Loader';
 import { PeopleFilters } from '../PeopleFilters';
 import { FilterParams } from '../../types/FilterParams';
 import { SortColumns } from '../../utils/SortColumns';
-import { SortOrders } from '../../utils/SortOrders';
 import { sortPeopleBy } from '../../utils/functions';
 
 function filterPeople(people: Person[], {
@@ -47,11 +46,11 @@ function filterPeople(people: Person[], {
     });
   }
 
-  if (sortFilter && sortOrder) {
+  if (sortFilter) {
     peopleCopy = sortPeopleBy(
       peopleCopy,
       sortFilter as SortColumns,
-      sortOrder as SortOrders,
+      sortOrder === 'desc',
     );
   }
 
@@ -71,7 +70,7 @@ export const PeoplePage: React.FC = () => {
       centuryFilter: searchParams.getAll('centuries'),
       sexFilter: searchParams.get('sex'),
       sortFilter: searchParams.get('sort') as SortColumns,
-      sortOrder: searchParams.get('order') as SortOrders,
+      sortOrder: searchParams.get('order'),
     };
 
     return filterPeople(people, filters);
@@ -97,6 +96,12 @@ export const PeoplePage: React.FC = () => {
     </p>
   );
 
+  const EmptyVisiblePeopleBlock = (
+    <p>
+      There are no people matching the current search criteria
+    </p>
+  );
+
   const renderingBlock = () => {
     if (isLoading) {
       return <Loader />;
@@ -108,6 +113,10 @@ export const PeoplePage: React.FC = () => {
 
     if (!people.length) {
       return EmptyPeopleBlock;
+    }
+
+    if (!visiblePeople.length) {
+      return EmptyVisiblePeopleBlock;
     }
 
     return <People people={visiblePeople} />;
@@ -123,7 +132,10 @@ export const PeoplePage: React.FC = () => {
           <div className="columns is-desktop is-flex-direction-row-reverse">
 
             <div className="column is-7-tablet is-narrow-desktop">
-              <PeopleFilters />
+              {!isLoading
+                && (
+                  <PeopleFilters />
+                )}
             </div>
 
             <div className="column">
