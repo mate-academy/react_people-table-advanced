@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import classNames from 'classnames';
 import { Person } from '../../types/Person';
@@ -19,7 +19,7 @@ export const People: React.FC<Props> = ({
   const sort = searchParams.get('sort') || '';
   const order = searchParams.get('order') || '';
 
-  const findPerson = (name: string | null) => {
+  const findPerson = useCallback((name: string | null) => {
     if (!name) {
       return undefined;
     }
@@ -27,7 +27,7 @@ export const People: React.FC<Props> = ({
     return people.find(personItem => {
       return personItem.name === name;
     });
-  };
+  }, []);
 
   const handleOnSort = (sortColumn: SortColumns) => {
     let isShouldBeReversed: boolean | null = null;

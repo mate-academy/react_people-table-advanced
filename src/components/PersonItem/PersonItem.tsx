@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import cn from 'classnames';
 import { useParams, Link, useSearchParams } from 'react-router-dom';
 import { Person } from '../../types/Person';
@@ -24,10 +24,13 @@ export const PersonItem: React.FC<Props> = ({
 
   const { personSlug } = useParams();
   const [searchParams] = useSearchParams();
+  let mother: Person | undefined;
+  let father: Person | undefined;
 
-  const mother = findPerson(motherName);
-
-  const father = findPerson(fatherName);
+  useEffect(() => {
+    mother = findPerson(motherName);
+    father = findPerson(fatherName);
+  }, []);
 
   return (
     <tr
