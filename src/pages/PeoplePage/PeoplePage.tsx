@@ -1,15 +1,23 @@
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useSearchParams } from 'react-router-dom';
 import { PeopleFilters } from '../../components/PeopleFilter';
 import { PeopleTable } from '../../components/PeopleTable';
-import { Person } from '../../types';
+import { Person, SortType } from '../../types';
 import { getPeople } from '../../api';
+import { filterPeople, sortPeople } from '../../utils/peopleService';
 
 export const PeoplePage = () => {
+  const [searchParams] = useSearchParams();
   const [people, setPeople] = useState<Person[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const { selectedSlug } = useParams();
+
+  const query = searchParams.get('query') || '';
+  const sex = searchParams.get('sex') || '';
+  const centuries = searchParams.getAll('centuries') || [];
+  const sort = searchParams.get('sort') || '';
+  const order = searchParams.get('order') || '';
 
   useEffect(() => {
     setIsLoading(true);
@@ -21,6 +29,10 @@ export const PeoplePage = () => {
       })
       .finally(() => setIsLoading(false));
   }, []);
+
+  const filteredPeople = filterPeople(people, centuries, query, sex);
+
+  const visiblePeople = sortPeople(filteredPeople, sort as SortType, !!order);
 
   return (
     <>
@@ -34,12 +46,13 @@ export const PeoplePage = () => {
 
           <div className="column">
             <div className="block">
-              {/* <p>There are no people matching the current search criteria</p> */}
-
               <PeopleTable
-                people={people}
+                people={visiblePeople}
                 errorMessage={errorMessage}
                 isLoading={isLoading}
+                isNoMatchingPeople={
+                  people.length > 0 && visiblePeople.length === 0
+                }
                 selectedSlug={selectedSlug}
               />
             </div>

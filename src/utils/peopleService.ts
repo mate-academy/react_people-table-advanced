@@ -2,8 +2,8 @@ import { Person, SortType } from '../types';
 
 export const filterPeople = (
   people: Person[],
+  centuries: string[],
   query?: string,
-  centuries?: string[],
   sex?: string,
 ) => {
   let filteredPeople = [...people];
@@ -16,7 +16,7 @@ export const filterPeople = (
     });
   }
 
-  if (centuries) {
+  if (centuries.length > 0) {
     filteredPeople = filteredPeople.filter(person => {
       return centuries.includes(Math.ceil(person.born / 100).toString());
     });
