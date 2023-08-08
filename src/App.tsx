@@ -1,20 +1,24 @@
-import { PeoplePage } from './components/PeoplePage';
-import { Navbar } from './components/Navbar';
-
+import { Navigate, Route, Routes } from 'react-router-dom';
 import './App.scss';
+import Layout from './components/Layout';
+import HomePage from './pages/Home.page';
+import ErrorPage from './pages/Error.page';
+import PeoplePage from './pages/People.page';
 
 export const App = () => {
   return (
-    <div data-cy="app">
-      <Navbar />
+    <Routes>
+      <Route path="/" element={<Layout />}>
+        <Route index element={<HomePage />} />
 
-      <div className="section">
-        <div className="container">
-          <h1 className="title">Home Page</h1>
-          <h1 className="title">Page not found</h1>
-          <PeoplePage />
-        </div>
-      </div>
-    </div>
+        <Route path="people">
+          <Route path=":personSlug?" element={<PeoplePage />} />
+        </Route>
+
+        <Route path="home" element={<Navigate to="/" />} />
+
+        <Route path="*" element={<ErrorPage />} />
+      </Route>
+    </Routes>
   );
 };
