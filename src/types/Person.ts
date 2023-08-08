@@ -9,3 +9,16 @@ export interface Person {
   mother?: Person,
   father?: Person,
 }
+
+export enum PersonSex {
+  Male = 'm',
+  Female = 'f',
+}
+
+export enum SortField {
+  All = '',
+  Sex = 'sex',
+  Name = 'name',
+  Born = 'born',
+  Died = 'died',
+}
