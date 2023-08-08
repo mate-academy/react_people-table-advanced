@@ -36,7 +36,7 @@ export const PeopleTable: React.FC<Props> = ({
         sort,
         order,
       },
-    ), 
+    ),
     [people, query, sex, centuries, sort, order],
   );
 
