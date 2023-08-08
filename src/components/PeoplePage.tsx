@@ -75,17 +75,6 @@ export const PeoplePage = () => {
                 </p>
               )}
 
-              {/* {!isLoading && !people.length && isLoaded ? (
-                <p data-cy="noPeopleMessage">
-                  There are no people on the server
-                </p>
-              ) : (
-                <PeopleTable
-                  people={people}
-                  slug={slug}
-                  isLoading={isLoading}
-                />
-              )} */}
             </div>
           </div>
         </div>

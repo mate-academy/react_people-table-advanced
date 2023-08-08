@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import classNames from 'classnames';
 import { Person } from '../types';
 import { PersonItem } from './PersonItem/PersonItem';
 import { SearchLink } from './SearchLink';
+import { preparePeople } from '../utils/helpers';
 
 type Props = {
   people: Person[];
@@ -11,7 +12,11 @@ type Props = {
   isLoading: boolean;
 };
 
-export const PeopleTable: React.FC<Props> = ({ people, slug, isLoading }) => {
+export const PeopleTable: React.FC<Props> = ({
+  people, 
+  slug, 
+  isLoading,
+}) => {
   const [searchParams] = useSearchParams();
 
   const query = searchParams.get('query') || '';
@@ -21,52 +26,19 @@ export const PeopleTable: React.FC<Props> = ({ people, slug, isLoading }) => {
   const order = searchParams.get('order') || '';
   const categoryFilter = ['Name', 'Sex', 'Born', 'Died'];
 
-  const preparePeople = () => {
-    let newPeople = [...people];
-
-    if (query) {
-      const normalizedQuery = query.trim().toLowerCase();
-
-      newPeople = newPeople.filter(person => {
-        return person.name.toLowerCase().includes(normalizedQuery)
-          || (person.motherName || '').toLowerCase().includes(normalizedQuery)
-          || (person.fatherName || '').toLowerCase().includes(normalizedQuery);
-      });
-    }
-
-    if (sex) {
-      newPeople = newPeople.filter(person => person.sex === sex);
-    }
-
-    if (centuries.length) {
-      newPeople = newPeople.filter(person => {
-        return centuries.includes(Math.ceil(person.born / 100).toString());
-      });
-    }
-
-    if (sort) {
-      newPeople = newPeople.sort((a, b) => {
-        switch (sort) {
-          case 'Name':
-            return a.name.localeCompare(b.name);
-          case 'Sex':
-            return a.sex.localeCompare(b.sex);
-          case 'Born':
-            return a.born - b.born;
-          case 'Died':
-            return a.died - b.died;
-          default:
-            return 0;
-        }
-      });
-    }
-
-    if (order === 'desc') {
-      newPeople = newPeople.reverse();
-    }
-
-    return newPeople;
-  };
+  const preparedPeople = useMemo(
+    () => preparePeople(
+      people,
+      {
+        query,
+        sex,
+        centuries,
+        sort,
+        order,
+      },
+    ), 
+    [people, query, sex, centuries, sort, order],
+  );
 
   const calculateOrder = (value: string) => {
     if (sort === value) {
@@ -84,7 +56,7 @@ export const PeopleTable: React.FC<Props> = ({ people, slug, isLoading }) => {
     return value;
   };
 
-  if (!isLoading && !preparePeople().length) {
+  if (!isLoading && !preparedPeople.length) {
     return (
       <p>
         There are no people matching the current search criteria
@@ -129,7 +101,7 @@ export const PeopleTable: React.FC<Props> = ({ people, slug, isLoading }) => {
       </thead>
 
       <tbody>
-        {preparePeople().map(person => (
+        {preparedPeople.map(person => (
           <PersonItem
             person={person}
             slug={slug}
