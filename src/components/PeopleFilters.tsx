@@ -8,6 +8,7 @@ export const PeopleFilters = () => {
   const sex = searchParams.get('sex');
   const query = searchParams.get('query') || '';
   const centuries = searchParams.getAll('centuries') || [];
+  const allCenturies = ['16', '17', '18', '19', '20'];
 
   const handleCenturiesParams = (century: string) => {
     const newCenturies = (centuries.includes(century))
@@ -68,7 +69,7 @@ export const PeopleFilters = () => {
             className="input"
             placeholder="Search"
             value={query}
-            onChange={e => handleSearchTerms(e)}
+            onChange={handleSearchTerms}
           />
 
           <span className="icon is-left">
@@ -80,55 +81,18 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            <SearchLink
-              data-cy="century"
-              className={classNames('button mr-1', {
-                'is-info': centuries.includes('16'),
-              })}
-              params={{ centuries: handleCenturiesParams('16') }}
-            >
-              16
-            </SearchLink>
-
-            <SearchLink
-              data-cy="century"
-              className={classNames('button mr-1', {
-                'is-info': centuries.includes('17'),
-              })}
-              params={{ centuries: handleCenturiesParams('17') }}
-            >
-              17
-            </SearchLink>
-
-            <SearchLink
-              data-cy="century"
-              className={classNames('button mr-1', {
-                'is-info': centuries.includes('18'),
-              })}
-              params={{ centuries: handleCenturiesParams('18') }}
-            >
-              18
-            </SearchLink>
-
-            <SearchLink
-              data-cy="century"
-              className={classNames('button mr-1', {
-                'is-info': centuries.includes('19'),
-              })}
-              params={{ centuries: handleCenturiesParams('19') }}
-            >
-              19
-            </SearchLink>
-
-            <SearchLink
-              data-cy="century"
-              className={classNames('button mr-1', {
-                'is-info': centuries.includes('20'),
-              })}
-              params={{ centuries: handleCenturiesParams('20') }}
-            >
-              20
-            </SearchLink>
+            {allCenturies.map((century) => (
+              <SearchLink
+                key={century}
+                data-cy="century"
+                className={classNames('button mr-1', {
+                  'is-info': centuries.includes(century),
+                })}
+                params={{ centuries: handleCenturiesParams(century) }}
+              >
+                {century}
+              </SearchLink>
+            ))}
           </div>
 
           <div className="level-right ml-4">

@@ -16,10 +16,16 @@ export const filterAndSortPeople = (people: Person[], params: Params) => {
   }
 
   if (params.query) {
-    const normalizedQuery = params.query.toLowerCase();
+    const normalizeQuery = params.query.toLowerCase();
 
     initial = initial
-      .filter(person => person.name.toLowerCase().includes(normalizedQuery));
+      .filter(({ name, motherName, fatherName }) => {
+        const byName = name.toLowerCase().includes(normalizeQuery);
+        const byMotherName = motherName?.toLowerCase().includes(normalizeQuery);
+        const byFatherName = fatherName?.toLowerCase().includes(normalizeQuery);
+
+        return byName || byMotherName || byFatherName;
+      });
   }
 
   if (params.centuries.length > 0) {

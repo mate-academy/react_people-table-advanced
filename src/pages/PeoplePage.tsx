@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { getPeople } from '../api';
 import { Loader } from '../components/Loader';
@@ -48,14 +48,14 @@ const PeoplePage: React.FC = () => {
       .finally(() => setIsPending(false));
   };
 
-  const visiblePeople = filterAndSortPeople(people,
+  const visiblePeople = useMemo(() => filterAndSortPeople(people,
     {
       sex,
       query,
       centuries,
       sortField,
       sortOrder,
-    });
+    }), [sex, query, centuries, sortField, sortOrder]);
 
   useEffect(() => {
     preparePeople();
