@@ -7,55 +7,7 @@ import { Loader } from '../Loader';
 import { PeopleFilters } from '../PeopleFilters';
 import { FilterParams } from '../../types/FilterParams';
 import { SortColumns } from '../../utils/SortColumns';
-import { sortPeopleBy } from '../../utils/functions';
-
-function filterPeople(people: Person[], {
-  queryFilter,
-  centuryFilter,
-  sexFilter,
-  sortFilter,
-  sortOrder,
-}: FilterParams) {
-  let peopleCopy = [...people];
-
-  if (queryFilter) {
-    const normalizedQuery = queryFilter.toLowerCase();
-
-    peopleCopy = peopleCopy.filter(person => {
-      const normalizedName = person.name.toLowerCase();
-      const normalizedMother = person.motherName?.toLowerCase() || '';
-      const normalizedFather = person.fatherName?.toLowerCase() || '';
-
-      return normalizedName.includes(normalizedQuery)
-        || normalizedMother.includes(normalizedQuery)
-        || normalizedFather.includes(normalizedQuery);
-    });
-  }
-
-  if (centuryFilter && centuryFilter.length) {
-    peopleCopy = peopleCopy.filter(person => {
-      const currentCentury = Math.floor(person.born / 100) + 1;
-
-      return centuryFilter.includes(currentCentury.toString());
-    });
-  }
-
-  if (sexFilter) {
-    peopleCopy = peopleCopy.filter(person => {
-      return person.sex === sexFilter?.toString();
-    });
-  }
-
-  if (sortFilter) {
-    peopleCopy = sortPeopleBy(
-      peopleCopy,
-      sortFilter as SortColumns,
-      sortOrder === 'desc',
-    );
-  }
-
-  return peopleCopy;
-}
+import { filterPeople } from '../../utils/functions';
 
 export const PeoplePage: React.FC = () => {
   const [searchParams] = useSearchParams();

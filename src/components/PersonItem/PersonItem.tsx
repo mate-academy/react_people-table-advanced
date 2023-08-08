@@ -1,7 +1,8 @@
-import React, { useEffect } from 'react';
+import React, { useMemo } from 'react';
 import cn from 'classnames';
-import { useParams, Link, useSearchParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { Person } from '../../types/Person';
+import { PersonLink } from '../PersonLink';
 
 interface Props {
   person: Person,
@@ -13,7 +14,6 @@ export const PersonItem: React.FC<Props> = ({
   findPerson,
 }) => {
   const {
-    name,
     sex,
     born,
     died,
@@ -23,14 +23,8 @@ export const PersonItem: React.FC<Props> = ({
   } = person;
 
   const { personSlug } = useParams();
-  const [searchParams] = useSearchParams();
-  let mother: Person | undefined;
-  let father: Person | undefined;
-
-  useEffect(() => {
-    mother = findPerson(motherName);
-    father = findPerson(fatherName);
-  }, []);
+  const mother = useMemo(() => findPerson(motherName), [motherName]);
+  const father = useMemo(() => findPerson(fatherName), [fatherName]);
 
   return (
     <tr
@@ -40,14 +34,7 @@ export const PersonItem: React.FC<Props> = ({
       })}
     >
       <td>
-        <Link
-          to={`/people/${slug}?${searchParams.toString()}`}
-          className={cn({
-            'has-text-danger': sex === 'f',
-          })}
-        >
-          {name}
-        </Link>
+        <PersonLink person={person} />
       </td>
 
       <td>{sex}</td>
@@ -56,23 +43,12 @@ export const PersonItem: React.FC<Props> = ({
       <td>
         {mother
           ? (
-            <Link
-              to={`/people/${mother.slug}?${searchParams.toString()}`}
-              className={cn({
-                'has-text-danger': mother.sex === 'f',
-              })}
-            >
-              {mother.name}
-            </Link>
+            <PersonLink person={mother} />
           ) : (motherName || '-')}
       </td>
       <td>
         {father ? (
-          <Link
-            to={`/people/${father.slug}?${searchParams.toString()}`}
-          >
-            {father.name}
-          </Link>
+          <PersonLink person={father} />
         ) : (
           (fatherName || '-')
         )}

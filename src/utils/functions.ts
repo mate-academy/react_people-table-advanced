@@ -1,7 +1,8 @@
 import { Person } from '../types';
+import { FilterParams } from '../types/FilterParams';
 import { SortColumns } from './SortColumns';
 
-export function sortPeopleBy(
+function sortPeopleBy(
   people: Person[],
   sortFilter: SortColumns,
   isOrderReversed: boolean,
@@ -52,4 +53,52 @@ export function sortPeopleBy(
   }
 
   return peopleResult;
+}
+
+export function filterPeople(people: Person[], {
+  queryFilter,
+  centuryFilter,
+  sexFilter,
+  sortFilter,
+  sortOrder,
+}: FilterParams) {
+  let peopleCopy = [...people];
+
+  if (queryFilter) {
+    const normalizedQuery = queryFilter.toLowerCase();
+
+    peopleCopy = peopleCopy.filter(person => {
+      const normalizedName = person.name.toLowerCase();
+      const normalizedMother = person.motherName?.toLowerCase() || '';
+      const normalizedFather = person.fatherName?.toLowerCase() || '';
+
+      return normalizedName.includes(normalizedQuery)
+        || normalizedMother.includes(normalizedQuery)
+        || normalizedFather.includes(normalizedQuery);
+    });
+  }
+
+  if (centuryFilter && centuryFilter.length) {
+    peopleCopy = peopleCopy.filter(person => {
+      const currentCentury = Math.floor(person.born / 100) + 1;
+
+      return centuryFilter.includes(currentCentury.toString());
+    });
+  }
+
+  if (sexFilter) {
+    peopleCopy = peopleCopy.filter(person => {
+      return person.sex === sexFilter?.toString();
+    });
+  }
+
+  if (sortFilter) {
+    peopleCopy = sortPeopleBy(
+      peopleCopy,
+      sortFilter as SortColumns,
+      sortOrder === 'desc',
+    );
+  }
+
+  return peopleCopy;
 }
