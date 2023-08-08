@@ -17,7 +17,7 @@ export const PersonItem: React.FC<Props> = ({ person, slug }) => {
       })}
     >
       <td>
-        <PersonLink 
+        <PersonLink
           person={person}
         />
       </td>
@@ -30,7 +30,7 @@ export const PersonItem: React.FC<Props> = ({ person, slug }) => {
 
       <td>
         {person.mother ? (
-          <PersonLink 
+          <PersonLink
             person={person.mother}
           />
         ) : (
@@ -40,7 +40,7 @@ export const PersonItem: React.FC<Props> = ({ person, slug }) => {
 
       <td>
         {person.father ? (
-          <PersonLink 
+          <PersonLink
             person={person.father}
           />
         ) : (

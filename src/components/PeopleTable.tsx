@@ -13,8 +13,8 @@ type Props = {
 };
 
 export const PeopleTable: React.FC<Props> = ({
-  people, 
-  slug, 
+  people,
+  slug,
   isLoading,
 }) => {
   const [searchParams] = useSearchParams();

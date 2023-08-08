@@ -1,4 +1,4 @@
-import { Person } from "../types";
+import { Person } from '../types';
 
 type Filter = {
   query: string,
