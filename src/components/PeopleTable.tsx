@@ -8,9 +8,10 @@ import { SearchLink } from './SearchLink';
 type Props = {
   people: Person[];
   slug: string | undefined;
+  isLoading: boolean;
 };
 
-export const PeopleTable: React.FC<Props> = ({ people, slug }) => {
+export const PeopleTable: React.FC<Props> = ({ people, slug, isLoading }) => {
   const [searchParams] = useSearchParams();
 
   const query = searchParams.get('query') || '';
@@ -18,6 +19,7 @@ export const PeopleTable: React.FC<Props> = ({ people, slug }) => {
   const centuries = searchParams.getAll('centuries') || [];
   const sort = searchParams.get('sort') || '';
   const order = searchParams.get('order') || '';
+  const categoryFilter = ['Name', 'Sex', 'Born', 'Died'];
 
   const preparePeople = () => {
     let newPeople = [...people];
@@ -82,7 +84,7 @@ export const PeopleTable: React.FC<Props> = ({ people, slug }) => {
     return value;
   };
 
-  if (!preparePeople().length) {
+  if (!isLoading && !preparePeople().length) {
     return (
       <p>
         There are no people matching the current search criteria
@@ -97,7 +99,7 @@ export const PeopleTable: React.FC<Props> = ({ people, slug }) => {
     >
       <thead>
         <tr>
-          {['Name', 'Sex', 'Born', 'Died'].map((column) => (
+          {categoryFilter.map((column) => (
             <th key={column}>
               <span className="is-flex is-flex-wrap-nowrap">
                 {column}

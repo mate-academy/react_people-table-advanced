@@ -7,22 +7,20 @@ import { Person } from '../types';
 import { getPeople } from '../api';
 
 const getPreparedPeople = (people: Person[]): Person[] => {
-  const preparedPeople = people.map(person => {
+  return people.map(person => {
     return {
       ...person,
       father: people.find(p => p.name === person.fatherName),
       mother: people.find(p => p.name === person.motherName),
     };
   });
-
-  return preparedPeople;
 };
 
 export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
-  const [isEmpty, setIsEmpty] = useState(false);
+  const [isLoaded, setIsLoaded] = useState(false);
   const { slug } = useParams();
 
   useEffect(() => {
@@ -30,11 +28,13 @@ export const PeoplePage = () => {
 
     getPeople()
       .then((data) => {
-        setIsEmpty(!data.length);
         setPeople(getPreparedPeople(data));
       })
       .catch(() => setIsError(true))
-      .finally(() => setIsLoading(false));
+      .finally(() => {
+        setIsLoading(false);
+        setIsLoaded(true);
+      });
   }, []);
 
   return (
@@ -44,7 +44,9 @@ export const PeoplePage = () => {
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
           <div className="column is-7-tablet is-narrow-desktop">
-            <PeopleFilters />
+            {!!people.length && isLoaded && (
+              <PeopleFilters />
+            )}
           </div>
 
           <div className="column">
@@ -59,7 +61,21 @@ export const PeoplePage = () => {
                 </p>
               )}
 
-              {isEmpty ? (
+              {!!people.length && isLoaded && (
+                <PeopleTable
+                  people={people}
+                  slug={slug}
+                  isLoading={isLoading}
+                />
+              )}
+
+              {!people.length && isLoaded && (
+                <p data-cy="noPeopleMessage">
+                  There are no people on the server
+                </p>
+              )}
+
+              {/* {!isLoading && !people.length && isLoaded ? (
                 <p data-cy="noPeopleMessage">
                   There are no people on the server
                 </p>
@@ -67,8 +83,9 @@ export const PeoplePage = () => {
                 <PeopleTable
                   people={people}
                   slug={slug}
+                  isLoading={isLoading}
                 />
-              )}
+              )} */}
             </div>
           </div>
         </div>
