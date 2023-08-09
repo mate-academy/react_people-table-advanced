@@ -78,6 +78,14 @@ export const PeopleTable = ({ people }: { people: Person[] }) => {
             </td>
           </tr>
         ))}
+
+        {visiblePeople.length === 0 && (
+          <tr>
+            <td>
+              <p className="my-3">No people found for the selected filters</p>
+            </td>
+          </tr>
+        )}
       </tbody>
     </table>
   );

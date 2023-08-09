@@ -2,10 +2,10 @@ import { useSearchParams } from 'react-router-dom';
 import classNames from 'classnames';
 import { SearchLink } from './SearchLink';
 
+const allCenturies = ['16', '17', '18', '19', '20'];
+
 export const CenturyFilter = () => {
   const [searchParams] = useSearchParams();
-
-  const allCenturies = ['16', '17', '18', '19', '20'];
   const currentCenturies = searchParams.getAll('centuries');
 
   const getUpdatedCenturies = (centuryToUpdate: string): string[] => {
