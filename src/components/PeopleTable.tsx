@@ -1,5 +1,8 @@
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+/* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable no-else-return */
-import React, { useMemo, useState } from 'react';
+import React, { useState } from 'react';
 import classNames from 'classnames';
 import { useParams } from 'react-router-dom';
 import { Person } from '../types';
@@ -18,6 +21,8 @@ type Props = {
   centuries: Centuries;
   centuriesClickHandler: (centuries: Centuries) => void;
   deleteFilters: () => void;
+  searchParams: URLSearchParams;
+  setSearchParams: (sp: URLSearchParams) => void;
 };
 
 export const PeopleTable:React.FC<Props> = ({
@@ -30,6 +35,8 @@ export const PeopleTable:React.FC<Props> = ({
   centuries,
   centuriesClickHandler,
   deleteFilters,
+  searchParams,
+  setSearchParams,
 }) => {
   const { slug } = useParams();
   const [nameClickCount, setNameClickCount] = useState(0);
@@ -37,45 +44,93 @@ export const PeopleTable:React.FC<Props> = ({
   const [bornClickCount, setBornClickCount] = useState(0);
   const [diedClickCount, setDiedClickCount] = useState(0);
 
-  const nameHref = useMemo(() => {
-    if (nameClickCount === 1) {
-      return '#/people?sort=name';
-    } else if (nameClickCount === 2) {
-      return '#/people?sort=name&order=desc';
+  const nameClickHandler = (name: string, order: string) => {
+    const params = new URLSearchParams(searchParams);
+
+    if (nameClickCount === 0) {
+      params.set('sort', name);
+      setSearchParams(params);
+
+      return params;
+    } else if (nameClickCount === 1) {
+      params.set('order', order);
+      setSearchParams(params);
+
+      return params;
+    } else {
+      params.set('order', '');
+      params.set('sort', '');
+      setSearchParams(params);
+
+      return params;
     }
+  };
 
-    return '#/people';
-  }, [nameClickCount]);
+  const sexFieldClickHandler = (someSex: string, order: string) => {
+    const params = new URLSearchParams(searchParams);
 
-  const sexHref = useMemo(() => {
-    if (sexClickCount === 1) {
-      return '#/people?sort=sex';
-    } else if (sexClickCount === 2) {
-      return '#/people?sort=sex&order=desc';
+    if (sexClickCount === 0) {
+      params.set('sort', someSex);
+      setSearchParams(params);
+
+      return params;
+    } else if (sexClickCount === 1) {
+      params.set('order', order);
+      setSearchParams(params);
+
+      return params;
+    } else {
+      params.set('order', '');
+      params.set('sort', '');
+      setSearchParams(params);
+
+      return params;
     }
+  };
 
-    return '#/people';
-  }, [sexClickCount]);
+  const diedClickHandler = (year: string, order: string) => {
+    const params = new URLSearchParams(searchParams);
 
-  const bornHref = useMemo(() => {
-    if (bornClickCount === 1) {
-      return '#/people?sort=born';
-    } else if (bornClickCount === 2) {
-      return '#/people?sort=born&order=desc';
+    if (diedClickCount === 0) {
+      params.set('sort', year);
+      setSearchParams(params);
+
+      return params;
+    } else if (diedClickCount === 1) {
+      params.set('order', order);
+      setSearchParams(params);
+
+      return params;
+    } else {
+      params.set('order', '');
+      params.set('sort', '');
+      setSearchParams(params);
+
+      return params;
     }
+  };
 
-    return '#/people';
-  }, [bornClickCount]);
+  const bornClickHandler = (year: string, order: string) => {
+    const params = new URLSearchParams(searchParams);
 
-  const diedHref = useMemo(() => {
-    if (diedClickCount === 1) {
-      return '#/people?sort=died';
-    } else if (diedClickCount === 2) {
-      return '#/people?sort=died&order=desc';
+    if (bornClickCount === 0) {
+      params.set('sort', year);
+      setSearchParams(params);
+
+      return params;
+    } else if (bornClickCount === 1) {
+      params.set('order', order);
+      setSearchParams(params);
+
+      return params;
+    } else {
+      params.set('order', '');
+      params.set('sort', '');
+      setSearchParams(params);
+
+      return params;
     }
-
-    return '#/people';
-  }, [diedClickCount]);
+  };
 
   return (
     <>
@@ -101,8 +156,8 @@ export const PeopleTable:React.FC<Props> = ({
                     <span className="is-flex is-flex-wrap-nowrap">
                       Name
                       <a
-                        href={nameHref}
                         onClick={() => {
+                          nameClickHandler('name', 'desc');
                           setNameClickCount(prev => {
                             if (prev === 0) {
                               return 1;
@@ -141,8 +196,8 @@ export const PeopleTable:React.FC<Props> = ({
                     <span className="is-flex is-flex-wrap-nowrap">
                       Sex
                       <a
-                        href={sexHref}
                         onClick={() => {
+                          sexFieldClickHandler('sex', 'desc');
                           setSexClickCount(prev => {
                             if (prev === 0) {
                               return 1;
@@ -181,8 +236,8 @@ export const PeopleTable:React.FC<Props> = ({
                     <span className="is-flex is-flex-wrap-nowrap">
                       Born
                       <a
-                        href={bornHref}
                         onClick={() => {
+                          bornClickHandler('born', 'desc');
                           setBornClickCount(prev => {
                             if (prev === 0) {
                               return 1;
@@ -221,8 +276,8 @@ export const PeopleTable:React.FC<Props> = ({
                     <span className="is-flex is-flex-wrap-nowrap">
                       Died
                       <a
-                        href={diedHref}
                         onClick={() => {
+                          diedClickHandler('died', 'desc');
                           setDiedClickCount(prev => {
                             if (prev === 0) {
                               return 1;

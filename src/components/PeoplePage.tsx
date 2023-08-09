@@ -114,6 +114,8 @@ export const PeoplePage: React.FC = () => {
                 centuries={centuries as Centuries}
                 centuriesClickHandler={centuriesClickHandler}
                 deleteFilters={deleteFilters}
+                searchParams={searchParams}
+                setSearchParams={setSearchParams}
               />
             )}
           {isError && (
