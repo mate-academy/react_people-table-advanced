@@ -48,7 +48,7 @@ export const TableTitle: React.FC<Props> = ({ title }) => {
             <i
               className={cn('fas', {
                 'fa-sort': sort !== lowerTitle,
-                'fa-sort-up': sort === lowerTitle && order === null,
+                'fa-sort-up': sort === lowerTitle && order !== Order.Desc,
                 'fa-sort-down': sort === lowerTitle && order === Order.Desc,
               })}
             />
