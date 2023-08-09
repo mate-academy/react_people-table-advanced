@@ -2,12 +2,16 @@
 import { Person } from '../types';
 import { Sex } from '../types/Sex';
 import { Centuries } from '../types/Centuries';
+import { SortField } from '../types/SortField';
+import { Order } from '../types/Order';
 
 type Props = {
   people: Person[];
   sex: Sex;
   query: string;
   centuries: Centuries;
+  sort: SortField,
+  order: Order,
 };
 
 export const preparedPeople = ({
@@ -15,6 +19,8 @@ export const preparedPeople = ({
   sex,
   query,
   centuries,
+  sort,
+  order,
 }: Props): Person[] => {
   let newPeople = [...people];
 
@@ -63,6 +69,40 @@ export const preparedPeople = ({
 
       case Centuries.twenty:
         newPeople = newPeople.filter(person => Math.ceil(person.born / 100) === 20);
+        break;
+
+      default:
+        newPeople = [...newPeople];
+    }
+  }
+
+  if (sort) {
+    switch (sort) {
+      case SortField.name:
+        newPeople = [...newPeople].sort((p1, p2) => p1.name.localeCompare(p2.name));
+        break;
+
+      case SortField.sex:
+        newPeople = [...newPeople].sort((p1, p2) => p1.sex.localeCompare(p2.sex));
+        break;
+
+      case SortField.born:
+        newPeople = [...newPeople].sort((p1, p2) => p1.born - p2.born);
+        break;
+
+      case SortField.died:
+        newPeople = [...newPeople].sort((p1, p2) => p1.died - p2.died);
+        break;
+
+      default:
+        newPeople = [...newPeople];
+    }
+  }
+
+  if (order) {
+    switch (order) {
+      case Order.desc:
+        newPeople = [...newPeople].reverse();
         break;
 
       default:

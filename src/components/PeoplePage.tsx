@@ -8,6 +8,8 @@ import { Person } from '../types';
 import { Centuries } from '../types/Centuries';
 import { Sex } from '../types/Sex';
 import { preparedPeople } from '../utils/preparedPeople';
+import { SortField } from '../types/SortField';
+import { Order } from '../types/Order';
 
 type Parent = 'father' | 'mother';
 
@@ -31,6 +33,8 @@ export const PeoplePage: React.FC = () => {
   const query = searchParams.get('query') || '';
   const sex = (searchParams.get('sex') || '') as Sex;
   const centuries = (searchParams.get('centuries') || '') as Centuries;
+  const sort = (searchParams.get('sort') || '') as SortField;
+  const order = (searchParams.get('order') || '') as Order;
 
   const sexClickHandler = (personSex: string): void => {
     const params = new URLSearchParams(searchParams);
@@ -88,7 +92,7 @@ export const PeoplePage: React.FC = () => {
 
   const normalizedPeople = useMemo(() => {
     return preparedPeople({
-      people, sex, query, centuries,
+      people, sex, query, centuries, sort, order,
     });
   }, [searchParams, people]);
 
