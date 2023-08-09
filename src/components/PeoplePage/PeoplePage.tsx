@@ -60,54 +60,18 @@ export const PeoplePage = () => {
     }
 
     if (sort) {
-      switch (sort) {
-        case 'name':
-          if (order === 'asc') {
-            peopleToFilter = peopleToFilter.sort(
-              (a, b) => a.name.localeCompare(b.name),
-            );
-          } else if (order === 'desc') {
-            peopleToFilter = peopleToFilter.sort(
-              (a, b) => b.name.localeCompare(a.name),
-            );
-          }
+      peopleToFilter = peopleToFilter.sort((a, b) => {
+        if (sort === 'name' || sort === 'sex') {
+          return order === 'asc' ? a[sort].localeCompare(b[sort])
+            : b[sort].localeCompare(a[sort]);
+        }
 
-          break;
+        if (sort === 'born' || sort === 'died') {
+          return order === 'asc' ? a[sort] - b[sort] : b[sort] - a[sort];
+        }
 
-        case 'sex':
-          if (order === 'asc') {
-            peopleToFilter = peopleToFilter.sort(
-              (a, b) => a.sex.localeCompare(b.sex),
-            );
-          } else if (order === 'desc') {
-            peopleToFilter = peopleToFilter.sort(
-              (a, b) => b.sex.localeCompare(a.sex),
-            );
-          }
-
-          break;
-
-        case 'born':
-          if (order && order === 'asc') {
-            peopleToFilter = peopleToFilter.sort((a, b) => a.born - b.born);
-          } else if (order === 'desc') {
-            peopleToFilter = peopleToFilter.sort((a, b) => b.born - a.born);
-          }
-
-          break;
-
-        case 'died':
-          if (order && order === 'asc') {
-            peopleToFilter = peopleToFilter.sort((a, b) => a.died - b.died);
-          } else if (order === 'desc') {
-            peopleToFilter = peopleToFilter.sort((a, b) => b.died - a.died);
-          }
-
-          break;
-
-        default:
-          break;
-      }
+        return 0;
+      });
     }
 
     return peopleToFilter;
