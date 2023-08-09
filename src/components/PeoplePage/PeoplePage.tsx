@@ -51,13 +51,13 @@ export const PeoplePage = () => {
                 </p>
               )}
 
-              {people.length === 0 && !hasError && !isLoading && (
+              {preparedPeople.length === 0 && !hasError && !isLoading && (
                 <p data-cy="noPeopleMessage">
                   There are no people on the server
                 </p>
               )}
 
-              {people.length > 0 && !hasError
+              {preparedPeople.length > 0 && !hasError
                 && <PeopleTable people={preparedPeople} />}
             </div>
           </div>
