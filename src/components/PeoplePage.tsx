@@ -7,6 +7,7 @@ import { PeopleTable } from './PeopleTable';
 import { Person } from '../types';
 import { Centuries } from '../types/Centuries';
 import { Sex } from '../types/Sex';
+import { preparedPeople } from '../utils/preparedPeople';
 
 type Parent = 'father' | 'mother';
 
@@ -28,8 +29,8 @@ export const PeoplePage: React.FC = () => {
   const [isPending, setIsPending] = useState(true);
   const [searchParams, setSearchParams] = useSearchParams();
   const query = searchParams.get('query') || '';
-  const sex = searchParams.get('sex') || '';
-  const centuries = searchParams.get('centuries') || '';
+  const sex = (searchParams.get('sex') || '') as Sex;
+  const centuries = (searchParams.get('centuries') || '') as Centuries;
 
   const sexClickHandler = (personSex: string): void => {
     const params = new URLSearchParams(searchParams);
@@ -85,60 +86,10 @@ export const PeoplePage: React.FC = () => {
     preparePeople();
   }, []);
 
-  const preparedPeople = useMemo(() => {
-    let newPeople = [...people];
-
-    if (query) {
-      const normalizedQuery = query.toLocaleLowerCase();
-
-      newPeople = newPeople.filter(
-        person => person.name.toLowerCase().includes(normalizedQuery),
-      );
-    }
-
-    if (sex) {
-      switch (sex) {
-        case Sex.male:
-          newPeople = newPeople.filter(person => person.sex === 'm');
-          break;
-
-        case Sex.female:
-          newPeople = newPeople.filter(person => person.sex === 'f');
-          break;
-
-        default:
-          newPeople = [...newPeople];
-      }
-    }
-
-    if (centuries) {
-      switch (centuries) {
-        case Centuries.sixteen:
-          newPeople = newPeople.filter(person => Math.ceil(person.born / 100) === 16);
-          break;
-
-        case Centuries.seventeen:
-          newPeople = newPeople.filter(person => Math.ceil(person.born / 100) === 17);
-          break;
-
-        case Centuries.eighteen:
-          newPeople = newPeople.filter(person => Math.ceil(person.born / 100) === 18);
-          break;
-
-        case Centuries.nineteen:
-          newPeople = newPeople.filter(person => Math.ceil(person.born / 100) === 19);
-          break;
-
-        case Centuries.twenty:
-          newPeople = newPeople.filter(person => Math.ceil(person.born / 100) === 20);
-          break;
-
-        default:
-          newPeople = [...newPeople];
-      }
-    }
-
-    return newPeople;
+  const normalizedPeople = useMemo(() => {
+    return preparedPeople({
+      people, sex, query, centuries,
+    });
   }, [searchParams, people]);
 
   return (
@@ -151,7 +102,7 @@ export const PeoplePage: React.FC = () => {
             : (
               <PeopleTable
                 onError={isError}
-                people={preparedPeople}
+                people={normalizedPeople}
                 sex={sex as Sex}
                 sexClickHandler={sexClickHandler}
                 query={query}

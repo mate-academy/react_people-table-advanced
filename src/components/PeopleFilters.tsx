@@ -1,3 +1,4 @@
+/* eslint-disable array-callback-return */
 /* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
@@ -26,6 +27,9 @@ export const PeopleFilters:React.FC<Props> = ({
   centuriesClickHandler,
   deleteFilters,
 }) => {
+  const centuriesArray = [Centuries.sixteen, Centuries.seventeen, Centuries.eighteen, Centuries.nineteen,
+    Centuries.twenty];
+
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
@@ -80,67 +84,24 @@ export const PeopleFilters:React.FC<Props> = ({
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            <a
-              data-cy="century"
-              className={classNames('button mr-1', {
-                'is-info': centuries === '16',
-              })}
-              onClick={() => centuriesClickHandler(Centuries.sixteen)}
-            >
-              16
-            </a>
-
-            <a
-              data-cy="century"
-              className={classNames('button mr-1', {
-                'is-info': centuries === '17',
-              })}
-              onClick={() => centuriesClickHandler(Centuries.seventeen)}
-            >
-              17
-            </a>
-
-            <a
-              data-cy="century"
-              className={classNames('button mr-1', {
-                'is-info': centuries === '18',
-              })}
-              onClick={() => centuriesClickHandler(Centuries.eighteen)}
-            >
-              18
-            </a>
-
-            <a
-              data-cy="century"
-              className={classNames('button mr-1', {
-                'is-info': centuries === '19',
-              })}
-              onClick={() => centuriesClickHandler(Centuries.nineteen)}
-            >
-              19
-            </a>
-
-            <a
-              data-cy="century"
-              className={classNames('button mr-1', {
-                'is-info': centuries === '20',
-              })}
-              onClick={() => centuriesClickHandler(Centuries.twenty)}
-            >
-              20
-            </a>
+            {centuriesArray.map(century => (
+              <a
+                data-cy="century"
+                className={classNames('button mr-1', {
+                  'is-info': centuries === century,
+                })}
+                onClick={() => centuriesClickHandler(century)}
+              >
+                {century}
+              </a>
+            ))}
           </div>
 
           <div className="level-right ml-4">
             <a
               data-cy="centuryALL"
               className={classNames('button is-outlined', {
-                'is-success': centuries === ''
-                || (centuries !== '16'
-                && centuries !== '17'
-                && centuries !== '18'
-                && centuries !== '19'
-                && centuries !== '20'),
+                'is-success': centuries === Centuries.none,
               })}
               onClick={() => centuriesClickHandler(Centuries.none)}
             >
