@@ -1,8 +1,8 @@
 import { useSearchParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { PeopleFilters } from './PeopleFilters';
-import { Loader } from './Loader';
-import { PeopleTable } from './PeopleTable';
+import { PeopleFilters } from '../components/PeopleFilters';
+import { Loader } from '../components/Loader';
+import { PeopleTable } from '../components/PeopleTable';
 import { Person } from '../types';
 import { getPeople } from '../api';
 import { getPeopleWithParent } from '../utils/getPeopleWithParent';
@@ -18,6 +18,8 @@ export const PeoplePage: React.FC = () => {
   const sex = searchParams.get('sex') || '';
   const query = searchParams.get('query') || '';
   const centuries = searchParams.getAll('centuries') || [];
+  const sort = searchParams.get('sort') || '';
+  const order = searchParams.get('order') || '';
 
   const preparedPeople = () => {
     setIsLoading(true);
@@ -32,7 +34,12 @@ export const PeoplePage: React.FC = () => {
   };
 
   const visiblePeople = getFilteredPeople({
-    people, sex, query, centuries,
+    people,
+    sex,
+    query,
+    centuries,
+    sort,
+    order,
   });
 
   useEffect(() => {
@@ -56,9 +63,7 @@ export const PeoplePage: React.FC = () => {
               {isLoading && <Loader />}
 
               {error && (
-                <p data-cy="peopleLoadingError">
-                  Something went wrong
-                </p>
+                <p data-cy="peopleLoadingError">Something went wrong</p>
               )}
 
               {!isLoading && !people.length && !error && (
@@ -68,9 +73,7 @@ export const PeoplePage: React.FC = () => {
               )}
 
               {!visiblePeople.length && !isLoading && (
-                <p>
-                  There are no people matching the current search criteria
-                </p>
+                <p>There are no people matching the current search criteria</p>
               )}
 
               {!isLoading && people.length && !error && (

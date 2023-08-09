@@ -1,8 +1,10 @@
-import { useParams } from 'react-router-dom';
+import { useParams, useSearchParams } from 'react-router-dom';
 import classNames from 'classnames';
 
 import { Person } from '../types';
 import { PersonLink } from './PersonLink';
+import { SortField } from '../utils/options';
+import { SearchLink } from './SearchLink';
 
 type Props = {
   people: Person[];
@@ -10,6 +12,30 @@ type Props = {
 
 export const PeopleTable: React.FC<Props> = ({ people }) => {
   const { slug } = useParams();
+  const [searchParams] = useSearchParams();
+
+  const sort = searchParams.get('sort') || '';
+  const order = searchParams.get('order') || '';
+
+  const getIconClassName = (field: SortField) => {
+    return classNames('fas', {
+      'fa-sort': sort !== field,
+      'fa-sort-up': !order && sort === field,
+      'fa-sort-down': order && sort === field,
+    });
+  };
+
+  const handleSort = (field: SortField) => {
+    if (sort === field && !order) {
+      return { sort: field, order: 'desc' };
+    }
+
+    if (sort === field && order) {
+      return { sort: null, order: null };
+    }
+
+    return { sort: field, order: null };
+  };
 
   return (
     <table
@@ -18,49 +44,20 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
     >
       <thead>
         <tr>
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Name
-              <a href="#/people?sort=name">
-                <span className="icon">
-                  <i className="fas fa-sort" />
-                </span>
-              </a>
-            </span>
-          </th>
-
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Sex
-              <a href="#/people?sort=sex">
-                <span className="icon">
-                  <i className="fas fa-sort" />
-                </span>
-              </a>
-            </span>
-          </th>
-
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Born
-              <a href="#/people?sort=born&amp;order=desc">
-                <span className="icon">
-                  <i className="fas fa-sort-up" />
-                </span>
-              </a>
-            </span>
-          </th>
-
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Died
-              <a href="#/people?sort=died">
-                <span className="icon">
-                  <i className="fas fa-sort" />
-                </span>
-              </a>
-            </span>
-          </th>
+          {Object.entries(SortField).map(([key, field]) => (
+            <th key={field}>
+              <span className="is-flex is-flex-wrap-nowrap">
+                {key}
+                <SearchLink
+                  params={handleSort(field)}
+                >
+                  <span className="icon">
+                    <i className={`fas ${getIconClassName(field)}`} />
+                  </span>
+                </SearchLink>
+              </span>
+            </th>
+          ))}
 
           <th>Mother</th>
           <th>Father</th>

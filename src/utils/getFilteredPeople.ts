@@ -1,10 +1,13 @@
 import { Person } from '../types';
+import { SortField } from './options';
 
 type Props = {
   people: Person[];
-  sex: string
+  sex: string;
   centuries: string[];
   query: string;
+  sort: string;
+  order: string;
 };
 
 function normalized(string: string | undefined) {
@@ -24,6 +27,8 @@ export const getFilteredPeople = ({
   sex,
   query,
   centuries,
+  sort,
+  order,
 }: Props) => {
   let preparedPeople = people;
 
@@ -43,6 +48,26 @@ export const getFilteredPeople = ({
     preparedPeople = preparedPeople.filter(person => (
       centuries.includes(getCentury(person.born))
     ));
+  }
+
+  if (sort) {
+    preparedPeople = [...preparedPeople].sort((p1, p2) => {
+      switch (sort) {
+        case SortField.Name:
+        case SortField.Sex:
+          return p1[sort].localeCompare(p2[sort]);
+
+        case SortField.Born:
+        case SortField.Died:
+          return p1[sort] - p2[sort];
+        default:
+          return 0;
+      }
+    });
+  }
+
+  if (order === 'desc') {
+    preparedPeople.reverse();
   }
 
   return preparedPeople;

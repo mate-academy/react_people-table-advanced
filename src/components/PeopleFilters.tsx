@@ -1,12 +1,13 @@
 import { useSearchParams } from 'react-router-dom';
 import classNames from 'classnames';
 import { SearchLink } from './SearchLink';
-import { centuriesCategories, sexCategories } from '../utils/filterOptions';
+import { SexCategories, centuriesCategories } from '../utils/options';
 import { getSearchWith } from '../utils/searchHelper';
 
 export const PeopleFilters: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const sex = searchParams.get('sex') || '';
+
+  const sex = searchParams.get('sex') || null;
   const query = searchParams.get('query') || '';
   const centuries = searchParams.getAll('centuries') || [];
 
@@ -29,15 +30,15 @@ export const PeopleFilters: React.FC = () => {
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        {sexCategories.map(category => (
+        {Object.entries(SexCategories).map(([key, value]) => (
           <SearchLink
-            key={category.label}
+            key={key}
             className={classNames({
-              'is-active': sex === category.value,
+              'is-active': sex === value,
             })}
-            params={{ sex: category.value }}
+            params={{ sex: value }}
           >
-            {category.label}
+            {key}
           </SearchLink>
         ))}
       </p>
