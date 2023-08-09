@@ -27,16 +27,18 @@ export const PeopleTable = () => {
   const sort = searchParams.get('sort') as SortParameters || '';
   const order = searchParams.get('order') || '';
 
-  const preparedPeople = getPreparedPeople(
-    peopleWithParents,
-    {
-      query,
-      sex,
-      centuries,
-    },
-    sort,
-    order,
-  );
+  const preparedPeople = useMemo(() => {
+    return getPreparedPeople(
+      peopleWithParents,
+      {
+        query,
+        sex,
+        centuries,
+      },
+      sort,
+      order,
+    );
+  }, [peopleWithParents, query, sex, centuries, sort, order]);
 
   useEffect(() => {
     setIsLoading(true);

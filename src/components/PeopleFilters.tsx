@@ -3,7 +3,7 @@ import { Link, useSearchParams } from 'react-router-dom';
 import classNames from 'classnames';
 import { SearchParams, getSearchWith } from '../utils/searchHelper';
 
-const renderCenturies = '16 17 18 19 20'.split(' ');
+const renderCenturies = ['16', '17', '18', '19', '20'];
 
 export const PeopleFilters = () => {
   const [searchParameters, setSearchParameters] = useSearchParams();
