@@ -8,6 +8,8 @@ import { getPeopleWithParents } from '../utils/getPeopleWithParents';
 import { getPreparedPeople } from '../utils/getPreparedPeople';
 import { SortLink, Loader, PeopleFilters } from '../components';
 
+const fieldsWithSort = ['Name', 'Sex', 'Born', 'Died'];
+
 export const PeopleTable = () => {
   const [people, setPeople] = useState<Person[] | []>([]);
   const [isError, setIsError] = useState(false);
@@ -18,8 +20,6 @@ export const PeopleTable = () => {
   const peopleWithParents = useMemo(() => {
     return getPeopleWithParents(people);
   }, [people]);
-
-  const fieldsWithSort = useMemo(() => ['Name', 'Sex', 'Born', 'Died'], []);
 
   const sex = searchParams.get('sex') || '';
   const query = searchParams.get('query') || '';
@@ -69,13 +69,13 @@ export const PeopleTable = () => {
                 </p>
               )}
 
-              {(isLoadWithoutErrors && people.length === 0) && (
+              {(isLoadWithoutErrors && preparedPeople.length === 0) && (
                 <p data-cy="noPeopleMessage">
                   There are no people on the server
                 </p>
               )}
 
-              {isLoadWithoutErrors && (
+              {(isLoadWithoutErrors && preparedPeople.length !== 0) && (
                 <table
                   data-cy="peopleTable"
                   className="table is-striped is-hoverable is-narrow is-fullwidth"

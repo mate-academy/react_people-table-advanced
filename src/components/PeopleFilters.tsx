@@ -3,10 +3,10 @@ import classNames from 'classnames';
 import { Link, useSearchParams } from 'react-router-dom';
 import { getSearchWith, SearchParams } from '../utils/searchHelper';
 
+const centuriesForRender = '16 17 18 19 20'.split(' ');
+
 export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-
-  const centuriesForRender = '16 17 18 19 20'.split(' ');
 
   const sex = searchParams.get('sex') || '';
   const query = searchParams.get('query') || '';
