@@ -43,7 +43,7 @@ export const TableTitle: React.FC<Props> = ({ title }) => {
     <th>
       <span className="is-flex is-flex-wrap-nowrap">
         {title}
-        <SearchLink params={setParams(title)}>
+        <SearchLink params={setParams(lowerTitle)}>
           <span className="icon">
             <i
               className={cn('fas', {
