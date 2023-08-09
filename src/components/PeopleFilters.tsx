@@ -1,6 +1,8 @@
 import React from 'react';
 import cn from 'classnames';
 import { SearchLink } from './SearchLink';
+import { SelectedSex } from '../types';
+import { allCentury } from '../utils/constants';
 
 type PeopleFiltersProps = {
   query: string,
@@ -17,14 +19,6 @@ export const PeopleFilters: React.FC<PeopleFiltersProps> = ({
   handleSex,
   handleQueryChange,
 }) => {
-  const allCentury = ['16', '17', '18', '19', '20'];
-
-  enum SelectedSex {
-    ALL = 'all',
-    MALE = 'male',
-    FEMALE = 'female',
-  }
-
   function toggleCentury(century: string) {
     return centuries.includes(century)
       ? centuries.filter(num => num !== century)

@@ -2,6 +2,7 @@ import cn from 'classnames';
 import { Link, useParams } from 'react-router-dom';
 import { Person } from '../types';
 import { SortTable } from './SortTable';
+import { arrayOfSortType } from '../utils/constants';
 
 type PeopleTableProps = {
   people: Person[],
@@ -16,7 +17,6 @@ export const PeopleTable: React.FC<PeopleTableProps> = ({
 }) => {
   const params = useParams();
   const selected = params.slug ? params.slug : '';
-  const arrayOfSortType = ['Name', 'Sex', 'Born', 'Died'];
 
   return (
     <table
