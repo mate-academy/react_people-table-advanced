@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
 import classNames from 'classnames';
 
@@ -16,9 +17,11 @@ export const PeopleTable = ({ people }: { people: Person[] }) => {
   const sortField = searchParams.get('sort') || '';
   const order = searchParams.get('order') || '';
 
-  const visiblePeople = getPreparedPeople(people, {
-    query, sex, centuries, sortField, order,
-  });
+  const visiblePeople = useMemo(() => (
+    getPreparedPeople(people, {
+      query, sex, centuries, sortField, order,
+    })
+  ), [people, query, sex, centuries, sortField, order]);
 
   return (
     <table
