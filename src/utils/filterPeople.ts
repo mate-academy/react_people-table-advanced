@@ -25,14 +25,14 @@ export const filterPeople = ({
     peopleToFilter = peopleToFilter.filter(person => {
       const { name, motherName, fatherName } = person;
 
-      return name.includes(normalizedQuery)
-        || motherName?.includes(normalizedQuery)
-        || fatherName?.includes(normalizedQuery);
+      return name.toLowerCase().includes(normalizedQuery)
+        || motherName?.toLowerCase().includes(normalizedQuery)
+        || fatherName?.toLowerCase().includes(normalizedQuery);
     });
   }
 
   if (sex) {
-    if (sex === 'm') {
+    if (sex === Sex.Male) {
       peopleToFilter
         = peopleToFilter.filter(person => person.sex === Sex.Male);
     } else {

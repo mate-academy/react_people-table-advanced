@@ -13,9 +13,9 @@ export const PeopleFilters = () => {
 
   const handleQueryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const search = getSearchWith(searchParams,
-      { query: event.target.value.trim() || null });
+      { query: event.target.value || null });
 
-    setSearchParams(search);
+    setSearchParams(search.trim());
   };
 
   return (

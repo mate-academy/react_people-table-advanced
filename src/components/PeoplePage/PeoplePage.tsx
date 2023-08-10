@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { PeopleFilters } from '../PeopleFilters';
 import { Loader } from '../Loader';
@@ -27,9 +27,9 @@ export const PeoplePage = () => {
       .catch(() => setIsError(true));
   }, []);
 
-  const filteredPeople = useMemo(() => filterPeople({
+  const filteredPeople = filterPeople({
     peopleFromServer, query, sex, centuries, sort, order,
-  }), [peopleFromServer, query, sex, centuries, sort, order]);
+  });
 
   return (
     <>
