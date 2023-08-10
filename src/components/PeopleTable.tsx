@@ -16,20 +16,20 @@ const tableColumns = ['Name', 'Sex', 'Born', 'Died'];
 export const PeopleTable: React.FC<Props> = ({ people, slug }) => {
   const [searchParams] = useSearchParams();
 
-  const sort = searchParams.get('sort') || '';
-  const order = searchParams.get('order') || '';
+  const sort = searchParams.get('sort') || null;
+  const order = searchParams.get('order') || null;
 
   const makeOrder = (col: string) => {
     if (sort === col) {
-      return order ? '' : 'desc';
+      return order ? null : 'desc';
     }
 
-    return '';
+    return null;
   };
 
   const chooseSortField = (col: string) => {
     if (sort === col && order === 'desc') {
-      return '';
+      return null;
     }
 
     return col;
@@ -49,8 +49,8 @@ export const PeopleTable: React.FC<Props> = ({ people, slug }) => {
                   {tableColumn}
                   <SearchLink
                     params={{
-                      sort: chooseSortField(tableColumn) || '',
-                      order: makeOrder(tableColumn) || '',
+                      sort: chooseSortField(tableColumn) || null,
+                      order: makeOrder(tableColumn) || null,
                     }}
                   >
                     <span className="icon">

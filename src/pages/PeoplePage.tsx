@@ -17,8 +17,8 @@ export const PeoplePage = () => {
   const query = searchParams.get('query') || '';
   const sex = searchParams.get('sex');
   const centuries = searchParams.getAll('centuries') || [];
-  const sort = searchParams.get('sort') || '';
-  const order = searchParams.get('order') || '';
+  const sort = searchParams.get('sort') || null;
+  const order = searchParams.get('order') || null;
 
   const { slug } = useParams();
 

@@ -4,8 +4,8 @@ type FilterObject = {
   query: string,
   sex: string | null,
   centuries: string[],
-  sort: string,
-  order: string,
+  sort: string | null,
+  order: string | null,
 };
 
 export const preparePeople = (
