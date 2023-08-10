@@ -56,7 +56,7 @@ export const PeoplePage = () => {
 
           <div className="column">
             <div className="box table-container">
-              {filteredPeople.length > 0 && (
+              {people.length > 0 && (
                 <PeopleTable people={filteredPeople} />
               )}
 
