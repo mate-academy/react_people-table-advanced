@@ -45,7 +45,7 @@ export const PeopleTable: React.FC<Props> = ({ people, slug }) => {
           {
             tableColumns.map(tableColumn => (
               <th key={tableColumn}>
-            <span className="is-flex is-flex-wrap-nowrap">
+                <span className="is-flex is-flex-wrap-nowrap">
                   {tableColumn}
                   <SearchLink
                     params={{
@@ -53,7 +53,7 @@ export const PeopleTable: React.FC<Props> = ({ people, slug }) => {
                       order: makeOrder(tableColumn) || '',
                     }}
                   >
-                <span className="icon">
+                    <span className="icon">
                       <i className={classNames('fas', {
                         'fa-sort': sort !== tableColumn,
                         'fa-sort-up': sort === tableColumn && order !== 'desc',
@@ -61,10 +61,10 @@ export const PeopleTable: React.FC<Props> = ({ people, slug }) => {
                           && order === 'desc',
                       })}
                       />
-                </span>
+                    </span>
                   </SearchLink>
-            </span>
-          </th>
+                </span>
+              </th>
             ))
           }
 

@@ -20,11 +20,11 @@ const findLinkedPerson = (name: string, table: Person[]) => {
 
 export const PeopleRow: React.FC<Props> = ({ person, slug, people }) => {
   const linkedMother = useMemo(
-    () => findLinkedPerson(person.motherName || '', people), [],
+    () => findLinkedPerson(person.motherName || '', people), [people],
   );
 
   const linkedFather = useMemo(
-    () => findLinkedPerson(person.fatherName || '', people), [],
+    () => findLinkedPerson(person.fatherName || '', people), [people],
   );
 
   return (

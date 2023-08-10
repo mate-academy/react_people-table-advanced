@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
 
 import { PeopleFilters } from '../components/PeopleFilters';
@@ -30,7 +30,7 @@ export const PeoplePage = () => {
       .finally(() => setLoading(false));
   }, []);
 
-  const preparedPeople = preparePeople(
+  const preparedPeople = useMemo(() => preparePeople(
     people,
     {
       query,
@@ -39,7 +39,7 @@ export const PeoplePage = () => {
       sort,
       order,
     },
-  );
+  ), [people, query, sex, centuries, sort, order]);
 
   return (
     <>
@@ -69,13 +69,14 @@ export const PeoplePage = () => {
                       </p>
                     )}
 
-                    {preparedPeople.length === 0 && !loading && (
-                      <p>
-                        There are no people matching the current search criteria
-                      </p>
-                    )}
-
-                    <PeopleTable people={preparedPeople} slug={slug} />
+                    {preparedPeople.length === 0 && !loading
+                      ? (
+                        <p>
+                          {/* eslint-disable-next-line max-len  */}
+                          There are no people matching the current search criteria
+                        </p>
+                      )
+                      : <PeopleTable people={preparedPeople} slug={slug} />}
                   </>
                 )}
             </div>
