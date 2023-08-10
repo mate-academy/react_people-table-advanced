@@ -1,0 +1,1 @@
+export { PeopleTableBody } from './PeopleTableBody';
