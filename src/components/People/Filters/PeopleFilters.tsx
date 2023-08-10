@@ -60,14 +60,6 @@ export const PeopleFilters: React.FC<Props> = ({
     setSearchParams(params);
   };
 
-  const resetAllFilters = () => {
-    const params = new URLSearchParams();
-
-    setSearchParams(params);
-    handleSexChange('');
-    clearCenturies();
-  };
-
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
@@ -96,7 +88,6 @@ export const PeopleFilters: React.FC<Props> = ({
             centuries: null,
           }}
           className="button is-link is-outlined is-fullwidth"
-          onClick={resetAllFilters}
         >
           Reset all filters
         </SearchLink>
