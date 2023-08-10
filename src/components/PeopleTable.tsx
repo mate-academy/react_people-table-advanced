@@ -1,18 +1,18 @@
-/* eslint-disable no-nested-ternary */
-import {
-  Link,
-  useParams,
-  useSearchParams,
-} from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import classNames from 'classnames';
 import { useMemo } from 'react';
 import { PersonLink } from './Links';
 import { Person } from '../types';
-import { Params, Sort, getSearchWith } from '../utils/getSearchWith';
+import { Params, getSearchWith } from '../utils/getSearchWith';
+import { SortType } from '../types/SortType';
 
 type Props = {
   people: Person[],
   error: boolean,
+  searchParams: URLSearchParams,
+  query: string,
+  sexFilter: string,
+  centuries: string[],
 };
 
 function getFiltered(
@@ -60,12 +60,12 @@ function getFiltered(
   if (sort) {
     filteredPeople = filteredPeople.sort((person1, person2) => {
       switch (sort) {
-        case Sort.NAME:
-        case Sort.SEX:
+        case SortType.NAME:
+        case SortType.SEX:
           return person1[sort].localeCompare(person2[sort]);
 
-        case Sort.BORN:
-        case Sort.DIED:
+        case SortType.BORN:
+        case SortType.DIED:
           return person1[sort] - person2[sort];
 
         default:
@@ -84,12 +84,12 @@ function getFiltered(
 export const PeopleTable: React.FC<Props> = ({
   people,
   error,
+  searchParams,
+  query,
+  sexFilter,
+  centuries,
 }) => {
   const { slug } = useParams();
-  const [searchParams] = useSearchParams();
-  const query = searchParams.get('query') || '';
-  const sexFilter = searchParams.get('sex') || '';
-  const centuries = searchParams.getAll('centuries') || [];
   const sort = searchParams.get('sort') || null;
   const order = searchParams.get('order') || null;
 
@@ -103,7 +103,7 @@ export const PeopleTable: React.FC<Props> = ({
     });
   }, [searchParams]);
 
-  function sortBy(sortType: Sort) {
+  function sortBy(sortType: SortType) {
     const firstClick = sortType !== sort;
     const secondClick = sortType === sort && !order;
 
@@ -112,7 +112,7 @@ export const PeopleTable: React.FC<Props> = ({
     }
 
     if (secondClick) {
-      return getSearchWith({ sort: null, order: 'desc' }, searchParams);
+      return getSearchWith({ order: 'desc' }, searchParams);
     }
 
     return getSearchWith({ sort: null, order: null }, searchParams);
@@ -138,13 +138,13 @@ export const PeopleTable: React.FC<Props> = ({
             <span className="is-flex is-flex-wrap-nowrap">
               Name
               <Link
-                to={{ search: sortBy(Sort.NAME) }}
+                to={{ search: sortBy(SortType.NAME) }}
               >
                 <span className="icon">
                   <i className={classNames('fas', {
-                    'fa-sort': sort !== Sort.NAME,
-                    'fa-sort-up': sort === Sort.NAME && !order,
-                    'fa-sort-down': sort === Sort.NAME && order,
+                    'fa-sort': sort !== SortType.NAME,
+                    'fa-sort-up': sort === SortType.NAME && !order,
+                    'fa-sort-down': sort === SortType.NAME && order,
                   })}
                   />
                 </span>
@@ -157,13 +157,13 @@ export const PeopleTable: React.FC<Props> = ({
             <span className="is-flex is-flex-wrap-nowrap">
               Sex
               <Link
-                to={{ search: sortBy(Sort.SEX) }}
+                to={{ search: sortBy(SortType.SEX) }}
               >
                 <span className="icon">
                   <i className={classNames('fas', {
-                    'fa-sort': sort !== Sort.SEX,
-                    'fa-sort-up': sort === Sort.SEX && !order,
-                    'fa-sort-down': sort === Sort.SEX && order,
+                    'fa-sort': sort !== SortType.SEX,
+                    'fa-sort-up': sort === SortType.SEX && !order,
+                    'fa-sort-down': sort === SortType.SEX && order,
                   })}
                   />
                 </span>
@@ -175,13 +175,13 @@ export const PeopleTable: React.FC<Props> = ({
             <span className="is-flex is-flex-wrap-nowrap">
               Born
               <Link
-                to={{ search: sortBy(Sort.BORN) }}
+                to={{ search: sortBy(SortType.BORN) }}
               >
                 <span className="icon">
                   <i className={classNames('fas', {
-                    'fa-sort': sort !== Sort.BORN,
-                    'fa-sort-up': sort === Sort.BORN && !order,
-                    'fa-sort-down': sort === Sort.BORN && order,
+                    'fa-sort': sort !== SortType.BORN,
+                    'fa-sort-up': sort === SortType.BORN && !order,
+                    'fa-sort-down': sort === SortType.BORN && order,
                   })}
                   />
                 </span>
@@ -193,13 +193,13 @@ export const PeopleTable: React.FC<Props> = ({
             <span className="is-flex is-flex-wrap-nowrap">
               Died
               <Link
-                to={{ search: sortBy(Sort.DIED) }}
+                to={{ search: sortBy(SortType.DIED) }}
               >
                 <span className="icon">
                   <i className={classNames('fas', {
-                    'fa-sort': sort !== Sort.DIED,
-                    'fa-sort-up': sort === Sort.DIED && !order,
-                    'fa-sort-down': sort === Sort.DIED && order,
+                    'fa-sort': sort !== SortType.DIED,
+                    'fa-sort-up': sort === SortType.DIED && !order,
+                    'fa-sort-down': sort === SortType.DIED && order,
                   })}
                   />
                 </span>

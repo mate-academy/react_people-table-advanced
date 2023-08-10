@@ -1,13 +1,8 @@
 /* eslint-disable no-restricted-syntax */
 
-export const enum Sort {
-  NAME = 'name',
-  SEX = 'sex',
-  BORN = 'born',
-  DIED = 'died',
-}
+import { SortType } from '../types/SortType';
 
-export type Param = string | number | Sort;
+export type Param = string | number | SortType;
 export type Params = {
   [key: string]: Param[] | Param | null;
 };

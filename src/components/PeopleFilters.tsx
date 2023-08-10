@@ -1,20 +1,23 @@
-/* eslint-disable no-restricted-syntax */
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import { Link, useSearchParams } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import classNames from 'classnames';
 import { getSearchWith } from '../utils/getSearchWith';
+import { SexType } from '../types/SexType';
 
-const enum SexType {
-  ALL = '',
-  MALE = 'm',
-  FEMALE = 'f',
-}
+type Props = {
+  searchParams: URLSearchParams,
+  setSearchParams: (nextInit: string) => void,
+  query: string,
+  sexFilter: string,
+  centuries: string[],
+};
 
-export const PeopleFilters: React.FC = () => {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const query = searchParams.get('query') || '';
-  const sexFilter = searchParams.get('sex') || '';
-  const centuries = searchParams.getAll('centuries') || [];
+export const PeopleFilters: React.FC<Props> = ({
+  searchParams,
+  setSearchParams,
+  query,
+  sexFilter,
+  centuries,
+}) => {
   const centuryFilterNumbers = ['16', '17', '18', '19', '20'];
 
   function setSearchWith(params: any) {

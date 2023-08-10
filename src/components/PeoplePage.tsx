@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { Person } from '../types';
 import { getPeople } from '../api';
 import { PeopleFilters } from './PeopleFilters';
@@ -9,6 +10,10 @@ export const PeoplePage = () => {
   const [visiblePeople, setVisiblePeople] = useState<Person[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const query = searchParams.get('query') || '';
+  const sexFilter = searchParams.get('sex') || '';
+  const centuries = searchParams.getAll('centuries') || [];
 
   useEffect(() => {
     getPeople()
@@ -43,7 +48,13 @@ export const PeoplePage = () => {
               : (
                 <>
                   <div className="column is-7-tablet is-narrow-desktop">
-                    <PeopleFilters />
+                    <PeopleFilters
+                      searchParams={searchParams}
+                      setSearchParams={setSearchParams}
+                      query={query}
+                      sexFilter={sexFilter}
+                      centuries={centuries}
+                    />
                   </div>
 
                   <div className="column">
@@ -51,6 +62,10 @@ export const PeoplePage = () => {
                       <PeopleTable
                         people={visiblePeople}
                         error={error}
+                        searchParams={searchParams}
+                        query={query}
+                        sexFilter={sexFilter}
+                        centuries={centuries}
                       />
                     </div>
                   </div>
