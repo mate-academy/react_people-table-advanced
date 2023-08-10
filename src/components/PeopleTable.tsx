@@ -16,19 +16,24 @@ export const PeopleTable: React.FC<Table> = ({
   const sort = searchParams.get('sort' || '');
 
   const sortedCategory = (field: string) => {
-    switch (sort) {
-      case field:
-        return {
-          sort: field,
-          order: order ? null : 'desc',
-        };
-
-      default:
-        return {
-          sort: field,
-          order: null,
-        };
+    if (order && sort === field) {
+      return {
+        sort: null,
+        order: null,
+      };
     }
+
+    if (!order && sort === field) {
+      return {
+        sort: field,
+        order: 'desc',
+      };
+    }
+
+    return {
+      sort: field,
+      order: null,
+    };
   };
 
   return (
