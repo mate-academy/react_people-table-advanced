@@ -88,8 +88,12 @@ export const PeoplePage: React.FC = () => {
                       </p>
                     )}
 
-                    {people.length > 0 && !error && (
+                    {visiblePeople.length > 0 && !error ? (
                       <PeopleTable people={visiblePeople} />
+                    ) : (
+                      <p>
+                        There are no people matching the current search criteria
+                      </p>
                     )}
                   </>
                 )}
