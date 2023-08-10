@@ -1,6 +1,7 @@
 import { Link, useSearchParams } from 'react-router-dom';
 import classNames from 'classnames';
 import { getSearchWith } from '../utils/searchHelper';
+import { Sex } from '../types/Sex';
 
 export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -8,6 +9,12 @@ export const PeopleFilters = () => {
   const sex = searchParams.get('sex') || '';
   const centuries = searchParams.getAll('centuries') || [];
   const centuriesArr = ['16', '17', '18', '19', '20'];
+
+  const handleChangeQuery = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchParams(getSearchWith(
+      searchParams, { query: event.target.value || null },
+    ));
+  };
 
   return (
     <nav className="panel">
@@ -21,18 +28,14 @@ export const PeopleFilters = () => {
           All
         </Link>
         <Link
-          className={classNames(
-            { 'is-active': sex === 'm' },
-          )}
-          to={{ search: getSearchWith(searchParams, { sex: 'm' }) }}
+          className={classNames({ 'is-active': sex === Sex.Male })}
+          to={{ search: getSearchWith(searchParams, { sex: Sex.Male }) }}
         >
           Male
         </Link>
         <Link
-          className={classNames(
-            { 'is-active': sex === 'f' },
-          )}
-          to={{ search: getSearchWith(searchParams, { sex: 'f' }) }}
+          className={classNames({ 'is-active': sex === Sex.Female })}
+          to={{ search: getSearchWith(searchParams, { sex: Sex.Female }) }}
         >
           Female
         </Link>
@@ -46,11 +49,7 @@ export const PeopleFilters = () => {
             className="input"
             placeholder="Search"
             value={query}
-            onChange={event => {
-              setSearchParams(getSearchWith(
-                searchParams, { query: event.target.value || null },
-              ));
-            }}
+            onChange={handleChangeQuery}
           />
 
           <span className="icon is-left">
