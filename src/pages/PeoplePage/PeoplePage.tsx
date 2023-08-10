@@ -13,7 +13,7 @@ export const PeoplePage = () => {
   const [isLoaded, setIsLoaded] = useState(false);
   const [errorMessage, setErrorMessage] = useState(false);
 
-  const showEmptyTable = people.length === 0 && !isLoaded;
+  const showLoader = people.length === 0 && !isLoaded;
   const showNoPeopleMessage = isLoaded && !errorMessage && people.length === 0;
   const showErrorMessage = errorMessage && people.length === 0;
 
@@ -31,7 +31,7 @@ export const PeoplePage = () => {
     });
   }, [people, searchParams]);
 
-  const showEmptyMessage = filteredPeople.length === 0;
+  const showEmptyMessage = filteredPeople.length === 0 && people.length > 0;
 
   function getPeopleFromServer() {
     return getPeople()
@@ -47,16 +47,16 @@ export const PeoplePage = () => {
   return (
     <>
       <h1 className="title">People Page</h1>
-      {showEmptyTable && <Loader />}
+      {showLoader && <Loader />}
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
           <div className="column is-7-tablet is-narrow-desktop">
-            {!showEmptyTable && <PeopleFilters />}
+            {isLoaded && <PeopleFilters />}
           </div>
 
           <div className="column">
             <div className="box table-container">
-              {people.length > 0 && (
+              {people.length > 0 && filteredPeople.length !== 0 && (
                 <PeopleTable people={filteredPeople} />
               )}
 

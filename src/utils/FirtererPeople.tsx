@@ -31,7 +31,7 @@ export function filterPeople(people: Person[], {
         ?.toLowerCase()
         .includes(normalizedQuery);
 
-      return name && motherName && fatherName;
+      return name || motherName || fatherName;
     });
   }
 
