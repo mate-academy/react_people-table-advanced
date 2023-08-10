@@ -10,6 +10,7 @@ import { Person } from '../../types';
 import { PeopleTable } from '../PeopleTable';
 import { PeopleFilters } from '../PeopleFilters';
 import { getSearchWith } from '../../utils/searchHelper';
+import { preparePeople } from '../../utils/preparePeople';
 
 export const PeoplePage: React.FC = () => {
   const [people, setPeople] = useState<Person[]>([]);
@@ -33,83 +34,14 @@ export const PeoplePage: React.FC = () => {
       });
   }, []);
 
-  const filterByValue = (peopleForFilter: Person[]) => {
-    const normalizedValue = value.toLowerCase().trim();
-
-    return peopleForFilter.filter(person => (
-      person.name.toLowerCase().includes(normalizedValue)
-    ));
-  };
-
-  const filterBySex = (peopleForFilter: Person[]) => (
-    peopleForFilter.filter(person => person.sex === sex)
-  );
-
-  const filterByCenturies = (peopleForFilter: Person[]) => (
-    peopleForFilter.filter(person => (
-      centuries.includes(Math.ceil(person.died / 100).toString())
-    ))
-  );
-
-  const sortPeople = (a: Person, b: Person): number => {
-    switch (sort) {
-      case 'name':
-      case 'sex':
-        return a[sort].localeCompare(b[sort]);
-
-      case 'born':
-      case 'died':
-        return a[sort] - b[sort];
-
-      default:
-        return 0;
-    }
-  };
-
-  const sortBy = (sortedPeople: Person[]) => {
-    switch (order) {
-      case '':
-        return sortedPeople.sort(sortPeople);
-
-      case 'desc':
-        return sortedPeople.sort(sortPeople).reverse();
-
-      default:
-        return sortedPeople;
-    }
-  };
-
-  const preparedPeople = useMemo(() => {
-    let mapedPeople: Person[] = people.map(person => {
-      const mother = people.find(findPerson => (
-        findPerson.name === person.motherName
-      ));
-
-      const father = people.find(findPerson => (
-        findPerson.name === person.fatherName
-      ));
-
-      return { ...person, mother, father };
-    });
-
-    if (value.length !== 0) {
-      mapedPeople = filterByValue(mapedPeople);
-    }
-
-    if (sex !== '') {
-      mapedPeople = filterBySex(mapedPeople);
-    }
-
-    if (centuries.length !== 0) {
-      mapedPeople = filterByCenturies(mapedPeople);
-    }
-
-    if (sort !== '') {
-      mapedPeople = sortBy(mapedPeople);
-    }
-
-    return mapedPeople;
-  }, [people, value, centuries, sex, sort, order]);
+  const preparedPeople = useMemo(() => preparePeople(
+    people,
+    value,
+    sex,
+    centuries,
+    sort,
+    order,
+  ), [people, value, sex, centuries, sort, order]);
 
   const onAddCentury = (str: string) => {
     const newCenturies = centuries.includes(str)
@@ -141,7 +73,9 @@ export const PeoplePage: React.FC = () => {
 
   const onChangeValue = (event: React.ChangeEvent<HTMLInputElement>) => {
     const normalizedValue = event.target.value.trim();
-    const newValue = getSearchWith(searchParams, { value: normalizedValue });
+    const newValue = !normalizedValue.length
+      ? getSearchWith(searchParams, { value: null })
+      : getSearchWith(searchParams, { value: normalizedValue });
 
     setSearchParams(newValue);
   };
@@ -153,16 +87,18 @@ export const PeoplePage: React.FC = () => {
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
           <div className="column is-7-tablet is-narrow-desktop">
-            <PeopleFilters
-              sex={sex}
-              centuries={centuries}
-              value={value}
-              onAddCentury={onAddCentury}
-              onChangeValue={onChangeValue}
-            />
+            {!isLoading && !error && (
+              <PeopleFilters
+                sex={sex}
+                centuries={centuries}
+                value={value}
+                onAddCentury={onAddCentury}
+                onChangeValue={onChangeValue}
+              />
+            )}
           </div>
 
-          <div className="block">
+          <div className="column">
             <div className="box table-container">
               {isLoading && <Loader />}
 
