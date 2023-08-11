@@ -65,7 +65,8 @@ export const PeoplePage = () => {
                       There are no people matching the current search criteria
                     </p>
                   )}
-                  <PeopleTable people={filteredPeople} />
+                  {filteredPeople.length !== 0
+                    && (<PeopleTable people={filteredPeople} />)}
                 </>
               )}
             </div>

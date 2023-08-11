@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import classNames from 'classnames';
 import { Link, useSearchParams } from 'react-router-dom';
 import { Person } from '../types';
 import { PeopleLink } from './PeopleLink';
 import { getSearchWith } from '../utils/searchHelper';
+import { sortOptions } from '../utils/consts';
 
 type Props = {
   people: Person[],
@@ -14,16 +15,9 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
   const sort = searchParams.get('sort') || '';
   const order = searchParams.get('order') || '';
 
-  const sortOptions = [
-    { title: 'Name', value: 'name' },
-    { title: 'Sex', value: 'sex' },
-    { title: 'Born', value: 'born' },
-    { title: 'Died', value: 'died' },
-  ];
-
-  const findPerson = (name: string | null) => {
+  const findPerson = useCallback((name: string | null) => {
     return people.find(person => person.name === name);
-  };
+  }, [people]);
 
   const sortBy = (newSortType: string) => {
     let sortParams = {};
