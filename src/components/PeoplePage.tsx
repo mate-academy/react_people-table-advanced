@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Outlet, useSearchParams } from 'react-router-dom';
 import {
   Gender, Person, SortType, OrderType,
@@ -35,16 +35,18 @@ export const PeoplePage = () => {
       });
   }, []);
 
-  const visiblePeople = prepearedPeople(
-    people,
-    {
-      sex,
-      query,
-      centuries,
-      sortBy,
-      order,
-    },
-  );
+  const visiblePeople = useMemo(() => {
+    return prepearedPeople(
+      people,
+      {
+        sex,
+        query,
+        centuries,
+        sortBy,
+        order,
+      },
+    );
+  }, [people, sex, query, centuries, sortBy, order]);
 
   const hasPeople = !loading && !errorMessage && people?.length !== 0;
 

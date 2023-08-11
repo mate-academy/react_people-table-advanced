@@ -84,7 +84,7 @@ export const PeopleTable:React.FC<Props> = ({ people, sort, order }) => {
           <PersonInfo
             person={person}
             key={person.slug}
-            findParent={(parentName) => findParent(parentName)}
+            findParent={findParent}
           />
         ))}
       </tbody>

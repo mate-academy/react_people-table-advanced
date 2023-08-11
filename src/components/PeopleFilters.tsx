@@ -4,6 +4,13 @@ import { SearchParams, getSearchWith } from '../utils/searchHelper';
 import { SearchLink } from './SearchLink';
 import { Gender } from '../types';
 
+const centuryOptions = ['16', '17', '18', '19', '20'];
+const genderOptions = [
+  { gender: 'All', value: Gender.All },
+  { gender: 'Male', value: Gender.Male },
+  { gender: 'Female', value: Gender.Female },
+];
+
 type Props = {
   sex: Gender,
   query: string,
@@ -14,13 +21,6 @@ export const PeopleFilters:React.FC<Props> = ({
   sex, query, centuries,
 }) => {
   const [searchParams, setSearchParams] = useSearchParams();
-
-  const centuryOptions = ['16', '17', '18', '19', '20'];
-  const genderOptions = [
-    { gender: 'All', value: Gender.All },
-    { gender: 'Male', value: Gender.Male },
-    { gender: 'Female', value: Gender.Female },
-  ];
 
   function setSearchWith(params: SearchParams) {
     const search = getSearchWith(searchParams, params);
