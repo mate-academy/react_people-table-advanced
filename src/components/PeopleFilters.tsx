@@ -39,9 +39,11 @@ export const PeopleFilters = () => {
       <p className="panel-tabs" data-cy="SexFilter">
         {sexValues.map((gender) => (
           <SearchLink
-            className={classNames({ 'is-active': gender.value === sex })}
+            className={classNames({
+              'is-active': gender.value === sex,
+            })}
             key={gender.title}
-            params={{ sex: gender.value }}
+            params={{ sex: gender.value || null }}
           >
             {gender.title}
           </SearchLink>

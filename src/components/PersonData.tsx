@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import classNames from 'classnames';
 import { useParams } from 'react-router-dom';
 import { useMemo } from 'react';
@@ -16,13 +17,19 @@ const PersonData: React.FC<PersonDataProps> = ({ person, people }) => {
     return peopleFromServer.find((mom) => mom.name === child.motherName);
   };
 
-  const mother = useMemo(() => findMother(people, person), [people]);
+  const mother = useMemo(
+    () => findMother(people, person),
+    [people, person.motherName],
+  );
 
   const findFather = (peopleFromServer: Person[], child: Person) => {
     return peopleFromServer.find((dad) => dad.name === child.fatherName);
   };
 
-  const father = useMemo(() => findFather(people, person), [people]);
+  const father = useMemo(
+    () => findFather(people, person),
+    [people, person.fatherName],
+  );
 
   return (
     <tr

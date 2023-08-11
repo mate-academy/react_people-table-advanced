@@ -1,19 +1,11 @@
-import { useSearchParams } from 'react-router-dom';
 import { Person } from '../types';
 import PersonData from './PersonData';
-import { getPreparedPeople } from '../utils/getPreparedPeople';
 
 interface PeopleTableProps {
   people: Person[];
 }
 
 const PeopleTable: React.FC<PeopleTableProps> = ({ people }) => {
-  const [searchParams] = useSearchParams();
-  const query = searchParams.get('query') || '';
-  const sex = searchParams.get('sex') || '';
-  const centuries = searchParams.getAll('centuries') || '';
-  const visiblePeople = getPreparedPeople(people, { query, sex, centuries });
-
   return (
     <table
       data-cy="peopleTable"
@@ -71,7 +63,7 @@ const PeopleTable: React.FC<PeopleTableProps> = ({ people }) => {
       </thead>
 
       <tbody>
-        {visiblePeople.map((person) => (
+        {people.map((person) => (
           <PersonData key={person.slug} person={person} people={people} />
         ))}
       </tbody>
