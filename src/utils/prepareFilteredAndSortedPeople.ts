@@ -9,7 +9,6 @@ export const prepareFilteredAndSortedPeople = (
 
   if (params.sex) {
     filteredPeople = filteredPeople.filter(person => person.sex === params.sex);
-    console.log(filteredPeople);
   }
 
   if (params.query) {
@@ -23,7 +22,6 @@ export const prepareFilteredAndSortedPeople = (
 
         return byName || byMotherName || byFatherName;
       });
-    console.log(filteredPeople);
   }
 
   if (params.centuries.length > 0) {
@@ -32,8 +30,6 @@ export const prepareFilteredAndSortedPeople = (
 
       return params.centuries.includes(century);
     });
-
-    console.log(filteredPeople);
   }
 
   if (params.sortField) {
@@ -52,7 +48,6 @@ export const prepareFilteredAndSortedPeople = (
           return 0;
       }
     });
-    console.log(filteredPeople);
   }
 
   return filteredPeople;
