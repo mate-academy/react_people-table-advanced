@@ -90,7 +90,7 @@ export const PeopleFilters: React.FC = () => {
             <SearchLink
               data-cy="centuryALL"
               className={cn('button', 'is-success', {
-                'is-outlined': centuries.length === 0,
+                'is-outlined': !centuries.length,
               })}
               params={{ centuries: null }}
             >

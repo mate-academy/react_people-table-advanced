@@ -82,59 +82,61 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
       </thead>
 
       <tbody>
-        {people.map(person => (
+        {people.map(({
+          slug, name, sex, born, died, mother, father, motherName, fatherName,
+        }) => (
           <tr
             data-cy="person"
-            key={person.slug}
+            key={slug}
             className={cn({
-              'has-background-warning': personId === person.slug,
+              'has-background-warning': personId === slug,
             })}
           >
             <td>
               <Link
                 to={{
-                  pathname: `/people/${person.slug}`,
+                  pathname: `/people/${slug}`,
                   search: searchParams.toString(),
                 }}
                 className={cn({
-                  'has-text-danger': person.sex === 'f',
+                  'has-text-danger': sex === 'f',
                 })}
               >
-                {person.name}
+                {name}
               </Link>
             </td>
 
-            <td>{person.sex}</td>
-            <td>{person.born}</td>
-            <td>{person.died}</td>
+            <td>{sex}</td>
+            <td>{born}</td>
+            <td>{died}</td>
             <td>
-              {person.mother ? (
+              {mother ? (
                 <Link
                   className="has-text-danger"
                   to={{
-                    pathname: `/people/${person.mother.slug}`,
+                    pathname: `/people/${mother.slug}`,
                     search: searchParams.toString(),
                   }}
                 >
-                  {person.motherName}
+                  {motherName}
                 </Link>
               ) : (
-                person.motherName || '-'
+                motherName || '-'
               )}
             </td>
 
             <td>
-              {person.father ? (
+              {father ? (
                 <Link
                   to={{
-                    pathname: `/people/${person.father.slug}`,
+                    pathname: `/people/${father.slug}`,
                     search: searchParams.toString(),
                   }}
                 >
-                  {person.fatherName}
+                  {fatherName}
                 </Link>
               ) : (
-                person.fatherName || '-'
+                fatherName || '-'
               )}
             </td>
           </tr>
