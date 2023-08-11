@@ -17,7 +17,7 @@ export const App = () => {
       <div className="section">
         <div className="container">
           <Routes>
-            <Route index element={<HomePage />} />
+            <Route path="/" element={<HomePage />} />
             <Route path="home" element={<Navigate to="/" replace />} />
 
             <Route path="people">
