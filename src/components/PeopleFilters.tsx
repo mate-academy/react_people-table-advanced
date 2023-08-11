@@ -36,7 +36,7 @@ export const PeopleFilters: React.FC = () => {
             className={classNames({
               'is-active': sex === value,
             })}
-            params={{ sex: value || null }}
+            params={{ sex: (value || null) }}
           >
             {key}
           </SearchLink>

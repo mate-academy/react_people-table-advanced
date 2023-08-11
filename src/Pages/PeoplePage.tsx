@@ -78,7 +78,7 @@ export const PeoplePage: React.FC = () => {
                 </p>
               )}
 
-              {!isLoading && visiblePeople.length && !error && (
+              {!isLoading && visiblePeople.length > 0 && !error && (
                 <PeopleTable people={visiblePeople} />
               )}
             </div>
