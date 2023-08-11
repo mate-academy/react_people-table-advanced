@@ -1,4 +1,10 @@
-export const Navbar = () => {
+/* eslint-disable max-len */
+import classNames from 'classnames';
+import { NavLink } from 'react-router-dom';
+
+const getLinkClass = ({ isActive }: { isActive: boolean }) => classNames('navbar-item', { 'has-background-grey-lighter': isActive });
+
+const NavBar = () => {
   return (
     <nav
       data-cy="nav"
@@ -8,17 +14,17 @@ export const Navbar = () => {
     >
       <div className="container">
         <div className="navbar-brand">
-          <a className="navbar-item" href="#/">Home</a>
+          <NavLink className={getLinkClass} to="/">
+            Home
+          </NavLink>
 
-          <a
-            aria-current="page"
-            className="navbar-item has-background-grey-lighter"
-            href="#/people"
-          >
+          <NavLink className={getLinkClass} to="/people">
             People
-          </a>
+          </NavLink>
         </div>
       </div>
     </nav>
   );
 };
+
+export default NavBar;
