@@ -8,13 +8,14 @@ export const prepareFilteredAndSortedPeople = (
   let filteredPeople = people;
 
   if (params.sex) {
-    filteredPeople = people.filter(person => person.sex === params.sex);
+    filteredPeople = filteredPeople.filter(person => person.sex === params.sex);
+    console.log(filteredPeople);
   }
 
   if (params.query) {
     const normalizeQuery = params.query.toLowerCase();
 
-    filteredPeople = people
+    filteredPeople = filteredPeople
       .filter(({ name, motherName, fatherName }) => {
         const byName = name.toLowerCase().includes(normalizeQuery);
         const byMotherName = motherName?.toLowerCase().includes(normalizeQuery);
@@ -22,20 +23,23 @@ export const prepareFilteredAndSortedPeople = (
 
         return byName || byMotherName || byFatherName;
       });
+    console.log(filteredPeople);
   }
 
   if (params.centuries.length > 0) {
-    filteredPeople = people.filter(person => {
+    filteredPeople = filteredPeople.filter(person => {
       const century = Math.ceil(person.born / 100).toString();
 
       return params.centuries.includes(century);
     });
+
+    console.log(filteredPeople);
   }
 
   if (params.sortField) {
     const order = params.sortOrder ? -1 : 1;
 
-    filteredPeople = [...people].sort((p1, p2) => {
+    filteredPeople = [...filteredPeople].sort((p1, p2) => {
       switch (params.sortField) {
         case SortField.Born:
         case SortField.Died:
@@ -48,6 +52,7 @@ export const prepareFilteredAndSortedPeople = (
           return 0;
       }
     });
+    console.log(filteredPeople);
   }
 
   return filteredPeople;
