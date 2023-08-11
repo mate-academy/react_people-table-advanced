@@ -58,8 +58,12 @@ export function preparePeople(people: Person[], {
 
     copy = copy.filter(person => {
       const name = person.name.toLowerCase();
+      const fatherName = person.fatherName?.toLowerCase() || '';
+      const motherName = person.motherName?.toLowerCase() || '';
 
-      return name.includes(normalizedQuery);
+      return name.includes(normalizedQuery)
+        || fatherName.includes(normalizedQuery)
+        || motherName.includes(normalizedQuery);
     });
   }
 
