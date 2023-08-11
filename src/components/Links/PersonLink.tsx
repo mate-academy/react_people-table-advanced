@@ -8,7 +8,7 @@ type Props = {
 };
 
 export const PersonLink: React.FC<Props> = ({ person }) => {
-  const getMother = useMemo(() => {
+  const motherInfo = useMemo(() => {
     return person.mother
       ? (
         <Link
@@ -21,7 +21,7 @@ export const PersonLink: React.FC<Props> = ({ person }) => {
       : person.motherName;
   }, []);
 
-  const getFather = useMemo(() => {
+  const fatherInfo = useMemo(() => {
     return person.father
       ? (
         <Link
@@ -48,10 +48,10 @@ export const PersonLink: React.FC<Props> = ({ person }) => {
       <td>{person.born}</td>
       <td>{person.died}</td>
       <td>
-        {person.motherName ? getMother : '-'}
+        {person.motherName ? motherInfo : '-'}
       </td>
       <td>
-        {person.fatherName ? getFather : '-'}
+        {person.fatherName ? fatherInfo : '-'}
       </td>
     </>
   );

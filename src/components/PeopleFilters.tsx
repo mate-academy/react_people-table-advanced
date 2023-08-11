@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import classNames from 'classnames';
 import { getSearchWith } from '../utils/getSearchWith';
 import { SexType } from '../types/SexType';
+import { centuryFilterNumbers } from './constants/FilterNumbers';
 
 type Props = {
   searchParams: URLSearchParams,
@@ -18,8 +19,6 @@ export const PeopleFilters: React.FC<Props> = ({
   sexFilter,
   centuries,
 }) => {
-  const centuryFilterNumbers = ['16', '17', '18', '19', '20'];
-
   function setSearchWith(params: any) {
     const search = getSearchWith(params, searchParams);
 

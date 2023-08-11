@@ -18,7 +18,7 @@ export const App = () => {
           <Route path=":slug" element={<PeoplePage />} />
         </Route>
         <Route path="*" element={<NotFoundPage />} />
-        <Route path="/home" element={<Navigate to="/" />} />
+        <Route path="/home" element={<Navigate to="/" replace />} />
       </Routes>
     </div>
   );
