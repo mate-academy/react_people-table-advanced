@@ -39,7 +39,7 @@ export const PeopleTable: React.FC<Props> = ({ people, loading, isError }) => {
                   >
                     <span className="icon">
                       <i
-                        className={classNames('fas', {
+                        className={classNames('fas fa-sort', {
                           'fa-sort': sortBy === '',
                           'fa-sort-up': sortBy === tHead.toLowerCase()
                             && !orderBy,

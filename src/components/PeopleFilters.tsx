@@ -4,6 +4,12 @@ import { SearchLink } from './SearchLink';
 
 const centuriess = ['16', '17', '18', '19', '20'];
 
+export enum SexType {
+  male = 'm',
+  female = 'f',
+  all = 'all',
+}
+
 type Props = {
   query: string,
   handleQueryChange: (event: React.ChangeEvent<HTMLInputElement>) => void,
@@ -27,23 +33,23 @@ export const PeopleFilters: React.FC<Props> = ({
         <SearchLink
           className={classNames({ 'is-active': sex === '' })}
           params={{ sex: null }}
-          onClick={() => handleSexChange('m')}
+          onClick={() => handleSexChange(SexType.all)}
         >
           All
         </SearchLink>
 
         <SearchLink
-          className={classNames({ 'is-active': sex === 'm' })}
-          params={{ sex: 'm' }}
-          onClick={() => handleSexChange('m')}
+          className={classNames({ 'is-active': sex === SexType.male })}
+          params={{ sex: SexType.male }}
+          onClick={() => handleSexChange(SexType.male)}
         >
           Male
         </SearchLink>
 
         <SearchLink
-          className={classNames({ 'is-active': sex === 'f' })}
-          params={{ sex: 'f' }}
-          onClick={() => handleSexChange('f')}
+          className={classNames({ 'is-active': sex === SexType.female })}
+          params={{ sex: SexType.female }}
+          onClick={() => handleSexChange(SexType.female)}
         >
           Female
         </SearchLink>

@@ -9,6 +9,14 @@ import { getSearchWith } from '../utils/searchHelper';
 import { filteringPeople } from '../utils/filteringPeople';
 import { sortingPeople } from '../utils/sortingPeople';
 
+export enum SearchType {
+  QUERY = 'query',
+  SEX = 'sex',
+  CENTURIES = 'centuries',
+  SORT = 'sort',
+  ORDER = 'order',
+}
+
 export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);
   const [loading, setLoading] = useState(false);
@@ -16,12 +24,12 @@ export const PeoplePage = () => {
 
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const query = searchParams.get('query') || '';
-  const sex = searchParams.get('sex') || '';
-  const centuries = searchParams.getAll('centuries') || [];
+  const query = searchParams.get(SearchType.QUERY) || '';
+  const sex = searchParams.get(SearchType.SEX) || '';
+  const centuries = searchParams.getAll(SearchType.CENTURIES) || [];
 
-  const sortBy = searchParams.get('sort');
-  const order = searchParams.get('order');
+  const sortBy = searchParams.get(SearchType.SORT);
+  const order = searchParams.get(SearchType.ORDER);
 
   const fiteredPeople = filteringPeople(people, query, centuries, sex);
   const preparedPeople = sortingPeople(fiteredPeople, sortBy, order);
