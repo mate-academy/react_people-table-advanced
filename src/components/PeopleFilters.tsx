@@ -12,7 +12,7 @@ export const PeopleFilters: React.FC = () => {
   const centuries = searchParams.getAll('centuries') || [];
 
   const handleQueryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const newQuery = event.target.value.trim() || null;
+    const newQuery = event.target.value || null;
 
     const search = getSearchWith(searchParams, { query: newQuery });
 
@@ -36,7 +36,7 @@ export const PeopleFilters: React.FC = () => {
             className={classNames({
               'is-active': sex === value,
             })}
-            params={{ sex: value }}
+            params={{ sex: value || null }}
           >
             {key}
           </SearchLink>

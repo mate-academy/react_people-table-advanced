@@ -10,12 +10,8 @@ type Props = {
   order: string;
 };
 
-function normalized(string: string | undefined) {
-  if (string) {
-    return string?.trim().toLowerCase();
-  }
-
-  return '';
+function normalized(string: string | null) {
+  return string ? string.toLowerCase() : '';
 }
 
 function getCentury(born: number) {
@@ -37,11 +33,19 @@ export const getFilteredPeople = ({
   }
 
   if (query) {
-    preparedPeople = preparedPeople.filter(person => (
-      normalized(person.name).includes(normalized(query))
-        || normalized(person.mother?.name).includes(normalized(query))
-        || normalized(person.father?.name).includes(normalized(query))
-    ));
+    const normalizedQuery = normalized(query);
+
+    preparedPeople = preparedPeople.filter(person => {
+      const normalizedName = normalized(person.name);
+      const normalizedMotherName = normalized(person?.motherName) || '';
+      const normalizedFatherName = normalized(person?.fatherName) || '';
+
+      return (
+        normalizedName.includes(normalizedQuery)
+          || normalizedMotherName.includes(normalizedQuery)
+          || normalizedFatherName.includes(normalizedQuery)
+      );
+    });
   }
 
   if (centuries.length) {
