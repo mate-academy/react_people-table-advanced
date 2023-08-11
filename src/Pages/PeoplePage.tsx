@@ -73,10 +73,12 @@ export const PeoplePage: React.FC = () => {
               )}
 
               {!visiblePeople.length && !isLoading && (
-                <p>There are no people matching the current search criteria</p>
+                <p>
+                  There are no people matching the current search criteria
+                </p>
               )}
 
-              {!isLoading && people.length && !error && (
+              {!isLoading && visiblePeople.length && !error && (
                 <PeopleTable people={visiblePeople} />
               )}
             </div>

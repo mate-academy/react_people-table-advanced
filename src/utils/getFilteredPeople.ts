@@ -33,7 +33,7 @@ export const getFilteredPeople = ({
   }
 
   if (query) {
-    const normalizedQuery = normalized(query);
+    const normalizedQuery = normalized(query).trim();
 
     preparedPeople = preparedPeople.filter(person => {
       const normalizedName = normalized(person.name);
