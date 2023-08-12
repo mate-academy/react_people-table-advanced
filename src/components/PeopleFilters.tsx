@@ -1,8 +1,15 @@
 /* eslint-disable max-len */
 import classNames from 'classnames';
 import { useSearchParams } from 'react-router-dom';
+import { FC } from 'react';
 import { SearchLink } from '../utils/SearchLink';
 import { SearchParams, getSearchWith } from '../utils/searchHelper';
+
+type Props = {
+  query: string;
+  sex: string;
+  centuries: string[];
+};
 
 const sexValues = [
   { title: 'All', value: '' },
@@ -12,11 +19,8 @@ const sexValues = [
 
 const centuriesValues = ['16', '17', '18', '19', '20'];
 
-export const PeopleFilters = () => {
+export const PeopleFilters: FC<Props> = ({ query, sex, centuries }) => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const query = searchParams.get('query') || '';
-  const sex = searchParams.get('sex') || '';
-  const centuries = searchParams.getAll('centuries') || '';
 
   function handleQueryChange(params: SearchParams) {
     const search = getSearchWith(searchParams, params);
