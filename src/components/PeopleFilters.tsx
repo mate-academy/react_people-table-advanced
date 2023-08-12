@@ -1,7 +1,7 @@
 /* eslint-disable max-len */
 import classNames from 'classnames';
 import { useSearchParams } from 'react-router-dom';
-import { SearchLink } from './SearchLink';
+import { SearchLink } from '../utils/SearchLink';
 import { SearchParams, getSearchWith } from '../utils/searchHelper';
 
 const sexValues = [

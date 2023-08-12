@@ -18,7 +18,7 @@ const PeopleTable: React.FC<PeopleTableProps> = ({ people }) => {
               Name
               <a href="#/people?sort=name">
                 <span className="icon">
-                  <i className="fas fa-sort" />
+                  <i className="fas fa-sort-down" />
                 </span>
               </a>
             </span>

@@ -1,18 +1,18 @@
-/* eslint-disable no-nested-ternary */
 import { useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { getPeople } from '../api';
 import { Person } from '../types';
-import { Loader } from './Loader';
-import FetchError from './FetchError';
-import NoPeopleMessage from './NoPeopleMessage';
-import PeopleTable from './PeopleTable';
-import { PeopleFilters } from './PeopleFilters';
+import { Loader } from '../components/Loader';
+import FetchError from '../errors/FetchError';
+import NoPeopleMessage from '../errors/NoPeopleMessage';
+import PeopleTable from '../components/PeopleTable';
+import { PeopleFilters } from '../components/PeopleFilters';
 import { getPreparedPeople } from '../utils/getPreparedPeople';
+import NoMatchingPeople from '../errors/NoMatchingPeople';
 
 const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [isError, setIsError] = useState(false);
   const [searchParams] = useSearchParams();
   const query = searchParams.get('query') || '';
@@ -52,13 +52,18 @@ const PeoplePage = () => {
             <div className="box table-container">
               {isLoading ? (
                 <Loader />
-              ) : visiblePeople.length > 0 ? (
-                <PeopleTable people={visiblePeople} />
               ) : (
-                <p>There are no people matching the current search criteria</p>
+                <>
+                  {isError && <FetchError />}
+                  {!isLoading && people.length === 0 && <NoPeopleMessage />}
+                  {!isLoading && visiblePeople.length === 0 && (
+                    <NoMatchingPeople />
+                  )}
+                  {visiblePeople.length !== 0 && people.length !== 0 && (
+                    <PeopleTable people={visiblePeople} />
+                  )}
+                </>
               )}
-              {isError && <FetchError />}
-              {!isLoading && people.length === 0 && <NoPeopleMessage />}
             </div>
           </div>
         </div>

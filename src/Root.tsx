@@ -1,9 +1,9 @@
 import { Route, HashRouter as Router, Routes } from 'react-router-dom';
 import { App } from './App';
-import HomePage from './components/HomePage';
-import PeoplePage from './components/PeoplePage';
-import HomeRedirect from './components/HomeRedirect';
-import NotFoundPage from './components/NotFoundPage';
+import HomePage from './pages/HomePage';
+import PeoplePage from './pages/PeoplePage';
+import HomeRedirect from './utils/HomeRedirect';
+import NotFoundPage from './errors/NotFoundPage';
 
 export const Root = () => {
   return (
