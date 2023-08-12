@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import classNames from 'classnames';
 
-import { Person, SortField, SortFieldData } from '../../types';
+import { Person, SortField } from '../../types';
 import { PersonRow } from '../PersonRow';
 import { SearchLink } from '../SearchLink';
 import { getVisiblePeople } from '../../utils/visiblePeopleHelper';
@@ -46,20 +46,15 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
     father: people.find(({ name }) => name === person.fatherName),
   }));
 
-  const sortFieldData: SortFieldData = [
-    { sortField: SortField.Name, fieldText: 'Name' },
-    { sortField: SortField.Sex, fieldText: 'Sex' },
-    { sortField: SortField.Born, fieldText: 'Born' },
-    { sortField: SortField.Died, fieldText: 'Died' },
-  ];
-
-  const visiblePeople = getVisiblePeople(preparedPeople, {
-    query,
-    sex,
-    centuries,
-    sort,
-    order,
-  });
+  const visiblePeople = useMemo(() => {
+    return getVisiblePeople(preparedPeople, {
+      query,
+      sex,
+      centuries,
+      sort,
+      order,
+    });
+  }, [preparedPeople]);
 
   if (preparedPeople.length && !visiblePeople.length) {
     return (
@@ -74,7 +69,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
     >
       <thead>
         <tr>
-          {sortFieldData.map(({ sortField, fieldText }) => (
+          {Object.entries(SortField).map(([fieldText, sortField]) => (
             <th key={sortField}>
               <span className="is-flex is-flex-wrap-nowrap">
                 {fieldText}
