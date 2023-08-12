@@ -10,9 +10,9 @@ export function getPreparedPeople(
   if (query) {
     preparedPeople = preparedPeople.filter((person) => {
       return (
-        person.name.toLowerCase().includes(query.toLowerCase())
-        || person.motherName?.toLowerCase().includes(query.toLowerCase())
-        || person.fatherName?.toLowerCase().includes(query.toLowerCase())
+        person.name.toLowerCase().includes(query.toLowerCase().trim())
+        || person.motherName?.toLowerCase().includes(query.toLowerCase().trim())
+        || person.fatherName?.toLowerCase().includes(query.toLowerCase().trim())
       );
     });
   }
