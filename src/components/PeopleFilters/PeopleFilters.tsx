@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import { useCallback } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import cn from 'classnames';

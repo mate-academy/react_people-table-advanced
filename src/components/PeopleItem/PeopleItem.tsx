@@ -8,7 +8,7 @@ type Props = {
 };
 
 export const PeopleItem: React.FC<Props> = ({ person }) => {
-  const currLocationLink = useLocation().pathname;
+  const { pathname: currLocationLink } = useLocation();
 
   return (
     <tr
