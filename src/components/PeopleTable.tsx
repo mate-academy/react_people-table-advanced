@@ -1,6 +1,7 @@
 import { useSearchParams } from 'react-router-dom';
 import classNames from 'classnames';
 import { useMemo } from 'react';
+import { SORT_PARAMS } from '../utils/constants';
 import { PersonLink } from './PersonRow';
 import { SearchLink } from './SearchLink';
 import { Person } from '../types/Person';
@@ -8,8 +9,6 @@ import { Person } from '../types/Person';
 type Props = {
   people: Person[];
 };
-
-const sortParams = ['Name', 'Sex', 'Born', 'Died'];
 
 export const PeopleTable: React.FC<Props> = ({ people }) => {
   const [searchParams] = useSearchParams();
@@ -24,7 +23,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
     return Math.ceil(year / 100).toString();
   };
 
-  const filteredListOfPeope = useMemo(
+  const filteredListOfPeope: Person[] = useMemo(
     () => (() => {
       let filteredPeople = [...people];
 
@@ -74,6 +73,8 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
     [people, sex, query, centuries, sort, order],
   );
 
+  const tableIsShown = filteredListOfPeope.length > 0;
+
   const setOrder = (value: string) => {
     if (sort === value) {
       return order ? '' : 'desc';
@@ -91,46 +92,52 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
   };
 
   return (
-    <table
-      data-cy="peopleTable"
-      className="table is-striped is-hoverable is-narrow is-fullwidth"
-    >
-      <thead>
-        <tr>
-          {sortParams.map((param) => (
-            <th key={param}>
-              <span className="is-flex is-flex-wrap-nowrap">
-                {param}
-                <SearchLink
-                  params={{
-                    sort: setSort(param) || null,
-                    order: setOrder(param) || null,
-                  }}
-                >
-                  <span className="icon">
-                    <i
-                      className={classNames('fas', {
-                        'fa-sort-down': sort === param && order === 'desc',
-                        'fa-sort-up': sort === param && order !== 'desc',
-                        'fa-sort': sort !== param,
-                      })}
-                    />
+    <>
+      {tableIsShown ? (
+        <table
+          data-cy="peopleTable"
+          className="table is-striped is-hoverable is-narrow is-fullwidth"
+        >
+          <thead>
+            <tr>
+              {SORT_PARAMS.map((param) => (
+                <th key={param}>
+                  <span className="is-flex is-flex-wrap-nowrap">
+                    {param}
+                    <SearchLink
+                      params={{
+                        sort: setSort(param) || null,
+                        order: setOrder(param) || null,
+                      }}
+                    >
+                      <span className="icon">
+                        <i
+                          className={classNames('fas', {
+                            'fa-sort-down': sort === param && order === 'desc',
+                            'fa-sort-up': sort === param && order !== 'desc',
+                            'fa-sort': sort !== param,
+                          })}
+                        />
+                      </span>
+                    </SearchLink>
                   </span>
-                </SearchLink>
-              </span>
-            </th>
-          ))}
+                </th>
+              ))}
 
-          <th>Mother</th>
-          <th>Father</th>
-        </tr>
-      </thead>
+              <th>Mother</th>
+              <th>Father</th>
+            </tr>
+          </thead>
 
-      <tbody>
-        {filteredListOfPeope.map((person: Person) => (
-          <PersonLink person={person} key={person.slug} />
-        ))}
-      </tbody>
-    </table>
+          <tbody>
+            {filteredListOfPeope.map((person: Person) => (
+              <PersonLink person={person} key={person.slug} />
+            ))}
+          </tbody>
+        </table>
+      ) : (
+        <p>There are no people matching the current search criteria</p>
+      )}
+    </>
   );
 };
