@@ -13,8 +13,8 @@ export const Root = () => {
         <Route path="/" element={<App />}>
           <Route index element={<HomePage />} />
           <Route path="home" element={<Navigate to="/" replace />} />
-          <Route path="people" element={<PeoplePage />}>
-            <Route path=":slug?" element={<Navigate to="/people" replace />} />
+          <Route path="/people" element={<PeoplePage />}>
+            <Route path=":slug" element={<Navigate to="/people" />} />
           </Route>
           <Route path="*" element={<PageNotFound />} />
         </Route>
