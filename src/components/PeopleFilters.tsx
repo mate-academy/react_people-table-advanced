@@ -3,6 +3,7 @@ import React from 'react';
 import classNames from 'classnames';
 import { SearchLink } from './SearchLink';
 import { getSearchWith } from '../utils/searchHelper';
+import { avalibleCenturies } from '../utils/variables';
 
 export const PeopleFilters: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -10,6 +11,12 @@ export const PeopleFilters: React.FC = () => {
   const query = searchParams.get('query') || '';
   const sex = searchParams.get('sex') || '';
   const centuries = searchParams.getAll('centuries') || [];
+
+  if (avalibleCenturies.length === centuries.length) {
+    setSearchParams(
+      getSearchWith(searchParams, { centuries: [] }),
+    );
+  }
 
   function handleQueryChange(event: React.ChangeEvent<HTMLInputElement>) {
     setSearchParams(
@@ -74,7 +81,7 @@ export const PeopleFilters: React.FC = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            {['16', '17', '18', '19', '20'].map(century => (
+            {avalibleCenturies.map(century => (
               <SearchLink
                 key={century}
                 data-cy="century"

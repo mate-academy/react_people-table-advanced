@@ -1,4 +1,9 @@
-import { useEffect, useMemo, useState } from 'react';
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { PeopleFilters } from './PeopleFilters';
 import { Loader } from './Loader';
@@ -30,6 +35,10 @@ export const PeoplePage = () => {
       });
   }, []);
 
+  const normalizedQuery = useCallback((currentQuery: string) => {
+    return currentQuery.toLowerCase().trim();
+  }, []);
+
   const visiblePeople = useMemo(() => {
     let temp = people.map(person => ({
       ...person,
@@ -39,9 +48,15 @@ export const PeoplePage = () => {
 
     if (query) {
       temp = temp.filter(person => (
-        person.name.toLowerCase().trim().includes(query.toLowerCase().trim())
-        || person.name.toLowerCase().trim().includes(query.toLowerCase().trim())
-        || person.name.toLowerCase().trim().includes(query.toLowerCase().trim())
+        person.name.toLowerCase().trim().includes(normalizedQuery(query))
+        || person.mother?.name
+          .toLowerCase()
+          .trim()
+          .includes(normalizedQuery(query))
+        || person.father?.name
+          .toLowerCase()
+          .trim()
+          .includes(normalizedQuery(query))
       )) || null;
     }
 
