@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
 import { PeopleFilters } from './PeopleFilters';
@@ -37,7 +37,7 @@ export const PeoplePage = () => {
       .finally(() => setIsLoading(false));
   }, []);
 
-  useMemo(() => {
+  useEffect(() => {
     let newList = [...people];
 
     if (sex) {
@@ -90,9 +90,7 @@ export const PeoplePage = () => {
   [people, searchParams]);
 
   const handleQueryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const curQuery = event.target.value.trim()
-      ? event.target.value
-      : null;
+    const curQuery = event.target.value.trimStart() || null;
 
     setSearchParams(getSearchWith(searchParams, { query: curQuery }));
   };
@@ -135,7 +133,7 @@ export const PeoplePage = () => {
 
               {tableValidate && !currentPeople.length && !!people.length && (
                 <p data-cy="noPeopleMessage">
-                  There are no people on the server
+                  There are no people matching the current search criteria
                 </p>
               )}
 

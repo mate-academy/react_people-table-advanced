@@ -28,6 +28,11 @@ export const PeopleTable: React.FC<Props> = ({
     return { sort: null, order: null };
   };
 
+  // Used function body to prevent eslint-max-length
+  const capitalizeFirstLetter = (word: string) => {
+    return word.charAt(0).toUpperCase() + word.slice(1);
+  };
+
   return (
     <table
       data-cy="peopleTable"
@@ -35,26 +40,24 @@ export const PeopleTable: React.FC<Props> = ({
     >
       <thead>
         <tr>
-          {Object.values(SortOptions).map(option => {
-            return (
-              <th key={option}>
-                <span className="is-flex is-flex-wrap-nowrap">
-                  {option.charAt(0).toUpperCase() + option.slice(1)}
-                  <SearchLink params={sortParams(option)}>
-                    <span className="icon">
-                      <i className={classNames(
-                        'fas',
-                        { 'fa-sort': sort !== option },
-                        { 'fa-sort-up': sort === option && !order },
-                        { 'fa-sort-down': sort === option && order },
-                      )}
-                      />
-                    </span>
-                  </SearchLink>
-                </span>
-              </th>
-            );
-          })}
+          {Object.values(SortOptions).map(option => (
+            <th key={option}>
+              <span className="is-flex is-flex-wrap-nowrap">
+                {capitalizeFirstLetter(option)}
+                <SearchLink params={sortParams(option)}>
+                  <span className="icon">
+                    <i className={classNames(
+                      'fas',
+                      { 'fa-sort': sort !== option },
+                      { 'fa-sort-up': sort === option && !order },
+                      { 'fa-sort-down': sort === option && order },
+                    )}
+                    />
+                  </span>
+                </SearchLink>
+              </span>
+            </th>
+          ))}
           <th>Mother</th>
           <th>Father</th>
         </tr>

@@ -58,7 +58,7 @@ export const PeopleFilters: React.FC<Props> = ({
         <p className="control has-icons-left">
           <input
             data-cy="NameFilter"
-            type="text"
+            type="search"
             className="input"
             placeholder="Search"
             onChange={handleQueryChange}
