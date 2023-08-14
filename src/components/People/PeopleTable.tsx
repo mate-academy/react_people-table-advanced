@@ -2,6 +2,7 @@ import React from 'react';
 import { Person } from '../../types';
 import { PersonItem } from './PersonItem';
 import { PeopleTitle } from './PeopleTitle';
+import { peopleTitles } from '../../constants/peopleTitles';
 
 type Props = {
   visiblePeople: Person[],
@@ -12,8 +13,6 @@ export const PeopleTable: React.FC<Props> = ({
   visiblePeople,
   loading,
 }) => {
-  const peopleTitles = ['Name', 'Sex', 'Born', 'Died'];
-
   return (
     <table
       data-cy="peopleTable"
@@ -22,7 +21,11 @@ export const PeopleTable: React.FC<Props> = ({
       <thead>
         <tr>
           {peopleTitles.map((title) => (
-            <PeopleTitle key={title} title={title} />
+            <PeopleTitle
+              key={title}
+              title={title}
+              visiblePeople={visiblePeople}
+            />
           ))}
           <th>Mother</th>
           <th>Father</th>

@@ -2,12 +2,14 @@ import React from 'react';
 import { useSearchParams } from 'react-router-dom';
 import classNames from 'classnames';
 import { SearchLink } from '../SearchLink';
+import { Person } from '../../types';
 
 type Props = {
   title: string,
+  visiblePeople: Person[],
 };
 
-export const PeopleTitle: React.FC<Props> = ({ title }) => {
+export const PeopleTitle: React.FC<Props> = ({ title, visiblePeople }) => {
   const [searchParams] = useSearchParams();
   const sort = searchParams.get('sort');
   const order = searchParams.get('order');
@@ -45,16 +47,21 @@ export const PeopleTitle: React.FC<Props> = ({ title }) => {
         <SearchLink
           params={setParams(titleLower)}
         >
-          <span className="icon">
-            <i className={classNames('fas', {
-              'fa-sort': sort !== titleLower,
+          {
+            visiblePeople.length > 0 && (
+              <span className="icon">
+                <i className={classNames('fas', {
+                  'fa-sort': sort !== titleLower,
 
-              'fa-sort-down': sort === titleLower && order === 'asc',
+                  'fa-sort-down': sort === titleLower && order === 'asc',
 
-              'fa-sort-up': sort === titleLower && order === 'desc',
-            })}
-            />
-          </span>
+                  'fa-sort-up': sort === titleLower && order === 'desc',
+                })}
+                />
+              </span>
+            )
+          }
+
         </SearchLink>
       </span>
     </th>
