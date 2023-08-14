@@ -27,9 +27,9 @@ export const filterPeople = (
 
     peopleCopy = peopleCopy.filter(
       (human) =>
-        human.name.includes(normalizeQuery) ||
-        human.motherName?.includes(normalizeQuery) ||
-        human.fatherName?.includes(normalizeQuery)
+        human.name.toLowerCase().includes(normalizeQuery) ||
+        human.motherName?.toLowerCase().includes(normalizeQuery) ||
+        human.fatherName?.toLowerCase().includes(normalizeQuery)
     );
   }
 

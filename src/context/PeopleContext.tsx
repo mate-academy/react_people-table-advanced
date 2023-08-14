@@ -1,5 +1,5 @@
 /*eslint-disable*/
-import React, { createContext, useEffect, useMemo, useState } from "react";
+import React, { createContext, useMemo, useState } from "react";
 import { getPeople } from "../api";
 import { Person } from "../types";
 import { ERRORS } from "../types/ErrorsEnum";
@@ -18,6 +18,7 @@ interface IContext {
   centuries: string[];
   sort: SORT;
   order: string;
+  loadPeople: () => void;
 }
 
 export const PeopleContext = createContext<IContext>({
@@ -29,6 +30,7 @@ export const PeopleContext = createContext<IContext>({
   centuries: [],
   sort: SORT.ALL,
   order: "",
+  loadPeople: () => {},
 });
 
 type Props = {
@@ -48,7 +50,7 @@ export const PeopleProvider: React.FC<Props> = ({ children }) => {
   const sort = (searchParams.get("sort") || SORT.ALL) as SORT;
   const order = searchParams.get("order") || "";
 
-  useEffect(() => {
+  const loadPeople = () => {
     setPeopleLoading(true);
     getPeople()
       .then((peopleFromServer) => {
@@ -61,7 +63,7 @@ export const PeopleProvider: React.FC<Props> = ({ children }) => {
       })
       .catch(() => setPeopleError(ERRORS.SERVER))
       .finally(() => setPeopleLoading(false));
-  }, []);
+  };
 
   const visiblePeople = useMemo(() => {
     return filterPeople(peoples, {
@@ -82,6 +84,7 @@ export const PeopleProvider: React.FC<Props> = ({ children }) => {
     centuries,
     sort,
     order,
+    loadPeople
   };
 
   return (

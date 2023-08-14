@@ -1,12 +1,22 @@
-import { useContext } from 'react';
+import { useContext, useEffect } from "react";
 
-import { PeopleFilters } from '../components/PeopleFilters';
-import { Loader } from '../components/Loader';
-import { PeopleTable } from '../components/PeopleTable';
-import { PeopleContext } from '../context/PeopleContext';
+import { PeopleFilters } from "../components/PeopleFilters";
+import { Loader } from "../components/Loader";
+import { PeopleTable } from "../components/PeopleTable";
+import { PeopleContext } from "../context/PeopleContext";
 
 export const PeoplePage = () => {
-  const { peopleError, peopleLoading, peoples } = useContext(PeopleContext);
+  const {
+    peopleError,
+    peopleLoading,
+    peoples,
+    loadPeople,
+  }
+  = useContext(PeopleContext);
+
+  useEffect(() => {
+    loadPeople();
+  }, []);
 
   return (
     <>
