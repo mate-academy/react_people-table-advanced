@@ -35,8 +35,8 @@ export const PeoplePage = () => {
       });
   }, []);
 
-  const normalizedQuery = useCallback((currentQuery: string) => {
-    return currentQuery.toLowerCase().trim();
+  const normalized = useCallback((currentValue: string) => {
+    return currentValue.toLowerCase().trim();
   }, []);
 
   const visiblePeople = useMemo(() => {
@@ -48,15 +48,9 @@ export const PeoplePage = () => {
 
     if (query) {
       temp = temp.filter(person => (
-        person.name.toLowerCase().trim().includes(normalizedQuery(query))
-        || person.mother?.name
-          .toLowerCase()
-          .trim()
-          .includes(normalizedQuery(query))
-        || person.father?.name
-          .toLowerCase()
-          .trim()
-          .includes(normalizedQuery(query))
+        normalized(person.name).includes(normalized(query))
+        || person.fatherName?.toLowerCase().trim().includes(normalized(query))
+        || person.motherName?.toLowerCase().trim().includes(normalized(query))
       )) || null;
     }
 
