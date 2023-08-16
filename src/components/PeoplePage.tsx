@@ -16,12 +16,12 @@ export const PeoplePage = () => {
   ] = useState<string>(slug || '');
   const [isError, setIsError] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [searchPearams] = useSearchParams();
-  const sex = searchPearams.get('sex') || '';
-  const query = searchPearams.get('query') || '';
-  const centuries = searchPearams.getAll('centuries').map(century => +century);
-  const sort = searchPearams.get('sort') || '';
-  const order = searchPearams.get('order') || '';
+  const [searchParams] = useSearchParams();
+  const sex = searchParams.get('sex') || '';
+  const query = searchParams.get('query') || '';
+  const centuries = searchParams.getAll('centuries').map(century => +century);
+  const sort = searchParams.get('sort') || '';
+  const order = searchParams.get('order') || '';
 
   useEffect(() => {
     setIsLoading(true);
