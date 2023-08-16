@@ -15,10 +15,23 @@ export const PeopleFilters = () => {
   const handleQueryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const search = getSearchWith(
       searchParams,
-      { query: event.target.value.trim() || null },
+      { query: event.target.value || null },
     );
 
     setSearchParams(search);
+  };
+
+  const updateCenturiesParams = (
+    currentCenturies: string[],
+    centuryToToggle: string,
+  ) => {
+    const updatedCenturies = currentCenturies.includes(centuryToToggle)
+      ? currentCenturies.filter(year => year !== centuryToToggle)
+      : [...currentCenturies, centuryToToggle];
+
+    return {
+      centuries: updatedCenturies,
+    };
   };
 
   return (
@@ -29,7 +42,7 @@ export const PeopleFilters = () => {
         <SearchLink
           params={{ sex: null }}
           className={classNames({
-            'is-active': sex === '',
+            'is-active': !sex,
           })}
         >
           All
@@ -81,11 +94,7 @@ export const PeopleFilters = () => {
                 className={classNames('button mr-1', {
                   'is-info': centuries.includes(century),
                 })}
-                params={{
-                  centuries: centuries.includes(century)
-                    ? centuries.filter(year => year !== century)
-                    : [...centuries, century],
-                }}
+                params={updateCenturiesParams(centuries, century)}
               >
                 {century}
               </SearchLink>

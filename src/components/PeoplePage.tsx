@@ -26,9 +26,9 @@ export const PeoplePage:React.FC = () => {
   const fetchPeople = async (): Promise<Person[]> => {
     try {
       setIsLoading(true);
-      const peopleData = await getPeople();
 
       setIsError(false);
+      const peopleData = await getPeople();
 
       return peopleData;
     } catch (error) {
