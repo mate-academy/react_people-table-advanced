@@ -19,9 +19,11 @@ export const PeoplePage = () => {
 
   const [searchParams] = useSearchParams();
 
-  const query = (searchParams.get('query') || '');
+  const query = (searchParams.get('query') || '').toLowerCase();
   const centuries = searchParams.getAll('centuries') || [];
   const sex = searchParams.get('sex' || '');
+
+  const isFiltered = query || centuries.length || sex;
 
   const sort = searchParams.get('sort' || '');
   const order = searchParams.get('order' || '');
@@ -81,8 +83,7 @@ export const PeoplePage = () => {
                     && !!people?.length && (
                     <PeopleTable people={sortedPeople} />
                   )}
-
-                  {!isLoading && filteredPeople?.length === 0 && (
+                  {!isLoading && isFiltered && filteredPeople?.length === 0 && (
                     <p>
                       There are no people matching the current search criteria
                     </p>
