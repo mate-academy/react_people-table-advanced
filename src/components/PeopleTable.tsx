@@ -116,9 +116,9 @@ export const PeopleTable: FC<Props> = ({
 
                 <tbody>
                   {people.map(person => {
-                    const findWomen = people
+                    const motherDetails = people
                       .find(mother => mother.name === person.motherName);
-                    const findFather = people
+                    const fatherDetails = people
                       .find(father => father.name === person.fatherName);
 
                     return (
@@ -131,8 +131,8 @@ export const PeopleTable: FC<Props> = ({
                       >
                         <PersonLink
                           person={person}
-                          findWomen={findWomen}
-                          findFather={findFather}
+                          motherDetails={motherDetails}
+                          fatherDetails={fatherDetails}
                           handleClick={setIsSelected}
                         />
                       </tr>

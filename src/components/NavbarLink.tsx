@@ -7,7 +7,7 @@ type Props = {
   to: string,
 };
 
-export const Navbar: FC<Props> = ({ page, to }) => (
+export const NavbarLink: FC<Props> = ({ page, to }) => (
   <NavLink
     className={({ isActive }) => classNames('navbar-item',
       { 'has-background-grey-lighter': isActive })}

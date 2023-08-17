@@ -6,13 +6,13 @@ import {
 } from 'react-router-dom';
 
 import './App.scss';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { getPeople } from './api';
 import { Person } from './types';
-import { Navbar } from './components/Navbar';
+import { NavbarLink } from './components/NavbarLink';
 import { PeoplePage } from './components/PeoplePage';
 import { HomePage } from './components/HomePage';
-import { getSearchWith } from './utils/searchHelper';
+import { SearchParams, getSearchWith } from './utils/searchHelper';
 
 const filteredAndSortedPeople = (
   people: Person[],
@@ -83,11 +83,12 @@ export const App = () => {
   const order = searchParams.get('order') || '';
   const genders = searchParams.get('genders') || 'All';
   const centuries = searchParams.getAll('centuries') || [];
-  const visiblePeople = filteredAndSortedPeople(people
+  const visiblePeople = useMemo(() => filteredAndSortedPeople(people
     .filter(item => isIncluded(item.name, query)),
-  genders, centuries, sort, order);
+  genders, centuries, sort, order),
+  [people, query, genders, centuries, sort, order]);
 
-  const setSearchWith = (param: any) => { // eslint-disable-line
+  const setSearchWith = (param: SearchParams) => {
     const search = getSearchWith(searchParams, param);
 
     setSearchParams(search);
@@ -105,7 +106,7 @@ export const App = () => {
       }).catch(() => {
         setError('Something went wrong');
       });
-  }, [people]);
+  });
 
   return (
     <div data-cy="app">
@@ -117,8 +118,8 @@ export const App = () => {
       >
         <div className="container">
           <div className="navbar-brand">
-            <Navbar to="/" page="Home" />
-            <Navbar to="/people" page="People" />
+            <NavbarLink to="/" page="Home" />
+            <NavbarLink to="/people" page="People" />
           </div>
         </div>
       </nav>

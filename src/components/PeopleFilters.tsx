@@ -38,7 +38,7 @@ export const PeopleFilters: FC<Props> = ({
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        {'All Male Female'.split(' ').map(gender => (
+        {['All', 'Male', 'Female'].map(gender => (
           <SearchLink
             params={filterByClick(gender)}
             key={gender}
@@ -71,10 +71,10 @@ export const PeopleFilters: FC<Props> = ({
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            {'16 17 18 19 20'.split(' ').map(century => (
+            {['16', '17', '18', '19', '20'].map(century => (
               <SearchLink
                 key={century}
-                dat-cy="century"
+                data-cy="century"
                 className={classNames('button mr-1', {
                   'is-info': centuries.includes(century),
                 })}

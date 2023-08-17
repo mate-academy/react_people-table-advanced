@@ -5,15 +5,15 @@ import { Person } from '../types';
 
 type Props = {
   person: Person,
-  findWomen: Person | undefined,
-  findFather: Person | undefined,
+  motherDetails: Person | undefined,
+  fatherDetails: Person | undefined,
   handleClick: (names: string | null) => void,
 };
 
 export const PersonLink: FC<Props> = ({
   person,
-  findWomen,
-  findFather,
+  motherDetails,
+  fatherDetails,
   handleClick,
 }) => {
   const {
@@ -45,12 +45,12 @@ export const PersonLink: FC<Props> = ({
       <td>{born}</td>
       <td>{died}</td>
       <td>
-        {findWomen
+        {motherDetails
           ? (
             <Link
-              to={`#/people/${findWomen.slug}`}
+              to={`#/people/${motherDetails.slug}`}
               className={ClassNames({
-                'has-text-danger': findWomen,
+                'has-text-danger': motherDetails,
               })}
               onClick={() => handleClick(motherName)}
             >
@@ -60,10 +60,10 @@ export const PersonLink: FC<Props> = ({
           : motherName || '-' }
       </td>
       <td>
-        {findFather
+        {fatherDetails
           ? (
             <Link
-              to={`#/people/${findFather.slug}`}
+              to={`#/people/${fatherDetails.slug}`}
               onClick={() => handleClick(fatherName)}
             >
               {fatherName}
