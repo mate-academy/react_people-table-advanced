@@ -1,17 +1,145 @@
-export const PeopleFilters = () => {
+/* eslint-disable max-len */
+import React from 'react';
+import classNames from 'classnames';
+import { NavLink, useSearchParams, useLocation } from 'react-router-dom';
+import { FEMALE, MALE } from '../utils/constants';
+
+interface Props {
+  setSearchQuery: React.Dispatch<React.SetStateAction<string>>;
+  setSex: React.Dispatch<React.SetStateAction<string>>;
+  setCenturies: React.Dispatch<React.SetStateAction<string[]>>;
+}
+
+const setActiveClass = ({ isActive }: { isActive: boolean }) => {
+  return classNames({ 'is-active': isActive });
+};
+
+export const PeopleFilters: React.FC<Props> = ({ setSearchQuery, setSex, setCenturies }) => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const location = useLocation();
+
+  const isFemalePicked = location.search.includes('sex=f');
+  const isMalePicked = location.search.includes('sex=m');
+  const isSexPicked = isMalePicked || isFemalePicked;
+
+  const searchHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const newSearchQuery = event.target.value;
+
+    const newSearchParams = new URLSearchParams(searchParams.toString());
+
+    newSearchParams.set('searchQuery', newSearchQuery);
+
+    if (newSearchQuery === '') {
+      newSearchParams.delete('searchQuery');
+    }
+
+    setSearchQuery(newSearchQuery);
+    setSearchParams(newSearchParams);
+  };
+
+  const sexPickHandler = (sex: string) => {
+    setSex(sex);
+  };
+
+  const generateSexPickURL = (sex: string) => {
+    const currentParams = new URLSearchParams(searchParams.toString());
+
+    if (currentParams.has('sex')) {
+      currentParams.set('sex', sex);
+    } else {
+      currentParams.append('sex', sex);
+    }
+
+    return `/people?${currentParams.toString()}`;
+  };
+
+  const centuryPickHandler = (century: string) => {
+    const currentParams = new URLSearchParams(searchParams.toString());
+    const centuriesFromURL = currentParams.getAll('century');
+
+    const newCenturies = centuriesFromURL.includes(century)
+      ? centuriesFromURL.filter(c => c !== century)
+      : [...centuriesFromURL, century];
+
+    setCenturies(century ? newCenturies : []);
+  };
+
+  const generateCenturyPickURL = (century: string) => {
+    const currentParams = new URLSearchParams(searchParams.toString());
+    const centuriesFromURL = currentParams.getAll('century');
+
+    if (!century) {
+      currentParams.delete('century');
+    } else {
+      const newCenturies = centuriesFromURL.includes(century)
+        ? centuriesFromURL.filter(c => c !== century)
+        : [...centuriesFromURL, century];
+
+      currentParams.delete('century');
+      newCenturies.forEach(c => currentParams.append('century', c));
+    }
+
+    return `/people?${currentParams.toString()}`;
+  };
+
+  const isCenturyActive = (century: string) => {
+    return searchParams.getAll('century').some((centuryFromURL) => centuryFromURL === century);
+  };
+
+  const generateResetURL = () => {
+    const currentParams = new URLSearchParams(searchParams.toString());
+
+    currentParams.delete('century');
+    currentParams.delete('sex');
+    currentParams.delete('searchQuery');
+
+    return `/people?${currentParams.toString()}`;
+  };
+
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        <a className="is-active" href="#/people">All</a>
-        <a className="" href="#/people?sex=m">Male</a>
-        <a className="" href="#/people?sex=f">Female</a>
+        <NavLink
+          to={{
+            pathname: '/people',
+            search: location.search.replace(/([&?])sex=[^&]+(&|$)/, '$1'),
+          }}
+          className={
+            setActiveClass({ isActive: !isSexPicked })
+          }
+          onClick={() => setSex('')}
+        >
+          All
+        </NavLink>
+
+        <NavLink
+          className={
+            setActiveClass({ isActive: isMalePicked })
+          }
+          to={generateSexPickURL(MALE)}
+          onClick={() => sexPickHandler(MALE)}
+        >
+          Male
+        </NavLink>
+
+        <NavLink
+          className={
+            setActiveClass({ isActive: isFemalePicked })
+          }
+          to={generateSexPickURL(FEMALE)}
+          onClick={() => sexPickHandler(FEMALE)}
+        >
+          Female
+        </NavLink>
       </p>
 
       <div className="panel-block">
         <p className="control has-icons-left">
           <input
+            value={searchParams.get('searchQuery') || ''}
+            onChange={(event) => searchHandler(event)}
             data-cy="NameFilter"
             type="search"
             className="input"
@@ -27,66 +155,44 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            <a
-              data-cy="century"
-              className="button mr-1"
-              href="#/people?centuries=16"
-            >
-              16
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=17"
-            >
-              17
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=18"
-            >
-              18
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=19"
-            >
-              19
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1"
-              href="#/people?centuries=20"
-            >
-              20
-            </a>
+            {['16', '17', '18', '19', '20'].map(century => (
+              <NavLink
+                key={century}
+                data-cy="century"
+                className={`button mr-1 ${isCenturyActive(century) ? 'is-info' : ''}`}
+                to={generateCenturyPickURL(century)}
+                onClick={() => centuryPickHandler(century)}
+              >
+                {century}
+              </NavLink>
+            ))}
           </div>
 
           <div className="level-right ml-4">
-            <a
+            <NavLink
               data-cy="centuryALL"
-              className="button is-success is-outlined"
-              href="#/people"
+              className={`button is-success ${searchParams.has('century') ? 'is-outlined' : ''}`}
+              to={generateCenturyPickURL('')}
+              onClick={() => centuryPickHandler('')}
             >
               All
-            </a>
+            </NavLink>
           </div>
         </div>
       </div>
 
       <div className="panel-block">
-        <a
+        <NavLink
           className="button is-link is-outlined is-fullwidth"
-          href="#/people"
+          to={generateResetURL()}
+          onClick={() => {
+            setSex('');
+            setSearchQuery('');
+            setCenturies([]);
+          }}
         >
           Reset all filters
-        </a>
+        </NavLink>
       </div>
     </nav>
   );
