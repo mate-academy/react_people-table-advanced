@@ -44,36 +44,43 @@ export const PeopleTable: React.FC<Props> = ({
   );
 
   const handleSortLinkClick = (query: SortQuery) => {
-    if (sortQuery === query && sortOrder && DESC) {
+    if (sortQuery !== query) {
+      setSortQuery(query);
+
+      return;
+    }
+
+    if (sortQuery === query && sortOrder === ASC) {
+      setSortOrder(DESC);
+
+      return;
+    }
+
+    if (sortQuery === query && sortOrder === DESC) {
       setSortQuery(SortQuery.INITIAL);
+      setSortOrder(ASC);
 
       return;
     }
 
     setSortQuery(query);
-    setSortOrder((prevOrder) => {
-      if (prevOrder === ASC) {
-        return DESC;
-      }
-
-      return ASC;
-    });
   };
 
   const generateSortURL = (query: SortQuery) => {
     const currentParams = new URLSearchParams(searchParams.toString());
 
-    if (currentParams.has('order')) {
+    if (currentParams.has('order') && currentParams.get('sort') === query) {
       currentParams.delete('order');
       currentParams.delete('sort');
 
       return `/people?${currentParams.toString()}`;
     }
 
-    if (currentParams.has('sort')) {
+    if (currentParams.get('sort') === query) {
       currentParams.append('order', DESC);
     } else {
       currentParams.set('sort', query);
+      currentParams.delete('order');
     }
 
     return `/people?${currentParams.toString()}`;
