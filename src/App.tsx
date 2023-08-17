@@ -106,7 +106,7 @@ export const App = () => {
       }).catch(() => {
         setError('Something went wrong');
       });
-  });
+  }, []);
 
   return (
     <div data-cy="app">
