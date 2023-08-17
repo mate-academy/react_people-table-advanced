@@ -55,24 +55,24 @@ export const PeoplePage = () => {
 
   let visibleUsers = users;
 
-  if (query && users) {
-    visibleUsers = users.filter(user => (
+  if (centuries.length > 0 && visibleUsers) {
+    visibleUsers = visibleUsers.filter(user => (
+      isCenturyChosen(user.born)
+    ));
+  }
+
+  if (query && visibleUsers) {
+    visibleUsers = visibleUsers.filter(user => (
       isInQuery(user.name)
       || isInQuery(user.motherName ? user.motherName : '')
       || isInQuery(user.fatherName ? user.fatherName : '')
     ));
   }
 
-  if (sex !== '' && users) {
-    visibleUsers = users.filter(
+  if (sex !== '' && visibleUsers) {
+    visibleUsers = visibleUsers.filter(
       user => user.sex === sex,
     );
-  }
-
-  if (centuries.length > 0 && users) {
-    visibleUsers = users.filter(user => (
-      isCenturyChosen(user.born)
-    ));
   }
 
   function customSort(a: any, b: any, sor: string, ord: string) {
