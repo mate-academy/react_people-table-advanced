@@ -16,8 +16,6 @@ export const PageRouter = () => (
       <Route path="/home" element={<Navigate replace to="/" />} />
       <Route path="people" element={<PeoplePage />}>
         <Route path=":personID" element={<PeoplePage />} />
-        {/* <Route path=":searchQuery" element={<PeoplePage />} />
-        <Route path=":sex" element={<PeoplePage />} /> */}
       </Route>
       <Route path="*" element={<NotFoundPage />} />
     </Route>

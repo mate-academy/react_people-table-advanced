@@ -1,13 +1,11 @@
-/* eslint-disable no-console */
-/* eslint-disable max-len */
-import React from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { PeopleFilters } from './PeopleFilters';
 import { Loader } from './Loader';
 import { PeopleTable } from './PeopleTable';
 import { Person } from '../types';
 import { fetchPeopleData } from '../utils/fetchPeopleData';
-import { SortOrder, SortQuery } from '../types/SortQuery';
+import { SortOrder, SortQuery } from '../types/SortParams';
 
 function calcCentury(year: number) {
   return Math.ceil(year / 100);
@@ -20,37 +18,42 @@ const {
 const { ASC } = SortOrder;
 
 export const PeoplePage = () => {
-  const [peopleData, setPeopleData] = React.useState<Person[] | null>(null);
-  const [isLoading, setIsLoading] = React.useState(false);
-  const [isError, setIsError] = React.useState(false);
+  const [peopleData, setPeopleData] = useState<Person[] | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isError, setIsError] = useState(false);
 
-  const [filteredList, setFilteredList] = React.useState<Person[] | null>(null);
+  const [filteredList, setFilteredList] = useState<Person[] | null>(null);
 
   const location = useLocation();
   const initialSearchParams = new URLSearchParams(location.search);
   const initialSearchQuery = initialSearchParams.get('searchQuery') || '';
   const initialSexParam = initialSearchParams.get('sex') || '';
   const initialCenturyParams = initialSearchParams.getAll('century');
+
   const initialSortQuery = initialSearchParams.get('sort') || SortQuery.INITIAL;
   const initialOrderQuery = initialSearchParams.get('order') || SortOrder.ASC;
 
-  const [searchQuery, setSearchQuery] = React.useState(initialSearchQuery);
-  const [sex, setSex] = React.useState(initialSexParam);
-  const [centuries, setCenturies] = React.useState(initialCenturyParams);
+  const [searchQuery, setSearchQuery] = useState(initialSearchQuery);
+  const [sex, setSex] = useState(initialSexParam);
+  const [centuries, setCenturies] = useState(initialCenturyParams);
 
-  const [sortQuery, setSortQuery] = React.useState<SortQuery>(initialSortQuery as SortQuery);
-  const [sortOrder, setSortOrder] = React.useState<SortOrder>(initialOrderQuery as SortOrder);
+  const [sortQuery, setSortQuery] = useState<SortQuery>(
+    initialSortQuery as SortQuery,
+  );
+  const [sortOrder, setSortOrder] = useState<SortOrder>(
+    initialOrderQuery as SortOrder,
+  );
+  const [sortedList, setSortedList] = useState<Person[]>([]);
 
-  const initialList = React.useMemo(() => {
+  const initialList = useMemo(() => {
     if (filteredList) {
       return [...filteredList];
     }
 
     return [];
   }, [filteredList]);
-  const [sortedList, setSortedList] = React.useState<Person[]>([]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     setIsLoading(true);
 
     fetchPeopleData()
@@ -66,30 +69,33 @@ export const PeoplePage = () => {
       });
   }, []);
 
-  React.useEffect(() => {
-    if (peopleData) {
-      const filteredData = peopleData.filter(
-        (person: Person) => (initialSearchQuery === ''
-            || person.name.toLowerCase().includes(initialSearchQuery)
-            || person.motherName?.toLowerCase().includes(initialSearchQuery)
-            || person.fatherName?.toLowerCase().includes(initialSearchQuery))
-          && (initialSexParam === '' || person.sex === initialSexParam)
-          && (initialCenturyParams.length === 0
-            || initialCenturyParams.includes(
-              calcCentury(person.born).toString()
-                || calcCentury(person.died).toString(),
-            )),
-      );
-
-      if (filteredData) {
-        setFilteredList(filteredData);
-        setSortedList(filteredData);
-      }
+  useEffect(() => {
+    if (!peopleData) {
+      return;
     }
+
+    const filteredData = peopleData.filter((person) => {
+      const nameMatch
+        = initialSearchQuery === ''
+        || person.name.toLowerCase().includes(initialSearchQuery)
+        || person.motherName?.toLowerCase().includes(initialSearchQuery)
+        || person.fatherName?.toLowerCase().includes(initialSearchQuery);
+
+      const sexMatch = initialSexParam === '' || person.sex === initialSexParam;
+
+      const centuryMatch
+        = initialCenturyParams.length === 0
+        || initialCenturyParams.includes(calcCentury(person.born).toString())
+        || initialCenturyParams.includes(calcCentury(person.died).toString());
+
+      return nameMatch && sexMatch && centuryMatch;
+    });
+
+    setFilteredList(filteredData);
   }, [searchQuery, peopleData, sex, centuries.length]);
 
-  React.useEffect(() => {
-    const newSortedList = [...sortedList];
+  useEffect(() => {
+    const newSortedList = [...filteredList || []];
 
     if (sortQuery === INITIAL && initialList) {
       setSortedList([...initialList]);
@@ -124,10 +130,12 @@ export const PeoplePage = () => {
   }, [sortQuery, sortOrder, initialList]);
 
   const isMatchingResult = filteredList && filteredList.length > 0;
-  const isSuccessfullyLoaded
-    = !isError && !isLoading && peopleData && isMatchingResult;
+  const isSuccessfullyLoaded = !isError && !isLoading && peopleData;
 
-  const isPeopleArrayEmpty = peopleData?.length === 0 && !isError;
+  const isPeopleArrayEmpty = peopleData?.length === 0;
+  const isPersonNonExistent = isSuccessfullyLoaded
+    && !isMatchingResult
+    && !isPeopleArrayEmpty;
 
   return (
     <>
@@ -151,26 +159,29 @@ export const PeoplePage = () => {
                 <p data-cy="peopleLoadingError">Something went wrong</p>
               )}
 
-              {isPeopleArrayEmpty && isSuccessfullyLoaded && (
+              {isPeopleArrayEmpty && (
                 <p data-cy="noPeopleMessage">
                   There are no people on the server
                 </p>
               )}
 
-              {!isMatchingResult && (
+              {isPersonNonExistent && (
                 <p>There are no people matching the current search criteria</p>
               )}
 
-              {isSuccessfullyLoaded && (
-                <PeopleTable
-                  peopleData={sortedList}
-                  initialPeopleData={peopleData}
-                  setSortQuery={setSortQuery}
-                  setSortOrder={setSortOrder}
-                  sortQuery={sortQuery}
-                  sortOrder={sortOrder}
-                />
-              )}
+              {isSuccessfullyLoaded
+                && !isPeopleArrayEmpty
+                && isMatchingResult
+                && (
+                  <PeopleTable
+                    peopleData={sortedList}
+                    initialPeopleData={peopleData}
+                    setSortQuery={setSortQuery}
+                    setSortOrder={setSortOrder}
+                    sortQuery={sortQuery}
+                    sortOrder={sortOrder}
+                  />
+                )}
             </div>
           </div>
         </div>

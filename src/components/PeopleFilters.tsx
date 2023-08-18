@@ -1,5 +1,4 @@
-/* eslint-disable max-len */
-import React from 'react';
+import React, { useCallback } from 'react';
 import classNames from 'classnames';
 import { NavLink, useSearchParams, useLocation } from 'react-router-dom';
 import { FEMALE, MALE } from '../utils/constants';
@@ -14,7 +13,11 @@ const setActiveClass = ({ isActive }: { isActive: boolean }) => {
   return classNames({ 'is-active': isActive });
 };
 
-export const PeopleFilters: React.FC<Props> = ({ setSearchQuery, setSex, setCenturies }) => {
+export const PeopleFilters: React.FC<Props> = ({
+  setSearchQuery,
+  setSex,
+  setCenturies,
+}) => {
   const [searchParams, setSearchParams] = useSearchParams();
   const location = useLocation();
 
@@ -22,7 +25,9 @@ export const PeopleFilters: React.FC<Props> = ({ setSearchQuery, setSex, setCent
   const isMalePicked = location.search.includes('sex=m');
   const isSexPicked = isMalePicked || isFemalePicked;
 
-  const searchHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const searchHandler = useCallback((
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
     const newSearchQuery = event.target.value;
 
     const newSearchParams = new URLSearchParams(searchParams.toString());
@@ -35,13 +40,13 @@ export const PeopleFilters: React.FC<Props> = ({ setSearchQuery, setSex, setCent
 
     setSearchQuery(newSearchQuery);
     setSearchParams(newSearchParams);
-  };
+  }, []);
 
-  const sexPickHandler = (sex: string) => {
+  const sexPickHandler = useCallback((sex: string) => {
     setSex(sex);
-  };
+  }, [setSex]);
 
-  const generateSexPickURL = (sex: string) => {
+  const generateSexPickURL = useCallback((sex: string) => {
     const currentParams = new URLSearchParams(searchParams.toString());
 
     if (currentParams.has('sex')) {
@@ -51,9 +56,9 @@ export const PeopleFilters: React.FC<Props> = ({ setSearchQuery, setSex, setCent
     }
 
     return `/people?${currentParams.toString()}`;
-  };
+  }, [searchParams]);
 
-  const centuryPickHandler = (century: string) => {
+  const centuryPickHandler = useCallback((century: string) => {
     const currentParams = new URLSearchParams(searchParams.toString());
     const centuriesFromURL = currentParams.getAll('century');
 
@@ -62,9 +67,9 @@ export const PeopleFilters: React.FC<Props> = ({ setSearchQuery, setSex, setCent
       : [...centuriesFromURL, century];
 
     setCenturies(century ? newCenturies : []);
-  };
+  }, [searchParams, setCenturies]);
 
-  const generateCenturyPickURL = (century: string) => {
+  const generateCenturyPickURL = useCallback((century: string) => {
     const currentParams = new URLSearchParams(searchParams.toString());
     const centuriesFromURL = currentParams.getAll('century');
 
@@ -80,13 +85,15 @@ export const PeopleFilters: React.FC<Props> = ({ setSearchQuery, setSex, setCent
     }
 
     return `/people?${currentParams.toString()}`;
-  };
+  }, [searchParams]);
 
-  const isCenturyActive = (century: string) => {
-    return searchParams.getAll('century').some((centuryFromURL) => centuryFromURL === century);
-  };
+  const isCenturyActive = useCallback((century: string) => {
+    return searchParams.getAll('century').some(
+      (centuryFromURL) => centuryFromURL === century,
+    );
+  }, [searchParams]);
 
-  const generateResetURL = () => {
+  const generateResetURL = useCallback(() => {
     const currentParams = new URLSearchParams(searchParams.toString());
 
     currentParams.delete('century');
@@ -94,7 +101,7 @@ export const PeopleFilters: React.FC<Props> = ({ setSearchQuery, setSex, setCent
     currentParams.delete('searchQuery');
 
     return `/people?${currentParams.toString()}`;
-  };
+  }, [searchParams]);
 
   return (
     <nav className="panel">
