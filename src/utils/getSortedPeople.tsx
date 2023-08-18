@@ -1,25 +1,26 @@
 import { Person } from '../types';
 
 export const getSortedPeople = (
-  people: Person[] | null,
-  sort: string | null,
-  order: string | null,
+  people: Person[],
+  sort: string,
+  reverse: boolean,
 ) => {
-  const peopleCopy = people ? [...people] : [];
+  const peopleCopy = [...people];
   const men = peopleCopy.filter(person => person.sex === 'm');
   const women = peopleCopy.filter(person => person.sex === 'f');
 
   switch (sort) {
     case 'name':
       return peopleCopy.sort((a, b) => {
-        if (order) {
+        if (reverse) {
           return b.name.localeCompare(a.name);
         }
 
         return a.name.localeCompare(b.name);
       });
+
     case 'sex':
-      if (order) {
+      if (reverse) {
         return [
           ...men.reverse(),
           ...women.reverse(),
@@ -30,18 +31,21 @@ export const getSortedPeople = (
         ...women,
         ...men,
       ];
+
     case 'born':
-      if (order) {
+      if (reverse) {
         return peopleCopy.sort((a, b) => b.born - a.born);
       }
 
       return peopleCopy.sort((a, b) => a.born - b.born);
+
     case 'died':
-      if (order) {
+      if (reverse) {
         return peopleCopy.sort((a, b) => b.died - a.died);
       }
 
       return peopleCopy.sort((a, b) => a.died - b.died);
+
     default:
       return peopleCopy;
   }

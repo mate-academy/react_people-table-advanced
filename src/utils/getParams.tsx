@@ -1,6 +1,6 @@
 export const getParams = (
-  sort: string | null,
-  order: string | null,
+  sort: string,
+  order: string,
   linkName: string,
 ) => {
   return {

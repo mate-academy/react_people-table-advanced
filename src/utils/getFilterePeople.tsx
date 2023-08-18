@@ -21,7 +21,7 @@ export const getFilteredPeople = (
   people: Person[] | null,
   query: string,
   centuries: string[],
-  sex: string | null,
+  sex: string,
 ) => {
   const preparedPeople = getPreparedPeople(people);
   let copy = preparedPeople ? [...preparedPeople] : [];

@@ -19,21 +19,24 @@ export const PeoplePage = () => {
 
   const [searchParams] = useSearchParams();
 
-  const query = (searchParams.get('query') || '').toLowerCase();
+  const query = searchParams.get('query') || '';
   const centuries = searchParams.getAll('centuries') || [];
-  const sex = searchParams.get('sex' || '');
+  const sex = searchParams.get('sex') || '';
 
   const isFiltered = query || centuries.length || sex;
 
-  const sort = searchParams.get('sort' || '');
-  const order = searchParams.get('order' || '');
+  const sort = searchParams.get('sort') || '';
+  const order = searchParams.get('order') || '';
 
   const filteredPeople = useMemo(() => {
     return getFilteredPeople(people, query, centuries, sex);
   }, [people, query, centuries, sex]);
 
+  const showTable = !isLoading && !!filteredPeople?.length && !!people?.length;
+  const noMatchingPeople = !isLoading && isFiltered && !filteredPeople?.length;
+
   const sortedPeople = useMemo(() => {
-    return getSortedPeople(filteredPeople, sort, order);
+    return getSortedPeople(filteredPeople, sort, !!order);
   }, [filteredPeople, sort, order]);
 
   useEffect(() => {
@@ -78,12 +81,10 @@ export const PeoplePage = () => {
                     </p>
                   )}
 
-                  {!isLoading
-                    && !!filteredPeople?.length
-                    && !!people?.length && (
+                  {showTable && (
                     <PeopleTable people={sortedPeople} />
                   )}
-                  {!isLoading && isFiltered && filteredPeople?.length === 0 && (
+                  {noMatchingPeople && (
                     <p>
                       There are no people matching the current search criteria
                     </p>

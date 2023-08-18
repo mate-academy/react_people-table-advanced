@@ -18,8 +18,8 @@ export const PeopleTable: React.FC<Props> = ({
 }) => {
   const { selectedSlug } = useParams();
   const [searchParams] = useSearchParams();
-  const sort = searchParams.get('sort' || '');
-  const order = searchParams.get('order' || '');
+  const sort = searchParams.get('sort') || '';
+  const order = searchParams.get('order') || '';
 
   return (
     <table
