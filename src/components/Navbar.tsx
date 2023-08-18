@@ -1,3 +1,6 @@
+import { NavLink } from 'react-router-dom';
+import { getLinkClass, getLinkStyle } from '../utils/getStyles';
+
 export const Navbar = () => {
   return (
     <nav
@@ -8,15 +11,21 @@ export const Navbar = () => {
     >
       <div className="container">
         <div className="navbar-brand">
-          <a className="navbar-item" href="#/">Home</a>
+          <NavLink
+            to="/"
+            className={getLinkClass}
+            style={getLinkStyle}
+          >
+            Home
+          </NavLink>
 
-          <a
-            aria-current="page"
-            className="navbar-item has-background-grey-lighter"
-            href="#/people"
+          <NavLink
+            to="/people"
+            className={getLinkClass}
+            style={getLinkStyle}
           >
             People
-          </a>
+          </NavLink>
         </div>
       </div>
     </nav>
