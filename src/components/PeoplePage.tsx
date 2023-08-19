@@ -1,11 +1,11 @@
 import { useEffect, useMemo, useState } from 'react';
 
+import { useSearchParams } from 'react-router-dom';
 import { Person } from '../types';
 import { getPeople } from '../api';
 import { Loader } from './Loader';
 import { TablePeople } from './PeopleTable';
 import { PeopleFilters } from './PeopleFilters';
-import { useSearchParams } from 'react-router-dom';
 import { toFlilterPeople } from './toFilterPeople';
 
 export const PeoplePage = () => {

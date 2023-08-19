@@ -1,4 +1,4 @@
-import { Person } from "../types"
+import { Person } from '../types';
 
 export const toFlilterPeople = (
   people: Person[],
@@ -7,63 +7,57 @@ export const toFlilterPeople = (
   query: string | null,
   sex: string | null,
   centuries: string[],
-  ) => {
-    let allPeople = [...people];
+) => {
+  let allPeople = [...people];
 
-    // if (order === 'desc') {
-    //   allPeople.reverse();
-    // }
+  if (sort) {
+    allPeople.sort((a, b) => {
+      let comparisonResult = 0;
 
-    if (sort) {
-      allPeople.sort((a, b) => {
-        let comparisonResult = 0;
-
-        switch (sort) {
+      switch (sort) {
+        case 'sex':
           case 'name':
-            comparisonResult = a.name.localeCompare(b.name);
+            comparisonResult = a[sort].localeCompare(b[sort]);
             break;
-          case 'sex':
-            comparisonResult = a.sex.localeCompare(b.sex);
-            break;
-          case 'born':
-            comparisonResult = a.born - b.born;
-            break;
-          case 'died':
-            comparisonResult = a.died - b.died;
-            break;
-          default:
-            comparisonResult = 0;
-        }
 
-        return order === 'desc' ? -comparisonResult : comparisonResult;
-      });
-    }
+            case 'born':
+              case 'died':
+                comparisonResult = a[sort] - b[sort];
+                break;
+        default:
+          comparisonResult = 0;
+      }
 
-    if (query) {
-      allPeople = allPeople.filter(person => {
-        if (person.name.toLowerCase().includes(query.toLowerCase())) {
-          return true;
-        } else if (person.fatherName?.toLowerCase().includes(query.toLowerCase())) {
-          return true;
-        } else if (person.motherName?.toLowerCase().includes(query.toLowerCase())) {
-          return true;
-        } else {
-          return false;
-        }
-      })
-    }
+      return order === 'desc' ? -comparisonResult : comparisonResult;
+    });
+  }
 
-    if (sex) {
-      allPeople = allPeople.filter(p => p.sex === sex)
-    }
+  if (query) {
+    allPeople = allPeople.filter(person => {
+      if (
+        person.name.toLowerCase().includes(query.toLowerCase()) ||
+        person.fatherName?.toLowerCase().includes(query.toLowerCase()) ||
+        person.motherName?.toLowerCase().includes(query.toLowerCase())
+      ) {
+        return true;
+      }
 
-    if (centuries.length !== 0) {
-      allPeople = allPeople.filter(
-        person => centuries.includes(
-          Math.ceil(person.born / 100).toString(),
-        ),
-      );
-    }
 
-    return allPeople;
-}
+      return false
+    });
+  }
+
+  if (sex) {
+    allPeople = allPeople.filter(p => p.sex === sex);
+  }
+
+  if (centuries.length) {
+    allPeople = allPeople.filter(
+      person => centuries.includes(
+        Math.ceil(person.born / 100).toString(),
+      ),
+    );
+  }
+
+  return allPeople;
+};

@@ -1,7 +1,6 @@
+import { Route, Routes, Navigate } from 'react-router-dom';
 import { PeoplePage } from './components/PeoplePage';
 import { Navbar } from './components/Navbar';
-
-import { Route, Routes, Navigate } from 'react-router-dom';
 
 import { Home } from './components/Home';
 import { NotFound } from './components/NotFound';
@@ -17,12 +16,12 @@ export const App = () => {
         <div className="container">
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/people" element={<PeoplePage />} >
+            <Route path="/people" element={<PeoplePage />}>
               <Route path=":personSlug" element={<PeoplePage />} />
             </Route>
 
-          <Route path="*" element={<NotFound />}/>
-          <Route path="/home" element={<Navigate to="/" replace/>}/>
+            <Route path="*" element={<NotFound />} />
+            <Route path="/home" element={<Navigate to="/" replace />} />
           </Routes>
         </div>
       </div>
