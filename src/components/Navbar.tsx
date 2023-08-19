@@ -1,3 +1,9 @@
+/* eslint-disable max-len */
+import classNames from 'classnames';
+import { NavLink } from 'react-router-dom';
+
+const isActiveButton = ({ isActive }: { isActive: boolean }) => classNames({ 'navbar-item': true, 'has-background-grey-lighter': isActive });
+
 export const Navbar = () => {
   return (
     <nav
@@ -8,15 +14,13 @@ export const Navbar = () => {
     >
       <div className="container">
         <div className="navbar-brand">
-          <a className="navbar-item" href="#/">Home</a>
+          <NavLink className={isActiveButton} to=".">
+            Home
+          </NavLink>
 
-          <a
-            aria-current="page"
-            className="navbar-item has-background-grey-lighter"
-            href="#/people"
-          >
+          <NavLink aria-current="page" className={isActiveButton} to="/people">
             People
-          </a>
+          </NavLink>
         </div>
       </div>
     </nav>
