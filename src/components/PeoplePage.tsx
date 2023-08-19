@@ -5,7 +5,7 @@ import { Loader } from './Loader';
 import { PeopleTable } from './PeopleTable';
 import { getPeople } from '../api';
 import { Person } from '../types';
-import { SortBy } from './enums/SortBy';
+// import { SortBy } from './enums/SortBy';
 
 export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);
@@ -63,30 +63,19 @@ export const PeoplePage = () => {
 
     if (sort) {
       filteredPeople = filteredPeople.sort((a, b) => {
-        switch (sort) {
-          case SortBy.name:
-            return order
-              ? b.name.localeCompare(a.name)
-              : a.name.localeCompare(b.name);
-
-          case SortBy.sex:
-            return order
-              ? b.sex.localeCompare(a.sex)
-              : a.sex.localeCompare(b.sex);
-
-          case SortBy.born:
-            return order
-              ? +b?.born - +a?.born
-              : +a.born - +b.born;
-
-          case SortBy.died:
-            return order
-              ? +b.died - +a.died
-              : +a.died - +b.died;
-
-          default:
-            return 0;
+        if (sort === 'name' || sort === 'sex') {
+          return order
+            ? b[sort].localeCompare(a[sort])
+            : a[sort].localeCompare(b[sort]);
         }
+
+        if (sort === 'born' || sort === 'died') {
+          return order
+            ? +b[sort] - +a[sort]
+            : +a[sort] - +b[sort];
+        }
+
+        return 0;
       });
     }
 
