@@ -19,6 +19,12 @@ export const PeopleFilters:React.FC<Props> = ({
 }) => {
   const arrayCenturies = ['16', '17', '18', '19', '20'];
 
+  const updateCenturies = (century: string) => {
+    return centuries.includes(century)
+      ? (centuries.filter(age => age !== century))
+      : [...centuries, century];
+  };
+
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
@@ -67,23 +73,20 @@ export const PeopleFilters:React.FC<Props> = ({
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            {arrayCenturies.map(cent => (
+            {arrayCenturies.map(century => (
               <>
                 <SearchLink
-                  key={cent}
+                  key={century}
                   params={{
-                    centuries: centuries.includes(cent)
-                      ? (centuries.filter(cen => cen !== cent)) : (
-                        [...centuries, cent]
-                      ),
+                    centuries: updateCenturies(century),
                   }}
                   className={classNames(
                     'button',
                     'mr-1',
-                    { 'is-info': centuries.includes(cent) },
+                    { 'is-info': centuries.includes(century) },
                   )}
                 >
-                  {cent}
+                  {century}
                 </SearchLink>
               </>
             ))}

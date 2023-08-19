@@ -5,7 +5,7 @@ import { PeopleFilters } from './PeopleFilters';
 import { Loader } from './Loader';
 import { getPeople } from '../api';
 import { PeopleTable } from './PeopleTable';
-import { getSearchWith } from '../utils/searchHelper';
+import { SearchParams, getSearchWith } from '../utils/searchHelper';
 
 export const PeoplePage = () => {
   const [users, setUsers] = useState<Person[] | null>(null);
@@ -17,7 +17,7 @@ export const PeoplePage = () => {
   const sort = searchParams.get('sort') || '';
   const order = searchParams.get('order') || '';
 
-  const setSearchWith = (params: any) => {
+  const setSearchWith = (params: SearchParams) => {
     const search = getSearchWith(searchParams, params);
 
     setSearchParams(search);
@@ -32,11 +32,7 @@ export const PeoplePage = () => {
   };
 
   const isInQuery = (arg: string) => {
-    if (arg.toLowerCase().includes(query.toLowerCase())) {
-      return true;
-    }
-
-    return false;
+    return !!arg.toLowerCase().includes(query.toLowerCase());
   };
 
   const yearToCentury = (year: number) => {
@@ -64,8 +60,8 @@ export const PeoplePage = () => {
   if (query && visibleUsers) {
     visibleUsers = visibleUsers.filter(user => (
       isInQuery(user.name)
-      || isInQuery(user.motherName ? user.motherName : '')
-      || isInQuery(user.fatherName ? user.fatherName : '')
+      || isInQuery(user.motherName || '')
+      || isInQuery(user.fatherName || '')
     ));
   }
 
@@ -75,22 +71,26 @@ export const PeoplePage = () => {
     );
   }
 
-  function customSort(a: any, b: any, sor: string, ord: string) {
+  function compareNumbers(a: number, b: number, ord: string): number {
+    return ord ? b - a : a - b;
+  }
+
+  function compareStrings(a: string, b: string, ord: string): number {
+    return ord ? a.localeCompare(b) : b.localeCompare(a);
+  }
+
+  function customSort(a: Person, b: Person, sor: string, ord: string) {
     switch (sor) {
       case 'name':
-        return ord ? b.name.localeCompare(
-          a.name,
-        ) : a.name.localeCompare(b.name);
+        return compareStrings(a.name, b.name, ord);
       case 'sex':
-        return ord ? b.sex.localeCompare(
-          a.sex,
-        ) : a.sex.localeCompare(b.sex);
+        return compareStrings(a.sex, b.sex, ord);
       case 'born':
-        return ord ? b.born - a.born : a.born - b.born;
+        return compareNumbers(a.born, b.born, ord);
       case 'died':
-        return ord ? b.died - a.died : a.died - b.died;
+        return compareNumbers(a.died, b.died, ord);
       default:
-        return null;
+        return 0;
     }
   }
 
@@ -152,15 +152,15 @@ export const PeoplePage = () => {
               )}
 
               {users
-                && !users.length && query === '' && centuries.length === 0 && (
+                && !users.length && !query && !centuries.length && (
                 <p data-cy="noPeopleMessage">
                   There are no people on the server
                 </p>
               )}
 
               {((
-                query !== '' || centuries.length > 0
-              ) && users && users.length === 0) && (
+                query || !!centuries.length
+              ) && visibleUsers && !visibleUsers.length) && (
                 <p>There are no people matching the current search criteria</p>
               )}
 
