@@ -1,7 +1,11 @@
 import React, { useCallback, useMemo } from 'react';
-import { NavLink, useParams, useSearchParams } from 'react-router-dom';
+import {
+  NavLink, useLocation, useParams, useSearchParams,
+} from 'react-router-dom';
 import classNames from 'classnames';
+
 import { generateNavLink } from '../utils/generateNavLink';
+
 import { Person } from '../types';
 import { SortOrder, SortQuery } from '../types/SortParams';
 
@@ -17,12 +21,10 @@ interface Props {
 const { ASC, DESC } = SortOrder;
 
 const {
-  NAME,
-  SEX,
-  BORN,
-  DIED,
   INITIAL,
 } = SortQuery;
+
+const tableSortQueries = ['Name', 'Sex', 'Born', 'Died'];
 
 export const PeopleTable: React.FC<Props> = ({
   peopleData,
@@ -34,6 +36,9 @@ export const PeopleTable: React.FC<Props> = ({
 }) => {
   const { personID } = useParams();
   const [searchParams] = useSearchParams();
+  const location = useLocation();
+
+  const currentPathName = location.pathname;
 
   const findPerson = useMemo(
     () => (personName: string | null) => {
@@ -42,7 +47,7 @@ export const PeopleTable: React.FC<Props> = ({
       );
 
       if (parent) {
-        return generateNavLink(parent);
+        return generateNavLink(parent, searchParams);
       }
 
       return personName || '-';
@@ -82,7 +87,7 @@ export const PeopleTable: React.FC<Props> = ({
       currentParams.delete('order');
       currentParams.delete('sort');
 
-      return `/people?${currentParams.toString()}`;
+      return `${currentPathName}?${currentParams.toString()}`;
     }
 
     if (isSortedByCurrentQuery) {
@@ -92,8 +97,20 @@ export const PeopleTable: React.FC<Props> = ({
       currentParams.delete('order');
     }
 
-    return `/people?${currentParams.toString()}`;
-  }, [searchParams]);
+    return `${currentPathName}?${currentParams.toString()}`;
+  }, [searchParams, currentPathName]);
+
+  const iconClass = useMemo(() => (query: SortQuery) => {
+    if (sortOrder === ASC && query === sortQuery) {
+      return 'fas fa-sort-up';
+    }
+
+    if (sortOrder === DESC && query === sortQuery) {
+      return 'fas fa-sort-down';
+    }
+
+    return 'fas fa-sort';
+  }, [sortQuery, sortOrder]);
 
   return (
     <table
@@ -102,62 +119,25 @@ export const PeopleTable: React.FC<Props> = ({
     >
       <thead>
         <tr>
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Name
-              <NavLink
-                to={generateSortURL(NAME)}
-                onClick={() => handleSortLinkClick(NAME)}
-              >
-                <span className="icon">
-                  <i className="fas fa-sort" />
-                </span>
-              </NavLink>
-            </span>
-          </th>
+          {tableSortQueries.map(query => {
+            const newSortQuery = query.toLowerCase() as SortQuery;
 
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Sex
-              <NavLink
-                to={generateSortURL(SEX)}
-                onClick={() => handleSortLinkClick(SEX)}
-              >
-                <span className="icon">
-                  <i className="fas fa-sort" />
+            return (
+              <th key={query}>
+                <span className="is-flex is-flex-wrap-nowrap">
+                  {query}
+                  <NavLink
+                    to={generateSortURL(newSortQuery)}
+                    onClick={() => handleSortLinkClick(newSortQuery)}
+                  >
+                    <span className="icon">
+                      <i className={iconClass(newSortQuery)} />
+                    </span>
+                  </NavLink>
                 </span>
-              </NavLink>
-            </span>
-          </th>
-
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Born
-              <NavLink
-                to={generateSortURL(BORN)}
-                onClick={() => handleSortLinkClick(BORN)}
-              >
-                <span className="icon">
-                  <i className="fas fa-sort" />
-                </span>
-              </NavLink>
-            </span>
-          </th>
-
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Died
-              <NavLink
-                to={generateSortURL(DIED)}
-                onClick={() => handleSortLinkClick(DIED)}
-              >
-                <span className="icon">
-                  <i className="fas fa-sort" />
-                </span>
-              </NavLink>
-            </span>
-          </th>
-
+              </th>
+            );
+          })}
           <th>Mother</th>
           <th>Father</th>
         </tr>
@@ -182,7 +162,7 @@ export const PeopleTable: React.FC<Props> = ({
                 'has-background-warning': personID === slug,
               })}
             >
-              <td>{generateNavLink(person)}</td>
+              <td>{generateNavLink(person, searchParams)}</td>
 
               <td>{sex}</td>
               <td>{born}</td>

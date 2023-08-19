@@ -18,17 +18,17 @@ const {
 const { ASC } = SortOrder;
 
 export const PeoplePage = () => {
-  const [peopleData, setPeopleData] = useState<Person[] | null>(null);
+  const [peopleData, setPeopleData] = useState<Person[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
 
-  const [filteredList, setFilteredList] = useState<Person[] | null>(null);
+  const [filteredList, setFilteredList] = useState<Person[]>(peopleData);
 
   const location = useLocation();
   const initialSearchParams = new URLSearchParams(location.search);
   const initialSearchQuery = initialSearchParams.get('searchQuery') || '';
   const initialSexParam = initialSearchParams.get('sex') || '';
-  const initialCenturyParams = initialSearchParams.getAll('century');
+  const initialCenturyParams = initialSearchParams.getAll('century') || [];
 
   const initialSortQuery = initialSearchParams.get('sort') || SortQuery.INITIAL;
   const initialOrderQuery = initialSearchParams.get('order') || SortOrder.ASC;
@@ -43,7 +43,7 @@ export const PeoplePage = () => {
   const [sortOrder, setSortOrder] = useState<SortOrder>(
     initialOrderQuery as SortOrder,
   );
-  const [sortedList, setSortedList] = useState<Person[]>([]);
+  const [sortedList, setSortedList] = useState<Person[]>(filteredList);
 
   const initialList = useMemo(() => {
     if (filteredList) {
@@ -92,50 +92,57 @@ export const PeoplePage = () => {
     });
 
     setFilteredList(filteredData);
-  }, [searchQuery, peopleData, sex, centuries.length]);
+  }, [
+    searchQuery,
+    peopleData,
+    sex,
+    centuries.length,
+    initialSearchQuery,
+    initialSexParam,
+    initialCenturyParams.length,
+  ]);
 
   useEffect(() => {
-    const newSortedList = [...filteredList || []];
-
     if (sortQuery === INITIAL && initialList) {
       setSortedList([...initialList]);
     } else {
-      newSortedList.sort((person1, person2) => {
-        switch (sortQuery) {
-          case NAME:
-          case SEX: {
-            if (sortOrder === ASC) {
-              return person1[sortQuery].localeCompare(person2[sortQuery]);
+      setSortedList(
+        [...filteredList].sort((person1, person2) => {
+          switch (sortQuery) {
+            case NAME:
+            case SEX: {
+              if (sortOrder === ASC) {
+                return person1[sortQuery].localeCompare(person2[sortQuery]);
+              }
+
+              return person2[sortQuery].localeCompare(person1[sortQuery]);
             }
 
-            return person2[sortQuery].localeCompare(person1[sortQuery]);
-          }
+            case BORN:
+            case DIED: {
+              if (sortOrder === ASC) {
+                return person1[sortQuery] - person2[sortQuery];
+              }
 
-          case BORN:
-          case DIED: {
-            if (sortOrder === ASC) {
-              return person1[sortQuery] - person2[sortQuery];
+              return person2[sortQuery] - person1[sortQuery];
             }
 
-            return person2[sortQuery] - person1[sortQuery];
+            default:
+              return 0;
           }
-
-          default:
-            return 0;
-        }
-      });
-
-      setSortedList(newSortedList);
+        }),
+      );
     }
-  }, [sortQuery, sortOrder, initialList]);
+  }, [sortQuery, sortOrder, initialList, filteredList]);
 
-  const isMatchingResult = filteredList && filteredList.length > 0;
-  const isSuccessfullyLoaded = !isError && !isLoading && peopleData;
+  const isMatchingResult = filteredList.length > 0;
+  const isSuccessfullyLoaded = !isError && !isLoading;
 
-  const isPeopleArrayEmpty = peopleData?.length === 0;
-  const isPersonNonExistent = isSuccessfullyLoaded
-    && !isMatchingResult
-    && !isPeopleArrayEmpty;
+  const isPeopleArrayEmpty = peopleData.length === 0 && isSuccessfullyLoaded;
+  const isPersonNonExistent
+    = isSuccessfullyLoaded && !isMatchingResult && !isPeopleArrayEmpty;
+  const isTableVisible
+    = isSuccessfullyLoaded && !isPeopleArrayEmpty && isMatchingResult;
 
   return (
     <>
@@ -169,19 +176,16 @@ export const PeoplePage = () => {
                 <p>There are no people matching the current search criteria</p>
               )}
 
-              {isSuccessfullyLoaded
-                && !isPeopleArrayEmpty
-                && isMatchingResult
-                && (
-                  <PeopleTable
-                    peopleData={sortedList}
-                    initialPeopleData={peopleData}
-                    setSortQuery={setSortQuery}
-                    setSortOrder={setSortOrder}
-                    sortQuery={sortQuery}
-                    sortOrder={sortOrder}
-                  />
-                )}
+              {isTableVisible && (
+                <PeopleTable
+                  peopleData={sortedList}
+                  initialPeopleData={peopleData}
+                  setSortQuery={setSortQuery}
+                  setSortOrder={setSortOrder}
+                  sortQuery={sortQuery}
+                  sortOrder={sortOrder}
+                />
+              )}
             </div>
           </div>
         </div>

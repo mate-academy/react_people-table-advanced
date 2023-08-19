@@ -40,7 +40,7 @@ export const PeopleFilters: React.FC<Props> = ({
 
     setSearchQuery(newSearchQuery);
     setSearchParams(newSearchParams);
-  }, []);
+  }, [setSearchParams]);
 
   const sexPickHandler = useCallback((sex: string) => {
     setSex(sex);
