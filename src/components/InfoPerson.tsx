@@ -5,82 +5,70 @@ import classNames from 'classnames';
 
 import { Person } from '../types';
 
+enum Gender {
+  Female = 'f',
+  Male = 'm',
+}
+
 type Props = {
-  person: Person,
-  ifPersonPind: (name: string | null) => Person | undefined,
+  person: Person;
+  ifPersonPind: (name: string | null) => Person | undefined;
 };
 
 export const InfoPerson: React.FC<Props> = ({ person, ifPersonPind }) => {
   const { personLink } = useParams();
 
+  const {
+    name,
+    sex,
+    born,
+    died,
+    motherName,
+    fatherName,
+    slug,
+  } = person;
+
+  const getLinkText = (pName: string | null) => {
+    const linkedPerson = ifPersonPind(pName);
+
+    return linkedPerson ? linkedPerson.slug || '-' : '-';
+  };
+
   return (
     <tr
       data-cy="person"
       className={classNames({
-        'has-background-warning': personLink === person.slug,
+        'has-background-warning': personLink === slug,
       })}
     >
       <td>
         <Link
-          to={`${person.slug}`}
+          to={`/${slug}`}
           className={classNames({
-            'has-text-danger': person.sex === 'f',
+            'has-text-danger': sex === Gender.Female,
           })}
         >
-          {person.name}
+          {name}
         </Link>
       </td>
-
-      <td>{person.sex}</td>
-      <td>{person.born}</td>
-      <td>{person.died}</td>
-
+      <td>{sex}</td>
+      <td>{born}</td>
+      <td>{died}</td>
       <td>
-        {person.motherName
-            && ifPersonPind(person.motherName)
-          ? (
-            <Link
-              className="has-text-danger"
-              to={`${
-                ifPersonPind(person.motherName)?.slug || ''
-              }`}
-            >
-              {person.motherName}
-            </Link>
-          ) : (
-            <Link
-              className="has-text-danger"
-              to={`${
-                ifPersonPind(person.motherName)?.slug || ''
-              }`}
-            >
-              -
-            </Link>
-          )}
+        <Link
+          className="has-text-danger"
+          to={`/${getLinkText(motherName)}`}
+        >
+          {motherName || '-'}
+        </Link>
       </td>
-
       <td>
-        {person.fatherName
-            && ifPersonPind(person.fatherName)
-          ? (
-            <Link
-              className="has-text-danger"
-              to={`${
-                ifPersonPind(person.fatherName)?.slug || ''
-              }`}
-            >
-              {person.fatherName}
-            </Link>
-          ) : (
-            <Link
-              className="has-text-danger"
-              to={`${
-                ifPersonPind(person.fatherName)?.slug || ''
-              }`}
-            >
-              -
-            </Link>
-          )}
+        <Link
+          className="has-text-danger"
+          to={`/${getLinkText(fatherName)}`}
+        >
+          {fatherName || '-'}
+        </Link>
       </td>
     </tr>
   );

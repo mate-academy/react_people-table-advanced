@@ -1,5 +1,12 @@
 import { Person } from '../types';
 
+enum SortField {
+  Sex = 'sex',
+  Name = 'name',
+  Born = 'born',
+  Died = 'died',
+}
+
 export const toFlilterPeople = (
   people: Person[],
   order: string | null,
@@ -15,15 +22,16 @@ export const toFlilterPeople = (
       let comparisonResult = 0;
 
       switch (sort) {
-        case 'sex':
-          case 'name':
-            comparisonResult = a[sort].localeCompare(b[sort]);
-            break;
+        case SortField.Sex:
+        case SortField.Name:
+          comparisonResult = a[sort].localeCompare(b[sort]);
+          break;
 
-            case 'born':
-              case 'died':
-                comparisonResult = a[sort] - b[sort];
-                break;
+        case SortField.Born:
+        case SortField.Died:
+          comparisonResult = a[sort] - b[sort];
+          break;
+
         default:
           comparisonResult = 0;
       }
@@ -35,15 +43,14 @@ export const toFlilterPeople = (
   if (query) {
     allPeople = allPeople.filter(person => {
       if (
-        person.name.toLowerCase().includes(query.toLowerCase()) ||
-        person.fatherName?.toLowerCase().includes(query.toLowerCase()) ||
-        person.motherName?.toLowerCase().includes(query.toLowerCase())
+        person.name.toLowerCase().includes(query.toLowerCase())
+        || person.fatherName?.toLowerCase().includes(query.toLowerCase())
+        || person.motherName?.toLowerCase().includes(query.toLowerCase())
       ) {
         return true;
       }
 
-
-      return false
+      return false;
     });
   }
 
