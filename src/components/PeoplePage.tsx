@@ -28,9 +28,9 @@ export const PeoplePage = () => {
   const preperedPeople: Person[] = useMemo(() => {
     let withMumDad = people.map(person => {
       const mother = people
-        .find(mum => mum.name === person.motherName) || undefined;
+        .find(mum => mum.name === person.motherName);
       const father = people
-        .find(dad => dad.name === person.fatherName) || undefined;
+        .find(dad => dad.name === person.fatherName);
 
       return {
         ...person,

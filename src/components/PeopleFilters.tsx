@@ -2,6 +2,7 @@ import React from 'react';
 import classNames from 'classnames';
 import { Link, useSearchParams } from 'react-router-dom';
 import { getSearchWith } from '../utils/searchHelper';
+import { Sex } from '../types/Sex';
 
 export const PeopleFilters: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -35,13 +36,13 @@ export const PeopleFilters: React.FC = () => {
         </Link>
         <Link
           className={classNames({ 'is-active': sex === 'm' })}
-          to={{ search: getSearchWith(searchParams, { sex: 'm' }) }}
+          to={{ search: getSearchWith(searchParams, { sex: Sex.Male }) }}
         >
           Male
         </Link>
         <Link
           className={classNames({ 'is-active': sex === 'f' })}
-          to={{ search: getSearchWith(searchParams, { sex: 'f' }) }}
+          to={{ search: getSearchWith(searchParams, { sex: Sex.Female }) }}
         >
           Female
         </Link>
