@@ -9,3 +9,8 @@ export interface Person {
   mother?: Person,
   father?: Person,
 }
+
+export enum Sex {
+  Male = 'm',
+  Female = 'f',
+}
