@@ -1,6 +1,6 @@
 # React People Table (Advanced) - Filterging and Sorting
 
-> Here is [the working example](https://mate-academy.github.io/react_people-table-advanced/)
+> Here is [the working example](https://growingananas.github.io/react_people-table-advanced/)
 
 > Sorting and filtering tests are not implemented yet
 
