@@ -1,4 +1,5 @@
 import { Person } from '../types';
+import { SortType } from '../types/SortType';
 
 export const getFilteredPeople = (
   people: Person[],
@@ -33,12 +34,12 @@ export const getFilteredPeople = (
   if (sortBy) {
     visiblePeople.sort((person1, person2) => {
       switch (sortBy) {
-        case 'name':
-        case 'sex':
+        case SortType.NAME:
+        case SortType.SEX:
           return person1[sortBy].localeCompare(person2[sortBy]);
 
-        case 'born':
-        case 'died':
+        case SortType.BORN:
+        case SortType.DIED:
           return person1[sortBy] - person2[sortBy];
 
         default:
