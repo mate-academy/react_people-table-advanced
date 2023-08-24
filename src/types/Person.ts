@@ -1,6 +1,6 @@
 export interface Person {
   name: string,
-  sex: string,
+  sex: PersonSex.Male | PersonSex.Female,
   born: number,
   died: number,
   fatherName: string | null,
@@ -8,4 +8,9 @@ export interface Person {
   slug: string,
   mother?: Person,
   father?: Person,
+}
+
+export enum PersonSex {
+  Male = 'm',
+  Female = 'f',
 }
