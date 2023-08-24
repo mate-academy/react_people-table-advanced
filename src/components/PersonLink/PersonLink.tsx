@@ -13,7 +13,7 @@ type Props = {
 export const PersonLink: React.FC<Props> = ({ person }) => {
   const { name, slug, sex } = person;
   const [searchFilters] = useSearchParams();
-  const q = searchFilters.get(FilterEnum.Query);
+  const query = searchFilters.get(FilterEnum.Query);
 
   return (
     <Link
@@ -25,7 +25,7 @@ export const PersonLink: React.FC<Props> = ({ person }) => {
         { 'has-text-danger': sex === SexEnum.Woman },
       )}
     >
-      <HighlightedText text={name} highlight={q} />
+      <HighlightedText text={name} highlight={query} />
     </Link>
   );
 };
