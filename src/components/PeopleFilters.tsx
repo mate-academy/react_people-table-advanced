@@ -2,6 +2,7 @@ import React from 'react';
 import { useSearchParams } from 'react-router-dom';
 import cn from 'classnames';
 import { SearchLink } from './SearchLink';
+import { getSearchWith } from '../utils/searchHelper';
 
 export const PeopleFilters: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -10,7 +11,12 @@ export const PeopleFilters: React.FC = () => {
   const query = searchParams.get('query') || '';
 
   const handleNameFilter = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchParams({ query: event.target.value });
+    const search = getSearchWith(
+      searchParams,
+      { query: event.target.value.trim() } || null,
+    );
+
+    setSearchParams(search);
   };
 
   function toggleCentury(century: string) {
@@ -64,7 +70,7 @@ export const PeopleFilters: React.FC = () => {
             type="search"
             className="input"
             placeholder="Search"
-            value={query}
+            defaultValue={query}
             onChange={handleNameFilter}
           />
           <span className="icon is-left">

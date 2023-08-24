@@ -8,6 +8,8 @@ import { PeopleFilters } from './PeopleFilters';
 import { peopleFilter } from '../utils/peopleUtils';
 import { PeopleTableHeader } from './PeopleTableHeader';
 
+const sortField = ['name', 'sex', 'born', 'died'];
+
 export const PeoplePage: React.FC = () => {
   const [people, setPeople] = useState<Person[]>([]);
   const [errorMessage, setErrorMessage] = useState('');
@@ -19,8 +21,6 @@ export const PeoplePage: React.FC = () => {
   const centuries = searchParams.getAll('centuries') || '';
   const sort = searchParams.get('sort') || '';
   const order = searchParams.get('order') || '';
-
-  const sortField = ['name', 'sex', 'born', 'died'];
 
   useEffect(() => {
     setLoading(true);
@@ -52,49 +52,54 @@ export const PeoplePage: React.FC = () => {
   return (
     <>
       <h1 className="title">People Page</h1>
+
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
           <div className="column is-7-tablet is-narrow-desktop">
             <PeopleFilters />
           </div>
-          <div className="box table-container">
-            {loading && <Loader />}
-            {!errorMessage && !loading && people.length > 0 && (
-              <table
-                data-cy="peopleTable"
-                className="table is-striped is-hoverable is-narrow is-fullwidth"
-              >
-                <PeopleTableHeader
-                  sortField={sortField}
-                  sort={sort}
-                  order={order}
-                />
-                <tbody>
-                  {visiblePeople.map(person => (
-                    <PersonRow
-                      person={person}
-                      key={person.slug}
-                    />
-                  ))}
-                </tbody>
-              </table>
-            )}
 
-            {errorMessage && !loading && (
-              <p data-cy="peopleLoadingError" className="has-text-danger">
-                {errorMessage}
-              </p>
-            )}
-            {!errorMessage && !loading && !people.length && (
-              <p data-cy="noPeopleMessage" className="has-text-danger">
-                There are no people on the server
-              </p>
-            )}
-            {!errorMessage && !loading && !visiblePeople.length && (
-              <p data-cy="noPeopleMessage" className="has-text-danger">
-                No people for your criteria
-              </p>
-            )}
+          <div className="column">
+
+            <div className="box table-container">
+              {loading && <Loader />}
+              {!errorMessage && !loading && people.length > 0 && (
+                <table
+                  data-cy="peopleTable"
+                  className="table is-striped is-hoverable is-narrow is-fullwidth"
+                >
+                  <PeopleTableHeader
+                    sortField={sortField}
+                    sort={sort}
+                    order={order}
+                  />
+                  <tbody>
+                    {visiblePeople.map(person => (
+                      <PersonRow
+                        person={person}
+                        key={person.slug}
+                      />
+                    ))}
+                  </tbody>
+                </table>
+              )}
+
+              {errorMessage && !loading && (
+                <p data-cy="peopleLoadingError" className="has-text-danger">
+                  {errorMessage}
+                </p>
+              )}
+              {!errorMessage && !loading && !people.length && (
+                <p data-cy="noPeopleMessage" className="has-text-danger">
+                  There are no people on the server
+                </p>
+              )}
+              {!errorMessage && !loading && !visiblePeople.length && (
+                <p data-cy="noPeopleMessage" className="has-text-danger">
+                  No people for your criteria
+                </p>
+              )}
+            </div>
           </div>
         </div>
       </div>
