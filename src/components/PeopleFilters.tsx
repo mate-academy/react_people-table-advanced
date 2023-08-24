@@ -3,15 +3,16 @@ import classNames from 'classnames';
 import { useSearchParams } from 'react-router-dom';
 import { SearchParams, getSearchWith } from '../utils/searchHelper';
 import { SearchLink } from './SearchLink';
+import { Filter } from '../types';
 
 const ALL_CENTURIES = ['16', '17', '18', '19', '20'];
 
 export const PeopleFilters: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const sex = searchParams.get('sex') || '';
-  const query = searchParams.get('query') || '';
-  const centuries = searchParams.getAll('centuries') || [];
+  const sex = searchParams.get(Filter.SEX) || '';
+  const query = searchParams.get(Filter.QUERY) || '';
+  const centuries = searchParams.getAll(Filter.CENTURIES) || [];
 
   function setSearchWith(params: SearchParams) {
     const newParams = getSearchWith(searchParams, params);

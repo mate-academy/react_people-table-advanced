@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { getPeople } from '../api';
 import { Loader } from './Loader';
-import { Person, SortField } from '../types';
+import { Filter, Person, SortField } from '../types';
 import { PeopleTable } from './PeopleTable';
 import { PeopleFilters } from './PeopleFilters';
 import { filterPeople } from '../utils/filterPeople';
@@ -13,9 +13,9 @@ export const PeoplePage = () => {
   const [loading, setLoading] = useState(false);
 
   const [searchParams] = useSearchParams();
-  const sex = searchParams.get('sex') || '';
-  const query = searchParams.get('query') || '';
-  const centuries = searchParams.getAll('centuries') || [];
+  const sex = searchParams.get(Filter.SEX) || '';
+  const query = searchParams.get(Filter.QUERY) || '';
+  const centuries = searchParams.getAll(Filter.CENTURIES) || [];
   const sortField = searchParams.get('sort') as SortField || SortField.ALL;
   const sortOrder = searchParams.get('order') || '';
 
