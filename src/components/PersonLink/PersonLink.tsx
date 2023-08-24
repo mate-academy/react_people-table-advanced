@@ -18,7 +18,7 @@ export const PersonLink: React.FC<Props> = ({ person }) => {
   return (
     <Link
       to={{
-        pathname: `../${slug}`,
+        pathname: `/people/${slug}`,
         search: searchFilters.toString(),
       }}
       className={classNames(

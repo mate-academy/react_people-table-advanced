@@ -60,8 +60,6 @@ export const PeoplePage = () => {
     }
 
     if (searchFilters.get('query')) {
-      // eslint-disable-next-line no-console
-      console.log(searchFilters.get('query'));
       result = result.filter(
         filterByQuery(searchFilters.get('query') as string),
       );
@@ -120,7 +118,7 @@ export const PeoplePage = () => {
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
 
-          {people.length > 0 && (
+          {!!people.length && (
             <div className="column is-7-tablet is-narrow-desktop">
               <PeopleFilters />
             </div>
@@ -136,17 +134,17 @@ export const PeoplePage = () => {
                 <p data-cy="peopleLoadingError">Something went wrong</p>
               )}
 
-              {(people.length === 0 && !isLoading) && (
+              {(!people.length && !isLoading) && (
                 <p data-cy="noPeopleMessage">
                   There are no people on the server
                 </p>
               ) }
 
-              {(!isLoading && visiblePeople.length === 0) && (
+              {(!isLoading && !visiblePeople.length) && (
                 <p>There are no people matching the current search criteria</p>
               )}
 
-              {(!isLoading && visiblePeople.length > 0) && (
+              {(!isLoading && !!visiblePeople.length) && (
                 <PeopleTable people={visiblePeople} />
               )}
             </div>

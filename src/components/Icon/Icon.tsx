@@ -13,13 +13,12 @@ export const Icon: React.FC<Props> = ({ sortBy }) => {
   const isSorting = searchParams.sort === sortBy;
   const isDesc = searchParams.order === 'desc';
 
-  switch (true) {
-    case (isSorting && !isDesc):
-      return (<i className="fas fa-sort-up" />);
-    case (isSorting && isDesc):
-      return (<i className="fas fa-sort-down" />);
-    default:
-      break;
+  if (isSorting && !isDesc) {
+    return (<i className="fas fa-sort-up" />);
+  }
+
+  if (isSorting && isDesc) {
+    return (<i className="fas fa-sort-down" />);
   }
 
   return (<i className="fas fa-sort" />);

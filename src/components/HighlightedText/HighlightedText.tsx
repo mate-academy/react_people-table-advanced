@@ -17,7 +17,7 @@ export const HighlightedText: React.FC<Props> = ({
 
   const normalizedText = text?.toLowerCase();
 
-  if (highlight !== null && normalizedText.includes(highlight)) {
+  if (highlight && normalizedText.includes(highlight)) {
     const parts = text.split(new RegExp(`(${highlight})`, 'gi'));
 
     return (

@@ -22,7 +22,7 @@ export const TableRow: React.FC<Props> = ({ person }) => {
   } = person;
 
   const [searchFilters] = useSearchParams();
-  const q = searchFilters.get(FilterEnum.Query);
+  const query = searchFilters.get(FilterEnum.Query);
   const { slug } = useParams();
 
   return (
@@ -42,12 +42,12 @@ export const TableRow: React.FC<Props> = ({ person }) => {
       <td>
         {(mother)
           ? (<PersonLink person={mother} />)
-          : <HighlightedText text={motherName} highlight={q} />}
+          : <HighlightedText text={motherName} highlight={query} />}
       </td>
       <td>
         {(father)
           ? (<PersonLink person={father} />)
-          : <HighlightedText text={fatherName} highlight={q} />}
+          : <HighlightedText text={fatherName} highlight={query} />}
       </td>
     </tr>
   );
