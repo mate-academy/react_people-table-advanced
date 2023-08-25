@@ -7,12 +7,13 @@ export enum SexFilter {
   Female = 'f',
 }
 
+const centuriesOptions = ['16', '17', '18', '19', '20'];
+
 export const PeopleFilters: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const query = searchParams.get('query') || '';
   const sex = searchParams.get('sex');
   const centuries = searchParams.getAll('centuries') || [];
-  const centuriesOptions = ['16', '17', '18', '19', '20'];
 
   const handleCenturiesParams = (century: string) => {
     const newCenturies = (centuries.includes(century))
@@ -87,7 +88,7 @@ export const PeopleFilters: React.FC = () => {
             <i
               className="fas fa-search"
               aria-hidden="true"
-              onClick={() => clearCentury}
+              onClick={clearCentury}
             />
           </span>
         </p>
