@@ -11,7 +11,7 @@ export const PeopleFilters = () => {
 
   const handleQuery = (event: React.ChangeEvent<HTMLInputElement>) => {
     const inputValue = event.target.value;
-    const newParams = new URLSearchParams();
+    const newParams = new URLSearchParams(searchParams);
 
     if (inputValue) {
       newParams.set('query', inputValue);
@@ -23,7 +23,7 @@ export const PeopleFilters = () => {
   };
 
   const handleSortMale = (field: string) => {
-    const param = new URLSearchParams();
+    const param = new URLSearchParams(searchParams);
 
     if (field === 'sex') {
       param.set('sex', 'm');
@@ -33,7 +33,7 @@ export const PeopleFilters = () => {
   };
 
   const handleSortFemale = (field: string) => {
-    const param = new URLSearchParams();
+    const param = new URLSearchParams(searchParams);
 
     if (field === 'sex') {
       param.set('sex', 'f');
@@ -51,9 +51,11 @@ export const PeopleFilters = () => {
   };
 
   const handleSortCenuties = (field: string) => {
-    const param = new URLSearchParams();
+    const param = new URLSearchParams(searchParams);
 
     const selectedCenturies = toggleCentury(field);
+
+    param.delete('centuries');
 
     selectedCenturies.forEach(century => param.append('centuries', century));
 
@@ -122,7 +124,9 @@ export const PeopleFilters = () => {
           <div className="level-right ml-4">
             <a
               data-cy="centuryALL"
-              className="button is-success is-outlined"
+              className={cn('button', 'is-success', {
+                'is-outlined': centuries.length > 0,
+              })}
               href="#/people"
             >
               All

@@ -15,13 +15,13 @@ export const filterPeople = (
   let filteredPeople = [...people];
 
   if (params.sex) {
-    return filteredPeople.filter(person => person.sex === params.sex);
+    filteredPeople = filteredPeople.filter(person => person.sex === params.sex);
   }
 
   if (params.query) {
     const normalizeQuery = params.query.toLowerCase();
 
-    return filteredPeople.filter(
+    filteredPeople = filteredPeople.filter(
       person => person.name.toLowerCase().includes(normalizeQuery)
       || person.fatherName?.toLowerCase().includes(normalizeQuery)
       || person.motherName?.toLowerCase().includes(normalizeQuery),
@@ -34,14 +34,12 @@ export const filterPeople = (
 
       return params.centuries.includes(century);
     });
-
-    return filteredPeople;
   }
 
   if (params.sortField) {
     const order = params.order ? -1 : 1;
 
-    filteredPeople = [...filteredPeople].sort((p1, p2) => {
+    filteredPeople = filteredPeople.sort((p1, p2) => {
       switch (params.sortField) {
         case SortField.Born:
         case SortField.Died:
@@ -54,8 +52,6 @@ export const filterPeople = (
           return 0;
       }
     });
-  } else {
-    filteredPeople = [...people];
   }
 
   return filteredPeople;
