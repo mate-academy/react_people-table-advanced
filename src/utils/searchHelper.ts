@@ -30,9 +30,12 @@ export function getSearchWith(
     .forEach(([key, value]) => {
       if (value === null) {
         newParams.delete(key);
+        // console.log('Run-getSearchWith-value-part=', value);
       } else if (Array.isArray(value)) {
         // we delete the key to remove old values
         newParams.delete(key);
+
+        // console.log('Run-getSearchWith-array-part=', value);
 
         value.forEach(part => {
           newParams.append(key, part);
