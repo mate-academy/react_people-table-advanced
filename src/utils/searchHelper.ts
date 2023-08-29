@@ -1,5 +1,3 @@
-import { URLSearchParams } from 'url';
-
 export type SearchParams = {
   [key: string]: string | string[] | null,
 };

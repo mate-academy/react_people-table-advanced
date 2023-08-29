@@ -2,7 +2,7 @@ import { Person, SortField } from '../types';
 
 export type FilterSortParams = {
   sortField: SortField;
-  order: string;
+  order: string | null;
   sex: string;
   query: string;
   centuries: string[];

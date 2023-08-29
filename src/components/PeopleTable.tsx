@@ -3,6 +3,7 @@ import cn from 'classnames';
 import { Person, SortField } from '../types';
 import { Loader } from './Loader';
 import { filterPeople } from '../utils/filter';
+import { SearchLink } from './SearchLink';
 
 type Props = {
   person: Person[]
@@ -25,40 +26,6 @@ export const PeopleTable:React.FC<Props> = ({ person, isLoading }) => {
       'fa-sort-down': currentSearch === `${field}` && currentOrder === 'desc',
     })
   );
-
-  const handleSortType = (field: SortField) => {
-    const param = new URLSearchParams(searchParams);
-    let newSearch: SortField | null;
-    let newOrder: string | null;
-
-    if (!currentOrder && currentSearch === field) {
-      newSearch = field;
-      newOrder = 'desc';
-    } else if (currentOrder && currentSearch === field) {
-      newSearch = null;
-      newOrder = null;
-    } else {
-      newSearch = field;
-      newOrder = null;
-    }
-
-    if (newSearch) {
-      param.set('sort', newSearch);
-    } else {
-      param.delete('sort');
-    }
-
-    if (newOrder) {
-      param.set('order', newOrder);
-    } else {
-      param.delete('order');
-    }
-
-    return {
-      pathname: '/people',
-      search: param.toString(),
-    };
-  };
 
   let currentSortField = '' as SortField;
 
@@ -84,6 +51,10 @@ export const PeopleTable:React.FC<Props> = ({ person, isLoading }) => {
     return persons.find(parent => parent.name === parentName);
   };
 
+  if (filteredPersons.length === 0 && !isLoading) {
+    return <p>There are no people matching the current search criteria</p>;
+  }
+
   if (isLoading) {
     return <Loader />;
   }
@@ -98,44 +69,72 @@ export const PeopleTable:React.FC<Props> = ({ person, isLoading }) => {
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Name
-              <Link to={handleSortType(SortField.Name)}>
+              <SearchLink
+                params={{
+                  sort: currentSearch === SortField.Name
+                  && currentOrder ? null : SortField.Name,
+                  order: currentSearch === SortField.Name
+                  && currentOrder !== 'desc' ? 'desc' : null,
+                }}
+              >
                 <span className="icon">
                   <i className={sortOrderIcon('name')} />
                 </span>
-              </Link>
+              </SearchLink>
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Sex
-              <Link to={handleSortType(SortField.Sex)}>
+              <SearchLink
+                params={{
+                  sort: currentSearch === SortField.Sex
+                  && currentOrder ? null : SortField.Sex,
+                  order: currentSearch === SortField.Sex
+                  && currentOrder !== 'desc' ? 'desc' : null,
+                }}
+              >
                 <span className="icon">
                   <i className={sortOrderIcon('sex')} />
                 </span>
-              </Link>
+              </SearchLink>
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Born
-              <Link to={handleSortType(SortField.Born)}>
+              <SearchLink
+                params={{
+                  sort: currentSearch === SortField.Born
+                  && currentOrder ? null : SortField.Born,
+                  order: currentSearch === SortField.Born
+                  && currentOrder !== 'desc' ? 'desc' : null,
+                }}
+              >
                 <span className="icon">
                   <i className={sortOrderIcon('born')} />
                 </span>
-              </Link>
+              </SearchLink>
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Died
-              <Link to={handleSortType(SortField.Died)}>
+              <SearchLink
+                params={{
+                  sort: currentSearch === SortField.Died
+                  && currentOrder ? null : SortField.Died,
+                  order: currentSearch === SortField.Died
+                  && currentOrder !== 'desc' ? 'desc' : null,
+                }}
+              >
                 <span className="icon">
                   <i className={sortOrderIcon('died')} />
                 </span>
-              </Link>
+              </SearchLink>
             </span>
           </th>
 
