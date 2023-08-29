@@ -29,7 +29,7 @@ export const PeopleFilters = () => {
           className={cn({
             'is-active': !currentSex || (currentQuery !== '' && !currentSex),
           })}
-          params={{ sex: '', query: '' }}
+          params={{ sex: '' }}
         >
           All
         </SearchLink>

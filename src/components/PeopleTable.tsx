@@ -157,7 +157,13 @@ export const PeopleTable:React.FC<Props> = ({ person, isLoading }) => {
               )}
             >
               <td>
-                <Link className={cn({ 'has-text-danger': personItem.sex === 'f' })} to={`/people/${personItem.slug}`}>
+                <Link
+                  className={cn({ 'has-text-danger': personItem.sex === 'f' })}
+                  to={{
+                    pathname: `/people/${personItem.slug}`,
+                    search: searchParams.toString(),
+                  }}
+                >
                   {personItem.name}
                 </Link>
               </td>
@@ -166,12 +172,12 @@ export const PeopleTable:React.FC<Props> = ({ person, isLoading }) => {
               <td>{personItem.born}</td>
               <td>{personItem.died}</td>
               <td>
-                {mother ? (<Link className="has-text-danger" to={`/people/${mother.slug}`}>{personItem.motherName}</Link>) : (
+                {mother ? (<Link className="has-text-danger" to={{ pathname: `/people/${mother.slug}`, search: searchParams.toString() }}>{personItem.motherName}</Link>) : (
                   personItem.motherName || '-'
                 )}
               </td>
               <td>
-                {father ? (<Link to={`/people/${father.slug}`}>{personItem.fatherName}</Link>) : (
+                {father ? (<Link to={{ pathname: `/people/${father.slug}`, search: searchParams.toString() }}>{personItem.fatherName}</Link>) : (
                   personItem.fatherName || '-'
                 )}
               </td>
