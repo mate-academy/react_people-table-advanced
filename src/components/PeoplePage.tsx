@@ -38,8 +38,8 @@ export const PeoplePage = () => {
 
           <div className="column">
             <div className="box table-container">
-              {people === null && errMess === false && (<Loader />)}
-              {people !== null && filteredPeople.length > 0 && (
+              {!people && !errMess && (<Loader />)}
+              {!!people && filteredPeople.length > 0 && (
                 <PeopleTable
                   people={people}
                   filteredPeople={filteredPeople}
@@ -52,13 +52,13 @@ export const PeoplePage = () => {
                 </p>
               )}
 
-              {people !== null && people.length < 1 && (
+              {!!people && !people.length && (
                 <p data-cy="noPeopleMessage">
                   There are no people on the server
                 </p>
               )}
 
-              {people !== null && filteredPeople.length < 1 && (
+              {!!people && !filteredPeople.length && (
                 <p>There are no people matching the current search criteria</p>
               )}
             </div>

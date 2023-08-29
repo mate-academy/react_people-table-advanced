@@ -1,10 +1,12 @@
-import { Link, useLocation, useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import React, { useEffect } from 'react';
 import classNames from 'classnames';
 import { Person } from '../types';
 import { getSearchWith } from '../utils/searchHelper';
 import { Sex } from '../types/Sex';
 import { LinksForCentury } from './LinksForCentury';
+import { SearchParams } from '../types/SearchPapams';
+import { SearchLink } from './SearchLink';
 
 type Props = {
   people: Person[],
@@ -16,14 +18,13 @@ export const PeopleFilters: React.FC<Props> = React.memo(({
 }) => {
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const query = searchParams.get('query') || '';
-  const centuries = searchParams.getAll('centuries') || [];
-  const sex = searchParams.get('sex') || '';
-  const location = useLocation();
+  const query = searchParams.get(SearchParams.Query) || '';
+  const centuries = searchParams.getAll(SearchParams.Centuries) || [];
+  const sex = searchParams.get(SearchParams.Sex) || '';
 
   const getFilteredPeople = () => {
-    return [...people]
-      .filter(person => { // FiltredPeopleByQuery
+    return people
+      .filter(person => {
         const correctQuery = query.trim().toLocaleLowerCase();
         const { name, motherName, fatherName } = person;
 
@@ -45,14 +46,14 @@ export const PeopleFilters: React.FC<Props> = React.memo(({
 
         return true;
       })
-      .filter(person => { // FiltredPeopleBySex
+      .filter(person => {
         if (sex) {
           return person.sex === sex;
         }
 
         return true;
       })
-      .filter(person => { // FiltredPeopleByCentury
+      .filter(person => {
         if (centuries !== undefined && centuries.length > 0) {
           const { born } = person;
           const bornCentury = Math.ceil(+born / 100);
@@ -79,35 +80,26 @@ export const PeopleFilters: React.FC<Props> = React.memo(({
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        <Link
+        <SearchLink
           className={classNames({ 'is-active': sex === Sex.Empty })}
-          to={{
-            pathname: location.pathname,
-            search: getSearchWith(searchParams, { sex: null }),
-          }}
+          params={{ sex: null }}
         >
           All
-        </Link>
+        </SearchLink>
 
-        <Link
+        <SearchLink
           className={classNames({ 'is-active': sex === Sex.Male })}
-          to={{
-            pathname: location.pathname,
-            search: getSearchWith(searchParams, { sex: Sex.Male }),
-          }}
+          params={{ sex: Sex.Male }}
         >
           Male
-        </Link>
+        </SearchLink>
 
-        <Link
+        <SearchLink
           className={classNames({ 'is-active': sex === Sex.Female })}
-          to={{
-            pathname: location.pathname,
-            search: getSearchWith(searchParams, { sex: Sex.Female }),
-          }}
+          params={{ sex: Sex.Female }}
         >
           Female
-        </Link>
+        </SearchLink>
       </p>
 
       <div className="panel-block">
@@ -134,19 +126,12 @@ export const PeopleFilters: React.FC<Props> = React.memo(({
       </div>
 
       <div className="panel-block">
-        <Link
+        <SearchLink
           className="button is-link is-outlined is-fullwidth"
-          to={{
-            pathname: location.pathname,
-            search: getSearchWith(searchParams, {
-              sex: null,
-              centuries: null,
-              query: null,
-            }),
-          }}
+          params={{ sex: null, centuries: null, query: null }}
         >
           Reset all filters
-        </Link>
+        </SearchLink>
       </div>
     </nav>
   );

@@ -1,25 +1,14 @@
-export type SearchParams = {
+export type CustomSearchParams = {
   [key: string]: string | string[] | null,
 };
 
 export function getSearchWith(
   currentParams: URLSearchParams,
-  paramsToUpdate: SearchParams, // it's our custom type
+  paramsToUpdate: CustomSearchParams,
 ): string {
   const newParams = new URLSearchParams(
     currentParams.toString(),
   );
-
-  // Here is the example of paramsToUpdate
-  // {
-  //   sex: 'm',                ['sex', 'm']
-  //   order: null,             ['order', null]
-  //   centuries: ['16', '19'], ['centuries', ['16', '19']]
-  // }
-  //
-  // - params with the `null` value are deleted;
-  // - string value is set to given param key;
-  // - array of strings adds several params with the same key;
 
   Object.entries(paramsToUpdate)
     .forEach(([key, value]) => {
@@ -27,7 +16,6 @@ export function getSearchWith(
         newParams.delete(key);
       } else if (Array.isArray(value)) {
         newParams.delete(key);
-
 
         value.forEach(part => {
           newParams.append(key, part);

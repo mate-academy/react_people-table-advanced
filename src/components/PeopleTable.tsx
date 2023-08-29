@@ -1,10 +1,11 @@
 import classNames from 'classnames';
-import { Link, useLocation, useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import React, { useMemo, useState } from 'react';
 import { Person } from '../types';
 import { PersonLink } from './PesonLink';
-import { getSearchWith } from '../utils/searchHelper';
 import { SortParams } from '../types/SortParams';
+import { SearchParams } from '../types/SearchPapams';
+import { SearchLink } from './SearchLink';
 
 type Props = {
   people: Person[],
@@ -19,10 +20,9 @@ export const PeopleTable: React.FC<Props> = ({
   ] = useState<Person[]>(filteredPeople);
 
   const [searchParams] = useSearchParams();
-  const location = useLocation();
 
-  const sortParam = searchParams.get('sort') || '';
-  const order = searchParams.get('order') || '';
+  const sortParam = searchParams.get(SearchParams.Sort) || '';
+  const order = searchParams.get(SearchParams.Order) || '';
 
   const handlerSortPeopleBy = (sortParams: SortParams) => {
     return [...filteredPeople].sort((personA, personB) => {
@@ -73,12 +73,12 @@ export const PeopleTable: React.FC<Props> = ({
 
   const getSearchSortBy = (key: string) => {
     if (sortParam !== key) {
-      return getSearchWith(searchParams, { sort: key, order: null });
+      return { sort: key, order: null };
     }
 
     return (!order)
-      ? getSearchWith(searchParams, { order: 'desc' })
-      : getSearchWith(searchParams, { sort: null, order: null });
+      ? { sort: key, order: SearchParams.OrderValue }
+      : { sort: null, order: null };
   };
 
   useMemo(() => {
@@ -95,11 +95,8 @@ export const PeopleTable: React.FC<Props> = ({
           <th>
             <span className="is-flex is-flex-wrap-no-wrap">
               Name
-              <Link
-                to={{
-                  pathname: location.pathname,
-                  search: getSearchSortBy('name'),
-                }}
+              <SearchLink
+                params={getSearchSortBy(SortParams.Name)}
               >
                 <span className="icon">
                   <i className={classNames(
@@ -110,18 +107,15 @@ export const PeopleTable: React.FC<Props> = ({
                   )}
                   />
                 </span>
-              </Link>
+              </SearchLink>
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-no-wrap">
               Sex
-              <Link
-                to={{
-                  pathname: location.pathname,
-                  search: getSearchSortBy('sex'),
-                }}
+              <SearchLink
+                params={getSearchSortBy(SortParams.Sex)}
               >
                 <span className="icon">
                   <i className={classNames(
@@ -132,18 +126,15 @@ export const PeopleTable: React.FC<Props> = ({
                   )}
                   />
                 </span>
-              </Link>
+              </SearchLink>
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-no-wrap">
               Born
-              <Link
-                to={{
-                  pathname: location.pathname,
-                  search: getSearchSortBy('born'),
-                }}
+              <SearchLink
+                params={getSearchSortBy(SortParams.Born)}
               >
                 <span className="icon">
                   <i className={classNames(
@@ -154,18 +145,15 @@ export const PeopleTable: React.FC<Props> = ({
                   )}
                   />
                 </span>
-              </Link>
+              </SearchLink>
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-no-wrap">
               Died
-              <Link
-                to={{
-                  pathname: location.pathname,
-                  search: getSearchSortBy('died'),
-                }}
+              <SearchLink
+                params={getSearchSortBy(SortParams.Died)}
               >
                 <span className="icon">
                   <i className={classNames(
@@ -176,7 +164,7 @@ export const PeopleTable: React.FC<Props> = ({
                   )}
                   />
                 </span>
-              </Link>
+              </SearchLink>
             </span>
           </th>
 

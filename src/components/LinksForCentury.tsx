@@ -1,63 +1,54 @@
-import { Link, useLocation, useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import classNames from 'classnames';
-import { getSearchWith } from '../utils/searchHelper';
+import { SearchParams } from '../types/SearchPapams';
+import { SearchLink } from './SearchLink';
 
 const startedCenturies = ['16', '17', '18', '19', '20'];
 
 export const LinksForCentury: React.FC = () => {
   const [searchParams] = useSearchParams();
-  const location = useLocation();
 
-  const centuries = searchParams.getAll('centuries') || [];
+  const centuries = searchParams.getAll(SearchParams.Centuries) || [];
 
-  const handlerCenturiesChange = (ch: string | null) => {
-    if (ch) {
-      if (centuries.includes(ch)) {
-        return getSearchWith(
-          searchParams,
-          { centuries: [...centuries].filter(cen => cen !== ch) || [] },
-        );
-      }
-
-      return getSearchWith(searchParams, { centuries: [...centuries, ch] });
+  const handlerCenturiesChange = (ch: string) => {
+    if (centuries.includes(ch)) {
+      return { centuries: [...centuries].filter(cen => cen !== ch) || [] };
     }
 
-    return getSearchWith(searchParams, { centuries: null });
-  };
+    return { centuries: [...centuries, ch] };
+  }
 
   return (
     <>
       <div className="level-left">
-        {startedCenturies.map(century => (
-          <Link
-            key={`century-${century}`}
-            data-cy="century"
-            className={classNames('button', 'mr-1', {
-              'is-info': centuries.includes(century),
-            })}
-            to={{
-              pathname: location.pathname,
-              search: handlerCenturiesChange(century),
-            }}
-          >
-            {century}
-          </Link>
-        ))}
+        {startedCenturies.map(century => {
+          const newParams = handlerCenturiesChange(century);
+
+          return (
+            <SearchLink
+              key={`century-${century}`}
+              data-cy="century"
+              className={classNames('button', 'mr-1', {
+                'is-info': centuries.includes(century),
+              })}
+              params={newParams}
+            >
+              {century}
+            </SearchLink>
+          )
+        })}
       </div>
 
       <div className="level-right ml-4">
-        <Link
+        <SearchLink
           data-cy="centuryALL"
           className={classNames(
             'button', 'is-success', { 'is-outlined': centuries.length > 0 },
           )}
-          to={{
-            pathname: location.pathname,
-            search: handlerCenturiesChange(null),
-          }}
+          params={{ centuries: null }}
         >
           All
-        </Link>
+        </SearchLink>
       </div>
     </>
 
