@@ -63,7 +63,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
           </th>
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
-              Name
+              Sex
               <SearchLink params={handleSortParams(SortField.NAME)}>
                 <span className="icon">
                   <i className={classNames('fas', {
@@ -82,13 +82,13 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Born
-              <SearchLink params={handleSortParams(SortField.BORN)}>
+              <SearchLink params={handleSortParams(SortField.SEX)}>
                 <span className="icon">
                   <i className={classNames('fas', {
-                    'fa-sort': sortField !== SortField.BORN,
-                    'fa-sort-up': sortField === SortField.BORN
+                    'fa-sort': sortField !== SortField.SEX,
+                    'fa-sort-up': sortField === SortField.SEX
                       && !sortOrder,
-                    'fa-sort-down': sortField === SortField.BORN
+                    'fa-sort-down': sortField === SortField.SEX
                       && sortOrder,
                   })}
                   />
