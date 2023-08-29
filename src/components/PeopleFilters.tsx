@@ -27,9 +27,9 @@ export const PeopleFilters = () => {
       <p className="panel-tabs" data-cy="SexFilter">
         <SearchLink
           className={cn({
-            'is-active': currentQuery.trim() === '' && !currentSex,
+            'is-active': !currentSex || (currentQuery !== '' && !currentSex),
           })}
-          params={{ sex: '' }}
+          params={{ sex: '', query: '' }}
         >
           All
         </SearchLink>

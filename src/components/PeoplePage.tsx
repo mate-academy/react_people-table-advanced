@@ -1,13 +1,19 @@
+import { useEffect, useState } from 'react';
 import { PeopleFilters } from './PeopleFilters';
 import { PeopleTable } from './PeopleTable';
 import { Person } from '../types';
+import { getPeople } from '../api';
 
-type Props = {
-  person: Person[]
-  isLoading: boolean
-};
+export const PeoplePage = () => {
+  const [person, setPerson] = useState<Person[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-export const PeoplePage: React.FC<Props> = ({ person, isLoading }) => {
+  useEffect(() => {
+    getPeople()
+      .then(setPerson)
+      .finally(() => setIsLoading(false));
+  }, [setPerson, setIsLoading]);
+
   return (
     <>
       <h1 className="title">People Page</h1>
