@@ -41,13 +41,13 @@ export const filterPeople = (
       if (params.sort === 'name' || params.sort === 'sex') {
         return params.order
           ? b[params.sort].localeCompare(a[params.sort])
-          : b[params.sort].localeCompare(a[params.sort]);
+          : a[params.sort].localeCompare(b[params.sort]);
       }
 
       if (params.sort === 'born' || params.sort === 'died') {
         return params.order
           ? +b[params.sort] - +a[params.sort]
-          : +b[params.sort] - +a[params.sort];
+          : +a[params.sort] - +b[params.sort];
       }
 
       return 0;

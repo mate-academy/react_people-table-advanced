@@ -78,7 +78,6 @@ export const PeopleFilters = () => {
                     centuries: toggleCentury(century),
                   }),
                 }}
-                onClick={() => toggleCentury(century)}
                 className={classNames('button mr-1', {
                   'is-info': centuries.includes(century),
                 })}

@@ -35,46 +35,45 @@ export const PeoplePage = () => {
       <div className="container">
         <h1 className="title">People Page</h1>
 
-        {!loading && !errorMessage && people.length > 0 && (
-          <div className="block">
-            <div className="columns is-desktop is-flex-direction-row-reverse">
-              <div className="column is-7-tablet is-narrow-desktop">
-                <PeopleFilters />
-              </div>
+        <div className="block">
+          <div className="columns is-desktop is-flex-direction-row-reverse">
+            <div className="column is-7-tablet is-narrow-desktop">
+              <PeopleFilters />
+            </div>
 
-              <div className="column">
-                <div className="box table-container">
-                  {loading && (<Loader />)}
+            {loading && (<Loader />)}
 
-                  {errorMessage && !loading && (
-                    <p data-cy="peopleLoadingError">
-                      Something went wrong
-                    </p>
-                  )}
+            {errorMessage && !loading && (
+              <p data-cy="peopleLoadingError">
+                Something went wrong
+              </p>
+            )}
 
-                  {!errorMessage && !loading && people.length === 0 && (
-                    <p data-cy="noPeopleMessage">
-                      There are no people on the server
-                    </p>
-                  )}
+            {!errorMessage && !loading && people.length === 0 && (
+              <p data-cy="noPeopleMessage">
+                There are no people on the server
+              </p>
+            )}
 
-                  {!loading && !errorMessage && preperedPeople.length < 1 && (
-                    <p>
-                      There are no people matching the current search criteria
-                    </p>
-                  )}
+            {!loading && !errorMessage && preperedPeople.length < 1 && (
+              <p>
+                There are no people matching the current search criteria
+              </p>
+            )}
 
-                  {!loading && !errorMessage && people.length > 0
-                    && preperedPeople.length > 0 && (
-                    <PeopleTable
-                      people={preperedPeople}
-                    />
-                  )}
-                </div>
+            <div className="column">
+              <div className="box table-container">
+
+                {!loading && !errorMessage && people.length > 0
+                  && preperedPeople.length > 0 && (
+                  <PeopleTable
+                    people={preperedPeople}
+                  />
+                )}
               </div>
             </div>
           </div>
-        )}
+        </div>
       </div>
     </div>
   );

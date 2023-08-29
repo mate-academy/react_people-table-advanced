@@ -1,13 +1,41 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
+import classNames from 'classnames';
 import { Person } from '../types';
 import { PersonLink } from './PersonLink';
+import { SearchLink } from './SearchLink';
+import { SortField } from '../types/SortField';
 
 type Props = {
   people: Person[]
 };
 
 export const PeopleTable: React.FC<Props> = ({ people }) => {
+  const [searchParams] = useSearchParams();
+  const sortField = searchParams.get('sort') || SortField.All;
+  const sortOrder = searchParams.get('order') || null;
+
+  const handleSortParams = (field: SortField) => {
+    if (sortField === field && sortOrder) {
+      return {
+        sort: null,
+        order: null,
+      };
+    }
+
+    if (sortField === field && !sortOrder) {
+      return {
+        sort: field,
+        order: 'desc',
+      };
+    }
+
+    return {
+      sort: field,
+      order: null,
+    };
+  };
+
   return (
     <table
       data-cy="peopleTable"
@@ -19,44 +47,71 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Name
-              <a href="#/people?sort=name">
+              <SearchLink params={handleSortParams(SortField.NAME)}>
                 <span className="icon">
-                  <i className="fas fa-sort" />
+                  <i className={classNames('fas', {
+                    'fa-sort': sortField !== SortField.NAME,
+                    'fa-sort-up': sortField === SortField.NAME
+                      && !sortOrder,
+                    'fa-sort-down': sortField === SortField.NAME
+                      && sortOrder,
+                  })}
+                  />
                 </span>
-              </a>
+              </SearchLink>
             </span>
           </th>
-
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
-              Sex
-              <a href="#/people?sort=sex">
+              Name
+              <SearchLink params={handleSortParams(SortField.NAME)}>
                 <span className="icon">
-                  <i className="fas fa-sort" />
+                  <i className={classNames('fas', {
+                    'fa-sort': sortField !== SortField.NAME,
+                    'fa-sort-up': sortField === SortField.NAME
+                      && !sortOrder,
+                    'fa-sort-down': sortField === SortField.NAME
+                      && sortOrder,
+                  })}
+                  />
                 </span>
-              </a>
+              </SearchLink>
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Born
-              <a href="#/people?sort=born&amp;order=desc">
+              <SearchLink params={handleSortParams(SortField.BORN)}>
                 <span className="icon">
-                  <i className="fas fa-sort-up" />
+                  <i className={classNames('fas', {
+                    'fa-sort': sortField !== SortField.BORN,
+                    'fa-sort-up': sortField === SortField.BORN
+                      && !sortOrder,
+                    'fa-sort-down': sortField === SortField.BORN
+                      && sortOrder,
+                  })}
+                  />
                 </span>
-              </a>
+              </SearchLink>
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Died
-              <Link to="#/people?sort=died">
+              <SearchLink params={handleSortParams(SortField.DIED)}>
                 <span className="icon">
-                  <i className="fas fa-sort" />
+                  <i className={classNames('fas', {
+                    'fa-sort': sortField !== SortField.DIED,
+                    'fa-sort-up': sortField === SortField.DIED
+                      && !sortOrder,
+                    'fa-sort-down': sortField === SortField.DIED
+                      && sortOrder,
+                  })}
+                  />
                 </span>
-              </Link>
+              </SearchLink>
             </span>
           </th>
 
