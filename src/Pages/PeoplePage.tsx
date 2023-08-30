@@ -14,7 +14,7 @@ export const PeoplePage = () => {
   const [errorMessage, setErrorMessage] = useState(false);
 
   const [searchParams] = useSearchParams();
-  const centuries = searchParams.getAll('centuries') || [];
+  const centuries = searchParams.getAll(ParamsSearch.CENTENARY) || [];
   const query = searchParams.get(ParamsSearch.QUERY) || '';
   const sex = searchParams.get(ParamsSearch.SEX) || '';
   const sort = searchParams.get(ParamsSearch.SORT) || '';
