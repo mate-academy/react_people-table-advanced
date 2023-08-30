@@ -52,7 +52,14 @@ export const PeopleList: React.FC<Props> = ({ people }) => {
       <tbody>
         {people.map(person => {
           const {
-            slug, sex, born, died, mother, motherName, father, fatherName,
+            slug,
+            sex,
+            born,
+            died,
+            mother,
+            motherName,
+            father,
+            fatherName,
           } = person;
 
           return (

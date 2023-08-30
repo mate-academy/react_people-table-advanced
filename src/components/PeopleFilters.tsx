@@ -71,14 +71,15 @@ export const PeopleFilters = () => {
           <div className="level-left">
             {centuryOptions.map(century => {
               const isCenturySelected = centuries.includes(century);
+              const updateCenturies = isCenturySelected
+                ? centuries.filter(centum => centum !== century)
+                : [...centuries, century];
 
               return (
                 <SearchLink
                   key={century}
                   params={{
-                    centuries: isCenturySelected
-                      ? centuries.filter(centum => centum !== century)
-                      : [...centuries, century],
+                    centuries: updateCenturies,
                   }}
                   data-cy="century"
                   className={classNames('button mr-1', {

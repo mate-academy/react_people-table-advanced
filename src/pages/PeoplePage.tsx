@@ -51,6 +51,12 @@ export const PeoplePage = () => {
     }));
   }, [people]);
 
+  const compareStrings = (first: string, second: string, sortOrder: string) => {
+    return sortOrder
+      ? second.localeCompare(first)
+      : first.localeCompare(second);
+  };
+
   const peopleFilteredSorted = useMemo(() => {
     return preparedPeople
       .filter(({
@@ -69,13 +75,9 @@ export const PeoplePage = () => {
       .sort((first, second) => {
         switch (sort) {
           case SortType.NAME:
-            return order
-              ? second.name.localeCompare(first.name)
-              : first.name.localeCompare(second.name);
+            return compareStrings(first.name, second.name, order);
           case SortType.SEX:
-            return order
-              ? second.sex.localeCompare(first.sex)
-              : first.sex.localeCompare(second.sex);
+            return compareStrings(first.sex, second.sex, order);
           case SortType.BORN:
             return order
               ? +(second.born) - +(first.born)
