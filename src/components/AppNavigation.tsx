@@ -11,8 +11,8 @@ export const AppNavigation: React.FC = () => {
       role="navigation"
       aria-label="main navigation"
     >
-      <div className="container">
-        <div className="navbar-brand">
+      <ul className="container">
+        <li className="navbar-brand">
           <NavLink
             className={getNavLinkClass}
             to="/"
@@ -28,8 +28,8 @@ export const AppNavigation: React.FC = () => {
           >
             People
           </NavLink>
-        </div>
-      </div>
+        </li>
+      </ul>
     </nav>
   );
 };
