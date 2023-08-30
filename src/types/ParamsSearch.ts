@@ -3,4 +3,5 @@ export enum ParamsSearch {
   SEX = 'sex',
   SORT = 'sort',
   ORDER = 'order',
+  CENTENARY = 'centuries',
 }

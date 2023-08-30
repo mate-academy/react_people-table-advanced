@@ -3,14 +3,15 @@ import React from 'react';
 import classNames from 'classnames';
 import { Link, useSearchParams } from 'react-router-dom';
 import { getSearchWith } from '../utils/searchHelper';
+import { ParamsSearch } from '../types/ParamsSearch';
 
-const centenary = ['16', '17', '18', '19', '20'];
+const CENTENARY = ['16', '17', '18', '19', '20'];
 
 export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const centuries = searchParams.getAll('centuries') || [];
-  const query = searchParams.get('query') || '';
-  const sex = searchParams.get('sex') || '';
+  const centuries = searchParams.getAll(ParamsSearch.CENTENARY) || [];
+  const query = searchParams.get(ParamsSearch.QUERY) || '';
+  const sex = searchParams.get(ParamsSearch.SEX) || '';
 
   const handleQueryInput = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchParams(getSearchWith(
@@ -70,7 +71,7 @@ export const PeopleFilters = () => {
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
 
-            {centenary.map((century: string) => (
+            {CENTENARY.map((century: string) => (
               <Link
                 key={century}
                 data-cy="century"
