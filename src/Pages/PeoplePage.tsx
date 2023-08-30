@@ -6,6 +6,7 @@ import { Person } from '../types';
 import { getPeople } from '../api';
 import { filterPeople } from '../utils/filteredPeople';
 import { PeopleTable } from '../components/PeopleTable';
+import { ParamsSearch } from '../types/ParamsSearch';
 
 export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);
@@ -14,10 +15,10 @@ export const PeoplePage = () => {
 
   const [searchParams] = useSearchParams();
   const centuries = searchParams.getAll('centuries') || [];
-  const query = searchParams.get('query') || '';
-  const sex = searchParams.get('sex') || '';
-  const sort = searchParams.get('sort') || '';
-  const order = searchParams.get('order') || '';
+  const query = searchParams.get(ParamsSearch.QUERY) || '';
+  const sex = searchParams.get(ParamsSearch.SEX) || '';
+  const sort = searchParams.get(ParamsSearch.SORT) || '';
+  const order = searchParams.get(ParamsSearch.ORDER) || '';
 
   const preperedPeople = useMemo(() => filterPeople(people, {
     sex, query, order, centuries, sort,
@@ -64,8 +65,7 @@ export const PeoplePage = () => {
             <div className="column">
               <div className="box table-container">
 
-                {!loading && !errorMessage && people.length > 0
-                  && preperedPeople.length > 0 && (
+                {!loading && !errorMessage && preperedPeople.length > 0 && (
                   <PeopleTable
                     people={preperedPeople}
                   />
