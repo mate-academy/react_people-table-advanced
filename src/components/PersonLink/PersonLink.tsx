@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
 // import { NavLink } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { Person } from '../../types';
 
 type Props = {
@@ -36,16 +37,27 @@ export const PersonLink = ({
   }, []);
 
   return (
-    <a
+    // <a
+    //   className={findPerson.sex === 'f'
+    //     ? 'has-text-danger'
+    //     : ''}
+    //   href={`#/people/${findPerson.slug}${searchParams}`}
+    //   onClick={() => {
+    //     return handleSlugUser(findPerson.slug);
+    //   }}
+    // >
+    //   {findPerson.name}
+    // </a>
+    <Link
       className={findPerson.sex === 'f'
         ? 'has-text-danger'
         : ''}
-      href={`#/people/${findPerson.slug}${searchParams}`}
+      to={`#/people/${findPerson.slug}${searchParams}`}
       onClick={() => {
         return handleSlugUser(findPerson.slug);
       }}
     >
       {findPerson.name}
-    </a>
+    </Link>
   );
 };

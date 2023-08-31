@@ -10,6 +10,9 @@ export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);
   const [errorMessage, setErrorMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [filteredPeople, setFilteredPeople] = useState<Person[]>([]);
+
+  // console.log(filteredPeople);
 
   useEffect(() => {
     const fetchPeople = async () => {
@@ -18,6 +21,7 @@ export const PeoplePage = () => {
         const data = await getPeople();
 
         setPeople(data);
+        setFilteredPeople(data);
       } catch (error) {
         setErrorMessage('Unable to load people');
       }
@@ -27,6 +31,10 @@ export const PeoplePage = () => {
 
     fetchPeople();
   }, []);
+
+  const handlePeople = (newPeople: Person[]) => {
+    setFilteredPeople(newPeople);
+  };
 
   return (
     <>
@@ -52,13 +60,22 @@ export const PeoplePage = () => {
                   </>
                 )}
                 <div className="column is-7-tablet is-narrow-desktop">
-                  <PeopleFilters />
+                  <PeopleFilters
+                    people={people}
+                    handlePeople={handlePeople}
+                  />
                 </div>
 
                 <div className="column">
                   <div className="box table-container">
-
-                    <PeopleTable people={people} />
+                    {filteredPeople.length > 0
+                      ? <PeopleTable people={filteredPeople} />
+                      : (
+                        <p>
+                          There are no people matching
+                          the current search criteria
+                        </p>
+                      )}
                   </div>
                 </div>
               </>
