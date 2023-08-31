@@ -29,10 +29,11 @@ export const PeopleFilters = ({ people, handlePeople }: Props) => {
       return person.sex === activeSexFiltr;
     });
 
-    const test = centuries.length === 0 ? [16, 17, 18, 19, 20] : [...centuries];
+    const century = centuries.length === 0
+      ? [16, 17, 18, 19, 20] : [...centuries];
 
     const centuryFilteres = sexFilteredPeople.filter(person => {
-      return test.includes(Math.ceil(person.born / 100));
+      return century.includes(Math.ceil(person.born / 100));
     });
 
     handlePeople(centuryFilteres.filter(person => {
