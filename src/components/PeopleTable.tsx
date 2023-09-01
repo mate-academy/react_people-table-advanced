@@ -3,9 +3,10 @@ import { Link, useParams, useSearchParams } from 'react-router-dom';
 import { Person } from '../types';
 import { PersonLink } from './PersonLink';
 import { getSearchWith } from '../utils/searchHelper';
+import { SortType } from '../enums/SortType';
 
 type Props = {
-  people: Person[],
+  people: Person[];
 };
 
 export const PeopleTable: React.FC<Props> = ({ people }) => {
@@ -16,7 +17,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
   const { slug } = useParams();
   const selectedPerson = slug || '';
 
-  const handleSorting = (sortBy: string) => {
+  const handleSorting = (sortBy: SortType) => {
     if (!sort || sort !== sortBy) {
       return getSearchWith(searchParams, { sort: sortBy });
     }
@@ -28,7 +29,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
     return getSearchWith(searchParams, { sort: null, order: null });
   };
 
-  const getArrowClass = (sortBy: string) => classNames('fas', {
+  const getArrowClass = (sortBy: SortType) => classNames('fas', {
     'fa-sort': !sort || sort !== sortBy,
     'fa-sort-up': sort === sortBy && !order,
     'fa-sort-down': sort === sortBy && order,
@@ -44,9 +45,9 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Name
-              <Link to={{ search: handleSorting('name') }}>
+              <Link to={{ search: handleSorting(SortType.Name) }}>
                 <span className="icon">
-                  <i className={getArrowClass('name')} />
+                  <i className={getArrowClass(SortType.Name)} />
                 </span>
               </Link>
             </span>
@@ -55,9 +56,9 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Sex
-              <Link to={{ search: handleSorting('sex') }}>
+              <Link to={{ search: handleSorting(SortType.Sex) }}>
                 <span className="icon">
-                  <i className={getArrowClass('sex')} />
+                  <i className={getArrowClass(SortType.Sex)} />
                 </span>
               </Link>
             </span>
@@ -66,9 +67,9 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Born
-              <Link to={{ search: handleSorting('born') }}>
+              <Link to={{ search: handleSorting(SortType.Born) }}>
                 <span className="icon">
-                  <i className={getArrowClass('born')} />
+                  <i className={getArrowClass(SortType.Born)} />
                 </span>
               </Link>
             </span>
@@ -77,16 +78,26 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Died
-              <Link to={{ search: handleSorting('died') }}>
+              <Link to={{ search: handleSorting(SortType.Died) }}>
                 <span className="icon">
-                  <i className={getArrowClass('died')} />
+                  <i className={getArrowClass(SortType.Died)} />
+                </span>
+              </Link>
+            </span>
+          </th>
+
+          <th>
+            <span className="is-flex is-flex-wrap-nowrap">
+              Father
+              <Link to={{ search: handleSorting(SortType.Father) }}>
+                <span className="icon">
+                  <i className={getArrowClass(SortType.Father)} />
                 </span>
               </Link>
             </span>
           </th>
 
           <th>Mother</th>
-          <th>Father</th>
         </tr>
       </thead>
 
@@ -99,7 +110,6 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
           />
         ))}
       </tbody>
-
     </table>
   );
 };
