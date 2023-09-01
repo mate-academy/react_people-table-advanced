@@ -5,6 +5,7 @@ import { Loader } from './Loader';
 import { PeopleTable } from './PeopleTable';
 import { getPeople } from '../api';
 import { Person } from '../types';
+import { SortType } from '../enums/SortType';
 
 export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);
@@ -15,7 +16,7 @@ export const PeoplePage = () => {
   const query = searchParams.get('query') || '';
   const centuries = searchParams.getAll('centuries') || [];
   const sex = searchParams.get('sex') || '';
-  const sort = searchParams.get('sort') || '';
+  const sort = searchParams.get('sort') as SortType || '';
   const order = searchParams.get('order') || '';
 
   useEffect(() => {
@@ -30,16 +31,11 @@ export const PeoplePage = () => {
 
   const preparedPeople = useMemo(() => {
     let filteredPeople = people.map(person => {
-      const mother = people
-        .find(mom => person.motherName === mom.name) || null;
-
-      const father = people
-        .find(dad => person.fatherName === dad.name) || null;
+      const mother = people.find(mom => person.motherName === mom.name);
 
       return {
         ...person,
         mother,
-        father,
       };
     });
 
@@ -62,13 +58,13 @@ export const PeoplePage = () => {
 
     if (sort) {
       filteredPeople = filteredPeople.sort((a, b) => {
-        if (sort === 'name' || sort === 'sex') {
+        if (sort === SortType.Name || sort === SortType.Sex) {
           return order
             ? b[sort].localeCompare(a[sort])
             : a[sort].localeCompare(b[sort]);
         }
 
-        if (sort === 'born' || sort === 'died') {
+        if (sort === SortType.Born || sort === SortType.Died) {
           return order
             ? +b[sort] - +a[sort]
             : +a[sort] - +b[sort];
@@ -107,12 +103,12 @@ export const PeoplePage = () => {
                 </p>
               )}
 
-              {!isLoading && !isError && preparedPeople.length < 1 && (
+              {!isLoading && !isError && !preparedPeople.length && (
                 <p>There are no people matching the current search criteria</p>
               )}
 
-              {!isLoading && !isError && people.length > 0
-              && preparedPeople.length > 0 && (
+              {!isLoading && !isError && people.length
+              && preparedPeople.length && (
                 <PeopleTable
                   people={preparedPeople}
                 />

@@ -1,6 +1,7 @@
 import classNames from 'classnames';
 import { Link, useLocation } from 'react-router-dom';
 import { Person } from '../types';
+import { Gender } from '../enums/Gender';
 
 type Props = {
   person: Person,
@@ -32,7 +33,7 @@ export const PersonLink: React.FC<Props> = ({ person, selectedPerson }) => {
       <td>
         <Link
           to={`/people/${slug}${search}`}
-          className={classNames({ 'has-text-danger': sex === 'f' })}
+          className={classNames({ 'has-text-danger': sex === Gender.Female })}
         >
           {name}
         </Link>
