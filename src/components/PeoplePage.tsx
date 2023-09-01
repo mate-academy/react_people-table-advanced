@@ -1,35 +1,61 @@
-import { PeopleFilters } from './PeopleFilters';
+import React from 'react';
+import { useParams } from 'react-router-dom';
+import { Person } from '../types';
 import { Loader } from './Loader';
 import { PeopleTable } from './PeopleTable';
+import { PeopleFilters } from './PeopleFilters';
 
-export const PeoplePage = () => {
-  return (
-    <>
-      <h1 className="title">People Page</h1>
+type Props = {
+  people: Person[],
+  isError: boolean,
+  isLoading: boolean,
+};
 
-      <div className="block">
-        <div className="columns is-desktop is-flex-direction-row-reverse">
-          <div className="column is-7-tablet is-narrow-desktop">
-            <PeopleFilters />
-          </div>
+export const PeoplePage: React.FC<Props> = React.memo(
+  ({ people, isError, isLoading }) => {
+    const { slug = '' } = useParams();
 
-          <div className="column">
-            <div className="box table-container">
-              <Loader />
+    return (
+      <>
+        <h1 className="title">People Page</h1>
 
-              <p data-cy="peopleLoadingError">Something went wrong</p>
+        <div className="block">
+          <div className="columns is-desktop is-flex-direction-row-reverse">
+            <div className="column is-7-tablet is-narrow-desktop">
+              {!isLoading && <PeopleFilters />}
+            </div>
 
-              <p data-cy="noPeopleMessage">
-                There are no people on the server
-              </p>
+            <div className="column">
+              <div className="box table-container">
+                {isLoading
+                  ? <Loader />
+                  : (
+                    <>
+                      {isError && (
+                        <p
+                          data-cy="peopleLoadingError"
+                          className="has-text-danger"
+                        >
+                          Something went wrong
+                        </p>
+                      )}
 
-              <p>There are no people matching the current search criteria</p>
+                      {!people.length && (
+                        <p data-cy="noPeopleMessage">
+                          There are no people on the server
+                        </p>
+                      )}
+                    </>
+                  )}
 
-              <PeopleTable />
+                {people.length && (
+                  <PeopleTable people={people} selectedSlug={slug} />
+                )}
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    </>
-  );
-};
+      </>
+    );
+  },
+);
