@@ -86,18 +86,8 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
             </span>
           </th>
 
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Father
-              <Link to={{ search: handleSorting(SortType.Father) }}>
-                <span className="icon">
-                  <i className={getArrowClass(SortType.Father)} />
-                </span>
-              </Link>
-            </span>
-          </th>
-
           <th>Mother</th>
+          <th>Father</th>
         </tr>
       </thead>
 
