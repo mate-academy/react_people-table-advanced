@@ -5,6 +5,8 @@ import { Loader } from '../Loader';
 import { PeopleTable } from '../PeopleTable';
 import { getPeople } from '../../api';
 import { Person } from '../../types';
+import { QueryParams } from '../../types/QueryParams';
+import { SortTypes } from '../../types/SortTypes';
 
 export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);
@@ -12,11 +14,11 @@ export const PeoplePage = () => {
   const [isLoadingError, setIsLoadingError] = useState(false);
 
   const [searchParams] = useSearchParams();
-  const query = searchParams.get('query') || '';
-  const sex = searchParams.get('sex') || '';
-  const centuries = searchParams.getAll('centuries') || [];
-  const sort = searchParams.get('sort') || '';
-  const order = searchParams.get('order') || '';
+  const query = searchParams.get(QueryParams.Query) || '';
+  const sex = searchParams.get(QueryParams.Sex) || '';
+  const centuries = searchParams.getAll(QueryParams.Centuries) || [];
+  const sort = searchParams.get(QueryParams.Sort) || '';
+  const order = searchParams.get(QueryParams.Order) || '';
 
   const filteredPeople = useMemo(() => {
     let filtered = [...people];
@@ -47,16 +49,16 @@ export const PeoplePage = () => {
         const second = order ? person2 : person1;
 
         switch (sort) {
-          case 'name':
+          case SortTypes.Name:
             return second.name.localeCompare(first.name);
 
-          case 'sex':
+          case SortTypes.Sex:
             return second.sex.localeCompare(first.sex);
 
-          case 'born':
+          case SortTypes.Born:
             return +second.born - +first.born;
 
-          case 'died':
+          case SortTypes.Died:
             return +second.died - +first.died;
 
           default:

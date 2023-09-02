@@ -2,6 +2,8 @@ import cn from 'classnames';
 import { useEffect } from 'react';
 import { useParams, Link, useSearchParams } from 'react-router-dom';
 import { Person } from '../types';
+import { QueryParams } from '../types/QueryParams';
+import { SortTypes } from '../types/SortTypes';
 import { getSearchWith } from '../utils/searchHelper';
 import { Personlink } from './PersonLink';
 
@@ -9,15 +11,13 @@ type Props = {
   people: Person[];
 };
 
-const sortLinks = ['name', 'sex', 'born', 'died'];
-
 export const PeopleTable: React.FC<Props> = ({ people }) => {
   const { slug } = useParams();
   const [searchParams] = useSearchParams();
-  const sort = searchParams.get('sort') || '';
-  const order = searchParams.get('order') || '';
+  const sort = searchParams.get(QueryParams.Sort) || '';
+  const order = searchParams.get(QueryParams.Order) || '';
 
-  function getSearchWithSort(sortType: string) {
+  function getSearchWithSort(sortType: SortTypes) {
     if (!sort || sort !== sortType) {
       return getSearchWith(searchParams, { sort: sortType, order: null });
     }
@@ -53,20 +53,20 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
     >
       <thead>
         <tr>
-          {sortLinks.map(sortLink => (
-            <th key={sortLink}>
+          {Object.values(SortTypes).map(sortType => (
+            <th key={sortType}>
               <span className="is-flex is-flex-wrap-nowrap">
-                {sortLink.slice(0, 1).toUpperCase() + sortLink.slice(1)}
+                {sortType.slice(0, 1).toUpperCase() + sortType.slice(1)}
 
                 <Link
-                  to={{ search: getSearchWithSort(sortLink) }}
+                  to={{ search: getSearchWithSort(sortType) }}
                 >
                   <span className="icon">
                     <i
                       className={cn('fas', {
-                        'fa-sort': !sort || sort !== sortLink,
-                        'fa-sort-up': sort === sortLink && !order,
-                        'fa-sort-down': sort === sortLink && order,
+                        'fa-sort': !sort || sort !== sortType,
+                        'fa-sort-up': sort === sortType && !order,
+                        'fa-sort-down': sort === sortType && order,
                       })}
                     />
                   </span>
