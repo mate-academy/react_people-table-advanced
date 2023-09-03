@@ -39,7 +39,7 @@ export const PeoplePage = () => {
                 <p>There are no people matching the current search criteria</p>
               )}
 
-              <PeopleTable />
+            {!isLoading && !isError && <PeopleTable />}
             </div>
           </div>
         </div>
