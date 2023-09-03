@@ -1,5 +1,9 @@
 import React from 'react';
-import { useParams, NavLink } from 'react-router-dom';
+import {
+  useParams,
+  Link,
+  useSearchParams,
+} from 'react-router-dom';
 import classNames from 'classnames';
 import { Person } from '../types';
 
@@ -22,27 +26,29 @@ export const PersonLink: React.FC<Props> = ({ person }) => {
 
   const { personSlug } = useParams();
 
-  const isSelectedPerson = personSlug === slug;
-
   const isWomen = sex === 'f';
+  const [searchParams] = useSearchParams();
 
   return (
     <tr
       data-cy="person"
       key={name}
       className={classNames(
-        { 'has-background-warning': isSelectedPerson },
+        { 'has-background-warning': personSlug === slug },
       )}
     >
       <td>
-        <NavLink
-          to={`people/${slug}`}
+        <Link
+          to={{
+            pathname: `/people/${slug}`,
+            search: searchParams.toString(),
+          }}
           className={classNames(
             { 'has-text-danger': isWomen },
           )}
         >
           {name}
-        </NavLink>
+        </Link>
       </td>
 
       <td>{sex}</td>
@@ -51,11 +57,15 @@ export const PersonLink: React.FC<Props> = ({ person }) => {
 
       {mother ? (
         <td>
-          <NavLink
-            to={`people/${mother.slug}`}
+          <Link
+            className="has-text-danger"
+            to={{
+              pathname: `/people/${mother.slug}`,
+              search: searchParams.toString(),
+            }}
           >
             {motherName}
-          </NavLink>
+          </Link>
         </td>
       ) : (
         <td>{motherName || '-'}</td>
@@ -63,16 +73,18 @@ export const PersonLink: React.FC<Props> = ({ person }) => {
 
       {father ? (
         <td>
-          <NavLink
-            to={`people/${father.slug}`}
+          <Link
+            to={{
+              pathname: `/people/${father.slug}`,
+              search: searchParams.toString(),
+            }}
           >
             {fatherName}
-          </NavLink>
+          </Link>
         </td>
       ) : (
         <td>{fatherName || '-'}</td>
       )}
     </tr>
-
   );
 };
