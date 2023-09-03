@@ -1,6 +1,6 @@
 import cn from 'classnames';
 import { useParams } from 'react-router-dom';
-import { Person } from '../../types';
+import { Person } from '../../types/Person';
 import { Personlink } from '../PersonLink';
 import { SortLink } from '../SortLink';
 
@@ -16,12 +16,14 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
   };
 
   const getPersonParent = (name: string | null): JSX.Element => {
+    const personsParent = name && getPersonByName(name);
+
     return (name ? (
       <>
-        {getPersonByName(name)
+        {personsParent
           ? (
             <Personlink
-              person={getPersonByName(name) as Person}
+              person={personsParent}
             />
           )
           : (

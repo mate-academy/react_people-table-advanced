@@ -3,11 +3,12 @@ import cn from 'classnames';
 import { SearchLink } from '../SearchLink';
 import { getSearchWith } from '../../utils/searchHelper';
 
+const CENTURIES = ['16', '17', '18', '19', '20'];
+
 export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const sex = searchParams.get('sex');
   const centuriesParams = searchParams.getAll('centuries');
-  const centuries = ['16', '17', '18', '19', '20'];
 
   const queryChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchParams(
@@ -61,7 +62,7 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            {centuries.map(century => (
+            {CENTURIES.map(century => (
               <SearchLink
                 data-cy="century"
                 className={cn(

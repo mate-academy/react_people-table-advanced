@@ -1,23 +1,20 @@
 import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { getPeople } from '../../api';
-import { Person } from '../../types';
+import { Person } from '../../types/Person';
 import { Loader } from '../Loader';
 import { PeopleTable } from '../PeopleTable';
 import { PeopleFilters } from '../PeopleFilters/PeopleFilters';
+import { SearchParam } from '../../types/SearcParam';
 
-export const PeoplePage: React.FC = () => {
-  const [people, setPeople] = useState<Person[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [isError, setIsError] = useState(false);
-  const [searchParams] = useSearchParams();
-
-  const sex = searchParams.get('sex');
-  const query = searchParams.get('query');
-  const centuries = searchParams.getAll('centuries');
-  const sortField = searchParams.get('sort');
-  const order = searchParams.get('order');
-
+function getFilteredPeople(
+  people: Person[],
+  sex: string | null,
+  query: string | null,
+  centuries: string[],
+  sortField: string | null,
+  order: string | null,
+): Person[] {
   let preparedPeople = [...people];
 
   if (sex) {
@@ -69,6 +66,30 @@ export const PeoplePage: React.FC = () => {
       preparedPeople.reverse();
     }
   }
+
+  return preparedPeople;
+}
+
+export const PeoplePage: React.FC = () => {
+  const [people, setPeople] = useState<Person[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isError, setIsError] = useState(false);
+  const [searchParams] = useSearchParams();
+
+  const sex = searchParams.get(SearchParam.sex);
+  const query = searchParams.get(SearchParam.query);
+  const centuries = searchParams.getAll(SearchParam.centuries);
+  const sortField = searchParams.get(SearchParam.sort);
+  const order = searchParams.get(SearchParam.order);
+
+  const preparedPeople = getFilteredPeople(
+    people,
+    sex,
+    query,
+    centuries,
+    sortField,
+    order,
+  );
 
   const loadPeopleTable = (): JSX.Element => {
     return (
