@@ -25,7 +25,12 @@ export const TablePersons: React.FC<Props> = ({ persons }) => {
 
   const setSearch = (sortParameter: string): string => {
     if (sort && order) {
-      return '';
+      const searchString = getSearchWith(searchParams, {
+        sort: null,
+        order: null,
+      });
+
+      return searchString;
     }
 
     if (!sort && !order) {
