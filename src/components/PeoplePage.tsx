@@ -29,13 +29,13 @@ export const PeoplePage = () => {
               {isError && (
                 <p data-cy="peopleLoadingError">Something went wrong</p>
               )}
-              {allPeople.length === 0 && (
+              {!isLoading && allPeople.length === 0 && (
                 <p data-cy="noPeopleMessage">
                   There are no people on the server
                 </p>
               )}
 
-              {filteredPeople.length === 0 && (
+              {!isLoading && filteredPeople.length === 0 && (
                 <p>There are no people matching the current search criteria</p>
               )}
 

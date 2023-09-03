@@ -87,6 +87,7 @@ export const PeopleContextProvider: React.FC<Props> = ({ children }) => {
 
   useEffect(() => {
     setIsLoading(true);
+    setIsError(false);
     getPeople()
       .then((people) => {
         const preparedData = getParents(people);
