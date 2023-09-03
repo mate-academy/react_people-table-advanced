@@ -5,7 +5,7 @@ import { Person } from '../../types/Person';
 import { Loader } from '../Loader';
 import { PeopleTable } from '../PeopleTable';
 import { PeopleFilters } from '../PeopleFilters/PeopleFilters';
-import { SearchParam } from '../../types/SearcParam';
+import { SearchParam } from '../../types/SearchParam';
 
 function getFilteredPeople(
   people: Person[],
