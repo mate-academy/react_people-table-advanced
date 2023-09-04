@@ -1,0 +1,15 @@
+.error-page {
+  padding: 40px 0;
+  background: #fff;
+  text-align: center;
+
+  &--bg {
+    background-image: url(https://cdn.dribbble.com/users/285475/screenshots/2083086/dribbble_1.gif);
+    height: 500px;
+    background-position: center;
+  }
+
+  &__description {
+    margin: 0 auto;
+  }
+}
