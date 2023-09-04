@@ -8,8 +8,9 @@ type Props = {
   value: string;
 };
 
+const numbersOfCenturies = ['16', '17', '18', '19', '20'];
+
 export const PeopleFilter: React.FC<Props> = ({ value }) => {
-  const numbersOfCenturies = ['16', '17', '18', '19', '20'];
 
   const [searchParams, setSearchParams] = useSearchParams();
 
