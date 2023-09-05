@@ -24,7 +24,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
     if (sortBy === sort && !order) {
       return getSearchWith(searchParams, { sort: sortBy, order: 'desc' });
     }
-    
+
     return getSearchWith(searchParams, { sort: null, order: null });
   };
 

@@ -32,10 +32,10 @@ export const PeoplePage = () => {
   const preparedPeople = useMemo(() => {
     let filteredPeople = people.map(person => {
       const mother = people
-        .find(mom => person.motherName === mom.name) || null;
+        .find(mom => person.motherName === mom.name) || undefined;
 
       const father = people
-        .find(dad => person.fatherName === dad.name) || null;
+        .find(dad => person.fatherName === dad.name) || undefined;
 
       return {
         ...person,
