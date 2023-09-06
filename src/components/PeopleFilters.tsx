@@ -11,6 +11,8 @@ export const PeopleFilters: React.FC = () => {
   const centuries = searchParams.getAll('centuries') || [];
   const sex = searchParams.get('sex') || '';
 
+  const centuriesArr = ['16', '17', '18', '19', '20'];
+
   const handleQueryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchParams(getSearchWith(
       searchParams, { query: event.target.value || null },
@@ -68,7 +70,7 @@ export const PeopleFilters: React.FC = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            {['16', '17', '18', '19', '20'].map(num => (
+            {centuriesArr.map(num => (
               <Link
                 key={num}
                 data-cy="century"
