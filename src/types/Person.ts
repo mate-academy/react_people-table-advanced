@@ -8,4 +8,6 @@ export interface Person {
   slug: string,
   mother?: Person,
   father?: Person,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  [key: string]: any;
 }
