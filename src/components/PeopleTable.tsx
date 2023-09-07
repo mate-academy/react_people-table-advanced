@@ -26,16 +26,19 @@ export const PeopleTable: React.FC<Props> = ({ peoples }) => {
       case sort !== parentEl:
         setSearchParams(getSearchWith(searchParams,
           { sort: parentEl || null, order: null }));
-        break;
+
+        return null;
 
       case sort === parentEl && Boolean(order):
         setSearchParams(getSearchWith(searchParams,
           { sort: null, order: null }));
-        break;
+
+        return null;
 
       case sort === parentEl:
         setSearchParams(getSearchWith(searchParams, { order: 'desc' }));
-        break;
+
+        return null;
 
       default:
         return null;
