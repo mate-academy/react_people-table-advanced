@@ -1,4 +1,3 @@
-/* eslint-disable consistent-return */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import { useSearchParams } from 'react-router-dom';
@@ -13,10 +12,21 @@ type Props = {
   peoples: Person[],
 };
 
+type Params = {
+  sort?: string | null,
+  order: 'desc' | null,
+};
+
 export const PeopleTable: React.FC<Props> = ({ peoples }) => {
   const [searchParams, setSearchParams] = useSearchParams();
   const sort = searchParams.get('sort') || '';
   const order = searchParams.get('order') || '';
+  const setSearchWith = (params: Params) => {
+    const search = getSearchWith(searchParams, params);
+
+    setSearchParams(search);
+  };
+
   const handleClick = (e: React.MouseEvent<HTMLSpanElement>) => {
     const spanElement = e.currentTarget;
     const parentEl = spanElement.parentElement?.parentElement?.textContent
@@ -24,19 +34,17 @@ export const PeopleTable: React.FC<Props> = ({ peoples }) => {
 
     switch (true) {
       case sort !== parentEl:
-        setSearchParams(getSearchWith(searchParams,
-          { sort: parentEl || null, order: null }));
+        setSearchWith({ sort: parentEl || null, order: null });
 
         return null;
 
       case sort === parentEl && Boolean(order):
-        setSearchParams(getSearchWith(searchParams,
-          { sort: null, order: null }));
+        setSearchWith({ sort: null, order: null });
 
         return null;
 
       case sort === parentEl:
-        setSearchParams(getSearchWith(searchParams, { order: 'desc' }));
+        setSearchWith({ order: 'desc' });
 
         return null;
 

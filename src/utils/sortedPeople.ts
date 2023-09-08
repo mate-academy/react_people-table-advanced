@@ -8,17 +8,21 @@ export const getSortedPeople = (
 ) => {
   const sortByNumber = (arr: Person[], sortN: string, dir: null | string) => {
     if (dir) {
-      return [...arr].sort((n1, n2) => n2[sortN] - n1[sortN]);
+      return [...arr].sort((n1, n2) => (n2[sortN] as number)
+      - (n1[sortN] as number));
     } else {
-      return [...arr].sort((n1, n2) => n1[sortN] - n2[sortN]);
+      return [...arr].sort((n1, n2) => (n1[sortN] as number)
+        - (n2[sortN] as number));
     }
   };
 
   const sortByString = (arr: Person[], sortN: string, dir: null | string) => {
     if (dir) {
-      return [...arr].sort((s1, s2) => s2[sortN].localeCompare(s1[sortN]));
+      return [...arr].sort((s1, s2) => (s2[sortN] as string)
+        .localeCompare((s1[sortN] as string)));
     } else {
-      return [...arr].sort((s1, s2) => s1[sortN].localeCompare(s2[sortN]));
+      return [...arr].sort((s1, s2) => (s1[sortN] as string)
+        .localeCompare((s2[sortN] as string)));
     }
   };
 

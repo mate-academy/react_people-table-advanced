@@ -14,22 +14,18 @@ export const Navbar = () => {
       <div className="container">
         <div className="navbar-brand">
           <NavLink
-            className={({ isActive }) => {
-              return classNames('navbar-item', {
-                'has-background-grey-lighter': isActive,
-              });
-            }}
-            to={{ pathname: '/', search: searchParams.toString() }}
+            className={({ isActive }) => classNames('navbar-item', {
+              'has-background-grey-lighter': isActive,
+            })}
+            to="/"
           >
             Home
           </NavLink>
 
           <NavLink
-            className={({ isActive }) => {
-              return classNames('navbar-item', {
-                'has-background-grey-lighter': isActive,
-              });
-            }}
+            className={({ isActive }) => classNames('navbar-item', {
+              'has-background-grey-lighter': isActive,
+            })}
             to={{ pathname: '/people', search: searchParams.toString() }}
           >
             People

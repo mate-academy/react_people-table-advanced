@@ -12,7 +12,7 @@ import { PeopleTable } from '../components/PeopleTable';
 
 export const PeoplePage = () => {
   const [people, setPeoples] = useState<Person[]>([]);
-  const [isVisiblePeople, setIsVisiblePeople] = useState<Person[]>([]);
+  const [visiblePeople, setVisiblePeople] = useState<Person[]>([]);
   const [isError, setIsError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -31,7 +31,7 @@ export const PeoplePage = () => {
     getPeople()
       .then(res => {
         setPeoples(res);
-        setIsVisiblePeople(getSortedPeople(getFilteredPeople(
+        setVisiblePeople(getSortedPeople(getFilteredPeople(
           res, query, sex, centuries,
         ), sort, order));
       })
@@ -42,7 +42,7 @@ export const PeoplePage = () => {
   useEffect(() => {
     const filteredPeople = getFilteredPeople(people, query, sex, centuries);
 
-    setIsVisiblePeople(getSortedPeople(filteredPeople, sort, order));
+    setVisiblePeople(getSortedPeople(filteredPeople, sort, order));
   }, [searchParams]);
 
   return (
@@ -71,13 +71,13 @@ export const PeoplePage = () => {
                     </p>
                   )}
 
-                  {!isError && isVisiblePeople.length === 0 && (
+                  {!isError && visiblePeople.length === 0 && (
                     <p>
                       There are no people matching the current search criteria
                     </p>
                   )}
 
-                  <PeopleTable peoples={isVisiblePeople} />
+                  <PeopleTable peoples={visiblePeople} />
                 </>
               )}
 

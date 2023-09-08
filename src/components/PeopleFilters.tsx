@@ -11,8 +11,12 @@ export const PeopleFilters = () => {
   const centuriesArr = [16, 17, 18, 19, 20];
   const centuries = searchParams.getAll('centuries') || [];
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const setSearchWith = (params: any) => {
+  type Params = {
+    query?: string | null,
+    centuries?: string[],
+  };
+
+  const setSearchWith = (params: Params) => {
     const search = getSearchWith(searchParams, params);
 
     setSearchParams(search);
