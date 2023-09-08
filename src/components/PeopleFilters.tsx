@@ -3,15 +3,21 @@ import classNames from 'classnames';
 import { Link, useSearchParams } from 'react-router-dom';
 import { getSearchWith } from '../utils/searchHelper';
 import { Sex } from '../types/Sex';
+import { CenturiesArr } from '../CenturiesArray';
 
 export const PeopleFilters: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
+  const centuriesArr = [...CenturiesArr];
 
-  const query = searchParams.get('query') || '';
-  const centuries = searchParams.getAll('centuries') || [];
-  const sex = searchParams.get('sex') || '';
+  const SearchParams = {
+    Query: searchParams.get('query') || '',
+    Centuries: searchParams.getAll('centuries') || [],
+    Sex: searchParams.get('sex') || '',
+  };
 
-  const centuriesArr = ['16', '17', '18', '19', '20'];
+  const query = SearchParams.Query;
+  const centuries = SearchParams.Centuries;
+  const sex = SearchParams.Sex;
 
   const handleQueryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchParams(getSearchWith(
