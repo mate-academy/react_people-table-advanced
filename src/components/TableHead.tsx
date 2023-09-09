@@ -2,6 +2,8 @@ import { useSearchParams } from 'react-router-dom';
 import classNames from 'classnames';
 import { SearchLink } from './SearchLink';
 
+const SORT_FIELDS = ['name', 'sex', 'born', 'died'];
+
 export const TableHead = () => {
   const [searchParams] = useSearchParams();
 
@@ -9,26 +11,21 @@ export const TableHead = () => {
   const order = searchParams.get('order');
 
   function setSort(keySort: string) {
-    const sortParams = { sort, order };
-
     if (sort !== keySort) {
-      sortParams.sort = keySort;
-      sortParams.order = null;
-    } else if (!order) {
-      sortParams.order = 'desc';
-    } else {
-      sortParams.sort = null;
-      sortParams.order = null;
+      return { sort: keySort, order: null };
     }
 
-    return sortParams;
+    if (!order) {
+      return { sort, order: 'desc' };
+    }
+
+    return { sort: null, order: null };
   }
 
   return (
     <tr>
-      {['name', 'sex', 'born', 'died'].map(field => {
+      {SORT_FIELDS.map(field => {
         const fieldName = field[0].toUpperCase() + field.slice(1);
-        const sortParams = setSort(field);
         const fieldClassName = classNames(
           'fas',
           { 'fa-sort': sort !== field },
@@ -40,7 +37,7 @@ export const TableHead = () => {
           <th key={field}>
             <span className="is-flex is-flex-wrap-nowrap">
               {fieldName}
-              <SearchLink params={sortParams}>
+              <SearchLink params={setSort(field)}>
                 <span className="icon">
                   <i className={fieldClassName} />
                 </span>

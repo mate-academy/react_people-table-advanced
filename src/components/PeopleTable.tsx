@@ -63,44 +63,52 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
   }
 
   return (
-    <table
-      data-cy="peopleTable"
-      className="table is-striped is-hoverable is-narrow is-fullwidth"
-    >
-      <thead>
-        <TableHead />
-      </thead>
+    <>
+      {filteredPeople.length ? (
+        <table
+          data-cy="peopleTable"
+          className="table is-striped is-hoverable is-narrow is-fullwidth"
+        >
+          <thead>
+            <TableHead />
+          </thead>
 
-      <tbody>
-        {filteredPeople.map(person => {
-          const {
-            sex, born, died, motherName, fatherName, slug: url,
-          } = person;
+          <tbody>
+            {filteredPeople.map(person => {
+              const {
+                sex, born, died, motherName, fatherName, slug: url,
+              } = person;
 
-          const mother = getPerson(motherName);
-          const father = getPerson(fatherName);
+              const mother = getPerson(motherName);
+              const father = getPerson(fatherName);
 
-          return (
-            <tr
-              data-cy="person"
-              key={url}
-              className={classNames({
-                'has-background-warning': slug === url,
-              })}
-            >
-              <td>
-                <PersonLink person={person} />
-              </td>
+              return (
+                <tr
+                  data-cy="person"
+                  key={url}
+                  className={classNames({
+                    'has-background-warning': slug === url,
+                  })}
+                >
+                  <td>
+                    <PersonLink person={person} />
+                  </td>
 
-              <td>{sex}</td>
-              <td>{born}</td>
-              <td>{died}</td>
-              <td>{mother}</td>
-              <td>{father}</td>
-            </tr>
-          );
-        })}
-      </tbody>
-    </table>
+                  <td>{sex}</td>
+                  <td>{born}</td>
+                  <td>{died}</td>
+                  <td>{mother}</td>
+                  <td>{father}</td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      ) : (
+        <p>
+          There are no people matching the current search criteria
+        </p>
+      )}
+    </>
   );
 };

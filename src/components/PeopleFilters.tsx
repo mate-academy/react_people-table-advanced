@@ -3,6 +3,8 @@ import classNames from 'classnames';
 import { SearchLink } from './SearchLink';
 import { getSearchWith } from '../utils/searchHelper';
 
+const CENTURIES_BOTTONS = ['16', '17', '18', '19', '20'];
+
 export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const sex = searchParams.get('sex');
@@ -65,7 +67,7 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            {['16', '17', '18', '19', '20'].map(century => {
+            {CENTURIES_BOTTONS.map(century => {
               const centuryParams = {
                 centuries: centuries.includes(century)
                   ? centuries.filter(cent => century !== cent)
