@@ -2,7 +2,7 @@ import { useSearchParams, Link, NavLink } from 'react-router-dom';
 
 enum Sex {
   all = 'all',
-  mail = 'm',
+  male = 'm',
   female = 'f',
 }
 
@@ -33,9 +33,8 @@ export const PeopleFilters = () => {
     setSearchParams(params);
   };
 
-  const handleClickSex = (
+  const handleClickSex = (currentSex: Sex) => (
     event: React.MouseEvent<HTMLAnchorElement>,
-    currentSex: string,
   ) => {
     event.preventDefault();
     const params = new URLSearchParams(searchParams);
@@ -51,9 +50,8 @@ export const PeopleFilters = () => {
     setSearchParams(params);
   };
 
-  const handleClickCenturies = (
+  const handleClickCenturies = (currentCentury: string) => (
     event: React.MouseEvent<HTMLAnchorElement>,
-    currentCentury: string,
   ) => {
     event.preventDefault();
 
@@ -108,15 +106,15 @@ export const PeopleFilters = () => {
         <Link
           className={!sex ? 'is-active' : ''}
           to={`/people?${searchParams.toString()}`}
-          onClick={(e) => handleClickSex(e, Sex.all)}
+          onClick={handleClickSex(Sex.all)}
         >
           All
         </Link>
 
         <Link
-          className={sex === Sex.mail ? 'is-active' : ''}
+          className={sex === Sex.male ? 'is-active' : ''}
           to="/people"
-          onClick={(e) => handleClickSex(e, Sex.mail)}
+          onClick={handleClickSex(Sex.male)}
         >
           Male
         </Link>
@@ -124,7 +122,7 @@ export const PeopleFilters = () => {
         <Link
           className={sex === Sex.female ? 'is-active' : ''}
           to="/people"
-          onClick={(e) => handleClickSex(e, Sex.female)}
+          onClick={handleClickSex(Sex.female)}
         >
           Female
         </Link>
@@ -154,7 +152,7 @@ export const PeopleFilters = () => {
               data-cy="century"
               className={`button mr-1 ${centuries.includes('16') && 'is-info'}`}
               to="/people?centuries=16"
-              onClick={(e) => handleClickCenturies(e, '16')}
+              onClick={handleClickCenturies('16')}
             >
               16
             </NavLink>
@@ -163,7 +161,7 @@ export const PeopleFilters = () => {
               data-cy="century"
               className={`button mr-1 ${centuries.includes('17') && 'is-info'}`}
               to="/people?centuries=17"
-              onClick={(e) => handleClickCenturies(e, '17')}
+              onClick={handleClickCenturies('17')}
             >
               17
             </Link>
@@ -172,7 +170,7 @@ export const PeopleFilters = () => {
               data-cy="century"
               className={`button mr-1 ${centuries.includes('18') && 'is-info'}`}
               to="/people?centuries=18"
-              onClick={(e) => handleClickCenturies(e, '18')}
+              onClick={handleClickCenturies('18')}
             >
               18
             </Link>
@@ -181,7 +179,7 @@ export const PeopleFilters = () => {
               data-cy="century"
               className={`button mr-1 ${centuries.includes('19') && 'is-info'}`}
               to="/people?centuries=19"
-              onClick={(e) => handleClickCenturies(e, '19')}
+              onClick={handleClickCenturies('19')}
             >
               19
             </Link>
@@ -190,7 +188,7 @@ export const PeopleFilters = () => {
               data-cy="century"
               className={`button mr-1 ${centuries.includes('20') && 'is-info'}`}
               to="/people?centuries=20"
-              onClick={(e) => handleClickCenturies(e, '20')}
+              onClick={handleClickCenturies('20')}
             >
               20
             </Link>

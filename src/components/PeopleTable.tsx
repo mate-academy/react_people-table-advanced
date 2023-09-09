@@ -9,7 +9,7 @@ type Props = {
 };
 
 enum Sex {
-  mail = 'm',
+  male = 'm',
   female = 'f',
 }
 
@@ -80,8 +80,8 @@ export const PeopleTable: React.FC<Props> = ({
         return filterPeopleByCenturies(filterPeopleByQuery(result));
       }
 
-      case Sex.mail: {
-        const result = men.filter(person => person.sex === Sex.mail);
+      case Sex.male: {
+        const result = men.filter(person => person.sex === Sex.male);
 
         return filterPeopleByCenturies(filterPeopleByQuery(result));
       }
