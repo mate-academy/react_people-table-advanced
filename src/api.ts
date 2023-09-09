@@ -8,8 +8,13 @@ function wait(delay: number) {
 }
 
 export async function getPeople(): Promise<Person[]> {
-  // keep this delay for testing purpose
   return wait(500)
     .then(() => fetch(API_URL))
-    .then(response => response.json());
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(`${response.status} - ${response.statusText}`);
+      }
+
+      return response.json();
+    });
 }
