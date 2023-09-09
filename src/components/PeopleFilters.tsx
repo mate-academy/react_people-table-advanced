@@ -1,12 +1,133 @@
+import { useSearchParams, Link, NavLink } from 'react-router-dom';
+
+enum Sex {
+  all = 'all',
+  mail = 'm',
+  female = 'f',
+}
+
+enum Params {
+  sex = 'sex',
+  query = 'query',
+  centuries = 'centuries',
+}
+
 export const PeopleFilters = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const sex = searchParams.get(Params.sex) || '';
+  const query = searchParams.get(Params.query) || '';
+  const centuries = searchParams.getAll(Params.centuries) || '';
+
+  const handleChangeQuery = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const params = new URLSearchParams(searchParams);
+
+    if (!event.target.value) {
+      params.delete(Params.query);
+      setSearchParams(params);
+
+      return;
+    }
+
+    params.set(Params.query, event.target.value);
+    setSearchParams(params);
+  };
+
+  const handleClickSex = (
+    event: React.MouseEvent<HTMLAnchorElement>,
+    currentSex: string,
+  ) => {
+    event.preventDefault();
+    const params = new URLSearchParams(searchParams);
+
+    if (currentSex === Sex.all) {
+      params.delete(Params.sex);
+      setSearchParams(params);
+
+      return;
+    }
+
+    params.set(Params.sex, currentSex);
+    setSearchParams(params);
+  };
+
+  const handleClickCenturies = (
+    event: React.MouseEvent<HTMLAnchorElement>,
+    currentCentury: string,
+  ) => {
+    event.preventDefault();
+
+    const params = new URLSearchParams(searchParams);
+
+    if (centuries.includes(currentCentury)) {
+      params.delete(Params.centuries);
+      centuries.forEach(century => {
+        if (century !== currentCentury) {
+          params.append(Params.centuries, century);
+        }
+      });
+
+      setSearchParams(params);
+
+      return;
+    }
+
+    params.append(Params.centuries, currentCentury);
+    setSearchParams(params);
+  };
+
+  const handleClickWithoutCenturies = (
+    event: React.MouseEvent<HTMLAnchorElement>,
+  ) => {
+    event.preventDefault();
+    searchParams.delete(Params.centuries);
+    setSearchParams(searchParams);
+  };
+
+  const handleclickDeleteFilters = (
+    event: React.MouseEvent<HTMLAnchorElement>,
+  ) => {
+    event.preventDefault();
+
+    const params = new URLSearchParams();
+
+    searchParams.forEach((value, param) => {
+      if (param === 'sort' || param === 'order') {
+        params.set(param, value);
+      }
+    });
+
+    setSearchParams(params);
+  };
+
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        <a className="is-active" href="#/people">All</a>
-        <a className="" href="#/people?sex=m">Male</a>
-        <a className="" href="#/people?sex=f">Female</a>
+        <Link
+          className={!sex ? 'is-active' : ''}
+          to={`/people?${searchParams.toString()}`}
+          onClick={(e) => handleClickSex(e, Sex.all)}
+        >
+          All
+        </Link>
+
+        <Link
+          className={sex === Sex.mail ? 'is-active' : ''}
+          to="/people"
+          onClick={(e) => handleClickSex(e, Sex.mail)}
+        >
+          Male
+        </Link>
+
+        <Link
+          className={sex === Sex.female ? 'is-active' : ''}
+          to="/people"
+          onClick={(e) => handleClickSex(e, Sex.female)}
+        >
+          Female
+        </Link>
       </p>
 
       <div className="panel-block">
@@ -16,6 +137,8 @@ export const PeopleFilters = () => {
             type="search"
             className="input"
             placeholder="Search"
+            value={query}
+            onChange={handleChangeQuery}
           />
 
           <span className="icon is-left">
@@ -27,66 +150,73 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            <a
+            <NavLink
               data-cy="century"
-              className="button mr-1"
-              href="#/people?centuries=16"
+              className={`button mr-1 ${centuries.includes('16') && 'is-info'}`}
+              to="/people?centuries=16"
+              onClick={(e) => handleClickCenturies(e, '16')}
             >
               16
-            </a>
+            </NavLink>
 
-            <a
+            <Link
               data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=17"
+              className={`button mr-1 ${centuries.includes('17') && 'is-info'}`}
+              to="/people?centuries=17"
+              onClick={(e) => handleClickCenturies(e, '17')}
             >
               17
-            </a>
+            </Link>
 
-            <a
+            <Link
               data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=18"
+              className={`button mr-1 ${centuries.includes('18') && 'is-info'}`}
+              to="/people?centuries=18"
+              onClick={(e) => handleClickCenturies(e, '18')}
             >
               18
-            </a>
+            </Link>
 
-            <a
+            <Link
               data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=19"
+              className={`button mr-1 ${centuries.includes('19') && 'is-info'}`}
+              to="/people?centuries=19"
+              onClick={(e) => handleClickCenturies(e, '19')}
             >
               19
-            </a>
+            </Link>
 
-            <a
+            <Link
               data-cy="century"
-              className="button mr-1"
-              href="#/people?centuries=20"
+              className={`button mr-1 ${centuries.includes('20') && 'is-info'}`}
+              to="/people?centuries=20"
+              onClick={(e) => handleClickCenturies(e, '20')}
             >
               20
-            </a>
+            </Link>
           </div>
 
           <div className="level-right ml-4">
-            <a
+            <Link
               data-cy="centuryALL"
-              className="button is-success is-outlined"
-              href="#/people"
+              className={`button is-success ${!!centuries.length && 'is-outlined'}`}
+              to="/people"
+              onClick={handleClickWithoutCenturies}
             >
               All
-            </a>
+            </Link>
           </div>
         </div>
       </div>
 
       <div className="panel-block">
-        <a
+        <Link
           className="button is-link is-outlined is-fullwidth"
-          href="#/people"
+          to="/people"
+          onClick={handleclickDeleteFilters}
         >
           Reset all filters
-        </a>
+        </Link>
       </div>
     </nav>
   );
