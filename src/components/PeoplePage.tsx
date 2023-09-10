@@ -5,6 +5,8 @@ import { Loader } from './Loader';
 import { PeopleTable } from './PeopleTable';
 import { getPeople } from '../api';
 import { Person } from '../types';
+import { SortBy } from '../types/SortBy';
+
 
 const findParents = (people: Person []) => {
   return people.map(person => {
@@ -27,6 +29,7 @@ export const PeoplePage = () => {
   const [isError, setIsError] = useState(false);
 
   const [searchParams] = useSearchParams();
+  
   const query = searchParams.get('query');
   const sex = searchParams.get('sex');
   const centuries = searchParams.getAll('centuries');
@@ -61,11 +64,11 @@ export const PeoplePage = () => {
     if (sort) {
       filtered.sort((a, b) => {
         switch (sort) {
-          case 'name':
-          case 'sex':
+          case SortBy.Name:
+          case SortBy.Sex:
             return a[sort].localeCompare(b[sort]);
-          case 'born':
-          case 'died':
+          case SortBy.Born:
+          case SortBy.Died:
             return a[sort] - b[sort];
 
           default:

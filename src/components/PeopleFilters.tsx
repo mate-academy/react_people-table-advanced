@@ -1,20 +1,15 @@
 import { useSearchParams } from 'react-router-dom';
 import classNames from 'classnames';
 import { SearchLink } from './SearchLink';
-import { CenturiesArr } from '../CenturiesArray';
+import { CenturiesArr } from '../pages/CenturiesArray';
 
 const centuriesArray = [...CenturiesArr];
 
 export const PeopleFilters: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const SearchParams = {
-    Centuries: searchParams.getAll('centuries') || [],
-    Sex: searchParams.get('sex') || '',
-  };
-
-  const centuries = SearchParams.Centuries;
-  const sex = SearchParams.Sex;
+  const centuries = searchParams.getAll('centuries') || [];
+  const sex = searchParams.get('sex') || '';
 
   const clearCenturies = () => {
     const params = new URLSearchParams(searchParams);

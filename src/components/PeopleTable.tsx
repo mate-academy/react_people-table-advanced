@@ -3,6 +3,7 @@ import classNames from 'classnames';
 import { Person as PersonType } from '../types';
 import { Person } from './Person';
 import { SearchLink } from './SearchLink';
+import { SortBy } from '../types/SortBy';
 
 type Props = {
   people: PersonType [],
@@ -53,10 +54,10 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
             <span className="is-flex is-flex-wrap-nowrap">
               Name
               <SearchLink
-                params={handleSortType('name')}
+                params={handleSortType(SortBy.Name)}
               >
                 <span className="icon">
-                  <i className={sortOrderIcon('name')} />
+                  <i className={sortOrderIcon(SortBy.Name)} />
                 </span>
               </SearchLink>
             </span>
@@ -66,10 +67,10 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
             <span className="is-flex is-flex-wrap-nowrap">
               Sex
               <SearchLink
-                params={handleSortType('sex')}
+                params={handleSortType(SortBy.Sex)}
               >
                 <span className="icon">
-                  <i className={sortOrderIcon('sex')} />
+                  <i className={sortOrderIcon(SortBy.Sex)} />
                 </span>
               </SearchLink>
             </span>
@@ -79,10 +80,10 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
             <span className="is-flex is-flex-wrap-nowrap">
               Born
               <SearchLink
-                params={handleSortType('born')}
+                params={handleSortType(SortBy.Born)}
               >
                 <span className="icon">
-                  <i className={sortOrderIcon('born')} />
+                  <i className={sortOrderIcon(SortBy.Born)} />
                 </span>
               </SearchLink>
             </span>
@@ -92,10 +93,10 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
             <span className="is-flex is-flex-wrap-nowrap">
               Died
               <SearchLink
-                params={handleSortType('died')}
+                params={handleSortType(SortBy.Died)}
               >
                 <span className="icon">
-                  <i className={sortOrderIcon('died')} />
+                  <i className={sortOrderIcon(SortBy.Died)} />
                 </span>
               </SearchLink>
             </span>
