@@ -3,12 +3,12 @@ import { useSearchParams } from 'react-router-dom';
 
 import { getSearchWith } from '../utils/searchHelper';
 import { SearchLink } from './SearchLink';
+import { centuriesArr } from '../assets/centuries';
 
 export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const query = searchParams.get('query') || '';
   const sex = searchParams.get('sex') || '';
-  const centuriesArr = [16, 17, 18, 19, 20];
   const centuries = searchParams.getAll('centuries') || [];
 
   type Params = {
@@ -41,19 +41,19 @@ export const PeopleFilters = () => {
       <p className="panel-tabs" data-cy="SexFilter">
         <SearchLink
           params={{ sex: null }}
-          className={!sex ? 'is-active' : ''}
+          className={classNames({ 'is-active': !sex })}
         >
           All
         </SearchLink>
         <SearchLink
           params={{ sex: 'm' }}
-          className={sex === 'm' ? 'is-active' : ''}
+          className={classNames({ 'is-active': sex === 'm' })}
         >
           Male
         </SearchLink>
         <SearchLink
           params={{ sex: 'f' }}
-          className={sex === 'f' ? 'is-active' : ''}
+          className={classNames({ 'is-active': sex === 'f' })}
 
         >
           Female
