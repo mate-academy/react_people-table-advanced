@@ -29,7 +29,7 @@ export const PeoplePage = () => {
   const centuries = searchParams.getAll('centuries') || [];
 
   const getPreparedPeople = (peopleAll: Person[]) => {
-    let visiblePeople = peopleAll;
+    let visiblePeople = [...peopleAll];
 
     if (sort) {
       visiblePeople.sort((person1, person2) => {
