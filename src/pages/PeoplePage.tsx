@@ -5,7 +5,7 @@ import { Loader } from '../components/Loader';
 import { PeopleTable } from '../components/PeopleTable';
 import { Person } from '../types';
 import { getPeople } from '../api';
-import { Sort } from '../types/Sort';
+import { getPreparedPeople } from '../utils/getPreparedPeople';
 
 export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);
@@ -28,58 +28,10 @@ export const PeoplePage = () => {
   const order = searchParams.get('order') || '';
   const centuries = searchParams.getAll('centuries') || [];
 
-  const getPreparedPeople = (peopleAll: Person[]) => {
-    let visiblePeople = [...peopleAll];
-
-    if (sort) {
-      visiblePeople.sort((person1, person2) => {
-        switch (sort) {
-          case Sort.name:
-          case Sort.sex:
-            return person1[sort].localeCompare(person2[sort]);
-
-          case Sort.born:
-          case Sort.died:
-            return person1[sort] - person2[sort];
-
-          default:
-            return 0;
-        }
-      });
-    }
-
-    if (sex) {
-      visiblePeople = visiblePeople.filter(person => person.sex === sex);
-    }
-
-    if (query) {
-      visiblePeople = visiblePeople.filter(person => {
-        const normalizedQuery = query.toLowerCase().trim();
-        const filteredFields = (
-          person.name + person.motherName + person.fatherName
-        ).toLowerCase();
-
-        return filteredFields.includes(normalizedQuery);
-      });
-    }
-
-    if (centuries) {
-      visiblePeople = visiblePeople.filter(person => centuries.includes(
-        String(Math.ceil(person.born / 100)),
-      ));
-    }
-
-    if (order) {
-      visiblePeople.reverse();
-    }
-
-    return visiblePeople;
-  };
-
-  const filteredPeople = getPreparedPeople(people);
-
-  // console.log(filteredPeople)
-  // console.log(people)
+  const filteredPeople = getPreparedPeople(people,
+    {
+      query, sex, sort, order, centuries,
+    });
 
   return (
     <>
@@ -105,21 +57,23 @@ export const PeoplePage = () => {
                 <p data-cy="peopleLoadingError">Something went wrong</p>
               )}
 
-              {people.length === 0 && (
+              {!isLoading && people.length === 0 && (
                 <p data-cy="noPeopleMessage">
                   There are no people on the server
                 </p>
               )}
 
-              {filteredPeople.length === 0 && (
+              {!isLoading && filteredPeople.length === 0 && (
                 <p>There are no people matching the current search criteria</p>
               )}
 
-              <PeopleTable
-                people={filteredPeople}
-                sort={sort}
-                order={order}
-              />
+              {!error && filteredPeople.length > 0 && (
+                <PeopleTable
+                  filteredPeople={filteredPeople}
+                  sort={sort}
+                  order={order}
+                />
+              )}
             </div>
           </div>
         </div>

@@ -5,10 +5,10 @@ import { Person } from '../types';
 
 type Props = {
   person: Person,
-  people: Person[],
+  filteredPeople: Person[],
 };
 
-export const PersonLink: React.FC<Props> = ({ person, people }) => {
+export const PersonLink: React.FC<Props> = ({ person, filteredPeople }) => {
   const { personLink } = useParams();
 
   return (
@@ -32,8 +32,8 @@ export const PersonLink: React.FC<Props> = ({ person, people }) => {
       <td>{person.sex}</td>
       <td>{person.born}</td>
       <td>{person.died}</td>
-      <td>{findParent(people, person.motherName)}</td>
-      <td>{findParent(people, person.fatherName)}</td>
+      <td>{findParent(filteredPeople, person.motherName)}</td>
+      <td>{findParent(filteredPeople, person.fatherName)}</td>
     </tr>
   );
 };

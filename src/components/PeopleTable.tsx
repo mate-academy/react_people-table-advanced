@@ -1,89 +1,71 @@
+import cn from 'classnames';
 import { Person } from '../types';
-import { Sort } from '../types/Sort';
-import { Order } from '../types/Order';
 import { PersonLink } from './PersonLink';
 import { SearchLink } from './SearchLink';
+import { capitalize } from '../utils/capitalize';
 
 type Props = {
-  people: Person[],
+  filteredPeople: Person[],
   sort: string,
   order: string,
 };
 
-export const PeopleTable: React.FC<Props> = ({ people }) => {
-  return (
-    <table
-      data-cy="peopleTable"
-      className="table is-striped is-hoverable is-narrow is-fullwidth"
-    >
-      <thead>
-        <tr>
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Name
-              <SearchLink
-                params={{ sort: Sort.name }}
-              >
-                <span className="icon">
-                  <i className="fas fa-sort" />
-                </span>
-              </SearchLink>
-            </span>
-          </th>
+const headerCells = ['name', 'sex', 'born', 'died'];
 
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Sex
-              <SearchLink
-                params={{ sort: Sort.sex }}
-              >
-                <span className="icon">
-                  <i className="fas fa-sort" />
-                </span>
-              </SearchLink>
-            </span>
-          </th>
+export const PeopleTable: React.FC<Props> = ({
+  filteredPeople, sort, order,
+}) => (
+  <table
+    data-cy="peopleTable"
+    className="table is-striped is-hoverable is-narrow is-fullwidth"
+  >
+    <thead>
+      <tr>
+        {headerCells.map(cell => {
+          const selectedCell = sort === cell;
+          const isReversed = order === 'desc';
 
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Born
-              <SearchLink
-                params={{ sort: Sort.born, order: Order.desc }}
-              >
-                <span className="icon">
-                  <i className="fas fa-sort-up" />
-                </span>
-              </SearchLink>
-            </span>
-          </th>
+          return (
+            <th key={cell}>
+              <span className="is-flex is-flex-wrap-nowrap">
+                {capitalize(cell)}
+                <SearchLink
+                  params={{
+                    sort: selectedCell && isReversed
+                      ? null
+                      : cell,
+                    order: selectedCell && !isReversed
+                      ? 'desc'
+                      : null,
+                  }}
+                >
+                  <span className="icon">
+                    <i className={cn('fas', {
+                      'fa-sort': !selectedCell,
+                      'fa-sort-up': selectedCell && !isReversed,
+                      'fa-sort-down': selectedCell && isReversed,
+                    })}
+                    />
+                  </span>
+                </SearchLink>
+              </span>
+            </th>
+          );
+        })}
 
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Died
-              <SearchLink
-                params={{ sort: Sort.died }}
-              >
-                <span className="icon">
-                  <i className="fas fa-sort" />
-                </span>
-              </SearchLink>
-            </span>
-          </th>
+        <th>Mother</th>
+        <th>Father</th>
+      </tr>
+    </thead>
 
-          <th>Mother</th>
-          <th>Father</th>
-        </tr>
-      </thead>
-
-      <tbody>
-        {people.map(person => (
-          <PersonLink
-            key={person.slug}
-            person={person}
-            people={people}
-          />
-        ))}
-      </tbody>
-    </table>
-  );
-};
+    <tbody>
+      {filteredPeople.map(person => (
+        <PersonLink
+          key={person.slug}
+          person={person}
+          filteredPeople={filteredPeople}
+        />
+      ))}
+    </tbody>
+  </table>
+);
