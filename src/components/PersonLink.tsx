@@ -1,4 +1,4 @@
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams, useSearchParams } from 'react-router-dom';
 import cn from 'classnames';
 import { findParent } from '../utils/findParent';
 import { Person } from '../types';
@@ -10,6 +10,7 @@ type Props = {
 
 export const PersonLink: React.FC<Props> = ({ person, filteredPeople }) => {
   const { personLink } = useParams();
+  const [searchParams] = useSearchParams();
 
   return (
     <tr
@@ -20,7 +21,7 @@ export const PersonLink: React.FC<Props> = ({ person, filteredPeople }) => {
     >
       <td>
         <Link
-          to={`/people/${person.slug}`}
+          to={{ pathname: `/people/${person.slug}`, search: searchParams.toString() }}
           className={cn({
             'has-text-danger': person.sex === 'f',
           })}
@@ -32,8 +33,8 @@ export const PersonLink: React.FC<Props> = ({ person, filteredPeople }) => {
       <td>{person.sex}</td>
       <td>{person.born}</td>
       <td>{person.died}</td>
-      <td>{findParent(filteredPeople, person.motherName)}</td>
-      <td>{findParent(filteredPeople, person.fatherName)}</td>
+      <td>{findParent(filteredPeople, person.motherName, searchParams)}</td>
+      <td>{findParent(filteredPeople, person.fatherName, searchParams)}</td>
     </tr>
   );
 };
