@@ -1,6 +1,6 @@
 import classNames from 'classnames';
 import { useSearchParams } from 'react-router-dom';
-import { Person, Sort } from '../../types';
+import { Order, Person, Sort } from '../../types';
 import { PersonLink } from '../PersonLink/PersonLink';
 import { SearchLink } from '../SearchLink/SearchLink';
 
@@ -14,7 +14,9 @@ export const PeopleTable: React.FC<Props> = ({ people, selectedPerson }) => {
   const getSort = searchParams.get('sort') || '';
   const getOrder = searchParams.get('order') || '';
 
-  const handleSortClick = (sortType: string) => {
+  const handleSortClick = (
+    sortType: string,
+  ): { sort: string | null; order: Order } => {
     if (!getSort || sortType !== getSort) {
       return { sort: sortType, order: null };
     }

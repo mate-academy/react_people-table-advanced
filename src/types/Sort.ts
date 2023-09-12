@@ -4,3 +4,5 @@ export enum Sort {
   died = 'died',
   name = 'name',
 }
+
+export type Order = 'desc' | null;
