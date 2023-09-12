@@ -1,9 +1,9 @@
 import { useSearchParams } from 'react-router-dom';
 import classNames from 'classnames';
 import { SearchLink } from './SearchLink';
-import { CenturiesArr } from '../pages/CenturiesArray';
+import { centuriesArr } from '../pages/CenturiesArray'
 
-const centuriesArray = [...CenturiesArr];
+const centuriesArray = [...centuriesArr];
 
 export const PeopleFilters: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();

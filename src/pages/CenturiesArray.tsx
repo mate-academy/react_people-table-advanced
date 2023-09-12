@@ -1,1 +1,1 @@
-export const CenturiesArr = ['16', '17', '18', '19', '20'];
+export const centuriesArr = ['16', '17', '18', '19', '20'];

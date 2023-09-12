@@ -7,7 +7,6 @@ import { getPeople } from '../api';
 import { Person } from '../types';
 import { SortBy } from '../types/SortBy';
 
-
 const findParents = (people: Person []) => {
   return people.map(person => {
     const mother = people
@@ -29,7 +28,7 @@ export const PeoplePage = () => {
   const [isError, setIsError] = useState(false);
 
   const [searchParams] = useSearchParams();
-  
+
   const query = searchParams.get('query');
   const sex = searchParams.get('sex');
   const centuries = searchParams.getAll('centuries');
