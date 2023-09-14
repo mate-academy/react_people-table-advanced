@@ -22,7 +22,7 @@ export const PeoplePage = () => {
   const query = searchParams.get(SearchParams.Query) || '';
   const centuries = searchParams.getAll(SearchParams.Centuries);
   const sort = searchParams.get(SearchParams.Sort);
-  const order = searchParams.get(SearchParams.Sort);
+  const order = searchParams.get(SearchParams.Order);
 
   const preparedPeople = (() => {
     let newPeople = [...people];
