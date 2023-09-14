@@ -1,6 +1,10 @@
 import classNames from 'classnames';
+import { useSearchParams } from 'react-router-dom';
 import { Person } from '../types';
 import { PersonLink } from './PersonLink';
+import { SearchLink } from './SearchLink';
+import { ColumnsNames } from '../types/ColumnsNames';
+import { SearchParams } from '../types/SearchParams';
 
 type Props = {
   people: Person[],
@@ -8,70 +12,58 @@ type Props = {
 };
 
 export const PeopleTable: React.FC<Props> = ({ people, slug }) => {
+  const [searchParams] = useSearchParams();
+  const sort = searchParams.get(SearchParams.Sort);
+  const order = searchParams.get(SearchParams.Order);
+
+  const setSortParams = (sortValue: string) => {
+    if (sort !== sortValue) {
+      return { sort: sortValue, order: null };
+    }
+
+    if (!order) {
+      return { sort: sortValue, order: 'desc' };
+    }
+
+    return { sort: null, order: null };
+  };
+
+  const isSortUp = (sortValue: string) => sort === sortValue && !order;
+  const isSortDown = (sortValue: string) => sort === sortValue && order;
+
   return (
     <table
       data-cy="peopleTable"
       className="table is-striped is-hoverable is-narrow is-fullwidth"
     >
-      {/* <thead>
-        <tr>
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Name
-              <a href="#/people?sort=name">
-                <span className="icon">
-                  <i className="fas fa-sort" />
-                </span>
-              </a>
-            </span>
-          </th>
-
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Sex
-              <a href="#/people?sort=sex">
-                <span className="icon">
-                  <i className="fas fa-sort" />
-                </span>
-              </a>
-            </span>
-          </th>
-
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Born
-              <a href="#/people?sort=born&amp;order=desc">
-                <span className="icon">
-                  <i className="fas fa-sort-up" />
-                </span>
-              </a>
-            </span>
-          </th>
-
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Died
-              <a href="#/people?sort=died">
-                <span className="icon">
-                  <i className="fas fa-sort" />
-                </span>
-              </a>
-            </span>
-          </th>
-
-          <th>Mother</th>
-          <th>Father</th>
-        </tr>
-      </thead> */}
-
       <thead>
         <tr>
-          <th>Name</th>
-          <th>Sex</th>
-          <th>Born</th>
-          <th>Died</th>
-          <th>Mother</th>
-          <th>Father</th>
+          {Object.values(ColumnsNames).map(name => {
+            const isSortButtonShown
+              = name !== ColumnsNames.Mother && name !== ColumnsNames.Father;
+
+            return (
+              <th key={name}>
+                <span className="is-flex is-flex-wrap-nowrap">
+                  {name[0].toUpperCase() + name.slice(1)}
+                  {isSortButtonShown && (
+                    <SearchLink
+                      params={setSortParams(name)}
+                    >
+                      <span className="icon">
+                        <i
+                          className={classNames('fas', 'fa-sort', {
+                            'fa-sort-up': isSortUp(name),
+                            'fa-sort-down': isSortDown(name),
+                          })}
+                        />
+                      </span>
+                    </SearchLink>
+                  )}
+                </span>
+              </th>
+            );
+          })}
         </tr>
       </thead>
 
