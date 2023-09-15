@@ -3,11 +3,7 @@ import { useSearchParams } from 'react-router-dom';
 import { getSearchWith } from '../utils/searchHelper';
 import { SearchLink } from './SearchLink';
 import { SearchParams } from '../types/SearchParams';
-
-enum Sex {
-  m = 'm',
-  f = 'f',
-}
+import { Sex } from '../types/Sex';
 
 const centuriesValues = ['16', '17', '18', '19', '20'];
 
