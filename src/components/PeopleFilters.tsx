@@ -1,11 +1,14 @@
+/* eslint-disable @typescript-eslint/no-shadow */
 /* eslint-disable @typescript-eslint/no-unused-expressions */
-import { Link } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { Person } from '../types/Person';
+import { SearchLink } from './SearchLink';
 
 type Props = {
   people: Person[]
   handlePeople: (people: Person[]) => void;
+  handleParams: (data: string) => void;
 };
 
 enum SexFiltr {
@@ -14,11 +17,36 @@ enum SexFiltr {
   all = 'all',
 }
 
-export const PeopleFilters = ({ people, handlePeople }: Props) => {
+export const PeopleFilters = ({
+  people,
+  handlePeople,
+  handleParams,
+}: Props) => {
+  const [searchParams, setSearchParams] = useSearchParams(
+    (window.location.hash).substring(window.location.hash.indexOf('?')),
+  );
   const [activeSexFiltr, setActiveSexFiltr]
   = useState<SexFiltr>(SexFiltr.all);
-  const [query, setQuery] = useState<string>('');
-  const [centuries, setCenturies] = useState<number[]>([]);
+  const [query, setQuery] = useState<string>(searchParams.get('query') ?? '');
+  const [centuries, setCenturies] = useState<number[]>(
+    searchParams.getAll('centuries').map(century => +century),
+  );
+
+  useEffect(() => {
+    if (searchParams.get('sex') === SexFiltr.male) {
+      setActiveSexFiltr(SexFiltr.male);
+    } else if (searchParams.get('sex') === SexFiltr.female) {
+      setActiveSexFiltr(SexFiltr.female);
+    }
+
+    if (window.location.hash.includes('?')) {
+      handleParams(
+        (window.location.hash).substring(window.location.hash.indexOf('?')),
+      );
+    } else {
+      handleParams('');
+    }
+  });
 
   useEffect(() => {
     const sexFilteredPeople = people.filter(person => {
@@ -58,29 +86,30 @@ export const PeopleFilters = ({ people, handlePeople }: Props) => {
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        <Link
+        <SearchLink
           className={activeSexFiltr === SexFiltr.all ? 'is-active' : ''}
-          to="#/people"
+          params={{ sex: null }}
           onClick={() => {
             setActiveSexFiltr(SexFiltr.all);
+            searchParams.delete('sex');
           }}
         >
           All
-        </Link>
-        <Link
+        </SearchLink>
+        <SearchLink
           className={activeSexFiltr === SexFiltr.male ? 'is-active' : ''}
-          to="#/people?sex=m"
+          params={{ sex: 'm' }}
           onClick={() => setActiveSexFiltr(SexFiltr.male)}
         >
           Male
-        </Link>
-        <Link
+        </SearchLink>
+        <SearchLink
           className={activeSexFiltr === SexFiltr.female ? 'is-active' : ''}
-          to="#/people?sex=f"
+          params={{ sex: 'f' }}
           onClick={() => setActiveSexFiltr(SexFiltr.female)}
         >
           Female
-        </Link>
+        </SearchLink>
       </p>
 
       <div className="panel-block">
@@ -91,7 +120,12 @@ export const PeopleFilters = ({ people, handlePeople }: Props) => {
             className="input"
             placeholder="Search"
             value={query}
-            onChange={e => setQuery(e.target.value.toLowerCase())}
+            onChange={e => {
+              setQuery(e.target.value.toLowerCase());
+              setSearchParams(
+                { ...searchParams, query: e.target.value.toLowerCase() },
+              );
+            }}
           />
 
           <span className="icon is-left">
@@ -104,39 +138,49 @@ export const PeopleFilters = ({ people, handlePeople }: Props) => {
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
             {[16, 17, 18, 19, 20].map(century => (
-              <Link
+              <SearchLink
                 key={century}
                 data-cy="century"
                 className={`button mr-1${centuries.includes(century) ? ' is-info' : ''}`}
-                to={`#/people?centuries=${century}`}
                 onClick={() => {
                   centuries.includes(century)
                     ? setCenturies(centuries.filter(item => item !== century))
                     : setCenturies([...centuries, century]);
                 }}
+                params={
+                  {
+                    centuries: centuries.includes(century)
+                      ? centuries
+                        .filter(paramsCentury => paramsCentury !== century)
+                        .map(century => String(century))
+                      : [...centuries
+                        .map(century => String(century)), String(century)],
+
+                  }
+                }
               >
                 {century}
-              </Link>
+              </SearchLink>
             ))}
           </div>
 
           <div className="level-right ml-4">
-            <Link
+            <SearchLink
               data-cy="centuryALL"
               className="button is-success is-outlined"
-              to="#/people"
+              params={{ centuries: null }}
               onClick={() => setCenturies([])}
             >
               All
-            </Link>
+            </SearchLink>
           </div>
         </div>
       </div>
 
       <div className="panel-block">
-        <Link
+        <SearchLink
           className="button is-link is-outlined is-fullwidth"
-          to="#/people"
+          params={{ centuries: null, sex: null }}
           onClick={() => {
             setActiveSexFiltr(SexFiltr.all);
             setQuery('');
@@ -144,7 +188,7 @@ export const PeopleFilters = ({ people, handlePeople }: Props) => {
           }}
         >
           Reset all filters
-        </Link>
+        </SearchLink>
       </div>
     </nav>
   );

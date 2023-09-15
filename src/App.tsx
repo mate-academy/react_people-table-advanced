@@ -25,8 +25,6 @@ export const App = () => {
             />
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
-          {/* <h1 className="title">Home Page</h1> */}
-          {/* <PeoplePage /> */}
         </div>
       </div>
     </div>

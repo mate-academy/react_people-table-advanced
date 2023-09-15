@@ -5,9 +5,11 @@ import { useEffect, useState } from 'react';
 import cn from 'classnames';
 import { Person } from '../types';
 import { PersonItem } from './PersonItem/PersonItem';
+import { SearchLink } from './SearchLink';
 
 type Props = {
   people: Person[],
+  allParams: string,
 };
 
 enum Sort {
@@ -18,14 +20,14 @@ enum Sort {
 
 type SortBy = 'name' | 'sex' | 'born' | 'died' | null;
 
-export const PeopleTable = ({ people }:Props) => {
+export const PeopleTable = ({ people, allParams }:Props) => {
   const params = useParams();
   const [slugUser, setSlugUser] = useState<string | undefined>(params.slug);
-  const [searchParams, setSearchParams]
-  = useSearchParams((window.location.hash).slice(8));
+  const [searchParams, setSearchParams] = useSearchParams(
+    (window.location.hash).substring(window.location.hash.indexOf('?')),
+  );
   const [sexSort, setSexSort] = useState<Sort>(Sort.notSorted);
   const [nameSort, setNameSort] = useState<Sort>(Sort.notSorted);
-  // const [diedSort, setDiedSort] = useState<Sort>(Sort.notSorted);
   const [bornSort, setBornSort] = useState<Sort>(Sort.notSorted);
   const [diedSort, setDiedSort] = useState<Sort>(Sort.notSorted);
   const [sortBy, setSortBy] = useState<SortBy | null>(null);
@@ -155,6 +157,16 @@ export const PeopleTable = ({ people }:Props) => {
 
   const sortedPeople = arraySort(sortBy);
 
+  const sort = (value: string) => {
+    return searchParams.get('sort') !== value || !searchParams.has('order')
+      ? value : null;
+  };
+
+  const order = (value: string) => {
+    return searchParams.get('sort') === value && !searchParams.has('order')
+      ? 'desc' : null;
+  };
+
   return (
     <table
       data-cy="peopleTable"
@@ -165,9 +177,8 @@ export const PeopleTable = ({ people }:Props) => {
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Name
-              <a
-                href={searchParams.has('sort') ? `#/people?${searchParams.toString()}`
-                  : '#/people'}
+              <SearchLink
+                params={{ sort: sort('name'), order: order('name') }}
                 onClick={() => {
                   searchParams.delete('order');
                   handleSort(nameSort, setNameSort, 'name');
@@ -181,16 +192,15 @@ export const PeopleTable = ({ people }:Props) => {
                     className={ActiveLinkSexClassName(nameSort)}
                   />
                 </span>
-              </a>
+              </SearchLink>
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Sex
-              <a
-                href={searchParams.has('sort') ? `#/people?${searchParams.toString()}`
-                  : '#/people'}
+              <SearchLink
+                params={{ sort: sort('sex'), order: order('sex') }}
                 onClick={() => {
                   searchParams.delete('order');
                   handleSort(sexSort, setSexSort, 'sex');
@@ -204,16 +214,15 @@ export const PeopleTable = ({ people }:Props) => {
                     className={ActiveLinkSexClassName(sexSort)}
                   />
                 </span>
-              </a>
+              </SearchLink>
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Born
-              <a
-                href={searchParams.has('sort') ? `#/people?${searchParams.toString()}`
-                  : '#/people'}
+              <SearchLink
+                params={{ sort: sort('born'), order: order('born') }}
                 onClick={() => {
                   searchParams.delete('order');
                   handleSort(bornSort, setBornSort, 'born');
@@ -227,16 +236,15 @@ export const PeopleTable = ({ people }:Props) => {
                     className={ActiveLinkSexClassName(bornSort)}
                   />
                 </span>
-              </a>
+              </SearchLink>
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Died
-              <a
-                href={searchParams.has('sort') ? `#/people?${searchParams.toString()}`
-                  : '#/people'}
+              <SearchLink
+                params={{ sort: sort('died'), order: order('died') }}
                 onClick={() => {
                   searchParams.delete('order');
                   handleSort(diedSort, setDiedSort, 'died');
@@ -250,7 +258,7 @@ export const PeopleTable = ({ people }:Props) => {
                     className={ActiveLinkSexClassName(diedSort)}
                   />
                 </span>
-              </a>
+              </SearchLink>
             </span>
           </th>
 
@@ -267,7 +275,7 @@ export const PeopleTable = ({ people }:Props) => {
             people={people}
             handleSlugUser={handleSlugUser}
             slugUser={slugUser}
-            searchParams={searchParams.toString()}
+            allParams={allParams}
           />
         ))}
       </tbody>

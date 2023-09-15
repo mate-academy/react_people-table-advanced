@@ -8,7 +8,7 @@ type Props = {
   people: Person[];
   handleSlugUser: (value: string) => void;
   isParent: 'no' | 'mother' | 'father';
-  searchParams: string;
+  allParams: string;
 };
 
 export const PersonLink = ({
@@ -16,7 +16,7 @@ export const PersonLink = ({
   handleSlugUser,
   people,
   isParent,
-  searchParams,
+  allParams,
 }:Props) => {
   const findPerson = useMemo(() => {
     if (isParent === 'no') {
@@ -37,22 +37,11 @@ export const PersonLink = ({
   }, []);
 
   return (
-    // <a
-    //   className={findPerson.sex === 'f'
-    //     ? 'has-text-danger'
-    //     : ''}
-    //   href={`#/people/${findPerson.slug}${searchParams}`}
-    //   onClick={() => {
-    //     return handleSlugUser(findPerson.slug);
-    //   }}
-    // >
-    //   {findPerson.name}
-    // </a>
     <Link
       className={findPerson.sex === 'f'
         ? 'has-text-danger'
         : ''}
-      to={`#/people/${findPerson.slug}${searchParams}`}
+      to={`/people/${findPerson.slug}${allParams}`}
       onClick={() => {
         return handleSlugUser(findPerson.slug);
       }}

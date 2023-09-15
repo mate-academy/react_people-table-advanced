@@ -7,7 +7,7 @@ type Props = {
   people: Person[];
   handleSlugUser: (value: string) => void;
   slugUser: string | undefined;
-  searchParams: string;
+  allParams: string;
 };
 
 export const PersonItem = ({
@@ -15,7 +15,7 @@ export const PersonItem = ({
   people,
   handleSlugUser,
   slugUser,
-  searchParams,
+  allParams,
 }:Props) => {
   return (
     <tr
@@ -30,7 +30,7 @@ export const PersonItem = ({
           handleSlugUser={handleSlugUser}
           people={people}
           isParent="no"
-          searchParams={searchParams}
+          allParams={allParams}
         />
       </td>
 
@@ -45,7 +45,7 @@ export const PersonItem = ({
               handleSlugUser={handleSlugUser}
               people={people}
               isParent="mother"
-              searchParams={searchParams}
+              allParams={allParams}
             />
           </td>
         ) : (
@@ -62,7 +62,7 @@ export const PersonItem = ({
               handleSlugUser={handleSlugUser}
               people={people}
               isParent="father"
-              searchParams={searchParams}
+              allParams={allParams}
             />
           </td>
         ) : (

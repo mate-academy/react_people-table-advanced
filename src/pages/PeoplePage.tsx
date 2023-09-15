@@ -11,8 +11,11 @@ export const PeoplePage = () => {
   const [errorMessage, setErrorMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [filteredPeople, setFilteredPeople] = useState<Person[]>([]);
+  const [allParams, setAllParams] = useState('');
 
-  // console.log(filteredPeople);
+  const handleParams = (data: string) => {
+    setAllParams(data);
+  };
 
   useEffect(() => {
     const fetchPeople = async () => {
@@ -46,7 +49,7 @@ export const PeoplePage = () => {
             ? (<Loader />)
             : (
               <>
-                {errorMessage && (
+                {errorMessage ? (
                   <>
                     <p
                       data-cy="peopleLoadingError"
@@ -54,30 +57,46 @@ export const PeoplePage = () => {
                     >
                       Something went wrong
                     </p>
-                    <p data-cy="noPeopleMessage">
-                      There are no people on the server
-                    </p>
                   </>
-                )}
-                <div className="column is-7-tablet is-narrow-desktop">
-                  <PeopleFilters
-                    people={people}
-                    handlePeople={handlePeople}
-                  />
-                </div>
-
-                <div className="column">
-                  <div className="box table-container">
-                    {filteredPeople.length > 0
-                      ? <PeopleTable people={filteredPeople} />
-                      : (
-                        <p>
-                          There are no people matching
-                          the current search criteria
+                )
+                  : (
+                    <>
+                      {people.length === 0 ? (
+                        <p data-cy="noPeopleMessage">
+                          There are no people on the server
                         </p>
+                      ) : (
+                        <>
+                          <div className="column is-7-tablet is-narrow-desktop">
+                            <PeopleFilters
+                              people={people}
+                              handlePeople={handlePeople}
+                              handleParams={handleParams}
+                            />
+                          </div>
+                          <div className="column">
+                            <div className="box table-container">
+                              {filteredPeople.length > 0
+                                ? (
+                                  <PeopleTable
+                                    people={filteredPeople}
+                                    allParams={allParams}
+                                  />
+                                )
+                                : (
+                                  <p>
+                                    There are no people matching
+                                    the current search criteria
+                                  </p>
+                                )}
+                            </div>
+                          </div>
+
+                        </>
                       )}
-                  </div>
-                </div>
+
+                    </>
+                  )}
               </>
             )}
 
