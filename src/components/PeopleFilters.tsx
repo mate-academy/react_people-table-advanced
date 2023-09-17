@@ -1,21 +1,12 @@
 import { useSearchParams } from 'react-router-dom';
-import classNames from 'classnames';
-import { useCallback, useEffect } from 'react';
+import cn from 'classnames';
+import { useCallback } from 'react';
 import { SearchLink } from './SearchLink';
 import { getSearchWith } from '../utils/searchHelper';
-import { Person } from '../types';
-
-type Props = {
-  people: Person[],
-  setFilterPeople: (people: Person[]) => void,
-};
 
 const startedCenturies = ['16', '17', '18', '19', '20'];
 
-export const PeopleFilters: React.FC<Props> = ({
-  people,
-  setFilterPeople,
-}) => {
+export const PeopleFilters: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const sex = searchParams.get('sex') || '';
@@ -38,53 +29,6 @@ export const PeopleFilters: React.FC<Props> = ({
     setSearchParams(getSearchWith(searchParams, newParams));
   }, [searchParams]);
 
-  const getFilteredPeople = useCallback(() => {
-    return people
-      .filter(person => {
-        const normalizeQuery = query.trim().toLocaleLowerCase();
-        const { name, motherName, fatherName } = person;
-
-        if (normalizeQuery) {
-          if (!!motherName
-            && motherName.toLocaleLowerCase().includes(normalizeQuery)
-          ) {
-            return true;
-          }
-
-          if (!!fatherName
-            && fatherName.toLocaleLowerCase().includes(normalizeQuery)
-          ) {
-            return true;
-          }
-
-          return name.toLocaleLowerCase().includes(normalizeQuery);
-        }
-
-        return true;
-      })
-      .filter(person => {
-        if (sex) {
-          return person.sex === sex;
-        }
-
-        return true;
-      })
-      .filter(person => {
-        if (!!centuries && !!centuries.length) {
-          const { born } = person;
-          const bornCentury = Math.ceil(+born / 100);
-
-          return centuries.includes(bornCentury.toString());
-        }
-
-        return true;
-      });
-  }, [people, query, sex, centuries]);
-
-  useEffect(() => {
-    setFilterPeople(getFilteredPeople());
-  }, [searchParams]);
-
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
@@ -92,19 +36,19 @@ export const PeopleFilters: React.FC<Props> = ({
       <p className="panel-tabs" data-cy="SexFilter">
         <SearchLink
           params={{ sex: null }}
-          className={classNames({ 'is-active': !sex })}
+          className={cn({ 'is-active': !sex })}
         >
           All
         </SearchLink>
         <SearchLink
           params={{ sex: 'm' }}
-          className={classNames({ 'is-active': sex === 'm' })}
+          className={cn({ 'is-active': sex === 'm' })}
         >
           Male
         </SearchLink>
         <SearchLink
           params={{ sex: 'f' }}
-          className={classNames({ 'is-active': sex === 'f' })}
+          className={cn({ 'is-active': sex === 'f' })}
         >
           Female
         </SearchLink>
@@ -137,7 +81,7 @@ export const PeopleFilters: React.FC<Props> = ({
                 <SearchLink
                   key={`${century}`}
                   data-cy="century"
-                  className={classNames('button', 'mr-1', {
+                  className={cn('button', 'mr-1', {
                     'is-info': centuries.includes(century),
                   })}
                   params={newParams}
@@ -151,7 +95,7 @@ export const PeopleFilters: React.FC<Props> = ({
           <div className="level-right ml-4">
             <SearchLink
               data-cy="centuryALL"
-              className={classNames(
+              className={cn(
                 'button',
                 'is-success',
                 { 'is-outlined': centuries.length > 0 },

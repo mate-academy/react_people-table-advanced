@@ -9,13 +9,11 @@ export const PeoplePage: React.FC = () => {
   const [people, setPeople] = useState<Person[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isError, setIsError] = useState(false);
-  const [filterPeople, setFilterPeople] = useState<Person[]>([]);
 
   useEffect(() => {
     getPeople()
       .then(date => {
         setPeople(date);
-        setFilterPeople(date);
       })
       .catch(() => setIsError(true))
       .finally(() => setIsLoading(false));
@@ -28,10 +26,7 @@ export const PeoplePage: React.FC = () => {
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
           <div className="column is-7-tablet is-narrow-desktop">
-            <PeopleFilters
-              people={people}
-              setFilterPeople={setFilterPeople}
-            />
+            <PeopleFilters />
           </div>
 
           <div className="column">
@@ -39,10 +34,7 @@ export const PeoplePage: React.FC = () => {
               {isLoading && !isError ? (
                 <Loader />
               ) : (
-                <PeopleList
-                  people={filterPeople}
-                  peopleFromSesver={people}
-                />
+                <PeopleList people={people} />
               )}
 
               {isError && (

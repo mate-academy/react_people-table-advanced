@@ -56,7 +56,7 @@ export const PeopleItem: React.FC<Props> = ({
 
       {father ? (
         <td>
-          <Link to={`${father.slug}`}>
+          <Link to={`../${father.slug}`}>
             {father.name}
           </Link>
         </td>
