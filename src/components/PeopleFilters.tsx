@@ -3,6 +3,7 @@ import cn from 'classnames';
 import { useCallback } from 'react';
 import { SearchLink } from './SearchLink';
 import { getSearchWith } from '../utils/searchHelper';
+import { Sex } from '../utils/constants';
 
 const startedCenturies = ['16', '17', '18', '19', '20'];
 
@@ -13,12 +14,12 @@ export const PeopleFilters: React.FC = () => {
   const centuries = searchParams.getAll('centuries') || [];
   const query = searchParams.get('query') || '';
 
-  const handlerCenturiesChange = useCallback((el: string) => {
-    if (centuries.includes(el)) {
-      return { centuries: [...centuries].filter(cent => cent !== el) || [] };
+  const handlerCenturiesChange = useCallback((age: string) => {
+    if (centuries.includes(age)) {
+      return { centuries: centuries.filter(cent => cent !== age) || [] };
     }
 
-    return { centuries: [...centuries, el] };
+    return { centuries: [...centuries, age] };
   }, [centuries]);
 
   const handlerQuery = useCallback((
@@ -41,14 +42,14 @@ export const PeopleFilters: React.FC = () => {
           All
         </SearchLink>
         <SearchLink
-          params={{ sex: 'm' }}
-          className={cn({ 'is-active': sex === 'm' })}
+          params={{ sex: Sex.Man }}
+          className={cn({ 'is-active': sex === Sex.Man })}
         >
           Male
         </SearchLink>
         <SearchLink
-          params={{ sex: 'f' }}
-          className={cn({ 'is-active': sex === 'f' })}
+          params={{ sex: Sex.Feme }}
+          className={cn({ 'is-active': sex === Sex.Feme })}
         >
           Female
         </SearchLink>

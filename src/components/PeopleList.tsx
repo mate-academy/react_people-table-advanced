@@ -4,6 +4,7 @@ import cn from 'classnames';
 import { Person } from '../types';
 import { PeopleItem } from './PeopleItem';
 import { SearchLink } from './SearchLink';
+import { SortMap } from '../utils/constants';
 
 type Props = {
   people: Person[],
@@ -49,18 +50,10 @@ export const PeopleList: React.FC<Props> = ({
   const getSortedPeople = useCallback(() => {
     let sortedPeople = [...people];
 
-    if (sort) {
-      switch (sort) {
-        case 'name':
-        case 'sex':
-        case 'born':
-        case 'died':
-          sortedPeople = handlerSortPeople(sort);
-          break;
+    const sortParams = sort as SortMap;
 
-        default:
-          sortedPeople = people;
-      }
+    if (sortParams) {
+      sortedPeople = handlerSortPeople(sortParams);
 
       return order ? sortedPeople.reverse() : sortedPeople;
     }
@@ -73,47 +66,41 @@ export const PeopleList: React.FC<Props> = ({
       .filter(person => {
         const normalizeQuery = query.trim().toLocaleLowerCase();
         const { name, motherName, fatherName } = person;
+        const result = [];
 
-        if (normalizeQuery) {
-          if (!!motherName
-            && motherName.toLocaleLowerCase().includes(normalizeQuery)
-          ) {
-            return true;
-          }
-
-          if (!!fatherName
-            && fatherName.toLocaleLowerCase().includes(normalizeQuery)
-          ) {
-            return true;
-          }
-
-          return name.toLocaleLowerCase().includes(normalizeQuery);
+        if (!normalizeQuery
+            || (motherName
+            && motherName.toLocaleLowerCase().includes(normalizeQuery))
+            || (fatherName
+              && fatherName.toLocaleLowerCase().includes(normalizeQuery))
+        ) {
+          result.push(true);
+        } else {
+          result.push(name.toLocaleLowerCase().includes(normalizeQuery));
         }
 
-        return true;
-      })
-      .filter(person => {
-        if (sex) {
-          return person.sex === sex;
+        if (!sex) {
+          result.push(true);
+        } else {
+          result.push(person.sex === sex);
         }
 
-        return true;
-      })
-      .filter(person => {
         if (!!centuries && !!centuries.length) {
           const { born } = person;
           const bornCentury = Math.ceil(+born / 100);
 
-          return centuries.includes(bornCentury.toString());
+          result.push(centuries.includes(bornCentury.toString()));
+        } else {
+          result.push(true);
         }
 
-        return true;
+        return result[0] && result[1] && result[2];
       });
   }, [query, sex, centuries]);
 
   useEffect(() => {
     setSortPeople(getFilteredPeople(getSortedPeople()));
-  }, [searchParams, people]);
+  }, [searchParams, people, sort]);
 
   return (
     <>
