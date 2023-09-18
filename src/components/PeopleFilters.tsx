@@ -81,6 +81,20 @@ export const PeopleFilters = ({
     }));
   }, [query, activeSexFiltr, centuries]);
 
+  const centuriesArray = [16, 17, 18, 19, 20];
+
+  const filterCentirues = (century: number) => {
+    centuries.includes(century)
+      ? setCenturies(centuries.filter(item => item !== century))
+      : setCenturies([...centuries, century]);
+  };
+
+  const resetFilters = () => {
+    setActiveSexFiltr(SexFiltr.all);
+    setQuery('');
+    setCenturies([]);
+  };
+
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
@@ -137,16 +151,12 @@ export const PeopleFilters = ({
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            {[16, 17, 18, 19, 20].map(century => (
+            {centuriesArray.map(century => (
               <SearchLink
                 key={century}
                 data-cy="century"
                 className={`button mr-1${centuries.includes(century) ? ' is-info' : ''}`}
-                onClick={() => {
-                  centuries.includes(century)
-                    ? setCenturies(centuries.filter(item => item !== century))
-                    : setCenturies([...centuries, century]);
-                }}
+                onClick={() => filterCentirues(century)}
                 params={
                   {
                     centuries: centuries.includes(century)
@@ -155,7 +165,6 @@ export const PeopleFilters = ({
                         .map(century => String(century))
                       : [...centuries
                         .map(century => String(century)), String(century)],
-
                   }
                 }
               >
@@ -181,11 +190,7 @@ export const PeopleFilters = ({
         <SearchLink
           className="button is-link is-outlined is-fullwidth"
           params={{ centuries: null, sex: null }}
-          onClick={() => {
-            setActiveSexFiltr(SexFiltr.all);
-            setQuery('');
-            setCenturies([]);
-          }}
+          onClick={resetFilters}
         >
           Reset all filters
         </SearchLink>
