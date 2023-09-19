@@ -1,5 +1,4 @@
 import { useMemo } from 'react';
-// import { NavLink } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import { Person } from '../../types';
 
@@ -42,9 +41,7 @@ export const PersonLink = ({
         ? 'has-text-danger'
         : ''}
       to={`/people/${findPerson.slug}${allParams}`}
-      onClick={() => {
-        return handleSlugUser(findPerson.slug);
-      }}
+      onClick={() => handleSlugUser(findPerson.slug)}
     >
       {findPerson.name}
     </Link>

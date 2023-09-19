@@ -2,6 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unused-expressions */
 import { useSearchParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
+import cn from 'classnames';
 import { Person } from '../types/Person';
 import { SearchLink } from './SearchLink';
 
@@ -32,10 +33,24 @@ export const PeopleFilters = ({
     searchParams.getAll('centuries').map(century => +century),
   );
 
+  const ActiveSexSortAll = (sexFiltr: SexFiltr) => cn(
+    { 'is-active': sexFiltr === SexFiltr.all },
+  );
+
+  const ActiveSexSortMale = (sexFiltr: SexFiltr) => cn(
+    { 'is-active': sexFiltr === SexFiltr.male },
+  );
+
+  const ActiveSexSortFemale = (sexFiltr: SexFiltr) => cn(
+    { 'is-active': sexFiltr === SexFiltr.female },
+  );
+
   useEffect(() => {
-    if (searchParams.get('sex') === SexFiltr.male) {
+    const sex = searchParams.get('sex');
+
+    if (sex === SexFiltr.male) {
       setActiveSexFiltr(SexFiltr.male);
-    } else if (searchParams.get('sex') === SexFiltr.female) {
+    } else if (sex === SexFiltr.female) {
       setActiveSexFiltr(SexFiltr.female);
     }
 
@@ -95,13 +110,24 @@ export const PeopleFilters = ({
     setCenturies([]);
   };
 
+  const params = (century: number) => {
+    return {
+      centuries: centuries.includes(century)
+        ? centuries
+          .filter(paramsCentury => paramsCentury !== century)
+          .map(century => String(century))
+        : [...centuries
+          .map(century => String(century)), String(century)],
+    };
+  };
+
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
         <SearchLink
-          className={activeSexFiltr === SexFiltr.all ? 'is-active' : ''}
+          className={ActiveSexSortAll(activeSexFiltr)}
           params={{ sex: null }}
           onClick={() => {
             setActiveSexFiltr(SexFiltr.all);
@@ -111,14 +137,14 @@ export const PeopleFilters = ({
           All
         </SearchLink>
         <SearchLink
-          className={activeSexFiltr === SexFiltr.male ? 'is-active' : ''}
+          className={ActiveSexSortMale(activeSexFiltr)}
           params={{ sex: 'm' }}
           onClick={() => setActiveSexFiltr(SexFiltr.male)}
         >
           Male
         </SearchLink>
         <SearchLink
-          className={activeSexFiltr === SexFiltr.female ? 'is-active' : ''}
+          className={ActiveSexSortFemale(activeSexFiltr)}
           params={{ sex: 'f' }}
           onClick={() => setActiveSexFiltr(SexFiltr.female)}
         >
@@ -157,16 +183,7 @@ export const PeopleFilters = ({
                 data-cy="century"
                 className={`button mr-1${centuries.includes(century) ? ' is-info' : ''}`}
                 onClick={() => filterCentirues(century)}
-                params={
-                  {
-                    centuries: centuries.includes(century)
-                      ? centuries
-                        .filter(paramsCentury => paramsCentury !== century)
-                        .map(century => String(century))
-                      : [...centuries
-                        .map(century => String(century)), String(century)],
-                  }
-                }
+                params={params(century)}
               >
                 {century}
               </SearchLink>

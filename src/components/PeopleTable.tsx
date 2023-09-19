@@ -47,18 +47,21 @@ export const PeopleTable = ({ people, allParams }:Props) => {
     setSort: (sort: Sort) => void,
     columnName: string,
   ) => {
-    if (sort === Sort.notSorted) {
-      setSort(Sort.sortAsc);
-      searchParams.set('sort', columnName);
-      setSearchParams(searchParams);
-    } else if (sort === Sort.sortAsc) {
-      setSort(Sort.sortDesc);
-      searchParams.set('order', 'desc');
-      setSearchParams(searchParams);
-    } else {
-      setSort(Sort.notSorted);
-      searchParams.delete('sort');
-      searchParams.delete('order');
+    switch (sort) {
+      case Sort.notSorted:
+        setSort(Sort.sortAsc);
+        searchParams.set('sort', columnName);
+        setSearchParams(searchParams);
+        break;
+      case Sort.sortAsc:
+        setSort(Sort.sortDesc);
+        searchParams.set('order', 'desc');
+        setSearchParams(searchParams);
+        break;
+      default:
+        setSort(Sort.notSorted);
+        searchParams.delete('sort');
+        searchParams.delete('order');
     }
   };
 
@@ -167,6 +170,38 @@ export const PeopleTable = ({ people, allParams }:Props) => {
       ? 'desc' : null;
   };
 
+  const sortName = () => {
+    searchParams.delete('order');
+    handleSort(nameSort, setNameSort, 'name');
+    setSexSort(Sort.notSorted);
+    setBornSort(Sort.notSorted);
+    setDiedSort(Sort.notSorted);
+  };
+
+  const sortSex = () => {
+    searchParams.delete('order');
+    handleSort(sexSort, setSexSort, 'sex');
+    setNameSort(Sort.notSorted);
+    setBornSort(Sort.notSorted);
+    setDiedSort(Sort.notSorted);
+  };
+
+  const sortBorn = () => {
+    searchParams.delete('order');
+    handleSort(bornSort, setBornSort, 'born');
+    setSexSort(Sort.notSorted);
+    setNameSort(Sort.notSorted);
+    setDiedSort(Sort.notSorted);
+  };
+
+  const sortDied = () => {
+    searchParams.delete('order');
+    handleSort(diedSort, setDiedSort, 'died');
+    setSexSort(Sort.notSorted);
+    setBornSort(Sort.notSorted);
+    setNameSort(Sort.notSorted);
+  };
+
   return (
     <table
       data-cy="peopleTable"
@@ -179,13 +214,7 @@ export const PeopleTable = ({ people, allParams }:Props) => {
               Name
               <SearchLink
                 params={{ sort: sort('name'), order: order('name') }}
-                onClick={() => {
-                  searchParams.delete('order');
-                  handleSort(nameSort, setNameSort, 'name');
-                  setSexSort(Sort.notSorted);
-                  setBornSort(Sort.notSorted);
-                  setDiedSort(Sort.notSorted);
-                }}
+                onClick={sortName}
               >
                 <span className="icon">
                   <i
@@ -201,13 +230,7 @@ export const PeopleTable = ({ people, allParams }:Props) => {
               Sex
               <SearchLink
                 params={{ sort: sort('sex'), order: order('sex') }}
-                onClick={() => {
-                  searchParams.delete('order');
-                  handleSort(sexSort, setSexSort, 'sex');
-                  setNameSort(Sort.notSorted);
-                  setBornSort(Sort.notSorted);
-                  setDiedSort(Sort.notSorted);
-                }}
+                onClick={sortSex}
               >
                 <span className="icon">
                   <i
@@ -223,13 +246,7 @@ export const PeopleTable = ({ people, allParams }:Props) => {
               Born
               <SearchLink
                 params={{ sort: sort('born'), order: order('born') }}
-                onClick={() => {
-                  searchParams.delete('order');
-                  handleSort(bornSort, setBornSort, 'born');
-                  setNameSort(Sort.notSorted);
-                  setSexSort(Sort.notSorted);
-                  setDiedSort(Sort.notSorted);
-                }}
+                onClick={sortBorn}
               >
                 <span className="icon">
                   <i
@@ -245,13 +262,7 @@ export const PeopleTable = ({ people, allParams }:Props) => {
               Died
               <SearchLink
                 params={{ sort: sort('died'), order: order('died') }}
-                onClick={() => {
-                  searchParams.delete('order');
-                  handleSort(diedSort, setDiedSort, 'died');
-                  setNameSort(Sort.notSorted);
-                  setSexSort(Sort.notSorted);
-                  setBornSort(Sort.notSorted);
-                }}
+                onClick={sortDied}
               >
                 <span className="icon">
                   <i
