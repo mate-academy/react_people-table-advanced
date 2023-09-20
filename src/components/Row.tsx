@@ -1,19 +1,19 @@
 import classNames from 'classnames';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { Person } from '../types';
 
 type Props = {
   person: Person
-  onSelectPerson: (slug: string) => void
-  isSelected: boolean
+  // onSelectPerson: (slug: string) => void
+  // isSelected: boolean
   motherSlug?: string
   fatherSlug?: string
 };
 
 export const Row: React.FC<Props> = ({
   person,
-  onSelectPerson,
-  isSelected,
+  // onSelectPerson,
+  // isSelected,
   motherSlug,
   fatherSlug,
 }) => {
@@ -27,15 +27,24 @@ export const Row: React.FC<Props> = ({
     fatherName,
   } = person;
 
+  const { userSlug } = useParams();
+  const selectedUserSlug = userSlug;
+  // const [searchParams] = useSearchParams();
+
+  // console.log(selectedUserSlug);
+
   return (
     <tr
       data-cy="person"
-      className={classNames({ 'has-background-warning': isSelected })}
+      className={classNames({
+        'has-background-warning': slug === selectedUserSlug,
+      })}
     >
       <td>
         <Link
-          onClick={() => onSelectPerson(slug)}
-          to={`#/people/:${slug}`}
+          // onClick={() => onSelectPerson(slug)}
+          to={`./${slug}`}
+          // to={{ pathname: `./${slug}`, search: searchParams.toString() }}
           className={classNames({ 'has-text-danger': motherSlug })}
         >
           {name}
@@ -48,9 +57,9 @@ export const Row: React.FC<Props> = ({
         {motherSlug
           ? (
             <Link
-              to={`#/:${person.slug}`}
+              to={`./${slug}`}
               className={classNames({ 'has-text-danger': motherSlug })}
-              onClick={() => motherSlug && onSelectPerson(motherSlug)}
+              // onClick={() => motherSlug && onSelectPerson(motherSlug)}
             >
               {motherName}
             </Link>
@@ -61,8 +70,8 @@ export const Row: React.FC<Props> = ({
         {fatherSlug
           ? (
             <Link
-              to={`#/:${person.slug}`}
-              onClick={() => fatherSlug && onSelectPerson(fatherSlug)}
+              to={`./${slug}`}
+              // onClick={() => fatherSlug && onSelectPerson(fatherSlug)}
             >
               {fatherName}
             </Link>

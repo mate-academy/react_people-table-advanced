@@ -25,7 +25,7 @@ export const Navbar = () => {
           <NavLink
             aria-current="page"
             className={getLinkClass}
-            to="/people"
+            to="people"
           >
             People
           </NavLink>

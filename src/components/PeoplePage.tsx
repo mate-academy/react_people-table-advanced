@@ -103,7 +103,7 @@ export const PeoplePage: React.FC = () => {
     }
 
     if (params.sortField) {
-      const order = params.sortOrder ? -1 : 1;
+      const order = params.sortOrder === 'desc' ? -1 : 1;
 
       initial = [...initial].sort((p1, p2) => {
         switch (params.sortField) {
@@ -134,7 +134,7 @@ export const PeoplePage: React.FC = () => {
 
   useEffect(() => {
     preparePeople();
-  }, []);
+  }, [sortOrder]);
 
   return (
     <>
