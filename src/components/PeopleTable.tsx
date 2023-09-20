@@ -89,7 +89,7 @@ export const PeopleTable: React.FC<Props> = ({
         <tr>
           {Object.values(SortOptions).map(option => (
             (
-              <th>
+              <th key={option}>
                 <span
                   className="is-flex is-flex-wrap-nowrap"
                 >

@@ -31,7 +31,7 @@ export const Row: React.FC<Props> = ({
   const selectedUserSlug = userSlug;
   // const [searchParams] = useSearchParams();
 
-  // console.log(selectedUserSlug);
+  console.log(selectedUserSlug);
 
   return (
     <tr
@@ -43,7 +43,7 @@ export const Row: React.FC<Props> = ({
       <td>
         <Link
           // onClick={() => onSelectPerson(slug)}
-          to={`./${slug}`}
+          to={`../${slug}`}
           // to={{ pathname: `./${slug}`, search: searchParams.toString() }}
           className={classNames({ 'has-text-danger': motherSlug })}
         >
@@ -57,7 +57,7 @@ export const Row: React.FC<Props> = ({
         {motherSlug
           ? (
             <Link
-              to={`./${slug}`}
+              to={`../${slug}`}
               className={classNames({ 'has-text-danger': motherSlug })}
               // onClick={() => motherSlug && onSelectPerson(motherSlug)}
             >
@@ -70,7 +70,7 @@ export const Row: React.FC<Props> = ({
         {fatherSlug
           ? (
             <Link
-              to={`./${slug}`}
+              to={`../${slug}`}
               // onClick={() => fatherSlug && onSelectPerson(fatherSlug)}
             >
               {fatherName}

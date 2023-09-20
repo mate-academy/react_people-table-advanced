@@ -21,20 +21,15 @@ export const App = () => {
               element={<h1 className="title">Home Page</h1>}
             />
             <Route
-              // path="people/:userSlug?"
               path="people"
               element={(
                 <PeoplePage />
               )}
-            />
-            {/* <Route path="people">
+            >
               <Route
                 path=":userSlug?"
-                element={(
-                  <PeoplePage />
-                )}
               />
-            </Route> */}
+            </Route>
           </Routes>
 
         </div>
