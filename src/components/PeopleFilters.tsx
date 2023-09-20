@@ -29,7 +29,7 @@ export const PeopleFilters = () => {
 
   const checkParamsCentury = (century:string) => {
     if (centuries.includes(century)) {
-      centuries.filter(currentCentury => currentCentury !== century);
+      return centuries.filter(currentCentury => currentCentury !== century);
     }
 
     return [...centuries, century];

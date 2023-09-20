@@ -1,5 +1,6 @@
 import { useParams, useSearchParams } from 'react-router-dom';
 import classNames from 'classnames';
+import { useCallback } from 'react';
 import { Person } from '../types';
 import { PersonLink } from './PeopleLink';
 import { SearchLink } from './SearchLink';
@@ -21,20 +22,27 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
       return null;
     }
 
-    if (sortMethod === sort && sortMethod !== order) {
+    if (sortMethod === sort && order !== 'desc') {
       return 'desc';
     }
 
     return null;
   };
 
-  const getPersonName = (name: string | null) => {
-    if (!name) {
-      return undefined;
+  const parentLinks = useCallback((
+    parentName: string | null,
+    parentInfo: Person | null,
+  ) => {
+    if (!parentName && !parentInfo) {
+      return '-';
     }
 
-    return people.find(person => person.name === name);
-  };
+    if (parentInfo) {
+      return <PersonLink person={parentInfo} />;
+    }
+
+    return parentName;
+  }, []);
 
   return (
     <table
@@ -73,7 +81,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
               >
                 <span className="icon">
                   <i className={classNames('fas', {
-                    'fa-sort': SortType.sex !== sort,
+                    'fa-sort': sort !== SortType.sex,
                     'fa-sort-up': sort === SortType.sex && !order,
                     'fa-sort-down': sort === SortType.sex && order,
                   })}
@@ -130,9 +138,6 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
 
       <tbody>
         {people.map(person => {
-          const mother = getPersonName(person.motherName);
-          const father = getPersonName(person.fatherName);
-
           return (
             <tr
               key={person.slug}
@@ -148,14 +153,10 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
               <td>{person.born}</td>
               <td>{person.died}</td>
               <td>
-                {mother
-                  ? <PersonLink person={mother} />
-                  : person.motherName || <span>-</span> }
+                {parentLinks(person.motherName, person.mother) }
               </td>
               <td>
-                {father
-                  ? <PersonLink person={father} />
-                  : person.fatherName || <span>-</span> }
+                {parentLinks(person.fatherName, person.father) }
               </td>
             </tr>
           );
