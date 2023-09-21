@@ -46,7 +46,7 @@ export const PeoplePage: React.FC = () => {
   const sortField = searchParams.get('sort') as SortField || SortField.All;
   const sortOrder = searchParams.get('order') || '';
 
-  const preparePeople = () => {
+  useEffect(() => {
     setIsLoading(true);
 
     getPeople().then(res => {
@@ -70,7 +70,7 @@ export const PeoplePage: React.FC = () => {
         }
       })
       .finally(() => setIsLoading(false));
-  };
+  }, [sortOrder]);
 
   const filterAndSortPeople = (peoples: Person[], params: Params) => {
     let initial = peoples;
@@ -132,10 +132,6 @@ export const PeoplePage: React.FC = () => {
       sortOrder,
     }), [sex, query, centuries, sortField, sortOrder]);
 
-  useEffect(() => {
-    preparePeople();
-  }, [sortOrder]);
-
   return (
     <>
       <h1 className="title">People Page</h1>
@@ -184,6 +180,7 @@ export const PeoplePage: React.FC = () => {
 
               <PeopleTable
                 persons={visiblePeople}
+                initialPersons={people}
               />
             </div>
           </div>

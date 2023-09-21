@@ -98,16 +98,16 @@ export const PeopleFilters: React.FC = () => {
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
 
-            {centuriesOptions.map((c) => (
+            {centuriesOptions.map((centurie) => (
               <SearchLink
-                key={c}
+                key={centurie}
                 data-cy="century"
                 className={classNames('button mr-1', {
-                  'is-info': centuries.includes(c),
+                  'is-info': centuries.includes(centurie),
                 })}
-                params={{ centuries: handleCenturiesParams(c) }}
+                params={{ centuries: handleCenturiesParams(centurie) }}
               >
-                {c}
+                {centurie}
               </SearchLink>
             ))}
           </div>

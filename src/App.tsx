@@ -27,7 +27,7 @@ export const App = () => {
               )}
             >
               <Route
-                path=":userSlug?"
+                path=":userSlug"
               />
             </Route>
           </Routes>

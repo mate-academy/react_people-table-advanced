@@ -6,7 +6,8 @@ import { Row } from './Row';
 import { SearchLink } from './SearchLink';
 
 type Props = {
-  persons: Person[]
+  persons: Person[];
+  initialPersons: Person[]
 };
 
 enum SortOptions {
@@ -18,9 +19,8 @@ enum SortOptions {
 
 export const PeopleTable: React.FC<Props> = ({
   persons,
+  initialPersons,
 }) => {
-  // const [selectedPersonSlug, setSelectedPersonSlug] = useState<string>();
-
   const [searchParams] = useSearchParams();
   const sort = searchParams.get('sort') || '';
   const sortOrder = searchParams.get('order') || '';
@@ -46,38 +46,24 @@ export const PeopleTable: React.FC<Props> = ({
     };
   };
 
-  const personNamesFromSlug = useMemo(() => persons
+  const personNamesFromSlug = useMemo(() => initialPersons
     .map(currPerson => currPerson.slug
-      .toLowerCase().split('-').join('').slice(0, -4)), [persons]);
+      .toLowerCase().split('-').join('').slice(0, -4)), [initialPersons]);
 
-  const getPersonsMotherSlug = (fullName: string | null) => {
+  const getPersonsParentsSlug = (fullName: string | null) => {
     if (!fullName) {
       return undefined;
     }
 
     const formatedFullName = fullName.toLocaleLowerCase().replace(/\s/g, '');
-    const isMotherInList = personNamesFromSlug.includes(formatedFullName);
+    const isParentInList = personNamesFromSlug
+      .includes(formatedFullName);
 
-    if (!isMotherInList) {
+    if (!isParentInList) {
       return undefined;
     }
 
-    return persons.find(({ name }) => name === fullName)?.slug;
-  };
-
-  const getPersonsFatherSlug = (fullName: string | null) => {
-    if (!fullName) {
-      return undefined;
-    }
-
-    const formatedFullName = fullName.toLocaleLowerCase().replace(/\s/g, '');
-    const isFatherInList = personNamesFromSlug.includes(formatedFullName);
-
-    if (!isFatherInList) {
-      return undefined;
-    }
-
-    return persons.find(({ name }) => name === fullName)?.slug;
+    return initialPersons.find(({ name }) => name === fullName)?.slug;
   };
 
   return (
@@ -124,10 +110,8 @@ export const PeopleTable: React.FC<Props> = ({
           <Row
             key={person.slug}
             person={person}
-            // isSelected={person.slug === selectedPersonSlug}
-            motherSlug={getPersonsMotherSlug(person.motherName)}
-            fatherSlug={getPersonsFatherSlug(person.fatherName)}
-            // onSelectPerson={setSelectedPersonSlug}
+            motherSlug={getPersonsParentsSlug(person.motherName)}
+            fatherSlug={getPersonsParentsSlug(person.fatherName)}
           />
         ))}
       </tbody>
