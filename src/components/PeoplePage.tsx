@@ -70,7 +70,7 @@ export const PeoplePage: React.FC = () => {
         }
       })
       .finally(() => setIsLoading(false));
-  }, [sortOrder]);
+  }, []);
 
   const filterAndSortPeople = (peoples: Person[], params: Params) => {
     let initial = peoples;
