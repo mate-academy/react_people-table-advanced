@@ -9,7 +9,7 @@ export const PeopleFilters = () => {
   const query = searchParams.get('query') || '';
   const sex = searchParams.get('sex') || 'all';
 
-  const setSearchWith = (params: any) => {
+  const setSearchWith = (params: { query: string }) => {
     const search = getSearchWith(searchParams, params);
 
     setSearchParams(search);
