@@ -5,7 +5,16 @@ import { Loader } from './Loader';
 import { PeopleTable } from './PeopleTable';
 import { Person } from '../types';
 import { getPeople } from '../api';
-import { GENDER_FEMALE, GENDER_MALE, SortCategories } from '../utils/vars';
+import {
+  DEFAULT_CENTURIES,
+  DEFAULT_ORDER,
+  DEFAULT_QUERY,
+  DEFAULT_SEX,
+  DEFAULT_SORT,
+} from '../utils/vars';
+import { getSortCategory } from '../utils/getSortCategory';
+import { getMother } from '../utils/getMother';
+import { getFather } from '../utils/getFather';
 
 export const PeoplePage = () => {
   const [searchParams] = useSearchParams();
@@ -13,11 +22,11 @@ export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);
   const [isError, setIsError] = useState(false);
 
-  const sort = searchParams.get('sort') || '';
-  const order = searchParams.get('order') || '';
-  const sex = searchParams.get('sex') || '';
-  const query = searchParams.get('query') || '';
-  const centuries = searchParams.getAll('centuries') || [];
+  const sort = searchParams.get('sort') || DEFAULT_SORT;
+  const order = searchParams.get('order') || DEFAULT_ORDER;
+  const sex = searchParams.get('sex') || DEFAULT_SEX;
+  const query = searchParams.get('query') || DEFAULT_QUERY;
+  const centuries = searchParams.getAll('centuries') || DEFAULT_CENTURIES;
 
   useEffect(() => {
     setIsLoading(true);
@@ -25,10 +34,8 @@ export const PeoplePage = () => {
       .then((persons) => {
         const preparedPeople: Person[] = persons.map((person: Person) => ({
           ...person,
-          mother: persons.find((mother) => mother.sex === GENDER_FEMALE
-            && mother.name === person.motherName),
-          father: persons.find((father) => father.sex === GENDER_MALE
-            && father.name === person.fatherName),
+          mother: getMother(persons, person),
+          father: getFather(persons, person),
         }));
 
         setPeople(preparedPeople);
@@ -37,54 +44,13 @@ export const PeoplePage = () => {
       .finally(() => setIsLoading(false));
   }, []);
 
-  const filteredPeople = useMemo(() => {
-    let visiblePeople = [...people];
-
-    switch (sort) {
-      case SortCategories.Name:
-      case SortCategories.Sex:
-        visiblePeople.sort((a, b) => a[sort].localeCompare(b[sort]));
-        break;
-
-      case SortCategories.Born:
-      case SortCategories.Died:
-        visiblePeople.sort((a, b) => a[sort] - b[sort]);
-        break;
-
-      default:
-        break;
-    }
-
-    if (order) {
-      visiblePeople.reverse();
-    }
-
-    if (sex) {
-      visiblePeople = visiblePeople.filter(person => {
-        return person.sex === sex;
-      });
-    }
-
-    if (query) {
-      visiblePeople = visiblePeople.filter(person => {
-        const normalizedQuery = query.toLowerCase();
-
-        return person.name.toLowerCase().includes(normalizedQuery)
-          || person.fatherName?.toLowerCase().includes(normalizedQuery)
-          || person.motherName?.toLowerCase().includes(normalizedQuery);
-      });
-    }
-
-    if (centuries.length) {
-      visiblePeople = visiblePeople.filter(person => {
-        return centuries.some(century => +century === Math.floor(
-          (person.born - 1) / 100,
-        ) + 1);
-      });
-    }
-
-    return visiblePeople;
-  }, [sort, order, sex, query, centuries]);
+  const filteredPeople = useMemo(() => getSortCategory(people,
+    sort,
+    order,
+    sex,
+    query,
+    centuries),
+  [sort, order, sex, query, centuries]);
 
   return (
     <>

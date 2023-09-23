@@ -15,3 +15,9 @@ export enum SortCategories {
   Born = 'born',
   Died = 'died',
 }
+
+export const DEFAULT_CENTURIES = [];
+export const DEFAULT_QUERY = '';
+export const DEFAULT_SEX = 'all';
+export const DEFAULT_SORT = '';
+export const DEFAULT_ORDER = '';
