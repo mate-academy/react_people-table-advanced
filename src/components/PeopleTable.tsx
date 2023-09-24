@@ -39,12 +39,12 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
   function handleClick(field: SortCategories) {
     if (sort !== field) {
       setSearch({ sort: field, order: null });
-    } else
-    if (sort === field && order) {
+    } else if (sort === field && order) {
       setSearch({ sort: null, order: null });
-    } else
-    if (sort === field) {
-      setSearch({ order: 'desc' });
+    } else if (sort === field) {
+      setSearch({
+        order: 'desc',
+      });
     }
   }
 
