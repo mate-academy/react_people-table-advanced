@@ -49,7 +49,7 @@ export const PeoplePage = () => {
     }
 
     if (sort) {
-      preparedPeople = preparedPeople.sort((person1, person2) => {
+      preparedPeople = [...preparedPeople].sort((person1, person2) => {
         switch (sort) {
           case SortCategories.Name:
           case SortCategories.Sex:
