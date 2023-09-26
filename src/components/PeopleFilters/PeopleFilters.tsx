@@ -66,6 +66,7 @@ export const PeopleFilters = () => {
             {CENTURIES.map(century => (
               <SearchLink
                 data-cy="century"
+                key={century}
                 className={cn(
                   'button mr-1',
                   {
