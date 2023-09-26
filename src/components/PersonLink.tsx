@@ -32,7 +32,7 @@ export const PersonLink: React.FC<Props> = ({ person }) => {
       <td>
         <Link
           to={`/people/${slug}`}
-          className={classNames({ 'has-text-danger': sex === Gender.female })}
+          className={classNames({ 'has-text-danger': sex === Gender.Female })}
         >
           {name}
         </Link>

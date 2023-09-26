@@ -27,28 +27,28 @@ export const PeopleFilters: React.FC<Props> = ({
       <p className="panel-tabs" data-cy="SexFilter">
         <SearchLink
           className={classNames({
-            'is-active': sex === Gender.all,
+            'is-active': sex === Gender.All,
           })}
           params={{ sex: null }}
-          onClick={() => handleSex(Gender.all)}
+          onClick={() => handleSex(Gender.All)}
         >
           All
         </SearchLink>
         <SearchLink
           className={classNames({
-            'is-active': sex === Gender.male,
+            'is-active': sex === Gender.Male,
           })}
-          params={{ sex: Gender.male }}
-          onClick={() => Gender.male}
+          params={{ sex: Gender.Male }}
+          onClick={() => Gender.Male}
         >
           Male
         </SearchLink>
         <SearchLink
           className={classNames({
-            'is-active': sex === Gender.female,
+            'is-active': sex === Gender.Female,
           })}
-          params={{ sex: Gender.female }}
-          onClick={() => Gender.female}
+          params={{ sex: Gender.Female }}
+          onClick={() => Gender.Female}
         >
           Female
         </SearchLink>
@@ -97,7 +97,7 @@ export const PeopleFilters: React.FC<Props> = ({
             <SearchLink
               data-cy="centuryALL"
               className={classNames('button is-success', {
-                'is-outlined': centuries.length > 0,
+                'is-outlined': !!centuries.length,
               })}
               params={{ centuries: null }}
             >
