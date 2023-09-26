@@ -76,13 +76,15 @@ export const PeoplePage = () => {
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
           <div className="column is-7-tablet is-narrow-desktop">
-            <PeopleFilters
-              query={query}
-              centuries={centuries}
-              sex={sex}
-              handleQuery={hadnleQuery}
-              handleSex={handleSex}
-            />
+            {!isLoading && (
+              <PeopleFilters
+                query={query}
+                centuries={centuries}
+                sex={sex}
+                handleQuery={hadnleQuery}
+                handleSex={handleSex}
+              />
+            )}
           </div>
 
           <div className="column">
