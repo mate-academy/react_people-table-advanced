@@ -4,7 +4,7 @@ import { Navbar } from './components/Navbar';
 */
 
 import './App.scss';
-import {Navigation} from "./featurs/Navigation";
+import { Navigation } from './featurs/Navigation';
 
 export const App = () => {
   return (
@@ -13,7 +13,7 @@ export const App = () => {
         <Navigation />
       </div>
 
-{/*
+      {/*
       <div data-cy="app">
         <Navbar />
 
@@ -24,7 +24,7 @@ export const App = () => {
             <PeoplePage />
           </div>
         </div>
-      </div>*/}
+      </div> */}
 
     </>
   );
