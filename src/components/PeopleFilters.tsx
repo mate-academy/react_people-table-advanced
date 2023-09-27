@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import cn from 'classnames';
 import { SearchLink } from './SearchLink';
@@ -8,6 +9,8 @@ const CENTURIES = ['16', '17', '18', '19', '20'];
 
 export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
+  const [query, setQuery] = useState(searchParams.get('query') || '');
+
   const sex = searchParams.get(SearchParam.sex);
   const centuriesParams = searchParams.getAll(SearchParam.centuries);
 
@@ -17,6 +20,7 @@ export const PeopleFilters = () => {
         query: e.target.value || null,
       }),
     );
+    setQuery(e.target.value);
   };
 
   const getSearchLinkParams = (century: string) => {
@@ -62,6 +66,7 @@ export const PeopleFilters = () => {
             className="input"
             placeholder="Search"
             onChange={queryChangeHandler}
+            value={query}
           />
 
           <span className="icon is-left">
@@ -106,6 +111,7 @@ export const PeopleFilters = () => {
         <SearchLink
           className="button is-link is-outlined is-fullwidth"
           params={{ sex: null, query: null, centuries: null }}
+          clearQueryFunc={setQuery}
         >
           Reset all filters
         </SearchLink>
