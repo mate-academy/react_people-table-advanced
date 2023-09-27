@@ -5,7 +5,8 @@ import {
 } from '../../../context/PeoplePageContext';
 import { PeopleFilters } from './PeopleFilters';
 import { OnePerson } from './OnePerson';
-import { TableHeader } from './TableHeader';
+import { TableHeaders } from './TableHeaders';
+import { PageTitle } from '../../../common/PageTitle';
 
 export const PeoplePageContent = () => {
   const {
@@ -20,7 +21,7 @@ export const PeoplePageContent = () => {
 
       <main className="section">
         <div className="container">
-          <h1 className="title">People Page</h1>
+          <PageTitle title="People Page<" />
 
           <div className="block">
             <div className="columns is-desktop is-flex-direction-row-reverse">
@@ -58,7 +59,7 @@ export const PeoplePageContent = () => {
                     className="table is-striped
                   is-hoverable is-narrow is-fullwidth"
                   >
-                    <TableHeader />
+                    <TableHeaders />
                     <tbody>
                       {people.map(person => (
                         <OnePerson
