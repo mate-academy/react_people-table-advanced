@@ -1,16 +1,18 @@
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import classNames from 'classnames';
-import { Person } from '../../../types';
+import { usePerson } from './usePerson';
+import { Person } from '../../../../types';
+import { usePeoplePageContext } from '../../../../context/PeoplePageContext';
 
 type Props = {
   person: Person,
-  getParentSlug: (parentName: string | null) => string | JSX.Element;
 };
 
 export const OnePerson = ({
   person,
-  getParentSlug,
 }: Props) => {
+  const { people } = usePeoplePageContext();
+  const { getParentSlug } = usePerson();
   const { slug } = useParams();
   const navigate = useNavigate();
 
@@ -37,8 +39,8 @@ export const OnePerson = ({
       <td>{person.sex}</td>
       <td>{person.born}</td>
       <td>{person.died}</td>
-      <td>{getParentSlug(person.motherName)}</td>
-      <td>{getParentSlug(person.fatherName)}</td>
+      <td>{getParentSlug(people, person.motherName)}</td>
+      <td>{getParentSlug(people, person.fatherName)}</td>
     </tr>
   );
 };
