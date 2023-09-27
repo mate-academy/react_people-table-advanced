@@ -21,7 +21,7 @@ function getFilteredPeople(
     preparedPeople = preparedPeople.filter(person => person.sex === sex);
   }
 
-  if (centuries.length > 0) {
+  if (centuries.length) {
     const getCentury = (person: Person) => Math.ceil(person.born / 100);
 
     preparedPeople = preparedPeople.filter(
@@ -102,7 +102,7 @@ export const PeoplePage: React.FC = () => {
           )
           : (
             <>
-              {people.length > 0
+              {people.length
                 ? (
                   <PeopleTable people={preparedPeople} />
                 )

@@ -19,6 +19,16 @@ export const PeopleFilters = () => {
     );
   };
 
+  const getSearchLinkParams = (century: string) => {
+    const centuries = centuriesParams.includes(century)
+      ? centuriesParams.filter(cent => cent !== century)
+      : [...centuriesParams, century];
+
+    return {
+      centuries,
+    };
+  };
+
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
@@ -73,11 +83,7 @@ export const PeopleFilters = () => {
                     'is-info': centuriesParams.includes(century),
                   },
                 )}
-                params={{
-                  centuries: centuriesParams.includes(century)
-                    ? centuriesParams.filter(cent => cent !== century)
-                    : [...centuriesParams, century],
-                }}
+                params={getSearchLinkParams(century)}
               >
                 {century}
               </SearchLink>
