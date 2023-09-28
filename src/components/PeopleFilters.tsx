@@ -15,11 +15,11 @@ export const PeopleFilters: React.FC = () => {
   const query = searchParams.get(SearchParams.QUERY) || '';
   const centuries = searchParams.getAll(SearchParams.CENTURIES) || [];
 
-  function handleQueryChange(event: React.ChangeEvent<HTMLInputElement>) {
+  const handleQueryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchParams(
       getSearchWith(searchParams, { query: event.target.value || null }),
     );
-  }
+  };
 
   return (
     <nav className="panel">

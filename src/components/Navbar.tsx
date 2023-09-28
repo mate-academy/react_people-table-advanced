@@ -21,7 +21,6 @@ export const Navbar = () => {
           </NavLink>
 
           <NavLink
-            aria-current="page"
             className={hasActive}
             to="/people"
           >
