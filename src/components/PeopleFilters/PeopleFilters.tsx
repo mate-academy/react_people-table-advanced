@@ -51,9 +51,9 @@ export const PeopleFilters = () => {
 
         <SearchLink
           className={
-            classNames({ 'is-active': sex === PersonSex.Male })
+            classNames({ 'is-active': sex === PersonSex.Female })
           }
-          params={{ [SearchOptions.Sex]: PersonSex.Male }}
+          params={{ [SearchOptions.Sex]: PersonSex.Female }}
         >
           Female
         </SearchLink>
