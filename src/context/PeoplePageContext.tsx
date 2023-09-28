@@ -1,7 +1,7 @@
 import {
   createContext, useContext, useEffect, useState,
 } from 'react';
-import { PeoplePageContextType, Props } from './types';
+import { PeoplePageContextType, Props, SortField } from './types';
 import { Person } from '../types';
 import { getPeople } from '../api';
 
@@ -12,6 +12,8 @@ export const PeoplePageProvider = ({ children }: Props) => {
   const [people, setPeople] = useState<Person[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<boolean>(false);
+  const [sortField, setSortField] = useState<SortField | null>(null);
+  const [isReversed, setIsReversed] = useState<boolean>(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -30,12 +32,20 @@ export const PeoplePageProvider = ({ children }: Props) => {
     fetchData();
   }, []);
 
+  const sortOnClick = (newSortFiled: SortField) => {
+    setSortField(newSortFiled);
+    setIsReversed(!isReversed);
+  };
+
   return (
     <PeoplePageContext.Provider
       value={{
         people,
         isLoading,
         error,
+        sortField,
+        isReversed,
+        sortOnClick,
       }}
     >
       {children}

@@ -7,14 +7,20 @@ import { PeopleFilters } from './PeopleFilters';
 import { OnePerson } from './OnePerson';
 import { TableHeaders } from './TableHeaders';
 import { PageTitle } from '../../../common/PageTitle';
+import { useGetDisplayPeople } from './useGetDisplayPeople';
 
 export const PeoplePageContent = () => {
   const {
     people,
     error,
     isLoading,
+    sortField,
+    isReversed,
   }
-    = usePeoplePageContext();
+= usePeoplePageContext();
+
+  const visablePeople
+     = useGetDisplayPeople(people, sortField, isReversed);
 
   return (
     <div data-cy="app">
@@ -61,7 +67,7 @@ export const PeoplePageContent = () => {
                   >
                     <TableHeaders />
                     <tbody>
-                      {people.map(person => (
+                      {visablePeople.map(person => (
                         <OnePerson
                           key={nanoid()}
                           person={person}
