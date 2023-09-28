@@ -27,7 +27,7 @@ export const PeoplePageContent = () => {
 
       <main className="section">
         <div className="container">
-          <PageTitle title="People Page<" />
+          <PageTitle title="People Page" />
 
           <div className="block">
             <div className="columns is-desktop is-flex-direction-row-reverse">
