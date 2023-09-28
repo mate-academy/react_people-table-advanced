@@ -62,8 +62,8 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
             <tr>
               {Object.values(SortFields).map(columnName => (
                 <th key={columnName}>
-                  <span className="is-flex is-flex-wrap-nowrap is-capitalized">
-                    {columnName}
+                  <span className="is-flex is-flex-wrap-nowrap">
+                    {columnName.slice(0, 1).toUpperCase() + columnName.slice(1)}
                     <Link to={{ search: changeParamsClick(columnName) }}>
                       <span className="icon">
                         <i className={classNames('fas', {
