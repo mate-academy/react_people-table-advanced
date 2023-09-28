@@ -1,11 +1,15 @@
 import React, { useContext, useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { Loader } from '../Loader';
 import { getPeople } from '../../api';
 import { PeopleTable } from '../PeopleTable';
 import { PeopleContext } from '../../contexts/PeopleContext';
 import { PeopleFilters } from '../PeopleFilters';
+import { SearchParms } from '../../types/SearchParams';
+import { SortFields } from '../../types/SortFields';
 
 export const PeoplePage: React.FC = () => {
+  const [searchParams] = useSearchParams();
   const { people, setPeople } = useContext(PeopleContext);
   const [isLoad, setIsLoad] = useState(false);
   const [isError, setIsError] = useState(false);
@@ -31,6 +35,73 @@ export const PeoplePage: React.FC = () => {
 
     return () => setPeople([]);
   }, []);
+
+  const getModifiedPeople = () => {
+    const strSearchParams = searchParams?.toString();
+
+    if (!strSearchParams) {
+      return people;
+    }
+
+    const sortOrder = searchParams.has(SearchParms.Order) ? -1 : 1;
+    const sortKey = searchParams.get(SearchParms.Sort);
+
+    const modifiedPeople = people.slice().sort((person1, person2) => {
+      switch (sortKey) {
+        case SortFields.Name:
+        case SortFields.Sex:
+          return person1[sortKey].localeCompare(person2[sortKey]) * sortOrder;
+        case SortFields.Born:
+        case SortFields.Died:
+          return (person1[sortKey] - person2[sortKey]) * sortOrder;
+        default:
+          return 0;
+      }
+    });
+
+    const sexFilterParam = searchParams.get(SearchParms.Sex);
+    const centuriesFilterParam = searchParams.get(SearchParms.Centuries);
+    const queryFilterParam = searchParams.get(SearchParms.Query);
+
+    if (!sexFilterParam && !centuriesFilterParam && !queryFilterParam) {
+      return modifiedPeople;
+    }
+
+    return modifiedPeople.filter(({
+      sex,
+      name,
+      fatherName,
+      motherName,
+      born,
+    }) => {
+      let centuryCondition = true;
+
+      if (centuriesFilterParam) {
+        const centuriesList = searchParams.getAll(SearchParms.Centuries);
+
+        centuryCondition = centuriesList
+          .includes((born + 100).toString().slice(0, 2));
+      }
+
+      let sexCondition = true;
+
+      if (sexFilterParam) {
+        sexCondition = sex === sexFilterParam;
+      }
+
+      let queryCondition = true;
+
+      if (queryFilterParam) {
+        const validSexParam = queryFilterParam.trim().toLowerCase();
+
+        queryCondition = name.toLowerCase().includes(validSexParam)
+          || !!fatherName?.toLowerCase().includes(validSexParam)
+          || !!motherName?.toLowerCase().includes(validSexParam);
+      }
+
+      return centuryCondition && sexCondition && queryCondition;
+    });
+  };
 
   return (
     <>
@@ -59,7 +130,7 @@ export const PeoplePage: React.FC = () => {
                 </p>
               )}
 
-              {isShowPeople && <PeopleTable people={people} />}
+              {isShowPeople && <PeopleTable people={getModifiedPeople()} />}
             </div>
           </div>
         </div>
