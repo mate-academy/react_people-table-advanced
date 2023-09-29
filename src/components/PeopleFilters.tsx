@@ -5,6 +5,7 @@ import { getSearchWith } from '../utils/searchHelper';
 import { SearchLink } from './SearchLink';
 import { FilterParams } from '../types/FilterParams';
 import { CENTURIES } from '../utils/centuries';
+import { Sex } from '../types/Sex';
 
 export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -39,15 +40,15 @@ export const PeopleFilters = () => {
         </SearchLink>
 
         <SearchLink
-          params={{ sex: 'm' }}
-          className={classNames({ 'is-active': sexFilter === 'm' })}
+          params={{ sex: Sex.Male }}
+          className={classNames({ 'is-active': sexFilter === Sex.Male })}
         >
           Male
         </SearchLink>
 
         <SearchLink
-          params={{ sex: 'f' }}
-          className={classNames({ 'is-active': sexFilter === 'f' })}
+          params={{ sex: Sex.Female }}
+          className={classNames({ 'is-active': sexFilter === Sex.Female })}
         >
           Female
         </SearchLink>

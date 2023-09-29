@@ -8,6 +8,7 @@ import { SortParams } from '../types/SortParams';
 import { SearchLink } from './SearchLink';
 import { FilterParams } from '../types/FilterParams';
 import { getRelatives } from '../utils/getRelatives';
+import { Relative } from '../types/Relative';
 
 type Props = {
   people: Person[];
@@ -80,8 +81,8 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
             <td>{person.sex}</td>
             <td>{person.born}</td>
             <td>{person.died}</td>
-            <td>{getRelatives(person, 'mother')}</td>
-            <td>{getRelatives(person, 'father')}</td>
+            <td>{getRelatives(person, Relative.Mother)}</td>
+            <td>{getRelatives(person, Relative.Father)}</td>
           </tr>
         ))}
       </tbody>
