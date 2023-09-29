@@ -1,4 +1,9 @@
+import { useState } from 'react';
+import { Link } from 'react-router-dom';
+
 export const Navbar = () => {
+  const [activePage, setActivePage] = useState('home');
+
   return (
     <nav
       data-cy="nav"
@@ -8,15 +13,22 @@ export const Navbar = () => {
     >
       <div className="container">
         <div className="navbar-brand">
-          <a className="navbar-item" href="#/">Home</a>
+          <Link
+            className={`navbar-item ${activePage === 'home' ? 'has-background-grey-lighter' : ''}`}
+            to="#/"
+            onClick={() => setActivePage('home')}
+          >
+            Home
+          </Link>
 
-          <a
+          <Link
             aria-current="page"
-            className="navbar-item has-background-grey-lighter"
-            href="#/people"
+            className={`navbar-item ${activePage === 'people' ? 'has-background-grey-lighter' : ''}`}
+            to="#/people"
+            onClick={() => setActivePage('people')}
           >
             People
-          </a>
+          </Link>
         </div>
       </div>
     </nav>
