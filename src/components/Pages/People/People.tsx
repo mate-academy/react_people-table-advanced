@@ -1,10 +1,10 @@
 import { useContext, useEffect, useState } from 'react';
-import { getPeople } from '../../api';
-import { PeopleContext } from '../../contexts/PeopleContext';
-import { getPreparedPeople } from '../../utils/peopleHelper';
-import { Loader } from '../Loader';
-import { PeopleFilters } from '../PeopleFilters';
-import { PeopleList } from '../PeopleList';
+import { getPeople } from '../../../api';
+import { PeopleContext } from '../../../contexts/PeopleContext';
+import { getPreparedPeople } from '../../../utils/peopleHelper';
+import { Loader } from '../../Shared/Loader';
+import { PeopleFilters } from '../../People/Filters';
+import { PeopleList } from '../../People/List';
 
 export const PeoplePage = () => {
   const { people, setPeople, visiblePeople } = useContext(PeopleContext);

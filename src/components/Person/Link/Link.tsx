@@ -1,7 +1,7 @@
 import { Link, useSearchParams } from 'react-router-dom';
 import React from 'react';
 import classNames from 'classnames';
-import { Person, PersonSex } from '../../types';
+import { Person, PersonSex } from '../../../types';
 
 type Props = {
   person: Person

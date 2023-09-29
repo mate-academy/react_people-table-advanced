@@ -1,7 +1,7 @@
 import { Outlet } from 'react-router-dom';
-import { PageNavigation } from '../PageNavigation';
+import { PageNavigation } from '../Shared/PageNavigation';
 
-export const PageContent = () => {
+export const Layout = () => {
   return (
     <>
       <PageNavigation />

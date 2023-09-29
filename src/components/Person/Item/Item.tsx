@@ -1,8 +1,8 @@
 import React from 'react';
 import classNames from 'classnames';
-import { Person } from '../../types';
-import { PersonLink } from '../PersonLink';
-import { NOT_SET_VALUE } from '../../constants';
+import { Person } from '../../../types';
+import { PersonLink } from '../Link';
+import { NOT_SET_VALUE } from '../../../constants';
 
 type Props = {
   person: Person;
