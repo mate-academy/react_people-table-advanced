@@ -7,6 +7,7 @@ import { PeopleContext } from '../../contexts/PeopleContext';
 import { PeopleFilters } from '../PeopleFilters';
 import { SearchParms } from '../../types/SearchParams';
 import { SortFields } from '../../types/SortFields';
+import { hasIncludesQuery } from '../../utils/hasIncludesQuery';
 
 export const PeoplePage: React.FC = () => {
   const [searchParams] = useSearchParams();
@@ -92,11 +93,9 @@ export const PeoplePage: React.FC = () => {
       let queryCondition = true;
 
       if (queryFilterParam) {
-        const validSexParam = queryFilterParam.trim().toLowerCase();
-
-        queryCondition = name.toLowerCase().includes(validSexParam)
-          || !!fatherName?.toLowerCase().includes(validSexParam)
-          || !!motherName?.toLowerCase().includes(validSexParam);
+        queryCondition = hasIncludesQuery(name, queryFilterParam)
+          || hasIncludesQuery(fatherName, queryFilterParam)
+          || hasIncludesQuery(motherName, queryFilterParam);
       }
 
       return centuryCondition && sexCondition && queryCondition;

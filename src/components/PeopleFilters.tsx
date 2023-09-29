@@ -20,8 +20,8 @@ export const PeopleFilters = () => {
     if (centuriesList.includes(paramValue)) {
       newSerchParams.delete(SearchParms.Centuries);
       centuriesList
-        .filter(cent => cent !== paramValue)
-        .forEach(el => newSerchParams.append(SearchParms.Centuries, el));
+        .forEach(el => el !== paramValue
+            && newSerchParams.append(SearchParms.Centuries, el));
 
       return newSerchParams.toString();
     }
@@ -69,6 +69,12 @@ export const PeopleFilters = () => {
     || searchParams.has(SearchParms.Query)
     || searchParams.has(SearchParms.Centuries);
 
+  const hasActiveLinkActive = (sex: string) => {
+    return sex === searchParams.get(SearchParms.Sex)
+    || (sex === SexFilter.All
+      && !searchParams.has(SearchParms.Sex));
+  };
+
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
@@ -79,9 +85,7 @@ export const PeopleFilters = () => {
             to={{ search: handleFilterLink(SearchParms.Sex, value) }}
             key={key}
             className={classNames({
-              'is-active': value === searchParams.get(SearchParms.Sex)
-                || (value === SexFilter.All
-                  && !searchParams.has(SearchParms.Sex)),
+              'is-active': hasActiveLinkActive(value),
             })}
           >
             {key}

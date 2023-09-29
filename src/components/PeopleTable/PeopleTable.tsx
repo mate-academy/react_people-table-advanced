@@ -63,7 +63,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
               {Object.values(SortFields).map(columnName => (
                 <th key={columnName}>
                   <span className="is-flex is-flex-wrap-nowrap">
-                    {columnName.slice(0, 1).toUpperCase() + columnName.slice(1)}
+                    {columnName.toCapitalize()}
                     <Link to={{ search: changeParamsClick(columnName) }}>
                       <span className="icon">
                         <i className={classNames('fas', {
@@ -83,29 +83,40 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
           </thead>
 
           <tbody>
-            {people.map(person => (
-              <tr
-                data-cy="person"
-                key={person.slug}
-                className={classNames({
-                  'has-background-warning': slug === person.slug,
-                })}
-              >
-                <td>
-                  <PeopleLink person={person} />
-                </td>
+            {people.map(person => {
+              const {
+                slug: pSlug,
+                sex,
+                born,
+                died,
+                motherName,
+                fatherName,
+              } = person;
 
-                <td>{person.sex}</td>
-                <td>{person.born}</td>
-                <td>{person.died}</td>
-                <td>
-                  <ParentsLink parentName={person.motherName} />
-                </td>
-                <td>
-                  <ParentsLink parentName={person.fatherName} />
-                </td>
-              </tr>
-            ))}
+              return (
+                <tr
+                  data-cy="person"
+                  key={pSlug}
+                  className={classNames({
+                    'has-background-warning': slug === pSlug,
+                  })}
+                >
+                  <td>
+                    <PeopleLink person={person} />
+                  </td>
+
+                  <td>{sex}</td>
+                  <td>{born}</td>
+                  <td>{died}</td>
+                  <td>
+                    <ParentsLink parentName={motherName} />
+                  </td>
+                  <td>
+                    <ParentsLink parentName={fatherName} />
+                  </td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       ) : (
