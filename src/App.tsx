@@ -4,11 +4,10 @@ import {
   Route,
   Routes,
 } from 'react-router-dom';
-
-import { HomePage } from './components/HomePage/HomePage';
-import { PeoplePage } from './components/PeoplePage/PeoplePage';
-import { NotFoundPage } from './components/NotFoundPage/NotFoundPage';
-import { PageContent } from './components/PageContent/PageContent';
+import { PageContent } from './components/PageContent';
+import { HomePage } from './components/HomePage';
+import { NotFoundPage } from './components/NotFoundPage';
+import { PeoplePage } from './components/PeoplePage';
 
 export const App = () => (
   <div data-cy="app">

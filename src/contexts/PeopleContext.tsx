@@ -1,8 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { Person } from '../types';
-import { SortField } from '../types/SortField';
-import { SearchOptions } from '../types/SearchOptions';
+import { Person, SearchOptions, SortField } from '../types';
 
 interface IPeopleContext {
   people: Person[];

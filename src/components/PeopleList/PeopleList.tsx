@@ -1,12 +1,11 @@
 import React, { useContext } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
 import classNames from 'classnames';
-import { PersonItem } from '../PersonItem/PersonItem';
-import { SearchLink } from '../SearchLink/SearchLink';
-import { SearchParams } from '../../utils/searchHelper';
 import { PeopleContext } from '../../contexts/PeopleContext';
-import { SortField } from '../../types/SortField';
-import { SearchOptions } from '../../types/SearchOptions';
+import { SearchOptions, SortField } from '../../types';
+import { SearchParams } from '../../utils/searchHelper';
+import { PersonItem } from '../PersonItem';
+import { SearchLink } from '../SearchLink';
 
 type Props = {};
 

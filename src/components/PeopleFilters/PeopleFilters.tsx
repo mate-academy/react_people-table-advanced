@@ -1,10 +1,9 @@
 import { useSearchParams } from 'react-router-dom';
 import classNames from 'classnames';
-import { SearchLink } from '../SearchLink/SearchLink';
+import { CENTURIES } from '../../constants';
+import { SearchOptions, PersonSex } from '../../types';
 import { getSearchWith } from '../../utils/searchHelper';
-import { CENTURIES } from '../../variables';
-import { PersonSex } from '../../types';
-import { SearchOptions } from '../../types/SearchOptions';
+import { SearchLink } from '../SearchLink';
 
 export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();

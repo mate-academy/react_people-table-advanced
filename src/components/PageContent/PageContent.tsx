@@ -1,5 +1,5 @@
 import { Outlet } from 'react-router-dom';
-import { PageNavigation } from '../PageNavigation/PageNavigation';
+import { PageNavigation } from '../PageNavigation';
 
 export const PageContent = () => {
   return (
