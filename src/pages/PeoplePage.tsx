@@ -10,6 +10,8 @@ import {
   hasIncludeQuery,
 } from '../utils/utils';
 import { PeopleFilters } from '../components/PeopleFilters';
+import { yearsPerCentury } from '../utils/constants';
+import { SortOptions } from '../types/SortOptions';
 
 export const PeoplePage = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -32,13 +34,11 @@ export const PeoplePage = () => {
               peopleFromServer, personData,
             );
 
-            const person: Person = {
+            return {
               ...personData,
               mother,
               father,
             };
-
-            return person;
           }),
         );
       })
@@ -65,7 +65,7 @@ export const PeoplePage = () => {
 
     if (centuries.length > 0) {
       preparedPeople = preparedPeople.filter(person => {
-        const numberOfCentury = Math.ceil(person.born / 100);
+        const numberOfCentury = Math.ceil(person.born / yearsPerCentury);
 
         return centuries.includes(numberOfCentury.toString());
       });
@@ -82,12 +82,14 @@ export const PeoplePage = () => {
     if (sort) {
       preparedPeople.sort((a, b) => {
         switch (sort) {
-          case 'name':
-          case 'sex':
-            return a[sort].localeCompare(b[sort]);
-          case 'born':
-          case 'died':
-            return a[sort] - b[sort];
+          case SortOptions.Name:
+            return a.name.localeCompare(b.name);
+          case SortOptions.Sex:
+            return a.sex.localeCompare(b.sex);
+          case SortOptions.Born:
+            return a.born - b.born;
+          case SortOptions.Died:
+            return a.died - b.died;
           default:
             return 0;
         }

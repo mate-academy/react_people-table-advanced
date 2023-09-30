@@ -12,6 +12,5 @@ export const App = () => (
         <Outlet />
       </div>
     </main>
-
   </div>
 );

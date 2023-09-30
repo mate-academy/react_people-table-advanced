@@ -1,7 +1,7 @@
 import { useSearchParams } from 'react-router-dom';
 import classnames from 'classnames';
 import { Gender } from '../types/Gender';
-import { FEMALE_SEX, MALE_SEX } from '../utils/constants';
+import { FEMALE_SEX, MALE_SEX, centuriesNumbers } from '../utils/constants';
 import { SearchLink } from './SearchLink';
 import { getSearchWith } from '../utils/searchHelper';
 
@@ -69,7 +69,7 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            {['16', '17', '18', '19', '20'].map(century => (
+            {centuriesNumbers.map(century => (
               <SearchLink
                 key={century}
                 data-cy="century"
