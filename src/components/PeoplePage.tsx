@@ -150,7 +150,8 @@ export const PeoplePage = () => {
           <div className="box table-container">
             {sortedPeople.length > 0 ? (
               <PeopleTable
-                people={sortedPeople}
+                sortedPeople={sortedPeople}
+                people={people}
               />
             ) : (
               <p>There are no people matching the current search criteria</p>

@@ -7,12 +7,13 @@ import { PersonLink } from './PersonLink';
 import { getSearchWith } from '../utils/searchHelper';
 
 type Props = {
+  sortedPeople: Person[],
   people: Person[],
 };
 
 const interactiveElements = ['Name', 'Sex', 'Born', 'Died'];
 
-export const PeopleTable: React.FC<Props> = ({ people }) => {
+export const PeopleTable: React.FC<Props> = ({ sortedPeople, people }) => {
   const [searchParams] = useSearchParams();
   const sort = searchParams.get('sort') || '';
   const order = searchParams.get('order') || '';
@@ -70,7 +71,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
       </thead>
 
       <tbody>
-        {people.map(person => {
+        {sortedPeople.map(person => {
           return (
             <PersonLink
               key={person.name}

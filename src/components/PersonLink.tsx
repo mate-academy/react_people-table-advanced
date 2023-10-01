@@ -1,6 +1,6 @@
 import classNames from 'classnames';
 
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams, useSearchParams } from 'react-router-dom';
 import React from 'react';
 import { Person } from '../types';
 
@@ -9,13 +9,20 @@ type Props = {
   people: Person[],
 };
 
-const renderPersonName = (person: Person | undefined, name?: string | null) => {
+const renderPersonName = (
+  person: Person | undefined,
+  searchParams: URLSearchParams,
+  name?: string | null,
+) => {
   let context;
 
   if (person) {
     context = (
       <Link
-        to={`/people/${person.slug}`}
+        to={{
+          pathname: `/people/${person.slug}`,
+          search: searchParams.toString(),
+        }}
         className={classNames({ 'has-text-danger': person.sex === 'f' })}
       >
         {person.name}
@@ -34,15 +41,23 @@ export const PersonLink: React.FC<Props> = ({
   person,
   people,
 }) => {
+  const {
+    sex,
+    born,
+    died,
+    motherName,
+    fatherName,
+  } = person;
+  const [searchParams] = useSearchParams();
   const { slug } = useParams();
   const selectedPerson = people.find(p => p.slug === slug);
 
   const personMother = people.find(
-    mother => mother.name === person.motherName,
+    mother => mother.name === motherName,
   );
 
   const personFather = people.find(
-    father => father.name === person.fatherName,
+    father => father.name === fatherName,
   );
 
   return (
@@ -52,12 +67,12 @@ export const PersonLink: React.FC<Props> = ({
         { 'has-background-warning': selectedPerson?.slug === person.slug },
       )}
     >
-      <td>{renderPersonName(person)}</td>
-      <td>{person.sex}</td>
-      <td>{person.born}</td>
-      <td>{person.died}</td>
-      <td>{renderPersonName(personMother, person.motherName)}</td>
-      <td>{renderPersonName(personFather, person.fatherName)}</td>
+      <td>{renderPersonName(person, searchParams)}</td>
+      <td>{sex}</td>
+      <td>{born}</td>
+      <td>{died}</td>
+      <td>{renderPersonName(personMother, searchParams, motherName)}</td>
+      <td>{renderPersonName(personFather, searchParams, fatherName)}</td>
     </tr>
   );
 };
