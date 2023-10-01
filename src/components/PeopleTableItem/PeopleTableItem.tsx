@@ -4,16 +4,13 @@ import { PersonLink } from '../PersonLink';
 import { PARENT_NOT_SET_VALUE } from '../../utils/constants';
 
 interface Props {
-  people: Person[];
   person: Person;
-  selectedPersonSlug: string | undefined;
+  selectedPersonSlug: string;
 }
-export const PeopleListItem: React.FC<Props> = (
-  {
-    person,
-    selectedPersonSlug,
-  },
-) => {
+export const PeopleTableItem: React.FC<Props> = ({
+  person,
+  selectedPersonSlug,
+}) => {
   const {
     sex,
     born,

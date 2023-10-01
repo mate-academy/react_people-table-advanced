@@ -9,3 +9,12 @@ export const TABLE_ATTRIBUTES = [
   'Mother',
   'Father',
 ];
+
+export const DEFAULT_PARAMS = {
+  sex: null,
+  centuries: null,
+  query: null,
+  sort: null,
+};
+
+export const CENTURIES_TO_FILTER = [16, 17, 18, 19, 20];
