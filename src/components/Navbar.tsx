@@ -1,10 +1,10 @@
 import { NavLink } from 'react-router-dom';
 import classNames from 'classnames';
 
-const hasActive = ({ isActive }: { isActive: boolean }) => classNames(
-  'navbar-item',
-  { 'has-background-grey-lighter': isActive },
-);
+// const hasActive = ({ isActive }: { isActive: boolean }) => classNames(
+//   'navbar-item',
+//   { 'has-background-grey-lighter': isActive },
+// );
 
 export const Navbar = () => {
   return (
@@ -16,12 +16,17 @@ export const Navbar = () => {
     >
       <div className="container">
         <div className="navbar-brand">
-          <NavLink className={hasActive} to="/">
+          <NavLink
+            className={({ isActive }) => classNames('navbar-item',
+              { 'has-background-grey-lighter': isActive })}
+            to="/"
+          >
             Home
           </NavLink>
 
           <NavLink
-            className={hasActive}
+            className={({ isActive }) => classNames('navbar-item',
+              { 'has-background-grey-lighter': isActive })}
             to="/people"
           >
             People
