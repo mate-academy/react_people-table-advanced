@@ -122,8 +122,6 @@ export const PeoplePage: React.FC = () => {
                 </p>
               )}
 
-              {/* <p>There are no people matching the current search criteria</p> */}
-
               {people.length && (
                 <PeopleTable people={preparedPeople} />
               )}
