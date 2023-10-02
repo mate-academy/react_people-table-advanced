@@ -23,15 +23,14 @@ export const SortLink: React.FC<Props> = ({ sortBy }) => {
   return (
     <SearchLink params={params}>
       <span className="icon">
-        <i
-          className={classNames(
-            'fas',
-            {
-              'fa-sort': sortField !== sortBy,
-              'fa-sort-up': sortField === sortBy && !isReversed,
-              'fa-sort-down': sortField === sortBy && isReversed,
-            },
-          )}
+        <i className={classNames(
+          'fas',
+          {
+            'fa-sort': sortField !== sortBy,
+            'fa-sort-up': sortField === sortBy && !isReversed,
+            'fa-sort-down': sortField === sortBy && isReversed,
+          },
+        )}
         />
       </span>
     </SearchLink>

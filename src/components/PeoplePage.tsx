@@ -6,7 +6,6 @@ import { Loader } from './Loader';
 import { PeopleTable } from './PeopleTable';
 import { Person } from '../types';
 import { getPeople } from '../api';
-import { SortLink } from './SortLink';
 import { SearchParams } from '../types/SearchParams';
 
 const getFilteredPeople = (
@@ -125,56 +124,8 @@ export const PeoplePage: React.FC = () => {
 
               {/* <p>There are no people matching the current search criteria</p> */}
 
-              {!!people.length && (
-                <table
-                  data-cy="peopleTable"
-                  className="table is-striped is-hoverable
-                    is-narrow is-fullwidth"
-                >
-                  <thead>
-                    <tr>
-                      <th>
-                        <span className="is-flex is-flex-wrap-nowrap">
-                          Name
-                          <SortLink sortBy="name" />
-                        </span>
-                      </th>
-
-                      <th>
-                        <span className="is-flex is-flex-wrap-nowrap">
-                          Sex
-                          <SortLink sortBy="sex" />
-                        </span>
-                      </th>
-
-                      <th>
-                        <span className="is-flex is-flex-wrap-nowrap">
-                          Born
-                          <SortLink sortBy="born" />
-                        </span>
-                      </th>
-
-                      <th>
-                        <span className="is-flex is-flex-wrap-nowrap">
-                          Died
-                          <SortLink sortBy="died" />
-                        </span>
-                      </th>
-
-                      <th>Mother</th>
-                      <th>Father</th>
-                    </tr>
-                  </thead>
-
-                  <tbody>
-                    {preparedPeople.map(person => (
-                      <PeopleTable
-                        person={person}
-                        key={person.slug}
-                      />
-                    ))}
-                  </tbody>
-                </table>
+              {people.length && (
+                <PeopleTable people={preparedPeople} />
               )}
             </div>
           </div>
