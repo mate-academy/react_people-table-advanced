@@ -1,5 +1,5 @@
 import { useSearchParams } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Loader } from './Loader';
 import { Person } from '../types';
 import { getPeople } from '../api';
@@ -82,10 +82,12 @@ export const PeoplePage = () => {
     );
   }, [people, searchParams]);
 
-  const availableCenturies = people
-    .map(person => Math.ceil(person.born / 100))
-    .filter((year, index, arr) => arr.indexOf(year) === index)
-    .sort((a, b) => a - b);
+  const availableCenturies = useMemo(() => {
+    return people
+      .map(person => Math.ceil(person.born / 100))
+      .filter((year, index, arr) => arr.indexOf(year) === index)
+      .sort((a, b) => a - b);
+  }, [people]);
 
   const renderContent = () => {
     if (isLoading) {
