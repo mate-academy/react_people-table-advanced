@@ -16,52 +16,24 @@ function sortPeople(
 ) {
   let updatedPeople = [...people];
 
-  switch (sort) {
-    case 'name':
-      updatedPeople = updatedPeople.sort((personA, personB) => {
-        return order === 'desc'
-          ? personB.name.localeCompare(personA.name)
-          : personA.name.localeCompare(personB.name);
-      });
-      break;
+  updatedPeople.sort((personA: Person, personB: Person) => {
+    if (sort === 'name' || sort === 'sex') {
+      return order === 'desc'
+        ? personB[sort].localeCompare(personA[sort])
+        : personA[sort].localeCompare(personB[sort]);
+    }
 
-    case 'sex':
-      updatedPeople = updatedPeople.sort((personA, personB) => {
-        return order === 'desc'
-          ? personB.sex.localeCompare(personA.sex)
-          : personA.sex.localeCompare(personB.sex);
-      });
-      break;
+    if (sort === 'born' || sort === 'died') {
+      return order === 'desc'
+        ? personB[sort] - personA[sort]
+        : personA[sort] - personB[sort];
+    }
 
-    case 'born':
-      updatedPeople = updatedPeople.sort((personA, personB) => {
-        return order === 'desc'
-          ? personB.born - personA.born
-          : personA.born - personB.born;
-      });
-      break;
+    return 0;
+  });
 
-    case 'died':
-      updatedPeople = updatedPeople.sort((personA, personB) => {
-        return order === 'desc'
-          ? personB.died - personA.died
-          : personA.died - personB.died;
-      });
-      break;
-
-    default:
-      break;
-  }
-
-  switch (sex) {
-    case 'm':
-      updatedPeople = updatedPeople.filter((person) => person.sex === 'm');
-      break;
-    case 'f':
-      updatedPeople = updatedPeople.filter((person) => person.sex === 'f');
-      break;
-    default:
-      break;
+  if (sex === 'm' || sex === 'f') {
+    updatedPeople = updatedPeople.filter((person) => person.sex === sex);
   }
 
   if (query) {
@@ -93,15 +65,15 @@ export const PeoplePage = () => {
 
   useEffect(() => {
     setIsLoading(true);
-    getPeople().then((data) => {
-      setPeople(data);
-    }).catch((error) => {
-      // eslint-disable-next-line no-console
-      console.error('Something went wrong', error);
-      setIsError(true);
-    }).finally(() => {
-      setIsLoading(false);
-    });
+    getPeople()
+      .then(setPeople)
+      .catch((error) => {
+        // eslint-disable-next-line no-console
+        console.error('Something went wrong', error);
+        setIsError(true);
+      }).finally(() => {
+        setIsLoading(false);
+      });
   }, []);
 
   useEffect(() => {
