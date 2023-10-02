@@ -2,8 +2,9 @@ import React from 'react';
 import classNames from 'classnames';
 import { Link, useSearchParams } from 'react-router-dom';
 import { Person } from '../../types';
+import { Gender } from '../../types/Gender';
 
-const MALE_SEX = 'm';
+const MALE_SEX = Gender.Male;
 const isMale = (sex: string) => {
   return sex === MALE_SEX;
 };

@@ -23,7 +23,7 @@ export const People = () => {
     query: searchParams.get('query') || '',
     sex: searchParams.get('sex') as Gender || null,
     centuries: searchParams.getAll('centuries') || [],
-    sort: searchParams.get('sort') || '',
+    sort: searchParams.get('sort') as keyof Person || '',
     order: searchParams.get('order') || '',
   };
 
@@ -37,9 +37,9 @@ export const People = () => {
     && !filteredPeople.length;
 
   const isTableDisplayed
-  = !isLoading
-  && !errorMessage
-  && Boolean(filteredPeople.length);
+    = !isLoading
+    && !errorMessage
+    && Boolean(filteredPeople.length);
 
   useEffect(() => {
     setIsLoading(true);

@@ -9,13 +9,12 @@ export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const CENTURIES_LINKS = ['16', '17', '18', '19', '20'];
-  const SEX_FILTER_DATA: { [key: string]: string | null,
-  } = {
+  const SEX_FILTER_DATA = {
     All: null,
     Male: 'm',
     Female: 'f',
   };
-  // const query = searchParams.get('query') || '';
+
   const sex = searchParams.get('sex') as Gender || null;
   const centuries = searchParams.getAll('centuries') || [];
 
@@ -40,20 +39,25 @@ export const PeopleFilters = () => {
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        {Object.keys(SEX_FILTER_DATA).map(key => (
-          <Link
-            key={key}
-            className={classNames({
-              'is-active': SEX_FILTER_DATA[key] === sex,
-            })}
-            to={{
-              search:
-                getSearchWith(searchParams, { sex: SEX_FILTER_DATA[key] }),
-            }}
-          >
-            {key}
-          </Link>
-        ))}
+        {Object.keys(SEX_FILTER_DATA).map(key => {
+          const definedKey = key as keyof typeof SEX_FILTER_DATA;
+
+          return (
+            <Link
+              key={key}
+              className={classNames({
+                'is-active': SEX_FILTER_DATA[definedKey] === sex,
+              })}
+              to={{
+                search: getSearchWith(searchParams, {
+                  sex: SEX_FILTER_DATA[definedKey],
+                }),
+              }}
+            >
+              {key}
+            </Link>
+          );
+        })}
       </p>
 
       <div className="panel-block">
@@ -116,7 +120,11 @@ export const PeopleFilters = () => {
         <Link
           className="button is-link is-outlined is-fullwidth"
           to={{
-            search: '',
+            search: getSearchWith(searchParams, {
+              centuries: null,
+              query: null,
+              sex: null,
+            }),
           }}
         >
           Reset all filters

@@ -38,38 +38,26 @@ const filterByCentury = (people: Person[], century: string[]) => {
   return people;
 };
 
-const getSortFunction = (sortBy: string) => {
+const getSortFunction = (sortBy: keyof Person) => {
   return (personA: Person, personB: Person): number => {
-    switch (sortBy) {
-      case 'name':
-        return personA.name.localeCompare(personB.name);
-
-      case 'sex':
-        return personA.sex.localeCompare(personB.sex);
-
-      case 'born':
-        return personA.born - personB.born;
-
-      case 'died':
-        return personA.died - personB.died;
-
-      default:
-        return 0;
+    if (typeof personA[sortBy] === 'string') {
+      return (personA[sortBy] as string)
+        .localeCompare(personB[sortBy] as string);
     }
+
+    if (typeof personA[sortBy] === 'number') {
+      return +(personA[sortBy] ?? 0) - +(personB[sortBy] ?? 0);
+    }
+
+    return 0;
   };
 };
 
 const sortByParam = (
   people: Person[],
-  sortBy: string,
+  sortBy: keyof Person,
   order: string,
 ) => {
-  // const sortedPeople = [...people].sort((personA, personB) => {
-  //   if (typeof personA[sortBy] === 'string') {
-  //     return personA[sortBy].localeCompare(personB[sortBy]);
-  //   }
-  // });
-
   const sortedPeople = [...people].sort(getSortFunction(sortBy));
 
   if (order) {

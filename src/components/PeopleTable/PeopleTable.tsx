@@ -13,6 +13,7 @@ type Props = {
 
 export const PeopleTable: React.FC<Props> = ({ people }) => {
   const { personSlug } = useParams();
+
   const [searchParams] = useSearchParams();
   const sort = searchParams.get('sort');
   const order = searchParams.get('order');
@@ -29,7 +30,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
     'Father',
   ];
 
-  const getSearchLink = (sortField: string) => {
+  const getSortSearchLink = (sortField: string) => {
     const searchUpdates: { sort: string | null, order: null | string } = {
       sort: sortField,
       order: null,
@@ -58,7 +59,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
               <span className="is-flex is-flex-wrap-nowrap">
                 {header}
                 <Link to={{
-                  search: getSearchLink(header.toLowerCase()),
+                  search: getSortSearchLink(header.toLowerCase()),
                 }}
                 >
                   <span className="icon">
