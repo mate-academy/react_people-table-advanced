@@ -15,6 +15,7 @@ export const PeopleFilters = () => {
     Female: 'f',
   };
 
+  const query = searchParams.get('query') || '';
   const sex = searchParams.get('sex') as Gender || null;
   const centuries = searchParams.getAll('centuries') || [];
 
@@ -68,6 +69,7 @@ export const PeopleFilters = () => {
             className="input"
             placeholder="Search"
             onChange={handleQueryChange}
+            value={query}
           />
 
           <span className="icon is-left">
