@@ -18,14 +18,14 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
   const sort = searchParams.get('sort');
   const order = searchParams.get('order');
 
-  const TABLE_HEADERS_WITH_FILTERS = [
+  const TABLE_HEADERS_WITH_SORT = [
     'Name',
     'Sex',
     'Born',
     'Died',
   ];
 
-  const TABLE_HEADERS_NO_FILTERS = [
+  const TABLE_HEADERS_NO_SORT = [
     'Mother',
     'Father',
   ];
@@ -54,28 +54,32 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
     >
       <thead>
         <tr>
-          {TABLE_HEADERS_WITH_FILTERS.map(header => (
-            <th key={header}>
-              <span className="is-flex is-flex-wrap-nowrap">
-                {header}
-                <Link to={{
-                  search: getSortSearchLink(header.toLowerCase()),
-                }}
-                >
-                  <span className="icon">
-                    <i className={classNames('fas', {
-                      'fa-sort': header.toLowerCase() !== sort,
-                      'fa-sort-up': header.toLowerCase() === sort && !order,
-                      'fa-sort-down': header.toLowerCase() === sort && order,
-                    })}
-                    />
-                  </span>
-                </Link>
-              </span>
-            </th>
-          ))}
+          {TABLE_HEADERS_WITH_SORT.map(header => {
+            const normalisedHeader = header.toLowerCase();
 
-          {TABLE_HEADERS_NO_FILTERS.map(header => (
+            return (
+              <th key={header}>
+                <span className="is-flex is-flex-wrap-nowrap">
+                  {header}
+                  <Link to={{
+                    search: getSortSearchLink(normalisedHeader),
+                  }}
+                  >
+                    <span className="icon">
+                      <i className={classNames('fas', {
+                        'fa-sort': normalisedHeader !== sort,
+                        'fa-sort-up': normalisedHeader === sort && !order,
+                        'fa-sort-down': normalisedHeader === sort && order,
+                      })}
+                      />
+                    </span>
+                  </Link>
+                </span>
+              </th>
+            );
+          })}
+
+          {TABLE_HEADERS_NO_SORT.map(header => (
             <th key={header}>
               {header}
             </th>
@@ -84,49 +88,62 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
       </thead>
 
       <tbody>
-        {people.map(person => (
-          <tr
-            key={person.slug}
-            data-cy="person"
-            className={classNames({
-              'has-background-warning': person.slug === personSlug,
-            })}
-          >
-            <td>
-              <PersonLink
-                person={person}
-              />
-            </td>
+        {people.map(person => {
+          const {
+            slug,
+            sex,
+            born,
+            died,
+            motherName,
+            mother,
+            fatherName,
+            father,
+          } = person;
 
-            <td>{person.sex}</td>
-            <td>{person.born}</td>
-            <td>{person.died}</td>
+          return (
+            <tr
+              key={slug}
+              data-cy="person"
+              className={classNames({
+                'has-background-warning': slug === personSlug,
+              })}
+            >
+              <td>
+                <PersonLink
+                  person={person}
+                />
+              </td>
 
-            <td>
-              {person.mother
-                ? (
-                  <PersonLink
-                    person={person.mother}
-                  />
-                )
-                : (
-                  person.motherName || EMPTY_FIELD
-                )}
-            </td>
+              <td>{sex}</td>
+              <td>{born}</td>
+              <td>{died}</td>
 
-            <td>
-              {person.father
-                ? (
-                  <PersonLink
-                    person={person.father}
-                  />
-                )
-                : (
-                  person.fatherName || EMPTY_FIELD
-                )}
-            </td>
-          </tr>
-        ))}
+              <td>
+                {mother
+                  ? (
+                    <PersonLink
+                      person={mother}
+                    />
+                  )
+                  : (
+                    motherName || EMPTY_FIELD
+                  )}
+              </td>
+
+              <td>
+                {father
+                  ? (
+                    <PersonLink
+                      person={father}
+                    />
+                  )
+                  : (
+                    fatherName || EMPTY_FIELD
+                  )}
+              </td>
+            </tr>
+          );
+        })}
       </tbody>
     </table>
   );
