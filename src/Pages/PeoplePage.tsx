@@ -42,7 +42,7 @@ export const PeoplePage: React.FC = () => {
 
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
-          {isPeopleLoading && (
+          {!isPeopleLoading && (
             <div className="column is-7-tablet is-narrow-desktop">
               <PeopleFilters />
             </div>
