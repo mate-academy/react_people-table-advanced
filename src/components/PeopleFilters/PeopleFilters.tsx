@@ -54,7 +54,7 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            {CENTURIES.split(' ').map(century => (
+            {CENTURIES.map(century => (
               <SearchLink
                 key={century}
                 data-cy="century"
