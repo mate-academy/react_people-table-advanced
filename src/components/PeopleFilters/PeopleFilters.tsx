@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import { FilterBySex, SearchParameters } from '../../types';
 import { centuryFilterButtonsNumber, startingCentury } from '../../utils';
 import { getSearchWith } from '../../utils/searchHelper';
-import { SearchLink } from '../SearchLink/SearchLink';
+import { SearchLink } from '../SearchLink';
 
 type Props = {
   query: string;

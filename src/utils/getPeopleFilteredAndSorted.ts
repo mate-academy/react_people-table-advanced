@@ -8,25 +8,31 @@ export function getPeopleFilteredAndSorted(
   order: string,
   people: Person[],
 ) {
-  const preparedPeople = people.filter(person => {
+  const preparedPeople = people.filter(({
+    sex,
+    name,
+    born,
+    motherName,
+    fatherName,
+  }) => {
     let filterCondition = true;
 
     if (category) {
-      filterCondition = person.sex === category;
+      filterCondition = sex === category;
     }
 
     if (query) {
       const preparedQuery = query.toLowerCase();
 
       filterCondition = filterCondition
-        && (person.name.toLowerCase().includes(preparedQuery)
-          || (person.motherName?.toLowerCase().includes(preparedQuery) || false)
-          || person.fatherName?.toLowerCase().includes(preparedQuery) || false);
+        && (name.toLowerCase().includes(preparedQuery)
+          || (motherName?.toLowerCase().includes(preparedQuery) || false)
+          || (fatherName?.toLowerCase().includes(preparedQuery) || false));
     }
 
     if (centuries.length) {
       filterCondition = filterCondition
-        && centuries.includes(`${Math.ceil(person.born / 100)}`);
+        && centuries.includes(`${Math.ceil(born / 100)}`);
     }
 
     return filterCondition;
