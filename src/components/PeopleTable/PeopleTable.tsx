@@ -1,34 +1,31 @@
 import React from 'react';
 
-import { Link, useParams, useSearchParams } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import classNames from 'classnames';
 import { Person } from '../../types';
-import { PersonLink } from './PersonLink';
-import { EMPTY_FIELD } from '../../utils/constants';
 import { getSearchWith } from '../../utils/searchHelper';
+import { PeopleTableBody } from './PeopleTableBody';
+
+const TABLE_HEADERS_WITH_SORT = [
+  'Name',
+  'Sex',
+  'Born',
+  'Died',
+];
+
+const TABLE_HEADERS_NO_SORT = [
+  'Mother',
+  'Father',
+];
 
 type Props = {
   people: Person[],
 };
 
 export const PeopleTable: React.FC<Props> = ({ people }) => {
-  const { personSlug } = useParams();
-
   const [searchParams] = useSearchParams();
   const sort = searchParams.get('sort');
   const order = searchParams.get('order');
-
-  const TABLE_HEADERS_WITH_SORT = [
-    'Name',
-    'Sex',
-    'Born',
-    'Died',
-  ];
-
-  const TABLE_HEADERS_NO_SORT = [
-    'Mother',
-    'Father',
-  ];
 
   const getSortSearchLink = (sortField: string) => {
     const searchUpdates: { sort: string | null, order: null | string } = {
@@ -87,64 +84,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
         </tr>
       </thead>
 
-      <tbody>
-        {people.map(person => {
-          const {
-            slug,
-            sex,
-            born,
-            died,
-            motherName,
-            mother,
-            fatherName,
-            father,
-          } = person;
-
-          return (
-            <tr
-              key={slug}
-              data-cy="person"
-              className={classNames({
-                'has-background-warning': slug === personSlug,
-              })}
-            >
-              <td>
-                <PersonLink
-                  person={person}
-                />
-              </td>
-
-              <td>{sex}</td>
-              <td>{born}</td>
-              <td>{died}</td>
-
-              <td>
-                {mother
-                  ? (
-                    <PersonLink
-                      person={mother}
-                    />
-                  )
-                  : (
-                    motherName || EMPTY_FIELD
-                  )}
-              </td>
-
-              <td>
-                {father
-                  ? (
-                    <PersonLink
-                      person={father}
-                    />
-                  )
-                  : (
-                    fatherName || EMPTY_FIELD
-                  )}
-              </td>
-            </tr>
-          );
-        })}
-      </tbody>
+      <PeopleTableBody people={people} />
     </table>
   );
 };

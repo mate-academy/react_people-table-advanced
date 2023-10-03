@@ -5,15 +5,15 @@ import classNames from 'classnames';
 import { getSearchWith } from '../../utils/searchHelper';
 import { Gender } from '../../types/Gender';
 
+const CENTURIES_LINKS = ['16', '17', '18', '19', '20'];
+const SEX_FILTER_DATA = {
+  All: null,
+  Male: 'm',
+  Female: 'f',
+};
+
 export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-
-  const CENTURIES_LINKS = ['16', '17', '18', '19', '20'];
-  const SEX_FILTER_DATA = {
-    All: null,
-    Male: 'm',
-    Female: 'f',
-  };
 
   const query = searchParams.get('query') || '';
   const sex = searchParams.get('sex') as Gender || null;
@@ -40,18 +40,16 @@ export const PeopleFilters = () => {
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        {Object.keys(SEX_FILTER_DATA).map(key => {
-          const definedKey = key as keyof typeof SEX_FILTER_DATA;
-
+        {Object.entries(SEX_FILTER_DATA).map(([key, value]) => {
           return (
             <Link
               key={key}
               className={classNames({
-                'is-active': SEX_FILTER_DATA[definedKey] === sex,
+                'is-active': value === sex,
               })}
               to={{
                 search: getSearchWith(searchParams, {
-                  sex: SEX_FILTER_DATA[definedKey],
+                  sex: value,
                 }),
               }}
             >
