@@ -1,4 +1,3 @@
-import { useSearchParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { Loader } from '../components/Loader';
 import { PeopleTable } from '../components/PeopleTable';
@@ -11,8 +10,6 @@ export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
-
-  const [searchParams] = useSearchParams();
 
   useEffect(() => {
     setIsLoading(true);
