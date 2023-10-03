@@ -1,9 +1,74 @@
-export const PeopleFilters = () => {
+import { useSearchParams, Link } from 'react-router-dom';
+import classNames from 'classnames';
+import * as constants from '../utils/constants';
+
+type Props = {
+  onChangeQuery: (query: string) => void,
+};
+
+export const PeopleFilters: React.FC<Props> = ({
+  onChangeQuery = () => {},
+}) => {
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const query = searchParams.get('query') || '';
+  const centuries = searchParams.getAll('centuries') || [];
+
+  // function handleQueryChange(event: ChangeEvent<HTMLInputElement>) {
+  //   const params = new URLSearchParams(searchParams);
+
+  //   params.set('query', event.target.value);
+  //   setSearchParams(params);
+  // }
+
+  const addCenturyToUrlParams = (cen: string): URLSearchParams => {
+    const params = new URLSearchParams(searchParams);
+
+    const newCenturies = centuries.includes(cen)
+      ? centuries.filter(century => century !== cen)
+      : [...centuries, cen];
+
+    params.delete('centuries');
+    newCenturies.forEach(century => params.append('centuries', century));
+
+    return params;
+  };
+
+  function toggleCentury(cen: string) {
+    setSearchParams(addCenturyToUrlParams(cen));
+  }
+
+  function clearCenturies() {
+    const params = new URLSearchParams(searchParams);
+
+    params.delete('centuries');
+    setSearchParams(params);
+  }
+
+  const onChangeSetQuery = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const params = new URLSearchParams(searchParams);
+
+    params.set('query', event.target.value);
+    setSearchParams(params);
+
+    onChangeQuery(event.target.value);
+  };
+
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
+        {/* {constants.gender.map(currentGender => (
+          <a
+            key={`${Date.now()}_${currentGender}`}
+            // className=''
+            className="is-active"
+            href="#/people"
+          >
+            {currentGender}
+          </a>
+        ))} */}
         <a className="is-active" href="#/people">All</a>
         <a className="" href="#/people?sex=m">Male</a>
         <a className="" href="#/people?sex=f">Female</a>
@@ -16,6 +81,8 @@ export const PeopleFilters = () => {
             type="search"
             className="input"
             placeholder="Search"
+            value={query}
+            onChange={onChangeSetQuery}
           />
 
           <span className="icon is-left">
@@ -27,55 +94,33 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            <a
-              data-cy="century"
-              className="button mr-1"
-              href="#/people?centuries=16"
-            >
-              16
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=17"
-            >
-              17
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=18"
-            >
-              18
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=19"
-            >
-              19
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1"
-              href="#/people?centuries=20"
-            >
-              20
-            </a>
+            {constants.centurySet.map(currentCentury => (
+              <Link
+                key={`${Date.now()}_${currentCentury}`}
+                data-cy="century"
+                className={classNames('button', 'mr-1', {
+                  'is-info': centuries.includes(currentCentury),
+                })}
+                onClick={() => toggleCentury(currentCentury)}
+                to={{
+                  pathname: '',
+                  search: addCenturyToUrlParams(currentCentury).toString(),
+                }}
+              >
+                {currentCentury}
+              </Link>
+            ))}
           </div>
 
           <div className="level-right ml-4">
-            <a
+            <Link
               data-cy="centuryALL"
               className="button is-success is-outlined"
-              href="#/people"
+              to="#/people"
+              onClick={() => clearCenturies()}
             >
               All
-            </a>
+            </Link>
           </div>
         </div>
       </div>
