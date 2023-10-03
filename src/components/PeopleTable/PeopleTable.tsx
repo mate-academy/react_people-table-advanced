@@ -74,6 +74,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
                   'has-background-warning': personId === person.slug,
                 })
               }
+              key={person.slug}
             >
               <td>
                 <PersonLink person={person} />
