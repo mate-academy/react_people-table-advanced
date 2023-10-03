@@ -42,9 +42,9 @@ export const PeoplePage = () => {
       const childrenWithParents = peopleFormServer.map(person => ({
         ...person,
         father: peopleFormServer
-          .find(father => father.name === person.fatherName),
+          .find(({ name }) => name === person.fatherName),
         mother: peopleFormServer
-          .find(mother => mother.name === person.motherName),
+          .find(({ name }) => name === person.motherName),
       }));
 
       setPeople(childrenWithParents);
@@ -55,7 +55,7 @@ export const PeoplePage = () => {
     }
   };
 
-  const hadndleQuery = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleQuery = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchParams(
       getSearchWith(searchParams, { query: event.target.value }),
     );
@@ -81,7 +81,7 @@ export const PeoplePage = () => {
                 query={query}
                 centuries={centuries}
                 sex={sex}
-                handleQuery={hadndleQuery}
+                handleQuery={handleQuery}
                 handleSexFilter={handleSexFilter}
               />
             )}

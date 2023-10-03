@@ -2,6 +2,8 @@ import { Person } from '../types';
 import { FilterParams } from '../types/FilterParams';
 import { Order } from '../types/Order';
 import { SortType } from '../types/SortType';
+import { isStringIncludesQuery } from './app.helper';
+import { CENTURY_DIVIDER } from '../constants/app.constants';
 
 export const getFilteredPeople = (people: Person[], {
   query,
@@ -10,21 +12,23 @@ export const getFilteredPeople = (people: Person[], {
   sort,
   order,
 }: FilterParams): Person[] => {
-  let filteredPeople = [...people];
+  let filteredPeople = people;
 
-  if (query.trim() !== '') {
+  if (!query.trim()) {
     const normalizedQuery = query.toLowerCase().trim();
 
     filteredPeople = filteredPeople.filter(
-      person => person.name.toLowerCase().includes(normalizedQuery)
-        || person.fatherName?.toLowerCase().includes(normalizedQuery)
-        || person.motherName?.toLowerCase().includes(normalizedQuery),
+      person => isStringIncludesQuery(person.name, normalizedQuery)
+        || isStringIncludesQuery(person.motherName, normalizedQuery)
+        || isStringIncludesQuery(person.fatherName, normalizedQuery),
     );
   }
 
-  if (centuries.length > 0) {
+  if (centuries.length) {
     filteredPeople = filteredPeople.filter((person) => {
-      return centuries.includes(Math.ceil(person.born / 100).toString());
+      return centuries.includes(
+        Math.ceil(person.born / CENTURY_DIVIDER).toString(),
+      );
     });
   }
 

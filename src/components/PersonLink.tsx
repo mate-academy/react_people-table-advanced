@@ -3,6 +3,7 @@ import { useParams, Link, useSearchParams } from 'react-router-dom';
 import classNames from 'classnames';
 import { Person } from '../types';
 import { SexFilter } from '../types/SexFilter';
+import { NOT_SET_VALUE } from '../constants/app.constants';
 
 type Props = {
   person: Person;
@@ -65,7 +66,7 @@ export const PersonLink: React.FC<Props> = ({ person }) => {
           >
             {fatherName}
           </Link>
-        ) : (fatherName || '-')}
+        ) : (fatherName || NOT_SET_VALUE)}
       </td>
     </tr>
   );
