@@ -1,12 +1,46 @@
-export const PeopleFilters = () => {
+import { useSearchParams } from 'react-router-dom';
+import classNames from 'classnames';
+import { SearchLink } from './SearchLink';
+import { getSearchWith } from '../utils/searchHelper';
+
+export const allCenturies = ['16', '17', '18', '19', '20'];
+
+export const PeopleFilters = (
+) => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const sexFilter = searchParams.get('sex');
+  const centuriesFilter = searchParams.getAll('centuries');
+  const query = searchParams.get('query') as string;
+
+  const handleChange: React.ChangeEventHandler<HTMLInputElement> = (event) => {
+    setSearchParams(getSearchWith(searchParams, {
+      query: event.target.value || null,
+    }));
+  };
+
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        <a className="is-active" href="#/people">All</a>
-        <a className="" href="#/people?sex=m">Male</a>
-        <a className="" href="#/people?sex=f">Female</a>
+        <SearchLink
+          className={sexFilter === null ? 'is-active' : ''}
+          params={{ sex: null }}
+        >
+          All
+        </SearchLink>
+        <SearchLink
+          className={sexFilter === 'm' ? 'is-active' : ''}
+          params={{ sex: 'm' }}
+        >
+          Male
+        </SearchLink>
+        <SearchLink
+          className={sexFilter === 'f' ? 'is-active' : ''}
+          params={{ sex: 'f' }}
+        >
+          Female
+        </SearchLink>
       </p>
 
       <div className="panel-block">
@@ -15,7 +49,9 @@ export const PeopleFilters = () => {
             data-cy="NameFilter"
             type="search"
             className="input"
+            value={query}
             placeholder="Search"
+            onChange={handleChange}
           />
 
           <span className="icon is-left">
@@ -27,55 +63,34 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            <a
-              data-cy="century"
-              className="button mr-1"
-              href="#/people?centuries=16"
-            >
-              16
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=17"
-            >
-              17
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=18"
-            >
-              18
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=19"
-            >
-              19
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1"
-              href="#/people?centuries=20"
-            >
-              20
-            </a>
+            {allCenturies.map(century => (
+              <SearchLink
+                key={century}
+                data-cy="century"
+                className={classNames('button mr-1', {
+                  'is-info': centuriesFilter.includes(century),
+                })}
+                params={{
+                  centuries: centuriesFilter.includes(century)
+                    ? centuriesFilter.filter(
+                      value => value !== century,
+                    )
+                    : [...centuriesFilter, century],
+                }}
+              >
+                {century}
+              </SearchLink>
+            ))}
           </div>
 
           <div className="level-right ml-4">
-            <a
+            <SearchLink
               data-cy="centuryALL"
               className="button is-success is-outlined"
-              href="#/people"
+              params={{ centuries: null }}
             >
               All
-            </a>
+            </SearchLink>
           </div>
         </div>
       </div>
