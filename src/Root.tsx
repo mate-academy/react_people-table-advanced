@@ -8,17 +8,18 @@ import { App } from './App';
 import { NotFoundPage } from './pages/NotFoundPage';
 import { HomePage } from './pages/HomePage';
 import { PeoplePage } from './pages/PeoplePage';
+import { NavLinks } from './types/NavLinks';
 
 export const Root = () => (
   <Router>
     <Routes>
-      <Route path="/" element={<App />}>
+      <Route path={NavLinks.Home} element={<App />}>
         <Route index element={<HomePage />} />
-        <Route path="home" element={<Navigate to="/" replace />} />
-        <Route path="people">
+        <Route path="home" element={<Navigate to={NavLinks.Home} replace />} />
+        <Route path={NavLinks.People}>
           <Route path=":selectedPersonSlug?" element={<PeoplePage />} />
         </Route>
-        <Route path="*" element={<NotFoundPage />} />
+        <Route path={NavLinks.Unknown} element={<NotFoundPage />} />
       </Route>
     </Routes>
   </Router>

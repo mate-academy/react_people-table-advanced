@@ -1,5 +1,6 @@
 import classNames from 'classnames';
 import { NavLink } from 'react-router-dom';
+import { NavLinks } from '../../types/NavLinks';
 
 type Link = {
   isActive: boolean;
@@ -20,14 +21,14 @@ export const Navbar = () => (
       <div className="navbar-brand">
         <NavLink
           className={getLinkClass}
-          to="/"
+          to={NavLinks.Home}
         >
           Home
         </NavLink>
 
         <NavLink
           className={getLinkClass}
-          to="/people"
+          to={NavLinks.People}
         >
           People
         </NavLink>
