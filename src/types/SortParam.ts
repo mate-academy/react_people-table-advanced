@@ -1,7 +1,7 @@
 export enum SortParam {
-  NoSort,
-  Name,
-  Born,
-  Die,
-  Sex,
+  NoSort = 'NoSort',
+  Name = 'name',
+  Born = 'born',
+  Died = 'died',
+  Sex = 'sex',
 }

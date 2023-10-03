@@ -10,6 +10,7 @@ interface Props {
 export const PersonLink: React.FC<Props> = ({ person }) => (
   <Link
     to={`${person.slug}`}
+    replace
     className={classNames({
       'has-text-danger': person.sex === FEMALE,
       'has-text-link': person.sex === MALE,
