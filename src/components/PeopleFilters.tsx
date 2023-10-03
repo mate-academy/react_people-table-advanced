@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import classNames from 'classnames';
 import { FEMALE, FILTER_CENTURY, MALE } from '../utils/constants';
@@ -6,6 +7,7 @@ import { SearchLink } from './SearchLink';
 import { SearchOptions } from '../types/SearchOptions';
 
 export const PeopleFilters = () => {
+  const [query, setQuery] = useState('');
   const [searchParams, setSearchParams] = useSearchParams();
   const sex = searchParams.get(SearchOptions.Sex);
   const centuries = searchParams.getAll(SearchOptions.Centuries);
@@ -16,6 +18,7 @@ export const PeopleFilters = () => {
         query: event.target.value || null,
       }),
     );
+    setQuery(event.target.value);
   };
 
   return (
@@ -58,6 +61,7 @@ export const PeopleFilters = () => {
             type="search"
             className="input"
             placeholder="Search"
+            value={query}
             onChange={handleQueryChange}
           />
 
@@ -110,6 +114,9 @@ export const PeopleFilters = () => {
         <SearchLink
           className="button is-link is-outlined is-fullwidth"
           params={{ sex: null, query: null, centuries: null }}
+          onClick={() => {
+            setQuery('');
+          }}
         >
           Reset all filters
         </SearchLink>
