@@ -1,15 +1,34 @@
 import { useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { Loader } from '../components/Loader';
 import { PeopleTable } from '../components/PeopleTable';
 import { Person } from '../types';
 import { getPreparedPeople } from '../utils/getPreparedPeople';
 import { getPeople } from '../services/api';
 import { PeopleFilters } from '../components/PeopleFilters';
+import { SearchOptions } from '../types/SearchOptions';
+import { getFilteredPeople } from '../utils/getFilteredPeople';
 
 export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
+  const [searchParams] = useSearchParams();
+
+  const sex = searchParams.get(SearchOptions.Sex);
+  const query = searchParams.get(SearchOptions.Query);
+  const centuries = searchParams.getAll(SearchOptions.Centuries);
+  const sortField = searchParams.get(SearchOptions.Sort);
+  const order = searchParams.get(SearchOptions.Order);
+
+  const visiblePeople = getFilteredPeople(
+    people,
+    sex,
+    query,
+    centuries,
+    sortField,
+    order,
+  );
 
   useEffect(() => {
     setIsLoading(true);
@@ -29,6 +48,7 @@ export const PeoplePage = () => {
   const isDisplayErrorMessage = isError && !isLoading;
   const isNoPeopleFromServer = !people.length && !isLoading && !isError;
   const isPeopleFromServer = !!people.length && !isError;
+  const isNoMatchingPeople = !visiblePeople.length && !isLoading && !isError;
 
   return (
     <>
@@ -58,8 +78,14 @@ export const PeoplePage = () => {
                 </p>
               )}
 
-              {isPeopleFromServer && (
-                <PeopleTable people={people} />
+              {isNoMatchingPeople && (
+                <p data-cy="noPeopleMessage">
+                  There are no people matching the current search criteria
+                </p>
+              )}
+
+              {isPeopleFromServer && !isNoMatchingPeople && (
+                <PeopleTable people={visiblePeople} />
               )}
             </div>
           </div>

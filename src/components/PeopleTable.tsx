@@ -3,7 +3,11 @@ import { TABLE_ATTRIBUTES } from '../utils/constants';
 import { Person } from '../types';
 import { PersonElement } from './PersonElement/PersonElemet';
 
-export const PeopleTable = ({ people }: { people: Person[] }) => {
+type Props = {
+  people: Person[],
+};
+
+export const PeopleTable: React.FC<Props> = ({ people }) => {
   const { personId = '' } = useParams();
 
   return (
