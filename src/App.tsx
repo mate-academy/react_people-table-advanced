@@ -13,11 +13,13 @@ export const App = () => {
       <div className="section">
         <div className="container">
           <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/home" element={<Navigate to="/" replace />} />
             <Route path="*" element={<NotFoundPage />} />
-            <Route path="/people">
-              <Route path=":chosenUserSlug?" element={<PeoplePage />} />
+            <Route path="/">
+              <Route index element={<HomePage />} />
+              <Route path="home" element={<Navigate to="/" replace />} />
+              <Route path="people">
+                <Route path=":chosenUserSlug?" element={<PeoplePage />} />
+              </Route>
             </Route>
           </Routes>
         </div>

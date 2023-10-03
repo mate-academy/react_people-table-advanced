@@ -6,16 +6,13 @@ import { PeopleTable } from '../PeopleTable/PeopleTable';
 import { Person } from '../../types';
 import { getPeople } from '../../api';
 import { getPrepearedPeople } from '../../utils/getPrepearedPeople';
-import { SearchingParams } from '../../types/SearchingParams';
+import { getFilteredPeople } from '../../utils/getFilteredPeople';
 
 export const PeoplePage = () => {
   const [hasError, setHasError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [people, setPeople] = useState<Person[]>([]);
   const [searchParams] = useSearchParams();
-  const query = searchParams.get(SearchingParams.Query) || '';
-  const sex = searchParams.get(SearchingParams.Sex) || '';
-  const centuries = searchParams.getAll(SearchingParams.Centuries) || [];
 
   useEffect(() => {
     setIsLoading(true);
@@ -29,35 +26,7 @@ export const PeoplePage = () => {
       .finally(() => setIsLoading(false));
   }, []);
 
-  const getFilteredPeople = () => {
-    let filteredPeople = [...people];
-
-    if (query) {
-      const normalisedQuery = query.toLowerCase();
-
-      filteredPeople = people.filter(person => {
-        return person.name.toLowerCase().includes(normalisedQuery)
-          || person.motherName?.toLowerCase().includes(normalisedQuery)
-          || person.fatherName?.toLowerCase().includes(normalisedQuery);
-      });
-    }
-
-    if (sex) {
-      filteredPeople = filteredPeople.filter(person => {
-        return person.sex === sex;
-      });
-    }
-
-    if (centuries.length) {
-      filteredPeople = filteredPeople.filter(person => {
-        return centuries.includes(String(Math.ceil(person.born / 100)));
-      });
-    }
-
-    return filteredPeople;
-  };
-
-  const visiblePeople = getFilteredPeople();
+  const visiblePeople = getFilteredPeople(searchParams, people);
   const isPeopleVisible = !hasError && !isLoading && !!visiblePeople.length;
   const isSuccessRequest = !isLoading && !hasError;
   const isRequestFail = hasError && !isLoading;
