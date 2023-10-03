@@ -1,3 +1,7 @@
+import { Link } from 'react-router-dom';
+import classNames from 'classnames';
+import { FILTER_CENTURY } from '../utils/constants';
+
 export const PeopleFilters = () => {
   return (
     <nav className="panel">
@@ -27,45 +31,20 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            <a
-              data-cy="century"
-              className="button mr-1"
-              href="#/people?centuries=16"
-            >
-              16
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=17"
-            >
-              17
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=18"
-            >
-              18
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=19"
-            >
-              19
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1"
-              href="#/people?centuries=20"
-            >
-              20
-            </a>
+            {FILTER_CENTURY.map((century: string) => (
+              <Link
+                key={century}
+                data-cy="century"
+                className={classNames(
+                  'button',
+                  'mr-1',
+                  { 'is-info': true },
+                )}
+                to={`#/people?centuries=${century}`}
+              >
+                {century}
+              </Link>
+            ))}
           </div>
 
           <div className="level-right ml-4">
