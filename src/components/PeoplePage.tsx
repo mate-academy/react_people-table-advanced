@@ -1,8 +1,13 @@
+import React, { useContext } from 'react';
+import { PeopleContext } from '../PeopleContext';
 import { PeopleFilters } from './PeopleFilters';
 import { Loader } from './Loader';
+import { ErrorMessages } from '../types/ErrorMessages';
 import { PeopleTable } from './PeopleTable';
 
-export const PeoplePage = () => {
+export const PeoplePage: React.FC = () => {
+  const { peopleList, isLoading, errorMessage } = useContext(PeopleContext);
+
   return (
     <>
       <h1 className="title">People Page</h1>
@@ -10,22 +15,36 @@ export const PeoplePage = () => {
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
           <div className="column is-7-tablet is-narrow-desktop">
-            <PeopleFilters />
+            {!!peopleList.length && (
+              <PeopleFilters />
+            )}
           </div>
 
           <div className="column">
             <div className="box table-container">
-              <Loader />
+              {isLoading && (<Loader />)}
 
-              <p data-cy="peopleLoadingError">Something went wrong</p>
+              {errorMessage === ErrorMessages.LoadError && (
+                <p data-cy="peopleLoadingError" className="has-text-danger">
+                  {ErrorMessages.SomethingWentWrong}
+                </p>
+              )}
 
-              <p data-cy="noPeopleMessage">
-                There are no people on the server
-              </p>
+              {(!peopleList.length && !isLoading) && (
+                <p data-cy="noPeopleMessage">
+                  {ErrorMessages.NoPeople}
+                </p>
+              )}
 
-              <p>There are no people matching the current search criteria</p>
+              {false && (
+                <p>
+                  {ErrorMessages.NoMatch}
+                </p>
+              )}
 
-              <PeopleTable />
+              {!!peopleList.length && (
+                <PeopleTable />
+              )}
             </div>
           </div>
         </div>
