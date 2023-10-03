@@ -1,5 +1,5 @@
 import { Person } from '../types';
-import { FilterParams } from '../types/FiltereParams';
+import { FilterParams } from '../types/FilterParams';
 import { Order } from '../types/Order';
 import { SortType } from '../types/SortType';
 
