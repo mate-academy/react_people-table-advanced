@@ -26,7 +26,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
       };
     }
 
-    if (sort === sortKey && !order) {
+    if (!order) {
       return { order: 'desc' };
     }
 

@@ -11,7 +11,7 @@ export const PeopleFilters = () => {
   const query = searchParams.get(SearchingParams.Query) || '';
   const centuries = searchParams.getAll(SearchingParams.Centuries) || [];
 
-  const habdleQueryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleQueryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchParams(
       getSearchWith(searchParams, {
         query: event.target.value || null,
@@ -42,7 +42,7 @@ export const PeopleFilters = () => {
             className="input"
             placeholder="Search"
             value={query}
-            onChange={habdleQueryChange}
+            onChange={handleQueryChange}
           />
 
           <span className="icon is-left">
@@ -54,22 +54,24 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            {CENTURIES.map(century => (
-              <SearchLink
-                key={century}
-                data-cy="century"
-                className={classNames('button', 'mr-1', {
-                  'is-info': centuries.includes(century),
-                })}
-                params={{
-                  centuries: centuries.includes(century)
-                    ? centuries.filter(cent => cent !== century)
-                    : [...centuries, century],
-                }}
-              >
-                {century}
-              </SearchLink>
-            ))}
+            {CENTURIES.map(century => {
+              const newCenturies = centuries.includes(century)
+                ? centuries.filter(cent => cent !== century)
+                : [...centuries, century];
+
+              return (
+                <SearchLink
+                  key={century}
+                  data-cy="century"
+                  className={classNames('button', 'mr-1', {
+                    'is-info': centuries.includes(century),
+                  })}
+                  params={{ centuries: newCenturies }}
+                >
+                  {century}
+                </SearchLink>
+              );
+            })}
           </div>
 
           <div className="level-right ml-4">
