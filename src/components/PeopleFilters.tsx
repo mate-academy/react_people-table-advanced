@@ -1,16 +1,21 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import classNames from 'classnames';
-import { FEMALE, FILTER_CENTURY, MALE } from '../utils/constants';
+import { FILTER_CENTURY } from '../utils/constants';
 import { getSearchWith } from '../utils/searchHelper';
 import { SearchLink } from './SearchLink';
 import { SearchOptions } from '../types/SearchOptions';
+import { Gender } from '../types/Gender';
 
 export const PeopleFilters = () => {
   const [query, setQuery] = useState('');
   const [searchParams, setSearchParams] = useSearchParams();
   const sex = searchParams.get(SearchOptions.Sex);
   const centuries = searchParams.getAll(SearchOptions.Centuries);
+
+  useEffect(() => {
+    setQuery(searchParams.get(SearchOptions.Query) || '');
+  }, []);
 
   const handleQueryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchParams(
@@ -37,18 +42,18 @@ export const PeopleFilters = () => {
 
         <SearchLink
           className={classNames(
-            { 'is-active': sex === MALE },
+            { 'is-active': sex === Gender.Male },
           )}
-          params={{ sex: MALE }}
+          params={{ sex: Gender.Male }}
         >
           Male
         </SearchLink>
 
         <SearchLink
           className={classNames(
-            { 'is-active': sex === FEMALE },
+            { 'is-active': sex === Gender.Female },
           )}
-          params={{ sex: FEMALE }}
+          params={{ sex: Gender.Female }}
         >
           Female
         </SearchLink>
@@ -62,7 +67,10 @@ export const PeopleFilters = () => {
             className="input"
             placeholder="Search"
             value={query}
-            onChange={handleQueryChange}
+            defaultValue={searchParams.get(SearchOptions.Query) || ''}
+            onChange={(event) => {
+              handleQueryChange(event);
+            }}
           />
 
           <span className="icon is-left">
@@ -76,6 +84,9 @@ export const PeopleFilters = () => {
           <div className="level-left">
             {FILTER_CENTURY.map((century: string) => {
               const isCenturyIncluded = centuries.includes(century);
+              const updatedCenturies = isCenturyIncluded
+                ? centuries.filter(cent => cent !== century)
+                : [...centuries, century];
 
               return (
                 <SearchLink
@@ -87,9 +98,7 @@ export const PeopleFilters = () => {
                     { 'is-info': isCenturyIncluded },
                   )}
                   params={{
-                    centuries: isCenturyIncluded
-                      ? centuries.filter(cent => cent !== century)
-                      : [...centuries, century],
+                    centuries: updatedCenturies,
                   }}
                 >
                   {century}

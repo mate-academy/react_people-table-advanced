@@ -12,9 +12,13 @@ export const SortLink: React.FC<Props> = ({ sortBy }) => {
   const isReversed = searchParams.get('order') === 'desc';
   const sortField = searchParams.get('sort') || '';
 
+  const isSortAsc = sortBy === sortField && !isReversed;
+  const isSortDesc = sortBy === sortField && isReversed;
+  const isUnsorted = sortField !== sortBy;
+
   const params = {
-    order: (sortBy === sortField && !isReversed) ? 'desc' : null,
-    sort: (sortBy === sortField && isReversed) ? null : sortBy,
+    order: isSortAsc ? 'desc' : null,
+    sort: isSortDesc ? null : sortBy,
   };
 
   return (
@@ -24,9 +28,9 @@ export const SortLink: React.FC<Props> = ({ sortBy }) => {
           className={classNames(
             'fas',
             {
-              'fa-sort': sortField !== sortBy,
-              'fa-sort-up': sortField === sortBy && !isReversed,
-              'fa-sort-down': sortField === sortBy && isReversed,
+              'fa-sort': isUnsorted,
+              'fa-sort-up': isSortAsc,
+              'fa-sort-down': isSortDesc,
             },
           )}
         />
