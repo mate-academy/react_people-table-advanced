@@ -6,6 +6,7 @@ import { SearchLink } from '../SearchLink/SearchLink';
 import { SortKeys } from '../../types/SortKeys';
 import { SearchParams } from '../../utils/searchHelper';
 import { SearchingParams } from '../../types/SearchingParams';
+import { getPeopleSorted } from '../../utils/getPeopleSorted';
 
 type Props = {
   people: Person[],
@@ -35,28 +36,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
     };
   };
 
-  const getPeopleSorted = (peopleToSort: Person[]) => {
-    const sortedPeople = [...peopleToSort];
-    const ord = order ? -1 : 1;
-
-    switch (sort) {
-      case SortKeys.Born:
-      case SortKeys.Died: {
-        return sortedPeople.sort((a, b) => (a[sort] - b[sort]) * ord);
-      }
-
-      case SortKeys.Name:
-      case SortKeys.Sex:
-        return sortedPeople.sort(
-          ((a, b) => a[sort].localeCompare(b[sort]) * ord),
-        );
-
-      default:
-        return sortedPeople;
-    }
-  };
-
-  const sortedPeople = getPeopleSorted(people);
+  const sortedPeople = getPeopleSorted(people, sort as SortKeys, order);
 
   return (
     <table
