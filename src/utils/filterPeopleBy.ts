@@ -9,26 +9,21 @@ export const filterPeople = (
   const searchQuery = searchParams.get('query')?.toLowerCase();
 
   return people.filter(({
-    sex, born, motherName, fatherName, name,
+    sex,
+    born,
+    name,
+    motherName,
+    fatherName,
   }) => {
     const birthCentury = String(Math.ceil(born / 100));
 
-    if (searchSex && sex !== searchSex) {
-      return false;
-    }
+    const sexMatch = !searchSex || sex === searchSex;
+    const centuryMatch = searchCenturies.length === 0
+      || searchCenturies.includes(birthCentury);
+    const queryMatch = !searchQuery
+      || [name, motherName, fatherName]
+        .some((n) => n?.toLowerCase().includes(searchQuery));
 
-    if (searchCenturies.length && !searchCenturies.includes(birthCentury)) {
-      return false;
-    }
-
-    if (searchQuery
-      && !(name.toLowerCase().includes(searchQuery)
-        || motherName?.toLowerCase().includes(searchQuery)
-        || fatherName?.toLowerCase().includes(searchQuery))
-    ) {
-      return false;
-    }
-
-    return true;
+    return sexMatch && centuryMatch && queryMatch;
   });
 };

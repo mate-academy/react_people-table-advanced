@@ -78,7 +78,7 @@ export const PeoplePage = () => {
                 </p>
               )}
 
-              {isLoaded && !!people.length && (
+              {isLoaded && !!visiblePeople.length && (
                 <Table people={visiblePeople} />
               )}
             </div>

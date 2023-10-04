@@ -31,12 +31,13 @@ export const PeopleFilters = () => {
           All
         </SearchLink>
 
-        {Object.entries(Sex).map(sex => (
+        {Object.entries(Sex).map(([key, value]) => (
           <SearchLink
-            className={classNames({ 'is-active': sexParam === sex[1] })}
-            params={{ sex: sex[1] }}
+            key={key}
+            className={classNames({ 'is-active': sexParam === value })}
+            params={{ sex: value }}
           >
-            {sex[0]}
+            {key}
           </SearchLink>
         ))}
       </p>
@@ -75,6 +76,7 @@ export const PeopleFilters = () => {
 
               return (
                 <SearchLink
+                  key={century}
                   data-cy="century"
                   className={classNames(
                     'button',
