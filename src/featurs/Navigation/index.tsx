@@ -40,8 +40,9 @@ export const Navigation = () => {
       </nav>
       <Routes>
         <Route path="/" element={<HomePage />} />
-        <Route path="/people" element={<PeoplePage />} />
-        <Route path="/people/:slug" element={<PeoplePage />} />
+        <Route path="/people" element={<PeoplePage />}>
+          <Route path=":slug" element={<PeoplePage />} />
+        </Route>
         <Route
           path="/home"
           element={<Navigate to="/" />}

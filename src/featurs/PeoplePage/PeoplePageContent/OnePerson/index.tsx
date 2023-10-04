@@ -1,4 +1,6 @@
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import {
+  Link, useNavigate, useParams, useSearchParams,
+} from 'react-router-dom';
 import classNames from 'classnames';
 import { usePerson } from './usePerson';
 import { Person } from '../../../../types';
@@ -15,6 +17,7 @@ export const OnePerson = ({
   const { getParentSlug } = usePerson();
   const { slug } = useParams();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
 
   const cleaningHandler = (url: string) => {
     navigate(url, { replace: true });
@@ -30,8 +33,8 @@ export const OnePerson = ({
       <td>
         <Link
           className={person.sex === 'f' ? 'has-text-danger' : ''}
-          to={`/people/${person.slug}`}
-          onClick={() => cleaningHandler(`/people/${person.slug}`)}
+          to={`/people/${person.slug}?${searchParams.toString()}`}
+          onClick={() => cleaningHandler(`/people/${person.slug}?${searchParams.toString()}`)}
         >
           {person.name}
         </Link>
