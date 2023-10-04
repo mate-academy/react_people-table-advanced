@@ -18,14 +18,14 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
 
   const handleSortOrderChange = (sortType : string) => {
     if (sort === sortType) {
-      return order ? null : FilterParams.Descending;
+      return order ? null : 'desc';
     }
 
     return null;
   };
 
   const handleSortTypeChange = (sortType: string) => {
-    if (sort === sortType && order === FilterParams.Descending) {
+    if (sort === sortType && order === 'desc') {
       return null;
     }
 
@@ -48,8 +48,8 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
                   {button}
                   <SearchLink
                     params={{
-                      sort: handleSortOrderChange(sortType) || null,
-                      order: handleSortTypeChange(sortType) || null,
+                      sort: handleSortTypeChange(sortType) || null,
+                      order: handleSortOrderChange(sortType) || null,
                     }}
                   >
                     <span className="icon">
