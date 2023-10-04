@@ -16,6 +16,16 @@ export const PeopleFilters = () => {
     return [...allCenturies, century];
   };
 
+  const handleQueryChange = (newValue: string) => {
+    if (newValue === '') {
+      searchParams.delete('query');
+    } else {
+      searchParams.set('query', newValue);
+    }
+
+    setSearchParams(searchParams);
+  };
+
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
@@ -48,10 +58,7 @@ export const PeopleFilters = () => {
         <p className="control has-icons-left">
           <input
             value={query || ''}
-            onChange={(e) => {
-              searchParams.set('query', e.target.value);
-              setSearchParams(searchParams);
-            }}
+            onChange={(e) => handleQueryChange(e.target.value)}
             data-cy="NameFilter"
             type="search"
             className="input"
