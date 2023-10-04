@@ -1,7 +1,7 @@
 import { Person } from './types';
 
 function findParent(peopleList: Person[], parentName: string | null) {
-  return peopleList.find((person) => person.name === parentName);
+  return peopleList.find(({ name }) => name === parentName);
 }
 
 export function getPeopleWithParents(

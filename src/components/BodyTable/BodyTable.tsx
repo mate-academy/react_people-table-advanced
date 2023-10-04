@@ -8,7 +8,7 @@ type Props = {
   selectedSlug: string | undefined,
 };
 
-const IS_NAME = '-';
+const NOT_SET_VALUE = '-';
 
 export const BodyTable: React.FC<Props> = ({ person, selectedSlug }) => {
   const {
@@ -46,7 +46,7 @@ export const BodyTable: React.FC<Props> = ({ person, selectedSlug }) => {
         {mother ? (
           <PersonLink person={mother} />
         ) : (
-          motherName ?? IS_NAME
+          motherName ?? NOT_SET_VALUE
         )}
       </td>
 
@@ -54,7 +54,7 @@ export const BodyTable: React.FC<Props> = ({ person, selectedSlug }) => {
         {father ? (
           <PersonLink person={father} />
         ) : (
-          fatherName ?? IS_NAME
+          fatherName ?? NOT_SET_VALUE
         )}
       </td>
     </tr>
