@@ -33,7 +33,7 @@ export const TableHeader: React.FC = () => {
           const lowerColumn = column.toLowerCase();
 
           return (
-            <th>
+            <th key={column}>
               <span className="is-flex is-flex-wrap-nowrap">
                 {column}
                 <SearchLink
