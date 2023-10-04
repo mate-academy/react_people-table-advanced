@@ -14,7 +14,7 @@ export const useGetDisplayPeople = (people: Person[]): Person[] => {
   const [searchParams] = useSearchParams();
   const resultArray = [...people];
 
-  const sortParam = searchParams.get('sort') || 'name';
+  const sortParam = searchParams.get('sort');
   const orderParam = searchParams.get('order') === 'desc' ? -1 : 1;
   const sexParam = searchParams.get('sex');
   const centuries = searchParams.get('centuries');
