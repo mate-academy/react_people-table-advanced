@@ -53,10 +53,19 @@ export const getPreparedPeople = (
 
   if (query) {
     PreparedPeople = PreparedPeople.filter(person => {
-      const preparedTitle = person.name.trim().toLowerCase();
       const preparedQuery = query.trim().toLowerCase();
+      const preparedName = person.name.trim()
+        .toLowerCase()
+        .includes(preparedQuery);
 
-      return preparedTitle.includes(preparedQuery);
+      const preparedMotherName = person.motherName
+        ?.toLowerCase()
+        .includes(preparedQuery);
+      const preparedFatherName = person.fatherName
+        ?.toLowerCase()
+        .includes(preparedQuery);
+
+      return preparedName || preparedMotherName || preparedFatherName;
     });
   }
 
@@ -157,7 +166,7 @@ export const PeoplePage = () => {
                 </p>
               )}
 
-              {visiblePeople.length
+              {(!!visiblePeople.length && !isLoading)
                 ? <PeopleTable people={visiblePeople} />
                 : (
                   <p>
