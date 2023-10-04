@@ -6,15 +6,13 @@ import { PeopleTable } from './PeopleTable';
 import { Person } from '../types';
 import { getPeople } from '../api';
 import { getPreparedPeople } from '../utils/getPreparedPeople';
-import { getFilteredPeople } from '../utils/getFilteredPeople';
+import { FilterSortPeople } from '../utils/FilterSortPeople';
 
 export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
   const [searchParams] = useSearchParams();
-
-  const visiblePeople = getFilteredPeople(people, searchParams);
 
   useEffect(() => {
     setIsLoading(true);
@@ -26,9 +24,10 @@ export const PeoplePage = () => {
       .finally(() => setIsLoading(false));
   }, []);
 
+  const visiblePeople = FilterSortPeople(people, searchParams);
+
   const isDisplayErrorMessage = isError && !isLoading;
   const isNoPeopleOnServer = !people.length && !isLoading && !isError;
-
   const isPeopleDisplayed = !isLoading && !!visiblePeople.length && !isError;
   const isNoPeopleDisplayed = !isLoading && !visiblePeople.length && !isError;
 

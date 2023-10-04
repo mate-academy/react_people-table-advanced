@@ -1,15 +1,16 @@
 import { Person } from '../types';
+import { QueryParamsType } from '../types/QueryParamsType';
 import { SortFields } from '../types/SortFields';
 
-export const getFilteredPeople = (
+export const FilterSortPeople = (
   people: Person[],
   queryParams: URLSearchParams,
 ): Person[] => {
-  const query = queryParams.get('query') || '';
-  const sexFilter = queryParams.get('sex');
-  const centuriesFilter = queryParams.getAll('centuries');
-  const sortField = queryParams.get('sort');
-  const order = queryParams.get('order');
+  const query = queryParams.get(QueryParamsType.Query) || '';
+  const sexFilter = queryParams.get(QueryParamsType.Sex);
+  const centuriesFilter = queryParams.getAll(QueryParamsType.Centuries);
+  const sortField = queryParams.get(QueryParamsType.Sort);
+  const order = queryParams.get(QueryParamsType.Order);
 
   let filteredPeople = [...people];
 

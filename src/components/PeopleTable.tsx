@@ -1,11 +1,13 @@
-import classNames from 'classnames';
-import { Link, useSearchParams } from 'react-router-dom';
 import React from 'react';
+import classNames from 'classnames';
+import { useSearchParams } from 'react-router-dom';
 import { Person } from '../types';
 import { PersonItem } from './PersonItem';
-import { SearchParams, getSearchWith } from '../utils/searchHelper';
+import { SearchParams } from '../utils/searchHelper';
 import { SortFields } from '../types/SortFields';
-// import { COLUMN_NAMES } from '../utils/variables';
+import { QueryParamsType } from '../types/QueryParamsType';
+import { DESCENDING } from '../utils/variables';
+import { SearchLink } from './SearchLink';
 
 type Props = {
   people: Person[],
@@ -13,14 +15,15 @@ type Props = {
 
 export const PeopleTable: React.FC<Props> = ({ people }) => {
   const [searchParams] = useSearchParams();
+  const sort = searchParams.get(QueryParamsType.Sort);
+  const isOrder = searchParams.has(QueryParamsType.Order);
+  const query = searchParams.get(QueryParamsType.Query);
 
   function getSortQuery(sortField: SortFields): SearchParams {
-    if (searchParams.has('sort') && searchParams.get('sort') === sortField) {
-      if (searchParams.has('order')) {
-        return { sort: null, order: null };
-      }
-
-      return { sort: sortField, order: 'desc' };
+    if (sort === sortField) {
+      return isOrder
+        ? { sort: null, order: null }
+        : { sort: sortField, order: DESCENDING };
     }
 
     return { sort: sortField, order: null };
@@ -36,108 +39,76 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Name
-              <Link
-                to={{
-                  search: getSearchWith(
-                    searchParams,
-                    getSortQuery(SortFields.Name),
-                  ),
-                }}
+              <SearchLink
+                params={getSortQuery(SortFields.Name)}
               >
                 <span className="icon">
                   <i className={classNames('fas',
                     {
-                      'fa-sort': searchParams.get('sort') !== SortFields.Name,
-                      'fa-sort-up': searchParams.get('sort') === SortFields.Name
-                        && !searchParams.has('order'),
-                      'fa-sort-down':
-                        searchParams.get('sort') === SortFields.Name
-                      && searchParams.has('order'),
+                      'fa-sort': query !== SortFields.Name,
+                      'fa-sort-up': sort === SortFields.Name && !isOrder,
+                      'fa-sort-down': sort === SortFields.Name && isOrder,
                     })}
                   />
                 </span>
-              </Link>
+              </SearchLink>
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Sex
-              <Link
-                to={{
-                  search: getSearchWith(
-                    searchParams,
-                    getSortQuery(SortFields.Sex),
-                  ),
-                }}
+              <SearchLink
+                params={getSortQuery(SortFields.Sex)}
               >
                 <span className="icon">
                   <i className={classNames('fas',
                     {
-                      'fa-sort': searchParams.get('sort') !== SortFields.Sex,
-                      'fa-sort-up': searchParams.get('sort') === SortFields.Sex
-                        && !searchParams.has('order'),
-                      'fa-sort-down':
-                        searchParams.get('sort') === SortFields.Sex
-                      && searchParams.has('order'),
+                      'fa-sort': query !== SortFields.Sex,
+                      'fa-sort-up': sort === SortFields.Sex && !isOrder,
+                      'fa-sort-down': sort === SortFields.Sex && isOrder,
                     })}
                   />
                 </span>
-              </Link>
+              </SearchLink>
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Born
-              <Link
-                to={{
-                  search: getSearchWith(
-                    searchParams,
-                    getSortQuery(SortFields.Born),
-                  ),
-                }}
+              <SearchLink
+                params={getSortQuery(SortFields.Born)}
               >
                 <span className="icon">
                   <i className={classNames('fas',
                     {
-                      'fa-sort': searchParams.get('sort') !== SortFields.Born,
-                      'fa-sort-up': searchParams.get('sort') === SortFields.Born
-                        && !searchParams.has('order'),
-                      'fa-sort-down':
-                        searchParams.get('sort') === SortFields.Born
-                      && searchParams.has('order'),
+                      'fa-sort': query !== SortFields.Born,
+                      'fa-sort-up': sort === SortFields.Born && !isOrder,
+                      'fa-sort-down': sort === SortFields.Born && isOrder,
                     })}
                   />
                 </span>
-              </Link>
+              </SearchLink>
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Died
-              <Link
-                to={{
-                  search: getSearchWith(
-                    searchParams,
-                    getSortQuery(SortFields.Died),
-                  ),
-                }}
+              <SearchLink
+                params={getSortQuery(SortFields.Died)}
               >
                 <span className="icon">
                   <i className={classNames('fas',
                     {
-                      'fa-sort': searchParams.get('sort') !== SortFields.Died,
-                      'fa-sort-up': searchParams.get('sort') === SortFields.Died
-                        && !searchParams.has('order'),
-                      'fa-sort-down':
-                        searchParams.get('sort') === SortFields.Died
-                      && searchParams.has('order'),
+                      'fa-sort': query !== SortFields.Died,
+                      'fa-sort-up': sort === SortFields.Died && !isOrder,
+                      'fa-sort-down': sort === SortFields.Died && isOrder,
                     })}
                   />
                 </span>
-              </Link>
+              </SearchLink>
             </span>
           </th>
 
