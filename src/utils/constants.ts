@@ -7,6 +7,6 @@ export const ERRORS = {
 
 export const NO_PARENT_MARK = '-';
 
-export const centuryFilterButtonsNumber = 5;
+export const CENTURY_BUTTONS_BEGINNING = 5;
 
-export const startingCentury = 16;
+export const STARTING_CENTURY = 16;

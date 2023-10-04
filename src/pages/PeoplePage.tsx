@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import classNames from 'classnames';
 import { Loader, PeopleTable, PeopleFilters } from '../components';
@@ -20,6 +20,7 @@ export const PeoplePage = () => {
   const centuries = searchParams.getAll(SearchParameters.Centuries) || [];
   const sort = searchParams.get(SearchParameters.Sort) || '';
   const order = searchParams.get(SearchParameters.Order) || '';
+  const firstRender = useRef(true);
 
   useEffect(() => {
     setIsLoading(true);
@@ -47,6 +48,12 @@ export const PeoplePage = () => {
   );
 
   useEffect(() => {
+    if (firstRender.current) {
+      firstRender.current = false;
+
+      return;
+    }
+
     if (!visiblePeople.length) {
       setErrorMessage(ERRORS.NO_PEOPLE_ON_SEARCH_ERROR);
     } else {
