@@ -1,4 +1,18 @@
+/* eslint-disable no-console */
+// import { useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
+
 export const PeopleFilters = () => {
+  // const [filterName, setFilterName] = useState('');
+  const [searchParams, setSearchParams] = useSearchParams();
+  // const [year, setYear] = useState(1900);
+  // const history = useHistory();
+
+  const query = searchParams.get('query') || '';
+  const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchParams({ query: event.target.value });
+  };
+
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
@@ -16,6 +30,8 @@ export const PeopleFilters = () => {
             type="search"
             className="input"
             placeholder="Search"
+            value={query}
+            onChange={onChange}
           />
 
           <span className="icon is-left">
