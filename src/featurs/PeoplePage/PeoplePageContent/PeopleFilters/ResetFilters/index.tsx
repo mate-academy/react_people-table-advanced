@@ -7,4 +7,4 @@ export const ResetFilters = () => (
       Reset all filters
     </a>
   </div>
-)
+);
