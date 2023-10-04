@@ -14,13 +14,11 @@ export const PeoplePageContent = () => {
     people,
     error,
     isLoading,
-    sortField,
-    isReversed,
   }
 = usePeoplePageContext();
 
   const visablePeople
-     = useGetDisplayPeople(people, sortField, isReversed);
+     = useGetDisplayPeople(people);
 
   return (
     <div data-cy="app">

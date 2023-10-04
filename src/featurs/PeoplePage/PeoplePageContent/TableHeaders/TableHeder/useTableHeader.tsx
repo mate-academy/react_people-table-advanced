@@ -1,36 +1,53 @@
-import { SortField } from '../../../../../context/types';
+import { useSearchParams } from 'react-router-dom';
 
 export const useTableHeader = () => {
-  const getHref = (name: string, isReversed: boolean) => {
+  const [searchParams] = useSearchParams();
+
+  const sortFilter = searchParams.get('sort');
+  const orderFilter = searchParams.get('order');
+
+  const isSortName = (name: string) => {
     const lowerCaseName = name.toLocaleLowerCase();
 
-    if (isReversed) {
-      return `#/people?sort=${lowerCaseName}&order=desc`;
+    if ((sortFilter === null || sortFilter === lowerCaseName)
+      && orderFilter === null) {
+      return lowerCaseName;
     }
 
-    if (!isReversed) {
-      return `#/people?sort=${lowerCaseName}&order=asc`;
+    if (sortFilter !== lowerCaseName) {
+      return lowerCaseName;
     }
 
-    return `#/people?sort=${lowerCaseName}`;
+    return null;
   };
 
-  const sortIcon = (
-    name: string,
-    sortFiled: SortField | null,
-    isReversed: boolean,
-  ) => {
-    if (sortFiled === name.toLocaleLowerCase() && !isReversed) {
-      return 'fas fa-sort-up';
+  const isOrder = (name: string) => {
+    const lowerCaseName = name.toLocaleLowerCase();
+
+    if (sortFilter === null && orderFilter === null) {
+      return null;
     }
 
-    if (sortFiled === name.toLocaleLowerCase()
-      && isReversed) {
+    if (sortFilter === lowerCaseName && orderFilter === null) {
+      return 'desc';
+    }
+
+    return null;
+  };
+
+  const sortIcon = (name: string) => {
+    const lowerCaseName = name.toLocaleLowerCase();
+
+    if (sortFilter === lowerCaseName && orderFilter) {
       return 'fas fa-sort-down';
+    }
+
+    if (sortFilter === lowerCaseName) {
+      return 'fas fa-sort-up';
     }
 
     return 'fas fa-sort';
   };
 
-  return { sortIcon, getHref };
+  return { isSortName, isOrder, sortIcon };
 };

@@ -1,33 +1,24 @@
-import { usePeoplePageContext } from '../../../../context/PeoplePageContext';
 import { TableHeader } from './TableHeder';
 
-export const TableHeaders = () => {
-  const { sortOnClick } = usePeoplePageContext();
+export const TableHeaders = () => (
+  <thead>
+    <tr>
+      <TableHeader
+        name="Name"
+      />
+      <TableHeader
+        name="Sex"
+      />
+      <TableHeader
+        name="Born"
+      />
+      <TableHeader
+        name="Died"
+      />
 
-  return (
-    <thead>
-      <tr>
-        <TableHeader
-          name="Name"
-          onClick={() => sortOnClick('name')}
-        />
-        <TableHeader
-          name="Sex"
-          onClick={() => sortOnClick('sex')}
-        />
-        <TableHeader
-          name="Born"
-          onClick={() => sortOnClick('born')}
-        />
-        <TableHeader
-          name="Died"
-          onClick={() => sortOnClick('died')}
-        />
+      <th>Mother</th>
+      <th>Father</th>
+    </tr>
+  </thead>
 
-        <th>Mother</th>
-        <th>Father</th>
-      </tr>
-    </thead>
-
-  );
-};
+);

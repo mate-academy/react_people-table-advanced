@@ -1,33 +1,29 @@
-import { usePeoplePageContext } from '../../../../../context/PeoplePageContext';
 import { useTableHeader } from './useTableHeader';
+import { SearchLink } from './SearchLink';
 
 type Props = {
   name: string,
-  onClick: () => void,
 };
 
 export const TableHeader = ({
   name,
-  onClick,
 }: Props) => {
-  const { sortField, isReversed } = usePeoplePageContext();
-  const { sortIcon, getHref } = useTableHeader();
-
-  const sortClassName = sortIcon(name, sortField, isReversed);
-  const href = getHref(name, isReversed);
+  const { isSortName, isOrder, sortIcon } = useTableHeader();
 
   return (
     <th>
       <span className="is-flex is-flex-wrap-nowrap">
         {name}
-        <a
-          href={href}
-          onClick={onClick}
+        <SearchLink
+          params={{
+            sort: isSortName(name),
+            order: isOrder(name),
+          }}
         >
           <span className="icon">
-            <i className={sortClassName} />
+            <i className={sortIcon(name)} />
           </span>
-        </a>
+        </SearchLink>
       </span>
     </th>
   );
