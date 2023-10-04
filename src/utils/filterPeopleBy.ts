@@ -6,7 +6,7 @@ export const filterPeople = (
 ): Person[] => {
   const searchSex = searchParams.get('sex');
   const searchCenturies = searchParams.getAll('centuries');
-  const searchQuery = searchParams.get('query')?.toLowerCase();
+  const searchQuery = searchParams.get('query')?.toLowerCase().trim();
 
   return people.filter(({
     sex, born, motherName, fatherName, name,
