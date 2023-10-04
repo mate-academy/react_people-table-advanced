@@ -44,9 +44,6 @@ export const PersonRow:React.FC<{
         ) : getName(person.fatherName) }
 
       </td>
-      <td>
-        {person.century}
-      </td>
     </tr>
   );
 };
