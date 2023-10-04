@@ -29,28 +29,32 @@ export const TableHeader: React.FC = () => {
   return (
     <thead>
       <tr>
-        {tableColumns.map(column => (
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              {column}
-              <SearchLink
-                params={{
-                  sort: setSortField(column.toLowerCase()) || null,
-                  order: setOrder(column.toLowerCase()) || null,
-                }}
-              >
-                <span className="icon">
-                  <i className={classNames('fas', {
-                    'fa-sort': sort !== column,
-                    'fa-sort-up': sort === column && order !== 'desc',
-                    'fa-sort-down': sort === column && order === 'desc',
-                  })}
-                  />
-                </span>
-              </SearchLink>
-            </span>
-          </th>
-        ))}
+        {tableColumns.map(column => {
+          const lowerColumn = column.toLowerCase();
+
+          return (
+            <th>
+              <span className="is-flex is-flex-wrap-nowrap">
+                {column}
+                <SearchLink
+                  params={{
+                    sort: setSortField(lowerColumn) || null,
+                    order: setOrder(lowerColumn) || null,
+                  }}
+                >
+                  <span className="icon">
+                    <i className={classNames('fas', {
+                      'fa-sort': sort !== lowerColumn,
+                      'fa-sort-up': sort === lowerColumn && order !== 'desc',
+                      'fa-sort-down': sort === lowerColumn && order === 'desc',
+                    })}
+                    />
+                  </span>
+                </SearchLink>
+              </span>
+            </th>
+          );
+        })}
 
         <th>Mother</th>
         <th>Father</th>

@@ -36,12 +36,6 @@ export const PeoplePage: React.FC = () => {
                 </p>
               )}
 
-              {false && (
-                <p>
-                  {ErrorMessages.NoMatch}
-                </p>
-              )}
-
               {!!peopleList.length && (
                 <PeopleTable />
               )}

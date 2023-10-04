@@ -4,6 +4,7 @@ import { PeopleContext } from '../PeopleContext';
 import { PersonRow } from './PersonRow';
 import { getFilteredPeople } from '../utils/functions';
 import { TableHeader } from './TableHeader';
+import { ErrorMessages } from '../types/ErrorMessages';
 
 export const PeopleTable: React.FC = () => {
   const { peopleList } = useContext(PeopleContext);
@@ -22,21 +23,29 @@ export const PeopleTable: React.FC = () => {
   });
 
   return (
-    <table
-      data-cy="peopleTable"
-      className="table is-striped is-hoverable is-narrow is-fullwidth"
-    >
-      <TableHeader />
+    <>
+      {!filteredPeople.length && (
+        <p>
+          {ErrorMessages.NoMatch}
+        </p>
+      )}
 
-      <tbody>
-        {filteredPeople.map(person => (
-          <PersonRow
-            person={person}
-            peopleSlug={peopleSlug}
-            key={person.slug}
-          />
-        ))}
-      </tbody>
-    </table>
+      <table
+        data-cy="peopleTable"
+        className="table is-striped is-hoverable is-narrow is-fullwidth"
+      >
+        <TableHeader />
+
+        <tbody>
+          {filteredPeople.map(person => (
+            <PersonRow
+              person={person}
+              peopleSlug={peopleSlug}
+              key={person.slug}
+            />
+          ))}
+        </tbody>
+      </table>
+    </>
   );
 };
