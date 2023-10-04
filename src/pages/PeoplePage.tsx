@@ -157,9 +157,13 @@ export const PeoplePage = () => {
                 </p>
               )}
 
-              {isPeopleOnServer && (
-                <PeopleTable people={visiblePeople} />
-              )}
+              {visiblePeople.length
+                ? <PeopleTable people={visiblePeople} />
+                : (
+                  <p>
+                    There are no people matching the current search criteria
+                  </p>
+                )}
             </div>
           </div>
         </div>
