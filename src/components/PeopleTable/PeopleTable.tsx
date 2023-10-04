@@ -48,17 +48,17 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
           <th>Mother</th>
           <th>Father</th>
         </tr>
-
-        <tbody>
-          {people.map((person) => (
-            <PersonRow
-              person={person}
-              selectedPersonId={personId}
-              key={person.slug}
-            />
-          ))}
-        </tbody>
       </thead>
+
+      <tbody>
+        {people.map((person) => (
+          <PersonRow
+            person={person}
+            selectedPersonId={personId}
+            key={person.slug}
+          />
+        ))}
+      </tbody>
     </table>
   );
 };
