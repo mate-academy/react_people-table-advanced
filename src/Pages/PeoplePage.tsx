@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useLayoutEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Person } from '../types';
 import { getPeople } from '../api';
@@ -22,7 +22,7 @@ export const PeoplePage: React.FC = () => {
   const isSuccessfullyLoadedHasMatch = isSuccessfullyLoaded
     && Boolean(visiblePeople.length);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     setIsPeopleLoading(true);
 
     const fetchPeople = async () => {
