@@ -18,13 +18,11 @@ export const getPreparedPeople = (
       const filterByName = person.name.toLowerCase()
         .includes(query.toLowerCase());
 
-      const filterByMother = person.mother
-        ? person.mother.name.toLowerCase().includes(preparedQuery)
-        : person.motherName?.toLowerCase().includes(preparedQuery);
+      const filterByMother = person.motherName?.toLowerCase()
+        .includes(preparedQuery);
 
-      const filterByFather = person.father
-        ? person.father.name.toLowerCase().includes(preparedQuery)
-        : person.fatherName?.toLowerCase().includes(preparedQuery);
+      const filterByFather = person.fatherName?.toLowerCase()
+        .includes(preparedQuery);
 
       return filterByName || filterByMother || filterByFather;
     });
