@@ -8,6 +8,7 @@ type Props = {
 };
 
 export const PersonalLink: React.FC<Props> = ({ person }) => {
+
   return (
     <Link
       to={`../${person.slug}`}

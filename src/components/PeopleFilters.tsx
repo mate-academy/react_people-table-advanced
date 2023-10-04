@@ -31,11 +31,8 @@ export const PeopleFilters = () => {
       <p className="panel-tabs" data-cy="SexFilter">
         {Object.entries(Sex).map(([option, value]) => {
           const isActive = value === Sex.All
-            ? !sex
-            : sex === value;
-          const sexValue = value === Sex.All
-            ? null
-            : value;
+            ? (!sex || sex === value) : sex === value;
+          const sexValue = value === Sex.All ? null : value;
 
           return (
             <SearchLink

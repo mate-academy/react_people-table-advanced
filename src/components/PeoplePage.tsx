@@ -75,6 +75,15 @@ export const PeoplePage = () => {
 
   const filteredPeople = filterPeople(people, query, sex, centuries);
 
+  // const navigate = useNavigate();
+
+  // function handleUserClick(slug: string) {
+  //   const newSearchParams = new URLSearchParams(searchParams);
+  //
+  //   newSearchParams.set('page', '2');
+  //   navigate(`/people/${slug}?${newSearchParams.toString()}`);
+  // }
+
   return (
     <>
       <h1 className="title">People Page</h1>
@@ -112,7 +121,9 @@ export const PeoplePage = () => {
               )}
 
               {!!filteredPeople.length && (
-                <PeopleTable people={filteredPeople} />
+                <PeopleTable
+                  people={filteredPeople}
+                />
               )}
             </div>
           </div>
