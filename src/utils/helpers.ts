@@ -1,7 +1,6 @@
 import classNames from 'classnames';
+import { CENTURY_VALUE } from './constants';
 import { Person, SortField, SortOrder } from '../types';
-
-const CENTURY_VALUE = 100;
 
 export function getNavLinkClass({ isActive }: { isActive: boolean }) {
   return classNames('navbar-item', {

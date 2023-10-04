@@ -1,9 +1,8 @@
 import { memo } from 'react';
 import classNames from 'classnames';
+import { EMPTY_VALUE } from '../utils/constants';
 import { Person } from '../types';
 import { PersonLink } from './PersonLink';
-
-const EMPTY_VALUE = '-';
 
 type Props = {
   person: Person;

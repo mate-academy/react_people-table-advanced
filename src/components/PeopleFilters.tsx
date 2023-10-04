@@ -1,11 +1,10 @@
 import { memo } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import classNames from 'classnames';
+import { CENTURIES } from '../utils/constants';
 import { SearchParam, Sex } from '../types';
 import { toggleCentury } from '../utils';
 import { SearchLink } from './SearchLink';
-
-const CENTURIES = ['16', '17', '18', '19', '20'];
 
 export const PeopleFilters = memo(() => {
   const [searchParams, setSearchParams] = useSearchParams();
