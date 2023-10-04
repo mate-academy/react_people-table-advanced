@@ -1,6 +1,6 @@
 import { Person } from '../types';
 
-export const filterPeople = (
+export const getFilteredPeople = (
   people: Person[],
   searchParams: URLSearchParams,
 ): Person[] => {

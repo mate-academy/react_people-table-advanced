@@ -16,6 +16,11 @@ export const PeoplePage: React.FC = () => {
   const visiblePeople = applySearchAndFilter(people, searchParams);
 
   const isSuccessfullyLoaded = !hasError && !isPeopleLoading;
+  const isSuccessfullyLoadedEmpty = isSuccessfullyLoaded && !people.length;
+  const isSuccessfullyLoadedNoMatch = isSuccessfullyLoaded
+    && !visiblePeople.length;
+  const isSuccessfullyLoadedHasMatch = isSuccessfullyLoaded
+    && Boolean(visiblePeople.length);
 
   useEffect(() => {
     setIsPeopleLoading(true);
@@ -60,19 +65,19 @@ export const PeoplePage: React.FC = () => {
                 </p>
               )}
 
-              {isSuccessfullyLoaded && !people.length && (
+              {isSuccessfullyLoadedEmpty && (
                 <p data-cy="noPeopleMessage">
                   There are no people on the server
                 </p>
               )}
 
-              {isSuccessfullyLoaded && !visiblePeople.length && (
+              {isSuccessfullyLoadedNoMatch && (
                 <p>
                   There are no people matching the current search criteria
                 </p>
               )}
 
-              {isSuccessfullyLoaded && Boolean(visiblePeople.length) && (
+              {isSuccessfullyLoadedHasMatch && (
                 <PeopleTable people={visiblePeople} />
               )}
             </div>

@@ -1,5 +1,5 @@
 import { Person } from '../types';
-import { filterPeople } from './filterPeopleBy';
+import { getFilteredPeople } from './getFilteredPeople ';
 import { sortPeople } from './sortPeopleBy';
 
 export const applySearchAndFilter = (
@@ -18,7 +18,7 @@ export const applySearchAndFilter = (
     || stringParams.includes('sex=')
     || stringParams.includes('query')
   ) {
-    currentPeople = filterPeople(people, searchParams);
+    currentPeople = getFilteredPeople(people, searchParams);
   }
 
   if (stringParams.includes('sort') && currentPeople.length) {

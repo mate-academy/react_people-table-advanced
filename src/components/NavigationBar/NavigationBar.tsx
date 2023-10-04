@@ -1,8 +1,9 @@
-import { NavLink } from 'react-router-dom';
+import { NavLink, useSearchParams } from 'react-router-dom';
 import classNames from 'classnames';
 import { Link } from '../../types/Link';
 
 export const NavigationBar: React.FC = () => {
+  const [searchParams] = useSearchParams();
   const getClassNames = ({ isActive }: Link) => {
     return classNames(
       'navbar-item',
@@ -30,7 +31,12 @@ export const NavigationBar: React.FC = () => {
 
           <NavLink
             className={getClassNames}
-            to="/people"
+            to={
+              {
+                pathname: '/people',
+                search: `?${searchParams.toString()}`,
+              }
+            }
           >
             People
           </NavLink>
