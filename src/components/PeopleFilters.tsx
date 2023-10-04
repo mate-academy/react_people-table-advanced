@@ -7,13 +7,16 @@ import { Sex } from '../types';
 
 type Props = {
   centuries: string[]
+  query: string
+  sex: string
 };
 
-export const PeopleFilters: React.FC<Props> = ({ centuries }) => {
+export const PeopleFilters: React.FC<Props> = ({
+  centuries,
+  query,
+  sex,
+}) => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const query = searchParams.get(SearchParameters.Query) || '';
-  // const centuries = searchParams.getAll(SearchParameters.Centuries) || [];
-  const sex = searchParams.get(SearchParameters.Sex) || '';
 
   function handleQueryChange(event: React.ChangeEvent<HTMLInputElement>) {
     setSearchParams(

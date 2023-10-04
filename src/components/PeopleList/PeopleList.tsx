@@ -1,4 +1,3 @@
-import { useSearchParams } from 'react-router-dom';
 import cn from 'classnames';
 import { Person } from '../../types';
 import { ColumsNames, SearchParameters } from '../../variables';
@@ -8,13 +7,15 @@ import { SearchParams } from '../../utils/searchHelper';
 
 type Props = {
   people: Person[],
+  sort: string,
+  order: string,
 };
 
-export const PeopleList: React.FC<Props> = ({ people }) => {
-  const [searchParams] = useSearchParams();
-  const sort = searchParams.get(SearchParameters.Sort) || '';
-  const order = searchParams.get(SearchParameters.Order) || '';
-
+export const PeopleList: React.FC<Props> = ({
+  people,
+  sort,
+  order,
+}) => {
   function getSearchColumsParams(value: string): SearchParams {
     const firstClick = sort !== value;
     const secondClick = sort === value && !order;

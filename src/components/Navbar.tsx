@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useSearchParams } from 'react-router-dom';
 
 const getLinkClass = (
   { isActive }: { isActive: boolean },
@@ -7,26 +7,31 @@ const getLinkClass = (
   'has-background-grey-lighter': isActive,
 });
 
-export const Navbar = () => (
-  <nav
-    data-cy="nav"
-    className="navbar is-fixed-top has-shadow"
-    role="navigation"
-    aria-label="main navigation"
-  >
-    <div className="container">
-      <div className="navbar-brand">
-        <NavLink className={getLinkClass} to="/">
-          Home
-        </NavLink>
+export const Navbar = () => {
+  const [params] = useSearchParams();
+  const allParams = params.toString();
 
-        <NavLink
-          className={getLinkClass}
-          to="/people"
-        >
-          People
-        </NavLink>
+  return (
+    <nav
+      data-cy="nav"
+      className="navbar is-fixed-top has-shadow"
+      role="navigation"
+      aria-label="main navigation"
+    >
+      <div className="container">
+        <div className="navbar-brand">
+          <NavLink className={getLinkClass} to="/">
+            Home
+          </NavLink>
+
+          <NavLink
+            className={getLinkClass}
+            to={`/people?${allParams}`}
+          >
+            People
+          </NavLink>
+        </div>
       </div>
-    </div>
-  </nav>
-);
+    </nav>
+  );
+};

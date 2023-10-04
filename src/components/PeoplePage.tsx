@@ -46,14 +46,14 @@ export const PeoplePage: React.FC = () => {
 
       if (query) {
         isVisible = isVisible
-        && (preperedPerson(person.name)
-          || preperedPerson(person.motherName)
-          || preperedPerson(person.fatherName));
+          && (preperedPerson(person.name)
+            || preperedPerson(person.motherName)
+            || preperedPerson(person.fatherName));
       }
 
       if (centuries.length) {
         isVisible = isVisible
-        && centuries.includes(`${Math.ceil(person.born / CENTURY)}`);
+          && centuries.includes(`${Math.ceil(person.born / CENTURY)}`);
       }
 
       if (sex) {
@@ -89,6 +89,8 @@ export const PeoplePage: React.FC = () => {
 
   const peopleLoadingError = errorMessage && !isLoading;
   const noPeopleMessage = !people.length && !isLoading && !errorMessage;
+  const hasVisiblePeople = !isLoading && !errorMessage
+    && people.length && !visiblePeople.length;
 
   return (
     <>
@@ -98,7 +100,11 @@ export const PeoplePage: React.FC = () => {
         <div className="columns is-desktop is-flex-direction-row-reverse">
           <div className="column is-7-tablet is-narrow-desktop">
             {!isLoading && (
-              <PeopleFilters centuries={centuries} />
+              <PeopleFilters
+                centuries={centuries}
+                query={query}
+                sex={sex}
+              />
             )}
           </div>
 
@@ -120,10 +126,16 @@ export const PeoplePage: React.FC = () => {
                 </p>
               )}
 
-              {/* <p>There are no people matching the current search criteria</p> */}
+              {hasVisiblePeople && (
+                <p>There are no people matching the current search criteria</p>
+              )}
 
-              {!!people.length && (
-                <PeopleList people={visiblePeople} />
+              {!!visiblePeople.length && (
+                <PeopleList
+                  people={visiblePeople}
+                  sort={sort}
+                  order={order}
+                />
               )}
             </div>
           </div>
