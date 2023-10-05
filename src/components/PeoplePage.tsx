@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { PeopleFilters } from './PeopleFilters';
 import { Loader } from './Loader';
 import { PeopleTable } from './PeopleTable';
-import { Person, SearchParameters } from '../types';
+import { Person, SearchParameters, SortValues } from '../types';
 import { getPeople } from '../api';
 import { getPreparedPersons } from '../utils/getPreparedPersons';
 
@@ -13,13 +13,9 @@ export const PeoplePage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [searchParams] = useSearchParams();
 
-  const sort = searchParams.get(SearchParameters.Sort) || '';
+  const sort = searchParams.get(SearchParameters.Sort) as SortValues || '';
   const order = searchParams.get(SearchParameters.Order) || '';
-
-  // eslint-disable-next-line no-console
-  console.log(sort, order);
   const centuries = searchParams.getAll(SearchParameters.Centuries) || [];
-
   const query = searchParams.get(SearchParameters.Query) || '';
   const sex = searchParams.get(SearchParameters.Sex) || '';
 
@@ -46,6 +42,35 @@ export const PeoplePage = () => {
         setIsLoading(false);
       });
   }, []);
+
+  const sortPeople = (sortType: SortValues,
+    isOrder: string,
+    allPeople: Person[]) => {
+    const copyAllPeople = [...allPeople];
+
+    if (sortType) {
+      copyAllPeople.sort((a, b) => {
+        switch (sortType) {
+          case SortValues.Name:
+            return a.name.localeCompare(b.name);
+          case SortValues.Sex:
+            return a.sex.localeCompare(b.sex);
+          case SortValues.Born:
+            return a.born - b.born;
+          case SortValues.Died:
+            return a.died - b.died;
+          default:
+            return 0;
+        }
+      });
+    }
+
+    if (isOrder === 'desc') {
+      copyAllPeople.reverse();
+    }
+
+    return copyAllPeople;
+  };
 
   function filterPeople(allPeople: Person[],
     queryFilter: string,
@@ -74,15 +99,7 @@ export const PeoplePage = () => {
   }
 
   const filteredPeople = filterPeople(people, query, sex, centuries);
-
-  // const navigate = useNavigate();
-
-  // function handleUserClick(slug: string) {
-  //   const newSearchParams = new URLSearchParams(searchParams);
-  //
-  //   newSearchParams.set('page', '2');
-  //   navigate(`/people/${slug}?${newSearchParams.toString()}`);
-  // }
+  const isSortedPeople = sortPeople(sort, order, filteredPeople);
 
   return (
     <>
@@ -101,9 +118,6 @@ export const PeoplePage = () => {
               {isLoading && (
                 <Loader />
               )}
-              {/* <Loader /> */}
-
-              {/* <p data-cy="peopleLoadingError">Something went wrong</p> */}
 
               {isErrorMessageVisible && (
                 <p data-cy="peopleLoadingError" className="has-text-danger">
@@ -122,7 +136,7 @@ export const PeoplePage = () => {
 
               {!!filteredPeople.length && (
                 <PeopleTable
-                  people={filteredPeople}
+                  people={isSortedPeople}
                 />
               )}
             </div>

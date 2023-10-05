@@ -1,7 +1,9 @@
-import { useParams } from 'react-router-dom';
+import { useParams, useSearchParams } from 'react-router-dom';
 import React from 'react';
-import { Person } from '../types';
+import cn from 'classnames';
+import { Person, SearchParameters } from '../types';
 import { User } from './User';
+import { SearchLink } from './SearchLink';
 import { NamesColumnsTable } from '../constants/NamesColumnsTable';
 
 type Props = {
@@ -11,6 +13,11 @@ type Props = {
 export const PeopleTable: React.FC<Props> = ({ people }) => {
   const { slug = '' } = useParams();
 
+  const [searchParams] = useSearchParams();
+
+  const isSorted = searchParams.get(SearchParameters.Sort);
+  const isOrdered = searchParams.get(SearchParameters.Order);
+
   return (
     <table
       data-cy="peopleTable"
@@ -18,18 +25,38 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
     >
       <thead>
         <tr>
-          {NamesColumnsTable.map(name => (
-            <th
-              key={name}
-            >
-              {name}
-              <a href="#/people?sort=sex">
-                <span className="icon">
-                  <i className="fas fa-sort" />
+          {NamesColumnsTable.map((name, index) => {
+            const lowercaseName = name.toLowerCase();
+
+            return (
+              <th key={name}>
+                <span className="is-flex is-flex-wrap-nowrap">
+                  {name}
+                  {(index < 4) && (
+                    <SearchLink
+                      params={{
+                        sort: isOrdered ? null : lowercaseName,
+                        order:
+                          (isSorted === lowercaseName && !isOrdered)
+                            ? 'desc'
+                            : null,
+                      }}
+                    >
+                      <span className="icon">
+                        <i
+                          className={cn('fas', {
+                            'fa-sort': true,
+                            'fa-sort-up': true,
+                            'fa-sort-down': true,
+                          })}
+                        />
+                      </span>
+                    </SearchLink>
+                  )}
                 </span>
-              </a>
-            </th>
-          ))}
+              </th>
+            );
+          })}
         </tr>
       </thead>
 
