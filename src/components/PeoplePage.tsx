@@ -1,3 +1,4 @@
+// eslint-disable-next-line
 import { useParams } from 'react-router';
 import { useEffect, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
