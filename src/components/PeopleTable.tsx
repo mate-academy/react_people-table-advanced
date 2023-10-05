@@ -28,6 +28,30 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
           {NamesColumnsTable.map((name, index) => {
             const lowercaseName = name.toLowerCase();
 
+            let sortValue = null;
+            let orderValue = null;
+
+            if (isSorted && isSorted !== lowercaseName) {
+              sortValue = lowercaseName;
+            }
+
+            if (isSorted !== lowercaseName || isSorted) {
+              sortValue = lowercaseName;
+            }
+
+            if (isSorted && isSorted === lowercaseName) {
+              orderValue = 'desc';
+            }
+
+            if (isSorted && isOrdered) {
+              sortValue = null;
+              orderValue = null;
+            }
+
+            const noSort = isSorted !== lowercaseName;
+            const firstSort = isSorted === lowercaseName;
+            const reverseSort = firstSort && isOrdered;
+
             return (
               <th key={name}>
                 <span className="is-flex is-flex-wrap-nowrap">
@@ -35,19 +59,16 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
                   {(index < 4) && (
                     <SearchLink
                       params={{
-                        sort: isOrdered ? null : lowercaseName,
-                        order:
-                          (isSorted === lowercaseName && !isOrdered)
-                            ? 'desc'
-                            : null,
+                        sort: sortValue,
+                        order: orderValue,
                       }}
                     >
                       <span className="icon">
                         <i
                           className={cn('fas', {
-                            'fa-sort': true,
-                            'fa-sort-up': true,
-                            'fa-sort-down': true,
+                            'fa-sort': noSort,
+                            'fa-sort-up': firstSort && !reverseSort,
+                            'fa-sort-down': reverseSort,
                           })}
                         />
                       </span>
