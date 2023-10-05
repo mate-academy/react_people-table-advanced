@@ -1,7 +1,7 @@
 import { useSearchParams, Link } from 'react-router-dom';
 import classNames from 'classnames';
-import * as constants from '../utils/constants';
-import { Gender } from '../types/Gender';
+import * as constants from '../../utils/constants';
+import { Gender } from '../../types/Gender';
 
 type Props = {
   query: string | null,

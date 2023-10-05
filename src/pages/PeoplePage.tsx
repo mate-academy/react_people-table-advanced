@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
-import { PeopleFilters } from '../components/PeopleFilters';
+import { PeopleFilters } from '../components/PeopleFilters/PeopleFilters';
 import { Loader } from '../components/Loader';
 import { PeopleTable } from '../components/PeopleTable';
 import { Person } from '../types/Person';
 import { getPeople } from '../services/people';
-import { getPeopleWithParents } from '../helper';
+import { getPeopleWithParents, sortPeople } from '../helper';
 import { Gender } from '../types/Gender';
 
 function hasNormalizedQuery(content: string, query: string | null): boolean {
@@ -45,10 +45,13 @@ function filterPeopleByQuery(
 
 export const PeoplePage: React.FC = () => {
   const [people, setPeople] = useState<Person[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [errorMassage, setErrorMassage] = useState('');
 
   const [searchParams] = useSearchParams();
+  const oldSort = searchParams.get('sort');
+  const oldOrder = searchParams.get('order');
+
   const { slug: selectedSlug } = useParams();
 
   const isShowTable = !isLoading && !!people.length;
@@ -58,14 +61,14 @@ export const PeoplePage: React.FC = () => {
     && !people.length;
 
   useEffect(() => {
-    setIsLoading(true);
-
-    getPeople()
-      .then(peopleList => {
-        setPeople(getPeopleWithParents(peopleList));
-      })
-      .catch(() => setErrorMassage('Something went wrong'))
-      .finally(() => setIsLoading(false));
+    setTimeout(() => {
+      getPeople()
+        .then(peopleList => {
+          setPeople(getPeopleWithParents(peopleList));
+        })
+        .catch(() => setErrorMassage('Something went wrong'))
+        .finally(() => setIsLoading(false));
+    }, 1000);
   }, []);
 
   const selectedGender: string = searchParams.get('sex') ?? '';
@@ -82,6 +85,8 @@ export const PeoplePage: React.FC = () => {
     centuries,
   );
 
+  const sortedPeople = sortPeople(visiblePeople, oldSort, oldOrder);
+
   return (
     <>
       <h1 className="title">People Page</h1>
@@ -89,10 +94,12 @@ export const PeoplePage: React.FC = () => {
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
           <div className="column is-7-tablet is-narrow-desktop">
-            <PeopleFilters
-              query={query}
-              centuries={centuries}
-            />
+            {!isLoading && (
+              <PeopleFilters
+                query={query}
+                centuries={centuries}
+              />
+            )}
           </div>
 
           <div className="column">
@@ -103,7 +110,7 @@ export const PeoplePage: React.FC = () => {
 
               {isShowTable && (
                 <PeopleTable
-                  people={visiblePeople}
+                  people={sortedPeople}
                   selectedSlug={selectedSlug}
                 />
               )}
@@ -114,9 +121,10 @@ export const PeoplePage: React.FC = () => {
                     There are no people on the server
                   </p>
                 )}
-
-              <p>There are no people matching the current search criteria</p>
-
+              {!isLoading
+              && !sortedPeople.length && (
+                <p>There are no people matching the current search criteria</p>
+              )}
               {errorMassage && (
                 <p
                   data-cy="peopleLoadingError"

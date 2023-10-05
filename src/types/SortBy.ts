@@ -1,4 +1,4 @@
-export enum SortType {
+export enum SortBy {
   Name = 'name',
   Sex = 'sex',
   Born = 'born',
