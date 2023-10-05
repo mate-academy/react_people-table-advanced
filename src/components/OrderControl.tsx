@@ -36,7 +36,6 @@ export const OrderControl = ({ sortBy }: OrderControlProps) => {
               && (searchParams.get('sortBy') === sortBy),
           })}
         />
-        {' '}
       </span>
     </SearchLink>
   );
