@@ -19,7 +19,16 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
       <thead>
         <tr>
           {NamesColumnsTable.map(name => (
-            <th key={name}>{name}</th>
+            <th
+              key={name}
+            >
+              {name}
+              <a href="#/people?sort=sex">
+                <span className="icon">
+                  <i className="fas fa-sort" />
+                </span>
+              </a>
+            </th>
           ))}
         </tr>
       </thead>
