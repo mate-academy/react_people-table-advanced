@@ -2,8 +2,8 @@ import {
   createContext, useContext, useEffect, useState,
 } from 'react';
 import { PeoplePageContextType, Props } from './types';
-import { Person } from '../types';
-import { getPeople } from '../api';
+import { Person } from '../../../types';
+import { getPeople } from '../../../api';
 
 const PeoplePageContext
 = createContext<PeoplePageContextType | undefined>(undefined);

@@ -1,10 +1,16 @@
+import { SearchLink } from '../../TableHeaders/TableHeder/SearchLink';
+
 export const ResetFilters = () => (
   <div className="panel-block">
-    <a
+    <SearchLink
       className="button is-link is-outlined is-fullwidth"
-      href="#/people"
+      params={{
+        sex: null,
+        centuries: null,
+        query: null,
+      }}
     >
       Reset all filters
-    </a>
+    </SearchLink>
   </div>
 );

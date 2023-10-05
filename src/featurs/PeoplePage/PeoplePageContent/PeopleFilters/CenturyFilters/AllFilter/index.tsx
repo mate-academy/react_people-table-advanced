@@ -1,12 +1,14 @@
+import { SearchLink } from '../../../TableHeaders/TableHeder/SearchLink';
+
 export const AllFilter = () => (
 
   <div className="level-right ml-4">
-    <a
+    <SearchLink
       data-cy="centuryALL"
       className="button is-success is-outlined"
-      href="#/people"
+      params={{ centuries: null }}
     >
       All
-    </a>
+    </SearchLink>
   </div>
 );

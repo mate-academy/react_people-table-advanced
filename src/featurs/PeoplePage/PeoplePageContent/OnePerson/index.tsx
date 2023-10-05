@@ -4,7 +4,7 @@ import {
 import classNames from 'classnames';
 import { usePerson } from './usePerson';
 import { Person } from '../../../../types';
-import { usePeoplePageContext } from '../../../../context/PeoplePageContext';
+import { usePeoplePageContext } from '../../context/PeoplePageContext';
 
 type Props = {
   person: Person,

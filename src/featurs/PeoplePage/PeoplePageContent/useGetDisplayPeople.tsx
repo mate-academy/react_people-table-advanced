@@ -17,50 +17,76 @@ export const useGetDisplayPeople = (people: Person[]): Person[] => {
   const sortParam = searchParams.get('sort');
   const orderParam = searchParams.get('order') === 'desc' ? -1 : 1;
   const sexParam = searchParams.get('sex');
-  const centuries = searchParams.get('centuries');
+  const centuriesParam = searchParams.getAll('centuries');
+  const queryParam = searchParams.get('query');
+
+  const centuryRanges: CenturyRanges = {
+    16: { start: 1501, end: 1600 },
+    17: { start: 1601, end: 1700 },
+    18: { start: 1701, end: 1800 },
+    19: { start: 1801, end: 1900 },
+    20: { start: 1901, end: 2000 },
+  };
+
+  const filteredArray = resultArray.filter((person) => {
+    if (sexParam && person.sex !== sexParam) {
+      return false;
+    }
+
+    if (centuriesParam.length > 0) {
+      const isPersonInSelectedCenturies = centuriesParam.some((century) => {
+        const centuryRange = centuryRanges[century];
+
+        return (
+          centuryRange
+          && ((person.born >= centuryRange.start
+            && person.born <= centuryRange.end)
+            || (person.died >= centuryRange.start
+              && person.died <= centuryRange.end))
+        );
+      });
+
+      if (!isPersonInSelectedCenturies) {
+        return false;
+      }
+    }
+
+    if (queryParam) {
+      const query = queryParam.toLowerCase().trim();
+      const isMatch
+        = person.name.toLowerCase().includes(query)
+        || person.sex.toLowerCase().includes(query)
+        || person.born.toString().includes(query)
+        || person.died.toString().includes(query)
+        || (person.motherName
+          && person.motherName.toLowerCase().includes(query))
+        || (person.fatherName
+          && person.fatherName.toLowerCase().includes(query));
+
+      if (!isMatch) {
+        return false;
+      }
+    }
+
+    return true;
+  });
 
   switch (sortParam) {
     case 'name':
-      resultArray.sort((a, b) => a.name.localeCompare(b.name) * orderParam);
+      filteredArray.sort((a, b) => a.name.localeCompare(b.name) * orderParam);
       break;
     case 'sex':
-      resultArray.sort((a, b) => a.sex.localeCompare(b.sex) * orderParam);
+      filteredArray.sort((a, b) => a.sex.localeCompare(b.sex) * orderParam);
       break;
     case 'born':
-      resultArray.sort((a, b) => (a.born > b.born ? 1 : -1) * orderParam);
+      filteredArray.sort((a, b) => (a.born > b.born ? 1 : -1) * orderParam);
       break;
     case 'died':
-      resultArray.sort((a, b) => (a.died > b.died ? 1 : -1) * orderParam);
+      filteredArray.sort((a, b) => (a.died > b.died ? 1 : -1) * orderParam);
       break;
     default:
       break;
   }
 
-  if (sexParam === 'm') {
-    return resultArray.filter(p => p.sex === 'm');
-  }
-
-  if (sexParam === 'f') {
-    return resultArray.filter(p => p.sex === 'f');
-  }
-
-  if (centuries) {
-    const centuryRanges: CenturyRanges = {
-      16: { start: 1501, end: 1600 },
-      17: { start: 1601, end: 1700 },
-      18: { start: 1701, end: 1800 },
-      19: { start: 1801, end: 1900 },
-      20: { start: 1901, end: 2000 },
-    };
-
-    const centuryRange = centuryRanges[centuries];
-
-    if (centuryRange) {
-      return resultArray.filter(p => (p.born >= centuryRange.start
-        && p.born <= centuryRange.end)
-        || (p.died >= centuryRange.start && p.died <= centuryRange.end));
-    }
-  }
-
-  return resultArray;
+  return filteredArray;
 };

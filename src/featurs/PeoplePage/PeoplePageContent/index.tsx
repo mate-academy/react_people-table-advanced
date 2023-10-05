@@ -1,8 +1,7 @@
 import { nanoid } from 'nanoid';
 import { Loader } from './Loader';
-import {
-  usePeoplePageContext,
-} from '../../../context/PeoplePageContext';
+
+import { usePeoplePageContext } from '../context/PeoplePageContext';
 import { PeopleFilters } from './PeopleFilters';
 import { OnePerson } from './OnePerson';
 import { TableHeaders } from './TableHeaders';
@@ -15,10 +14,10 @@ export const PeoplePageContent = () => {
     error,
     isLoading,
   }
-= usePeoplePageContext();
+    = usePeoplePageContext();
 
-  const visablePeople
-     = useGetDisplayPeople(people);
+  const visiblePeople
+    = useGetDisplayPeople(people);
 
   return (
     <div data-cy="app">
@@ -30,11 +29,11 @@ export const PeoplePageContent = () => {
           <div className="block">
             <div className="columns is-desktop is-flex-direction-row-reverse">
               {!isLoading
-              && (
-                <div className="column is-7-tablet is-narrow-desktop">
-                  <PeopleFilters />
-                </div>
-              )}
+                && (
+                  <div className="column is-7-tablet is-narrow-desktop">
+                    <PeopleFilters />
+                  </div>
+                )}
               <div className="column">
 
                 <div className="box table-container">
@@ -42,38 +41,53 @@ export const PeoplePageContent = () => {
                     <Loader />
                   )}
 
-                  {error && (
-                    <p data-cy="peopleLoadingError" className="has-text-danger">
-                      Something went wrong
-                    </p>
+                  {error
+                    && (
+                      <p
+                        data-cy="peopleLoadingError"
+                        className="has-text-danger"
+                      >
+                        Something went wrong
+                      </p>
 
-                  )}
+                    )}
 
-                  {!isLoading && (people.length < 1) && (
-                    <p data-cy="noPeopleMessage">
-                      There are no people on the server
-                    </p>
-                    //              <p>There are no people matching the current search criteria</p>
-                  )}
+                  {!isLoading
+                    && !error
+                    && (!people.length)
+                    && (
+                      <p data-cy="noPeopleMessage">
+                        There are no people on the server
+                      </p>
+                    )}
+                  {!isLoading
+                    && !visiblePeople.length
+                    && !!people.length
+                    && (
+                      <p data-cy="noMatchingPeopleMessage">
+                        There are no people matching the current search criteria
+                      </p>
+                    )}
 
-                  { people.length > 0
-                && (
-                  <table
-                    data-cy="peopleTable"
-                    className="table is-striped
+                  {!!people.length
+                    && !!visiblePeople.length
+                    && (
+                      <table
+                        data-cy="peopleTable"
+                        className="table is-striped
                   is-hoverable is-narrow is-fullwidth"
-                  >
-                    <TableHeaders />
-                    <tbody>
-                      {visablePeople.map(person => (
-                        <OnePerson
-                          key={nanoid()}
-                          person={person}
-                        />
-                      ))}
-                    </tbody>
-                  </table>
-                )}
+                      >
+                        <TableHeaders />
+                        <tbody>
+                          {visiblePeople.map(person => (
+                            <OnePerson
+                              key={nanoid()}
+                              person={person}
+                            />
+                          ))}
+                        </tbody>
+                      </table>
+                    )}
 
                 </div>
               </div>

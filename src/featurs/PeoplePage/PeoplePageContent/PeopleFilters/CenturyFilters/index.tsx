@@ -1,52 +1,30 @@
+import { SearchLink } from '../../TableHeaders/TableHeder/SearchLink';
 import { AllFilter } from './AllFilter';
-import { CenturyFilter } from './CenturyFilter';
+import { useCenturyFilters } from './useCenturyFilters';
 
-export const CenturyFilters = () => (
-  <div className="panel-block">
-    <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
-      <div className="level-left">
-        <CenturyFilter />
-        <a
-          data-cy="century"
-          className="button mr-1"
-          href="#/people?centuries=16"
-        >
-          16
-        </a>
+export const CenturyFilters = () => {
+  const { centuries, getParams, className } = useCenturyFilters();
 
-        <a
-          data-cy="century"
-          className="button mr-1 is-info"
-          href="#/people?centuries=17"
-        >
-          17
-        </a>
+  return (
+    <div className="panel-block">
+      <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
+        <div className="level-left">
+          {centuries.map(century => (
+            <SearchLink
+              key={century}
+              data-cy="century"
+              className={className(century)}
+              params={{
+                centuries: getParams(century.toString()),
+              }}
+            >
+              {century}
+            </SearchLink>
+          ))}
 
-        <a
-          data-cy="century"
-          className="button mr-1 is-info"
-          href="#/people?centuries=18"
-        >
-          18
-        </a>
-
-        <a
-          data-cy="century"
-          className="button mr-1 is-info"
-          href="#/people?centuries=19"
-        >
-          19
-        </a>
-
-        <a
-          data-cy="century"
-          className="button mr-1"
-          href="#/people?centuries=20"
-        >
-          20
-        </a>
+        </div>
+        <AllFilter />
       </div>
-      <AllFilter />
     </div>
-  </div>
-);
+  );
+};
