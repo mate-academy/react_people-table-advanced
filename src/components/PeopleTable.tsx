@@ -214,7 +214,7 @@ export const PeopleTable = ({ people }: Props) => {
                       className={cn({
                         'has-text-danger': person.sex === 'f',
                       })}
-                      to={`${person.slug}`}
+                      to={`${person.slug}?${searchParams.toString()}`}
                     >
                       {person.name}
                     </Link>
@@ -228,7 +228,7 @@ export const PeopleTable = ({ people }: Props) => {
                       ? (
                         <Link
                           className="has-text-danger"
-                          to={`${person.mother.slug}`}
+                          to={`${person.mother.slug}?${searchParams.toString()}`}
                         >
                           {person.motherName}
                         </Link>
@@ -240,7 +240,7 @@ export const PeopleTable = ({ people }: Props) => {
                     {person.father
                       ? (
                         <Link
-                          to={`${person.father.slug}`}
+                          to={`${person.father.slug}?${searchParams.toString()}`}
                         >
                           {person.fatherName}
                         </Link>
