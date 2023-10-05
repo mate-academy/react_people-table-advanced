@@ -58,17 +58,20 @@ export const PeoplePage = () => {
     return getPeopleSorted(sort, order, filteredPeople);
   }, [sort, order, filteredPeople]);
 
+  const noPeopleOnSearchErrorCondition = !visiblePeople.length
+  && isDataFetched && !errorMessage;
+
   useEffect(() => {
-    if (!visiblePeople.length && isDataFetched) {
+    if (noPeopleOnSearchErrorCondition) {
       setErrorMessage(ERRORS.NO_PEOPLE_ON_SEARCH_ERROR);
-    } else {
+    } else if (errorMessage !== ERRORS.NO_PEOPLE_ERROR) {
       setErrorMessage('');
     }
   }, [visiblePeople.length, isDataFetched]);
 
   const isTableVisible = !errorMessage && !!visiblePeople.length;
 
-  const isFilterPanelVisible = isTableVisible || !isLoading
+  const isFilterPanelVisible = isTableVisible
   || errorMessage === ERRORS.NO_PEOPLE_ON_SEARCH_ERROR;
 
   return (
