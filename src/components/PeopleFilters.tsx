@@ -1,13 +1,80 @@
+import { useSearchParams } from 'react-router-dom';
+import classNames from 'classnames';
+import { SearchLink } from './SearchLink';
+import { getSearchWith } from '../utils/searchHelper';
+
+export const allCenturies = ['16', '17', '18', '19', '20'];
+
+const SexFilter = ({ currentSex }: { currentSex: string | null }) => {
+  const sexes = [null, 'm', 'f'];
+  const labels = ['All', 'Male', 'Female'];
+
+  return (
+    <p className="panel-tabs" data-cy="SexFilter">
+      {sexes.map((sex, index) => (
+        <SearchLink
+          key={sex}
+          className={currentSex === sex ? 'is-active' : ''}
+          params={{ sex }}
+        >
+          {labels[index]}
+        </SearchLink>
+      ))}
+    </p>
+  );
+};
+
+// eslint-disable-next-line
+const CenturyFilter = ({ currentCenturies }: { currentCenturies: string[] }) => (
+  <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
+    <div className="level-left">
+      {allCenturies.map(century => (
+        <SearchLink
+          key={century}
+          data-cy="century"
+          className={classNames('button mr-1', {
+            'is-info': currentCenturies.includes(century),
+          })}
+          params={{
+            centuries: currentCenturies.includes(century)
+              ? currentCenturies.filter(value => value !== century)
+              : [...currentCenturies, century],
+          }}
+        >
+          {century}
+        </SearchLink>
+      ))}
+    </div>
+
+    <div className="level-right ml-4">
+      <SearchLink
+        data-cy="centuryALL"
+        className="button is-success is-outlined"
+        params={{ centuries: null }}
+      >
+        All
+      </SearchLink>
+    </div>
+  </div>
+);
+
 export const PeopleFilters = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const sexFilter = searchParams.get('sex');
+  const centuriesFilter = searchParams.getAll('centuries');
+  const query = searchParams.get('query') as string;
+
+  const handleChange: React.ChangeEventHandler<HTMLInputElement> = (event) => {
+    setSearchParams(getSearchWith(searchParams, {
+      query: event.target.value || null,
+    }));
+  };
+
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
 
-      <p className="panel-tabs" data-cy="SexFilter">
-        <a className="is-active" href="#/people">All</a>
-        <a className="" href="#/people?sex=m">Male</a>
-        <a className="" href="#/people?sex=f">Female</a>
-      </p>
+      <SexFilter currentSex={sexFilter} />
 
       <div className="panel-block">
         <p className="control has-icons-left">
@@ -15,7 +82,9 @@ export const PeopleFilters = () => {
             data-cy="NameFilter"
             type="search"
             className="input"
+            value={query}
             placeholder="Search"
+            onChange={handleChange}
           />
 
           <span className="icon is-left">
@@ -25,59 +94,7 @@ export const PeopleFilters = () => {
       </div>
 
       <div className="panel-block">
-        <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
-          <div className="level-left">
-            <a
-              data-cy="century"
-              className="button mr-1"
-              href="#/people?centuries=16"
-            >
-              16
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=17"
-            >
-              17
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=18"
-            >
-              18
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=19"
-            >
-              19
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1"
-              href="#/people?centuries=20"
-            >
-              20
-            </a>
-          </div>
-
-          <div className="level-right ml-4">
-            <a
-              data-cy="centuryALL"
-              className="button is-success is-outlined"
-              href="#/people"
-            >
-              All
-            </a>
-          </div>
-        </div>
+        <CenturyFilter currentCenturies={centuriesFilter} />
       </div>
 
       <div className="panel-block">
