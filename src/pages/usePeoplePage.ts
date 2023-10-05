@@ -9,7 +9,6 @@ export const usePeoplePage = () => {
   const [hasError, setHasError] = useState<boolean>(false);
 
   useEffect(() => {
-    setIsLoading(true);
     getPeople()
       .then((response) => {
         setPeople(response
