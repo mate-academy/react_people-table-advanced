@@ -1,35 +1,253 @@
+import { useParams } from 'react-router';
+import { useEffect, useState } from 'react';
+import { Link, useSearchParams } from 'react-router-dom';
+import classNames from 'classnames';
 import { PeopleFilters } from './PeopleFilters';
 import { Loader } from './Loader';
 import { PeopleTable } from './PeopleTable';
+import { Person } from '../types';
 
-export const PeoplePage = () => {
-  return (
-    <>
+export const PeoplePage: React.FC<{
+  isError: boolean;
+  setIsError: React.Dispatch<React.SetStateAction<boolean>>;
+  isLoading: boolean;
+  peopleFromServer: Person[] | undefined;
+  errorMessage: string | undefined;
+}> = ({
+  isError, setIsError, isLoading, peopleFromServer, errorMessage,
+}) => {
+  const { slug = '' } = useParams();
+  const [visiblePeople, setVisiblePeople] = useState(peopleFromServer || []);
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const initialSort = searchParams.get('sort');
+  const [sortUpdate, SetSortUpdate] = useState(initialSort);
+  const [sortBefore, SetSortBefore] = useState(sortUpdate);
+  const initialOrder = searchParams.get('order') || null;
+  const [orderUpdate, SetOrderUpdate] = useState(initialOrder);
+
+  const setSearchWith = (
+    firstSearchParams: URLSearchParams,
+    params: {
+      [key: string]: string[] | string | null;
+    },
+  ) => {
+    Object.entries(params).forEach(([key, value]) => {
+      if (value === null || value === '') {
+        firstSearchParams.delete(key);
+      } else if (Array.isArray(value)) {
+        firstSearchParams.delete(key);
+
+        value.forEach((part) => {
+          firstSearchParams.append(key, part);
+        });
+      } else {
+        firstSearchParams.set(key, value);
+      }
+    });
+
+    return firstSearchParams.toString();
+  };
+
+  const askProperty = (element: string) => {
+    if (orderUpdate) {
+      return {
+        search: setSearchWith(searchParams, {
+          sort: null,
+          order: null,
+        }),
+      };
+    }
+
+    return {
+      search: setSearchWith(searchParams, {
+        sort: element,
+        order: element === sortUpdate ? 'desc' : null,
+      }),
+    };
+  };
+
+  const doSortingNow = () => {
+    if (peopleFromServer) {
+      const resetSex = searchParams.get('sex') === null;
+      const resetCenturies = searchParams.get('centuries') === null;
+      const resetSearch = searchParams.get('search') === null;
+      const resetSort = searchParams.get('sort') === null;
+
+      const sortElement = (currentList: Person[]) => {
+        if (resetSort) {
+          return currentList;
+        }
+
+        return currentList.sort((first: Person, second: Person) => {
+          switch (initialSort) {
+            case 'name':
+              if (initialOrder) {
+                return second.name.localeCompare(first.name);
+              }
+
+              return first.name.localeCompare(second.name);
+
+            case 'sex':
+              if (initialOrder) {
+                return second.sex.localeCompare(first.sex);
+              }
+
+              return first.sex.localeCompare(second.sex);
+            case 'born':
+              if (initialOrder) {
+                return second.born - first.born;
+              }
+
+              return first.born - second.born;
+            case 'died':
+              if (initialOrder) {
+                return second.died - first.died;
+              }
+
+              return first.died - second.died;
+
+            default:
+              return 0;
+          }
+        });
+      };
+
+      let newVisiblePeople = [...peopleFromServer].filter((person) => {
+        const statusSex = resetSex
+          ? true
+          : person.sex === searchParams.get('sex');
+        const rawCenturies = Math.ceil(person.born / 100);
+        const statusCenturies = resetCenturies
+          ? true
+          : searchParams.getAll('centuries').includes(`${rawCenturies}`);
+        const statusSearch = resetSearch
+          ? true
+          : person.name
+            .toLocaleLowerCase()
+            .includes(searchParams.get('search')?.toLocaleLowerCase() || '');
+
+        return statusSex && statusCenturies && statusSearch;
+      });
+
+      if (resetSex && resetCenturies && resetSearch) {
+        newVisiblePeople = [...peopleFromServer];
+      }
+
+      setVisiblePeople(sortElement(newVisiblePeople));
+    }
+  };
+
+  useEffect(() => {
+    doSortingNow();
+    SetSortUpdate(initialSort);
+    SetSortBefore(sortUpdate);
+    SetOrderUpdate(initialOrder);
+  }, [searchParams]);
+
+  return isLoading ? (
+    <Loader setIsError={setIsError} isError={isError} />
+  ) : (
+    <div className="container">
       <h1 className="title">People Page</h1>
-
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
           <div className="column is-7-tablet is-narrow-desktop">
-            <PeopleFilters />
+            <PeopleFilters
+              setSearchWith={setSearchWith}
+              setSearchParams={setSearchParams}
+              currentSearchParams={searchParams}
+            />
           </div>
-
           <div className="column">
             <div className="box table-container">
-              <Loader />
+              {isError && (
+                <p
+                  data-cy={
+                    peopleFromServer?.length === 0
+                      ? 'noPeopleMessage'
+                      : 'peopleLoadingError'
+                  }
+                  className="has-text-danger"
+                >
+                  {errorMessage}
+                </p>
+              )}
 
-              <p data-cy="peopleLoadingError">Something went wrong</p>
+              {!isError && (
+                <table
+                  data-cy="peopleTable"
+                  className="
+                  table is-striped is-hoverable is-narrow is-fullwidth
+                  "
+                >
+                  <thead>
+                    <tr>
+                      {['Name', 'Sex', 'Born', 'Died', 'Mother', 'Father'].map(
+                        (element) => {
+                          const typeOfData = element.toLowerCase();
 
-              <p data-cy="noPeopleMessage">
-                There are no people on the server
-              </p>
+                          if (element === 'Mother' || element === 'Father') {
+                            return <th key={element}>{element}</th>;
+                          }
 
-              <p>There are no people matching the current search criteria</p>
+                          return (
+                            <th key={element}>
+                              {element}
+                              <Link to={askProperty(typeOfData)}>
+                                <span className="icon">
+                                  <i
+                                    className={classNames(
+                                      'fas',
+                                      // 'fa-sort', //когда стрелки две
+                                      // 'fa-sort-down', //когда стрелка вверх
+                                      // 'fa-sort-up', // когда стрелка вниз
+                                      {
+                                        'fa-sort':
+                                          sortUpdate !== `${typeOfData}`,
+                                      },
+                                      {
+                                        'fa-sort-up':
+                                          sortUpdate === `${typeOfData}`
+                                          && orderUpdate === null,
+                                      },
+                                      {
+                                        'fa-sort-down':
+                                          sortBefore === `${typeOfData}`
+                                          && orderUpdate === 'desc',
+                                      },
+                                    )}
+                                  />
+                                </span>
+                              </Link>
+                            </th>
+                          );
+                        },
+                      )}
+                    </tr>
+                  </thead>
 
-              <PeopleTable />
+                  <tbody>
+                    {visiblePeople
+                      && visiblePeople.map((person: Person) => {
+                        return (
+                          <PeopleTable
+                            person={person}
+                            key={person.name}
+                            selectedTodoId={slug}
+                            visiblePeople={visiblePeople}
+                          />
+                        );
+                      })}
+                  </tbody>
+                </table>
+              )}
             </div>
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
+
+//              <p>There are no people matching the current search criteria</p>
