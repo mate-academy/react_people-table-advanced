@@ -1,6 +1,6 @@
 import { Person } from '../types/Person';
 
-export const getPreparedPeople = (people: Person[]) => (
+export const getPeoplePrepared = (people: Person[]) => (
   people.map(person => {
     return {
       ...person,

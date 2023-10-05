@@ -7,6 +7,4 @@ export const ERRORS = {
 
 export const NO_PARENT_MARK = '-';
 
-export const CENTURY_BUTTONS_BEGINNING = 5;
-
-export const STARTING_CENTURY = 16;
+export const CENTURY_ARRAY = ['16', '17', '18', '19', '20'];

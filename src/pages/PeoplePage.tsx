@@ -1,18 +1,24 @@
-import { useState, useEffect, useRef } from 'react';
+import {
+  useState,
+  useEffect,
+  useMemo,
+} from 'react';
 import { useSearchParams } from 'react-router-dom';
 import classNames from 'classnames';
 import { Loader, PeopleTable, PeopleFilters } from '../components';
 import {
   ERRORS,
   getPeople,
-  getPreparedPeople,
-  getPeopleFilteredAndSorted,
+  getPeopleSorted,
+  getPeopleFiltered,
+  getPeoplePrepared,
 } from '../utils';
 import { Person, SearchParameters } from '../types';
 
 export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [isDataFetched, setIsDataFetched] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [searchParams] = useSearchParams();
   const query = searchParams.get(SearchParameters.Query) || '';
@@ -20,7 +26,6 @@ export const PeoplePage = () => {
   const centuries = searchParams.getAll(SearchParameters.Centuries) || [];
   const sort = searchParams.get(SearchParameters.Sort) || '';
   const order = searchParams.get(SearchParameters.Order) || '';
-  const firstRender = useRef(true);
 
   useEffect(() => {
     setIsLoading(true);
@@ -32,9 +37,11 @@ export const PeoplePage = () => {
           setErrorMessage(ERRORS.NO_PEOPLE_ERROR);
         }
 
-        setPeople(getPreparedPeople(currentPeople));
+        setPeople(getPeoplePrepared(currentPeople));
+        setIsDataFetched(true);
       } catch (error) {
         setErrorMessage(ERRORS.DOWNLOAD_ERROR);
+        setIsDataFetched(false);
       } finally {
         setIsLoading(false);
       }
@@ -43,25 +50,26 @@ export const PeoplePage = () => {
     fetchPeople();
   }, []);
 
-  const visiblePeople = getPeopleFilteredAndSorted(
-    filterBySex, query, centuries, sort, order, people,
-  );
+  const filteredPeople = useMemo(() => {
+    return getPeopleFiltered(filterBySex, query, centuries, people);
+  }, [filterBySex, query, centuries, people]);
+
+  const visiblePeople = useMemo(() => {
+    return getPeopleSorted(sort, order, filteredPeople);
+  }, [sort, order, filteredPeople]);
 
   useEffect(() => {
-    if (firstRender.current) {
-      firstRender.current = false;
-
-      return;
-    }
-
-    if (!visiblePeople.length) {
+    if (!visiblePeople.length && isDataFetched) {
       setErrorMessage(ERRORS.NO_PEOPLE_ON_SEARCH_ERROR);
     } else {
       setErrorMessage('');
     }
-  }, [visiblePeople.length]);
+  }, [visiblePeople.length, isDataFetched]);
 
-  const canShowTable = !errorMessage && !!people.length;
+  const isTableVisible = !errorMessage && !!visiblePeople.length;
+
+  const isFilterPanelVisible = isTableVisible || !isLoading
+  || errorMessage === ERRORS.NO_PEOPLE_ON_SEARCH_ERROR;
 
   return (
     <>
@@ -69,8 +77,7 @@ export const PeoplePage = () => {
 
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
-          {(canShowTable
-          || errorMessage === ERRORS.NO_PEOPLE_ON_SEARCH_ERROR) && (
+          {(isFilterPanelVisible) && (
             <div className="column is-7-tablet is-narrow-desktop">
               <PeopleFilters
                 query={query}
@@ -98,7 +105,7 @@ export const PeoplePage = () => {
                 </p>
               )}
 
-              {canShowTable && (
+              {isTableVisible && (
                 <PeopleTable
                   people={visiblePeople}
                   sort={sort}

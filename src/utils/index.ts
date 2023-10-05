@@ -1,4 +1,5 @@
 export * from './api';
 export * from './constants';
-export * from './getPreparedPeople';
-export * from './getPeopleFilteredAndSorted';
+export * from './getPeopleSorted';
+export * from './getPeopleFiltered';
+export * from './getPeoplePrepared';

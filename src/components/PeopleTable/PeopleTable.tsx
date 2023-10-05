@@ -43,23 +43,27 @@ export const PeopleTable: React.FC<Props> = ({ people, sort, order }) => {
     >
       <thead>
         <tr>
-          {Object.entries(SortValues).map(([key, value]) => (
-            <th key={key}>
-              <span className="is-flex is-flex-wrap-nowrap">
-                {key}
-                <SearchLink params={handleSortClick(value)}>
-                  <span className="icon">
-                    <i className={classNames('fas', {
-                      'fa-sort': sort !== value,
-                      'fa-sort-up': sort === value && !order,
-                      'fa-sort-down': sort === value && order,
-                    })}
-                    />
-                  </span>
-                </SearchLink>
-              </span>
-            </th>
-          ))}
+          {Object.entries(SortValues).map(([key, value]) => {
+            const isSortMatchValue = sort === value;
+
+            return (
+              <th key={key}>
+                <span className="is-flex is-flex-wrap-nowrap">
+                  {key}
+                  <SearchLink params={handleSortClick(value)}>
+                    <span className="icon">
+                      <i className={classNames('fas', {
+                        'fa-sort': !isSortMatchValue,
+                        'fa-sort-up': isSortMatchValue && !order,
+                        'fa-sort-down': isSortMatchValue && order,
+                      })}
+                      />
+                    </span>
+                  </SearchLink>
+                </span>
+              </th>
+            );
+          })}
           <th>Mother</th>
           <th>Father</th>
         </tr>

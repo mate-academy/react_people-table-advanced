@@ -1,7 +1,7 @@
 import { useSearchParams } from 'react-router-dom';
 import classNames from 'classnames';
 import { FilterBySex, SearchParameters } from '../../types';
-import { CENTURY_BUTTONS_BEGINNING, STARTING_CENTURY } from '../../utils';
+import { CENTURY_ARRAY } from '../../utils';
 import { getSearchWith } from '../../utils/searchHelper';
 import { SearchLink } from '../SearchLink';
 
@@ -72,24 +72,20 @@ export const PeopleFilters: React.FC<Props> = ({
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            {Array.from({ length: CENTURY_BUTTONS_BEGINNING }, (_, index) => {
-              const century = String(index + STARTING_CENTURY);
-
-              return (
-                <SearchLink
-                  key={century}
-                  data-cy="century"
-                  className={classNames('button', 'mr-1', {
-                    'is-info': centuries.includes(century),
-                  })}
-                  params={{
-                    [SearchParameters.Centuries]: toggleCentury(century),
-                  }}
-                >
-                  {century}
-                </SearchLink>
-              );
-            })}
+            {CENTURY_ARRAY.map((century) => (
+              <SearchLink
+                key={century}
+                data-cy="century"
+                className={classNames('button', 'mr-1', {
+                  'is-info': centuries.includes(century),
+                })}
+                params={{
+                  [SearchParameters.Centuries]: toggleCentury(century),
+                }}
+              >
+                {century}
+              </SearchLink>
+            ))}
           </div>
 
           <div className="level-right ml-4">
