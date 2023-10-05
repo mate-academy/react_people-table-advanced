@@ -79,6 +79,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
             <tr
               data-cy="person"
               className={(isClicked === person.name
+                  || location.pathname === `/people/${slug}`
                   || location.pathname === `/people/${slug}?${searchParams.toString()}`)
                 ? 'has-background-warning' : ''}
             >
