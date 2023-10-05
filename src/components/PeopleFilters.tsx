@@ -1,7 +1,7 @@
 import classNames from 'classnames';
 import { useSearchParams } from 'react-router-dom';
 import { SearchLink } from './SearchLink';
-import { CENTURIES, SEARCH_FILTER } from '../utils/constants';
+import { CENTURIES, SEX_FILTER } from '../utils/constants';
 
 export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -27,14 +27,14 @@ export const PeopleFilters = () => {
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        {Object.keys(SEARCH_FILTER).map(
+        {Object.keys(SEX_FILTER).map(
           (key) => (
             <SearchLink
               key={key}
-              params={{ sex: SEARCH_FILTER[key as keyof typeof SEARCH_FILTER] }}
+              params={{ sex: SEX_FILTER[key as keyof typeof SEX_FILTER] }}
               className={classNames({
                 'is-active': params.get('sex')
-                  === SEARCH_FILTER[key as keyof typeof SEARCH_FILTER],
+                  === SEX_FILTER[key as keyof typeof SEX_FILTER],
               })}
             >
               {key}

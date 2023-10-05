@@ -22,7 +22,7 @@ export const CENTURIES = [
   '20',
 ];
 
-export const SEARCH_FILTER = {
+export const SEX_FILTER = {
   All: null,
   Male: 'm',
   Female: 'f',

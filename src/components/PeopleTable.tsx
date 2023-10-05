@@ -32,7 +32,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
         case 'died':
           return a[sort] - b[sort];
         default:
-          return 1;
+          return 0;
       }
     });
 
@@ -51,7 +51,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
     }
 
     if (currentColumnTitle === sort && !order) {
-      return { sort: null, order: 'desc' };
+      return { sort, order: 'desc' };
     }
 
     return { sort: null, order: null };
