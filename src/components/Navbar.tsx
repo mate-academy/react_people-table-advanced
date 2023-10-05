@@ -1,5 +1,4 @@
 import { PageNavLink } from './PageNavLink';
-import { mainURL } from './globalVariables';
 
 export const Navbar = () => {
   return (
@@ -11,8 +10,8 @@ export const Navbar = () => {
     >
       <div className="container">
         <div className="navbar-brand">
-          <PageNavLink to={`${mainURL}/`} text="Home" />
-          <PageNavLink to={`${mainURL}/people`} text="People" />
+          <PageNavLink to="/" text="Home" />
+          <PageNavLink to="/people" text="People" />
         </div>
       </div>
     </nav>
