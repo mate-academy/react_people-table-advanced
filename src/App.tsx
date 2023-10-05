@@ -9,6 +9,7 @@ import { NotFound } from './pages/NotFound';
 import { getPeople } from './api';
 import { Person } from './types';
 import { Loader } from './components/Loader';
+import { mainURL } from './components/globalVariables';
 
 export const App = () => {
   const [peopleFromServer, setPeopleFromServer] = useState<Person[]>();
@@ -43,10 +44,10 @@ export const App = () => {
       <div className="section">
         <Routes>
           <Route path="*" element={<NotFound />} />
-          <Route path="/" element={<Home />} />
-          <Route path="/home" element={<Navigate to="/" replace />} />
+          <Route path={`${mainURL}/`} element={<Home />} />
+          <Route path={`${mainURL}/home`} element={<Navigate to="/" replace />} />
 
-          <Route path="/people">
+          <Route path={`:${mainURL}/people`}>
             <Route
               index
               element={(

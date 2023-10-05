@@ -1,9 +1,9 @@
 import classNames from 'classnames';
 import { Link } from 'react-router-dom';
 import { Person } from '../types';
+import { mainURL } from './globalVariables';
 
 export const PeopleTable: React.FC<{
-  // updateSearchLane: () => void;
   person: Person;
   selectedTodoId: string;
   visiblePeople: Person[];
@@ -27,7 +27,7 @@ export const PeopleTable: React.FC<{
     if (findedParents) {
       return (
         <Link
-          to={`/people/${findedParents.slug}`}
+          to={`/${mainURL}/people/${findedParents.slug}`}
           className={classNames({
             'has-text-danger': findedParents.sex === 'f',
           })}
@@ -49,7 +49,7 @@ export const PeopleTable: React.FC<{
     >
       <td>
         <Link
-          to={`/people/${slug}`}
+          to={`/${mainURL}/people/${slug}`}
           className={classNames({
             'has-text-danger': sex === 'f',
           })}
