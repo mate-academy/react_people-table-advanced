@@ -5,8 +5,15 @@ export const SearchInput = () => {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    searchParams.set('query', `${e.target.value}`);
-    setSearchParams(searchParams);
+    const inputValue = e.target.value;
+
+    if (inputValue === '') {
+      searchParams.delete('query');
+    } else {
+      searchParams.set('query', inputValue);
+    }
+
+    setSearchParams(new URLSearchParams(searchParams));
   };
 
   return (
