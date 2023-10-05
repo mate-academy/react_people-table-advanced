@@ -1,22 +1,32 @@
-export const Navbar = () => {
+/* eslint-disable no-nested-ternary */
+import { NavLink } from 'react-router-dom';
+
+export const Navbar: React.FC = () => {
   return (
     <nav
-      data-cy="nav"
       className="navbar is-fixed-top has-shadow"
       role="navigation"
       aria-label="main navigation"
+      data-cy="nav"
     >
       <div className="container">
         <div className="navbar-brand">
-          <a className="navbar-item" href="#/">Home</a>
-
-          <a
-            aria-current="page"
-            className="navbar-item has-background-grey-lighter"
-            href="#/people"
+          <NavLink
+            to="/"
+            className={({ isActive, isPending }) => (
+              isPending ? 'navbar-item' : isActive
+                ? 'navbar-item has-background-grey-lighter' : 'navbar-item')}
+          >
+            Home
+          </NavLink>
+          <NavLink
+            to="/people"
+            className={({ isActive, isPending }) => (
+              isPending ? 'navbar-item' : isActive
+                ? 'navbar-item has-background-grey-lighter' : 'navbar-item')}
           >
             People
-          </a>
+          </NavLink>
         </div>
       </div>
     </nav>
