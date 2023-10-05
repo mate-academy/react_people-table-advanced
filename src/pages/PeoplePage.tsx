@@ -10,6 +10,27 @@ import {
 } from '../utils';
 import { Person, SearchParameters } from '../types';
 
+const fetchPeople = async (
+  setPeople: React.Dispatch<React.SetStateAction<Person[]>>,
+  setIsLoading: React.Dispatch<React.SetStateAction<boolean>>,
+  setErrorMessage: React.Dispatch<React.SetStateAction<string>>,
+) => {
+  setIsLoading(true);
+  try {
+    const currentPeople = await getPeople();
+
+    if (!currentPeople.length) {
+      setErrorMessage(ERRORS.NO_PEOPLE_ERROR);
+    }
+
+    setPeople(getPreparedPeople(currentPeople));
+  } catch (error) {
+    setErrorMessage(ERRORS.DOWNLOAD_ERROR);
+  } finally {
+    setIsLoading(false);
+  }
+};
+
 export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -23,24 +44,7 @@ export const PeoplePage = () => {
   const firstRender = useRef(true);
 
   useEffect(() => {
-    setIsLoading(true);
-    const fetchPeople = async () => {
-      try {
-        const currentPeople = await getPeople();
-
-        if (!currentPeople.length) {
-          setErrorMessage(ERRORS.NO_PEOPLE_ERROR);
-        }
-
-        setPeople(getPreparedPeople(currentPeople));
-      } catch (error) {
-        setErrorMessage(ERRORS.DOWNLOAD_ERROR);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchPeople();
+    fetchPeople(setPeople, setIsLoading, setErrorMessage);
   }, []);
 
   const visiblePeople = getPeopleFilteredAndSorted(
@@ -61,7 +65,11 @@ export const PeoplePage = () => {
     }
   }, [visiblePeople.length]);
 
-  const canShowTable = !errorMessage && !!people.length;
+  const shouldShowFilters = !errorMessage && !!people.length;
+  const errorMessageDataCy
+    = errorMessage === ERRORS.DOWNLOAD_ERROR
+      ? 'peopleLoadingError'
+      : errorMessage === ERRORS.NO_PEOPLE_ERROR && 'noPeopleMessage';
 
   return (
     <>
@@ -69,8 +77,7 @@ export const PeoplePage = () => {
 
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
-          {(canShowTable
-          || errorMessage === ERRORS.NO_PEOPLE_ON_SEARCH_ERROR) && (
+          {shouldShowFilters && (
             <div className="column is-7-tablet is-narrow-desktop">
               <PeopleFilters
                 query={query}
@@ -86,10 +93,7 @@ export const PeoplePage = () => {
 
               {errorMessage && (
                 <p
-                  data-cy={errorMessage === ERRORS.DOWNLOAD_ERROR
-                    ? 'peopleLoadingError'
-                    : errorMessage === ERRORS.NO_PEOPLE_ERROR
-                      && 'noPeopleMessage'}
+                  data-cy={errorMessageDataCy}
                   className={classNames({
                     'has-text-danger': errorMessage === ERRORS.DOWNLOAD_ERROR,
                   })}
@@ -98,7 +102,7 @@ export const PeoplePage = () => {
                 </p>
               )}
 
-              {canShowTable && (
+              {shouldShowFilters && (
                 <PeopleTable
                   people={visiblePeople}
                   sort={sort}
