@@ -1,10 +1,8 @@
-// import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Person } from '../types';
 import { PersonLink } from './PersonLink';
 
 export const PeopleTable = ({ people }: { people: Person[] }) => {
-  // const [selectedPerson, setSelectedPerson] = useState<string | null>(null);
   const { slug } = useParams();
 
   return (

@@ -1,4 +1,8 @@
+// import { useSearchParamsContext } from '../SearchParamsContext';
+
 export const PeopleFilters = () => {
+  // const { searchParams, setSearchParams } = useSearchParamsContext();
+
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>

@@ -1,11 +1,16 @@
 import { useEffect, useState } from 'react';
+
 import { getPeople } from '../api';
 import { Person } from '../types';
 import { PeopleFilters } from './PeopleFilters';
 import { Loader } from './Loader';
 import { PeopleTable } from './PeopleTable';
 
+// import { useSearchParamsContext } from '../SearchParamsContext';
+
 export const PeoplePage = () => {
+  // const { searchParams, setSearchParams } = useSearchParamsContext();
+
   const [people, setPeople] = useState<Person[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
