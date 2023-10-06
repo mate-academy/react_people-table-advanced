@@ -1,14 +1,12 @@
-import { createRoot } from 'react-dom/client';
-import { HashRouter as Router } from 'react-router-dom';
-
 import 'bulma/css/bulma.css';
 import '@fortawesome/fontawesome-free/css/all.css';
+import ReactDOM from 'react-dom';
+import React from 'react';
+import App from './App';
 
-import { App } from './App';
-
-createRoot(document.getElementById('root') as HTMLDivElement)
-  .render(
-    <Router>
-      <App />
-    </Router>,
-  );
+ReactDOM.render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>,
+  document.getElementById('root'),
+);
