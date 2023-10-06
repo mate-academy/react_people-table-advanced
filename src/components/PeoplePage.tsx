@@ -76,28 +76,27 @@ export const PeoplePage = () => {
     queryFilter: string,
     filterBySex: string,
     filterByCenturies: string[]) {
-    let copyAllPeople = [...allPeople];
 
     if (queryFilter) {
-      copyAllPeople = copyAllPeople.filter(({ name }) => name.toLowerCase()
+      allPeople.filter(({ name }) => name.toLowerCase()
         .includes(queryFilter.toLowerCase()));
     }
 
     if (filterBySex) {
-      copyAllPeople = copyAllPeople.filter(({ sex }) => sex === filterBySex);
+      allPeople.filter(({ sex }) => sex === filterBySex);
     }
 
     if (filterByCenturies.length) {
       const centuryDivider = 100;
 
-      copyAllPeople = copyAllPeople.filter(person => {
+      allPeople.filter(person => {
         const personCenturyBorn = Math.ceil(person.born / centuryDivider);
 
         return filterByCenturies.includes(personCenturyBorn.toString());
       });
     }
 
-    return copyAllPeople;
+    return allPeople;
   }
 
   const filteredPeople = filterPeople(people, query, gender, centuries);
