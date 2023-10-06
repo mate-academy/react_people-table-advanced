@@ -18,32 +18,23 @@ export const PeopleTable: React.FC<TableProps> = ({ people }) => {
     const query = searchParams.get('query');
     const centuries = searchParams.getAll('centuries');
 
-    filteredPeople = filteredPeople.filter(
-      (person) => {
-        if (gender && person.sex !== gender) {
-          return false;
-        }
+    filteredPeople = gender
+      ? filteredPeople.filter(person => person.sex === gender)
+      : filteredPeople;
 
-        if (centuries
-          && !centuries.includes(
-            (Math.ceil(Number(person.born) / 100)).toString(),
-          )) {
-          return false;
-        }
+    filteredPeople = query
+      ? filteredPeople.filter(person => person
+        .name.toLocaleLowerCase().includes(query.toLocaleLowerCase())
+      || person.motherName?.toLocaleLowerCase()
+        .includes(query.toLocaleLowerCase())
+      || person.fatherName?.toLocaleLowerCase()
+        .includes(query.toLocaleLowerCase()))
+      : filteredPeople;
 
-        if (query
-          && (person.name.toLocaleLowerCase()
-            .includes(query.toLocaleLowerCase())
-          || person.motherName?.toLocaleLowerCase()
-            .includes(query.toLocaleLowerCase())
-          || person.fatherName?.toLocaleLowerCase()
-            .includes(query.toLocaleLowerCase()))) {
-          return true;
-        }
-
-        return true;
-      },
-    );
+    filteredPeople = centuries.length > 0
+      ? filteredPeople.filter(person => centuries
+        .includes((Math.ceil(Number(person.born) / 100)).toString()))
+      : filteredPeople;
 
     const sort = searchParams.get('sort');
 
