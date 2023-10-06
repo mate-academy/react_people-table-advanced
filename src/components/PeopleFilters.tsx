@@ -13,7 +13,7 @@ export const PeopleFilters = () => {
 
     const newQuery = e.target.value;
 
-    if (newQuery === '') {
+    if (!newQuery) {
       params.delete('query');
     } else {
       params.set('query', newQuery);
@@ -27,14 +27,14 @@ export const PeopleFilters = () => {
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        {Object.keys(SEX_FILTER).map(
-          (key) => (
+        {Object.entries(SEX_FILTER).map(
+          ([key, value]) => (
             <SearchLink
               key={key}
-              params={{ sex: SEX_FILTER[key as keyof typeof SEX_FILTER] }}
+              params={{ sex: value }}
               className={classNames({
                 'is-active': params.get('sex')
-                  === SEX_FILTER[key as keyof typeof SEX_FILTER],
+                  === value,
               })}
             >
               {key}
@@ -73,7 +73,8 @@ export const PeopleFilters = () => {
                 }}
                 data-cy="century"
                 className={classNames(
-                  'button mr-1',
+                  'button',
+                  'mr-1',
                   { 'is-info': selectedCenturies.includes(century) },
                 )}
               >

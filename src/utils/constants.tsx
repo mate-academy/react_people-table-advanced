@@ -28,5 +28,6 @@ export const SEX_FILTER = {
   Female: 'f',
 };
 
-export const NO_PARENT_NAME = '-';
+export const EMPTY_VALUE = '-';
 export const FEMALE_SEX = 'f';
+export const CENTURY = 100;

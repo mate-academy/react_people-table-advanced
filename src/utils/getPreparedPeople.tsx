@@ -1,4 +1,6 @@
 import { Person } from '../types';
+import { CENTURY } from './constants';
+import { findPersonByName } from './findPersonByName';
 
 export const getPreparedPeople = (
   people: Person[],
@@ -8,14 +10,10 @@ export const getPreparedPeople = (
   const query = searchParams.get('query')?.trim().toLowerCase() || '';
   const centuries = searchParams.getAll('century') || [];
 
-  const findPersonByName = (personName: string | null) => {
-    return people.find(({ name }) => name === personName);
-  };
-
   const peopleWithParents = people.map(person => {
-    const mother = findPersonByName(person.motherName);
+    const mother = findPersonByName(person.motherName, people);
 
-    const father = findPersonByName(person.fatherName);
+    const father = findPersonByName(person.fatherName, people);
 
     return { ...person, mother, father };
   });
@@ -32,7 +30,7 @@ export const getPreparedPeople = (
       || person.fatherName?.toLowerCase().includes(query)
     );
 
-    const bornCentury = (Math.ceil(person.born / 100)).toString();
+    const bornCentury = (Math.ceil(person.born / CENTURY)).toString();
     const centuryFilter = !centuries.length
       || centuries.includes(bornCentury);
 
