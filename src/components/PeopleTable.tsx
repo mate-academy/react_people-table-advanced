@@ -1,7 +1,12 @@
+// import { useState } from 'react';
+import { useParams } from 'react-router-dom';
 import { Person } from '../types';
 import { PersonLink } from './PersonLink';
 
 export const PeopleTable = ({ people }: { people: Person[] }) => {
+  // const [selectedPerson, setSelectedPerson] = useState<string | null>(null);
+  const { slug } = useParams();
+
   return (
     <table
       data-cy="peopleTable"
@@ -60,7 +65,11 @@ export const PeopleTable = ({ people }: { people: Person[] }) => {
 
       <tbody>
         {people.map((person: Person) => (
-          <tr data-cy="person" key={person.slug}>
+          <tr
+            data-cy="person"
+            key={person.slug}
+            className={slug === person.slug ? 'has-background-warning' : ''}
+          >
             <td>
               <PersonLink person={person.name} people={people} />
             </td>

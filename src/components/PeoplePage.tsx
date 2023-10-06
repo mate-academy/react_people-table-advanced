@@ -24,7 +24,6 @@ export const PeoplePage = () => {
 
   const renderContent = () => {
     switch (true) {
-
       case hasError:
         return <p data-cy="peopleLoadingError">Something went wrong</p>;
 
