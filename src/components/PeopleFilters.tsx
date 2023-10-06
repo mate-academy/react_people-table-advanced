@@ -42,18 +42,16 @@ export const PeopleFilters = () => {
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        {Object.keys(SEX_FILTER).map(key => {
-          const typedKey = key as keyof typeof SEX_FILTER;
-
+        {Object.entries(SEX_FILTER).map(([key, value]) => {
           return (
             <Link
               key={key}
               className={classNames({
-                'is-active': SEX_FILTER[typedKey] === sex,
+                'is-active': value === sex,
               })}
               to={{
                 search: getSearchWith(searchParams, {
-                  sex: SEX_FILTER[typedKey],
+                  sex: value,
                 }),
               }}
             >

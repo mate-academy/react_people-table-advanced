@@ -35,7 +35,7 @@ export function getPreparedPeople(
   if (centuries.length) {
     const preparedCentries = centuries.map(Number);
 
-    return copyPeople
+    copyPeople = copyPeople
       .filter(({ born }) => preparedCentries.includes(calculationCentry(born)));
   }
 
@@ -55,7 +55,7 @@ export function getPreparedPeople(
   }
 
   if (order) {
-    return copyPeople.reverse();
+    copyPeople.reverse();
   }
 
   return copyPeople;

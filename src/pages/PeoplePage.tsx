@@ -27,10 +27,6 @@ export const PeoplePage = () => {
       .finally(() => setIsLoading(false));
   }, []);
 
-  const isNoPeople = !people.length && !isLoading && !isError;
-  const isErrorMessage = isError && !isLoading;
-  const isDisplayPeople = !!people.length && !isError;
-
   const query = search.get('query') || '';
   const sex = search.get('sex') || null;
   const centuries = search.getAll('centuries') || [];
@@ -45,6 +41,11 @@ export const PeoplePage = () => {
     sort,
     order,
   );
+
+  const isNoPeople = !people.length && !isLoading && !isError;
+  const isNoVissiblePeople = !filteredPeople.length && !isLoading && !isError;
+  const isErrorMessage = isError && !isLoading;
+  const isDisplayPeople = !!people.length && !isError;
 
   return (
     <>
@@ -78,6 +79,10 @@ export const PeoplePage = () => {
 
               {isDisplayPeople && (
                 <PeopleTable people={filteredPeople} />
+              )}
+
+              {isNoVissiblePeople && (
+                <p>There are no people matching the current search criteria</p>
               )}
             </div>
           </div>
