@@ -1,4 +1,10 @@
-export const Navbar = () => {
+import { memo } from 'react';
+import { NavLink, useLocation } from 'react-router-dom';
+import { getNavLinkClass } from '../utils/helpers';
+
+export const Navbar = memo(() => {
+  const { search } = useLocation();
+
   return (
     <nav
       data-cy="nav"
@@ -8,17 +14,21 @@ export const Navbar = () => {
     >
       <div className="container">
         <div className="navbar-brand">
-          <a className="navbar-item" href="#/">Home</a>
+          <NavLink
+            to="/"
+            className={getNavLinkClass}
+          >
+            Home
+          </NavLink>
 
-          <a
-            aria-current="page"
-            className="navbar-item has-background-grey-lighter"
-            href="#/people"
+          <NavLink
+            to={{ pathname: 'people', search }}
+            className={getNavLinkClass}
           >
             People
-          </a>
+          </NavLink>
         </div>
       </div>
     </nav>
   );
-};
+});
