@@ -1,7 +1,7 @@
 import React from 'react';
 import { Person } from '../../types';
-import { PersonComponent } from '../PersonComponent/PersonComponent';
-import { SortComponent } from '../SortComponent/SortComponent';
+import { PersonComponent } from '../PersonComponent';
+import { SortComponent } from '../SortComponent';
 
 interface Props {
   people: Person[]

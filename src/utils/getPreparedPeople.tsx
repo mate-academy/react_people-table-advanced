@@ -1,46 +1,43 @@
 import { getSortPreparedPeople } from './getSortedPeople';
 import { Person } from '../types';
+import { CENTURY_DIVIDER } from './variablesHelpers';
 
 export const getPreparedPeople = (
   people: Person[],
   query: string,
-  sex: string,
+  sexParam: string,
   centuries: string[],
   sort: string,
   order: string,
 ) => {
-  let preparedPeople = [...people];
+  const preparedPeople = people.filter(({
+    name,
+    motherName,
+    fatherName,
+    sex,
+    born,
+  }) => {
+    let condition = true;
 
-  if (query) {
-    preparedPeople = preparedPeople.filter(person => {
+    if (query) {
       const preparedQuery = query.toLowerCase();
 
-      const filterByName = person.name.toLowerCase()
-        .includes(query.toLowerCase());
+      condition = name.toLowerCase().includes(preparedQuery)
+        || (motherName?.toLowerCase().includes(preparedQuery) || false)
+        || (fatherName?.toLowerCase().includes(preparedQuery) || false);
+    }
 
-      const filterByMother = person.motherName?.toLowerCase()
-        .includes(preparedQuery);
+    if (sexParam) {
+      condition = condition && sex === sexParam;
+    }
 
-      const filterByFather = person.fatherName?.toLowerCase()
-        .includes(preparedQuery);
+    if (centuries.length) {
+      condition = condition
+        && centuries.includes(`${Math.ceil(born / CENTURY_DIVIDER)}`);
+    }
 
-      return filterByName || filterByMother || filterByFather;
-    });
-  }
+    return condition;
+  });
 
-  if (sex) {
-    preparedPeople = preparedPeople.filter(person => person.sex === sex);
-  }
-
-  if (centuries.length) {
-    preparedPeople = preparedPeople.filter(({ born }) => {
-      const personCentury = Math.floor((born / 100) + 1);
-
-      return centuries.includes(personCentury.toString());
-    });
-  }
-
-  const sortPreparedPeople = getSortPreparedPeople(preparedPeople, sort, order);
-
-  return sortPreparedPeople;
+  return getSortPreparedPeople(preparedPeople, sort, order);
 };

@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { Person } from '../types';
 import { SortType } from '../types/SortType';
 
@@ -30,6 +31,7 @@ export function getSortPreparedPeople(
       break;
 
     default:
+      console.error('Invalid sort type: ', sort);
       break;
   }
 

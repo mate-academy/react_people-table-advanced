@@ -26,6 +26,7 @@ export const SortComponent: React.FC = () => {
       <tr>
         {SORT_PEOPLE.map(category => {
           const preparedCategory = category.toLowerCase();
+          const isActiveSort = sort === preparedCategory;
 
           return (
             <th key={category}>
@@ -37,9 +38,8 @@ export const SortComponent: React.FC = () => {
                   <span className="icon">
                     <i
                       className={cn('fas', 'fa-sort', {
-                        'fa-sort-up': sort === preparedCategory && !order,
-                        'fa-sort-down':
-                          sort === preparedCategory && order,
+                        'fa-sort-up': isActiveSort && !order,
+                        'fa-sort-down': isActiveSort && order,
                       })}
                     />
                   </span>

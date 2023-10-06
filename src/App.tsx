@@ -19,7 +19,7 @@ export const App = () => {
           <Route path="/" element={<HomePage />} />
           <Route path="people">
             <Route
-              path=":slug?"
+              path=":slugId?"
               element={<PeoplePage />}
             />
           </Route>

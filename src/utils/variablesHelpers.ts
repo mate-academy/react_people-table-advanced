@@ -1,5 +1,6 @@
-export const EMPTY_PERSON = '-';
+export const EMPTY_VALUE = '-';
 export const SEX_FEMALE = 'f';
+export const CENTURY_DIVIDER = 100;
 export const CENTURIES = ['16', '17', '18', '19', '20'];
 
 export const SORT_PEOPLE = [

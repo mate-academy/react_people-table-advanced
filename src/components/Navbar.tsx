@@ -1,14 +1,14 @@
 import cn from 'classnames';
 import { NavLink, useSearchParams } from 'react-router-dom';
 
+const getLinkClass = ({ isActive }: { isActive: boolean }) => (
+  cn('navbar-item', {
+    'has-background-grey-lighter': isActive,
+  })
+);
+
 export const Navbar = () => {
   const [searchParams] = useSearchParams();
-
-  const getLinkClass = ({ isActive }: { isActive: boolean }) => (
-    cn('navbar-item', {
-      'has-background-grey-lighter': isActive,
-    })
-  );
 
   return (
     <nav
