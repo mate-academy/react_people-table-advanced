@@ -17,7 +17,7 @@ export const PeoplePage = () => {
   const order = searchParams.get(SearchParameters.Order) || '';
   const centuries = searchParams.getAll(SearchParameters.Centuries) || [];
   const query = searchParams.get(SearchParameters.Query) || '';
-  const sex = searchParams.get(SearchParameters.Sex) || '';
+  const gender = searchParams.get(SearchParameters.Sex) || '';
 
   const isNotPeopleOnServer
     = !people.length
@@ -79,17 +79,19 @@ export const PeoplePage = () => {
     let copyAllPeople = [...allPeople];
 
     if (queryFilter) {
-      copyAllPeople = copyAllPeople.filter(man => man.name.toLowerCase()
+      copyAllPeople = copyAllPeople.filter(({ name }) => name.toLowerCase()
         .includes(queryFilter.toLowerCase()));
     }
 
     if (filterBySex) {
-      copyAllPeople = copyAllPeople.filter(man => man.sex === filterBySex);
+      copyAllPeople = copyAllPeople.filter(({ sex }) => sex === filterBySex);
     }
 
     if (filterByCenturies.length) {
+      const centuryDivider = 100;
+
       copyAllPeople = copyAllPeople.filter(person => {
-        const personCenturyBorn = Math.ceil(person.born / 100);
+        const personCenturyBorn = Math.ceil(person.born / centuryDivider);
 
         return filterByCenturies.includes(personCenturyBorn.toString());
       });
@@ -98,7 +100,7 @@ export const PeoplePage = () => {
     return copyAllPeople;
   }
 
-  const filteredPeople = filterPeople(people, query, sex, centuries);
+  const filteredPeople = filterPeople(people, query, gender, centuries);
   const isSortedPeople = sortPeople(sort, order, filteredPeople);
 
   return (

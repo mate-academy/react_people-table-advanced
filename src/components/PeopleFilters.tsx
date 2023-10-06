@@ -4,6 +4,7 @@ import React from 'react';
 import { SearchLink } from './SearchLink';
 import { SearchParameters, Sex } from '../types';
 import { isToggleCentury } from '../utils/isToggleCentury';
+import { centuriesForFilter } from '../constants/centuriesForFilter';
 
 export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -68,7 +69,7 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            {['16', '17', '18', '19', '20'].map(century => {
+            {centuriesForFilter.map(century => {
               return (
                 <SearchLink
                   data-cy="century"
