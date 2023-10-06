@@ -10,10 +10,9 @@ import { NoPeople } from '../components/NoPeople';
 export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);
   const [error, setError] = useState(false);
-  const [loading, setLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    setLoading(true);
     getPeople()
       .then(setPeople)
       .catch((newError) => {
