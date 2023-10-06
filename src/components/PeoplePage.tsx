@@ -2,6 +2,7 @@ import { PeopleFilters } from './PeopleFilters';
 import { PeopleTable } from './PeopleTable';
 
 export const PeoplePage = () => {
+
   return (
     <>
       <h1 className="title">People Page</h1>
@@ -14,8 +15,6 @@ export const PeoplePage = () => {
 
           <div className="column">
             <div className="box table-container">
-              <p>There are no people matching the current search criteria</p>
-
               <PeopleTable />
             </div>
           </div>

@@ -9,8 +9,8 @@ export const useDisplayPeople = (people: Person[]): Person[] => {
     const queryFilter = searchParams.get('query')?.toLowerCase();
     const sexFilter = searchParams.get('sex') || '';
     const centuriesFilter = searchParams.getAll('centuries') || [];
-    const sortOrder = searchParams.get('sortOrder') || 'ASC';
-    const sortBy = searchParams.get('sort') || 'name';
+    const sortOrder = searchParams.get('sortOrder');
+    const sortBy = searchParams.get('sort');
 
     let filteredPeople = [...people];
 
