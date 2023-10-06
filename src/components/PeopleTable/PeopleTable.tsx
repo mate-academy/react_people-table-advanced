@@ -24,20 +24,21 @@ export const PeopleTable: React.FC<TableProps> = ({ people }) => {
           return false;
         }
 
-        if (query && (
-          !person.name.toLocaleLowerCase().includes(query.toLocaleLowerCase())
-        && !person.motherName?.toLocaleLowerCase()
-          .includes(query.toLocaleLowerCase())
-        && !person.fatherName?.toLocaleLowerCase()
-          .includes(query.toLocaleLowerCase()))) {
-          return false;
-        }
-
         if (centuries
           && !centuries.includes(
             (Math.ceil(Number(person.born) / 100)).toString(),
           )) {
           return false;
+        }
+
+        if (query
+          && (person.name.toLocaleLowerCase()
+            .includes(query.toLocaleLowerCase())
+          || person.motherName?.toLocaleLowerCase()
+            .includes(query.toLocaleLowerCase())
+          || person.fatherName?.toLocaleLowerCase()
+            .includes(query.toLocaleLowerCase()))) {
+          return true;
         }
 
         return true;
