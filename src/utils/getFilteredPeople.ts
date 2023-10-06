@@ -1,4 +1,5 @@
 import { Person } from '../types';
+import { YEARS_PER_CENTURY } from './constants';
 
 export const getFilteredPeople = (
   people: Person[],
@@ -11,7 +12,7 @@ export const getFilteredPeople = (
   return people.filter(({
     sex, born, motherName, fatherName, name,
   }) => {
-    const birthCentury = String(Math.ceil(born / 100));
+    const birthCentury = String(Math.ceil(born / YEARS_PER_CENTURY));
 
     if (searchSex && sex !== searchSex) {
       return false;

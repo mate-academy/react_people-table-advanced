@@ -2,11 +2,11 @@ import { Person } from '../types';
 
 export const findPersonByName = (
   people: Person[],
-  name: string | null,
+  personName: string | null,
 ): Person | null => {
-  if (!name) {
+  if (!personName) {
     return null;
   }
 
-  return people.find(person => person.name === name) || null;
+  return people.find(({ name }) => name === personName) || null;
 };

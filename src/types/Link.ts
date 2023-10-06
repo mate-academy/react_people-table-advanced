@@ -1,3 +1,4 @@
 export interface Link {
-  isActive: boolean;
+  isActive?: boolean;
+  isPending?: boolean;
 }

@@ -12,15 +12,15 @@ export const sortPeople = (
   }
 
   return [...people].sort((a: Person, b: Person) => {
-    const aValue = a[sortField as keyof Person];
-    const bValue = b[sortField as keyof Person];
+    const item1 = a[sortField as keyof Person];
+    const item2 = b[sortField as keyof Person];
 
-    if (typeof aValue === 'string' && typeof bValue === 'string') {
-      return aValue.localeCompare(bValue) * order;
+    if (typeof item1 === 'string' && typeof item2 === 'string') {
+      return item1.localeCompare(item2) * order;
     }
 
-    if (typeof aValue === 'number' && typeof bValue === 'number') {
-      return (aValue - bValue) * order;
+    if (typeof item1 === 'number' && typeof item2 === 'number') {
+      return (item1 - item2) * order;
     }
 
     return 0;

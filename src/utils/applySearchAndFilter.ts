@@ -1,5 +1,5 @@
 import { Person } from '../types';
-import { getFilteredPeople } from './getFilteredPeople ';
+import { getFilteredPeople } from './getFilteredPeople';
 import { sortPeople } from './sortPeopleBy';
 
 export const applySearchAndFilter = (

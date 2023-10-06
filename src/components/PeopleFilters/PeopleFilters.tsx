@@ -31,12 +31,12 @@ export const PeopleFilters = () => {
           All
         </SearchLink>
 
-        {Object.entries(Sex).map(sex => (
+        {Object.entries(Sex).map(([key, value]) => (
           <SearchLink
-            className={classNames({ 'is-active': sexFromSearch === sex[1] })}
-            params={{ sex: sex[1] }}
+            className={classNames({ 'is-active': sexFromSearch === value })}
+            params={{ sex: value }}
           >
-            {sex[0]}
+            {key}
           </SearchLink>
         ))}
       </p>
