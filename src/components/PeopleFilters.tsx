@@ -14,16 +14,17 @@ export const PeopleFilters = memo(() => {
   const centuries = searchParams.getAll(SearchParam.Centuries) ?? [];
 
   const handleQueryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const params = new URLSearchParams(searchParams);
     const inputValue = event.target.value;
 
-    if (inputValue) {
-      params.set(SearchParam.Query, inputValue);
-    } else {
-      params.delete(SearchParam.Query);
-    }
+    setSearchParams((currentParams) => {
+      if (inputValue) {
+        currentParams.set(SearchParam.Query, inputValue);
+      } else {
+        currentParams.delete(SearchParam.Query);
+      }
 
-    setSearchParams(params);
+      return currentParams;
+    });
   };
 
   return (
