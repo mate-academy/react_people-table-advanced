@@ -1,6 +1,6 @@
 import { Person, SortValues } from '../types';
 
-export function getPeopleSorted(sort: string, order: string, people: Person[]) {
+export function getSortedPeople(sort: string, order: string, people: Person[]) {
   const preparedPeople = [...people];
 
   if (sort) {

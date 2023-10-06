@@ -1,6 +1,6 @@
 import { Person } from '../types';
 
-export function getPeopleFiltered(
+export function getFilteredPeople(
   category: string,
   query: string,
   centuries: string[],

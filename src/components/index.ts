@@ -5,3 +5,4 @@ export * from './PersonLink';
 export * from './SearchLink';
 export * from './PeopleTable';
 export * from './PeopleFilters';
+export * from './ErrorNotification';
