@@ -1,20 +1,36 @@
-import { PeoplePage } from './components/PeoplePage';
-import { Navbar } from './components/Navbar';
-
+import { Navigate, createHashRouter, RouterProvider } from 'react-router-dom';
 import './App.scss';
+import Home from './pages/HomePage';
+import RootLayout from './pages/Root';
+import ErrorPage from './pages/Error';
+import PeoplePage from './pages/People';
 
-export const App = () => {
+const router = createHashRouter([{
+  path: '/',
+  element: <RootLayout />,
+  errorElement: <ErrorPage />,
+  children: [
+    { path: '/', element: <Home /> },
+    { path: '/home', element: <Navigate to="/" replace /> },
+    {
+      path: '/people',
+      element: <PeoplePage />,
+      children: [
+        { path: ':slug', element: <PeoplePage /> },
+      ],
+    },
+  ],
+}]);
+
+function App() {
   return (
-    <div data-cy="app">
-      <Navbar />
 
-      <div className="section">
-        <div className="container">
-          <h1 className="title">Home Page</h1>
-          <h1 className="title">Page not found</h1>
-          <PeoplePage />
-        </div>
+    <>
+      <div data-cy="app">
+        <RouterProvider router={router} />
       </div>
-    </div>
+    </>
   );
-};
+}
+
+export default App;
