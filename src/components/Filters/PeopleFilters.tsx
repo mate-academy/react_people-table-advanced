@@ -1,4 +1,3 @@
-import React from 'react';
 import { CenturyFilter } from './CenturyFilter';
 import { GenderFilter } from './GenderFilter';
 import { SearchLink } from '../SearchLink';
