@@ -3,15 +3,11 @@ import { Link, useSearchParams } from 'react-router-dom';
 import cn from 'classnames';
 
 import { Person } from '../../types';
+import { Sex } from '../../types/Sex';
 
 type Props = {
   person: Person,
 };
-
-enum Sex {
-  FEMALE = 'f',
-  MALE = 'm',
-}
 
 export const PersonLink: React.FC<Props> = ({ person }) => {
   const {

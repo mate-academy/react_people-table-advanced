@@ -1,8 +1,8 @@
 import React from 'react';
 import { useSearchParams } from 'react-router-dom';
 
-import { ColumnNames } from '../../api';
 import { SearchLink } from '../SearchLink';
+import { ColumnNames } from '../../types';
 
 type Props = {
   value: keyof typeof ColumnNames,

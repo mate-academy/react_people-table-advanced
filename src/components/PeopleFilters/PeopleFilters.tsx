@@ -3,10 +3,11 @@ import { useSearchParams } from 'react-router-dom';
 import cn from 'classnames';
 
 import { CenturyItem } from '../FilterCenturyItem';
-import { CENTURIES, PersonSex } from '../../api';
 import { PersonSexItem } from '../FilterSexItem';
 import { SearchLink } from '../SearchLink';
 import { getSearchWith } from '../../utils/searchHelper';
+import { PersonSex } from '../../types';
+import { CENTURIES } from '../../utils/variables';
 
 export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();

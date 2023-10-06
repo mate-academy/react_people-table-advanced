@@ -3,7 +3,7 @@ import cn from 'classnames';
 
 import { Person } from '../../types';
 import { PersonLink } from '../PersonLink';
-import { NOT_SET_VALUE } from '../../api';
+import { NOT_SET_VALUE } from '../../utils/variables';
 
 type Props = {
   person: Person;

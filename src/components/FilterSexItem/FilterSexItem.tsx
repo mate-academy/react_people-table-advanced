@@ -3,7 +3,7 @@ import { useSearchParams } from 'react-router-dom';
 import cn from 'classnames';
 
 import { SearchLink } from '../SearchLink';
-import { PersonSex } from '../../api';
+import { PersonSex } from '../../types';
 
 type Props = {
   sexValue: keyof typeof PersonSex,
