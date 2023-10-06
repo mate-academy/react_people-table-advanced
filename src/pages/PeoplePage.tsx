@@ -7,12 +7,11 @@ import { getPeople } from '../api';
 
 export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>();
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [noPeopleMessage, setNoPeopleMessage] = useState(false);
   const [error, setError] = useState(false);
 
   useEffect(() => {
-    setIsLoading(true);
     getPeople()
       .then((resp) => {
         setPeople(resp);
@@ -32,7 +31,7 @@ export const PeoplePage = () => {
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
           <div className="column is-7-tablet is-narrow-desktop">
-            <PeopleFilters />
+            {!isLoading && <PeopleFilters />}
           </div>
 
           <div className="column">
