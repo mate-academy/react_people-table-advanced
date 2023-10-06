@@ -1,7 +1,5 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
-
 import { Navbar } from './components/Navbar';
-
 import './App.scss';
 import { HomePage } from './pages/HomePage';
 import { NotFoundPage } from './pages/NotFoundPage';
