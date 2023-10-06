@@ -12,6 +12,7 @@ import { Loader } from '../components/Loader';
 import { PeopleTable } from '../components/PeopleTable';
 
 export const PeoplePage = () => {
+  const [initialPeople, setInitialPeople] = useState<Person[]>([]);
   const [people, setPeople] = useState<Person[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(false);
@@ -24,14 +25,14 @@ export const PeoplePage = () => {
   const centuries = searchParams.getAll('centuries') || [];
 
   const visiblePeople = useMemo(() => {
-    return getFilteredPeople(people, {
+    return getFilteredPeople(initialPeople, {
       query,
       sex,
       sort,
       order,
       centuries,
     });
-  }, [people, searchParams]);
+  }, [initialPeople, searchParams, query]);
 
   const fetchPeople = async () => {
     setIsLoading(true);
@@ -47,6 +48,7 @@ export const PeoplePage = () => {
           .find(({ name }) => name === person.motherName),
       }));
 
+      setInitialPeople(childrenWithParents);
       setPeople(childrenWithParents);
     } catch {
       setError(true);

@@ -14,7 +14,7 @@ export const getFilteredPeople = (people: Person[], {
 }: FilterParams): Person[] => {
   let filteredPeople = people;
 
-  if (!query.trim()) {
+  if (query.trim()) {
     const normalizedQuery = query.toLowerCase().trim();
 
     filteredPeople = filteredPeople.filter(

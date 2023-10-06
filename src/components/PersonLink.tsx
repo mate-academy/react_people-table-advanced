@@ -54,7 +54,7 @@ export const PersonLink: React.FC<Props> = ({ person }) => {
           >
             {motherName}
           </Link>
-        ) : (motherName || '-')}
+        ) : (motherName || NOT_SET_VALUE)}
       </td>
 
       <td>
