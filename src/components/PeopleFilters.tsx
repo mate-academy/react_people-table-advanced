@@ -39,14 +39,16 @@ export const PeopleFilters = () => {
             params={{ sex: sex === 'All' ? null : sex }}
           >
             {(() => {
-  if (sex === 'All') {
-    return 'All';
-  } else if (sex === 'm') {
-    return 'Male';
-  } else {
-    return 'Female';
-  }
-})()}
+              if (sex === 'All') {
+                return 'All';
+              }
+
+              if (sex === 'm') {
+                return 'Male';
+              }
+
+              return 'Female';
+            })()}
           </SearchLink>
         ))}
       </p>
@@ -97,9 +99,12 @@ export const PeopleFilters = () => {
       </div>
 
       <div className="panel-block">
-        <a className="button is-link is-outlined is-fullwidth" href="#/people">
+        <SearchLink
+        className="button is-link is-outlined is-fullwidth"
+        params={{ sex: null, query: null, centuries: null }}
+        >
           Reset all filters
-        </a>
+        </SearchLink>
       </div>
     </nav>
   );
