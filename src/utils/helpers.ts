@@ -1,12 +1,16 @@
 import cn from 'classnames';
 import { Person } from '../types/Person';
+import { YEARS_IN_CENTURY } from './constants';
 
 export const getNavLinkClass = ({ isActive }: { isActive: boolean }) => (
   cn('navbar-item', { 'has-background-grey-lighter': isActive })
 );
 
-export const findPersonByName = (people: Person[], name: string | null) => {
-  return people.find(person => person.name === name) || null;
+export const findPersonParent = (
+  people: Person[],
+  personName: string | null,
+) => {
+  return people.find(({ name }) => name === personName);
 };
 
 export function normalizeString(str: string | null) {
@@ -32,3 +36,7 @@ export function getSortOptionClass(
     faSortIcon,
   );
 }
+
+export const convertToCentury = (year: number) => {
+  return Math.ceil(year / YEARS_IN_CENTURY);
+};

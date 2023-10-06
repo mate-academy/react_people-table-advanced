@@ -4,12 +4,15 @@ import { PeopleFilters } from './PeopleFilters';
 import { Loader } from './Loader';
 import { PeopleTable } from './PeopleTable';
 import { getPeople } from '../api';
-import { findPersonByName, normalizeString } from '../utils/helpers';
+import {
+  convertToCentury,
+  findPersonParent,
+  normalizeString,
+} from '../utils/helpers';
 import { Person } from '../types';
 import { Sex } from '../utils/Sex';
 
 export const PeoplePage = () => {
-  // work with server
   const [isError, setIsError] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [people, setPeople] = useState<Person[]>([]);
@@ -19,8 +22,8 @@ export const PeoplePage = () => {
       .then(response => {
         const newPeople = response.map(person => ({
           ...person,
-          mother: findPersonByName(response, person.motherName),
-          father: findPersonByName(response, person.fatherName),
+          mother: findPersonParent(response, person.motherName),
+          father: findPersonParent(response, person.fatherName),
         }));
 
         setPeople(newPeople);
@@ -35,7 +38,6 @@ export const PeoplePage = () => {
 
   const isEverythingOk = !isError && !isLoading && !!people.length;
   const isNoPeopleOnServer = !isError && !isLoading && !people.length;
-  // #endregion
   const [filterParams] = useSearchParams();
   const query = filterParams.get('query') || '';
   const centuries = filterParams.getAll('centuries') || [];
@@ -65,8 +67,8 @@ export const PeoplePage = () => {
     const temp = people
       .filter(person => includesQuery(person))
       .filter(person => (sex ? sex === person.sex : true))
-      .filter(person => (centuries.length > 0
-        ? centuries.includes(Math.ceil(person.born / 100).toString())
+      .filter(person => (centuries.length
+        ? centuries.includes(convertToCentury(person.born).toString())
         : true
       ));
 

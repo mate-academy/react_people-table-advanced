@@ -7,6 +7,8 @@ export const TABLE_HEADERS = [
   'Father',
 ];
 
-export const NOT_SET_PARRENT_VALUE = '-';
+export const NOT_SET_VALUE = '-';
 
 export const SORT_OPTIONS = ['Name', 'Sex', 'Born', 'Died'];
+
+export const YEARS_IN_CENTURY = 100;
