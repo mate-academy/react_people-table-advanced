@@ -26,6 +26,7 @@ export const PeoplePage: React.FC<{
   const [sortBefore, SetSortBefore] = useState(sortUpdate);
   const initialOrder = searchParams.get('order') || null;
   const [orderUpdate, SetOrderUpdate] = useState(initialOrder);
+  const sortLane = ['Name', 'Sex', 'Born', 'Died', 'Mother', 'Father'];
 
   const setSearchWith = (
     firstSearchParams: URLSearchParams,
@@ -80,33 +81,29 @@ export const PeoplePage: React.FC<{
           return currentList;
         }
 
+        const partOfSort = (one: number | string, two: number | string) => {
+          if (typeof one === 'string' && typeof two === 'string') {
+            return one.localeCompare(two);
+          }
+
+          if (typeof one === 'number' && typeof two === 'number') {
+            return one - two;
+          }
+
+          return 0;
+        };
+
         return currentList.sort((first: Person, second: Person) => {
           switch (initialSort) {
             case 'name':
-              if (initialOrder) {
-                return second.name.localeCompare(first.name);
-              }
-
-              return first.name.localeCompare(second.name);
-
             case 'sex':
-              if (initialOrder) {
-                return second.sex.localeCompare(first.sex);
-              }
-
-              return first.sex.localeCompare(second.sex);
             case 'born':
-              if (initialOrder) {
-                return second.born - first.born;
-              }
-
-              return first.born - second.born;
             case 'died':
               if (initialOrder) {
-                return second.died - first.died;
+                return partOfSort(second[initialSort], first[initialSort]);
               }
 
-              return first.died - second.died;
+              return partOfSort(first[initialSort], second[initialSort]);
 
             default:
               return 0;
@@ -184,7 +181,7 @@ export const PeoplePage: React.FC<{
                 >
                   <thead>
                     <tr>
-                      {['Name', 'Sex', 'Born', 'Died', 'Mother', 'Father'].map(
+                      {sortLane.map(
                         (element) => {
                           const typeOfData = element.toLowerCase();
 
@@ -200,9 +197,6 @@ export const PeoplePage: React.FC<{
                                   <i
                                     className={classNames(
                                       'fas',
-                                      // 'fa-sort', //когда стрелки две
-                                      // 'fa-sort-down', //когда стрелка вверх
-                                      // 'fa-sort-up', // когда стрелка вниз
                                       {
                                         'fa-sort':
                                           sortUpdate !== `${typeOfData}`,
@@ -250,5 +244,3 @@ export const PeoplePage: React.FC<{
     </div>
   );
 };
-
-//              <p>There are no people matching the current search criteria</p>

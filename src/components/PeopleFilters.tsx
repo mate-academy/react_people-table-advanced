@@ -23,6 +23,7 @@ export const PeopleFilters = ({
   const centuriesAll = currentSearchParams.getAll('centuries') || [];
   const sexAll = currentSearchParams.get('sex') || '';
   const searchAll = currentSearchParams.get('search');
+  const centuriesArray = ['16', '17', '18', '19', '20'];
 
   const onInput = (event: React.ChangeEvent<HTMLInputElement>) => {
     const sendForm: {
@@ -141,7 +142,7 @@ export const PeopleFilters = ({
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            {['16', '17', '18', '19', '20'].map((number) => (
+            {centuriesArray.map((number) => (
               <Link
                 data-cy="century"
                 key={number}

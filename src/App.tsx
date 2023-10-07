@@ -10,8 +10,13 @@ import { getPeople } from './api';
 import { Person } from './types';
 import { Loader } from './components/Loader';
 
+enum ErrorType {
+  'There are no people on the server' = 'There are no people on the server',
+  'Something went wrong' = 'Something went wrong',
+}
+
 export const App = () => {
-  const [peopleFromServer, setPeopleFromServer] = useState<Person[]>();
+  const [people, setPeople] = useState<Person[]>();
   const [errorMessage, setErrorMessage] = useState<string>();
   const [isLoading, setIsLoading] = useState(true);
   const [isError, setIsError] = useState(false);
@@ -20,19 +25,19 @@ export const App = () => {
     getPeople()
       .then((persons) => {
         setIsLoading(true);
-        setPeopleFromServer(persons);
+        setPeople(persons);
         if (persons.length === 0) {
-          setErrorMessage('There are no people on the server');
+          setErrorMessage(ErrorType['There are no people on the server']);
         }
       })
       .catch(() => {
         setIsError(true);
-        setErrorMessage('Something went wrong');
+        setErrorMessage(ErrorType['Something went wrong']);
       })
       .finally(() => setIsLoading(false));
   }, []);
 
-  if (!peopleFromServer) {
+  if (!people) {
     return <Loader />;
   }
 
@@ -54,7 +59,7 @@ export const App = () => {
                   isError={isError}
                   setIsError={setIsError}
                   isLoading={isLoading}
-                  peopleFromServer={peopleFromServer}
+                  peopleFromServer={people}
                   errorMessage={errorMessage}
                 />
               )}
@@ -66,7 +71,7 @@ export const App = () => {
                   isError={isError}
                   setIsError={setIsError}
                   isLoading={isLoading}
-                  peopleFromServer={peopleFromServer}
+                  peopleFromServer={people}
                   errorMessage={errorMessage}
                 />
               )}
