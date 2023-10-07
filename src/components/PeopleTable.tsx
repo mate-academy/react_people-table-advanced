@@ -13,11 +13,11 @@ type Search = {
 
 export const PeopleTable: React.FC<{
   setSearchWith: Search;
+  peopleFromServer: Person[];
   person: Person;
   selectedTodoId: string;
-  visiblePeople: Person[];
 }> = ({
-  setSearchWith, person, selectedTodoId, visiblePeople,
+  setSearchWith, peopleFromServer, person, selectedTodoId,
 }) => {
   const {
     name, sex, born, died, fatherName, motherName, slug,
@@ -28,18 +28,14 @@ export const PeopleTable: React.FC<{
   const linkParents = (selectedParrents: string | null) => {
     const findedParents
       = selectedParrents
-      && visiblePeople.find((people) => people.name === selectedParrents);
+      && peopleFromServer.find((people) => people.name === selectedParrents);
 
     if (findedParents) {
       return (
         <Link
           to={{
-            pathname: `/people/${slug}`,
-            search: setSearchWith(searchParamThirdAttach, {
-              search: searchParamThirdAttach.get('search'),
-              centuries: searchParamThirdAttach.getAll('centuries'),
-              sex: searchParamThirdAttach.get('sex'),
-            }),
+            pathname: `/people/${findedParents.slug}`,
+            search: setSearchWith(searchParamThirdAttach, {}),
           }}
           className={classNames({
             'has-text-danger': findedParents.sex === 'f',
@@ -64,11 +60,7 @@ export const PeopleTable: React.FC<{
         <Link
           to={{
             pathname: `/people/${slug}`,
-            search: setSearchWith(searchParamThirdAttach, {
-              search: searchParamThirdAttach.get('search'),
-              centuries: searchParamThirdAttach.getAll('centuries'),
-              sex: searchParamThirdAttach.get('sex'),
-            }),
+            search: setSearchWith(searchParamThirdAttach, {}),
           }}
           className={classNames({
             'has-text-danger': sex === 'f',

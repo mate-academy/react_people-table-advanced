@@ -228,10 +228,10 @@ export const PeoplePage: React.FC<{
                         return (
                           <PeopleTable
                             setSearchWith={setSearchWith}
+                            peopleFromServer={peopleFromServer || []}
                             person={person}
                             key={person.name}
                             selectedTodoId={slug}
-                            visiblePeople={visiblePeople}
                           />
                         );
                       })}
