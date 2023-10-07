@@ -2,8 +2,15 @@ import { useParams } from 'react-router-dom';
 import { Person } from '../types';
 import { PersonLink } from './PersonLink';
 
-export const PeopleTable = ({ people }: { people: Person[] }) => {
-
+export const PeopleTable = ({
+  people,
+  handleSort,
+  sortState,
+}: {
+  people: Person[],
+  handleSort: (field: string) => void,
+  sortState: { sortField: string | null, sortOrder: string | null }
+}) => {
   const { slug } = useParams();
 
   return (
@@ -13,47 +20,43 @@ export const PeopleTable = ({ people }: { people: Person[] }) => {
     >
       <thead>
         <tr>
-          <th>
+          <th onClick={() => handleSort('name')}>
             <span className="is-flex is-flex-wrap-nowrap">
               Name
-              <a href="#/people?sort=name">
-                <span className="icon">
-                  <i className="fas fa-sort" />
-                </span>
-              </a>
+              <span className="icon">
+                {/* eslint-disable-next-line no-nested-ternary */}
+                <i className={`fas fa-sort${sortState.sortField === 'name' ? (sortState.sortOrder === 'asc' ? '-up' : '-down') : ''}`} style={{ cursor: 'pointer' }} />
+              </span>
             </span>
           </th>
 
-          <th>
+          <th onClick={() => handleSort('sex')}>
             <span className="is-flex is-flex-wrap-nowrap">
               Sex
-              <a href="#/people?sort=sex">
-                <span className="icon">
-                  <i className="fas fa-sort" />
-                </span>
-              </a>
+              <span className="icon">
+                {/* eslint-disable-next-line no-nested-ternary */}
+                <i className={`fas fa-sort${sortState.sortField === 'sex' ? (sortState.sortOrder === 'asc' ? '-up' : '-down') : ''}`} style={{ cursor: 'pointer' }} />
+              </span>
             </span>
           </th>
 
-          <th>
+          <th onClick={() => handleSort('born')}>
             <span className="is-flex is-flex-wrap-nowrap">
               Born
-              <a href="#/people?sort=born&amp;order=desc">
-                <span className="icon">
-                  <i className="fas fa-sort-up" />
-                </span>
-              </a>
+              <span className="icon">
+                {/* eslint-disable-next-line no-nested-ternary */}
+                <i className={`fas fa-sort${sortState.sortField === 'born' ? (sortState.sortOrder === 'asc' ? '-up' : '-down') : ''}`} style={{ cursor: 'pointer' }} />
+              </span>
             </span>
           </th>
 
-          <th>
+          <th onClick={() => handleSort('died')}>
             <span className="is-flex is-flex-wrap-nowrap">
               Died
-              <a href="#/people?sort=died">
-                <span className="icon">
-                  <i className="fas fa-sort" />
-                </span>
-              </a>
+              <span className="icon">
+                {/* eslint-disable-next-line no-nested-ternary */}
+                <i className={`fas fa-sort${sortState.sortField === 'died' ? (sortState.sortOrder === 'asc' ? '-up' : '-down') : ''}`} style={{ cursor: 'pointer' }} />
+              </span>
             </span>
           </th>
 

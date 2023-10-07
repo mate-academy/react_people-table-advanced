@@ -1,24 +1,16 @@
-// import { useEffect } from 'react';
 import { useSearchParamsContext } from '../SearchParamsContext';
-// import { Link } from 'react-router-dom';
 
 const CENTURIES = ['16', '17', '18', '19', '20'];
 
 export const PeopleFilters = () => {
   const { searchParams, setSearchParams } = useSearchParamsContext();
-  // const [isAllSelected, setIsAllSelected] = useState(true);
 
   const selectedCenturies = searchParams.getAll('centuries');
   const inputValue = searchParams.get('query') || '';
 
-  // useEffect(() => {
-  //   console.log("useEffect triggered", selectedCenturies);
-  //   setIsAllSelected(selectedCenturies.length === 0);
-  // }, [selectedCenturies]);
-
   const handleNameFilterChange = (event: React.ChangeEvent<
-    HTMLInputElement
-    >) => {
+  HTMLInputElement
+  >) => {
     const query = event.target.value;
 
     if (query) {
