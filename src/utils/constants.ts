@@ -6,4 +6,5 @@ export const NO_MATCHING_PEOPLE
 export const FEMALE_SEX = 'f';
 export const MALE_SEX = 'm';
 export const EMPTY_VALUE = '-';
+export const CENTURY_LENGTH = 100;
 export const ALL_CENTURIES = ['16', '17', '18', '19', '20'];

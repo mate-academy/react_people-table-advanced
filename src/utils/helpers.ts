@@ -1,3 +1,4 @@
+import classNames from 'classnames';
 import { Person } from '../types';
 
 export function getPreparedPeople(people: Person[]) {
@@ -36,3 +37,8 @@ export function getSortPeople(
 
   return (b as number) - (a as number);
 }
+
+export const getLinkClass = ({ isActive }: { isActive: boolean }) => classNames(
+  'navbar-item',
+  { 'has-background-grey-lighter': isActive },
+);

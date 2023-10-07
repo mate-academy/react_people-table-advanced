@@ -7,19 +7,24 @@ import { PeopleTable } from '../PeopleTable';
 import { PeopleFilters } from '../PeopleFilters';
 import {
   ERROR_MESSAGE,
-  FEMALE_SEX,
-  MALE_SEX,
   NO_MATCHING_PEOPLE,
   NO_PEOPLE_ON_SERVER,
   ALL_CENTURIES,
 } from '../../utils/constants';
-import { getPreparedPeople, getSortPeople } from '../../utils/helpers';
+import { getPreparedPeople } from '../../utils/helpers';
+import {
+  filterByCenturies,
+  filterByQuery,
+  filterBySex,
+  sortPeople,
+} from '../../utils/filterPeoplePageFunctions';
 
 export const PeoplePage: React.FC = () => {
   const [people, setPeople] = useState<Person[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isError, setIsError] = useState<boolean>(false);
   const [searchParams] = useSearchParams();
+
   const centuries = searchParams.getAll('centuries') || ALL_CENTURIES;
   const query = searchParams.get('query') as string;
   const order = searchParams.get('order');
@@ -34,53 +39,14 @@ export const PeoplePage: React.FC = () => {
   }, []);
   const preparedPeople = getPreparedPeople(people);
 
-  const peopleWithParents = preparedPeople.filter(person => {
-    if (searchParams.toString().includes(MALE_SEX)) {
-      return person.sex === MALE_SEX;
-    }
-
-    if (searchParams.toString().includes(FEMALE_SEX)) {
-      return person.sex === FEMALE_SEX;
-    }
-
-    return person;
-  }).filter(person => {
-    if (centuries.length !== 0) {
-      return centuries.includes(Math.ceil(person.born / 100).toString());
-    }
-
-    return person;
-  }).filter(person => {
-    if (query !== null) {
-      return person.name.toLowerCase().includes(query.toLowerCase())
-        || person.motherName?.toLowerCase().includes(query.toLowerCase())
-        || person.fatherName?.toLowerCase().includes(query.toLowerCase());
-    }
-
-    return person;
-  })
-    .sort((a, b) => {
-      if (sort === 'name') {
-        return getSortPeople(a.name, b.name, order);
-      }
-
-      if (sort === 'sex') {
-        return getSortPeople(a.sex, b.sex, order);
-      }
-
-      if (sort === 'born') {
-        return getSortPeople(a.born, b.born, order);
-      }
-
-      if (sort === 'died') {
-        return getSortPeople(a.died, b.died, order);
-      }
-
-      return 0;
-    });
+  const filteredPeople = preparedPeople
+    .filter((person) => filterBySex(person, searchParams))
+    .filter((person) => filterByCenturies(person, centuries))
+    .filter((person) => filterByQuery(person, query))
+    .sort((a, b) => sortPeople(a, b, sort, order));
 
   const noPeopleMessage = !people.length && !isLoading && !isError;
-  const noMatchingPeople = !isLoading && !peopleWithParents.length;
+  const noMatchingPeople = !isLoading && !filteredPeople.length;
 
   return (
     <>
@@ -115,7 +81,7 @@ export const PeoplePage: React.FC = () => {
 
               {!isLoading && (
                 <PeopleTable
-                  people={peopleWithParents}
+                  people={filteredPeople}
                 />
               )}
             </div>
