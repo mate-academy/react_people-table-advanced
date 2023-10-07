@@ -1,5 +1,5 @@
 import { Person } from '../types';
-import { FEMALE_SEX, MALE_SEX } from './constants';
+import { CENTURY_LENGTH, FEMALE_SEX, MALE_SEX } from './constants';
 import { getSortPeople } from './helpers';
 
 export function filterBySex(person: Person, searchParams: URLSearchParams) {
@@ -17,15 +17,16 @@ export function filterBySex(person: Person, searchParams: URLSearchParams) {
 export function filterByCenturies(
   person: Person, centuries: string[],
 ): boolean {
-  if (centuries.length !== 0) {
-    return centuries.includes(Math.ceil(person.born / 100).toString());
+  if (centuries.length) {
+    return centuries
+      .includes(Math.ceil(person.born / CENTURY_LENGTH).toString());
   }
 
   return true;
 }
 
 export function filterByQuery(person: Person, query: string | null) {
-  if (query !== null) {
+  if (query) {
     const queryLowerCase = query.toLowerCase();
 
     return (
