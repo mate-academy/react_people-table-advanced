@@ -33,8 +33,8 @@ export const PeopleProvider: React.FC<Props> = ({ children }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        setIsLoading(true);
         setTimeout(async () => {
+          setIsLoading(true);
           const peopleFromServer = await getPeople();
 
           setPeople(getPreparedPeople(peopleFromServer));
