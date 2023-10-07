@@ -1,32 +1,46 @@
 import classNames from 'classnames';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { Person } from '../types';
 
+type Search = {
+  (
+    searchParams: URLSearchParams,
+    params: {
+      [keys: string]: string | string[] | null;
+    }
+  ): string;
+};
+
 export const PeopleTable: React.FC<{
+  setSearchWith: Search;
   person: Person;
   selectedTodoId: string;
   visiblePeople: Person[];
-}> = ({ person, selectedTodoId, visiblePeople }) => {
+}> = ({
+  setSearchWith, person, selectedTodoId, visiblePeople,
+}) => {
   const {
-    name,
-    sex,
-    born,
-    died,
-    fatherName,
-    motherName,
-    slug,
-  }
-    = person;
+    name, sex, born, died, fatherName, motherName, slug,
+  } = person;
+
+  const [searchParamThirdAttach] = useSearchParams();
 
   const linkParents = (selectedParrents: string | null) => {
-    const findedParents = selectedParrents && visiblePeople.find(
-      (people) => people.name === selectedParrents,
-    );
+    const findedParents
+      = selectedParrents
+      && visiblePeople.find((people) => people.name === selectedParrents);
 
     if (findedParents) {
       return (
         <Link
-          to={`/people/${findedParents.slug}`}
+          to={{
+            pathname: `/people/${slug}`,
+            search: setSearchWith(searchParamThirdAttach, {
+              search: searchParamThirdAttach.get('search'),
+              centuries: searchParamThirdAttach.getAll('centuries'),
+              sex: searchParamThirdAttach.get('sex'),
+            }),
+          }}
           className={classNames({
             'has-text-danger': findedParents.sex === 'f',
           })}
@@ -48,7 +62,14 @@ export const PeopleTable: React.FC<{
     >
       <td>
         <Link
-          to={`/people/${slug}`}
+          to={{
+            pathname: `/people/${slug}`,
+            search: setSearchWith(searchParamThirdAttach, {
+              search: searchParamThirdAttach.get('search'),
+              centuries: searchParamThirdAttach.getAll('centuries'),
+              sex: searchParamThirdAttach.get('sex'),
+            }),
+          }}
           className={classNames({
             'has-text-danger': sex === 'f',
           })}

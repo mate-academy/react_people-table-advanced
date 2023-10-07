@@ -227,6 +227,7 @@ export const PeoplePage: React.FC<{
                       && visiblePeople.map((person: Person) => {
                         return (
                           <PeopleTable
+                            setSearchWith={setSearchWith}
                             person={person}
                             key={person.name}
                             selectedTodoId={slug}
