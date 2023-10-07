@@ -3,6 +3,7 @@ import { Person } from '../types';
 import { PersonLink } from './PersonLink';
 
 export const PeopleTable = ({ people }: { people: Person[] }) => {
+
   const { slug } = useParams();
 
   return (

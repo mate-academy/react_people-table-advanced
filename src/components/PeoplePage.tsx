@@ -5,15 +5,34 @@ import { Person } from '../types';
 import { PeopleFilters } from './PeopleFilters';
 import { Loader } from './Loader';
 import { PeopleTable } from './PeopleTable';
-
-// import { useSearchParamsContext } from '../SearchParamsContext';
+import { useSearchParamsContext } from '../SearchParamsContext';
 
 export const PeoplePage = () => {
-  // const { searchParams, setSearchParams } = useSearchParamsContext();
+  const { searchParams } = useSearchParamsContext();
 
   const [people, setPeople] = useState<Person[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
+
+  const query = searchParams.get('query') || '';
+  const selectedCenturies = searchParams.getAll('centuries');
+
+  const filteredPeople = people.filter(person => {
+    if (query) {
+      return person.name.toLowerCase().includes(query.toLowerCase()) ||
+             person.motherName?.toLowerCase().includes(query.toLowerCase()) ||
+             person.fatherName?.toLowerCase().includes(query.toLowerCase());
+    }
+    return true;
+  });
+
+  const filteredByCentury = filteredPeople.filter(person => {
+    if (selectedCenturies.length > 0) {
+      const century = Math.ceil(person.died / 100);
+      return selectedCenturies.includes(century.toString());
+    }
+    return true;
+  });
 
   useEffect(() => {
     getPeople()
@@ -41,7 +60,7 @@ export const PeoplePage = () => {
         );
 
       default:
-        return <PeopleTable people={people} />;
+        return <PeopleTable people={filteredByCentury} />;
     }
   };
 
@@ -50,9 +69,11 @@ export const PeoplePage = () => {
       <h1 className="title">People Page</h1>
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
-          <div className="column is-7-tablet is-narrow-desktop">
-            <PeopleFilters />
-          </div>
+          {!isLoading && (
+            <div className="column is-7-tablet is-narrow-desktop">
+              <PeopleFilters />
+            </div>
+          )}
           <div className="column">
             <div className="box table-container">
               {renderContent()}
