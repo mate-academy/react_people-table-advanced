@@ -9,9 +9,9 @@ export const getPreparedPeople = (peopleFromServer: Person[]) => {
       tempPerson.motherName = person.motherName || NOT_SET_VALUE;
       tempPerson.fatherName = person.fatherName || NOT_SET_VALUE;
       tempPerson.mother = peopleFromServer
-        .find(mother => mother.name === person.motherName);
+        .find(({ name }) => name === person.motherName);
       tempPerson.father = peopleFromServer
-        .find(father => father.name === person.fatherName);
+        .find(({ name }) => name === person.fatherName);
 
       return tempPerson;
     });

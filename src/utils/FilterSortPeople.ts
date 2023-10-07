@@ -1,6 +1,7 @@
 import { Person } from '../types';
 import { QueryParamsType } from '../types/QueryParamsType';
 import { SortFields } from '../types/SortFields';
+import { CENTURY_DIVIDER } from './variables';
 
 export const FilterSortPeople = (
   people: Person[],
@@ -33,27 +34,27 @@ export const FilterSortPeople = (
   if (centuriesFilter.length) {
     filteredPeople = filteredPeople
       .filter(({ born }) => centuriesFilter
-        .includes((Math.ceil(born / 100)).toString()));
+        .includes((Math.ceil(born / CENTURY_DIVIDER)).toString()));
   }
 
   if (sortField) {
     switch (sortField) {
       case SortFields.Name:
         filteredPeople
-          .sort((personA, personB) => personA.name.localeCompare(personB.name));
+          .sort((a, b) => a.name.localeCompare(b.name));
         break;
 
       case SortFields.Sex:
         filteredPeople
-          .sort((personA, personB) => personA.sex.localeCompare(personB.sex));
+          .sort((a, b) => a.sex.localeCompare(b.sex));
         break;
 
       case SortFields.Born:
-        filteredPeople.sort((personA, personB) => personA.born - personB.born);
+        filteredPeople.sort((a, b) => a.born - b.born);
         break;
 
       case SortFields.Died:
-        filteredPeople.sort((personA, personB) => personA.died - personB.died);
+        filteredPeople.sort((a, b) => a.died - b.died);
         break;
 
       default: break;

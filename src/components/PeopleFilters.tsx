@@ -94,7 +94,7 @@ export const PeopleFilters = () => {
               className={classNames(
                 'button',
                 'is-success',
-                { 'is-outlined': centuries.length !== 0 },
+                { 'is-outlined': !!centuries.length },
               )}
               params={{ centuries: null }}
             >
