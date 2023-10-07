@@ -1,47 +1,15 @@
-import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
 import { PeopleFilters } from '../components/PeopleFilters';
 import { Loader } from '../components/Loader';
 import { PeopleTable } from '../components/PeopleTable';
 
-import { Person } from '../types';
-import { getPeople } from '../api';
 import { usePeople } from '../store/PeopleContext';
 import { preparedPeople } from '../utils/preparedPeople';
 
-const getPreparedPeople = (people: Person[]): Person[] => {
-  return people.map(person => {
-    return {
-      ...person,
-      mother: people.find(mother => mother.name === person.motherName),
-      father: people.find(father => father.name === person.fatherName),
-    };
-  });
-};
-
 export const PeoplePage = () => {
-  const { people, setPeople } = usePeople();
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [isError, setIsError] = useState<boolean>(false);
+  const { people, isLoading, isError } = usePeople();
   const [searchParams] = useSearchParams();
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setIsLoading(true);
-        const peopleFromServer = await getPeople();
-
-        setPeople(getPreparedPeople(peopleFromServer));
-      } catch (error) {
-        setIsError(true);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchData();
-  }, []);
 
   const visiblePeople = preparedPeople(searchParams, people);
 

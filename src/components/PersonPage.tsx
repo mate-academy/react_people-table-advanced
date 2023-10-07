@@ -1,6 +1,7 @@
 import cn from 'classnames';
 import { Person } from '../types';
 import { PersonLink } from './PersonLink';
+import { NOT_SET_VALUE } from '../utils/constants';
 
 type Props = {
   person: Person;
@@ -8,36 +9,49 @@ type Props = {
 };
 
 export const PersonPage: React.FC<Props> = ({ person, selectedPerson }) => {
+  const {
+    slug,
+    sex,
+    born,
+    died,
+    mother,
+    motherName,
+    father,
+    fatherName,
+  } = person;
+
   return (
     <tr
       data-cy="person"
       className={
         cn({
-          'has-background-warning': selectedPerson === person.slug,
+          'has-background-warning': selectedPerson === slug,
         })
       }
     >
       <td>
-        <PersonLink person={person} />
+        <PersonLink
+          person={person}
+        />
       </td>
 
-      <td>{person.sex}</td>
-      <td>{person.born}</td>
-      <td>{person.died}</td>
+      <td>{sex}</td>
+      <td>{born}</td>
+      <td>{died}</td>
       <td>
-        {person.mother
+        {mother
           ? (
-            <PersonLink person={person.mother} />
+            <PersonLink person={mother} />
           ) : (
-            person.motherName || '-'
+            motherName || NOT_SET_VALUE
           )}
       </td>
       <td>
-        {person.father
+        {father
           ? (
-            <PersonLink person={person.father} />
+            <PersonLink person={father} />
           ) : (
-            person.fatherName || '-'
+            fatherName || NOT_SET_VALUE
           )}
       </td>
     </tr>

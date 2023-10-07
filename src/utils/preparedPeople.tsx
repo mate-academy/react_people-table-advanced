@@ -1,4 +1,5 @@
 import { Person } from '../types';
+import { ONE_HUNDRED } from './constants';
 
 export const preparedPeople = (
   searchParams: URLSearchParams,
@@ -25,7 +26,7 @@ export const preparedPeople = (
   if (centuries.length) {
     copyPeople = copyPeople.filter(person => {
       return centuries
-        .includes(Math.ceil(person.born / 100).toString());
+        .includes(Math.ceil(person.born / ONE_HUNDRED).toString());
     });
   }
 

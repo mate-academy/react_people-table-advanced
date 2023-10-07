@@ -1,10 +1,7 @@
 import cn from 'classnames';
 import { Link, useSearchParams } from 'react-router-dom';
 import { Person } from '../types';
-
-const FEMALE = 'f';
-const FEMALE_COLOR = 'has-text-danger';
-const MALE_COLOR = 'has-text-link';
+import { SEX_FEMALE, SEX_MALE } from '../utils/constants';
 
 type Props = {
   person: Person
@@ -20,7 +17,8 @@ export const PersonLink: React.FC<Props> = ({ person }) => {
         search: searchParams.toString(),
       }}
       className={cn({
-        [person.sex === FEMALE ? FEMALE_COLOR : MALE_COLOR]: '',
+        'has-text-danger': person.sex === SEX_MALE,
+        'has-text-link': person.sex === SEX_FEMALE,
       })}
     >
       {person.name}
