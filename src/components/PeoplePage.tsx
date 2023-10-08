@@ -20,8 +20,9 @@ export const PeoplePage = () => {
 
   const query = searchParams.get('query') || '';
   const selectedCenturies = searchParams.getAll('centuries');
+  const selectedSex = searchParams.get('sex');
 
-  const filteredPeople = people.filter(person => {
+  const filteredByQuery = people.filter(person => {
     if (query) {
       return person.name.toLowerCase().includes(query.toLowerCase())
         || person.motherName?.toLowerCase().includes(query.toLowerCase())
@@ -31,7 +32,7 @@ export const PeoplePage = () => {
     return true;
   });
 
-  const filteredByCentury = filteredPeople.filter(person => {
+  const filteredByCentury = filteredByQuery.filter(person => {
     if (selectedCenturies.length > 0) {
       const century = Math.ceil(person.died / 100);
 
@@ -40,6 +41,16 @@ export const PeoplePage = () => {
 
     return true;
   });
+
+  const filteredBySex = filteredByCentury.filter(person => {
+    if (selectedSex) {
+      return person.sex === selectedSex;
+    }
+
+    return true;
+  });
+
+  const filteredPeople = filteredBySex;
 
   const handleSort = (field: string) => {
     let newOrder = 'asc';
@@ -64,22 +75,24 @@ export const PeoplePage = () => {
   };
 
   useEffect(() => {
-    const newPeople = [...filteredByCentury];
+    const newPeople = [...filteredPeople];
     const sortField = searchParams.get('sort');
     const sortOrder = searchParams.get('order');
 
     if (sortField && sortOrder) {
+      const firstPerson = newPeople[0];
+      const sortFieldType = typeof firstPerson?.[sortField as keyof Person];
+
       newPeople.sort((a, b) => {
-        if (typeof a[sortField as keyof Person] === 'string'
-        && typeof b[sortField as keyof Person] === 'string') {
-          return (a[sortField as keyof Person] as string)
-            .localeCompare(b[sortField as keyof Person] as string);
+        const aValue = a[sortField as keyof Person];
+        const bValue = b[sortField as keyof Person];
+
+        if (sortFieldType === 'string') {
+          return (aValue as string).localeCompare(bValue as string);
         }
 
-        if (typeof a[sortField as keyof Person] === 'number'
-        && typeof b[sortField as keyof Person] === 'number') {
-          return (a[sortField as keyof Person] as number)
-          - (b[sortField as keyof Person] as number);
+        if (sortFieldType === 'number') {
+          return (aValue as number) - (bValue as number);
         }
 
         return 0;
@@ -91,7 +104,7 @@ export const PeoplePage = () => {
     }
 
     setSortedPeople(newPeople);
-  }, [filteredByCentury, searchParams]);
+  }, [filteredPeople, searchParams]);
 
   useEffect(() => {
     getPeople()
@@ -116,6 +129,13 @@ export const PeoplePage = () => {
       case people.length === 0:
         return (
           <p data-cy="noPeopleMessage">There are no people on the server</p>
+        );
+
+      case filteredByQuery.length === 0:
+        return (
+          <p data-cy="noPeopleMessage">
+            There are no people matching the current search criteria
+          </p>
         );
 
       default:

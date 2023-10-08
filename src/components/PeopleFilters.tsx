@@ -8,6 +8,18 @@ export const PeopleFilters = () => {
   const selectedCenturies = searchParams.getAll('centuries');
   const inputValue = searchParams.get('query') || '';
 
+  const selectedSex = searchParams.get('sex') || 'all';
+
+  const handleSexFilterChange = (sex: string) => {
+    if (sex === 'all') {
+      searchParams.delete('sex');
+    } else {
+      searchParams.set('sex', sex);
+    }
+
+    setSearchParams(new URLSearchParams(searchParams.toString()));
+  };
+
   const handleNameFilterChange = (event: React.ChangeEvent<
   HTMLInputElement
   >) => {
@@ -60,9 +72,27 @@ export const PeopleFilters = () => {
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        <a className="is-active" href="#/people">All</a>
-        <a className="" href="#/people?sex=m">Male</a>
-        <a className="" href="#/people?sex=f">Female</a>
+        <a
+          className={selectedSex === 'all' ? 'is-active' : ''}
+          href="#/people"
+          onClick={() => handleSexFilterChange('all')}
+        >
+          All
+        </a>
+        <a
+          className={selectedSex === 'm' ? 'is-active' : ''}
+          href="#/people?sex=m"
+          onClick={() => handleSexFilterChange('m')}
+        >
+          Male
+        </a>
+        <a
+          className={selectedSex === 'f' ? 'is-active' : ''}
+          href="#/people?sex=f"
+          onClick={() => handleSexFilterChange('f')}
+        >
+          Female
+        </a>
       </p>
 
       <div className="panel-block">

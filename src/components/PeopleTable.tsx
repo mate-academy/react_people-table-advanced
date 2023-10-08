@@ -2,6 +2,19 @@ import { useParams } from 'react-router-dom';
 import { Person } from '../types';
 import { PersonLink } from './PersonLink';
 
+const getSortIconClass = (field: string, sortState: {
+  sortField: string | null,
+  sortOrder: string | null
+}) => {
+  if (sortState.sortField === field) {
+    return sortState.sortOrder === 'asc'
+      ? 'fas fa-sort-up'
+      : 'fas fa-sort-down';
+  }
+
+  return 'fas fa-sort';
+};
+
 export const PeopleTable = ({
   people,
   handleSort,
@@ -24,8 +37,10 @@ export const PeopleTable = ({
             <span className="is-flex is-flex-wrap-nowrap">
               Name
               <span className="icon">
-                {/* eslint-disable-next-line no-nested-ternary */}
-                <i className={`fas fa-sort${sortState.sortField === 'name' ? (sortState.sortOrder === 'asc' ? '-up' : '-down') : ''}`} style={{ cursor: 'pointer' }} />
+                <i
+                  className={getSortIconClass('name', sortState)}
+                  style={{ cursor: 'pointer' }}
+                />
               </span>
             </span>
           </th>
@@ -34,8 +49,10 @@ export const PeopleTable = ({
             <span className="is-flex is-flex-wrap-nowrap">
               Sex
               <span className="icon">
-                {/* eslint-disable-next-line no-nested-ternary */}
-                <i className={`fas fa-sort${sortState.sortField === 'sex' ? (sortState.sortOrder === 'asc' ? '-up' : '-down') : ''}`} style={{ cursor: 'pointer' }} />
+                <i
+                  className={getSortIconClass('sex', sortState)}
+                  style={{ cursor: 'pointer' }}
+                />
               </span>
             </span>
           </th>
@@ -44,8 +61,10 @@ export const PeopleTable = ({
             <span className="is-flex is-flex-wrap-nowrap">
               Born
               <span className="icon">
-                {/* eslint-disable-next-line no-nested-ternary */}
-                <i className={`fas fa-sort${sortState.sortField === 'born' ? (sortState.sortOrder === 'asc' ? '-up' : '-down') : ''}`} style={{ cursor: 'pointer' }} />
+                <i
+                  className={getSortIconClass('born', sortState)}
+                  style={{ cursor: 'pointer' }}
+                />
               </span>
             </span>
           </th>
@@ -54,8 +73,10 @@ export const PeopleTable = ({
             <span className="is-flex is-flex-wrap-nowrap">
               Died
               <span className="icon">
-                {/* eslint-disable-next-line no-nested-ternary */}
-                <i className={`fas fa-sort${sortState.sortField === 'died' ? (sortState.sortOrder === 'asc' ? '-up' : '-down') : ''}`} style={{ cursor: 'pointer' }} />
+                <i
+                  className={getSortIconClass('died', sortState)}
+                  style={{ cursor: 'pointer' }}
+                />
               </span>
             </span>
           </th>
