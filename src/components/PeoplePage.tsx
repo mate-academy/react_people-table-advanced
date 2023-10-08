@@ -13,16 +13,20 @@ export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);
   const [error, setError] = useState<boolean>(false);
   const [filteredPeople, setFilteredPeople] = useState<Person[]>(people);
+  const [sortedPeople, setSortedPeople] = useState<Person[]>([]);
 
   const [searchParams] = useSearchParams();
 
   useEffect(() => {
     setIsLoading(true);
-    getPeople().then(setPeople).catch(() => setError(true))
+    getPeople().then((data) => {
+      setPeople(data);
+      // setFilteredPeople(data);
+    }).catch(() => setError(true))
       .finally(() => setIsLoading(false));
   }, []);
 
-  useMemo(() => {
+  useEffect(() => {
     setFilteredPeople(people.filter(person => person.name.toLowerCase()
       .includes(searchParams.get('query')?.toLowerCase() || '')
     || person.motherName?.toLowerCase().includes(searchParams
@@ -45,47 +49,48 @@ export const PeoplePage = () => {
 
     switch (true) {
       case (sort === 'name'
-      && !order):
-        return setFilteredPeople(filteredPeople
+          && !order):
+        setSortedPeople(filteredPeople
           .sort((a, b) => a.name.localeCompare(b.name)));
-
+        break;
       case (sort === 'name'
-      && !!order):
-        return setFilteredPeople(filteredPeople
+          && !!order):
+        setSortedPeople(filteredPeople
           .sort((a, b) => b.name.localeCompare(a.name)));
-
+        break;
       case (sort === 'sex'
-      && !order):
-        return setFilteredPeople(filteredPeople
+          && !order):
+        setSortedPeople(filteredPeople
           .sort((a, b) => a.sex.localeCompare(b.sex)));
-
+        break;
       case (sort === 'sex'
-      && !!order):
-        return setFilteredPeople(filteredPeople
+          && !!order):
+        setSortedPeople(filteredPeople
           .sort((a, b) => b.sex.localeCompare(a.sex)));
-
+        break;
       case (sort === 'born'
-      && !order):
-        return setFilteredPeople(filteredPeople
+          && !order):
+        setSortedPeople(filteredPeople
           .sort((a, b) => a.born - b.born));
-
+        break;
       case (sort === 'born'
-      && !!order):
-        return setFilteredPeople(filteredPeople
+          && !!order):
+        setSortedPeople(filteredPeople
           .sort((a, b) => b.born - a.born));
-
+        break;
       case (sort === 'died'
-      && !order):
-        return setFilteredPeople(filteredPeople
+          && !order):
+        setSortedPeople(filteredPeople
           .sort((a, b) => a.died - b.died));
-
+        break;
       case (sort === 'died'
-      && !!order):
-        return setFilteredPeople(filteredPeople
+          && !!order):
+        setSortedPeople(filteredPeople
           .sort((a, b) => b.died - a.died));
-      default: return filteredPeople;
+        break;
+      default: setSortedPeople(filteredPeople);
     }
-  }, [searchParams, people]);
+  }, [searchParams, filteredPeople, people]);
 
   return (
     <>
@@ -125,7 +130,7 @@ export const PeoplePage = () => {
 
               </>
 
-              {people.length > 0 && <PeopleTable people={filteredPeople} />}
+              {people.length > 0 && <PeopleTable people={sortedPeople} />}
             </div>
           </div>
         </div>
