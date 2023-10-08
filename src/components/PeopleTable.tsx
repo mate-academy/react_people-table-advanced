@@ -1,6 +1,7 @@
 import cn from 'classnames';
 import { Link, useParams, useSearchParams } from 'react-router-dom';
 import { Person } from '../types';
+import { SortBy } from './SortBy';
 
 type PeopleTableProps = {
   people: Person[]
@@ -52,44 +53,28 @@ export const PeopleTable: React.FC<PeopleTableProps> = ({ people }) => {
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Name
-              <a href="#/people?sort=name">
-                <span className="icon">
-                  <i className="fas fa-sort" />
-                </span>
-              </a>
+              <SortBy sort="name" />
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Sex
-              <a href="#/people?sort=sex">
-                <span className="icon">
-                  <i className="fas fa-sort" />
-                </span>
-              </a>
+              <SortBy sort="sex" />
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Born
-              <a href="#/people?sort=born&amp;order=desc">
-                <span className="icon">
-                  <i className="fas fa-sort-up" />
-                </span>
-              </a>
+              <SortBy sort="born" />
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Died
-              <a href="#/people?sort=died">
-                <span className="icon">
-                  <i className="fas fa-sort" />
-                </span>
-              </a>
+              <SortBy sort="died" />
             </span>
           </th>
 

@@ -39,6 +39,54 @@ export const PeoplePage = () => {
         : person)));
   }, [searchParams, people]);
 
+  useMemo(() => {
+    const sort = searchParams.get('sort');
+    const order = searchParams.get('order');
+
+    switch (true) {
+      case (sort === 'name'
+      && !order):
+        return setFilteredPeople(filteredPeople
+          .sort((a, b) => a.name.localeCompare(b.name)));
+
+      case (sort === 'name'
+      && !!order):
+        return setFilteredPeople(filteredPeople
+          .sort((a, b) => b.name.localeCompare(a.name)));
+
+      case (sort === 'sex'
+      && !order):
+        return setFilteredPeople(filteredPeople
+          .sort((a, b) => a.sex.localeCompare(b.sex)));
+
+      case (sort === 'sex'
+      && !!order):
+        return setFilteredPeople(filteredPeople
+          .sort((a, b) => b.sex.localeCompare(a.sex)));
+
+      case (sort === 'born'
+      && !order):
+        return setFilteredPeople(filteredPeople
+          .sort((a, b) => a.born - b.born));
+
+      case (sort === 'born'
+      && !!order):
+        return setFilteredPeople(filteredPeople
+          .sort((a, b) => b.born - a.born));
+
+      case (sort === 'died'
+      && !order):
+        return setFilteredPeople(filteredPeople
+          .sort((a, b) => a.died - b.died));
+
+      case (sort === 'died'
+      && !!order):
+        return setFilteredPeople(filteredPeople
+          .sort((a, b) => b.died - a.died));
+      default: return filteredPeople;
+    }
+  }, [searchParams, people]);
+
   return (
     <>
       <h1 className="title">People Page</h1>
