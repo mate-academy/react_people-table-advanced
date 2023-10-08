@@ -1,4 +1,5 @@
 import { useSearchParamsContext } from '../SearchParamsContext';
+import { SexFilter } from './SexFilter';
 
 const CENTURIES = ['16', '17', '18', '19', '20'];
 
@@ -8,17 +9,17 @@ export const PeopleFilters = () => {
   const selectedCenturies = searchParams.getAll('centuries');
   const inputValue = searchParams.get('query') || '';
 
-  const selectedSex = searchParams.get('sex') || 'all';
+  // const selectedSex = searchParams.get('sex') || 'all';
 
-  const handleSexFilterChange = (sex: string) => {
-    if (sex === 'all') {
-      searchParams.delete('sex');
-    } else {
-      searchParams.set('sex', sex);
-    }
+  // const handleSexFilterChange = (sex: string) => {
+  //   if (sex === 'all') {
+  //     searchParams.delete('sex');
+  //   } else {
+  //     searchParams.set('sex', sex);
+  //   }
 
-    setSearchParams(new URLSearchParams(searchParams.toString()));
-  };
+  //   setSearchParams(new URLSearchParams(searchParams.toString()));
+  // };
 
   const handleNameFilterChange = (event: React.ChangeEvent<
   HTMLInputElement
@@ -69,31 +70,8 @@ export const PeopleFilters = () => {
 
   return (
     <nav className="panel">
-      <p className="panel-heading">Filters</p>
 
-      <p className="panel-tabs" data-cy="SexFilter">
-        <a
-          className={selectedSex === 'all' ? 'is-active' : ''}
-          href="#/people"
-          onClick={() => handleSexFilterChange('all')}
-        >
-          All
-        </a>
-        <a
-          className={selectedSex === 'm' ? 'is-active' : ''}
-          href="#/people?sex=m"
-          onClick={() => handleSexFilterChange('m')}
-        >
-          Male
-        </a>
-        <a
-          className={selectedSex === 'f' ? 'is-active' : ''}
-          href="#/people?sex=f"
-          onClick={() => handleSexFilterChange('f')}
-        >
-          Female
-        </a>
-      </p>
+      <SexFilter />
 
       <div className="panel-block">
         <p className="control has-icons-left">

@@ -13,6 +13,7 @@ export const App = () => {
 
       <main className="section">
         <div className="container">
+
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/home" element={<Navigate to="/" replace />} />
@@ -20,6 +21,7 @@ export const App = () => {
             <Route path="/people/:slug" element={<PeoplePage />} />
             <Route path="/*" element={<PageNotFound />} />
           </Routes>
+
         </div>
       </main>
     </div>

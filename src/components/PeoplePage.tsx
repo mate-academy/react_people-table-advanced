@@ -42,15 +42,13 @@ export const PeoplePage = () => {
     return true;
   });
 
-  const filteredBySex = filteredByCentury.filter(person => {
+  const filteredPeople = filteredByCentury.filter(person => {
     if (selectedSex) {
       return person.sex === selectedSex;
     }
 
     return true;
   });
-
-  const filteredPeople = filteredBySex;
 
   const handleSort = (field: string) => {
     let newOrder = 'asc';
@@ -131,7 +129,7 @@ export const PeoplePage = () => {
           <p data-cy="noPeopleMessage">There are no people on the server</p>
         );
 
-      case filteredByQuery.length === 0:
+      case filteredPeople.length === 0:
         return (
           <p data-cy="noPeopleMessage">
             There are no people matching the current search criteria
