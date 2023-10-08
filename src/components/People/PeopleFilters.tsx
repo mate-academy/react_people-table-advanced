@@ -15,17 +15,6 @@ export const PeopleFilters: React.FC = () => {
       : [...centuries, num];
   }
 
-  // function toggleCentury(num: string) {
-  //   const params = new URLSearchParams(searchParams);
-  //   const newParams = centuries.includes(num)
-  //     ? centuries.filter(century => century !== num)
-  //     : [...centuries, num];
-
-  //   params.delete('centuries');
-  //   newParams.forEach(century => params.append('centuries', century));
-  //   setSearchParams(params);
-  // }
-
   function clearCentury() {
     const params = new URLSearchParams(searchParams);
 

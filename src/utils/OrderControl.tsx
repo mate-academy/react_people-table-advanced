@@ -31,12 +31,11 @@ export const OrderControl = ({ sort }: OrderControlProps) => {
   return (
     <SearchLink params={handleOrder()}>
       <span className="icon">
-        <i className={cn('fas', {
-          'fa-sort': true,
+        <i className={cn('fas fa-sort', {
           'fa-sort-up': searchParams.get('sort') === sort
-          && !searchParams.get('order'),
+            && !searchParams.get('order'),
           'fa-sort-down': searchParams.get('sort') === sort
-          && !!searchParams.get('order'),
+            && !!searchParams.get('order'),
         })}
         />
       </span>
