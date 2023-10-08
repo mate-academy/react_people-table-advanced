@@ -4,7 +4,8 @@ import { Person } from '../../types';
 export const useSortPeople = (people: Person[]) => {
   const [searchParams] = useSearchParams();
 
-  const sortParams = searchParams.get('sort') as keyof Person;
+  const sortParams = searchParams.get('sort') as keyof Pick<
+  Person, 'name' | 'born' | 'died' | 'sex'>;
   const orderParams = searchParams.get('order');
 
   const sortedPeople = people.sort((a, b) => {
