@@ -1,6 +1,7 @@
 import { Link, useParams, useSearchParams } from 'react-router-dom';
 import classNames from 'classnames';
 import { Person } from '../types/Person';
+import './PeopleTable.scss';
 
 type PeopleTableProps = {
   people: Person[],
@@ -230,7 +231,7 @@ export const PeopleTable: React.FC<PeopleTableProps> = (
                       ? (
                         <Link
                           className="has-text-danger"
-                          to={`${person.mother.slug}?${searchParams.toString()}`}
+                          to={`/people/${person.mother.slug}`}
                         >
                           {person.motherName}
                         </Link>
@@ -242,7 +243,7 @@ export const PeopleTable: React.FC<PeopleTableProps> = (
                     {person.father
                       ? (
                         <Link
-                          to={`${person.father.slug}?${searchParams.toString()}`}
+                          to={`/people/${person.father.slug}`}
                         >
                           {person.fatherName}
                         </Link>
