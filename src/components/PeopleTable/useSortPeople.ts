@@ -10,11 +10,11 @@ export const useSortPeople = (people: Person[]) => {
 
   const sortedPeople = people.sort((a, b) => {
     if (sortParams) {
-      if (a[sortParams] > b[sortParams]) {
+      if (a[sortParams] < b[sortParams]) {
         return orderParams === 'desc' ? 1 : -1;
       }
 
-      if (a[sortParams] < b[sortParams]) {
+      if (a[sortParams] > b[sortParams]) {
         return orderParams === 'desc' ? -1 : 1;
       }
     }
