@@ -1,12 +1,7 @@
 import { useSearchParams } from 'react-router-dom';
-// import { useState } from 'react';
 
 export const QueryFilter = () => {
   const [searchParams, setSeachParams] = useSearchParams();
-  // const [query, setQuery] = useState<string>('');
-
-  // eslint-disable-next-line no-console
-  console.log(searchParams.get('query'));
 
   return (
     <div className="panel-block">

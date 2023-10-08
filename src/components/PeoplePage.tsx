@@ -22,8 +22,6 @@ export const PeoplePage = () => {
       .finally(() => setIsLoading(false));
   }, []);
 
-  console.log(searchParams
-    .getAll('century').length > 0);
   useMemo(() => {
     setFilteredPeople(people.filter(person => person.name.toLowerCase()
       .includes(searchParams.get('query')?.toLowerCase() || '')
@@ -59,7 +57,11 @@ export const PeoplePage = () => {
 
               <>
                 {error && !isLoading
-&& <p data-cy="peopleLoadingError">Something went wrong</p>}
+              && (
+                <p data-cy="peopleLoadingError">
+                  Something went wrong
+                </p>
+              )}
 
                 {people.length === 0 && !isLoading && (
                   <p data-cy="noPeopleMessage">

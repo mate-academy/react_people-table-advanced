@@ -1,7 +1,6 @@
 import { useSearchParams } from 'react-router-dom';
 import cn from 'classnames';
 import { SearchLink } from './SearchLink';
-// import { SearchLink } from './SearchLink';
 
 export const CenturyFilter = () => {
   const centuries = ['16', '17', '18', '19', '20'];
