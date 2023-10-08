@@ -25,7 +25,7 @@ export const PostsProvider: React.FC<Props> = ({ children }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState(ErrorMessages.NoError);
 
-  const loadPeople = useEffect(() => {
+  useEffect(() => {
     setIsLoading(true);
     getPeople()
       .then((peopleFromServer) => {
@@ -43,7 +43,6 @@ export const PostsProvider: React.FC<Props> = ({ children }) => {
     peopleList,
     isLoading,
     errorMessage,
-    loadPeople,
   }), [peopleList, isLoading, errorMessage]);
 
   return (

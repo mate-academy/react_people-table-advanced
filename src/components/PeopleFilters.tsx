@@ -1,6 +1,6 @@
 import { useSearchParams } from 'react-router-dom';
 import classNames from 'classnames';
-import { SearchParams, getSearchWith } from '../utils/searchHelper';
+import { getSearchWith } from '../utils/searchHelper';
 import { PersonSex } from '../types/PersonSex';
 import {
   SEX_FEMALE, SEX_MALE, centuriesArray, initialParams,
@@ -14,20 +14,20 @@ export const PeopleFilters = () => {
   const centuries = searchParams.getAll('centuries') || [];
   const sex = searchParams.get('sex') || null;
 
-  function setSearchWith(paramsToUpdate: SearchParams) {
-    const search = getSearchWith(searchParams, paramsToUpdate);
-
-    setSearchParams(search);
-  }
-
   const getCenturies = (century: string) => {
-    return centuries.includes(century)
+    const filteredCenturies = centuries.includes(century)
       ? centuries.filter(number => number !== century)
       : [...centuries, century];
+
+    return { centuries: filteredCenturies };
   };
 
   function handleQueryChange(event: React.ChangeEvent<HTMLInputElement>) {
-    setSearchWith({ query: event.target.value || null });
+    const paramsToUpdate = { query: event.target.value || null };
+
+    const search = getSearchWith(searchParams, paramsToUpdate);
+
+    setSearchParams(search);
   }
 
   return (
@@ -81,7 +81,7 @@ export const PeopleFilters = () => {
                 className={classNames('button mr-1', {
                   'is-info': centuries.includes(century),
                 })}
-                params={{ centuries: getCenturies(century) }}
+                params={getCenturies(century)}
                 key={century}
               >
                 {century}
