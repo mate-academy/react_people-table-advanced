@@ -3,6 +3,7 @@ import cn from 'classnames';
 import { useParams } from 'react-router-dom';
 import { Person } from '../../types';
 import { PersonLink } from '../PersonLink';
+import { useDisplayPeople } from '../../hooks/useDisplayPeople';
 
 type PeopleTableProps = {
   people: Person[];
@@ -10,8 +11,7 @@ type PeopleTableProps = {
 
 export const PeopleTable: React.FC<PeopleTableProps> = ({ people }) => {
   const { personSlug } = useParams();
-
-  console.log(personSlug);
+  const displayPeople = useDisplayPeople(people);
 
   return (
     <table
@@ -70,7 +70,7 @@ export const PeopleTable: React.FC<PeopleTableProps> = ({ people }) => {
       </thead>
 
       <tbody>
-        {people.map(person => {
+        {displayPeople.map(person => {
           const mother = people.find(
             ({ name }) => name === person.motherName,
           );
