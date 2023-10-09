@@ -17,8 +17,8 @@ export const PersonLink: React.FC<Props> = ({ person }) => {
         search: searchParams.toString(),
       }}
       className={cn({
-        'has-text-danger': person.sex === SEX_MALE,
-        'has-text-link': person.sex === SEX_FEMALE,
+        'has-text-danger': person.sex === SEX_FEMALE,
+        'has-text-link': person.sex === SEX_MALE,
       })}
     >
       {person.name}
