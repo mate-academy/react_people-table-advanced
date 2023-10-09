@@ -1,7 +1,5 @@
 import { useSearchParams } from 'react-router-dom';
 import cn from 'classnames';
-// import { useEffect } from 'react';
-
 import { SearchLink } from './SearchLink';
 
 type SortByProps = {
