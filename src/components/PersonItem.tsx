@@ -1,13 +1,12 @@
 import classNames from 'classnames';
 import { Person } from '../types';
 import { PersonLink } from './PersonLink';
+import { NO_PARENT } from '../utils/constants';
 
 type Props = {
   person: Person;
   selectedSlug: string;
 };
-
-const NO_PARENT = '-';
 
 export const PersonItem: React.FC<Props> = ({ person, selectedSlug }) => {
   const {
@@ -39,7 +38,7 @@ export const PersonItem: React.FC<Props> = ({ person, selectedSlug }) => {
         {mother ? (
           <PersonLink person={mother} />
         ) : (
-          motherName || '-'
+          motherName || NO_PARENT
         )}
       </td>
       <td>

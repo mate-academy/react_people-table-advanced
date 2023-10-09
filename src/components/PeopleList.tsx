@@ -1,32 +1,19 @@
 import classNames from 'classnames';
 import { useParams, useSearchParams } from 'react-router-dom';
-import { useEffect, useState } from 'react';
-import { getPeople } from '../api';
-import { Person } from '../types';
-import { Loader } from './Loader';
-import { PersonItem } from './PersonItem';
-import { PeopleFilters } from './PeopleFilters';
 import { SortKeys } from '../types/SortKeys';
-import { SearchLink } from './SearchLink';
-import { SearchParams } from '../utils/searchHelper';
-import { SearchingParams } from '../types/SearchParams';
-import { getSortedPeople } from '../utils/getSortedPeople';
 import { getFilterdPeople } from '../utils/getFilterdPeople';
+import { getSortedPeople } from '../utils/getSortedPeople';
+import { SearchingParams } from '../types/SearchParams';
+import { Person } from '../types';
+import { SearchLink } from './SearchLink';
+import { PersonItem } from './PersonItem';
+import { SearchParams } from '../utils/searchHelper';
 
-function getPreparedPeople(people: Person[]) {
-  return people.map(person => {
-    return {
-      ...person,
-      mother: people.find(mother => mother.name === person.motherName),
-      father: people.find(father => father.name === person.fatherName),
-    };
-  });
-}
+type Props = {
+  people: Person[],
+};
 
-export const PeopleList = () => {
-  const [people, setPeople] = useState<Person[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [isError, setIsError] = useState(false);
+export const PeopleList:React.FC<Props> = ({ people }) => {
   const { personId = '' } = useParams();
 
   const [searchParams] = useSearchParams();
@@ -37,21 +24,6 @@ export const PeopleList = () => {
   const selectedCenturies = searchParams
     .getAll(SearchingParams.Centuries) || [];
 
-  useEffect(() => {
-    setIsLoading(true);
-
-    getPeople()
-      .then(data => {
-        setPeople(getPreparedPeople(data));
-      })
-      .catch(() => {
-        setIsError(true);
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
-  }, []);
-
   const getSortParams = (sortKey: SortKeys): SearchParams => {
     if (sort !== sortKey) {
       return {
@@ -60,7 +32,7 @@ export const PeopleList = () => {
       };
     }
 
-    if (sort === sortKey && !order) {
+    if (!order) {
       return { order: 'desc' };
     }
 
@@ -70,15 +42,13 @@ export const PeopleList = () => {
     };
   };
 
-  const isPeopleOnServer = !!people.length && !isError;
-  const isNoPeopleOnServer = !people.length && !isLoading;
-
   const filteredPeople = getFilterdPeople(
     people,
     selectedSex,
     query,
     selectedCenturies,
   );
+
   const sortedPeople = getSortedPeople(
     filteredPeople,
     sort as SortKeys,
@@ -86,85 +56,55 @@ export const PeopleList = () => {
   );
 
   return (
-    <>
-      <h1 className="title">People Page</h1>
+    <table
+      data-cy="peopleTable"
+      className="
+      table
+      is-striped
+      is-hoverable
+      is-narrow
+      is-fullwidth"
+    >
+      <thead>
+        <tr>
+          {Object.entries(SortKeys).map(([key, value]) => {
+            const isSortEqualValue = sort === value;
 
-      <div className="block">
-        <div className="columns is-desktop is-flex-direction-row-reverse">
-          <div className="column is-7-tablet is-narrow-desktop">
-            <PeopleFilters />
-          </div>
-
-          <div className="column">
-            <div className="box table-container">
-              {isLoading && (
-                <Loader />
-              )}
-
-              {isError && (
-                <p data-cy="peopleLoadingError" className="has-text-danger">
-                  Something went wrong
-                </p>
-              )}
-
-              {isNoPeopleOnServer && (
-                <p data-cy="noPeopleMessage">
-                  There are no people on the server
-                </p>
-              )}
-
-              {isPeopleOnServer && (
-                <table
-                  data-cy="peopleTable"
-                  className="
-                  table
-                  is-striped
-                  is-hoverable
-                  is-narrow
-                  is-fullwidth"
-                >
-                  <thead>
-                    <tr>
-                      {Object.entries(SortKeys).map(([key, value]) => (
-                        <th key={key}>
-                          <span className="is-flex is-flex-wrap-nowrap">
-                            {key}
-                            <SearchLink
-                              params={getSortParams(value)}
-                            >
-                              <span className="icon">
-                                <i
-                                  className={classNames('fas', {
-                                    'fa-sort': sort !== value,
-                                    'fa-sort-up': sort === value && !order,
-                                    'fa-sort-down': sort === value,
-                                  })}
-                                />
-                              </span>
-                            </SearchLink>
-                          </span>
-                        </th>
-                      ))}
-                      <th>Mother</th>
-                      <th>Father</th>
-                    </tr>
-                  </thead>
-
-                  <tbody>
-                    {sortedPeople.map(person => (
-                      <PersonItem
-                        key={person.slug}
-                        person={person}
-                        selectedSlug={personId}
+            return (
+              <th key={key}>
+                <span className="is-flex is-flex-wrap-nowrap">
+                  {key}
+                  <SearchLink
+                    params={getSortParams(value)}
+                  >
+                    <span className="icon">
+                      <i
+                        className={classNames('fas', {
+                          'fa-sort': !isSortEqualValue,
+                          'fa-sort-up': isSortEqualValue && !order,
+                          'fa-sort-down': isSortEqualValue,
+                        })}
                       />
-                    ))}
-                  </tbody>
-                </table>
-              )}
-            </div>
-          </div>
-        </div>
-      </div>
-    </>
+                    </span>
+                  </SearchLink>
+                </span>
+              </th>
+            );
+          })}
+          <th>Mother</th>
+          <th>Father</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        {sortedPeople.map(person => (
+          <PersonItem
+            key={person.slug}
+            person={person}
+            selectedSlug={personId}
+          />
+        ))}
+      </tbody>
+    </table>
   );
 };

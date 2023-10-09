@@ -1,8 +1,13 @@
 import { Person } from '../types';
+import { YEARS_IN_CENTURY } from './constants';
 
 const getCentury = (year: number) => {
-  return Math.ceil(year / 100);
+  return Math.ceil(year / YEARS_IN_CENTURY);
 };
+
+function includesIgnoreCase(str: string | null, query : string) {
+  return str?.toLowerCase().includes(query.toLowerCase());
+}
 
 export function getFilterdPeople(
   people: Person[],
@@ -16,11 +21,12 @@ export function getFilterdPeople(
     const lowerCaseQuery = query.toLowerCase();
 
     filteredPeople = filteredPeople
-      .filter(({ name, motherName, fatherName }) => name
-        .toLowerCase()
-        .includes(lowerCaseQuery)
-      || motherName?.toLowerCase().includes(lowerCaseQuery)
-      || fatherName?.toLowerCase().includes(lowerCaseQuery));
+      .filter(({ name, motherName, fatherName }) => includesIgnoreCase(
+        name,
+        lowerCaseQuery,
+      )
+      || includesIgnoreCase(motherName, lowerCaseQuery)
+      || includesIgnoreCase(fatherName, lowerCaseQuery));
   }
 
   if (sex) {

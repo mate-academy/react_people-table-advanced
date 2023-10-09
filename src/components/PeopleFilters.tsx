@@ -4,8 +4,8 @@ import { SearchLink } from './SearchLink';
 import { SearchingParams } from '../types/SearchParams';
 import { Genders } from '../types/Genders';
 import { getSearchWith } from '../utils/searchHelper';
-
-const CENTURIES = ['16', '17', '18', '19'];
+import { CENTURIES } from '../utils/constants';
+import { updateSelectedCenturies } from '../utils/updateSelectedCenturies';
 
 export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -39,7 +39,7 @@ export const PeopleFilters = () => {
                 },
               )}
               params={{
-                sex: value === '' ? null : value,
+                sex: value || null,
               }}
             >
               {genderKey}
@@ -80,9 +80,10 @@ export const PeopleFilters = () => {
                   },
                 )}
                 params={{
-                  centuries: selectedCenturies.includes(century)
-                    ? selectedCenturies.filter(cent => cent !== century)
-                    : [...selectedCenturies, century],
+                  centuries: updateSelectedCenturies(
+                    selectedCenturies,
+                    century,
+                  ),
                 }}
               >
                 {century}

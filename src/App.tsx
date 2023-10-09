@@ -1,20 +1,20 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
 import './App.scss';
 import { PageContent } from './components/PageContent';
-import { Home } from './components/Home';
-import { PeopleList } from './components/PeopleList';
-import { NotFound } from './components/NotFound';
+import { HomePage } from './components/HomePage';
+import { PeoplePage } from './components/PeoplePage';
+import { NotFoundPage } from './components/NotFoundPage';
 
 export const App = () => (
   <div data-cy="app">
     <Routes>
       <Route path="/" element={<PageContent />}>
-        <Route index element={<Home />} />
-        <Route path="/home" element={<Navigate to="/" />} />
-        <Route path="people" element={<PeopleList />}>
+        <Route index element={<HomePage />} />
+        <Route path="/home" element={<Navigate to="/" replace />} />
+        <Route path="people" element={<PeoplePage />}>
           <Route path=":personId" />
         </Route>
-        <Route path="*" element={<NotFound />} />
+        <Route path="*" element={<NotFoundPage />} />
       </Route>
     </Routes>
   </div>
