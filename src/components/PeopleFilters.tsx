@@ -11,6 +11,8 @@ type PeopleFiltersProps = {
   handleQueryChange: (event: React.ChangeEvent<HTMLInputElement>) => void,
 };
 
+const allCentury = ['16', '17', '18', '19', '20'];
+
 export const PeopleFilters: React.FC<PeopleFiltersProps> = ({
   query,
   sex,
@@ -18,8 +20,6 @@ export const PeopleFilters: React.FC<PeopleFiltersProps> = ({
   handleSex,
   handleQueryChange,
 }) => {
-  const allCentury = ['16', '17', '18', '19', '20'];
-
   function toggleCentury(century: string) {
     return centuries.includes(century)
       ? centuries.filter(num => num !== century)
@@ -35,7 +35,7 @@ export const PeopleFilters: React.FC<PeopleFiltersProps> = ({
               key={century}
               params={{ centuries: toggleCentury(century) }}
               data-cy="century"
-              className={cn('button mr-1', {
+              className={cn('button', 'mr-1', {
                 'is-info': centuries.includes(century),
               })}
             >
@@ -49,7 +49,7 @@ export const PeopleFilters: React.FC<PeopleFiltersProps> = ({
             params={{ centuries: null }}
             data-cy="centuryALL"
             className={cn('button is-success', {
-              'is-outlined': centuries.length !== 0,
+              'is-outlined': centuries.length,
             })}
           >
             All

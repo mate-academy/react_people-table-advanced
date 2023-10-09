@@ -60,16 +60,16 @@ const getVisiblePeople = (
   }
 
   if (sort) {
-    filteredPeople = filteredPeople.sort((person1, person2) => {
+    filteredPeople = filteredPeople.sort((a, b) => {
       switch (sort) {
         case 'Name':
-          return person1.name.localeCompare(person2.name);
+          return a.name.localeCompare(b.name);
         case 'Sex':
-          return person1.sex.localeCompare(person2.sex);
+          return a.sex.localeCompare(b.sex);
         case 'Born':
-          return person1.born - person2.born;
+          return a.born - b.born;
         case 'Died':
-          return person1.died - person2.died;
+          return a.died - b.died;
         default:
           return 0;
       }
@@ -86,7 +86,7 @@ const getVisiblePeople = (
 export const PeoplePage: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [people, setPeople] = useState<Person[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [hasError, setHasError] = useState(false);
   const query = searchParams.get('query') || '';
   const centuries = searchParams.getAll('centuries') || [];
@@ -106,7 +106,7 @@ export const PeoplePage: React.FC = () => {
     setSearchParams(params);
   };
 
-  const matchMotherAndFather = (peopleFromServer: Person[]): Person[] => {
+  const findPeopleParent = (peopleFromServer: Person[]): Person[] => {
     return peopleFromServer.map((per): Person => {
       const mother = peopleFromServer.find(
         person => person.name === per.motherName,
@@ -121,12 +121,12 @@ export const PeoplePage: React.FC = () => {
   };
 
   useEffect(() => {
-    setLoading(true);
+    setIsLoading(true);
     getPeople()
-      .then(data => matchMotherAndFather(data))
+      .then(data => findPeopleParent(data))
       .then(data => setPeople(data))
       .catch(() => setHasError(true))
-      .finally(() => setLoading(false));
+      .finally(() => setIsLoading(false));
   }, []);
 
   const allPeople = getVisiblePeople(people, {
@@ -144,7 +144,7 @@ export const PeoplePage: React.FC = () => {
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
           <div className="column is-7-tablet is-narrow-desktop">
-            {people.length !== 0 && !loading && (
+            {people.length !== 0 && !isLoading && (
               <PeopleFilters
                 query={query}
                 sex={sex}
@@ -157,19 +157,19 @@ export const PeoplePage: React.FC = () => {
 
           <div className="column">
             <div className="box table-container">
-              {loading && <Loader />}
+              {isLoading && <Loader />}
               {hasError && (
                 <p data-cy="peopleLoadingError">Something went wrong</p>
               )}
-              {people.length === 0 && !loading && (
+              {!people.length && !isLoading && (
                 <p data-cy="noPeopleMessage">
                   There are no people on the server
                 </p>
               )}
-              {allPeople.length === 0 && !loading && (
+              {!allPeople.length && !isLoading && (
                 <p>There are no people matching the current search criteria</p>
               )}
-              {allPeople.length !== 0 && !loading && (
+              {!!allPeople.length && !isLoading && (
                 <PeopleTable people={allPeople} sort={sort} order={order} />
               )}
             </div>
