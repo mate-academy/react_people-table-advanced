@@ -17,6 +17,16 @@ export const PeopleFilters = () => {
     };
   };
 
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    searchParams.set('query', `${event.target.value}`);
+
+    if (searchParams.get('query') === '') {
+      searchParams.delete('query');
+    }
+
+    setSearchParams(searchParams);
+  };
+
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
@@ -50,15 +60,7 @@ export const PeopleFilters = () => {
             className="input"
             placeholder="Search"
             value={query || ''}
-            onChange={(e) => {
-              searchParams.set('query', `${e.target.value}`);
-
-              if (searchParams.get('query') === '') {
-                searchParams.delete('query');
-              }
-
-              setSearchParams(searchParams);
-            }}
+            onChange={handleInputChange}
           />
 
           <span className="icon is-left">

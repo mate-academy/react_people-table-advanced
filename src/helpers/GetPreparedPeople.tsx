@@ -1,4 +1,3 @@
-import { useSearchParams } from 'react-router-dom';
 import { Person } from '../types';
 
 type Sort = 'name' | 'sex' | 'born' | 'died';
@@ -72,9 +71,8 @@ const queryFilter = (
 
 export const getPreparedPeople = (
   people: Person[],
+  searchParams: URLSearchParams,
 ) => {
-  // eslint-disable-next-line react-hooks/rules-of-hooks
-  const [searchParams] = useSearchParams();
   const sort = searchParams.get('sort');
   const order = searchParams.get('order');
   const sex = searchParams.get('sex');
