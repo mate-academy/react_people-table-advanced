@@ -1,4 +1,19 @@
+/* eslint-disable no-console */
+// import { useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
+import { CenturyFilter } from '../CenturyFilter';
+
 export const PeopleFilters = () => {
+  // const [filterName, setFilterName] = useState('');
+  const [searchParams, setSearchParams] = useSearchParams();
+  // const [year, setYear] = useState(1900);
+  // const history = useHistory();
+
+  const query = searchParams.get('query') || '';
+  const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchParams({ query: event.target.value });
+  };
+
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
@@ -16,6 +31,8 @@ export const PeopleFilters = () => {
             type="search"
             className="input"
             placeholder="Search"
+            value={query}
+            onChange={onChange}
           />
 
           <span className="icon is-left">
@@ -26,47 +43,7 @@ export const PeopleFilters = () => {
 
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
-          <div className="level-left">
-            <a
-              data-cy="century"
-              className="button mr-1"
-              href="#/people?centuries=16"
-            >
-              16
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=17"
-            >
-              17
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=18"
-            >
-              18
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=19"
-            >
-              19
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1"
-              href="#/people?centuries=20"
-            >
-              20
-            </a>
-          </div>
+          <CenturyFilter />
 
           <div className="level-right ml-4">
             <a
