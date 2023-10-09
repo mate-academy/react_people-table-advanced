@@ -5,85 +5,7 @@ import { PeopleTable } from '../components/PeopleTable';
 import { Loader } from '../components/Loader';
 import { Person } from '../types';
 import { getPeople } from '../api';
-import {
-  FEMALE_SEX,
-  MALE_SEX,
-  ONE_CENTURY,
-} from '../utils/variables';
-import { PeopleSortType } from '../utils/PeopleSortType';
-
-export const getPreparedPeople = (
-  people: Person[],
-  query: string,
-  sex: string,
-  centuries: string[],
-  sort: string,
-  order: string,
-): Person[] => {
-  let PreparedPeople = [...people];
-
-  if (sort) {
-    switch (sort) {
-      case PeopleSortType.Name:
-      case PeopleSortType.Sex:
-        PreparedPeople = PreparedPeople
-          .sort((a, b) => a[sort].localeCompare(b[sort]));
-        break;
-      case PeopleSortType.Born:
-      case PeopleSortType.Died:
-        PreparedPeople = PreparedPeople
-          .sort((a, b) => a[sort] - b[sort]);
-        break;
-      default:
-        return PreparedPeople;
-    }
-  }
-
-  if (order) {
-    PreparedPeople = PreparedPeople.reverse();
-  }
-
-  if (centuries.length > 0) {
-    PreparedPeople = PreparedPeople.filter(person => {
-      const getCentury = Math.ceil(person.born / ONE_CENTURY);
-
-      return centuries.includes(`${getCentury}`);
-    });
-  }
-
-  if (query) {
-    PreparedPeople = PreparedPeople.filter(person => {
-      const preparedQuery = query.trim().toLowerCase();
-      const preparedName = person.name.trim()
-        .toLowerCase()
-        .includes(preparedQuery);
-
-      const preparedMotherName = person.motherName
-        ?.toLowerCase()
-        .includes(preparedQuery);
-      const preparedFatherName = person.fatherName
-        ?.toLowerCase()
-        .includes(preparedQuery);
-
-      return preparedName || preparedMotherName || preparedFatherName;
-    });
-  }
-
-  if (sex) {
-    PreparedPeople = PreparedPeople.filter(person => {
-      switch (sex) {
-        case FEMALE_SEX:
-          return person.sex === FEMALE_SEX;
-        case MALE_SEX:
-          return person.sex === MALE_SEX;
-        default:
-          return person;
-      }
-    });
-  }
-
-  return PreparedPeople;
-};
+import { getPreparedPeople } from '../utils/servises';
 
 export const PeoplePage = () => {
   const [newPeople, setNewPeople] = useState<Person[]>([]);
@@ -123,12 +45,6 @@ export const PeoplePage = () => {
       .finally(() => setIsLoading(false));
   }, []);
 
-  const isDisplayErrorMessage = isError && !isLoading;
-
-  const isNoPeopleOnServer = !newPeople.length && !isLoading && !isError;
-
-  const isPeopleOnServer = !!newPeople.length && !isError;
-
   const visiblePeople = getPreparedPeople(
     newPeople,
     query,
@@ -137,6 +53,12 @@ export const PeoplePage = () => {
     sort,
     order,
   );
+
+  const isDisplayErrorMessage = isError && !isLoading;
+
+  const isNoPeopleOnServer = !newPeople.length && !isLoading && !isError;
+
+  const isPeopleOnServer = !!newPeople.length && !isError;
 
   return (
     <>
@@ -166,13 +88,14 @@ export const PeoplePage = () => {
                 </p>
               )}
 
-              {(!!visiblePeople.length && !isLoading)
-                ? <PeopleTable people={visiblePeople} />
-                : (
-                  <p>
-                    There are no people matching the current search criteria
-                  </p>
-                )}
+              {isPeopleOnServer && (
+                visiblePeople.length
+                  ? <PeopleTable people={visiblePeople} />
+                  : (
+                    <p>
+                      There are no people matching the current search criteria
+                    </p>
+                  ))}
             </div>
           </div>
         </div>
