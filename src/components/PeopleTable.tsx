@@ -1,18 +1,20 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
 import cn from 'classnames';
-import { Person } from '../types';
 import { SearchLink } from './SearchLink';
 import { Loader } from './Loader';
 import { PersonLink } from './PersonLink';
-import { getPeople } from '../api';
 import { useDisplayPeople } from './useDisplayPeople/useDisplayPeople';
+import { Person } from '../types';
 
-export const PeopleTable: React.FC = () => {
-  const [people, setPeople] = useState<Person[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<boolean>(false);
+interface PeopleTableProps {
+  people: Person[];
+  loading: boolean;
+  error: boolean;
+}
 
+export const PeopleTable:
+React.FC<PeopleTableProps> = ({ people, loading, error }) => {
   const [searchParams] = useSearchParams();
   const sort = searchParams.get('sort') || '';
   const sortOrder = searchParams.get('sortOrder') || '';
@@ -37,22 +39,6 @@ export const PeopleTable: React.FC = () => {
       sortOrder: null,
     };
   };
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const data = await getPeople();
-
-        setPeople(data);
-      } catch (e) {
-        setError(true);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-  }, []);
 
   const peopleWithParents = people.map((person) => {
     const mother = people.find(({ name }) => name === person.motherName);
