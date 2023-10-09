@@ -14,6 +14,7 @@ export const SortOptions: React.FC<SortOptionsProps> = (
   },
 ) => {
   const handleSortFilter = (param: string) => {
+
     if (sortFilter === null && orderFilter === null) {
       return param;
     }

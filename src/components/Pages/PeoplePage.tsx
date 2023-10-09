@@ -69,6 +69,10 @@ export const PeoplePage = () => {
 
     return { ...person, mother, father };
   }).filter(person => {
+    if (sort === 'name') {
+      return true;
+    }
+
     if (searchParams.toString().includes('m')) {
       return person.sex === 'm';
     }
@@ -77,13 +81,13 @@ export const PeoplePage = () => {
       return person.sex === 'f';
     }
 
-    return person;
+    return true;
   }).filter(person => {
     if (centuries.length !== 0) {
       return centuries.includes(Math.ceil(person.born / 100).toString());
     }
 
-    return person;
+    return true;
   }).filter(person => {
     if (query !== null) {
       return person.name.toLowerCase().includes(query.toLowerCase())
@@ -91,7 +95,7 @@ export const PeoplePage = () => {
         || person.fatherName?.toLowerCase().includes(query.toLowerCase());
     }
 
-    return person;
+    return true;
   })
     .sort((a, b) => {
       if (sort === 'name') {
