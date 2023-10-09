@@ -9,3 +9,13 @@ export interface Person {
   mother?: Person,
   father?: Person,
 }
+
+export interface PeoplePageProps {
+  people: Person[];
+  isLoading: boolean;
+}
+
+export interface PersonLinkProps {
+  person: string;
+  people: Person[];
+}
