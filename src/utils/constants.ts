@@ -1,4 +1,3 @@
 export const DEFAULT_VALUE = '-';
-export const columnNames = ['Name', 'Sex', 'Born', 'Died'];
-
+export const CENTURY_VALUE = 100;
 export const CENTURIES = ['16', '17', '18', '19', '20'];

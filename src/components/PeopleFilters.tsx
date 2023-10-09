@@ -18,7 +18,7 @@ export const PeopleFilters = () => {
     );
   }
 
-  function handeleCenturiesChange(centry: string) {
+  function handleCenturiesChange(centry: string) {
     const newCenturies = centuries.includes(centry)
       ? centuries.filter(num => num !== centry)
       : [...centuries, centry];
@@ -101,7 +101,7 @@ export const PeopleFilters = () => {
                     'mr-1',
                     { 'is-info': centuries.includes(centry) },
                   )}
-                  to={{ search: handeleCenturiesChange(centry) }}
+                  to={{ search: handleCenturiesChange(centry) }}
                 >
                   {centry}
                 </Link>

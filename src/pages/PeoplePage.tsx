@@ -4,10 +4,10 @@ import { useSearchParams } from 'react-router-dom';
 import { Person } from '../types';
 import { getPeople } from '../api';
 import { Loader } from '../components/Loader';
-import { getParents } from '../utils/getParentsFuncts';
+import { getPreparedPeople } from '../utils/getParentsFuncts';
 import { PeopleTable } from '../components/PeopleTable';
 import { PeopleFilters } from '../components/PeopleFilters';
-import { getPreparedPeople } from '../utils/getPreparedPeople';
+import { getFilteredPeople } from '../utils/getPreparedPeople';
 import { getSortedPeople } from '../utils/getSortedPeople';
 
 export const PeoplePage = () => {
@@ -22,7 +22,7 @@ export const PeoplePage = () => {
 
     getPeople()
       .then((peopleFromServer) => (
-        setPeople(getParents(peopleFromServer))
+        setPeople(getPreparedPeople(peopleFromServer))
       ))
       .catch(() => setIsError(true))
       .finally(() => setIsLoading(false));
@@ -35,7 +35,7 @@ export const PeoplePage = () => {
   const order = search.get('order');
 
   const sortedPeople = getSortedPeople(people, sort, order);
-  const filteredPeople = getPreparedPeople(
+  const filteredPeople = getFilteredPeople(
     sortedPeople,
     query,
     sex,
@@ -54,7 +54,7 @@ export const PeoplePage = () => {
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
           <div className="column is-7-tablet is-narrow-desktop">
-            {!!people.length && (
+            {isDisplayPeople && (
               <PeopleFilters />
             )}
           </div>

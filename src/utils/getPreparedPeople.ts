@@ -1,18 +1,23 @@
 import { Person } from '../types';
+import { CENTURY_VALUE } from './constants';
+
+const searchingByName = (person: string | null, query: string) => (
+  person?.toLowerCase().includes(query)
+);
 
 function filterByName(person: Person, query: string) {
   const normalizedQuery = query.toLowerCase();
 
-  return person.name.toLowerCase().includes(normalizedQuery)
-    || person.fatherName?.toLowerCase().includes(normalizedQuery)
-    || person.motherName?.toLowerCase().includes(normalizedQuery);
+  return searchingByName(person.name, normalizedQuery)
+    || searchingByName(person.fatherName, normalizedQuery)
+    || searchingByName(person.motherName, normalizedQuery);
 }
 
 function calculationCentry(year: number) {
-  return Math.ceil(year / 100);
+  return Math.ceil(year / CENTURY_VALUE);
 }
 
-export function getPreparedPeople(
+export function getFilteredPeople(
   people: Person[],
   query: string,
   sex: string | null,
