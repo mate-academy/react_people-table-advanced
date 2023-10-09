@@ -16,8 +16,6 @@ export const PeoplePage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
 
-  const [sortedPeople, setSortedPeople] = useState<Person[]>([]);
-
   const query = searchParams.get('query') || '';
   const selectedCenturies = searchParams.getAll('centuries');
   const selectedSex = searchParams.get('sex');
@@ -54,55 +52,50 @@ export const PeoplePage = () => {
     let newOrder = 'asc';
     const currentField = searchParams.get('sort');
     const currentOrder = searchParams.get('order');
+    const newSearchParams = new URLSearchParams(searchParams.toString());
 
     if (currentField === field) {
       if (currentOrder === 'asc') {
         newOrder = 'desc';
       } else if (currentOrder === 'desc') {
-        searchParams.delete('sort');
-        searchParams.delete('order');
-        navigate(`/people?${searchParams.toString()}`);
-
+        newSearchParams.delete('sort');
+        newSearchParams.delete('order');
+        navigate(`/people?${newSearchParams.toString()}`);
         return;
       }
     }
 
-    searchParams.set('sort', field);
-    searchParams.set('order', newOrder);
-    navigate(`/people?${searchParams.toString()}`);
+    newSearchParams.set('sort', field);
+    newSearchParams.set('order', newOrder);
+
+    navigate(`/people?${newSearchParams.toString()}`);
   };
 
-  useEffect(() => {
-    const newPeople = [...filteredPeople];
-    const sortField = searchParams.get('sort');
-    const sortOrder = searchParams.get('order');
+  let sortedPeople = [...filteredPeople];
+  const sortField = searchParams.get('sort');
+  const sortOrder = searchParams.get('order');
 
-    if (sortField && sortOrder) {
-      const firstPerson = newPeople[0];
-      const sortFieldType = typeof firstPerson?.[sortField as keyof Person];
+  if (sortField && sortOrder) {
+    const firstPerson = sortedPeople[0];
+    const sortFieldType = typeof firstPerson?.[sortField as keyof Person];
 
-      newPeople.sort((a, b) => {
-        const aValue = a[sortField as keyof Person];
-        const bValue = b[sortField as keyof Person];
+    sortedPeople.sort((a, b) => {
+      const aValue = a[sortField as keyof Person];
+      const bValue = b[sortField as keyof Person];
 
-        if (sortFieldType === 'string') {
-          return (aValue as string).localeCompare(bValue as string);
-        }
-
-        if (sortFieldType === 'number') {
-          return (aValue as number) - (bValue as number);
-        }
-
-        return 0;
-      });
-
-      if (sortOrder === 'desc') {
-        newPeople.reverse();
+      if (sortFieldType === 'string') {
+        return (aValue as string).localeCompare(bValue as string);
       }
-    }
+      if (sortFieldType === 'number') {
+        return (aValue as number) - (bValue as number);
+      }
+      return 0;
+    });
 
-    setSortedPeople(newPeople);
-  }, [filteredPeople, searchParams]);
+    if (sortOrder === 'desc') {
+      sortedPeople.reverse();
+    }
+  }
 
   useEffect(() => {
     getPeople()

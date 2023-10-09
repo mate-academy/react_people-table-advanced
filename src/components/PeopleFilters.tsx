@@ -9,20 +9,8 @@ export const PeopleFilters = () => {
   const selectedCenturies = searchParams.getAll('centuries');
   const inputValue = searchParams.get('query') || '';
 
-  // const selectedSex = searchParams.get('sex') || 'all';
-
-  // const handleSexFilterChange = (sex: string) => {
-  //   if (sex === 'all') {
-  //     searchParams.delete('sex');
-  //   } else {
-  //     searchParams.set('sex', sex);
-  //   }
-
-  //   setSearchParams(new URLSearchParams(searchParams.toString()));
-  // };
-
   const handleNameFilterChange = (event: React.ChangeEvent<
-  HTMLInputElement
+    HTMLInputElement
   >) => {
     const query = event.target.value;
 
