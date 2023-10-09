@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
 import { getPeople } from '../api';
 import { Person } from '../types';
@@ -11,6 +12,7 @@ import { useSearchParamsContext } from '../SearchParamsContext';
 export const PeoplePage = () => {
   const { searchParams } = useSearchParamsContext();
   const navigate = useNavigate();
+  const { slug } = useParams();
 
   const [people, setPeople] = useState<Person[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -61,6 +63,7 @@ export const PeoplePage = () => {
         newSearchParams.delete('sort');
         newSearchParams.delete('order');
         navigate(`/people?${newSearchParams.toString()}`);
+
         return;
       }
     }
@@ -68,10 +71,15 @@ export const PeoplePage = () => {
     newSearchParams.set('sort', field);
     newSearchParams.set('order', newOrder);
 
-    navigate(`/people?${newSearchParams.toString()}`);
+    let newURL = `/people?${newSearchParams.toString()}`;
+    if (slug) {
+      newURL = `/people/${slug}?${newSearchParams.toString()}`;
+    }
+
+    navigate(newURL);
   };
 
-  let sortedPeople = [...filteredPeople];
+  const sortedPeople = [...filteredPeople];
   const sortField = searchParams.get('sort');
   const sortOrder = searchParams.get('order');
 
@@ -86,9 +94,11 @@ export const PeoplePage = () => {
       if (sortFieldType === 'string') {
         return (aValue as string).localeCompare(bValue as string);
       }
+
       if (sortFieldType === 'number') {
         return (aValue as number) - (bValue as number);
       }
+
       return 0;
     });
 

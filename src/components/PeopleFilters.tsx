@@ -10,7 +10,7 @@ export const PeopleFilters = () => {
   const inputValue = searchParams.get('query') || '';
 
   const handleNameFilterChange = (event: React.ChangeEvent<
-    HTMLInputElement
+  HTMLInputElement
   >) => {
     const query = event.target.value;
 
