@@ -27,6 +27,10 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
   const filteredPeople = useFilterPeople(peopleWithParents);
   const sortedPeople = useSortPeople(filteredPeople);
 
+  if (sortedPeople.length === 0) {
+    return <p>There are no people matching the current search criteria</p>;
+  }
+
   return (
     <table
       data-cy="peopleTable"
