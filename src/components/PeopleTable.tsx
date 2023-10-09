@@ -2,9 +2,9 @@ import { Link, useSearchParams } from 'react-router-dom';
 import classNames from 'classnames';
 
 import { Person } from '../types';
-import { columnNames } from '../utils/constants';
 import { PersonItem } from './PersonItem';
 import { SearchParams, getSearchWith } from '../utils/searchHelper';
+import { SortField } from '../types/SortField';
 
 type Props = {
   people: Person[]
@@ -41,19 +41,19 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
         >
           <thead>
             <tr>
-              {columnNames.map(name => (
-                <th key={name}>
+              {Object.entries(SortField).map(([key, value]) => (
+                <th key={key}>
                   <span className="is-flex is-flex-wrap-nowrap">
-                    {name}
+                    {key}
                     <Link to={{
-                      search: getSortedLink(name.toLowerCase()),
+                      search: getSortedLink(value),
                     }}
                     >
                       <span className="icon">
                         <i className={classNames('fas', {
-                          'fa-sort': sort !== name.toLowerCase(),
-                          'fa-sort-up': sort === name.toLowerCase() && !order,
-                          'fa-sort-down': sort === name.toLowerCase() && order,
+                          'fa-sort': sort !== value,
+                          'fa-sort-up': sort === value && !order,
+                          'fa-sort-down': sort === value && order,
                         })}
                         />
                       </span>

@@ -17,17 +17,16 @@ export function getPreparedPeople(
   query: string,
   sex: string | null,
   centuries: string[],
-  sortField: string | null,
-  order: string | null,
 ) {
-  let copyPeople = [...people];
+  let filteredPeople = people;
 
   if (query) {
-    copyPeople = copyPeople.filter(person => filterByName(person, query));
+    filteredPeople = filteredPeople
+      .filter(person => filterByName(person, query));
   }
 
   if (sex) {
-    copyPeople = copyPeople.filter(person => {
+    filteredPeople = filteredPeople.filter(person => {
       return person.sex === sex;
     });
   }
@@ -35,28 +34,9 @@ export function getPreparedPeople(
   if (centuries.length) {
     const preparedCentries = centuries.map(Number);
 
-    copyPeople = copyPeople
+    filteredPeople = filteredPeople
       .filter(({ born }) => preparedCentries.includes(calculationCentry(born)));
   }
 
-  if (sortField) {
-    copyPeople = copyPeople.sort((person1, person2) => {
-      switch (sortField) {
-        case 'name':
-        case 'sex':
-          return person1[sortField].localeCompare(person2[sortField]);
-        case 'born':
-        case 'died':
-          return person1[sortField] - person2[sortField];
-        default:
-          return 0;
-      }
-    });
-  }
-
-  if (order) {
-    copyPeople.reverse();
-  }
-
-  return copyPeople;
+  return filteredPeople;
 }

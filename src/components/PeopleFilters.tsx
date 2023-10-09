@@ -2,7 +2,8 @@ import { Link, useSearchParams } from 'react-router-dom';
 import classNames from 'classnames';
 
 import { getSearchWith } from '../utils/searchHelper';
-import { CENTURIES, SEX_FILTER } from '../utils/constants';
+import { CENTURIES } from '../utils/constants';
+import { PersonSex } from '../types/PersonSex';
 
 export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -42,16 +43,24 @@ export const PeopleFilters = () => {
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        {Object.entries(SEX_FILTER).map(([key, value]) => {
+        {Object.entries(PersonSex).map(([key, value]) => {
+          const genderValue = value === PersonSex.All
+            ? null
+            : value;
+
+          const isFilterActive = value === PersonSex.All
+            ? !sex
+            : sex === value;
+
           return (
             <Link
               key={key}
               className={classNames({
-                'is-active': value === sex,
+                'is-active': isFilterActive,
               })}
               to={{
                 search: getSearchWith(searchParams, {
-                  sex: value,
+                  sex: genderValue,
                 }),
               }}
             >

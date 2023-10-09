@@ -8,6 +8,7 @@ import { getParents } from '../utils/getParentsFuncts';
 import { PeopleTable } from '../components/PeopleTable';
 import { PeopleFilters } from '../components/PeopleFilters';
 import { getPreparedPeople } from '../utils/getPreparedPeople';
+import { getSortedPeople } from '../utils/getSortedPeople';
 
 export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);
@@ -33,13 +34,12 @@ export const PeoplePage = () => {
   const sort = search.get('sort');
   const order = search.get('order');
 
+  const sortedPeople = getSortedPeople(people, sort, order);
   const filteredPeople = getPreparedPeople(
-    people,
+    sortedPeople,
     query,
     sex,
     centuries,
-    sort,
-    order,
   );
 
   const isNoPeople = !people.length && !isLoading && !isError;
