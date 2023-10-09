@@ -31,19 +31,19 @@ export const PeopleProvider: React.FC<Props> = ({ children }) => {
   const [isError, setIsError] = useState<boolean>(false);
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setTimeout(async () => {
-          setIsLoading(true);
+    setIsLoading(true);
+    const fetchData = () => {
+      setTimeout(async () => {
+        try {
           const peopleFromServer = await getPeople();
 
           setPeople(getPreparedPeople(peopleFromServer));
-        }, 3000);
-      } catch (error) {
-        setIsError(true);
-      } finally {
-        setIsLoading(false);
-      }
+        } catch (error) {
+          setIsError(true);
+        } finally {
+          setIsLoading(false);
+        }
+      }, 3000);
     };
 
     fetchData();
