@@ -12,7 +12,6 @@ export const PeopleTable = (
   const { slug } = useParams<{ slug: string }>();
   const location = useLocation();
 
-  // Function to extract sort params from URL
   const getSortParamsFromUrl = () => {
     const searchParams = new URLSearchParams(location.search);
     const sort = searchParams.get('sort');
@@ -27,7 +26,6 @@ export const PeopleTable = (
     setSortParams(getSortParamsFromUrl());
   }, [location.search]);
 
-  // Sorting logic
   const sortedPeople = [...filtredPeople].sort((a, b) => {
     const { sort, order } = sortParams;
 
@@ -56,12 +54,18 @@ export const PeopleTable = (
 
   const getSortLink = (sortType: string) => {
     const currentParams = new URLSearchParams(location.search);
+    const currentSort = currentParams.get('sort');
+    const currentOrder = currentParams.get('order');
 
-    currentParams.set('sort', sortType);
-
-    if (sortParams.sort === sortType && sortParams.order === 'asc') {
-      currentParams.set('order', 'desc');
+    if (currentSort === sortType) {
+      if (currentOrder === 'asc') {
+        currentParams.set('order', 'desc');
+      } else {
+        currentParams.delete('sort');
+        currentParams.delete('order');
+      }
     } else {
+      currentParams.set('sort', sortType);
       currentParams.set('order', 'asc');
     }
 
