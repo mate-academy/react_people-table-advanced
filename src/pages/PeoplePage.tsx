@@ -40,7 +40,7 @@ export const PeoplePage = () => {
                 </p>
               )}
 
-              {!people?.length && !isLoading && !isError && (
+              {!visiblePeople?.length && !isLoading && !isError && (
                 <p
                   data-cy="noPeopleMessage"
                 >
@@ -48,7 +48,7 @@ export const PeoplePage = () => {
                 </p>
               )}
 
-              {!!people?.length && !isError && (
+              {!!visiblePeople?.length && !isError && (
                 <PeopleTable people={visiblePeople} />
               )}
             </div>

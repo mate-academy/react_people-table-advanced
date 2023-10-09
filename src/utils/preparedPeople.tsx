@@ -9,11 +9,12 @@ export const preparedPeople = (
   const centuries = searchParams.getAll('centuries') || null;
   const sex = searchParams.get('sex') || null;
 
-  let copyPeople = [...people];
   const lowerQuery = query?.toLowerCase();
 
+  let filteredPeople = people;
+
   if (lowerQuery) {
-    copyPeople = copyPeople.filter(person => {
+    filteredPeople = filteredPeople.filter(person => {
       return person.name.toLowerCase()
         .includes(lowerQuery)
         || person.motherName?.toLowerCase()
@@ -24,17 +25,17 @@ export const preparedPeople = (
   }
 
   if (centuries.length) {
-    copyPeople = copyPeople.filter(person => {
+    filteredPeople = filteredPeople.filter(person => {
       return centuries
         .includes(Math.ceil(person.born / ONE_HUNDRED).toString());
     });
   }
 
   if (sex) {
-    copyPeople = copyPeople.filter(person => {
+    filteredPeople = filteredPeople.filter(person => {
       return person.sex === sex;
     });
   }
 
-  return copyPeople;
+  return filteredPeople;
 };

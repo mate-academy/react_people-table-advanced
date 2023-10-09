@@ -43,7 +43,7 @@ export const PeopleProvider: React.FC<Props> = ({ children }) => {
         } finally {
           setIsLoading(false);
         }
-      }, 3000);
+      }, 1000);
     };
 
     fetchData();
