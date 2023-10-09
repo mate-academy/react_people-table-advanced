@@ -22,7 +22,7 @@ export const PersonLink: React.FC<Props> = ({ person }) => {
 
   return (
     <Link
-      to={`../people/${slug}?${searchParams.toString()}`}
+      to={`../${slug}?${searchParams.toString()}`}
       className={cn({ 'has-text-danger': isFemale })}
     >
       {name}

@@ -26,7 +26,10 @@ export function addParent(people: Person[]) {
   });
 }
 
-export function sortPeople(people: Person[], sortParam: SortParam | string) {
+export function getSortedPeople(
+  people: Person[],
+  sortParam: SortParam | string,
+) {
   if (sortParam) {
     return [...people].sort((a, b) => {
       switch (sortParam) {
@@ -50,7 +53,14 @@ export function sortPeople(people: Person[], sortParam: SortParam | string) {
   return [...people];
 }
 
-export function filterPeople(
+const getFilteredPeopleHelper = (
+  name: string | null,
+  query: string,
+) => {
+  return name?.toLowerCase().includes(query);
+};
+
+export function getFilteredPeople(
   filterOption: FilterType,
   people: Person[],
 ) {
@@ -71,9 +81,13 @@ export function filterPeople(
 
   if (filterOption.query) {
     filteredPeople = filteredPeople
-      .filter(person => person.name.includes(filterOption.query)
-    || person.motherName?.includes(filterOption.query)
-    || person.fatherName?.includes(filterOption.query));
+      .filter(person => {
+        const query = filterOption.query.toLowerCase();
+
+        return getFilteredPeopleHelper(person.name, query)
+          || getFilteredPeopleHelper(person.motherName, query)
+          || getFilteredPeopleHelper(person.fatherName, query);
+      });
   }
 
   return filteredPeople;

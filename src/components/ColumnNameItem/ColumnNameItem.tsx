@@ -1,5 +1,6 @@
 import React from 'react';
 import { useSearchParams } from 'react-router-dom';
+import cn from 'classnames';
 
 import { SearchLink } from '../SearchLink';
 import { ColumnNames } from '../../types';
@@ -28,6 +29,10 @@ export const ColumnName: React.FC<Props> = ({ value }) => {
     return { sort: null, order: null };
   };
 
+  const hasFaSort = lowerCasedValue !== sort;
+  const hasFaSortUp = lowerCasedValue === sort && !order;
+  const hasFaSortDown = order && lowerCasedValue === sort;
+
   return (
     <th key={value}>
       <span className="is-flex is-flex-wrap-nowrap">
@@ -36,13 +41,13 @@ export const ColumnName: React.FC<Props> = ({ value }) => {
           params={getSortParams(lowerCasedValue)}
         >
           <span className="icon">
-            {lowerCasedValue !== sort && (<i className="fas fa-sort" />)}
-            {lowerCasedValue === sort && !order && (
-              <i className="fas fa-sort-up" />
+            <i className={cn(
+              'fas',
+              { 'fa-sort': hasFaSort },
+              { 'fa-sort-up': hasFaSortUp },
+              { 'fa-sort-down': hasFaSortDown },
             )}
-            {order && lowerCasedValue === sort && (
-              <i className="fas fa-sort-down" />
-            )}
+            />
           </span>
         </SearchLink>
       </span>

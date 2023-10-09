@@ -1,24 +1,49 @@
 import { useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 
-import { addParent, getPeople } from '../../api';
-import { Person } from '../../types';
+import {
+  addParent,
+  getFilteredPeople,
+  getPeople,
+  getSortedPeople,
+} from '../../api';
+
+import { FilterType, Person } from '../../types';
 import { PeopleFilters } from '../../components/PeopleFilters';
 import { Loader } from '../../components/Loader';
 import { PeopleTable } from '../../components/PeopleTable';
+import { SortParam } from '../../types/SortParam';
+import { DESC_SORT } from '../../utils/variables';
 
 export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);
-  const [filteredPeople, setFilteredPeople] = useState<Person[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [searchParams] = useSearchParams();
+  const sort: typeof SortParam | string = searchParams.get('sort') || '';
+  const sortedPeople = getSortedPeople(people, sort);
+
+  const order = searchParams.get('order') || '';
+  const query = searchParams.get('query') || '';
+  const centuries = searchParams.getAll('centuries') || [];
+  const sex = searchParams.get('sex') || '';
+
+  const filters: FilterType = {
+    query,
+    centuries,
+    sex,
+  };
+
+  const filteredPeople = getFilteredPeople(filters, sortedPeople);
+  const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
 
-  useEffect(() => {
-    setIsLoading(true);
+  if (order === DESC_SORT) {
+    filteredPeople.reverse();
+  }
 
+  useEffect(() => {
     getPeople()
       .then((peopleFromServer) => {
         setPeople(addParent(peopleFromServer));
-        setFilteredPeople(addParent(peopleFromServer));
       })
       .catch(() => {
         setHasError(true);
@@ -29,6 +54,7 @@ export const PeoplePage = () => {
       });
   }, []);
 
+  const hasPeopleFilter = !isLoading && !!people.length;
   const hasErrorMessage = hasError && !isLoading;
   const hasNoPeopleOnServer = !people.length && !hasError && !isLoading;
   const hasNoMatchingPeople = !isLoading
@@ -42,7 +68,7 @@ export const PeoplePage = () => {
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
           <div className="column is-7-tablet is-narrow-desktop">
-            {!isLoading && (<PeopleFilters />)}
+            {hasPeopleFilter && (<PeopleFilters />)}
           </div>
 
           <div className="column">
@@ -67,9 +93,7 @@ export const PeoplePage = () => {
 
               {!!people.length && (
                 <PeopleTable
-                  people={people}
                   filteredPeople={filteredPeople}
-                  setFilteredPeople={setFilteredPeople}
                 />
               )}
             </div>

@@ -15,13 +15,10 @@ export const PeopleFilters = () => {
   const centuries = searchParams.getAll('centuries') || [];
 
   const handleQueryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (!event.target.value) {
-      setSearchParams(getSearchWith(searchParams,
-        { query: null }));
-    } else {
-      setSearchParams(getSearchWith(searchParams,
-        { query: event.target.value }));
-    }
+    setSearchParams(
+      getSearchWith(searchParams,
+        { query: event.target.value || null }),
+    );
   };
 
   return (
@@ -80,12 +77,12 @@ export const PeopleFilters = () => {
       </div>
 
       <div className="panel-block">
-        <a
+        <SearchLink
           className="button is-link is-outlined is-fullwidth"
-          href="#/people"
+          params={{ query: null, centuries: null, sex: null }}
         >
           Reset all filters
-        </a>
+        </SearchLink>
       </div>
     </nav>
   );

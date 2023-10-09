@@ -1,54 +1,22 @@
-import React, { useEffect, useState } from 'react';
-import { Outlet, useParams, useSearchParams } from 'react-router-dom';
+import React from 'react';
+import { Outlet, useParams } from 'react-router-dom';
 
 import { PersonItem } from '../PersonItem';
 import { ColumnName } from '../ColumnNameItem';
-
-import { filterPeople, sortPeople } from '../../api';
-
-import { ColumnNames, FilterType, Person } from '../../types';
-import { SortParam } from '../../types/SortParam';
-import { DESC_SORT } from '../../utils/variables';
+import { ColumnNames, Person } from '../../types';
 
 type Props = {
-  people: Person[],
   filteredPeople: Person[],
-  setFilteredPeople: React.Dispatch<React.SetStateAction<Person[]>>,
 };
 
 export const PeopleTable: React.FC<Props> = ({
-  people,
   filteredPeople,
-  setFilteredPeople,
 }) => {
   const { slug } = useParams();
   const selectedPersonSlug = slug || '';
 
-  const [sortedPeople, setSortedPeople] = useState(people);
-
-  const [searchParams] = useSearchParams();
-  const sort: typeof SortParam | string = searchParams.get('sort') || '';
-  const order = searchParams.get('order') || '';
-  const query = searchParams.get('query') || '';
-  const centuries = searchParams.getAll('centuries') || [];
-  const sex = searchParams.get('sex') || '';
-
-  const filters: FilterType = {
-    query,
-    centuries,
-    sex,
-  };
-
-  useEffect(() => {
-    setSortedPeople(sortPeople(people, sort));
-  }, [sort, query, centuries.length, sex]);
-
-  useEffect(() => {
-    setFilteredPeople(filterPeople(filters, sortedPeople));
-  }, [query, centuries.length, sex, sortedPeople]);
-
-  if (order === DESC_SORT) {
-    filteredPeople.reverse();
+  if (!filteredPeople.length) {
+    return null;
   }
 
   return (
