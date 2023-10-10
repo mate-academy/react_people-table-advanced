@@ -1,19 +1,65 @@
+import { useState } from 'react';
 import {
   Link,
   useParams,
   useNavigate,
+  SetURLSearchParams,
 } from 'react-router-dom';
 import cn from 'classnames';
 import { Person } from '../types/Person';
+import { CategoryName } from './CategoryName';
 
 type Props = {
   people: Person[];
   searchParams: URLSearchParams;
+  setSearchParams: SetURLSearchParams;
 };
 
-export const PeopleTable: React.FC<Props> = ({ people, searchParams }) => {
+export const PeopleTable: React.FC<Props> = ({
+  people,
+  searchParams,
+  setSearchParams,
+}) => {
   const { human } = useParams();
   const navigate = useNavigate();
+  const [order, setOrder] = useState({ category: '', type: '' });
+
+  const sortHandler = (
+    e: React.MouseEvent<HTMLAnchorElement, MouseEvent>,
+    sortType: string,
+  ) => {
+    e.preventDefault();
+    let skip = false;
+    const params = new URLSearchParams(searchParams);
+
+    if (!order.category) {
+      setOrder({ category: sortType, type: '' });
+    }
+
+    if (sortType !== order.category) {
+      params.delete('order');
+      setOrder({ category: sortType, type: '' });
+    }
+
+    if (sortType === order.category && !order.type) {
+      params.set('order', 'desc');
+      setOrder({ category: sortType, type: 'desc' });
+    }
+
+    if (sortType === order.category && order.type === 'desc') {
+      params.delete('order');
+      skip = true;
+      setOrder({ category: '', type: '' });
+    }
+
+    if (skip) {
+      params.delete('sort');
+    } else {
+      params.set('sort', sortType);
+    }
+
+    setSearchParams(params);
+  };
 
   const linkHandler = (
     e: React.MouseEvent<HTMLAnchorElement, MouseEvent>,
@@ -38,7 +84,7 @@ export const PeopleTable: React.FC<Props> = ({ people, searchParams }) => {
       <Link
         to={`/people/${parent.slug}`}
         className={cn({ 'has-text-danger': parent.sex === 'f' })}
-        onClick={e => linkHandler(e, parent.slug)}
+        onClick={(e) => linkHandler(e, parent.slug)}
       >
         {name}
       </Link>
@@ -52,50 +98,26 @@ export const PeopleTable: React.FC<Props> = ({ people, searchParams }) => {
     >
       <thead>
         <tr>
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Name
-              <a href="#/people?sort=name">
-                <span className="icon">
-                  <i className="fas fa-sort" />
-                </span>
-              </a>
-            </span>
-          </th>
-
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Sex
-              <a href="#/people?sort=sex">
-                <span className="icon">
-                  <i className="fas fa-sort" />
-                </span>
-              </a>
-            </span>
-          </th>
-
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Born
-              <a href="#/people?sort=born&amp;order=desc">
-                <span className="icon">
-                  <i className="fas fa-sort-up" />
-                </span>
-              </a>
-            </span>
-          </th>
-
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Died
-              <a href="#/people?sort=died">
-                <span className="icon">
-                  <i className="fas fa-sort" />
-                </span>
-              </a>
-            </span>
-          </th>
-
+          <CategoryName
+            sortHandler={sortHandler}
+            order={order}
+            name="name"
+          />
+          <CategoryName
+            sortHandler={sortHandler}
+            order={order}
+            name="sex"
+          />
+          <CategoryName
+            sortHandler={sortHandler}
+            order={order}
+            name="born"
+          />
+          <CategoryName
+            sortHandler={sortHandler}
+            order={order}
+            name="died"
+          />
           <th>Mother</th>
           <th>Father</th>
         </tr>
@@ -116,7 +138,7 @@ export const PeopleTable: React.FC<Props> = ({ people, searchParams }) => {
                   <Link
                     to={`/people/${slug}`}
                     className={cn({ 'has-text-danger': sex === 'f' })}
-                    onClick={e => linkHandler(e, slug)}
+                    onClick={(e) => linkHandler(e, slug)}
                   >
                     {name}
                   </Link>

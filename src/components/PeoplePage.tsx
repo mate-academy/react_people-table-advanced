@@ -11,6 +11,8 @@ type OptionTypes = {
   sex: string,
   centuries: string[],
   query: string,
+  sort: string | number,
+  order: string,
 };
 
 export const PeoplePage = () => {
@@ -24,6 +26,8 @@ export const PeoplePage = () => {
       sex: searchParams.get('sex') ?? '',
       centuries: searchParams.getAll('centuries'),
       query: searchParams.get('query') ?? '',
+      sort: searchParams.get('sort') ?? '',
+      order: searchParams.get('order') ?? '',
     };
 
     const result = data.filter(item => {
@@ -56,6 +60,31 @@ export const PeoplePage = () => {
 
       return item;
     });
+
+    switch (options.sort) {
+      case 'name':
+        result.sort((a, b) => a.name.localeCompare(b.name));
+        break;
+
+      case 'sex':
+        result.sort((a, b) => a.sex.localeCompare(b.sex));
+        break;
+
+      case 'born':
+        result.sort((a, b) => a.born - b.born);
+        break;
+
+      case 'died':
+        result.sort((a, b) => a.died - b.died);
+        break;
+
+      default:
+        break;
+    }
+
+    if (options.order === 'desc') {
+      return result.reverse();
+    }
 
     return result;
   };
@@ -108,6 +137,7 @@ export const PeoplePage = () => {
                 <PeopleTable
                   people={filteredPeople}
                   searchParams={searchParams}
+                  setSearchParams={setSearchParams}
                 />
               )}
             </div>

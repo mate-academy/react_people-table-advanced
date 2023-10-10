@@ -25,7 +25,7 @@ export const PeopleFilters: React.FC<Props> = ({
 
   const resetFilter = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
     e.preventDefault();
-    navigate(`/people/${human}`);
+    navigate(`/people/${human || ''}`);
   };
 
   const pickAllCenturies = (
