@@ -1,8 +1,34 @@
-import { PeopleFilters } from './PeopleFilters';
+import { useEffect, useState } from 'react';
+import { getPeople } from '../api';
+import { Person } from '../types';
 import { Loader } from './Loader';
-import { PeopleTable } from './PeopleTable';
+import { PeopleFilters } from './PeopleFilters';
+import { getPreparedPeople } from '../utils/getPreparedPeople';
+import { PeopleList } from './PeopleList';
 
 export const PeoplePage = () => {
+  const [people, setPeople] = useState<Person[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isError, setIsError] = useState(false);
+
+  useEffect(() => {
+    setIsLoading(true);
+
+    getPeople()
+      .then(data => {
+        setPeople(getPreparedPeople(data));
+      })
+      .catch(() => {
+        setIsError(true);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  }, []);
+
+  const isPeopleOnServer = !!people.length && !isError;
+  const isNoPeopleOnServer = !people.length && !isLoading;
+
   return (
     <>
       <h1 className="title">People Page</h1>
@@ -10,22 +36,33 @@ export const PeoplePage = () => {
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
           <div className="column is-7-tablet is-narrow-desktop">
-            <PeopleFilters />
+            {isPeopleOnServer && (
+              <PeopleFilters />
+            )}
+
           </div>
 
           <div className="column">
             <div className="box table-container">
-              <Loader />
+              {isLoading && (
+                <Loader />
+              )}
 
-              <p data-cy="peopleLoadingError">Something went wrong</p>
+              {isError && (
+                <p data-cy="peopleLoadingError" className="has-text-danger">
+                  Something went wrong
+                </p>
+              )}
 
-              <p data-cy="noPeopleMessage">
-                There are no people on the server
-              </p>
+              {isNoPeopleOnServer && (
+                <p data-cy="noPeopleMessage">
+                  There are no people on the server
+                </p>
+              )}
 
-              <p>There are no people matching the current search criteria</p>
-
-              <PeopleTable />
+              {isPeopleOnServer && (
+                <PeopleList people={people} />
+              )}
             </div>
           </div>
         </div>
