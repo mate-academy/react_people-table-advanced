@@ -1,34 +1,35 @@
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import classNames from 'classnames';
+import { NavLink, useSearchParams } from 'react-router-dom';
+
+type Active = {
+  isActive: boolean
+};
 
 export const Navbar = () => {
-  const [activePage, setActivePage] = useState('home');
+  const [searchParams] = useSearchParams();
+
+  const linkClass = (active: Active) => classNames('navbar-item', {
+    'has-background-grey-lighter': active.isActive,
+  });
+  const peopleLink = `people?${searchParams.toString()}`;
 
   return (
-    <nav
-      data-cy="nav"
-      className="navbar is-fixed-top has-shadow"
-      role="navigation"
-      aria-label="main navigation"
-    >
+    <nav data-cy="nav">
       <div className="container">
         <div className="navbar-brand">
-          <Link
-            className={`navbar-item ${activePage === 'home' ? 'has-background-grey-lighter' : ''}`}
-            to="#/"
-            onClick={() => setActivePage('home')}
+          <NavLink
+            to="/"
+            className={linkClass}
           >
             Home
-          </Link>
+          </NavLink>
 
-          <Link
-            aria-current="page"
-            className={`navbar-item ${activePage === 'people' ? 'has-background-grey-lighter' : ''}`}
-            to="#/people"
-            onClick={() => setActivePage('people')}
+          <NavLink
+            to={peopleLink}
+            className={linkClass}
           >
             People
-          </Link>
+          </NavLink>
         </div>
       </div>
     </nav>

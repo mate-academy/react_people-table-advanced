@@ -1,31 +1,47 @@
-import { HashRouter, Route } from 'react-router-dom';
+import { Navigate, Route, Routes } from 'react-router-dom';
+
 import { PeoplePage } from './components/PeoplePage';
 import { Navbar } from './components/Navbar';
 import './App.scss';
 
 export const App = () => {
   return (
-    <HashRouter>
-      <div data-cy="app">
-        <Navbar />
-        <div className="section">
-          <div className="container">
-            <Route path="#/people">
-              <div className="block">
-                <div className="box table-container">
+    <div data-cy="app">
+      <Navbar />
+
+      <main className="section">
+        <div className="container">
+          <Routes>
+            <Route path="home" element={<Navigate to="/" replace />} />
+            <Route
+              path="/"
+              element={<h1 className="title">Home Page</h1>}
+            />
+            <Route path="people">
+              <Route
+                index
+                element={(
                   <PeoplePage />
-                </div>
-              </div>
+                )}
+              />
+              <Route
+                path=":slug"
+                element={(
+                  <PeoplePage />
+                )}
+              />
             </Route>
-            <Route path="/">
-              <h1 className="title">Home Page</h1>
-            </Route>
-            <Route>
-              <h1 className="title">Page not found</h1>
-            </Route>
-          </div>
+            <Route
+              path="*"
+              element={(
+                <h1 className="title">
+                  Page not found
+                </h1>
+              )}
+            />
+          </Routes>
         </div>
-      </div>
-    </HashRouter>
+      </main>
+    </div>
   );
 };

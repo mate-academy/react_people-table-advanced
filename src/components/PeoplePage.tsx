@@ -1,27 +1,21 @@
-import React, { useEffect, useState } from 'react';
-// import { PeopleFilters } from './PeopleFilters';
+import { useEffect, useState } from 'react';
+
+import { PeopleFilters } from './PeopleFilters';
 import { Loader } from './Loader';
 import { PeopleTable } from './PeopleTable';
-import { Person } from '../types';
+import { Person } from '../types/Person';
 import { getPeople } from '../api';
 
-export const PeoplePage: React.FC = () => {
-  const [people, setPeople] = useState<Person[]>([]);
-  const [error, setError] = useState<string | null>(null);
-  const [visiblePeople, setVisiblePeople] = useState<Person[]>([]);
+export const PeoplePage = () => {
+  const [people, setPeople] = useState<Person[] | null>(null);
+  const [isError, setIsError] = useState(false);
+  const showLoader = people === null && !isError;
+  const peopleLoaded = !!people?.length;
 
   useEffect(() => {
     getPeople()
-      .then((data) => {
-        setPeople(data);
-        if (data.length === 0) {
-          setError('There are no people on the server');
-          setVisiblePeople([]);
-        }
-      })
-      .catch(() => {
-        setError('Something went wrong while fetching data');
-      });
+      .then(setPeople)
+      .catch(() => setIsError(true));
   }, []);
 
   return (
@@ -30,32 +24,30 @@ export const PeoplePage: React.FC = () => {
 
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
-          <div className="column is-7-tablet is-narrow-desktop">
-            {/* <PeopleFilters
-              people={people}
-              setVisiblePeople={setVisiblePeople}
-              visiblePeople={visiblePeople}
-            /> */}
-          </div>
+          {peopleLoaded && (
+            <div className="column is-7-tablet is-narrow-desktop">
+              <PeopleFilters />
+            </div>
+          )}
 
           <div className="column">
             <div className="box table-container">
-              {error ? (
-                <p data-cy="peopleLoadingError">{error}</p>
-              ) : (
-                <>
-                  <Loader />
-                  {visiblePeople.length === 0 ? (
-                    <p>
-                      There are no people matching the current search criteria
-                    </p>
-                  ) : (
-                    <PeopleTable
-                      visiblePeople={visiblePeople}
-                      people={people}
-                    />
-                  )}
-                </>
+              {showLoader && <Loader />}
+
+              {isError && (
+                <p data-cy="peopleLoadingError">Something went wrong</p>
+              )}
+
+              {people && !people.length && (
+                <p data-cy="noPeopleMessage">
+                  There are no people on the server
+                </p>
+              )}
+
+              {peopleLoaded && (
+                <PeopleTable
+                  people={people}
+                />
               )}
             </div>
           </div>

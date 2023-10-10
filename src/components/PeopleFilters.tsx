@@ -1,97 +1,83 @@
-/* eslint-disable max-len */
-import React, { useState } from 'react';
-import { Person } from '../types';
+import { useSearchParams } from 'react-router-dom';
+import classNames from 'classnames';
+import { SearchLink } from './SearchLink';
 
-interface Props {
-  people: Person[];
-  setVisiblePeople: (visiblePeople: Person[]) => void;
-  visiblePeople: Person[];
-}
-
-export const PeopleFilters: React.FC<Props>
-= ({ people, setVisiblePeople, visiblePeople }) => {
-  // const [sexFilter, setSexFilter] = useState('All');
-  // const [ceuntryFilter, setCeuntryFilter] = useState('All');
-  const [value, setValue] = useState('');
-
-  const handleSearch: React.ChangeEventHandler<HTMLInputElement> = (event) => {
-    const inputValue = event.target.value.toLowerCase();
-
-    setValue(inputValue);
-    // eslint-disable-next-line max-len
-    setVisiblePeople(people.filter((p) => p.name.toLowerCase().includes(inputValue)));
+export const PeopleFilters = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const allCenturies = searchParams.getAll('centuries');
+  const sex = searchParams.get('sex');
+  const setSexFilterActiveClass = (selectedSex: string) => {
+    return classNames(
+      {
+        'is-active':
+          sex === selectedSex || (selectedSex === 'all' && sex === null),
+      },
+    );
   };
 
-  const handleSexFilterClick = (filter: string) => {
-    if (filter === 'M') {
-      setVisiblePeople(visiblePeople.filter((p) => p.sex === 'm'));
-    } else if (filter === 'F') {
-      setVisiblePeople(visiblePeople.filter((p) => p.sex === 'f'));
+  const setSearchCenturyClass = (centuryValue: string) => {
+    return classNames('button', 'mr-1', {
+      'is-info': allCenturies.includes(centuryValue),
+    });
+  };
+
+  const centuriesAllClasses = classNames('button', 'is-success', {
+    'is-outlined': allCenturies.length > 0,
+  });
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const newQuery = event.target.value;
+
+    if (newQuery === '') {
+      searchParams.delete('query');
     } else {
-      setVisiblePeople(people);
+      searchParams.set('query', newQuery);
     }
+
+    setSearchParams(searchParams);
   };
 
-  const handleCeuntryFilter = (ceuntry: string) => {
-    if (ceuntry === '16') {
-      setVisiblePeople(visiblePeople.filter((p) => p.born >= 1500 && p.born < 1600));
-    } else if (ceuntry === '17') {
-      setVisiblePeople(visiblePeople.filter((p) => p.born >= 1600 && p.born < 1700));
-    } else if (ceuntry === '18') {
-      setVisiblePeople(visiblePeople.filter((p) => p.born >= 1700 && p.born < 1800));
-    } else if (ceuntry === '19') {
-      setVisiblePeople(visiblePeople.filter((p) => p.born >= 1800 && p.born < 1900));
-    } else if (ceuntry === '20') {
-      setVisiblePeople(visiblePeople.filter((p) => p.born >= 1900 && p.born < 2000));
-    } else {
-      setVisiblePeople(people);
+  const setCenturyValues = (clickedCentury: string) => {
+    if (allCenturies.includes(clickedCentury)) {
+      return allCenturies.filter(century => century !== clickedCentury);
     }
-  };
 
-  const handleResetAllFilters = () => {
-    // setCeuntryFilter('All');
-    // setSexFilter('All');
-    setValue('');
-    setVisiblePeople(people);
+    return [...allCenturies, clickedCentury];
   };
 
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
-
       <p className="panel-tabs" data-cy="SexFilter">
-        <a
-          className="is-active"
-          href="#/people"
-          onClick={handleSexFilterClick('All')}
+        <SearchLink
+          className={setSexFilterActiveClass('all')}
+          params={{ sex: null }}
         >
           All
-        </a>
-        <a
-          className=""
-          href="#/people?sex=m"
-          onClick={handleSexFilterClick('M')}
+        </SearchLink>
+        <SearchLink
+          className={setSexFilterActiveClass('m')}
+          params={{ sex: 'm' }}
         >
           Male
-        </a>
-        <a
-          className=""
-          href="#/people?sex=f"
-          onClick={handleSexFilterClick('F')}
+        </SearchLink>
+        <SearchLink
+          className={setSexFilterActiveClass('f')}
+          params={{ sex: 'f' }}
         >
           Female
-        </a>
+        </SearchLink>
       </p>
 
       <div className="panel-block">
         <p className="control has-icons-left">
           <input
             data-cy="NameFilter"
-            type="search"
+            type="text"
             className="input"
-            value={value}
-            onChange={handleSearch}
             placeholder="Search"
+            onChange={handleChange}
+            value={searchParams.get('query') || ''}
           />
 
           <span className="icon is-left">
@@ -103,73 +89,69 @@ export const PeopleFilters: React.FC<Props>
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            <a
+            <SearchLink
               data-cy="century"
-              className="button mr-1"
-              href="#/people?centuries=16"
-              onClick={handleCeuntryFilter('16')}
+              className={setSearchCenturyClass('16')}
+              params={{ centuries: setCenturyValues('16') }}
             >
               16
-            </a>
+            </SearchLink>
 
-            <a
+            <SearchLink
               data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=17"
-              onClick={handleCeuntryFilter('17')}
+              className={setSearchCenturyClass('17')}
+              params={{ centuries: setCenturyValues('17') }}
             >
               17
-            </a>
+            </SearchLink>
 
-            <a
+            <SearchLink
               data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=18"
-              onClick={handleCeuntryFilter('18')}
+              className={setSearchCenturyClass('18')}
+              params={{ centuries: setCenturyValues('18') }}
             >
               18
-            </a>
+            </SearchLink>
 
-            <a
+            <SearchLink
               data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=19"
-              onClick={handleCeuntryFilter('19')}
+              className={setSearchCenturyClass('19')}
+              params={{ centuries: setCenturyValues('19') }}
             >
               19
-            </a>
+            </SearchLink>
 
-            <a
+            <SearchLink
               data-cy="century"
-              className="button mr-1"
-              href="#/people?centuries=20"
-              onClick={handleCeuntryFilter('20')}
+              className={setSearchCenturyClass('20')}
+              params={{ centuries: setCenturyValues('20') }}
             >
               20
-            </a>
+            </SearchLink>
           </div>
 
           <div className="level-right ml-4">
-            <a
+            <SearchLink
               data-cy="centuryALL"
-              className="button is-success is-outlined"
-              href="#/people"
-              onClick={handleCeuntryFilter('All')}
+              className={centuriesAllClasses}
+              params={{ centuries: null }}
             >
               All
-            </a>
+            </SearchLink>
           </div>
         </div>
       </div>
-
       <div className="panel-block">
-        <a
+        <SearchLink
           className="button is-link is-outlined is-fullwidth"
-          href="#/people"
-          onClick={handleResetAllFilters}
+          params={{
+            centuries: null,
+            sex: null,
+            query: null,
+          }}
         >
           Reset all filters
-        </a>
+        </SearchLink>
       </div>
     </nav>
   );
