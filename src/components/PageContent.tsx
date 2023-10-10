@@ -1,10 +1,10 @@
 import { Outlet } from 'react-router-dom';
-import { NavBar } from './NavBar';
+import { Navbar } from './Navbar';
 
 export const PageContent = () => {
   return (
     <>
-      <NavBar />
+      <Navbar />
 
       <main className="section">
         <div className="container">

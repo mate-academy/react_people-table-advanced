@@ -55,7 +55,7 @@ export const PeopleList:React.FC<Props> = ({ people }) => {
     order ? -1 : 1,
   );
 
-  return (
+  return sortedPeople.length ? (
     <table
       data-cy="peopleTable"
       className="
@@ -106,5 +106,7 @@ export const PeopleList:React.FC<Props> = ({ people }) => {
         ))}
       </tbody>
     </table>
+  ) : (
+    <p>There are no people matching the current search criteria</p>
   );
 };
