@@ -1,5 +1,7 @@
 import { createRoot } from 'react-dom/client';
-import { Route, HashRouter as Router, Routes } from 'react-router-dom';
+import {
+  Navigate, Route, HashRouter as Router, Routes,
+} from 'react-router-dom';
 
 import 'bulma/css/bulma.css';
 import '@fortawesome/fontawesome-free/css/all.css';
@@ -13,6 +15,7 @@ createRoot(document.getElementById('root') as HTMLDivElement).render(
   <Router>
     <Routes>
       <Route path="*" element={<Page404 />} />
+      <Route path="/home" element={<Navigate to="/" />} />
       <Route path="/" element={<App />}>
         <Route index element={<Homepage />} />
         <Route path="people">

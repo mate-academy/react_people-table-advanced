@@ -1,14 +1,27 @@
-import { Link, useParams } from 'react-router-dom';
+import {
+  Link,
+  useParams,
+  useNavigate,
+} from 'react-router-dom';
 import cn from 'classnames';
 import { Person } from '../types/Person';
 
 type Props = {
   people: Person[];
+  searchParams: URLSearchParams;
 };
 
-export const PeopleTable: React.FC<Props> = ({ people }) => {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+export const PeopleTable: React.FC<Props> = ({ people, searchParams }) => {
   const { human } = useParams();
+  const navigate = useNavigate();
+
+  const linkHandler = (
+    e: React.MouseEvent<HTMLAnchorElement, MouseEvent>,
+    slug: string,
+  ) => {
+    e.preventDefault();
+    navigate(`../${slug}?${searchParams.toString()}`);
+  };
 
   const parentLink = (name: string | null) => {
     if (!name) {
@@ -25,6 +38,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
       <Link
         to={`/people/${parent.slug}`}
         className={cn({ 'has-text-danger': parent.sex === 'f' })}
+        onClick={e => linkHandler(e, parent.slug)}
       >
         {name}
       </Link>
@@ -102,6 +116,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
                   <Link
                     to={`/people/${slug}`}
                     className={cn({ 'has-text-danger': sex === 'f' })}
+                    onClick={e => linkHandler(e, slug)}
                   >
                     {name}
                   </Link>

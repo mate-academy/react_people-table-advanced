@@ -1,4 +1,9 @@
-import { Link, SetURLSearchParams } from 'react-router-dom';
+import {
+  Link,
+  SetURLSearchParams,
+  useNavigate,
+  useParams,
+} from 'react-router-dom';
 import cn from 'classnames';
 import { Century } from './Century';
 
@@ -13,8 +18,15 @@ export const PeopleFilters: React.FC<Props> = ({
   searchParams,
   setSearchParams,
 }) => {
+  const { human } = useParams();
   const query = searchParams.get('query') ?? '';
   const centuries = searchParams.getAll('centuries') ?? [];
+  const navigate = useNavigate();
+
+  const resetFilter = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
+    e.preventDefault();
+    navigate(`/people/${human}`);
+  };
 
   const pickAllCenturies = (
     e: React.MouseEvent<HTMLAnchorElement, MouseEvent>,
@@ -24,8 +36,7 @@ export const PeopleFilters: React.FC<Props> = ({
     const params = new URLSearchParams(searchParams);
 
     params.delete('centuries');
-    centuriesButtons
-      .forEach((el) => params.append('centuries', el));
+    centuriesButtons.forEach((el) => params.append('centuries', el));
     setSearchParams(params);
   };
 
@@ -131,7 +142,11 @@ export const PeopleFilters: React.FC<Props> = ({
       </div>
 
       <div className="panel-block">
-        <a className="button is-link is-outlined is-fullwidth" href="#/people">
+        <a
+          className="button is-link is-outlined is-fullwidth"
+          href="#/people"
+          onClick={(e) => resetFilter(e)}
+        >
           Reset all filters
         </a>
       </div>
