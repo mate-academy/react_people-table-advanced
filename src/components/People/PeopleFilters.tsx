@@ -8,6 +8,7 @@ export const PeopleFilters = () => {
 
   const allCenturies = searchParams.getAll('centuries');
   const sex = searchParams.get('sex');
+  const possibleCenturies = ['16', '17', '18', '19', '20'];
 
   const setSexFilterActiveClass = (selectedSex: string) => {
     return classNames(
@@ -93,45 +94,15 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            <SearchLink
-              data-cy="century"
-              className={setSearchCenturyClass('16')}
-              params={{ centuries: setCenturyValues('16') }}
-            >
-              16
-            </SearchLink>
-
-            <SearchLink
-              data-cy="century"
-              className={setSearchCenturyClass('17')}
-              params={{ centuries: setCenturyValues('17') }}
-            >
-              17
-            </SearchLink>
-
-            <SearchLink
-              data-cy="century"
-              className={setSearchCenturyClass('18')}
-              params={{ centuries: setCenturyValues('18') }}
-            >
-              18
-            </SearchLink>
-
-            <SearchLink
-              data-cy="century"
-              className={setSearchCenturyClass('19')}
-              params={{ centuries: setCenturyValues('19') }}
-            >
-              19
-            </SearchLink>
-
-            <SearchLink
-              data-cy="century"
-              className={setSearchCenturyClass('20')}
-              params={{ centuries: setCenturyValues('20') }}
-            >
-              20
-            </SearchLink>
+            {possibleCenturies.map(century => (
+              <SearchLink
+                data-cy="century"
+                className={setSearchCenturyClass(century)}
+                params={{ centuries: setCenturyValues(century) }}
+              >
+                {century}
+              </SearchLink>
+            ))}
           </div>
 
           <div className="level-right ml-4">

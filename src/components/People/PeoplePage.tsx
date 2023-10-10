@@ -11,8 +11,8 @@ export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[] | null>(null);
   const [isError, setIsError] = useState(false);
 
-  const showLoader = people === null && !isError;
-  const peopleLoaded = people && people.length > 0;
+  const showLoader = !people && !isError;
+  const peopleLoaded = !!people?.length;
 
   useEffect(() => {
     getPeople()
@@ -42,7 +42,7 @@ export const PeoplePage = () => {
                 <p data-cy="peopleLoadingError">Something went wrong</p>
               )}
 
-              {people && people.length === 0 && (
+              {people && !people.length && (
                 <p data-cy="noPeopleMessage">
                   There are no people on the server
                 </p>

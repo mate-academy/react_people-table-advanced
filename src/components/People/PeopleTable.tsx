@@ -22,60 +22,62 @@ export const PeopleTable = (
   const sort = searchParams.get('sort');
   const order = searchParams.get('order');
   let displayedPeople = [...people];
+  const sortedFields = ['name', 'sex', 'born', 'died'];
 
-  if (query && query !== null) {
-    displayedPeople = displayedPeople.filter(person => {
-      const personName = person.name.toLowerCase();
-      const motherName = person.motherName?.toLowerCase();
-      const fatherName = person.fatherName?.toLowerCase();
-      const personMatch = personName.includes(query);
-      const motherMatch = motherName?.includes(query);
-      const fatherMatch = fatherName?.includes(query);
+  const checkMatchQuery = (checkedName: string | null) => {
+    return query && checkedName?.toLowerCase().includes(query);
+  };
 
-      return personMatch || motherMatch || fatherMatch;
-    });
+  if (query) {
+    displayedPeople = displayedPeople.filter(person => (
+      checkMatchQuery(person.name)
+        || checkMatchQuery(person.motherName)
+        || checkMatchQuery(person.fatherName)
+    ));
   }
 
-  if (centuries.length > 0) {
+  if (centuries.length) {
     displayedPeople = displayedPeople.filter(person => centuries.includes(
       (Math.floor(person.born / 100) + 1).toString(),
     ));
   }
 
-  if (sex !== null) {
+  if (sex) {
     displayedPeople = displayedPeople.filter(person => person.sex === sex);
   }
 
-  switch (sort) {
-    case 'name':
-    case 'sex':
-      displayedPeople.sort((p1, p2) => {
-        return order === 'desc'
-          ? p2[sort].localeCompare(p1[sort])
-          : p1[sort].localeCompare(p2[sort]);
-      });
-      break;
-    case 'died':
-    case 'born':
-      displayedPeople.sort((p1, p2) => {
-        return order === 'desc' ? p2[sort] - p1[sort] : p1[sort] - p2[sort];
-      });
-      break;
-    default:
-      break;
-  }
+  displayedPeople.sort((p1, p2) => {
+    let [person1, person2] = [p1, p2];
+
+    if (order === 'desc') {
+      [person2, person1] = [person1, person2];
+    }
+
+    switch (sort) {
+      case 'name':
+      case 'sex':
+        return person1[sort].localeCompare(person2[sort]);
+
+      case 'born':
+      case 'died':
+        return person1[sort] - person2[sort];
+
+      default:
+        return 0;
+    }
+  });
 
   const setSortParam = (sortParameter: string): SearchParams => {
-    if (sort === null || sort !== sortParameter) {
+    if (!sort || sort !== sortParameter) {
       return { sort: sortParameter, order: null };
     }
 
     switch (order) {
+      case 'desc':
+        return { sort: null, order: null };
       default:
       case null:
         return { order: 'desc' };
-      case 'desc':
-        return { sort: null, order: null };
     }
   };
 
@@ -91,71 +93,28 @@ export const PeopleTable = (
 
   return (
     <>
-      {displayedPeople.length === 0 ? (
-        <p>There are no people matching the current search criteria</p>
-      ) : (
+      {displayedPeople.length ? (
         <table
           data-cy="peopleTable"
           className="table is-striped is-hoverable is-narrow is-fullwidth"
         >
           <thead>
             <tr>
-              <th>
-                <span className="is-flex is-flex-wrap-nowrap">
-                  Name
-                  <SearchLink
-                    className="is-active"
-                    params={setSortParam('name')}
-                  >
-                    <span className="icon">
-                      <i className={setSortColumnClasses('name')} />
-                    </span>
-                  </SearchLink>
-                </span>
-              </th>
-
-              <th>
-                <span className="is-flex is-flex-wrap-nowrap">
-                  Sex
-                  <SearchLink
-                    className="is-active"
-                    params={setSortParam('sex')}
-                  >
-                    <span className="icon">
-                      <i className={setSortColumnClasses('sex')} />
-                    </span>
-                  </SearchLink>
-                </span>
-              </th>
-
-              <th>
-                <span className="is-flex is-flex-wrap-nowrap">
-                  Born
-                  <SearchLink
-                    className="is-active"
-                    params={setSortParam('born')}
-                  >
-                    <span className="icon">
-                      <i className={setSortColumnClasses('born')} />
-                    </span>
-                  </SearchLink>
-                </span>
-              </th>
-
-              <th>
-                <span className="is-flex is-flex-wrap-nowrap">
-                  Died
-                  <SearchLink
-                    className="is-active"
-                    params={setSortParam('died')}
-                  >
-                    <span className="icon">
-                      <i className={setSortColumnClasses('died')} />
-                    </span>
-                  </SearchLink>
-                </span>
-              </th>
-
+              {sortedFields.map(field => (
+                <th>
+                  <span className="is-flex is-flex-wrap-nowrap">
+                    {field[0].toUpperCase() + field.slice(1)}
+                    <SearchLink
+                      className="is-active"
+                      params={setSortParam(field)}
+                    >
+                      <span className="icon">
+                        <i className={setSortColumnClasses(field)} />
+                      </span>
+                    </SearchLink>
+                  </span>
+                </th>
+              ))}
               <th>Mother</th>
               <th>Father</th>
             </tr>
@@ -183,6 +142,8 @@ export const PeopleTable = (
             })}
           </tbody>
         </table>
+      ) : (
+        <p>There are no people matching the current search criteria</p>
       )}
 
     </>
