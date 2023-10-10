@@ -3,6 +3,12 @@ import { GenderKinds } from './GenderKinds';
 import { PeopleSortType } from './PeopleSortType';
 import { ONE_CENTURY } from './variables';
 
+const getPreparedName = (name:string | null, query:string) => {
+  const preparedQuery = query.trim().toLowerCase();
+
+  return name?.toLowerCase().includes(preparedQuery);
+};
+
 export const getPreparedPeople = (
   people: Person[],
   query: string,
@@ -43,21 +49,14 @@ export const getPreparedPeople = (
   }
 
   if (query) {
-    preparedPeople = preparedPeople.filter(person => {
-      const preparedQuery = query.trim().toLowerCase();
-      const preparedName = person.name.trim()
-        .toLowerCase()
-        .includes(preparedQuery);
+    preparedPeople = preparedPeople
+      .filter(({ name, motherName, fatherName }) => {
+        const preparedPersonName = getPreparedName(name, query);
+        const preparedMotherName = getPreparedName(motherName, query);
+        const preparedFatherName = getPreparedName(fatherName, query);
 
-      const preparedMotherName = person.motherName
-        ?.toLowerCase()
-        .includes(preparedQuery);
-      const preparedFatherName = person.fatherName
-        ?.toLowerCase()
-        .includes(preparedQuery);
-
-      return preparedName || preparedMotherName || preparedFatherName;
-    });
+        return preparedPersonName || preparedMotherName || preparedFatherName;
+      });
   }
 
   if (sex) {
