@@ -8,3 +8,10 @@ export const SEX_FILTER_LINKS = {
   Male: 'm',
   Female: 'f',
 };
+export enum SortingType {
+  Name = 'name',
+  Sex = 'sex',
+  Born = 'born',
+  Died = 'died',
+}
+export const CENTURY = 100;

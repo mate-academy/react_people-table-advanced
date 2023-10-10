@@ -1,7 +1,7 @@
 import React from 'react';
 import classNames from 'classnames';
 import { Person } from '../types';
-import { People } from './People';
+import { PersonTile } from './PersonTile';
 import {
   FATHER_THEAD_TITLE,
   MOTHER_THEAD_TITLE,
@@ -34,6 +34,9 @@ export const PeopleList: React.FC<Props> = ({
         <tr>
           {THEAD_TITLES.map(title => {
             const normalizedTitle = title.toLowerCase();
+            const isNotSorted = sort !== normalizedTitle;
+            const isSorted = !isNotSorted && !order;
+            const isReversed = sort === normalizedTitle && order;
 
             return (
               <th key={title}>
@@ -54,9 +57,9 @@ export const PeopleList: React.FC<Props> = ({
                         <span className="icon">
                           <i
                             className={classNames('fas', {
-                              'fa-sort': sort !== normalizedTitle,
-                              'fa-sort-up': sort === normalizedTitle && !order,
-                              'fa-sort-down': sort === normalizedTitle && order,
+                              'fa-sort': isNotSorted,
+                              'fa-sort-up': isSorted,
+                              'fa-sort-down': isReversed,
                             })}
                           />
                         </span>
@@ -70,7 +73,7 @@ export const PeopleList: React.FC<Props> = ({
       </thead>
       <tbody>
         {persons.map(person => (
-          <People key={person.slug} person={person} />
+          <PersonTile key={person.slug} person={person} />
         ))}
       </tbody>
     </table>

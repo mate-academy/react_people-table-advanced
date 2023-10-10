@@ -24,40 +24,6 @@ export const PeopleFilters: React.FC<Props> = ({
     setSearchParams(params);
   }
 
-  function handleSexSelected(filterPath: string | null) {
-    const params = new URLSearchParams(searchParams);
-
-    params.set('sex', filterPath || '');
-    setSearchParams(params);
-  }
-
-  function toggleCenturies(cntr: string) {
-    const params = new URLSearchParams(searchParams);
-
-    const newCenturies = centuries.includes(cntr)
-      ? centuries.filter(prevCentury => prevCentury !== cntr)
-      : [...centuries, cntr];
-
-    params.delete('centuries');
-    newCenturies.forEach(cent => params.append('centuries', cent));
-    setSearchParams(params);
-  }
-
-  function handleClearAllCenturies() {
-    const params = new URLSearchParams(searchParams);
-
-    params.delete('centuries');
-    setSearchParams(params);
-  }
-
-  function handleResetAllFilters() {
-    const params = new URLSearchParams(searchParams);
-
-    params.delete('sex');
-    params.delete('query');
-    setSearchParams(params);
-  }
-
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
@@ -67,7 +33,6 @@ export const PeopleFilters: React.FC<Props> = ({
             'is-active': sex === SEX_FILTER_LINKS.All,
           })}
           params={{ sex: null }}
-          onClick={() => handleSexSelected(null)}
         >
           All
         </SearchLink>
@@ -76,7 +41,6 @@ export const PeopleFilters: React.FC<Props> = ({
             'is-active': sex === SEX_FILTER_LINKS.Male,
           })}
           params={{ sex: SEX_FILTER_LINKS.Male }}
-          onClick={() => handleSexSelected(SEX_FILTER_LINKS.Male)}
         >
           Male
         </SearchLink>
@@ -85,7 +49,6 @@ export const PeopleFilters: React.FC<Props> = ({
             'is-active': sex === SEX_FILTER_LINKS.Female,
           })}
           params={{ sex: SEX_FILTER_LINKS.Female }}
-          onClick={() => handleSexSelected(SEX_FILTER_LINKS.Female)}
         >
           Female
         </SearchLink>
@@ -108,42 +71,51 @@ export const PeopleFilters: React.FC<Props> = ({
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            {CENTURIES.map(century => (
-              <button
-                key={century}
-                type="button"
-                data-cy="century"
-                className={classNames('button mr-1', {
-                  'is-info': centuries.includes(century),
-                })}
-                onClick={() => toggleCenturies(century)}
-              >
-                {century}
-              </button>
-            ))}
+            {CENTURIES.map(century => {
+              const isCenturyIncluded = centuries.includes(century);
+              const updatedCenturies = isCenturyIncluded
+                ? centuries.filter(cent => cent !== century)
+                : [...centuries, century];
+
+              return (
+                <SearchLink
+                  key={century}
+                  data-cy="century"
+                  className={classNames('button mr-1', {
+                    'is-info': isCenturyIncluded,
+                  })}
+                  params={{ centuries: updatedCenturies }}
+                >
+                  {century}
+                </SearchLink>
+              );
+            })}
           </div>
           <div className="level-right ml-4">
-            <button
+            <SearchLink
               type="button"
               data-cy="centuryALL"
               className={classNames('button is-success', {
                 'is-outlined': !!centuries.length,
               })}
-              onClick={handleClearAllCenturies}
+              params={{ centuries: null }}
             >
               All
-            </button>
+            </SearchLink>
           </div>
         </div>
       </div>
       <div className="panel-block">
-        <a
+        <SearchLink
           className="button is-link is-outlined is-fullwidth"
-          href="#/people"
-          onClick={() => handleResetAllFilters}
+          params={{
+            centuries: null,
+            sex: null,
+            query: null,
+          }}
         >
           Reset all filters
-        </a>
+        </SearchLink>
       </div>
     </nav>
   );

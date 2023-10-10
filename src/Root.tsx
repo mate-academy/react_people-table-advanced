@@ -5,7 +5,7 @@ import {
   Routes,
 } from 'react-router-dom';
 import { App } from './App';
-import { PageNotFound } from './components/PageNotFound';
+import { NotFoundPage } from './components/NotFoundPage';
 import { PeoplePage } from './components/PeoplePage';
 import { HomePage } from './components/HomePage';
 
@@ -17,7 +17,7 @@ export const Root = () => (
         <Route path="people">
           <Route path=":selectedPerson?" element={<PeoplePage />} />
         </Route>
-        <Route path="*" element={<PageNotFound />} />
+        <Route path="*" element={<NotFoundPage />} />
         <Route path="/home" element={<Navigate to="/" replace />} />
       </Route>
     </Routes>

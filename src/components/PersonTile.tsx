@@ -9,7 +9,7 @@ type Props = {
   person: Person,
 };
 
-export const People: React.FC<Props> = ({ person }) => {
+export const PersonTile: React.FC<Props> = ({ person }) => {
   const { selectedPerson = '' } = useParams();
   const {
     sex,

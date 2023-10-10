@@ -1,7 +1,8 @@
 import { Person } from '../types';
+import { CENTURY, SortingType } from '../utils/constants';
 
 export function getCentury(person: Person, centuries: string[]) {
-  return centuries.includes(Math.ceil(person.born / 100).toString());
+  return centuries.includes(Math.ceil(person.born / CENTURY).toString());
 }
 
 export function getSortedPeople(
@@ -17,12 +18,12 @@ export function getSortedPeople(
   if (sort) {
     personsClone = personsClone.sort((personA, personB) => {
       switch (sort) {
-        case 'name':
-        case 'sex':
+        case SortingType.Name:
+        case SortingType.Sex:
           return personA[sort].localeCompare(personB[sort]);
 
-        case 'born':
-        case 'died':
+        case SortingType.Born:
+        case SortingType.Died:
           return (+personA[sort]) - (+personB[sort]);
 
         default:

@@ -6,6 +6,7 @@ import { getPeople } from '../api';
 import { Person } from '../types';
 import { PeopleList } from './PeopleList';
 import { getSortedPeople } from '../helpers/getSortedPeople';
+import { getPreparedPeople } from '../helpers/getPreparedPeople';
 
 export const PeoplePage = () => {
   const [persons, setPersons] = useState<Person[]>([]);
@@ -27,16 +28,8 @@ export const PeoplePage = () => {
       .finally(() => setIsLoading(false));
   }, []);
 
-  const preparedPeople = persons.map(person => {
-    return {
-      ...person,
-      mother: persons.find(({ name }) => person.motherName === name),
-      father: persons.find(({ name }) => person.fatherName === name),
-    };
-  });
-
   const filteredPersons = getSortedPeople(
-    preparedPeople,
+    getPreparedPeople(persons),
     sort,
     order,
     query,
