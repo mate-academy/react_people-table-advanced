@@ -3,6 +3,7 @@ import { PeopleFilters } from './PeopleFilters';
 import { Loader } from './Loader';
 import { PeopleTable } from './PeopleTable';
 import { Person } from '../types';
+import { getPeople } from '../api';
 
 const preparePeople = (peop: Person[]) => {
   return peop.map(person => {
@@ -23,8 +24,7 @@ export const PeoplePage = () => {
   const [loadingError, setLoadingError] = useState(false);
 
   const fetchData = () => {
-    fetch('https://mate-academy.github.io/react_people-table/api/people.json')
-      .then((response) => response.json())
+    getPeople()
       .then((result) => {
         setPeople(preparePeople(result));
       })
