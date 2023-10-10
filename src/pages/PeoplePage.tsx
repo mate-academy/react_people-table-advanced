@@ -5,7 +5,7 @@ import { PeopleTable } from '../components/PeopleTable';
 import { Loader } from '../components/Loader';
 import { Person } from '../types';
 import { getPeople } from '../api';
-import { getPreparedPeople } from '../utils/servises';
+import { getPreparedPeople, preparedPerson } from '../utils/servises';
 
 export const PeoplePage = () => {
   const [newPeople, setNewPeople] = useState<Person[]>([]);
@@ -23,20 +23,8 @@ export const PeoplePage = () => {
     setIsLoading(true);
 
     getPeople()
-      .then(people => {
-        return people.map(person => {
-          const mother = people
-            .find(({ name }) => name === person.motherName);
-
-          const father = people
-            .find(({ name }) => name === person.fatherName);
-
-          return {
-            ...person,
-            mother,
-            father,
-          };
-        });
+      .then((people) => {
+        return preparedPerson(people);
       })
       .then(setNewPeople)
       .catch(() => {
@@ -88,14 +76,14 @@ export const PeoplePage = () => {
                 </p>
               )}
 
-              {isPeopleOnServer && (
-                visiblePeople.length
-                  ? <PeopleTable people={visiblePeople} />
-                  : (
-                    <p>
-                      There are no people matching the current search criteria
-                    </p>
-                  ))}
+              {isPeopleOnServer
+                && (visiblePeople.length ? (
+                  <PeopleTable people={visiblePeople} />
+                ) : (
+                  <p>
+                    There are no people matching the current search criteria
+                  </p>
+                ))}
             </div>
           </div>
         </div>

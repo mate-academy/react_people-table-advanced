@@ -1,13 +1,10 @@
 import { useSearchParams } from 'react-router-dom';
 import classNames from 'classnames';
 import { SearchLink } from './SearchLink';
-import {
-  DEFAULT_SEX,
-  FEMALE_SEX,
-  MALE_SEX,
-  centuriesList,
-} from '../utils/variables';
-import { PersonSexType } from '../utils/PersonSexType';
+import { centuriesList } from '../utils/variables';
+import { PersonSexTypeForFilter } from '../utils/PersonSexType';
+import { getSearchWith } from '../utils/searchHelper';
+import { GenderKinds } from '../utils/GenderKinds';
 
 export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -16,10 +13,7 @@ export const PeopleFilters = () => {
   const centuries = searchParams.getAll('centuries') || [];
 
   const handleQueryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const params = new URLSearchParams(searchParams);
-
-    params.set('query', event.target.value);
-    setSearchParams(params);
+    setSearchParams(getSearchWith(searchParams, { query: event.target.value }));
   };
 
   const toggleCenturies = (century: string) => {
@@ -35,27 +29,27 @@ export const PeopleFilters = () => {
       <p className="panel-tabs" data-cy="SexFilter">
         <SearchLink
           className={classNames({
-            'is-active': sex === DEFAULT_SEX,
+            'is-active': sex === GenderKinds.Default,
           })}
           params={{ sex: null }}
         >
-          {PersonSexType.All}
+          {PersonSexTypeForFilter.All}
         </SearchLink>
         <SearchLink
           className={classNames({
-            'is-active': sex === MALE_SEX,
+            'is-active': sex === GenderKinds.Male,
           })}
-          params={{ sex: MALE_SEX }}
+          params={{ sex: GenderKinds.Male }}
         >
-          {PersonSexType.Male}
+          {PersonSexTypeForFilter.Male}
         </SearchLink>
         <SearchLink
           className={classNames({
-            'is-active': sex === FEMALE_SEX,
+            'is-active': sex === GenderKinds.Female,
           })}
-          params={{ sex: FEMALE_SEX }}
+          params={{ sex: GenderKinds.Female }}
         >
-          {PersonSexType.Female}
+          {PersonSexTypeForFilter.Female}
         </SearchLink>
       </p>
 
@@ -100,7 +94,9 @@ export const PeopleFilters = () => {
           <div className="level-right ml-4">
             <SearchLink
               data-cy="centuryALL"
-              className="button is-success is-outlined"
+              className={classNames('button is-success', {
+                'is-outlined': !!centuries.length,
+              })}
               params={{ centuries: null }}
             >
               All

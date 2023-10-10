@@ -1,6 +1,7 @@
 import { Person } from '../types';
+import { GenderKinds } from './GenderKinds';
 import { PeopleSortType } from './PeopleSortType';
-import { FEMALE_SEX, MALE_SEX, ONE_CENTURY } from './variables';
+import { ONE_CENTURY } from './variables';
 
 export const getPreparedPeople = (
   people: Person[],
@@ -35,9 +36,9 @@ export const getPreparedPeople = (
 
   if (centuries.length) {
     preparedPeople = preparedPeople.filter(person => {
-      const getCentury = Math.ceil(person.born / ONE_CENTURY);
+      const century = Math.ceil(person.born / ONE_CENTURY);
 
-      return centuries.includes(`${getCentury}`);
+      return centuries.includes(`${century}`);
     });
   }
 
@@ -62,10 +63,10 @@ export const getPreparedPeople = (
   if (sex) {
     preparedPeople = preparedPeople.filter(person => {
       switch (sex) {
-        case FEMALE_SEX:
-          return person.sex === FEMALE_SEX;
-        case MALE_SEX:
-          return person.sex === MALE_SEX;
+        case GenderKinds.Female:
+          return person.sex === GenderKinds.Female;
+        case GenderKinds.Male:
+          return person.sex === GenderKinds.Male;
         default:
           return person;
       }
@@ -73,4 +74,18 @@ export const getPreparedPeople = (
   }
 
   return preparedPeople;
+};
+
+export const preparedPerson = (people:Person[]) => {
+  return people.map((person:Person) => {
+    const mother = people.find(({ name }:Person) => name === person.motherName);
+
+    const father = people.find(({ name }:Person) => name === person.fatherName);
+
+    return {
+      ...person,
+      mother,
+      father,
+    };
+  });
 };
