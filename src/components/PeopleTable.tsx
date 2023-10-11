@@ -54,7 +54,7 @@ React.FC<PeopleTableProps> = ({
     );
   }
 
-  if (!people) {
+  if (people.length === 0) {
     return <p data-cy="noPeopleMessage">There are no people on the server</p>;
   }
 
