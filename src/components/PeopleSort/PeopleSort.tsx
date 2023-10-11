@@ -38,20 +38,6 @@ export const PeopleSort = () => {
       params.delete('order');
     }
 
-    // switch (sort) {
-    //   case sort:
-    //     params.delete('sort');
-    //     break;
-    //   case oldSort:
-    //     !oldOrder
-    //       ? params.set('order', 'desc')
-    //       : params.delete('order');
-    //     break;
-
-    //   default:
-    //     params.set('sort', sort);
-    // }
-
     return params;
   };
 

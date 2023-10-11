@@ -48,31 +48,5 @@ export function sortPeople(
       default:
         return 0;
     }
-
-    // if (oldSort === SortBy.Name) {
-    //   return oldOrder === SortOrder.Desc
-    //     ? (humanA.name.localeCompare(humanB.name) * -1)
-    //     : humanA.name.localeCompare(humanB.name);
-    // }
-
-    // if (oldSort === SortBy.Sex) {
-    //   return oldOrder === SortOrder.Desc
-    //     ? (humanA.sex.localeCompare(humanB.sex) * -1)
-    //     : humanA.sex.localeCompare(humanB.sex);
-    // }
-
-    // if (oldSort === SortBy.Died) {
-    //   return oldOrder === SortOrder.Desc
-    //     ? humanB.died - humanA.died
-    //     : humanA.died - humanB.died;
-    // }
-
-    // if (oldSort === SortBy.Born) {
-    //   return oldOrder === SortOrder.Desc
-    //     ? humanB.born - humanA.born
-    //     : humanA.born - humanB.born;
-    // }
-
-    // return 0;
   });
 }
