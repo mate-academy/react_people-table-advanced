@@ -7,6 +7,7 @@ import { Person } from '../types/Person';
 import { getPeople } from '../services/people';
 import { getPeopleWithParents, sortPeople } from '../helper';
 import { Gender } from '../types/Gender';
+import { NORMALIZER } from '../utils/constants';
 
 function hasNormalizedQuery(content: string, query: string | null): boolean {
   const normalizedQuery = query?.trim()?.toLowerCase() ?? '';
@@ -20,8 +21,7 @@ function filterByGender(person: Person, selectedGender: Gender): boolean {
 
 function filterByCentury(person: Person, centuries: string[]):boolean {
   return !centuries?.length
-    ? true
-    : centuries.includes(Math.floor(person.born / 100).toString());
+    || centuries.includes(Math.floor(person.born / NORMALIZER).toString());
 }
 
 function filterPeopleByQuery(
