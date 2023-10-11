@@ -8,7 +8,7 @@ export const getFilteredPeople = (
   sortField: string | null,
   order: string | null,
 ): Person[] => {
-  let filteredPeople = [...people];
+  let filteredPeople = people;
 
   if (sex) {
     filteredPeople = filteredPeople.filter(person => person.sex === sex);

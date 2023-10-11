@@ -1,9 +1,7 @@
-import classNames from 'classnames';
 import React from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { Person } from '../types';
-import { Sex } from '../types/Sex';
-import { PersonLink } from './PersonLink/PersonLink';
+import { PersonContent } from '../PersonContent/PersonContent';
 
 type Props = {
   people: Person[];
@@ -11,20 +9,6 @@ type Props = {
 
 export const PeopleTable: React.FC<Props> = ({ people }) => {
   const { personSlug } = useParams();
-
-  const getParentsLink = (personName: string | null) => {
-    if (!personName) {
-      return '-';
-    }
-
-    const parent = people.find(({ name }) => name === personName);
-
-    if (parent) {
-      return <PersonLink person={parent} />;
-    }
-
-    return personName;
-  };
 
   return (
     <table
@@ -82,33 +66,15 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
         </tr>
       </thead>
 
-      {people.map((person) => (
-        <tbody key={person.slug}>
-          <tr
-            data-cy="person"
-            className={classNames({
-              'has-background-warning': person.slug === personSlug,
-            })}
-          >
-            <td>
-              <Link
-                to={person.slug}
-                className={classNames({
-                  'has-text-danger': person.sex === Sex.Female,
-                })}
-              >
-                {person.name}
-              </Link>
-            </td>
-
-            <td>{person.sex}</td>
-            <td>{person.born}</td>
-            <td>{person.died}</td>
-            <td>{getParentsLink(person.motherName)}</td>
-            <td>{getParentsLink(person.fatherName)}</td>
-          </tr>
-        </tbody>
-      ))}
+      <tbody>
+        {people.map((person) => (
+          <PersonContent
+            person={person}
+            key={person.slug}
+            personSlug={personSlug}
+          />
+        ))}
+      </tbody>
     </table>
   );
 };
