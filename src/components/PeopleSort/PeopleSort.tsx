@@ -1,4 +1,5 @@
 import { Link, useSearchParams } from 'react-router-dom';
+import classNames from 'classnames';
 import { SortBy } from '../../types/SortBy';
 
 export const PeopleSort = () => {
@@ -7,29 +8,30 @@ export const PeopleSort = () => {
   const oldOrder = searchParams.get('order');
 
   const setIconClass = (columnName: SortBy): string => {
-    if (columnName === oldSort && !oldOrder) {
-      return 'fas fa-sort-up';
-    }
-
-    if (columnName === oldSort && oldOrder) {
-      return 'fas fa-sort-down';
-    }
-
-    return 'fas fa-sort';
+    return classNames('fas',
+      { 'fa-sort-up': columnName === oldSort && !oldOrder },
+      { 'fa-sort-down': columnName === oldSort && oldOrder },
+      { 'fa-sort': columnName });
   };
 
   const addSortToUrlParams = (sort: SortBy): URLSearchParams => {
     const params = new URLSearchParams(searchParams);
 
-    if (sort === oldSort) {
+    if (sort) {
+      params.set('sort', sort);
+    } else {
+      params.delete('sort');
+    }
+
+    if (sort === oldSort && !oldOrder) {
+      params.set('order', 'desc');
+    } else {
+      params.delete('order');
+    }
+
+    if (sort === oldSort && oldOrder) {
       params.delete('sort');
       params.delete('order');
-    } else {
-      params.set('sort', sort);
-      params.delete('order');
-      if (oldOrder) {
-        params.set('order', 'desc');
-      }
     }
 
     return params;
