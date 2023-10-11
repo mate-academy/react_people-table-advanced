@@ -46,7 +46,7 @@ function filterPeopleByQuery(
 export const PeoplePage: React.FC = () => {
   const [people, setPeople] = useState<Person[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [errorMassage, setErrorMassage] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
 
   const [searchParams] = useSearchParams();
   const oldSort = searchParams.get('sort');
@@ -57,7 +57,7 @@ export const PeoplePage: React.FC = () => {
   const isShowTable = !isLoading && !!people.length;
 
   const isPeople = !isLoading
-    && !errorMassage
+    && !errorMessage
     && !people.length;
 
   useEffect(() => {
@@ -66,7 +66,7 @@ export const PeoplePage: React.FC = () => {
         .then(peopleList => {
           setPeople(getPeopleWithParents(peopleList));
         })
-        .catch(() => setErrorMassage('Something went wrong'))
+        .catch(() => setErrorMessage('Something went wrong'))
         .finally(() => setIsLoading(false));
     }, 1000);
   }, []);
@@ -125,12 +125,12 @@ export const PeoplePage: React.FC = () => {
               && !sortedPeople.length && (
                 <p>There are no people matching the current search criteria</p>
               )}
-              {errorMassage && (
+              {errorMessage && (
                 <p
                   data-cy="peopleLoadingError"
                   className="has-text-danger"
                 >
-                  {errorMassage}
+                  {errorMessage}
                 </p>
               )}
             </div>
