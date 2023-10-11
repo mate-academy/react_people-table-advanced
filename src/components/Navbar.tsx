@@ -1,4 +1,13 @@
+import classNames from 'classnames';
+import { Link, useLocation } from 'react-router-dom';
+
 export const Navbar = () => {
+  const location = useLocation();
+
+  const isLocationSelected = (path: string) => {
+    return location.pathname === path;
+  };
+
   return (
     <nav
       data-cy="nav"
@@ -8,17 +17,26 @@ export const Navbar = () => {
     >
       <div className="container">
         <div className="navbar-brand">
-          <a className="navbar-item" href="#/">Home</a>
-
-          <a
+          <Link
+            to="/"
+            className={classNames('navbar-item', {
+              'has-background-grey-lighter': isLocationSelected('/'),
+            })}
+          >
+            Home
+          </Link>
+          <Link
+            to="/people"
             aria-current="page"
-            className="navbar-item has-background-grey-lighter"
-            href="#/people"
+            className={classNames('navbar-item', {
+              'has-background-grey-lighter': isLocationSelected('/people'),
+            })}
           >
             People
-          </a>
+          </Link>
         </div>
       </div>
+      { }
     </nav>
   );
 };
