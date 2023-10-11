@@ -11,8 +11,8 @@ import { Person } from './types';
 import { Loader } from './components/Loader';
 
 enum ErrorType {
-  'There are no people on the server' = 'There are no people on the server',
-  'Something went wrong' = 'Something went wrong',
+  NoData = 'There are no people on the server',
+  Unknown = 'Something went wrong',
 }
 
 export const App = () => {
@@ -27,12 +27,12 @@ export const App = () => {
         setIsLoading(true);
         setPeople(persons);
         if (persons.length === 0) {
-          setErrorMessage(ErrorType['There are no people on the server']);
+          setErrorMessage(ErrorType.NoData);
         }
       })
       .catch(() => {
         setIsError(true);
-        setErrorMessage(ErrorType['Something went wrong']);
+        setErrorMessage(ErrorType.Unknown);
       })
       .finally(() => setIsLoading(false));
   }, []);

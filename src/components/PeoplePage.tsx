@@ -7,6 +7,9 @@ import { PeopleFilters } from './PeopleFilters';
 import { Loader } from './Loader';
 import { PeopleTable } from './PeopleTable';
 import { Person } from '../types';
+import { partOfSort } from './PartOfSort';
+
+const sortLane = ['Name', 'Sex', 'Born', 'Died', 'Mother', 'Father'];
 
 export const PeoplePage: React.FC<{
   isError: boolean;
@@ -22,11 +25,10 @@ export const PeoplePage: React.FC<{
   const [searchParams, setSearchParams] = useSearchParams();
 
   const initialSort = searchParams.get('sort');
-  const [sortUpdate, SetSortUpdate] = useState(initialSort);
-  const [sortBefore, SetSortBefore] = useState(sortUpdate);
-  const initialOrder = searchParams.get('order') || null;
-  const [orderUpdate, SetOrderUpdate] = useState(initialOrder);
-  const sortLane = ['Name', 'Sex', 'Born', 'Died', 'Mother', 'Father'];
+  const [sortUpdate, setSortUpdate] = useState(initialSort);
+  const [sortBefore, setSortBefore] = useState(sortUpdate);
+  const initialOrder = searchParams.get('order');
+  const [orderUpdate, setOrderUpdate] = useState(initialOrder);
 
   const setSearchWith = (
     firstSearchParams: URLSearchParams,
@@ -69,47 +71,35 @@ export const PeoplePage: React.FC<{
     };
   };
 
+  const sortElement = (currentList: Person[], resetSort: boolean) => {
+    if (resetSort) {
+      return currentList;
+    }
+
+    return currentList.sort((first: Person, second: Person) => {
+      switch (initialSort) {
+        case 'name':
+        case 'sex':
+        case 'born':
+        case 'died':
+          if (initialOrder) {
+            return partOfSort(second[initialSort], first[initialSort]);
+          }
+
+          return partOfSort(first[initialSort], second[initialSort]);
+
+        default:
+          return 0;
+      }
+    });
+  };
+
   const doSortingNow = () => {
     if (peopleFromServer) {
       const resetSex = searchParams.get('sex') === null;
       const resetCenturies = searchParams.get('centuries') === null;
       const resetSearch = searchParams.get('search') === null;
       const resetSort = searchParams.get('sort') === null;
-
-      const sortElement = (currentList: Person[]) => {
-        if (resetSort) {
-          return currentList;
-        }
-
-        const partOfSort = (one: number | string, two: number | string) => {
-          if (typeof one === 'string' && typeof two === 'string') {
-            return one.localeCompare(two);
-          }
-
-          if (typeof one === 'number' && typeof two === 'number') {
-            return one - two;
-          }
-
-          return 0;
-        };
-
-        return currentList.sort((first: Person, second: Person) => {
-          switch (initialSort) {
-            case 'name':
-            case 'sex':
-            case 'born':
-            case 'died':
-              if (initialOrder) {
-                return partOfSort(second[initialSort], first[initialSort]);
-              }
-
-              return partOfSort(first[initialSort], second[initialSort]);
-
-            default:
-              return 0;
-          }
-        });
-      };
 
       let newVisiblePeople = [...peopleFromServer].filter((person) => {
         const statusSex = resetSex
@@ -132,15 +122,15 @@ export const PeoplePage: React.FC<{
         newVisiblePeople = [...peopleFromServer];
       }
 
-      setVisiblePeople(sortElement(newVisiblePeople));
+      setVisiblePeople(sortElement(newVisiblePeople, resetSort));
     }
   };
 
   useEffect(() => {
     doSortingNow();
-    SetSortUpdate(initialSort);
-    SetSortBefore(sortUpdate);
-    SetOrderUpdate(initialOrder);
+    setSortUpdate(initialSort);
+    setSortBefore(sortUpdate);
+    setOrderUpdate(initialOrder);
   }, [searchParams]);
 
   return isLoading ? (
