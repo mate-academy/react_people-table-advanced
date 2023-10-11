@@ -21,21 +21,15 @@ export const PeopleSort = () => {
   const addSortToUrlParams = (sort: SortBy): URLSearchParams => {
     const params = new URLSearchParams(searchParams);
 
-    if (sort) {
+    if (sort === oldSort) {
+      params.delete('sort');
+      params.delete('order');
+    } else {
       params.set('sort', sort);
-    } else {
-      params.delete('sort');
-    }
-
-    if (sort === oldSort && !oldOrder) {
-      params.set('order', 'desc');
-    } else {
       params.delete('order');
-    }
-
-    if (sort === oldSort && oldOrder) {
-      params.delete('sort');
-      params.delete('order');
+      if (oldOrder) {
+        params.set('order', 'desc');
+      }
     }
 
     return params;
