@@ -108,12 +108,19 @@ export const PeoplePage: React.FC = () => {
                 <Loader />
               )}
 
-              {isShowTable && (
-                <PeopleTable
-                  people={sortedPeople}
-                  selectedSlug={selectedSlug}
-                />
-              )}
+              {!isLoading && !sortedPeople.length
+                ? (
+                  <p>
+                    There are no people matching the current search criteria
+                  </p>
+                )
+                : (isShowTable && (
+                  <PeopleTable
+                    people={sortedPeople}
+                    selectedSlug={selectedSlug}
+                  />
+                ))}
+
 
               {isPeople
                 && (
@@ -121,10 +128,6 @@ export const PeoplePage: React.FC = () => {
                     There are no people on the server
                   </p>
                 )}
-              {!isLoading
-              && !sortedPeople.length && (
-                <p>There are no people matching the current search criteria</p>
-              )}
               {errorMessage && (
                 <p
                   data-cy="peopleLoadingError"
