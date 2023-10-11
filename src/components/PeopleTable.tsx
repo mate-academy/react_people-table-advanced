@@ -1,4 +1,11 @@
-export const PeopleTable = () => {
+import { Person } from '../types';
+import { PersonLink } from './PersonLink';
+
+type Props = {
+  people: Person[];
+};
+
+export const PeopleTable = ({ people }: Props) => {
   return (
     <table
       data-cy="peopleTable"
@@ -56,7 +63,15 @@ export const PeopleTable = () => {
       </thead>
 
       <tbody>
-        <tr data-cy="person">
+        { people.map(person => (
+          <PersonLink
+            key={person.slug}
+            personLink={person}
+            people={people}
+          />
+        ))}
+
+        {/* <tr data-cy="person">
           <td>
             <a href="#/people/pieter-haverbeke-1602">Pieter Haverbeke</a>
           </td>
@@ -676,7 +691,7 @@ export const PeopleTable = () => {
           <td>
             <a href="#/people/carolus-haverbeke-1832">Carolus Haverbeke</a>
           </td>
-        </tr>
+        </tr> */}
       </tbody>
     </table>
   );
