@@ -3,6 +3,7 @@ import { PeopleFilters } from './PeopleFilters';
 import { PeopleTable } from './PeopleTable';
 import { getPeople } from '../api';
 import { Person } from '../types';
+import { useDisplayPeople } from './useDisplayPeople/useDisplayPeople';
 
 export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);
@@ -25,6 +26,15 @@ export const PeoplePage = () => {
     fetchData();
   }, []);
 
+  const peopleWithParents = people.map((person) => {
+    const mother = people.find(({ name }) => name === person.motherName);
+    const father = people.find(({ name }) => name === person.fatherName);
+
+    return { ...person, mother, father };
+  });
+
+  const displayPeople = useDisplayPeople(peopleWithParents);
+
   return (
     <>
       <h1 className="title">People Page</h1>
@@ -37,9 +47,14 @@ export const PeoplePage = () => {
 
           <div className="column">
             <div className="box table-container">
-              <p>There are no people matching the current search criteria</p>
-
-              <PeopleTable people={people} loading={loading} error={error} />
+              {!displayPeople.length
+              && <p>There are no people matching the search criteria</p>}
+              <PeopleTable
+                people={people}
+                loading={loading}
+                error={error}
+                displayPeople={displayPeople}
+              />
             </div>
           </div>
         </div>

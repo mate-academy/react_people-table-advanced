@@ -4,17 +4,19 @@ import cn from 'classnames';
 import { SearchLink } from './SearchLink';
 import { Loader } from './Loader';
 import { PersonLink } from './PersonLink';
-import { useDisplayPeople } from './useDisplayPeople/useDisplayPeople';
 import { Person } from '../types';
 
 interface PeopleTableProps {
-  people: Person[];
+  people: Person[]
   loading: boolean;
   error: boolean;
+  displayPeople: Person[]
 }
 
 export const PeopleTable:
-React.FC<PeopleTableProps> = ({ people, loading, error }) => {
+React.FC<PeopleTableProps> = ({
+  loading, error, displayPeople, people,
+}) => {
   const [searchParams] = useSearchParams();
   const sort = searchParams.get('sort') || '';
   const sortOrder = searchParams.get('sortOrder') || '';
@@ -40,15 +42,6 @@ React.FC<PeopleTableProps> = ({ people, loading, error }) => {
     };
   };
 
-  const peopleWithParents = people.map((person) => {
-    const mother = people.find(({ name }) => name === person.motherName);
-    const father = people.find(({ name }) => name === person.fatherName);
-
-    return { ...person, mother, father };
-  });
-
-  const displayPeople = useDisplayPeople(peopleWithParents);
-
   if (loading) {
     return <Loader />;
   }
@@ -61,7 +54,7 @@ React.FC<PeopleTableProps> = ({ people, loading, error }) => {
     );
   }
 
-  if (!displayPeople.length) {
+  if (!people) {
     return <p data-cy="noPeopleMessage">There are no people on the server</p>;
   }
 
