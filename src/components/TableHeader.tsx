@@ -2,13 +2,15 @@ import classNames from 'classnames';
 import React from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { SearchLink } from './SearchLink';
-import { tableColumns } from '../utils/constants';
+import { TABLE_COLUMNS } from '../utils/constants';
 
 export const TableHeader: React.FC = () => {
   const [searchParams] = useSearchParams();
 
   const sort = searchParams.get('sort') || null;
   const order = searchParams.get('order') || null;
+
+  const isOrderDescending = order === 'desc';
 
   const setOrder = (column: string) => {
     if (sort === column) {
@@ -19,7 +21,7 @@ export const TableHeader: React.FC = () => {
   };
 
   const setSortField = (column: string) => {
-    if (sort === column && order === 'desc') {
+    if (sort === column && isOrderDescending) {
       return null;
     }
 
@@ -29,8 +31,9 @@ export const TableHeader: React.FC = () => {
   return (
     <thead>
       <tr>
-        {tableColumns.map(column => {
+        {TABLE_COLUMNS.map(column => {
           const lowerColumn = column.toLowerCase();
+          const isColumnSorting = sort === lowerColumn;
 
           return (
             <th key={column}>
@@ -44,9 +47,9 @@ export const TableHeader: React.FC = () => {
                 >
                   <span className="icon">
                     <i className={classNames('fas', {
-                      'fa-sort': sort !== lowerColumn,
-                      'fa-sort-up': sort === lowerColumn && order !== 'desc',
-                      'fa-sort-down': sort === lowerColumn && order === 'desc',
+                      'fa-sort': !isColumnSorting,
+                      'fa-sort-up': isColumnSorting && !isOrderDescending,
+                      'fa-sort-down': isColumnSorting && isOrderDescending,
                     })}
                     />
                   </span>

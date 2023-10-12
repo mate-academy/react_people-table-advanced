@@ -10,7 +10,14 @@ type Props = {
 
 export const PersonRow: React.FC<Props> = ({ person, peopleSlug }) => {
   const {
-    slug, sex, born, died, motherName, fatherName, mother, father,
+    slug,
+    sex,
+    born,
+    died,
+    motherName,
+    fatherName,
+    mother,
+    father,
   } = person;
 
   return (

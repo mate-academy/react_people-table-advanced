@@ -10,14 +10,18 @@ interface FilterParams {
   order: string | null;
 }
 
+const CENTURY = 100;
+
+const checkQueryMatch = (name: string | null, query: string) => {
+  return name?.toLowerCase().includes(query);
+};
+
 export const getPreparedPeople = (peopleList: Person[]) => {
   return peopleList.map(person => {
     return {
       ...person,
-      mother: peopleList
-        .find(mother => mother.name === person.motherName),
-      father: peopleList
-        .find(father => father.name === person.fatherName),
+      mother: peopleList.find(({ name }) => name === person.motherName),
+      father: peopleList.find(({ name }) => name === person.fatherName),
     };
   });
 };
@@ -43,27 +47,19 @@ export const getFilteredPeople = (peopleList: Person[], {
         return false;
       }
 
-      const name = person.name.toLowerCase().includes(normalizedQuery);
-      const motherName = person.motherName
-        ?.toLowerCase()
-        .includes(normalizedQuery);
-      const fatherName = person.fatherName
-        ?.toLowerCase()
-        .includes(normalizedQuery);
+      const name = checkQueryMatch(person.name, normalizedQuery);
+      const motherName = checkQueryMatch(person.motherName, normalizedQuery);
+      const fatherName = checkQueryMatch(person.fatherName, normalizedQuery);
 
       return name || motherName || fatherName;
     });
   }
 
-  if (centuries.length > 0) {
+  if (centuries.length) {
     filteredPeople = filteredPeople.filter(person => {
-      const century = `${Math.ceil(person.born / 100)}`;
+      const century = `${Math.ceil(person.born / CENTURY)}`;
 
-      if (centuries.includes(century)) {
-        return true;
-      }
-
-      return false;
+      return centuries.includes(century);
     });
   }
 
