@@ -4,7 +4,7 @@ import classnames from 'classnames';
 import { SearchLink } from './SearchLink';
 import { getSearchWith } from '../utils/searchHelper';
 import { Sex } from '../types/Sex';
-import { FEMALE_SEX, MALE_SEX, centuriesNumbers } from '../utils/constants';
+import { CENTURIES_NUMBERS, Gender } from '../utils/constants';
 
 export const PeopleFilters = () => {
   const [searchParams, setSeacrhParams] = useSearchParams();
@@ -37,14 +37,14 @@ export const PeopleFilters = () => {
           {Sex.All}
         </SearchLink>
         <SearchLink
-          className={classnames({ 'is-active': sex === MALE_SEX })}
-          params={{ sex: MALE_SEX }}
+          className={classnames({ 'is-active': sex === Gender.Male })}
+          params={{ sex: Gender.Male }}
         >
           {Sex.Male}
         </SearchLink>
         <SearchLink
-          className={classnames({ 'is-active': sex === FEMALE_SEX })}
-          params={{ sex: FEMALE_SEX }}
+          className={classnames({ 'is-active': sex === Gender.Female })}
+          params={{ sex: Gender.Female }}
         >
           {Sex.Female}
         </SearchLink>
@@ -69,7 +69,7 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            {centuriesNumbers.map(century => (
+            {CENTURIES_NUMBERS.map(century => (
               <SearchLink
                 key={century}
                 data-cy="century"

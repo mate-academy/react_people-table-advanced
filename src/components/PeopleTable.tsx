@@ -3,7 +3,7 @@ import classnames from 'classnames';
 import { Person } from '../types';
 import { SearchLink } from './SearchLink';
 import { SearchParams } from '../utils/searchHelper';
-import { NOT_SET_VALUE, tableColumnNames } from '../utils/constants';
+import { NOT_SET_VALUE, TABLE_COLUMN_NAMES } from '../utils/constants';
 import { PersonLink } from './PersonLink';
 
 const sortTableColumnNames = ['Name', 'Sex', 'Born', 'Died'];
@@ -46,7 +46,7 @@ export const PeopleTable: React.FC<Props> = ({
     >
       <thead>
         <tr>
-          {tableColumnNames.map((name) => {
+          {TABLE_COLUMN_NAMES.map((name) => {
             return sortTableColumnNames.includes(name) ? (
               <th key={name}>
                 <span className="is-flex is-flex-wrap-nowrap">

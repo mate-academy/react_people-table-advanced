@@ -1,10 +1,14 @@
 export const NOT_SET_VALUE = '-';
-export const FEMALE_SEX = 'f';
-export const MALE_SEX = 'm';
-export const tableColumnNames = [
+
+export enum Gender {
+  Male = 'm',
+  Female = 'f',
+}
+
+export const TABLE_COLUMN_NAMES = [
   'Name', 'Sex', 'Born', 'Died', 'Mother', 'Father',
 ];
-export const centuriesNumbers = [
+export const CENTURIES_NUMBERS = [
   '16', '17', '18', '19', '20',
 ];
-export const yearsPerCentury = 100;
+export const YEARS_PER_CENTURY = 100;
