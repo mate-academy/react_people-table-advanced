@@ -19,33 +19,38 @@ export const PeopleTable: React.FC = () => {
   const order = searchParams.get('order') || null;
 
   const filteredPeople = getFilteredPeople(peopleList, {
-    sex, query, centuries, sort, order,
+    sex,
+    query,
+    centuries,
+    sort,
+    order,
   });
 
   return (
     <>
-      {!filteredPeople.length && (
-        <p>
-          {ErrorMessages.NoMatch}
-        </p>
-      )}
+      {filteredPeople.length
+        ? (
+          <table
+            data-cy="peopleTable"
+            className="table is-striped is-hoverable is-narrow is-fullwidth"
+          >
+            <TableHeader />
 
-      <table
-        data-cy="peopleTable"
-        className="table is-striped is-hoverable is-narrow is-fullwidth"
-      >
-        <TableHeader />
-
-        <tbody>
-          {filteredPeople.map(person => (
-            <PersonRow
-              person={person}
-              peopleSlug={peopleSlug}
-              key={person.slug}
-            />
-          ))}
-        </tbody>
-      </table>
+            <tbody>
+              {filteredPeople.map(person => (
+                <PersonRow
+                  person={person}
+                  peopleSlug={peopleSlug}
+                  key={person.slug}
+                />
+              ))}
+            </tbody>
+          </table>
+        ) : (
+          <p>
+            {ErrorMessages.NoMatch}
+          </p>
+        )}
     </>
   );
 };

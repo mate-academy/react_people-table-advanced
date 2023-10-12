@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import { getSearchWith } from '../utils/searchHelper';
 import { PersonSex } from '../types/PersonSex';
 import {
-  SEX_FEMALE, SEX_MALE, CENTURIES_ARRAY, INITIAL_PARAMS,
+  CENTURIES_ARRAY, INITIAL_PARAMS,
 } from '../utils/constants';
 import { SearchLink } from './SearchLink';
 
@@ -42,14 +42,14 @@ export const PeopleFilters = () => {
           {PersonSex.All}
         </SearchLink>
         <SearchLink
-          className={classNames({ 'is-active': sex === SEX_MALE })}
-          params={{ sex: SEX_MALE }}
+          className={classNames({ 'is-active': sex === PersonSex.SEX_MALE })}
+          params={{ sex: PersonSex.SEX_MALE }}
         >
           {PersonSex.Male}
         </SearchLink>
         <SearchLink
-          className={classNames({ 'is-active': sex === SEX_FEMALE })}
-          params={{ sex: SEX_FEMALE }}
+          className={classNames({ 'is-active': sex === PersonSex.SEX_FEMALE })}
+          params={{ sex: PersonSex.SEX_FEMALE }}
         >
           {PersonSex.Female}
         </SearchLink>

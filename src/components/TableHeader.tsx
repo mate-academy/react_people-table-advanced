@@ -2,19 +2,24 @@ import classNames from 'classnames';
 import React from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { SearchLink } from './SearchLink';
-import { TABLE_COLUMNS } from '../utils/constants';
+import {
+  ORDER,
+  ORDER_DESCENDING,
+  SORT,
+  TABLE_COLUMNS,
+} from '../utils/constants';
 
 export const TableHeader: React.FC = () => {
   const [searchParams] = useSearchParams();
 
-  const sort = searchParams.get('sort') || null;
-  const order = searchParams.get('order') || null;
+  const sort = searchParams.get(SORT) || null;
+  const order = searchParams.get(ORDER) || null;
 
-  const isOrderDescending = order === 'desc';
+  const isOrderDescending = order === ORDER_DESCENDING;
 
   const setOrder = (column: string) => {
     if (sort === column) {
-      return order ? null : 'desc';
+      return order ? null : ORDER_DESCENDING;
     }
 
     return null;

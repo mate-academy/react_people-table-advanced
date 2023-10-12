@@ -1,6 +1,7 @@
 import { Person } from '../types';
+import { PersonSex } from '../types/PersonSex';
 import { SortField } from '../types/SortField';
-import { SEX_FEMALE, SEX_MALE } from './constants';
+import { CENTURY } from './constants';
 
 interface FilterParams {
   sex: string | null;
@@ -10,9 +11,7 @@ interface FilterParams {
   order: string | null;
 }
 
-const CENTURY = 100;
-
-const checkQueryMatch = (name: string | null, query: string) => {
+const isQueryMatch = (name: string | null, query: string) => {
   return name?.toLowerCase().includes(query);
 };
 
@@ -27,29 +26,38 @@ export const getPreparedPeople = (peopleList: Person[]) => {
 };
 
 export const getFilteredPeople = (peopleList: Person[], {
-  sex, query, centuries, sort, order,
+  sex,
+  query,
+  centuries,
+  sort,
+  order,
 }: FilterParams) => {
   let filteredPeople = peopleList;
 
-  if (sex === SEX_MALE) {
-    filteredPeople = filteredPeople.filter(person => person.sex === SEX_MALE);
-  }
+  filteredPeople = filteredPeople.filter(person => {
+    switch (sex) {
+      case PersonSex.SEX_MALE:
+        return person.sex === PersonSex.SEX_MALE;
 
-  if (sex === SEX_FEMALE) {
-    filteredPeople = filteredPeople.filter(person => person.sex === SEX_FEMALE);
-  }
+      case PersonSex.SEX_FEMALE:
+        return person.sex === PersonSex.SEX_FEMALE;
+
+      default:
+        return person;
+    }
+  });
 
   if (query) {
     filteredPeople = filteredPeople.filter(person => {
       const normalizedQuery = query.trim().toLowerCase();
 
-      if (normalizedQuery === '') {
+      if (!normalizedQuery) {
         return false;
       }
 
-      const name = checkQueryMatch(person.name, normalizedQuery);
-      const motherName = checkQueryMatch(person.motherName, normalizedQuery);
-      const fatherName = checkQueryMatch(person.fatherName, normalizedQuery);
+      const name = isQueryMatch(person.name, normalizedQuery);
+      const motherName = isQueryMatch(person.motherName, normalizedQuery);
+      const fatherName = isQueryMatch(person.fatherName, normalizedQuery);
 
       return name || motherName || fatherName;
     });
