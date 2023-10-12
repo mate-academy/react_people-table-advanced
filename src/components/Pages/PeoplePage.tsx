@@ -5,7 +5,7 @@ import { Person } from '../../types';
 import { getPeople } from '../../api';
 import {
   getFilteredPeople,
-  preparePeople,
+  getPreparedPeople,
 } from '../../utils/functions';
 import { PeopleFilters } from '../PeopleFilters';
 import { Loader } from '../Loader';
@@ -23,7 +23,7 @@ export const PeoplePage = () => {
 
     getPeople()
       .then((peopleFromServer) => {
-        setPeople(preparePeople(peopleFromServer));
+        setPeople(getPreparedPeople(peopleFromServer));
       })
       .catch(() => setIsErrorHappened(true))
       .finally(() => setIsLoading(false));

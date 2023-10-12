@@ -3,12 +3,16 @@ import { Person } from '../types';
 import { YEARS_PER_CENTURY } from './constants';
 import { TypeSort } from '../types/TypeSort';
 
-export function getFatherPerson(persons: Person[], person: Person) {
-  return persons.find(({ name }: Person) => name === person.fatherName);
-}
+export function getParent(
+  persons: Person[],
+  person: Person,
+  mama: string,
+) {
+  if (mama === 'mama') {
+    return persons.find(({ name }: Person) => name === person.motherName);
+  }
 
-export function getMotherPerson(persons: Person[], person: Person) {
-  return persons.find(({ name }: Person) => name === person.motherName);
+  return persons.find(({ name }: Person) => name === person.fatherName);
 }
 
 export const getLinkClass = ({ isActive }: { isActive: boolean }) => {
@@ -83,13 +87,13 @@ export const getFilteredPeople = (
   return preparedPeople;
 };
 
-export const preparePeople = (persons: Person[]) => {
+export const getPreparedPeople = (persons: Person[]) => {
   return persons.map((personData) => {
-    const mother = getMotherPerson(
-      persons, personData,
+    const mother = getParent(
+      persons, personData, 'mama',
     );
-    const father = getFatherPerson(
-      persons, personData,
+    const father = getParent(
+      persons, personData, 'papa',
     );
 
     return {
