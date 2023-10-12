@@ -7,7 +7,11 @@ import { Loader } from '../../components/Loader';
 type TPeopleProps = {};
 
 export const PeoplePage: FC<TPeopleProps> = () => {
-  const { errorMessage, isLoading } = useContext(PeopleProvider);
+  const {
+    errorMessage,
+    isLoading,
+    preparedPeople,
+  } = useContext(PeopleProvider);
 
   const shouldShowFiltering = !errorMessage && !isLoading;
 
@@ -25,7 +29,15 @@ export const PeoplePage: FC<TPeopleProps> = () => {
             <div className="box table-container">
               {isLoading && <Loader />}
 
-              {!isLoading && <PeopleTable />}
+              {shouldShowFiltering && !!preparedPeople.length && (
+                <PeopleTable />
+              )}
+
+              {shouldShowFiltering && !preparedPeople.length && (
+                <p data-cy="noPeopleMessage">
+                  There are no people on the server
+                </p>
+              )}
 
               {errorMessage && (
                 <p data-cy="peopleLoadingError" className="has-text-danger">

@@ -9,6 +9,10 @@ type TTableItemProps = {
   people: Person[];
 };
 
+enum ESex {
+  Female = 'f',
+}
+
 export const PersonItem: FC<TTableItemProps> = ({ person, people }) => {
   const {
     name,
@@ -28,6 +32,8 @@ export const PersonItem: FC<TTableItemProps> = ({ person, people }) => {
   const father = people
     .find(currentPerson => currentPerson.name === fatherName);
 
+  const NOT_SET_VALUE = '-';
+
   return (
     <tr
       data-cy="person"
@@ -39,7 +45,7 @@ export const PersonItem: FC<TTableItemProps> = ({ person, people }) => {
         <Link
           to={`/people/${slug}`}
           className={classNames({
-            'has-text-danger': sex === 'f',
+            'has-text-danger': sex === ESex.Female,
           })}
         >
           {name}
@@ -58,7 +64,7 @@ export const PersonItem: FC<TTableItemProps> = ({ person, people }) => {
             {motherName}
           </Link>
         ) : (
-          motherName || '-'
+          motherName || NOT_SET_VALUE
         )}
       </td>
 
@@ -70,7 +76,7 @@ export const PersonItem: FC<TTableItemProps> = ({ person, people }) => {
             {fatherName}
           </Link>
         ) : (
-          fatherName || '-'
+          fatherName || NOT_SET_VALUE
         )}
       </td>
     </tr>

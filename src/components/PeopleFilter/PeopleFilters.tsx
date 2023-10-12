@@ -10,21 +10,23 @@ enum ESexFilter {
 
 const centuries: string[] = ['16', '17', '18', '19', '20'];
 
+type TGender = string | null;
+
+const getGenderLinkStyle = (gender: TGender, sexParam: TGender) => (
+  classNames({ 'is-active': gender === sexParam })
+);
+
+const getCenturiesLinkStyle = (centery: string, centuriesParam: string[]) => (
+  classNames('button', 'mr-1', {
+    'is-info': centuriesParam.includes(centery),
+  })
+);
+
 export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const sexParam = searchParams.get('sex');
   const queryParam = searchParams.get('query') ?? '';
   const centuriesParam = searchParams.getAll('centuries') ?? [];
-
-  const getGenderLinkStyle = (gender: string | null) => (
-    classNames({ 'is-active': gender === sexParam })
-  );
-
-  const getCenturiesLinkStyle = (centery: string) => (
-    classNames('button', 'mr-1', {
-      'is-info': centuriesParam.includes(centery),
-    })
-  );
 
   const setSearchWith = (params: SearchParams) => {
     const search = getSearchWith(searchParams, params);
@@ -51,19 +53,19 @@ export const PeopleFilters = () => {
       <p className="panel-tabs" data-cy="SexFilter">
         <SearchLink
           params={{ sex: null }}
-          className={getGenderLinkStyle(null)}
+          className={getGenderLinkStyle(null, sexParam)}
         >
           All
         </SearchLink>
         <SearchLink
           params={{ sex: ESexFilter.Male }}
-          className={getGenderLinkStyle(ESexFilter.Male)}
+          className={getGenderLinkStyle(ESexFilter.Male, sexParam)}
         >
           Male
         </SearchLink>
         <SearchLink
           params={{ sex: ESexFilter.Female }}
-          className={getGenderLinkStyle(ESexFilter.Female)}
+          className={getGenderLinkStyle(ESexFilter.Female, sexParam)}
         >
           Female
         </SearchLink>
@@ -93,7 +95,7 @@ export const PeopleFilters = () => {
               <SearchLink
                 key={centery}
                 data-cy="century"
-                className={getCenturiesLinkStyle(centery)}
+                className={getCenturiesLinkStyle(centery, centuriesParam)}
                 params={{ centuries: toggleCentries(centery) }}
               >
                 {centery}

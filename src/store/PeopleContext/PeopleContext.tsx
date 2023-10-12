@@ -6,13 +6,14 @@ import {
   useMemo,
   useState,
 } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useSearchParams } from 'react-router-dom';
 
 import { Person } from '../../types';
 import { getPeople } from '../../api';
+import { getPreparedPeople } from '../../utils/filterPeople';
 
 interface IInitialContext {
-  people: Person[];
+  preparedPeople: Person[];
   isLoading: boolean;
   errorMessage: string;
 }
@@ -22,7 +23,7 @@ type TPeopleContext = {
 };
 
 const initialContext: IInitialContext = {
-  people: [],
+  preparedPeople: [],
   isLoading: false,
   errorMessage: 'Something went wrong',
 };
@@ -30,9 +31,24 @@ const initialContext: IInitialContext = {
 export const PeopleProvider = createContext(initialContext);
 
 export const PeopleContext: FC<TPeopleContext> = ({ children }) => {
+  const [searchParams] = useSearchParams();
+  const sexParam = searchParams.get('sex') ?? '';
+  const queryParam = searchParams.get('query') ?? '';
+  const centuriesParam = searchParams.getAll('centuries') ?? [];
+  const sortBy = searchParams.get('sort') ?? '';
+  const orderBy = searchParams.get('order') ?? '';
+
   const [people, setPeople] = useState<Person[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+
+  const preparedPeople = getPreparedPeople(people, {
+    sexParam,
+    queryParam,
+    centuriesParam,
+    sortBy,
+    orderBy,
+  });
 
   const { pathname } = useLocation();
 
@@ -63,10 +79,10 @@ export const PeopleContext: FC<TPeopleContext> = ({ children }) => {
   }, [containsPeople]);
 
   const initialValue = useMemo(() => ({
-    people,
+    preparedPeople,
     isLoading,
     errorMessage,
-  }), [people, isLoading, errorMessage]);
+  }), [preparedPeople, isLoading, errorMessage]);
 
   return (
     <PeopleProvider.Provider value={initialValue}>
