@@ -1,6 +1,6 @@
 import React from 'react';
 import classNames from 'classnames';
-import { GenderStatus } from '../utils/constans';
+import { CENTURIES_NUMBERS, GenderStatus } from '../utils/constans';
 import { SearchLink } from './SearchLink';
 import { getSearchWith } from '../utils/searchHelper';
 import { SearchOptions } from '../utils/SearchOptions';
@@ -92,7 +92,7 @@ export const PeopleFilters: React.FC<Props> = ({
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            {['16', '17', '18', '19', '20'].map(century => {
+            {CENTURIES_NUMBERS.map(century => {
               const isCenturyIncluded = centuries.includes(century);
               const updatedCenturies = isCenturyIncluded
                 ? centuries.filter(cent => cent !== century)
@@ -103,7 +103,8 @@ export const PeopleFilters: React.FC<Props> = ({
                   key={century}
                   data-cy="century"
                   className={classNames(
-                    'button mr-1',
+                    'button',
+                    'mr-1',
                     { 'is-info': centuries.includes(century) },
                   )}
                   onClick={() => centuryToggle(century)}

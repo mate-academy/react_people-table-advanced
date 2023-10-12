@@ -7,6 +7,7 @@ import { Person } from '../types';
 import { SearchOptions } from '../utils/SearchOptions';
 import { SortType } from '../utils/SortType';
 import { SearchParams } from '../utils/searchHelper';
+import { ONE_HUNDRED_YEARS } from '../utils/constans';
 
 const isIncludeQuery = (
   personName: Person | undefined,
@@ -15,20 +16,21 @@ const isIncludeQuery = (
   personName?.name.toLocaleLowerCase().trim().includes(normalizeQuery)
 );
 
-const filterPeople = (
+const getPreparedPeople = (
   people: Person[],
   sex: string,
   query: string,
   centuries: string[],
   sort: string,
+  order: string,
 ): Person[] => {
   let preparedPeople = [...people];
   const normalizeQuery = query.toLocaleLowerCase().trim();
-  const centuriesToNumber = centuries.map(c => Number(c));
+  const centuriesToNumber = centuries.map(centurie => +centurie);
 
-  if (centuriesToNumber.length > 0) {
+  if (centuriesToNumber.length) {
     preparedPeople = preparedPeople.filter(person => {
-      const personCentury = Math.ceil(person.born / 100);
+      const personCentury = Math.ceil(person.born / ONE_HUNDRED_YEARS);
 
       return centuriesToNumber.includes(personCentury) && person;
     });
@@ -47,16 +49,24 @@ const filterPeople = (
   }
 
   if (sort) {
-    preparedPeople.sort((personA, personB) => {
+    preparedPeople.sort((a, b) => {
       switch (sort) {
         case SortType.Name:
-          return personA.name.localeCompare(personB.name);
+          return order
+            ? b.name.localeCompare(a.name)
+            : a.name.localeCompare(b.name);
         case SortType.Sex:
-          return personA.sex.localeCompare(personB.sex);
+          return order
+            ? b.sex.localeCompare(a.sex)
+            : a.sex.localeCompare(b.sex);
         case SortType.Born:
-          return personA.born - personB.born;
+          return order
+            ? b.born - a.born
+            : a.born - b.born;
         case SortType.Died:
-          return personA.died - personB.died;
+          return order
+            ? b.died - a.died
+            : a.died - b.died;
         default:
           return 0;
       }
@@ -95,14 +105,6 @@ export const PeoplePage = () => {
     return { ...person, mother, father };
   });
 
-  const visiblePeople = filterPeople(
-    peopleWithParents,
-    sex,
-    query,
-    centuries,
-    sort,
-  );
-
   const getSortParams = (sortType: SortType): SearchParams => {
     if (sort !== sortType) {
       return {
@@ -120,6 +122,15 @@ export const PeoplePage = () => {
       [SearchOptions.Order]: null,
     };
   };
+
+  const visiblePeople = getPreparedPeople(
+    peopleWithParents,
+    sex,
+    query,
+    centuries,
+    sort,
+    order,
+  );
 
   return (
     <>
@@ -141,15 +152,22 @@ export const PeoplePage = () => {
 
           <div className="column">
             <div className="box table-container">
-              <PeopleTable
-                visiblePeople={visiblePeople}
-                isError={isError}
-                isLoading={isLoading}
-                people={people}
-                sort={sort}
-                order={order}
-                getSortParams={getSortParams}
-              />
+              {query && !visiblePeople.length
+                ? (
+                  <p>
+                    There are no people matching the current search criteria
+                  </p>
+                ) : (
+                  <PeopleTable
+                    visiblePeople={visiblePeople}
+                    isError={isError}
+                    isLoading={isLoading}
+                    people={people}
+                    sort={sort}
+                    order={order}
+                    getSortParams={getSortParams}
+                  />
+                )}
             </div>
           </div>
         </div>
