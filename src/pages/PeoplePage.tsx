@@ -121,7 +121,6 @@ export const PeoplePage: React.FC = () => {
                   />
                 ))}
 
-
               {isPeople
                 && (
                   <p data-cy="noPeopleMessage">

@@ -1,3 +1,4 @@
+import classNames from 'classnames';
 import { Person } from './types';
 import { SortBy } from './types/SortBy';
 import { SortOrder } from './types/SortOrder';
@@ -49,4 +50,15 @@ export function sortPeople(
         return 0;
     }
   });
+}
+
+export function setIconClass(
+  columnName: SortBy,
+  oldSort: string | null,
+  oldOrder: string | null,
+): string {
+  return classNames('fas',
+    { 'fa-sort-up': columnName === oldSort && !oldOrder },
+    { 'fa-sort-down': columnName === oldSort && oldOrder },
+    { 'fa-sort': columnName });
 }

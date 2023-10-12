@@ -1,18 +1,11 @@
 import { Link, useSearchParams } from 'react-router-dom';
-import classNames from 'classnames';
 import { SortBy } from '../../types/SortBy';
+import { setIconClass } from '../../helper';
 
 export const PeopleSort = () => {
   const [searchParams] = useSearchParams();
   const oldSort = searchParams.get('sort');
   const oldOrder = searchParams.get('order');
-
-  const setIconClass = (columnName: SortBy): string => {
-    return classNames('fas',
-      { 'fa-sort-up': columnName === oldSort && !oldOrder },
-      { 'fa-sort-down': columnName === oldSort && oldOrder },
-      { 'fa-sort': columnName });
-  };
 
   const addSortToUrlParams = (sort: SortBy): URLSearchParams => {
     const params = new URLSearchParams(searchParams);
@@ -49,7 +42,7 @@ export const PeopleSort = () => {
             }}
           >
             <span className="icon">
-              <i className={setIconClass(SortBy.Name)} />
+              <i className={setIconClass(SortBy.Name, oldSort, oldOrder)} />
             </span>
           </Link>
         </span>
@@ -65,7 +58,7 @@ export const PeopleSort = () => {
             }}
           >
             <span className="icon">
-              <i className={setIconClass(SortBy.Sex)} />
+              <i className={setIconClass(SortBy.Sex, oldSort, oldOrder)} />
             </span>
           </Link>
         </span>
@@ -81,7 +74,7 @@ export const PeopleSort = () => {
             }}
           >
             <span className="icon">
-              <i className={setIconClass(SortBy.Born)} />
+              <i className={setIconClass(SortBy.Born, oldSort, oldOrder)} />
             </span>
           </Link>
         </span>
@@ -97,7 +90,7 @@ export const PeopleSort = () => {
             }}
           >
             <span className="icon">
-              <i className={setIconClass(SortBy.Died)} />
+              <i className={setIconClass(SortBy.Died, oldSort, oldOrder)} />
             </span>
           </Link>
         </span>
