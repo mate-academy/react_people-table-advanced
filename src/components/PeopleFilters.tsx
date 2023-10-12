@@ -24,6 +24,8 @@ export const PeopleFilters = ({
   const sexAll = currentSearchParams.get('sex') || '';
   const searchAll = currentSearchParams.get('search');
   const centuriesArray = ['16', '17', '18', '19', '20'];
+  const sexFemale = 'f';
+  const sexMale = 'm';
 
   const onInput = (event: React.ChangeEvent<HTMLInputElement>) => {
     const sendForm: {
@@ -106,17 +108,17 @@ export const PeopleFilters = ({
         </Link>
         <Link
           className={classNames({
-            'is-active': sexAll?.includes('m'),
+            'is-active': sexAll?.includes(sexMale),
           })}
-          to={handleClick({ sex: 'm' })}
+          to={handleClick({ sex: sexMale })}
         >
           Male
         </Link>
         <Link
           className={classNames({
-            'is-active': sexAll?.includes('f'),
+            'is-active': sexAll?.includes(sexFemale),
           })}
-          to={handleClick({ sex: 'f' })}
+          to={handleClick({ sex: sexFemale })}
         >
           Female
         </Link>
