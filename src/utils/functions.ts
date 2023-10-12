@@ -23,15 +23,31 @@ export const hasIncludeQuery = (name: string, query: string) => {
   return name.toLowerCase().includes(normalizedQuery);
 };
 
-export const getFilteredPeople = (people: Person[], search: string) => {
-  const params = new URLSearchParams(search);
+const sortPeople = (people: Person[], sort: string) => {
+  people.sort((a, b) => {
+    switch (sort) {
+      case TypeSort.Name:
+        return a.name.localeCompare(b.name);
+      case TypeSort.Sex:
+        return a.sex.localeCompare(b.sex);
+      case TypeSort.Born:
+        return a.born - b.born;
+      case TypeSort.Died:
+        return a.died - b.died;
+      default:
+        return 0;
+    }
+  });
+};
 
-  const sex = params.get('sex') || '';
-  const centuries = params.getAll('centuries') || [];
-  const query = params.get('query') || '';
-  const sort = params.get('sort') || '';
-  const order = params.get('order') || '';
-
+export const getFilteredPeople = (
+  people: Person[],
+  sex: string,
+  centuries: string[],
+  query: string,
+  sort: string,
+  order: string,
+) => {
   let preparedPeople = [...people];
 
   if (sex.length > 0) {
@@ -57,20 +73,7 @@ export const getFilteredPeople = (people: Person[], search: string) => {
   }
 
   if (sort) {
-    preparedPeople.sort((a, b) => {
-      switch (sort) {
-        case TypeSort.Name:
-          return a.name.localeCompare(b.name);
-        case TypeSort.Sex:
-          return a.sex.localeCompare(b.sex);
-        case TypeSort.Born:
-          return a.born - b.born;
-        case TypeSort.Died:
-          return a.died - b.died;
-        default:
-          return 0;
-      }
-    });
+    sortPeople(preparedPeople, sort);
   }
 
   if (order) {
@@ -78,4 +81,21 @@ export const getFilteredPeople = (people: Person[], search: string) => {
   }
 
   return preparedPeople;
+};
+
+export const preparePeople = (persons: Person[]) => {
+  return persons.map((personData) => {
+    const mother = getMotherPerson(
+      persons, personData,
+    );
+    const father = getFatherPerson(
+      persons, personData,
+    );
+
+    return {
+      ...personData,
+      mother,
+      father,
+    };
+  });
 };

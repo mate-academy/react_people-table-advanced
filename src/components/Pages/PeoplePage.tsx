@@ -4,9 +4,8 @@ import { useLocation } from 'react-router-dom';
 import { Person } from '../../types';
 import { getPeople } from '../../api';
 import {
-  getFatherPerson,
   getFilteredPeople,
-  getMotherPerson,
+  preparePeople,
 } from '../../utils/functions';
 import { PeopleFilters } from '../PeopleFilters';
 import { Loader } from '../Loader';
@@ -19,23 +18,6 @@ export const PeoplePage = () => {
 
   const { search } = useLocation();
 
-  const preparePeople = (persons: Person[]) => {
-    return persons.map((personData) => {
-      const mother = getMotherPerson(
-        persons, personData,
-      );
-      const father = getFatherPerson(
-        persons, personData,
-      );
-
-      return {
-        ...personData,
-        mother,
-        father,
-      };
-    });
-  };
-
   useEffect(() => {
     setIsLoading(true);
 
@@ -47,7 +29,22 @@ export const PeoplePage = () => {
       .finally(() => setIsLoading(false));
   }, []);
 
-  const preparedPeople = getFilteredPeople(people, search);
+  const params = new URLSearchParams(search);
+
+  const sex = params.get('sex') || '';
+  const centuries = params.getAll('centuries') || [];
+  const query = params.get('query') || '';
+  const sort = params.get('sort') || '';
+  const order = params.get('order') || '';
+
+  const preparedPeople = getFilteredPeople(
+    people,
+    sex,
+    centuries,
+    query,
+    sort,
+    order,
+  );
 
   const isPeopleNotExist = !isLoading
     && !isErrorHappened
