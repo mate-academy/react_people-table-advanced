@@ -155,58 +155,52 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
           </thead>
 
           <tbody>
-            {displayedPeople.map((person) => (
-              <tr
-                data-cy="person"
-                key={person.slug}
-                className={selectedPersonSlug === person.slug ? 'has-background-warning' : ''}
-              >
-                <td>
-                  <Link
-                    to={`/people/${person.slug}/?sort=${sort}`}
-                    className={person.sex === 'f' ? 'has-text-danger' : ''}
-                  >
-                    {person.name}
-                  </Link>
-                </td>
-                <td>{person.sex}</td>
-                <td>{person.born}</td>
-                <td>{person.died}</td>
+            {displayedPeople.map((person) => {
+              const motherSlug = people.find((p) => p.name === person.motherName)?.slug;
+              const fatherSlug = people.find((p) => p.name === person.fatherName)?.slug;
 
-                {/* <td>
-                  {person.mother
-                    ? (
-                      <Link
-                        to={`/people/${person.motherName}/?sort=${sort}`}
-                        className={person.sex === 'f' ? 'has-text-danger' : ''}
-                      >
-                        {person.mother.name}
-                      </Link>
-                    ) : '-'}
-                </td> */}
-                <td>
-                  {person.motherName && people.some(p => p.name === person.motherName)
-                    ? (
-                      <Link
-                        to={`/people/${person.mother?.slug}/?sort=${sort}`}
-                        className="has-text-danger"
-                      >
-                        {person.motherName}
-                      </Link>
-                    ) : person.motherName || '-'}
-                </td>
-                <td>
-                  {person.fatherName && people.some(p => p.name === person.fatherName)
-                    ? (
-                      <Link
-                        to={`/people/${person.father?.slug}/?sort=${sort}`}
-                      >
-                        {person.fatherName}
-                      </Link>
-                    ) : person.fatherName || '-'}
-                </td>
-              </tr>
-            ))}
+              return (
+                <tr
+                  data-cy="person"
+                  key={person.slug}
+                  className={selectedPersonSlug === person.slug ? 'has-background-warning' : ''}
+                >
+                  <td>
+                    <Link
+                      to={`/people/${person.slug}/?sort=${sort}`}
+                      className={person.sex === 'f' ? 'has-text-danger' : ''}
+                    >
+                      {person.name}
+                    </Link>
+                  </td>
+                  <td>{person.sex}</td>
+                  <td>{person.born}</td>
+                  <td>{person.died}</td>
+
+                  <td>
+                    {person.motherName && people.some(p => p.name === person.motherName)
+                      ? (
+                        <Link
+                          to={`/people/${motherSlug}/?sort=${sort}`}
+                          className="has-text-danger"
+                        >
+                          {person.motherName}
+                        </Link>
+                      ) : person.motherName || '-'}
+                  </td>
+                  <td>
+                    {person.fatherName && people.some(p => p.name === person.fatherName)
+                      ? (
+                        <Link
+                          to={`/people/${fatherSlug}/?sort=${sort}`}
+                        >
+                          {person.fatherName}
+                        </Link>
+                      ) : person.fatherName || '-'}
+                  </td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       )}
