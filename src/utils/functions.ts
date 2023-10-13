@@ -5,14 +5,9 @@ import { TypeSort } from '../types/TypeSort';
 
 export function getParent(
   persons: Person[],
-  person: Person,
-  mama: string,
+  targetName: string | null,
 ) {
-  if (mama === 'mama') {
-    return persons.find(({ name }: Person) => name === person.motherName);
-  }
-
-  return persons.find(({ name }: Person) => name === person.fatherName);
+  return persons.find(({ name }: Person) => name === targetName) || null;
 }
 
 export const getLinkClass = ({ isActive }: { isActive: boolean }) => {
@@ -54,13 +49,13 @@ export const getFilteredPeople = (
 ) => {
   let preparedPeople = [...people];
 
-  if (sex.length > 0) {
+  if (sex.length) {
     preparedPeople = preparedPeople.filter((person) => {
       return person.sex === sex;
     });
   }
 
-  if (centuries.length > 0) {
+  if (centuries.length) {
     preparedPeople = preparedPeople.filter(person => {
       const numberOfCentury = Math.ceil(person.born / YEARS_PER_CENTURY);
 
@@ -89,12 +84,8 @@ export const getFilteredPeople = (
 
 export const getPreparedPeople = (persons: Person[]) => {
   return persons.map((personData) => {
-    const mother = getParent(
-      persons, personData, 'mama',
-    );
-    const father = getParent(
-      persons, personData, 'papa',
-    );
+    const mother = getParent(persons, personData.motherName);
+    const father = getParent(persons, personData.fatherName);
 
     return {
       ...personData,

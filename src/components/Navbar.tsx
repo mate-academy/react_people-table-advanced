@@ -1,7 +1,10 @@
-import { NavLink } from 'react-router-dom';
+import { NavLink, useSearchParams } from 'react-router-dom';
 import { getLinkClass } from '../utils/functions';
 
 export const Navbar = () => {
+  const [params] = useSearchParams();
+  const restOfParams = params.toString();
+
   return (
     <nav
       data-cy="nav"
@@ -15,7 +18,7 @@ export const Navbar = () => {
             Home
           </NavLink>
 
-          <NavLink to="/people" className={getLinkClass}>
+          <NavLink to={`/people?${restOfParams}`} className={getLinkClass}>
             People
           </NavLink>
         </div>
