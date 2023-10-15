@@ -4,7 +4,9 @@ import {
   useSearchParams,
 } from 'react-router-dom';
 import {
+  // useCallback,
   useEffect,
+  // useMemo,
   useState,
 } from 'react';
 import classNames from 'classnames';
@@ -14,10 +16,10 @@ import { Loader } from './Loader';
 import { SearchLink } from './SearchLink';
 import { SearchParams } from '../utils/searchHelper';
 
-export enum SortType {
-  NONE,
-  ALPHABET,
-}
+// export enum SortType {
+//   NONE,
+//   ALPHABET,
+// }
 
 export const PeopleTable: React.FC = () => {
   const [people, setPeople] = useState([] as Person[]);
@@ -27,9 +29,15 @@ export const PeopleTable: React.FC = () => {
   const [isSelected, setIsSelected] = useState(false);
   const [copy, setCopy] = useState(people);
   const [searchParams] = useSearchParams();
-
   const sort = searchParams.get('sort');
   const order = searchParams.get('order');
+  const sex = searchParams.get('sex');
+  // const all = searchParams.toString().length;
+  // const [count, setCount] = useState(0)
+
+  // useCallback(() => {
+  //   setCount(prevState => prevState + 1);
+  // }, [all]);
 
   useEffect(() => {
     setIsLoading(true);
@@ -78,6 +86,12 @@ export const PeopleTable: React.FC = () => {
     if (sort === 'died') {
       list = people.sort(
         (first, second) => (first.died > second.died ? 1 : -1),
+      );
+    }
+
+    if (sex) {
+      list = people.sort(
+        (first, second) => getSortElementComparison(second.sex, first.sex),
       );
     }
 

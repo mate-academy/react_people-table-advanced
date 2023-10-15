@@ -1,12 +1,22 @@
+/* eslint-disable */
+// import { SearchParams } from '../utils/searchHelper';
+import { SearchLink } from './SearchLink';
+// import { useSearchParams } from 'react-router-dom';
+
 export const PeopleFilters = () => {
+  // const [searchParams] = useSearchParams();
+
+  function addFilters() {
+    return { sex: 'm' };
+  }
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        <a className="is-active" href="#/people">All</a>
-        <a className="" href="#/people?sex=m">Male</a>
-        <a className="" href="#/people?sex=f">Female</a>
+        <SearchLink className="is-active" params={{ sex: 'none' }}>All</SearchLink>
+        <SearchLink className="" params={addFilters() as any}>Male</SearchLink>
+        <SearchLink className="" params={{ sex: 'f' }}>Female</SearchLink>
       </p>
 
       <div className="panel-block">

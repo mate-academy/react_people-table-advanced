@@ -1,5 +1,4 @@
 import { PeopleFilters } from './PeopleFilters';
-// import { Loader } from './Loader';
 import { PeopleTable } from './PeopleTable';
 
 export const PeoplePage = () => {
