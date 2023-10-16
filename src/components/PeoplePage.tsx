@@ -60,12 +60,14 @@ export const PeoplePage = () => {
 
   const handleSortChange = (sortBy: string) => {
     let result;
+    const isSortBy = sort === sortBy;
+    const isDesc = order === 'desc';
 
-    if (sort === sortBy && order === 'desc') {
+    if (isSortBy && isDesc) {
       result = { sort: null, order: null };
-    } else if (sort !== sortBy && order !== 'desc') {
+    } else if (!isSortBy && !isDesc) {
       result = { sort: sortBy, order: null };
-    } else if (sort !== sortBy && order === 'desc') {
+    } else if (!isSortBy && isDesc) {
       result = { sort: sortBy, order: null };
     } else {
       result = { sort: sortBy, order: 'desc' };
