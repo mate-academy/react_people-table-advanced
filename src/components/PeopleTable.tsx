@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import { NavLink, useParams, useSearchParams } from 'react-router-dom';
 import cn from 'classnames';
-import { MagicWords, Person } from '../types';
+import { Person, Sex } from '../types';
 
 type Props = {
   person: Person;
@@ -11,7 +11,7 @@ type Props = {
 export const PeopleTable: FC<Props> = ({ person, getParentLink }) => {
   const [searchParams] = useSearchParams();
   const generateClassForPerson = cn({
-    'has-text-danger': person.sex === MagicWords.FEMALE,
+    'has-text-danger': person.sex === Sex.FEMALE,
   });
 
   const { slug } = useParams();
@@ -30,7 +30,7 @@ export const PeopleTable: FC<Props> = ({ person, getParentLink }) => {
               search: searchParams.toString(),
             }}
             className={cn({
-              'has-text-danger': parent?.sex === MagicWords.FEMALE,
+              'has-text-danger': parent?.sex === Sex.FEMALE,
             })}
           >
             {parent?.name}

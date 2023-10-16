@@ -1,7 +1,7 @@
 import { useEffect, useState, useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import cn from 'classnames';
-import { ErrorOption, Person } from '../types';
+import { ErrorOption, Person, SortBy } from '../types';
 import { PeopleFilters } from './PeopleFilters';
 import { Loader } from './Loader';
 import { PeopleTable } from './PeopleTable';
@@ -10,7 +10,7 @@ import { SearchLink } from './SearchLink';
 export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [errorOption, setErrorOption] = useState(ErrorOption.noError);
+  const [errorOption, setErrorOption] = useState(ErrorOption.NoError);
   const PEOPLE_URL
   = 'https://mate-academy.github.io/react_people-table/api/people.json';
 
@@ -49,7 +49,7 @@ export const PeoplePage = () => {
       params.delete('query');
     }
 
-    setSearchParams(params);
+    setSearchParams(params.toString());
   };
 
   const handleCenturiesChange = (century: string) => {
@@ -105,17 +105,17 @@ export const PeoplePage = () => {
     const sortedPeople = sort
       ? [...filteredPeople].sort((a, b) => {
         switch (sort) {
-          case 'name':
+          case SortBy.ByName:
             return !order
               ? a.name.localeCompare(b.name)
               : b.name.localeCompare(a.name);
-          case 'sex':
+          case SortBy.BySex:
             return !order
               ? a.sex.localeCompare(b.sex)
               : b.sex.localeCompare(a.sex);
-          case 'born':
+          case SortBy.ByBorn:
             return !order ? a.born - b.born : b.born - a.born;
-          case 'died':
+          case SortBy.ByDied:
             return !order ? a.died - b.died : b.died - a.died;
           default:
             return 0;
@@ -152,7 +152,7 @@ export const PeoplePage = () => {
       ))}
       <h1 className="title">People Page</h1>
       {isLoading && <Loader />}
-      {!isLoading && errorOption === ErrorOption.noError && (
+      {!isLoading && errorOption === ErrorOption.NoError && (
         <div className="block">
           <div className="columns is-desktop is-flex-direction-row-reverse">
             <div className="column is-7-tablet is-narrow-desktop">
@@ -168,8 +168,8 @@ export const PeoplePage = () => {
 
             <div className="column">
               <div className="box table-container">
-                {isLoading && errorOption === ErrorOption.noError && <Loader />}
-                {!isLoading && errorOption === ErrorOption.noError && (
+                {isLoading && errorOption === ErrorOption.NoError && <Loader />}
+                {!isLoading && errorOption === ErrorOption.NoError && (
                   <table
                     data-cy="peopleTable"
                     className="table is-striped

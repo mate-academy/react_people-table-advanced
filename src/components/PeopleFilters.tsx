@@ -1,6 +1,7 @@
 import { FC } from 'react';
 import cn from 'classnames';
 import { SearchLink } from './SearchLink';
+import { Sex } from '../types';
 
 type Props = {
   query: string;
@@ -25,6 +26,8 @@ export const PeopleFilters: FC<Props> = ({
   handleCenturiesChange,
   resetAll,
 }) => {
+  const centuriesArray = ['16', '17', '18', '19', '20'];
+
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
@@ -37,14 +40,14 @@ export const PeopleFilters: FC<Props> = ({
           All
         </SearchLink>
         <SearchLink
-          className={cn({ 'is-active': sex === 'm' })}
-          params={{ sex: 'm' }}
+          className={cn({ 'is-active': sex === Sex.MALE })}
+          params={{ sex: Sex.MALE }}
         >
           Male
         </SearchLink>
         <SearchLink
-          className={cn({ 'is-active': sex === 'f' })}
-          params={{ sex: 'f' }}
+          className={cn({ 'is-active': sex === Sex.FEMALE })}
+          params={{ sex: Sex.FEMALE }}
         >
           Female
         </SearchLink>
@@ -70,55 +73,18 @@ export const PeopleFilters: FC<Props> = ({
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            <SearchLink
-              data-cy="century"
-              className={cn('button mr-1', {
-                'is-info': centuries.includes('16'),
-              })}
-              params={{ centuries: handleCenturiesChange('16') }}
-            >
-              16
-            </SearchLink>
-
-            <SearchLink
-              data-cy="century"
-              className={cn('button mr-1', {
-                'is-info': centuries.includes('17'),
-              })}
-              params={{ centuries: handleCenturiesChange('17') }}
-            >
-              17
-            </SearchLink>
-
-            <SearchLink
-              data-cy="century"
-              className={cn('button mr-1', {
-                'is-info': centuries.includes('18'),
-              })}
-              params={{ centuries: handleCenturiesChange('18') }}
-            >
-              18
-            </SearchLink>
-
-            <SearchLink
-              data-cy="century"
-              className={cn('button mr-1', {
-                'is-info': centuries.includes('19'),
-              })}
-              params={{ centuries: handleCenturiesChange('19') }}
-            >
-              19
-            </SearchLink>
-
-            <SearchLink
-              data-cy="century"
-              className={cn('button mr-1', {
-                'is-info': centuries.includes('20'),
-              })}
-              params={{ centuries: handleCenturiesChange('20') }}
-            >
-              20
-            </SearchLink>
+            {centuriesArray.map((century) => (
+              <SearchLink
+                key={century}
+                data-cy="century"
+                className={cn('button mr-1', {
+                  'is-info': centuries.includes(century),
+                })}
+                params={{ centuries: handleCenturiesChange(century) }}
+              >
+                {century}
+              </SearchLink>
+            ))}
           </div>
 
           <div className="level-right ml-4">

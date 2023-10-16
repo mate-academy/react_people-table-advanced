@@ -11,18 +11,20 @@ export interface Person {
 }
 
 export enum ErrorOption {
-  noError,
+  NoError,
   Wrong,
   Empty,
-}
-
-export enum MagicWords {
-  FEMALE = 'f',
-  MALE = 'm',
 }
 
 export enum Sex {
   All = 'all',
   MALE = 'm',
   FEMALE = 'f',
+}
+
+export enum SortBy {
+  ByName = 'name',
+  BySex = 'sex',
+  ByBorn = 'born',
+  ByDied = 'died',
 }
