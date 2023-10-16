@@ -59,18 +59,22 @@ export const PeoplePage = () => {
   };
 
   const handleSortChange = (sortBy: string) => {
-    let result;
+    let result: {
+      sort: string | null, order: string | null
+    } = { sort: sortBy, order: 'desc' };
     const isSortBy = sort === sortBy;
     const isDesc = order === 'desc';
 
     if (isSortBy && isDesc) {
       result = { sort: null, order: null };
-    } else if (!isSortBy && !isDesc) {
+    }
+
+    if (!isSortBy && !isDesc) {
       result = { sort: sortBy, order: null };
-    } else if (!isSortBy && isDesc) {
+    }
+
+    if (!isSortBy && isDesc) {
       result = { sort: sortBy, order: null };
-    } else {
-      result = { sort: sortBy, order: 'desc' };
     }
 
     return result;
