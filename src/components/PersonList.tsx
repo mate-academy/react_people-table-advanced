@@ -11,7 +11,7 @@ export const PersonList: React.FC<Props> = ({
 }) => {
   return (
     <>
-      {people && people.map(person => (
+      {people?.map(person => (
         <Human
           key={person.slug}
           person={person}

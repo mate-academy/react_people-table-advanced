@@ -39,13 +39,13 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
     >
       <thead>
         <tr>
-          {tableSortButtons.map((button) => {
-            const sortType = button.toLowerCase();
+          {tableSortButtons.map((sortButton) => {
+            const sortType = sortButton.toLowerCase();
 
             return (
               <th>
                 <span className="is-flex is-flex-wrap-nowrap">
-                  {button}
+                  {sortButton}
                   <SearchLink
                     params={{
                       sort: handleSortTypeChange(sortType) || null,

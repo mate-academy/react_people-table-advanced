@@ -9,6 +9,56 @@ function checkQuery(string: string, query: string): boolean {
   return preparedString.includes(preparedQuery);
 }
 
+function getSortedPeople(
+  people: Person[],
+  sort: string | null,
+  order: string | null,
+) {
+  let sortedPeople = people;
+
+  if (sort) {
+    switch (sort) {
+      case (SortType.Name): {
+        sortedPeople = sortedPeople.sort(
+          (a, b) => a.name.localeCompare(b.name),
+        );
+        break;
+      }
+
+      case (SortType.Sex): {
+        sortedPeople = sortedPeople.sort(
+          (a, b) => a.sex.localeCompare(b.sex),
+        );
+        break;
+      }
+
+      case (SortType.Born): {
+        sortedPeople = sortedPeople.sort(
+          (a, b) => a.born - b.born,
+        );
+        break;
+      }
+
+      case (SortType.Died): {
+        sortedPeople = sortedPeople.sort(
+          (a, b) => a.died - b.died,
+        );
+        break;
+      }
+
+      default: {
+        return sortedPeople;
+      }
+    }
+
+    if (order) {
+      sortedPeople = sortedPeople.reverse();
+    }
+  }
+
+  return sortedPeople;
+}
+
 export function getPreparedPeople(
   people: Person[],
   sex: string | null,
@@ -31,46 +81,6 @@ export function getPreparedPeople(
     });
   }
 
-  if (sort) {
-    switch (sort) {
-      case (SortType.Name): {
-        preparedPeople = preparedPeople.sort(
-          (a, b) => a.name.localeCompare(b.name),
-        );
-        break;
-      }
-
-      case (SortType.Sex): {
-        preparedPeople = preparedPeople.sort(
-          (a, b) => a.sex.localeCompare(b.sex),
-        );
-        break;
-      }
-
-      case (SortType.Born): {
-        preparedPeople = preparedPeople.sort(
-          (a, b) => a.born - b.born,
-        );
-        break;
-      }
-
-      case (SortType.Died): {
-        preparedPeople = preparedPeople.sort(
-          (a, b) => a.died - b.died,
-        );
-        break;
-      }
-
-      default: {
-        return preparedPeople;
-      }
-    }
-
-    if (order) {
-      preparedPeople = preparedPeople.reverse();
-    }
-  }
-
   if (centuries.length !== 0) {
     preparedPeople = preparedPeople.filter(person => {
       const century = Math.ceil(person.born / 100).toString();
@@ -86,6 +96,15 @@ export function getPreparedPeople(
       || checkQuery(person.fatherName ?? '', query);
     });
   }
+
+  getSortedPeople(preparedPeople, sort, order);
+
+  preparedPeople = preparedPeople.map((person) => {
+    const mother = people.find(mom => mom.name === person.motherName);
+    const father = people.find(dad => dad.name === person.fatherName);
+
+    return { ...person, mother, father };
+  });
 
   return preparedPeople;
 }

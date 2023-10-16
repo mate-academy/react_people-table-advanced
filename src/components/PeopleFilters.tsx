@@ -3,6 +3,7 @@ import { useSearchParams } from 'react-router-dom';
 import { FilterParams, PersonSex } from '../types/Filters';
 import { SearchLink } from './SearchLink';
 import { filterCenturyButtons } from '../utils/constants';
+import { getSearchWith } from '../utils/searchHelper';
 
 export const PeopleFilters: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -10,21 +11,21 @@ export const PeopleFilters: React.FC = () => {
   const centuries = searchParams.getAll(FilterParams.Centuries) || [];
   const sex = searchParams.get(FilterParams.Sex) || null;
 
-  function isCenturySelected(century: string) {
+  function checkSelectedCentury(century: string) {
     return centuries.includes(century);
   }
 
-  const handleFiltersByCenturyChange = (century: string) => {
+  const setFiltersByCentury = (century: string) => {
     return centuries.includes(century)
       ? centuries.filter(filter => filter !== century)
       : [...centuries, century];
   };
 
   const handleQueryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const params = new URLSearchParams(searchParams);
+    const paramsToUpdate = { query: event.target.value };
+    const search = getSearchWith(searchParams, paramsToUpdate);
 
-    params.set(FilterParams.Query, event.target.value);
-    setSearchParams(params);
+    setSearchParams(search);
   };
 
   return (
@@ -78,15 +79,15 @@ export const PeopleFilters: React.FC = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            {filterCenturyButtons.map(button => (
+            {filterCenturyButtons.map(centuryButton => (
               <SearchLink
                 data-cy="century"
                 className={classNames('button mr-1', {
-                  'is-info': isCenturySelected(`${button}`),
+                  'is-info': checkSelectedCentury(`${centuryButton}`),
                 })}
-                params={{ centuries: handleFiltersByCenturyChange(`${button}`) }}
+                params={{ centuries: setFiltersByCentury(`${centuryButton}`) }}
               >
-                {button}
+                {centuryButton}
               </SearchLink>
             ))}
           </div>

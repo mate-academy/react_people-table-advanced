@@ -38,13 +38,13 @@ export const Human: React.FC<Props> = ({
       <td>{died}</td>
 
       <td>
-        {motherName && mother
+        {mother
           ? <PersonLink person={mother} />
           : (motherName || '-')}
       </td>
 
       <td>
-        {fatherName && father
+        {father
           ? <PersonLink person={father} />
           : (fatherName || '-')}
       </td>

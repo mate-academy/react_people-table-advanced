@@ -17,7 +17,7 @@ export const PeoplePage = () => {
   const order = searchParams.get(FilterParams.Order) || null;
 
   const [people, setPeople] = useState<Person[]>([]);
-  const [errorMessage, setErrorMessage] = useState<string>();
+  const [errorMessage, setErrorMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
@@ -42,16 +42,9 @@ export const PeoplePage = () => {
     order,
   );
 
-  const peopleWithParents = preparedPeople.map((person) => {
-    const mother = people.find(mom => mom.name === person.motherName);
-    const father = people.find(dad => dad.name === person.fatherName);
-
-    return { ...person, mother, father };
-  });
-
   const isNoPeopleMessage = !people.length && !errorMessage && !isLoading;
   const isErrorMessage = errorMessage && !isLoading;
-  const isShowPeople = !isLoading && !isErrorMessage && !!preparedPeople.length;
+  const isShowPeople = !isErrorMessage && !!preparedPeople.length;
   const isNoMatchingPeople = !preparedPeople.length && query;
 
   return (
@@ -61,7 +54,7 @@ export const PeoplePage = () => {
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
           <div className="column is-7-tablet is-narrow-desktop">
-            <PeopleFilters />
+            {!isLoading && <PeopleFilters />}
           </div>
 
           <div className="column">
@@ -86,7 +79,7 @@ export const PeoplePage = () => {
                 </p>
               )}
 
-              {isShowPeople && (<PeopleTable people={peopleWithParents} />)}
+              {isShowPeople && (<PeopleTable people={preparedPeople} />)}
             </div>
           </div>
         </div>
