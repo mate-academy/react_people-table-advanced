@@ -3,14 +3,23 @@ import classNames from 'classnames';
 import { useSearchParams } from 'react-router-dom';
 import { SearchLink } from './SearchLink';
 import { SearchParams, getSearchWith } from '../utils/searchHelper';
+import { CENTURIES_FOR_FILTERING } from '../constants';
 
-const centuriesForFiltering = ['16', '17', '18', '19', '20'];
+function onToggleCenturies(centuries: string[], century: string) {
+  return centuries.includes(century)
+    ? centuries.filter((centuryNew) => century !== centuryNew)
+    : [...centuries, century];
+}
 
 export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const centuries = searchParams.getAll('centuries') || [];
   const sex = searchParams.get('sex') || '';
   const query = searchParams.get('query') || '';
+
+  const FEMALE_SEX = 'f';
+  const MALE_SEX = 'm';
+  const ALL = '';
 
   function setSearchWith(paramsToUpdate: SearchParams) {
     const search = getSearchWith(searchParams, paramsToUpdate);
@@ -22,12 +31,6 @@ export const PeopleFilters = () => {
     setSearchWith({ query: event.target.value });
   }
 
-  function onToggleCenturies(century: string) {
-    return centuries.includes(century)
-      ? centuries.filter(centuryNew => century !== centuryNew)
-      : [...centuries, century];
-  }
-
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
@@ -35,7 +38,7 @@ export const PeopleFilters = () => {
       <p className="panel-tabs" data-cy="SexFilter">
         <SearchLink
           className={classNames({
-            'is-active': sex === '',
+            'is-active': sex === ALL,
           })}
           params={{ sex: null }}
         >
@@ -43,17 +46,17 @@ export const PeopleFilters = () => {
         </SearchLink>
         <SearchLink
           className={classNames({
-            'is-active': sex === 'm',
+            'is-active': sex === MALE_SEX,
           })}
-          params={{ sex: 'm' }}
+          params={{ sex: MALE_SEX }}
         >
           Male
         </SearchLink>
         <SearchLink
           className={classNames({
-            'is-active': sex === 'f',
+            'is-active': sex === FEMALE_SEX,
           })}
-          params={{ sex: 'f' }}
+          params={{ sex: FEMALE_SEX }}
         >
           Female
         </SearchLink>
@@ -79,7 +82,7 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            {centuriesForFiltering.map((century) => (
+            {CENTURIES_FOR_FILTERING.map((century) => (
               <SearchLink
                 key={century}
                 data-cy="century"
@@ -87,7 +90,7 @@ export const PeopleFilters = () => {
                   'is-info': centuries.includes(century),
                 })}
                 params={{
-                  centuries: onToggleCenturies(century),
+                  centuries: onToggleCenturies(centuries, century),
                 }}
               >
                 {century}
