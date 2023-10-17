@@ -1,14 +1,17 @@
 import { useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { PeopleFilters } from './PeopleFilters';
 import { Loader } from './Loader';
 import { PeopleTable } from './PeopleTable';
-import { Person } from '../types';
 import { getPeople } from '../api';
+import { usePeopleContext } from '../providers/AppProvider';
+import { getPeopleFiltered } from '../utils/Filters';
 
 export const PeoplePage = () => {
-  const [people, setPeople] = useState<Person[]>([]);
+  const { people, setPeople } = usePeopleContext();
   const [error, setError] = useState<string>('');
   const [isLoading, setIsLoading] = useState(false);
+  const [searchParams] = useSearchParams();
 
   useEffect(() => {
     const loadPeople = async () => {
@@ -38,17 +41,26 @@ export const PeoplePage = () => {
               {isLoading && <Loader />}
 
               {error
-              && <p data-cy="peopleLoadingError">Something went wrong</p>}
+                && <p data-cy="peopleLoadingError">Something went wrong</p>}
               {people.length === 0 && !isLoading
-              && (
-                <p data-cy="noPeopleMessage">
-                  There are no people on the server
-                </p>
-              )}
+                && (
+                  <p data-cy="noPeopleMessage">
+                    There are no people on the server
+                  </p>
+                )}
+              {getPeopleFiltered(people,
+                searchParams.get('sex'),
+                searchParams.get('query'),
+                searchParams.getAll('centuries'),
+                searchParams.get('sortBy'),
+                searchParams.get('sortOrder')).length === 0
+                && (
+                  <p>
+                    There are no people matching the current search criteria
+                  </p>
+                )}
 
-              <p>There are no people matching the current search criteria</p>
-
-              {people.length > 0 && <PeopleTable people={people} />}
+              {people.length > 0 && <PeopleTable />}
             </div>
           </div>
         </div>

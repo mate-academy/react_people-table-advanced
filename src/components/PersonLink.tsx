@@ -1,4 +1,4 @@
-import { NavLink, useParams } from 'react-router-dom';
+import { NavLink, useParams, useSearchParams } from 'react-router-dom';
 import cn from 'classnames';
 import { Person } from '../types/Person';
 
@@ -9,6 +9,7 @@ type Props = {
 
 export const PersonLink = ({ personLink, people }: Props) => {
   const { slug } = useParams();
+  const [searchParams] = useSearchParams();
 
   const names = people.map(person => person.name);
 
@@ -26,7 +27,7 @@ export const PersonLink = ({ personLink, people }: Props) => {
     >
       <td>
         <NavLink
-          to={`/people/${personLink.slug}`}
+          to={`/people/${personLink.slug}?${searchParams.toString()}`}
           className={cn({
             'has-text-danger': personLink.sex === 'f',
           })}

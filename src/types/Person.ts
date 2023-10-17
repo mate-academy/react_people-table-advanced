@@ -9,3 +9,6 @@ export interface Person {
   mother?: Person,
   father?: Person,
 }
+
+export type SortBy = string | null;
+export type SortOrder = string | null;
