@@ -8,7 +8,7 @@ export const PeopleFilters = () => {
   const query = searchParams.get('query') || '';
   const centuries = searchParams.getAll('centuries') || [];
   const sex = searchParams.get('sex') || null;
-  const allCenturies = ['16', '17', '19', '20'];
+  const allCenturies = ['16', '17', '18', '19', '20'];
 
   function getNewCenturies(century: string) {
     return centuries.includes(century)
