@@ -8,7 +8,9 @@ import { usePeopleContext } from '../providers/AppProvider';
 import { getPeopleFiltered } from '../utils/Filters';
 
 export const PeoplePage = () => {
-  const { people, setPeople, isLoading, setIsLoading } = usePeopleContext();
+  const {
+    people, setPeople, isLoading, setIsLoading,
+  } = usePeopleContext();
   const [error, setError] = useState<string>('');
 
   const [searchParams] = useSearchParams();
@@ -31,7 +33,7 @@ export const PeoplePage = () => {
     searchParams.get('query'),
     searchParams.getAll('centuries'),
     searchParams.get('sortBy'),
-    searchParams.get('sortOrder')).length === 0
+    searchParams.get('sortOrder')).length === 0;
 
   return (
     <>
