@@ -4,8 +4,11 @@ import { useParams } from 'react-router-dom';
 import { Person } from '../types';
 import { PersonLink } from './personLink';
 import { SearchLink } from './SearchLink';
+import { SearchParams } from '../utils/searchHelper';
+import { SortTypes } from '../types/sortParams';
 
 type Props = {
+  setSearchWith:(params: SearchParams) => void,
   people: Person[],
   allPeople: Person[],
   order: string,
@@ -14,6 +17,7 @@ type Props = {
 };
 
 export const PeopleTable: React.FC<Props> = ({
+  setSearchWith,
   people,
   allPeople,
   order,
@@ -42,6 +46,16 @@ export const PeopleTable: React.FC<Props> = ({
       : personParent;
   };
 
+  const handleSortOrder = (
+    event: React.MouseEvent<HTMLAnchorElement,
+    MouseEvent>, sortOrder: string,
+  ) => {
+    if (order && sort === sortOrder) {
+      setSearchWith({ sort: null, order: null });
+      event.preventDefault();
+    }
+  };
+
   return (
     <table
       data-cy="peopleTable"
@@ -54,22 +68,20 @@ export const PeopleTable: React.FC<Props> = ({
             <span className="is-flex is-flex-wrap-nowrap">
               Name
               <SearchLink
-                onClick={(event) => (
-                  (order && sort === 'name') && event.preventDefault()
-                )}
+                onClick={(event) => handleSortOrder(event, SortTypes.Name)}
                 params={{
                   order: (
-                    (sort === 'name' && !order)
+                    (sort === SortTypes.Name && !order)
                       ? 'desc'
                       : null
                   ),
-                  sort: 'name',
+                  sort: SortTypes.Name,
                 }}
               >
                 <span className="icon">
                   <i className={classNames('fas fa-sort', {
-                    'fa-sort-up': (!order && sort === 'name'),
-                    'fa-sort-down': (order && sort === 'name'),
+                    'fa-sort-up': (!order && sort === SortTypes.Name),
+                    'fa-sort-down': (order && sort === SortTypes.Name),
                   })}
                   />
                 </span>
@@ -81,22 +93,20 @@ export const PeopleTable: React.FC<Props> = ({
             <span className="is-flex is-flex-wrap-nowrap">
               Sex
               <SearchLink
-                onClick={(event) => (
-                  (order && sort === 'sex') && event.preventDefault()
-                )}
+                onClick={(event) => handleSortOrder(event, SortTypes.Sex)}
                 params={{
                   order: (
-                    (sort === 'sex' && !order)
+                    (sort === SortTypes.Sex && !order)
                       ? 'desc'
                       : null
                   ),
-                  sort: 'sex',
+                  sort: SortTypes.Sex,
                 }}
               >
                 <span className="icon">
                   <i className={classNames('fas fa-sort', {
-                    'fa-sort-up': (!order && sort === 'sex'),
-                    'fa-sort-down': (order && sort === 'sex'),
+                    'fa-sort-up': (!order && sort === SortTypes.Sex),
+                    'fa-sort-down': (order && sort === SortTypes.Sex),
                   })}
                   />
                 </span>
@@ -108,22 +118,20 @@ export const PeopleTable: React.FC<Props> = ({
             <span className="is-flex is-flex-wrap-nowrap">
               Born
               <SearchLink
-                onClick={(event) => (
-                  (order && sort === 'born') && event.preventDefault()
-                )}
+                onClick={(event) => handleSortOrder(event, SortTypes.Born)}
                 params={{
                   order: (
-                    (sort === 'born' && !order)
+                    (sort === SortTypes.Born && !order)
                       ? 'desc'
                       : null
                   ),
-                  sort: 'born',
+                  sort: SortTypes.Born,
                 }}
               >
                 <span className="icon">
                   <i className={classNames('fas fa-sort', {
-                    'fa-sort-up': (!order && sort === 'born'),
-                    'fa-sort-down': (order && sort === 'born'),
+                    'fa-sort-up': (!order && sort === SortTypes.Born),
+                    'fa-sort-down': (order && sort === SortTypes.Born),
                   })}
                   />
                 </span>
@@ -135,22 +143,20 @@ export const PeopleTable: React.FC<Props> = ({
             <span className="is-flex is-flex-wrap-nowrap">
               Died
               <SearchLink
-                onClick={(event) => (
-                  (order && sort === 'died') && event.preventDefault()
-                )}
+                onClick={(event) => handleSortOrder(event, SortTypes.Died)}
                 params={{
                   order: (
-                    (sort === 'died' && !order)
+                    (sort === SortTypes.Died && !order)
                       ? 'desc'
                       : null
                   ),
-                  sort: 'died',
+                  sort: SortTypes.Died,
                 }}
               >
                 <span className="icon">
                   <i className={classNames('fas fa-sort', {
-                    'fa-sort-up': (!order && sort === 'died'),
-                    'fa-sort-down': (order && sort === 'died'),
+                    'fa-sort-up': (!order && sort === SortTypes.Died),
+                    'fa-sort-down': (order && sort === SortTypes.Died),
                   })}
                   />
                 </span>

@@ -1,20 +1,20 @@
-import { useSearchParams } from 'react-router-dom';
 import classNames from 'classnames';
-import { getSearchWith, SearchParams } from '../utils/searchHelper';
+import { SearchParams } from '../utils/searchHelper';
 import { SearchLink } from './SearchLink';
+import { SexParams } from '../types/sexTypes';
 
-export const PeopleFilters: React.FC = () => {
+type Props = {
+  setSearchWith:(params: SearchParams) => void,
+  centuries: string[],
+  sex: string,
+};
+
+export const PeopleFilters: React.FC<Props> = ({
+  setSearchWith,
+  centuries,
+  sex,
+}) => {
   const allCenturies = [16, 17, 18, 19, 20];
-
-  const [searchParams, setSearchParams] = useSearchParams();
-  const sex = searchParams.get('sex') || '';
-  const centuries = searchParams.getAll('centuries') || [];
-
-  const setSearchWith = (params: SearchParams) => {
-    const newSearch = getSearchWith(searchParams, params);
-
-    setSearchParams(newSearch.toString());
-  };
 
   const getCenturiesForSearch = (century: string) => {
     return centuries.includes(century)
@@ -28,19 +28,19 @@ export const PeopleFilters: React.FC = () => {
 
       <p className="panel-tabs" data-cy="SexFilter">
         <SearchLink
-          className={classNames({ 'is-active': sex === '' })}
+          className={classNames({ 'is-active': sex === SexParams.none })}
           params={{ sex: null }}
         >
           All
         </SearchLink>
         <SearchLink
-          className={classNames({ 'is-active': sex === 'm' })}
+          className={classNames({ 'is-active': sex === SexParams.man })}
           params={{ sex: 'm' }}
         >
           Male
         </SearchLink>
         <SearchLink
-          className={classNames({ 'is-active': sex === 'f' })}
+          className={classNames({ 'is-active': sex === SexParams.women })}
           params={{ sex: 'f' }}
         >
           Female
