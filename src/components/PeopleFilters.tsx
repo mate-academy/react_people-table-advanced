@@ -34,7 +34,7 @@ export const PeopleFilters = () => {
         <SearchLink
           params={{ sex: null }}
           className={classNames({
-            'is-active': sex === null,
+            'is-active': !sex,
           })}
         >
           All

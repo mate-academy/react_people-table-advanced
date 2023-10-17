@@ -43,7 +43,7 @@ export const UsersProvider: React.FC<Props> = ({ children }) => {
 
     const preparedQuery = query.trim().toLowerCase();
 
-    if (preparedQuery !== '') {
+    if (preparedQuery) {
       preparedPeople = preparedPeople.filter(person => {
         const { name, motherName, fatherName } = person;
 
@@ -53,7 +53,7 @@ export const UsersProvider: React.FC<Props> = ({ children }) => {
       });
     }
 
-    if (sex !== '') {
+    if (sex) {
       preparedPeople = preparedPeople.filter(person => person.sex === sex);
     }
 
@@ -66,7 +66,7 @@ export const UsersProvider: React.FC<Props> = ({ children }) => {
       });
     }
 
-    if (sort !== '') {
+    if (sort) {
       preparedPeople.sort((person1, person2) => {
         switch (sort) {
           case 'name':
