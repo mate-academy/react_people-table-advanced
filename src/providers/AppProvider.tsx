@@ -8,17 +8,22 @@ type Props = PropsWithChildren<{}>;
 type PeopleContextType = {
   people: Person[];
   setPeople: React.Dispatch<React.SetStateAction<Person[]>>
+  isLoading: boolean;
+  setIsLoading: (bool: boolean) => void;
 };
 
 const PeopleContext = createContext<PeopleContextType | undefined>(undefined);
 
 export const AppProvider = ({ children }: Props) => {
   const [people, setPeople] = useState<Person[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   return (
     <PeopleContext.Provider value={{
       people,
       setPeople,
+      isLoading,
+      setIsLoading,
     }}
     >
       {children}

@@ -44,7 +44,7 @@ export const PersonLink = ({ personLink, people }: Props) => {
         {names.find(name => personLink.motherName?.includes(name))
           ? (
             <NavLink
-              to={`/people/${slugMother}`}
+              to={`/people/${slugMother}?${searchParams.toString()}`}
               className="has-text-danger"
             >
               {personLink.motherName}
@@ -58,7 +58,7 @@ export const PersonLink = ({ personLink, people }: Props) => {
         {names.find(name => personLink.fatherName?.includes(name))
           ? (
             <NavLink
-              to={`/people/${slugFather}`}
+              to={`/people/${slugFather}?${searchParams.toString()}`}
             >
               {personLink.fatherName}
             </NavLink>

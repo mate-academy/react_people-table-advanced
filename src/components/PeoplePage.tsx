@@ -8,9 +8,9 @@ import { usePeopleContext } from '../providers/AppProvider';
 import { getPeopleFiltered } from '../utils/Filters';
 
 export const PeoplePage = () => {
-  const { people, setPeople } = usePeopleContext();
+  const { people, setPeople, isLoading, setIsLoading } = usePeopleContext();
   const [error, setError] = useState<string>('');
-  const [isLoading, setIsLoading] = useState(false);
+
   const [searchParams] = useSearchParams();
 
   useEffect(() => {
@@ -26,6 +26,13 @@ export const PeoplePage = () => {
       .finally(() => setIsLoading(false));
   }, []);
 
+  const showNoPeopleMessage = getPeopleFiltered(people,
+    searchParams.get('sex'),
+    searchParams.get('query'),
+    searchParams.getAll('centuries'),
+    searchParams.get('sortBy'),
+    searchParams.get('sortOrder')).length === 0
+
   return (
     <>
       <h1 className="title">People Page</h1>
@@ -33,7 +40,7 @@ export const PeoplePage = () => {
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
           <div className="column is-7-tablet is-narrow-desktop">
-            <PeopleFilters />
+            {!isLoading && <PeopleFilters /> }
           </div>
 
           <div className="column">
@@ -48,12 +55,7 @@ export const PeoplePage = () => {
                     There are no people on the server
                   </p>
                 )}
-              {getPeopleFiltered(people,
-                searchParams.get('sex'),
-                searchParams.get('query'),
-                searchParams.getAll('centuries'),
-                searchParams.get('sortBy'),
-                searchParams.get('sortOrder')).length === 0
+              {showNoPeopleMessage && !isLoading
                 && (
                   <p>
                     There are no people matching the current search criteria
