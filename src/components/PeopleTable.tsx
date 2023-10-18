@@ -51,24 +51,28 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
     >
       <thead>
         <tr>
-          {sortCriteria.map(criteria => (
-            <th key={criteria}>
-              <span className="is-flex is-flex-wrap-nowrap">
-                {criteria}
-                <SearchLink params={handleSort(criteria.toLowerCase())}>
-                  <span className="icon">
-                    <i
-                      className={classNames('fas', {
-                        'fa-sort': sort !== criteria,
-                        'fa-sort-up': sort === criteria && !sortOrder,
-                        'fa-sort-down': sort === criteria && sortOrder,
-                      })}
-                    />
-                  </span>
-                </SearchLink>
-              </span>
-            </th>
-          ))}
+          {sortCriteria.map(criteria => {
+            const criteriaLower = criteria.toLowerCase();
+
+            return (
+              <th key={criteria}>
+                <span className="is-flex is-flex-wrap-nowrap">
+                  {criteria}
+                  <SearchLink params={handleSort(criteriaLower)}>
+                    <span className="icon">
+                      <i
+                        className={classNames('fas', {
+                          'fa-sort': sort !== criteriaLower,
+                          'fa-sort-up': sort === criteriaLower && !sortOrder,
+                          'fa-sort-down': sort === criteriaLower && sortOrder,
+                        })}
+                      />
+                    </span>
+                  </SearchLink>
+                </span>
+              </th>
+            );
+          })}
 
           <th>Mother</th>
           <th>Father</th>
