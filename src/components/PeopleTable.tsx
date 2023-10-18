@@ -1,29 +1,25 @@
 import classNames from 'classnames';
-import { useParams } from 'react-router-dom';
+import { useParams, useSearchParams } from 'react-router-dom';
 
 import { Person } from '../types';
-import { PersonLink } from './personLink';
+import { PersonLink } from './PersonLink';
 import { SearchLink } from './SearchLink';
-import { SearchParams } from '../utils/searchHelper';
 import { SortTypes } from '../types/sortParams';
+import { QueryParams } from '../types/filterParams';
 
 type Props = {
-  setSearchWith:(params: SearchParams) => void,
   people: Person[],
   allPeople: Person[],
-  order: string,
-  sort: string,
-  searchParams: URLSearchParams,
 };
 
 export const PeopleTable: React.FC<Props> = ({
-  setSearchWith,
   people,
   allPeople,
-  order,
-  sort,
-  searchParams,
 }) => {
+  const [searchParams] = useSearchParams();
+  const sort = searchParams.get(QueryParams.Sort) || '';
+  const order = searchParams.get(QueryParams.Order) || '';
+
   const { personSlug } = useParams();
 
   const isPersonInList = (personName: string) => (
@@ -46,14 +42,23 @@ export const PeopleTable: React.FC<Props> = ({
       : personParent;
   };
 
-  const handleSortOrder = (
-    event: React.MouseEvent<HTMLAnchorElement,
-    MouseEvent>, sortOrder: string,
-  ) => {
-    if (order && sort === sortOrder) {
-      setSearchWith({ sort: null, order: null });
-      event.preventDefault();
+  const getSortedParams = (
+    newSortType: string,
+  ): Record<string, string | null> => {
+    if (sort !== newSortType) {
+      return {
+        sort: newSortType,
+      };
     }
+
+    if (sort === newSortType && !order) {
+      return { order: 'desc' };
+    }
+
+    return {
+      sort: null,
+      order: null,
+    };
   };
 
   return (
@@ -68,15 +73,7 @@ export const PeopleTable: React.FC<Props> = ({
             <span className="is-flex is-flex-wrap-nowrap">
               Name
               <SearchLink
-                onClick={(event) => handleSortOrder(event, SortTypes.Name)}
-                params={{
-                  order: (
-                    (sort === SortTypes.Name && !order)
-                      ? 'desc'
-                      : null
-                  ),
-                  sort: SortTypes.Name,
-                }}
+                params={getSortedParams(SortTypes.Name)}
               >
                 <span className="icon">
                   <i className={classNames('fas fa-sort', {
@@ -93,15 +90,7 @@ export const PeopleTable: React.FC<Props> = ({
             <span className="is-flex is-flex-wrap-nowrap">
               Sex
               <SearchLink
-                onClick={(event) => handleSortOrder(event, SortTypes.Sex)}
-                params={{
-                  order: (
-                    (sort === SortTypes.Sex && !order)
-                      ? 'desc'
-                      : null
-                  ),
-                  sort: SortTypes.Sex,
-                }}
+                params={getSortedParams(SortTypes.Sex)}
               >
                 <span className="icon">
                   <i className={classNames('fas fa-sort', {
@@ -118,15 +107,7 @@ export const PeopleTable: React.FC<Props> = ({
             <span className="is-flex is-flex-wrap-nowrap">
               Born
               <SearchLink
-                onClick={(event) => handleSortOrder(event, SortTypes.Born)}
-                params={{
-                  order: (
-                    (sort === SortTypes.Born && !order)
-                      ? 'desc'
-                      : null
-                  ),
-                  sort: SortTypes.Born,
-                }}
+                params={getSortedParams(SortTypes.Born)}
               >
                 <span className="icon">
                   <i className={classNames('fas fa-sort', {
@@ -143,15 +124,7 @@ export const PeopleTable: React.FC<Props> = ({
             <span className="is-flex is-flex-wrap-nowrap">
               Died
               <SearchLink
-                onClick={(event) => handleSortOrder(event, SortTypes.Died)}
-                params={{
-                  order: (
-                    (sort === SortTypes.Died && !order)
-                      ? 'desc'
-                      : null
-                  ),
-                  sort: SortTypes.Died,
-                }}
+                params={getSortedParams(SortTypes.Died)}
               >
                 <span className="icon">
                   <i className={classNames('fas fa-sort', {

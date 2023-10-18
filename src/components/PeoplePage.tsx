@@ -6,7 +6,6 @@ import { PeopleTable } from './PeopleTable';
 import { Person } from '../types';
 import { clientGet } from '../utils/fetchClient';
 import { filterPeople } from '../utils/filteredPeople';
-import { SearchParams, getSearchWith } from '../utils/searchHelper';
 import { QueryParams } from '../types/filterParams';
 
 export const PeoplePage = () => {
@@ -14,7 +13,7 @@ export const PeoplePage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isLoadingError, setIsLoadingError] = useState(false);
 
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
   const query = searchParams.get(QueryParams.Query) || '';
   const sex = searchParams.get(QueryParams.Sex) || '';
   const centuries = searchParams.getAll(QueryParams.Centuries) || [];
@@ -38,12 +37,6 @@ export const PeoplePage = () => {
     });
   }, [people, query, centuries, sex, sort, order]);
 
-  const setSearchWith = (params: SearchParams) => {
-    const newSearch = getSearchWith(searchParams, params);
-
-    setSearchParams(newSearch.toString());
-  };
-
   return (
     <>
       <h1 className="title">People Page</h1>
@@ -54,11 +47,7 @@ export const PeoplePage = () => {
         ) : (
           <div className="columns is-desktop is-flex-direction-row-reverse">
             <div className="column is-7-tablet is-narrow-desktop">
-              <PeopleFilters
-                setSearchWith={setSearchWith}
-                centuries={centuries}
-                sex={sex}
-              />
+              <PeopleFilters />
             </div>
 
             <div className="column">
@@ -73,12 +62,8 @@ export const PeoplePage = () => {
                       <>
                         {filteredPeople.length ? (
                           <PeopleTable
-                            setSearchWith={setSearchWith}
                             people={filteredPeople}
                             allPeople={people}
-                            order={order}
-                            sort={sort}
-                            searchParams={searchParams}
                           />
                         ) : (
                           <p>

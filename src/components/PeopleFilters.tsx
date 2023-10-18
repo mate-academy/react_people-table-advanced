@@ -1,25 +1,34 @@
 import classNames from 'classnames';
-import { SearchParams } from '../utils/searchHelper';
+import { useSearchParams } from 'react-router-dom';
+import { getSearchWith } from '../utils/searchHelper';
 import { SearchLink } from './SearchLink';
 import { SexParams } from '../types/sexTypes';
+import { QueryParams } from '../types/filterParams';
 
-type Props = {
-  setSearchWith:(params: SearchParams) => void,
-  centuries: string[],
-  sex: string,
-};
+export const PeopleFilters = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const query = searchParams.get(QueryParams.Query) || '';
+  const sex = searchParams.get(QueryParams.Sex) || '';
+  const centuries = searchParams.getAll(QueryParams.Centuries) || [];
 
-export const PeopleFilters: React.FC<Props> = ({
-  setSearchWith,
-  centuries,
-  sex,
-}) => {
   const allCenturies = [16, 17, 18, 19, 20];
 
   const getCenturiesForSearch = (century: string) => {
     return centuries.includes(century)
       ? centuries.filter(c => c !== century)
       : [...centuries, century];
+  };
+
+  // const setSearchWith = (params: SearchParams) => {
+  //   const newSearch = getSearchWith(searchParams, params);
+
+  //   setSearchParams(newSearch.toString());
+  // };
+
+  const handleQueryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchParams(
+      getSearchWith(searchParams, { query: event.target.value || null }),
+    );
   };
 
   return (
@@ -54,7 +63,8 @@ export const PeopleFilters: React.FC<Props> = ({
             type="search"
             className="input"
             placeholder="Search"
-            onChange={(e) => setSearchWith({ query: e.target.value || null })}
+            value={query}
+            onChange={handleQueryChange}
           />
 
           <span className="icon is-left">
