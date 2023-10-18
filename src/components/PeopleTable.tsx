@@ -2,7 +2,7 @@ import classNames from 'classnames';
 import { useParams, useSearchParams } from 'react-router-dom';
 
 import { Person } from '../types';
-import { PersonLink } from './PersonLink';
+import { PersonLink } from './PeopleLink';
 import { SearchLink } from './SearchLink';
 import { SortTypes } from '../types/sortParams';
 import { QueryParams } from '../types/filterParams';
