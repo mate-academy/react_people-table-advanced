@@ -21,7 +21,7 @@ export const PeoplePage = () => {
 
       setPeople(data);
     };
-  
+
     if (people.length === 0) {
       setIsLoading(true);
     }
