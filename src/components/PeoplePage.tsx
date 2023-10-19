@@ -42,22 +42,22 @@ export const PeoplePage = () => {
   const preparedPeople = () => {
     let filteredPeople = [...people];
 
-    filteredPeople = centuries.length > 0
-      ? filteredPeople.filter(person => centuries
-        .includes(Math.ceil(+person.born / 100).toString()))
-      : filteredPeople;
+    if (centuries.length) {
+      filteredPeople = filteredPeople.filter(person => centuries
+        .includes(Math.ceil(+person.born / 100).toString()));
+    }
 
-    filteredPeople = sex
-      ? filteredPeople.filter(person => person.sex === sex)
-      : filteredPeople;
+    if (sex) {
+      filteredPeople = filteredPeople.filter(person => person.sex === sex);
+    }
 
-    filteredPeople = query
-      ? filteredPeople.filter(person => (
+    if (query) {
+      filteredPeople = filteredPeople.filter(person => (
         person.name.toLowerCase().includes(query)
         || person.motherName?.toLowerCase().includes(query)
         || person.fatherName?.toLowerCase().includes(query)
-      ))
-      : filteredPeople;
+      ));
+    }
 
     if (sortBy) {
       switch (sortBy) {
@@ -87,6 +87,11 @@ export const PeoplePage = () => {
     return filteredPeople;
   };
 
+  const showPeopleFilters = !isLoading && !hasError && !!people.length;
+  const noPeopleOnServer = !people.length && !hasError && !isLoading;
+  const showPeopleTable = !!people.length && !isLoading;
+  const noMatchingPeople = !preparedPeople().length && !isLoading && !hasError;
+
   return (
     <>
       <h1 className="title">
@@ -96,9 +101,7 @@ export const PeoplePage = () => {
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
           <div className="column is-7-tablet is-narrow-desktop">
-            {!isLoading && !hasError && people.length > 0 && (
-              <PeopleFilters />
-            )}
+            {showPeopleFilters && (<PeopleFilters />)}
           </div>
 
           <div className="column">
@@ -111,17 +114,17 @@ export const PeoplePage = () => {
                 </p>
               )}
 
-              {!people.length && !hasError && !isLoading && (
+              {noPeopleOnServer && (
                 <p data-cy="noPeopleMessage">
                   There are no people on the server
                 </p>
               )}
 
-              {people.length > 0 && !isLoading && (
+              {showPeopleTable && (
                 <PeopleTable people={preparedPeople()} />
               )}
 
-              {!preparedPeople().length && !isLoading && !hasError && (
+              {noMatchingPeople && (
                 <p>There are no people matching the current search criteria</p>
               )}
             </div>
