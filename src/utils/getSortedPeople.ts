@@ -1,5 +1,5 @@
 import { PersonType } from '../types';
-import { SortTypes } from './constats';
+import { CENTURY, SortTypes } from './constats';
 
 export const getSortedPeople = (
   people: PersonType[],
@@ -29,24 +29,24 @@ export const getSortedPeople = (
 
   if (centuries.length) {
     visiblePeople = visiblePeople.filter(
-      ({ born }) => centuries.includes((Math.ceil(born / 100)).toString()),
+      ({ born }) => centuries.includes((Math.ceil(born / CENTURY)).toString()),
     );
   }
 
   if (sortType) {
-    visiblePeople.sort((personA, personB) => {
+    visiblePeople.sort((a, b) => {
       switch (sortType) {
         case SortTypes.Name:
-          return personA.name.localeCompare(personB.name);
+          return a.name.localeCompare(b.name);
 
         case SortTypes.Sex:
-          return personA.sex.localeCompare(personB.sex);
+          return a.sex.localeCompare(b.sex);
 
         case SortTypes.Born:
-          return personA.born - personB.born;
+          return a.born - b.born;
 
         case SortTypes.Died:
-          return personA.died - personB.died;
+          return a.died - b.died;
 
         default:
           return 0;

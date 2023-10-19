@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import cn from 'classnames';
 import { PersonType } from '../types';
 import { PersonLink } from './PersonLink';
-import { EMPTY_PARENT_VALUE } from '../utils/constats';
+import { EMPTY_VALUE } from '../utils/constats';
 
 type Props = {
   person: PersonType,
@@ -40,14 +40,14 @@ export const Person: React.FC<Props> = ({ person }) => {
         {mother ? (
           <PersonLink person={mother} />
         ) : (
-          motherName || EMPTY_PARENT_VALUE
+          motherName || EMPTY_VALUE
         )}
       </td>
       <td>
         {father ? (
           <PersonLink person={father} />
         ) : (
-          fatherName || EMPTY_PARENT_VALUE
+          fatherName || EMPTY_VALUE
         )}
       </td>
     </tr>

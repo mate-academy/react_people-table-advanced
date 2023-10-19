@@ -1,5 +1,6 @@
+export const CENTURY = 100;
 export const FEMALE = 'f';
-export const EMPTY_PARENT_VALUE = '-';
+export const EMPTY_VALUE = '-';
 export const FILTER_BY_SEX = {
   All: null,
   Male: 'm',

@@ -68,7 +68,7 @@ export const PeopleFilters = () => {
               <SearchLink
                 data-cy="century"
                 key={century}
-                className={cn('button mr-1', {
+                className={cn('button', 'mr-1', {
                   'is-info': centuries.includes(century),
                 })}
                 params={{ centuries: handleCenturyToggle(century) }}
@@ -81,7 +81,7 @@ export const PeopleFilters = () => {
           <div className="level-right ml-4">
             <SearchLink
               data-cy="centuryALL"
-              className={cn('button is-success', {
+              className={cn('button', 'is-success', {
                 'is-outlined': centuries.length,
               })}
               params={{ centuries: [] }}
