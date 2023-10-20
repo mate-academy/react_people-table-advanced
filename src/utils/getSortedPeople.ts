@@ -20,10 +20,16 @@ export const getSortedPeople = (
   if (query) {
     const normalizedQuery = query.trim().toLowerCase();
 
+    const includeNormalizedName = (
+      person: PersonType, attribute: 'name' | 'fatherName' | 'motherName',
+    ) => (
+      person[attribute]?.toLowerCase().includes(normalizedQuery)
+    );
+
     visiblePeople = visiblePeople.filter(person => (
-      person.name.toLowerCase().includes(normalizedQuery)
-      || person.fatherName?.toLowerCase().includes(normalizedQuery)
-      || person.motherName?.toLowerCase().includes(normalizedQuery)
+      includeNormalizedName(person, 'name')
+      || includeNormalizedName(person, 'fatherName')
+      || includeNormalizedName(person, 'motherName')
     ));
   }
 
