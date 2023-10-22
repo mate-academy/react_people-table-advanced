@@ -1,6 +1,5 @@
 import {
   NavLink,
-  // useLocation,
   useParams,
   useSearchParams,
 } from 'react-router-dom';
@@ -29,14 +28,43 @@ export const PeopleTable: React.FC<Props> = ({ peoples }) => {
   const [filteredPeoples, setFilteredPeoples] = useState<Person[]>(peoples);
   const [sortedPeoples, setSortedPeoples] = useState<Person[]>(filteredPeoples);
   const sortField = params.get('sort');
+  const order = params.get('order');
 
   const sortTable = () => {
+    if (!sortField) {
+      setSortedPeoples(filteredPeoples);
+    }
+
     if (sortField === 'name' || sortField === 'sex') {
-      setSortedPeoples(prev => {
-        return [...prev].sort((name1, name2) => {
-          return name1[sortField].localeCompare(name2[sortField]);
+      if (order === 'desc') {
+        setSortedPeoples(prev => {
+          return [...prev].sort((name1, name2) => {
+            return name2[sortField].localeCompare(name1[sortField]);
+          });
         });
-      });
+      } else {
+        setSortedPeoples(prev => {
+          return [...prev].sort((name1, name2) => {
+            return name1[sortField].localeCompare(name2[sortField]);
+          });
+        });
+      }
+    }
+
+    if (sortField === 'born' || sortField === 'died') {
+      if (order === 'desc') {
+        setSortedPeoples(prev => {
+          return [...prev].sort((a, b) => {
+            return +b[sortField] - +a[sortField];
+          });
+        });
+      } else {
+        setSortedPeoples(prev => {
+          return [...prev].sort((a, b) => {
+            return +a[sortField] - +b[sortField];
+          });
+        });
+      }
     }
   };
 
@@ -108,7 +136,7 @@ export const PeopleTable: React.FC<Props> = ({ peoples }) => {
 
   useEffect(() => {
     sortTable();
-  }, [sortField]);
+  }, [sortField, order]);
 
   return (
     <table

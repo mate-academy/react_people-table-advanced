@@ -9,6 +9,7 @@ export const PeopleFilters = () => {
   const sex = searchParams.get('sex') || 'All';
   const centuries = searchParams.getAll('centuries') || [];
 
+  // eslint-disable-next-line
   function setSearchWith(params: any) {
     const search = getSearchWith(searchParams, params);
 
