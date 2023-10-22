@@ -1,15 +1,21 @@
 import {
-  Link,
   NavLink,
+  // useLocation,
   useParams,
   useSearchParams,
 } from 'react-router-dom';
 import classNames from 'classnames';
 import { useEffect, useState } from 'react';
 import { Person } from '../types';
+import { SearchLink } from './SearchLink';
 
 type Props = {
   peoples: Person[],
+};
+
+type Obj = {
+  sort?: string | null,
+  order?: string | null,
 };
 
 function getParent(name: string | null, arr: Person[]) {
@@ -21,6 +27,18 @@ export const PeopleTable: React.FC<Props> = ({ peoples }) => {
   const selectedPersonSlug = personSlug;
   const [params] = useSearchParams();
   const [filteredPeoples, setFilteredPeoples] = useState<Person[]>(peoples);
+  const [sortedPeoples, setSortedPeoples] = useState<Person[]>(filteredPeoples);
+  const sortField = params.get('sort');
+
+  const sortTable = () => {
+    if (sortField === 'name' || sortField === 'sex') {
+      setSortedPeoples(prev => {
+        return [...prev].sort((name1, name2) => {
+          return name1[sortField].localeCompare(name2[sortField]);
+        });
+      });
+    }
+  };
 
   const handleFilterChange = () => {
     let newPeoples = [...peoples];
@@ -58,9 +76,39 @@ export const PeopleTable: React.FC<Props> = ({ peoples }) => {
     setFilteredPeoples(newPeoples);
   };
 
+  const handleSortSpan = (title: string, sortBy: string) => {
+    let obj: Obj = { sort: sortBy, order: null };
+    let classForArrow = 'fa-sort';
+
+    if (params.get('sort') === sortBy && !params.get('order')) {
+      obj = { sort: sortBy, order: 'desc' };
+      classForArrow = 'fa-sort-up';
+    }
+
+    if (params.get('sort') === sortBy && params.get('order')) {
+      obj = { sort: null, order: null };
+      classForArrow = 'fa-sort-down';
+    }
+
+    return (
+      <span className="is-flex is-flex-wrap-nowrap">
+        {title}
+        <SearchLink params={obj}>
+          <span className="icon">
+            <i className={`fas ${classForArrow}`} />
+          </span>
+        </SearchLink>
+      </span>
+    );
+  };
+
   useEffect(() => {
     handleFilterChange();
   }, [params]);
+
+  useEffect(() => {
+    sortTable();
+  }, [sortField]);
 
   return (
     <table
@@ -70,47 +118,19 @@ export const PeopleTable: React.FC<Props> = ({ peoples }) => {
       <thead>
         <tr>
           <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Name
-              <Link to="#/people?sort=name">
-                <span className="icon">
-                  <i className="fas fa-sort" />
-                </span>
-              </Link>
-            </span>
+            {(() => handleSortSpan('Name', 'name'))()}
           </th>
 
           <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Sex
-              <Link to="#/people?sort=sex">
-                <span className="icon">
-                  <i className="fas fa-sort" />
-                </span>
-              </Link>
-            </span>
+            {(() => handleSortSpan('Sex', 'sex'))()}
           </th>
 
           <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Born
-              <Link to="#/people?sort=born&amp;order=desc">
-                <span className="icon">
-                  <i className="fas fa-sort-up" />
-                </span>
-              </Link>
-            </span>
+            {(() => handleSortSpan('Born', 'born'))()}
           </th>
 
           <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Died
-              <Link to="#/people?sort=died">
-                <span className="icon">
-                  <i className="fas fa-sort" />
-                </span>
-              </Link>
-            </span>
+            {(() => handleSortSpan('Died', 'died'))()}
           </th>
 
           <th>Mother</th>
@@ -119,7 +139,7 @@ export const PeopleTable: React.FC<Props> = ({ peoples }) => {
       </thead>
 
       <tbody>
-        {filteredPeoples.map((person) => {
+        {sortedPeoples.map((person) => {
           const {
             name,
             slug,

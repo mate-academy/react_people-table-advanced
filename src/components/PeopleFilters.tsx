@@ -1,29 +1,7 @@
 import classNames from 'classnames';
-import { Link, useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import { getSearchWith } from '../utils/searchHelper';
 import { SearchLink } from './SearchLink';
-
-// type Param = string | number;
-// type Params = {
-//   [key: string]: Param[] | Param | null;
-// };
-
-// function getSearchWith(params: Params, search?: string | URLSearchParams) {
-//   const newParams = new URLSearchParams(search);
-
-//   Object.entries(params).forEach(([key, value]) => {
-//     if (value === null) {
-//       newParams.delete(key);
-//     } else if (Array.isArray(value)) {
-//       newParams.delete(key);
-//       value.forEach(item => newParams.append(key, item.toString()));
-//     } else {
-//       newParams.set(key, value.toString());
-//     }
-//   });
-
-//   return newParams.toString();
-// }
 
 export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -32,7 +10,7 @@ export const PeopleFilters = () => {
   const centuries = searchParams.getAll('centuries') || [];
 
   function setSearchWith(params: any) {
-    const search = getSearchWith(params, params);
+    const search = getSearchWith(searchParams, params);
 
     setSearchParams(search);
   }
@@ -65,41 +43,35 @@ export const PeopleFilters = () => {
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        <Link
+        <SearchLink
+          params={{ sex: null }}
           className={classNames({
             'is-active': sex === 'All',
           })}
-          to={{
-            search: getSearchWith(searchParams, { sex: null }),
-          }}
           onClick={() => handleSexChange('All')}
         >
           All
-        </Link>
+        </SearchLink>
 
-        <Link
+        <SearchLink
+          params={{ sex: 'm' }}
           className={classNames({
             'is-active': sex === 'm',
           })}
-          to={{
-            search: getSearchWith(searchParams, { sex: 'm' }),
-          }}
           onClick={() => handleSexChange('Male')}
         >
           Male
-        </Link>
+        </SearchLink>
 
-        <Link
+        <SearchLink
+          params={{ sex: 'f' }}
           className={classNames({
             'is-active': sex === 'f',
           })}
-          to={{
-            search: getSearchWith(searchParams, { sex: 'f' }),
-          }}
           onClick={() => handleSexChange('Female')}
         >
           Female
-        </Link>
+        </SearchLink>
       </p>
 
       <div className="panel-block">
@@ -157,12 +129,6 @@ export const PeopleFilters = () => {
       </div>
 
       <div className="panel-block">
-        {/* <Link
-          className="button is-link is-outlined is-fullwidth"
-          to="/people"
-        >
-          Reset all filters
-        </Link> */}
         <SearchLink
           params={{
             centuries: null,
@@ -170,7 +136,6 @@ export const PeopleFilters = () => {
             query: null,
           }}
           className="button is-link is-outlined is-fullwidth"
-          // to="/people"
         >
           Reset all filters
         </SearchLink>

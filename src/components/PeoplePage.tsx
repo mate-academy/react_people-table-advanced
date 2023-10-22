@@ -10,9 +10,6 @@ export const PeoplePage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState('');
 
-  // const [filteredPeoples, setFilteredPeoples] = useState<Person[]>([]);
-  const filteredPeoples = [...peoples];
-
   const getPeoples = () => {
     return peopleService.getPeople()
       .then(peopleFromServer => setPeoples(peopleFromServer))
@@ -52,7 +49,7 @@ export const PeoplePage = () => {
                 </p>
               )}
 
-              {filteredPeoples.length === 0 && !isLoading && (
+              {peoples.length === 0 && !isLoading && (
                 <p>There are no people matching the current search criteria</p>
               )}
 
