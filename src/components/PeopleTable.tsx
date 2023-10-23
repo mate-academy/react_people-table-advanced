@@ -22,7 +22,7 @@ import { SearchParams } from '../utils/searchHelper';
 // }
 
 export const PeopleTable: React.FC = () => {
-  const [people, setPeople] = useState([] as Person[]);
+  const [people, setPeople] = useState<Person[]>([]);
   const { personSlug } = useParams();
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingError, setIsLoadingError] = useState(false);
@@ -34,10 +34,6 @@ export const PeopleTable: React.FC = () => {
   const sex = searchParams.get('sex');
   // const all = searchParams.toString().length;
   // const [count, setCount] = useState(0)
-
-  // useCallback(() => {
-  //   setCount(prevState => prevState + 1);
-  // }, [all]);
 
   useEffect(() => {
     setIsLoading(true);
@@ -63,44 +59,46 @@ export const PeopleTable: React.FC = () => {
   }
 
   function sortByTrigger() {
-    let list = [] as Person[];
+    const list = [...people];
+
+    if (order) {
+      return list.reverse();
+    }
 
     if (sort === 'name') {
-      list = people.sort(
+      return list.sort(
         (first, second) => getSortElementComparison(first.name, second.name),
       );
     }
 
     if (sort === 'sex') {
-      list = people.sort(
+      return list.sort(
         (first, second) => getSortElementComparison(first.sex, second.sex),
       );
     }
 
     if (sort === 'born') {
-      list = people.sort(
+      return list.sort(
         (first, second) => (first.born > second.born ? 1 : -1),
       );
     }
 
     if (sort === 'died') {
-      list = people.sort(
+      return list.sort(
         (first, second) => (first.died > second.died ? 1 : -1),
       );
     }
 
-    if (sex) {
-      list = people.sort(
+    if (sex === 'm') {
+      return list.sort(
         (first, second) => getSortElementComparison(second.sex, first.sex),
       );
     }
 
-    if (sort && !order) {
-      return list;
-    }
-
-    if (order) {
-      return list.reverse();
+    if (sex === 'f') {
+      return list.sort(
+        (first, second) => getSortElementComparison(first.sex, second.sex),
+      );
     }
 
     return copy;
@@ -117,6 +115,12 @@ export const PeopleTable: React.FC = () => {
 
     return { sort: sortBy };
   }
+
+  useEffect(() => {
+    const newPeople = sortByTrigger();
+
+    setPeople(newPeople);
+  }, [sort, sex, order]);
 
   return (
     <>
@@ -202,7 +206,7 @@ export const PeopleTable: React.FC = () => {
 
             )}
             <tbody>
-              {sortByTrigger().map((person) => {
+              {people.map((person) => {
                 return (
                   <tr
                     data-cy="person"

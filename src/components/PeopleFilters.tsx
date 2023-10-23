@@ -1,22 +1,40 @@
 /* eslint-disable */
 // import { SearchParams } from '../utils/searchHelper';
+import { useState } from 'react';
 import { SearchLink } from './SearchLink';
 // import { useSearchParams } from 'react-router-dom';
+// import { URLSearchParams } from 'url';
 
 export const PeopleFilters = () => {
   // const [searchParams] = useSearchParams();
+  const [query, setQuery] = useState('')
 
-  function addFilters() {
+  function addFiltersMale() {
     return { sex: 'm' };
   }
+  function addFiltersFemale() {
+    return { sex: 'f' };
+  }
+  function addFiltersAllSex() {
+    return { sex: null };
+  }
+  function searchFilter(e: React.ChangeEvent<HTMLInputElement>) {
+    setQuery(e.target.value);
+    console.log(query);
+
+    const params = new URLSearchParams();
+
+    params.set('query', e.target.value);
+  }
+  // setSearchParams({ query: query })
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        <SearchLink className="is-active" params={{ sex: 'none' }}>All</SearchLink>
-        <SearchLink className="" params={addFilters() as any}>Male</SearchLink>
-        <SearchLink className="" params={{ sex: 'f' }}>Female</SearchLink>
+        <SearchLink className="is-active" params={addFiltersAllSex()}>All</SearchLink>
+        <SearchLink className="" params={addFiltersMale()}>Male</SearchLink>
+        <SearchLink className="" params={addFiltersFemale()}>Female</SearchLink>
       </p>
 
       <div className="panel-block">
@@ -26,8 +44,10 @@ export const PeopleFilters = () => {
             type="search"
             className="input"
             placeholder="Search"
+            value={query}
+            onChange={(e) =>searchFilter(e)}
           />
-
+          {/* <SearchLink params={{ query: query }}/> */}
           <span className="icon is-left">
             <i className="fas fa-search" aria-hidden="true" />
           </span>
