@@ -6,6 +6,7 @@ import { getPeople } from '../../api';
 import { OrderControl } from '../../utils/OrderControl';
 import { PeopleFilters } from '../PeopleFilters/PeopleFilters';
 import { PeopleTable } from '../PeopleTable/PeopleTable';
+import { SearchParamsEnum } from '../../types/SearchParamsEnum';
 
 const getPreparedPeople = (people: Person[]) => {
   return people.map(person => {
@@ -40,9 +41,9 @@ export const PeoplePage: React.FC = () => {
   const displayedPeople = () => {
     let filteredPeople = [...people];
 
-    const centuries = searchParams.getAll('centuries') || [];
-    const gender = searchParams.get('sex') || '';
-    const query = searchParams.get('query') || '';
+    const centuries = searchParams.getAll(SearchParamsEnum.CENTURIES) || [];
+    const gender = searchParams.get(SearchParamsEnum.GENDER) || '';
+    const query = searchParams.get(SearchParamsEnum.QUERY) || '';
 
     filteredPeople = centuries.length > 0
       ? filteredPeople.filter(person => centuries
