@@ -1,5 +1,6 @@
 import {
   NavLink,
+  useLocation,
   useParams,
   useSearchParams,
 } from 'react-router-dom';
@@ -26,9 +27,12 @@ export const PeopleTable: React.FC<Props> = ({ peoples }) => {
   const selectedPersonSlug = personSlug;
   const [params] = useSearchParams();
   const [filteredPeoples, setFilteredPeoples] = useState<Person[]>(peoples);
-  const [sortedPeoples, setSortedPeoples] = useState<Person[]>(filteredPeoples);
+  const [sortedPeoples, setSortedPeoples]
+  = useState<Person[]>([...filteredPeoples]);
   const sortField = params.get('sort');
   const order = params.get('order');
+
+  const { search } = useLocation();
 
   const sortTable = () => {
     if (!sortField) {
@@ -102,6 +106,7 @@ export const PeopleTable: React.FC<Props> = ({ peoples }) => {
     }
 
     setFilteredPeoples(newPeoples);
+    setSortedPeoples(newPeoples);
   };
 
   const handleSortSpan = (title: string, sortBy: string) => {
@@ -190,7 +195,7 @@ export const PeopleTable: React.FC<Props> = ({ peoples }) => {
             >
               <td>
                 <NavLink
-                  to={slug}
+                  to={`${slug}${search}`}
                   className={classNames({
                     'has-text-danger': sex === 'f',
                   })}
@@ -208,7 +213,7 @@ export const PeopleTable: React.FC<Props> = ({ peoples }) => {
                   {mother ? (
                     <NavLink
                       className="has-text-danger"
-                      to={`${mother.slug}`}
+                      to={`${mother.slug}${search}`}
                     >
                       {motherName}
                     </NavLink>
@@ -221,7 +226,7 @@ export const PeopleTable: React.FC<Props> = ({ peoples }) => {
               {fatherName ? (
                 <td>
                   {father ? (
-                    <NavLink to={`${father.slug}`}>
+                    <NavLink to={`${father.slug}${search}`}>
                       {fatherName}
                     </NavLink>
                   ) : fatherName}
