@@ -12,7 +12,7 @@ export const PeoplePage = () => {
 
   const getPeoples = () => {
     return peopleService.getPeople()
-      .then(peopleFromServer => setPeoples(peopleFromServer))
+      .then(setPeoples)
       .catch(() => setErrorMessage('Something went wrong'))
       .finally(() => setIsLoading(false));
   };

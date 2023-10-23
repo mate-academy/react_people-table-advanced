@@ -107,6 +107,7 @@ export const PeopleTable: React.FC<Props> = ({ peoples }) => {
 
     setFilteredPeoples(newPeoples);
     setSortedPeoples(newPeoples);
+    sortTable();
   };
 
   const handleSortSpan = (title: string, sortBy: string) => {
