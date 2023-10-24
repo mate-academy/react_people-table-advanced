@@ -1,4 +1,10 @@
-export const Navbar = () => {
+import { FC } from 'react';
+import { useLocation } from 'react-router-dom';
+import { NavbarLink } from './NavbarLink';
+
+export const Navbar: FC = () => {
+  const location = useLocation();
+
   return (
     <nav
       data-cy="nav"
@@ -8,15 +14,17 @@ export const Navbar = () => {
     >
       <div className="container">
         <div className="navbar-brand">
-          <a className="navbar-item" href="#/">Home</a>
-
-          <a
-            aria-current="page"
-            className="navbar-item has-background-grey-lighter"
-            href="#/people"
-          >
-            People
-          </a>
+          <NavbarLink
+            to="/"
+            text="Home"
+          />
+          <NavbarLink
+            to={{
+              pathname: 'people',
+              search: location.search,
+            }}
+            text="People"
+          />
         </div>
       </div>
     </nav>
