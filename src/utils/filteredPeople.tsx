@@ -20,18 +20,14 @@ export const filteredPeople = (people: Person[], {
     );
   }
 
-  if (centuries.length > 0) {
-    preparedPeople = preparedPeople.filter(
-      person => centuries.includes(
-        Math.ceil(person.born / 100).toString(),
-      ),
-    );
+  /* eslint-disable no-extra-boolean-cast */
+  if (!!centuries.length) {
+    preparedPeople = preparedPeople.filter((person) => centuries
+      .includes(Math.ceil(person.born / 100).toString()));
   }
 
   if (sex) {
-    preparedPeople = preparedPeople.filter(
-      person => person.sex === sex,
-    );
+    preparedPeople = preparedPeople.filter((person) => person.sex === sex);
   }
 
   if (sort) {

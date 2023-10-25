@@ -82,8 +82,9 @@ export const PeoplePage = () => {
                 <p data-cy="peopleLoadingError">{errorMessage}</p>
               )}
 
-              {isResponseSuccessful && (
-                peopleFromServer.length > 0 ? (
+              {/* eslint-disable no-extra-boolean-cast */}
+              {isResponseSuccessful
+                && (!!peopleFromServer.length ? (
                   <PeopleTable people={filterPeople} />
                 ) : (
                   <p data-cy="noPeopleMessage">
@@ -91,8 +92,7 @@ export const PeoplePage = () => {
                   </p>
                 ))}
 
-              {peopleFromServer.length > 0
-                && filterPeople.length === 0 && (
+              {!!peopleFromServer.length && filterPeople.length === 0 && (
                 <p>There are no people matching the current search criteria</p>
               )}
             </div>
