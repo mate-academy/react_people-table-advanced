@@ -1,18 +1,43 @@
 import React from 'react';
-import { Link as PersonLink, useParams } from 'react-router-dom';
+import {
+  Link as PersonLink,
+  useParams,
+  useSearchParams,
+} from 'react-router-dom';
 import classNames from 'classnames';
 
 import { Person } from '../types';
+import { SearchLink } from './SearchLink';
+import { SearchParams } from '../utils/searchHelper';
 
 type Props = {
   people: Person[];
+  visiblePeople: Person[];
 };
 
-export const PeopleTable: React.FC<Props> = ({ people }) => {
+export const PeopleTable: React.FC<Props> = ({ people, visiblePeople }) => {
+  const [searchParams] = useSearchParams();
+
+  const sort = searchParams.get('sort') || '';
+  const order = searchParams.get('order') || '';
   const { slug } = useParams();
 
+  const setSortParams = (field: string): SearchParams => {
+    if (sort === field && order) {
+      return { sort: null, order: null };
+    }
+
+    if (sort === field) {
+      return { order: 'desc' };
+    }
+
+    return { sort: field, order: null };
+  };
+
   const findParent = (parentName: string) => {
-    return people.find(parent => parent.name === parentName)?.slug;
+    const parentSlug = people.find(parent => parent.name === parentName)?.slug;
+
+    return `/people/${parentSlug}?${searchParams.toString()}`;
   };
 
   return (
@@ -23,21 +48,85 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
         is-striped
         is-hoverable
         is-narrow
-        is-fullwidth"
-    >
+        is-fullwidth
+   ">
       <thead>
         <tr>
-          <th>Name</th>
-          <th>Sex</th>
-          <th>Born</th>
-          <th>Died</th>
+          <th>
+            <span className="is-flex is-flex-wrap-nowrap">
+              Name
+              <SearchLink params={setSortParams('name')}>
+                <span className="icon">
+                  <i
+                    className={classNames('fas', {
+                      'fa-sort': sort !== 'name',
+                      'fa-sort-up': sort === 'name' && !order,
+                      'fa-sort-down': sort === 'name' && order,
+                    })}
+                  />
+                </span>
+              </SearchLink>
+            </span>
+          </th>
+
+          <th>
+            <span className="is-flex is-flex-wrap-nowrap">
+              Sex
+              <SearchLink params={setSortParams('sex')}>
+                <span className="icon">
+                  <i
+                    className={classNames('fas', {
+                      'fa-sort': sort !== 'sex',
+                      'fa-sort-up': sort === 'sex' && !order,
+                      'fa-sort-down': sort === 'sex' && order,
+                    })}
+                  />
+                </span>
+              </SearchLink>
+            </span>
+          </th>
+
+          <th>
+            <span className="is-flex is-flex-wrap-nowrap">
+              Born
+              <SearchLink params={setSortParams('born')}>
+                <span className="icon">
+                  <i
+                    className={classNames('fas', {
+                      'fa-sort': sort !== 'born',
+                      'fa-sort-up': sort === 'born' && !order,
+                      'fa-sort-down': sort === 'born' && order,
+                    })}
+                  />
+                </span>
+              </SearchLink>
+            </span>
+          </th>
+
+          <th>
+            <span className="is-flex is-flex-wrap-nowrap">
+              Died
+              <SearchLink params={setSortParams('died')}>
+                <span className="icon">
+                  <i
+                    className={classNames('fas', {
+                      'fa-sort': sort !== 'died',
+                      'fa-sort-up': sort === 'died' && !order,
+                      'fa-sort-down': sort === 'died' && order,
+                    })}
+                  />
+                </span>
+              </SearchLink>
+            </span>
+          </th>
+
           <th>Mother</th>
           <th>Father</th>
         </tr>
       </thead>
 
       <tbody>
-        {people.map(person => (
+        {visiblePeople.map(person => (
           <tr
             key={person.slug}
             data-cy="person"
@@ -47,7 +136,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
           >
             <td>
               <PersonLink
-                to={`/people/${person.slug}`}
+                to={`/people/${person.slug}?${searchParams.toString()}`}
                 className={classNames({
                   'has-text-danger': person.sex === 'f',
                 })}
@@ -65,7 +154,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
                 .some(mother => mother.name === person.motherName)
                 && person.motherName ? (
                   <PersonLink
-                    to={`/people/${findParent(person.motherName)}`}
+                    to={findParent(person.motherName)}
                     className="has-text-danger"
                   >
                     {person.motherName}
@@ -82,7 +171,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
                 .some(father => father.name === person.fatherName)
                 && person.fatherName ? (
                   <PersonLink
-                    to={`/people/${findParent(person.fatherName)}`}
+                    to={findParent(person.fatherName)}
                   >
                     {person.fatherName}
                   </PersonLink>
