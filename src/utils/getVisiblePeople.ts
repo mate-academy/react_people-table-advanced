@@ -16,7 +16,7 @@ export const getVisiblePeople = (
   } = filters;
 
   if (query) {
-    const lowerQuery = query.toLowerCase();
+    const lowerQuery = query.toLowerCase().trim();
 
     visiblePeople = people.filter(person => {
       const lowerName = person.name.toLowerCase();
