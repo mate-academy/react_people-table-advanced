@@ -1,5 +1,6 @@
 import { Person } from '../types';
 import { Filter } from '../types/Filter';
+import { SortType } from '../types/SortType';
 
 export const filteredPeople = (people: Person[], {
   query = '',
@@ -20,8 +21,7 @@ export const filteredPeople = (people: Person[], {
     );
   }
 
-  /* eslint-disable no-extra-boolean-cast */
-  if (!!centuries.length) {
+  if (centuries.length) {
     preparedPeople = preparedPeople.filter((person) => centuries
       .includes(Math.ceil(person.born / 100).toString()));
   }
@@ -33,12 +33,12 @@ export const filteredPeople = (people: Person[], {
   if (sort) {
     preparedPeople.sort((person1, person2) => {
       switch (sort) {
-        case 'name':
-        case 'sex':
+        case SortType.Name:
+        case SortType.Sex:
           return person1[sort].localeCompare(person2[sort]);
 
-        case 'born':
-        case 'died':
+        case SortType.Born:
+        case SortType.Died:
           return person1[sort] - person2[sort];
 
         default:
