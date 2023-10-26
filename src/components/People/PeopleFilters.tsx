@@ -23,6 +23,8 @@ export const PeopleFilters = () => {
     setSearchWith({ query: event.target.value || null });
   };
 
+  const centuriesToDisplay = [16, 17, 18, 19, 20];
+
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
@@ -68,7 +70,7 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            {[16, 17, 18, 19, 20].map((number) => {
+            {centuriesToDisplay.map((number) => {
               const century = number.toString();
 
               return (
