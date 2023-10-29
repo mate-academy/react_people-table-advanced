@@ -106,7 +106,7 @@ export const PeoplePage = () => {
                 <p data-cy="peopleLoadingError">{errorMessage}</p>
               )}
 
-              {people.length === 0 && !isLoading && !errorMessage && (
+              {!people.length && !isLoading && !errorMessage && (
                 <p data-cy="noPeopleMessage">
                   There are no people on the server
                 </p>
