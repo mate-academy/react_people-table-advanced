@@ -6,6 +6,7 @@ import { PeopleTable } from './PeopleTable';
 import { Person } from '../types';
 import { getPeople } from '../api';
 import { Search } from '../types/searchEnum';
+import { SearchParams } from '../types/SearchParamsEnum';
 
 export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);
@@ -13,11 +14,11 @@ export const PeoplePage = () => {
   const [errorMessage, setErrorMessage] = useState('');
 
   const [searchParams] = useSearchParams();
-  const query = searchParams.get('query') || '';
-  const sex = searchParams.get('sex') || '';
-  const centuries = searchParams.getAll('centuries') || [];
-  const sort = searchParams.get('sort') || '';
-  const order = searchParams.get('order') || '';
+  const query = searchParams.get(SearchParams.Query) || '';
+  const sex = searchParams.get(SearchParams.Sex) || '';
+  const centuries = searchParams.getAll(SearchParams.Centuries) || [];
+  const sort = searchParams.get(SearchParams.Sort) || '';
+  const order = searchParams.get(SearchParams.Order) || '';
 
   useEffect(() => {
     const fetchData = async () => {
@@ -111,9 +112,11 @@ export const PeoplePage = () => {
                 </p>
               )}
 
-              {sortedPeople.length === 0 && !isLoading ? (
+              {sortedPeople.length === 0 && !isLoading && (
                 <p>There are no people matching the current search criteria</p>
-              ) : (
+              )}
+
+              {sortedPeople.length > 0 && !isLoading && (
                 <PeopleTable people={sortedPeople} />
               )}
             </div>

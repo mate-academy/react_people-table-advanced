@@ -2,12 +2,13 @@ import classNames from 'classnames';
 import { useSearchParams } from 'react-router-dom';
 import { SearchLink } from './SearchLink';
 import { getSearchWith } from '../utils/searchHelper';
+import { SearchParams } from '../types/SearchParamsEnum';
 
 export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const query = searchParams.get('query') || '';
-  const sex = searchParams.get('sex') || '';
-  const centuries = searchParams.getAll('centuries') || [];
+  const query = searchParams.get(SearchParams.Query) || '';
+  const sex = searchParams.get(SearchParams.Sex) || '';
+  const centuries = searchParams.getAll(SearchParams.Centuries) || [];
 
   const allCenturies = ['16', '17', '18', '19', '20'];
 

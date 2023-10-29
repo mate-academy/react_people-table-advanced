@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import classNames from 'classnames';
 import {
   NavLink,
@@ -128,7 +127,10 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
               <td>{person.died}</td>
               <td>
                 {mother ? (
-                  <NavLink to={`/people/${mother.slug}`} className="has-text-danger">
+                  <NavLink
+                    to={`/people/${mother.slug}?${searchParams.toString()}`}
+                    className="has-text-danger"
+                  >
                     {person.motherName || '-'}
                   </NavLink>
                 ) : (
@@ -138,7 +140,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
 
               <td>
                 {father ? (
-                  <NavLink to={`/people/${father.slug}`}>
+                  <NavLink to={`/people/${father.slug}?${searchParams.toString()}`}>
                     {person.fatherName || '-'}
                   </NavLink>
                 ) : (
