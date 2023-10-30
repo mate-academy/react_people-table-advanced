@@ -1,12 +1,13 @@
 import { Person } from '../types';
 import { Filter } from '../types/Filter';
+import { Order } from '../types/OrderFilter';
 import { SortType } from '../types/SortType';
 
 export const filteredPeople = (people: Person[], {
   query = '',
   centuries = [],
   sex = '',
-  order = 'asc',
+  order = Order.Asc,
   sort = '',
 }: Filter): Person[] => {
   let preparedPeople = [...people];
@@ -47,7 +48,7 @@ export const filteredPeople = (people: Person[], {
     });
   }
 
-  if (order === 'desc') {
+  if (order === Order.Desc) {
     preparedPeople.reverse();
   }
 
