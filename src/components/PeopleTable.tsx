@@ -1,12 +1,11 @@
+/* eslint-disable */
 import {
   Link,
   useParams,
   useSearchParams,
 } from 'react-router-dom';
 import {
-  // useCallback,
   useEffect,
-  // useMemo,
   useState,
 } from 'react';
 import classNames from 'classnames';
@@ -16,35 +15,54 @@ import { Loader } from './Loader';
 import { SearchLink } from './SearchLink';
 import { SearchParams } from '../utils/searchHelper';
 
-// export enum SortType {
-//   NONE,
-//   ALPHABET,
-// }
-
 export const PeopleTable: React.FC = () => {
   const [people, setPeople] = useState<Person[]>([]);
   const { personSlug } = useParams();
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingError, setIsLoadingError] = useState(false);
   const [isSelected, setIsSelected] = useState(false);
-  const [copy, setCopy] = useState(people);
+  const [copy, setCopy] = useState<Person[]>([]);
   const [searchParams] = useSearchParams();
   const sort = searchParams.get('sort');
   const order = searchParams.get('order');
   const sex = searchParams.get('sex');
-  // const all = searchParams.toString().length;
-  // const [count, setCount] = useState(0)
+  const query = searchParams.get('query');
+  const centuries = searchParams.getAll('centuries');
+  // const [_sexState, _setSexState] = useState(sex)
+  // const [centuriesState, setCenturiesState] = useState(centuries)
+
+  // console.log(sexState, 'sexState');
+  // console.log(centuriesState, 'centState');
+  // console.log( 'last1'.slice(0,-1));
 
   useEffect(() => {
     setIsLoading(true);
     getPeople()
       .then(response => {
-        setPeople(response);
+        setPeople(response)
         setCopy([...response]);
+
+
       })
       .catch(() => setIsLoadingError(true))
-      .finally(() => setIsLoading(false));
+      .finally(() => {
+        // console.log(copy, 'copy2');
+
+        setIsLoading(false)
+      });
   }, []);
+
+  // useEffect(() => {
+  //   const newPeople = sortByTrigger();
+  //   setPeople(newPeople);
+  // }, [copy])
+
+  useEffect(() => {
+    const newPeople = sortByTrigger();
+
+    setPeople(newPeople);
+
+  }, [copy, sort, sex, order, query, JSON.stringify(centuries)]);
 
   const isAnchorHere = (anchorName: string | null): Person | undefined => {
     if (anchorName) {
@@ -58,69 +76,143 @@ export const PeopleTable: React.FC = () => {
     return firstWord.localeCompare(secondWord);
   }
 
+  // function sortFuncSwitchCase(sortCase: string | string[] | null) {
+
+  //   switch(sortCase) {
+  //     // @ts-ignore
+  //     case 'm':
+  //       console.log('sort sex m sortCase' );
+  //       break;
+  //     // @ts-ignore
+  //     case 'born':
+  //       console.log('born sortCase');
+  //       break;
+  //     case 'centuries':
+  //       console.log(centuries, 'sortCase');
+  //       break;
+  //     default:
+  //       console.log('def sortCase');
+  //       break;
+  //   }
+  // }
+
+  // sortFuncSwitchCase(sex);
+
+
+  // console.log(list, 'list  outside');
+
   function sortByTrigger() {
-    const list = [...people];
+    const list = [...copy];
+    // console.log(list, copy);
 
-    if (order) {
-      return list.reverse();
-    }
+    if (centuries.length) {
+      // const list2 = [...copy]
+      console.log(centuries, 'if sortByTrigger');
 
-    if (sort === 'name') {
-      return list.sort(
-        (first, second) => getSortElementComparison(first.name, second.name),
-      );
-    }
+      const test = list.filter((person) => {
+        return centuries.some((century) => findCentury(person.born, century));
+        });
+        // console.log(test, 'test');
 
-    if (sort === 'sex') {
+      return test;
+   }
+
+    else if (sort === 'sex') {
+      console.log('sex sortByTrigger');
+
       return list.sort(
         (first, second) => getSortElementComparison(first.sex, second.sex),
       );
     }
 
-    if (sort === 'born') {
+    else if (sort === 'born') {
+      console.log('sex sortByTrigger');
+
       return list.sort(
         (first, second) => (first.born > second.born ? 1 : -1),
       );
     }
 
-    if (sort === 'died') {
+    else if (sort === 'died') {
+      console.log('died sortByTrigger');
+
       return list.sort(
         (first, second) => (first.died > second.died ? 1 : -1),
       );
     }
 
-    if (sex === 'm') {
+    else if (query?.length) {
+      const test = list.filter(person => (
+        person.name.toLowerCase().includes(query.toLowerCase())
+      ))
+
+      console.log(test, 'query is here');
+      return test;
+
+    }
+
+    else if (sex === 'm') {
+      console.log('sex m sortByTrigger');
+
       return list.sort(
         (first, second) => getSortElementComparison(second.sex, first.sex),
       );
     }
 
-    if (sex === 'f') {
+    else if (sex === 'f') {
+      // console.log('sex f');
+
       return list.sort(
         (first, second) => getSortElementComparison(first.sex, second.sex),
       );
     }
 
+    else if (order) {
+    // console.log('reversed');
+
+    return list.reverse();
+  }
+
+  else if (sort === 'name') {
+    // console.log('name');
+
+    return list.sort(
+      (first, second) => getSortElementComparison(first.name, second.name),
+    );
+  }
+
     return copy;
   }
 
+  function findCentury(dateOfBirth: Person['born'], century: string) {
+    const result = (+century -1) === +(String(dateOfBirth).slice(0, -2))
+    // console.log(result, 'result');
+    return result;
+  }
+
   function sortByName(sortBy: string) {
+
+    // sortFuncSwitchCase(sortBy);
+    // console.log(sortBy, 'sortBy');
+
     if (sort && !order) {
+      console.log('sort & !order');
+
       return { sort: sortBy, order: 'desc' };
     }
 
     if (order) {
+      console.log('order');
+
       return { sort: null, order: null };
     }
 
     return { sort: sortBy };
   }
 
-  useEffect(() => {
-    const newPeople = sortByTrigger();
 
-    setPeople(newPeople);
-  }, [sort, sex, order]);
+
+
 
   return (
     <>
@@ -164,7 +256,7 @@ export const PeopleTable: React.FC = () => {
                     <span className="is-flex is-flex-wrap-nowrap">
                       Sex
                       <SearchLink
-                        params={sortByName('sex') as SearchParams}
+                        params={sortByName('sex') as SearchParams }
                       >
                         <span className="icon">
                           <i className="fas fa-sort" />
