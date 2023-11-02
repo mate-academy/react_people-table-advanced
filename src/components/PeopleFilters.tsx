@@ -1,17 +1,12 @@
-/* eslint-disable */
 import { useState } from 'react';
-import { SearchLink } from './SearchLink';
 import { Link, useSearchParams } from 'react-router-dom';
+import { SearchLink } from './SearchLink';
 
 export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const [query, setQuery] = useState('')
-    // const query = searchParams.get('query');
-
-  // const [sexState, setSexState] = useState('')
+  const [query, setQuery] = useState('');
 
   function addFiltersMale() {
-    // setSexState()
     return { sex: 'm' };
   }
 
@@ -23,19 +18,20 @@ export const PeopleFilters = () => {
     return { sex: null };
   }
 
+  function addCenturies(century: string) {
+    let centuryArray = searchParams.getAll('centuries') || [];
 
-function addCenturies(century: string) {
-  let centuryArray = searchParams.getAll ('centuries') || [];
-  centuryArray = [...centuryArray, century];
-  return { centuries: centuryArray }
-}
+    centuryArray = [...centuryArray, century];
+
+    return { centuries: centuryArray };
+  }
 
   const params = new URLSearchParams(searchParams);
 
   function searchFilter(e: React.ChangeEvent<HTMLInputElement>) {
     setQuery(e.target.value);
     params.set('query', e.target.value);
-    setSearchParams(params)
+    setSearchParams(params);
   }
 
   return (
@@ -43,9 +39,15 @@ function addCenturies(century: string) {
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        <SearchLink className="is-active" params={addFiltersAllSex()}>All</SearchLink>
-        <SearchLink className="" params={addFiltersMale()}>Male</SearchLink>
-        <SearchLink className="" params={addFiltersFemale()}>Female</SearchLink>
+        <SearchLink className="is-active" params={addFiltersAllSex()}>
+          All
+        </SearchLink>
+        <SearchLink className="" params={addFiltersMale()}>
+          Male
+        </SearchLink>
+        <SearchLink className="" params={addFiltersFemale()}>
+          Female
+        </SearchLink>
       </p>
 
       <div className="panel-block">
@@ -56,7 +58,7 @@ function addCenturies(century: string) {
             className="input"
             placeholder="Search"
             value={query}
-            onChange={(e) =>searchFilter(e)}
+            onChange={(e) => searchFilter(e)}
           />
           <span className="icon is-left">
             <i className="fas fa-search" aria-hidden="true" />

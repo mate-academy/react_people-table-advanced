@@ -1,4 +1,3 @@
-/* eslint-disable */
 import {
   Link,
   useParams,
@@ -28,41 +27,19 @@ export const PeopleTable: React.FC = () => {
   const sex = searchParams.get('sex');
   const query = searchParams.get('query');
   const centuries = searchParams.getAll('centuries');
-  // const [_sexState, _setSexState] = useState(sex)
-  // const [centuriesState, setCenturiesState] = useState(centuries)
-
-  // console.log(sexState, 'sexState');
-  // console.log(centuriesState, 'centState');
-  // console.log( 'last1'.slice(0,-1));
 
   useEffect(() => {
     setIsLoading(true);
     getPeople()
       .then(response => {
-        setPeople(response)
+        setPeople(response);
         setCopy([...response]);
-
-
       })
       .catch(() => setIsLoadingError(true))
       .finally(() => {
-        // console.log(copy, 'copy2');
-
-        setIsLoading(false)
+        setIsLoading(false);
       });
   }, []);
-
-  // useEffect(() => {
-  //   const newPeople = sortByTrigger();
-  //   setPeople(newPeople);
-  // }, [copy])
-
-  useEffect(() => {
-    const newPeople = sortByTrigger();
-
-    setPeople(newPeople);
-
-  }, [copy, sort, sex, order, query, JSON.stringify(centuries)]);
 
   const isAnchorHere = (anchorName: string | null): Person | undefined => {
     if (anchorName) {
@@ -76,143 +53,83 @@ export const PeopleTable: React.FC = () => {
     return firstWord.localeCompare(secondWord);
   }
 
-  // function sortFuncSwitchCase(sortCase: string | string[] | null) {
+  function findCentury(dateOfBirth: Person['born'], century: string) {
+    const result = (+century - 1) === +(String(dateOfBirth).slice(0, -2));
 
-  //   switch(sortCase) {
-  //     // @ts-ignore
-  //     case 'm':
-  //       console.log('sort sex m sortCase' );
-  //       break;
-  //     // @ts-ignore
-  //     case 'born':
-  //       console.log('born sortCase');
-  //       break;
-  //     case 'centuries':
-  //       console.log(centuries, 'sortCase');
-  //       break;
-  //     default:
-  //       console.log('def sortCase');
-  //       break;
-  //   }
-  // }
-
-  // sortFuncSwitchCase(sex);
-
-
-  // console.log(list, 'list  outside');
+    return result;
+  }
 
   function sortByTrigger() {
-    const list = [...copy];
-    // console.log(list, copy);
+    let list = [...copy];
 
     if (centuries.length) {
-      // const list2 = [...copy]
-      console.log(centuries, 'if sortByTrigger');
-
-      const test = list.filter((person) => {
+      list = list.filter((person) => {
         return centuries.some((century) => findCentury(person.born, century));
-        });
-        // console.log(test, 'test');
+      });
+    }
 
-      return test;
-   }
-
-    else if (sort === 'sex') {
-      console.log('sex sortByTrigger');
-
-      return list.sort(
+    if (sort === 'sex') {
+      list.sort(
         (first, second) => getSortElementComparison(first.sex, second.sex),
       );
     }
 
-    else if (sort === 'born') {
-      console.log('sex sortByTrigger');
-
-      return list.sort(
+    if (sort === 'born') {
+      list.sort(
         (first, second) => (first.born > second.born ? 1 : -1),
       );
     }
 
-    else if (sort === 'died') {
-      console.log('died sortByTrigger');
-
-      return list.sort(
+    if (sort === 'died') {
+      list.sort(
         (first, second) => (first.died > second.died ? 1 : -1),
       );
     }
 
-    else if (query?.length) {
-      const test = list.filter(person => (
+    if (query?.length) {
+      list = list.filter(person => (
         person.name.toLowerCase().includes(query.toLowerCase())
-      ))
-
-      console.log(test, 'query is here');
-      return test;
-
+      ));
     }
 
-    else if (sex === 'm') {
-      console.log('sex m sortByTrigger');
+    if (sex === 'm') {
+      list = list.filter(person => person.sex === 'm');
+    }
 
-      return list.sort(
-        (first, second) => getSortElementComparison(second.sex, first.sex),
+    if (sex === 'f') {
+      list = list.filter(person => person.sex === 'f');
+    }
+
+    if (sort === 'name') {
+      list.sort(
+        (first, second) => getSortElementComparison(first.name, second.name),
       );
     }
 
-    else if (sex === 'f') {
-      // console.log('sex f');
-
-      return list.sort(
-        (first, second) => getSortElementComparison(first.sex, second.sex),
-      );
+    if (order) {
+      list.reverse();
     }
 
-    else if (order) {
-    // console.log('reversed');
-
-    return list.reverse();
+    return list;
   }
 
-  else if (sort === 'name') {
-    // console.log('name');
+  useEffect(() => {
+    const newPeople = sortByTrigger();
 
-    return list.sort(
-      (first, second) => getSortElementComparison(first.name, second.name),
-    );
-  }
-
-    return copy;
-  }
-
-  function findCentury(dateOfBirth: Person['born'], century: string) {
-    const result = (+century -1) === +(String(dateOfBirth).slice(0, -2))
-    // console.log(result, 'result');
-    return result;
-  }
+    setPeople(newPeople);
+  }, [copy, sort, sex, order, query, JSON.stringify(centuries)]);
 
   function sortByName(sortBy: string) {
-
-    // sortFuncSwitchCase(sortBy);
-    // console.log(sortBy, 'sortBy');
-
     if (sort && !order) {
-      console.log('sort & !order');
-
       return { sort: sortBy, order: 'desc' };
     }
 
     if (order) {
-      console.log('order');
-
       return { sort: null, order: null };
     }
 
     return { sort: sortBy };
   }
-
-
-
-
 
   return (
     <>
@@ -256,7 +173,7 @@ export const PeopleTable: React.FC = () => {
                     <span className="is-flex is-flex-wrap-nowrap">
                       Sex
                       <SearchLink
-                        params={sortByName('sex') as SearchParams }
+                        params={sortByName('sex') as SearchParams}
                       >
                         <span className="icon">
                           <i className="fas fa-sort" />
