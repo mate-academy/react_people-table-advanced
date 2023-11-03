@@ -3,15 +3,16 @@ import React from 'react';
 import cn from 'classnames';
 import { SearchLink } from '../SearchLink';
 import { getSearchWith } from '../../utils/searchHelper';
+import { SearchParams } from '../../types/SearchParams';
 
 const CENTURIES_OPTION = ['16', '17', '18', '19', '20'];
 
 export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const query = searchParams.get('query') || '';
-  const sex = searchParams.get('sex') || '';
-  const centuries = searchParams.getAll('centuries') || [];
+  const query = searchParams.get(SearchParams.query) || '';
+  const sex = searchParams.get(SearchParams.sex) || '';
+  const centuries = searchParams.getAll(SearchParams.centuries) || [];
 
   const handleChangeQuery = (e: React.ChangeEvent<HTMLInputElement>) => {
     const searchs = getSearchWith(

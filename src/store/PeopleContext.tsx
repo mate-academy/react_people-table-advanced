@@ -2,6 +2,7 @@ import { useSearchParams } from 'react-router-dom';
 import React, { useState } from 'react';
 import * as type from '../types';
 import { getFilteredPeople } from '../utils/filter';
+import { SearchParams } from '../types/SearchParams';
 
 export const PeopleContext = React.createContext<type.PeopleContext>({
   setInitialPeople: () => { },
@@ -23,11 +24,11 @@ export const PeopleProvide: React.FC<Props> = ({ children }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [hasError, setHasError] = useState('');
 
-  const query = searchParams.get('query') || '';
-  const centuries = searchParams.getAll('centuries') || [];
-  const sex = searchParams.get('sex') || '';
-  const sort = searchParams.get('sort') || '';
-  const order = searchParams.get('order') || '';
+  const query = searchParams.get(SearchParams.query) || '';
+  const centuries = searchParams.getAll(SearchParams.centuries) || [];
+  const sex = searchParams.get(SearchParams.sex) || '';
+  const sort = searchParams.get(SearchParams.sort) || '';
+  const order = searchParams.get(SearchParams.order) || '';
 
   const visiblePeople = getFilteredPeople(
     initialPeople,
