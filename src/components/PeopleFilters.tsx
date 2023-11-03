@@ -1,10 +1,12 @@
-import { useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
+import classNames from 'classnames';
 import { SearchLink } from './SearchLink';
 
 export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const [query, setQuery] = useState('');
+  const sex = searchParams.get('sex');
+  const centuries = searchParams.getAll('centuries');
+  const query = searchParams.get('query') || '';
 
   function addFiltersMale() {
     return { sex: 'm' };
@@ -21,7 +23,11 @@ export const PeopleFilters = () => {
   function addCenturies(century: string) {
     let centuryArray = searchParams.getAll('centuries') || [];
 
-    centuryArray = [...centuryArray, century];
+    if (centuryArray.includes(century)) {
+      centuryArray.splice(centuries.indexOf(century), 1);
+    } else {
+      centuryArray = [...centuryArray, century];
+    }
 
     return { centuries: centuryArray };
   }
@@ -29,8 +35,12 @@ export const PeopleFilters = () => {
   const params = new URLSearchParams(searchParams);
 
   function searchFilter(e: React.ChangeEvent<HTMLInputElement>) {
-    setQuery(e.target.value);
-    params.set('query', e.target.value);
+    if (!e.target.value) {
+      params.delete('query');
+    } else {
+      params.set('query', e.target.value);
+    }
+
     setSearchParams(params);
   }
 
@@ -39,13 +49,25 @@ export const PeopleFilters = () => {
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        <SearchLink className="is-active" params={addFiltersAllSex()}>
+
+        <SearchLink
+          className={classNames({ 'is-active': (sex !== 'm' && sex !== 'f') })}
+          params={addFiltersAllSex()}
+        >
           All
         </SearchLink>
-        <SearchLink className="" params={addFiltersMale()}>
+
+        <SearchLink
+          className={classNames({ 'is-active': sex === 'm' })}
+          params={addFiltersMale()}
+        >
           Male
         </SearchLink>
-        <SearchLink className="" params={addFiltersFemale()}>
+
+        <SearchLink
+          className={classNames({ 'is-active': sex === 'f' })}
+          params={addFiltersFemale()}
+        >
           Female
         </SearchLink>
       </p>
@@ -71,7 +93,11 @@ export const PeopleFilters = () => {
           <div className="level-left">
             <SearchLink
               data-cy="century"
-              className="button mr-1"
+              className={
+                classNames(
+                  'button mr-1', { 'is-info': centuries.includes('16') },
+                )
+              }
               params={addCenturies('16')}
             >
               16
@@ -79,7 +105,11 @@ export const PeopleFilters = () => {
 
             <SearchLink
               data-cy="century"
-              className="button mr-1 is-info"
+              className={
+                classNames(
+                  'button mr-1', { 'is-info': centuries.includes('17') },
+                )
+              }
               params={addCenturies('17')}
             >
               17
@@ -87,7 +117,11 @@ export const PeopleFilters = () => {
 
             <SearchLink
               data-cy="century"
-              className="button mr-1 is-info"
+              className={
+                classNames(
+                  'button mr-1', { 'is-info': centuries.includes('18') },
+                )
+              }
               params={addCenturies('18')}
             >
               18
@@ -95,7 +129,11 @@ export const PeopleFilters = () => {
 
             <SearchLink
               data-cy="century"
-              className="button mr-1 is-info"
+              className={
+                classNames(
+                  'button mr-1', { 'is-info': centuries.includes('19') },
+                )
+              }
               params={addCenturies('19')}
             >
               19
@@ -103,7 +141,11 @@ export const PeopleFilters = () => {
 
             <SearchLink
               data-cy="century"
-              className="button mr-1"
+              className={
+                classNames(
+                  'button mr-1', { 'is-info': centuries.includes('20') },
+                )
+              }
               params={addCenturies('20')}
             >
               20

@@ -133,12 +133,10 @@ export const PeopleTable: React.FC = () => {
 
   return (
     <>
-      {/* <h1 className="title">People Page</h1> */}
       {isLoading ? (
         <Loader />
       ) : (
         <div className="block">
-          {/* <div className="box table-container"> */}
           {isLoadingError && (
             <p data-cy="peopleLoadingError" className="has-text-danger">
               Something went wrong
@@ -278,9 +276,7 @@ export const PeopleTable: React.FC = () => {
 
             </tbody>
           </table>
-          {/* </div> */}
         </div>
-
       )}
     </>
   );
