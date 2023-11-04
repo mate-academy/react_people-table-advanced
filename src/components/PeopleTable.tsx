@@ -27,6 +27,7 @@ export const PeopleTable: React.FC = () => {
   const sex = searchParams.get('sex');
   const query = searchParams.get('query');
   const centuries = searchParams.getAll('centuries');
+  const params = new URLSearchParams(searchParams);
 
   useEffect(() => {
     setIsLoading(true);
@@ -225,7 +226,7 @@ export const PeopleTable: React.FC = () => {
                   >
                     <td>
                       <Link
-                        to={`/people/${person.slug}`}
+                        to={`/people/${person.slug}?${params}`}
                         className={classNames({
                           'has-text-danger': person.sex === 'f',
                         })}

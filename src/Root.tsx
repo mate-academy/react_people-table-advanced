@@ -5,7 +5,6 @@ import {
   Navigate,
 } from 'react-router-dom';
 import { App } from './App';
-// import { PeopleTable } from './components/PeopleTable';
 import { PeoplePage } from './components/PeoplePage';
 
 export const Root = () => (
