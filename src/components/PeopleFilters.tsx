@@ -1,7 +1,7 @@
 import cn from 'classnames';
 import { useSearchParams } from 'react-router-dom';
 import { SearchLink } from './SearchLink';
-import { getSearchWith } from './getSeachWith';
+import { getSearchWith } from '../utils/searchHelper';
 
 const centuries = [16, 17, 18, 19, 20];
 
@@ -11,14 +11,11 @@ export const PeopleFilters = () => {
   const selectedCenturies = searchParams.getAll('centuries');
   const sex = searchParams.get('sex') || '';
 
-  function setSearchWith(params: any) {
-    const search = getSearchWith(params, searchParams);
-
-    setSearchParams(search);
-  }
-
   const handleQueryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchWith({ query: event.target.value || null });
+
+    setSearchParams(getSearchWith(
+      searchParams, { query: event.target.value || null },
+    ));
   };
 
   return (
@@ -98,7 +95,9 @@ export const PeopleFilters = () => {
           <div className="level-right ml-4">
             <SearchLink
               data-cy="centuryALL"
-              className="button is-success is-outlined"
+              className={cn('button is-success', {
+                'is-outlined': selectedCenturies.length > 0,
+              })}
               params={{ centuries: [] }}
             >
               All

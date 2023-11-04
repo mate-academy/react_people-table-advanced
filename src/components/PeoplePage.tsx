@@ -9,7 +9,7 @@ import { getPeople } from '../api';
 export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);
   const [error, setError] = useState<boolean>(false);
-  const [loader, setLoader] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [arePeople, setArePeople] = useState<boolean>(false);
   const [searchParams] = useSearchParams();
   const query = searchParams.get('query') || '';
@@ -17,15 +17,15 @@ export const PeoplePage = () => {
   const sex = searchParams.get('sex') || '';
 
   useEffect(() => {
-    setLoader(true);
+    setIsLoading(true);
     getPeople().then((response) => {
       setPeople(response);
 
-      if (response.length === 0) {
+      if (!response.length) {
         setArePeople(true);
       }
     }).catch(() => setError(true))
-      .finally(() => setLoader(false));
+      .finally(() => setIsLoading(false));
   }, []);
 
   const filteredPeople = () => {
@@ -36,7 +36,7 @@ export const PeoplePage = () => {
       filterPeople = filterPeople.filter((person) => person.sex === sex);
     }
 
-    if (query) {
+    if (query.trim()) {
       filterPeople = filterPeople.filter((person) => {
         return (
           person.name.toLowerCase().includes(newQuery)
@@ -68,7 +68,7 @@ export const PeoplePage = () => {
 
           <div className="column">
             <div className="box table-container">
-              {loader && <Loader />}
+              {isLoading && <Loader />}
 
               {error
               && <p data-cy="peopleLoadingError">Something went wrong</p>}
@@ -79,10 +79,10 @@ export const PeoplePage = () => {
                 </p>
               )}
 
-              {!loader && people.length > 0
+              {!isLoading && people.length > 0
               && <PeopleTable people={filteredPeople()} />}
 
-              {!filteredPeople().length && !loader
+              {!filteredPeople().length && !isLoading
               && (
                 <p>
                   There are no people matching the current search criteria
