@@ -6,8 +6,11 @@ import { Person } from '../../types';
 import '../../App.scss';
 import { PersonLink } from '../PersonLink';
 import { SearchLink } from '../SearchLink';
+import { Filter } from '../../types/Filter';
 
-const SORT_TITLES = ['name', 'sex', 'born', 'died'];
+const SORT_TITLES: Filter[] = (
+  [Filter.Name, Filter.Sex, Filter.Born, Filter.Died]
+);
 
 type Props = {
   people: Person[],
@@ -55,14 +58,21 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
       });
     }
 
-    if (sort === 'born' || sort === 'died') {
-      filteredPeople = filteredPeople.sort((a, b) => a[sort] - b[sort]);
-    }
+    switch (sort) {
+      case Filter.Born:
+      case Filter.Died:
+        filteredPeople = filteredPeople.sort((a, b) => a[sort] - b[sort]);
+        break;
 
-    if (sort === 'name' || sort === 'sex') {
-      filteredPeople = (
-        filteredPeople.sort((a, b) => a[sort].localeCompare(b[sort]))
-      );
+      case Filter.Name:
+      case Filter.Sex:
+        filteredPeople = (
+          filteredPeople.sort((a, b) => a[sort].localeCompare(b[sort]))
+        );
+        break;
+
+      default:
+        break;
     }
 
     if (order) {

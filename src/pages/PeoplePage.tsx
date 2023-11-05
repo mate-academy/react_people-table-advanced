@@ -22,12 +22,8 @@ export const PeoplePage = () => {
           setIsNoPeople(true);
         }
       })
-      .catch(() => {
-        setIsError(true);
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
+      .catch(() => setIsError(true))
+      .finally(() => setIsLoading(false));
   }, []);
 
   return (
