@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { PeopleFilters } from './PeopleFilters';
 import { Loader } from './Loader';
@@ -28,7 +28,7 @@ export const PeoplePage = () => {
       .finally(() => setIsLoading(false));
   }, []);
 
-  const filteredPeople = () => {
+  const filteredPeople = useMemo(() => {
     const newQuery = query.toLowerCase().trim();
     let filterPeople = [...people];
 
@@ -36,7 +36,7 @@ export const PeoplePage = () => {
       filterPeople = filterPeople.filter((person) => person.sex === sex);
     }
 
-    if (query.trim()) {
+    if (newQuery) {
       filterPeople = filterPeople.filter((person) => {
         return (
           person.name.toLowerCase().includes(newQuery)
@@ -54,7 +54,7 @@ export const PeoplePage = () => {
     }
 
     return filterPeople;
-  };
+  }, [query, sex, people, selectedCenturies]);
 
   return (
     <>
@@ -80,9 +80,9 @@ export const PeoplePage = () => {
               )}
 
               {!isLoading && people.length > 0
-              && <PeopleTable people={filteredPeople()} />}
+              && <PeopleTable people={filteredPeople} />}
 
-              {!filteredPeople().length && !isLoading
+              {!filteredPeople.length && !isLoading
               && (
                 <p>
                   There are no people matching the current search criteria

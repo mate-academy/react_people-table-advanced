@@ -7,11 +7,10 @@ type Props = {
 };
 
 export const PeopleLink: React.FC<Props> = ({ person }) => {
-
   const {
     name,
     slug,
-    sex
+    sex,
   } = person;
 
   return (
