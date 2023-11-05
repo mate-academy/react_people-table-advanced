@@ -1,11 +1,25 @@
-import { useContext } from 'react';
+import { useContext, useMemo } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { PeopleFilters } from '../components/PeopleFilters';
 import { Loader } from '../components/Loader';
 import { PeopleTable } from '../components/PeopleTable';
 import { PeopleContext } from '../stores/PeopleContext';
 
 export const PeoplePage = () => {
-  const { people, isLoading, loadingError } = useContext(PeopleContext);
+  const {
+    people, isLoading, loadingError, filterPeople,
+  } = useContext(PeopleContext);
+  const [searchParams] = useSearchParams();
+  const query = searchParams.get('query') || '';
+  const sex = searchParams.get('sex') || '';
+  const centuries = searchParams.getAll('centuries') || [];
+  const sort = searchParams.get('sort') || '';
+  const order = searchParams.get('order') || '';
+  const filteredPeople = useMemo(() => {
+    return filterPeople({
+      query, sex, centuries, sort, order,
+    });
+  }, [people, query, centuries, sex, sort, order]);
 
   return (
     <>
@@ -14,7 +28,9 @@ export const PeoplePage = () => {
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
           <div className="column is-7-tablet is-narrow-desktop">
-            <PeopleFilters />
+            {people.length > 0 && (
+              <PeopleFilters />
+            )}
           </div>
 
           <div className="column">
@@ -26,18 +42,18 @@ export const PeoplePage = () => {
               {loadingError && (
                 <p data-cy="peopleLoadingError">Something went wrong</p>
               )}
-              {!isLoading && !loadingError && people.length === 0 && (
+              {(!isLoading && !loadingError && !people.length) && (
                 <p data-cy="noPeopleMessage">
                   There are no people on the server
                 </p>
               )}
 
-              {false && (
+              {!filteredPeople.length && (
                 <p>There are no people matching the current search criteria</p>
               )}
 
-              {people.length > 0 && (
-                <PeopleTable people={people} />
+              {(filteredPeople.length && !isLoading) && (
+                <PeopleTable people={filteredPeople} />
               )}
             </div>
           </div>
