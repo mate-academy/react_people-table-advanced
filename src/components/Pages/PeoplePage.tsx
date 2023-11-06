@@ -9,12 +9,14 @@ export const PeoplePage = () => {
   const {
     people, loading, loadingError, filterPeople,
   } = usePeople();
+
   const [searchParams] = useSearchParams();
   const query = searchParams.get('query') || '';
   const sex = searchParams.get('sex') || '';
   const centuries = searchParams.getAll('centuries') || [];
   const sort = searchParams.get('sort') || '';
   const order = searchParams.get('order') || '';
+
   const filteredPeople = useMemo(() => {
     return filterPeople({
       query, sex, centuries, sort, order,
@@ -35,9 +37,7 @@ export const PeoplePage = () => {
 
           <div className="column">
             <div className="box table-container">
-              {loading && (
-                <Loader />
-              )}
+              {loading && (<Loader />)}
 
               {loadingError && (
                 <p data-cy="peopleLoadingError">

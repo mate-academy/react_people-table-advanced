@@ -16,6 +16,22 @@ export const PeopleFilters = () => {
       : [...centuries, century];
   }
 
+  const allCenturiesLink = (Centuries: string[]) => {
+    return (Centuries.map(century => (
+      <SearchLink
+        params={{ centuries: getNewCenturies(century) }}
+        data-cy="century"
+        className={classNames(
+          'button mr-1',
+          { 'is-info': centuries.includes(century) },
+        )}
+        key={century}
+      >
+        {century}
+      </SearchLink>
+    )));
+  };
+
   function setSearchWith(params: SearchParams) {
     const search = getSearchWith(searchParams, params);
 
@@ -77,19 +93,7 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            {allCenturies.map(century => (
-              <SearchLink
-                params={{ centuries: getNewCenturies(century) }}
-                data-cy="century"
-                className={classNames(
-                  'button mr-1',
-                  { 'is-info': centuries.includes(century) },
-                )}
-                key={century}
-              >
-                {century}
-              </SearchLink>
-            ))}
+            {allCenturiesLink(allCenturies)}
           </div>
 
           <div className="level-right ml-4">
