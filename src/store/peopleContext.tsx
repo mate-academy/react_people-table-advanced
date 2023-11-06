@@ -16,6 +16,17 @@ type Props = {
   children: React.ReactNode;
 };
 
+enum SortValues {
+  name = 'name',
+  sex = 'sex',
+  born = 'born',
+  died = 'died',
+}
+
+enum OrderValue {
+  desc = 'desc',
+}
+
 export const UsersProvider: React.FC<Props> = ({ children }) => {
   const [people, setPeople] = useState<Person[]>([]);
   const [loading, setLoading] = useState(false);
@@ -69,12 +80,12 @@ export const UsersProvider: React.FC<Props> = ({ children }) => {
     if (sort) {
       preparedPeople.sort((person1, person2) => {
         switch (sort) {
-          case 'name':
-          case 'sex':
+          case SortValues.name:
+          case SortValues.sex:
             return person1[sort].localeCompare(person2[sort]);
 
-          case 'born':
-          case 'died':
+          case SortValues.born:
+          case SortValues.died:
             return person1[sort] - person2[sort];
 
           default:
@@ -83,7 +94,7 @@ export const UsersProvider: React.FC<Props> = ({ children }) => {
       });
     }
 
-    if (order === 'desc') {
+    if (order === OrderValue.desc) {
       preparedPeople.reverse();
     }
 
