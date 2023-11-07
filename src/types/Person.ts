@@ -9,3 +9,22 @@ export interface Person {
   mother?: Person,
   father?: Person,
 }
+
+export enum ErrorOption {
+  NoError,
+  Wrong,
+  Empty,
+}
+
+export enum Gender {
+  All = 'all',
+  MALE = 'm',
+  FEMALE = 'f',
+}
+
+export enum SortBy {
+  name = 'name',
+  sex = 'sex',
+  born = 'born',
+  died = 'died',
+}

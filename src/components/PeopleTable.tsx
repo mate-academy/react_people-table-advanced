@@ -1,173 +1,89 @@
-import React from 'react';
-import { useParams, useSearchParams } from 'react-router-dom';
-import classNames from 'classnames';
-import { Person } from '../types';
-import { PersonLink } from './PersonLink';
-import { SearchLink } from './SearchLink';
+import { FC } from 'react';
+import { NavLink, useParams, useSearchParams } from 'react-router-dom';
+import cn from 'classnames';
+import { Person, Gender } from '../types';
 
 type Props = {
-  people: Person[],
+  person: Person;
+  getParentLink: (par: string) => Person | undefined;
 };
-
-export const PeopleTable: React.FC<Props> = ({ people }) => {
+export const PeopleTable: FC<Props> = ({ person, getParentLink }) => {
   const [searchParams] = useSearchParams();
-  const { slugId } = useParams();
-  const sortType = searchParams.get('sort') || null;
-  const order = searchParams.get('order') || null;
+  const generateClassForPerson = cn({
+    'has-text-danger': person.sex === Gender.FEMALE,
+  });
 
-  const getParentLink = (name: string | null) => {
-    if (!name) {
-      return '-';
-    }
+  const { slug } = useParams();
 
-    const parent = people.find(par => par.name === name);
+  const getParentContent = (parentName: string) => {
+    let result;
 
-    if (parent) {
-      return (
-        <PersonLink
-          person={parent}
-        />
+    if (getParentLink(parentName)) {
+      const parent = getParentLink(parentName);
+
+      result = (
+        <td>
+          <NavLink
+            to={{
+              pathname: `/people/${parent?.slug}`,
+              search: searchParams.toString(),
+            }}
+            className={cn({
+              'has-text-danger': parent?.sex === Gender.FEMALE,
+            })}
+          >
+            {parent?.name}
+          </NavLink>
+        </td>
       );
     }
 
-    return name;
-  };
-
-  const getSortParams = (changeSort: string) => {
-    const newSort = sortType === changeSort && order === 'desc'
-      ? null
-      : changeSort;
-
-    let newOrder = null;
-
-    if (sortType === changeSort) {
-      newOrder = order
-        ? null
-        : 'desc';
+    if (parentName && !getParentLink(parentName)) {
+      result = <td>{parentName}</td>;
     }
 
-    const newParams = {
-      sort: newSort,
-      order: newOrder,
-    };
-
-    return newParams;
+    return result;
   };
 
-  const getSortClass = (changeSort: string) => {
-    return classNames(
-      'fas',
-      { 'fa-sort': sortType !== changeSort },
-      { 'fa-sort-up': sortType === changeSort && order !== 'desc' },
-      { 'fa-sort-down': sortType === changeSort && order === 'desc' },
-    );
-  };
+  const {
+    motherName,
+    fatherName,
+    slug: adress,
+    name,
+    sex,
+    born,
+    died,
+  } = person;
+
+  const motherContent = motherName
+    ? getParentContent(motherName)
+    : <td>-</td>;
+
+  const fatherContent = fatherName
+    ? getParentContent(fatherName)
+    : <td>-</td>;
 
   return (
-    <table
-      data-cy="peopleTable"
-      className="table is-striped is-hoverable is-narrow is-fullwidth"
+    <tr
+      data-cy="person"
+      className={slug === adress ? 'has-background-warning' : ''}
     >
-      <thead>
-        <tr>
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Name
-              <SearchLink
-                params={getSortParams('name')}
-              >
-                <span className="icon">
-                  <i
-                    className={getSortClass('name')}
-                  />
-                </span>
-              </SearchLink>
-            </span>
-          </th>
-
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Sex
-              <SearchLink
-                params={getSortParams('sex')}
-              >
-                <span className="icon">
-                  <i
-                    className={getSortClass('sex')}
-                  />
-                </span>
-              </SearchLink>
-            </span>
-          </th>
-
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Born
-              <SearchLink
-                params={getSortParams('born')}
-              >
-                <span className="icon">
-                  <i
-                    className={getSortClass('born')}
-                  />
-                </span>
-              </SearchLink>
-            </span>
-          </th>
-
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Died
-              <SearchLink
-                params={getSortParams('died')}
-              >
-                <span className="icon">
-                  <i
-                    className={getSortClass('died')}
-                  />
-                </span>
-              </SearchLink>
-            </span>
-          </th>
-
-          <th>Mother</th>
-          <th>Father</th>
-        </tr>
-      </thead>
-
-      <tbody>
-        {people.map(person => {
-          const {
-            sex,
-            born,
-            died,
-            fatherName,
-            motherName,
-          } = person;
-
-          return (
-            <tr
-              data-cy="person"
-              key={person.name}
-              className={classNames({
-                'has-background-warning': person.slug === slugId,
-              })}
-            >
-              <td>
-                <PersonLink
-                  person={person}
-                />
-              </td>
-
-              <td>{sex}</td>
-              <td>{born}</td>
-              <td>{died}</td>
-              <td>{getParentLink(motherName)}</td>
-              <td>{getParentLink(fatherName)}</td>
-            </tr>
-          );
-        })}
-      </tbody>
-    </table>
+      <td>
+        <NavLink
+          className={generateClassForPerson}
+          to={{
+            pathname: `/people/${adress}`,
+            search: searchParams.toString(),
+          }}
+        >
+          {name}
+        </NavLink>
+      </td>
+      <td>{sex}</td>
+      <td>{born}</td>
+      <td>{died}</td>
+      {motherContent}
+      {fatherContent}
+    </tr>
   );
 };
