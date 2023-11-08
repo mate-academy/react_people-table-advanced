@@ -19,12 +19,27 @@ export const SearchLink: React.FC<Props> = ({
   ...props // all usual Link props like `className`, `style` and `id`
 }) => {
   const [searchParams] = useSearchParams();
+  let currentCenturies = searchParams.getAll('centuries');
+
+  const newParams = params;
+
+  if (newParams.centuries
+      && typeof newParams.centuries === 'string') {
+    // let newCenturies = currentCenturies;
+
+    if (currentCenturies.includes(newParams.centuries)) {
+      currentCenturies = currentCenturies
+        .filter(elem => elem !== newParams.centuries);
+
+      newParams.centuries = currentCenturies.length ? currentCenturies : null;
+    } else {
+      currentCenturies.push(newParams.centuries);
+      newParams.centuries = currentCenturies;
+    }
+  }
 
   return (
     <Link
-      // to={{ search: getSearchWith(searchParams, { query: 'sdf' }) }}
-      // to={{ search: getSearchWith(searchParams, { query: null }) }}
-      // to={{ search: getSearchWith(searchParams, { centuries: ['16', '18'] }) }}
       to={{
         search: getSearchWith(searchParams, params),
       }}
