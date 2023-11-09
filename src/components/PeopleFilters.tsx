@@ -1,12 +1,65 @@
-export const PeopleFilters = () => {
+import cn from 'classnames';
+import { Link, useSearchParams } from 'react-router-dom';
+import { getSearchWith } from '../utils/searchHelper';
+import { SexEnum } from '../utils/SexEnum';
+
+type Props = {
+  centuries: string[],
+  query: string,
+  sex: string,
+};
+
+const cEnturies = ['16', '17', '18', '19', '20'];
+
+export const PeopleFilters: React.FC<Props> = ({
+  centuries,
+  query,
+  sex,
+}) => {
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  // eslint-disable-next-line
+  function setSearchWith(params: any) {
+    const search = getSearchWith(searchParams, params);
+
+    setSearchParams(search);
+  }
+
+  const handleQuery = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchWith({ query: e.target.value || null });
+  };
+
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        <a className="is-active" href="#/people">All</a>
-        <a className="" href="#/people?sex=m">Male</a>
-        <a className="" href="#/people?sex=f">Female</a>
+        <Link
+          className={cn('', { 'is-active': sex === SexEnum.ALL })}
+          to={{ search: getSearchWith(searchParams, { sex: null }) }}
+        >
+          All
+        </Link>
+
+        <Link
+          className={cn('', { 'is-active': sex === SexEnum.MALE })}
+          to={{
+            search: getSearchWith(searchParams,
+              { sex: SexEnum.MALE || null }),
+          }}
+        >
+          Male
+        </Link>
+
+        <Link
+          className={cn('', { 'is-active': sex === SexEnum.FEMALE })}
+          to={{
+            search: getSearchWith(searchParams,
+              { sex: SexEnum.FEMALE || null }),
+          }}
+        >
+          Female
+        </Link>
       </p>
 
       <div className="panel-block">
@@ -16,6 +69,8 @@ export const PeopleFilters = () => {
             type="search"
             className="input"
             placeholder="Search"
+            value={query}
+            onChange={handleQuery}
           />
 
           <span className="icon is-left">
@@ -27,66 +82,52 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            <a
-              data-cy="century"
-              className="button mr-1"
-              href="#/people?centuries=16"
-            >
-              16
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=17"
-            >
-              17
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=18"
-            >
-              18
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=19"
-            >
-              19
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1"
-              href="#/people?centuries=20"
-            >
-              20
-            </a>
+            {
+              cEnturies.map((century) => (
+                <Link
+                  key={century}
+                  data-cy="century"
+                  className={cn('button mr-1', {
+                    'is-info': centuries.includes(century.toString()),
+                  })}
+                  to={{
+                    search: getSearchWith(searchParams, {
+                      centuries: (centuries.includes(century))
+                        ? centuries.filter((ch) => ch !== century)
+                        : [...centuries, century],
+                    }),
+                  }}
+                >
+                  {century}
+                </Link>
+              ))
+            }
           </div>
 
           <div className="level-right ml-4">
-            <a
+            <Link
               data-cy="centuryALL"
-              className="button is-success is-outlined"
-              href="#/people"
+              className={cn('button is-success', {
+                'is-outlined': (!!centuries.length),
+              })}
+              to={{ search: getSearchWith(searchParams, { centuries: null }) }}
             >
               All
-            </a>
+            </Link>
           </div>
         </div>
       </div>
 
       <div className="panel-block">
-        <a
+        <Link
           className="button is-link is-outlined is-fullwidth"
-          href="#/people"
+          to={{
+            search: getSearchWith(searchParams,
+              { sex: null, query: null, centuries: null }),
+          }}
         >
           Reset all filters
-        </a>
+        </Link>
       </div>
     </nav>
   );
