@@ -61,6 +61,22 @@ export const PeopleTable: React.FC<Props> = ({ people, filteredPeople }) => {
     setSortedPeople(newSortedPeople);
   };
 
+  const getSortParams = (linkParameter: keyof Person) => {
+    // If the current sort parameter is not equal to the link parameter,
+    // we'll set the 'sort' to the link parameter and reset the 'order'.
+    if (faSort !== linkParameter) {
+      return { sort: linkParameter, order: null };
+    }
+    // If the current sort parameter equals the link parameter, we will toggle
+    // the sort order. If faOrder is truthy, reset both 'sort' and 'order' to null,
+    // otherwise set both to the link parameter.
+
+    return {
+      sort: faOrder ? null : linkParameter,
+      order: faOrder ? null : linkParameter,
+    };
+  };
+
   return (
     <table
       data-cy="peopleTable"
@@ -76,13 +92,14 @@ export const PeopleTable: React.FC<Props> = ({ people, filteredPeople }) => {
                 {linkParameter.charAt(0).toUpperCase() + linkParameter.slice(1)}
 
                 <SearchLink
-                  params={faSort !== linkParameter ? {
-                    sort: linkParameter,
-                    order: null,
-                  } : {
-                    sort: faOrder ? null : linkParameter,
-                    order: faOrder ? null : linkParameter,
-                  }}
+                  params={getSortParams(linkParameter)}
+                  // params={faSort !== linkParameter ? {
+                  //   sort: linkParameter,
+                  //   order: null,
+                  // } : {
+                  //   sort: faOrder ? null : linkParameter,
+                  //   order: faOrder ? null : linkParameter,
+                  // }}
                   onClick={() => handleSortClick(linkParameter)}
                 >
                   <span className="icon">

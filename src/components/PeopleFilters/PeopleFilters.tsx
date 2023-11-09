@@ -18,6 +18,8 @@ export const PeopleFilters: React.FC<Props> = ({
   query,
   centuries,
 }) => {
+  const listOfPossibleCenturies = ['16', '17', '18', '19', '20'];
+
   function setSearchWith(params: SearchParams) {
     const search = getSearchWith(searchParams, params);
 
@@ -75,7 +77,7 @@ export const PeopleFilters: React.FC<Props> = ({
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            {['16', '17', '18', '19', '20'].map(century => (
+            {listOfPossibleCenturies.map(century => (
               <SearchLink
                 key={century}
                 params={{

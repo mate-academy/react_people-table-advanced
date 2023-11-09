@@ -9,61 +9,69 @@ type Props = {
 };
 
 export const PersonLink: React.FC<Props> = ({
-  person,
+  person: {
+    slug,
+    name,
+    sex,
+    born,
+    died,
+    motherName,
+    fatherName,
+  },
   getPersonByName,
 }) => {
   const { personName } = useParams();
   const [searchParams] = useSearchParams();
-  const motherInList = getPersonByName(person.motherName);
-  const fatherInList = getPersonByName(person.fatherName);
+  const motherInList = getPersonByName(motherName);
+  const fatherInList = getPersonByName(fatherName);
 
   return (
     <tr
       data-cy="person"
       className={
-        cn({ 'has-background-warning': person.slug === personName })
+        cn({ 'has-background-warning': slug === personName })
       }
     >
       <td>
         <Link
-          className={cn({ 'has-text-danger': person.sex === 'f' })}
-          to={`/people/${person.slug}?${searchParams.toString()}`}
+          className={cn({ 'has-text-danger': sex === 'f' })}
+          to={`/people/${slug}?${searchParams.toString()}`}
         >
-          {person.name}
+          {name}
         </Link>
       </td>
 
-      <td>{person.sex}</td>
-      <td>{person.born}</td>
-      <td>{person.died}</td>
+      <td>{sex}</td>
+      <td>{born}</td>
+      <td>{died}</td>
 
-      {getPersonByName(person.motherName)
+      {getPersonByName(motherName)
         ? (
           <td>
             <Link
               className="has-text-danger"
               to={motherInList ? `/people/${motherInList.slug}?${searchParams.toString()}` : '#'}
             >
-              {person.motherName}
+              {motherName}
             </Link>
           </td>
         )
         : (
-          <td>{person.motherName || '-'}</td>
+          <td>{motherName || '-'}</td>
         )}
 
-      {getPersonByName(person.fatherName)
+      {getPersonByName(fatherName)
         ? (
           <td>
             <Link
               to={fatherInList ? `/people/${fatherInList.slug}?${searchParams.toString()}` : '#'}
             >
-              {person.fatherName}
+              {fatherName}
             </Link>
           </td>
         )
         : (
-          <td>{person.fatherName || '-'}</td>
+          <td>{fatherName || '-'}</td>
         )}
     </tr>
   );

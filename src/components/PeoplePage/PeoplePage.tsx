@@ -8,21 +8,21 @@ import { PeopleTable } from '../PeopleTable/PeopleTable';
 
 export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);
-  const [errorMessage, setErrorMessage] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [hasErrorMessage, setHasErrorMessage] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   const [searchParams, setSearchParams] = useSearchParams();
   const sex = searchParams.get('sex') || '';
   const query = searchParams.get('query') || '';
   const centuries = searchParams.getAll('centuries') || [];
 
   useEffect(() => {
-    setLoading(true);
+    setIsLoading(true);
 
     getPeople()
       .then(setPeople)
-      .catch(() => setErrorMessage('Something went wrong'))
+      .catch(() => setHasErrorMessage('Something went wrong'))
       .finally(() => {
-        setLoading(false);
+        setIsLoading(false);
       });
   }, []);
 
@@ -31,18 +31,18 @@ export const PeoplePage = () => {
       ? people : (() => {
         let result = [...people];
 
-        if (sex !== '') {
+        if (sex) {
           result = result.filter(person => person.sex === sex);
         }
 
-        if (query !== '') {
+        if (query) {
           result = result.filter(person => (
             [person.name, person.motherName, person.fatherName].some(name => {
               return name && name.toLowerCase().includes(query.toLowerCase());
             })));
         }
 
-        if (centuries.length !== 0) {
+        if (centuries.length) {
           result = result.filter(person => {
             return centuries.includes(
               (Math.floor(person.born / 100) + 1).toString(),
@@ -53,6 +53,9 @@ export const PeoplePage = () => {
         return result;
       })();
 
+  const showPeopleTable = !isLoading && !hasErrorMessage
+  && !!people.length && !!filteredPeople.length;
+
   return (
     <>
       <h1 className="title">People Page</h1>
@@ -60,7 +63,7 @@ export const PeoplePage = () => {
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
           <div className="column is-7-tablet is-narrow-desktop">
-            {!loading && !errorMessage && !!people.length && (
+            {!isLoading && !hasErrorMessage && !!people.length && (
               <PeopleFilters
                 searchParams={searchParams}
                 setSearchParams={setSearchParams}
@@ -73,26 +76,25 @@ export const PeoplePage = () => {
 
           <div className="column">
             <div className="box table-container">
-              {loading && <Loader />}
+              {isLoading && <Loader />}
 
-              {errorMessage && (
+              {hasErrorMessage && (
                 <p data-cy="peopleLoadingError" className="has-text-danger">
-                  {errorMessage}
+                  {hasErrorMessage}
                 </p>
               )}
 
-              {!people.length && !loading && !errorMessage && (
+              {!people.length && !isLoading && !hasErrorMessage && (
                 <p data-cy="noPeopleMessage">
                   There are no people on the server
                 </p>
               )}
 
-              {!filteredPeople.length && !loading && (
+              {!filteredPeople.length && !isLoading && (
                 <p>There are no people matching the current search criteria</p>
               )}
 
-              {!loading && !errorMessage && !!people.length
-              && !!filteredPeople.length && (
+              {showPeopleTable && (
                 <PeopleTable people={people} filteredPeople={filteredPeople} />
               )}
             </div>
