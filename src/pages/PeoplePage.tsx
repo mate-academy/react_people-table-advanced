@@ -1,0 +1,132 @@
+import React, { useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
+import { getPeople } from '../api';
+import { Person } from '../types';
+import { preparePeopleData } from '../utils/prepareData';
+import { SearchParams, getSearchWith } from '../utils/searchHelper';
+import { Loader } from '../components/Loader';
+import { PeopleFilters } from '../components/PeopleFilters';
+import { PeopleTable } from '../components/PeopleTable';
+
+export const PeoplePage: React.FC = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const [people, setPeople] = useState<Person[]>([]);
+  const [peopleLoading, setPeopleLoading] = useState(false);
+  const [isLoadingError, setIsLoadingError] = useState(false);
+
+  const query = searchParams.get('query') || '';
+  const filterBySex = searchParams.get('sex') || 'all';
+  const filterByCentury = searchParams.getAll('centuries') || [];
+  const sort = searchParams.get('sort') || null;
+  const order = searchParams.get('order') || null;
+
+  const isDataAvailable = !peopleLoading && people.length > 0;
+  const isArrayEmpty = !peopleLoading && people.length === 0;
+
+  useEffect(() => {
+    setIsLoadingError(false);
+    setPeopleLoading(true);
+
+    getPeople()
+      .then((response) => {
+        const preparedData = preparePeopleData(response);
+
+        setPeople(preparedData);
+      })
+      .catch(() => setIsLoadingError(true))
+      .finally(() => setPeopleLoading(false));
+  }, []);
+
+  const setSearchWith = (params: SearchParams) => {
+    const search = getSearchWith(params, searchParams);
+
+    setSearchParams(search);
+  };
+
+  const getPeopleToRender = (allPeople: Person[]) => {
+    let filteredPeople: Person[] = allPeople;
+
+    if (query) {
+      const lowerQuery = query.toLowerCase();
+
+      filteredPeople = filteredPeople.filter(person => (
+        person.name.toLowerCase().includes(lowerQuery)
+        || person.motherName?.toLowerCase().includes(lowerQuery)
+        || person.fatherName?.toLowerCase().includes(lowerQuery)
+      ));
+    }
+
+    if (filterBySex !== 'all') {
+      filteredPeople = filteredPeople
+        .filter(person => person.sex === filterBySex);
+    }
+
+    if (filterByCentury.length) {
+      filteredPeople = filteredPeople
+        .filter(person => filterByCentury
+          .includes(Math.ceil(person.born / 100).toString()));
+    }
+
+    if (sort) {
+      switch (sort) {
+        case 'name':
+        case 'sex':
+          return filteredPeople.sort((a, b) => a[sort].localeCompare(b[sort]));
+        case 'born':
+        case 'died':
+          return filteredPeople.sort((a, b) => a[sort] - b[sort]);
+        default:
+          return filteredPeople;
+      }
+    }
+
+    if (order) {
+      filteredPeople.reverse();
+    }
+
+    return filteredPeople;
+  };
+
+  let visiblePeople = getPeopleToRender(people);
+
+  useEffect(() => {
+    visiblePeople = getPeopleToRender(visiblePeople);
+  }, [searchParams]);
+
+  return (
+    <>
+      <h1 className="title">People Page</h1>
+
+      <div className="block">
+        <div className="columns is-desktop is-flex-direction-row-reverse">
+          <div className="column is-7-tablet is-narrow-desktop">
+            {isDataAvailable && (
+              <PeopleFilters setSearchWith={setSearchWith} />
+            )}
+          </div>
+
+          <div className="column">
+            <div className="box table-container">
+              {peopleLoading && <Loader />}
+
+              {isLoadingError && (
+                <p data-cy="peopleLoadingError" className="has-text-danger">
+                  Something went wrong
+                </p>
+              )}
+
+              {isDataAvailable && <PeopleTable people={visiblePeople} />}
+
+              {isArrayEmpty && (
+                <p data-cy="noPeopleMessage">
+                  There are no people on the server
+                </p>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+};
