@@ -47,23 +47,23 @@ export const PeopleTable: React.FC<Props> = ({
   const sortOrderArr = ['Name', 'Sex', 'Born', 'Died'];
   const sort = sorts[0];
 
-  const toggleSortOrderSigns = (arr: string) => {
+  const toggleSortOrderSigns = (titleParam: string) => {
     // eslint-disable-next-line
-    return !sorts.includes(arr)
+    return !sorts.includes(titleParam)
       ? {
         search: getSearchWith(
-          searchParams, { sort: arr || null, order: null },
+          searchParams, { sort: titleParam || null, order: null },
         ),
       }
       // eslint-disable-next-line
       : (
-        sorts.includes(arr) && !order
+        sorts.includes(titleParam) && !order
       )
         ? {
           search: getSearchWith(
             searchParams, { order: 'desc' || null },
           ),
-        } : (sorts.includes(arr) && order)
+        } : (sorts.includes(titleParam) && order)
           ? {
             search: getSearchWith(
               searchParams, { sort: null, order: null },
