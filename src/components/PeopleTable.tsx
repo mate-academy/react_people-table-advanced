@@ -1,9 +1,11 @@
 import React from 'react';
+import cn from 'classnames';
 import { useParams, useSearchParams } from 'react-router-dom';
 import { PersonInfo } from './PersonInfo';
 import { Person } from '../types/Person';
 import { SearchLink } from './SearchLink';
 import { SearchParams } from '../utils/searchHelper';
+import { sortHeaders } from '../types/sortHeaders';
 
 type Props = {
   people: Person[];
@@ -43,51 +45,25 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
     >
       <thead>
         <tr>
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Name
-              <SearchLink
-                params={getSortParams('name') as SearchParams}
-              >
-                <span className="icon">
-                  <i className="fas fa-sort" />
-                </span>
-              </SearchLink>
-            </span>
-          </th>
-
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Sex
-              <SearchLink params={getSortParams('sex') as SearchParams}>
-                <span className="icon">
-                  <i className="fas fa-sort" />
-                </span>
-              </SearchLink>
-            </span>
-          </th>
-
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Born
-              <SearchLink params={getSortParams('born') as SearchParams}>
-                <span className="icon">
-                  <i className="fas fa-sort-up" />
-                </span>
-              </SearchLink>
-            </span>
-          </th>
-
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Died
-              <SearchLink params={getSortParams('died') as SearchParams}>
-                <span className="icon">
-                  <i className="fas fa-sort" />
-                </span>
-              </SearchLink>
-            </span>
-          </th>
+          {sortHeaders.map(header => (
+            <th key={header.id}>
+              <span className="is-flex is-flex-wrap-nowrap">
+                {header.title}
+                <SearchLink params={
+                  getSortParams(header.sortBy) as SearchParams
+                }
+                >
+                  <span className="icon">
+                    <i className={cn('fas fa-sort', {
+                      'fa-sort-up': sort === header.sortBy && !order,
+                      'fa-sort-down': sort === header.sortBy && order,
+                    })}
+                    />
+                  </span>
+                </SearchLink>
+              </span>
+            </th>
+          ))}
 
           <th>Mother</th>
           <th>Father</th>
