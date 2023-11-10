@@ -17,7 +17,7 @@ export const PeoplePage: React.FC = () => {
   const [isLoadingError, setIsLoadingError] = useState(false);
 
   const query = searchParams.get('query') || '';
-  const filterBySex = searchParams.get('sex') || 'all';
+  const filterBySex = searchParams.get('sex') || null;
   const filterByCentury = searchParams.getAll('centuries') || [];
   const sort = searchParams.get('sort') || null;
   const order = searchParams.get('order') || null;
@@ -59,7 +59,7 @@ export const PeoplePage: React.FC = () => {
       ));
     }
 
-    if (filterBySex !== 'all') {
+    if (filterBySex) {
       filteredPeople = filteredPeople
         .filter(person => person.sex === filterBySex);
     }
