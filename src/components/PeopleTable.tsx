@@ -2,6 +2,9 @@ import classNames from 'classnames';
 import { useParams } from 'react-router-dom';
 import { Person } from '../types';
 import { PersonLink } from './PersonLink';
+import { TableColumnHead } from './TableColumnHead';
+
+const COLUMNS = ['name', 'sex', 'born', 'died'];
 
 export const PeopleTable = ({ people }: { people: Person[] }) => {
   const { peopleSlug } = useParams();
@@ -13,10 +16,9 @@ export const PeopleTable = ({ people }: { people: Person[] }) => {
     >
       <thead>
         <tr>
-          <th>Name</th>
-          <th>Sex</th>
-          <th>Born</th>
-          <th>Died</th>
+          {COLUMNS.map(column => (
+            <TableColumnHead title={column} key={column} />
+          ))}
           <th>Mother</th>
           <th>Father</th>
         </tr>

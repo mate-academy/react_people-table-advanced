@@ -10,6 +10,8 @@ interface FilterParams {
   sex: string | null,
   centuries: string[] | null,
   query: string | null,
+  sort: keyof Person | null,
+  order: string | null,
 }
 
 type Prepare = (
@@ -17,7 +19,9 @@ type Prepare = (
   filterParams: FilterParams,
 ) => Person[];
 
-const preparePeople: Prepare = (people, { sex, centuries, query }) => {
+const preparePeople: Prepare = (people, {
+  sex, centuries, query, sort, order,
+}) => {
   return people
     .map((person) => {
       return {
@@ -40,6 +44,26 @@ const preparePeople: Prepare = (people, { sex, centuries, query }) => {
         : person.name.toLowerCase().includes(query.toLowerCase());
 
       return isSexValid && isCenturyValid && isNameValid;
+    })
+    .sort((person1, person2) => {
+      if (sort) {
+        const field1 = person1[sort];
+        const field2 = person2[sort];
+
+        if (typeof field1 === 'number' && typeof field2 === 'number') {
+          return order === null
+            ? field1 - field2
+            : field2 - field1;
+        }
+
+        if (typeof field1 === 'string' && typeof field2 === 'string') {
+          return order === null
+            ? field1.localeCompare(field2)
+            : field2.localeCompare(field1);
+        }
+      }
+
+      return 0;
     });
 };
 
@@ -54,18 +78,20 @@ export const PeoplePage = () => {
       sex: searchParams.get('sex'),
       centuries: searchParams.getAll('centuries'),
       query: searchParams.get('query'),
+      sort: searchParams.get('sort') as keyof Person,
+      order: searchParams.get('order'),
     };
 
     return preparePeople(people, filterParams);
   }, [searchParams, people]);
 
   const isDataEmpty = useMemo(() => {
-    return !isError && !isLoading && people.length === 0;
-  }, [isLoading, isError, people]);
+    return !isError && !isLoading && preparedPeople.length === 0;
+  }, [isLoading, isError, preparedPeople]);
 
   const isDataPrepared = useMemo(() => {
-    return !isError && !isLoading && people.length > 0;
-  }, [isLoading, isError, people]);
+    return !isError && !isLoading && preparedPeople.length > 0;
+  }, [isLoading, isError, preparedPeople]);
 
   useEffect(() => {
     setIsLoading(true);
@@ -75,7 +101,9 @@ export const PeoplePage = () => {
       .then((response) => {
         setPeople(preparePeople(
           response,
-          { sex: null, centuries: null, query: null },
+          {
+            sex: null, centuries: null, query: null, sort: null, order: null,
+          },
         ));
       })
       .catch(() => setIsError(true))
