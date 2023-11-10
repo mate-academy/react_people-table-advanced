@@ -13,7 +13,7 @@ export const PeopleFilters: React.FC<Props> = ({ setSearchWith }) => {
   const [searchParams] = useSearchParams();
 
   const query = searchParams.get('query') || '';
-  const filterBySex = searchParams.get('sex') || 'all';
+  const filterBySex = searchParams.get('sex') || null;
   const filterByCentury = searchParams.getAll('centuries') || [];
 
   const handleQueryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
