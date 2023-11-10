@@ -19,7 +19,7 @@ export const PeopleFilters = () => {
 
   const currentCentury = searchParams.getAll('centuries');
   const currentSex = searchParams.get('sex');
-  const currentQyery = searchParams.get('query');
+  const currentQuery = searchParams.get('query');
 
   return (
     <nav className="panel">
@@ -57,7 +57,7 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <p className="control has-icons-left">
           <input
-            value={currentQyery || ''}
+            value={currentQuery || ''}
             data-cy="NameFilter"
             type="search"
             className="input"

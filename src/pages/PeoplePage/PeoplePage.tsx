@@ -53,7 +53,7 @@ export const PeoplePage = () => {
       return <ErrorLoad />;
     }
 
-    if (people.length === 0 && !isLoading) {
+    if (!people.length && !isLoading) {
       return (
         <p data-cy="noPeopleMessage">
           There are no people on the server

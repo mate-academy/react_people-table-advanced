@@ -25,8 +25,6 @@ export const SearchLink: React.FC<Props> = ({
 
   if (newParams.centuries
       && typeof newParams.centuries === 'string') {
-    // let newCenturies = currentCenturies;
-
     if (currentCenturies.includes(newParams.centuries)) {
       currentCenturies = currentCenturies
         .filter(elem => elem !== newParams.centuries);
