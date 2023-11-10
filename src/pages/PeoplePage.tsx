@@ -24,6 +24,7 @@ export const PeoplePage: React.FC = () => {
 
   const isDataAvailable = !peopleLoading && people.length > 0;
   const isArrayEmpty = !peopleLoading && people.length === 0;
+  const noVisiblePeople = !peopleLoading && visiblePeople.length === 0;
 
   useEffect(() => {
     setIsLoadingError(false);
@@ -121,11 +122,18 @@ export const PeoplePage: React.FC = () => {
                 </p>
               )}
 
-              {isDataAvailable && <PeopleTable people={visiblePeople} />}
+              {isDataAvailable && visiblePeople.length > 0 && (
+                <PeopleTable people={visiblePeople} />)}
 
               {isArrayEmpty && (
                 <p data-cy="noPeopleMessage">
                   There are no people on the server
+                </p>
+              )}
+
+              {noVisiblePeople && (
+                <p data-cy="noPeopleMessage">
+                  There are no people matching the current search criteria
                 </p>
               )}
             </div>
