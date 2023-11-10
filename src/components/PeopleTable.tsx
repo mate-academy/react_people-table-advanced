@@ -28,8 +28,8 @@ export const PeopleTable: React.FC<Params> = ({ people }) => {
       case SortsParams.Name:
       case SortsParams.Sex:
         newPeople.sort((a, b) => {
-          return a[currentSort].toLocaleLowerCase()
-            .localeCompare(b[currentSort].toLocaleLowerCase()) * order;
+          return a[currentSort].toLowerCase()
+            .localeCompare(b[currentSort].toLowerCase()) * order;
         });
 
         break;
@@ -50,9 +50,13 @@ export const PeopleTable: React.FC<Params> = ({ people }) => {
 
     if (currentQuery) {
       newPeople = newPeople.filter((person) => {
-        if (person.name.includes(currentQuery)
-          || person.fatherName?.includes(currentQuery)
-          || person.motherName?.includes(currentQuery)
+        if (
+          person.name.toLowerCase()
+            .includes(currentQuery.toLowerCase())
+          || person.fatherName?.toLowerCase()
+            .includes(currentQuery.toLowerCase())
+          || person.motherName?.toLowerCase()
+            .includes(currentQuery.toLowerCase())
         ) {
           return true;
         }
