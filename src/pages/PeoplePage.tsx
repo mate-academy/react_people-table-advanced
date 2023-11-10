@@ -12,6 +12,7 @@ export const PeoplePage: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const [people, setPeople] = useState<Person[]>([]);
+  const [visiblePeople, setVisiblePeople] = useState<Person[]>(people);
   const [peopleLoading, setPeopleLoading] = useState(false);
   const [isLoadingError, setIsLoadingError] = useState(false);
 
@@ -45,7 +46,7 @@ export const PeoplePage: React.FC = () => {
   };
 
   const getPeopleToRender = (allPeople: Person[]) => {
-    let filteredPeople: Person[] = allPeople;
+    let filteredPeople: Person[] = [...allPeople];
 
     if (query) {
       const lowerQuery = query.toLowerCase();
@@ -72,27 +73,31 @@ export const PeoplePage: React.FC = () => {
       switch (sort) {
         case 'name':
         case 'sex':
-          return filteredPeople.sort((a, b) => a[sort].localeCompare(b[sort]));
+          filteredPeople = filteredPeople
+            .sort((a, b) => a[sort].localeCompare(b[sort]));
+          break;
         case 'born':
         case 'died':
-          return filteredPeople.sort((a, b) => a[sort] - b[sort]);
+          filteredPeople = filteredPeople
+            .sort((a, b) => a[sort] - b[sort]);
+          break;
         default:
-          return filteredPeople;
+          break;
       }
     }
 
-    if (order) {
-      filteredPeople.reverse();
+    if (order === 'desc') {
+      filteredPeople = [...filteredPeople].reverse();
     }
 
     return filteredPeople;
   };
 
-  let visiblePeople = getPeopleToRender(people);
-
   useEffect(() => {
-    visiblePeople = getPeopleToRender(visiblePeople);
-  }, [searchParams]);
+    const updatedPeople = getPeopleToRender(people);
+
+    setVisiblePeople(updatedPeople);
+  }, [searchParams, people]);
 
   return (
     <>
