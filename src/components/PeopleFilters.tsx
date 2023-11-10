@@ -16,7 +16,7 @@ export const PeopleFilters = () => {
   const getCurrentCenturies = useCallback((century: string) => {
     const centuriesFromSearch = searchParams.getAll('centuries');
 
-    if (centuriesFromSearch === null) {
+    if (!centuriesFromSearch) {
       return [century];
     }
 
@@ -28,7 +28,7 @@ export const PeopleFilters = () => {
   }, [searchParams]);
 
   const handleQueryChange = useCallback((text: string) => {
-    if (text.length === 0) {
+    if (!text.length) {
       searchParams.delete('query');
       setSearchParams(searchParams);
 
