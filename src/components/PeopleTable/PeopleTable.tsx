@@ -25,11 +25,8 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
   }
 
   function isBornInCentury(centuries: string[] = [], person: Person) {
-    if (centuries.length === 0) {
-      return true;
-    }
-
-    return centuries.includes(Math.ceil(person.born / 100).toString());
+    return !centuries.length
+      || centuries.includes(Math.ceil(person.born / 100).toString());
   }
 
   const [searchParams] = useSearchParams();
@@ -85,7 +82,9 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
                 <span className="is-flex is-flex-wrap-nowrap">
                   {field}
                   <SearchLink params={{
-                    sort: order === 'desc' ? null : SortFields[field],
+                    sort: order === 'desc' && sort === SortFields[field]
+                      ? null
+                      : SortFields[field],
                     order: sort === SortFields[field] && !order ? 'desc' : null,
                   }}
                   >
