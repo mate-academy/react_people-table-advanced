@@ -8,6 +8,7 @@ export const PeopleFilters: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const centuries = searchParams.getAll('centuries') || [];
+  const CENTURIES = [16, 17, 18, 19, 20];
 
   function toggleCentury(century: string) {
     return centuries.includes(century)
@@ -34,6 +35,9 @@ export const PeopleFilters: React.FC = () => {
       {century}
     </SearchLink>
   );
+
+  const centuryLinks = CENTURIES
+    .map((century) => renderCenturyLink(String(century)));
 
   return (
     <nav className="panel">
@@ -89,10 +93,7 @@ export const PeopleFilters: React.FC = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            {Array.from(
-              { length: 5 },
-              (_, index) => renderCenturyLink(String(index + 16)),
-            )}
+            {centuryLinks}
           </div>
 
           <div className="level-right ml-4">

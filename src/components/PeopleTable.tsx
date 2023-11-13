@@ -4,6 +4,7 @@ import { useParams } from 'react-router-dom';
 import { Person } from '../types';
 import { PersonLink } from './PersonLink';
 import { OrderControl } from '../utils/Order';
+import { filterPeople } from '../utils/filterPeople';
 
 type Props = {
   people: Person[];
@@ -11,6 +12,14 @@ type Props = {
 
 export const PeopleTable: React.FC<Props> = ({ people }) => {
   const { slug } = useParams();
+
+  const filteredPeople = filterPeople(people, {
+    query: '', // Pass your filter criteria here
+    sex: '',
+    centuries: [],
+    sort: '',
+    order: '',
+  });
 
   return (
     <table
@@ -53,7 +62,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
       </thead>
 
       <tbody>
-        {people.map((person) => (
+        {filteredPeople.map((person) => (
           <tr
             data-cy="person"
             key={person.slug}
