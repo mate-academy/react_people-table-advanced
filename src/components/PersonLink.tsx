@@ -9,11 +9,11 @@ type Props = {
 
 export const PersonLink: React.FC<Props> = ({ person, people }) => {
   const { slugId } = useParams();
-  const findMother = people.find(
+  const matchedMother = people.find(
     mother => person.motherName === mother.name,
   );
 
-  const findFather = people.find(
+  const matchedFather = people.find(
     father => person.fatherName === father.name,
   );
 
@@ -36,10 +36,10 @@ export const PersonLink: React.FC<Props> = ({ person, people }) => {
       <td>{person.born}</td>
       <td>{person.died}</td>
       <td>
-        {findMother
+        {matchedMother
           ? (
             <Link
-              to={`/people/${findMother.slug}`}
+              to={`/people/${matchedMother.slug}`}
               className="has-text-danger"
             >
               {person.motherName}
@@ -49,10 +49,10 @@ export const PersonLink: React.FC<Props> = ({ person, people }) => {
           )}
       </td>
       <td>
-        {findFather
+        {matchedFather
           ? (
             <Link
-              to={`/people/${findFather.slug}`}
+              to={`/people/${matchedFather.slug}`}
             >
               {person.fatherName}
             </Link>

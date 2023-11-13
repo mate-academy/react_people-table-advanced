@@ -1,4 +1,4 @@
-export interface Person {
+export type Person = {
   name: string,
   sex: string,
   born: number,
@@ -8,4 +8,4 @@ export interface Person {
   slug: string,
   mother?: Person,
   father?: Person,
-}
+};
