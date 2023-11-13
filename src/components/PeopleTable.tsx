@@ -14,7 +14,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
   const { slug } = useParams();
 
   const filteredPeople = filterPeople(people, {
-    query: '', // Pass your filter criteria here
+    query: '',
     sex: '',
     centuries: [],
     sort: '',
