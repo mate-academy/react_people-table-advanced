@@ -16,7 +16,7 @@ export const OrderControl = ({ sort }: OrderControlProps) => {
     let newSort: string | null = null;
     let newOrder: string | null = null;
 
-    if (!currentSort) {
+    if (!currentSort || currentSort !== sort) {
       newSort = sort;
     }
 
