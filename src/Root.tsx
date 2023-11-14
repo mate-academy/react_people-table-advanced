@@ -9,6 +9,7 @@ import { PeoplePage } from './components/PeoplePage';
 import { HomePage } from './components/HomePage';
 // import { PeopleFilters } from './components/PeopleFilters';
 // import { PeopleTable } from './components/PeopleTable';
+import logo from './components/logo.png';
 
 export const Root = () => (
   <Router>
@@ -22,7 +23,17 @@ export const Root = () => (
         </Route>
         <Route
           path="*"
-          element={<h1 className="title">Page not found</h1>}
+          element={(
+            <>
+              <h1 className="title">Page not found</h1>
+              <img
+                src={logo}
+                alt="error not found"
+                width="200"
+                height="200"
+              />
+            </>
+          )}
         />
       </Route>
     </Routes>
