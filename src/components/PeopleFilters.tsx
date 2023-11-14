@@ -1,11 +1,31 @@
-import React from 'react';
-import { useSearchParams } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Link, useSearchParams } from 'react-router-dom';
+import classNames from 'classnames';
 import { getSearchWith } from '../utils/searchHelper';
 
 export const PeopleFilters: React.FC
   = () => {
+    const [isActive, setIsActive] = useState(false);
     const [searchParams, setSearchParams] = useSearchParams();
     const query = searchParams.get('query') || '';
+    const [filter, setFilter] = useState('');
+    const [centFilter, setCentFilter] = useState('');
+    const centuries = ['16', '17', '18', '19', '20'];
+
+    const handleAllClick = () => {
+      setIsActive(!isActive);
+      setFilter('all');
+    };
+
+    const handleMalelClick = () => {
+      setIsActive(!isActive);
+      setFilter('m');
+    };
+
+    const handleFemaleClick = () => {
+      setIsActive(!isActive);
+      setFilter('f');
+    };
 
     const handleQueryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       const search
@@ -19,15 +39,27 @@ export const PeopleFilters: React.FC
         <p className="panel-heading">Filters</p>
 
         <p className="panel-tabs" data-cy="SexFilter">
-          <a className="is-active" href="#/people">
+          <Link
+            to="?all"
+            className={classNames({ 'is-active': filter === 'all' })}
+            onClick={handleAllClick}
+          >
             All
-          </a>
-          <a className="" href="#/people?sex=m">
+          </Link>
+          <Link
+            to="?sex=m"
+            className={classNames({ 'is-active': filter === 'm' })}
+            onClick={handleMalelClick}
+          >
             Male
-          </a>
-          <a className="" href="#/people?sex=f">
+          </Link>
+          <Link
+            to="?sex=f"
+            className={classNames({ 'is-active': filter === 'f' })}
+            onClick={handleFemaleClick}
+          >
             Female
-          </a>
+          </Link>
         </p>
 
         <div className="panel-block">
@@ -53,66 +85,41 @@ export const PeopleFilters: React.FC
             data-cy="CenturyFilter"
           >
             <div className="level-left">
-              <a
-                data-cy="century"
-                className="button mr-1"
-                href="#/people?centuries=16"
-              >
-                16
-              </a>
-
-              <a
-                data-cy="century"
-                className="button mr-1 is-info"
-                href="#/people?centuries=17"
-              >
-                17
-              </a>
-
-              <a
-                data-cy="century"
-                className="button mr-1 is-info"
-                href="#/people?centuries=18"
-              >
-                18
-              </a>
-
-              <a
-                data-cy="century"
-                className="button mr-1 is-info"
-                href="#/people?centuries=19"
-              >
-                19
-              </a>
-
-              <a
-                data-cy="century"
-                className="button mr-1"
-                href="#/people?centuries=20"
-              >
-                20
-              </a>
+              {centuries.map((century) => (
+                <a
+                  data-cy="century"
+                  className={classNames('button mr-1',
+                    { 'is-info': centFilter === century })}
+                  href={`#/people?centuries=${century}`}
+                  onClick={() => {
+                    setIsActive(!isActive);
+                    setCentFilter(century.toString());
+                  }}
+                >
+                  {century}
+                </a>
+              ))}
             </div>
 
             <div className="level-right ml-4">
-              <a
+              <Link
                 data-cy="centuryALL"
                 className="button is-success is-outlined"
-                href="#/people"
+                to="?all"
               >
                 All
-              </a>
+              </Link>
             </div>
           </div>
         </div>
 
         <div className="panel-block">
-          <a
+          <Link
             className="button is-link is-outlined is-fullwidth"
-            href="#/people"
+            to="#/people"
           >
             Reset all filters
-          </a>
+          </Link>
         </div>
       </nav>
     );

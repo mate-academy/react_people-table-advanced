@@ -1,4 +1,5 @@
 export interface Person {
+  map(arg0: (person: any) => JSX.Element): import("react").ReactNode;
   name: string,
   sex: string,
   born: number,
