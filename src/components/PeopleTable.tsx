@@ -1,91 +1,47 @@
-import React, { useEffect, useMemo, useState } from 'react';
-import { Link, useSearchParams } from 'react-router-dom';
-import { getPeople } from '../api';
+import { useSearchParams } from 'react-router-dom';
+import classNames from 'classnames';
 import { Person } from '../types';
-import { filterPeopleByQuery } from '../utils/filterPeopleByQuery';
 import { SearchLink } from './SearchLink';
+import { PersonLink } from './PersonLink';
 
-export const PeopleTable: React.FC = () => {
-  const [people, setPeople] = useState<Person[]>([]);
+type Props = {
+  people: Person[];
+};
+
+export const PeopleTable: React.FC<Props> = ({ people }) => {
   const [searchParams] = useSearchParams();
-  const query = searchParams.get('query') || '';
-  const sex = searchParams.get('sex') || '';
-  const centuries = searchParams.get('centuries') || '';
-
-  const sort = searchParams.get('sort') || '';
   const order = searchParams.get('order') || '';
+  const sort = searchParams.get('sort') || '';
 
-  useEffect(() => {
-    getPeople().then(setPeople);
-  }, []);
-
-  const filteredPeople: Person[] | undefined = useMemo(() => {
-    const filteredPeopleByQuery = filterPeopleByQuery(query, people);
-
-    if (!sex && !centuries) {
-      return filteredPeopleByQuery;
+  const getSortType = (field: string) => {
+    if (!order && sort === field) {
+      return {
+        order: 'desk',
+        sort: field,
+      };
     }
 
-    const filterPeopleBySex = filteredPeopleByQuery
-      .filter((person) => person.sex === sex);
-
-    const filteredPeopleByCentury = filteredPeopleByQuery
-      .filter(person => (Math.ceil(person.born / 100))
-        .toString() === centuries);
-
-    if (sex) {
-      return filterPeopleBySex;
+    if (order && sort === field) {
+      return {
+        order: null,
+        sort: null,
+      };
     }
 
-    if (centuries) {
-      return filteredPeopleByCentury;
-    }
-
-    return filteredPeopleByQuery;
-  }, [query, sex, people, searchParams, centuries]);
-
-  const handleSortChange = (sortBy: string) => {
-    let result: {
-      sort: string | null;
-      order: string | null;
-    } = { sort: sortBy, order: 'desc' };
-    const isSortBy = sort === sortBy;
-    const isDesc = order === 'desc';
-
-    if (isSortBy && isDesc) {
-      result = { sort: null, order: null };
-    }
-
-    if (!isSortBy && !isDesc) {
-      result = { sort: sortBy, order: null };
-    }
-
-    if (!isSortBy && isDesc) {
-      result = { sort: sortBy, order: null };
-    }
-
-    return result;
+    return {
+      order: null,
+      sort: field,
+    };
   };
 
-  const sortedPeople = [...filteredPeople]
-    .sort((a: Person, b: Person) => {
-      let [personA, personB] = [a, b];
-      const key = sort as keyof Person;
-
-      if (order === 'desc') {
-        [personA, personB] = [personB, personA];
-      }
-
-      if (key === 'name' || key === 'sex') {
-        return personA[key].localeCompare(personB[key]);
-      }
-
-      if (key === 'born' || key === 'died') {
-        return personA[key] - personB[key];
-      }
-
-      return 0;
-    });
+  const getSortClass = (changeSortClass: string) => {
+    return classNames(
+      'fas',
+      { 'fa-sort': sort !== changeSortClass },
+      { 'fa-sort-up': sort === changeSortClass && !order },
+      { 'fa-sort-down': sort === changeSortClass && order },
+    );
+  };
 
   return (
     <table
@@ -97,9 +53,9 @@ export const PeopleTable: React.FC = () => {
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Name
-              <SearchLink params={handleSortChange('name')}>
+              <SearchLink params={getSortType('name')}>
                 <span className="icon">
-                  <i className="fas fa-sort" />
+                  <i className={getSortClass('name')} />
                 </span>
               </SearchLink>
             </span>
@@ -108,9 +64,9 @@ export const PeopleTable: React.FC = () => {
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Sex
-              <SearchLink params={handleSortChange('sex')}>
+              <SearchLink params={getSortType('sex')}>
                 <span className="icon">
-                  <i className="fas fa-sort" />
+                  <i className={getSortClass('sex')} />
                 </span>
               </SearchLink>
             </span>
@@ -119,9 +75,9 @@ export const PeopleTable: React.FC = () => {
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Born
-              <SearchLink params={handleSortChange('born')}>
+              <SearchLink params={getSortType('born')}>
                 <span className="icon">
-                  <i className="fas fa-sort" />
+                  <i className={getSortClass('born')} />
                 </span>
               </SearchLink>
             </span>
@@ -130,9 +86,9 @@ export const PeopleTable: React.FC = () => {
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Died
-              <SearchLink params={handleSortChange('died')}>
+              <SearchLink params={getSortType('died')}>
                 <span className="icon">
-                  <i className="fas fa-sort" />
+                  <i className={getSortClass('died')} />
                 </span>
               </SearchLink>
             </span>
@@ -144,27 +100,9 @@ export const PeopleTable: React.FC = () => {
       </thead>
 
       <tbody>
-        {sortedPeople
-          .map((person) => (
-            <tr data-cy="person" key={person.name}>
-              <td>
-                <Link to="#/people/pieter-haverbeke-1602">{person.name}</Link>
-              </td>
-              <td>{person.sex}</td>
-              <td>{person.born}</td>
-              <td>{person.died}</td>
-              <td>
-                <Link to={person.slug}>
-                  {person.motherName ? person.motherName : '-'}
-                </Link>
-              </td>
-              <td>
-                <Link to={person.slug}>
-                  {person.fatherName ? person.fatherName : '-'}
-                </Link>
-              </td>
-            </tr>
-          ))}
+        {people.map((person) => (
+          <PersonLink key={person.slug} person={person} people={people} />
+        ))}
       </tbody>
     </table>
   );
