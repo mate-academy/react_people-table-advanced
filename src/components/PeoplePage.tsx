@@ -20,6 +20,11 @@ export const PeoplePage = () => {
   const queryFilter = searchParams.get('query') || '';
   const centuriesFilter = searchParams.getAll('centuries') || [];
 
+  const nameSort = 'name';
+  const sexSort = 'sex';
+  const bornSort = 'born';
+  const diedSort = 'died';
+
   const getFilteredPeople = () => {
     let newPeople = [...people];
 
@@ -49,16 +54,16 @@ export const PeoplePage = () => {
 
     if (sortFilter) {
       switch (sortFilter) {
-        case 'name':
+        case nameSort:
           newPeople = newPeople.sort((a, b) => a.name.localeCompare(b.name));
           break;
-        case 'sex':
+        case sexSort:
           newPeople = newPeople.sort((a, b) => a.sex.localeCompare(b.sex));
           break;
-        case 'born':
+        case bornSort:
           newPeople = newPeople.sort((a, b) => a.born - b.born);
           break;
-        case 'died':
+        case diedSort:
           newPeople = newPeople.sort((a, b) => a.died - b.died);
           break;
         default:

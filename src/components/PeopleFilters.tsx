@@ -7,6 +7,7 @@ export const PeopleFilters = () => {
   const sex = searchParams.get('sex') || null;
   const query = searchParams.get('query') || '';
   const centuries = searchParams.getAll('centuries') || [];
+  const centuryArr = ['16', '17', '18', '19', '20'];
 
   const onChangeInput = (value: string) => {
     const search = getSearchWith(searchParams, { query: value || null });
@@ -65,7 +66,7 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            {['16', '17', '18', '19', '20'].map((century) => (
+            {centuryArr.map((century) => (
               <Link
                 data-cy="century"
                 className={cn('button mr-1', {
