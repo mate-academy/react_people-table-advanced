@@ -15,6 +15,7 @@ const tableHeaders = [
 
 type Props = {
   people: Person[];
+  collection: Person[];
   toggleSortBy: (header: TableHeader) => void;
   sortBy: TableHeader | string;
   isReversed: boolean;
@@ -22,6 +23,7 @@ type Props = {
 
 export const PeopleTable: React.FC<Props> = ({
   people,
+  collection,
   toggleSortBy,
   sortBy,
   isReversed,
@@ -78,10 +80,10 @@ export const PeopleTable: React.FC<Props> = ({
             fatherName,
           } = person;
 
-          const mother = people.find(parent => parent.name === motherName);
-          const father = people.find(parent => parent.name === fatherName);
+          const mother = collection.find(parent => parent.name === motherName);
+          const father = collection.find(parent => parent.name === fatherName);
 
-          const mum = mother && people.includes(mother)
+          const mum = mother
             ? (
               <PersonLink
                 name={motherName}
@@ -91,7 +93,7 @@ export const PeopleTable: React.FC<Props> = ({
             )
             : motherName;
 
-          const dad = father && people.includes(father)
+          const dad = father
             ? (
               <PersonLink
                 name={fatherName}

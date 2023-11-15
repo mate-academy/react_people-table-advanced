@@ -16,13 +16,6 @@ type VisiblePeople = {
   isReversed: boolean,
 };
 
-const generateSortHelper = {
-  [TableHeader.Name]: (a: Person, b: Person) => a.name.localeCompare(b.name),
-  [TableHeader.Sex]: (a: Person, b: Person) => a.sex.localeCompare(b.sex),
-  [TableHeader.Born]: (a: Person, b: Person) => a.born - b.born,
-  [TableHeader.Died]: (a: Person, b: Person) => a.died - b.died,
-};
-
 export const getVisiblePeople = ({
   people,
   selectedGender,
@@ -63,12 +56,22 @@ export const getVisiblePeople = ({
 
   if (sortBy) {
     visiblePeople.sort((a, b) => {
-      const sortHelper = typeof sortBy === 'string'
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        ? (_a: Person, _b: Person) => 0
-        : generateSortHelper[sortBy];
+      switch (sortBy) {
+        case TableHeader.Name:
+          return a.name.localeCompare(b.name);
 
-      return sortHelper(a, b);
+        case TableHeader.Sex:
+          return a.sex.localeCompare(b.sex);
+
+        case TableHeader.Born:
+          return a.born - b.born;
+
+        case TableHeader.Died:
+          return a.died - b.died;
+
+        default:
+          return 0;
+      }
     });
 
     if (isReversed) {
@@ -163,6 +166,7 @@ export const PeoplePage = () => {
     ? (
       <PeopleTable
         people={visiblePeople}
+        collection={people}
         toggleSortBy={toggleSortBy}
         sortBy={sortBy}
         isReversed={isReversed}
