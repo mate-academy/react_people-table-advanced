@@ -24,32 +24,27 @@ export const PeopleTable:React.FC<Prop> = ({
   };
 
   const sortedPeople = () => {
-    switch (true) {
-      case (sort && !order):
-        if (sort === 'born' || sort === 'died') {
-          return people.sort((a, b) => a[sort] - b[sort]);
-        }
+    let sorted = [];
 
-        if (sort === 'name' || sort === 'sex') {
-          return people.sort((a, b) => a[sort].localeCompare(b[sort]));
-        }
+    sorted = [...people.sort((a, b) => {
+      let [personA, personB] = [a, b];
 
-        break;
+      if (order === 'desc') {
+        [personA, personB] = [personB, personA];
+      }
 
-      case (sort && order === 'desc'):
-        if (sort === 'born' || sort === 'died') {
-          return people.sort((a, b) => b[sort] - a[sort]);
-        }
+      if (sort === 'name' || sort === 'sex') {
+        return personA[sort].localeCompare(personB[sort]);
+      }
 
-        if (sort === 'name' || sort === 'sex') {
-          return people.sort((a, b) => b[sort].localeCompare(a[sort]));
-        }
+      if (sort === 'died' || sort === 'born') {
+        return personA[sort] - personB[sort];
+      }
 
-        break;
-      default: return people;
-    }
+      return 0;
+    })];
 
-    return people;
+    return sorted;
   };
 
   return (
@@ -159,9 +154,7 @@ export const PeopleTable:React.FC<Prop> = ({
               </td>
             ) : (
               <td>
-                {fatherName || (
-                  '-'
-                )}
+                {fatherName || '-'}
               </td>
             )}
           </tr>

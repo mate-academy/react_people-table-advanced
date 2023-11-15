@@ -24,17 +24,23 @@ export const PeoplePage = () => {
       setPeople(load);
     } catch {
       setError(true);
+    } finally {
+      setPeopleLoader(false);
     }
-
-    setPeopleLoader(false);
   };
 
   useEffect(() => {
     loadPeople();
   }, []);
 
-  const noPeopleOnServer = () => {
-    return !people.length && !error && !peopleLoader;
+  const noPeopleOnServer = !people.length && !error && !peopleLoader;
+
+  const isMatch = (str: string | null) => {
+    if (str) {
+      return str.toLowerCase().includes(query.toLowerCase());
+    }
+
+    return str;
   };
 
   const peopleFiltered = () => {
@@ -59,9 +65,9 @@ export const PeoplePage = () => {
         fatherName,
         motherName,
       }) => (
-        name.toLowerCase().includes(query.toLowerCase())
-        || fatherName?.toLowerCase().includes(query.toLowerCase())
-        || motherName?.toLowerCase().includes(query.toLowerCase())
+        isMatch(name)
+        || isMatch(fatherName)
+        || isMatch(motherName)
       ))];
     }
 
@@ -99,7 +105,7 @@ export const PeoplePage = () => {
                   </p>
                 )}
 
-                {noPeopleOnServer() && (
+                {noPeopleOnServer && (
                   <p data-cy="noPeopleMessage">
                     There are no people on the server
                   </p>
