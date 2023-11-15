@@ -13,7 +13,7 @@ export const filterPeople = ({
   let filteredPeople = filtered;
 
   if (filter) {
-    filteredPeople = (filteredPeople.filter(person => person.sex === filter));
+    filteredPeople = filteredPeople.filter(person => person.sex === filter);
   }
 
   if (query) {

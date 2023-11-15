@@ -110,7 +110,7 @@ export const PeopleFilters = () => {
                   'is-outlined': centuriesFromUrl.length,
                 },
               )}
-              params={{ century: null }}
+              params={{ centuries: null }}
             >
               All
             </SearchLink>
