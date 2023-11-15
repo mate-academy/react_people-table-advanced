@@ -6,16 +6,25 @@ import { Person } from '../types';
 import { getPeople } from '../api';
 import { PeopleTable } from '../components/PeopleTable';
 import { PeopleFilters } from '../components/PeopleFilters';
+import { preparePeople } from '../utils/preparePeople';
+import { Filters } from '../types/Filters';
 
 export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isError, setIsError] = useState(false);
   const [searchParams, setSearchParams] = useSearchParams();
-  const query = searchParams.get('query') || '';
-  const centuries = searchParams.getAll('centuries') || '';
+  const [peopleToDisplay, setPeopleToDisplay] = useState<Person[]>([]);
 
-  console.debug(query, centuries);
+  const filters: Filters = {
+    query: searchParams.get('query') || '',
+    centuries: searchParams.getAll('centuries') || '',
+    sex: searchParams.get('sex') || '',
+  };
+
+  useEffect(() => {
+    setPeopleToDisplay(preparePeople(people, filters));
+  }, [searchParams]);
 
   useEffect(() => {
     const loadPeople = async () => {
@@ -25,6 +34,7 @@ export const PeoplePage = () => {
         const loadedPeople = await getPeople();
 
         setPeople(loadedPeople);
+        setPeopleToDisplay(loadedPeople);
       } catch {
         setIsError(true);
       } finally {
@@ -66,7 +76,11 @@ export const PeoplePage = () => {
                 </p>
               )}
 
-              {people.length > 0 && <PeopleTable people={people} />}
+              {people.length > 0 && (
+                <PeopleTable
+                  people={peopleToDisplay}
+                />
+              )}
             </div>
           </div>
         </div>

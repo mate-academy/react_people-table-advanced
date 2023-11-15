@@ -95,12 +95,10 @@ export const PeopleFilters: React.FC<Props> = ({
               className={cn(
                 'button',
                 'is-outlined',
-                { 'is-success': centuries.length === Centuries.length },
+                'is-success',
               )}
               params={{
-                centuries: centuries.length > 0
-                  ? []
-                  : Centuries,
+                centuries: null,
               }}
             >
               All
