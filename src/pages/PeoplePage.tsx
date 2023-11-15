@@ -8,6 +8,7 @@ import { PeopleTable } from '../components/PeopleTable';
 import { PeopleFilters } from '../components/PeopleFilters';
 import { preparePeople } from '../utils/preparePeople';
 import { Filters } from '../types/Filters';
+import { Sorting } from '../types/Sorting';
 
 export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);
@@ -22,8 +23,13 @@ export const PeoplePage = () => {
     sex: searchParams.get('sex') || '',
   };
 
+  const sorting: Sorting = {
+    sort: searchParams.get('sort'),
+    order: searchParams.get('order'),
+  };
+
   useEffect(() => {
-    setPeopleToDisplay(preparePeople(people, filters));
+    setPeopleToDisplay(preparePeople(people, filters, sorting));
   }, [searchParams]);
 
   useEffect(() => {
@@ -76,10 +82,14 @@ export const PeoplePage = () => {
                 </p>
               )}
 
-              {people.length > 0 && (
+              {peopleToDisplay.length > 0 && (
                 <PeopleTable
                   people={peopleToDisplay}
                 />
+              )}
+
+              {(peopleToDisplay.length === 0 && !isLoading) && (
+                'There are no people matching the current search criteria'
               )}
             </div>
           </div>

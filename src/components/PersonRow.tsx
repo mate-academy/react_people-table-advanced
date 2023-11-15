@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams, useSearchParams } from 'react-router-dom';
 import cn from 'classnames';
 import { Person } from '../types';
 
@@ -10,6 +10,7 @@ type Props = {
 
 export const PersonRow: React.FC<Props> = ({ person, people }) => {
   const { personSlug } = useParams();
+  const [searchParams] = useSearchParams();
 
   const isPersonInTable = (personName: string | null) => {
     if (personName) {
@@ -33,7 +34,7 @@ export const PersonRow: React.FC<Props> = ({ person, people }) => {
     >
       <td>
         <Link
-          to={`/people/${person.slug}`}
+          to={`/people/${person.slug}/?${searchParams.toString()}`}
           className={cn({ 'has-text-danger': person.sex === 'f' })}
         >
           {person.name}
@@ -47,7 +48,7 @@ export const PersonRow: React.FC<Props> = ({ person, people }) => {
         {isPersonInTable(person.motherName)
           ? (
             <Link
-              to={`/people/${getSlugByName(person.motherName)}`}
+              to={`/people/${getSlugByName(person.motherName)}/?${searchParams.toString()}`}
               className={cn('has-text-danger')}
             >
               {person.motherName}
@@ -60,7 +61,7 @@ export const PersonRow: React.FC<Props> = ({ person, people }) => {
         {isPersonInTable(person.fatherName)
           ? (
             <Link
-              to={`/people/${getSlugByName(person.fatherName)}`}
+              to={`/people/${getSlugByName(person.fatherName)}/?${searchParams.toString()}`}
             >
               {person.fatherName}
             </Link>

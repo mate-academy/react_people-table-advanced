@@ -1,5 +1,6 @@
 import { Person } from '../types';
 import { Filters } from '../types/Filters';
+import { Sorting } from '../types/Sorting';
 
 function yearToCentury(year: number) {
   if (!Number.isInteger(year) || year <= 0) {
@@ -11,9 +12,13 @@ function yearToCentury(year: number) {
   return century;
 }
 
-export const preparePeople = (people: Person[], filters: Filters) => {
+type Ftype = (people: Person[], filters: Filters, sorting: Sorting) => Person[];
+
+export const preparePeople: Ftype = (people, filters, sorting) => {
   let filteredPeople = [...people];
   const { sex, query, centuries } = filters;
+  const sortType = sorting.sort;
+  const order = sorting.order || 'asc';
 
   if (sex) {
     filteredPeople = filteredPeople.filter(person => person.sex === sex);
@@ -23,9 +28,9 @@ export const preparePeople = (people: Person[], filters: Filters) => {
     filteredPeople = filteredPeople.filter(person => {
       const normalizedQuery = query.toLowerCase();
 
-      return person.name.includes(normalizedQuery)
-        || person.fatherName?.includes(normalizedQuery)
-        || person.motherName?.includes(normalizedQuery);
+      return person.name.toLowerCase().includes(normalizedQuery)
+        || person.fatherName?.toLowerCase().includes(normalizedQuery)
+        || person.motherName?.toLowerCase().includes(normalizedQuery);
     });
   }
 
@@ -34,5 +39,11 @@ export const preparePeople = (people: Person[], filters: Filters) => {
       .filter(person => centuries.includes(String(yearToCentury(person.born))));
   }
 
-  return filteredPeople;
+  const sortedPeople = [...filteredPeople];
+
+  if (sortType && order) {
+    sortedPeople.sort();
+  }
+
+  return sortedPeople;
 };

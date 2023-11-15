@@ -28,7 +28,7 @@ export const PeopleFilters: React.FC<Props> = ({
   };
 
   useEffect(() => {
-    searchParams.set('sex', 'null');
+    getSearchWith(searchParams, { sex: null });
   }, []);
 
   return (
@@ -38,6 +38,7 @@ export const PeopleFilters: React.FC<Props> = ({
       <p className="panel-tabs" data-cy="SexFilter">
         {SexFilter.map(({ title, value }) => (
           <SearchLink
+            key={title}
             params={{
               sex: value,
             }}
@@ -72,6 +73,7 @@ export const PeopleFilters: React.FC<Props> = ({
           <div className="level-left">
             {Centuries.map(century => (
               <SearchLink
+                key={century}
                 params={{
                   centuries: centuries.includes(century)
                     ? centuries.filter(c => c !== century)
@@ -94,7 +96,6 @@ export const PeopleFilters: React.FC<Props> = ({
               data-cy="centuryALL"
               className={cn(
                 'button',
-                'is-outlined',
                 'is-success',
               )}
               params={{
