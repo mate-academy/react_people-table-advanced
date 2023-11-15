@@ -3,6 +3,7 @@ import { Link, useSearchParams } from 'react-router-dom';
 import { getPeople } from '../api';
 import { Person } from '../types';
 import { filterPeopleByQuery } from '../utils/filterPeopleByQuery';
+import { SearchLink } from './SearchLink';
 
 export const PeopleTable: React.FC = () => {
   const [people, setPeople] = useState<Person[]>([]);
@@ -11,11 +12,13 @@ export const PeopleTable: React.FC = () => {
   const sex = searchParams.get('sex') || '';
   const centuries = searchParams.get('centuries') || '';
 
+  const sort = searchParams.get('sort') || '';
+  const order = searchParams.get('order') || '';
+
   useEffect(() => {
     getPeople().then(setPeople);
   }, []);
 
-  // eslint-disable-next-line consistent-return
   const filteredPeople: Person[] | undefined = useMemo(() => {
     const filteredPeopleByQuery = filterPeopleByQuery(query, people);
 
@@ -41,6 +44,66 @@ export const PeopleTable: React.FC = () => {
     return filteredPeopleByQuery;
   }, [query, sex, people, searchParams, centuries]);
 
+  const handleSortChange = (sortBy: string) => {
+    let result: {
+      sort: string | null;
+      order: string | null;
+    } = { sort: sortBy, order: 'desc' };
+    const isSortBy = sort === sortBy;
+    const isDesc = order === 'desc';
+
+    if (isSortBy && isDesc) {
+      result = { sort: null, order: null };
+    }
+
+    if (!isSortBy && !isDesc) {
+      result = { sort: sortBy, order: null };
+    }
+
+    if (!isSortBy && isDesc) {
+      result = { sort: sortBy, order: null };
+    }
+
+    return result;
+  };
+
+  const sortedPeople = filteredPeople
+    .sort((a: Person, b: Person) => {
+      if (order === 'desc' && sort === 'name') {
+        return b.name.localeCompare(a.name);
+      }
+
+      if (!order && sort === 'name') {
+        return a.name.localeCompare(b.name);
+      }
+
+      if (order === 'desc' && sort === 'sex') {
+        return b.sex.localeCompare(a.sex);
+      }
+
+      if (!order && sort === 'sex') {
+        return a.sex.localeCompare(b.sex);
+      }
+
+      if (order === 'desc' && sort === 'born') {
+        return b.born - a.born;
+      }
+
+      if (!order && sort === 'born') {
+        return a.born - b.born;
+      }
+
+      if (order === 'desc' && sort === 'died') {
+        return b.died - a.died;
+      }
+
+      if (!order && sort === 'died') {
+        return a.died - b.died;
+      }
+
+      return a.name.localeCompare(b.name);
+    });
+
   return (
     <table
       data-cy="peopleTable"
@@ -51,44 +114,44 @@ export const PeopleTable: React.FC = () => {
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Name
-              <a href="#/people?sort=name">
+              <SearchLink params={handleSortChange('name')}>
                 <span className="icon">
                   <i className="fas fa-sort" />
                 </span>
-              </a>
+              </SearchLink>
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Sex
-              <a href="#/people?sort=sex">
+              <SearchLink params={handleSortChange('sex')}>
                 <span className="icon">
                   <i className="fas fa-sort" />
                 </span>
-              </a>
+              </SearchLink>
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Born
-              <a href="#/people?sort=born&amp;order=desc">
+              <SearchLink params={handleSortChange('born')}>
                 <span className="icon">
-                  <i className="fas fa-sort-up" />
+                  <i className="fas fa-sort" />
                 </span>
-              </a>
+              </SearchLink>
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Died
-              <a href="#/people?sort=died">
+              <SearchLink params={handleSortChange('died')}>
                 <span className="icon">
                   <i className="fas fa-sort" />
                 </span>
-              </a>
+              </SearchLink>
             </span>
           </th>
 
@@ -98,7 +161,7 @@ export const PeopleTable: React.FC = () => {
       </thead>
 
       <tbody>
-        {filteredPeople
+        {sortedPeople
           .map((person) => (
             <tr data-cy="person" key={person.name}>
               <td>

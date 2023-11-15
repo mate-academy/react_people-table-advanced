@@ -12,29 +12,6 @@ import { HomePage } from './pages/HomePage';
 import { PeoplePage } from './pages/PeoplePage';
 import { NotFoundPage } from './pages/NotfoundPage';
 
-// type Param = string | number;
-// type Params = {
-//   [key: string]: Param[] | Param | null;
-// };
-
-// function getSearchWith(params: Params, search?: string | URLSearchParams) {
-//   const newParams = new URLSearchParams(search);
-
-//   // eslint-disable-next-line no-restricted-syntax
-//   for (const [key, value] of Object.entries(params)) {
-//     if (value === null) {
-//       newParams.delete(key);
-//     } else if (Array.isArray(value)) {
-//       newParams.delete(key);
-//       value.forEach((item) => newParams.append(key, item.toString()));
-//     } else {
-//       newParams.set(key, value.toString());
-//     }
-//   }
-
-//   return newParams.toString();
-// }
-
 export const App: React.FC = () => {
   return (
     <div data-cy="app">

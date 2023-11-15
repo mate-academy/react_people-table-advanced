@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import classNames from 'classnames';
 import { getSearchWith } from '../utils/searchHelper';
+import { SearchLink } from './SearchLink';
 
 export const PeopleFilters: React.FC
   = () => {
@@ -41,25 +42,25 @@ export const PeopleFilters: React.FC
         <p className="panel-tabs" data-cy="SexFilter">
           <Link
             to="?all"
-            className={classNames({ 'is-active': filter === 'all' })}
             onClick={handleAllClick}
+            className={classNames({ 'is-active': filter === 'all' })}
           >
             All
           </Link>
-          <Link
-            to="?sex=m"
-            className={classNames({ 'is-active': filter === 'm' })}
+          <SearchLink
             onClick={handleMalelClick}
+            className={classNames({ 'is-active': filter === 'm' })}
+            params={{ sex: 'm' }}
           >
             Male
-          </Link>
-          <Link
-            to="?sex=f"
-            className={classNames({ 'is-active': filter === 'f' })}
+          </SearchLink>
+          <SearchLink
             onClick={handleFemaleClick}
+            className={classNames({ 'is-active': filter === 'f' })}
+            params={{ sex: 'f' }}
           >
             Female
-          </Link>
+          </SearchLink>
         </p>
 
         <div className="panel-block">
@@ -86,18 +87,19 @@ export const PeopleFilters: React.FC
           >
             <div className="level-left">
               {centuries.map((century) => (
-                <a
+                <SearchLink
                   data-cy="century"
-                  className={classNames('button mr-1',
-                    { 'is-info': centFilter === century })}
-                  href={`#/people?centuries=${century}`}
                   onClick={() => {
                     setIsActive(!isActive);
-                    setCentFilter(century.toString());
+                    setCentFilter(century);
                   }}
+                  className={classNames('button mr-1', {
+                    'is-info': centFilter === century,
+                  })}
+                  params={{ centuries: century }}
                 >
                   {century}
-                </a>
+                </SearchLink>
               ))}
             </div>
 
