@@ -67,41 +67,24 @@ export const PeopleTable: React.FC = () => {
     return result;
   };
 
-  const sortedPeople = filteredPeople
+  const sortedPeople = [...filteredPeople]
     .sort((a: Person, b: Person) => {
-      if (order === 'desc' && sort === 'name') {
-        return b.name.localeCompare(a.name);
+      let [personA, personB] = [a, b];
+      const key = sort as keyof Person;
+
+      if (order === 'desc') {
+        [personA, personB] = [personB, personA];
       }
 
-      if (!order && sort === 'name') {
-        return a.name.localeCompare(b.name);
+      if (key === 'name' || key === 'sex') {
+        return personA[key].localeCompare(personB[key]);
       }
 
-      if (order === 'desc' && sort === 'sex') {
-        return b.sex.localeCompare(a.sex);
+      if (key === 'born' || key === 'died') {
+        return personA[key] - personB[key];
       }
 
-      if (!order && sort === 'sex') {
-        return a.sex.localeCompare(b.sex);
-      }
-
-      if (order === 'desc' && sort === 'born') {
-        return b.born - a.born;
-      }
-
-      if (!order && sort === 'born') {
-        return a.born - b.born;
-      }
-
-      if (order === 'desc' && sort === 'died') {
-        return b.died - a.died;
-      }
-
-      if (!order && sort === 'died') {
-        return a.died - b.died;
-      }
-
-      return a.name.localeCompare(b.name);
+      return 0;
     });
 
   return (
