@@ -1,9 +1,9 @@
 /* eslint-disable no-nested-ternary */
 import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { PeopleFilters } from './PeopleFilters';
-import { Loader } from './Loader';
-import { PeopleTable } from './PeopleTable';
+import { PeopleFilters } from '../components/PeopleFilters';
+import { Loader } from '../components/Loader';
+import { PeopleTable } from '../components/PeopleTable';
 import { getPeople } from '../api';
 import { Person } from '../types';
 import { sortPeople } from '../utils/sortPeople';

@@ -40,10 +40,12 @@ export const SortParam: React.FC<Props> = ({ param }) => {
     return newParams;
   };
 
+  const title = param.charAt(0).toUpperCase() + param.slice(1);
+
   return (
     <th key={param}>
       <span className="is-flex is-flex-wrap-nowrap">
-        {param.charAt(0).toUpperCase() + param.slice(1)}
+        {title}
         <SearchLink params={handleSortClick(param)}>
           <span className="icon">
             <i className={classNames('fas', {

@@ -3,18 +3,19 @@ import { useSearchParams } from 'react-router-dom';
 import classNames from 'classnames';
 import { SearchLink } from './SearchLink';
 
+const initialCenturies = ['16', '17', '18', '19', '20'];
+
+const emptyParams = {
+  sex: null,
+  query: null,
+  centuries: null,
+};
+
 export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const query = searchParams.get('query') || '';
-  const initialCenturies = ['16', '17', '18', '19', '20'];
   const centuriesFromUrl = searchParams.getAll('centuries') || [];
-
-  const emptyParams = {
-    sex: null,
-    query: null,
-    centuries: null,
-  };
 
   const handleQueryChange = (newQuery: string) => {
     const updatedSearchParams = new URLSearchParams(searchParams);

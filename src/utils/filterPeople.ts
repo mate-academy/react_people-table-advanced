@@ -10,7 +10,7 @@ type Props = {
 export const filterPeople = ({
   filtered, filter, query, centuries,
 }: Props) => {
-  let filteredPeople = [...filtered];
+  let filteredPeople = filtered;
 
   if (filter) {
     filteredPeople = (filteredPeople.filter(person => person.sex === filter));

@@ -7,9 +7,9 @@ type Props = {
 };
 
 export const sortPeople = ({ filtered, sortType, order }: Props) => {
-  let filteredPeople = [...filtered];
+  const filteredPeople = [...filtered];
 
-  filteredPeople = filtered.sort((person1, person2) => {
+  filteredPeople.sort((person1, person2) => {
     if (sortType === 'born' || sortType === 'died') {
       return person1[sortType] - person2[sortType];
     }
@@ -22,7 +22,7 @@ export const sortPeople = ({ filtered, sortType, order }: Props) => {
   });
 
   if (order) {
-    filteredPeople = filteredPeople.reverse();
+    filteredPeople.reverse();
   }
 
   return filteredPeople;
