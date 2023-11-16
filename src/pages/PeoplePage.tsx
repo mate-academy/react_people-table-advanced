@@ -27,12 +27,6 @@ export const PeoplePage = () => {
     order: searchParams.get('order'),
   };
 
-  let peopleToDisplay: Person[] = preparePeople(people, filters, sorting);
-
-  useEffect(() => {
-    peopleToDisplay = preparePeople(people, filters, sorting);
-  }, [searchParams]);
-
   useEffect(() => {
     const loadPeople = async () => {
       setIsError(false);
@@ -41,7 +35,6 @@ export const PeoplePage = () => {
         const loadedPeople = await getPeople();
 
         setPeople(loadedPeople);
-        peopleToDisplay = preparePeople(loadedPeople, filters, sorting);
       } catch {
         setIsError(true);
       } finally {
@@ -51,6 +44,8 @@ export const PeoplePage = () => {
 
     loadPeople();
   }, []);
+
+  const peopleToDisplay: Person[] = preparePeople(people, filters, sorting);
 
   return (
     <>
