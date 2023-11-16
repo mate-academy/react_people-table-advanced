@@ -14,7 +14,7 @@ export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isError, setIsError] = useState(false);
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
 
   const filters: Filters = {
     query: searchParams.get('query') || '',

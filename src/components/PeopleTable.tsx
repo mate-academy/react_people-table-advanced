@@ -55,9 +55,11 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
                   <span className="icon">
                     <i className={cn(
                       'fas',
-                      { 'fa-sort': sort !== type },
-                      { 'fa-sort-up': sort === type && !order },
-                      { 'fa-sort-down': sort === type && order },
+                      {
+                        'fa-sort': sort !== type,
+                        'fa-sort-up': sort === type && !order,
+                        'fa-sort-down': sort === type && order,
+                      },
                     )}
                     />
                   </span>
