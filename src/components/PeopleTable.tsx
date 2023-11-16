@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import { Person } from '../types/Person';
 import { PersonLink } from './PersonLink';
 import { TableHeader } from '../types/TableHeader';
+import { SearchLink } from './SearchLink';
 
 const tableHeaders = [
   TableHeader.Name,
@@ -16,15 +17,13 @@ const tableHeaders = [
 type Props = {
   people: Person[];
   collection: Person[];
-  toggleSortBy: (header: TableHeader) => void;
-  sortBy: TableHeader | string;
-  isReversed: boolean;
+  sortBy: TableHeader | string | null;
+  isReversed: string | null;
 };
 
 export const PeopleTable: React.FC<Props> = ({
   people,
   collection,
-  toggleSortBy,
   sortBy,
   isReversed,
 }) => {
@@ -41,26 +40,46 @@ export const PeopleTable: React.FC<Props> = ({
             const sortable = header !== TableHeader.Mother
               && header !== TableHeader.Father;
 
+            const firstClick = sortBy !== header;
+            const secondClick = sortBy === header && !isReversed;
+            const thirdClick = sortBy === header && !!isReversed;
+            let sort = null;
+            let order = null;
+
+            if (firstClick) {
+              sort = header.toLowerCase();
+              order = null;
+            }
+
+            if (secondClick) {
+              sort = header.toLowerCase();
+              order = 'desc';
+            }
+
+            if (thirdClick) {
+              sort = null;
+              order = null;
+            }
+
             return (
               <th key={header}>
                 <span className="is-flex is-flex-wrap-nowrap">
                   {header}
 
                   {sortable && (
-                    <a
-                      href="#/people"
-                      onClick={() => toggleSortBy(header)}
+                    <SearchLink
+                      params={{ sort, order }}
                     >
                       <span className="icon">
                         <i
                           className={classNames('fas', {
-                            'fa-sort': sortBy !== header,
-                            'fa-sort-up': sortBy === header && !isReversed,
-                            'fa-sort-down': sortBy === header && isReversed,
+                            'fa-sort': firstClick,
+                            'fa-sort-up': secondClick,
+                            'fa-sort-down': thirdClick,
                           })}
                         />
                       </span>
-                    </a>
+                    </SearchLink>
                   )}
                 </span>
               </th>

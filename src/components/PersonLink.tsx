@@ -1,4 +1,5 @@
 import classNames from 'classnames';
+import { Link, useSearchParams } from 'react-router-dom';
 
 type Props = {
   name: string | null;
@@ -7,14 +8,19 @@ type Props = {
 };
 
 export const PersonLink: React.FC<Props> = ({ name, slug, sex }) => {
+  const [searchParams] = useSearchParams();
+
   return (
-    <a
-      href={`#/people/${slug}`}
+    <Link
+      to={{
+        pathname: `/people/${slug}`,
+        search: searchParams.toString(),
+      }}
       className={classNames({
         'has-text-danger': sex === 'f',
       })}
     >
       {name}
-    </a>
+    </Link>
   );
 };
