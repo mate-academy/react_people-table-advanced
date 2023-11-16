@@ -42,7 +42,28 @@ export const preparePeople: Ftype = (people, filters, sorting) => {
   const sortedPeople = [...filteredPeople];
 
   if (sortType && order) {
-    sortedPeople.sort();
+    sortedPeople.sort((p1, p2) => {
+      const value1 = p1[sortType];
+      const value2 = p2[sortType];
+
+      if (typeof value1 === 'number' && typeof value2 === 'number') {
+        if (order === 'asc') {
+          return value1 - value2;
+        }
+
+        return value2 - value1;
+      }
+
+      if (typeof value1 === 'string' && typeof value2 === 'string') {
+        if (order === 'asc') {
+          return value1.localeCompare(value2);
+        }
+
+        return value2.localeCompare(value1);
+      }
+
+      return 0;
+    });
   }
 
   return sortedPeople;

@@ -1,4 +1,6 @@
+import { Person } from './Person';
+
 export type Sorting = {
-  sort?: string | null;
+  sort?: keyof Person | null;
   order?: string | null;
 };

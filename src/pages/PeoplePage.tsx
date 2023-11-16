@@ -15,7 +15,6 @@ export const PeoplePage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isError, setIsError] = useState(false);
   const [searchParams, setSearchParams] = useSearchParams();
-  const [peopleToDisplay, setPeopleToDisplay] = useState<Person[]>([]);
 
   const filters: Filters = {
     query: searchParams.get('query') || '',
@@ -28,8 +27,10 @@ export const PeoplePage = () => {
     order: searchParams.get('order'),
   };
 
+  let peopleToDisplay: Person[] = preparePeople(people, filters, sorting);
+
   useEffect(() => {
-    setPeopleToDisplay(preparePeople(people, filters, sorting));
+    peopleToDisplay = preparePeople(people, filters, sorting);
   }, [searchParams]);
 
   useEffect(() => {
@@ -40,7 +41,7 @@ export const PeoplePage = () => {
         const loadedPeople = await getPeople();
 
         setPeople(loadedPeople);
-        setPeopleToDisplay(loadedPeople);
+        peopleToDisplay = preparePeople(loadedPeople, filters, sorting);
       } catch {
         setIsError(true);
       } finally {
