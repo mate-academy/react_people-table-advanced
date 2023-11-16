@@ -16,7 +16,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
   const getSortType = (field: string) => {
     if (!order && sort === field) {
       return {
-        order: 'desk',
+        order: 'desc',
         sort: field,
       };
     }
