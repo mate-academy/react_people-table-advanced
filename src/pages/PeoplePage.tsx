@@ -23,7 +23,7 @@ export const PeoplePage = () => {
   };
 
   const sorting: Sorting = {
-    sort: searchParams.get('sort'),
+    sort: searchParams.get('sort') as keyof Person,
     order: searchParams.get('order'),
   };
 
