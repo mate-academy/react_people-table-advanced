@@ -115,7 +115,7 @@ export const PeoplePage = () => {
 
             <div className="column">
               <div className="box table-container">
-                {people.length > 0
+                {filteredPeople.length > 0
                   ? (
                     <PeopleTable
                       slug={personSlug}
@@ -137,8 +137,9 @@ export const PeoplePage = () => {
                         </p>
 
                       )}
-                      {/* <p>There are no people matching the current search criteria</p> */}
-
+                      {filteredPeople.length === 0 && (
+                        <p>There are no people matching the current search criteria</p>
+                      )}
                     </>
                   )}
               </div>
