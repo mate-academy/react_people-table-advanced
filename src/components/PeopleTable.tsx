@@ -24,9 +24,7 @@ export const PeopleTable:React.FC<Prop> = ({
   };
 
   const sortedPeople = () => {
-    let sorted = [];
-
-    sorted = [...people.sort((a, b) => {
+    const sorted = [...people.sort((a, b) => {
       let [personA, personB] = [a, b];
 
       if (order === 'desc') {
@@ -139,9 +137,7 @@ export const PeopleTable:React.FC<Prop> = ({
               </td>
             ) : (
               <td>
-                {motherName || (
-                  '-'
-                )}
+                {motherName || '-'}
               </td>
             )}
             {personLink(fatherName) ? (
