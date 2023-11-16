@@ -2,6 +2,7 @@ import { useSearchParams } from 'react-router-dom';
 
 import classNames from 'classnames';
 import { SearchLink } from './SearchLink';
+import { UrlSearchParams } from '../types/UrlSearchParams';
 
 const initialCenturies = ['16', '17', '18', '19', '20'];
 
@@ -14,16 +15,16 @@ const emptyParams = {
 export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const query = searchParams.get('query') || '';
-  const centuriesFromUrl = searchParams.getAll('centuries') || [];
+  const query = searchParams.get(UrlSearchParams.QUERY) || '';
+  const centuriesFromUrl = searchParams.getAll(UrlSearchParams.CENTURIES) || [];
 
   const handleQueryChange = (newQuery: string) => {
     const updatedSearchParams = new URLSearchParams(searchParams);
 
     if (!newQuery.trim()) {
-      updatedSearchParams.delete('query');
+      updatedSearchParams.delete(UrlSearchParams.QUERY);
     } else {
-      updatedSearchParams.set('query', newQuery.trim());
+      updatedSearchParams.set(UrlSearchParams.QUERY, newQuery.trim());
     }
 
     setSearchParams(updatedSearchParams.toString());
@@ -41,7 +42,9 @@ export const PeopleFilters = () => {
 
       <p className="panel-tabs" data-cy="SexFilter">
         <SearchLink
-          className={classNames({ 'is-active': !searchParams.get('sex') })}
+          className={classNames({
+            'is-active': !searchParams.get(UrlSearchParams.SEX)
+          })}
           params={{ sex: null }}
         >
           All
@@ -49,7 +52,7 @@ export const PeopleFilters = () => {
 
         <SearchLink
           className={classNames({
-            'is-active': searchParams.get('sex') === 'm',
+            'is-active': searchParams.get(UrlSearchParams.SEX) === 'm',
           })}
           params={{ sex: 'm' }}
         >
@@ -58,7 +61,7 @@ export const PeopleFilters = () => {
 
         <SearchLink
           className={classNames({
-            'is-active': searchParams.get('sex') === 'f',
+            'is-active': searchParams.get(UrlSearchParams.SEX) === 'f',
           })}
           params={{ sex: 'f' }}
         >
