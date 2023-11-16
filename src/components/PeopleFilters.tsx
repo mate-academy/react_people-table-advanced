@@ -1,25 +1,23 @@
 import classNames from 'classnames';
 import React from 'react';
-import { SetURLSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import { filterCenturies, filterSex } from '../utils/helpers';
 import { getSearchWith } from '../utils/searchHelper';
 import { SearchLink } from './SearchLink';
 
 type Props = {
-  searchParams: URLSearchParams,
-  setSearchParams: SetURLSearchParams,
   query: string,
   filterBySex: string | null,
   centuriesOption: string[],
 };
 
 export const PeopleFilters: React.FC<Props> = ({
-  searchParams,
-  setSearchParams,
   query,
   filterBySex,
   centuriesOption,
 }) => {
+  const [searchParams, setSearchParams] = useSearchParams();
+
   const handleQueryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const params = getSearchWith(searchParams, { query: event.target.value });
 
