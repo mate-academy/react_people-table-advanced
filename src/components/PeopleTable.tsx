@@ -45,7 +45,7 @@ export const PeopleTable: React.FC<Props> = ({
                 <span className="icon">
                   <i className={cn('fas fa-sort', {
                     'fa-sort-up': currentSort === 'name' && !currentOrder,
-                    'fa-sort-down': currentOrder === 'desc',
+                    'fa-sort-down': currentOrder === 'desc' && currentSort === 'name',
                   })}
                   />
                 </span>
@@ -62,7 +62,7 @@ export const PeopleTable: React.FC<Props> = ({
                 <span className="icon">
                   <i className={cn('fas fa-sort', {
                     'fa-sort-up': currentSort === 'sex' && !currentOrder,
-                    'fa-sort-down': currentOrder === 'desc',
+                    'fa-sort-down': currentOrder === 'desc' && currentSort === 'sex',
                   })}
                   />
                 </span>
@@ -79,7 +79,7 @@ export const PeopleTable: React.FC<Props> = ({
                 <span className="icon">
                   <i className={cn('fas fa-sort', {
                     'fa-sort-up': currentSort === 'born' && !currentOrder,
-                    'fa-sort-down': currentOrder === 'born',
+                    'fa-sort-down': currentOrder === 'desc' && currentSort === 'born',
                   })}
                   />
                 </span>
@@ -96,7 +96,7 @@ export const PeopleTable: React.FC<Props> = ({
                 <span className="icon">
                   <i className={cn('fas fa-sort', {
                     'fa-sort-up': currentSort === 'died' && !currentOrder,
-                    'fa-sort-down': currentOrder === 'desc',
+                    'fa-sort-down': currentOrder === 'desc' && currentSort === 'died',
                   })}
                   />
                 </span>
