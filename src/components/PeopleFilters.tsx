@@ -1,20 +1,13 @@
 import React, { useEffect } from 'react';
-import { SetURLSearchParams } from 'react-router-dom';
+import { SetURLSearchParams, useSearchParams } from 'react-router-dom';
 import cn from 'classnames';
 import { getSearchWith } from '../utils/searchHelper';
 import { SearchLink } from './SearchLink';
 import { Centuries } from '../types/Centuries';
 import { SexFilter } from '../types/SexFilter';
 
-type Props = {
-  searchParams: URLSearchParams,
-  setSearchParams: SetURLSearchParams,
-};
-
-export const PeopleFilters: React.FC<Props> = ({
-  searchParams,
-  setSearchParams,
-}) => {
+export const PeopleFilters: React.FC = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
   const query = searchParams.get('query') || '';
   const centuries = searchParams.getAll('centuries');
   const sex = searchParams.get('sex');
