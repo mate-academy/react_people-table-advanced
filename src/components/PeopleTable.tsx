@@ -1,41 +1,85 @@
-import { useState } from 'react';
-import { NavLink, useParams, useSearchParams } from 'react-router-dom';
+// import { useState } from 'react';
+import { useParams } from 'react-router-dom';
+import { useEffect } from 'react';
 import cn from 'classnames';
 import { PersonLink } from './PersonLink';
+import { SearchLink } from './SearchLink';
 import { Person } from '../types';
 
 type Props = {
-  getpeople: Person[]
+  getpeople: Person[];
+  preparedPeople: Person[];
+  setPreparedPeople: React.Dispatch<React.SetStateAction<Person[]>>
+  sort: string;
+  order: string;
+  centuries: string[]
 };
 
-export const PeopleTable: React.FC<Props> = ({ getpeople }) => {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const sort = searchParams.get('sort' || '');
-  const [sortValue, setSortValue] = useState('');
-  // const [sortedPeople, setSortedPeople] = useState<Person[]>([])
+export const PeopleTable: React.FC<Props> = ({
+  getpeople,
+  preparedPeople,
+  setPreparedPeople,
+  sort,
+  order,
+  centuries,
+}) => {
+  const handleSortChange = (sortBy: string) => {
+    let result: {
+      sort: string | null;
+      order: string | null;
+    } = { sort: sortBy, order: 'desc' };
+    const isSortBy = sort === sortBy;
+    const isDesc = order === 'desc';
 
-  const heandleSort = () => {
-    const params = new URLSearchParams(searchParams);
-    let count = 0;
-
-    if (count === 0) {
-      count = +1;
-      params.set('sort', sortValue);
-      setSearchParams(params);
+    if (isSortBy && isDesc) {
+      result = { sort: null, order: null };
     }
 
-    if (sort === sortValue && count === 1) {
-      count = +1;
-      params.set('sort', `${sortValue}&order=desc`);
-      setSearchParams(params);
+    if (!isSortBy && !isDesc) {
+      result = { sort: sortBy, order: null };
     }
 
-    if (sort !== sortValue) {
-      count = 1;
-      params.set('sort', sortValue);
-      setSearchParams(params);
+    if (!isSortBy && isDesc) {
+      result = { sort: sortBy, order: null };
     }
+
+    return result;
   };
+
+  useEffect(() => {
+    let sortedPeople = [...getpeople];
+
+    if (centuries.length > 0) {
+      sortedPeople = [...preparedPeople];
+    }
+
+    if (sort) {
+      sortedPeople.sort((a, b) => {
+        let comparison = 0;
+
+        switch (sort) {
+          case 'name':
+            comparison = a.name.localeCompare(b.name);
+            break;
+          case 'sex':
+            comparison = a.sex.localeCompare(b.sex);
+            break;
+          case 'born':
+            comparison = a.born - b.born;
+            break;
+          case 'died':
+            comparison = a.died - b.died;
+            break;
+          default:
+            break;
+        }
+
+        return order === 'desc' ? comparison * -1 : comparison;
+      });
+    }
+
+    setPreparedPeople(sortedPeople);
+  }, [sort, order, preparedPeople]);
 
   const { slug } = useParams();
   const getParent = (name: string | null) => {
@@ -43,7 +87,7 @@ export const PeopleTable: React.FC<Props> = ({ getpeople }) => {
       return '-';
     }
 
-    const parentName = getpeople.find(person => person.name === name);
+    const parentName = preparedPeople.find((person) => person.name === name);
 
     if (parentName) {
       return <PersonLink person={parentName} />;
@@ -52,6 +96,8 @@ export const PeopleTable: React.FC<Props> = ({ getpeople }) => {
     return name;
   };
 
+  const paramSort = ['Name', 'Sex', 'Born', 'Died'];
+
   return (
     <table
       data-cy="peopleTable"
@@ -59,63 +105,32 @@ export const PeopleTable: React.FC<Props> = ({ getpeople }) => {
     >
       <thead>
         <tr>
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Name
-              <NavLink
-                to={`#/people?sort${sort}`}
-                onClick={() => {
-                  heandleSort();
-                  setSortValue('name');
-                }}
-              >
-                <span className="icon">
-                  <i className="fas fa-sort" />
+          {paramSort.map((key) => (
+            <>
+              <th key={key}>
+                <span className="is-flex is-flex-wrap-nowrap">
+                  {key}
+                  <SearchLink params={handleSortChange(`${(key.toLowerCase())}`)}>
+                    <span className="icon">
+                      <i
+                        className={cn('fas fa-sort', {
+                          'fa-sort-up': !order && sort === key.toLowerCase(),
+                          'fa-sort-down': order && sort === key.toLowerCase(),
+                        })}
+                      />
+                    </span>
+                  </SearchLink>
                 </span>
-              </NavLink>
-            </span>
-          </th>
-
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Sex
-              <NavLink to="#/people?sort=sex">
-                <span className="icon">
-                  <i className="fas fa-sort" />
-                </span>
-              </NavLink>
-            </span>
-          </th>
-
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Born
-              <NavLink to="#/people?sort=born&amp;order=desc">
-                <span className="icon">
-                  <i className="fas fa-sort-up" />
-                </span>
-              </NavLink>
-            </span>
-          </th>
-
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Died
-              <NavLink to="#/people?sort=died">
-                <span className="icon">
-                  <i className="fas fa-sort" />
-                </span>
-              </NavLink>
-            </span>
-          </th>
-
+              </th>
+            </>
+          ))}
           <th>Mother</th>
           <th>Father</th>
         </tr>
       </thead>
 
       <tbody>
-        {getpeople.map((person) => (
+        {preparedPeople.map((person) => (
           <tr
             key={person.slug}
             data-cy="person"

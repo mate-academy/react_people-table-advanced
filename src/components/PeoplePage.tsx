@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { PeopleFilters } from './PeopleFilters';
 import { Loader } from './Loader';
 import { PeopleTable } from './PeopleTable';
@@ -9,6 +10,12 @@ export const PeoplePage = () => {
   const [getpeople, setGetPeople] = useState<Person[]>([]);
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+
+  const [searchParams] = useSearchParams();
+  const [preparedPeople, setPreparedPeople] = useState([...getpeople]);
+  const centuries = searchParams.getAll('centuries') || [];
+  const sort = searchParams.get('sort') || '';
+  const order = searchParams.get('order') || '';
 
   useEffect(() => {
     setIsLoading(true);
@@ -34,7 +41,12 @@ export const PeoplePage = () => {
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
           <div className="column is-7-tablet is-narrow-desktop">
-            <PeopleFilters />
+            <PeopleFilters
+              centuries={centuries}
+              preparedPeople={preparedPeople}
+              getpeople={getpeople}
+              setPreparedPeople={setPreparedPeople}
+            />
           </div>
 
           <div className="column">
@@ -56,47 +68,15 @@ export const PeoplePage = () => {
               )}
 
               <p>There are no people matching the current search criteria</p>
-              {/* {getpeople.length > 0 && !isLoading && (
-                <table
-                  data-cy="peopleTable"
-                  className="table is-striped is-hoverable is-narrow is-fullwidth"
-                >
-                  <thead>
-                    <tr>
-                      <th>Name</th>
-                      <th>Sex</th>
-                      <th>Born</th>
-                      <th>Died</th>
-                      <th>Mother</th>
-                      <th>Father</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {getpeople.map((person) => (
-                      <tr
-                        key={person.slug}
-                        data-cy="person"
-                        className={cn({
-                          'has-background-warning': person.slug === slug,
-                        })}
-                      >
-                        <td>
-                          <PersonLink person={person} />
-                        </td>
-
-                        <td>{person.sex}</td>
-                        <td>{person.born}</td>
-                        <td>{person.died}</td>
-                        <td>{getParent(person.motherName)}</td>
-                        <td>{getParent(person.fatherName)}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              )} */}
               {getpeople.length > 0 && !isLoading && (
                 <PeopleTable
                   getpeople={getpeople}
+                  // searchParams={searchParams}
+                  preparedPeople={preparedPeople}
+                  setPreparedPeople={setPreparedPeople}
+                  sort={sort}
+                  order={order}
+                  centuries={centuries}
                 />
               )}
             </div>
