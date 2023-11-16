@@ -24,6 +24,14 @@ export const PersonRow: React.FC<Props> = ({ person, people }) => {
     return people.find(p => p.name === name)?.slug;
   };
 
+  const getPersonLink = (personName: string | null) => {
+    const slug = getSlugByName(personName);
+    const sParams = searchParams.toString()
+      && `/?${searchParams.toString()}`;
+
+    return `./${slug}${sParams}`;
+  };
+
   return (
     <tr
       data-cy="person"
@@ -34,7 +42,7 @@ export const PersonRow: React.FC<Props> = ({ person, people }) => {
     >
       <td>
         <Link
-          to={`/people/${person.slug}/?${searchParams.toString()}`}
+          to={getPersonLink(person.name)}
           className={cn({ 'has-text-danger': person.sex === 'f' })}
         >
           {person.name}
@@ -48,7 +56,7 @@ export const PersonRow: React.FC<Props> = ({ person, people }) => {
         {isPersonInTable(person.motherName)
           ? (
             <Link
-              to={`/people/${getSlugByName(person.motherName)}/?${searchParams.toString()}`}
+              to={getPersonLink(person.motherName)}
               className={cn('has-text-danger')}
             >
               {person.motherName}
@@ -61,7 +69,7 @@ export const PersonRow: React.FC<Props> = ({ person, people }) => {
         {isPersonInTable(person.fatherName)
           ? (
             <Link
-              to={`/people/${getSlugByName(person.fatherName)}/?${searchParams.toString()}`}
+              to={getPersonLink(person.fatherName)}
             >
               {person.fatherName}
             </Link>
