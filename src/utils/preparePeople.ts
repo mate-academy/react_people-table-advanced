@@ -12,6 +12,13 @@ function yearToCentury(year: number) {
   return century;
 }
 
+const isIncludesQuery = (
+  name: string | null,
+  normalizedQuery: string,
+) => {
+  return name?.toLowerCase().includes(normalizedQuery);
+};
+
 type Ftype = (people: Person[], filters: Filters, sorting: Sorting) => Person[];
 
 export const preparePeople: Ftype = (people, filters, sorting) => {
@@ -28,9 +35,9 @@ export const preparePeople: Ftype = (people, filters, sorting) => {
     filteredPeople = filteredPeople.filter(person => {
       const normalizedQuery = query.toLowerCase();
 
-      return person.name.toLowerCase().includes(normalizedQuery)
-        || person.fatherName?.toLowerCase().includes(normalizedQuery)
-        || person.motherName?.toLowerCase().includes(normalizedQuery);
+      return isIncludesQuery(person.name, normalizedQuery)
+        || isIncludesQuery(person.fatherName, normalizedQuery)
+        || isIncludesQuery(person.motherName, normalizedQuery);
     });
   }
 
@@ -45,8 +52,12 @@ export const preparePeople: Ftype = (people, filters, sorting) => {
     sortedPeople.sort((p1, p2) => {
       const value1 = p1[sortType];
       const value2 = p2[sortType];
+      const areNumerical = (
+        typeof value1 === 'number'
+        && typeof value2 === 'number'
+      );
 
-      if (typeof value1 === 'number' && typeof value2 === 'number') {
+      if (areNumerical) {
         if (order === 'asc') {
           return value1 - value2;
         }
@@ -54,12 +65,12 @@ export const preparePeople: Ftype = (people, filters, sorting) => {
         return value2 - value1;
       }
 
-      if (typeof value1 === 'string' && typeof value2 === 'string') {
+      if (!areNumerical) {
         if (order === 'asc') {
-          return value1.localeCompare(value2);
+          return String(value1)?.localeCompare(String(value2));
         }
 
-        return value2.localeCompare(value1);
+        return String(value2)?.localeCompare(String(value1));
       }
 
       return 0;
