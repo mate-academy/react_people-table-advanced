@@ -62,11 +62,15 @@ export const PeoplePage = () => {
     }
   }, [query, searchParams, setSearchParams]);
 
+  const normiliseQuery = (personParentName: string) => {
+    return personParentName.toLowerCase().includes(query.toLowerCase());
+  };
+
   if (query) {
     filteredPeople = filteredPeople.filter(person => {
-      return person.name.toLowerCase().includes(query.toLowerCase())
-        || (person.motherName && person.motherName.toLowerCase().includes(query.toLowerCase()))
-        || (person.fatherName && person.fatherName.toLowerCase().includes(query.toLowerCase()));
+      return normiliseQuery(person.name)
+        || (person.motherName && normiliseQuery(person.motherName))
+        || (person.fatherName && normiliseQuery(person.fatherName));
     });
   }
 

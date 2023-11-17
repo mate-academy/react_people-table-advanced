@@ -6,7 +6,7 @@ import { SearchLink } from './SearchLink';
 
 type Props = {
   people: Person[];
-  slug: string | undefined;
+  slug?: string;
   searchParams: URLSearchParams;
 };
 
