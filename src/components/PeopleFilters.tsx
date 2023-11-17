@@ -1,9 +1,10 @@
 import cn from 'classnames';
-import { useEffect } from 'react';
+// import { useEffect } from 'react';
 import { SearchLink } from './SearchLink';
 import { Person } from '../types';
 
 type Props = {
+  sex: string;
   centuries: string[];
   preparedPeople: Person[];
   setPreparedPeople: React.Dispatch<React.SetStateAction<Person[]>>;
@@ -11,10 +12,11 @@ type Props = {
 };
 
 export const PeopleFilters: React.FC<Props> = ({
+  sex,
   centuries,
-  preparedPeople,
-  setPreparedPeople,
-  getpeople,
+  // preparedPeople,
+  // setPreparedPeople,
+  // getpeople,
 }) => {
   const arrCenturies = [16, 17, 18, 19, 20];
   const handleCenturiesChange = (century: string) => {
@@ -23,33 +25,33 @@ export const PeopleFilters: React.FC<Props> = ({
       : [...centuries, century];
   };
 
-  useEffect(() => {
-    const filteredPeople = [...getpeople];
-    let finishPeople = [...filteredPeople];
+  const handleFilterSex = (filter: string) => {
+    const sexFilter = { sex: filter };
 
-    centuries.forEach((century) => {
-      const startYear = (+century - 1) * 100 + 1;
-      const endYear = +century * 100;
-      // console.log(startYear, endYear);
+    return sexFilter;
+  };
 
-      finishPeople = finishPeople.filter((people) => {
-        return (
-          (people.born >= startYear && people.born <= endYear)
-          || (people.died >= startYear && people.died <= endYear)
-        );
-      });
-    });
-    setPreparedPeople(finishPeople);
-  }, [centuries, preparedPeople]);
+  const sexFilters = ['Male', 'Female'];
 
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        <a className="is-active" href="#/people">All</a>
-        <a className="" href="#/people?sex=m">Male</a>
-        <a className="" href="#/people?sex=f">Female</a>
+        <SearchLink
+          className={cn({ 'is-active': !sex })}
+          params={{ sex: null }}
+        >
+          All
+        </SearchLink>
+        {sexFilters.map((item) => (
+          <SearchLink
+            className={cn({ 'is-active': sex === item[0].toLowerCase() })}
+            params={handleFilterSex(`${(item[0].toLowerCase())}`)}
+          >
+            {item}
+          </SearchLink>
+        ))}
       </p>
 
       <div className="panel-block">
@@ -86,24 +88,32 @@ export const PeopleFilters: React.FC<Props> = ({
           </div>
 
           <div className="level-right ml-4">
-            <a
+            <SearchLink
               data-cy="centuryALL"
-              className="button is-success is-outlined"
-              href="#/people"
+              className={cn('button is-success', {
+                'is-outlined': centuries.length,
+              })}
+              params={{
+                centuries: null,
+              }}
             >
               All
-            </a>
+            </SearchLink>
           </div>
         </div>
       </div>
 
       <div className="panel-block">
-        <a
+        <SearchLink
           className="button is-link is-outlined is-fullwidth"
-          href="#/people"
+          params={{
+            sex: null,
+            query: null,
+            centuries: null,
+          }}
         >
           Reset all filters
-        </a>
+        </SearchLink>
       </div>
     </nav>
   );

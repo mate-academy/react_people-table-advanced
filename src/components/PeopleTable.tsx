@@ -16,12 +16,12 @@ type Props = {
 };
 
 export const PeopleTable: React.FC<Props> = ({
-  getpeople,
+  // getpeople,
   preparedPeople,
   setPreparedPeople,
   sort,
   order,
-  centuries,
+  // centuries,
 }) => {
   const handleSortChange = (sortBy: string) => {
     let result: {
@@ -47,11 +47,7 @@ export const PeopleTable: React.FC<Props> = ({
   };
 
   useEffect(() => {
-    let sortedPeople = [...getpeople];
-
-    if (centuries.length > 0) {
-      sortedPeople = [...preparedPeople];
-    }
+    const sortedPeople = [...preparedPeople];
 
     if (sort) {
       sortedPeople.sort((a, b) => {
@@ -79,7 +75,7 @@ export const PeopleTable: React.FC<Props> = ({
     }
 
     setPreparedPeople(sortedPeople);
-  }, [sort, order, preparedPeople]);
+  }, [sort, order]);
 
   const { slug } = useParams();
   const getParent = (name: string | null) => {

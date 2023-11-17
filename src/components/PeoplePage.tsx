@@ -13,10 +13,32 @@ export const PeoplePage = () => {
 
   const [searchParams] = useSearchParams();
   const [preparedPeople, setPreparedPeople] = useState([...getpeople]);
+  const sex = searchParams.get('sex') || '';
   const centuries = searchParams.getAll('centuries') || [];
   const sort = searchParams.get('sort') || '';
   const order = searchParams.get('order') || '';
 
+  useEffect(() => {
+    const filteredPeople = [...getpeople];
+    let finishPeople = [...filteredPeople];
+
+    centuries.forEach((century) => {
+      const startYear = (+century - 1) * 100 + 1;
+      const endYear = +century * 100;
+      // console.log(startYear, endYear);
+
+      finishPeople = finishPeople.filter((people) => {
+        return (
+          (people.born >= startYear && people.born <= endYear)
+          || (people.died >= startYear && people.died <= endYear)
+        );
+      });
+    });
+    setPreparedPeople(finishPeople);
+  }, [searchParams]);
+  // console.log(getpeople);
+  // console.log(centuries);
+  // console.log(preparedPeople);
   useEffect(() => {
     setIsLoading(true);
     getPeople()
@@ -42,6 +64,7 @@ export const PeoplePage = () => {
         <div className="columns is-desktop is-flex-direction-row-reverse">
           <div className="column is-7-tablet is-narrow-desktop">
             <PeopleFilters
+              sex={sex}
               centuries={centuries}
               preparedPeople={preparedPeople}
               getpeople={getpeople}
