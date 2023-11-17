@@ -8,11 +8,18 @@ type VisiblePeople = {
   query: string;
   selectedCenturies: Century[] | string[];
   sortBy: string | null;
+  sortByURL: keyof Person;
   isReversed: string | null;
 };
 
 export const getVisiblePeople = ({
-  people, selectedGender, query, selectedCenturies, sortBy, isReversed,
+  people,
+  selectedGender,
+  query,
+  selectedCenturies,
+  sortBy,
+  sortByURL,
+  isReversed,
 }: VisiblePeople) => {
   let visiblePeople = [...people];
 
@@ -20,8 +27,6 @@ export const getVisiblePeople = ({
     visiblePeople = visiblePeople.filter(({ sex }) => {
       switch (selectedGender) {
         case 'm':
-          return sex === selectedGender;
-
         case 'f':
           return sex === selectedGender;
 
@@ -33,11 +38,17 @@ export const getVisiblePeople = ({
 
   if (query) {
     const normalizedQuery = query.toLowerCase();
+    const includesQuery = (
+      criteria: string | null,
+      currentQuery: string,
+    ) => {
+      return criteria?.toLowerCase().includes(currentQuery);
+    };
 
     visiblePeople = visiblePeople.filter(person => (
-      person.name.toLowerCase().includes(normalizedQuery)
-      || person.motherName?.toLowerCase().includes(normalizedQuery)
-      || person.fatherName?.toLowerCase().includes(normalizedQuery)
+      includesQuery(person.name, normalizedQuery)
+        || includesQuery(person.motherName, normalizedQuery)
+        || includesQuery(person.fatherName, normalizedQuery)
     ));
   }
 
@@ -51,16 +62,13 @@ export const getVisiblePeople = ({
     visiblePeople.sort((a, b) => {
       switch (sortBy) {
         case TableHeader.Name:
-          return a.name.localeCompare(b.name);
-
         case TableHeader.Sex:
-          return a.sex.localeCompare(b.sex);
+          return (a[sortByURL] as keyof Person)
+            .localeCompare((b[sortByURL] as keyof Person));
 
         case TableHeader.Born:
-          return a.born - b.born;
-
         case TableHeader.Died:
-          return a.died - b.died;
+          return (a[sortByURL] as number) - (b[sortByURL] as number);
 
         default:
           return 0;

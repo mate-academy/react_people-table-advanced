@@ -10,17 +10,14 @@ import { getVisiblePeople } from '../utils/getVisiblePeople';
 export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);
   const [isError, setIsError] = useState(false);
-  const [loading, setLoading] = useState(true);
-
-  // const [sortBy, setSortBy] = useState<TableHeader | string>('');
-  // const [isReversed, setIsReversed] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   const [searchParams] = useSearchParams();
   const selectedGender = searchParams.get('sex') || null;
   const query = searchParams.get('query') || '';
   const selectedCenturies = searchParams.getAll('centuries') || [];
   const isReversed = searchParams.get('order') || null;
-  const sortByURL = searchParams.get('sort') || null;
+  const sortByURL = searchParams.get('sort') as keyof Person;
   const sortBy = sortByURL
     ? sortByURL.charAt(0).toUpperCase() + sortByURL.slice(1)
     : null;
@@ -30,7 +27,7 @@ export const PeoplePage = () => {
       const response = await getPeople();
 
       setPeople(response);
-      setLoading(false);
+      setIsLoading(false);
     } catch {
       setIsError(true);
     }
@@ -46,10 +43,11 @@ export const PeoplePage = () => {
     query,
     selectedCenturies,
     sortBy,
+    sortByURL,
     isReversed,
   });
 
-  const preparedTable = visiblePeople.length && !loading
+  const preparedTable = visiblePeople.length && !isLoading
     ? (
       <PeopleTable
         people={visiblePeople}
@@ -68,7 +66,7 @@ export const PeoplePage = () => {
         <div className="block">
           <div className="columns is-desktop is-flex-direction-row-reverse">
             <div className="column is-7-tablet is-narrow-desktop">
-              {!loading && (
+              {!isLoading && (
                 <PeopleFilters
                   selectedGender={selectedGender}
                   query={query}
@@ -79,7 +77,7 @@ export const PeoplePage = () => {
 
             <div className="column">
               <div className="box table-container">
-                {loading
+                {isLoading
                   ? <Loader />
                   : preparedTable}
 
@@ -89,7 +87,7 @@ export const PeoplePage = () => {
                   </p>
                 )}
 
-                {!people.length && !loading && (
+                {!people.length && !isLoading && (
                   <p data-cy="noPeopleMessage">
                     There are no people on the server
                   </p>

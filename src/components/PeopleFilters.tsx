@@ -29,6 +29,18 @@ export const PeopleFilters: React.FC<Props> = ({
 }) => {
   const [searchParams, setSearchParams] = useSearchParams();
 
+  const handleQueryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const params = new URLSearchParams(searchParams);
+
+    if (event.target.value) {
+      params.set('query', event?.target.value);
+    } else {
+      params.delete('query');
+    }
+
+    setSearchParams(params);
+  };
+
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
@@ -64,17 +76,7 @@ export const PeopleFilters: React.FC<Props> = ({
             type="search"
             className="input"
             placeholder="Search"
-            onChange={(event) => {
-              const params = new URLSearchParams(searchParams);
-
-              if (event.target.value) {
-                params.set('query', event?.target.value);
-              } else {
-                params.delete('query');
-              }
-
-              setSearchParams(params);
-            }}
+            onChange={handleQueryChange}
           />
 
           <span className="icon is-left">
