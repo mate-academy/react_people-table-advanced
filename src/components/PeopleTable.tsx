@@ -1,6 +1,5 @@
-// import { useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import cn from 'classnames';
 import { PersonLink } from './PersonLink';
 import { SearchLink } from './SearchLink';
@@ -9,19 +8,15 @@ import { Person } from '../types';
 type Props = {
   getpeople: Person[];
   preparedPeople: Person[];
-  setPreparedPeople: React.Dispatch<React.SetStateAction<Person[]>>
   sort: string;
   order: string;
-  centuries: string[]
+  centuries: string[];
 };
 
 export const PeopleTable: React.FC<Props> = ({
-  // getpeople,
   preparedPeople,
-  setPreparedPeople,
   sort,
   order,
-  // centuries,
 }) => {
   const handleSortChange = (sortBy: string) => {
     let result: {
@@ -46,11 +41,13 @@ export const PeopleTable: React.FC<Props> = ({
     return result;
   };
 
+  const [sortedPeople, setSortedPeople] = useState<Person[]>([]);
+
   useEffect(() => {
-    const sortedPeople = [...preparedPeople];
+    const sortedPeopleCopy = [...preparedPeople];
 
     if (sort) {
-      sortedPeople.sort((a, b) => {
+      sortedPeopleCopy.sort((a, b) => {
         let comparison = 0;
 
         switch (sort) {
@@ -74,8 +71,8 @@ export const PeopleTable: React.FC<Props> = ({
       });
     }
 
-    setPreparedPeople(sortedPeople);
-  }, [sort, order]);
+    setSortedPeople(sortedPeopleCopy);
+  }, [preparedPeople, sort, order]);
 
   const { slug } = useParams();
   const getParent = (name: string | null) => {
@@ -126,7 +123,7 @@ export const PeopleTable: React.FC<Props> = ({
       </thead>
 
       <tbody>
-        {preparedPeople.map((person) => (
+        {sortedPeople.map((person) => (
           <tr
             key={person.slug}
             data-cy="person"

@@ -13,6 +13,7 @@ export const PeoplePage = () => {
 
   const [searchParams] = useSearchParams();
   const [preparedPeople, setPreparedPeople] = useState([...getpeople]);
+  const query = searchParams.get('query') || '';
   const sex = searchParams.get('sex') || '';
   const centuries = searchParams.getAll('centuries') || [];
   const sort = searchParams.get('sort') || '';
@@ -22,23 +23,33 @@ export const PeoplePage = () => {
     const filteredPeople = [...getpeople];
     let finishPeople = [...filteredPeople];
 
-    centuries.forEach((century) => {
-      const startYear = (+century - 1) * 100 + 1;
-      const endYear = +century * 100;
-      // console.log(startYear, endYear);
+    if (centuries.length > 0) {
+      finishPeople = finishPeople.filter(person => {
+        return centuries.includes(Math.ceil(person.born / 100).toString());
+      });
+    }
 
-      finishPeople = finishPeople.filter((people) => {
+    if (sex) {
+      finishPeople = finishPeople.filter(person => person.sex.includes(sex));
+    }
+
+    if (query) {
+      finishPeople = finishPeople.filter(person => {
         return (
-          (people.born >= startYear && people.born <= endYear)
-          || (people.died >= startYear && people.died <= endYear)
+          person.fatherName?.toLowerCase().includes(query)
+          || person.motherName?.toLowerCase().includes(query)
+          || person.name.toLowerCase().includes(query)
         );
       });
-    });
+    }
+
+    if (finishPeople.length <= 0) {
+      setError('There are no people matching the current search criteria');
+    }
+
     setPreparedPeople(finishPeople);
-  }, [searchParams]);
-  // console.log(getpeople);
-  // console.log(centuries);
-  // console.log(preparedPeople);
+  }, [getpeople, searchParams]);
+
   useEffect(() => {
     setIsLoading(true);
     getPeople()
@@ -64,11 +75,9 @@ export const PeoplePage = () => {
         <div className="columns is-desktop is-flex-direction-row-reverse">
           <div className="column is-7-tablet is-narrow-desktop">
             <PeopleFilters
+              query={query}
               sex={sex}
               centuries={centuries}
-              preparedPeople={preparedPeople}
-              getpeople={getpeople}
-              setPreparedPeople={setPreparedPeople}
             />
           </div>
 
@@ -77,7 +86,7 @@ export const PeoplePage = () => {
               {isLoading && (
                 <Loader />
               )}
-              {!!error && (
+              {!!error && preparedPeople.length === 0 && !isLoading && (
                 <>
                   <p data-cy="peopleLoadingError" className="has-text-danger">
                     {error}
@@ -90,13 +99,10 @@ export const PeoplePage = () => {
                 </>
               )}
 
-              <p>There are no people matching the current search criteria</p>
-              {getpeople.length > 0 && !isLoading && (
+              {preparedPeople.length > 0 && !isLoading && (
                 <PeopleTable
                   getpeople={getpeople}
-                  // searchParams={searchParams}
                   preparedPeople={preparedPeople}
-                  setPreparedPeople={setPreparedPeople}
                   sort={sort}
                   order={order}
                   centuries={centuries}

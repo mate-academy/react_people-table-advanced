@@ -1,23 +1,20 @@
 import cn from 'classnames';
-// import { useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { SearchLink } from './SearchLink';
-import { Person } from '../types';
+import { getSearchWith } from '../utils/searchHelper';
 
 type Props = {
   sex: string;
   centuries: string[];
-  preparedPeople: Person[];
-  setPreparedPeople: React.Dispatch<React.SetStateAction<Person[]>>;
-  getpeople: Person[];
+  query: string;
 };
 
 export const PeopleFilters: React.FC<Props> = ({
   sex,
   centuries,
-  // preparedPeople,
-  // setPreparedPeople,
-  // getpeople,
+  query,
 }) => {
+  const [searchParams, setSearchParams] = useSearchParams();
   const arrCenturies = [16, 17, 18, 19, 20];
   const handleCenturiesChange = (century: string) => {
     return centuries.includes(century)
@@ -32,6 +29,14 @@ export const PeopleFilters: React.FC<Props> = ({
   };
 
   const sexFilters = ['Male', 'Female'];
+
+  const handleInputChange = (event:React.ChangeEvent<HTMLInputElement>) => {
+    const params = getSearchWith(searchParams, {
+      query: event.target.value.toLowerCase(),
+    });
+
+    setSearchParams(params);
+  };
 
   return (
     <nav className="panel">
@@ -57,10 +62,12 @@ export const PeopleFilters: React.FC<Props> = ({
       <div className="panel-block">
         <p className="control has-icons-left">
           <input
+            value={query}
             data-cy="NameFilter"
             type="search"
             className="input"
             placeholder="Search"
+            onChange={handleInputChange}
           />
 
           <span className="icon is-left">
