@@ -4,6 +4,7 @@ import cn from 'classnames';
 import { PersonLink } from './PersonLink';
 import { SearchLink } from './SearchLink';
 import { Person } from '../types';
+import { getSortFunction } from '../utils/sortFunction';
 
 type Props = {
   getpeople: Person[];
@@ -46,32 +47,7 @@ export const PeopleTable: React.FC<Props> = ({
   useEffect(() => {
     const sortedPeopleCopy = [...preparedPeople];
 
-    if (sort) {
-      sortedPeopleCopy.sort((a, b) => {
-        let comparison = 0;
-
-        switch (sort) {
-          case 'name':
-            comparison = a.name.localeCompare(b.name);
-            break;
-          case 'sex':
-            comparison = a.sex.localeCompare(b.sex);
-            break;
-          case 'born':
-            comparison = a.born - b.born;
-            break;
-          case 'died':
-            comparison = a.died - b.died;
-            break;
-          default:
-            break;
-        }
-
-        return order === 'desc' ? comparison * -1 : comparison;
-      });
-    }
-
-    setSortedPeople(sortedPeopleCopy);
+    setSortedPeople(getSortFunction(sortedPeopleCopy, sort, order));
   }, [preparedPeople, sort, order]);
 
   const { slug } = useParams();
