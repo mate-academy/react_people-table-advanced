@@ -114,19 +114,22 @@ export const PeoplePage = () => {
                   {error}
                 </p>
               )}
-              {false
+              {filteredPeople.length === 0 && !isLoading
                 && (
                 // eslint-disable-next-line
                   <p>There are no people matching the current search criteria</p>
                 )}
 
-              {!error && !isLoading && (
-                <PeopleTable
-                  people={filteredPeople}
-                  allPeople={peopleFromServer}
-                  searchParams={searchParams}
-                />
-              )}
+              {!error
+                && !isLoading
+                && filteredPeople.length !== 0
+                && (
+                  <PeopleTable
+                    people={filteredPeople}
+                    allPeople={peopleFromServer}
+                    searchParams={searchParams}
+                  />
+                )}
             </div>
           </div>
         </div>
