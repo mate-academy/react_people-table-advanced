@@ -32,13 +32,8 @@ export const PeoplePage = () => {
     visiblePeople.sort((a, b) => {
       switch (sort) {
         case ('name'):
-          return a.name.localeCompare(b.name);
-
         case ('sex'):
-          return a.sex.localeCompare(b.sex);
-
-        case ('age'):
-          return (a.died - a.born) - (b.died - b.died);
+          return a[sort].localeCompare(b[sort]);
 
         case ('born'):
           return (a.born - b.born);
@@ -58,10 +53,6 @@ export const PeoplePage = () => {
 
   if (query) {
     visiblePeople = visiblePeople.filter(({ name, motherName, fatherName }) => {
-      if (!visiblePeople.length) {
-        setError(true);
-      }
-
       return (
         name.toLowerCase().includes(query)
         || motherName?.toLowerCase().includes(query)
@@ -82,6 +73,21 @@ export const PeoplePage = () => {
         .includes(Math.ceil(person.born / 100)));
   }
 
+  const loader = isLoading && <Loader />;
+  const errorMessage = error && (
+    <p data-cy="peopleLoadingError" className="has-text-danger">
+      Something went wrong
+    </p>
+  );
+  const noPeopleMessage = !peopleFromServer.length
+    && !isLoading
+    && !error
+    && (
+      <p data-cy="noPeopleMessage">
+        There are no people on the server
+      </p>
+    );
+
   return (
     <>
       <h1 className="title">People Page</h1>
@@ -99,21 +105,14 @@ export const PeoplePage = () => {
 
           <div className="column">
             <div className="box table-container">
-              {isLoading ? (
-                <Loader />
-              ) : error ? (
-                <p data-cy="peopleLoadingError" className="has-text-danger">
-                  Something went wrong
-                </p>
-              ) : peopleFromServer.length ? (
+              {loader}
+              {errorMessage}
+              {noPeopleMessage}
+              {!!peopleFromServer.length && (
                 <PeopleTable
                   people={visiblePeople}
                   searchParams={searchParams}
                 />
-              ) : (
-                <p data-cy="noPeopleMessage">
-                  There are no people on the server
-                </p>
               )}
             </div>
           </div>
