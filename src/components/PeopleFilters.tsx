@@ -26,14 +26,8 @@ export const PeopleFilters = () => {
 
     if (type === 'All') {
       params.delete('sex');
-    }
-
-    if (type === 'Male') {
-      params.set('sex', SexFilter.Male);
-    }
-
-    if (type === 'Female') {
-      params.set('sex', SexFilter.Female);
+    } else {
+      params.set('sex', SexFilter[type]);
     }
 
     setSearchParams(params);
@@ -120,6 +114,7 @@ export const PeopleFilters = () => {
                 })}
                 href="#/people"
                 onClick={(event) => handlCenturyChange(event, century)}
+                key={century}
               >
                 {century}
               </a>
