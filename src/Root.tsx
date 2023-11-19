@@ -3,7 +3,7 @@ import {
 } from 'react-router-dom';
 import { App } from './App';
 import { HomePage } from './components/HomePage';
-import { PeopleTable } from './components/PeopleTable';
+import { PeoplePage } from './components/PeoplePage';
 
 export const Root = () => (
   <HashRouter>
@@ -18,8 +18,8 @@ export const Root = () => (
         <Route path="/home" element={<Navigate to="/" replace />} />
 
         <Route path="people">
-          <Route index element={<PeopleTable />} />
-          <Route path=":slug" element={<PeopleTable />} />
+          <Route index element={<PeoplePage />} />
+          <Route path=":slug" element={<PeoplePage />} />
         </Route>
       </Route>
     </Routes>
