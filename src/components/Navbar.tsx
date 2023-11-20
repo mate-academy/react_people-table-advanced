@@ -1,4 +1,13 @@
-export const Navbar = () => {
+import classNames from 'classnames';
+import { NavLink } from 'react-router-dom';
+
+export const NavBar = () => {
+  const getClassName = ({ isActive }: { isActive: boolean }) => {
+    return (classNames('navbar-item', {
+      'has-background-grey-lighter': isActive,
+    }));
+  };
+
   return (
     <nav
       data-cy="nav"
@@ -8,15 +17,13 @@ export const Navbar = () => {
     >
       <div className="container">
         <div className="navbar-brand">
-          <a className="navbar-item" href="#/">Home</a>
+          <NavLink to="/" className={getClassName}>
+            Home
+          </NavLink>
 
-          <a
-            aria-current="page"
-            className="navbar-item has-background-grey-lighter"
-            href="#/people"
-          >
+          <NavLink to="/people" className={getClassName}>
             People
-          </a>
+          </NavLink>
         </div>
       </div>
     </nav>
