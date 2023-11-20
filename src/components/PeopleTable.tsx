@@ -1,22 +1,23 @@
 import { useEffect, useState } from 'react';
-// import cn from 'classnames';
+import cn from 'classnames';
 import { useSearchParams } from 'react-router-dom';
 import { Person } from '../types';
 import { getPeople } from '../api';
 import { PersonLink } from './PersonLink';
+import { SearchLink } from './SearchLink';
 
-// const columns = ['Name', 'Sex', 'Born', 'Died'];
-
-// const columns = [
-//   { name: 'Name' },
-//   { sex: 'Sex' },
-//   { born: 'Born' },
-//   { died: 'Died' },
-// ];
+const columns = [
+  { Name: 'name' },
+  { Sex: 'sex' },
+  { Born: 'born' },
+  { Died: 'died' },
+];
 
 export const PeopleTable = () => {
   const [people, setPeople] = useState<Person[]>([]);
   const [searchParams] = useSearchParams();
+  const sortValue = searchParams.get('sort');
+  const sortOrder = searchParams.get('order');
 
   useEffect(() => {
     getPeople()
@@ -28,8 +29,6 @@ export const PeopleTable = () => {
     const filterBySex = searchParams.get('sex');
     const filterByQuery = searchParams.get('query');
     const filterByCentury = searchParams.getAll('centuries');
-    const sortValue = searchParams.get('sort') || null;
-    const sortOrder = searchParams.get('order') || null;
 
     if (filterBySex) {
       peopleCopy = peopleCopy.filter((person => (person.sex === filterBySex)));
@@ -87,74 +86,43 @@ export const PeopleTable = () => {
     >
       <thead>
         <tr>
-          {/* {columns.map(column => {
-            const initialCol = column.toLowerCase();
+          {columns.map((column) => {
+            const [name, sortName] = Object.entries(column)[0];
+            const newSortName = sortValue === sortName
+              && sortOrder === 'desc' ? null : sortName;
 
-            const sortedCol = sortValue === initialCol
-              && sortOrder === 'desc' ? null : initialCol;
+            let newOrder = null;
 
-                <th key={column}>
-              <span className="is-flex is-flex-wrap-nowrap">
-                Name
-                <SearchLink params={{
-                  sortValue: sort,
-                  sortOrder: order,
-                }}>
-                  <span className="icon">
-                    <i className={cn('fas', {
-                      'fa-sort': sortValue !== value,
-                      'fa-sort-up': sortValue === value && !sortOrder,
-                      'fa-sort-down': sortValue === value && sortOrder,
-                    })}
-                    />
-                  </span>
-                </SearchLink>
-              </span>
-            </th>
-          })} */}
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Name
-              <a href="#/people?sort=name">
-                <span className="icon">
-                  <i className="fas fa-sort" />
+            if (sortValue === sortName) {
+              if (sortOrder === 'desc') {
+                newOrder = null;
+              } else {
+                newOrder = 'desc';
+              }
+            }
+
+            return (
+              <th key={sortName}>
+                <span className="is-flex is-flex-wrap-nowrap">
+                  {name}
+                  <SearchLink params={{
+                    sort: newSortName,
+                    order: newOrder,
+                  }}
+                  >
+                    <span className="icon">
+                      <i className={cn('fas', {
+                        'fa-sort': sortValue !== sortName,
+                        'fa-sort-up': sortValue === sortName && !sortOrder,
+                        'fa-sort-down': sortValue === sortName && sortOrder,
+                      })}
+                      />
+                    </span>
+                  </SearchLink>
                 </span>
-              </a>
-            </span>
-          </th>
-
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Sex
-              <a href="#/people?sort=sex">
-                <span className="icon">
-                  <i className="fas fa-sort" />
-                </span>
-              </a>
-            </span>
-          </th>
-
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Born
-              <a href="#/people?sort=born&amp;order=desc">
-                <span className="icon">
-                  <i className="fas fa-sort-up" />
-                </span>
-              </a>
-            </span>
-          </th>
-
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Died
-              <a href="#/people?sort=died">
-                <span className="icon">
-                  <i className="fas fa-sort" />
-                </span>
-              </a>
-            </span>
-          </th>
+              </th>
+            );
+          })}
 
           <th>Mother</th>
           <th>Father</th>

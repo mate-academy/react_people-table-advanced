@@ -1,7 +1,6 @@
 import cn from 'classnames';
 
 import { useSearchParams } from 'react-router-dom';
-// import { getPeople } from '../api';
 import { SearchParams, getSearchWith } from '../utils/searchHelper';
 import { SearchLink } from './SearchLink';
 
