@@ -1,8 +1,6 @@
-// import { PeoplePage } from './pages/PeoplePage';
+import './App.scss';
 import { Outlet } from 'react-router-dom';
 import { Navbar } from './components/Navbar';
-
-import './App.scss';
 
 export const App = () => {
   return (
