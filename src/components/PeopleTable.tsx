@@ -25,10 +25,21 @@ export const PeopleTable: React.FC<Props> = ({
     return allPeople.find(p => p.name === parentName);
   };
 
-  const setSort = (searchParams.get('sort') === null);
+  const getParams = (sortParam: string) => {
+    const currentSort = searchParams.get('sort');
+    const currentOrder = searchParams.get('order');
 
-  const setOrder = searchParams.get('sort') !== null
-    && searchParams.get('order') === null;
+    if (currentSort !== sortParam) {
+      return { sort: sortParam, order: null };
+    }
+
+    if (currentSort === sortParam
+      && currentOrder === 'desc') {
+      return { sort: null, order: null };
+    }
+
+    return { sort: sortParam, order: 'desc' };
+  };
 
   return (
     <table
@@ -44,11 +55,7 @@ export const PeopleTable: React.FC<Props> = ({
               <span className="is-flex is-flex-wrap-nowrap">
                 {field}
                 <SearchLink
-                  params={{
-                    sort: (setSort ? SortField[field] : null)
-                    || (setOrder ? SortField[field] : null),
-                    order: setOrder ? 'desc' : null,
-                  }}
+                  params={getParams(SortField[field])}
                 >
                   <span className="icon">
                     <i className={cn('fas', {

@@ -6,6 +6,7 @@ import { PeopleTable } from './PeopleTable';
 import { Person } from '../types/Person';
 import { getPeople } from '../api';
 import { SortField } from '../types/SortField';
+import { FilterSex } from '../types/FilterSex';
 
 export const PeoplePage = () => {
   const [peopleFromServer, setPeopleFromServer] = useState<Person[]>([]);
@@ -20,7 +21,7 @@ export const PeoplePage = () => {
     try {
       const people = await getPeople();
 
-      if (people.length === 0) {
+      if (!people.length) {
         setError('There are no people on the server');
 
         return;
@@ -44,9 +45,9 @@ export const PeoplePage = () => {
     const visiblepeople = [...peopleFromServer]
       .filter(person => {
         switch (sex) {
-          case 'm':
+          case FilterSex.Male:
             return person.sex === 'm';
-          case 'f':
+          case FilterSex.Female:
             return person.sex === 'f';
           default:
             return true;
