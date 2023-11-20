@@ -5,8 +5,17 @@ import { useSearchParams } from 'react-router-dom';
 import { SearchParams, getSearchWith } from '../utils/searchHelper';
 import { SearchLink } from './SearchLink';
 
+const gender = [
+  { All: null },
+  { Male: 'm' },
+  { Female: 'f' },
+];
+
+const centuriesList = ['16', '17', '18', '19', '20'];
+
 export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
+  const sex = searchParams.get('sex');
   const query = searchParams.get('query') || '';
   const centuries = searchParams.getAll('centuries');
 
@@ -17,7 +26,7 @@ export const PeopleFilters = () => {
   }
 
   function handleQueryChange(event: React.ChangeEvent<HTMLInputElement>) {
-    setSearchWith({ query: event.target.value || null });
+    setSearchWith({ query: event.target.value.trim().toLowerCase() || null });
   }
 
   return (
@@ -25,9 +34,23 @@ export const PeopleFilters = () => {
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        <a className="is-active" href="#/people">All</a>
-        <a className="" href="#/people?sex=m">Male</a>
-        <a className="" href="#/people?sex=f">Female</a>
+        {gender.map((role) => {
+          const [key, value] = Object.entries(role)[0];
+
+          return (
+            <SearchLink
+              key={value}
+              params={{
+                sex: value,
+              }}
+              className={cn({
+                'is-active': sex === value,
+              })}
+            >
+              {key}
+            </SearchLink>
+          );
+        })}
       </p>
 
       <div className="panel-block">
@@ -50,7 +73,7 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            {['16', '17', '18', '19', '20'].map(century => {
+            {centuriesList.map(century => {
               return (
                 <SearchLink
                   key={century}
@@ -94,6 +117,9 @@ export const PeopleFilters = () => {
           params={{
             centuries: null,
             query: null,
+            sort: null,
+            order: null,
+            sex: null,
           }}
         >
           Reset all filters
