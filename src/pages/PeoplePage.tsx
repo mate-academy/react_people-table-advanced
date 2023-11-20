@@ -9,7 +9,7 @@ import { Person } from '../types';
 import { PeopleFilters } from '../components/PeopleFilters';
 import { Loader } from '../components/Loader';
 import { PeopleTable } from '../components/PeopleTable';
-import { getPreparedPeople } from '../utils/getPreparedPeople';
+import { getPreparedPeople } from '../helpers/getPreparedPeople';
 
 export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);

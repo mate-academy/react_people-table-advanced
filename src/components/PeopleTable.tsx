@@ -2,10 +2,11 @@ import React from 'react';
 import { useSearchParams } from 'react-router-dom';
 import cn from 'classnames';
 
+import { getSortingParams } from '../helpers/getSortingParams';
+import { Sort } from '../types/Sort';
 import { Person } from '../types';
 
 import { PeopleRow } from './PeopleRow';
-import { Sort } from '../types/Sort';
 import { SearchLink } from './SearchLink';
 
 type Props = {
@@ -24,36 +25,26 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
     >
       <thead>
         <tr>
-          {Object.entries(Sort).map(([key, value]) => {
-            const sortValue = !sort
-              ? value
-              : ((sort && sort !== value) || !order) && value;
-            const orderValue = sort === value && !order && 'desc';
-
-            return (
-              <th key={key}>
-                <span className="is-flex is-flex-wrap-nowrap">
-                  {key}
-                  <SearchLink
-                    params={{
-                      sort: sortValue || null,
-                      order: orderValue || null,
-                    }}
-                  >
-                    <span className="icon">
-                      <i
-                        className={cn('fas', {
-                          'fa-sort': sort !== value,
-                          'fa-sort-up': sort === value && !order,
-                          'fa-sort-down': sort === value && order,
-                        })}
-                      />
-                    </span>
-                  </SearchLink>
-                </span>
-              </th>
-            );
-          })}
+          {Object.entries(Sort).map(([key, value]) => (
+            <th key={key}>
+              <span className="is-flex is-flex-wrap-nowrap">
+                {key}
+                <SearchLink
+                  params={getSortingParams(sort, order, value)}
+                >
+                  <span className="icon">
+                    <i
+                      className={cn('fas', {
+                        'fa-sort': sort !== value,
+                        'fa-sort-up': sort === value && !order,
+                        'fa-sort-down': sort === value && order,
+                      })}
+                    />
+                  </span>
+                </SearchLink>
+              </span>
+            </th>
+          ))}
 
           <th>Mother</th>
           <th>Father</th>

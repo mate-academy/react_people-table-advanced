@@ -26,7 +26,11 @@ export function getPreparedPeople(people: Person[], filterParam: FilterParam) {
     const normalizedQuery = filterParam.query.toLowerCase();
 
     preparedPeople = preparedPeople
-      .filter(person => person.name.toLowerCase().includes(normalizedQuery));
+      .filter(person => {
+        return person.name.toLowerCase().includes(normalizedQuery)
+          || person.motherName?.toLowerCase().includes(normalizedQuery)
+          || person.fatherName?.toLowerCase().includes(normalizedQuery);
+      });
   }
 
   if (filterParam.sort) {
