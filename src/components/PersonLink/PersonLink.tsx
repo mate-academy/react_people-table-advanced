@@ -10,7 +10,6 @@ export const PersonLink: React.FC<Props> = ({ person }) => {
   const [searchParams] = useSearchParams();
 
   return (
-
     <Link
       to={`/people/${person.slug}?${searchParams.toString()}`}
       className={cn({
@@ -19,6 +18,5 @@ export const PersonLink: React.FC<Props> = ({ person }) => {
     >
       {person.name}
     </Link>
-
   );
 };

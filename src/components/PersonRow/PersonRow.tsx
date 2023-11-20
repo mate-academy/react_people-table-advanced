@@ -27,29 +27,16 @@ export const PersonRow: React.FC<Props> = ({ person, people }) => {
       <td>{person.born}</td>
       <td>{person.died}</td>
       <td>
-        {/* eslint-disable */}
-        {person.motherName ? (
-          motherLink ? (
-            <PersonLink person={motherLink} />
-          ) : (
-            person.motherName
-          )
-        ) : (
-          '-'
-        )}
+        {person.motherName
+        && motherLink
+          ? <PersonLink person={motherLink} /> : person.motherName}
+        {!person.motherName && '-'}
       </td>
-
       <td>
-        {person.fatherName ? (
-          fatherLink ? (
-            <PersonLink person={fatherLink} />
-          ) : (
-            person.fatherName
-          )
-        ) : (
-          '-'
-        )}
-        {/* eslint-enable */}
+        {person.fatherName
+        && fatherLink
+          ? <PersonLink person={fatherLink} /> : person.fatherName}
+        {!person.fatherName && '-'}
       </td>
     </tr>
   );

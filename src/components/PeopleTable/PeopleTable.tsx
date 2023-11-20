@@ -20,7 +20,6 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
           <th>
             Name
             <Sort type="name" />
-
           </th>
           <th>
             Sex
@@ -43,7 +42,11 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
       ) : (
         <tbody>
           {filteredPeople.map((person) => (
-            <PersonRow person={person} people={filteredPeople} />
+            <PersonRow
+              person={person}
+              people={filteredPeople}
+              key={person.slug}
+            />
           ))}
         </tbody>
       )}

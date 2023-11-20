@@ -10,8 +10,6 @@ const SexFilter:{ [key:string]:string } = {
 const CenturyFilter = [16, 17, 18, 19, 20];
 
 export const PeopleFilters = () => {
-  // const [centuries, setCenturies] = useState<CenturyFilter[]>([]);
-
   const [searchParams, setSearchParams] = useSearchParams();
   const query = searchParams.get('query') || '';
   const sex = searchParams.get('sex') || '';
@@ -24,7 +22,7 @@ export const PeopleFilters = () => {
     event.preventDefault();
     const params = new URLSearchParams(searchParams);
 
-    if (type === 'All') {
+    if (type === Object.keys(SexFilter)[0]) {
       params.delete('sex');
     } else {
       params.set('sex', SexFilter[type]);

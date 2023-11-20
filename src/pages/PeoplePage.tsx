@@ -29,26 +29,27 @@ export const PeoplePage = () => {
   return (
     <>
       <h1 className="title">People Page</h1>
-      <div className="block">
-        <div className="box table-container">
-          <div className="column is-7-tablet is-narrow-desktop">
-            <PeopleFilters />
-          </div>
-          {/* eslint-disable */}
-          {isLoading ? (
-            <Loader />
-          ) : people.length === 0 ? (
-            <p data-cy="noPeopleMessage">There are no people on the server</p>
-          ) : (
-            <PeopleTable people={people} />
-          )}
-          {/* eslint-enable */}
-          {error && (
-            <p data-cy="peopleLoadingError" className="has-text-danger">
-              Something went wrong
-            </p>
-          )}
+      <div className="block flex-reverse">
+        <div className="is-7-tablet is-narrow-desktop">
+          <PeopleFilters />
         </div>
+        {isLoading ? <Loader /> : (
+          <div className="box table-container">
+            {(people.length === 0 && !isLoading) && (
+              <p data-cy="noPeopleMessage">
+                There are no people on the server
+              </p>
+            )}
+            {(people.length !== 0 && !isLoading)
+          && <PeopleTable people={people} />}
+            {error && (
+              <p data-cy="peopleLoadingError" className="has-text-danger">
+                Something went wrong
+              </p>
+            )}
+          </div>
+        )}
+
       </div>
     </>
   );

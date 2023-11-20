@@ -1,3 +1,13 @@
 iframe {
   display: none;
 }
+
+.flex-reverse {
+  display: flex;
+  flex-direction: row-reverse;
+  gap: 1rem;
+}
+
+th {
+  min-width: 80px;
+}
