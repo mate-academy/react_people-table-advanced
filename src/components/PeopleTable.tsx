@@ -1,10 +1,12 @@
-import { useEffect, useState } from 'react';
 import cn from 'classnames';
 import { useSearchParams } from 'react-router-dom';
 import { Person } from '../types';
-import { getPeople } from '../api';
 import { PersonLink } from './PersonLink';
 import { SearchLink } from './SearchLink';
+
+type Props = {
+  people: Person[],
+};
 
 const columns = [
   { Name: 'name' },
@@ -13,16 +15,10 @@ const columns = [
   { Died: 'died' },
 ];
 
-export const PeopleTable = () => {
-  const [people, setPeople] = useState<Person[]>([]);
+export const PeopleTable: React.FC<Props> = ({ people }) => {
   const [searchParams] = useSearchParams();
   const sortValue = searchParams.get('sort');
   const sortOrder = searchParams.get('order');
-
-  useEffect(() => {
-    getPeople()
-      .then(setPeople);
-  }, []);
 
   const filterPeople = (p: Person[]) => {
     let peopleCopy = [...p];
