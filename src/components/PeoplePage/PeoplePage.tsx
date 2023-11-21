@@ -94,9 +94,9 @@ export const PeoplePage = () => {
           <div className="column">
             <div className="box table-container">
               {loader && (<Loader />)}
-              {people?.length === 0 && error === false && !loader && (<NoPeople />)}
+              {(people?.length === 0) && error === false && !loader && (<NoPeople />)}
               {error && (<PeopleError />)}
-              {error === false && people?.length && !loader && (<Table people={displayedPeople} />)}
+              {error === false && (people?.length !== 0) && !loader && (<Table people={displayedPeople} />)}
             </div>
           </div>
         </div>
