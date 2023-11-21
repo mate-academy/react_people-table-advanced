@@ -69,6 +69,22 @@ export const PeoplePage = () => {
     );
   };
 
+  const showFilters = (
+    loadingState: boolean,
+    error: string,
+    peopleArray: Person[],
+  ) => {
+    if (!error.length && peopleArray.length && !loadingState) {
+      return (
+        <div className="column is-7-tablet is-narrow-desktop">
+          <PeopleFilters />
+        </div>
+      );
+    }
+
+    return false;
+  };
+
   const visiblePeople = getVisiblePeople(people, searchParams);
 
   return (
@@ -77,12 +93,7 @@ export const PeoplePage = () => {
 
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
-          {!errorMessage.length && people.length && !isLoading
-          && (
-            <div className="column is-7-tablet is-narrow-desktop">
-              <PeopleFilters />
-            </div>
-          )}
+          {showFilters(isLoading, errorMessage, people)}
 
           <div className="column">
             <div className="box table-container">
