@@ -4,7 +4,7 @@ export type SearchParams = {
 
 export function getSearchWith(
   currentParams: URLSearchParams,
-  paramsToUpdate: SearchParams, 
+  paramsToUpdate: SearchParams,
 ): string {
   const newParams = new URLSearchParams(
     currentParams.toString(),
@@ -27,4 +27,3 @@ export function getSearchWith(
 
   return newParams.toString();
 }
-
