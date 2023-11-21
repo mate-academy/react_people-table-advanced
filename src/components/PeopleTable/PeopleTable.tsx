@@ -43,12 +43,15 @@ export const PeopleTable: React.FC<{ people: Person[] }> = ({ people }) => {
                 const sortLower = sort.toLowerCase();
 
                 return (
-                  <th>
+                  <th key={sortLower}>
                     <span className="is-flex is-flex-wrap-nowrap">
                       {sort}
                       <SearchLink
                         params={{
-                          sort: sortLower,
+                          sort: sortLower === currentSort.sortBy
+                            && currentSort.order === 'desc'
+                            ? null
+                            : sortLower,
                           order: sortLower === currentSort.sortBy
                             && currentSort.order !== 'desc'
                             ? 'desc'

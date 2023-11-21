@@ -1,8 +1,8 @@
 import classNames from 'classnames';
 
-import { useCallback } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { SearchLink } from './SearchLink';
+import { getSearchWith } from '../utils/searchHelper';
 
 const centuries = [16, 17, 18, 19, 20];
 
@@ -15,19 +15,17 @@ export const PeopleFilters = () => {
     sex: searchParams.get('sex'),
   };
 
-  const handleQueryChange = useCallback(
-    (event: React.ChangeEvent<HTMLInputElement>) => {
-      if (!event.target.value) {
-        searchParams.delete('query');
-        setSearchParams(searchParams);
-      } else {
-        setSearchParams({
-          ...searchParams,
-          query: event.target.value,
-        });
-      }
-    }, [params.query],
-  );
+  const handleQueryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (!event.target.value) {
+      setSearchParams(
+        getSearchWith(searchParams, { query: null }),
+      );
+    } else {
+      setSearchParams(
+        getSearchWith(searchParams, { query: event.target.value }),
+      );
+    }
+  };
 
   return (
     <nav className="panel">
@@ -88,6 +86,7 @@ export const PeopleFilters = () => {
           <div className="level-left">
             {centuries.map(century => (
               <SearchLink
+                key={century}
                 data-cy="century"
                 className={classNames(
                   'button',
