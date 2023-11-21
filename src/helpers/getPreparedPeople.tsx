@@ -1,4 +1,5 @@
 import { Person } from '../types';
+import { Sort } from '../types/Sort';
 
 export interface FilterParam {
   sort: string;
@@ -38,13 +39,13 @@ export function getPreparedPeople(people: Person[], filterParam: FilterParam) {
 
     preparedPeople = [...preparedPeople].sort((a, b) => {
       switch (filterParam.sort) {
-        case 'name':
-        case 'sex':
+        case Sort.Name:
+        case Sort.Sex:
           return a[filterParam.sort]
             .localeCompare(b[filterParam.sort]) * reverseFactor;
 
-        case 'born':
-        case 'died':
+        case Sort.Born:
+        case Sort.Died:
           return (a[filterParam.sort] - b[filterParam.sort]) * reverseFactor;
 
         default:

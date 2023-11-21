@@ -1,3 +1,4 @@
+import React from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import cn from 'classnames';
 
@@ -9,7 +10,7 @@ import { SearchLink } from './SearchLink';
 
 const CENTURIES = ['16', '17', '18', '19', '20'];
 
-export const PeopleFilters = () => {
+export const PeopleFilters: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const sex = searchParams.get('sex') || '';
   const query = searchParams.get('query') || '';
