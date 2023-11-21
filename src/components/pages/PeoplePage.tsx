@@ -65,13 +65,7 @@ export const PeoplePage = () => {
     }
 
     return (
-      <>
-        {/* <div className="column is-7-tablet is-narrow-desktop">
-          <PeopleFilters />
-        </div> */}
-
-        <PeopleTable people={peopleArray} />
-      </>
+      <PeopleTable people={peopleArray} />
     );
   };
 

@@ -26,7 +26,7 @@ export const getVisiblePeople = (
 
   if (centuries.length) {
     visiblePeople = visiblePeople.filter(person => {
-      const century = Math.floor(person.born / 100) + 1;
+      const century = Math.ceil(person.born / 100);
 
       return centuries.includes(century.toString());
     });
