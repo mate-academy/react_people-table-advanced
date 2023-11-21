@@ -2,6 +2,7 @@
 
 import React from 'react';
 import classNames from 'classnames';
+import { Link } from 'react-router-dom';
 import { Person } from '../types';
 import { PersonLink } from './PersonLink';
 import { TableHeaders } from '../types/TableHeaders';
@@ -28,10 +29,22 @@ export const PeopleTable: React.FC<PeopleTableProps> = ({
     >
       <thead>
         <tr>
-          {Object.values(TableHeaders).map((header) => (
-            <th key={header}>{header}</th>
+          {Object.values(TableHeaders).map((header, index) => (
+            <th key={header}>
+              <span className="is-flex is-flex-wrap-nowrap">
+                {header}
+                {index < 4 && (
+                  <Link to={`?sort=${header.toLowerCase()}`}>
+                    <span className="icon">
+                      <i className="fas fa-sort" />
+                    </span>
+                  </Link>
+                )}
+              </span>
+            </th>
           ))}
         </tr>
+
       </thead>
       <tbody>
         {people.map((person) => (

@@ -1,12 +1,22 @@
+import { Link } from 'react-router-dom';
+import { Centuries } from '../types/Centuries';
+import { Gender } from '../types/Gender';
+
 export const PeopleFilters = () => {
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        <a className="is-active" href="#/people">All</a>
-        <a className="" href="#/people?sex=m">Male</a>
-        <a className="" href="#/people?sex=f">Female</a>
+        {Object.values(Gender).map((sex) => (
+          <Link
+            key={sex}
+            className={sex === Gender.ALL ? 'is-active' : ''}
+            to={sex === Gender.ALL ? '.' : `?sex=${sex.toLowerCase().charAt(0)}`}
+          >
+            {sex}
+          </Link>
+        ))}
       </p>
 
       <div className="panel-block">
@@ -27,55 +37,23 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            <a
-              data-cy="century"
-              className="button mr-1"
-              href="#/people?centuries=16"
-            >
-              16
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=17"
-            >
-              17
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=18"
-            >
-              18
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=19"
-            >
-              19
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1"
-              href="#/people?centuries=20"
-            >
-              20
-            </a>
-          </div>
-
-          <div className="level-right ml-4">
-            <a
+            {Object.values(Centuries).map((century) => (
+              <Link
+                key={century}
+                data-cy="century"
+                className="button mr-1 is-info"
+                to={`?centuries=${century}`}
+              >
+                {century}
+              </Link>
+            ))}
+            <Link
               data-cy="centuryALL"
               className="button is-success is-outlined"
-              href="#/people"
+              to="."
             >
               All
-            </a>
+            </Link>
           </div>
         </div>
       </div>
