@@ -20,105 +20,111 @@ export const PeopleTable: React.FC<{ people: Person[] }> = ({ people }) => {
   }, [searchParams]);
 
   return (
-    <table
-      data-cy="peopleTable"
-      className={classNames(
-        'table',
-        'is-striped',
-        'is-hoverable',
-        'is-narrow',
-        'is-fullwidth',
-      )}
-    >
-      <thead>
-        <tr>
-          {sorts.map(sort => {
-            const sortLower = sort.toLowerCase();
+    people.length === 0
+      ? (
+        <>
+          There are no people matching the current search criteria
+        </>
+      )
+      : (
+        <table
+          data-cy="peopleTable"
+          className={classNames(
+            'table',
+            'is-striped',
+            'is-hoverable',
+            'is-narrow',
+            'is-fullwidth',
+          )}
+        >
+          <thead>
+            <tr>
+              {sorts.map(sort => {
+                const sortLower = sort.toLowerCase();
 
-            return (
-              <th>
-                <span className="is-flex is-flex-wrap-nowrap">
-                  {sort}
-                  <SearchLink
-                    params={{
-                      sort: currentSort.order !== 'desc'
-                        ? sortLower
-                        : null,
-                      order: sortLower === currentSort.sortBy
-                          && currentSort.order !== 'desc'
-                        ? 'desc'
-                        : null,
-                    }}
-                  >
-                    <span className="icon">
-                      <i
-                        className={classNames(
-                          'fas',
-                          {
-                            'fa-sort': currentSort.sortBy !== sortLower,
-                            'fa-sort-up': currentSort.sortBy === sortLower
-                              && !currentSort.order,
-                            'fa-sort-down': currentSort.sortBy === sortLower
-                              && currentSort.order,
-                          },
-                        )}
-                      />
+                return (
+                  <th>
+                    <span className="is-flex is-flex-wrap-nowrap">
+                      {sort}
+                      <SearchLink
+                        params={{
+                          sort: sortLower,
+                          order: sortLower === currentSort.sortBy
+                            && currentSort.order !== 'desc'
+                            ? 'desc'
+                            : null,
+                        }}
+                      >
+                        <span className="icon">
+                          <i
+                            className={classNames(
+                              'fas',
+                              {
+                                'fa-sort': currentSort.sortBy !== sortLower,
+                                'fa-sort-up': currentSort.sortBy === sortLower
+                                  && !currentSort.order,
+                                'fa-sort-down': currentSort.sortBy === sortLower
+                                  && currentSort.order,
+                              },
+                            )}
+                          />
+                        </span>
+                      </SearchLink>
                     </span>
-                  </SearchLink>
-                </span>
-              </th>
-            );
-          })}
+                  </th>
+                );
+              })}
 
-          <th>Mother</th>
-          <th>Father</th>
-        </tr>
-      </thead>
-
-      <tbody>
-        {people.map(person => {
-          const {
-            sex,
-            born,
-            died,
-            motherName,
-            fatherName,
-            slug,
-            father,
-            mother,
-          } = person;
-
-          return (
-            <tr
-              key={slug}
-              data-cy="person"
-              className={classNames(
-                {
-                  'has-background-warning': slug === selectedSlug,
-                },
-              )}
-            >
-              <td>
-                <PeopleLink person={person} />
-              </td>
-
-              <td>{sex}</td>
-              <td>{born}</td>
-              <td>{died}</td>
-              <td>
-                {mother
-                  ? <PeopleLink person={mother as Person} />
-                  : motherName || '-'}
-              </td>
-              <td>
-                {father
-                  ? <PeopleLink person={father as Person} />
-                  : fatherName || '-'}
-              </td>
+              <th>Mother</th>
+              <th>Father</th>
             </tr>
-          );
-        })}
-      </tbody>
-    </table>
+          </thead>
+
+          <tbody>
+            {people.map(person => {
+              const {
+                sex,
+                born,
+                died,
+                motherName,
+                fatherName,
+                slug,
+                father,
+                mother,
+              } = person;
+
+              return (
+                <tr
+                  key={slug}
+                  data-cy="person"
+                  className={classNames(
+                    {
+                      'has-background-warning': slug === selectedSlug,
+                    },
+                  )}
+                >
+                  <td>
+                    <PeopleLink person={person} />
+                  </td>
+
+                  <td>{sex}</td>
+                  <td>{born}</td>
+                  <td>{died}</td>
+                  <td>
+                    {mother
+                      ? <PeopleLink person={mother as Person} />
+                      : motherName || '-'}
+                  </td>
+                  <td>
+                    {father
+                      ? <PeopleLink person={father as Person} />
+                      : fatherName || '-'}
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      )
   );
 };
