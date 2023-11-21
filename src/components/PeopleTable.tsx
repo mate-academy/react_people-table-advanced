@@ -1,6 +1,5 @@
 import classNames from 'classnames';
 import { useParams } from 'react-router-dom';
-import React from 'react';
 import { Person } from '../types/Person';
 import { PersonLink } from './PersonLink';
 import { TableHeader } from '../types/TableHeader';

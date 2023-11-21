@@ -1,6 +1,5 @@
 import classNames from 'classnames';
 import { useSearchParams } from 'react-router-dom';
-import React from 'react';
 import { Century, Gender } from '../types/Filters';
 import { SearchLink } from './SearchLink';
 
