@@ -11,7 +11,7 @@ type Props = {
 };
 
 const sexColumns = {
-  All: null,
+  All: '',
   Male: 'm',
   Female: 'f',
 };
@@ -36,10 +36,10 @@ export const PeopleFilters: React.FC<Props> = ({ query, sex, centuries }) => {
           <SearchLink
             key={value}
             params={{
-              sex: value,
+              sex: value || null,
             }}
             className={cn({
-              'is-active': value === sex,
+              'is-active': sex === value,
             })}
           >
             {key}
