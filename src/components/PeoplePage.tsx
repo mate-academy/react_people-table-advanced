@@ -49,14 +49,16 @@ export const PeoplePage = () => {
       switch (sort) {
         case 'name':
         case 'sex':
-          return filterPeople.sort((a, b) => a[sort].localeCompare(b[sort]));
+          // eslint-disable-next-line max-len
+          filterPeople = filterPeople.sort((a, b) => a[sort].localeCompare(b[sort]));
+          break;
 
         case 'born':
         case 'died':
-          return filterPeople.sort((a, b) => a[sort] - b[sort]);
+          filterPeople = filterPeople.sort((a, b) => a[sort] - b[sort]);
+          break;
 
         default:
-          return filterPeople;
       }
     }
 

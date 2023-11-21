@@ -64,8 +64,8 @@ export const PeopleTable = ({ people }: { people: Person[] }) => {
               >
                 <span className="icon">
                   <i className={cn('fas fa-sort', {
-                    'fa-sort-up': sort === 'name' && !order,
-                    'fa-sort-down': sort === 'name' && order,
+                    'fa-sort-up': sort === 'sex' && !order,
+                    'fa-sort-down': sort === 'sex' && order,
                   })}
                   />
                 </span>
@@ -81,8 +81,8 @@ export const PeopleTable = ({ people }: { people: Person[] }) => {
               >
                 <span className="icon">
                   <i className={cn('fas fa-sort', {
-                    'fa-sort-up': sort === 'name' && !order,
-                    'fa-sort-down': sort === 'name' && order,
+                    'fa-sort-up': sort === 'born' && !order,
+                    'fa-sort-down': sort === 'born' && order,
                   })}
                   />
                 </span>
@@ -98,8 +98,8 @@ export const PeopleTable = ({ people }: { people: Person[] }) => {
               >
                 <span className="icon">
                   <i className={cn('fas fa-sort', {
-                    'fa-sort-up': sort === 'name' && !order,
-                    'fa-sort-down': sort === 'name' && order,
+                    'fa-sort-up': sort === 'died' && !order,
+                    'fa-sort-down': sort === 'died' && order,
                   })}
                   />
                 </span>

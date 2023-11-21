@@ -13,7 +13,7 @@ export const PeopleFilters: React.FC<Props> = ({ setSearchWith }) => {
   const [searchParams] = useSearchParams();
   const query = searchParams.get('query') || '';
   const sex = searchParams.get('sex') || null;
-  const filterCenturies = searchParams.getAll('century') || [];
+  const filterCenturies = searchParams.getAll('centuries') || [];
 
   return (
     <nav className="panel">
@@ -30,7 +30,7 @@ export const PeopleFilters: React.FC<Props> = ({ setSearchWith }) => {
         </SearchLink>
 
         <SearchLink
-          params={{ sex: null }}
+          params={{ sex: 'm' }}
           className={cn({
             'is-active': sex === 'm',
           })}
@@ -39,7 +39,7 @@ export const PeopleFilters: React.FC<Props> = ({ setSearchWith }) => {
         </SearchLink>
 
         <SearchLink
-          params={{ sex: null }}
+          params={{ sex: 'f' }}
           className={cn({
             'is-active': sex === 'f',
           })}
