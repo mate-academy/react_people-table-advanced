@@ -1,8 +1,8 @@
 import classNames from 'classnames';
 import { useSearchParams } from 'react-router-dom';
+import React from 'react';
 import { Century, Gender } from '../types/Filters';
 import { SearchLink } from './SearchLink';
-import React from 'react';
 
 const centuries = [
   Century.XVI,
@@ -46,7 +46,7 @@ export const PeopleFilters: React.FC<Props> = ({
     <nav className="panel">
       <p className="panel-heading">Filters</p>
 
-      <p className="panel-tabs" data-cy="SexFilter"></p>
+      <p className="panel-tabs" data-cy="SexFilter" />
       <SearchLink
         params={{ sex: null }}
         className={classNames({
@@ -67,7 +67,7 @@ export const PeopleFilters: React.FC<Props> = ({
           {gender.title}
         </SearchLink>
       ))}
-    <div className="panel-block">
+      <div className="panel-block">
         <p className="control has-icons-left">
           <input
             value={query}
@@ -75,13 +75,15 @@ export const PeopleFilters: React.FC<Props> = ({
             type="search"
             className="input"
             placeholder="Search"
-            onChange={handleQueryChange} />
+            onChange={handleQueryChange}
+          />
 
           <span className="icon is-left">
             <i className="fas fa-search" aria-hidden="true" />
           </span>
         </p>
-      </div><div className="panel-block">
+      </div>
+      <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
             {centuries.map(century => (
@@ -114,7 +116,8 @@ export const PeopleFilters: React.FC<Props> = ({
             </SearchLink>
           </div>
         </div>
-      </div><div className="panel-block">
+      </div>
+      <div className="panel-block">
         <SearchLink
           className="button is-link is-outlined is-fullwidth"
           params={{
@@ -124,8 +127,8 @@ export const PeopleFilters: React.FC<Props> = ({
           }}
         >
           Reset all filters
-      </SearchLink>
+        </SearchLink>
       </div>
     </nav>
   );
-        }
+};

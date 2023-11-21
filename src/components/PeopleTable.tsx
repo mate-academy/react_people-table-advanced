@@ -1,10 +1,10 @@
 import classNames from 'classnames';
 import { useParams } from 'react-router-dom';
+import React from 'react';
 import { Person } from '../types/Person';
 import { PersonLink } from './PersonLink';
 import { TableHeader } from '../types/TableHeader';
 import { SearchLink } from './SearchLink';
-import React from 'react';
 
 const tableHeaders = [
   TableHeader.Name,
@@ -37,7 +37,7 @@ export const PeopleTable: React.FC<Props> = ({
     >
       <thead>
         <tr>
-        {tableHeaders.map(header => {
+          {tableHeaders.map(header => {
             const sortable = header !== TableHeader.Mother
               && header !== TableHeader.Father;
 
@@ -83,14 +83,14 @@ export const PeopleTable: React.FC<Props> = ({
                     </SearchLink>
                   )}
                 </span>
-                </th>
+              </th>
             );
           })}
         </tr>
       </thead>
 
       <tbody>
-      {people.map(person => {
+        {people.map(person => {
           const {
             name,
             sex,

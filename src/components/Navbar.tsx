@@ -24,6 +24,6 @@ export const Navbar = () => (
           People
         </NavLink>
       </div>
-      </div>
+    </div>
   </nav>
 );

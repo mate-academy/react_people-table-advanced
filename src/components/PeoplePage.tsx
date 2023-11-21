@@ -1,12 +1,11 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { Loader } from '../components/Loader';
-import { PeopleTable } from '../components/PeopleTable';
+import { Loader } from './Loader';
+import { PeopleTable } from './PeopleTable';
 import { Person } from '../types/Person';
 import { getPeople } from '../api';
-import { PeopleFilters } from '../components/PeopleFilters';
+import { PeopleFilters } from './PeopleFilters';
 import { getVisiblePeople } from '../utils/getVisiblePeople';
-import React from 'react';
 
 export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);
@@ -72,32 +71,32 @@ export const PeoplePage = () => {
                   selectedGender={selectedGender}
                   query={query}
                   selectedCenturies={selectedCenturies}
-                  />
-                  )}
-                </div>
+                />
+              )}
+            </div>
 
-                <div className="column">
-                  <div className="box table-container">
-                    {isLoading
-                      ? <Loader />
-                      : preparedTable}
+            <div className="column">
+              <div className="box table-container">
+                {isLoading
+                  ? <Loader />
+                  : preparedTable}
 
-                    {isError && (
-                      <p data-cy="peopleLoadingError" className="has-text-danger">
-                        Something went wrong
-                      </p>
-                    )}
+                {isError && (
+                  <p data-cy="peopleLoadingError" className="has-text-danger">
+                    Something went wrong
+                  </p>
+                )}
 
-                    {!people.length && !isLoading && (
-                      <p data-cy="noPeopleMessage">
-                        There are no people on the server
-                      </p>
-                    )}
-                  </div>
-                </div>
+                {!people.length && !isLoading && (
+                  <p data-cy="noPeopleMessage">
+                    There are no people on the server
+                  </p>
+                )}
               </div>
             </div>
           </div>
-        </main>
-      );
-    };
+        </div>
+      </div>
+    </main>
+  );
+};

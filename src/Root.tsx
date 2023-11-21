@@ -4,11 +4,11 @@ import {
   HashRouter as Router,
   Routes,
 } from 'react-router-dom';
+import React from 'react';
 import { App } from './App';
 import { HomePage } from './components/HomePage';
 import { NotFoundPage } from './components/NotFoundPage';
 import { PeoplePage } from './components/PeoplePage';
-import React from 'react';
 
 export const Root = () => (
   <Router>
