@@ -16,14 +16,6 @@ export const PeopleFilters = () => {
     setSearchParams(search);
   };
 
-  // const toggleCentury = (century: number) => {
-  //   const newCenturies = centuries.includes(century.toString())
-  //     ? centuries.filter(cent => +cent !== century)
-  //     : [...centuries, century.toString()];
-
-  //   setSearchWith({ centuries: newCenturies });
-  // };
-
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchWith({ query: event.target.value || null });
   };
@@ -94,11 +86,7 @@ export const PeopleFilters = () => {
                       ? centuries.filter(cent => +cent !== century)
                       : [...centuries, century.toString()],
                   }),
-                }} // `?centuries=${century}`
-              // onClick={() => {
-              //   toggleCentury(century);
-              //   console.log(centuries);
-              // }}
+                }}
               >
                 {century}
               </Link>
