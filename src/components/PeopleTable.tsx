@@ -21,7 +21,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
   function togglesort(column: string) {
     let newParam = {};
 
-    if (sort !== column.toLowerCase() && !order) {
+    if (sort !== column.toLowerCase()) {
       newParam = { sort: column.toLowerCase(), order: null };
     }
 

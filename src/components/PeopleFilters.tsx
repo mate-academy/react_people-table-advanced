@@ -93,7 +93,6 @@ export const PeopleFilters = () => {
                 'is-outlined': centuries.length > 0,
               })}
               params={{ centuries: null }}
-              // to="#/people"
             >
               All
             </SearchLink>
@@ -104,7 +103,6 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <SearchLink
           className="button is-link is-outlined is-fullwidth"
-          // to="#/people"
           params={{ centuries: null, query: null, sex: null }}
         >
           Reset all filters

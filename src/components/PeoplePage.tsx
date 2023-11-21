@@ -19,8 +19,6 @@ export const PeoplePage = () => {
   const sort = searchParams.get('sort');
   const order = searchParams.get('order');
 
-  // console.log(order);
-
   useEffect(() => {
     setIsLoad(true);
     getPeople()
@@ -82,10 +80,6 @@ export const PeoplePage = () => {
     return visiblePeople;
   };
 
-  // const visiblePeople = people
-  //   ? people.filter((person) => (sex ? person.sex === sex : true))
-  //   : [];
-
   return (
     <>
       <h1 className="title">People Page</h1>
@@ -115,15 +109,3 @@ export const PeoplePage = () => {
     </>
   );
 };
-
-// Something went wrong
-
-// There are no people on the server
-
-// There are no people matching the current search criteria
-//
-// <p data-cy="peopleLoadingError">Something went wrong</p>
-
-// <p data-cy="noPeopleMessage">There are no people on the server</p>
-
-// <p>There are no people matching the current search criteria</p>
