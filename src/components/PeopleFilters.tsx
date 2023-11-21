@@ -63,7 +63,9 @@ export const PeopleFilters: React.FC<Props> = (
               setSearchParams(
                 getSearchWith(
                   searchParams,
-                  { query: event.target.value.trim().toLocaleLowerCase() },
+                  (event.target.value.trim())
+                    ? { query: event.target.value.trim().toLocaleLowerCase() }
+                    : { query: null },
                 ),
               );
             }}
@@ -102,7 +104,7 @@ export const PeopleFilters: React.FC<Props> = (
             <SearchLink
               data-cy="centuryALL"
               className={classNames(
-                'button is-success', { 'is-outlined': centuries.length < 1 },
+                'button is-success', { 'is-outlined': centuries.length },
               )}
               params={{ centuries: null }}
             >
