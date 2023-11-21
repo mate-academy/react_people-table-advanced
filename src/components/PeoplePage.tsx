@@ -3,6 +3,7 @@ import { getPeople } from '../api';
 import { Loader } from './Loader';
 import { PeopleTable } from './PeopleTable';
 import { Person } from '../types/Person';
+import { PeopleFilters } from './PeopleFilters';
 
 export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);
@@ -22,6 +23,13 @@ export const PeoplePage = () => {
       <h1 className="title">People Page</h1>
 
       <div className="block">
+        <div className="columns is-desktop is-flex-direction-row-reverse">
+          {!isLoading && (
+            <div className="column is-7-tablet is-narrow-desktop">
+              <PeopleFilters />
+            </div>
+          )}
+
         <div className="box table-container">
           {isLoading && <Loader />}
           {hasError && (
@@ -37,6 +45,7 @@ export const PeoplePage = () => {
 
           {isTableVisible && <PeopleTable people={people} />}
         </div>
+      </div>
       </div>
     </div>
   );

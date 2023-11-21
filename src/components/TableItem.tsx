@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import React ,{ useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 import { PersonLink } from './PersonLink';
 import { Person } from '../types';
@@ -18,11 +18,11 @@ export const TableItem: React.FC<Props> = ({ person, people }) => {
     fatherName,
   } = person;
 
-const getParent = useMemo(() => {
-  return (parentName: string | null) => {
-    return people.find(parent => parent.name === parentName);
-  };
-}, [people]);
+  const getParent = useMemo(() => {
+    return (parentName: string | null) => {
+      return people.find(parent => parent.name === parentName);
+    };
+  }, [people]);
 
   const mother = getParent(motherName);
   const father = getParent(fatherName);
