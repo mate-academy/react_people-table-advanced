@@ -10,8 +10,6 @@ export const PeopleFilters = () => {
   const query = searchParams.get('query') || '';
   const centuries = searchParams.getAll('centuries') || [];
 
-  // console.log(centuries);
-
   const handleQueryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newQueryParam = getSearchWith(searchParams, {
       query: event.target.value.trim().toLocaleLowerCase() || null,
@@ -69,7 +67,7 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            {centuriesItem.map(century => {
+            {centuriesItem.map((century) => {
               return (
                 <SearchLink
                   key={century}
@@ -89,21 +87,28 @@ export const PeopleFilters = () => {
           </div>
 
           <div className="level-right ml-4">
-            <a
+            <SearchLink
               data-cy="centuryALL"
-              className="button is-success is-outlined"
-              href="#/people"
+              className={classnames('button', 'is-success', {
+                'is-outlined': centuries.length > 0,
+              })}
+              params={{ centuries: null }}
+              // to="#/people"
             >
               All
-            </a>
+            </SearchLink>
           </div>
         </div>
       </div>
 
       <div className="panel-block">
-        <a className="button is-link is-outlined is-fullwidth" href="#/people">
+        <SearchLink
+          className="button is-link is-outlined is-fullwidth"
+          // to="#/people"
+          params={{ centuries: null, query: null, sex: null }}
+        >
           Reset all filters
-        </a>
+        </SearchLink>
       </div>
     </nav>
   );

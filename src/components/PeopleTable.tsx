@@ -19,7 +19,6 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
   const order = searchParams.get('order');
 
   function togglesort(column: string) {
-    // console.log(`column-- ${column}`);
     let newParam = {};
 
     if (sort !== column.toLowerCase() && !order) {
@@ -37,48 +36,48 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
     return newParam;
   }
 
-  // console.log(`sort-- ${sort}`);
-
   return (
     <table
       data-cy="peopleTable"
       className="table is-striped is-hoverable is-narrow is-fullwidth"
     >
-      <thead>
-        <tr>
-          {columnsName.map((colum) => {
-            console.log(sort);
+      {people.length > 0 ? (
+        <thead>
+          <tr>
+            {columnsName.map((colum) => {
+              return (
+                <th key={colum}>
+                  <span className="is-flex is-flex-wrap-nowrap">
+                    {colum}
+                    <SearchLink
+                      params={{
+                        ...togglesort(colum),
+                      }}
+                    >
+                      <span className="icon">
+                        <i
+                          className={classnames('fas', {
+                            'fa-sort': sort !== colum.toLowerCase(),
+                            'fa-sort-up':
+                              sort === colum.toLowerCase() && order !== 'desc',
+                            'fa-sort-down':
+                              sort === colum.toLowerCase() && order === 'desc',
+                          })}
+                        />
+                      </span>
+                    </SearchLink>
+                  </span>
+                </th>
+              );
+            })}
 
-            return (
-              <th key={colum}>
-                <span className="is-flex is-flex-wrap-nowrap">
-                  {colum}
-                  <SearchLink
-                    params={{
-                      ...togglesort(colum),
-                    }}
-                  >
-                    <span className="icon">
-                      <i
-                        className={classnames('fas', {
-                          'fa-sort': sort !== colum.toLowerCase(),
-                          'fa-sort-up':
-                            sort === colum.toLowerCase() && order !== 'desc',
-                          'fa-sort-down':
-                            sort === colum.toLowerCase() && order === 'desc',
-                        })}
-                      />
-                    </span>
-                  </SearchLink>
-                </span>
-              </th>
-            );
-          })}
-
-          <th>Mother</th>
-          <th>Father</th>
-        </tr>
-      </thead>
+            <th>Mother</th>
+            <th>Father</th>
+          </tr>
+        </thead>
+      ) : (
+        <p>There are no people matching the current search criteria</p>
+      )}
       <tbody>
         {people.map((person: Person) => {
           const searchMother = people.find(
