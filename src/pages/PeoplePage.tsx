@@ -79,6 +79,8 @@ export const PeoplePage = () => {
     return filterAll;
   }
 
+  console.log(filterTable().length);
+
   return (
     <>
       <h1 className="title">People Page</h1>
@@ -104,9 +106,18 @@ export const PeoplePage = () => {
                   There are no people on the server
                 </p>
               )}
-              {people.length > 0 && !isLoading && !errorMessage && (
-                <PeopleTable people={filterTable()} />
+
+              {filterTable().length === 0 && !isLoading && !errorMessage && (
+                <h1>yo</h1>
               )}
+
+              {filterTable().length > 0
+                && people.length > 0
+                && !isLoading
+                && !errorMessage
+                && (
+                  <PeopleTable people={filterTable()} />
+                )}
             </div>
           </div>
         </div>
