@@ -49,14 +49,12 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
     if (sortValue) {
       peopleCopy.sort((a, b) => {
         switch (sortValue) {
-          case ('name'):
-            return a.name.localeCompare(b.name);
-          case ('sex'):
-            return a.sex.localeCompare(b.sex);
-          case ('born'):
-            return (a.born - b.born);
-          case ('died'):
-            return (a.died - b.died);
+          case 'name':
+          case 'sex':
+            return a[sortValue].localeCompare(b[sortValue]);
+          case 'born':
+          case 'died':
+            return (a[sortValue] - b[sortValue]);
           default: return 0;
         }
       });
