@@ -5,10 +5,6 @@ type Props = Omit<LinkProps, 'to'> & {
   params: SearchParams,
 };
 
-/**
- * SearchLink обновляет переданные `params` в поиске, сохраняя `pathname`
- * и другие существующие параметры поиска (см. `getSearchWith`)
- */
 export const SearchLink: React.FC<Props> = ({
   children, // this is the content between the open and closing tags
   params, // the params to be updated in the `search`
