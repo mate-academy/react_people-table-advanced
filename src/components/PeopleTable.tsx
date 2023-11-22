@@ -1,4 +1,3 @@
-import React, { useRef } from 'react';
 import cn from 'classnames';
 import { Link, useSearchParams } from 'react-router-dom';
 import { Person } from '../types';
@@ -17,8 +16,6 @@ export const PeopleTable: React.FC<Props> = ({
 
   const sort = searchParams.get('sort');
   const order = searchParams.get('order');
-
-  // const columnName = useRef('');
 
   const toggleSort = (column: string) => {
     let newParams = {};
@@ -62,8 +59,6 @@ export const PeopleTable: React.FC<Props> = ({
     const foundPerson = parentType === 'mother'
       ? isMotherExistInList(person[parentTypeName])
       : isFatherExistInList(person[parentTypeName]);
-
-    console.log(person, foundPerson);
 
     if (foundPerson) {
       return (
@@ -176,6 +171,19 @@ export const PeopleTable: React.FC<Props> = ({
             <td>{person.sex}</td>
             <td>{person.born}</td>
             <td>{person.died}</td>
+            {/* <td>{person.mother ? (
+              <Link
+                to={`/people/${person.mother.slug}`}
+                className={cn({
+                  'has-text-danger': person.mother.sex === 'f',
+                })}
+              />
+            )
+              : person.motherName}
+            </td>
+            <td>{person.father ?
+              <Link to={`/people/${person.father.slug}`} /> : person.fatherName}
+            </td> */}
             {getParent(person, 'mother')}
             {getParent(person, 'father')}
           </tr>

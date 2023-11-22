@@ -79,9 +79,10 @@ export const PeopleFilters = () => {
                 className={cn('button mr-1', {
                   'is-info': centuries.includes(`${century}`),
                 })}
-                params={{ centuries: centuries.includes(`${century}`)
-                  ? centuries.filter(c => c !== century)
-                  : [...centuries, century],
+                params={{
+                  centuries: centuries.includes(`${century}`)
+                    ? centuries.filter(c => c !== century)
+                    : [...centuries, century],
                 }}
               >
                 {century}

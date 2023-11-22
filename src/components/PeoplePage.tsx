@@ -13,8 +13,8 @@ const getVisiblePeople = (
     sex: string,
     centuries: string[],
     query: string,
-    sort: string,
-    order: string,
+    sort: string | null,
+    order: string | null,
   },
 ) => {
   let copiePeople = [...people];
@@ -50,7 +50,7 @@ const getVisiblePeople = (
   }
 
   if (sort) {
-    copiePeople = copiePeople.sort((person1, person2) => {
+    copiePeople = copiePeople.sort((person1, person2): number => {
       switch (sort) {
         case 'name':
           return order
@@ -69,7 +69,7 @@ const getVisiblePeople = (
             ? person2.died - person1.died
             : person1.died - person2.died;
         default:
-          return copiePeople;
+          return 0;
       }
     });
   }
