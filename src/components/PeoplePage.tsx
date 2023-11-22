@@ -39,18 +39,7 @@ function filterPeople(people: Person[], filterParam: FilterValues): Person[] {
   }
 
   if (sex) {
-    switch (sex) {
-      case 'm':
-        filteredpeople = filteredpeople.filter(person => person.sex === sex);
-        break;
-
-      case 'f':
-        filteredpeople = filteredpeople.filter(person => person.sex === sex);
-        break;
-
-      default:
-        break;
-    }
+    filteredpeople = filteredpeople.filter(person => person.sex === sex);
   }
 
   if (centuries.length) {
@@ -64,23 +53,17 @@ function filterPeople(people: Person[], filterParam: FilterValues): Person[] {
   if (sort) {
     switch (sort) {
       case SortParams.NAME:
-        filteredpeople = filteredpeople
-          .sort((personA, personB) => personA.name.localeCompare(personB.name));
-        break;
-
       case SortParams.SEX:
         filteredpeople = filteredpeople
-          .sort((personA, personB) => personA.sex.localeCompare(personB.sex));
+          .sort(
+            (personA, personB) => personA[sort].localeCompare(personB[sort]),
+          );
         break;
 
       case SortParams.BORN:
-        filteredpeople = filteredpeople
-          .sort((personA, personB) => personA.born - personB.born);
-        break;
-
       case SortParams.DIED:
         filteredpeople = filteredpeople
-          .sort((personA, personB) => personA.died - personB.died);
+          .sort((personA, personB) => personA[sort] - personB[sort]);
         break;
 
       default:
