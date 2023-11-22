@@ -4,12 +4,12 @@ import { PeopleFilters } from './PeopleFilters';
 import { Loader } from './Loader';
 import { PeopleTable } from './PeopleTable';
 import { getPeople } from '../api';
-
+import { getVisiblePeople } from '../utils/getVisiblePeople';
 import { Person } from '../types/Person';
 
 export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[] | null>(null);
-  const [isLoad, setIsLoad] = useState<boolean>(false);
+  const [isLoad, setIsLoad] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [searchParams] = useSearchParams();
 
@@ -20,7 +20,6 @@ export const PeoplePage = () => {
   const order = searchParams.get('order');
 
   useEffect(() => {
-    setIsLoad(true);
     getPeople()
       .then((peopleFromServer) => setPeople(peopleFromServer))
       .catch(() => {
@@ -28,57 +27,6 @@ export const PeoplePage = () => {
       })
       .finally(() => setIsLoad(false));
   }, []);
-
-  const getVisiblePeople = () => {
-    if (!people) {
-      return [];
-    }
-
-    let visiblePeople = [...people];
-
-    if (sex) {
-      visiblePeople = visiblePeople.filter((person) => person.sex === sex);
-    }
-
-    if (query) {
-      visiblePeople = visiblePeople.filter((person) => person
-        .name.toLocaleLowerCase().includes(query)
-        || person.motherName?.toLocaleLowerCase().includes(query)
-        || person.fatherName?.toLocaleLowerCase().includes(query));
-    }
-
-    if (centuries.length > 0) {
-      visiblePeople = visiblePeople.filter((person) => centuries
-        ?.includes(Math.ceil(person.born / 100).toString()));
-    }
-
-    if (sort) {
-      visiblePeople.sort((a, b) => {
-        switch (sort) {
-          case 'name':
-            return a.name.localeCompare(b.name);
-
-          case 'sex':
-            return a.sex.localeCompare(b.sex);
-
-          case 'born':
-            return (a.born - b.born);
-
-          case 'died':
-            return (a.died - b.died);
-
-          default:
-            return 0;
-        }
-      });
-    }
-
-    if (order) {
-      visiblePeople.reverse();
-    }
-
-    return visiblePeople;
-  };
 
   return (
     <>
@@ -98,7 +46,18 @@ export const PeoplePage = () => {
                   {error}
                 </p>
               )}
-              {people && <PeopleTable people={getVisiblePeople()} />}
+              {people && (
+                <PeopleTable
+                  people={getVisiblePeople(
+                    people,
+                    sex,
+                    query,
+                    centuries,
+                    sort,
+                    order,
+                  )}
+                />
+              )}
               {!isLoad && !error && !people && (
                 <p data-cy="noPeopleMessage">no people</p>
               )}
