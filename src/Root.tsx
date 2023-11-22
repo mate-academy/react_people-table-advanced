@@ -1,7 +1,7 @@
 import {
   Navigate,
   Route,
-  HashRouter as Router,
+  HashRouter,
   Routes,
 } from 'react-router-dom';
 
@@ -12,7 +12,7 @@ import { NotFoundPage } from './components/NotFoundPage';
 
 export const Root = () => {
   return (
-    <Router>
+    <HashRouter>
       <Routes>
         <Route path="/" element={<App />}>
           <Route index element={<HomePage />} />
@@ -23,6 +23,6 @@ export const Root = () => {
           <Route path="*" element={<NotFoundPage />} />
         </Route>
       </Routes>
-    </Router>
+    </HashRouter>
   );
 };

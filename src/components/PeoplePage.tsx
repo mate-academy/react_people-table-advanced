@@ -104,9 +104,6 @@ export const PeoplePage = () => {
       break;
   }
 
-  const secondClick = sort && order !== 'desc';
-  const thirdClick = sort && order === 'desc';
-
   const allCategories = ['Name', 'Sex', 'Born', 'Died'];
 
   return (
@@ -141,8 +138,10 @@ export const PeoplePage = () => {
                             {name}
                             <SearchLink
                               params={{
-                                sort: thirdClick ? null : name,
-                                order: secondClick ? 'desc' : null,
+                                sort: sort === name && order ? null : name,
+                                order: sort === name && order
+                                ? null
+                                : (sort === name ? 'desc' : null),
                               }}
                             >
                               <span className="icon">
