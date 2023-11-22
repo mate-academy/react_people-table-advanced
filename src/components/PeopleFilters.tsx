@@ -2,7 +2,34 @@ import { Link } from 'react-router-dom';
 import { Centuries } from '../types/Centuries';
 import { Gender } from '../types/Gender';
 
-export const PeopleFilters = () => {
+type PeopleFiltersProps = {
+  filterGenderStatus: Gender;
+  setFilterGenderStatus: React.Dispatch<React.SetStateAction<Gender>>;
+  setSelectedCenturies: React.Dispatch<React.SetStateAction<string[]>>;
+  selectedCenturies: string[];
+};
+
+export const PeopleFilters: React.FC<PeopleFiltersProps> = ({
+  filterGenderStatus,
+  setFilterGenderStatus,
+  setSelectedCenturies,
+  selectedCenturies,
+}) => {
+  const toggleCentury = (century: string) => {
+    setSelectedCenturies(prev => (prev.includes(century)
+      ? prev.filter(c => c !== century)
+      : [...prev, century]));
+  };
+
+  const resetAllCenturies = () => {
+    setSelectedCenturies([]);
+  };
+
+  const resetAllFilters = () => {
+    resetAllCenturies();
+    setFilterGenderStatus(Gender.ALL);
+  };
+
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
@@ -11,7 +38,8 @@ export const PeopleFilters = () => {
         {Object.values(Gender).map((sex) => (
           <Link
             key={sex}
-            className={sex === Gender.ALL ? 'is-active' : ''}
+            onClick={() => setFilterGenderStatus(sex)}
+            className={`panel-tab ${filterGenderStatus === sex ? 'is-active' : ''}`}
             to={sex === Gender.ALL ? '.' : `?sex=${sex.toLowerCase().charAt(0)}`}
           >
             {sex}
@@ -40,16 +68,18 @@ export const PeopleFilters = () => {
             {Object.values(Centuries).map((century) => (
               <Link
                 key={century}
+                onClick={() => toggleCentury(century)}
+                className={`button mr-1 ${selectedCenturies.includes(century) ? 'is-info' : ''}`}
                 data-cy="century"
-                className="button mr-1 is-info"
                 to={`?centuries=${century}`}
               >
                 {century}
               </Link>
             ))}
             <Link
+              onClick={resetAllCenturies}
               data-cy="centuryALL"
-              className="button is-success is-outlined"
+              className={`button is-success ${selectedCenturies.length > 0 ? 'is-outlined' : ''}`}
               to="."
             >
               All
@@ -59,12 +89,13 @@ export const PeopleFilters = () => {
       </div>
 
       <div className="panel-block">
-        <a
+        <Link
+          onClick={resetAllFilters}
           className="button is-link is-outlined is-fullwidth"
-          href="#/people"
+          to="#/people"
         >
           Reset all filters
-        </a>
+        </Link>
       </div>
     </nav>
   );

@@ -3,23 +3,17 @@
 import React from 'react';
 import classNames from 'classnames';
 import { Link } from 'react-router-dom';
-import { Person } from '../types';
 import { PersonLink } from './PersonLink';
 import { TableHeaders } from '../types/TableHeaders';
-
-type PeopleTableProps = {
-  people: Person[];
-  selectedPersonSlug: string;
-  handleSelectPerson: (slug: string) => void;
-};
+import { PeopleTableProps } from '../types/PeopleTableProps';
 
 export const PeopleTable: React.FC<PeopleTableProps> = ({
-  people,
+  filteredPeople,
   selectedPersonSlug,
   handleSelectPerson,
 }) => {
   const getParent = (parentName: string | null) => {
-    return people.find((parent) => parent.name === parentName);
+    return filteredPeople.find((parent) => parent.name === parentName);
   };
 
   return (
@@ -47,7 +41,7 @@ export const PeopleTable: React.FC<PeopleTableProps> = ({
 
       </thead>
       <tbody>
-        {people.map((person) => (
+        {filteredPeople.map((person) => (
           <tr
             data-cy="person"
             key={person.slug}

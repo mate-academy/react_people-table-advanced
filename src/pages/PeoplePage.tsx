@@ -5,17 +5,45 @@ import { Loader } from '../components/Loader';
 import { getPeople } from '../api';
 import { PeopleFilters } from '../components/PeopleFilters';
 import { PeopleTable } from '../components/PeopleTable';
+import { Gender } from '../types/Gender';
 
 export const PeoplePage: React.FC = () => {
   const [people, setPeople] = useState<Person[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [errorMessage, setErrorMessage] = useState<string>('');
   const [selectedPersonSlug, setSelectedPersonSlug] = useState<string>('');
+  const [filterGenderStatus, setFilterGenderStatus]
+  = useState<Gender>(Gender.ALL);
+  const [filteredPeople, setFilteredPeople] = useState<Person[]>([]);
+  const [selectedCenturies, setSelectedCenturies] = useState<string[]>([]);
+
   const { slug } = useParams();
 
   const handleSelectPerson = (selectedSlug: string) => {
     setSelectedPersonSlug(selectedSlug);
   };
+
+  const getCentury = (year: number) => {
+    return Math.ceil(year / 100).toString();
+  };
+
+  useEffect(() => {
+    const filterPeopleByCenturies = () => {
+      if (selectedCenturies.length === 0) {
+        return people;
+      }
+
+      return people.filter(person => {
+        const personCentury = getCentury(person.born);
+
+        return selectedCenturies.includes(personCentury);
+      });
+    };
+
+    const filtered = filterPeopleByCenturies();
+
+    setFilteredPeople(filtered);
+  }, [people, selectedCenturies]);
 
   useEffect(() => {
     const loadPeople = async () => {
@@ -36,13 +64,38 @@ export const PeoplePage: React.FC = () => {
     loadPeople();
   }, [slug]);
 
+  useEffect(() => {
+    const filterPeopleByGender = () => {
+      const peopleCopy = [...people];
+
+      switch (filterGenderStatus) {
+        case Gender.MALE:
+          return peopleCopy.filter(person => person.sex === 'm');
+        case Gender.FEMALE:
+          return peopleCopy.filter(person => person.sex === 'f');
+        case Gender.ALL:
+        default:
+          return peopleCopy;
+      }
+    };
+
+    const filtered = filterPeopleByGender();
+
+    setFilteredPeople(filtered);
+  }, [people, filterGenderStatus]);
+
   return (
     <>
       <h1 className="title">People Page</h1>
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
           <div className="column is-7-tablet is-narrow-desktop">
-            <PeopleFilters />
+            <PeopleFilters
+              selectedCenturies={selectedCenturies}
+              setSelectedCenturies={setSelectedCenturies}
+              filterGenderStatus={filterGenderStatus}
+              setFilterGenderStatus={setFilterGenderStatus}
+            />
           </div>
 
           <div className="column">
@@ -61,7 +114,7 @@ export const PeoplePage: React.FC = () => {
               {/* <p>There are no people matching the current search criteria</p> */}
               {people.length > 0 && (
                 <PeopleTable
-                  people={people}
+                  filteredPeople={filteredPeople}
                   selectedPersonSlug={selectedPersonSlug}
                   handleSelectPerson={handleSelectPerson}
                 />
