@@ -30,6 +30,8 @@ export function getSearchWith(
     .forEach(([key, value]) => {
       if (value === null) {
         newParams.delete(key);
+        // eslint-disable-next-line no-console
+        console.log(key);
       } else if (Array.isArray(value)) {
         // we delete the key to remove old values
         newParams.delete(key);
