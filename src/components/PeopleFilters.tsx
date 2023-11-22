@@ -1,20 +1,27 @@
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { Centuries } from '../types/Centuries';
 import { Gender } from '../types/Gender';
+import { LinkWithParams } from './LinkWithParams';
 
 type PeopleFiltersProps = {
   filterGenderStatus: Gender;
   setFilterGenderStatus: React.Dispatch<React.SetStateAction<Gender>>;
   setSelectedCenturies: React.Dispatch<React.SetStateAction<string[]>>;
   selectedCenturies: string[];
+  handleSearchChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  searchQuery: string;
 };
 
 export const PeopleFilters: React.FC<PeopleFiltersProps> = ({
   filterGenderStatus,
   setFilterGenderStatus,
   setSelectedCenturies,
-  selectedCenturies,
+  handleSearchChange,
+  searchQuery,
 }) => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const centuries = searchParams.getAll('centuries' || []);
+
   const toggleCentury = (century: string) => {
     setSelectedCenturies(prev => (prev.includes(century)
       ? prev.filter(c => c !== century)
@@ -22,7 +29,10 @@ export const PeopleFilters: React.FC<PeopleFiltersProps> = ({
   };
 
   const resetAllCenturies = () => {
-    setSelectedCenturies([]);
+    const params = new URLSearchParams();
+
+    params.delete('centuries');
+    setSearchParams(params);
   };
 
   const resetAllFilters = () => {
@@ -36,15 +46,25 @@ export const PeopleFilters: React.FC<PeopleFiltersProps> = ({
 
       <p className="panel-tabs" data-cy="SexFilter">
         {Object.values(Gender).map((sex) => (
-          <Link
+          <LinkWithParams
             key={sex}
-            onClick={() => setFilterGenderStatus(sex)}
-            className={`panel-tab ${filterGenderStatus === sex ? 'is-active' : ''}`}
-            to={sex === Gender.ALL ? '.' : `?sex=${sex.toLowerCase().charAt(0)}`}
+            to={{
+              sex: sex === Gender.ALL ? null : sex.toLowerCase().charAt(0),
+            }}
           >
-            {sex}
-          </Link>
+            <a
+              role="button"
+              tabIndex={0}
+              onClick={() => setFilterGenderStatus(sex)}
+              onKeyDown={(e) => e.key === 'Enter' && setFilterGenderStatus(sex)}
+              className={`panel-tab ${filterGenderStatus === sex ? 'is-active' : ''}`}
+              style={{ cursor: 'pointer', textDecoration: 'none' }}
+            >
+              {sex}
+            </a>
+          </LinkWithParams>
         ))}
+
       </p>
 
       <div className="panel-block">
@@ -53,6 +73,8 @@ export const PeopleFilters: React.FC<PeopleFiltersProps> = ({
             data-cy="NameFilter"
             type="search"
             className="input"
+            value={searchQuery}
+            onChange={handleSearchChange}
             placeholder="Search"
           />
 
@@ -66,24 +88,32 @@ export const PeopleFilters: React.FC<PeopleFiltersProps> = ({
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
             {Object.values(Centuries).map((century) => (
-              <Link
+              <LinkWithParams
                 key={century}
-                onClick={() => toggleCentury(century)}
-                className={`button mr-1 ${selectedCenturies.includes(century) ? 'is-info' : ''}`}
-                data-cy="century"
-                to={`?centuries=${century}`}
+                to={{
+                  centuries: centuries.includes(century)
+                    ? centuries.filter(cent => cent !== century)
+                    : [...centuries, century],
+                }}
               >
-                {century}
-              </Link>
+                <button
+                  type="button"
+                  onClick={() => toggleCentury(century)}
+                  className={`button mr-1 ${centuries.includes(century) ? 'is-info' : ''}`}
+                >
+                  {century}
+                </button>
+              </LinkWithParams>
             ))}
-            <Link
-              onClick={resetAllCenturies}
-              data-cy="centuryALL"
-              className={`button is-success ${selectedCenturies.length > 0 ? 'is-outlined' : ''}`}
-              to="."
-            >
-              All
-            </Link>
+            <LinkWithParams to={{ centuries: [] }}>
+              <button
+                type="button"
+                onClick={resetAllCenturies}
+                className={`button is-success ${centuries.length > 0 ? '' : 'is-outlined'}`}
+              >
+                All
+              </button>
+            </LinkWithParams>
           </div>
         </div>
       </div>
@@ -92,7 +122,7 @@ export const PeopleFilters: React.FC<PeopleFiltersProps> = ({
         <Link
           onClick={resetAllFilters}
           className="button is-link is-outlined is-fullwidth"
-          to="#/people"
+          to="."
         >
           Reset all filters
         </Link>

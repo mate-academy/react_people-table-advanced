@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useSearchParams } from 'react-router-dom';
 import { Person } from '../types';
 import { Loader } from '../components/Loader';
 import { getPeople } from '../api';
@@ -7,7 +7,11 @@ import { PeopleFilters } from '../components/PeopleFilters';
 import { PeopleTable } from '../components/PeopleTable';
 import { Gender } from '../types/Gender';
 
+const MALE_GENDER = 'm';
+const FEMALE_GENDER = 'f';
+
 export const PeoplePage: React.FC = () => {
+  const [searchParams, setSearcParams] = useSearchParams();
   const [people, setPeople] = useState<Person[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [errorMessage, setErrorMessage] = useState<string>('');
@@ -16,34 +20,54 @@ export const PeoplePage: React.FC = () => {
   = useState<Gender>(Gender.ALL);
   const [filteredPeople, setFilteredPeople] = useState<Person[]>([]);
   const [selectedCenturies, setSelectedCenturies] = useState<string[]>([]);
+  const [searchQuery, setSearchQuery] = useState('');
 
   const { slug } = useParams();
-
-  const handleSelectPerson = (selectedSlug: string) => {
-    setSelectedPersonSlug(selectedSlug);
-  };
 
   const getCentury = (year: number) => {
     return Math.ceil(year / 100).toString();
   };
 
+  const handleSearchChange = (event: { target: { value: string; }; }) => {
+    setSearchQuery(event.target.value.toLowerCase());
+
+    const params = new URLSearchParams(searchParams);
+
+    params.set('query', event.target.value.toLowerCase());
+    setSearcParams(params);
+  };
+
   useEffect(() => {
-    const filterPeopleByCenturies = () => {
-      if (selectedCenturies.length === 0) {
-        return people;
-      }
+    let filtered = [...people];
 
-      return people.filter(person => {
-        const personCentury = getCentury(person.born);
+    if (searchQuery) {
+      filtered = filtered.filter(person => person
+        .name.toLowerCase().includes(searchQuery.trim()));
+    }
 
-        return selectedCenturies.includes(personCentury);
-      });
-    };
+    switch (filterGenderStatus) {
+      case Gender.MALE:
+        filtered = filtered.filter(person => person.sex === MALE_GENDER);
+        break;
+      case Gender.FEMALE:
+        filtered = filtered.filter(person => person.sex === FEMALE_GENDER);
+        break;
+      case Gender.ALL:
+      default:
+        break;
+    }
 
-    const filtered = filterPeopleByCenturies();
+    if (selectedCenturies.length > 0) {
+      filtered = filtered.filter(person => selectedCenturies
+        .includes(getCentury(person.born)));
+    }
 
     setFilteredPeople(filtered);
-  }, [people, selectedCenturies]);
+  }, [people, searchQuery, filterGenderStatus, selectedCenturies]);
+
+  const handleSelectPerson = (selectedSlug: string) => {
+    setSelectedPersonSlug(selectedSlug);
+  };
 
   useEffect(() => {
     const loadPeople = async () => {
@@ -64,26 +88,6 @@ export const PeoplePage: React.FC = () => {
     loadPeople();
   }, [slug]);
 
-  useEffect(() => {
-    const filterPeopleByGender = () => {
-      const peopleCopy = [...people];
-
-      switch (filterGenderStatus) {
-        case Gender.MALE:
-          return peopleCopy.filter(person => person.sex === 'm');
-        case Gender.FEMALE:
-          return peopleCopy.filter(person => person.sex === 'f');
-        case Gender.ALL:
-        default:
-          return peopleCopy;
-      }
-    };
-
-    const filtered = filterPeopleByGender();
-
-    setFilteredPeople(filtered);
-  }, [people, filterGenderStatus]);
-
   return (
     <>
       <h1 className="title">People Page</h1>
@@ -91,6 +95,8 @@ export const PeoplePage: React.FC = () => {
         <div className="columns is-desktop is-flex-direction-row-reverse">
           <div className="column is-7-tablet is-narrow-desktop">
             <PeopleFilters
+              searchQuery={searchQuery}
+              handleSearchChange={handleSearchChange}
               selectedCenturies={selectedCenturies}
               setSelectedCenturies={setSelectedCenturies}
               filterGenderStatus={filterGenderStatus}
@@ -106,7 +112,7 @@ export const PeoplePage: React.FC = () => {
                   {errorMessage}
                 </p>
               )}
-              {!isLoading && !errorMessage && people.length === 0 && (
+              {!isLoading && !errorMessage && !people.length && (
                 <p data-cy="noPeopleMessage">
                   There are no people on the server
                 </p>
