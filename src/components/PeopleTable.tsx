@@ -4,15 +4,19 @@ import { Person } from '../types';
 import { SearchLink } from './SearchLink';
 
 interface Props {
-  people: Person[],
+  visiblePeople: Person[],
   personId?: string,
+  people: Person[],
 }
 
 export const PeopleTable: React.FC<Props> = ({
-  people,
+  visiblePeople,
   personId,
+  people,
 }) => {
   const [searchParams] = useSearchParams();
+
+  const filteringType = ['Name', 'Sex', 'Born', 'Died'];
 
   const sort = searchParams.get('sort');
   const order = searchParams.get('order');
@@ -39,12 +43,8 @@ export const PeopleTable: React.FC<Props> = ({
     return newParams;
   };
 
-  const isMotherExistInList = (motherName?: string | null) => {
-    return people.find(person => person.name === motherName);
-  };
-
-  const isFatherExistInList = (fatherName?: string | null) => {
-    return people.find(person => person.name === fatherName);
+  const isPersonExistInList = (personName?: string | null) => {
+    return people.find(person => person.name === personName);
   };
 
   const getParent = (person: Person, parentType: 'father' | 'mother') => {
@@ -56,9 +56,7 @@ export const PeopleTable: React.FC<Props> = ({
       return <td>-</td>;
     }
 
-    const foundPerson = parentType === 'mother'
-      ? isMotherExistInList(person[parentTypeName])
-      : isFatherExistInList(person[parentTypeName]);
+    const foundPerson = isPersonExistInList(person[parentTypeName]);
 
     if (foundPerson) {
       return (
@@ -89,64 +87,33 @@ export const PeopleTable: React.FC<Props> = ({
     >
       <thead>
         <tr>
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Name
-              <SearchLink
-                params={toggleSort('name')}
-              >
-                <span className="icon">
-                  <i className="fas fa-sort" />
-                </span>
-              </SearchLink>
-            </span>
-          </th>
-
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Sex
-              <SearchLink
-                params={toggleSort('sex')}
-              >
-                <span className="icon">
-                  <i className="fas fa-sort" />
-                </span>
-              </SearchLink>
-            </span>
-          </th>
-
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Born
-              <SearchLink
-                params={toggleSort('born')}
-              >
-                <span className="icon">
-                  <i className="fas fa-sort-up" />
-                </span>
-              </SearchLink>
-            </span>
-          </th>
-
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Died
-              <SearchLink
-                params={toggleSort('died')}
-              >
-                <span className="icon">
-                  <i className="fas fa-sort" />
-                </span>
-              </SearchLink>
-            </span>
-          </th>
+          {filteringType.map(column => (
+            <th>
+              <span className="is-flex is-flex-wrap-nowrap">
+                {column}
+                <SearchLink
+                  params={toggleSort(column.toLowerCase())}
+                >
+                  <span className="icon">
+                    <i className={cn('fas', {
+                      'fa-sort': sort !== column,
+                      'fa-sort-up': sort === column.toLowerCase() && !order,
+                      'fa-sort-down': sort
+                        && order && sort === column.toLowerCase(),
+                    })}
+                    />
+                  </span>
+                </SearchLink>
+              </span>
+            </th>
+          ))}
 
           <th>Mother</th>
           <th>Father</th>
         </tr>
       </thead>
 
-      {people.map(person => (
+      {visiblePeople.map(person => (
         <tbody
           key={person.slug}
         >
@@ -171,19 +138,6 @@ export const PeopleTable: React.FC<Props> = ({
             <td>{person.sex}</td>
             <td>{person.born}</td>
             <td>{person.died}</td>
-            {/* <td>{person.mother ? (
-              <Link
-                to={`/people/${person.mother.slug}`}
-                className={cn({
-                  'has-text-danger': person.mother.sex === 'f',
-                })}
-              />
-            )
-              : person.motherName}
-            </td>
-            <td>{person.father ?
-              <Link to={`/people/${person.father.slug}`} /> : person.fatherName}
-            </td> */}
             {getParent(person, 'mother')}
             {getParent(person, 'father')}
           </tr>

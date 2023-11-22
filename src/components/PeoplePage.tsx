@@ -144,7 +144,8 @@ export const PeoplePage = () => {
 
               {!isPeopleLoading && visiblePeople.length > 0 && (
                 <PeopleTable
-                  people={visiblePeople}
+                  visiblePeople={visiblePeople}
+                  people={people}
                   personId={personId}
                 />
               )}
