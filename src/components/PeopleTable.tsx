@@ -75,7 +75,6 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
     >
       <thead>
         <tr>
-
           {SortFieldsKeys.map(field => {
             return (
               <th key={field}>
