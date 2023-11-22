@@ -1,4 +1,6 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import { Link, useSearchParams } from 'react-router-dom';
+import { Dispatch, SetStateAction } from 'react';
 import { Centuries } from '../types/Centuries';
 import { Gender } from '../types/Gender';
 import { LinkWithParams } from './LinkWithParams';
@@ -10,6 +12,7 @@ type PeopleFiltersProps = {
   selectedCenturies: string[];
   handleSearchChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   searchQuery: string;
+  setSearchQuery: Dispatch<SetStateAction<string>>;
 };
 
 export const PeopleFilters: React.FC<PeopleFiltersProps> = ({
@@ -17,6 +20,7 @@ export const PeopleFilters: React.FC<PeopleFiltersProps> = ({
   setFilterGenderStatus,
   setSelectedCenturies,
   handleSearchChange,
+  setSearchQuery,
   searchQuery,
 }) => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -33,11 +37,13 @@ export const PeopleFilters: React.FC<PeopleFiltersProps> = ({
 
     params.delete('centuries');
     setSearchParams(params);
+    setSelectedCenturies([]);
   };
 
   const resetAllFilters = () => {
     resetAllCenturies();
     setFilterGenderStatus(Gender.ALL);
+    setSearchQuery('');
   };
 
   return (
