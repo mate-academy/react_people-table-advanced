@@ -1,9 +1,16 @@
-import { Link, useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import cn from 'classnames';
 import { getSearchWith } from '../utils/searchHelper';
+import { SearchLink } from './SearchLink';
 
 const centuriesArray = [
   '16', '17', '18', '19', '20',
+];
+
+const sexArray = [
+  { title: 'All', urlParam: 'All' },
+  { title: 'Male', urlParam: 'm' },
+  { title: 'Female', urlParam: 'f' },
 ];
 
 export const PeopleFilters: React.FC = () => {
@@ -14,36 +21,32 @@ export const PeopleFilters: React.FC = () => {
 
   const toggleCenturies = (century: string) => {
     if (!century) {
-      return getSearchWith(searchParams, {
-        centuries: [],
-      });
+      return { centuries: [] };
     }
 
-    return getSearchWith(searchParams, {
+    return {
       centuries: centuries.includes(century)
         ? centuries.filter(ch => ch !== century)
         : [...centuries, century],
-    });
+    };
   };
 
   const toggleSex = (newSex: string | null) => {
     if (newSex === 'All') {
-      return getSearchWith(searchParams, { sex: null });
+      return { sex: null };
     }
 
-    return getSearchWith(searchParams, { sex: newSex });
+    return { sex: newSex };
   };
 
   const toggleQuery = (newQuery: string) => {
-    const search = getSearchWith(searchParams, { query: newQuery });
+    const search = getSearchWith(searchParams, { query: newQuery || null });
 
     setSearchParams(search);
   };
 
   const toggleAllReset = () => {
-    return getSearchWith(
-      searchParams, { query: null, centuries: [], sex: null },
-    );
+    return { query: null, centuries: [], sex: null };
   };
 
   return (
@@ -51,24 +54,14 @@ export const PeopleFilters: React.FC = () => {
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        <Link
-          className={cn({ 'is-active': sex === 'All' })}
-          to={{ search: toggleSex('All') }}
-        >
-          All
-        </Link>
-        <Link
-          className={cn({ 'is-active': sex === 'm' })}
-          to={{ search: toggleSex('m') }}
-        >
-          Male
-        </Link>
-        <Link
-          className={cn({ 'is-active': sex === 'f' })}
-          to={{ search: toggleSex('f') }}
-        >
-          Female
-        </Link>
+        {sexArray.map((currSex) => (
+          <SearchLink
+            className={cn({ 'is-active': sex === currSex.urlParam })}
+            params={toggleSex(currSex.urlParam)}
+          >
+            {currSex.title}
+          </SearchLink>
+        ))}
       </p>
 
       <div className="panel-block">
@@ -92,42 +85,40 @@ export const PeopleFilters: React.FC = () => {
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
             {centuriesArray.map((century) => (
-              <Link
+              <SearchLink
                 data-cy="century"
                 className={cn('button mr-1', {
                   'is-info': centuries.includes(century),
                 })}
-                to={{
-                  search: toggleCenturies(century),
-                }}
+                params={toggleCenturies(century)}
               >
                 {century}
-              </Link>
+              </SearchLink>
             ))}
           </div>
 
           <div className="level-right ml-4">
-            <Link
+            <SearchLink
               data-cy="centuryALL"
               className={cn('button is-success', {
                 'is-outlined': centuries.length,
               })}
-              to={{ search: toggleCenturies('') }}
+              params={toggleCenturies('')}
 
             >
               All
-            </Link>
+            </SearchLink>
           </div>
         </div>
       </div>
 
       <div className="panel-block">
-        <Link
+        <SearchLink
           className="button is-link is-outlined is-fullwidth"
-          to={{ search: toggleAllReset() }}
+          params={toggleAllReset()}
         >
           Reset all filters
-        </Link>
+        </SearchLink>
       </div>
     </nav>
   );

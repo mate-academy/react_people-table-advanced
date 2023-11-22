@@ -1,8 +1,8 @@
-import { Link, useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import cn from 'classnames';
 import { Person } from '../types';
 import { PersonComponent } from './PersonComponent';
-import { getSearchWith } from '../utils/searchHelper';
+import { SearchLink } from './SearchLink';
 
 type Props = {
   people: Person[];
@@ -21,20 +21,19 @@ export const PeopleTable: React.FC<Props> = ({
   visiblePeople,
 }) => {
   const [searchParams] = useSearchParams();
-
   const sort = searchParams.get('sort') || '';
   const order = searchParams.get('order') || '';
 
   const sortToggle = (sortType: string) => {
     if (sort !== sortType) {
-      return getSearchWith(searchParams, { sort: sortType, order: null });
+      return { sort: sortType, order: null };
     }
 
     if (sort === sortType && order === 'desc') {
-      return getSearchWith(searchParams, { sort: null, order: null });
+      return { sort: null, order: null };
     }
 
-    return getSearchWith(searchParams, { sort: sortType, order: 'desc' });
+    return { sort: sortType, order: 'desc' };
   };
 
   return (
@@ -48,7 +47,7 @@ export const PeopleTable: React.FC<Props> = ({
             <th key={sortCategory.title}>
               <span className="is-flex is-flex-wrap-nowrap">
                 {sortCategory.title}
-                <Link to={{ search: sortToggle(sortCategory.urlParam) }}>
+                <SearchLink params={sortToggle(sortCategory.urlParam)}>
                   <span className="icon">
                     <i className={cn('fas',
                       {
@@ -60,7 +59,7 @@ export const PeopleTable: React.FC<Props> = ({
                       })}
                     />
                   </span>
-                </Link>
+                </SearchLink>
               </span>
             </th>
           ))}
