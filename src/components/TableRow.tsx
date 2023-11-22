@@ -7,7 +7,7 @@ import { PersonLink } from './PersonLink';
 
 type Props = {
   person: Person,
-  slug: string | undefined,
+  slug?: string,
 };
 
 export const TableRow: React.FC<Props> = ({ person, slug }) => {

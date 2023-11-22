@@ -11,10 +11,12 @@ import { PeopleFilters } from './PeopleFilters';
 import { TableRow } from './TableRow';
 import { Loader } from './Loader';
 import { SearchLink } from './SearchLink';
+import { SortTypes } from '../helpers/sortTypes';
+
 
 export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);
-  const [loader, setLoader] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
   const [searchParams, setSearchParams] = useSearchParams();
@@ -26,15 +28,15 @@ export const PeoplePage = () => {
   const order = searchParams.get('order') || '';
 
   useEffect(() => {
-    setLoader(true);
+    setIsLoading(true);
     getPeople()
       .then(setPeople)
       .catch((error) => {
-        setLoader(false);
+        setIsLoading(false);
         setErrorMessage('Something went wrong');
         throw error;
       })
-      .finally(() => setLoader(false));
+      .finally(() => setIsLoading(false));
   }, []);
 
   const peopleFromServer = people.map(person => ({
@@ -48,11 +50,17 @@ export const PeoplePage = () => {
 
   const normalizedQuery = query.toLowerCase().trim();
 
-  let filteredPeople = peopleFromServer.filter(p => (
-    p.name.toLowerCase().includes(normalizedQuery)
-    || p.motherName?.toLowerCase().includes(normalizedQuery)
-    || p.fatherName?.toLowerCase().includes(normalizedQuery)
-  ));
+  const isIncludesNormalizedQuery = (name: string) => {
+    return name.toLowerCase().includes(normalizedQuery)
+  }
+
+  let filteredPeople = peopleFromServer.filter(p => {
+    let personName = isIncludesNormalizedQuery(p.name);
+    let personFatherName =  isIncludesNormalizedQuery(p.fatherName ?? '');
+    let personMotherName = isIncludesNormalizedQuery(p.motherName ?? '');
+
+    return personName || personFatherName || personMotherName
+  });
 
   if (sex) {
     filteredPeople = filteredPeople.filter(p => p.sex === sex);
@@ -65,25 +73,25 @@ export const PeoplePage = () => {
   }
 
   switch (sort) {
-    case 'Name':
+    case SortTypes.name:
       filteredPeople.sort((value1, value2) => {
         return value1.name.localeCompare(value2.name);
       });
       break;
 
-    case 'Sex':
+    case SortTypes.sex:
       filteredPeople.sort((value1, value2) => {
         return value1.sex.localeCompare(value2.sex);
       });
       break;
 
-    case 'Born':
+    case SortTypes.born:
       filteredPeople.sort((value1, value2) => {
         return value1.born - value2.born;
       });
       break;
 
-    case 'Died':
+    case SortTypes.died:
       filteredPeople.sort((value1, value2) => {
         return value1.born - value2.born;
       });
@@ -98,6 +106,8 @@ export const PeoplePage = () => {
 
   const secondClick = sort && order !== 'desc';
   const thirdClick = sort && order === 'desc';
+
+  const allCategories = ['Name', 'Sex', 'Born', 'Died'];
 
   return (
     <>
@@ -125,8 +135,8 @@ export const PeoplePage = () => {
                 >
                   <thead>
                     <tr>
-                      {['Name', 'Sex', 'Born', 'Died'].map(name => (
-                        <th>
+                      {allCategories.map(name => (
+                        <th key={name}>
                           <span className="is-flex is-flex-wrap-nowrap">
                             {name}
                             <SearchLink
@@ -178,13 +188,13 @@ export const PeoplePage = () => {
             </p>
           )}
 
-          {!loader && people.length === 0 && !errorMessage && (
+          {!isLoading && people.length === 0 && !errorMessage && (
             <p data-cy="noPeopleMessage">
               There are no people on the server
             </p>
           )}
 
-          {loader && <Loader />}
+          {isLoading && <Loader />}
         </div>
       )}
     </>

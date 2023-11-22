@@ -2,6 +2,7 @@ import React from 'react';
 
 import cn from 'classnames';
 
+import { Link } from 'react-router-dom';
 import { getSearchWith } from '../utils/searchHelper';
 
 import { SearchLink } from './SearchLink';
@@ -29,35 +30,30 @@ export const PeopleFilters: React.FC<Props> = ({
     ));
   };
 
+  const allCenturies = ['16', '17', '18', '19', '20'];
+  const allSexParams = ['All', 'Male', 'Female'];
+
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        <SearchLink
-          params={{ sex: null }}
-          className={cn({
-            'is-active': sex === '',
-          })}
-        >
-          All
-        </SearchLink>
-        <SearchLink
-          params={{ sex: 'm' }}
-          className={cn({
-            'is-active': sex === 'm',
-          })}
-        >
-          Male
-        </SearchLink>
-        <SearchLink
-          params={{ sex: 'f' }}
-          className={cn({
-            'is-active': sex === 'f',
-          })}
-        >
-          Female
-        </SearchLink>
+        {allSexParams.map(param => (
+          <SearchLink
+            key={param}
+            params={{
+              sex: (param === 'Male' ? 'm' : null)
+                || (param === 'Female' ? 'f' : null),
+            }}
+            className={cn({
+              'is-active': (sex === '' && param === 'All')
+                || (sex === 'm' && param === 'Male')
+                || (sex === 'f' && param === 'Female'),
+            })}
+          >
+            {param}
+          </SearchLink>
+        ))}
       </p>
 
       <div className="panel-block">
@@ -80,7 +76,7 @@ export const PeopleFilters: React.FC<Props> = ({
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            {['16', '17', '18', '19', '20'].map(century => (
+            {allCenturies.map(century => (
               <SearchLink
                 key={century}
                 data-cy="century"
@@ -111,16 +107,12 @@ export const PeopleFilters: React.FC<Props> = ({
       </div>
 
       <div className="panel-block">
-        <SearchLink
+        <Link
           className="button is-link is-outlined is-fullwidth"
-          params={{
-            query: null,
-            sex: null,
-            centuries: null,
-          }}
+          to={{ search: '' }}
         >
           Reset all filters
-        </SearchLink>
+        </Link>
       </div>
     </nav>
   );
