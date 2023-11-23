@@ -1,5 +1,13 @@
 import { Person } from '../types';
 
+// Constants for sorting fields
+const SORT_FIELDS = {
+  NAME: 'name',
+  SEX: 'sex',
+  BORN: 'born',
+  DIED: 'died',
+} as const;
+
 export const getFilteredPeople = (
   people: Person[],
   filters: URLSearchParams,
@@ -20,9 +28,11 @@ export const getFilteredPeople = (
       const preparedMotherName = person.motherName?.toLowerCase();
       const preparedFatherName = person.fatherName?.toLowerCase();
 
-      return (preparedName.includes(preparedQuery)
+      return (
+        preparedName.includes(preparedQuery)
         || preparedMotherName?.includes(preparedQuery)
-        || preparedFatherName?.includes(preparedQuery));
+        || preparedFatherName?.includes(preparedQuery)
+      );
     });
   }
 
@@ -40,11 +50,11 @@ export const getFilteredPeople = (
 
   filteredPeople.sort((a, b) => {
     switch (sort) {
-      case 'name':
-      case 'sex':
+      case SORT_FIELDS.NAME:
+      case SORT_FIELDS.SEX:
         return a[sort].localeCompare(b[sort]);
-      case 'born':
-      case 'died':
+      case SORT_FIELDS.BORN:
+      case SORT_FIELDS.DIED:
         return a[sort] - b[sort];
       default:
         return 0;

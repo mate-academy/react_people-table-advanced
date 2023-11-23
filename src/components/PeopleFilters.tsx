@@ -20,6 +20,13 @@ export const PeopleFilters = () => {
     setSearchParams(search);
   };
 
+  // Функція для визначення активності посилання
+  const isLinkActive = (param: string | null) => {
+    return cn({
+      'is-active': sex === param,
+    });
+  };
+
   const onSexChange = (newSex: string | null) => {
     if (sex === null) {
       return getSearchWith(searchParams, { newSex: null });
@@ -55,21 +62,15 @@ export const PeopleFilters = () => {
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        <Link
-          to={{ search: onSexChange(null) }}
-          className={cn({
-            'is-active': !sex,
-          })}
-        >
+        <Link to={{ search: onSexChange(null) }} className={isLinkActive(null)}>
           All
         </Link>
 
         {Object.entries(SEXES).map(([param, text]) => (
           <Link
+            key={param}
             to={{ search: onSexChange(param) }}
-            className={cn({
-              'is-active': sex === param,
-            })}
+            className={isLinkActive(param)}
           >
             {text}
           </Link>

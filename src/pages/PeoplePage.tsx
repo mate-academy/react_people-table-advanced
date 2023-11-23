@@ -18,12 +18,8 @@ export const PeoplePage = () => {
   useEffect(() => {
     getPeople()
       .then(setPeople)
-      .catch(() => {
-        setIsLoadingError(true);
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
+      .catch(() => setIsLoadingError(true))
+      .finally(() => setIsLoading(false));
   }, []);
 
   return (
@@ -68,7 +64,6 @@ export const PeoplePage = () => {
                   )}
                 </>
               )}
-
             </div>
           </div>
         </div>
