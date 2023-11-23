@@ -30,8 +30,12 @@ export const PeoplePage = () => {
             </div>
           )}
 
+        <div className="column">
           <div className="box table-container">
-            {isLoading && <Loader />}
+            {isLoading && (
+              <Loader />
+            )}
+
             {hasError && (
               <p data-cy="peopleLoadingError" className="has-text-danger">
                 Something went wrong
@@ -48,5 +52,6 @@ export const PeoplePage = () => {
         </div>
       </div>
     </div>
+  </div>
   );
 };
