@@ -1,4 +1,11 @@
+import { useContext } from 'react';
+import { NavLink } from 'react-router-dom';
+import { classChange } from '../utils/classChange';
+import { PeopleContext } from '../PeopleContext';
+
 export const Navbar = () => {
+  const { setIsPageActive } = useContext(PeopleContext);
+
   return (
     <nav
       data-cy="nav"
@@ -8,15 +15,21 @@ export const Navbar = () => {
     >
       <div className="container">
         <div className="navbar-brand">
-          <a className="navbar-item" href="#/">Home</a>
+          <NavLink
+            className={classChange}
+            to="/"
+            onClick={() => setIsPageActive(false)}
+          >
+            Home
+          </NavLink>
 
-          <a
-            aria-current="page"
-            className="navbar-item has-background-grey-lighter"
-            href="#/people"
+          <NavLink
+            className={classChange}
+            to="/people"
+            onClick={() => setIsPageActive(true)}
           >
             People
-          </a>
+          </NavLink>
         </div>
       </div>
     </nav>
