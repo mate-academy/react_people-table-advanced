@@ -41,9 +41,11 @@ export const PeopleFilters = () => {
   };
 
   const handleResetAllFilters = () => {
-    setSearchWith({ sex: null });
-    setSearchWith({ query: null });
-    setSearchWith({ century: null });
+    setSearchWith({
+      sex: null,
+      query: null,
+      century: null,
+    });
   };
 
   return (

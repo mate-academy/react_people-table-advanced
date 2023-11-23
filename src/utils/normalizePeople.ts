@@ -1,4 +1,4 @@
-import { Person } from '../types';
+import { Person } from '../types/Person/Person';
 
 export function normalizePeople(peopleFromServer: Person[]): Person[] {
   const people = peopleFromServer.map(person => {

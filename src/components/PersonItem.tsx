@@ -1,8 +1,8 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
 import classNames from 'classnames';
-import { Person } from '../types';
 import { PersonLink } from './PersonLink';
+import { Person } from '../types/Person/Person';
 
 type Props = {
   person: Person

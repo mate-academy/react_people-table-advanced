@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
-import { Person } from '../types';
 import { getPeople } from '../api';
 import { Loader } from './Loader';
 import { PeopleTable } from './PeopleTable';
 import { normalizePeople } from '../utils/normalizePeople';
 import { PeopleFilters } from './PeopleFilters';
-import { filterPeople } from '../utils/filterPeople';
+import { preparationPeople } from '../utils/preparationPeople';
+import { Person } from '../types/Person/Person';
 
 export const PeoplePage: React.FC = () => {
   const [people, setPeople] = useState<Person[]>([]);
@@ -26,7 +26,7 @@ export const PeoplePage: React.FC = () => {
 
   const [searchParams] = useSearchParams();
 
-  const visiblePeople = filterPeople(people, searchParams);
+  const visiblePeople = preparationPeople(people, searchParams);
 
   if (isLoading || isError) {
     return (
@@ -44,6 +44,10 @@ export const PeoplePage: React.FC = () => {
     );
   }
 
+  const noPeopleMessage = searchParams.get('query')
+    ? 'There are no people matching the current search criteria'
+    : 'There are no people on the server';
+
   return (
     <>
       <h1 className="title">People Page</h1>
@@ -60,8 +64,7 @@ export const PeoplePage: React.FC = () => {
                 <PeopleTable people={visiblePeople} />
               ) : (
                 <p data-cy="noPeopleMessage">
-                  There are no people on the server
-                  {/* <p>There are no people matching the current search criteria</p> */}
+                  {noPeopleMessage}
                 </p>
               )}
             </div>
