@@ -119,7 +119,7 @@ export const PeopleFilters = () => {
             <button
               data-cy="centuryALL"
               className="button is-success is-outlined"
-              onClick={() => handleResetCentry()}
+              onClick={handleResetCentry}
               type="button"
             >
               All
@@ -131,7 +131,7 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <button
           className="button is-link is-outlined is-fullwidth"
-          onClick={() => handleResetAllFilters()}
+          onClick={handleResetAllFilters}
           type="button"
         >
           Reset all filters

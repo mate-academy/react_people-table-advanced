@@ -11,6 +11,10 @@ import { NotFoundPage } from './components/NotFoundPage';
 import { PeoplePage } from './components/PeoplePage';
 
 export const App = () => {
+  if (window.location.hash === '' || window.location.hash === '#/home') {
+    <Navigate to="/" replace />;
+  }
+
   return (
     <div data-cy="app">
       <Navbar />
@@ -18,12 +22,6 @@ export const App = () => {
       <main className="section">
         <div className="container">
           <div className="block">
-
-            {(window.location.hash === ''
-            || window.location.hash === '#/home') && (
-              <Navigate to="/" replace />
-            )}
-
             <Routes>
               <Route path="/" element={<HomePage />} />
 
