@@ -12,6 +12,7 @@ const FEMALE_GENDER = 'f';
 
 export const PeoplePage: React.FC = () => {
   const [searchParams, setSearcParams] = useSearchParams();
+  const params = new URLSearchParams(searchParams);
   const [people, setPeople] = useState<Person[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [errorMessage, setErrorMessage] = useState<string>('');
@@ -21,7 +22,8 @@ export const PeoplePage: React.FC = () => {
   const [filteredPeople, setFilteredPeople] = useState<Person[]>([]);
   const [selectedCenturies, setSelectedCenturies] = useState<string[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
-
+  const sort = searchParams.get('sort');
+  const order = searchParams.get('order');
   const { slug } = useParams();
 
   const getCentury = (year: number) => {
@@ -29,12 +31,14 @@ export const PeoplePage: React.FC = () => {
   };
 
   const handleSearchChange = (event: { target: { value: string; }; }) => {
-    setSearchQuery(event.target.value.toLowerCase());
+    setSearchQuery(event.target.value);
 
-    const params = new URLSearchParams(searchParams);
-
-    params.set('query', event.target.value.toLowerCase());
+    params.set('query', event.target.value);
     setSearcParams(params);
+
+    if (event.target.value.length === 0) {
+      setSearcParams('');
+    }
   };
 
   useEffect(() => {
@@ -42,7 +46,7 @@ export const PeoplePage: React.FC = () => {
 
     if (searchQuery) {
       filtered = filtered.filter(person => person
-        .name.toLowerCase().includes(searchQuery.trim()));
+        .name.toLowerCase().includes(searchQuery.toLowerCase()));
     }
 
     switch (filterGenderStatus) {
@@ -62,8 +66,30 @@ export const PeoplePage: React.FC = () => {
         .includes(getCentury(person.born)));
     }
 
+    if (sort) {
+      switch (sort) {
+        case 'name':
+        case 'sex':
+          filtered = filtered.sort((a, b) => {
+            return order === 'desc'
+              ? b[sort].localeCompare(a[sort])
+              : a[sort].localeCompare(b[sort]);
+          });
+          break;
+        case 'born':
+        case 'died':
+          filtered = filtered.sort((a, b) => {
+            return order === 'desc'
+              ? b[sort] - a[sort]
+              : a[sort] - b[sort];
+          });
+          break;
+        default:
+      }
+    }
+
     setFilteredPeople(filtered);
-  }, [people, searchQuery, filterGenderStatus, selectedCenturies]);
+  }, [people, searchQuery, filterGenderStatus, selectedCenturies, sort, order]);
 
   const handleSelectPerson = (selectedSlug: string) => {
     setSelectedPersonSlug(selectedSlug);
@@ -92,43 +118,44 @@ export const PeoplePage: React.FC = () => {
     <>
       <h1 className="title">People Page</h1>
       <div className="block">
-        <div className="columns is-desktop is-flex-direction-row-reverse">
-          <div className="column is-7-tablet is-narrow-desktop">
-            <PeopleFilters
-              setSearchQuery={setSearchQuery}
-              searchQuery={searchQuery}
-              handleSearchChange={handleSearchChange}
-              selectedCenturies={selectedCenturies}
-              setSelectedCenturies={setSelectedCenturies}
-              filterGenderStatus={filterGenderStatus}
-              setFilterGenderStatus={setFilterGenderStatus}
-            />
-          </div>
+        {isLoading ? (
+          <Loader />
+        ) : (
+          <div className="columns is-desktop is-flex-direction-row-reverse">
+            <div className="column is-7-tablet is-narrow-desktop">
+              <PeopleFilters
+                setSearchQuery={setSearchQuery}
+                searchQuery={searchQuery}
+                handleSearchChange={handleSearchChange}
+                selectedCenturies={selectedCenturies}
+                setSelectedCenturies={setSelectedCenturies}
+                filterGenderStatus={filterGenderStatus}
+                setFilterGenderStatus={setFilterGenderStatus}
+              />
+            </div>
 
-          <div className="column">
-            <div className="box table-container">
-              {isLoading && <Loader />}
-              {errorMessage && (
-                <p data-cy="peopleLoadingError" className="has-text-danger">
-                  {errorMessage}
-                </p>
-              )}
-              {!isLoading && !errorMessage && !people.length && (
-                <p data-cy="noPeopleMessage">
-                  There are no people on the server
-                </p>
-              )}
-              {/* <p>There are no people matching the current search criteria</p> */}
-              {people.length > 0 && (
-                <PeopleTable
-                  filteredPeople={filteredPeople}
-                  selectedPersonSlug={selectedPersonSlug}
-                  handleSelectPerson={handleSelectPerson}
-                />
-              )}
+            <div className="column">
+              <div className="box table-container">
+                {!errorMessage && !people.length && (
+                  <p data-cy="noPeopleMessage">
+                    There are no people on the server
+                  </p>
+                )}
+                {!filteredPeople.length ? (
+                  <p data-cy="noPeopleMessage">
+                    There are no people matching the current search criteria
+                  </p>
+                ) : (
+                  <PeopleTable
+                    filteredPeople={filteredPeople}
+                    selectedPersonSlug={selectedPersonSlug}
+                    handleSelectPerson={handleSelectPerson}
+                  />
+                )}
+              </div>
             </div>
           </div>
-        </div>
+        )}
       </div>
     </>
   );
