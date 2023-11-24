@@ -11,10 +11,20 @@ type Props = {
 export const PersonLink: React.FC<Props> = ({ person }) => {
   const { personSlug } = useParams();
   const {
-    findPersonFather,
-    findPersonMother,
     people,
   } = useContext(PeopleContext);
+
+  const findPersonFather = (newPeople: Person[], selectedPerson: Person) => {
+    const father = newPeople.find(p => p.name === selectedPerson.fatherName);
+
+    return father?.slug;
+  };
+
+  const findPersonMother = (newPeople: Person[], selectedPerson: Person) => {
+    const mother = newPeople.find(p => p.name === selectedPerson.motherName);
+
+    return mother?.slug;
+  };
 
   return (
     <tr

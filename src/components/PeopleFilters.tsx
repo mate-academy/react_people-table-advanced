@@ -1,7 +1,6 @@
-import { useContext } from 'react';
 import cn from 'classnames';
+import { useSearchParams } from '../utils/useSearchParams';
 import { SearchLink } from './SearchLink';
-import { PeopleContext } from '../PeopleContext';
 import { getSearchWith } from '../utils/searchHelper';
 
 const centuries = ['16', '17', '18', '19', '20'];
@@ -10,10 +9,10 @@ export const PeopleFilters = () => {
   const {
     sex,
     query,
-    setSearchParams,
-    searchParams,
     centuriesUrl,
-  } = useContext(PeopleContext);
+    searchParams,
+    setSearchParams,
+  } = useSearchParams();
 
   const handleQueryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const search = getSearchWith(searchParams, (
