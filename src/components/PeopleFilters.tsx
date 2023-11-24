@@ -3,6 +3,7 @@ import cn from 'classnames';
 import { ChangeEvent } from 'react';
 import { SearchLink } from './SearchLink';
 import { getSearchWith } from '../utils/searchHelper';
+import { filterBySex } from '../types/filterBySex';
 
 export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -14,9 +15,8 @@ export const PeopleFilters = () => {
   const query = searchParams.get('query') || '';
 
   function handleSearch(e: ChangeEvent<HTMLInputElement>): void {
-    const newParam = (e.target.value === '')
-      ? getSearchWith(searchParams, { query: null })
-      : getSearchWith(searchParams, { query: e.target.value });
+    const newParam = getSearchWith(searchParams,
+      { query: e.target.value || null });
 
     setSearchParams(newParam);
   }
@@ -26,26 +26,14 @@ export const PeopleFilters = () => {
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        <SearchLink
-          params={{ sex: null }}
-          className={cn({ 'is-active': !sex })}
-        >
-          All
-        </SearchLink>
-
-        <SearchLink
-          params={{ sex: 'm' }}
-          className={cn({ 'is-active': sex === 'm' })}
-        >
-          Male
-        </SearchLink>
-
-        <SearchLink
-          params={{ sex: 'f' }}
-          className={cn({ 'is-active': sex === 'f' })}
-        >
-          Female
-        </SearchLink>
+        {filterBySex.map(option => (
+          <SearchLink
+            params={{ sex: option.value }}
+            className={cn({ 'is-active': sex === option.value })}
+          >
+            {option.title}
+          </SearchLink>
+        ))}
       </p>
 
       <div className="panel-block">

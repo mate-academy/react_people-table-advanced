@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
-import { PeopleFilters } from './PeopleFilters';
-import { Loader } from './Loader';
-import { PeopleTable } from './PeopleTable';
+import { PeopleFilters } from '../components/PeopleFilters';
+import { Loader } from '../components/Loader';
+import { PeopleTable } from '../components/PeopleTable';
 import { Person } from '../types';
+import { SortType } from '../types/sortType';
 import { getPeople } from '../api';
 
 export const PeoplePage = () => {
@@ -38,12 +39,13 @@ export const PeoplePage = () => {
       .finally(() => setIsLoading(false));
   }, []);
 
+  const sort = searchParams.get('sort');
+  const order = searchParams.get('order');
+  const filterSex = searchParams.get('sex');
+  const query = searchParams.get('query')?.trim().toLocaleLowerCase();
+  const centuries = searchParams.getAll('centuries');
+
   const preparedPeople = () => {
-    const sort = searchParams.get('sort');
-    const order = searchParams.get('order');
-    const filterSex = searchParams.get('sex');
-    const query = searchParams.get('query')?.trim().toLocaleLowerCase();
-    const centuries = searchParams.getAll('centuries');
     let prepared = [...people];
 
     if (query) {
@@ -64,24 +66,24 @@ export const PeoplePage = () => {
 
     if (sort) {
       switch (sort) {
-        case 'name':
+        case SortType.Name:
         {
           prepared.sort((a, b) => a.name.localeCompare(b.name));
           break;
         }
 
-        case 'sex':
+        case SortType.Sex:
         {
           prepared.sort((a, b) => a.sex.localeCompare(b.sex));
           break;
         }
 
-        case 'born': {
+        case SortType.Born: {
           prepared.sort((a, b) => a.born - b.born);
           break;
         }
 
-        case 'died': {
+        case SortType.Died: {
           prepared.sort((a, b) => a.died - b.died);
           break;
         }
@@ -120,7 +122,9 @@ export const PeoplePage = () => {
                   There are no people on the server
                 </p>
               )}
-              <p>There are no people matching the current search criteria</p>
+              {query && preparedPeople().length === 0 && (
+                <p>There are no people matching the current search criteria</p>
+              )}
               {people.length > 0 && (
                 <PeopleTable people={preparedPeople()} slugSelected={slug} />
               )}
