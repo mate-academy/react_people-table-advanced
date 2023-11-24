@@ -33,15 +33,9 @@ export const PeopleContent: React.FC<Props> = ({ children }) => {
   useEffect(() => {
     setIsLoading(true);
     getPeople()
-      .then(usersFromServer => {
-        setPeople(usersFromServer);
-      })
-      .catch(() => {
-        setError('Something went wrong');
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
+      .then(setPeople)
+      .catch(() => setError('Something went wrong'))
+      .finally(() => setIsLoading(false));
   }, [isPageActive]);
 
   return (

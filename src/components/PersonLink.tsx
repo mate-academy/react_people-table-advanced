@@ -8,23 +8,26 @@ type Props = {
   person: Person
 };
 
+function findPersonFather(newPeople: Person[], selectedPerson: Person) {
+  const father = newPeople.find(p => p.name === selectedPerson.fatherName);
+
+  return father?.slug;
+}
+
+function findPersonMother(newPeople: Person[], selectedPerson: Person) {
+  const mother = newPeople.find(p => p.name === selectedPerson.motherName);
+
+  return mother?.slug;
+}
+
 export const PersonLink: React.FC<Props> = ({ person }) => {
   const { personSlug } = useParams();
   const {
     people,
   } = useContext(PeopleContext);
 
-  const findPersonFather = (newPeople: Person[], selectedPerson: Person) => {
-    const father = newPeople.find(p => p.name === selectedPerson.fatherName);
-
-    return father?.slug;
-  };
-
-  const findPersonMother = (newPeople: Person[], selectedPerson: Person) => {
-    const mother = newPeople.find(p => p.name === selectedPerson.motherName);
-
-    return mother?.slug;
-  };
+  const motherSlug = findPersonMother(people, person);
+  const fatherSlug = findPersonFather(people, person);
 
   return (
     <tr
@@ -48,7 +51,7 @@ export const PersonLink: React.FC<Props> = ({ person }) => {
         ? (
           <td>
             <a
-              href={`#/people/${findPersonMother(people, person)}`}
+              href={`#/people/${motherSlug}`}
               className="has-text-danger"
             >
               {person.motherName}
@@ -59,7 +62,7 @@ export const PersonLink: React.FC<Props> = ({ person }) => {
       {findPersonFather(people, person)
         ? (
           <td>
-            <a href={`#/people/${findPersonFather(people, person)}`}>
+            <a href={`#/people/${fatherSlug}`}>
               {person.fatherName}
             </a>
           </td>
