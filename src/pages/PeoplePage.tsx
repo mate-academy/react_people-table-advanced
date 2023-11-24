@@ -1,10 +1,10 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { PeopleFilters } from '../components/PeopleFilters';
+import { getPeople } from '../api';
 import { Loader } from '../components/Loader';
+import { PeopleFilters } from '../components/PeopleFilters';
 import { PeopleTable } from '../components/PeopleTable';
 import { Person } from '../types';
-import { getPeople } from '../api';
 import { getFilteredPeople } from '../utils/getFilteredPeople';
 
 export const PeoplePage = () => {
@@ -18,8 +18,12 @@ export const PeoplePage = () => {
   useEffect(() => {
     getPeople()
       .then(setPeople)
-      .catch(() => setIsLoadingError(true))
-      .finally(() => setIsLoading(false));
+      .catch(() => {
+        setIsLoadingError(true);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
   }, []);
 
   return (
@@ -64,6 +68,7 @@ export const PeoplePage = () => {
                   )}
                 </>
               )}
+
             </div>
           </div>
         </div>

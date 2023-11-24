@@ -1,4 +1,5 @@
 import cn from 'classnames';
+import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Person } from '../types';
 

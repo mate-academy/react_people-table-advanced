@@ -1,4 +1,5 @@
 import cn from 'classnames';
+import React from 'react';
 import { NavLink } from 'react-router-dom';
 
 const setClasses = ({ isActive }: { isActive: boolean }) => cn('navbar-item', {

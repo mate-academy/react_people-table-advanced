@@ -1,9 +1,9 @@
-import React from 'react';
 import cn from 'classnames';
+import React from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { Person } from '../types';
-import { PersonItem } from './PersonItem';
 import { getSearchWith } from '../utils/searchHelper';
+import { PersonItem } from './PersonItem';
 
 type Props = {
   people: Person[],

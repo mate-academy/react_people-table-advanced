@@ -1,4 +1,5 @@
 import cn from 'classnames';
+import React from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
 import { getSearchWith, SearchParams } from '../utils/searchHelper';
 
@@ -11,24 +12,24 @@ const CENTURIES = ['16', '17', '18', '19', '20'];
 export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const query = searchParams.get('query') || '';
-  const centuries = searchParams.getAll('centuries') || [];
+  const centuries = searchParams.getAll('centuries') || '';
   const sex = searchParams.get('sex') || '';
 
   const setSearchWith = (params: SearchParams) => {
     const search = getSearchWith(searchParams, params);
-
     setSearchParams(search);
   };
 
-  // Функція для визначення активності посилання
   const isLinkActive = (param: string | null) => {
     return cn({
       'is-active': sex === param,
     });
   };
 
+  const sexEntries = Object.entries(SEXES);
+
   const onSexChange = (newSex: string | null) => {
-    if (sex === null) {
+    if (!sex) {
       return getSearchWith(searchParams, { newSex: null });
     }
 
@@ -66,7 +67,7 @@ export const PeopleFilters = () => {
           All
         </Link>
 
-        {Object.entries(SEXES).map(([param, text]) => (
+        {sexEntries.map(([param, text]) => (
           <Link
             key={param}
             to={{ search: onSexChange(param) }}

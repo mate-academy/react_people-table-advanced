@@ -1,15 +1,20 @@
+import React from 'react';
+
 import { createRoot } from 'react-dom/client';
 import {
-  HashRouter as Router, Routes, Route, Navigate,
+  HashRouter as Router,
+  Routes,
+  Route,
+  Navigate,
 } from 'react-router-dom';
 
 import 'bulma/css/bulma.css';
 import '@fortawesome/fontawesome-free/css/all.css';
 
 import { App } from './App';
-import { HomePage } from './pages/HomePage';
-import { PeoplePage } from './pages/PeoplePage';
-import { NotFoundPage } from './pages/NotFoundPage';
+import { HomePage } from './Pages/HomePage';
+import { NotFoundPage } from './Pages/NotFoundPage';
+import { PeoplePage } from './Pages/PeoplePage';
 
 createRoot(document.getElementById('root') as HTMLDivElement).render(
   <Router>
