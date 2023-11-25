@@ -46,12 +46,13 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
       .sort((person1, person2) => {
         switch (sort) {
           case SortFields.Name:
+            return person1.name.localeCompare(person2.name);
           case SortFields.Sex:
-            return person1[sort].localeCompare(person2[sort]);
-
+            return person1.sex.localeCompare(person2.sex);
           case SortFields.Born:
+            return person1.born - person2.born;
           case SortFields.Died:
-            return person1[sort] - person2[sort];
+            return person1.died - person2.died;
 
           default:
             return 0;
