@@ -17,7 +17,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
     Born = 'born',
     Died = 'died',
   }
-  
+
   function isQueryIncluded(str = '', person: Person) {
     return person.name.toLowerCase().includes(str)
       || person.fatherName?.toLowerCase().includes(str)
