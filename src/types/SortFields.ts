@@ -3,6 +3,4 @@ export enum SortFields {
   Sex = 'sex',
   Born = 'born',
   Died = 'died',
-  Mother = 'moter',
-  Father = 'father',
 }
