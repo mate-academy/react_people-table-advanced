@@ -4,20 +4,20 @@ import classNames from 'classnames';
 import { Person } from '../types';
 import { TableItem } from './TableItem';
 import { SearchLink } from './SearchLink';
-import { SortFieldsType } from '../types/SortFieldsType';
+// import { SortFields } from '../types/SortFields';
 
 type Props = {
   people: Person[];
 };
 
 export const PeopleTable: React.FC<Props> = ({ people }) => {
-  const SortFields: SortFieldsType = {
-    Name: 'name',
-    Sex: 'sex',
-    Born: 'born',
-    Died: 'died',
-  };
-
+  enum SortFields {
+    Name = 'name',
+    Sex = 'sex',
+    Born = 'born',
+    Died = 'died',
+  }
+  
   function isQueryIncluded(str = '', person: Person) {
     return person.name.toLowerCase().includes(str)
       || person.fatherName?.toLowerCase().includes(str)
@@ -66,43 +66,37 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
     return filtredAndSortedPeople;
   }, [sex, query, centuries]);
 
-  const SortFieldsKeys = Object.keys(SortFields) as Array<keyof SortFieldsType>;
-
   return (
     <table
       data-cy="peopleTable"
       className="table is-striped is-hoverable is-narrow is-fullwidth"
     >
       <thead>
-        <tr>
-          {SortFieldsKeys.map(field => {
-            return (
-              <th key={field}>
-                <span className="is-flex is-flex-wrap-nowrap">
-                  {field}
-                  <SearchLink params={{
-                    sort: order === 'desc' && sort === SortFields[field]
+        {Object.values(SortFields).map((field) => (
+          <th key={field}>
+            <span className="is-flex is-flex-wrap-nowrap">
+              {String(field)}
+              <SearchLink
+                params={{
+                  sort:
+                    order === 'desc' && sort === field
                       ? null
-                      : SortFields[field],
-                    order: sort === SortFields[field] && !order ? 'desc' : null,
-                  }}
-                  >
-                    <span className="icon">
-                      <i className={classNames('fas', 'fa-sort', {
-                        'fa-sort-up': sort === SortFields[field] && !order,
-                        'fa-sort-down': sort === SortFields[field] && order,
-                      })}
-                      />
-                    </span>
-                  </SearchLink>
+                      : field,
+                  order: sort === field && !order ? 'desc' : null,
+                }}
+              >
+                <span className="icon">
+                  <i
+                    className={classNames('fas', 'fa-sort', {
+                      'fa-sort-up': sort === field && !order,
+                      'fa-sort-down': sort === field && order,
+                    })}
+                  />
                 </span>
-              </th>
-            );
-          })}
-
-          <th>Mother</th>
-          <th>Father</th>
-        </tr>
+              </SearchLink>
+            </span>
+          </th>
+        ))}
       </thead>
 
       <tbody>
