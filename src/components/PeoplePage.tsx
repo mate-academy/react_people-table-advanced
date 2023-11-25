@@ -5,6 +5,7 @@ import { Person } from '../types';
 import { Loader } from './Loader';
 import { PeopleFilters } from './PeopleFilters';
 import { PeopleTable } from './PeopleTable';
+import { SortField } from '../types/SortField';
 
 const preparePeople = (people: Person[]) => {
   return people.map(person => {
@@ -72,12 +73,12 @@ export const PeoplePage: React.FC = () => {
   if (sortField) {
     visiblePeople.sort((a, b) => {
       switch (sortField) {
-        case 'name':
-        case 'sex':
+        case SortField.name:
+        case SortField.sex:
           return a[sortField].localeCompare(b[sortField]);
 
-        case 'born':
-        case 'died':
+        case SortField.born:
+        case SortField.died:
           return a[sortField] - b[sortField];
 
         default:

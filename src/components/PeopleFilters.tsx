@@ -2,11 +2,32 @@ import classNames from 'classnames';
 import { Link, useSearchParams } from 'react-router-dom';
 import { getSearchWith } from '../utils/searchHelper';
 
+enum FilterType {
+  female = 'f',
+  male = 'm',
+}
+
 export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const query = searchParams.get('query') || '';
   const centuries = searchParams.getAll('centuries') || [];
   const sex = searchParams.get('sex') || null;
+
+  function handleQueryChange(event: React.ChangeEvent<HTMLInputElement>) {
+    setSearchParams(
+      getSearchWith(searchParams, {
+        query: event.target.value || null,
+      }),
+    );
+  }
+
+  const centuriesArray = '16,17,18,19,20'.split(',');
+
+  function handleCenturyToggle(century: string) {
+    return centuries.includes(century)
+      ? centuries.filter(ch => century !== ch)
+      : [...centuries, century];
+  }
 
   return (
     <nav className="panel">
@@ -26,20 +47,20 @@ export const PeopleFilters = () => {
         <Link
           to={{
             search: getSearchWith(
-              searchParams, { sex: 'm' },
+              searchParams, { sex: FilterType.male },
             ),
           }}
-          className={classNames({ 'is-active': sex === 'm' })}
+          className={classNames({ 'is-active': sex === FilterType.male })}
         >
           Male
         </Link>
         <Link
           to={{
             search: getSearchWith(
-              searchParams, { sex: 'f' },
+              searchParams, { sex: FilterType.female },
             ),
           }}
-          className={classNames({ 'is-active': sex === 'f' })}
+          className={classNames({ 'is-active': sex === FilterType.female })}
         >
           Female
         </Link>
@@ -53,11 +74,7 @@ export const PeopleFilters = () => {
             className="input"
             placeholder="Search"
             value={query}
-            onChange={event => setSearchParams(
-              getSearchWith(searchParams, {
-                query: event.target.value || null,
-              }),
-            )}
+            onChange={handleQueryChange}
           />
 
           <span className="icon is-left">
@@ -69,16 +86,13 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            {'16,17,18,19,20'.split(',').map(century => (
+            {centuriesArray.map(century => (
               <Link
                 key={century}
                 to={{
                   search: getSearchWith(
-                    searchParams, {
-                      centuries: centuries.includes(century)
-                        ? centuries.filter(ch => century !== ch)
-                        : [...centuries, century],
-                    },
+                    searchParams,
+                    { centuries: handleCenturyToggle(century) },
                   ),
                 }}
                 className={classNames('button mr-1', {

@@ -3,6 +3,7 @@ import classNames from 'classnames';
 import { Link, useParams, useSearchParams } from 'react-router-dom';
 import { Person } from '../types';
 import { SearchLink } from './SearchLink';
+import { SortField } from '../types/SortField';
 
 type Props = {
   people: Person[],
@@ -42,7 +43,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
           <th>
             Name
             <SearchLink
-              params={getSortParams('name')}
+              params={getSortParams(SortField.name)}
             >
               <span className="icon">
                 <i className="fas fa-sort" />
@@ -52,7 +53,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
           <th>
             Sex
             <SearchLink
-              params={getSortParams('sex')}
+              params={getSortParams(SortField.sex)}
             >
               <span className="icon">
                 <i className="fas fa-sort" />
@@ -62,7 +63,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
           <th>
             Born
             <SearchLink
-              params={getSortParams('born')}
+              params={getSortParams(SortField.born)}
             >
               <span className="icon">
                 <i className="fas fa-sort" />
@@ -72,7 +73,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
           <th>
             Died
             <SearchLink
-              params={getSortParams('died')}
+              params={getSortParams(SortField.died)}
             >
               <span className="icon">
                 <i className="fas fa-sort" />
