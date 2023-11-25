@@ -21,12 +21,21 @@ export const PeoplePage = () => {
 
   useEffect(() => {
     getPeople()
-      .then((peopleFromServer) => setPeople(peopleFromServer))
+      .then(setPeople)
       .catch(() => {
         setError('Something went wrong');
       })
       .finally(() => setIsLoad(false));
   }, []);
+
+  const visiblePeople = getVisiblePeople(
+    people,
+    sex,
+    query,
+    centuries,
+    sort,
+    order,
+  );
 
   return (
     <>
@@ -46,18 +55,7 @@ export const PeoplePage = () => {
                   {error}
                 </p>
               )}
-              {people && (
-                <PeopleTable
-                  people={getVisiblePeople(
-                    people,
-                    sex,
-                    query,
-                    centuries,
-                    sort,
-                    order,
-                  )}
-                />
-              )}
+              {people && <PeopleTable people={visiblePeople} />}
               {!isLoad && !error && !people && (
                 <p data-cy="noPeopleMessage">no people</p>
               )}

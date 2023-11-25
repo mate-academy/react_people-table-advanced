@@ -1,7 +1,7 @@
 import { Person } from '../types/Person';
 
 export const getVisiblePeople = (
-  people: Person[],
+  people: Person[] | null,
   sex: string | null,
   query: string | undefined,
   centuries: string[],

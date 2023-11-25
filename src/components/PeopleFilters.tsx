@@ -18,6 +18,12 @@ export const PeopleFilters = () => {
     setSearchParams(newQueryParam);
   };
 
+  const sexFilters = [
+    { label: 'All', value: null },
+    { label: 'Male', value: 'm' },
+    { label: 'Female', value: 'f' },
+  ];
+
   const centuriesItem = ['16', '17', '18', '19', '20'];
 
   return (
@@ -25,26 +31,15 @@ export const PeopleFilters = () => {
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        <SearchLink
-          className={classnames({ 'is-active': !sex })}
-          params={{ sex: null }}
-        >
-          All
-        </SearchLink>
-
-        <SearchLink
-          className={classnames({ 'is-active': sex === 'm' })}
-          params={{ sex: 'm' }}
-        >
-          Male
-        </SearchLink>
-
-        <SearchLink
-          className={classnames({ 'is-active': sex === 'f' })}
-          params={{ sex: 'f' }}
-        >
-          Female
-        </SearchLink>
+        {sexFilters.map(({ label, value }) => (
+          <SearchLink
+            key={value}
+            className={classnames({ 'is-active': sex === value })}
+            params={{ sex: value }}
+          >
+            {label}
+          </SearchLink>
+        ))}
       </p>
 
       <div className="panel-block">
