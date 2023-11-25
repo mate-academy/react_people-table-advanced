@@ -3,8 +3,8 @@ import { Link, useSearchParams } from 'react-router-dom';
 import { getSearchWith } from '../utils/searchHelper';
 
 enum FilterType {
-  female = 'f',
-  male = 'm',
+  Female = 'f',
+  Male = 'm',
 }
 
 export const PeopleFilters = () => {
@@ -12,6 +12,7 @@ export const PeopleFilters = () => {
   const query = searchParams.get('query') || '';
   const centuries = searchParams.getAll('centuries') || [];
   const sex = searchParams.get('sex') || null;
+  const centuriesArray = ['16', '17', '18', '19', '20'];
 
   function handleQueryChange(event: React.ChangeEvent<HTMLInputElement>) {
     setSearchParams(
@@ -20,8 +21,6 @@ export const PeopleFilters = () => {
       }),
     );
   }
-
-  const centuriesArray = '16,17,18,19,20'.split(',');
 
   function handleCenturyToggle(century: string) {
     return centuries.includes(century)
@@ -47,20 +46,20 @@ export const PeopleFilters = () => {
         <Link
           to={{
             search: getSearchWith(
-              searchParams, { sex: FilterType.male },
+              searchParams, { sex: FilterType.Male },
             ),
           }}
-          className={classNames({ 'is-active': sex === FilterType.male })}
+          className={classNames({ 'is-active': sex === FilterType.Male })}
         >
           Male
         </Link>
         <Link
           to={{
             search: getSearchWith(
-              searchParams, { sex: FilterType.female },
+              searchParams, { sex: FilterType.Female },
             ),
           }}
-          className={classNames({ 'is-active': sex === FilterType.female })}
+          className={classNames({ 'is-active': sex === FilterType.Female })}
         >
           Female
         </Link>
