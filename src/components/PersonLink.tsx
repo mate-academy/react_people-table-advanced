@@ -8,26 +8,14 @@ type Props = {
   person: Person
 };
 
-function findPersonFather(newPeople: Person[], selectedPerson: Person) {
-  const father = newPeople.find(p => p.name === selectedPerson.fatherName);
-
-  return father?.slug;
-}
-
-function findPersonMother(newPeople: Person[], selectedPerson: Person) {
-  const mother = newPeople.find(p => p.name === selectedPerson.motherName);
-
-  return mother?.slug;
-}
-
 export const PersonLink: React.FC<Props> = ({ person }) => {
   const { personSlug } = useParams();
   const {
     people,
   } = useContext(PeopleContext);
 
-  const motherSlug = findPersonMother(people, person);
-  const fatherSlug = findPersonFather(people, person);
+  const motherSlug = people.find(p => p.name === person.motherName)?.slug;
+  const fatherSlug = people.find(p => p.name === person.fatherName)?.slug;
 
   return (
     <tr
@@ -47,7 +35,7 @@ export const PersonLink: React.FC<Props> = ({ person }) => {
       <td>{person.sex}</td>
       <td>{person.born}</td>
       <td>{person.died}</td>
-      {findPersonMother(people, person)
+      {motherSlug
         ? (
           <td>
             <a
@@ -59,7 +47,7 @@ export const PersonLink: React.FC<Props> = ({ person }) => {
           </td>
         )
         : <td>{person.motherName ? person.motherName : '-'}</td>}
-      {findPersonFather(people, person)
+      {fatherSlug
         ? (
           <td>
             <a href={`#/people/${fatherSlug}`}>
