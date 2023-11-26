@@ -1,9 +1,13 @@
-import { useSearchParams } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import classNames from 'classnames';
 import { SearchLink } from './SearchLink';
 import { SearchParams, getSearchWith } from '../utils/searchHelper';
 
 const CENTURIES_ARRAY = ['16', '17', '18', '19', '20'];
+const SEXES_ARRAY = [
+  { fullSex: 'Male', shortSex: 'm' },
+  { fullSex: 'Female', shortSex: 'f' },
+];
 
 export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -22,16 +26,15 @@ export const PeopleFilters = () => {
   };
 
   const getCenturiesParams = (century: string, currentCenturies: string[]) => {
-    const updatedCenturies = [...currentCenturies];
-    const index = updatedCenturies.indexOf(`${century}`);
-
-    if (updatedCenturies.includes(century)) {
-      updatedCenturies.splice(index, 1);
-    } else {
-      updatedCenturies.push(century);
-    }
+    const updatedCenturies = currentCenturies.includes(century)
+      ? currentCenturies.filter((currentCentury) => currentCentury !== century)
+      : [...currentCenturies, century];
 
     return { centuries: updatedCenturies };
+  };
+
+  const handleClearAll = () => {
+    return getSearchWith(new URLSearchParams(), {});
   };
 
   return (
@@ -46,19 +49,14 @@ export const PeopleFilters = () => {
           All
         </SearchLink>
 
-        <SearchLink
-          params={{ sex: 'm' }}
-          className={classNames({ 'is-active': sex === 'm' })}
-        >
-          Male
-        </SearchLink>
-
-        <SearchLink
-          params={{ sex: 'f' }}
-          className={classNames({ 'is-active': sex === 'f' })}
-        >
-          Female
-        </SearchLink>
+        {SEXES_ARRAY.map(sexType => (
+          <SearchLink
+            params={{ sex: sexType.shortSex }}
+            className={classNames({ 'is-active': sex === sexType.shortSex })}
+          >
+            {sexType.fullSex}
+          </SearchLink>
+        ))}
       </p>
 
       <div className="panel-block">
@@ -109,12 +107,12 @@ export const PeopleFilters = () => {
       </div>
 
       <div className="panel-block">
-        <SearchLink
-          params={{ sex: null, query: null, centuries: null }}
+        <Link
+          to={{ search: handleClearAll() }}
           className="button is-link is-outlined is-fullwidth"
         >
           Reset all filters
-        </SearchLink>
+        </Link>
       </div>
     </nav>
   );
