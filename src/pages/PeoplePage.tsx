@@ -89,9 +89,11 @@ export const PeoplePage = () => {
 
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
-          <div className="column is-7-tablet is-narrow-desktop">
-            <PeopleFilters />
-          </div>
+          {isLoading ? null : (
+            <div className="column is-7-tablet is-narrow-desktop">
+              <PeopleFilters />
+            </div>
+          )}
 
           <div className="column">
             <div className="box table-container">
@@ -103,7 +105,7 @@ export const PeoplePage = () => {
                     </p>
                   )}
 
-                  {!people.length && !isLoading ? (
+                  {!people.length ? (
                     <p data-cy="noPeopleMessage">{NO_PEOPLE_MESSAGE}</p>
                   ) : (
                     <PeopleTable people={filteredPeople} />

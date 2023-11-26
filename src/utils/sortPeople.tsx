@@ -1,5 +1,12 @@
 import { Person } from '../types';
 
+enum SortBy {
+  Died = 'died',
+  Born = 'born',
+  Sex = 'sex',
+  Name = 'name',
+}
+
 interface Sort {
   sortBy: string | null,
   order: string | null,
@@ -12,21 +19,21 @@ export function sortPeople(people: Person[], sort: Sort) {
 
   if (sort.sortBy) {
     switch (sort.sortBy) {
-      case 'died':
-        return peopleCopy.sort((Person1, Person2) => (
-          (Person1.died - Person2.died) * direction
+      case SortBy.Died:
+        return peopleCopy.sort((person1, person2) => (
+          (person1.died - person2.died) * direction
         ));
-      case 'born':
-        return peopleCopy.sort((Person1, Person2) => (
-          (Person1.born - Person2.born) * direction
+      case SortBy.Born:
+        return peopleCopy.sort((person1, person2) => (
+          (person1.born - person2.born) * direction
         ));
-      case 'sex':
-        return peopleCopy.sort((Person1, Person2) => (
-          (Person1.sex.localeCompare(Person2.sex)) * direction
+      case SortBy.Sex:
+        return peopleCopy.sort((person1, person2) => (
+          (person1.sex.localeCompare(person2.sex)) * direction
         ));
-      case 'name':
-        return peopleCopy.sort((Person1, Person2) => (
-          (Person1.name.localeCompare(Person2.name)) * direction
+      case SortBy.Name:
+        return peopleCopy.sort((person1, person2) => (
+          (person1.name.localeCompare(person2.name)) * direction
         ));
       default:
         return peopleCopy;

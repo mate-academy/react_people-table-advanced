@@ -24,7 +24,7 @@ export const PeopleFilters: React.FC = () => {
 
   const renderSexFilter = (sex: string | null, label: string) => (
     <SearchLink
-      className={classNames('button', { 'is-active': params.sex === sex })}
+      className={classNames({ 'is-active': params.sex === sex })}
       params={{ sex }}
     >
       {label}
