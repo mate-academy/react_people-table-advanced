@@ -1,14 +1,8 @@
 import React from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import cn from 'classnames';
 import { getSearchWith } from '../../utils/searchHelper';
 import { SearchLink } from '../SearchLink/SearchLink';
-
-type Props = {
-  query: string;
-  sex: string;
-  centuries: string[];
-};
 
 const sexColumns = {
   All: '',
@@ -18,13 +12,25 @@ const sexColumns = {
 
 const centuriesValues = ['16', '17', '18', '19', '20'];
 
-export const PeopleFilters: React.FC<Props> = ({ query, sex, centuries }) => {
+export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
+
+  const query = searchParams.get('query') || '';
+  const sex = searchParams.get('sex') || '';
+  const centuries = searchParams.getAll('centuries') || [];
 
   const handleQueryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchParams(
       getSearchWith(searchParams, { query: event.target.value || null }),
     );
+  };
+
+  const updateCenturies = (century: string) => {
+    const newCenturies = centuries.includes(century)
+      ? centuries.filter((el) => el !== century)
+      : [...centuries, century];
+
+    return { centuries: newCenturies };
   };
 
   return (
@@ -74,11 +80,7 @@ export const PeopleFilters: React.FC<Props> = ({ query, sex, centuries }) => {
                 className={cn('button mr-1', {
                   'is-info': centuries.includes(century),
                 })}
-                params={{
-                  centuries: centuries.includes(century)
-                    ? centuries.filter((el) => el !== century)
-                    : [...centuries, century],
-                }}
+                params={updateCenturies(century)}
               >
                 {century}
               </SearchLink>
@@ -102,16 +104,14 @@ export const PeopleFilters: React.FC<Props> = ({ query, sex, centuries }) => {
       </div>
 
       <div className="panel-block">
-        <SearchLink
+        <Link
           className="button is-link is-outlined is-fullwidth"
-          params={{
-            query: null,
-            sex: null,
-            centuries: null,
+          to={{
+            search: '',
           }}
         >
           Reset all filters
-        </SearchLink>
+        </Link>
       </div>
     </nav>
   );

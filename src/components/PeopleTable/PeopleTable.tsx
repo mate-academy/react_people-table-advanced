@@ -1,5 +1,5 @@
 import React from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useSearchParams } from 'react-router-dom';
 import cn from 'classnames';
 import { Person } from '../../types';
 import { PersonLink } from '../PersonLink/PersonLink';
@@ -9,11 +9,14 @@ import { SearchParams } from '../../utils/searchHelper';
 
 type Props = {
   people: Person[];
-  sort: string;
-  order: string;
 };
 
-export const PeopleTable: React.FC<Props> = ({ people, sort, order }) => {
+export const PeopleTable: React.FC<Props> = ({ people }) => {
+  const [searchParams] = useSearchParams();
+
+  const sort = searchParams.get('sort') || '';
+  const order = searchParams.get('order') || '';
+
   const { personSlug } = useParams();
 
   const sortParams = (param: string) => {
