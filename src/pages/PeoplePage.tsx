@@ -4,6 +4,7 @@ import { useSearchParams } from 'react-router-dom';
 import { Loader } from '../components/Loader';
 import { PeopleFilters } from '../components/PeopleFilters';
 import { PeopleTable } from '../components/PeopleTable';
+import { isQuery } from '../helpers/queryHelpers';
 import { Person } from '../types';
 import { SortOrders } from '../types/SortOrder';
 
@@ -27,12 +28,10 @@ const getFilteredPeople = ({
   let visiblePeople = [...people];
 
   if (query) {
-    const normalizedQuery = query.trim();
-
     visiblePeople = visiblePeople.filter(person => (
-      person.name.toLowerCase().includes(normalizedQuery)
-      || person.fatherName?.toLowerCase().includes(normalizedQuery)
-      || person.motherName?.toLowerCase().includes(normalizedQuery)
+      isQuery(person.name, query)
+        || isQuery(person.fatherName, query)
+        || isQuery(person.motherName, query)
     ));
   }
 

@@ -26,18 +26,17 @@ export const PeopleTable: React.FC<Props> = ({ people, searchParams }) => {
         <tr>
           {Object.values(SortOrders).map(column => {
             const normalizedOrder = column[0].toUpperCase() + column.slice(1);
-            let newSort = null;
+            const newSort = sort === column && order === 'desc'
+              ? null : column;
+
             let newOrder = null;
 
-            if (sort !== column && order !== 'desc') {
-              newSort = column;
-            }
-
-            if (sort === column && order !== 'desc') {
-              newSort = column;
-              newOrder = 'desc';
-            } else {
-              newOrder = null;
+            if (sort === column) {
+              if (order !== 'desc') {
+                newOrder = 'desc';
+              } else {
+                newOrder = null;
+              }
             }
 
             return (

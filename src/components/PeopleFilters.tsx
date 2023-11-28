@@ -3,17 +3,12 @@ import { SetURLSearchParams } from 'react-router-dom';
 
 import { getSearchWith } from '../utils/searchHelper';
 import { SearchLink } from './SearchLink';
+import { SexValues } from '../types/SexValues';
 
 type Props = {
   searchParams: URLSearchParams,
   setSearchParams: SetURLSearchParams,
 };
-
-enum SexValues {
-  All = '',
-  Male = 'm',
-  Female = 'f',
-}
 
 const centuriesValues = ['16', '17', '18', '19', '20'];
 
