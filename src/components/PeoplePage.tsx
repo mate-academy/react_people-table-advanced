@@ -11,8 +11,6 @@ export const PeoplePage = () => {
   const [peopleFromServer, setPeopleFromServer] = useState<Person[]>([]);
   const [error, setError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-
-  // const [people, setPeople] = useState(peopleFromServer);
   const [searchParams, setSearchParams] = useSearchParams();
   const sort = searchParams.get('sort');
   const order = searchParams.get('order');
@@ -42,54 +40,91 @@ export const PeoplePage = () => {
 
   // #region getVisiblePeople
 
-  let visiblePeople = [...peopleFromServer];
-
   // #region filter
-  if (sex) {
-    visiblePeople = visiblePeople.filter(person => person.sex === sex);
-  }
+  function setFilteredPeople(people: Person[]) {
+    let result = [...people];
 
-  if (query) {
-    const ifIncludes = (personName: string | null) => {
-      return personName && personName.toLowerCase().includes(query);
-    };
+    if (sex) {
+      result = result.filter(person => person.sex === sex);
+    }
 
-    visiblePeople = visiblePeople.filter(
-      ({ name, motherName, fatherName }) => ifIncludes(name)
-        || ifIncludes(motherName)
-        || ifIncludes(fatherName),
-    );
-  }
+    if (query) {
+      const ifIncludes = (personName: string | null) => {
+        return personName && personName.toLowerCase().includes(query);
+      };
 
-  if (centuries.length) {
-    visiblePeople = visiblePeople.filter(
-      person => centuries.includes(Math.ceil(person.born / 100).toString()),
-    );
+      result = result.filter(
+        ({ name, motherName, fatherName }) => ifIncludes(name)
+          || ifIncludes(motherName)
+          || ifIncludes(fatherName),
+      );
+    }
+
+    if (centuries.length) {
+      result = result.filter(
+        person => centuries.includes(Math.ceil(person.born / 100).toString()),
+      );
+    }
+
+    return result;
   }
   // #endregion
 
   // #region sort
-  if (sort) {
-    visiblePeople.sort((a, b) => {
-      switch (sort) {
-        case 'name':
-        case 'sex':
-          return a[sort].localeCompare(b[sort]);
-        case 'born':
-        case 'died':
-          return (a[sort] - b[sort]);
-        default:
-          return 0;
-      }
-    });
-  }
+  function setSortPeople(people: Person[]) {
+    let result = [...people];
 
-  if (order) {
-    visiblePeople = visiblePeople.reverse();
+    if (sort) {
+      result.sort((a, b) => {
+        switch (sort) {
+          case 'name':
+          case 'sex':
+            return a[sort].localeCompare(b[sort]);
+          case 'born':
+          case 'died':
+            return (a[sort] - b[sort]);
+          default:
+            return 0;
+        }
+      });
+    }
+
+    if (order) {
+      result = result.reverse();
+    }
+
+    return result;
   }
   // #endregion
 
+  const visiblePeople = setSortPeople(setFilteredPeople(peopleFromServer));
   // #endregion
+
+  function getMarkUp() {
+    switch (true) {
+      case isLoading:
+        return (<Loader />);
+      case error:
+        return (
+          <p
+            data-cy="peopleLoadingError"
+            className="has-text-danger"
+          >
+            Something went wrong
+          </p>
+        );
+      case !peopleFromServer.length:
+        return (
+          <p data-cy="noPeopleMessage">
+            There are no people on the server
+          </p>
+        );
+      case !!peopleFromServer.length:
+        return (<PeopleTable people={visiblePeople} />);
+      default:
+        return (<></>);
+    }
+  }
 
   return (
     <>
@@ -108,31 +143,7 @@ export const PeoplePage = () => {
 
           <div className="column">
             <div className="box table-container">
-              {(() => {
-                switch (true) {
-                  case isLoading:
-                    return (<Loader />);
-                  case error:
-                    return (
-                      <p
-                        data-cy="peopleLoadingError"
-                        className="has-text-danger"
-                      >
-                        Something went wrong
-                      </p>
-                    );
-                  case !peopleFromServer.length:
-                    return (
-                      <p data-cy="noPeopleMessage">
-                        There are no people on the server
-                      </p>
-                    );
-                  case !!peopleFromServer.length:
-                    return (<PeopleTable people={visiblePeople} />);
-                  default:
-                    return (<></>);
-                }
-              })()}
+              {getMarkUp()}
             </div>
           </div>
         </div>

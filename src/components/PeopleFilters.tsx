@@ -11,6 +11,12 @@ interface Props {
 
 const filterCenturies = ['16', '17', '18', '19', '20'];
 
+enum SexParams {
+  All = '',
+  Male = 'm',
+  Female = 'f',
+}
+
 export const PeopleFilters: React.FC<Props> = (
   { searchParams, setSearchParams },
 ) => {
@@ -18,37 +24,33 @@ export const PeopleFilters: React.FC<Props> = (
   const query = searchParams.get('query');
   const centuries = searchParams.getAll('centuries');
 
+  function handleChange(event: { target: { value: string; }; }) {
+    setSearchParams(
+      getSearchWith(
+        searchParams,
+        (event.target.value.trim())
+          ? { query: event.target.value.trim().toLocaleLowerCase() }
+          : { query: null },
+      ),
+    );
+  }
+
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        <SearchLink
-          params={{ sex: null }}
-          className={classNames(
-            { 'is-active': sex === null },
-          )}
-        >
-          All
-        </SearchLink>
-
-        <SearchLink
-          params={{ sex: 'm' }}
-          className={classNames(
-            { 'is-active': sex === 'm' },
-          )}
-        >
-          Male
-        </SearchLink>
-
-        <SearchLink
-          params={{ sex: 'f' }}
-          className={classNames(
-            { 'is-active': sex === 'f' },
-          )}
-        >
-          Female
-        </SearchLink>
+        {Object.entries(SexParams).map(([key, value]) => (
+          <SearchLink
+            key={key}
+            params={{ sex: value || null }}
+            className={classNames(
+              { 'is-active': sex === value || (value === '' && sex === null) },
+            )}
+          >
+            {key}
+          </SearchLink>
+        ))}
       </p>
 
       <div className="panel-block">
@@ -59,16 +61,7 @@ export const PeopleFilters: React.FC<Props> = (
             className="input"
             placeholder="Search"
             value={query || ''}
-            onChange={(event) => {
-              setSearchParams(
-                getSearchWith(
-                  searchParams,
-                  (event.target.value.trim())
-                    ? { query: event.target.value.trim().toLocaleLowerCase() }
-                    : { query: null },
-                ),
-              );
-            }}
+            onChange={handleChange}
           />
 
           <span className="icon is-left">
