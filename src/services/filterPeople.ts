@@ -21,12 +21,15 @@ export const filterPeople = (
     const normalizedQuery = query.toLowerCase();
 
     filteredPeople
-        = filteredPeople.filter(person => person.name.toLowerCase()
-        .includes(query))
-        || filteredPeople.filter(person => person.motherName?.toLowerCase()
-          .includes(normalizedQuery))
-        || filteredPeople.filter(person => person.fatherName?.toLowerCase()
-          .includes(normalizedQuery));
+    = filteredPeople.filter(person => {
+        return person.name.toLowerCase().includes(query);
+      })
+    || filteredPeople.filter(person => {
+      return person.motherName?.toLowerCase().includes(normalizedQuery);
+    })
+    || filteredPeople.filter(person => {
+      return person.fatherName?.toLowerCase().includes(normalizedQuery);
+    });
   }
 
   return filteredPeople;

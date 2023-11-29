@@ -12,7 +12,7 @@ import '@fortawesome/fontawesome-free/css/all.css';
 import { App } from './App';
 import { HomePage } from './pages/HomePage';
 import { PeoplePage } from './pages/PeoplePage';
-import { NotFoundPage } from './pages/NotFoundPage';
+import { NotFoundPage } from './components/NotFoundPage';
 
 createRoot(document.getElementById('root') as HTMLDivElement)
   .render(

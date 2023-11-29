@@ -2,11 +2,13 @@ import cn from 'classnames';
 import { useSearchParams } from 'react-router-dom';
 import { SearchLink } from './SearchLink';
 import { getSearchWith } from '../utils/searchHelper';
+import { Gender } from '../types/Gender';
 
 const centuries = ['16', '17', '18', '19', '20'];
 
 export const PeopleFilters: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
+
   const query = searchParams.get('query') || '';
   const sex = searchParams.get('sex') || null;
   const centuryParams = searchParams.getAll('centuries') || [];
@@ -29,14 +31,14 @@ export const PeopleFilters: React.FC = () => {
           All
         </SearchLink>
         <SearchLink
-          params={{ sex: 'm' }}
-          className={cn({ 'is-active': sex === 'm' })}
+          params={{ sex: Gender.MALE }}
+          className={cn({ 'is-active': sex === Gender.FEMALE })}
         >
           Male
         </SearchLink>
         <SearchLink
-          params={{ sex: 'f' }}
-          className={cn({ 'is-active': sex === 'f' })}
+          params={{ sex: Gender.FEMALE }}
+          className={cn({ 'is-active': sex === Gender.FEMALE })}
         >
           Female
         </SearchLink>

@@ -15,6 +15,7 @@ export const PeoplePage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [hasError, setHasError] = useState(false);
   const [searchParams] = useSearchParams();
+
   const query = searchParams.get('query') || '';
   const sex = searchParams.get('sex') || null;
   const centuryParams = searchParams.getAll('centuries') || [];
@@ -31,7 +32,7 @@ export const PeoplePage = () => {
     setHasError(false);
 
     getPeople()
-      .then(peopleData => setPeople(peopleData))
+      .then(setPeople)
       .catch(() => setHasError(true))
       .finally(() => setIsLoading(false));
   }, []);
@@ -77,9 +78,7 @@ export const PeoplePage = () => {
               )}
 
             {!!people.length && !!filteredPeople.length && (
-
               <PeopleTable people={filteredPeople} />
-
             )}
           </div>
         </div>
