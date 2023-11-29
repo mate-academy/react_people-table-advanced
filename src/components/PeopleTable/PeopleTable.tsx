@@ -16,12 +16,11 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
   const [searchParams] = useSearchParams();
 
   const getSortingParams = useCallback((param: string): SearchParams => {
-    if (searchParams.get('sort') === param
-      && searchParams.get('order') === 'desc') {
-      return { sort: null, order: null };
-    }
-
     if (searchParams.get('sort') === param) {
+      if (searchParams.get('order') === 'desc') {
+        return { sort: null, order: null };
+      }
+
       return { sort: param, order: 'desc' };
     }
 
@@ -100,36 +99,43 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
       </thead>
 
       <tbody>
-        {proceedPeople(people, searchParams).map((person) => (
-          <tr
-            data-cy="person"
-            className={cn(
-              { 'has-background-warning': person.slug === humanId },
-            )}
-          >
-            <td>
-              <PersonLink person={person} />
-            </td>
+        {proceedPeople(people, searchParams).map((person) => {
+          const {
+            sex, born, died, slug, motherName,
+            fatherName, mother, father,
+          } = person;
 
-            <td>{person.sex}</td>
-            <td>{person.born}</td>
-            <td>{person.died}</td>
-            <td>
-              {
-                person.mother
-                  ? <PersonLink person={person.mother} />
-                  : person.motherName || '-'
-              }
-            </td>
-            <td>
-              {
-                person.father
-                  ? <PersonLink person={person.father} />
-                  : person.fatherName || '-'
-              }
-            </td>
-          </tr>
-        ))}
+          return (
+            <tr
+              data-cy="person"
+              className={cn(
+                { 'has-background-warning': slug === humanId },
+              )}
+            >
+              <td>
+                <PersonLink person={person} />
+              </td>
+
+              <td>{sex}</td>
+              <td>{born}</td>
+              <td>{died}</td>
+              <td>
+                {
+                  mother
+                    ? <PersonLink person={mother} />
+                    : motherName || '-'
+                }
+              </td>
+              <td>
+                {
+                  father
+                    ? <PersonLink person={father} />
+                    : fatherName || '-'
+                }
+              </td>
+            </tr>
+          );
+        })}
       </tbody>
     </table>
   );
