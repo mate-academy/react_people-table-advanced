@@ -3,15 +3,16 @@ import {
   useParams,
   useSearchParams,
 } from 'react-router-dom';
+import { useMemo } from 'react';
 import { Person } from '../types';
 import { PersonLink } from './PersonLink';
 import { SearchLink } from './SearchLink';
+import { sortPeople } from '../services/sortPeople';
+import { SortParams } from '../types/SortParams';
 
 type Props = {
   people: Person[];
 };
-
-const sortTypes = ['Name', 'Sex', 'Born', 'Died'];
 
 export const PeopleTable: React.FC<Props> = ({ people }) => {
   const { slug } = useParams();
@@ -19,6 +20,10 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
   const [searchParams] = useSearchParams();
   const sort = searchParams.get('sort');
   const order = searchParams.get('order');
+
+  const sortedPeople = useMemo(() => {
+    return sortPeople(people, sort, order);
+  }, [sort, order, people]);
 
   const getSortParams = (sortType: string) => {
     if (sort !== sortType) {
@@ -31,6 +36,9 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
 
     return { sort: null, order: null };
   };
+
+  const normalizeSortType
+    = (sortType: string) => sortType[0].toUpperCase() + sortType.slice(1);
 
   const getParentInfo = (parentName: string) => {
     const parent = people.find(person => person.name === parentName);
@@ -51,10 +59,10 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
     >
       <thead>
         <tr>
-          {sortTypes.map(sortType => (
+          {Object.values(SortParams).map(sortType => (
             <th key={sortType}>
               <span className="is-flex is-flex-wrap-nowrap">
-                {sortType}
+                {normalizeSortType(sortType)}
                 <SearchLink params={getSortParams(sortType)}>
                   <span className="icon">
                     <i className={cn('fas fa-sort',
@@ -73,7 +81,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
       </thead>
 
       <tbody>
-        {people.map(person => (
+        {sortedPeople.map(person => (
           <tr
             data-cy="person"
             key={person.slug}

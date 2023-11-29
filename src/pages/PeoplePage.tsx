@@ -3,9 +3,9 @@ import {
   useState,
 } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { PeopleFilters } from './PeopleFilters';
-import { Loader } from './Loader';
-import { PeopleTable } from './PeopleTable';
+import { PeopleFilters } from '../components/PeopleFilters';
+import { Loader } from '../components/Loader';
+import { PeopleTable } from '../components/PeopleTable';
 import { Person } from '../types';
 import { getPeople } from '../api';
 import { filterPeople } from '../services/filterPeople';
@@ -18,16 +18,12 @@ export const PeoplePage = () => {
   const query = searchParams.get('query') || '';
   const sex = searchParams.get('sex') || null;
   const centuryParams = searchParams.getAll('centuries') || [];
-  const sort = searchParams.get('sort');
-  const order = searchParams.get('order');
 
   const filteredPeople = filterPeople(
     people,
     query,
     sex,
     centuryParams,
-    sort,
-    order,
   );
 
   useEffect(() => {
@@ -40,13 +36,17 @@ export const PeoplePage = () => {
       .finally(() => setIsLoading(false));
   }, []);
 
+  const peopleFilterBlock = !isLoading && !hasError && !!people.length;
+
+  const peopleAbsenceMsg = !isLoading && !hasError && !people.length;
+
   return (
     <>
       <h1 className="title">People Page</h1>
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
 
-          {!isLoading && !hasError && !!people.length
+          {peopleFilterBlock
           && (
             <div className="column is-7-tablet is-narrow-desktop">
               <PeopleFilters />
@@ -63,7 +63,7 @@ export const PeoplePage = () => {
               </p>
             )}
 
-            {!isLoading && !hasError && !people.length && (
+            {peopleAbsenceMsg && (
               <p data-cy="noPeopleMessage">
                 There are no people on the server
               </p>
