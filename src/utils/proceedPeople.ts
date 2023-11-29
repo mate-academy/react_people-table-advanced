@@ -16,7 +16,7 @@ function sortPeople(people: Person[], sortParam: string, order: number) {
 
 function filterPeople(people: Person[], searchParams: URLSearchParams) {
   let newPeople = [...people];
-  const query = searchParams.get('query');
+  const query = searchParams.get('query')?.trim();
   const sex = searchParams.get('sex');
   const centuries = searchParams.getAll('centuries');
 

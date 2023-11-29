@@ -11,17 +11,17 @@ import { PeopleTable } from '../../components/PeopleTable';
 
 export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);
-  const [error, setError] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [isError, setIsError] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const displayPeopleTable = useMemo(() => {
-    return !error && !loading && !!people.length;
-  }, [error, loading, people]);
+    return !isError && !isLoading && !!people.length;
+  }, [isError, isLoading, people]);
 
   const fetchPeople = () => {
-    setError(false);
+    setIsError(false);
     setPeople([]);
-    setLoading(true);
+    setIsLoading(true);
     getPeople()
       .then((data) => {
         const mappedPeople = data.map((person) => {
@@ -42,8 +42,8 @@ export const PeoplePage = () => {
 
         setPeople(mappedPeople);
       })
-      .catch(() => setError(true))
-      .finally(() => setLoading(false));
+      .catch(() => setIsError(true))
+      .finally(() => setIsLoading(false));
   };
 
   useEffect(() => {
@@ -61,15 +61,15 @@ export const PeoplePage = () => {
 
           <div className="column">
             <div className="box table-container">
-              {loading && <Loader />}
+              {isLoading && <Loader />}
 
-              {error && (
+              {isError && (
                 <p data-cy="peopleLoadingError" className="has-text-danger">
                   Something went wrong
                 </p>
               )}
 
-              {(!error && !loading && !people.length) && (
+              {(!isError && !isLoading && !people.length) && (
                 <p data-cy="noPeopleMessage">
                   There are no people on the server
                 </p>

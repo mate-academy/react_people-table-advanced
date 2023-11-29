@@ -10,6 +10,11 @@ const centuriesList: Centuries[] = ['16', '17', '18', '19', '20'];
 export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
 
+  const handleInputQuery = (query: string) => setSearchParams(getSearchWith(
+    searchParams,
+    { query: query.trimStart() || null },
+  ));
+
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
@@ -49,10 +54,7 @@ export const PeopleFilters = () => {
             className="input"
             placeholder="Search"
             value={searchParams.get('query') || ''}
-            onChange={e => setSearchParams(getSearchWith(
-              searchParams,
-              { query: e.target.value || null },
-            ))}
+            onChange={(event) => handleInputQuery(event.target.value)}
           />
 
           <span className="icon is-left">
