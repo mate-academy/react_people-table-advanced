@@ -15,6 +15,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
   const sort = searchParams.get('sort') || '';
   const order = searchParams.get('order') || '';
 
+export const PeopleTable = () => {
   return (
     <table
       data-cy="peopleTable"
