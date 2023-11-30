@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/control-has-associated-label */
 export const PeopleTable = () => {
   return (
     <table
