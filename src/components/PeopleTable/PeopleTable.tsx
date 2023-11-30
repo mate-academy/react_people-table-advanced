@@ -1,8 +1,9 @@
-import { Link, useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import cn from 'classnames';
 import { Person } from '../../types';
 import { PersonLink } from '../PersonLink';
 import { getSearchWith } from '../../utils/searchHelper';
+import { SearchLink } from '../SearchLink';
 
 type Props = {
   people: Person[];
@@ -44,7 +45,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
               <th key={key}>
                 <span className="is-flex is-flex-wrap-nowrap">
                   {key}
-                  <Link to={{ search: handleArrowClick(value) }}>
+                  <SearchLink params={{ search: handleArrowClick(value) }}>
                     <span className="icon">
                       <i className={cn('fas', {
                         'fa-sort': sort !== value,
@@ -53,7 +54,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
                       })}
                       />
                     </span>
-                  </Link>
+                  </SearchLink>
                 </span>
               </th>
             ))}

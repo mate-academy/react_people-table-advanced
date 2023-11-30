@@ -72,18 +72,18 @@ export const PeopleFilters = () => {
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
             {centuriesList.map(century => (
-              <Link
+              <SearchLink
                 data-cy="century"
                 key={century}
                 className={cn('button mr-1', {
                   'is-info': centuries.includes(century.toString()),
                 })}
-                to={{
+                params={{
                   search: toggleCentury(century),
                 }}
               >
                 {century}
-              </Link>
+              </SearchLink>
             ))}
 
             <div className="level-right ml-4">
@@ -102,12 +102,12 @@ export const PeopleFilters = () => {
       </div>
 
       <div className="panel-block">
-        <SearchLink
+        <Link
           className="button is-link is-outlined is-fullwidth"
-          params={{ query: null, sex: null, centuries: null }}
+          to="#/people"
         >
           Reset all filters
-        </SearchLink>
+        </Link>
       </div>
     </nav>
   );
