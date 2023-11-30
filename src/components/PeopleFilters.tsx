@@ -14,8 +14,10 @@ export const PeopleFilters = () => {
   const centuries = searchParams.getAll('centuries') || [];
 
   const handleSearh = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const trimmedValue = event.target.value.trim();
+
     setSearchParams(getSearchWith(searchParams, {
-      query: event.target.value || null,
+      query: trimmedValue || null,
     }));
   };
 
