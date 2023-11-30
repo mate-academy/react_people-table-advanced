@@ -1,32 +1,70 @@
-import { PeopleFilters } from './PeopleFilters';
+import { useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { Loader } from './Loader';
+import { Person } from '../types';
+import { getPeople } from '../api';
+import { PeopleFilters } from './PeopleFilters';
+import { getPreparedPeople } from '../helpers/getPreparedPeople';
+import { preparePeople } from '../helpers/preparePeople';
 import { PeopleTable } from './PeopleTable';
 
-export const PeoplePage = () => {
+export const PeoplePage: React.FC = () => {
+  const [people, setPeople] = useState<Person[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [error, setError] = useState<boolean>(false);
+
+  const [searchParams] = useSearchParams();
+  const sort = searchParams.get('sort') || '';
+  const order = searchParams.get('order') || '';
+  const sex = searchParams.get('sex') || '';
+  const query = searchParams.get('query') || '';
+  const centuries = searchParams.getAll('centuries') || [];
+
+  const visiblePeople = getPreparedPeople(people, {
+    sort, order, sex, query, centuries: centuries.join(','),
+  });
+
+  useEffect(() => {
+    setIsLoading(true);
+    setError(false);
+
+    getPeople()
+      .then(peopleFromServer => setPeople(preparePeople(peopleFromServer)))
+      .catch(() => setError(true))
+      .finally(() => setIsLoading(false));
+  }, []);
+
   return (
     <>
       <h1 className="title">People Page</h1>
 
       <div className="block">
-        <div className="columns is-desktop is-flex-direction-row-reverse">
+
+        {!isLoading && (
           <div className="column is-7-tablet is-narrow-desktop">
             <PeopleFilters />
           </div>
+        )}
 
-          <div className="column">
-            <div className="box table-container">
-              <Loader />
+        <div className="column">
+          <div className="box table-container">
+            {isLoading && (<Loader />)}
 
-              <p data-cy="peopleLoadingError">Something went wrong</p>
+            {error && (
+              <p data-cy="peopleLoadingError" className="has-text-danger">
+                Something went wrong
+              </p>
+            )}
 
+            {!isLoading && !error && !people.length && (
               <p data-cy="noPeopleMessage">
                 There are no people on the server
               </p>
+            )}
 
-              <p>There are no people matching the current search criteria</p>
-
-              <PeopleTable />
-            </div>
+            {!isLoading && !error && !!people.length && (
+              <PeopleTable people={visiblePeople} />
+            )}
           </div>
         </div>
       </div>
