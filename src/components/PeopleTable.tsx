@@ -114,7 +114,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
               aria-describedby={`person-${person.slug}-label`}
             >
               <td>
-                <PersonLink person={person} />
+                <PersonLink person={person} aria-label={`Details for ${person.name}`} />
               </td>
               <td>{person.sex}</td>
               <td>{person.born}</td>
