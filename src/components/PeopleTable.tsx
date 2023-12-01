@@ -139,3 +139,4 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
     </table>
   );
 };
+
