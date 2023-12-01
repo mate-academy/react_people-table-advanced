@@ -1,3 +1,4 @@
+import React from 'react';
 import classNames from 'classnames';
 import { useParams, useSearchParams, Link } from 'react-router-dom';
 import { PersonLink } from './PersonLink';
@@ -73,12 +74,14 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
             <th key={sortName}>
               <span className="is-flex is-flex-wrap-nowrap">
                 {sortName}
-                <Link to={{
-                  search: getSearchWith(
-                    searchParams,
-                    sortByColumn(sortName.toLowerCase()),
-                  ),
-                }}
+                <Link
+                  to={{
+                    search: getSearchWith(
+                      searchParams,
+                      sortByColumn(sortName.toLowerCase()),
+                    ),
+                  }}
+                  aria-label={`Sort by ${sortName}`}
                 >
                   <span className="icon">
                     <i className={classNames('fas fa-sort', {
@@ -108,6 +111,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
               className={classNames({
                 'has-background-warning': person.slug === slug,
               })}
+              aria-describedby={`person-${person.slug}-label`}
             >
               <td>
                 <PersonLink person={person} />
