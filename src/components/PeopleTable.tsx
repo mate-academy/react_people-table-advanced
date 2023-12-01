@@ -62,7 +62,6 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
 
     return { sort: null, order: null };
   };
-  /* eslint-disable jsx-a11y/control-has-associated-label */
 
   return (
     <table
@@ -114,9 +113,11 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
               })}
               aria-describedby={`person-${person.slug}-label`}
             >
-              {/* eslint-disable jsx-a11y/control-has-associated-label */}
               <td>
-                <PersonLink person={person} aria-label={`Details for ${person.name}`} />
+                <PersonLink
+                  person={person}
+                  aria-label={`Details for ${person.name}`}
+                />
               </td>
               <td>{person.sex}</td>
               <td>{person.born}</td>
