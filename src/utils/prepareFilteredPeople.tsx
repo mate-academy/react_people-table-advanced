@@ -19,10 +19,12 @@ export const prepareFilteredPeople = (people: Person[], filter: Filter) => {
   }
 
   if (filter.query) {
+    const trimmedQuery = filter.query.trim().toLowerCase();
+
     peoples = peoples.filter(
-      input => input.name.toLowerCase().includes(filter.query)
-        || input.motherName?.toLowerCase().includes(filter.query)
-        || input.fatherName?.toLowerCase().includes(filter.query),
+      input => input.name.toLowerCase().includes(trimmedQuery)
+        || input.motherName?.toLowerCase().includes(trimmedQuery)
+        || input.fatherName?.toLowerCase().includes(trimmedQuery),
     );
   }
 

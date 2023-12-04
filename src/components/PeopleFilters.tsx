@@ -9,7 +9,6 @@ import { SexPerson } from '../types/SexPerson';
 type Props = {
   searchParams: URLSearchParams;
   setSearchParams: SetURLSearchParams;
-  filter?: Filter;
 };
 
 const centuriesList = ['16', '17', '18', '19', '20'];
@@ -17,9 +16,9 @@ const centuriesList = ['16', '17', '18', '19', '20'];
 export const PeopleFilters: React.FC<Props> = ({
   searchParams,
   setSearchParams,
-  filter,
-}) => {
+}, filter: Filter) => {
   const centuries = searchParams.getAll('centuries') || [];
+  const sex = searchParams.get('sex') || '';
 
   const handleQueryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const search = getSearchWith(searchParams, (
@@ -39,7 +38,7 @@ export const PeopleFilters: React.FC<Props> = ({
             key={key}
             params={{ sex: value || null }}
             className={cn({
-              'is-active': filter?.sex === value,
+              'is-active': sex === value,
             })}
           >
             {key}
@@ -54,7 +53,7 @@ export const PeopleFilters: React.FC<Props> = ({
             type="search"
             className="input"
             placeholder="Search"
-            value={filter?.query}
+            value={filter.query}
             onChange={handleQueryChange}
           />
 

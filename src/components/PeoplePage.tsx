@@ -69,7 +69,11 @@ export const PeoplePage = () => {
                 </p>
               )}
 
-              {!!people.length && (
+              {!!people.length && !visiblePeople.length && (
+                <p>There are no people matching the current search criteria</p>
+              )}
+
+              {!!people.length && !!visiblePeople.length && (
                 <PeopleTable
                   people={visiblePeople}
                   searchParams={searchParams}
