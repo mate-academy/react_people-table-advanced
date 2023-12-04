@@ -24,10 +24,12 @@ export const PeoplePage: React.FC = () => {
 
     if (sort) {
       switch (sort) {
-        case SortFields.NAME || SortFields.SEX:
+        case SortFields.NAME:
+        case SortFields.SEX:
           filtered.sort((a, b) => a[sort].localeCompare(b[sort]));
           break;
-        case SortFields.BORN || SortFields.DIED:
+        case SortFields.BORN:
+        case SortFields.DIED:
           filtered.sort((a, b) => a[sort] - b[sort]);
           break;
         default:
