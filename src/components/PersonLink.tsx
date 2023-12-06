@@ -9,12 +9,12 @@ type Props = {
 };
 
 export const PersonLink: React.FC<Props> = ({ person }) => {
-  const { people } = useContext(GlobalContext);
+  const { sortedPeople, searchParams } = useContext(GlobalContext);
   const { user } = useParams();
   const selectedUser = user;
 
-  const mother = people.find(human => human.name === person.motherName);
-  const father = people.find(human => human.name === person.fatherName);
+  const mother = sortedPeople.find(human => human.name === person.motherName);
+  const father = sortedPeople.find(human => human.name === person.fatherName);
 
   return (
     <tr
@@ -25,7 +25,10 @@ export const PersonLink: React.FC<Props> = ({ person }) => {
     >
       <td>
         <Link
-          to={`/people/${person.slug}`}
+          to={{
+            pathname: `/people/${person.slug}`,
+            search: searchParams.toString(),
+          }}
           className={classNames({
             'has-text-danger': person.sex === 'f',
           })}
@@ -42,7 +45,10 @@ export const PersonLink: React.FC<Props> = ({ person }) => {
           && mother
           ? (
             <Link
-              to={`/people/${mother.slug}`}
+              to={{
+                pathname: `/people/${mother.slug}`,
+                search: searchParams.toString(),
+              }}
               className={classNames({
                 'has-text-danger': mother.sex === 'f',
               })}
@@ -60,7 +66,10 @@ export const PersonLink: React.FC<Props> = ({ person }) => {
           && father
           ? (
             <Link
-              to={`/people/${father.slug}`}
+              to={{
+                pathname: `/people/${father.slug}`,
+                search: searchParams.toString(),
+              }}
             >
               {father.name}
             </Link>
