@@ -1,3 +1,5 @@
+import React from 'react';
+
 import { Link, LinkProps, useSearchParams } from 'react-router-dom';
 import { getSearchWith, SearchParams } from '../utils/searchHelper';
 
@@ -8,7 +10,6 @@ import { getSearchWith, SearchParams } from '../utils/searchHelper';
 type Props = Omit<LinkProps, 'to'> & {
   params: SearchParams,
 };
-
 /**
  * SearchLink updates the given `params` in the search keeping the `pathname`
  * and the other existing search params (see `getSearchWith`)
