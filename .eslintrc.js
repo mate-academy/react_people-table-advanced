@@ -9,9 +9,4 @@ module.exports = {
       assert: "either",
     }],
   },
-  extends: [
-    'airbnb',
-  + 'airbnb-typescript'
-  ],
 };
-

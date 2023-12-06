@@ -33,12 +33,14 @@ export const PeoplePage = () => {
 
     if (sort) {
       switch (sort) {
-        case Sort.NAME || Sort.SEX:
+        case Sort.SEX:
+        case Sort.NAME:
           filteredPeople.sort((a, b) => (
             a[sort].localeCompare(b[sort])));
           break;
 
-        case Sort.BORN || Sort.DIED:
+        case Sort.BORN:
+        case Sort.DIED:
           filteredPeople.sort((a, b) => (a[sort] - b[sort]));
           break;
 
@@ -68,7 +70,7 @@ export const PeoplePage = () => {
       }
 
       filteredPeople = filteredPeople.filter(person => centuries
-        .includes((Math.floor(person.born / 100).toString())));
+        .includes(((Math.floor(person.born / 100) + 1).toString())));
     }
 
     return filteredPeople;
@@ -104,9 +106,9 @@ export const PeoplePage = () => {
                 </p>
               )}
 
-              <p>There are no people matching the current search criteria</p>
-
-              {visiblePeople?.length !== 0 && (
+              {visiblePeople?.length === 0 ? (
+                <p>There are no people matching the current search criteria</p>
+              ) : (
                 <PeopleTable people={visiblePeople} />
               )}
             </div>
