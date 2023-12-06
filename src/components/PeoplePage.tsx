@@ -7,10 +7,15 @@ import { PeopleFilters } from './PeopleFilters';
 import { filterPeople } from '../utils/FilterPeople';
 import { Filters } from '../types/Filters';
 
+enum ErrorType {
+  Type1 = 'type1',
+  Type2 = 'type2',
+}
+
 export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);
   const [filteredPeople, setFilteredPeople] = useState<Person[]>([]);
-  const [errorType, setErrorType] = useState<string>('');
+  const [errorType, setErrorType] = useState<ErrorType | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [dataIsValid, setDataIsValid] = useState<boolean>(false);
   const [filters, setFilters] = useState<Filters>({} as Filters);
@@ -21,14 +26,14 @@ export const PeoplePage = () => {
         const data = await getPeople();
 
         if (!data || data.length === 0) {
-          setErrorType('type1');
+          setErrorType(ErrorType.Type1);
           setDataIsValid(false);
         } else {
           setPeople(data);
           setDataIsValid(true);
         }
       } catch (error) {
-        setErrorType('type2');
+        setErrorType(ErrorType.Type2);
       } finally {
         setIsLoading(false);
       }
@@ -56,16 +61,16 @@ export const PeoplePage = () => {
       <h1 className="title">People Page</h1>
       <div className="block">
         <div className="box table-container">
-          {isLoading ? <Loader /> : null}
+          {isLoading && <Loader /> }
 
           {errorType === 'type1' && (
-            <p data-cy="peopleLoadingError" className="has-text-danger">
+            <p data-cy="noPeopleMessage" className="has-text-danger">
               It seems there are no people on the server.
             </p>
           )}
 
           {errorType === 'type2' && (
-            <p data-cy="noPeopleMessage">
+            <p data-cy="peopleLoadingError">
               Something went wrong while fetching people data.
             </p>
           )}

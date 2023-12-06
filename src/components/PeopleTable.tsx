@@ -13,7 +13,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
   const { personSlug } = useParams();
 
   const getPersonLink = (
-    person: Person | undefined,
+    person?: Person,
     parent?: string | null,
   ) => {
     return person

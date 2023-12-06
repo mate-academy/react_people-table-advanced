@@ -2,6 +2,7 @@ import { useEffect, useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { SearchLink } from './SearchLink';
 import { Filters } from '../types/Filters';
+import { Sex } from '../utils/FilterPeople';
 
 interface Props {
   handleFilterChange: (newFilters: Filters) => void;
@@ -15,7 +16,9 @@ export const PeopleFilters: React.FC<Props> = ({ handleFilterChange }) => {
     () => searchParams.getAll('centuries') || [], [searchParams],
   );
 
-  const sex = useMemo(() => searchParams.get('sex') || '', [searchParams]);
+  const sex = useMemo(
+    () => (searchParams.get('sex') as Sex) || Sex.All, [searchParams],
+  );
 
   function handleQueryChange(event: React.ChangeEvent<HTMLInputElement>) {
     const newQuery = event.target.value;
@@ -50,20 +53,20 @@ export const PeopleFilters: React.FC<Props> = ({ handleFilterChange }) => {
 
       <p className="panel-tabs" data-cy="SexFilter">
         <SearchLink
-          className={`${sex === '' ? 'is-active' : ''}`}
-          params={{ sex: '' }}
+          className={`${sex === Sex.All ? 'is-active' : ''}`}
+          params={{ sex: Sex.All }}
         >
           All
         </SearchLink>
         <SearchLink
-          className={`${sex === 'm' ? 'is-active' : ''}`}
-          params={{ sex: 'm' }}
+          className={`${sex === Sex.Male ? 'is-active' : ''}`}
+          params={{ sex: Sex.Male }}
         >
           Male
         </SearchLink>
         <SearchLink
-          className={`${sex === 'f' ? 'is-active' : ''}`}
-          params={{ sex: 'f' }}
+          className={`${sex === Sex.Female ? 'is-active' : ''}`}
+          params={{ sex: Sex.Female }}
         >
           Female
         </SearchLink>

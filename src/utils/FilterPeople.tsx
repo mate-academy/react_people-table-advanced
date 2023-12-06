@@ -1,6 +1,12 @@
 import { Person } from '../types';
 import { Filters } from '../types/Filters';
 
+export enum Sex {
+  Male = 'm',
+  Female = 'f',
+  All = 'all',
+}
+
 export function filterPeople(people: Person[], filters: Filters) {
   let peopleCopy = [...people];
   const query = filters.query || '';
@@ -19,8 +25,11 @@ export function filterPeople(people: Person[], filters: Filters) {
           break;
 
         case 'sex':
-          peopleCopy = peopleCopy
-            .filter((person: Person) => person.sex === filters.sex);
+          if (filters.sex && filters.sex !== Sex.All) {
+            peopleCopy = peopleCopy
+              .filter((person: Person) => person.sex === filters.sex);
+          }
+
           break;
 
         case 'query':
