@@ -3,6 +3,7 @@ import { useContext } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { Person } from '../types';
 import { GlobalContext } from './GeneralContext';
+import { Sex } from '../types/Sex';
 
 type Props = {
   person: Person,
@@ -13,35 +14,45 @@ export const PersonLink: React.FC<Props> = ({ person }) => {
   const { user } = useParams();
   const selectedUser = user;
 
-  const mother = sortedPeople.find(human => human.name === person.motherName);
-  const father = sortedPeople.find(human => human.name === person.fatherName);
+  const {
+    motherName,
+    fatherName,
+    slug,
+    sex,
+    name,
+    born,
+    died,
+  } = person;
+
+  const mother = sortedPeople.find(human => human.name === motherName);
+  const father = sortedPeople.find(human => human.name === fatherName);
 
   return (
     <tr
       data-cy="person"
       className={classNames({
-        'has-background-warning': person.slug === selectedUser,
+        'has-background-warning': slug === selectedUser,
       })}
     >
       <td>
         <Link
           to={{
-            pathname: `/people/${person.slug}`,
+            pathname: `/people/${slug}`,
             search: searchParams.toString(),
           }}
           className={classNames({
-            'has-text-danger': person.sex === 'f',
+            'has-text-danger': sex === Sex.FEMALE,
           })}
         >
-          {person.name}
+          {name}
         </Link>
       </td>
 
-      <td>{person.sex}</td>
-      <td>{person.born}</td>
-      <td>{person.died}</td>
+      <td>{sex}</td>
+      <td>{born}</td>
+      <td>{died}</td>
       <td>
-        {person.motherName
+        {motherName
           && mother
           ? (
             <Link
@@ -50,19 +61,19 @@ export const PersonLink: React.FC<Props> = ({ person }) => {
                 search: searchParams.toString(),
               }}
               className={classNames({
-                'has-text-danger': mother.sex === 'f',
+                'has-text-danger': mother.sex === Sex.FEMALE,
               })}
             >
               {mother.name}
             </Link>
           )
-          : person.motherName}
+          : motherName}
 
-        {!person.motherName && '-'}
+        {!motherName && '-'}
       </td>
 
       <td>
-        {person.fatherName
+        {fatherName
           && father
           ? (
             <Link
@@ -74,9 +85,9 @@ export const PersonLink: React.FC<Props> = ({ person }) => {
               {father.name}
             </Link>
           )
-          : person.fatherName}
+          : fatherName}
 
-        {!person.fatherName && '-'}
+        {!fatherName && '-'}
       </td>
     </tr>
   );

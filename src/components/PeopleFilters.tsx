@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { getSearchWith } from '../utils/searchHelper';
 import { areArraysEqual } from '../utils/areArraysEqual';
 import { GlobalContext } from './GeneralContext';
+import { Sex } from '../types/Sex';
 
 const centuriesList = ['16', '17', '18', '19', '20'];
 
@@ -18,7 +19,7 @@ export const PeopleFilters: React.FC = () => {
 
   const query = searchParams.get('query') || '';
   const centuries = searchParams.getAll('centuries') || [];
-  const sex = searchParams.get('sex') || '';
+  const sex = searchParams.get('sex') || Sex.ALL;
 
   const isAllCenturiesSelected = centuries.length === 0;
 
@@ -75,10 +76,10 @@ export const PeopleFilters: React.FC = () => {
       <p className="panel-tabs" data-cy="SexFilter">
         <Link
           to={{
-            search: getSearchWith({ sex: '' || null }, searchParams),
+            search: getSearchWith({ sex: Sex.ALL || null }, searchParams),
           }}
           className={classNames({
-            'is-active': sex === '',
+            'is-active': sex === Sex.ALL,
           })}
         >
           All
@@ -86,10 +87,10 @@ export const PeopleFilters: React.FC = () => {
 
         <Link
           to={{
-            search: getSearchWith({ sex: 'm' || null }, searchParams),
+            search: getSearchWith({ sex: Sex.MALE || null }, searchParams),
           }}
           className={classNames({
-            'is-active': sex === 'm',
+            'is-active': sex === Sex.MALE,
           })}
         >
           Male
@@ -97,10 +98,10 @@ export const PeopleFilters: React.FC = () => {
 
         <Link
           to={{
-            search: getSearchWith({ sex: 'f' || null }, searchParams),
+            search: getSearchWith({ sex: Sex.FEMALE || null }, searchParams),
           }}
           className={classNames({
-            'is-active': sex === 'f',
+            'is-active': sex === Sex.FEMALE,
           })}
         >
           Female
