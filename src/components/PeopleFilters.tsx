@@ -11,6 +11,8 @@ export const PeopleFilters: React.FC = () => {
   const name = searchParams.get(Filter.NAME) || '';
   const centuries = searchParams.getAll('centuries') || null;
 
+  const centuriesValues = [16, 17, 18, 19, 20];
+
   const resetParams = () => {
     const newSearchParams = new URLSearchParams('');
 
@@ -77,7 +79,7 @@ export const PeopleFilters: React.FC = () => {
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
 
-            {[16, 17, 18, 19, 20].map(number => (
+            {centuriesValues.map(number => (
               <Link
                 data-cy="century"
                 key={number}

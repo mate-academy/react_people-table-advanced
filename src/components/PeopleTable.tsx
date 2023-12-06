@@ -18,6 +18,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
   const [searchParams] = useSearchParams();
   const sort = searchParams.get(SORT_PARAM) || null;
   const order = searchParams.get(ORDER_PARAM) || null;
+  const colWithSortValues = ['Name', 'Sex', 'Born', 'Died'];
 
   function setParams(param: string) {
     let params;
@@ -44,7 +45,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
     >
       <thead>
         <tr>
-          {['Name', 'Sex', 'Born', 'Died'].map(item => (
+          {colWithSortValues.map(item => (
             <th key={item}>
               <span className="is-flex is-flex-wrap-nowrap">
                 {item}

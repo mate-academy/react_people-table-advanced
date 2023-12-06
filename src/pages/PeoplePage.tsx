@@ -76,7 +76,7 @@ export const PeoplePage = () => {
     return filteredPeople;
   }
 
-  const visiblePeople = getFilteredPeople() || null;
+  const visiblePeople = getFilteredPeople();
 
   return (
     <>
