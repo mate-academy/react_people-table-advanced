@@ -1,12 +1,54 @@
+import React from 'react';
+import classNames from 'classnames';
+import { Link, useSearchParams } from 'react-router-dom';
+import { SearchParams, getSearchWith } from '../utils/searchHelper';
+
 export const PeopleFilters = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const query = searchParams.get('query') || '';
+  const userSex = searchParams.get('sex') || '';
+  const centuries = searchParams.getAll('centuries') || [];
+
+  function setSearchWith(params: SearchParams) {
+    const search = getSearchWith(searchParams, params);
+
+    setSearchParams(search);
+  }
+
+  function handleQueryChange(event: React.ChangeEvent<HTMLInputElement>) {
+    setSearchWith({ query: event.target.value || null });
+  }
+
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        <a className="is-active" href="#/people">All</a>
-        <a className="" href="#/people?sex=m">Male</a>
-        <a className="" href="#/people?sex=f">Female</a>
+        <Link
+          className={userSex === 'all' ? 'is-active' : ''}
+          to={{
+            search: getSearchWith(searchParams, { sex: null }),
+          }}
+        >
+          All
+        </Link>
+        <Link
+          className={userSex === 'm' ? 'is-active' : ''}
+          to={{
+            search: getSearchWith(searchParams, { sex: 'm' }),
+          }}
+        >
+          Male
+        </Link>
+        <Link
+          className={userSex === 'f' ? 'is-active' : ''}
+          to={{
+            search: getSearchWith(searchParams, { sex: 'f' }),
+          }}
+        >
+          Female
+        </Link>
       </p>
 
       <div className="panel-block">
@@ -16,6 +58,8 @@ export const PeopleFilters = () => {
             type="search"
             className="input"
             placeholder="Search"
+            value={query}
+            onChange={handleQueryChange}
           />
 
           <span className="icon is-left">
@@ -27,55 +71,35 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            <a
-              data-cy="century"
-              className="button mr-1"
-              href="#/people?centuries=16"
-            >
-              16
-            </a>
+            {[16, 17, 18, 19, 20].map(century => (
+              <Link
+                key={century}
+                data-cy="century"
+                className={classNames('button mr-1', {
+                  'is-info': centuries.includes(century.toString()),
+                })}
+                to={{
+                  search: getSearchWith(searchParams, {
+                    centuries: centuries.includes(century.toString())
+                      ? centuries.filter(cent => +cent !== century)
+                      : [...centuries, century.toString()],
+                  }),
+                }}
+              >
+                {century}
+              </Link>
+            ))}
 
-            <a
-              data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=17"
-            >
-              17
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=18"
-            >
-              18
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=19"
-            >
-              19
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1"
-              href="#/people?centuries=20"
-            >
-              20
-            </a>
           </div>
 
           <div className="level-right ml-4">
-            <a
+            <Link
               data-cy="centuryALL"
               className="button is-success is-outlined"
-              href="#/people"
+              to={{ search: getSearchWith(searchParams, { centuries: [] }) }}
             >
               All
-            </a>
+            </Link>
           </div>
         </div>
       </div>
