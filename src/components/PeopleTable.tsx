@@ -35,9 +35,9 @@ export const PeopleTable: React.FC<Props> = ({
                 >
                   <span className="icon">
                     <i className={cn('fas', {
-                      'fa-sort': sort !== key,
-                      'fa-sort-up': sort === key && !order,
-                      'fa-sort-down': sort === key && order,
+                      'fa-sort': sort !== value,
+                      'fa-sort-up': sort === value && !order,
+                      'fa-sort-down': sort === value && order,
                     })}
                     />
                   </span>
