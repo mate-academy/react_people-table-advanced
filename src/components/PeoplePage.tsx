@@ -65,24 +65,15 @@ export const PeoplePage = () => {
     if (sort) {
       switch (sort) {
         case 'name':
-        {
-          prepared.sort((a, b) => a.name.localeCompare(b.name));
-          break;
-        }
-
         case 'sex':
         {
-          prepared.sort((a, b) => a.sex.localeCompare(b.sex));
+          prepared.sort((a, b) => a[sort].localeCompare(b[sort]));
           break;
         }
 
-        case 'born': {
-          prepared.sort((a, b) => a.born - b.born);
-          break;
-        }
-
+        case 'born':
         case 'died': {
-          prepared.sort((a, b) => a.died - b.died);
+          prepared.sort((a, b) => a[sort] - b[sort]);
           break;
         }
 
