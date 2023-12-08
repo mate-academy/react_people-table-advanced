@@ -13,7 +13,7 @@ export const Navbar = () => {
         <div className="navbar-brand">
           <NavLink
             to="/"
-            className="navbar-item"
+            className={getLinkClass}
           >
             Home
           </NavLink>

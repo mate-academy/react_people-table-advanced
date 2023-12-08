@@ -54,6 +54,10 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
 
   const sortByColumn = (column: string) => {
     if (sort !== column) {
+      return { sort: column, order: null };
+    }
+
+    if (!order) {
       return { sort: column, order: 'desc' };
     }
 
