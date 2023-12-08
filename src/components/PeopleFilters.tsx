@@ -3,14 +3,15 @@ import { ChangeEvent } from 'react';
 import cn from 'classnames';
 import { SearchLink } from './SearchLink';
 import { getSearchWith } from '../utils/searchHelper';
+import { searchENUM } from '../types/serchENUM';
 
 export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const centuriesList = ['16', '17', '18', '19', '20'];
 
-  const sex = searchParams.get('sex');
-  const centuries = searchParams.getAll('centuries');
-  const query = searchParams.get('query') || '';
+  const sex = searchParams.get(searchENUM.Sex);
+  const centuries = searchParams.getAll(searchENUM.Centuries);
+  const query = searchParams.get(searchENUM.Query) || '';
 
   function handleQuery(event: ChangeEvent<HTMLInputElement>) {
     const params = (event.target.value === '')

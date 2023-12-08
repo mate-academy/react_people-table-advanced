@@ -37,7 +37,10 @@ export const PeopleTable: React.FC<Props> = ({ people, Slug }) => {
 
     return (
       <Link
-        to={`/people/${slug}`}
+        to={{
+          pathname: `/people/${slug}`,
+          search: searchParams.toString(),
+        }}
         className={cn({ 'has-text-danger': sex === 'f' })}
       >
         {name}
@@ -59,7 +62,8 @@ export const PeopleTable: React.FC<Props> = ({ people, Slug }) => {
                 params={sortParams('name') as SearchParams}
               >
                 <span className="icon">
-                  <i className={cn('fas fa-sort', {
+                  <i className={cn('fas', {
+                    'fa-sort': sort !== 'name',
                     'fa-sort-up': sort === 'name' && !order,
                     'fa-sort-down': sort === 'name' && order,
                   })}
@@ -76,7 +80,8 @@ export const PeopleTable: React.FC<Props> = ({ people, Slug }) => {
                 params={sortParams('sex') as SearchParams}
               >
                 <span className="icon">
-                  <i className={cn('fas fa-sort', {
+                  <i className={cn('fas', {
+                    'fa-sort': sort !== 'sex',
                     'fa-sort-up': sort === 'sex' && !order,
                     'fa-sort-down': sort === 'sex' && order,
                   })}
@@ -93,7 +98,8 @@ export const PeopleTable: React.FC<Props> = ({ people, Slug }) => {
                 params={sortParams('born') as SearchParams}
               >
                 <span className="icon">
-                  <i className={cn('fas fa-sort', {
+                  <i className={cn('fas', {
+                    'fa-sort': sort !== 'born',
                     'fa-sort-up': sort === 'born' && !order,
                     'fa-sort-down': sort === 'born' && order,
                   })}
@@ -110,7 +116,8 @@ export const PeopleTable: React.FC<Props> = ({ people, Slug }) => {
                 params={sortParams('died') as SearchParams}
               >
                 <span className="icon">
-                  <i className={cn('fas fa-sort', {
+                  <i className={cn('fas', {
+                    'fa-sort': sort !== 'died',
                     'fa-sort-up': sort === 'died' && !order,
                     'fa-sort-down': sort === 'died' && order,
                   })}
