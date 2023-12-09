@@ -30,7 +30,7 @@ export const PeoplePage = () => {
     setLoading(true);
     getPeople()
       .then(peopleOnServer)
-      .then(preparedPeople => setPeople(preparedPeople))
+      .then(setPeople)
       .catch(() => setError(true))
       .finally(() => setLoading(false));
   }, []);
@@ -62,24 +62,15 @@ export const PeoplePage = () => {
     if (sort) {
       switch (sort) {
         case 'name':
-        {
-          prepared.sort((a, b) => a.name.localeCompare(b.name));
-          break;
-        }
-
         case 'sex':
         {
-          prepared.sort((a, b) => a.sex.localeCompare(b.sex));
+          prepared.sort((a, b) => a[sort].localeCompare(b[sort]));
           break;
         }
 
-        case 'born': {
-          prepared.sort((a, b) => a.born - b.born);
-          break;
-        }
-
+        case 'born':
         case 'died': {
-          prepared.sort((a, b) => a.died - b.died);
+          prepared.sort((a, b) => a[sort] - b[sort]);
           break;
         }
 
@@ -97,41 +88,46 @@ export const PeoplePage = () => {
   return (
     <>
       <h1 className="title">People Page</h1>
-      <div className="block">
-        <div className="columns is-desktop is-flex-direction-row-reverse">
-          <div className="column is-7-tablet is-narrow-desktop">
-            <PeopleFilters />
-          </div>
+      {loading
+        ? (
+          <Loader />
+        )
+        : (
+          <div className="block">
+            <div className="columns is-desktop is-flex-direction-row-reverse">
+              <div className="column is-7-tablet is-narrow-desktop">
+                <PeopleFilters />
+              </div>
 
-          <div className="column">
-            <div className="box table-container">
-              {loading && (
-                <Loader />
-              )}
+              <div className="column">
+                <div className="box table-container">
 
-              {error && (
-                <p data-cy="peopleLoadingError" className="has-text-danger">
-                  Something went wrong
-                </p>
-              )}
+                  {error && (
+                    <p data-cy="peopleLoadingError" className="has-text-danger">
+                      Something went wrong
+                    </p>
+                  )}
 
-              {!loading && !people.length && (
-                <p data-cy="noPeopleMessage">
-                  There are no people on the server
-                </p>
-              )}
+                  {!loading && !people.length && (
+                    <p data-cy="noPeopleMessage">
+                      There are no people on the server
+                    </p>
+                  )}
 
-              {(!preparedPeople().length && !loading) && (
-                <p>There are no people matching the current search criteria</p>
-              )}
+                  {(!preparedPeople().length && !loading) && (
+                    <p>
+                      There are no people matching the current search criteria
+                    </p>
+                  )}
 
-              {people.length > 0 && (
-                <PeopleTable people={preparedPeople()} Slug={slug} />
-              )}
+                  {people.length > 0 && (
+                    <PeopleTable people={preparedPeople()} Slug={slug} />
+                  )}
+                </div>
+              </div>
             </div>
           </div>
-        </div>
-      </div>
+        )}
     </>
   );
 };
