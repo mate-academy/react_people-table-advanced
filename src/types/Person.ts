@@ -9,3 +9,14 @@ export interface Person {
   mother?: Person,
   father?: Person,
 }
+
+export enum PersonSort {
+  NONE = '',
+  NAME = 'name',
+  SEX = 'sex',
+  BORN = 'born',
+  DIED = 'died',
+}
+
+export type PersonSortKeys = keyof Omit<Person
+, 'fatherName' | 'motherName' | 'slug' | 'mother' | 'father'>;
