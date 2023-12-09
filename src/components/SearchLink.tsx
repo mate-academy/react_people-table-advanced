@@ -19,6 +19,7 @@ export const SearchLink: React.FC<Props> = ({
   ...props // all usual Link props like `className`, `style` and `id`
 }) => {
   const [searchParams] = useSearchParams();
+  
 
   return (
     <Link
