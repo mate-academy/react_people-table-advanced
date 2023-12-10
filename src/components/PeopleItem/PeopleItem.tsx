@@ -1,10 +1,10 @@
-import React, { useContext, useMemo } from 'react';
+import React, { useCallback, useContext, useMemo } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import cn from 'classnames';
 import { Person } from '../../types';
 import { PersonLink } from '../PersonLink';
 import { PeopleContext } from '../../PeopleContext';
-import { Sex } from '../../enum';
+import { Gender } from '../../enum';
 
 interface Props {
   person: Person
@@ -18,11 +18,12 @@ export const PeopleItem: React.FC<Props> = ({ person }) => {
   const { personSlug } = useParams();
   const { persons } = useContext(PeopleContext);
 
-  const findPersonByName = useMemo(() => {
-    return (name: string): Person | undefined => {
+  const findPersonByName = useCallback(
+    (name: string): Person | undefined => {
       return persons.find((p) => p.name === name);
-    };
-  }, [persons]);
+    },
+    [persons],
+  );
 
   const mother = useMemo(() => {
     return findPersonByName(motherName ?? '');
@@ -47,7 +48,7 @@ export const PeopleItem: React.FC<Props> = ({ person }) => {
       <td>
         <Link
           to={`/people/${slug}`}
-          className={cn({ 'has-text-danger': sex === Sex.F })}
+          className={cn({ 'has-text-danger': sex === Gender.F })}
         >
           {person.name}
         </Link>

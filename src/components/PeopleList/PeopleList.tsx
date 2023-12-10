@@ -3,7 +3,7 @@ import { useLocation } from 'react-router-dom';
 import { PeopleContext } from '../../PeopleContext';
 import { PeopleItem } from '../PeopleItem/PeopleItem';
 import { Person } from '../../types';
-import { Sex } from '../../enum';
+import { Gender, TableFilters } from '../../enum';
 
 export const PeopleList: React.FC = () => {
   const { persons } = useContext(PeopleContext);
@@ -32,11 +32,11 @@ export const PeopleList: React.FC = () => {
   };
 
   const tableSort = () => {
-    if (sort === 'name' || sort === 'sex') {
+    if (sort === TableFilters.Name || sort === TableFilters.Sex) {
       persons.sort((a, b) => b[sort].localeCompare(a[sort]));
     }
 
-    if (sort === 'born' || sort === 'died') {
+    if (sort === TableFilters.Born || sort === TableFilters.Died) {
       persons.sort((a, b) => b[sort] - a[sort]);
     }
 
@@ -51,19 +51,19 @@ export const PeopleList: React.FC = () => {
     tableSort();
 
     switch (sex) {
-      case Sex.F:
+      case Gender.F:
         return query?.trim()
-          ? filteredArray.filter((person) => filterCondition(person, Sex.F))
-          : filteredArray.filter((person) => person.sex === Sex.F);
-      case Sex.M:
+          ? filteredArray.filter((person) => filterCondition(person, Gender.F))
+          : filteredArray.filter((person) => person.sex === Gender.F);
+      case Gender.M:
         return query?.trim()
-          ? filteredArray.filter((person) => filterCondition(person, Sex.M))
-          : filteredArray.filter((person) => person.sex === Sex.M);
+          ? filteredArray.filter((person) => filterCondition(person, Gender.M))
+          : filteredArray.filter((person) => person.sex === Gender.M);
       default:
         return query?.trim()
           ? filteredArray.filter((person) => {
-            return filterCondition(person, Sex.F)
-              || filterCondition(person, Sex.M);
+            return filterCondition(person, Gender.F)
+              || filterCondition(person, Gender.M);
           })
           : filteredArray;
     }

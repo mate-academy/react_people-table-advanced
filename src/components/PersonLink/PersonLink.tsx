@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Person } from '../../types';
-import { Sex } from '../../enum';
+import { Gender } from '../../enum';
 
 interface Props {
   person: Person | undefined;
@@ -16,7 +16,7 @@ export const PersonLink: React.FC<Props> = ({ person }) => {
 
   return (
     <>
-      {sex === Sex.M ? (
+      {sex === Gender.M ? (
         <Link to={`/people/${slug}`}>
           {name}
         </Link>
