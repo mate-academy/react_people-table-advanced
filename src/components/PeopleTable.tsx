@@ -54,12 +54,21 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
 
   const sortByColumn = (column: string) => {
     if (sort !== column) {
+      // eslint-disable-next-line no-console
+      console.log('sort !== column)');
+
       return { sort: column, order: null };
     }
 
     if (!order) {
+      // eslint-disable-next-line no-console
+      console.log('!order');
+
       return { sort: column, order: 'desc' };
     }
+
+    // eslint-disable-next-line no-console
+    console.log('sort: null, order: null ');
 
     return { sort: null, order: null };
   };
@@ -85,9 +94,12 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
                   aria-label={`Sort by${sortName}`}
                 >
                   <span className="icon">
-                    <i className={classNames('fas fa-sort', {
-                      'fa-sort-up': sort === sortName.toLowerCase() && !order,
-                      'fa-sort-down': sort === sortName.toLowerCase(),
+                    <i className={classNames('fas', {
+                      ' fa-sort': sort !== sortName.toLowerCase(),
+                      'fa-sort-up': sort === sortName.toLowerCase()
+                        && order !== 'desc',
+                      'fa-sort-down': sort === sortName.toLowerCase()
+                        && order === 'desc',
                     })}
                     />
                   </span>
