@@ -7,9 +7,6 @@ import { TyChangeEvtInputElmt } from '../types/General';
 import { SearchLink } from './SearchLink';
 
 export const PeopleFilters: R.FC = () => {
-  // eslint-disable-next-line
-  console.info('reder PeopleFilters');
-
   const [searchParams, setSearchParams] = RRD.useSearchParams();
   const query = searchParams.get('query') || '';
   const sex = searchParams.get('sex') || '';

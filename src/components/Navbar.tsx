@@ -1,4 +1,4 @@
-import { NavLink } from 'react-router-dom';
+import * as RRD from 'react-router-dom';
 import cn from 'classnames';
 
 const getLinkClass = ({ isActive }: { isActive: boolean }) => (cn(
@@ -6,6 +6,9 @@ const getLinkClass = ({ isActive }: { isActive: boolean }) => (cn(
 ));
 
 export const Navbar = () => {
+  const [searchParams] = RRD.useSearchParams();
+  const { state } = RRD.useLocation();
+
   return (
     <nav
       data-cy="nav"
@@ -15,19 +18,23 @@ export const Navbar = () => {
     >
       <div className="container">
         <div className="navbar-brand">
-          <NavLink
+          <RRD.NavLink
             to="/"
+            state={{ search: searchParams.toString() }}
             className={getLinkClass}
           >
             Home
-          </NavLink>
+          </RRD.NavLink>
 
-          <NavLink
-            to="/people"
+          <RRD.NavLink
+            to={{
+              pathname: '/people',
+              search: state?.search,
+            }}
             className={getLinkClass}
           >
             People
-          </NavLink>
+          </RRD.NavLink>
         </div>
       </div>
     </nav>

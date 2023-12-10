@@ -11,7 +11,6 @@ export const PeoplePage: R.FC = () => {
   const [people, setPeople] = R.useState<Person[]>([]);
   const [isLoading, setIsLoading] = R.useState(true);
   const [errMsg, setErrMsg] = R.useState('');
-  // const { pathname, search } = RRD.useLocation();
 
   const [searchParams] = RRD.useSearchParams();
   const query = searchParams.get('query') || '';
@@ -77,8 +76,8 @@ export const PeoplePage: R.FC = () => {
 
       break;
 
-    case PersonSort.NONE:
     default:
+      break;
   }
 
   return (
@@ -90,14 +89,6 @@ export const PeoplePage: R.FC = () => {
           {!isLoading && (
             <div className="column is-7-tablet is-narrow-desktop">
               <PeopleFilters />
-
-              {/* <p className="title is-5 has-text-info">
-                {pathname}
-              </p>
-
-              <p className="title is-6">
-                {search && search.replaceAll('&', ' &')}
-              </p> */}
             </div>
           )}
 

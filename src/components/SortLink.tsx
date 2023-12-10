@@ -42,17 +42,6 @@ export const SortLink: React.FC<Props> = ({
       sort: null,
       order: null,
     };
-
-    // if (sortField === sort && isDesc) {
-    //   iconFaSort = 'fa-sort-down';
-
-    //   return {
-    //     sort: null,
-    //     order: null,
-    //   };
-    // }
-
-    // return {};
   })();
 
   return (

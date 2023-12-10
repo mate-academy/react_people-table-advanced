@@ -11,9 +11,6 @@ type Props = {
 export const PersonLink: R.FC<Props> = ({
   person: { slug, name, sex },
 }) => {
-  // eslint-disable-next-line
-  console.info('reder PersonLink');
-
   const { search } = useLocation();
 
   return (
@@ -30,4 +27,3 @@ export const PersonLink: R.FC<Props> = ({
     </Link>
   );
 };
-// , () => true
