@@ -1,16 +1,12 @@
-import { useContext } from 'react';
 import cn from 'classnames';
 import { useSearchParams } from 'react-router-dom';
-import { PeopleContext } from '../PeopleContext';
-import { getSearchWith } from '../utils/searchHelper';
+import { SearchParams, getSearchWith } from '../utils/searchHelper';
 import { SearchLink } from './SearchLink';
 
 const queryCentury = ['16', '17', '18', '19', '20'];
 
 export const PeopleFilters = () => {
-  const { handleQueryChange } = useContext(PeopleContext);
-
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const sex = searchParams.get('sex') || 'all';
   const query = searchParams.get('query') || '';
@@ -22,6 +18,17 @@ export const PeopleFilters = () => {
       sex: null,
       query: null,
     });
+  }
+
+  function setSearchWith(params: SearchParams) {
+    const search: string = getSearchWith(searchParams, params);
+
+    setSearchParams(search);
+  }
+
+  function handleQueryChange(event: React.ChangeEvent<HTMLInputElement>) {
+    setSearchWith({ query: event.target.value || null });
+    searchParams.set('query', event.target.value);
   }
 
   return (
@@ -99,14 +106,11 @@ export const PeopleFilters = () => {
 
             <div className="level-right ml-4">
               <SearchLink
+                data-cy="centuryALL"
                 className={cn('button is-success', {
                   'is-outlined': centuries.length,
                 })}
-                params={{
-                  search: getSearchWith(searchParams,
-                    { centuries: null },
-                  ).toString(),
-                }}
+                params={{ centuries: null }}
               >
                 All
               </SearchLink>

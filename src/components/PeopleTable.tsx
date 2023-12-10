@@ -1,6 +1,35 @@
+import cn from 'classnames';
+import { useSearchParams } from 'react-router-dom';
 import { PeopleList } from './PeopleList';
+import { SearchLink } from './SearchLink';
+import { SearchParams } from '../utils/searchHelper';
 
 export const PeopleTable = () => {
+  const [searchParams] = useSearchParams();
+
+  const sort = searchParams.get('sort') || '';
+  const order = searchParams.get('order') || '';
+
+  function sortByTable(sortBy: string): SearchParams {
+    if (sort !== sortBy && !order) {
+      return (
+        { sort: sortBy }
+      );
+    }
+
+    if (sort === sortBy && order === '') {
+      return ({
+        sort: sortBy,
+        order: 'desc',
+      });
+    }
+
+    return ({
+      sort: null,
+      order: null,
+    });
+  }
+
   return (
     <table
       data-cy="peopleTable"
@@ -11,44 +40,72 @@ export const PeopleTable = () => {
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Name
-              <a href="#/people?sort=name">
+              <SearchLink
+                params={sortByTable('name')}
+              >
                 <span className="icon">
-                  <i className="fas fa-sort" />
+                  <i
+                    className={cn('fas',
+                      { 'fa-sort': sort !== 'name' },
+                      { 'fa-sort-up': sort === 'name' && !order },
+                      { 'fa-sort-down': sort === 'name' && order === 'desc' })}
+                  />
                 </span>
-              </a>
+              </SearchLink>
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Sex
-              <a href="#/people?sort=sex">
+              <SearchLink
+                params={sortByTable('sex')}
+              >
                 <span className="icon">
-                  <i className="fas fa-sort" />
+                  <i
+                    className={cn('fas',
+                      { 'fa-sort': sort !== 'sex' },
+                      { 'fa-sort-up': sort === 'sex' && !order },
+                      { 'fa-sort-down': sort === 'sex' && order === 'desc' })}
+                  />
                 </span>
-              </a>
+              </SearchLink>
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Born
-              <a href="#/people?sort=born&amp;order=desc">
+              <SearchLink
+                params={sortByTable('born')}
+              >
                 <span className="icon">
-                  <i className="fas fa-sort-up" />
+                  <i
+                    className={cn('fas',
+                      { 'fa-sort': sort !== 'born' },
+                      { 'fa-sort-up': sort === 'born' && !order },
+                      { 'fa-sort-down': sort === 'born' && order === 'desc' })}
+                  />
                 </span>
-              </a>
+              </SearchLink>
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Died
-              <a href="#/people?sort=died">
+              <SearchLink
+                params={sortByTable('died')}
+              >
                 <span className="icon">
-                  <i className="fas fa-sort" />
+                  <i
+                    className={cn('fas',
+                      { 'fa-sort': sort !== 'died' },
+                      { 'fa-sort-up': sort === 'died' && !order },
+                      { 'fa-sort-down': sort === 'died' && order === 'desc' })}
+                  />
                 </span>
-              </a>
+              </SearchLink>
             </span>
           </th>
 

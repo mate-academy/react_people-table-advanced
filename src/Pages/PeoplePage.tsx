@@ -6,7 +6,7 @@ import { getPeople } from '../api';
 import { PeopleContext } from '../PeopleContext';
 
 export const PeoplePage = () => {
-  const { setPersons } = useContext(PeopleContext);
+  const { persons, setPersons } = useContext(PeopleContext);
 
   const [errorMessage, setErrorMessage] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
@@ -25,10 +25,20 @@ export const PeoplePage = () => {
       });
   }, []);
 
-  console.log(errorMessage);
-
   return (
     <>
+      {errorMessage && (
+        <p data-cy="peopleLoadingError" className="has-text-danger">
+          {errorMessage}
+        </p>
+      )}
+
+      {persons.length === 0 && !loading && !errorMessage && (
+        <p data-cy="noPeopleMessage">
+          There are no people on the server
+        </p>
+      )}
+
       <h1 className="title">People Page</h1>
 
       {loading ? (
