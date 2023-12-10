@@ -4,6 +4,7 @@ import cn from 'classnames';
 import { Person } from '../../types';
 import { PersonLink } from '../PersonLink';
 import { PeopleContext } from '../../PeopleContext';
+import { Sex } from '../../enum';
 
 interface Props {
   person: Person
@@ -46,7 +47,7 @@ export const PeopleItem: React.FC<Props> = ({ person }) => {
       <td>
         <Link
           to={`/people/${slug}`}
-          className={cn({ 'has-text-danger': sex === 'f' })}
+          className={cn({ 'has-text-danger': sex === Sex.F })}
         >
           {person.name}
         </Link>

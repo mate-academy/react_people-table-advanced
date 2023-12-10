@@ -3,6 +3,7 @@ import { useLocation } from 'react-router-dom';
 import { PeopleContext } from '../../PeopleContext';
 import { PeopleItem } from '../PeopleItem/PeopleItem';
 import { Person } from '../../types';
+import { Sex } from '../../enum';
 
 export const PeopleList: React.FC = () => {
   const { persons } = useContext(PeopleContext);
@@ -50,18 +51,19 @@ export const PeopleList: React.FC = () => {
     tableSort();
 
     switch (sex) {
-      case 'f':
+      case Sex.F:
         return query?.trim()
-          ? filteredArray.filter((person) => filterCondition(person, 'f'))
-          : filteredArray.filter((person) => person.sex === 'f');
-      case 'm':
+          ? filteredArray.filter((person) => filterCondition(person, Sex.F))
+          : filteredArray.filter((person) => person.sex === Sex.F);
+      case Sex.M:
         return query?.trim()
-          ? filteredArray.filter((person) => filterCondition(person, 'm'))
-          : filteredArray.filter((person) => person.sex === 'm');
+          ? filteredArray.filter((person) => filterCondition(person, Sex.M))
+          : filteredArray.filter((person) => person.sex === Sex.M);
       default:
         return query?.trim()
           ? filteredArray.filter((person) => {
-            return filterCondition(person, 'f') || filterCondition(person, 'm');
+            return filterCondition(person, Sex.F)
+              || filterCondition(person, Sex.M);
           })
           : filteredArray;
     }

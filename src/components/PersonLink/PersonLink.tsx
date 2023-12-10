@@ -1,15 +1,11 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Person } from '../../types';
+import { Sex } from '../../enum';
 
 interface Props {
   person: Person | undefined;
 }
-
-const Sex = {
-  M: 'm',
-  F: 'f',
-};
 
 export const PersonLink: React.FC<Props> = ({ person }) => {
   if (!person) {
