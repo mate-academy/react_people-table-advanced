@@ -1,6 +1,8 @@
 import cn from 'classnames';
 import { useSearchParams } from 'react-router-dom';
 import { SearchLink } from './SearchLink';
+import { getSexParam } from '../Helpers/getSexParam';
+import { getSexType } from '../Helpers/getSexType';
 
 export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -9,6 +11,7 @@ export const PeopleFilters = () => {
   const centuries = searchParams.getAll('centuries') || [];
 
   const arrayOfCenturies: string[] = ['16', '17', '18', '19', '20'];
+  const arayOfFilterType: string[] = ['All', 'Male', 'Female'];
 
   function handleQueryChange(event: React.ChangeEvent<HTMLInputElement>) {
     const params = new URLSearchParams(searchParams);
@@ -27,30 +30,16 @@ export const PeopleFilters = () => {
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        <SearchLink
-          className={cn({
-            'is-active': sex === '',
-          })}
-          params={{ sex: null }}
-        >
-          All
-        </SearchLink>
-        <SearchLink
-          className={cn({
-            'is-active': sex === 'm',
-          })}
-          params={{ sex: 'm' }}
-        >
-          Male
-        </SearchLink>
-        <SearchLink
-          className={cn({
-            'is-active': sex === 'f',
-          })}
-          params={{ sex: 'f' }}
-        >
-          Female
-        </SearchLink>
+        {arayOfFilterType.map(filterType => (
+          <SearchLink
+            className={cn({
+              'is-active': getSexType(filterType, sex),
+            })}
+            params={getSexParam(filterType)}
+          >
+            {filterType}
+          </SearchLink>
+        ))}
       </p>
 
       <div className="panel-block">
@@ -105,12 +94,12 @@ export const PeopleFilters = () => {
       </div>
 
       <div className="panel-block">
-        <a
+        <SearchLink
           className="button is-link is-outlined is-fullwidth"
-          href="#/people"
+          params={{ centuries: [], sex: null }}
         >
           Reset all filters
-        </a>
+        </SearchLink>
       </div>
     </nav>
   );

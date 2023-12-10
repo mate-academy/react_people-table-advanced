@@ -2,6 +2,7 @@ import cn from 'classnames';
 import { Link, useSearchParams } from 'react-router-dom';
 import { Person } from '../types';
 import { SearchLink } from './SearchLink';
+import { getParent } from '../Helpers/getParent';
 
 interface Props {
   visiblePeople: Person[],
@@ -24,7 +25,7 @@ export const PeopleTable: React.FC<Props> = ({
   const toggleSort = (column: string) => {
     let newParams = {};
 
-    if (!sort) {
+    if (!sort || (sort && sort !== column)) {
       newParams = { sort: column, order: null };
     }
 
@@ -32,52 +33,11 @@ export const PeopleTable: React.FC<Props> = ({
       newParams = { sort: column, order: 'desc' };
     }
 
-    if (sort && sort !== column) {
-      newParams = { sort: column, order: null };
-    }
-
     if (sort && sort === column && order) {
       newParams = { sort: null, order: null };
     }
 
     return newParams;
-  };
-
-  const isPersonExistInList = (personName?: string | null) => {
-    return people.find(person => person.name === personName);
-  };
-
-  const getParent = (person: Person, parentType: 'father' | 'mother') => {
-    const parentTypeName = parentType === 'mother'
-      ? 'motherName'
-      : 'fatherName';
-
-    if (!person[parentTypeName]) {
-      return <td>-</td>;
-    }
-
-    const foundPerson = isPersonExistInList(person[parentTypeName]);
-
-    if (foundPerson) {
-      return (
-        <td>
-          <Link
-            className={cn({
-              'has-text-danger': foundPerson.sex === 'f',
-            })}
-            to={`/people/${foundPerson.slug}`}
-          >
-            {foundPerson.name}
-          </Link>
-        </td>
-      );
-    }
-
-    return (
-      <td>
-        {person[parentTypeName]}
-      </td>
-    );
   };
 
   return (
@@ -138,8 +98,8 @@ export const PeopleTable: React.FC<Props> = ({
             <td>{person.sex}</td>
             <td>{person.born}</td>
             <td>{person.died}</td>
-            {getParent(person, 'mother')}
-            {getParent(person, 'father')}
+            {getParent(person, 'mother', people)}
+            {getParent(person, 'father', people)}
           </tr>
         </tbody>
       ))}

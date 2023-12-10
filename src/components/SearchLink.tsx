@@ -1,5 +1,4 @@
-import cn from 'classnames';
-import { LinkProps, NavLink, useSearchParams } from 'react-router-dom';
+import { Link, LinkProps, useSearchParams } from 'react-router-dom';
 import { getSearchWith, SearchParams } from '../utils/searchHelper';
 
 /**
@@ -9,12 +8,6 @@ import { getSearchWith, SearchParams } from '../utils/searchHelper';
 type Props = Omit<LinkProps, 'to'> & {
   params: SearchParams,
 };
-
-const getFilterLinkClass = ({
-  isActive,
-}: { isActive: boolean }) => cn({
-  'is-active': isActive,
-});
 
 /**
  * SearchLink updates the given `params` in the search keeping the `pathname`
@@ -28,8 +21,7 @@ export const SearchLink: React.FC<Props> = ({
   const [searchParams] = useSearchParams();
 
   return (
-    <NavLink
-      className={getFilterLinkClass}
+    <Link
       // to={{ search: getSearchWith(searchParams, { query: 'sdf' }) }}
       // to={{ search: getSearchWith(searchParams, { query: null }) }}
       // to={{ search: getSearchWith(searchParams, { centuries: ['16', '18'] }) }}
@@ -39,6 +31,6 @@ export const SearchLink: React.FC<Props> = ({
       {...props} // copy all the other props
     >
       {children}
-    </NavLink>
+    </Link>
   );
 };
