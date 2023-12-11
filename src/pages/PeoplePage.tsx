@@ -37,7 +37,7 @@ export const PeoplePage: R.FC = () => {
       .finally(() => setIsLoading(false));
   }, []);
 
-  let visiblePeople = people;
+  let visiblePeople = [...people];
 
   if (sex) {
     visiblePeople = visiblePeople.filter((p) => p.sex === sex);
@@ -61,6 +61,7 @@ export const PeoplePage: R.FC = () => {
 
   switch (sortField) {
     case PersonSort.NAME:
+    case PersonSort.SEX:
       visiblePeople = visiblePeople
         .sort((a, b) => (
           reverseKoeff * a[sortField].localeCompare(b[sortField])
