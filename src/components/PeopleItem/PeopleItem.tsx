@@ -50,7 +50,7 @@ export const PeopleItem: React.FC<Props> = ({ person }) => {
       <td>
         <Link
           to={{
-            pathname: `../${slug}`,
+            pathname: `/people/${slug}`,
             search: searchParams.toString(),
           }}
           className={cn({ 'has-text-danger': sex === Gender.F })}
