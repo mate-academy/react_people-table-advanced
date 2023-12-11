@@ -1,5 +1,5 @@
 import React, { useCallback, useContext, useMemo } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import cn from 'classnames';
 import { Person } from '../../types';
 import { PersonLink } from '../PersonLink';
@@ -15,7 +15,9 @@ export const PeopleItem: React.FC<Props> = ({ person }) => {
     motherName, sex, fatherName, slug, born, died,
   } = person;
 
-  const { personSlug } = useParams();
+  const [searchParams] = useSearchParams();
+  const userName = searchParams.get('slug') || '';
+
   const { persons } = useContext(PeopleContext);
 
   const findPersonByName = useCallback(
@@ -42,12 +44,12 @@ export const PeopleItem: React.FC<Props> = ({ person }) => {
       key={slug}
       data-cy="person"
       className={cn({
-        'has-background-warning': slug === personSlug,
+        'has-background-warning': slug === userName,
       })}
     >
       <td>
         <Link
-          to={`/people/${slug}`}
+          to={`../people/${slug}`}
           className={cn({ 'has-text-danger': sex === Gender.F })}
         >
           {person.name}
