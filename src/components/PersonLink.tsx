@@ -23,7 +23,12 @@ export const PersonLink = ({ person, people }: PersonLinkProps) => {
 
     if (parent) {
       return (
-        <Link to={`/people/${parent.slug}`} className={classNames({ 'has-text-danger': parent.sex === Sex.Female })}>
+        <Link
+          to={`/people/${slug}?${searchParams.toString()}`}
+          className={classNames(
+            { 'has-text-danger': parent.sex === Sex.Female },
+          )}
+        >
           {parent.name}
         </Link>
       );
