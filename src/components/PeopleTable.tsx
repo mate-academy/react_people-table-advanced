@@ -13,9 +13,10 @@ export const PeopleTable = () => {
   function sortByTable(sortBy: string): SearchParams {
     switch (true) {
       case (sort !== sortBy) || (!sort.trim() && !order.trim()):
-        return (
-          { sort: sortBy }
-        );
+        return ({
+          sort: sortBy,
+          order: null,
+        });
       case sort === sortBy && !order:
         return ({
           sort: sortBy,
