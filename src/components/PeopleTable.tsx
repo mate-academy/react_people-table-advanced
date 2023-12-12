@@ -11,23 +11,22 @@ export const PeopleTable = () => {
   const order = searchParams.get('order') || '';
 
   function sortByTable(sortBy: string): SearchParams {
-    if (sort !== sortBy && !order) {
-      return (
-        { sort: sortBy }
-      );
+    switch (true) {
+      case (sort !== sortBy) || (!sort.trim() && !order.trim()):
+        return (
+          { sort: sortBy }
+        );
+      case sort === sortBy && !order:
+        return ({
+          sort: sortBy,
+          order: 'desc',
+        });
+      default:
+        return ({
+          sort: null,
+          order: null,
+        });
     }
-
-    if (sort === sortBy && order === '') {
-      return ({
-        sort: sortBy,
-        order: 'desc',
-      });
-    }
-
-    return ({
-      sort: null,
-      order: null,
-    });
   }
 
   return (

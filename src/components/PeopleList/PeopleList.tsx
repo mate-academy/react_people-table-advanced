@@ -31,24 +31,28 @@ export const PeopleList: React.FC = () => {
     return persons;
   };
 
-  const tableSort = () => {
+  const tableSort = (arr: Person[]) => {
     if (sort === TableFilters.Name || sort === TableFilters.Sex) {
-      persons.sort((a, b) => b[sort].localeCompare(a[sort]));
+      arr.sort((a, b) => a[sort].localeCompare(b[sort]));
     }
 
     if (sort === TableFilters.Born || sort === TableFilters.Died) {
-      persons.sort((a, b) => b[sort] - a[sort]);
+      arr.sort((a, b) => a[sort] - b[sort]);
     }
 
     if (order === 'desc') {
-      persons.reverse();
+      arr.reverse();
     }
+
+    return arr;
   };
 
   const filteredPeople = () => {
     const filteredArray = centFilter().slice();
 
-    tableSort();
+    if (sort !== '' || sort !== null) {
+      tableSort(filteredArray);
+    }
 
     switch (sex) {
       case Gender.F:

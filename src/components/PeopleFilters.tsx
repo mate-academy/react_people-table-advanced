@@ -17,6 +17,8 @@ export const PeopleFilters = () => {
       centuries: null,
       sex: null,
       query: null,
+      sort: null,
+      order: null,
     });
   }
 
