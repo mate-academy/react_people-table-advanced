@@ -52,37 +52,21 @@ export const PeoplePage = () => {
   }).sort((p1, p2) => {
     if (sort) {
       switch (sort) {
-        case 'name': {
+        case 'name':
+        case 'sex':
           if (order) {
-            return p2.name.localeCompare(p1.name);
+            return p2[sort].localeCompare(p1[sort]);
           }
 
-          return p1.name.localeCompare(p2.name);
-        }
+          return p1[sort].localeCompare(p2[sort]);
 
-        case 'sex': {
+        case 'born':
+        case 'died':
           if (order) {
-            return p2.sex.localeCompare(p1.sex);
+            return p2[sort] - p1[sort];
           }
 
-          return p1.sex.localeCompare(p2.sex);
-        }
-
-        case 'born': {
-          if (order) {
-            return p2.born - p1.born;
-          }
-
-          return p1.born - p2.born;
-        }
-
-        case 'died': {
-          if (order) {
-            return p2.died - p1.died;
-          }
-
-          return p1.died - p2.died;
-        }
+          return p1[sort] - p2[sort];
 
         default: {
           return 0;
