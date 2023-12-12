@@ -21,15 +21,17 @@ export const PersonInfo = ({ person, people }: PersonInfoProps) => {
       })}
     >
       <td>
-        <NavLink
-          to={`/people/${person.slug}?${searchParams.toString()}`}
+        const { slug, sex, name } = person;
+
+      <NavLink
+          to={`/people/${slug}?${searchParams.toString()}`}
           className={cn({
-            'has-text-danger': person.sex === 'f',
-          })}
-        >
-          {person.name}
-        </NavLink>
-      </td>
+          'has-text-danger': sex === 'f',
+        })}
+      >
+          {name}
+      </NavLink>
+     </td>
 
       <td>{person.sex}</td>
       <td>{person.born}</td>
