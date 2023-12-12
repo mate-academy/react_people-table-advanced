@@ -11,18 +11,23 @@ export const OrderControl = ({ sortBy }: OrderControlProps) => {
   const currentSortBy = searchParams.get('sort');
   const sortOrder = searchParams.get('sortOrder');
 
-  const getSearchParams = () => {
-    let nextSortOrder: string | null = 'ASC';
+  enum SortOrder {
+  ASC = 'ASC',
+  DESC = 'DESC',
+}
 
-    if (currentSortBy === sortBy) {
-      nextSortOrder = sortOrder === 'ASC' ? 'DESC' : null;
-    }
+const getSearchParams = () => {
+  let nextSortOrder: SortOrder | null = SortOrder.ASC;
 
-    return {
-      sort: nextSortOrder === null ? null : sortBy,
-      sortOrder: nextSortOrder,
-    };
+  if (currentSortBy === sortBy) {
+    nextSortOrder = sortOrder === SortOrder.ASC ? SortOrder.DESC : null;
+  }
+
+  return {
+    sort: nextSortOrder null : sortBy,
+    sortOrder: nextSortOrder,
   };
+};
 
   return (
     <SearchLink params={getSearchParams()}>
