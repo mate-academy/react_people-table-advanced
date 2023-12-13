@@ -32,15 +32,20 @@ export const PeopleList: React.FC = () => {
   };
 
   const tableSort = (arr: Person[]) => {
-    if (sort === TableFilters.Name || sort === TableFilters.Sex) {
-      arr.sort((a, b) => a[sort].localeCompare(b[sort]));
+    switch (sort) {
+      case TableFilters.Name:
+      case TableFilters.Sex:
+        arr.sort((a, b) => a[sort].localeCompare(b[sort]));
+        break;
+      case TableFilters.Born:
+      case TableFilters.Died:
+        arr.sort((a, b) => a[sort] - b[sort]);
+        break;
+      default:
+        return arr;
     }
 
-    if (sort === TableFilters.Born || sort === TableFilters.Died) {
-      arr.sort((a, b) => a[sort] - b[sort]);
-    }
-
-    if (order === 'desc') {
+    if (order === TableFilters.Desc) {
       arr.reverse();
     }
 

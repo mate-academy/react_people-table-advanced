@@ -8,4 +8,5 @@ export enum TableFilters {
   Sex = 'sex',
   Born = 'born',
   Died = 'died',
+  Desc = 'desc',
 }
