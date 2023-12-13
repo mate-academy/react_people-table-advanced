@@ -6,6 +6,13 @@ import { PeopleTable } from './PeopleTable';
 import { getPeople } from '../api';
 import { Person } from '../types';
 
+export enum SortType {
+  Name = 'name',
+  Sex = 'sex',
+  Born = 'born',
+  Died = 'died',
+}
+
 export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[] | null>(null);
   const [filteredPeople, setFilteredPeople] = useState<Person[] | null>(null);
@@ -53,28 +60,38 @@ export const PeoplePage = () => {
         ));
       }
 
-      if (sort === 'name' || sort === 'sex') {
-        if (order) {
-          peopleCopy = peopleCopy.sort((person, person2) => (
-            (person2[sort as keyof Person] as string)
-              .localeCompare(person[sort as keyof Person] as string)
-          ));
-        } else {
-          peopleCopy = peopleCopy.sort((person, person2) => (
-            (person[sort as keyof Person] as string)
-              .localeCompare(person2[sort as keyof Person] as string)
-          ));
-        }
-      } else if (sort === 'born' || sort === 'died') {
-        if (order) {
-          peopleCopy = peopleCopy.sort((person, person2) => (
-            person2[sort] - person[sort]
-          ));
-        } else {
-          peopleCopy = peopleCopy.sort((person, person2) => (
-            person[sort] - person2[sort]
-          ));
-        }
+      switch (sort) {
+        case SortType.Sex:
+        case SortType.Name:
+          if (order) {
+            peopleCopy = peopleCopy.sort((person, person2) => (
+              (person2[sort as keyof Person] as string)
+                .localeCompare(person[sort as keyof Person] as string)
+            ));
+          } else {
+            peopleCopy = peopleCopy.sort((person, person2) => (
+              (person[sort as keyof Person] as string)
+                .localeCompare(person2[sort as keyof Person] as string)
+            ));
+          }
+
+          break;
+        case SortType.Died:
+        case SortType.Born:
+          if (order) {
+            peopleCopy = peopleCopy.sort((person, person2) => (
+              person2[sort] - person[sort]
+            ));
+          } else {
+            peopleCopy = peopleCopy.sort((person, person2) => (
+              person[sort] - person2[sort]
+            ));
+          }
+
+          break;
+
+        default:
+          break;
       }
 
       setFilteredPeople(() => peopleCopy);
@@ -141,14 +158,3 @@ export const PeoplePage = () => {
     </>
   );
 };
-
-/*
-
-    <p data-cy="peopleLoadingError">Something went wrong</p>
-
-    <p data-cy="noPeopleMessage">
-      There are no people on the server
-    </p>
-
-    <p>There are no people matching the current search criteria</p>
-*/
