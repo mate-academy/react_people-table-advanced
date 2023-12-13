@@ -132,7 +132,8 @@ export const PeopleFilters = ({ centuriesList }: PeopleFiltersProps) => {
           <div className="level-right ml-4">
             <Link
               data-cy="centuryALL"
-              className="button is-success is-outlined"
+              className={classNames('button is-success',
+                { 'is-outlined': selectedCenturies.length > 0 })}
               to={{
                 search: getSearchWith(
                   searchParams, { centuries: null },
