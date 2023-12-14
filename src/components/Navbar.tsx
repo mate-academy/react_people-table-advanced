@@ -1,5 +1,5 @@
 import { NavLink } from 'react-router-dom';
-import { getLinkClass } from '../utils/getLinkClass';
+import { getLinkClass } from '../helpers/getLinkClass';
 
 export const Navbar = () => {
   return (

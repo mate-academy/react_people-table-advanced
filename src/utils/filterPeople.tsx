@@ -1,3 +1,4 @@
+import { matchesQuery } from '../helpers/matchesQuery';
 import { Person } from '../types';
 import { SortField } from '../types/SortField';
 
@@ -20,13 +21,9 @@ export function filterPeople(
       .includes(Math.ceil(person.born / 100).toString()));
   }
 
-  if (query) {
-    filteredPeople = filteredPeople.filter(person => person.name.toLowerCase()
-      .includes(query.toLowerCase())
-      || person.motherName?.toLowerCase()
-        .includes(query.toLowerCase())
-      || person.fatherName?.toLowerCase()
-        .includes(query.toLowerCase()));
+  if (query !== null) {
+    filteredPeople = filteredPeople
+      .filter(person => matchesQuery(person, query));
   }
 
   if (sortField) {
