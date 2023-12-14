@@ -110,7 +110,10 @@ export const PeoplePage = () => {
                 <p>There are no people matching the current search criteria</p>
               )}
 
-              {!!people.length && <PeopleTable people={handlePeople()} />}
+              {
+                !!handlePeople().length
+                && <PeopleTable people={handlePeople()} />
+              }
             </div>
           </div>
         </div>
