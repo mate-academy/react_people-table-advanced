@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { PeopleFilters } from '../PeopleFilters';
 import { Loader } from '../Loader';
-import { PeopleTable } from '../PeopleTable';
+import { PeopleTable } from '../PeopleTable/PeopleTable';
 import { getPeople } from '../../api';
 import { Person } from '../../types';
 import { findParent } from '../../utils/findParent';
