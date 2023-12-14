@@ -4,12 +4,12 @@ import { Link, useSearchParams } from 'react-router-dom';
 import { getSearchWith } from '../utils/searchHelper';
 import { SearchLink } from './SearchLink';
 
+const CENTURIES = ['16', '17', '18', '19', '20'];
+
 export const PeopleFilters: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const allCenturies = ['16', '17', '18', '19', '20'];
   const centuries = searchParams.getAll('centuries') || [];
-
   const query = searchParams.get('query') || '';
   const sex = searchParams.get('sex');
 
@@ -17,6 +17,12 @@ export const PeopleFilters: React.FC = () => {
     setSearchParams(
       getSearchWith(searchParams, { query: event.target.value || null }),
     );
+  };
+
+  const checkCentury = (el: string) => {
+    return centuries.includes(el)
+      ? centuries.filter(century => century !== el)
+      : [...centuries, el];
   };
 
   return (
@@ -66,18 +72,14 @@ export const PeopleFilters: React.FC = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            {allCenturies.map(el => (
+            {CENTURIES.map(el => (
               <SearchLink
                 key={el}
                 data-cy="century"
                 className={classNames('button mr-1', {
                   'is-info': centuries.includes(el),
                 })}
-                params={{
-                  centuries: centuries.includes(el)
-                    ? centuries.filter(century => century !== el)
-                    : [...centuries, el],
-                }}
+                params={{ centuries: checkCentury(el) }}
               >
                 {el}
               </SearchLink>

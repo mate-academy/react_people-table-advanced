@@ -5,11 +5,12 @@ import { Loader } from './Loader';
 import { PeopleTable } from './PeopleTable';
 import { Person } from '../types';
 import { getPeople } from '../api';
+import { SortType } from '../types/sortType';
 
 export const PeoplePage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [people, setPeople] = useState<Person[]>([]);
-  const [erroeMessage, setErrorMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
 
   const [searchParams] = useSearchParams();
 
@@ -42,7 +43,8 @@ export const PeoplePage = () => {
   };
 
   const preparedPeople = useMemo(() => {
-    const filtredAndSortedPeople = people.filter((person) => {
+    const copyPeople = [...people];
+    const filtredAndSortedPeople = copyPeople.filter((person) => {
       const lowerQuery = query?.toLowerCase();
 
       return (
@@ -50,22 +52,25 @@ export const PeoplePage = () => {
         && queryIncludes(lowerQuery, person)
         && bornInCentury(century, person)
       );
-    })
-      .sort((person1, person2) => {
+    });
+
+    if (sort) {
+      filtredAndSortedPeople.sort((person1, person2) => {
         switch (sort) {
-          case 'Name':
+          case SortType.Name:
             return person1.name.localeCompare(person2.name);
-          case 'Sex':
+          case SortType.Sex:
             return person1.sex.localeCompare(person2.sex);
-          case 'Born':
+          case SortType.Born:
             return person1.born - person2.born;
-          case 'Died':
+          case SortType.Died:
             return person1.died - person2.died;
 
           default:
             return 0;
         }
       });
+    }
 
     if (order === 'desc') {
       filtredAndSortedPeople.reverse();
@@ -90,7 +95,7 @@ export const PeoplePage = () => {
             <div className="box table-container">
               {isLoading && <Loader />}
 
-              <p data-cy="peopleLoadingError">{erroeMessage}</p>
+              <p data-cy="peopleLoadingError">{errorMessage}</p>
 
               {!people.length && !isLoading && (
                 <p data-cy="noPeopleMessage">
