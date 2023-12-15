@@ -1,21 +1,23 @@
 /* eslint-disable jsx-a11y/control-has-associated-label */
-import { useEffect, useMemo, useState } from 'react';
+import { useContext, useMemo } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
 import cn from 'classnames';
 import { Loader } from '../Loader';
-import { Person } from '../../types';
-import { getPeople } from '../../api';
 import { PersonLink } from '../PersonLink/PersonLink';
 import { findParent } from '../../services/findParent';
 import { filterPeople } from '../../utils/filterPeople';
 import { SortLink } from '../SortLink/SortLink';
 import { sortPeople } from '../../utils/sortPeople';
+import { PeopleContext } from '../PeopleProvider/PeopleProvider';
 
 export const PeopleTable = () => {
-  const [people, setPeople] = useState<Person[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [isError, setIsError] = useState(false);
-  const [isEmpty, setIsEmpty] = useState(false);
+  const {
+    people,
+    isLoading,
+    isError,
+    isEmpty,
+  } = useContext(PeopleContext);
+
   const { slug } = useParams();
   const [searchParams] = useSearchParams();
 
@@ -25,29 +27,6 @@ export const PeopleTable = () => {
 
   const sort = searchParams.get('sort');
   const order = searchParams.get('order');
-
-  const getPeopleFromServer = async () => {
-    try {
-      setIsError(false);
-      setIsLoading(true);
-
-      const peopleFromServer = await getPeople();
-
-      if (peopleFromServer.length === 0) {
-        setIsEmpty(true);
-      }
-
-      setPeople(peopleFromServer);
-    } catch {
-      setIsError(true);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    getPeopleFromServer();
-  }, []);
 
   const preparingPeopleForRending = useMemo(() => {
     const peopleWithParents = people.map(person => ({

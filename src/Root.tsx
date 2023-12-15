@@ -9,19 +9,22 @@ import { PageNotFound } from './pages/PageNotFound';
 import { HomePage } from './pages/HomePage';
 import { PeoplePage } from './pages/PeoplePage';
 import { PeopleTable } from './components/PopleTable/PeopleTable';
+import { PeopleProvider } from './components/PeopleProvider/PeopleProvider';
 
 export const Root = () => (
   <Router>
-    <Routes>
-      <Route path="/" element={<App />}>
-        <Route index element={<HomePage />} />
-        <Route path="/home" element={<Navigate to="/" replace />} />
+    <PeopleProvider>
+      <Routes>
+        <Route path="/" element={<App />}>
+          <Route index element={<HomePage />} />
+          <Route path="/home" element={<Navigate to="/" replace />} />
 
-        <Route path="people" element={<PeoplePage />}>
-          <Route path=":slug?" element={<PeopleTable />} />
+          <Route path="people" element={<PeoplePage />}>
+            <Route path=":slug?" element={<PeopleTable />} />
+          </Route>
+          <Route path="*" element={<PageNotFound />} />
         </Route>
-        <Route path="*" element={<PageNotFound />} />
-      </Route>
-    </Routes>
+      </Routes>
+    </PeopleProvider>
   </Router>
 );
