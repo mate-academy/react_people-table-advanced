@@ -1,6 +1,6 @@
 import { PeopleFilters } from './PeopleFilters';
 import { Loader } from './Loader';
-import { PeopleTable } from './PeopleTable';
+// import { PeopleTable } from './PeopleTable';
 
 export const PeoplePage = () => {
   return (
@@ -25,7 +25,7 @@ export const PeoplePage = () => {
 
               <p>There are no people matching the current search criteria</p>
 
-              <PeopleTable />
+              {/* <PeopleTable /> */}
             </div>
           </div>
         </div>
