@@ -1,6 +1,7 @@
 import cn from 'classnames';
 import { Link, useSearchParams } from 'react-router-dom';
 import { Person } from '../types';
+import { TypeSex } from '../types/TypeSex';
 
 type Props = {
   person: Person;
@@ -16,7 +17,7 @@ export const PersonLink: React.FC<Props> = ({ person }) => {
         search: searchParams.toString(),
       }}
       className={cn({
-        'has-text-danger': person.sex === 'f',
+        'has-text-danger': person.sex === TypeSex.Female,
       })}
     >
       {person.name}

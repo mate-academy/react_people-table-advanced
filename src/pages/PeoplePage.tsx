@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from "react";
-import { useSearchParams } from "react-router-dom";
-import { PeopleFilters } from "../components/PeopleFilters";
-import { Loader } from "../components/Loader";
-import { PeopleTable } from "../components/PeopleTable";
-import { Person } from "../types";
-import { getPeople } from "../api";
-import { filterPeople } from "../utils/filterPeople";
-import { preparePeople } from "../helpers/preparePeople";
+import React, { useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
+import { PeopleFilters } from '../components/PeopleFilters';
+import { Loader } from '../components/Loader';
+import { PeopleTable } from '../components/PeopleTable';
+import { Person } from '../types';
+import { getPeople } from '../api';
+import { filterPeople } from '../utils/filterPeople';
+import { preparePeople } from '../helpers/preparePeople';
 
 export const PeoplePage: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -14,11 +14,11 @@ export const PeoplePage: React.FC = () => {
   const [people, setPeople] = useState<Person[]>([]);
   const [searchParams] = useSearchParams();
 
-  const sex = searchParams.get("sex");
-  const query = searchParams.get("query");
-  const centuries = searchParams.getAll("centuries");
-  const sortField = searchParams.get("sort");
-  const isReversed = searchParams.get("order") === "desc";
+  const sex = searchParams.get('sex');
+  const query = searchParams.get('query');
+  const centuries = searchParams.getAll('centuries');
+  const sortField = searchParams.get('sort');
+  const isReversed = searchParams.get('order') === 'desc';
 
   useEffect(() => {
     setIsLoading(true);
@@ -37,7 +37,7 @@ export const PeoplePage: React.FC = () => {
     sex,
     centuries,
     sortField,
-    isReversed
+    isReversed,
   );
 
   return (
@@ -68,7 +68,7 @@ export const PeoplePage: React.FC = () => {
                 </p>
               )}
 
-              {people.length && !visiblePeople.length && (
+              {!!people.length && !visiblePeople.length && (
                 <p>There are no people matching the current search criteria</p>
               )}
 
