@@ -9,12 +9,14 @@ const sortingParameters = ['name', 'sex', 'born', 'died'];
 
 type Props = {
   people: Person[],
+  peopleAll: Person[],
   searchParams: URLSearchParams,
   sort: PersonsKeys | '',
   order: string,
 };
 
 export const PeopleTable: React.FC<Props> = ({
+  peopleAll,
   people,
   searchParams,
   sort,
@@ -79,7 +81,7 @@ export const PeopleTable: React.FC<Props> = ({
         {people.map((person) => (
           <PersonLink
             person={person}
-            people={people}
+            peopleAll={peopleAll}
             key={person.name}
           />
         ))}

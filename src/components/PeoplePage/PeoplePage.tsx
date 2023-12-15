@@ -60,6 +60,7 @@ export const PeoplePage = () => {
               <div className="box table-container">
                 <PeopleTable
                   people={visiblePeople}
+                  peopleAll={people}
                   searchParams={searchParams}
                   sort={sort}
                   order={order}
