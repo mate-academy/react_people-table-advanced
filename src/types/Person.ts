@@ -9,3 +9,5 @@ export interface Person {
   mother?: Person,
   father?: Person,
 }
+
+export type PersonsKeys = keyof Person;
