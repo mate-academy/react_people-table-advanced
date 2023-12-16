@@ -1,8 +1,10 @@
 import React from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useSearchParams } from 'react-router-dom';
 import cn from 'classnames';
 import { PersonLink } from './PersonLink';
 import { Person } from '../types';
+import { SearchLink } from './SearchLink';
+import { SortBy } from '../types/SortBy';
 
 interface Props {
   people: Person[],
@@ -10,6 +12,23 @@ interface Props {
 
 export const PeopleTable: React.FC<Props> = ({ people }) => {
   const { slug: currentSlug } = useParams();
+
+  const [searchParams] = useSearchParams();
+
+  const sortBy = searchParams.get('sort') || '';
+  const sortOrder = searchParams.get('order') || '';
+
+  const getSortParams = (field: string) => {
+    if (field === sortBy && !sortOrder) {
+      return { sort: field, order: 'desc' };
+    }
+
+    if (field === sortBy && sortOrder) {
+      return { sort: null, order: null };
+    }
+
+    return { sort: field, order: null };
+  };
 
   const getParent = (parentName: string | null) => {
     const parent = people.find(person => person.name === parentName);
@@ -27,56 +46,76 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Name
-              <a
-                href="#/people?sort=name"
-                aria-label="sort"
+              <SearchLink
+                params={getSortParams(SortBy.name)}
               >
                 <span className="icon">
-                  <i className="fas fa-sort" />
+                  <i
+                    className={cn('fas', {
+                      'fa-sort': sortBy !== SortBy.name,
+                      'fa-sort-up': sortBy === SortBy.name && !sortOrder,
+                      'fa-sort-down': sortBy === SortBy.name && sortOrder,
+                    })}
+                  />
                 </span>
-              </a>
+              </SearchLink>
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Sex
-              <a
-                href="#/people?sort=sex"
-                aria-label="sort"
+              <SearchLink
+                params={getSortParams(SortBy.sex)}
               >
                 <span className="icon">
-                  <i className="fas fa-sort" />
+                  <i
+                    className={cn('fas', {
+                      'fa-sort': sortBy !== SortBy.sex,
+                      'fa-sort-up': sortBy === SortBy.sex && !sortOrder,
+                      'fa-sort-down': sortBy === SortBy.sex && sortOrder,
+                    })}
+                  />
                 </span>
-              </a>
+              </SearchLink>
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Born
-              <a
-                href="#/people?sort=born&amp;order=desc"
-                aria-label="sort"
+              <SearchLink
+                params={getSortParams(SortBy.born)}
               >
                 <span className="icon">
-                  <i className="fas fa-sort-up" />
+                  <i
+                    className={cn('fas', {
+                      'fa-sort': sortBy !== SortBy.born,
+                      'fa-sort-up': sortBy === SortBy.born && !sortOrder,
+                      'fa-sort-down': sortBy === SortBy.born && sortOrder,
+                    })}
+                  />
                 </span>
-              </a>
+              </SearchLink>
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Died
-              <a
-                href="#/people?sort=died"
-                aria-label="sort"
+              <SearchLink
+                params={getSortParams(SortBy.died)}
               >
                 <span className="icon">
-                  <i className="fas fa-sort" />
+                  <i
+                    className={cn('fas', {
+                      'fa-sort': sortBy !== SortBy.died,
+                      'fa-sort-up': sortBy === SortBy.died && !sortOrder,
+                      'fa-sort-down': sortBy === SortBy.died && sortOrder,
+                    })}
+                  />
                 </span>
-              </a>
+              </SearchLink>
             </span>
           </th>
 
