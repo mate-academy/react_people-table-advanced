@@ -1,14 +1,24 @@
 import { useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { getPeople } from '../api';
 import { Person } from '../types';
 import { Loader } from '../components/Loader';
 import { PeopleTable } from '../components/PeopleTable';
 import { PeopleFilters } from '../components/PeopleFilters';
+import { getPreparedPeople } from '../utils/getPreparedPeople';
 
 export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);
   const [isError, setIsError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+
+  const [searchParams] = useSearchParams();
+
+  const sex = searchParams.get('sex');
+  const query = searchParams.get('query');
+  const centuries = searchParams.getAll('century');
+  const sortBy = searchParams.get('sort');
+  const sortOrder = searchParams.get('order');
 
   useEffect(() => {
     setIsLoading(true);
@@ -18,6 +28,15 @@ export const PeoplePage = () => {
       .catch(() => setIsError(true))
       .finally(() => setIsLoading(false));
   }, []);
+
+  const preredPeople = getPreparedPeople(
+    people,
+    sex,
+    query,
+    centuries,
+    sortBy,
+    sortOrder,
+  );
 
   return (
     <>
@@ -45,12 +64,12 @@ export const PeoplePage = () => {
                 </p>
               )}
 
-              {false && (
+              {!!people.length && !preredPeople.length && (
                 <p>There are no people matching the current search criteria</p>
               )}
 
-              {!isLoading && !!people.length && (
-                <PeopleTable people={people} />
+              {!isLoading && !!preredPeople.length && (
+                <PeopleTable people={preredPeople} />
               )}
             </div>
           </div>
