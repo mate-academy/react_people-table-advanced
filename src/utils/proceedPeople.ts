@@ -60,3 +60,23 @@ export function proceedPeople(
 
   return newPeople;
 }
+
+export function mappedPeople(people : Person[]) {
+  people.map((person) => {
+    const editedPerson = { ...person };
+    const mother = people.find(({ name }) => name === person.motherName);
+    const father = people.find(({ name }) => name === person.fatherName);
+
+    if (mother) {
+      editedPerson.mother = mother;
+    }
+
+    if (father) {
+      editedPerson.father = father;
+    }
+
+    return editedPerson;
+  });
+
+  return people;
+}

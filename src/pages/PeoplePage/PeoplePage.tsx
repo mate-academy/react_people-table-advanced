@@ -1,22 +1,19 @@
-import {
-  useEffect,
-  useMemo,
-  useState,
-} from 'react';
+import { useEffect, useState } from 'react';
 import { Loader } from '../../components/Loader';
 import { getPeople } from '../../api';
 import { Person } from '../../types';
 import { PeopleFilters } from '../../components/PeopleFilters';
 import { PeopleTable } from '../../components/PeopleTable';
+import { mappedPeople } from '../../utils/proceedPeople';
 
 export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);
   const [isError, setIsError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  
-  const displayPeopleTable = useMemo(() => {
+
+  const displayPeopleTable = () => {
     return !isError && !isLoading && !!people.length;
-  }, [isError, isLoading, people]);
+  };
 
   const fetchPeople = () => {
     setIsError(false);
@@ -24,23 +21,7 @@ export const PeoplePage = () => {
     setIsLoading(true);
     getPeople()
       .then((data) => {
-        const mappedPeople = data.map((person) => {
-          const editedPerson = { ...person };
-          const mother = data.find(({ name }) => name === person.motherName);
-          const father = data.find(({ name }) => name === person.fatherName);
-
-          if (mother) {
-            editedPerson.mother = mother;
-          }
-
-          if (father) {
-            editedPerson.father = father;
-          }
-
-          return editedPerson;
-        });
-
-        setPeople(mappedPeople);
+        setPeople(mappedPeople(data));
       })
       .catch(() => setIsError(true))
       .finally(() => setIsLoading(false));
@@ -75,7 +56,7 @@ export const PeoplePage = () => {
                 </p>
               )}
 
-              {displayPeopleTable && (
+              {displayPeopleTable() && (
                 <PeopleTable people={people} />
               )}
             </div>

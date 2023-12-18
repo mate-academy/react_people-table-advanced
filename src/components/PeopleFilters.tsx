@@ -4,12 +4,14 @@ import { SearchLink } from './SearchLink';
 import { getSearchWith } from '../utils/searchHelper';
 import { Sex, SearchField, SortParam } from '../types';
 
-type Centuries = '16' | '17' | '18' | '19' | '20';
-
-const centuriesList: Centuries[] = ['16', '17', '18', '19', '20'];
+// type Centuries = '16' | '17' | '18' | '19' | '20';
+// const centuriesList: Centuries[] = ['16', '17', '18', '19', '20'];
 
 export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
+
+  const centuries = searchParams.getAll(SearchField.Centuries) || [];
+  const isCentury = (cent: number) => centuries.includes(cent.toString());
 
   const handleInputQuery = (query: string) => setSearchParams(getSearchWith(
     searchParams,
@@ -54,7 +56,7 @@ export const PeopleFilters = () => {
             type="search"
             className="input"
             placeholder="Search"
-            value={searchParams.get('query') || ''}
+            value={searchParams.get(SearchField.Query) || ''}
             onChange={(event) => handleInputQuery(event.target.value)}
           />
 
@@ -67,21 +69,17 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            {centuriesList.map(century => (
+            {[16, 17, 18, 19, 20].map(century => (
               <SearchLink
                 key={century}
                 data-cy="century"
-                className={cn('button', 'mr-1', {
-                  'is-info': searchParams.getAll(SearchField.Centuries)
-                    .includes(century),
+                className={cn('button mr-1', {
+                  'is-info': isCentury(century),
                 })}
                 params={{
-                  centuries:
-                    !searchParams.getAll(SearchField.Centuries)
-                      .includes(century)
-                      ? [...searchParams.getAll(SearchField.Centuries), century]
-                      : searchParams.getAll(SearchField.Centuries)
-                        .filter(c => c !== century),
+                  centuries: isCentury(century)
+                    ? centuries.filter(cent => +cent !== century)
+                    : [...centuries, century.toString()],
                 }}
               >
                 {century}

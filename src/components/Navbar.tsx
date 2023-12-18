@@ -1,5 +1,5 @@
-import cn from 'classnames';
 import { NavLink } from 'react-router-dom';
+import { getLinkClass } from '../utils/getLinkClass';
 
 export const Navbar = () => {
   return (
@@ -13,16 +13,14 @@ export const Navbar = () => {
         <div className="navbar-brand">
           <NavLink
             to="/"
-            className={({ isActive }) => cn('navbar-item',
-              { 'has-background-grey-lighter': isActive })}
+            className={getLinkClass}
           >
             Home
           </NavLink>
 
           <NavLink
             to="people"
-            className={({ isActive }) => cn('navbar-item',
-              { 'has-background-grey-lighter': isActive })}
+            className={getLinkClass}
           >
             People
           </NavLink>
