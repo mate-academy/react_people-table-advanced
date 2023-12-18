@@ -1,16 +1,24 @@
 import { useEffect, useState } from 'react';
-import { Loader } from './Loader';
+import { useSearchParams } from 'react-router-dom';
+import { Loader } from '../components/Loader';
 import { Person } from '../types';
 import { getPeople } from '../api';
-import { PeopleFilters } from './PeopleFilters';
-import { PeopleTable } from './PeopleTable';
+import { PeopleFilters } from '../components/PeopleFilters';
+import { PeopleTable } from '../components/PeopleTable';
+import { getPreparedPeople } from '../utils/getPreparedPeople';
 
 export const PeoplePage: React.FC = () => {
   const [people, setPeople] = useState<Person[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [hasError, setHasError] = useState(false);
 
+  const [searchParams] = useSearchParams();
 
+  const sex = searchParams.get('sex');
+  const query = searchParams.get('query');
+  const centuries = searchParams.getAll('century');
+  const sortBy = searchParams.get('sort');
+  const sortOrder = searchParams.get('order');
 
   useEffect(() => {
     setIsLoading(true);
@@ -21,6 +29,15 @@ export const PeoplePage: React.FC = () => {
       .catch(() => setHasError(true))
       .finally(() => setIsLoading(false));
   }, []);
+
+  const preparedPeople = getPreparedPeople(
+    people,
+    sex,
+    query,
+    centuries,
+    sortBy,
+    sortOrder,
+  );
 
   return (
     <>
@@ -55,7 +72,7 @@ export const PeoplePage: React.FC = () => {
 
               {!isLoading && people.length !== 0 && (
                 <PeopleTable
-                  people={people}
+                  people={preparedPeople}
                 />
               )}
             </div>
