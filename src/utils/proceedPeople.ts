@@ -62,7 +62,7 @@ export function proceedPeople(
 }
 
 export function mappedPeople(people : Person[]) {
-  people.map((person) => {
+  return people.map((person) => {
     const editedPerson = { ...person };
     const mother = people.find(({ name }) => name === person.motherName);
     const father = people.find(({ name }) => name === person.fatherName);
@@ -77,6 +77,4 @@ export function mappedPeople(people : Person[]) {
 
     return editedPerson;
   });
-
-  return people;
 }

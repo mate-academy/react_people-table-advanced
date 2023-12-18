@@ -4,9 +4,6 @@ import { SearchLink } from './SearchLink';
 import { getSearchWith } from '../utils/searchHelper';
 import { Sex, SearchField, SortParam } from '../types';
 
-// type Centuries = '16' | '17' | '18' | '19' | '20';
-// const centuriesList: Centuries[] = ['16', '17', '18', '19', '20'];
-
 export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
 
