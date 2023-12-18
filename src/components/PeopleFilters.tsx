@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom';
+
 export const PeopleFilters = () => {
   return (
     <nav className="panel">
@@ -5,8 +7,8 @@ export const PeopleFilters = () => {
 
       <p className="panel-tabs" data-cy="SexFilter">
         <a className="is-active" href="#/people">All</a>
-        <a className="" href="#/people?sex=m">Male</a>
-        <a className="" href="#/people?sex=f">Female</a>
+        <Link to="?sex=m">Male</Link>
+        <Link to="?sex=f">Female</Link>
       </p>
 
       <div className="panel-block">
