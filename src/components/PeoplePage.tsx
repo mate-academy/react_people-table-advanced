@@ -103,27 +103,25 @@ export const PeoplePage: React.FC = () => {
 
           <div className="column">
             <div className="box table-container">
-              <div className="box table-container">
-                {loading ? (
-                  <Loader />
-                ) : (
-                  <>
-                    {hasError ? (
-                      <p
-                        data-cy="peopleLoadingError"
-                        className="has-text-danger"
-                      >
-                        Something went wrong
-                      </p>
-                    ) : (
-                      <PeopleTable
-                        peopleList={peopleListToShow}
-                        selectedPerson={selectedPerson}
-                      />
-                    )}
-                  </>
-                )}
-              </div>
+              {loading ? (
+                <Loader />
+              ) : (
+                <>
+                  {hasError ? (
+                    <p
+                      data-cy="peopleLoadingError"
+                      className="has-text-danger"
+                    >
+                      Something went wrong
+                    </p>
+                  ) : (
+                    <PeopleTable
+                      peopleList={peopleListToShow}
+                      selectedPerson={selectedPerson}
+                    />
+                  )}
+                </>
+              )}
             </div>
           </div>
         </div>

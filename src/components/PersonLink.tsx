@@ -2,7 +2,7 @@ import React from 'react';
 import cn from 'classnames';
 import { Link, useSearchParams } from 'react-router-dom';
 
-import { Person } from '../types';
+import { Person, Sex } from '../types';
 
 interface PersonLinkProps {
   person: Person;
@@ -22,7 +22,7 @@ export const PersonLink: React.FC<PersonLinkProps> = ({
         search: params.toString(),
       }}
       className={cn({
-        [WOMAN]: sex === 'f',
+        [WOMAN]: sex === Sex.Female,
       })}
     >
       {name}
