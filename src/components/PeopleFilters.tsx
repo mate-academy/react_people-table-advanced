@@ -97,6 +97,7 @@ export const PeopleFilters = () => {
                   'is-info': centuries.includes(century),
                 })}
                 params={{ centuries: handleCenturyChange(century) }}
+                key={century}
               >
                 {century}
               </SearchLink>
