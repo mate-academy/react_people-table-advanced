@@ -1,20 +1,29 @@
-import { PeoplePage } from './components/PeoplePage';
-import { Navbar } from './components/Navbar';
-
 import './App.scss';
+import {
+  HashRouter as Router,
+  Route,
+  Routes,
+  Navigate,
+} from 'react-router-dom';
 
-export const App = () => {
-  return (
-    <div data-cy="app">
-      <Navbar />
+import { PeoplePage } from './pages/PeoplePage';
+import { HomePage } from './pages/HomePage';
+import { Page404 } from './pages/Page404';
+import { Header } from './components/Header';
 
-      <div className="section">
-        <div className="container">
-          <h1 className="title">Home Page</h1>
-          <h1 className="title">Page not found</h1>
-          <PeoplePage />
-        </div>
-      </div>
-    </div>
-  );
-};
+export const App = () => (
+  <div data-cy="app">
+    <Router>
+      <Routes>
+        <Route path="/" element={<Header />}>
+          <Route path="home" element={<Navigate to="/" replace />} />
+          <Route index element={<HomePage />} />
+          <Route path="people">
+            <Route path=":humanId?" element={<PeoplePage />} />
+          </Route>
+          <Route path="*" element={<Page404 />} />
+        </Route>
+      </Routes>
+    </Router>
+  </div>
+);

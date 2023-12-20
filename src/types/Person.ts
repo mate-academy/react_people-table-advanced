@@ -1,6 +1,6 @@
 export interface Person {
   name: string,
-  sex: string,
+  sex: SexType,
   born: number,
   died: number,
   fatherName: string | null,
@@ -8,4 +8,23 @@ export interface Person {
   slug: string,
   mother?: Person,
   father?: Person,
+}
+
+export enum SexType {
+  male = 'm',
+  female = 'f',
+  undefined = '',
+}
+
+export enum SearchField {
+  Sex = 'sex',
+  Centuries = 'centuries',
+  Query = 'query',
+}
+
+export enum SortParam {
+  Sex = 'sex',
+  Name = 'name',
+  Born = 'born',
+  Died = 'died',
 }
