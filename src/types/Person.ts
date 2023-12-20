@@ -1,6 +1,6 @@
 export interface Person {
   name: string,
-  sex: Sex,
+  sex: SexType,
   born: number,
   died: number,
   fatherName: string | null,
@@ -10,20 +10,19 @@ export interface Person {
   father?: Person,
 }
 
-export enum Sex {
+export enum SexType {
   male = 'm',
   female = 'f',
+  undefined = '',
 }
 
 export enum SearchField {
-  // eslint-disable-next-line @typescript-eslint/no-shadow
   Sex = 'sex',
   Centuries = 'centuries',
   Query = 'query',
 }
 
 export enum SortParam {
-  // eslint-disable-next-line @typescript-eslint/no-shadow
   Sex = 'sex',
   Name = 'name',
   Born = 'born',

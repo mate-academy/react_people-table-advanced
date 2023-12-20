@@ -11,9 +11,8 @@ export const PeoplePage = () => {
   const [isError, setIsError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  const displayPeopleTable = () => (
-    !isError && !isLoading && !!people.length
-  );
+  const shouldDisplayPeopleTable = !isError
+  && !isLoading && !!people.length;
 
   const fetchPeople = () => {
     setIsError(false);
@@ -56,7 +55,7 @@ export const PeoplePage = () => {
                 </p>
               )}
 
-              {displayPeopleTable() && (
+              {shouldDisplayPeopleTable && (
                 <PeopleTable people={people} />
               )}
             </div>

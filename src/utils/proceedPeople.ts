@@ -1,8 +1,8 @@
 import {
-  Person, Sex, SearchField, SortParam,
+  Person, SexType, SearchField, SortParam,
 } from '../types';
 
-const sexOrder = Object.values(Sex);
+const sexOrder = Object.values(SexType);
 
 function sortPeople(people: Person[], sortParam: string, order: number) {
   switch (sortParam) {
@@ -12,9 +12,8 @@ function sortPeople(people: Person[], sortParam: string, order: number) {
       return people.sort((a, b) => order * (
         sexOrder.indexOf(a.sex) - sexOrder.indexOf(b.sex)));
     case SortParam.Born:
-      return people.sort((a, b) => order * (a.born - b.born));
     case SortParam.Died:
-      return people.sort((a, b) => order * (a.died - b.died));
+      return people.sort((a, b) => order * (a[sortParam] - b[sortParam]));
     default: return people;
   }
 }

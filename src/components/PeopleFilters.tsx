@@ -2,11 +2,12 @@ import cn from 'classnames';
 import { useSearchParams } from 'react-router-dom';
 import { SearchLink } from './SearchLink';
 import { getSearchWith } from '../utils/searchHelper';
-import { Sex, SearchField, SortParam } from '../types';
+import { SexType, SearchField, SortParam } from '../types';
 
 export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
 
+  const initialCenturies = [16, 17, 18, 19, 20];
   const centuries = searchParams.getAll(SearchField.Centuries) || [];
   const isCentury = (cent: number) => centuries.includes(cent.toString());
 
@@ -24,23 +25,23 @@ export const PeopleFilters = () => {
           className={cn({
             'is-active': !searchParams.get(SortParam.Sex),
           })}
-          params={{ sex: null }}
+          params={{ sex: SexType.undefined }}
         >
           All
         </SearchLink>
         <SearchLink
           className={cn({
-            'is-active': searchParams.get(SortParam.Sex) === Sex.male,
+            'is-active': searchParams.get(SortParam.Sex) === SexType.male,
           })}
-          params={{ sex: Sex.male }}
+          params={{ sex: SexType.male }}
         >
           Male
         </SearchLink>
         <SearchLink
           className={cn({
-            'is-active': searchParams.get(SortParam.Sex) === Sex.female,
+            'is-active': searchParams.get(SortParam.Sex) === SexType.female,
           })}
-          params={{ sex: Sex.female }}
+          params={{ sex: SexType.female }}
         >
           Female
         </SearchLink>
@@ -66,7 +67,7 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            {[16, 17, 18, 19, 20].map(century => (
+            {initialCenturies.map(century => (
               <SearchLink
                 key={century}
                 data-cy="century"
@@ -100,7 +101,7 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <SearchLink
           className="button is-link is-outlined is-fullwidth"
-          params={{ centuries: null, query: null, sex: null }}
+          params={{ centuries: null, query: null, sex: SexType.undefined }}
         >
           Reset all filters
         </SearchLink>
