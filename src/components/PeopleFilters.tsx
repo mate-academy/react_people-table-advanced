@@ -3,15 +3,15 @@ import React from 'react';
 import classNames from 'classnames';
 import { Link, useSearchParams } from 'react-router-dom';
 import { Filter } from '../types/Filter';
-import { getSearchWith } from '../utils/searchHelper';
+import { SearchParams, getSearchWith } from '../utils/searchHelper';
+
+const centuriesValues = [16, 17, 18, 19, 20];
 
 export const PeopleFilters: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const sex = searchParams.get(Filter.SEX) || null;
+  const sex = searchParams.get(Filter.SEX);
   const name = searchParams.get(Filter.NAME) || '';
-  const centuries = searchParams.getAll('centuries') || null;
-
-  const centuriesValues = [16, 17, 18, 19, 20];
+  const centuries = searchParams.getAll('centuries');
 
   const resetParams = () => {
     const newSearchParams = new URLSearchParams('');
@@ -19,8 +19,7 @@ export const PeopleFilters: React.FC = () => {
     return newSearchParams.toString();
   };
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  function setParams(params: any) {
+  function setParams(params: SearchParams) {
     const search = getSearchWith(params, searchParams);
 
     setSearchParams(search);
@@ -37,7 +36,7 @@ export const PeopleFilters: React.FC = () => {
 
       <p className="panel-tabs" data-cy="SexFilter">
         <Link
-          className={classNames({ 'is-active': sex === null })}
+          className={classNames({ 'is-active': !sex })}
           to={{ search: getSearchWith({ sex: null }, searchParams) }}
         >
           All

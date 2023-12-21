@@ -10,6 +10,8 @@ import { Person } from './Person';
 import { ORDER_PARAM, SORT_PARAM } from '../types/Sort';
 import { getSearchWith } from '../utils/searchHelper';
 
+const colWithSortValues = ['Name', 'Sex', 'Born', 'Died'];
+
 type Props = {
   people: PersonType[] | null;
 };
@@ -18,7 +20,6 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
   const [searchParams] = useSearchParams();
   const sort = searchParams.get(SORT_PARAM) || null;
   const order = searchParams.get(ORDER_PARAM) || null;
-  const colWithSortValues = ['Name', 'Sex', 'Born', 'Died'];
 
   function setParams(param: string) {
     let params;
