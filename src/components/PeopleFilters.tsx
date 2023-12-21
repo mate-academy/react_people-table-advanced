@@ -1,10 +1,11 @@
 import React, { useEffect, useMemo } from 'react';
-import { NavLink, useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import classNames from 'classnames';
 import { usePeopleContext } from './PeopleContext/PeopleContext';
 import { calculateBirthCenturies } from './function/calculateBirthCenturies';
 import { SearchLink } from './SearchLink';
-import { Person } from '../types';
+import { filterPeopleByCenturies } from './function/filterPeopleByCenturies';
+import { filterPeopleBySex } from './function/filterPeopleBySex';
 
 export const PeopleFilters = () => {
   const {
@@ -18,18 +19,11 @@ export const PeopleFilters = () => {
   const century = useMemo(
     () => searchParams.getAll('centuries') || [], [searchParams],
   );
+
+  const sexSearch = useMemo(
+    () => searchParams.get('sex'), [searchParams],
+  );
   const centurysNumber = calculateBirthCenturies(people);
-
-  const filterPeopleByCenturies = (
-    peopleArray: Person[],
-    selectedCenturies: string[],
-  ) => {
-    return peopleArray.filter(person => {
-      const personCentury = Math.ceil(person.born / 100).toString();
-
-      return selectedCenturies.includes(personCentury);
-    });
-  };
 
   useEffect(() => {
     const searchParamValue = searchParams.get('query') || '';
@@ -45,7 +39,12 @@ export const PeopleFilters = () => {
       ? filteredByName
       : filterPeopleByCenturies(filteredByName, century);
 
-    setFilteredPeople(filteredByCentury);
+    // filterPeopleBySex
+    const filteredBySex = !sexSearch
+      ? filteredByCentury
+      : filterPeopleBySex(filteredByCentury, sexSearch);
+
+    setFilteredPeople(filteredBySex);
   }, [searchParams, people, setSearchByName, setFilteredPeople, century]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -63,11 +62,11 @@ export const PeopleFilters = () => {
     setSearchParams(param);
   };
 
-  const handleReset = () => {
-    searchParams.delete('centuries', 'query');
-  };
+  const handleCenturyFilter = (ch: string | null) => {
+    if (!ch) {
+      return null;
+    }
 
-  const handleCenturyFilter = (ch: string) => {
     const newCenturies = century.includes(`${ch}`)
       ? century.filter(item => item !== `${ch}`)
       : [...century, ch];
@@ -75,14 +74,62 @@ export const PeopleFilters = () => {
     return newCenturies;
   };
 
+  const handleSexFilter = (fm:string | null) => {
+    if (!fm) {
+      return null;
+    }
+
+    return fm === 'm' ? 'm' : 'f';
+  };
+
+  const handleReset = () => {
+    searchParams.delete('centuries', 'query');
+  };
+
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        <a className="is-active" href="#/people">All</a>
-        <a className="" href="#/people?sex=m">Male</a>
-        <a className="" href="#/people?sex=f">Female</a>
+        <SearchLink
+          params={{
+            sex: handleSexFilter(null),
+          }}
+          className={
+            classNames(
+              {
+                'is-active': !(sexSearch === 'm' || sexSearch === 'f'),
+              },
+            )
+          }
+        >
+          All
+        </SearchLink>
+        <SearchLink
+          params={{
+            sex: handleSexFilter('m'),
+          }}
+          className={
+            classNames(
+              { 'is-active': sexSearch === 'm' },
+            )
+          }
+        >
+          Male
+        </SearchLink>
+
+        <SearchLink
+          params={{
+            sex: handleSexFilter('f'),
+          }}
+          className={
+            classNames(
+              { 'is-active': sexSearch === 'f' },
+            )
+          }
+        >
+          Female
+        </SearchLink>
       </p>
 
       <div className="panel-block">
@@ -126,13 +173,15 @@ export const PeopleFilters = () => {
           </div>
 
           <div className="level-right ml-4">
-            <NavLink
+            <SearchLink
               data-cy="centuryALL"
               className="button is-success is-outlined"
-              to="#/people"
+              params={{
+                centuries: handleCenturyFilter(null),
+              }}
             >
               All
-            </NavLink>
+            </SearchLink>
           </div>
         </div>
       </div>
