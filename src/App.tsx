@@ -1,30 +1,23 @@
-import { Outlet } from 'react-router-dom';
+import { Outlet, useLocation, useParams } from 'react-router-dom';
 import './App.scss';
 import { Navigation } from './components/Navigation/Navigation';
 
-export const App = () => (
-  <div data-cy="app">
-    <Navigation />
-    <main className="section">
-      <div className="container">
-        <Outlet />
-      </div>
-    </main>
-  </div>
-);
+export const App = () => {
+  const { slug } = useParams();
+  const { pathname, search, state } = useLocation();
 
-// export const App = () => {
-//   return (
-//     <div data-cy="app">
-//       <Navbar />
-
-//       <div className="section">
-//         <div className="container">
-//           <h1 className="title">Home Page</h1>
-//           <h1 className="title">Page not found</h1>
-//           <PeoplePage />
-//         </div>
-//       </div>
-//     </div>
-//   );
-// };
+  return (
+    <div data-cy="app">
+      <Navigation />
+      <p className="centre">{`slug ${slug} `}</p>
+      <p className="centre">{`pathname ${pathname} `}</p>
+      <p className="centre">{`search ${search} `}</p>
+      <p className="centre">{`state ${state} `}</p>
+      <main className="section">
+        <div className="container">
+          <Outlet />
+        </div>
+      </main>
+    </div>
+  );
+};

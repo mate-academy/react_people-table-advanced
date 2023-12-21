@@ -1,18 +1,22 @@
-import { useEffect, useState } from 'react';
 import classNames from 'classnames';
 import { Link, useParams } from 'react-router-dom';
 
 import { Loader } from '../components/Loader';
-import { getPeople } from '../api';
 import { Person } from '../types';
 import { PersonLink } from '../components/PersonLink';
 import { convertToSlug } from '../components/function/convertToSlug';
-// import { convertToSlug } from '../components/function/convertToSlug';
+import { usePeopleContext } from '../components/PeopleContext/PeopleContext';
 
 export const TablePeople = () => {
-  const [loading, setLoading] = useState(true);
-  const [people, setPeople] = useState<Person[]>([]);
-  const [errorMessage, setError] = useState<string | null>(null);
+  const {
+    loading,
+    people,
+    errorMessage,
+    isMotherInArray,
+    isFatherInArray,
+    filteredPeople,
+    searchByName,
+  } = usePeopleContext();
 
   const { slug } = useParams();
 
@@ -43,30 +47,6 @@ export const TablePeople = () => {
     });
   }
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const data = await getPeople();
-
-        setPeople(data);
-      } catch (error) {
-        setError('Something went wrong');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-  }, []);
-
-  const isMotherInArray = (name: string | null) => {
-    return name ? people.map(p => p.name).includes(name) : false;
-  };
-
-  const isFatherInArray = (name: string | null) => {
-    return name ? people.map(p => p.name).includes(name) : false;
-  };
-
   return (
     <div className="block">
       <div className="box table-container">
@@ -85,104 +65,115 @@ export const TablePeople = () => {
         )}
 
         {!loading && !errorMessage && (
-          <table
-            data-cy="peopleTable"
-            className="table is-striped is-hoverable is-narrow is-fullwidth"
-          >
-            <thead>
-              <tr>
-                <th>
-                  <span className="is-flex is-flex-wrap-nowrap">
-                    Name
-                    <Link to="#/people?sort=name">
-                      <span className="icon">
-                        <i className="fas fa-sort" />
-                      </span>
-                    </Link>
-                  </span>
-                </th>
+          <>
+            { }
+          </>
+        )}
 
-                <th>
-                  <span className="is-flex is-flex-wrap-nowrap">
-                    Sex
-                    <Link to="#/people?sort=sex">
-                      <span className="icon">
-                        <i className="fas fa-sort" />
-                      </span>
-                    </Link>
-                  </span>
-                </th>
+        {!loading && !errorMessage && (
+          filteredPeople.length === 0 && searchByName.length > 0 ? (
+            <p>There are no people matching the current search criteria</p>
+          ) : (
+            <table
+              data-cy="peopleTable"
+              className="table is-striped is-hoverable is-narrow is-fullwidth"
+            >
+              <thead>
+                <tr>
+                  <th>
+                    <span className="is-flex is-flex-wrap-nowrap">
+                      Name
+                      <Link to="#/people?sort=name">
+                        <span className="icon">
+                          <i className="fas fa-sort" />
+                        </span>
+                      </Link>
+                    </span>
+                  </th>
 
-                <th>
-                  <span className="is-flex is-flex-wrap-nowrap">
-                    Born
-                    <Link to="#/people?sort=born&amp;order=desc">
-                      <span className="icon">
-                        <i className="fas fa-sort-up" />
-                      </span>
-                    </Link>
-                  </span>
-                </th>
+                  <th>
+                    <span className="is-flex is-flex-wrap-nowrap">
+                      Sex
+                      <Link to="#/people?sort=sex">
+                        <span className="icon">
+                          <i className="fas fa-sort" />
+                        </span>
+                      </Link>
+                    </span>
+                  </th>
 
-                <th>
-                  <span className="is-flex is-flex-wrap-nowrap">
-                    Died
-                    <Link to="#/people?sort=died">
-                      <span className="icon">
-                        <i className="fas fa-sort" />
-                      </span>
-                    </Link>
-                  </span>
-                </th>
+                  <th>
+                    <span className="is-flex is-flex-wrap-nowrap">
+                      Born
+                      <Link to="#/people?sort=born&amp;order=desc">
+                        <span className="icon">
+                          <i className="fas fa-sort-up" />
+                        </span>
+                      </Link>
+                    </span>
+                  </th>
 
-                <th>Mother</th>
-                <th>Father</th>
-              </tr>
-            </thead>
-            <tbody>
+                  <th>
+                    <span className="is-flex is-flex-wrap-nowrap">
+                      Died
+                      <Link to="#/people?sort=died">
+                        <span className="icon">
+                          <i className="fas fa-sort" />
+                        </span>
+                      </Link>
+                    </span>
+                  </th>
 
-              {people.map(person => {
-                const {
-                  name, sex, born, died, motherName, fatherName,
-                } = person;
+                  <th>Mother</th>
+                  <th>Father</th>
+                </tr>
+              </thead>
+              <tbody>
 
-                return (
-                  <tr
-                    key={name}
-                    data-cy="person"
-                    className={getRowClassName(person, slug)}
-                  >
-                    <td aria-label="CHOOSE">
-                      <PersonLink person={person} />
-                    </td>
-                    <td>{sex}</td>
-                    <td>{born}</td>
-                    <td>{died}</td>
-                    <td>
-                      {isMotherInArray(motherName) ? (
-                        <PersonLink person={
-                          getPersonByName(motherName!, people)
-                        }
-                        />
-                      ) : (
-                        motherName ?? '-'
-                      )}
-                    </td>
-                    <td>
-                      {isFatherInArray(fatherName) ? (
-                        <PersonLink person={
-                          getPersonByName(fatherName!, people)
-                        }
-                        />
-                      ) : (
-                        fatherName ?? '-'
-                      )}
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
+                {(filteredPeople.length > 0 || searchByName ? filteredPeople
+                  : people).map(person => {
+                  const {
+                    name, sex, born, died, motherName, fatherName,
+                  } = person;
+
+                  return (
+                    <tr
+                      key={name}
+                      data-cy="person"
+                      className={getRowClassName(person, slug)}
+                    >
+                      <td aria-label="CHOOSE">
+                        <PersonLink person={person} />
+                      </td>
+                      <td>{sex}</td>
+                      <td>{born}</td>
+                      <td>{died}</td>
+                      <td>
+                        {isMotherInArray(motherName) ? (
+                          <PersonLink person={
+                            getPersonByName(motherName!, people)
+                          }
+                          />
+                        ) : (
+                          motherName ?? '-'
+                        )}
+                      </td>
+                      <td>
+                        {isFatherInArray(fatherName) ? (
+                          <PersonLink person={
+                            getPersonByName(fatherName!, people)
+                          }
+                          />
+                        ) : (
+                          fatherName ?? '-'
+                        )}
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          )
         )}
       </div>
     </div>
