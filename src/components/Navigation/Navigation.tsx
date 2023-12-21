@@ -16,7 +16,7 @@ export const Navigation = () => (
               'has-background-grey-lighter': isActive,
             },
           )}
-          to="/"
+          to="../"
         >
           Home
         </NavLink>

@@ -39,7 +39,6 @@ export const PeopleFilters = () => {
       ? filteredByName
       : filterPeopleByCenturies(filteredByName, century);
 
-    // filterPeopleBySex
     const filteredBySex = !sexSearch
       ? filteredByCentury
       : filterPeopleBySex(filteredByCentury, sexSearch);
@@ -80,10 +79,6 @@ export const PeopleFilters = () => {
     }
 
     return fm === 'm' ? 'm' : 'f';
-  };
-
-  const handleReset = () => {
-    searchParams.delete('centuries', 'query');
   };
 
   return (
@@ -175,7 +170,12 @@ export const PeopleFilters = () => {
           <div className="level-right ml-4">
             <SearchLink
               data-cy="centuryALL"
-              className="button is-success is-outlined"
+              className={
+                classNames(
+                  'button is-outlined',
+                  { 'is-success': !century.length },
+                )
+              }
               params={{
                 centuries: handleCenturyFilter(null),
               }}
@@ -187,13 +187,16 @@ export const PeopleFilters = () => {
       </div>
 
       <div className="panel-block">
-        <a
+        <SearchLink
           className="button is-link is-outlined is-fullwidth"
-          href="#/people"
-          onClick={handleReset}
+          params={{
+            centuries: null,
+            sex: null,
+            query: null,
+          }}
         >
           Reset all filters
-        </a>
+        </SearchLink>
       </div>
     </nav>
   );
