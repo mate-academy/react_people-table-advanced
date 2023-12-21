@@ -4,14 +4,14 @@ import {
   useRef,
   useState,
 } from 'react';
-import { Link, useSearchParams } from 'react-router-dom';
-// import { URLSearchParams } from 'url';
+import { useSearchParams } from 'react-router-dom';
 import { PeopleFilters } from './PeopleFilters';
 import { Loader } from './Loader';
 import { Person } from '../types';
 import { getPeople } from '../api';
 import { PersonLink } from './PeopleTable';
 import { SearchLink } from './SearchLink';
+import { Sort } from '../types/Sort';
 
 export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);
@@ -39,18 +39,21 @@ export const PeoplePage = () => {
     fetchData();
   }, []);
 
-  const sex = searchParams.get('sex');
-  const centuries = searchParams.getAll('centuries');
-  const query = searchParams.get('query');
+  const sex = searchParams.get(Sort.sex);
+  const centuries = searchParams.getAll(Sort.centuries);
+  const query = searchParams.get(Sort.query);
+  const sort = searchParams.get(Sort.sort);
+  const order = searchParams.get(Sort.order);
+  const typesSort = ['Name', 'Sex', 'Born', 'Died'];
 
   const filteredPeople = useMemo(() => {
-    let peoples = people;
+    let peoples = [...people];
 
     if (sex) {
       peoples = peoples.filter(person => person.sex === sex);
     }
 
-    if (centuries) { // Проблема з цим
+    if (centuries.length) {
       peoples = peoples.filter(person => centuries
         .includes((parseInt(person.born
           .toString().slice(0, 2), 10) + 1).toString()));
@@ -58,11 +61,75 @@ export const PeoplePage = () => {
 
     if (query) {
       peoples = peoples.filter(person => person.name.toLowerCase()
-        .includes(query.toLowerCase()));
+        .includes(query.toLowerCase())
+        || person.motherName?.toLowerCase().includes(query.toLowerCase())
+        || person.fatherName?.toLowerCase().includes(query.toLowerCase()));
+    }
+
+    if (sort) {
+      switch (sort) {
+        case 'name':
+          peoples = peoples.sort((a, b) => a.name.localeCompare(b.name));
+          break;
+        case Sort.sex:
+          peoples = peoples.sort((a, b) => a.sex.localeCompare(b.sex));
+          break;
+        case 'born':
+          peoples = peoples.sort((a, b) => a.born - b.born);
+          break;
+        case 'died':
+          peoples = peoples.sort((a, b) => a.died - b.died);
+          break;
+        default:
+          break;
+      }
+
+      if (order === Sort.desc) {
+        peoples.reverse();
+      }
     }
 
     return peoples;
-  }, [query, people, sex, centuries]);
+  }, [order, sort, query, people, sex, centuries]);
+
+  const handleSortName = (type: string) => {
+    switch (sort) {
+      case type:
+        if (order !== Sort.desc) {
+          return (
+            <SearchLink params={{
+              order: Sort.desc,
+            }}
+            >
+              <span className="icon">
+                <i className="fas fa-sort-up" />
+              </span>
+            </SearchLink>
+          );
+        }
+
+        return (
+          <SearchLink params={{
+            sort: null,
+            order: null,
+          }}
+          >
+            <span className="icon">
+              <i className="fas fa-sort-down" />
+            </span>
+          </SearchLink>
+        );
+
+      default:
+        return (
+          <SearchLink params={{ sort: type, order: null }}>
+            <span className="icon">
+              <i className="fas fa-sort" />
+            </span>
+          </SearchLink>
+        );
+    }
+  };
 
   return (
     <>
@@ -106,87 +173,18 @@ export const PeoplePage = () => {
                         >
                           <thead>
                             <tr>
-                              <th>
-                                <span className="is-flex is-flex-wrap-nowrap">
-                                  Name
-                                  {(() => { // Замінити на функцію
-                                    const sort = searchParams.get('sort');
-                                    const order = searchParams.get('order');
-
-                                    switch (sort) {
-                                      case 'name':
-                                        if (order !== 'desc') {
-                                          return (
-                                            <SearchLink params={{
-                                              order: 'desc',
-                                            }}
-                                            >
-                                              <span className="icon">
-                                                <i className="fas fa-sort-up" />
-                                              </span>
-                                            </SearchLink>
-                                          );
-                                        }
-
-                                        return (
-                                          <SearchLink params={{
-                                            sort: null,
-                                            order: null,
-                                          }}
-                                          >
-                                            <span className="icon">
-                                              <i className="fas fa-sort-down" />
-                                            </span>
-                                          </SearchLink>
-                                        );
-
-                                      default:
-                                        return (
-                                          <SearchLink params={{ sort: 'name' }}>
-                                            <span className="icon">
-                                              <i className="fas fa-sort" />
-                                            </span>
-                                          </SearchLink>
-                                        );
-                                    }
-                                  })()}
-                                </span>
-                              </th>
-
-                              <th>
-                                <span className="is-flex is-flex-wrap-nowrap">
-                                  Sex
-                                  <Link to="#/people?sort=sex">
-                                    <span className="icon">
-                                      <i className="fas fa-sort" />
+                              {
+                                typesSort.map(type => (
+                                  <th>
+                                    <span
+                                      className="is-flex is-flex-wrap-nowrap"
+                                    >
+                                      {type}
+                                      {handleSortName(type.toLocaleLowerCase())}
                                     </span>
-                                  </Link>
-                                </span>
-                              </th>
-
-                              <th>
-                                <span className="is-flex is-flex-wrap-nowrap">
-                                  Born
-                                  <Link to="#/people?sort=born&amp;order=desc">
-                                    <span className="icon">
-                                      <i className="fas fa-sort" />
-                                      {/* fa-sort-up fa-sort-down */}
-                                    </span>
-                                  </Link>
-                                </span>
-                              </th>
-
-                              <th>
-                                <span className="is-flex is-flex-wrap-nowrap">
-                                  Died
-                                  <Link to="#/people?sort=died">
-                                    <span className="icon">
-                                      <i className="fas fa-sort" />
-                                    </span>
-                                  </Link>
-                                </span>
-                              </th>
-
+                                  </th>
+                                ))
+                              }
                               <th>Mother</th>
                               <th>Father</th>
                             </tr>
@@ -194,7 +192,7 @@ export const PeoplePage = () => {
 
                           <tbody>
                             {
-                              filteredPeople.map(person => (
+                              (filteredPeople).map(person => (
                                 <PersonLink
                                   key={person.slug}
                                   person={person}
@@ -215,45 +213,3 @@ export const PeoplePage = () => {
     </>
   );
 };
-
-// {/* <th>
-// <span className="is-flex is-flex-wrap-nowrap">
-//   Name
-//   {(() => {
-//     switch (searchParams.get('sort') === 'name') {
-//       case 'name': // #/people?sort=name
-//         return (
-//           <SearchLink
-//             params={{ order: 'desc' }}
-//           >
-//             <span
-//               className="icon"
-//             >
-//               <i className="fa-sort-up" />
-//             </span>
-//           </SearchLink>
-//         );
-//       case '#/people?sort=name&order=desc':
-//         return (
-//           <SearchLink params={{
-//             name: null,
-//             order: null,
-//           }}
-//           >
-//             <span className="icon">
-//               <i className="fa-sort-down" />
-//             </span>
-//           </SearchLink>
-//         );
-//       default:
-//         return (
-//           <SearchLink params={{ sort: 'name' }}>
-//             <span className="icon">
-//               <i className="fas fa-sort" />
-//             </span>
-//           </SearchLink>
-//         );
-//     }
-//   })()}
-// </span>
-// </th> */}

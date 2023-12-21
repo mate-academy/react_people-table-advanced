@@ -2,6 +2,7 @@
 import { Link, useParams } from 'react-router-dom';
 import classNames from 'classnames';
 import { Person } from '../types';
+import { Sort } from '../types/Sort';
 
 interface PersonLinkType {
   person: Person;
@@ -30,7 +31,7 @@ export const PersonLink: React.FC<PersonLinkType> = ({ person, people }) => {
       })}
     >
       <td>
-        {sex === 'm'
+        {sex === Sort.male
           ? (
             <Link to={`/people/${person.slug}`}>
               {name}
