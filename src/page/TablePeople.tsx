@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
+/* eslint-disable react-hooks/exhaustive-deps */
 import classNames from 'classnames';
 import { useParams, useSearchParams } from 'react-router-dom';
 import { useEffect, useMemo } from 'react';
@@ -33,10 +35,10 @@ export const TablePeople = () => {
   const sortSearch = useMemo(
     () => searchParams.get('sort'), [searchParams],
   );
-
   const orderSearch = useMemo(
     () => searchParams.get('order'), [searchParams],
   );
+
   const { slug } = useParams();
 
   const handleSort = (field: string | null) => {
@@ -135,14 +137,16 @@ export const TablePeople = () => {
   useEffect(() => {
     let sorted = [];
 
-    if (filteredPeople.length === 0) {
+    if (!sortSearch) {
+      sorted = [...people];
+    } else if (filteredPeople.length === 0) {
       sorted = sortedPeople(people);
     } else {
       sorted = sortedPeople(filteredPeople);
     }
 
     setFilteredPeople(sorted);
-  }, [sortSearch, orderSearch]);
+  }, [searchParams, people]);
 
   return (
     <div className="block">

@@ -12,9 +12,7 @@ export const Root = () => (
       <Route path="*" element={<PageNotFound />} />
       <Route path="home" element={<Navigate to="/" />} />
       <Route path="people" element={<Poeple />}>
-        {/* <Route index path="*" element={<PeoplePage />} /> */}
         <Route index path="*" element={<TablePeople />} />
-        {/* </Route> */}
         <Route index path=":slug" element={<TablePeople />} />
       </Route>
     </Route>

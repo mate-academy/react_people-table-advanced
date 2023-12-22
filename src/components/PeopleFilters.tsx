@@ -29,10 +29,8 @@ export const PeopleFilters = () => {
     const searchParamValue = searchParams.get('query') || '';
 
     setSearchByName(searchParamValue);
-
     const filteredByName = people.filter((person) => (
-      person.name.toLowerCase()
-        .includes(searchParamValue.toLowerCase())
+      person.name.toLowerCase().includes(searchParamValue.toLowerCase())
     ));
 
     const filteredByCentury = century.length === 0
@@ -44,7 +42,13 @@ export const PeopleFilters = () => {
       : filterPeopleBySex(filteredByCentury, sexSearch);
 
     setFilteredPeople(filteredBySex);
-  }, [searchParams, people, setSearchByName, setFilteredPeople, century]);
+  }, [
+    searchParams,
+    people,
+    setFilteredPeople,
+    setSearchByName,
+    century,
+    sexSearch]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
@@ -73,7 +77,7 @@ export const PeopleFilters = () => {
     return newCenturies;
   };
 
-  const handleSexFilter = (fm:string | null) => {
+  const handleSexFilter = (fm: string | null) => {
     if (!fm) {
       return null;
     }
