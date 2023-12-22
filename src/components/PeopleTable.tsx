@@ -52,9 +52,10 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
                 {item}
                 <Link to={{ search: setParams(item.toLowerCase()) }}>
                   <span className="icon">
-                    <i className={classNames('fa fa-sort', {
+                    <i className={classNames('fa', {
+                      'fa-sort': sort !== item.toLowerCase(),
                       'fa-sort-up': sort === item.toLowerCase() && !order,
-                      'fa-sort-down': sort === item.toLowerCase() && order,
+                      'fa-sort-down': sort === item.toLowerCase() && order === 'desc',
                     })}
                     />
                   </span>
