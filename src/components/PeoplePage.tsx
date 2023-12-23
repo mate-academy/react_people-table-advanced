@@ -67,39 +67,13 @@ export const PeoplePage = () => {
     if (centuries.length) {
       let peopleOfCentyries: Person [] = [];
 
-      if (centuries.includes('16')) {
-        peopleOfCentyries = [...peopleOfCentyries,
-          ...result.filter(
-            (person: Person) => Math.ceil(person.born / 100) === 16,
-          )];
-      }
-
-      if (centuries.includes('17')) {
-        peopleOfCentyries = [...peopleOfCentyries,
-          ...result.filter(
-            (person: Person) => Math.ceil(person.born / 100) === 17,
-          )];
-      }
-
-      if (centuries.includes('18')) {
-        peopleOfCentyries = [...peopleOfCentyries,
-          ...result.filter(
-            (person: Person) => Math.ceil(person.born / 100) === 18,
-          )];
-      }
-
-      if (centuries.includes('19')) {
-        peopleOfCentyries = [...peopleOfCentyries,
-          ...result.filter(
-            (person: Person) => Math.ceil(person.born / 100) === 19,
-          )];
-      }
-
-      if (centuries.includes('20')) {
-        peopleOfCentyries = [...peopleOfCentyries,
-          ...result.filter(
-            (person: Person) => Math.ceil(person.born / 100) === 20,
-          )];
+      for (let i = 16; i < 21; i += 1) {
+        if (centuries.includes(`${i}`)) {
+          peopleOfCentyries = [...peopleOfCentyries,
+            ...result.filter(
+              (person: Person) => Math.ceil(person.born / 100) === i,
+            )];
+        }
       }
 
       result = peopleOfCentyries;
@@ -109,17 +83,11 @@ export const PeoplePage = () => {
       result.sort((p1, p2) => {
         switch (sort) {
           case 'name':
-            return p1.name.localeCompare(p2.name);
-
           case 'sex':
-            return p1.sex.localeCompare(p2.sex);
-
+            return p1[sort].localeCompare(p2[sort]);
           case 'born':
-            return p1.born - p2.born;
-
           case 'died':
-            return p1.died - p2.died;
-
+            return p1[sort] - p2[sort];
           default:
             return 1;
         }

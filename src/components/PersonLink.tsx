@@ -1,5 +1,5 @@
 import cn from 'classnames';
-import { useParams, useSearchParams } from 'react-router-dom';
+import { Link, useParams, useSearchParams } from 'react-router-dom';
 import { Person } from '../types/Person';
 
 type Props = {
@@ -15,43 +15,40 @@ export const PersonLink: React.FC<Props> = ({ person, people }) => {
   } = person;
 
   function getMother() {
-    if (motherName) {
+    const mother = people.find(p => p.name === motherName);
+
+    if (mother) {
       return (
-        people.some(p => p.name === motherName)
-          ? (
-            <a
-              href={searchParams.toString()
-                ? `#/people/${people.find(p => p.name === motherName)?.slug}?${searchParams.toString()}`
-                : `#/people/${people.find(p => p.name === motherName)?.slug}`}
-              className="has-text-danger"
-            >
-              {motherName}
-            </a>
-          )
-          : motherName
+        <Link
+          to={urlSlug
+            ? `../${mother.slug}?${searchParams.toString()}`
+            : `/people/${mother.slug}`}
+          className="has-text-danger"
+        >
+          {mother.name}
+        </Link>
       );
     }
 
-    return '-';
+    return motherName || '-';
   }
 
   function getFather() {
-    if (fatherName) {
+    const father = people.find(p => p.name === fatherName);
+
+    if (father) {
       return (
-        people.some(p => p.name === fatherName)
-          ? (
-            <a href={searchParams.toString()
-              ? `#/people/${people.find(p => p.name === fatherName)?.slug}?${searchParams.toString()}`
-              : `#/people/${people.find(p => p.name === fatherName)?.slug}`}
-            >
-              {fatherName}
-            </a>
-          )
-          : fatherName
+        <Link
+          to={urlSlug
+            ? `../${father.slug}?${searchParams.toString()}`
+            : `/people/${father.slug}`}
+        >
+          {father.name}
+        </Link>
       );
     }
 
-    return '-';
+    return fatherName || '-';
   }
 
   return (
@@ -62,16 +59,16 @@ export const PersonLink: React.FC<Props> = ({ person, people }) => {
       data-cy="person"
     >
       <td>
-        <a
+        <Link
+          to={urlSlug
+            ? `../${slug}?${searchParams.toString()}`
+            : `${slug}`}
           className={
             cn({ 'has-text-danger': sex === 'f' })
           }
-          href={searchParams.toString()
-            ? `#/people/${slug}?${searchParams.toString()}`
-            : `#/people/${slug}`}
         >
           {name}
-        </a>
+        </Link>
       </td>
 
       <td>{sex}</td>

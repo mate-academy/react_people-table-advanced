@@ -8,6 +8,7 @@ export const PeopleFilters = () => {
   const query = searchParams.get('query') || '';
   const sex = searchParams.get('sex') || '';
   const centuries = searchParams.getAll('centuries') || [];
+  const allCenturies = ['16', '17', '18', '19', '20'];
 
   function setSearchWith(params: any) {
     const search = getSearchWith(searchParams, params);
@@ -70,7 +71,7 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            {['16', '17', '18', '19', '20'].map((century: string) => (
+            {allCenturies.map((century: string) => (
               <SearchLink
                 params={{
                   centuries: centuries.includes(century)
