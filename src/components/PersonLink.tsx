@@ -10,6 +10,14 @@ type Props = {
 
 export const PersonLink: React.FC<Props> = ({ person, peopleList }) => {
   const { slug } = useParams();
+  const {
+    name,
+    sex,
+    born,
+    died,
+    motherName,
+    fatherName,
+  } = person;
 
   const mother = peopleList.find(mom => mom.name === person.motherName);
   const father = peopleList.find(dad => dad.name === person.fatherName);
@@ -25,34 +33,34 @@ export const PersonLink: React.FC<Props> = ({ person, peopleList }) => {
         <Link
           to={`../${person.slug}`}
           className={classNames({
-            'has-text-danger': person.sex === 'f',
+            'has-text-danger': sex === 'f',
           })}
         >
-          {person.name}
+          {name}
         </Link>
       </td>
-      <td>{person.sex}</td>
-      <td>{person.born}</td>
-      <td>{person.died}</td>
+      <td>{sex}</td>
+      <td>{born}</td>
+      <td>{died}</td>
       <td>
         {mother ? (
           <Link
             to={`../${mother.slug}`}
             className="has-text-danger"
           >
-            {person.motherName}
+            {motherName}
           </Link>
         ) : (
-          person.motherName || '-'
+          motherName || '-'
         )}
       </td>
       <td>
         {father ? (
           <Link to={`../${father.slug}`}>
-            {person.fatherName}
+            {fatherName}
           </Link>
         ) : (
-          person.fatherName || '-'
+          fatherName || '-'
         )}
       </td>
     </tr>
