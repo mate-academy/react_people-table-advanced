@@ -1,12 +1,14 @@
 import React, {
-  createContext, useContext, useEffect, useState, ReactNode,
+  createContext, useContext, useState, ReactNode,
 } from 'react';
 import { Person } from '../../types';
-import { getPeople } from '../../api';
 
 interface PeopleContextProps {
-  loading: boolean;
+  isLoading: boolean;
+  setIsLoading:React.Dispatch<React.SetStateAction<boolean>>;
+
   people: Person[];
+  setPeople:React.Dispatch<React.SetStateAction<Person[]>>;
 
   searchByName:string;
   setSearchByName: React.Dispatch<React.SetStateAction<string>>;
@@ -15,8 +17,16 @@ interface PeopleContextProps {
   setFilteredPeople: React.Dispatch<React.SetStateAction<Person[]>>;
 
   errorMessage: string | null;
+  setError:React.Dispatch<React.SetStateAction<string | null>>;
+
   isMotherInArray: (name: string | null) => boolean;
   isFatherInArray: (name: string | null) => boolean;
+
+  isSorting: boolean | null;
+  isFiltering: boolean | null;
+
+  setIsSorting: React.Dispatch<React.SetStateAction<boolean | null>>;
+  setIsFiltering: React.Dispatch<React.SetStateAction<boolean | null>>;
 }
 
 const PeopleContext = createContext<PeopleContextProps | undefined>(undefined);
@@ -26,29 +36,15 @@ interface PeopleProviderProps {
 }
 
 export const PeopleProvider: React.FC<PeopleProviderProps> = ({ children }) => {
-  const [loading, setLoading] = useState(true);
-  const [searchByName, setSearchByName] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
+  const [searchByName, setSearchByName] = useState<string>('');
 
   const [people, setPeople] = useState<Person[]>([]);
   const [errorMessage, setError] = useState<string | null>(null);
 
   const [filteredPeople, setFilteredPeople] = useState<Person[]>([]);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const data = await getPeople();
-
-        setPeople(data);
-      } catch (error) {
-        setError('Something went wrong');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-  }, []);
+  const [isFiltering, setIsFiltering] = useState<boolean | null>(null);
+  const [isSorting, setIsSorting] = useState<boolean | null>(null);
 
   const isMotherInArray = (name: string | null): boolean => {
     return name ? people.map((p) => p.name).includes(name) : false;
@@ -59,7 +55,7 @@ export const PeopleProvider: React.FC<PeopleProviderProps> = ({ children }) => {
   };
 
   const contextValue: PeopleContextProps = {
-    loading,
+    isLoading,
     people,
     errorMessage,
     isMotherInArray,
@@ -68,6 +64,13 @@ export const PeopleProvider: React.FC<PeopleProviderProps> = ({ children }) => {
     setFilteredPeople,
     searchByName,
     setSearchByName,
+    isSorting,
+    isFiltering,
+    setIsSorting,
+    setIsFiltering,
+    setIsLoading,
+    setPeople,
+    setError,
   };
 
   return (

@@ -1,17 +1,14 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import classNames from 'classnames';
 import { usePeopleContext } from './PeopleContext/PeopleContext';
 import { calculateBirthCenturies } from './function/calculateBirthCenturies';
 import { SearchLink } from './SearchLink';
-import { filterPeopleByCenturies } from './function/filterPeopleByCenturies';
-import { filterPeopleBySex } from './function/filterPeopleBySex';
 
 export const PeopleFilters = () => {
   const {
     searchByName,
     setSearchByName,
-    setFilteredPeople,
     people,
   } = usePeopleContext();
 
@@ -23,39 +20,11 @@ export const PeopleFilters = () => {
   const sexSearch = useMemo(
     () => searchParams.get('sex'), [searchParams],
   );
+
   const centurysNumber = calculateBirthCenturies(people);
-
-  useEffect(() => {
-    const searchParamValue = searchParams.get('query') || '';
-
-    setSearchByName(searchParamValue);
-    const filteredByName = people.filter((person) => (
-      person.name.toLowerCase().includes(searchParamValue.toLowerCase())
-    ));
-
-    const filteredByCentury = century.length === 0
-      ? filteredByName
-      : filterPeopleByCenturies(filteredByName, century);
-
-    const filteredBySex = !sexSearch
-      ? filteredByCentury
-      : filterPeopleBySex(filteredByCentury, sexSearch);
-
-    setFilteredPeople(filteredBySex);
-  }, [
-    searchParams,
-    people,
-    setFilteredPeople,
-    setSearchByName,
-    century,
-    sexSearch]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
-
-    if (!value) {
-      searchParams.delete('query');
-    }
 
     setSearchByName(value);
 
@@ -63,6 +32,10 @@ export const PeopleFilters = () => {
 
     param.set('query', value);
     setSearchParams(param);
+
+    if (!value) {
+      searchParams.delete('query');
+    }
   };
 
   const handleCenturyFilter = (ch: string | null) => {
@@ -83,6 +56,10 @@ export const PeopleFilters = () => {
     }
 
     return fm === 'm' ? 'm' : 'f';
+  };
+
+  const handleReset = () => {
+    setSearchByName('');
   };
 
   return (
@@ -198,6 +175,7 @@ export const PeopleFilters = () => {
             sex: null,
             query: null,
           }}
+          onClick={handleReset}
         >
           Reset all filters
         </SearchLink>

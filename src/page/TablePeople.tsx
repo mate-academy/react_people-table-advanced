@@ -2,7 +2,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import classNames from 'classnames';
 import { useParams, useSearchParams } from 'react-router-dom';
-import { useEffect, useMemo } from 'react';
+import { useMemo } from 'react';
 
 import { Loader } from '../components/Loader';
 import { Person } from '../types';
@@ -20,13 +20,12 @@ export enum SortType {
 
 export const TablePeople = () => {
   const {
-    loading,
+    isLoading,
     people,
     errorMessage,
     isMotherInArray,
     isFatherInArray,
     filteredPeople,
-    setFilteredPeople,
     searchByName,
   } = usePeopleContext();
 
@@ -104,54 +103,60 @@ export const TablePeople = () => {
     return <i className="fas fa-sort" />;
   };
 
-  const compareByField = (a: Person, b: Person, field: SortType) => {
-    if (orderSearch === 'desc') {
-      return b[field] > a[field] ? 1 : -1;
-    }
+  // const compareByField = (a: Person, b: Person, field: SortType) => {
+  //   if (orderSearch === 'desc') {
+  //     return b[field] > a[field] ? 1 : -1;
+  //   }
 
-    return a[field] > b[field] ? 1 : -1;
-  };
+  //   return a[field] > b[field] ? 1 : -1;
+  // };
 
-  const sortedPeople = (peopleArray: Person[]) => {
-    if (!sortSearch) {
-      return peopleArray;
-    }
+  // const sortedPeople = (peopleArray: Person[]) => {
+  //   if (!sortSearch) {
+  //     return peopleArray;
+  //   }
 
-    const compareFunction = (a: Person, b: Person) => {
-      const field = sortSearch as SortType;
+  //   const compareFunction = (a: Person, b: Person) => {
+  //     const field = sortSearch as SortType;
 
-      switch (field) {
-        case SortType.Name:
-        case SortType.Sex:
-        case SortType.Born:
-        case SortType.Died:
-          return compareByField(a, b, field);
-        default:
-          return 0;
-      }
-    };
+  //     switch (field) {
+  //       case SortType.Name:
+  //       case SortType.Sex:
+  //       case SortType.Born:
+  //       case SortType.Died:
+  //         return compareByField(a, b, field);
+  //       default:
+  //         return 0;
+  //     }
+  //   };
 
-    return [...peopleArray].sort(compareFunction);
-  };
+  //   return [...peopleArray].sort(compareFunction);
+  // };
 
-  useEffect(() => {
-    let sorted = [];
+  // useEffect(() => {
+  //   let sorted = [];
+  //   console.log(!sortSearch);
 
-    if (!sortSearch) {
-      sorted = [...people];
-    } else if (filteredPeople.length === 0) {
-      sorted = sortedPeople(people);
-    } else {
-      sorted = sortedPeople(filteredPeople);
-    }
+  //   if (!sortSearch) {
+  //         console.log("1", isFiltering);
 
-    setFilteredPeople(sorted);
-  }, [searchParams, people]);
+  //     sorted = isFiltering ? filteredPeople : [...people];
+  //   }
+  //   //   } else if (filteredPeople.length === 0) {
+  //   //     console.log("2");
+
+  //   //     sorted = sortedPeople(people);
+  //   //   } else {
+  //   //     console.log("3");
+
+  //   //     sorted = sortedPeople(filteredPeople);
+  //   setFilteredPeople([...sorted]);
+  // }, [searchParams, people]);
 
   return (
     <div className="block">
       <div className="box table-container">
-        {loading && <Loader />}
+        {isLoading && <Loader />}
 
         {errorMessage && (
           <p data-cy="peopleLoadingError" className="has-text-danger">
@@ -159,13 +164,13 @@ export const TablePeople = () => {
           </p>
         )}
 
-        {!loading && !errorMessage && people.length === 0 && (
+        {!isLoading && !errorMessage && people.length === 0 && (
           <p data-cy="noPeopleMessage">
             There are no people on the server
           </p>
         )}
 
-        {!loading && !errorMessage && (
+        {!isLoading && !errorMessage && (
           filteredPeople.length === 0 && searchByName.length > 0 ? (
             <p>There are no people matching the current search criteria</p>
           ) : (
@@ -242,7 +247,8 @@ export const TablePeople = () => {
               </thead>
               <tbody>
 
-                {(filteredPeople.length > 0 || searchByName ? filteredPeople
+                {(filteredPeople.length > 0
+                  ? filteredPeople
                   : people).map(person => {
                   const {
                     name, sex, born, died, motherName, fatherName,
