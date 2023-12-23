@@ -1,12 +1,66 @@
+import { useState } from 'react';
+import { Link, useSearchParams } from 'react-router-dom';
+import classNames from 'classnames';
+import { SearchLink } from './SearchLink';
+import { getSearchWith } from '../utils/searchHelper';
+import { Sort } from '../types/Sort';
+
 export const PeopleFilters = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [inputSearch, setInputSearch] = useState('');
+
+  const centuries = searchParams.getAll(Sort.centuries) || [];
+  const sex = searchParams.get(Sort.sex) || null;
+  const centuriesMain = ['16', '17', '18', '19', '20'];
+
+  const handleCenturies = (value: string) => {
+    if (centuries.includes(value)) {
+      return { centuries: centuries.filter(year => year !== value) };
+    }
+
+    return { centuries: [value, ...centuries] };
+  };
+
+  const handleInputSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const text = event.target.value;
+
+    setInputSearch(text);
+
+    if (!text.trim()) {
+      setSearchParams(getSearchWith(searchParams, { query: null }));
+
+      return;
+    }
+
+    setSearchParams(getSearchWith(searchParams, { query: text }));
+  };
+
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        <a className="is-active" href="#/people">All</a>
-        <a className="" href="#/people?sex=m">Male</a>
-        <a className="" href="#/people?sex=f">Female</a>
+        <SearchLink
+          className={classNames({
+            'is-active': !sex?.includes(Sort.male)
+              && !sex?.includes(Sort.female),
+          })}
+          params={{ sex: null }}
+        >
+          All
+        </SearchLink>
+        <SearchLink
+          className={classNames({ 'is-active': sex?.includes(Sort.male) })}
+          params={{ sex: Sort.male }}
+        >
+          Male
+        </SearchLink>
+        <SearchLink
+          className={classNames({ 'is-active': sex?.includes(Sort.female) })}
+          params={{ sex: Sort.female }}
+        >
+          Female
+        </SearchLink>
       </p>
 
       <div className="panel-block">
@@ -16,6 +70,8 @@ export const PeopleFilters = () => {
             type="search"
             className="input"
             placeholder="Search"
+            value={inputSearch}
+            onChange={(event) => handleInputSearch(event)}
           />
 
           <span className="icon is-left">
@@ -27,66 +83,45 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            <a
-              data-cy="century"
-              className="button mr-1"
-              href="#/people?centuries=16"
-            >
-              16
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=17"
-            >
-              17
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=18"
-            >
-              18
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=19"
-            >
-              19
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1"
-              href="#/people?centuries=20"
-            >
-              20
-            </a>
+            {
+              centuriesMain.map(century => (
+                <SearchLink
+                  key={century}
+                  data-cy="century"
+                  className={classNames('button mr-1', {
+                    'is-info': centuries.includes(century),
+                  })}
+                  params={handleCenturies(century)}
+                >
+                  {century}
+                </SearchLink>
+              ))
+            }
           </div>
 
           <div className="level-right ml-4">
-            <a
+            <SearchLink
               data-cy="centuryALL"
-              className="button is-success is-outlined"
-              href="#/people"
+              className={classNames('button is-success', {
+                'is-outlined': !centuriesMain
+                  .every(century => !centuries.includes(century)),
+              })}
+              params={{ centuries: null }}
             >
               All
-            </a>
+            </SearchLink>
           </div>
         </div>
       </div>
 
       <div className="panel-block">
-        <a
+        <Link
           className="button is-link is-outlined is-fullwidth"
-          href="#/people"
+          to="/people"
+          onClick={() => setInputSearch('')}
         >
           Reset all filters
-        </a>
+        </Link>
       </div>
     </nav>
   );
