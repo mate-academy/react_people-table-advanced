@@ -22,15 +22,17 @@ export const PeopleFilters = () => {
   };
 
   const handleInputSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setInputSearch(event.target.value);
+    const text = event.target.value;
 
-    if (event.target.value === '') {
+    setInputSearch(text);
+
+    if (!text.trim()) {
       setSearchParams(getSearchWith(searchParams, { query: null }));
 
       return;
     }
 
-    setSearchParams(getSearchWith(searchParams, { query: event.target.value }));
+    setSearchParams(getSearchWith(searchParams, { query: text }));
   };
 
   return (
@@ -116,7 +118,7 @@ export const PeopleFilters = () => {
         <Link
           className="button is-link is-outlined is-fullwidth"
           to="/people"
-          // params={{ centuries: null, sex: null }}
+          onClick={() => setInputSearch('')}
         >
           Reset all filters
         </Link>
