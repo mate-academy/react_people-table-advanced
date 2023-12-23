@@ -1,19 +1,38 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
+import { useSearchParams } from 'react-router-dom';
 import { PeopleFilters } from './PeopleFilters';
 import { Loader } from './Loader';
 import { PeopleTable } from './PeopleTable';
 import { Person } from '../types';
 import { getPeople } from '../api';
 import { findParents } from '../utils/findParents';
+import { SortParams } from '../types/SortParams';
+import { filterPeople } from '../utils/filterPeople';
+import { sortPeople } from '../utils/sortPeople';
 
 export const PeoplePage = () => {
+  const [searchParams] = useSearchParams();
+
   const [people, setPeople] = useState<Person[]>([]);
   const [hasError, setHasError] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [hasNoPeople, setHasNoPeople] = useState(false);
 
   const hasPeople = !!people.length && !hasError;
+
+  const visiblePeople = useMemo(() => {
+    const sortParams = searchParams.get(SortParams.Sort);
+    const orderParams = searchParams.get(SortParams.Order);
+
+    const filteredPeople = filterPeople(searchParams, [...people]);
+
+    if (!sortParams) {
+      return filteredPeople;
+    }
+
+    return sortPeople(filteredPeople, sortParams, orderParams);
+  }, [searchParams, people]);
 
   useEffect(() => {
     (async () => {
@@ -57,11 +76,15 @@ export const PeoplePage = () => {
                 </p>
               )}
 
-              {false && (
-                <p>There are no people matching the current search criteria</p>
+              {hasPeople && (
+                !visiblePeople.length
+                  ? (
+                    <p>
+                      There are no people matching the current search criteria
+                    </p>
+                  )
+                  : <PeopleTable people={visiblePeople} />
               )}
-
-              {hasPeople && <PeopleTable people={people} />}
             </div>
           </div>
         </div>

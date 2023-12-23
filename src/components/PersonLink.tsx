@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 
 import cn from 'classnames';
 import { Person } from '../types';
@@ -10,11 +10,16 @@ type Props = {
 };
 
 export const PersonLink: React.FC<Props> = ({ person, children }) => {
+  const [searchParams] = useSearchParams();
+
   return (
     person
       ? (
         <Link
-          to={`./${person.slug}`}
+          to={{
+            pathname: `./${person.slug}`,
+            search: searchParams.toString(),
+          }}
           className={cn(
             { 'has-text-danger': person.sex === 'f' },
           )}

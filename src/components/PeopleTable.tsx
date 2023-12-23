@@ -2,13 +2,11 @@
 import { Link, useParams, useSearchParams } from 'react-router-dom';
 import cn from 'classnames';
 
-import { useCallback, useMemo } from 'react';
 import { Person } from '../types';
 import { PersonLink } from './PersonLink';
-import { FilterParams } from '../types/FilterParams';
-import { getSearchWith } from '../utils/searchHelper';
-import { SortParams } from '../types/SortParams';
 import { SortType } from '../types/SortType';
+import { getSortSearchString } from '../utils/getSortSearchString';
+import { getClassNames } from '../utils/getClassNames';
 
 type Props = {
   people: Person[],
@@ -17,114 +15,6 @@ type Props = {
 export const PeopleTable: React.FC<Props> = ({ people }) => {
   const { slug } = useParams();
   const [searchParams] = useSearchParams();
-
-  const visiblePeople = useMemo(() => {
-    let result = [...people];
-    const sexSearchValue = searchParams.get(FilterParams.Sex);
-    const querySearchValue = searchParams.get(FilterParams.Query);
-    const centurySearchValue = searchParams.getAll(FilterParams.Century);
-    const sortNameParams = searchParams.get(SortParams.Sort);
-    const orderParams = searchParams.get(SortParams.Order);
-
-    if (sexSearchValue) {
-      result = result.filter(p => p.sex === sexSearchValue);
-    }
-
-    if (querySearchValue) {
-      result = result.filter(p => {
-        return (
-          p.name.includes(querySearchValue)
-        || p.motherName?.includes(querySearchValue)
-        || p.fatherName?.includes(querySearchValue)
-        );
-      });
-    }
-
-    if (centurySearchValue.length) {
-      let peopleFromCenturies: Person[] = [];
-
-      centurySearchValue.forEach(century => {
-        const peopleFromCurrCentury = [...result].filter(p => (
-          Math.ceil(p.born / 100) === +century
-        ));
-
-        peopleFromCenturies = [
-          ...peopleFromCenturies,
-          ...peopleFromCurrCentury,
-        ];
-      });
-
-      result = peopleFromCenturies;
-    }
-
-    if (!sortNameParams) {
-      return result;
-    }
-
-    switch (sortNameParams) {
-      case SortType.Name:
-        result.sort(
-          (person1, person2) => person1.name.localeCompare(person2.name),
-        );
-        break;
-
-      case SortType.Sex:
-        result.sort(
-          (person1, person2) => person1.sex.localeCompare(person2.sex),
-        );
-        break;
-      case SortType.Born:
-        result.sort(
-          (person1, person2) => person1.born - person2.born,
-        );
-        break;
-      case SortType.Died:
-        result.sort(
-          (person1, person2) => person1.died - person2.died,
-        );
-        break;
-
-      default:
-        break;
-    }
-
-    if (orderParams) {
-      result.reverse();
-    }
-
-    return result;
-  }, [searchParams, people]);
-
-  const handleSort = useCallback((type: SortType): string => {
-    const sortNameParams = searchParams.get(SortParams.Sort);
-    const orderParams = searchParams.get(SortParams.Order);
-
-    switch (true) {
-      case sortNameParams === type && !orderParams:
-        return getSearchWith(
-          searchParams, { [SortParams.Order]: 'desc' },
-        );
-
-      case sortNameParams !== type:
-        return getSearchWith(
-          searchParams, {
-            [SortParams.Sort]: type,
-            [SortParams.Order]: null,
-          },
-        );
-
-      case (sortNameParams === type && !!orderParams):
-        return getSearchWith(
-          searchParams, {
-            [SortParams.Sort]: null,
-            [SortParams.Order]: null,
-          },
-        );
-
-      default:
-        return '';
-    }
-  }, [searchParams]);
 
   return (
     <table
@@ -138,21 +28,12 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
               Name
               <Link
                 to={{
-                  search: handleSort(SortType.Name),
+                  search: getSortSearchString(searchParams, SortType.Name),
                 }}
               >
                 <span className="icon">
                   <i
-                    className={cn('fas', {
-                      'fa-sort':
-                        searchParams.get(SortParams.Sort) !== SortType.Name,
-                      'fa-sort-up':
-                        searchParams.get(SortParams.Sort) === SortType.Name
-                        && !searchParams.has(SortParams.Order),
-                      'fa-sort-down':
-                        searchParams.get(SortParams.Sort) === SortType.Name
-                        && searchParams.has(SortParams.Order),
-                    })}
+                    className={getClassNames(searchParams, SortType.Name)}
                   />
                 </span>
               </Link>
@@ -164,21 +45,12 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
               Sex
               <Link
                 to={{
-                  search: handleSort(SortType.Sex),
+                  search: getSortSearchString(searchParams, SortType.Sex),
                 }}
               >
                 <span className="icon">
                   <i
-                    className={cn('fas', {
-                      'fa-sort':
-                        searchParams.get(SortParams.Sort) !== SortType.Sex,
-                      'fa-sort-up':
-                        searchParams.get(SortParams.Sort) === SortType.Sex
-                        && !searchParams.has(SortParams.Order),
-                      'fa-sort-down':
-                        searchParams.get(SortParams.Sort) === SortType.Sex
-                        && searchParams.has(SortParams.Order),
-                    })}
+                    className={getClassNames(searchParams, SortType.Sex)}
                   />
                 </span>
               </Link>
@@ -190,21 +62,12 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
               Born
               <Link
                 to={{
-                  search: handleSort(SortType.Born),
+                  search: getSortSearchString(searchParams, SortType.Born),
                 }}
               >
                 <span className="icon">
                   <i
-                    className={cn('fas', {
-                      'fa-sort':
-                        searchParams.get(SortParams.Sort) !== SortType.Born,
-                      'fa-sort-up':
-                        searchParams.get(SortParams.Sort) === SortType.Born
-                        && !searchParams.has(SortParams.Order),
-                      'fa-sort-down':
-                        searchParams.get(SortParams.Sort) === SortType.Born
-                        && searchParams.has(SortParams.Order),
-                    })}
+                    className={getClassNames(searchParams, SortType.Born)}
                   />
                 </span>
               </Link>
@@ -216,21 +79,12 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
               Died
               <Link
                 to={{
-                  search: handleSort(SortType.Died),
+                  search: getSortSearchString(searchParams, SortType.Died),
                 }}
               >
                 <span className="icon">
                   <i
-                    className={cn('fas', {
-                      'fa-sort':
-                       searchParams.get(SortParams.Sort) !== SortType.Born,
-                      'fa-sort-up':
-                        searchParams.get(SortParams.Sort) === SortType.Died
-                        && !searchParams.has(SortParams.Order),
-                      'fa-sort-down':
-                        searchParams.get(SortParams.Sort) === SortType.Died
-                        && searchParams.has(SortParams.Order),
-                    })}
+                    className={getClassNames(searchParams, SortType.Died)}
                   />
                 </span>
               </Link>
@@ -244,7 +98,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
 
       <tbody>
         {
-          visiblePeople.map(person => {
+          people.map(person => {
             const {
               born,
               died,
