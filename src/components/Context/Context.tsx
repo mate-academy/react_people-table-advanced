@@ -14,11 +14,12 @@ interface ValuesTypes {
   searchParams: URLSearchParams;
   setSearchParams: SetURLSearchParams;
   query: string;
-  gender: string;
+  gender: string | null;
   centuries: string[];
-  sortCurr: string;
-  order: string;
+  sortCurr: string | null;
+  order: string | null;
   centuriesArr: string[];
+  necessaryPeople: Person[] | undefined;
 }
 
 const TableContext = React.createContext<ValuesTypes | undefined>(undefined);
@@ -40,12 +41,15 @@ export const TableProvider: React.FC<{ children: ReactNode }> = ({ children }) =
   const [searchParams, setSearchParams] = useSearchParams();
 
   const query = searchParams.get('query') || '';
-  const gender = searchParams.get('sex') || '';
+  const gender = searchParams.get('sex');
   const centuries = searchParams.getAll('centuries') || [];
-  const sortCurr = searchParams.get('sort') || '';
-  const order = searchParams.get('order') || '';
+  const sortCurr = searchParams.get('sort');
+  const order = searchParams.get('order');
 
   const centuriesArr = ['16', '17', '18', '19', '20'];
+  const necessaryPeople = currPeoples === undefined
+    ? peoples
+    : currPeoples;
 
   const values: ValuesTypes = {
     peoples,
@@ -64,6 +68,7 @@ export const TableProvider: React.FC<{ children: ReactNode }> = ({ children }) =
     sortCurr,
     order,
     centuriesArr,
+    necessaryPeople,
   };
 
   return (

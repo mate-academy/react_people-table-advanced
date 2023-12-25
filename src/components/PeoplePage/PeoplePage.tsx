@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import classNames from 'classnames';
 import { NavLink, useParams } from 'react-router-dom';
 import { client } from '../../utils/fetchClient';
@@ -16,17 +16,16 @@ export const PeoplePage: React.FC = () => {
     setHasError,
     isLoading,
     setIsLoading,
-    currPeoples,
-    searchParams,
+    necessaryPeople,
     query,
     gender,
     centuries,
     setCurrPeoples,
     sortCurr,
     order,
+    searchParams,
+    currPeoples,
   } = useTableContext();
-
-  const necessaryPeople = currPeoples ?? peoples;
 
   const { slug } = useParams();
 
@@ -42,6 +41,18 @@ export const PeoplePage: React.FC = () => {
     return { sort: sortType, order: 'desc' };
   };
 
+  const sortArrows = (sortParam: string) => {
+    if (sortCurr === sortParam && !order) {
+      return <i className="fas fa-sort-up" />;
+    }
+
+    if (sortCurr === sortParam && order) {
+      return <i className="fas fa-sort-down" />;
+    }
+
+    return <i className="fas fa-sort" />;
+  };
+
   useEffect(() => {
     setIsLoading(true);
 
@@ -55,14 +66,14 @@ export const PeoplePage: React.FC = () => {
       .finally(() => {
         setIsLoading(false);
       });
-  }, []);
+  }, [setHasError, setIsLoading, setPeoples]);
 
-  useEffect(() => {
+  const visiblePeoples = useMemo(() => {
     let filteredPeople = peoples;
 
     if (query !== '') {
-      filteredPeople = filteredPeople.filter(person => {
-        const normalizeQuery = query.toLowerCase();
+      filteredPeople = filteredPeople && filteredPeople.filter(person => {
+        const normalizeQuery = query && query.toLowerCase();
         const normalizeName = person.name.toLowerCase();
 
         return (
@@ -75,7 +86,7 @@ export const PeoplePage: React.FC = () => {
       });
     }
 
-    if (gender !== '') {
+    if (gender) {
       filteredPeople = filteredPeople.filter(person => person.sex === gender);
     }
 
@@ -92,30 +103,36 @@ export const PeoplePage: React.FC = () => {
         });
     }
 
-    if (sortCurr !== '') {
-      filteredPeople = filteredPeople.sort((a, b) => {
-        switch (sortCurr) {
-          case 'sex':
-          case 'name':
-            return a[sortCurr].localeCompare(b[sortCurr]);
-
-          case 'born':
-          case 'died':
-            return a[sortCurr] - b[sortCurr];
-
-          default: return 0;
-        }
-      });
-
-      if (order) {
-        filteredPeople = filteredPeople.reverse();
-      }
-
-      setCurrPeoples(filteredPeople);
+    if (sortCurr === 'name') {
+      filteredPeople.sort((a, b) => (a[sortCurr].localeCompare(b[sortCurr])));
     }
 
-    setCurrPeoples(filteredPeople);
-  }, [peoples, searchParams]);
+    if (sortCurr === 'sex') {
+      filteredPeople.sort((a, b) => (a[sortCurr].localeCompare(b[sortCurr])));
+    }
+
+    if (sortCurr === 'born') {
+      filteredPeople.sort((a, b) => (a[sortCurr] - b[sortCurr]));
+    }
+
+    if (sortCurr === 'died') {
+      filteredPeople.sort((a, b) => (a[sortCurr] - b[sortCurr]));
+    }
+
+    if (order) {
+      filteredPeople.reverse();
+    }
+
+    return filteredPeople;
+  }, [searchParams, peoples]);
+
+  useEffect(() => {
+    setCurrPeoples(visiblePeoples);
+  }, [
+    peoples,
+    searchParams,
+    sortCurr,
+  ]);
 
   return (
     <>
@@ -141,12 +158,12 @@ export const PeoplePage: React.FC = () => {
                 </p>
               )}
 
-              {peoples?.length === 0 && (
+              {!necessaryPeople?.length && (
                 <p data-cy="noPeopleMessage">
                   There are no people on the server
                 </p>
               )}
-              {!isLoading && (
+              {(!isLoading && necessaryPeople) && (
                 <table
                   data-cy="peopleTable"
                   className="
@@ -162,7 +179,7 @@ export const PeoplePage: React.FC = () => {
                             params={sortParams('name')}
                           >
                             <span className="icon" aria-label="name">
-                              <i className="fas fa-sort" />
+                              {sortArrows('name')}
                             </span>
                           </SearchLink>
                         </span>
@@ -175,7 +192,7 @@ export const PeoplePage: React.FC = () => {
                             params={sortParams('sex')}
                           >
                             <span className="icon" aria-label="sex">
-                              <i className="fas fa-sort" />
+                              {sortArrows('sex')}
                             </span>
                           </SearchLink>
                         </span>
@@ -188,7 +205,7 @@ export const PeoplePage: React.FC = () => {
                             params={sortParams('born')}
                           >
                             <span className="icon" aria-label="born">
-                              <i className="fas fa-sort-up" />
+                              {sortArrows('born')}
                             </span>
                           </SearchLink>
                         </span>
@@ -201,7 +218,7 @@ export const PeoplePage: React.FC = () => {
                             params={sortParams('died')}
                           >
                             <span className="icon" aria-label="died">
-                              <i className="fas fa-sort" />
+                              {sortArrows('died')}
                             </span>
                           </SearchLink>
                         </span>
@@ -299,9 +316,7 @@ export const PeoplePage: React.FC = () => {
               )}
             </div>
           </div>
-
         </div>
-
       </div>
     </>
   );
