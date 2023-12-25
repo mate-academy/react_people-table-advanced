@@ -5,15 +5,20 @@ import cn from 'classnames';
 import { getSearchWith } from '../utils/searchHelper';
 import { FilterParams } from '../types/FilterParams';
 import { CENTURIES } from '../constants/centuries';
+import { PersonSex } from '../types/PersonSex';
 
 export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const query = searchParams.get(FilterParams.Query) || '';
 
-  const handleChangeQuery = (e?: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChangeQuery = (
+    e?: React.ChangeEvent<HTMLInputElement>,
+  ) => {
     const search = getSearchWith(
       searchParams,
-      { [FilterParams.Query]: e?.target.value || null },
+      {
+        [FilterParams.Query]: e?.target.value || null,
+      },
     );
 
     setSearchParams(search);
@@ -55,20 +60,30 @@ export const PeopleFilters = () => {
         </Link>
         <Link
           className={cn(
-            { 'is-active': searchParams.get(FilterParams.Sex) === 'm' },
+            {
+              'is-active':
+              searchParams.get(FilterParams.Sex) === PersonSex.Male,
+            },
           )}
           to={{
-            search: getSearchWith(searchParams, { [FilterParams.Sex]: 'm' }),
+            search: getSearchWith(
+              searchParams, { [FilterParams.Sex]: PersonSex.Male },
+            ),
           }}
         >
           Male
         </Link>
         <Link
           className={cn(
-            { 'is-active': searchParams.get(FilterParams.Sex) === 'f' },
+            {
+              'is-active':
+            searchParams.get(FilterParams.Sex) === PersonSex.Female,
+            },
           )}
           to={{
-            search: getSearchWith(searchParams, { [FilterParams.Sex]: 'f' }),
+            search: getSearchWith(
+              searchParams, { [FilterParams.Sex]: PersonSex.Female },
+            ),
           }}
         >
           Female

@@ -1,10 +1,9 @@
 import { SortParams } from '../types/SortParams';
 import { SortType } from '../types/SortType';
 
-
 export const getClassNames = (
   searchParams: URLSearchParams,
-  type: SortType
+  type: SortType,
 ) => {
   switch (true) {
     case (searchParams.get(SortParams.Sort) === type
