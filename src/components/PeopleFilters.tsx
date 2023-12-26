@@ -28,7 +28,14 @@ export const PeopleFilters = () => {
 
     if (centuries.includes(value)) {
       setFilterParams(currentParams => {
-        currentParams.delete('century', value);
+        const currentCentury = currentParams.getAll('century')
+          .filter(centuryNumber => centuryNumber !== value);
+
+        currentParams.delete('century');
+
+        currentCentury.forEach(century => {
+          currentParams.append('century', century);
+        });
 
         return currentParams;
       });
