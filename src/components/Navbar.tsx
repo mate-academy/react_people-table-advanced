@@ -1,3 +1,11 @@
+import classNames from 'classnames';
+import { NavLink } from 'react-router-dom';
+
+// eslint-disable-next-line max-len
+const getLinkClass = ({ isActive }: { isActive: boolean }) => classNames('navbar-item', {
+  'has-background-grey-lighter': isActive,
+});
+
 export const Navbar = () => {
   return (
     <nav
@@ -7,16 +15,16 @@ export const Navbar = () => {
       aria-label="main navigation"
     >
       <div className="container">
-        <div className="navbar-brand">
-          <a className="navbar-item" href="#/">Home</a>
+        <div className="container">
+          <div className="navbar-brand">
+            <NavLink className={getLinkClass} to="/">
+              Home
+            </NavLink>
 
-          <a
-            aria-current="page"
-            className="navbar-item has-background-grey-lighter"
-            href="#/people"
-          >
-            People
-          </a>
+            <NavLink className={getLinkClass} to="/people">
+              People
+            </NavLink>
+          </div>
         </div>
       </div>
     </nav>
