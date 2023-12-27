@@ -24,7 +24,6 @@ export const PeoplePage: React.FC = () => {
     sortCurr,
     order,
     searchParams,
-    currPeoples,
   } = useTableContext();
 
   const { slug } = useParams();
@@ -41,12 +40,12 @@ export const PeoplePage: React.FC = () => {
     return { sort: sortType, order: 'desc' };
   };
 
-  const sortArrows = (sortParam: string) => {
-    if (sortCurr === sortParam && !order) {
+  const sortArrows = (sortType: string) => {
+    if (sortCurr === sortType && !order) {
       return <i className="fas fa-sort-up" />;
     }
 
-    if (sortCurr === sortParam && order) {
+    if (sortCurr === sortType && order) {
       return <i className="fas fa-sort-down" />;
     }
 
@@ -69,7 +68,8 @@ export const PeoplePage: React.FC = () => {
   }, [setHasError, setIsLoading, setPeoples]);
 
   const visiblePeoples = useMemo(() => {
-    let filteredPeople = peoples;
+    let filteredPeople: Person[] = JSON
+      .parse(JSON.stringify(peoples as Person[]));
 
     if (query !== '') {
       filteredPeople = filteredPeople && filteredPeople.filter(person => {
@@ -90,7 +90,7 @@ export const PeoplePage: React.FC = () => {
       filteredPeople = filteredPeople.filter(person => person.sex === gender);
     }
 
-    if (centuries.length > 0) {
+    if (centuries.length) {
       filteredPeople = filteredPeople
         .filter(person => {
           const century = Math.ceil(person.died / 100);
@@ -103,20 +103,19 @@ export const PeoplePage: React.FC = () => {
         });
     }
 
-    if (sortCurr === 'name') {
-      filteredPeople.sort((a, b) => (a[sortCurr].localeCompare(b[sortCurr])));
-    }
+    switch (sortCurr) {
+      case 'name':
+      case 'sex':
+        filteredPeople.sort((a, b) => (a[sortCurr].localeCompare(b[sortCurr])));
+        break;
 
-    if (sortCurr === 'sex') {
-      filteredPeople.sort((a, b) => (a[sortCurr].localeCompare(b[sortCurr])));
-    }
+      case 'born':
+      case 'died':
+        filteredPeople.sort((a, b) => (a[sortCurr] - b[sortCurr]));
+        break;
 
-    if (sortCurr === 'born') {
-      filteredPeople.sort((a, b) => (a[sortCurr] - b[sortCurr]));
-    }
-
-    if (sortCurr === 'died') {
-      filteredPeople.sort((a, b) => (a[sortCurr] - b[sortCurr]));
+      default:
+        break;
     }
 
     if (order) {
@@ -128,11 +127,7 @@ export const PeoplePage: React.FC = () => {
 
   useEffect(() => {
     setCurrPeoples(visiblePeoples);
-  }, [
-    peoples,
-    searchParams,
-    sortCurr,
-  ]);
+  }, [peoples, searchParams]);
 
   return (
     <>
@@ -158,7 +153,7 @@ export const PeoplePage: React.FC = () => {
                 </p>
               )}
 
-              {!necessaryPeople?.length && (
+              {(!necessaryPeople?.length && !hasError && !isLoading) && (
                 <p data-cy="noPeopleMessage">
                   There are no people on the server
                 </p>
