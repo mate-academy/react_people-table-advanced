@@ -1,9 +1,10 @@
 import cn from 'classnames';
-import { useParams, useSearchParams } from 'react-router-dom';
+import { useLocation, useParams, useSearchParams } from 'react-router-dom';
 
 import { Person } from '../types';
 import { SortMethod, SortOrder } from '../types/Sort';
 import { PersonLink } from './PersonLink';
+import { getHrefForLink } from './helper';
 
 /* eslint-disable jsx-a11y/control-has-associated-label */
 interface Props {
@@ -13,6 +14,7 @@ interface Props {
 export const PeopleTable = ({ people }: Props) => {
   const { personSlug } = useParams();
   const [searchParams, setSearchParams] = useSearchParams();
+  const location = useLocation();
 
   const sortButtonsStyles = (method: SortMethod) => cn(
     'fas',
@@ -58,7 +60,7 @@ export const PeopleTable = ({ people }: Props) => {
             <span className="is-flex is-flex-wrap-nowrap">
               Name
               <a
-                role="presentation"
+                href={`#${getHrefForLink('sort', SortMethod.Name, location)}`}
                 onClick={() => handleSortButtonClick(SortMethod.Name)}
               >
                 <span className="icon">
@@ -72,7 +74,7 @@ export const PeopleTable = ({ people }: Props) => {
             <span className="is-flex is-flex-wrap-nowrap">
               Sex
               <a
-                role="presentation"
+                href={`#${getHrefForLink('sort', SortMethod.Sex, location)}`}
                 onClick={() => handleSortButtonClick(SortMethod.Sex)}
               >
                 <span className="icon">
@@ -86,7 +88,7 @@ export const PeopleTable = ({ people }: Props) => {
             <span className="is-flex is-flex-wrap-nowrap">
               Born
               <a
-                role="presentation"
+                href={`#${getHrefForLink('sort', SortMethod.Born, location)}`}
                 onClick={() => handleSortButtonClick(SortMethod.Born)}
               >
                 <span className="icon">
@@ -100,7 +102,7 @@ export const PeopleTable = ({ people }: Props) => {
             <span className="is-flex is-flex-wrap-nowrap">
               Died
               <a
-                role="presentation"
+                href={`#${getHrefForLink('sort', SortMethod.Died, location)}`}
                 onClick={() => handleSortButtonClick(SortMethod.Died)}
               >
                 <span className="icon">

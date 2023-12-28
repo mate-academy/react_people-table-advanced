@@ -2,6 +2,7 @@ import { useLocation, useSearchParams } from 'react-router-dom';
 import cn from 'classnames';
 
 import { Filter, FilterSex } from '../types/Filter';
+import { getHrefForLink } from './helper';
 
 const CENTURIES_VALUES = ['16', '17', '18', '19', '20'];
 
@@ -63,26 +64,13 @@ export const PeopleFilters = () => {
     setFilterParams({});
   };
 
-  const getHrefForLink = (field: string, value: string) => {
-    const query = location.search.slice(1);
-
-    const filteredQuery = query.split('&')
-      .filter(param => !param.includes(field));
-
-    if (value) {
-      filteredQuery.push(`${field}=${value}`);
-    }
-
-    return `${location.pathname}?${filteredQuery.join('&')}`;
-  };
-
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
         <a
-          href={`#${getHrefForLink(Filter.Sex, FilterSex.All)}`}
+          href={`#${getHrefForLink(Filter.Sex, FilterSex.All, location)}`}
           className={cn({ 'is-active': !filterParams.get(Filter.Sex) })}
           onClick={() => handleFilterChanging(Filter.Sex, FilterSex.All)}
         >
@@ -90,7 +78,7 @@ export const PeopleFilters = () => {
         </a>
 
         <a
-          href={`#${getHrefForLink(Filter.Sex, FilterSex.Male)}`}
+          href={`#${getHrefForLink(Filter.Sex, FilterSex.Male, location)}`}
           className={cn({
             'is-active': filterParams.get(Filter.Sex) === FilterSex.Male,
           })}
@@ -100,7 +88,7 @@ export const PeopleFilters = () => {
         </a>
 
         <a
-          href={`#${getHrefForLink(Filter.Sex, FilterSex.Female)}`}
+          href={`#${getHrefForLink(Filter.Sex, FilterSex.Female, location)}`}
           className={cn({
             'is-active': filterParams.get(Filter.Sex) === FilterSex.Female,
           })}
