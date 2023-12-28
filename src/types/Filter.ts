@@ -3,3 +3,9 @@ export enum Filter {
   Query = 'query',
   Century = 'century',
 }
+
+export enum FilterSex {
+  All = '',
+  Male = 'm',
+  Female = 'f',
+}

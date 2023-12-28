@@ -104,8 +104,6 @@ export const PeoplePage = () => {
                 <p data-cy="peopleLoadingError">Something went wrong</p>
               )}
 
-              {/* <p>There are no people matching the current search criteria</p> */}
-
               {peopleFromServer && (
                 <>
                   {peopleFromServer.length === 0 ? (
@@ -113,7 +111,14 @@ export const PeoplePage = () => {
                       There are no people on the server
                     </p>
                   ) : (
-                    <PeopleTable people={peopleToView} />
+                    <>
+                      {peopleToView.length === 0 && !isPeopleLoading ? (
+                        <p>
+                          There are no people matching
+                          the current search criteria
+                        </p>
+                      ) : <PeopleTable people={peopleToView} />}
+                    </>
                   )}
                 </>
               )}

@@ -1,10 +1,13 @@
-import { useSearchParams } from 'react-router-dom';
+import { useLocation, useSearchParams } from 'react-router-dom';
 import cn from 'classnames';
 
-import { Filter } from '../types/Filter';
+import { Filter, FilterSex } from '../types/Filter';
+
+const CENTURIES_VALUES = ['16', '17', '18', '19', '20'];
 
 export const PeopleFilters = () => {
   const [filterParams, setFilterParams] = useSearchParams();
+  const location = useLocation();
 
   const handleFilterChanging = (
     field: Filter,
@@ -60,29 +63,48 @@ export const PeopleFilters = () => {
     setFilterParams({});
   };
 
+  const getHrefForLink = (field: string, value: string) => {
+    const query = location.search.slice(1);
+
+    const filteredQuery = query.split('&')
+      .filter(param => !param.includes(field));
+
+    if (value) {
+      filteredQuery.push(`${field}=${value}`);
+    }
+
+    return `${location.pathname}?${filteredQuery.join('&')}`;
+  };
+
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
         <a
-          role="presentation"
-          className={cn({ 'is-active': !filterParams.get('sex') })}
-          onClick={() => handleFilterChanging(Filter.Sex, '')}
+          href={`#${getHrefForLink(Filter.Sex, FilterSex.All)}`}
+          className={cn({ 'is-active': !filterParams.get(Filter.Sex) })}
+          onClick={() => handleFilterChanging(Filter.Sex, FilterSex.All)}
         >
           All
         </a>
+
         <a
-          role="presentation"
-          className={cn({ 'is-active': filterParams.get('sex') === 'm' })}
-          onClick={() => handleFilterChanging(Filter.Sex, 'm')}
+          href={`#${getHrefForLink(Filter.Sex, FilterSex.Male)}`}
+          className={cn({
+            'is-active': filterParams.get(Filter.Sex) === FilterSex.Male,
+          })}
+          onClick={() => handleFilterChanging(Filter.Sex, FilterSex.Male)}
         >
           Male
         </a>
+
         <a
-          role="presentation"
-          className={cn({ 'is-active': filterParams.get('sex') === 'f' })}
-          onClick={() => handleFilterChanging(Filter.Sex, 'f')}
+          href={`#${getHrefForLink(Filter.Sex, FilterSex.Female)}`}
+          className={cn({
+            'is-active': filterParams.get(Filter.Sex) === FilterSex.Female,
+          })}
+          onClick={() => handleFilterChanging(Filter.Sex, FilterSex.Female)}
         >
           Female
         </a>
@@ -111,76 +133,33 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            <a
-              data-cy="century"
-              role="presentation"
-              className={cn(
-                'button mr-1',
-                { 'is-info': filterParams.getAll('century').includes('16') },
-              )}
-              onClick={() => handleCenturiesApplying('16')}
-            >
-              16
-            </a>
-
-            <a
-              data-cy="century"
-              role="presentation"
-              className={cn(
-                'button mr-1',
-                { 'is-info': filterParams.getAll('century').includes('17') },
-              )}
-              onClick={() => handleCenturiesApplying('17')}
-            >
-              17
-            </a>
-
-            <a
-              data-cy="century"
-              role="presentation"
-              className={cn(
-                'button mr-1',
-                { 'is-info': filterParams.getAll('century').includes('18') },
-              )}
-              onClick={() => handleCenturiesApplying('18')}
-            >
-              18
-            </a>
-
-            <a
-              data-cy="century"
-              role="presentation"
-              className={cn(
-                'button mr-1',
-                { 'is-info': filterParams.getAll('century').includes('19') },
-              )}
-              onClick={() => handleCenturiesApplying('19')}
-            >
-              19
-            </a>
-
-            <a
-              data-cy="century"
-              role="presentation"
-              className={cn(
-                'button mr-1',
-                { 'is-info': filterParams.getAll('century').includes('20') },
-              )}
-              onClick={() => handleCenturiesApplying('20')}
-            >
-              20
-            </a>
+            {CENTURIES_VALUES.map(century => (
+              <button
+                type="button"
+                data-cy="century"
+                className={cn(
+                  'button mr-1',
+                  {
+                    'is-info': filterParams.getAll('century').includes(century),
+                  },
+                )}
+                key={century}
+                onClick={() => handleCenturiesApplying(century)}
+              >
+                {century}
+              </button>
+            ))}
           </div>
 
           <div className="level-right ml-4">
-            <a
+            <button
+              type="button"
               data-cy="centuryALL"
-              role="presentation"
               className="button is-success is-outlined"
               onClick={handleResetCenturies}
             >
               All
-            </a>
+            </button>
           </div>
         </div>
       </div>
