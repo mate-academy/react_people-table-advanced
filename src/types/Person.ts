@@ -22,3 +22,4 @@ export interface Title {
   born: number;
   died: number;
 }
+export type PersonSex = 'f' | 'm';

@@ -60,19 +60,18 @@ export const PeoplePage = () => {
 
           <div className="column">
             <div className="box table-container">
+              {isLoading && <Loader />}
+              {!isLoading && !isError && !people.length && <NoPeopleMessage />}
+              {isError && <PeopleLoadingError />}
 
-              {isLoading
-                ? <Loader />
-                : (isError && <PeopleLoadingError />) || (people.length > 0
-                  ? (
-                    <PeopleTable
-                      people={filteredPeople}
-                      sort={sort}
-                      order={order}
-                      setSearchWith={setSearchWith}
-                    />
-                  )
-                  : <NoPeopleMessage />)}
+              {!isLoading && people.length !== 0 && (
+                <PeopleTable
+                  people={filteredPeople}
+                  sort={sort}
+                  order={order}
+                  setSearchWith={setSearchWith}
+                />
+              )}
             </div>
           </div>
         </div>

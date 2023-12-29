@@ -5,6 +5,7 @@ import { Person, TableColumn } from '../types';
 import { SearchLink } from './SearchLink';
 import { SearchParams } from '../utils/searchHelper';
 import { NoCurCriteria } from './NoCurCriteria';
+import { TableHead } from '../types/enum';
 
 interface Props {
   people:Person[];
@@ -13,10 +14,10 @@ interface Props {
   setSearchWith: (value: SearchParams) => void;
 }
 const COLUMNS:TableColumn[] = [
-  { id: 1, title: 'Name', columnCode: 'name' },
-  { id: 2, title: 'Sex', columnCode: 'sex' },
-  { id: 3, title: 'Born', columnCode: 'born' },
-  { id: 4, title: 'Died', columnCode: 'died' },
+  { id: 1, title: 'Name', columnCode: TableHead.Name },
+  { id: 2, title: 'Sex', columnCode: TableHead.Sex },
+  { id: 3, title: 'Born', columnCode: TableHead.Born },
+  { id: 4, title: 'Died', columnCode: TableHead.Died },
 ];
 
 export const PeopleTable:React.FC<Props> = ({ people, sort, order }) => {
