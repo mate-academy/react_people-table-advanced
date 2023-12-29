@@ -6,10 +6,13 @@ import { SortType } from './types/SortType';
 
 const NOT_SET_VALUE = '-';
 
+export const male = 'm';
+export const female = 'f';
+
 export const getPeopleWithParents = (people: Person[]) => {
   return people.map(person => {
-    const mother = people.find(mom => person.motherName === mom.name);
-    const father = people.find(dad => person.fatherName === dad.name);
+    const mother = people.find(({ name }) => person.motherName === name);
+    const father = people.find(({ name }) => person.fatherName === name);
     const motherName = !person.motherName ? NOT_SET_VALUE : person.motherName;
     const fatherName = !person.fatherName ? NOT_SET_VALUE : person.fatherName;
     const century = Math.ceil(person.born / 100);
@@ -91,9 +94,9 @@ export const getFilteredPeople = (
     peopleToRender = peopleToRender.filter(person => {
       switch (sexFilter) {
         case Sex.Male:
-          return person.sex === 'm';
+          return person.sex === male;
         case Sex.Female:
-          return person.sex === 'f';
+          return person.sex === female;
         default:
           return person;
       }

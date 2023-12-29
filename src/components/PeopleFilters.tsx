@@ -31,7 +31,10 @@ export const PeopleFilters:React.FC = () => {
     if (century && centuriesParams.includes(century)) {
       return getSearchWith(
         searchParams,
-        { [FilterParams.Century]: centuriesParams.filter(c => c !== century) },
+        {
+          [FilterParams.Century]: centuriesParams
+            .filter(centry => centry !== century),
+        },
       );
     }
 

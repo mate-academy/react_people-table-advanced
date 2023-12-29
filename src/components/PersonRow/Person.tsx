@@ -1,6 +1,7 @@
 import cn from 'classnames';
 import { Link, useParams } from 'react-router-dom';
 import { Person } from '../../types';
+import { female } from '../../helpers';
 
 interface Props {
   person: Person;
@@ -19,7 +20,7 @@ export const PersonRow: React.FC<Props> = ({ person }) => {
     father,
   } = person;
 
-  const isFemale = sex === 'f';
+  const isFemale = sex === female;
   const { personSlug } = useParams();
 
   return (

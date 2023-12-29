@@ -38,9 +38,9 @@ export const PeopleTable: React.FC<Props> = (props) => {
                 }}
               >
                 <span className="icon">
-                  <i
-                    className={cn('fas',
-                      { [getArrowClass(searchParams, SortType.Name)]: true })}
+                  <i className={
+                    cn('fas', getArrowClass(searchParams, SortType.Name))
+                  }
                   />
                 </span>
               </Link>
@@ -59,9 +59,9 @@ export const PeopleTable: React.FC<Props> = (props) => {
                 }}
               >
                 <span className="icon">
-                  <i
-                    className={cn('fas',
-                      { [getArrowClass(searchParams, SortType.Sex)]: true })}
+                  <i className={
+                    cn('fas', getArrowClass(searchParams, SortType.Sex))
+                  }
                   />
                 </span>
               </Link>
@@ -80,9 +80,9 @@ export const PeopleTable: React.FC<Props> = (props) => {
                 }}
               >
                 <span className="icon">
-                  <i
-                    className={cn('fas',
-                      { [getArrowClass(searchParams, SortType.Born)]: true })}
+                  <i className={
+                    cn('fas', getArrowClass(searchParams, SortType.Born))
+                  }
                   />
                 </span>
               </Link>
@@ -101,9 +101,9 @@ export const PeopleTable: React.FC<Props> = (props) => {
                 }}
               >
                 <span className="icon">
-                  <i
-                    className={cn('fas',
-                      { [getArrowClass(searchParams, SortType.Died)]: true })}
+                  <i className={
+                    cn('fas', getArrowClass(searchParams, SortType.Died))
+                  }
                   />
                 </span>
               </Link>

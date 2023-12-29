@@ -7,13 +7,13 @@ import { getPeople } from '../../api';
 import { ErrBlock } from '../../components/AppiBadrequest/ErrBlock';
 import { Person } from '../../types';
 import { getFilteredPeople, getPeopleWithParents } from '../../helpers';
+import { NoQuery } from '../../components/Nosearchquery/noQuery';
 
 export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);
   const [isLoading, setLoading] = useState(false);
   const [isError, setIsError] = useState(false);
   const shouldShowNoPeople = people.length === 0 && !isError && !isLoading;
-  const shouldShowPeopleTable = !isError && people.length > 0;
   const [searchParams] = useSearchParams();
 
   useEffect(() => {
@@ -27,6 +27,7 @@ export const PeoplePage = () => {
 
   const peoplewithParents = getPeopleWithParents(people);
   const peopleToRender = getFilteredPeople(peoplewithParents, searchParams);
+  const shouldShowPeopleTable = !isError && peopleToRender.length > 0;
 
   return (
     <>
@@ -41,7 +42,7 @@ export const PeoplePage = () => {
           <div className="column">
             <div className="box table-container">
               <>
-
+                {peopleToRender.length === 0 && <NoQuery />}
                 {isError && <ErrBlock />}
                 {shouldShowNoPeople
                     && (
