@@ -4,6 +4,7 @@ import { SearchParams, getSearchWith } from '../../utils/searchHelper';
 import { SearchLink } from '../SearchLink';
 import { SearchFilterParams } from '../../types/SearchFilterParams';
 import { SortType } from '../../types/SortType';
+import { FilterBySex } from '../../types/FilterBySex';
 
 export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -30,21 +31,21 @@ export const PeopleFilters = () => {
       <p className="panel-tabs" data-cy="SexFilter">
         <SearchLink
           params={{ sex: null }}
-          className={cn({ 'is-active': !sex })}
+          className={cn({ 'is-active': FilterBySex.All })}
         >
           All
         </SearchLink>
 
         <SearchLink
           params={{ sex: 'm' }}
-          className={cn({ 'is-active': sex === 'm' })}
+          className={cn({ 'is-active': sex === FilterBySex.Male })}
         >
           Male
         </SearchLink>
 
         <SearchLink
           params={{ sex: 'f' }}
-          className={cn({ 'is-active': sex === 'f' })}
+          className={cn({ 'is-active': sex === FilterBySex.Female })}
         >
           Female
         </SearchLink>

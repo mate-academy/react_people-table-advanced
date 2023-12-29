@@ -25,11 +25,11 @@ export const PeoplePage = () => {
 
   const [searchParams] = useSearchParams();
   const sort = searchParams.get(SearchFilterParams.Sort)
-  || SearchFilterParams.None;
+    || SearchFilterParams.None;
   const order = searchParams.get(SearchFilterParams.Order)
-  || SearchFilterParams.None;
+    || SearchFilterParams.None;
   const query = searchParams.get(SearchFilterParams.Query)
-  || SearchFilterParams.None;
+    || SearchFilterParams.None;
   const sex = searchParams.get(SortType.Sex) || SortType.None;
   const centuries = searchParams.getAll(SearchFilterParams.Centuries) || [];
 
@@ -69,19 +69,23 @@ export const PeoplePage = () => {
             <PeopleFilters />
           </div>
 
-          {hasError && (<PeopleLoadingError />)}
-
-          {people.length === 0 && !isLoading && (<NoPeopleMessage />)}
-
-          {preparedPeople.length === 0 && !isLoading && (
-            <p>There are no people matching the current search criteria</p>
-          )}
-
           <div className="column">
             <div className="box table-container">
               {isLoading && <Loader />}
 
-              {!!preparedPeople.length && (
+              {!isLoading && hasError && (<PeopleLoadingError />)}
+
+              {!isLoading && !people.length && (
+                <p data-cy="noPeopleMessage">
+                  <NoPeopleMessage />
+                </p>
+              )}
+
+              {!isLoading && !preparedPeople.length && (
+                <p>There are no people matching the current search criteria</p>
+              )}
+
+              {!isLoading && !hasError && !!preparedPeople.length && (
                 <PeopleTable people={preparedPeople} />
               )}
 
