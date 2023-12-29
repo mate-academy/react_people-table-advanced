@@ -40,18 +40,6 @@ export const PeoplePage: React.FC = () => {
     return { sort: sortType, order: 'desc' };
   };
 
-  const sortArrows = (sortType: string) => {
-    if (sortCurr === sortType && !order) {
-      return <i className="fas fa-sort-up" />;
-    }
-
-    if (sortCurr === sortType && order) {
-      return <i className="fas fa-sort-down" />;
-    }
-
-    return <i className="fas fa-sort" />;
-  };
-
   useEffect(() => {
     setIsLoading(true);
 
@@ -174,7 +162,18 @@ export const PeoplePage: React.FC = () => {
                             params={sortParams('name')}
                           >
                             <span className="icon" aria-label="name">
-                              {sortArrows('name')}
+                              <i className={classNames(
+                                {
+                                  'fa-sort-up':
+                                    (sortCurr === 'name' && !order),
+                                  'fa-sort-down':
+                                    (sortCurr === 'name' && order),
+                                  'fa-sort':
+                                    (sortCurr !== 'name' && !order),
+                                  fas: true,
+                                },
+                              )}
+                              />
                             </span>
                           </SearchLink>
                         </span>
@@ -187,7 +186,18 @@ export const PeoplePage: React.FC = () => {
                             params={sortParams('sex')}
                           >
                             <span className="icon" aria-label="sex">
-                              {sortArrows('sex')}
+                              <i className={classNames(
+                                {
+                                  'fa-sort-up':
+                                    (sortCurr === 'sex' && !order),
+                                  'fa-sort-down':
+                                    (sortCurr === 'sex' && order),
+                                  'fa-sort':
+                                    (sortCurr !== 'sex' && !order),
+                                  fas: true,
+                                },
+                              )}
+                              />
                             </span>
                           </SearchLink>
                         </span>
@@ -200,7 +210,18 @@ export const PeoplePage: React.FC = () => {
                             params={sortParams('born')}
                           >
                             <span className="icon" aria-label="born">
-                              {sortArrows('born')}
+                              <i className={classNames(
+                                {
+                                  'fa-sort-up':
+                                    (sortCurr === 'born' && !order),
+                                  'fa-sort-down':
+                                    (sortCurr === 'born' && order),
+                                  'fa-sort':
+                                    (sortCurr !== 'born' && !order),
+                                  fas: true,
+                                },
+                              )}
+                              />
                             </span>
                           </SearchLink>
                         </span>
@@ -213,7 +234,18 @@ export const PeoplePage: React.FC = () => {
                             params={sortParams('died')}
                           >
                             <span className="icon" aria-label="died">
-                              {sortArrows('died')}
+                              <i className={classNames(
+                                {
+                                  'fa-sort-up':
+                                    (sortCurr === 'died' && !order),
+                                  'fa-sort-down':
+                                    (sortCurr === 'died' && order),
+                                  'fa-sort':
+                                    (sortCurr !== 'died' && !order),
+                                  fas: true,
+                                },
+                              )}
+                              />
                             </span>
                           </SearchLink>
                         </span>
@@ -273,10 +305,7 @@ export const PeoplePage: React.FC = () => {
                               })
                             ) : (
                               <td>
-                                {
-                                  people.motherName ? people.motherName
-                                    : '-'
-                                }
+                                {people.motherName ?? '-'}
                               </td>
                             )}
 
@@ -300,7 +329,7 @@ export const PeoplePage: React.FC = () => {
                               })
                             ) : (
                               <td>
-                                {people.fatherName ? people.fatherName : '-'}
+                                {people.fatherName ?? '-'}
                               </td>
                             )}
                         </tr>
