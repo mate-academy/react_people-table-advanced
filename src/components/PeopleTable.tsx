@@ -11,7 +11,6 @@ type Props = {
 
 export const PeopleTable: React.FC<Props> = ({ people }) => {
   const { slug } = useParams();
-
   const [searchParams] = useSearchParams();
 
   const sortBy = searchParams.get('sort') || '';
@@ -40,6 +39,17 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
 
     return parentName;
   };
+
+  const filteredPeople = people.filter(({ name }) => name.toLowerCase()
+    .includes((searchParams.get('q') || '').toLowerCase()));
+
+  if (filteredPeople.length === 0) {
+    return (
+      <div>
+        There are no people matching the current search criteria.
+      </div>
+    );
+  }
 
   return (
     <table
@@ -131,7 +141,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
       </thead>
 
       <tbody>
-        {people.map(({
+        {filteredPeople.map(({
           slug: personSlug,
           sex,
           born,
