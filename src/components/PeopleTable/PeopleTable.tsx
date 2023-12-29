@@ -4,6 +4,7 @@ import { FC } from 'react';
 import { PersonLink } from '../PersonLink';
 import { SearchLink } from '../SearchLink';
 import { Person } from '../../types';
+import { SearchFilterParams } from '../../types/SearchFilterParams';
 
 interface Props {
   people: Person[];
@@ -11,8 +12,10 @@ interface Props {
 
 export const PeopleTable: FC<Props> = ({ people }) => {
   const [searchParams] = useSearchParams();
-  const sort = searchParams.get('sort') || '';
-  const order = searchParams.get('order') || '';
+  const sort = searchParams.get(SearchFilterParams.Sort)
+  || SearchFilterParams.None;
+  const order = searchParams.get(SearchFilterParams.Order)
+  || SearchFilterParams.None;
 
   const getLinkClass = (param: string) => cn(
     'fas',

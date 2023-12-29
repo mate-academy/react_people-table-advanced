@@ -2,12 +2,15 @@ import cn from 'classnames';
 import { useSearchParams } from 'react-router-dom';
 import { SearchParams, getSearchWith } from '../../utils/searchHelper';
 import { SearchLink } from '../SearchLink';
+import { SearchFilterParams } from '../../types/SearchFilterParams';
+import { SortType } from '../../types/SortType';
 
 export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const query = searchParams.get('query') || '';
-  const sex = searchParams.get('sex') || '';
-  const centuries = searchParams.getAll('centuries') || [];
+  const query = searchParams.get(SearchFilterParams.Query)
+  || SearchFilterParams.None;
+  const sex = searchParams.get(SortType.Sex) || SortType.None;
+  const centuries = searchParams.getAll(SearchFilterParams.Centuries) || [];
   const allCenturies = ['16', '17', '18', '19', '20'];
 
   function setSearchWith(params: SearchParams) {
@@ -71,7 +74,9 @@ export const PeopleFilters = () => {
               <SearchLink
                 params={{
                   centuries: centuries.includes(century)
-                    ? centuries.filter((c: string) => c !== century)
+                    ? centuries
+                      .filter((centuryToFilter: string) => centuryToFilter
+                      !== century)
                     : [...centuries, century],
                 }}
                 key={century}

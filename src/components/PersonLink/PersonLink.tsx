@@ -23,10 +23,10 @@ export const PersonLink: FC<Props> = ({ person, people }) => {
   const { personSlug } = useParams();
 
   const mother = people
-    .find(motherToFind => motherToFind.name === person.motherName || null);
+    .find(motherToFind => motherToFind.name === person.motherName) || null;
 
   const father = people
-    .find(fatherToFind => fatherToFind.name === person.fatherName || null);
+    .find(fatherToFind => fatherToFind.name === person.fatherName) || null;
 
   return (
     <tr
