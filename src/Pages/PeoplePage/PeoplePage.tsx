@@ -40,7 +40,7 @@ export const PeoplePage = () => {
       .then(setPeople)
       .catch(() => setHasError(true))
       .finally(() => setIsLoading(false));
-  }, [setIsLoading, setHasError, setPeople]);
+  }, []);
 
   const getPreparedPeople = () => {
     let preparedPeople = [...people];
