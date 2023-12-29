@@ -31,7 +31,7 @@ export const PeopleFilters = () => {
           All
         </SearchLink>
         <SearchLink
-          className={cn({ 'is-active': searchParams.has('sex', 'm') })}
+          className={cn({ 'is-active': searchParams.get('sex') === 'm' })}
           params={{
             sex: 'm',
           }}
@@ -39,7 +39,7 @@ export const PeopleFilters = () => {
           Male
         </SearchLink>
         <SearchLink
-          className={cn({ 'is-active': searchParams.has('sex', 'f') })}
+          className={cn({ 'is-active': searchParams.get('sex') === 'f' })}
           params={{
             sex: 'f',
           }}
@@ -69,7 +69,9 @@ export const PeopleFilters = () => {
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
             {centuryFilters.map(century => {
-              const isSelected = searchParams.has('centuries', century);
+              const isSelected = searchParams
+                .getAll('centuries')
+                .includes(century);
 
               return (
                 <SearchLink

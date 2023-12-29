@@ -23,8 +23,12 @@ export const FilterPeople = (sourcePeople: Person[] | null) => {
   }
 
   if (query) {
+    const queryLC = query.toLowerCase();
+
     filteredPeople = filteredPeople.filter(
-      person => person.name.toLowerCase().includes(query.toLowerCase()),
+      person => (person.name.toLowerCase().includes(queryLC)
+      || person.motherName?.toLowerCase().includes(queryLC)
+      || person.name.toLowerCase().includes(queryLC)),
     );
   }
 
