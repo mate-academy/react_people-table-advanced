@@ -9,7 +9,7 @@ implement the ability to filter and sort people in the table.
 
 1. All the filters and sort params should be saved as URL Search Params, so you could share the link to show exactly what you see.
 1. Keep search params when navigating within the `People` page (when selecting a person or clicking the `People` link).
-1. The sidebar with the filters should appear only when people are loaded.
+<!-- 1. The sidebar with the filters should appear only when people are loaded. -->
 1. `NameFilter` should update the `query` search param with the text from the input.
     - show only people with the `name`, `motherName` or `fatherName` that match the query case insensitive;
     - if the input is empty there should not be `query` in the search params.

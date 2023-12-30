@@ -1,22 +1,26 @@
-import { useState, useEffect } from "react";
-import { PeopleFilters } from "../PeopleFilters";
-import { Loader } from "../Loader";
-import { PeopleTable } from "../PeopleTable";
-import { getPeople } from "../../api";
-import { getFullInfo } from "../../helpers/getFullInfo";
-import { Person } from "../../types";
-import { ErrorAPI } from "../ErrorAPI/ErrorAPI";
-import { NoPeopleMessage } from "../NoPeopleMessage/NoPeopleMessage";
-import { PersonLink } from "../PersonLink/PersonLink";
+import { useState, useEffect } from 'react';
+import { PeopleFilters } from '../PeopleFilters/PeopleFilters';
+import { Loader } from '../Loader';
+import { PeopleTable } from '../PeopleTable/PeopleTable';
+import { getPeople } from '../../api';
+import { getFullInfo } from '../../helpers/getFullInfo';
+import { Person } from '../../types';
+import { ErrorAPI } from '../ErrorAPI/ErrorAPI';
 
 export const PeoplePage = () => {
-  const [people, setPeople] = useState<Person[]>([]);
   const [hasError, setHasError] = useState<boolean>(false);
   const [isLoadingData, setIsLoadingData] = useState<boolean>(true);
+  const [people, setPeople] = useState<Person[]>([]);
 
   useEffect(() => {
+    setIsLoadingData(true);
+
     getPeople()
-      .then((peopleFromServer) => setPeople(getFullInfo(peopleFromServer)))
+      .then(peopleFromServer => {
+        const fullInfoPeople = getFullInfo(peopleFromServer);
+
+        setPeople(fullInfoPeople);
+      })
       .catch(() => setHasError(true))
       .finally(() => setIsLoadingData(false));
   }, []);
@@ -28,7 +32,7 @@ export const PeoplePage = () => {
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
           <div className="column is-7-tablet is-narrow-desktop">
-            <PeopleFilters />
+            {!isLoadingData && <PeopleFilters />}
           </div>
 
           <div className="column">
@@ -36,7 +40,11 @@ export const PeoplePage = () => {
               <ErrorAPI />
             ) : (
               <div className="box table-container">
-                {isLoadingData ? <Loader /> : <PeopleTable people={people} />}
+                {
+                  isLoadingData
+                    ? <Loader />
+                    : <PeopleTable people={people} />
+                }
               </div>
             )}
           </div>
