@@ -8,7 +8,7 @@ interface Props {
   query: string;
   handleQueryChange:(value: React.ChangeEvent<HTMLInputElement>) => void;
   centuries: string[];
-  sex: string;
+  sex: PersonSex.MALE | PersonSex.FEMALE;
 }
 
 export const PeopleFilters: React.FC<Props> = (props) => {
