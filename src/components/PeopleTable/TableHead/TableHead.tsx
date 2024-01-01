@@ -35,7 +35,7 @@ export const TableHead = () => {
     <thead>
       <tr>
         {SORT_FIELDS.map(sortField => (
-          <th>
+          <th key={sortField}>
             <span className="is-flex is-flex-wrap-nowrap">
               {sortField}
               <SearchLink params={getParamsForSorting(sortField.toLowerCase())}>

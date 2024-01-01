@@ -36,6 +36,5 @@ export function getSearchWith(
       }
     });
 
-
   return newParams.toString();
 }
