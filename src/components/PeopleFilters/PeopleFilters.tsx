@@ -1,8 +1,7 @@
-import { Link } from 'react-router-dom';
-
 import { SexFilter } from './SexFilter';
-import { SearchInput } from './SearchInput';
+import { NameFilter } from './NameFilter';
 import { CenturyFilter } from './CenturyFilter';
+import { SearchLink } from './SearchLink';
 
 export const PeopleFilters = () => {
   return (
@@ -11,17 +10,17 @@ export const PeopleFilters = () => {
 
       <SexFilter />
 
-      <SearchInput />
+      <NameFilter />
 
       <CenturyFilter />
 
       <div className="panel-block">
-        <Link
+        <SearchLink
           className="button is-link is-outlined is-fullwidth"
-          to="/people"
+          params={{ centuries: null, sex: null, query: null }}
         >
           Reset all filters
-        </Link>
+        </SearchLink>
       </div>
     </nav>
   );

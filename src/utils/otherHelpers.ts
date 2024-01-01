@@ -9,23 +9,38 @@ function getCentury(year: number): string {
 }
 
 interface Filters {
-  centuries: string[],
-  query: string,
-  sex: string,
+  centuries: string[];
+  query: string;
+  sex: string;
 }
 
-export function getFilteredPeople(people: Person[], filters: Filters) {
-  const { centuries, query, sex } = filters;
-  let filteredPeople = [...people];
+interface SortParams {
+  sortField: keyof Person;
+  order: string;
+}
+
+export function getPreparedPeople(
+  people: Person[],
+  params: Filters & SortParams,
+): Person[] {
+  let preparedPeople = [...people];
+
+  const {
+    centuries,
+    query,
+    sex,
+    sortField,
+    order,
+  } = params;
 
   if (centuries.length) {
-    filteredPeople = filteredPeople.filter(
-      person => filters.centuries.includes(getCentury(person.born)),
+    preparedPeople = preparedPeople.filter(
+      person => centuries.includes(getCentury(person.born)),
     );
   }
 
-  if (filters.query.trim()) {
-    filteredPeople = filteredPeople.filter(person => {
+  if (query.trim()) {
+    preparedPeople = preparedPeople.filter(person => {
       const preparedQuery = query.toLowerCase().trim();
       const preparedName = person.name.toLowerCase();
       const preparedMotherName = person.motherName?.toLowerCase();
@@ -37,9 +52,26 @@ export function getFilteredPeople(people: Person[], filters: Filters) {
     });
   }
 
-  if (filters.sex) {
-    filteredPeople = filteredPeople.filter(person => person.sex === sex);
+  if (sex) {
+    preparedPeople = preparedPeople.filter(person => person.sex === sex);
   }
 
-  return filteredPeople;
+  if (sortField) {
+    preparedPeople.sort((person1, person2) => {
+      const a = order === 'desc' ? person2[sortField] : person1[sortField];
+      const b = order === 'desc' ? person1[sortField] : person2[sortField];
+
+      if (typeof a === 'number' && typeof b === 'number') {
+        return a - b;
+      }
+
+      if (typeof a === 'string' && typeof b === 'string') {
+        return a.localeCompare(b);
+      }
+
+      return 0;
+    });
+  }
+
+  return preparedPeople;
 }

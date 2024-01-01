@@ -3,7 +3,7 @@ import { useSearchParams } from 'react-router-dom';
 
 import { SearchLink } from '../SearchLink';
 
-const centuries = ['16', '17', '18', '19', '20'];
+const CENTURIES = ['16', '17', '18', '19', '20'];
 
 export const CenturyFilter = () => {
   const [searchParams] = useSearchParams();
@@ -21,7 +21,7 @@ export const CenturyFilter = () => {
     <div className="panel-block">
       <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
         <div className="level-left">
-          {centuries.map(century => (
+          {CENTURIES.map(century => (
             <SearchLink
               params={{ centuries: getUpdatedCenturies(century) }}
               key={century}

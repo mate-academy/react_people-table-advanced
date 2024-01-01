@@ -3,51 +3,56 @@ import { useSearchParams } from 'react-router-dom';
 
 import { getPeople } from '../api';
 import { Loader, PeopleFilters, PeopleTable } from '../components';
-import type { Person } from '../types';
-import { getFilteredPeople, getPersonByName } from '../utils/otherHelpers';
+import { getPreparedPeople, getPersonByName } from '../utils/otherHelpers';
+import { Person, ErrorMessage } from '../types';
 
 export const PeoplePage = () => {
   const [searchParams] = useSearchParams();
   const [people, setPeople] = useState<Person[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [hasError, setHasError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<ErrorMessage | null>(null);
 
   useEffect(() => {
-    setIsLoading(true);
-    setHasError(false);
-
     getPeople()
-      .then((peopleFromServer) => setPeople(peopleFromServer.map(person => {
-        const personCopy = { ...person };
+      .then((peopleFromServer) => {
+        if (!peopleFromServer.length) {
+          setErrorMessage(ErrorMessage.noPeopleOnServer);
+        } else {
+          setPeople(peopleFromServer.map(person => {
+            const personCopy = { ...person };
 
-        if (person.motherName) {
-          personCopy.mother = getPersonByName(
-            person.motherName, peopleFromServer,
-          );
+            if (person.motherName) {
+              personCopy.mother = getPersonByName(
+                person.motherName, peopleFromServer,
+              );
+            }
+
+            if (person.fatherName) {
+              personCopy.father = getPersonByName(
+                person.fatherName, peopleFromServer,
+              );
+            }
+
+            return personCopy;
+          }));
         }
-
-        if (person.fatherName) {
-          personCopy.father = getPersonByName(
-            person.fatherName, peopleFromServer,
-          );
-        }
-
-        return personCopy;
-      })))
+      })
       .catch(() => {
-        setHasError(true);
+        setErrorMessage(ErrorMessage.peopleLoadingError);
       })
       .finally(() => {
         setIsLoading(false);
       });
   }, []);
 
-  const peopleToRender = getFilteredPeople(
+  const peopleToRender = getPreparedPeople(
     people,
     {
       centuries: searchParams.getAll('centuries') || [],
       query: searchParams.get('query') || '',
       sex: searchParams.get('sex') || '',
+      sortField: searchParams.get('sort') as keyof Person || '',
+      order: searchParams.get('order') || '',
     },
   );
 
@@ -66,26 +71,28 @@ export const PeoplePage = () => {
           <div className="column">
             <div className="box table-container">
               {isLoading && <Loader />}
-              {hasError && (
+
+              {(!errorMessage && !isLoading)
+                && (peopleToRender.length
+                  ? <PeopleTable people={peopleToRender} />
+                  : (
+                    <p>
+                      There are no people matching the current search criteria
+                    </p>
+                  ))}
+
+              {errorMessage === ErrorMessage.peopleLoadingError && (
                 <p data-cy="peopleLoadingError" className="has-text-danger">
-                  Something went wrong
+                  {ErrorMessage.peopleLoadingError}
                 </p>
               )}
 
-              {people.length !== 0 && (
-                <>
-                  {peopleToRender.length
-                    ? <PeopleTable people={peopleToRender} />
-                    : (
-                      <p data-cy="noPeopleMessage">
-                        There are no people on the server
-                      </p>
-                    )}
-                </>
+              {errorMessage === ErrorMessage.noPeopleOnServer && (
+                <p data-cy="noPeopleMessage">
+                  {ErrorMessage.noPeopleOnServer}
+                </p>
               )}
             </div>
-
-            <p>There are no people matching the current search criteria</p>
           </div>
         </div>
       </div>

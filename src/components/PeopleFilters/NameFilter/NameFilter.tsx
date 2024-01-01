@@ -3,7 +3,7 @@ import { useSearchParams } from 'react-router-dom';
 
 import { getSearchWith } from '../../../utils/searchHelper';
 
-export const SearchInput = () => {
+export const NameFilter = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const query = searchParams.get('query') || '';
 
