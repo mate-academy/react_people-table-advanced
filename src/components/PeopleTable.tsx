@@ -1,154 +1,149 @@
 import React from 'react';
 import classNames from 'classnames';
-import { useParams, useSearchParams, Link } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import { PersonLink } from './PersonLink';
 import { Person } from '../types';
+import { SortField } from '../types/SortField';
 import '@fortawesome/fontawesome-free/css/all.css';
 import 'bulma/css/bulma.css';
-import { getSearchWith } from '../utils/searchHelper';
+import { SearchLink } from './SearchLink';
 
 type Props = {
   people: Person[];
+  isError: boolean;
 };
 
-export enum SortBy {
-  Name = 'name',
-  Sex = 'sex',
-  Born = 'born',
-  Died = 'died',
-}
-
-const sortPeople = (
-  people: Person[],
-  sort: string | null,
-  order: string | null,
-): Person[] => {
-  const isReversed: number = order ? -1 : 1;
-
-  return [...people].sort((a, b) => {
-    switch (sort) {
-      case 'name':
-      case 'sex':
-        return (a[sort] as string).localeCompare(b[sort]) * isReversed;
-      case 'born':
-      case 'died':
-        return (+a[sort] - +b[sort]) * isReversed;
-
-      default:
-        return 0;
-    }
-  });
-};
-
-export const PeopleTable: React.FC<Props> = ({ people }) => {
-  const { slug } = useParams();
-
-  function findParent(parent: string | null) {
-    return people.find(person => person.name === parent);
-  }
-
+export const PeopleTable: React.FC<Props> = ({ people, isError }) => {
   const [searchParams] = useSearchParams();
-  const sort = searchParams.get('sort');
-  const order = searchParams.get('order');
-  const sortedPeople: Person[] = sortPeople(people, sort, order);
+  const sortField = searchParams.get('sort') || SortField.ALL;
+  const sortOrder = searchParams.get('order') || '';
 
-  const sortByColumn = (column: string) => {
-    if (sort !== column) {
-      // eslint-disable-next-line no-console
-      console.log('sort !== column)');
+  const handleSortParams = (field: SortField) => {
 
-      return { sort: column, order: null };
+    if (sortField === field && !sortOrder) {
+      return {
+        sort: field,
+        order: 'desc',
+      };
     }
 
-    if (!order) {
-      // eslint-disable-next-line no-console
-      console.log('!order');
-
-      return { sort: column, order: 'desc' };
+    if (sortField === field && sortOrder) {
+      return {
+        sort: null,
+        order: null,
+      };
     }
 
-    // eslint-disable-next-line no-console
-    console.log('sort: null, order: null ');
-
-    return { sort: null, order: null };
+    return {
+      sort: field,
+      order: null,
+    };
   };
 
   return (
-    <table
-      data-cy="peopleTable"
-      className="table is-striped is-hoverable is-narrow is-fullwidth"
-    >
-      <thead>
-        <tr>
-          {Object.keys(SortBy).map((sortName: string) => (
-            <th key={sortName}>
-              <span className="is-flex is-flex-wrap-nowrap">
-                {sortName}
-                <Link
-                  to={{
-                    search: getSearchWith(
-                      searchParams,
-                      sortByColumn(sortName.toLowerCase()),
-                    ),
-                  }}
-                  aria-label={`Sort by${sortName}`}
-                >
-                  <span className="icon">
-                    <i className={classNames('fas', {
-                      ' fa-sort': sort !== sortName.toLowerCase(),
-                      'fa-sort-up': sort === sortName.toLowerCase()
-                        && order !== 'desc',
-                      'fa-sort-down': sort === sortName.toLowerCase()
-                        && order === 'desc',
-                    })}
-                    />
-                  </span>
-                </Link>
-              </span>
-            </th>
-          ))}
-          <th>Mother</th>
-          <th>Father</th>
-        </tr>
-      </thead>
+    <>
+      {!isError ? (
+        <table
+          data-cy="peopleTable"
+          className="table is-striped is-hoverable is-narrow is-fullwidth"
+        >
+          <thead>
+            <tr>
+              <th>
+                <span className="is-flex is-flex-wrap-nowrap">
+                  Name
+                  <SearchLink params={handleSortParams(SortField.NAME)}>
+                    <span className="icon">
+                      <i className={classNames('fas', {
+                        'fa-sort': sortField !== SortField.NAME,
+                        'fa-sort-up': sortField === SortField.NAME
+                        && !sortOrder,
+                        'fa-sort-down': sortField === SortField.NAME
+                        && sortOrder,
+                      })}
+                      />
+                    </span>
+                  </SearchLink>
+                </span>
+              </th>
 
-      <tbody>
-        {sortedPeople.map((person) => {
-          const father = findParent(person.fatherName);
-          const mother = findParent(person.motherName);
+              <th>
+                <span className="is-flex is-flex-wrap-nowrap">
+                  Sex
+                  <SearchLink params={handleSortParams(SortField.SEX)}>
+                    <span className="icon">
+                      <i className={classNames('fas', {
+                        'fa-sort': sortField !== SortField.SEX,
+                        'fa-sort-up': sortField === SortField.SEX
+                          && !sortOrder,
+                        'fa-sort-down': sortField === SortField.SEX
+                          && sortOrder,
+                      })}
+                      />
+                    </span>
+                  </SearchLink>
+                </span>
+              </th>
 
-          return (
-            <tr
-              data-cy="person"
-              key={person.slug}
-              className={classNames({
-                'has-background-warning': person.slug === slug,
-              })}
-              aria-describedby={`person-${person.slug}-label`}
-            >
-              <td>
-                <PersonLink
-                  person={person}
-                  aria-label={`Details for ${person.name}`}
-                />
-              </td>
-              <td>{person.sex}</td>
-              <td>{person.born}</td>
-              <td>{person.died}</td>
-              <td>
-                {mother
-                  ? <PersonLink person={mother} />
-                  : person.motherName || '-'}
-              </td>
-              <td>
-                {father
-                  ? <PersonLink person={father} />
-                  : person.fatherName || '-'}
-              </td>
+              <th>
+                <span className="is-flex is-flex-wrap-nowrap">
+                  Born
+                  <SearchLink params={handleSortParams(SortField.BORN)}>
+                    <span className="icon">
+                      <i
+                        className={classNames('fas', {
+                          'fa-sort': sortField !== SortField.BORN,
+                          'fa-sort-up': sortField === SortField.BORN
+                            && !sortOrder,
+                          'fa-sort-down': sortField === SortField.BORN
+                            && sortOrder,
+                        })}
+                      />
+                    </span>
+                  </SearchLink>
+                </span>
+              </th>
+
+              <th>
+                <span className="is-flex is-flex-wrap-nowrap">
+                  Died
+                  <SearchLink params={handleSortParams(SortField.DIED)}>
+                    <span className="icon">
+                      <i
+                        className={classNames('fas', {
+                          'fa-sort': sortField !== SortField.DIED,
+                          'fa-sort-up': sortField === SortField.DIED
+                            && !sortOrder,
+                          'fa-sort-down': sortField === SortField.DIED
+                            && sortOrder,
+                        })}
+                      />
+                    </span>
+                  </SearchLink>
+                </span>
+              </th>
+
+              <th>Mother</th>
+              <th>Father</th>
             </tr>
-          );
-        })}
-      </tbody>
-    </table>
+          </thead>
+
+          <tbody>
+            {people.map(person => (
+              <PersonLink
+                key={person.slug}
+                person={{
+                  ...person,
+                  mother: people.find(p => p.name === person.motherName),
+                  father: people.find(p => p.name === person.fatherName),
+                }}
+              />
+            ))}
+          </tbody>
+        </table>
+      ) : (
+        <p>There are no people matching the current search criteria</p>
+      )}
+    </>
   );
 };
