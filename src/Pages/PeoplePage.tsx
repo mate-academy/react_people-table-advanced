@@ -21,8 +21,8 @@ export const PeoplePage = () => {
   useEffect(() => {
     getPeople()
       .then((peopleFromServer) => {
-        if (peopleFromServer.length === 0) {
-          setError(Errors.noPeopleOnServer);
+        if (!peopleFromServer.length) {
+          setError(Errors.NoPeopleOnServer);
         } else {
           setPeoples(
             getFoolPeoplesInfo(peopleFromServer),
@@ -54,7 +54,7 @@ export const PeoplePage = () => {
             <SomethingWhentWrong />
           )}
 
-          {error === Errors.noPeopleOnServer && (
+          {error === Errors.NoPeopleOnServer && (
             <NoPeopleOnServer />
           )}
 

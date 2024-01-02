@@ -5,7 +5,6 @@ import { NoPeopleOnServer } from '../Errors/NoPeopleOnServer';
 import { PersonLink } from './PersonLink/PersonLink';
 import { TableHeader } from './TableHead';
 
-/* eslint-disable jsx-a11y/control-has-associated-label */
 interface Props {
   peoples: Person[] | null;
 }

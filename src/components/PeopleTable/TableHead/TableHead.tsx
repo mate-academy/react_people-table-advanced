@@ -10,7 +10,7 @@ export const TableHeader = () => {
   const currentSort = searchParams.get('sort');
   const currentOrder = searchParams.get('order');
 
-  const iconClass = (sortBy: string): string => {
+  const getIconClass = (sortBy: string): string => {
     return classNames('fas', {
       'fa-sort': currentSort !== sortBy,
       'fa-sort-up': currentSort === sortBy && !currentOrder,
@@ -39,7 +39,7 @@ export const TableHeader = () => {
               {sortField}
               <SearchLink params={getParamsForSorting(sortField.toLowerCase())}>
                 <span className="icon">
-                  <i className={iconClass(sortField.toLowerCase())} />
+                  <i className={getIconClass(sortField.toLowerCase())} />
                 </span>
               </SearchLink>
             </span>

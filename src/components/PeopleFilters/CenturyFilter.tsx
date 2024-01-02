@@ -39,7 +39,7 @@ export const CenturyFilter = () => {
             data-cy="centuryALL"
             className={classNames(
               'button is-success',
-              { 'is-outlined': selectCenturies.length === 0 },
+              { 'is-outlined': !selectCenturies.length },
             )}
             params={{ centuries: [] }}
           >

@@ -12,7 +12,7 @@ export function getPreparedPeople(
   people: Person[],
   params: Params,
 ): Person[] {
-  let peoples = [...people];
+  let preparedPeople = [...people];
 
   const {
     centuries,
@@ -23,13 +23,13 @@ export function getPreparedPeople(
   } = params;
 
   if (centuries.length) {
-    peoples = peoples.filter(
+    preparedPeople = preparedPeople.filter(
       person => centuries.includes(Math.ceil(person.born / 100).toString()),
     );
   }
 
   if (query.trim()) {
-    peoples = peoples.filter(person => {
+    preparedPeople = preparedPeople.filter(person => {
       const preparedQuery = query.toLowerCase().trim();
       const preparedName = person.name.toLowerCase();
       const preparedMotherName = person.motherName?.toLowerCase();
@@ -42,11 +42,11 @@ export function getPreparedPeople(
   }
 
   if (sex) {
-    peoples = peoples.filter(person => person.sex === sex);
+    preparedPeople = preparedPeople.filter(person => person.sex === sex);
   }
 
   if (sortField) {
-    peoples.sort((person1, person2) => {
+    preparedPeople.sort((person1, person2) => {
       const a = order === 'desc' ? person2[sortField] : person1[sortField];
       const b = order === 'desc' ? person1[sortField] : person2[sortField];
 
@@ -62,5 +62,5 @@ export function getPreparedPeople(
     });
   }
 
-  return peoples;
+  return preparedPeople;
 }
