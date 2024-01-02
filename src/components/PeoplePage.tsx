@@ -15,6 +15,7 @@ export const PeoplePage = () => {
   const [searchParams] = useSearchParams();
   const sex = searchParams.get(Filter.SEX) || '';
   const query = searchParams.get(Filter.QUERY) || '';
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const centuries = searchParams.getAll(Filter.CENTURIES) || [];
   const sortField = searchParams.get('sort') as SortField || SortField.ALL;
   const sortOrder = searchParams.get('order') || '';
@@ -44,7 +45,7 @@ export const PeoplePage = () => {
     centuries,
     sortField,
     sortOrder,
-  }), [people, query, centuries, sortField, sortOrder]);
+  }), [people, sex, query, centuries, sortField, sortOrder]);
 
   return (
     <>
