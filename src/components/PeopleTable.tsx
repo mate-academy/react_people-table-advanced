@@ -19,7 +19,6 @@ export const PeopleTable: React.FC<Props> = ({ people, isError }) => {
   const sortOrder = searchParams.get('order') || '';
 
   const handleSortParams = (field: SortField) => {
-
     if (sortField === field && !sortOrder) {
       return {
         sort: field,
