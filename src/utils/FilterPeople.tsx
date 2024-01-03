@@ -6,7 +6,7 @@ export const filterPeople = (
   sexFilter: string | null,
   query: string | null,
 ) => {
-  if (sourcePeople === null) {
+  if (!sourcePeople) {
     return null;
   }
 
