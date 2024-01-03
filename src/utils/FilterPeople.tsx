@@ -1,18 +1,16 @@
-import { useSearchParams } from 'react-router-dom';
 import { Person } from '../types';
 
-export const FilterPeople = (sourcePeople: Person[] | null) => {
-  const [searchParams] = useSearchParams();
-
+export const filterPeople = (
+  sourcePeople: Person[] | null,
+  centuries: string[],
+  sexFilter: string | null,
+  query: string | null,
+) => {
   if (sourcePeople === null) {
     return null;
   }
 
-  const sexFilter = searchParams.get('sex');
-  const query = searchParams.get('query');
-  const centuriesFilter = searchParams.getAll('centuries')
-    .map(century => (+century * 100));
-  const sortBy = searchParams.get('sort') as keyof Person;
+  const centuriesFilter = centuries.map(century => (+century * 100));
 
   let filteredPeople = [...sourcePeople];
 
@@ -38,27 +36,6 @@ export const FilterPeople = (sourcePeople: Person[] | null) => {
         year >= person.born && (year - 100) < person.born
       )),
     );
-  }
-
-  if (sortBy) {
-    const isDesc = searchParams.get('order');
-
-    filteredPeople.sort((a, b) => {
-      const firstParam = isDesc ? b[sortBy] : a[sortBy];
-      const secondParam = isDesc ? a[sortBy] : b[sortBy];
-
-      if (typeof firstParam === 'string'
-      && typeof secondParam === 'string') {
-        return firstParam.localeCompare(secondParam);
-      }
-
-      if (typeof firstParam === 'number'
-      && typeof secondParam === 'number') {
-        return firstParam - secondParam;
-      }
-
-      return 0;
-    });
   }
 
   return filteredPeople;

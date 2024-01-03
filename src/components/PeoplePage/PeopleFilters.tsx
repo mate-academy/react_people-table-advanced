@@ -69,6 +69,15 @@ export const PeopleFilters = () => {
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
             {centuryFilters.map(century => {
+              const paramsOnUnselected = {
+                centuries: currentCenturies.length ? [
+                  ...currentCenturies,
+                  century,
+                ] : [
+                  century,
+                ],
+              };
+
               const isSelected = searchParams
                 .getAll('centuries')
                 .includes(century);
@@ -84,19 +93,28 @@ export const PeopleFilters = () => {
                     centuries: currentCenturies.filter(
                       paramCentury => paramCentury !== century,
                     ),
-                  } : {
-                    centuries: currentCenturies.length ? [
-                      ...currentCenturies,
-                      century,
-                    ] : [
-                      century,
-                    ],
-                  }}
+                  } : paramsOnUnselected}
                 >
                   {century}
                 </SearchLink>
               );
             })}
+          </div>
+
+          <div className="level-right ml-4">
+            <SearchLink
+              data-cy="centuryALL"
+              className={cn(
+                'button',
+                'is-success',
+                { 'is-outlined': currentCenturies.length },
+              )}
+              params={{
+                centuries: [],
+              }}
+            >
+              All
+            </SearchLink>
           </div>
         </div>
       </div>
