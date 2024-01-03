@@ -9,6 +9,7 @@ import { PeopleLoadingError } from './PeopleLoadingError';
 import { NoPeopleMessage } from './NoPeopleMessage';
 import { SearchParams, getSearchWith } from '../utils/searchHelper';
 import { getFilteredPeople } from '../utils/helpers';
+import { PersonSex } from '../types/enum';
 
 export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);
@@ -17,8 +18,8 @@ export const PeoplePage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const query = searchParams.get('query') || '';
   const centuries = searchParams.getAll('centuries') || null;
-  const sex = searchParams.get('sex') || '';
   const sort = searchParams.get('sort') || '';
+  const sex = searchParams.get('sex') as PersonSex || '';
   const order = searchParams.get('order') || '';
   const setSearchWith = (params: SearchParams) => {
     const search = getSearchWith(searchParams, params);
