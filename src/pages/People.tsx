@@ -47,10 +47,18 @@ export const People = () => {
             {!isLoading && <PeopleFilters />}
           </div>
 
+          {isError && (
+            <p data-cy="peopleLoadingError" className="has-text-danger">
+              Something went wrong
+            </p>
+          )}
+
           <div className="column">
             <div className="box table-container">
               {(!displayPeople.length && !isLoading) ? (
-                <p>There are no people matching the search criteria</p>
+                <p data-cy="noPeopleMessage">
+                  There are no people matching the search criteria
+                </p>
               ) : (
                 <Table
                   people={people}
