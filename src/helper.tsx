@@ -8,10 +8,10 @@ export const getFilteredPeople = (
   searchQuery: string,
   filterByCentries: string[],
 ) => {
-  const preparedPople = [...people];
+  let preparedPeople = [...people];
 
   if (filterByCentries.length) {
-    return preparedPople.filter(person => {
+    preparedPeople = preparedPeople.filter(person => {
       const mathCentry = Math.ceil(person.born / 100).toString();
 
       return filterByCentries.includes(mathCentry);
@@ -19,7 +19,7 @@ export const getFilteredPeople = (
   }
 
   if (searchQuery) {
-    return preparedPople.filter(person => (
+    preparedPeople = preparedPeople.filter(person => (
       person.name.toLowerCase().includes(searchQuery.toLocaleLowerCase().trim())
       || person.fatherName?.toLowerCase().includes(
         searchQuery.toLocaleLowerCase().trim(),
@@ -31,13 +31,13 @@ export const getFilteredPeople = (
   }
 
   if (filterSex) {
-    return preparedPople.filter(person => person.sex === filterSex);
+    preparedPeople = preparedPeople.filter(person => person.sex === filterSex);
   }
 
-  if (sortField) {
-    return preparedPople.sort((a, b) => {
-      const personA = sortOrder === SortBy.Asc ? b[sortField] : a[sortField];
-      const personB = sortOrder === SortBy.Desc ? a[sortField] : b[sortField];
+  if (sortField && sortOrder) {
+    preparedPeople = preparedPeople.sort((a, b) => {
+      const personA = sortOrder === SortBy.Asc ? a[sortField] : b[sortField];
+      const personB = sortOrder === SortBy.Asc ? b[sortField] : a[sortField];
 
       if (typeof personA === 'number' && typeof personB === 'number') {
         return personA - personB;
@@ -51,5 +51,5 @@ export const getFilteredPeople = (
     });
   }
 
-  return preparedPople;
+  return preparedPeople;
 };
