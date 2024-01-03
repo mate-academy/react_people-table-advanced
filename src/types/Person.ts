@@ -9,3 +9,17 @@ export interface Person {
   mother?: Person,
   father?: Person,
 }
+
+export interface TableColumn {
+  id: number;
+  title: string;
+  columnCode: string;
+}
+
+export interface Title {
+  name: string;
+  sex: string;
+  born: number;
+  died: number;
+}
+export type PersonSex = 'f' | 'm';
