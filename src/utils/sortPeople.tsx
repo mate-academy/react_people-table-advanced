@@ -5,7 +5,7 @@ export const sortPeople = (
   sortBy: keyof Person,
   sortOrder: string | null,
 ) => {
-  if (sourcePeople === null) {
+  if (!sourcePeople) {
     return null;
   }
 
