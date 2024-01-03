@@ -1,6 +1,6 @@
 import { Person } from '../types';
 
-export function useSortedPeople(
+export function getPreparedPeople(
   people: Person[],
   filters: {
     sort: string | null,

@@ -7,9 +7,7 @@ import { PersonRow } from '../PersonRow';
 import { Params } from '../../utils/searchHelper';
 import { SearchLink } from '../SearchLink';
 
-/* eslint-disable jsx-a11y/control-has-associated-label */
-
-const COLLUMNS = [
+const COLUMN_NAMES = [
   'Name',
   'Sex',
   'Born',
@@ -52,7 +50,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
     >
       <thead>
         <tr>
-          {COLLUMNS.map((column) => {
+          {COLUMN_NAMES.map((column) => {
             const columnLowered = column.toLowerCase();
 
             return (

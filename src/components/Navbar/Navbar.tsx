@@ -1,7 +1,7 @@
 import { NavLink } from 'react-router-dom';
 import cn from 'classnames';
 
-const handlerClassCondition = ({ isActive }: { isActive: boolean }) => (
+const handlerClassUpdating = ({ isActive }: { isActive: boolean }) => (
   cn('navbar-item', {
     'has-background-grey-lighter': isActive,
   })
@@ -17,11 +17,11 @@ export const Navbar = () => {
     >
       <div className="container">
         <div className="navbar-brand">
-          <NavLink className={handlerClassCondition} to="/">
+          <NavLink className={handlerClassUpdating} to="/">
             Home
           </NavLink>
 
-          <NavLink className={handlerClassCondition} to="/people">
+          <NavLink className={handlerClassUpdating} to="/people">
             People
           </NavLink>
         </div>

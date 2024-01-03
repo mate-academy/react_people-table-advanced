@@ -6,7 +6,7 @@ import { PeopleFilters } from '../PeopleFilters';
 import { Loader } from '../Loader';
 import { PeopleTable } from '../PeopleTable';
 import { getPeople } from '../../api';
-import { useSortedPeople } from '../../helpers/useSortedPeople';
+import { getPreparedPeople } from '../../helpers/getPreparedPeople';
 
 export const PeoplePage = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -31,7 +31,7 @@ export const PeoplePage = () => {
       .finally(() => setIsLoading(false));
   }, []);
 
-  const peopleToRender = useSortedPeople(people, filters);
+  const peopleToRender = getPreparedPeople(people, filters);
 
   return (
     <>

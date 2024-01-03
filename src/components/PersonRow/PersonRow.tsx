@@ -13,12 +13,8 @@ type Props = {
 export const PersonRow: React.FC<Props> = ({ person, people }) => {
   const { slug } = useParams();
 
-  const mother = people.find(possibleMother => (
-    possibleMother.name === person.motherName
-  )) || null;
-  const father = people.find(possibleFather => (
-    possibleFather.name === person.fatherName
-  )) || null;
+  const mother = people.find(({ name }) => (name === person.motherName));
+  const father = people.find(({ name }) => (name === person.fatherName));
 
   return (
     <tr

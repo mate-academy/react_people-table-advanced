@@ -1,7 +1,11 @@
 import { useSearchParams } from 'react-router-dom';
 import cn from 'classnames';
+
 import { getSearchWith } from '../../utils/searchHelper';
 import { SearchLink } from '../SearchLink';
+import { GENDERS } from '../../enum/gendersEnum';
+
+const Centuries = [16, 17, 18, 19, 20];
 
 export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -12,7 +16,7 @@ export const PeopleFilters = () => {
   type ParamsType = {
     sort: string | null,
     order: string | null,
-    sex: 'm' | 'f' | null,
+    sex: GENDERS | null,
     query: string | null,
     centuries: number | null,
   };
@@ -22,11 +26,11 @@ export const PeopleFilters = () => {
     const currentOrder = searchParams.get('order') || null;
 
     const updatedParams: ParamsType = {
-      sort: !currentSort ? null : currentSort,
+      sort: currentSort || null,
       order: currentOrder,
-      sex: !params.sex ? null : params.sex,
-      query: !params.query ? null : params.query,
-      centuries: params.centuries === undefined ? null : params.centuries,
+      sex: params.sex || null,
+      query: params.query || null,
+      centuries: params.centuries || null,
     };
 
     const search = getSearchWith(updatedParams, searchParams);
@@ -60,14 +64,14 @@ export const PeopleFilters = () => {
           All
         </SearchLink>
         <SearchLink
-          className={cn({ 'is-active': currentSex === 'm' })}
-          params={{ sex: 'm' }}
+          className={cn({ 'is-active': currentSex === GENDERS.m })}
+          params={{ sex: GENDERS.m }}
         >
           Male
         </SearchLink>
         <SearchLink
-          className={cn({ 'is-active': currentSex === 'f' })}
-          params={{ sex: 'f' }}
+          className={cn({ 'is-active': currentSex === GENDERS.f })}
+          params={{ sex: GENDERS.f }}
         >
           Female
         </SearchLink>
@@ -93,7 +97,7 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            {[16, 17, 18, 19, 20].map((century) => (
+            {Centuries.map((century) => (
               <SearchLink
                 data-cy="century"
                 key={century}
