@@ -23,22 +23,23 @@ const getBornCentury = (year: number) => {
   return year / 100 + 1;
 };
 
-const sortingByString = <K extends 'name' | 'sex'>(
+const sortingByFilter = (
   arr: Person[],
-  sortParam: K,
+  sortParam: 'name' | 'sex' | 'born' | 'died',
 ) => {
-  return arr.sort((a, b) => {
-    return a[sortParam].localeCompare(b[sortParam]);
-  });
-};
+  if (sortParam === 'born' || sortParam === 'died') {
+    return arr.sort((a, b) => {
+      return a[sortParam] - b[sortParam];
+    });
+  }
 
-const sortingByNumbers = <K extends 'born' | 'died'>(
-  arr: Person[],
-  sortParam: K,
-) => {
-  return arr.sort((a, b) => {
-    return a[sortParam] - b[sortParam];
-  });
+  if (sortParam === 'name' || sortParam === 'sex') {
+    return arr.sort((a, b) => {
+      return a[sortParam].localeCompare(b[sortParam]);
+    });
+  }
+
+  return arr;
 };
 
 export const PeopleTable: React.FC<PeopleTableProps> = ({ people }) => {
@@ -128,28 +129,28 @@ export const PeopleTable: React.FC<PeopleTableProps> = ({ people }) => {
       if (sort) {
         switch (sort) {
           case SearchFilter.name:
-            filteredPeopleList = sortingByString(
+            filteredPeopleList = sortingByFilter(
               filteredPeopleList,
               SearchFilter.name,
             );
             break;
 
           case SearchFilter.sex:
-            filteredPeopleList = sortingByString(
+            filteredPeopleList = sortingByFilter(
               filteredPeopleList,
               SearchFilter.sex,
             );
             break;
 
           case SearchFilter.born:
-            filteredPeopleList = sortingByNumbers(
+            filteredPeopleList = sortingByFilter(
               filteredPeopleList,
               SearchFilter.born,
             );
             break;
 
           case SearchFilter.died:
-            filteredPeopleList = sortingByNumbers(
+            filteredPeopleList = sortingByFilter(
               filteredPeopleList,
               SearchFilter.died,
             );
