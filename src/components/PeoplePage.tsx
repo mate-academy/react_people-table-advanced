@@ -1,8 +1,25 @@
+import React, { useEffect, useState } from 'react';
+import { Person } from '../types';
+import { getPeople } from '../api';
 import { PeopleFilters } from './PeopleFilters';
 import { Loader } from './Loader';
 import { PeopleTable } from './PeopleTable';
 
-export const PeoplePage = () => {
+export const PeoplePage: React.FC = () => {
+  const [people, setPeople] = useState<Person[] | null>(null);
+  const [isPeopleLoading, setIsPeopleLoading] = useState(false);
+  const [isPeopleError, setIsPeopleError] = useState(false);
+
+  useEffect(() => {
+    setIsPeopleLoading(true);
+    setIsPeopleError(false);
+
+    getPeople()
+      .then(peopleList => setPeople(peopleList))
+      .catch(() => setIsPeopleError(true))
+      .finally(() => setIsPeopleLoading(false));
+  }, []);
+
   return (
     <>
       <h1 className="title">People Page</h1>
@@ -15,17 +32,21 @@ export const PeoplePage = () => {
 
           <div className="column">
             <div className="box table-container">
-              <Loader />
+              {isPeopleLoading && <Loader />}
 
-              <p data-cy="peopleLoadingError">Something went wrong</p>
+              {isPeopleError && (
+                <p data-cy="peopleLoadingError">Something went wrong</p>
+              )}
 
-              <p data-cy="noPeopleMessage">
-                There are no people on the server
-              </p>
+              {people && !people.length && (
+                <p data-cy="noPeopleMessage">
+                  There are no people on the server
+                </p>
+              )}
 
-              <p>There are no people matching the current search criteria</p>
-
-              <PeopleTable />
+              {people
+              && people.length
+              && <PeopleTable people={people} />}
             </div>
           </div>
         </div>
