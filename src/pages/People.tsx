@@ -4,9 +4,9 @@ import { Person } from '../types';
 import { getPeople } from '../api';
 import { Table } from '../components/Table';
 import { PeopleFilters } from '../components/PeopleFilters';
-import { PeopleToDisplay } from '../components/PeopleToDisplay';
 import { preparePeople } from '../utils/helpers';
 import { Loader } from '../components/Loader';
+import { usePeopleToDisplay } from '../utils/PeopleToDisplay';
 
 export const People = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -24,7 +24,7 @@ export const People = () => {
       .finally(() => setIsLoading(false));
   }, []);
 
-  const displayPeople = PeopleToDisplay(preparePeople(people));
+  const displayPeople = usePeopleToDisplay(preparePeople(people));
 
   return (
     <>

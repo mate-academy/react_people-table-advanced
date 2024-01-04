@@ -1,8 +1,8 @@
 export enum SortFields {
-  Name = 'name',
-  Born = 'born',
-  Died = 'died',
-  Sex = 'sex,',
+  Name = 'Name',
+  Born = 'Born',
+  Died = 'Died',
+  Sex = 'Sex',
   Query = 'query',
   Centuries = 'centuries',
 }
