@@ -1,4 +1,4 @@
-import { Link, LinkProps, useSearchParams } from 'react-router-dom';
+import { NavLink, LinkProps, useSearchParams } from 'react-router-dom';
 import { getSearchWith, SearchParams } from '../utils/searchHelper';
 
 /**
@@ -21,7 +21,7 @@ export const SearchLink: React.FC<Props> = ({
   const [searchParams] = useSearchParams();
 
   return (
-    <Link
+    <NavLink
       // to={{ search: getSearchWith(searchParams, { query: 'sdf' }) }}
       // to={{ search: getSearchWith(searchParams, { query: null }) }}
       // to={{ search: getSearchWith(searchParams, { centuries: ['16', '18'] }) }}
@@ -31,6 +31,6 @@ export const SearchLink: React.FC<Props> = ({
       {...props} // copy all the other props
     >
       {children}
-    </Link>
+    </NavLink>
   );
 };
