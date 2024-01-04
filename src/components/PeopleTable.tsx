@@ -25,15 +25,18 @@ const getBornCentury = (year: number) => {
 
 const sortingByFilter = (
   arr: Person[],
-  sortParam: 'name' | 'sex' | 'born' | 'died',
+  sortParam: SearchFilter.name
+  | SearchFilter.sex
+  | SearchFilter.born
+  | SearchFilter.died,
 ) => {
-  if (sortParam === 'born' || sortParam === 'died') {
+  if (sortParam === 'born' || sortParam === SearchFilter.died) {
     return arr.sort((a, b) => {
       return a[sortParam] - b[sortParam];
     });
   }
 
-  if (sortParam === 'name' || sortParam === 'sex') {
+  if (sortParam === SearchFilter.name || sortParam === SearchFilter.sex) {
     return arr.sort((a, b) => {
       return a[sortParam].localeCompare(b[sortParam]);
     });
