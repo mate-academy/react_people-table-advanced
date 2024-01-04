@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Person } from '../types';
+import { SortFields } from '../types/SortFields';
 
 const useQueryFilter = (query: string | null, people: Person[]): Person[] => {
   if (!query) {
@@ -43,16 +44,16 @@ const useSort = (
   const sortedPeople = [...people];
 
   switch (sortBy) {
-    case 'name':
+    case SortFields.Name:
       sortedPeople.sort((a, b) => (sortOrder === 'ASC'
         ? a.name.localeCompare(b.name) : b.name.localeCompare(a.name)));
       break;
-    case 'sex':
+    case SortFields.Sex:
       sortedPeople.sort((a, b) => (sortOrder === 'ASC'
         ? a.sex.localeCompare(b.sex) : b.sex.localeCompare(a.sex)));
       break;
-    case 'born':
-    case 'died':
+    case SortFields.Born:
+    case SortFields.Died:
       sortedPeople.sort((a, b) => (sortOrder
         === 'ASC' ? a.born - b.born : b.born - a.born));
       break;
@@ -65,6 +66,7 @@ const useSort = (
 
 export const PeopleToDisplay = (people: Person[]): Person[] => {
   const [searchParams] = useSearchParams();
+
   const queryFilter = useQueryFilter(
     searchParams.get('query'),
     useSexFilter(

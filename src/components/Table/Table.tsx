@@ -5,6 +5,8 @@ import { Person } from '../../types';
 import { Loader } from '../Loader';
 import { SearchLink } from '../SearchLink';
 import { PersonRow } from '../PersonRow';
+import { SortOrder } from '../../types/SortOrder';
+import { SortFields } from '../../types/SortFields';
 
 interface Props {
   people: Person[]
@@ -29,12 +31,12 @@ export const Table: React.FC<Props> = ({
     if (sort !== newSortType) {
       return {
         sort: newSortType,
-        sortOrder: 'ASC',
+        sortOrder: SortOrder.Asc,
       };
     }
 
-    if (sort === newSortType && sortOrder === 'ASC') {
-      return { sortOrder: 'DESC' };
+    if (sort === newSortType && sortOrder === SortOrder.Asc) {
+      return { sortOrder: SortOrder.Desc };
     }
 
     return {
@@ -59,6 +61,22 @@ export const Table: React.FC<Props> = ({
     return <p data-cy="noPeopleMessage">There are no people on the server</p>;
   }
 
+  const sortingByHeader = (sortField: SortFields) => {
+    return (
+      <SearchLink params={getSortedParams(sortField)}>
+        <span className="icon">
+          <i
+            className={cn('fas', {
+              'fa-sort': sort !== `${sortField}`,
+              'fa-sort-up': sort === `${sortField}` && sortOrder === SortOrder.Asc,
+              'fa-sort-down': sort === `${sortField}` && sortOrder === SortOrder.Desc,
+            })}
+          />
+        </span>
+      </SearchLink>
+    );
+  };
+
   return (
     <table
       data-cy="peopleTable"
@@ -69,68 +87,28 @@ export const Table: React.FC<Props> = ({
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Name
-              <SearchLink params={getSortedParams('name')}>
-                <span className="icon">
-                  <i
-                    className={cn('fas', {
-                      'fa-sort': sort !== 'name',
-                      'fa-sort-up': sort === 'name' && sortOrder === 'ASC',
-                      'fa-sort-down': sort === 'name' && sortOrder === 'DESC',
-                    })}
-                  />
-                </span>
-              </SearchLink>
+              {sortingByHeader(SortFields.Name)}
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Sex
-              <SearchLink params={getSortedParams('sex')}>
-                <span className="icon">
-                  <i
-                    className={cn('fas', {
-                      'fa-sort': sort !== 'sex',
-                      'fa-sort-up': sort === 'sex' && sortOrder === 'ASC',
-                      'fa-sort-down': sort === 'sex' && sortOrder === 'DESC',
-                    })}
-                  />
-                </span>
-              </SearchLink>
+              {sortingByHeader(SortFields.Sex)}
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Born
-              <SearchLink params={getSortedParams('born')}>
-                <span className="icon">
-                  <i
-                    className={cn('fas', {
-                      'fa-sort': sort !== 'born',
-                      'fa-sort-up': sort === 'born' && sortOrder === 'ASC',
-                      'fa-sort-down': sort === 'born' && sortOrder === 'DESC',
-                    })}
-                  />
-                </span>
-              </SearchLink>
+              {sortingByHeader(SortFields.Born)}
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Died
-              <SearchLink params={getSortedParams('died')}>
-                <span className="icon">
-                  <i
-                    className={cn('fas', {
-                      'fa-sort': sort !== 'died',
-                      'fa-sort-up': sort === 'died' && sortOrder === 'ASC',
-                      'fa-sort-down': sort === 'died' && sortOrder === 'DESC',
-                    })}
-                  />
-                </span>
-              </SearchLink>
+              {sortingByHeader(SortFields.Died)}
             </span>
           </th>
 
