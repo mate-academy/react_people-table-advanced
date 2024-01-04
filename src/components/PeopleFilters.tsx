@@ -90,7 +90,6 @@ export const PeopleFilters = () => {
           <div className="level-right ml-4">
             <SearchLink
               data-cy="centuryALL"
-              // className="button is-success is-outlined"
               className={cn('button', 'is-success', {
                 'is-outlined': centuries.length,
               })}
@@ -107,7 +106,7 @@ export const PeopleFilters = () => {
           className="button is-link is-outlined is-fullwidth"
           params={{
             centuries: null,
-            sex: null,
+            sex: GenderPerson.All,
             query: null,
           }}
         >
