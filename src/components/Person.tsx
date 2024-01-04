@@ -19,14 +19,14 @@ export const Person: React.FC<Props> = ({ person }) => {
     fatherName,
     motherName,
     slug,
-    mother,
-    father,
   } = person;
 
   const { people } = usePeoplePageContext();
 
-  const { userSlug } = useParams();
+  const mother = people.find(mom => mom.name === person.motherName) || null;
+  const father = people.find(dad => dad.name === person.fatherName) || null;
 
+  const { userSlug } = useParams();
   const selectedPerson = people.find(personToFind => (
     personToFind.slug === userSlug
   ));
@@ -34,14 +34,13 @@ export const Person: React.FC<Props> = ({ person }) => {
   return (
     <tr
       data-cy="person"
-      key={slug}
       className={cn({
         'has-background-warning': selectedPerson?.slug === slug,
       })}
     >
       <td>
         <Link
-          to={`../${person.slug}`}
+          to={`../${slug}`}
           className={cn({ 'has-text-danger': sex === 'f' })}
         >
           {name}
