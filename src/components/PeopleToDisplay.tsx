@@ -68,11 +68,11 @@ export const PeopleToDisplay = (people: Person[]): Person[] => {
   const [searchParams] = useSearchParams();
 
   const queryFilter = useQueryFilter(
-    searchParams.get('query'),
+    searchParams.get(SortFields.Query),
     useSexFilter(
-      searchParams.get('sex') || '',
+      searchParams.get(SortFields.Sex) || '',
       useCenturiesFilter(searchParams
-        .getAll('centuries') || [], people),
+        .getAll(SortFields.Centuries) || [], people),
     ),
   );
 

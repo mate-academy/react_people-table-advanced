@@ -5,19 +5,8 @@ import { getPeople } from '../api';
 import { Table } from '../components/Table';
 import { PeopleFilters } from '../components/PeopleFilters';
 import { PeopleToDisplay } from '../components/PeopleToDisplay';
-
-const preparePeople = (people: Person[]) => {
-  return people.map(person => {
-    const mother = people.find(mom => mom.name === person.motherName);
-    const father = people.find(dad => dad.name === person.fatherName);
-
-    return {
-      ...person,
-      mother,
-      father,
-    };
-  });
-};
+import { preparePeople } from '../utils/helpers';
+import { Loader } from '../components/Loader';
 
 export const People = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -41,36 +30,37 @@ export const People = () => {
     <>
       <h1 className="title">People Page</h1>
 
-      <div className="block">
-        <div className="columns is-desktop is-flex-direction-row-reverse">
-          <div className="column is-7-tablet is-narrow-desktop">
-            {!isLoading && <PeopleFilters />}
-          </div>
+      {isError && (
+        <p data-cy="peopleLoadingError" className="has-text-danger">
+          Something went wrong
+        </p>
+      )}
 
-          {isError && (
-            <p data-cy="peopleLoadingError" className="has-text-danger">
-              Something went wrong
-            </p>
-          )}
+      {isLoading ? (
+        <Loader />
+      ) : (
+        <div className="block">
+          <div className="columns is-desktop is-flex-direction-row-reverse">
+            <div className="column is-7-tablet is-narrow-desktop">
+              {!isLoading && <PeopleFilters />}
+            </div>
 
-          <div className="column">
-            <div className="box table-container">
-              {(!displayPeople.length && !isLoading) ? (
-                <p data-cy="noPeopleMessage">
-                  There are no people matching the search criteria
-                </p>
-              ) : (
-                <Table
-                  people={people}
-                  loading={isLoading}
-                  error={isError}
-                  displayPeople={displayPeople}
-                />
-              )}
+            <div className="column">
+              <div className="box table-container">
+                {(!displayPeople.length && !isLoading) ? (
+                  <p data-cy="noPeopleMessage">
+                    There are no people matching the search criteria
+                  </p>
+                ) : (
+                  <Table
+                    displayPeople={displayPeople}
+                  />
+                )}
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      )}
     </>
   );
 };

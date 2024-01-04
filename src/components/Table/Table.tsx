@@ -2,24 +2,17 @@ import React from 'react';
 import { useSearchParams } from 'react-router-dom';
 import cn from 'classnames';
 import { Person } from '../../types';
-import { Loader } from '../Loader';
 import { SearchLink } from '../SearchLink';
 import { PersonRow } from '../PersonRow';
 import { SortOrder } from '../../types/SortOrder';
 import { SortFields } from '../../types/SortFields';
 
 interface Props {
-  people: Person[]
-  loading: boolean;
-  error: boolean;
   displayPeople: Person[]
 }
 
 export const Table: React.FC<Props> = ({
-  loading,
-  error,
   displayPeople,
-  people,
 }) => {
   const [searchParams] = useSearchParams();
   const sort = searchParams.get('sort') || '';
@@ -44,22 +37,6 @@ export const Table: React.FC<Props> = ({
       sortOrder: null,
     };
   };
-
-  if (loading) {
-    return <Loader />;
-  }
-
-  if (error) {
-    return (
-      <p data-cy="peopleLoadingError" className="has-text-danger">
-        Something went wrong
-      </p>
-    );
-  }
-
-  if (people.length === 0) {
-    return <p data-cy="noPeopleMessage">There are no people on the server</p>;
-  }
 
   const sortingByHeader = (sortField: SortFields) => {
     return (
