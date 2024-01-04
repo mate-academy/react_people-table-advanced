@@ -25,11 +25,9 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            <CenturiesFilterLink century={16} />
-            <CenturiesFilterLink century={17} />
-            <CenturiesFilterLink century={18} />
-            <CenturiesFilterLink century={19} />
-            <CenturiesFilterLink century={20} />
+            {[16, 17, 18, 19, 20].map(century => (
+              <CenturiesFilterLink century={century} />
+            ))}
           </div>
 
           <div className="level-right ml-4">

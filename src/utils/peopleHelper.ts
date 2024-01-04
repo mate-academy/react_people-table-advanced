@@ -1,6 +1,5 @@
 import { Person } from '../types';
 import SearchParam from '../constants/searchParam';
-// import { getCenturyFromYear, isComesUnderSearch } from "../utils/peopleHelper";
 import { Order } from '../constants/Order';
 import Sex from '../constants/Sex';
 import { SortBy } from '../constants/SortBy';
