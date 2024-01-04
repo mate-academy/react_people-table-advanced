@@ -4,7 +4,7 @@ import cn from 'classnames';
 
 import { SearchLink } from './SearchLink';
 import { getSearchWith } from '../utils/searchHelper';
-import { PersonSex } from "../types/PersonSex";
+import { PersonSex } from '../types/PersonSex';
 
 const CENTURIES = ['16', '17', '18', '19', '20'];
 

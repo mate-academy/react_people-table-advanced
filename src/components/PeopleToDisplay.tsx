@@ -2,75 +2,81 @@ import { useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Person } from '../types';
 
+const useQueryFilter = (query: string | null, people: Person[]): Person[] => {
+  if (!query) {
+    return people;
+  }
+
+  const searchedQuery = query.toLowerCase();
+
+  return people.filter(
+    (person) => person.name.toLowerCase().includes(searchedQuery)
+      || person.sex.toLowerCase().includes(searchedQuery),
+  );
+};
+
+const useSexFilter = (sex: string, people: Person[]): Person[] => {
+  if (!sex) {
+    return people;
+  }
+
+  return people.filter((person) => person.sex === sex);
+};
+
+const useCenturiesFilter = (
+  centuries: string[],
+  people: Person[],
+): Person[] => {
+  if (centuries.length === 0) {
+    return people;
+  }
+
+  return people.filter((person) => centuries
+    .includes(Math.ceil(Number(person.born) / 100).toString()));
+};
+
+const useSort = (
+  sortBy: string,
+  sortOrder: string,
+  people: Person[],
+): Person[] => {
+  const sortedPeople = [...people];
+
+  switch (sortBy) {
+    case 'name':
+      sortedPeople.sort((a, b) => (sortOrder === 'ASC'
+        ? a.name.localeCompare(b.name) : b.name.localeCompare(a.name)));
+      break;
+    case 'sex':
+      sortedPeople.sort((a, b) => (sortOrder === 'ASC'
+        ? a.sex.localeCompare(b.sex) : b.sex.localeCompare(a.sex)));
+      break;
+    case 'born':
+    case 'died':
+      sortedPeople.sort((a, b) => (sortOrder
+        === 'ASC' ? a.born - b.born : b.born - a.born));
+      break;
+    default:
+      break;
+  }
+
+  return sortedPeople;
+};
+
 export const PeopleToDisplay = (people: Person[]): Person[] => {
   const [searchParams] = useSearchParams();
+  const queryFilter = useQueryFilter(
+    searchParams.get('query'),
+    useSexFilter(
+      searchParams.get('sex') || '',
+      useCenturiesFilter(searchParams
+        .getAll('centuries') || [], people),
+    ),
+  );
 
-  return useMemo(() => {
-    const queryFilter = searchParams.get('query')
-      ?.toLowerCase();
-    const sexFilter = searchParams.get('sex') || '';
-    const centuriesFilter = searchParams.getAll('centuries') || [];
-    const sortOrder = searchParams.get('sortOrder');
-    const sortBy = searchParams.get('sort');
+  const sortOrder = searchParams.get('sortOrder') || '';
+  const sortBy = searchParams.get('sort') || '';
+  const filteredAndSortedPeople = useSort(sortBy, sortOrder, queryFilter);
 
-    let filteredPeople = [...people];
-
-    if (queryFilter) {
-      filteredPeople = filteredPeople.filter(
-        (person) => person.name.toLowerCase().includes(queryFilter)
-          || person.sex.toLowerCase().includes(queryFilter),
-      );
-    }
-
-    if (sexFilter) {
-      filteredPeople = filteredPeople.filter(
-        (person) => person.sex === sexFilter,
-      );
-    }
-
-    if (centuriesFilter.length > 0) {
-      filteredPeople = filteredPeople.filter((person) => {
-        return centuriesFilter.includes(
-          Math.ceil(Number(person.born) / 100)
-            .toString(),
-        );
-      });
-    }
-
-    if (sortBy === 'name') {
-      filteredPeople.sort((a, b) => {
-        if (sortOrder === 'ASC') {
-          return a.name.localeCompare(b.name);
-        }
-
-        return b.name.localeCompare(a.name);
-      });
-    } else if (sortBy === 'sex') {
-      filteredPeople.sort((a, b) => {
-        if (sortOrder === 'ASC') {
-          return a.sex.localeCompare(b.sex);
-        }
-
-        return b.sex.localeCompare(a.sex);
-      });
-    } else if (sortBy === 'born') {
-      filteredPeople.sort((a, b) => {
-        if (sortOrder === 'ASC') {
-          return a.born - b.born;
-        }
-
-        return b.born - a.born;
-      });
-    } else if (sortBy === 'died') {
-      filteredPeople.sort((a, b) => {
-        if (sortOrder === 'ASC') {
-          return a.born - b.born;
-        }
-
-        return b.born - a.born;
-      });
-    }
-
-    return filteredPeople;
-  }, [people, searchParams]);
+  return useMemo(() => filteredAndSortedPeople, [filteredAndSortedPeople]);
 };
