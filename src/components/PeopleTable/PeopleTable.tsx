@@ -33,28 +33,28 @@ export const PeopleTable: FC<Props> = ({ people }) => {
         <tr>
           <th>
             <span className="is-flex is-flex-wrap-nowrap is-capitalized">
-              {Sort.Name}
+              Name
               <SortBtn field={Sort.Name} />
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap is-capitalized">
-              {Sort.Sex}
+              Sex
               <SortBtn field={Sort.Sex} />
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap is-capitalized">
-              {Sort.Born}
+              Born
               <SortBtn field={Sort.Born} />
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap is-capitalized">
-              {Sort.Died}
+              Died
               <SortBtn field={Sort.Died} />
             </span>
           </th>
