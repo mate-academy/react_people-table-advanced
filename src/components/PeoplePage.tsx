@@ -39,7 +39,7 @@ export const PeoplePage = () => {
 
   const getPreparedPeople = () => {
     const sex = searchParams.get('sex');
-    const query = searchParams.get('query')?.trim().toLowerCase() || '';
+    const query = searchParams.get('query')?.trim().toLowerCase() ?? '';
     const centuries = searchParams.getAll('centuries');
     const sort = searchParams.get('sort');
     const order = searchParams.get('order');
@@ -63,13 +63,11 @@ export const PeoplePage = () => {
       const compareFunction = (a: Person, b: Person) => {
         switch (sort) {
           case 'name':
-            return a.name.localeCompare(b.name);
           case 'sex':
-            return a.sex.localeCompare(b.sex);
+            return a[sort].localeCompare(b[sort]);
           case 'born':
-            return a.born - b.born;
           case 'died':
-            return a.died - b.died;
+            return a[sort] - b[sort];
           default:
             return 0;
         }

@@ -5,14 +5,14 @@ import { ChangeEvent } from 'react';
 import { getSearchWith } from '../utils/searchHelper';
 import { SearchLink } from './SearchLink';
 
+const centuriesList = ['16', '17', '18', '19', '20'];
+
 export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const sex = searchParams.get('sex');
-  const query = searchParams.get('query') || '';
+  const query = searchParams.get('query') ?? '';
   const centuries = searchParams.getAll('centuries');
-
-  const centuriesList = ['16', '17', '18', '19', '20'];
 
   function handleSearch(e: ChangeEvent<HTMLInputElement>): void {
     const queryValue = e.target.value || null;
