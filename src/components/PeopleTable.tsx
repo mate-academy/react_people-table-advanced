@@ -122,12 +122,12 @@ export const PeopleTable: React.FC<Props> = ({ peopleFromServer }) => {
             <td>
               {person.mother
                 ? (<PersonLink currentPerson={person.mother} />)
-                : person.motherName || '-'}
+                : person.motherName ?? '-'}
             </td>
             <td>
               {person.father
                 ? (<PersonLink currentPerson={person.father} />)
-                : person.fatherName || '-'}
+                : person.fatherName ?? '-'}
             </td>
           </tr>
         ))}
