@@ -1,5 +1,6 @@
-import { Link, LinkProps, useSearchParams } from 'react-router-dom';
-import { getSearchWith, SearchParams } from '../utils/searchHelper';
+import { Link, LinkProps } from 'react-router-dom';
+import { getSearchWith, SearchParams } from '../../utils/searchHelper';
+import { useTableContext } from '../Context';
 
 /**
  * To replace the the standard `Link` we take all it props except for `to`
@@ -18,7 +19,9 @@ export const SearchLink: React.FC<Props> = ({
   params, // the params to be updated in the `search`
   ...props // all usual Link props like `className`, `style` and `id`
 }) => {
-  const [searchParams] = useSearchParams();
+  const {
+    searchParams,
+  } = useTableContext();
 
   return (
     <Link
