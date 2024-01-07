@@ -2,6 +2,7 @@ import { FC } from 'react';
 import cn from 'classnames';
 import { useSearchParams } from 'react-router-dom';
 import { SearchParams } from '../../types/SearchParams';
+import { DESC } from '../../constants';
 import { SearchLink } from '../SearchLink';
 
 type Props = {
@@ -11,11 +12,11 @@ type Props = {
 export const SortBtn: FC<Props> = ({ field }) => {
   const [searchParams] = useSearchParams();
   const sortParams = searchParams.get(SearchParams.Sort) || '';
-  const orederParams = searchParams.get(SearchParams.Order) === 'desc';
+  const orederParams = searchParams.get(SearchParams.Order) === DESC;
 
   const params = {
     sort: (field === sortParams && orederParams) ? null : field,
-    order: (field === sortParams && !orederParams) ? 'desc' : null,
+    order: (field === sortParams && !orederParams) ? DESC : null,
   };
 
   return (

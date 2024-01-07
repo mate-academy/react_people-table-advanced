@@ -1,25 +1,14 @@
-import { FC, useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import cn from 'classnames';
-import { WOMAN } from '../../constants';
+import { FC } from 'react';
 import { Person } from '../../types/Person';
 import { Sort } from '../../types/Sort';
 import { SortBtn } from '../SortBtn';
+import { PeopleRow } from '../PeopleRow/PeopleRow';
 
 type Props = {
   people: Person[];
 };
 
 export const PeopleTable: FC<Props> = ({ people }) => {
-  const [currentRowSlug, setCurrentRowSlug] = useState('');
-  const { slug: slugParam } = useParams();
-
-  useEffect(() => {
-    if (slugParam) {
-      setCurrentRowSlug(slugParam);
-    }
-  }, [slugParam]);
-
   if (people.length === 0) {
     return <p>There are no people matching the current search criteria</p>;
   }
@@ -65,78 +54,7 @@ export const PeopleTable: FC<Props> = ({ people }) => {
       </thead>
 
       <tbody>
-        {people.map(({
-          slug,
-          sex,
-          name,
-          born,
-          died,
-          motherName,
-          fatherName,
-          mother,
-          father,
-        }) => (
-          <tr
-            key={slug}
-            data-cy="person"
-            className={cn({
-              'has-background-warning': slug === currentRowSlug,
-            })}
-          >
-            <td>
-              <a
-                href={`#/people/${slug}`}
-                className={cn({
-                  'has-text-danger': sex === WOMAN,
-                })}
-              >
-                {name}
-              </a>
-            </td>
-
-            <td>{sex}</td>
-            <td>{born}</td>
-            <td>{died}</td>
-            {!motherName && (
-              <td>-</td>
-            )}
-
-            {(motherName && mother?.slug) && (
-              <td>
-                <a
-                  className="has-text-danger"
-                  href={`#/people/${mother?.slug}`}
-                >
-                  {motherName}
-                </a>
-              </td>
-            )}
-            {(motherName && !mother?.slug) && (
-              <td>
-                {motherName}
-              </td>
-            )}
-
-            {!fatherName && (
-              <td>-</td>
-            )}
-
-            {(fatherName && father?.slug) && (
-              <td>
-                <a
-                  href={`#/people/${father.slug}`}
-                >
-                  {fatherName}
-                </a>
-              </td>
-            )}
-            {(fatherName && !father?.slug) && (
-              <td>
-                {fatherName}
-              </td>
-            )}
-          </tr>
-        ))}
+        {people.map(person => <PeopleRow person={person} key={person.slug} />)}
       </tbody>
     </table>
   );

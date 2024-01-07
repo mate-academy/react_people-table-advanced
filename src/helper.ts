@@ -3,13 +3,17 @@ import { Person } from './types/Person';
 
 export const preparePeople = <T extends Data>(people: T[]): T[] => {
   return people.map(person => {
-    const mother = people.find(({ name }) => name === person.motherName);
-    const father = people.find(({ name }) => name === person.fatherName);
+    const mother = people.find(({ name }) => (
+      name === person.motherName
+    )) || null;
+    const father = people.find(({ name }) => (
+      name === person.fatherName
+    )) || null;
 
     return {
       ...person,
-      ...(mother && { mother }),
-      ...(father && { father }),
+      mother,
+      father,
     };
   });
 };

@@ -1,10 +1,11 @@
 import { FC, useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { getPeople } from '../../api';
-import { preparePeople, getCentury } from '../../helper';
 import { SearchParams } from '../../types/SearchParams';
-import { Sort } from '../../types/Sort';
+import { getPeople } from '../../api';
+import { preparePeople } from '../../helper';
+import { filteredPeople } from '../../utils/filteredPeople';
 import { Person } from '../../types/Person';
+import { DESC } from '../../constants';
 import { PeopleFilters } from '../PeopleFilters';
 import { Loader } from '../Loader';
 import { PeopleTable } from '../PeopleTable';
@@ -15,61 +16,19 @@ export const PeoplePage: FC = () => {
   const [people, setPeople] = useState<Person[]>([]);
   const [searchParams] = useSearchParams();
 
-  let currentPeople = [...people];
-
   const sexParams = searchParams.get(SearchParams.Sex);
   const queryParams = searchParams.get(SearchParams.Query);
   const centuriesParams = searchParams.getAll(SearchParams.Centurie);
   const sortParams = searchParams.get(SearchParams.Sort);
-  const orderParams = searchParams.get(SearchParams.Order) === 'desc';
+  const orderParams = searchParams.get(SearchParams.Order) === DESC;
 
-  if (sexParams) {
-    currentPeople = currentPeople.filter(({ sex }) => sex === sexParams);
-  }
-
-  if (centuriesParams.length > 0) {
-    currentPeople = currentPeople.filter(
-      person => centuriesParams.includes(
-        getCentury(person).toString(),
-      ),
-    );
-  }
-
-  if (queryParams) {
-    const lowerQuery = queryParams.toLocaleLowerCase();
-
-    currentPeople = currentPeople.filter(({
-      name,
-      motherName,
-      fatherName,
-    }) => {
-      return [name, motherName || '', fatherName || '']
-        .join('\n')
-        .toLocaleLowerCase()
-        .includes(lowerQuery);
-    });
-  }
-
-  if (sortParams) {
-    currentPeople.sort((a, b) => {
-      switch (sortParams) {
-        case Sort.Name:
-        case Sort.Sex:
-          return a[sortParams].localeCompare(b[sortParams]);
-
-        case Sort.Born:
-        case Sort.Died:
-          return a[sortParams] - b[sortParams];
-
-        default:
-          return 0;
-      }
-    });
-
-    if (orderParams) {
-      currentPeople.reverse();
-    }
-  }
+  const currentPeople = filteredPeople(people, {
+    sexParams,
+    queryParams,
+    centuriesParams,
+    sortParams,
+    orderParams,
+  });
 
   useEffect(() => {
     setIsLoading(true);
