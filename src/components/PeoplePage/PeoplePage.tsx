@@ -7,6 +7,7 @@ import { Loader } from '../Loader';
 import { PeopleFilters } from '../PeopleFilters';
 import { useTableContext } from '../Context';
 import { SearchLink } from '../SearchLink/SearchLink';
+import { Parent } from '../Parent';
 
 export const PeoplePage: React.FC = () => {
   const {
@@ -163,14 +164,14 @@ export const PeoplePage: React.FC = () => {
                           >
                             <span className="icon" aria-label="name">
                               <i className={classNames(
+                                'fas',
                                 {
                                   'fa-sort-up':
                                     (sortCurr === 'name' && !order),
                                   'fa-sort-down':
                                     (sortCurr === 'name' && order),
                                   'fa-sort':
-                                    (sortCurr !== 'name' && !order),
-                                  fas: true,
+                                    (sortCurr !== 'name'),
                                 },
                               )}
                               />
@@ -187,14 +188,14 @@ export const PeoplePage: React.FC = () => {
                           >
                             <span className="icon" aria-label="sex">
                               <i className={classNames(
+                                'fas',
                                 {
                                   'fa-sort-up':
                                     (sortCurr === 'sex' && !order),
                                   'fa-sort-down':
                                     (sortCurr === 'sex' && order),
                                   'fa-sort':
-                                    (sortCurr !== 'sex' && !order),
-                                  fas: true,
+                                    (sortCurr !== 'sex'),
                                 },
                               )}
                               />
@@ -211,14 +212,14 @@ export const PeoplePage: React.FC = () => {
                           >
                             <span className="icon" aria-label="born">
                               <i className={classNames(
+                                'fas',
                                 {
                                   'fa-sort-up':
                                     (sortCurr === 'born' && !order),
                                   'fa-sort-down':
                                     (sortCurr === 'born' && order),
                                   'fa-sort':
-                                    (sortCurr !== 'born' && !order),
-                                  fas: true,
+                                    (sortCurr !== 'born'),
                                 },
                               )}
                               />
@@ -235,14 +236,14 @@ export const PeoplePage: React.FC = () => {
                           >
                             <span className="icon" aria-label="died">
                               <i className={classNames(
+                                'fas',
                                 {
                                   'fa-sort-up':
                                     (sortCurr === 'died' && !order),
                                   'fa-sort-down':
                                     (sortCurr === 'died' && order),
                                   'fa-sort':
-                                    (sortCurr !== 'died' && !order),
-                                  fas: true,
+                                    (sortCurr !== 'died'),
                                 },
                               )}
                               />
@@ -284,54 +285,13 @@ export const PeoplePage: React.FC = () => {
                           <td>{people.sex}</td>
                           <td>{people.born}</td>
                           <td>{people.died}</td>
-                          {necessaryPeople.find(mother => {
-                            return mother.name === people.motherName;
-                          }) ? (
-                              peoples.map(mother => {
-                                if (mother.name === people.motherName) {
-                                  return (
-                                    <td>
-                                      <NavLink
-                                        to={`${mother.slug}`}
-                                        className="has-text-danger"
-                                      >
-                                        {mother.name}
-                                      </NavLink>
-                                    </td>
-                                  );
-                                }
-
-                                return null;
-                              })
-                            ) : (
-                              <td>
-                                {people.motherName ?? '-'}
-                              </td>
-                            )}
-
-                          {necessaryPeople.find(father => {
-                            return father.name === people.fatherName;
-                          }) ? (
-                              necessaryPeople.map(father => {
-                                if (father.name === people.fatherName) {
-                                  return (
-                                    <td>
-                                      <NavLink
-                                        to={`${father.slug}`}
-                                      >
-                                        {father.name}
-                                      </NavLink>
-                                    </td>
-                                  );
-                                }
-
-                                return null;
-                              })
-                            ) : (
-                              <td>
-                                {people.fatherName ?? '-'}
-                              </td>
-                            )}
+                          <Parent
+                            theMother="+"
+                            parentName={people.motherName}
+                          />
+                          <Parent
+                            parentName={people.fatherName}
+                          />
                         </tr>
                       );
                     })}
