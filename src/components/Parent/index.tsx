@@ -1,1 +1,1 @@
-export * from './Parent';
+export { Parent } from './Parent';
