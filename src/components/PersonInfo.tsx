@@ -1,5 +1,5 @@
 import { NavLink, useLocation, useSearchParams } from 'react-router-dom';
-import cn from 'classnames';
+
 import { Person } from '../types';
 
 type PersonInfoProps = {
@@ -13,32 +13,22 @@ export const PersonInfo = ({ person, people }: PersonInfoProps) => {
   const personMother = people?.find(p => p.name === person.motherName);
   const [searchParams] = useSearchParams();
 
+  const { slug, sex } = person;
+
   return (
-    <tr
-      data-cy="person"
-      className={cn({
-        'has-background-warning': location.pathname === `/people/${person.slug}`,
-      })}
-    >
-      <td>
-        const { slug, sex, name } = person;
-
-      <NavLink
-          to={`/people/${slug}?${searchParams.toString()}`}
-          className={cn({
-          'has-text-danger': sex === 'f',
-        })}
+    <>
+      <tr
+        data-cy="person"
+        className={`has-background-warning ${location.pathname === `/people/${slug}` ? 'is-active' : ''}`}
       >
-          {name}
-      </NavLink>
-     </td>
-
-      <td>{person.sex}</td>
-      <td>{person.born}</td>
-      <td>{person.died}</td>
-      <td>
-        {personMother
-          ? (
+        <td>
+          { /* ... */ }
+        </td>
+        <td>{sex}</td>
+        <td>{person.born}</td>
+        <td>{person.died}</td>
+        <td>
+          {personMother ? (
             <NavLink
               className="has-text-danger"
               to={`/people/${personMother.slug}?${searchParams.toString()}`}
@@ -46,19 +36,17 @@ export const PersonInfo = ({ person, people }: PersonInfoProps) => {
               {personMother.name}
             </NavLink>
           ) : person.motherName || '-'}
-
-      </td>
-      <td>
-        {personFather
-          ? (
+        </td>
+        <td>
+          {personFather ? (
             <NavLink
               to={`/people/${personFather.slug}?${searchParams.toString()}`}
             >
               {personFather.name}
             </NavLink>
           ) : person.fatherName || '-'}
-
-      </td>
-    </tr>
+        </td>
+      </tr>
+    </>
   );
 };
