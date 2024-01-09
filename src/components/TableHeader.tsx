@@ -5,6 +5,7 @@ import type { SearchParams } from '../utils/searchHelper';
 import { SearchLink } from './SearchLink';
 
 const SORT_FIELDS = ['Name', 'Sex', 'Born', 'Died'];
+const DESC = 'desc';
 
 export const TableHeader = () => {
   const [searchParams] = useSearchParams();
@@ -17,7 +18,7 @@ export const TableHeader = () => {
     }
 
     if (!currentOrder) {
-      return { order: 'desc' };
+      return { order: DESC };
     }
 
     return { sort: null, order: null };

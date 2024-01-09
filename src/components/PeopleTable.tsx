@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { PersonLink } from './PersonLink/PersonLink';
+import { Person } from './Person/Person';
 import { getPeople } from '../api';
 import { Person as PersonType } from '../types/index';
 import { Loader } from './Loader/Loader';
@@ -33,7 +33,7 @@ export const PeopleTable = () => {
   const findPersonByName = (name: string) => {
     const result = peoples.find(item => item.name === name);
 
-    return result?.slug;
+    return result?.slug ? result.slug : '';
   };
 
   const preparedPeople = filterPeople(
@@ -77,7 +77,7 @@ export const PeopleTable = () => {
                     <tbody>
                       {preparedPeople.map(person => {
                         return (
-                          <PersonLink
+                          <Person
                             person={person}
                             key={person.slug}
                             findSlug={findPersonByName}

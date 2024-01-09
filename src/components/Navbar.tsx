@@ -3,7 +3,7 @@ import cn from 'classnames';
 import { FC } from 'react';
 
 export const NavBar: FC = () => {
-  const isActiveLink = (isActive: boolean) => cn(
+  const getLinkClasses = (isActive: boolean) => cn(
     'navbar-item',
     { 'has-background-grey-lighter': isActive },
   );
@@ -19,14 +19,14 @@ export const NavBar: FC = () => {
         <div className="navbar-brand">
           <NavLink
             to="/"
-            className={({ isActive }) => isActiveLink(isActive)}
+            className={({ isActive }) => getLinkClasses(isActive)}
           >
             Home
           </NavLink>
 
           <NavLink
             to="/people"
-            className={({ isActive }) => isActiveLink(isActive)}
+            className={({ isActive }) => getLinkClasses(isActive)}
           >
             People
           </NavLink>
