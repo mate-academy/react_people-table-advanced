@@ -1,9 +1,9 @@
 import { SortingOption } from '../constants/SortingOption';
 import { Person } from '../types';
 
-export function getCentury(year: number): number {
+export const getCentury = (year: number) => {
   return Math.ceil(year / 100);
-}
+};
 
 export function preparePeople(
   tempPeople: Person[],
@@ -11,7 +11,7 @@ export function preparePeople(
   order: string,
   sex: string,
   query: string,
-  centuries: string[],
+  centuries: number[],
 ): Person[] | null {
   let sortedPeople = tempPeople?.sort((p1, p2) => {
     switch (sort) {
@@ -47,7 +47,7 @@ export function preparePeople(
 
   if (centuries.length) {
     sortedPeople = sortedPeople.filter(person => centuries
-      .includes(getCentury(person.born).toString()));
+      .includes(getCentury(person.born)));
   }
 
   return sortedPeople;

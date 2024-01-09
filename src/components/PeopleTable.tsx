@@ -62,13 +62,12 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
 
     const tempPeople = [...people];
 
-    if (!sort && !order) {
-      return tempPeople;
-    }
-
     const centuries = searchParams.getAll('centuries') || [];
+    const centuriesAsNumbers = centuries.map(century => parseInt(century, 10));
 
-    return preparePeople(tempPeople, sort, order, sex, query, centuries);
+    return preparePeople(
+      tempPeople, sort, order, sex, query, centuriesAsNumbers,
+    );
   }, [sort, order, people, sex, query, searchParams]);
 
   return (
