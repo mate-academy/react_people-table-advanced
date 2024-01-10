@@ -9,6 +9,7 @@ import { PeopleFilters } from '../../components/PeopleFilters';
 import { filterAndSortPeople } from '../../utils/filterAndSortPeople';
 
 export const PeoplePage = () => {
+  const [isNoPeople, setIsNoPeople] = useState(false);
   const [searchParams] = useSearchParams();
   const [initialPeople, setInitialPeople] = useState<Person[]>([]);
   const [people, setPeople] = useState<Person[]>([]);
@@ -20,7 +21,11 @@ export const PeoplePage = () => {
     setIsLoadingData(true);
     getPeople()
       .then((peopleFromServer) => {
-        setInitialPeople(getPersonWithParents(peopleFromServer));
+        if (peopleFromServer.length) {
+          setInitialPeople(getPersonWithParents(peopleFromServer));
+        } else {
+          setIsNoPeople(true);
+        }
       })
       .catch(() => setIsError(true))
       .finally(() => {
@@ -42,8 +47,8 @@ export const PeoplePage = () => {
     return setPeople(preparedPeople);
   }, [searchParams, initialPeople]);
 
-  const isNoPeople = !isError && !isLoadingData && !people.length;
-  const toShowPeople = !isError && !isLoadingData && people.length;
+  const isNoMatch = !isError && !isLoadingData && !people.length && !isNoPeople;
+  const toShowPeople = !isError && !isLoadingData && Boolean(people.length);
 
   return (
     <>
@@ -57,7 +62,7 @@ export const PeoplePage = () => {
 
           <div className="column">
             <div className="box table-container">
-              {isNoPeople ? (
+              {isNoMatch ? (
                 'There are no people matching the current search criteria'
               ) : (
                 <>
