@@ -41,7 +41,10 @@ export const PeoplePage = () => {
     return setPeople(preparedPeople);
   }, [searchParams, initialPeople]);
 
-  const isNoMatch = !isError && !isLoadingData && !people.length;
+  const isNoMatch = !isError
+  && !isLoadingData
+  && !people.length
+  && initialPeople.length;
   const toShowPeople = !isError && !isLoadingData && Boolean(people.length);
 
   return (
