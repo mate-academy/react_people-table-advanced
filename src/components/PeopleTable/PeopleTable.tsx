@@ -2,7 +2,7 @@
 import cn from 'classnames';
 import { useSearchParams } from 'react-router-dom';
 import { Person } from '../../types';
-import { PersonLink } from '../PersonLink/PersonLink';
+import { PersonRow } from '../PersonLink/PersonRow';
 import { SearchLink } from '../SearchLink';
 import { SortBy } from '../../types/Filters';
 
@@ -84,7 +84,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
           <p data-cy="noPeopleMessage">There are no people on the server</p>
         ) : (
           people.map((person) => (
-            <PersonLink person={person} key={person.slug} />
+            <PersonRow person={person} key={person.slug} />
           ))
         )}
       </tbody>

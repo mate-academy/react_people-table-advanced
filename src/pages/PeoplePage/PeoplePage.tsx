@@ -4,16 +4,14 @@ import { Loader } from '../../components/Loader';
 import { Person } from '../../types';
 import { getPeople } from '../../api';
 import { PeopleTable } from '../../components/PeopleTable/PeopleTable';
-import { getPersonWithParents } from '../../helpers/getPersonWithParents';
+import { getPersonWithParents } from '../../utils/getPersonWithParents';
 import { PeopleFilters } from '../../components/PeopleFilters';
 import { filterAndSortPeople } from '../../utils/filterAndSortPeople';
 
 export const PeoplePage = () => {
-  const [isNoPeople, setIsNoPeople] = useState(false);
   const [searchParams] = useSearchParams();
   const [initialPeople, setInitialPeople] = useState<Person[]>([]);
   const [people, setPeople] = useState<Person[]>([]);
-  // const [people, setPeople] = useState<Person[]>([]);
   const [isLoadingData, setIsLoadingData] = useState(false);
   const [isError, setIsError] = useState(false);
 
@@ -21,11 +19,7 @@ export const PeoplePage = () => {
     setIsLoadingData(true);
     getPeople()
       .then((peopleFromServer) => {
-        if (peopleFromServer.length) {
-          setInitialPeople(getPersonWithParents(peopleFromServer));
-        } else {
-          setIsNoPeople(true);
-        }
+        setInitialPeople(getPersonWithParents(peopleFromServer));
       })
       .catch(() => setIsError(true))
       .finally(() => {
@@ -47,7 +41,7 @@ export const PeoplePage = () => {
     return setPeople(preparedPeople);
   }, [searchParams, initialPeople]);
 
-  const isNoMatch = !isError && !isLoadingData && !people.length && !isNoPeople;
+  const isNoMatch = !isError && !isLoadingData && !people.length;
   const toShowPeople = !isError && !isLoadingData && Boolean(people.length);
 
   return (
@@ -74,7 +68,7 @@ export const PeoplePage = () => {
                     </p>
                   )}
 
-                  {isNoPeople && (
+                  {!isLoadingData && !initialPeople.length && (
                     <p data-cy="noPeopleMessage">
                       There are no people on the server
                     </p>
