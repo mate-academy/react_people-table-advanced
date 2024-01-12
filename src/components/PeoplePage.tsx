@@ -1,8 +1,29 @@
-import { PeopleFilters } from './PeopleFilters';
+import { useEffect, useState } from 'react';
+import { getPeople } from '../api';
 import { Loader } from './Loader';
+import { ErrorMessage } from './ErrorMessage';
 import { PeopleTable } from './PeopleTable';
+import { getParents } from '../utils/getParents';
+import { NoPeople } from './NoPeople';
+import { PeopleFilters } from './PeopleFilters';
 
 export const PeoplePage = () => {
+  const [content, setContent] = useState<JSX.Element>(<Loader />);
+
+  useEffect(() => {
+    getPeople()
+      .then(data => {
+        const peopleWithParents = getParents(data);
+
+        if (data.length) {
+          setContent(<PeopleTable people={peopleWithParents} />);
+        } else {
+          setContent(<NoPeople />);
+        }
+      })
+      .catch(() => setContent(ErrorMessage));
+  }, []);
+
   return (
     <>
       <h1 className="title">People Page</h1>
@@ -15,17 +36,7 @@ export const PeoplePage = () => {
 
           <div className="column">
             <div className="box table-container">
-              <Loader />
-
-              <p data-cy="peopleLoadingError">Something went wrong</p>
-
-              <p data-cy="noPeopleMessage">
-                There are no people on the server
-              </p>
-
-              <p>There are no people matching the current search criteria</p>
-
-              <PeopleTable />
+              {content}
             </div>
           </div>
         </div>
