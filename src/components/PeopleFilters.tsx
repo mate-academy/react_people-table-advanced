@@ -4,19 +4,38 @@ import { Centuries } from '../types/Centuries';
 type Props = {
   handleCenturyButton: (century:string) => void,
   filterCentury: Centuries[],
+  handleSexLink: (sex:string) => void,
 };
 
 export const PeopleFilters: React.FC<Props> = ({
-  handleCenturyButton, filterCentury
+  handleCenturyButton, filterCentury, handleSexLink,
 }) => {
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        <a className="is-active" href="#/people">All</a>
-        <a className="" href="#/people?sex=m">Male</a>
-        <a className="" href="#/people?sex=f">Female</a>
+        <a
+          className="is-active"
+          href="#/people"
+          onClick={() => handleSexLink('All')}
+        >
+          All
+        </a>
+        <a
+          className=""
+          href="#/people?sex=m"
+          onClick={() => handleSexLink('m')}
+        >
+          Male
+        </a>
+        <a
+          className=""
+          href="#/people?sex=f"
+          onClick={() => handleSexLink('f')}
+        >
+          Female
+        </a>
       </p>
 
       <div className="panel-block">

@@ -54,7 +54,7 @@ export const People = () => {
   const [errorMessage, setErrorMessage] = useState<string>('');
   const [sortColumn, setSortColumn] = useState<SortTypes>('None');
   const [sortIsReverse, setSortIsReverse] = useState(false);
-  const [filterSex, setFilterSex] = useState<'All' | 'Male' | 'Female'>('All');
+  const [filterSex, setFilterSex] = useState<'All' | 'm' | 'f'>('All');
   const [filterCentury, setFilterCentury]
   = useState<Centuries[]>([]);
   const [filterQuery, setFilterQuery] = useState<string>('');
@@ -90,6 +90,12 @@ export const People = () => {
     }
   };
 
+  const handleSexLink = (sex:string) => {
+    if (sex !== filterSex) {
+      setFilterSex(sex as 'All' | 'm' | 'f');
+    }
+  };
+
   return (
     <>
       <h1 className="title">People Page</h1>
@@ -102,6 +108,7 @@ export const People = () => {
               <PeopleFilters
                 handleCenturyButton={handleCenturyButton}
                 filterCentury={filterCentury}
+                handleSexLink={handleSexLink}
               />
             )}
           </div>
