@@ -5,10 +5,15 @@ type Props = {
   handleCenturyButton: (century:string) => void,
   filterCentury: Centuries[],
   handleSexLink: (sex:string) => void,
+  filterSex: string,
+  handleInput: (query: string) => void,
+  filterQuery: string,
 };
 
 export const PeopleFilters: React.FC<Props> = ({
-  handleCenturyButton, filterCentury, handleSexLink,
+  handleCenturyButton, filterCentury,
+  handleSexLink, filterSex, handleInput,
+  filterQuery,
 }) => {
   return (
     <nav className="panel">
@@ -16,21 +21,21 @@ export const PeopleFilters: React.FC<Props> = ({
 
       <p className="panel-tabs" data-cy="SexFilter">
         <a
-          className="is-active"
+          className={filterSex === 'All' ? 'is-active' : ''}
           href="#/people"
           onClick={() => handleSexLink('All')}
         >
           All
         </a>
         <a
-          className=""
+          className={filterSex === 'm' ? 'is-active' : ''}
           href="#/people?sex=m"
           onClick={() => handleSexLink('m')}
         >
           Male
         </a>
         <a
-          className=""
+          className={filterSex === 'f' ? 'is-active' : ''}
           href="#/people?sex=f"
           onClick={() => handleSexLink('f')}
         >
@@ -45,6 +50,8 @@ export const PeopleFilters: React.FC<Props> = ({
             type="search"
             className="input"
             placeholder="Search"
+            value={filterQuery}
+            onChange={event => handleInput(event.target.value)}
           />
 
           <span className="icon is-left">

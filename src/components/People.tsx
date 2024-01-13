@@ -96,89 +96,114 @@ export const People = () => {
     }
   };
 
+  const handleInput = (query: string) => {
+    setFilterQuery(query);
+  };
+
+  const adjustedPeople = sortAndFilter(people, sortColumn, sortIsReverse,
+    filterSex, filterCentury, filterQuery);
+
   return (
     <>
       <h1 className="title">People Page</h1>
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
           {!loadingDone && <Loader />}
+
           <div className="column is-7-tablet is-narrow-desktop">
-            {loadingDone
+            {(loadingDone && people.length > 0)
             && (
               <PeopleFilters
                 handleCenturyButton={handleCenturyButton}
                 filterCentury={filterCentury}
                 handleSexLink={handleSexLink}
+                filterSex={filterSex}
+                handleInput={handleInput}
+                filterQuery={filterQuery}
               />
             )}
+
           </div>
-          <div className="box table-container">
-            {errorMessage
-            && (
-              <p data-cy="peopleLoadingError" className="has-text-danger">
-                {errorMessage}
-              </p>
-            )}
-            {loadingDone && (people.length === 0 ? (
-              <p data-cy="noPeopleMessage">
-                There are no people on the server
-              </p>
-            ) : (
-              <table
-                data-cy="peopleTable"
-                className="table is-striped is-hoverable is-narrow is-fullwidth"
-              >
-                <thead>
-                  <tr>
-                    <th>
-                      <span className="is-flex is-flex-wrap-nowrap">
-                        Name
-                        <span className="icon">
-                          <i className="fas fa-sort" />
+          <div className="column">
+
+            <div className="box table-container">
+              {errorMessage
+              && (
+                <p data-cy="peopleLoadingError" className="has-text-danger">
+                  {errorMessage}
+                </p>
+              )}
+
+              {(loadingDone && people.length === 0) && (
+                <p data-cy="noPeopleMessage">
+                  There are no people on the server
+                </p>
+              )}
+
+              {(loadingDone && adjustedPeople.length === 0
+              && people.length > 0) && (
+                <p data-cy="noPeopleMessage">
+                  There are no people matching the current search criteria
+                </p>
+              )}
+
+              {(loadingDone && adjustedPeople.length > 0) && (
+                <table
+                  data-cy="peopleTable"
+                  className="table is-striped
+                  is-hoverable is-narrow is-fullwidth"
+                >
+                  <thead>
+                    <tr>
+                      <th>
+                        <span className="is-flex is-flex-wrap-nowrap">
+                          Name
+                          <span className="icon">
+                            <i className="fas fa-sort" />
+                          </span>
                         </span>
-                      </span>
-                    </th>
-                    <th>
-                      <span className="is-flex is-flex-wrap-nowrap">
-                        Sex
-                        <span className="icon">
-                          <i className="fas fa-sort" />
+                      </th>
+                      <th>
+                        <span className="is-flex is-flex-wrap-nowrap">
+                          Sex
+                          <span className="icon">
+                            <i className="fas fa-sort" />
+                          </span>
                         </span>
-                      </span>
-                    </th>
-                    <th>
-                      <span className="is-flex is-flex-wrap-nowrap">
-                        Born
-                        <span className="icon">
-                          <i className="fas fa-sort" />
+                      </th>
+                      <th>
+                        <span className="is-flex is-flex-wrap-nowrap">
+                          Born
+                          <span className="icon">
+                            <i className="fas fa-sort" />
+                          </span>
                         </span>
-                      </span>
-                    </th>
-                    <th>
-                      <span className="is-flex is-flex-wrap-nowrap">
-                        Died
-                        <span className="icon">
-                          <i className="fas fa-sort" />
+                      </th>
+                      <th>
+                        <span className="is-flex is-flex-wrap-nowrap">
+                          Died
+                          <span className="icon">
+                            <i className="fas fa-sort" />
+                          </span>
                         </span>
-                      </span>
-                    </th>
-                    <th>Mother</th>
-                    <th>Father</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {sortAndFilter(people, sortColumn, sortIsReverse,
-                    filterSex, filterCentury, filterQuery).map(person => {
-                    return (
-                      <PersonInfo
-                        person={person}
-                        key={person.slug}
-                      />
-                    );
-                  })}
-                </tbody>
-              </table>
-            ))}
+                      </th>
+                      <th>Mother</th>
+                      <th>Father</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {adjustedPeople.map(person => {
+                      return (
+                        <PersonInfo
+                          person={person}
+                          key={person.slug}
+                        />
+                      );
+                    })}
+                  </tbody>
+                </table>
+              )}
+            </div>
           </div>
         </div>
       </div>
