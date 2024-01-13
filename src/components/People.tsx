@@ -4,11 +4,18 @@ import { getPeople } from '../api';
 import { Loader } from './Loader';
 import { PersonInfo } from './PersonInfo';
 import { PeopleFilters } from './PeopleFilters';
+import { SortTypes } from '../types/SortTypes';
 
 export const People = () => {
   const [loadingDone, setLoadingDone] = useState(false);
   const [people, setPeople] = useState<Person[]>([]);
   const [errorMessage, setErrorMessage] = useState<string>('');
+  const [sortColumn, setSortColumn] = useState<SortTypes>('None');
+  const [sortIsReverse, setSortIsReverse] = useState(false);
+  const [filterSex, setFilterSex] = useState<'All' | 'Male' | 'Female'>('All');
+  const [filterCentury, setFilterCentury]
+  = useState<'16' | '17' | '18' | '19' | '20'[]>([]);
+  const [filterQuery, setFilterQuery] = useState<string>('');
 
   useEffect(() => {
     getPeople()
@@ -58,10 +65,38 @@ export const People = () => {
               >
                 <thead>
                   <tr>
-                    <th>Name</th>
-                    <th>Sex</th>
-                    <th>Born</th>
-                    <th>Died</th>
+                    <th>
+                      <span className="is-flex is-flex-wrap-nowrap">
+                        Name
+                        <span className="icon">
+                          <i className="fas fa-sort" />
+                        </span>
+                      </span>
+                    </th>
+                    <th>
+                      <span className="is-flex is-flex-wrap-nowrap">
+                        Sex
+                        <span className="icon">
+                          <i className="fas fa-sort" />
+                        </span>
+                      </span>
+                    </th>
+                    <th>
+                      <span className="is-flex is-flex-wrap-nowrap">
+                        Born
+                        <span className="icon">
+                          <i className="fas fa-sort" />
+                        </span>
+                      </span>
+                    </th>
+                    <th>
+                      <span className="is-flex is-flex-wrap-nowrap">
+                        Died
+                        <span className="icon">
+                          <i className="fas fa-sort" />
+                        </span>
+                      </span>
+                    </th>
                     <th>Mother</th>
                     <th>Father</th>
                   </tr>
