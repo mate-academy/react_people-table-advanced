@@ -6,6 +6,47 @@ import { PersonInfo } from './PersonInfo';
 import { PeopleFilters } from './PeopleFilters';
 import { SortTypes } from '../types/SortTypes';
 
+function sortAndFilter(
+  people: Person[],
+  sortColumn: SortTypes,
+  sortIsReverse: boolean,
+  filterSex: string,
+  filterCentury: string[],
+  filterQuery: string,
+) {
+  const newPeople = people
+    .filter((p) => (p.sex === filterSex || filterSex === 'All')
+    && (filterCentury
+      .includes(Math.ceil(p.born / 100).toString())
+      || filterCentury.length === 0)
+    && (p.name.toLowerCase().includes(filterQuery.toLowerCase())
+    || p.motherName?.toLowerCase().includes(filterQuery.toLowerCase())
+    || p.fatherName?.toLowerCase().includes(filterQuery.toLowerCase())));
+
+  switch (sortColumn) {
+    case 'Name':
+      newPeople.sort((p1, p2) => p1.name.localeCompare(p2.name));
+      break;
+    case 'Sex':
+      newPeople.sort((p1, p2) => p1.sex.localeCompare(p2.sex));
+      break;
+    case 'Born':
+      newPeople.sort((p1, p2) => p1.born - p2.born);
+      break;
+    case 'Died':
+      newPeople.sort((p1, p2) => p1.died - p2.died);
+      break;
+    default:
+      break;
+  }
+
+  if (sortIsReverse === true) {
+    newPeople.reverse();
+  }
+
+  return newPeople;
+}
+
 export const People = () => {
   const [loadingDone, setLoadingDone] = useState(false);
   const [people, setPeople] = useState<Person[]>([]);
