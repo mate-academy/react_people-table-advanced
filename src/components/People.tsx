@@ -4,7 +4,8 @@ import { getPeople } from '../api';
 import { Loader } from './Loader';
 import { PersonInfo } from './PersonInfo';
 import { PeopleFilters } from './PeopleFilters';
-import { SortTypes } from '../types/SortTypes';
+import { SortTypes } from '../types/sortTypes';
+import { Centuries } from '../types/Centuries';
 
 function sortAndFilter(
   people: Person[],
@@ -55,7 +56,7 @@ export const People = () => {
   const [sortIsReverse, setSortIsReverse] = useState(false);
   const [filterSex, setFilterSex] = useState<'All' | 'Male' | 'Female'>('All');
   const [filterCentury, setFilterCentury]
-  = useState<'16' | '17' | '18' | '19' | '20'[]>([]);
+  = useState<Centuries[]>([]);
   const [filterQuery, setFilterQuery] = useState<string>('');
 
   useEffect(() => {
@@ -79,6 +80,16 @@ export const People = () => {
       .finally(() => setLoadingDone(true));
   }, []);
 
+  const handleCenturyButton = (century:string) => {
+    if (century === 'All') {
+      setFilterCentury([]);
+    } else if (filterCentury.includes(century as Centuries)) {
+      setFilterCentury((prev) => prev.filter(c => c !== century));
+    } else {
+      setFilterCentury((prev) => [...prev, century as Centuries]);
+    }
+  };
+
   return (
     <>
       <h1 className="title">People Page</h1>
@@ -86,7 +97,13 @@ export const People = () => {
         <div className="columns is-desktop is-flex-direction-row-reverse">
           {!loadingDone && <Loader />}
           <div className="column is-7-tablet is-narrow-desktop">
-            {loadingDone && <PeopleFilters />}
+            {loadingDone
+            && (
+              <PeopleFilters
+                handleCenturyButton={handleCenturyButton}
+                filterCentury={filterCentury}
+              />
+            )}
           </div>
           <div className="box table-container">
             {errorMessage
@@ -143,7 +160,8 @@ export const People = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {people.map(person => {
+                  {sortAndFilter(people, sortColumn, sortIsReverse,
+                    filterSex, filterCentury, filterQuery).map(person => {
                     return (
                       <PersonInfo
                         person={person}

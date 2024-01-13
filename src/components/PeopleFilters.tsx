@@ -1,4 +1,14 @@
-export const PeopleFilters = () => {
+import React from 'react';
+import { Centuries } from '../types/Centuries';
+
+type Props = {
+  handleCenturyButton: (century:string) => void,
+  filterCentury: Centuries[],
+};
+
+export const PeopleFilters: React.FC<Props> = ({
+  handleCenturyButton, filterCentury
+}) => {
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
@@ -29,31 +39,35 @@ export const PeopleFilters = () => {
           <div className="level-left">
             <a
               data-cy="century"
-              className="button mr-1"
+              className={`button mr-1 ${filterCentury.includes('16') ? 'is-info' : ''}`}
               href="#/people?centuries=16"
+              onClick={() => handleCenturyButton('16')}
             >
               16
             </a>
 
             <a
               data-cy="century"
-              className="button mr-1 is-info"
+              className={`button mr-1 ${filterCentury.includes('17') ? 'is-info' : ''}`}
               href="#/people?centuries=17"
+              onClick={() => handleCenturyButton('17')}
             >
               17
             </a>
 
             <a
               data-cy="century"
-              className="button mr-1 is-info"
+              className={`button mr-1 ${filterCentury.includes('18') ? 'is-info' : ''}`}
               href="#/people?centuries=18"
+              onClick={() => handleCenturyButton('18')}
             >
               18
             </a>
 
             <a
               data-cy="century"
-              className="button mr-1 is-info"
+              className={`button mr-1 ${filterCentury.includes('19') ? 'is-info' : ''}`}
+              onClick={() => handleCenturyButton('19')}
               href="#/people?centuries=19"
             >
               19
@@ -61,7 +75,8 @@ export const PeopleFilters = () => {
 
             <a
               data-cy="century"
-              className="button mr-1"
+              className={`button mr-1 ${filterCentury.includes('20') ? 'is-info' : ''}`}
+              onClick={() => handleCenturyButton('20')}
               href="#/people?centuries=20"
             >
               20
@@ -71,8 +86,9 @@ export const PeopleFilters = () => {
           <div className="level-right ml-4">
             <a
               data-cy="centuryALL"
-              className="button is-success is-outlined"
+              className={`button is-success ${filterCentury.length === 0 ? '' : 'is-outlined'}`}
               href="#/people"
+              onClick={() => handleCenturyButton('All')}
             >
               All
             </a>
