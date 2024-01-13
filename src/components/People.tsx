@@ -4,7 +4,7 @@ import { getPeople } from '../api';
 import { Loader } from './Loader';
 import { PersonInfo } from './PersonInfo';
 import { PeopleFilters } from './PeopleFilters';
-import { SortTypes } from '../types/sortTypes';
+import { SortTypes } from '../types/SortTypes';
 import { Centuries } from '../types/Centuries';
 
 function sortAndFilter(
@@ -100,6 +100,32 @@ export const People = () => {
     setFilterQuery(query);
   };
 
+  const handleSortButton = (column: SortTypes) => {
+    if (column === sortColumn) {
+      if (sortIsReverse) {
+        setSortIsReverse(false);
+        setSortColumn('None');
+      } else {
+        setSortIsReverse(true);
+      }
+    } else {
+      setSortColumn(column);
+      setSortIsReverse(false);
+    }
+  };
+
+  const faSortSet = (column: SortTypes) => {
+    if (column === sortColumn) {
+      if (sortIsReverse) {
+        return 'fa-sort-down';
+      }
+
+      return 'fa-sort-up';
+    }
+
+    return 'fa-sort';
+  };
+
   const adjustedPeople = sortAndFilter(people, sortColumn, sortIsReverse,
     filterSex, filterCentury, filterQuery);
 
@@ -158,33 +184,57 @@ export const People = () => {
                       <th>
                         <span className="is-flex is-flex-wrap-nowrap">
                           Name
-                          <span className="icon">
-                            <i className="fas fa-sort" />
-                          </span>
+                          <a
+                            href="#/people?sort=name"
+                            onClick={() => handleSortButton('Name')}
+                            aria-label="sort by name"
+                          >
+                            <span className="icon">
+                              <i className={`fas ${faSortSet('Name')}`} />
+                            </span>
+                          </a>
                         </span>
                       </th>
                       <th>
                         <span className="is-flex is-flex-wrap-nowrap">
                           Sex
-                          <span className="icon">
-                            <i className="fas fa-sort" />
-                          </span>
+                          <a
+                            href="#/people?sort=sex"
+                            onClick={() => handleSortButton('Sex')}
+                            aria-label="sort by name"
+                          >
+                            <span className="icon">
+                              <i className={`fas ${faSortSet('Sex')}`} />
+                            </span>
+                          </a>
                         </span>
                       </th>
                       <th>
                         <span className="is-flex is-flex-wrap-nowrap">
                           Born
-                          <span className="icon">
-                            <i className="fas fa-sort" />
-                          </span>
+                          <a
+                            href="#/people?sort=born"
+                            onClick={() => handleSortButton('Born')}
+                            aria-label="sort by name"
+                          >
+                            <span className="icon">
+                              <i className={`fas ${faSortSet('Born')}`} />
+                            </span>
+                          </a>
                         </span>
                       </th>
                       <th>
                         <span className="is-flex is-flex-wrap-nowrap">
                           Died
-                          <span className="icon">
-                            <i className="fas fa-sort" />
-                          </span>
+                          <a
+                            href="#/people?sort=died"
+                            onClick={() => handleSortButton('Died')}
+                            aria-label="sort by name"
+                          >
+                            <span className="icon">
+                              <i className={`fas ${faSortSet('Died')}`} />
+                            </span>
+                          </a>
                         </span>
                       </th>
                       <th>Mother</th>
