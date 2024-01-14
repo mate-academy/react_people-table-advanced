@@ -9,12 +9,13 @@ type Props = {
   filterSex: string,
   handleInput: (query: string) => void,
   filterQuery: string,
+  handleResetButton: () => void,
 };
 
 export const PeopleFilters: React.FC<Props> = ({
   handleCenturyButton, filterCentury,
   handleSexLink, filterSex, handleInput,
-  filterQuery,
+  filterQuery, handleResetButton,
 }) => {
   return (
     <>
@@ -150,12 +151,19 @@ export const PeopleFilters: React.FC<Props> = ({
         </div>
 
         <div className="panel-block">
-          <a
+          <SearchLink
             className="button is-link is-outlined is-fullwidth"
-            href="#/people"
+            params={{
+              centuries: null,
+              sex: null,
+              query: null,
+              sort: null,
+              order: null,
+            }}
+            onClick={handleResetButton}
           >
             Reset all filters
-          </a>
+          </SearchLink>
         </div>
       </nav>
     </>

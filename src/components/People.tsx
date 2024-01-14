@@ -1,4 +1,6 @@
 import { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
+import { getSearchWith } from '../utils/searchHelper';
 import { Person } from '../types';
 import { getPeople } from '../api';
 import { Loader } from './Loader';
@@ -6,6 +8,7 @@ import { PersonInfo } from './PersonInfo';
 import { PeopleFilters } from './PeopleFilters';
 import { SortTypes } from '../types/SortTypes';
 import { Centuries } from '../types/Centuries';
+import { SearchLink } from './SearchLink';
 
 function sortAndFilter(
   people: Person[],
@@ -49,6 +52,7 @@ function sortAndFilter(
 }
 
 export const People = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
   const [loadingDone, setLoadingDone] = useState(false);
   const [people, setPeople] = useState<Person[]>([]);
   const [errorMessage, setErrorMessage] = useState<string>('');
@@ -98,6 +102,9 @@ export const People = () => {
 
   const handleInput = (query: string) => {
     setFilterQuery(query);
+    const search = getSearchWith(searchParams, { query: query || null });
+
+    setSearchParams(search);
   };
 
   const handleSortButton = (column: SortTypes) => {
@@ -114,6 +121,14 @@ export const People = () => {
     }
   };
 
+  const handleResetButton = () => {
+    setSortColumn('None');
+    setSortIsReverse(false);
+    setFilterSex('All');
+    setFilterCentury([]);
+    setFilterQuery('');
+  };
+
   const faSortSet = (column: SortTypes) => {
     if (column === sortColumn) {
       if (sortIsReverse) {
@@ -124,6 +139,30 @@ export const People = () => {
     }
 
     return 'fa-sort';
+  };
+
+  const getSortParam = (column: string) => {
+    if (column === sortColumn) {
+      if (sortIsReverse) {
+        return null;
+      }
+
+      return column;
+    }
+
+    return column;
+  };
+
+  const getOrderParam = (column: string) => {
+    if (column === sortColumn) {
+      if (sortIsReverse) {
+        return null;
+      }
+
+      return 'desc';
+    }
+
+    return null;
   };
 
   const adjustedPeople = sortAndFilter(people, sortColumn, sortIsReverse,
@@ -146,6 +185,7 @@ export const People = () => {
                 filterSex={filterSex}
                 handleInput={handleInput}
                 filterQuery={filterQuery}
+                handleResetButton={handleResetButton}
               />
             )}
 
@@ -184,57 +224,69 @@ export const People = () => {
                       <th>
                         <span className="is-flex is-flex-wrap-nowrap">
                           Name
-                          <a
-                            href="#/people?sort=name"
+                          <SearchLink
+                            params={{
+                              sort: getSortParam('name'),
+                              order: getOrderParam('name'),
+                            }}
                             onClick={() => handleSortButton('Name')}
                             aria-label="sort by name"
                           >
                             <span className="icon">
                               <i className={`fas ${faSortSet('Name')}`} />
                             </span>
-                          </a>
+                          </SearchLink>
                         </span>
                       </th>
                       <th>
                         <span className="is-flex is-flex-wrap-nowrap">
                           Sex
-                          <a
-                            href="#/people?sort=sex"
+                          <SearchLink
+                            params={{
+                              sort: getSortParam('sex'),
+                              order: getOrderParam('sex'),
+                            }}
                             onClick={() => handleSortButton('Sex')}
                             aria-label="sort by name"
                           >
                             <span className="icon">
                               <i className={`fas ${faSortSet('Sex')}`} />
                             </span>
-                          </a>
+                          </SearchLink>
                         </span>
                       </th>
                       <th>
                         <span className="is-flex is-flex-wrap-nowrap">
                           Born
-                          <a
-                            href="#/people?sort=born"
+                          <SearchLink
+                            params={{
+                              sort: getSortParam('born'),
+                              order: getOrderParam('born'),
+                            }}
                             onClick={() => handleSortButton('Born')}
                             aria-label="sort by name"
                           >
                             <span className="icon">
                               <i className={`fas ${faSortSet('Born')}`} />
                             </span>
-                          </a>
+                          </SearchLink>
                         </span>
                       </th>
                       <th>
                         <span className="is-flex is-flex-wrap-nowrap">
                           Died
-                          <a
-                            href="#/people?sort=died"
+                          <SearchLink
+                            params={{
+                              sort: getSortParam('died'),
+                              order: getOrderParam('died'),
+                            }}
                             onClick={() => handleSortButton('Died')}
                             aria-label="sort by name"
                           >
                             <span className="icon">
                               <i className={`fas ${faSortSet('Died')}`} />
                             </span>
-                          </a>
+                          </SearchLink>
                         </span>
                       </th>
                       <th>Mother</th>
