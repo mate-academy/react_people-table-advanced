@@ -9,6 +9,7 @@ import { PeopleFilters } from './PeopleFilters';
 import { SortTypes } from '../types/SortTypes';
 import { Centuries } from '../types/Centuries';
 import { SearchLink } from './SearchLink';
+import { Sex } from '../types/Sex';
 
 function sortAndFilter(
   people: Person[],
@@ -57,11 +58,15 @@ export const People = () => {
   const [people, setPeople] = useState<Person[]>([]);
   const [errorMessage, setErrorMessage] = useState<string>('');
   const [sortColumn, setSortColumn] = useState<SortTypes>('None');
-  const [sortIsReverse, setSortIsReverse] = useState(false);
-  const [filterSex, setFilterSex] = useState<'All' | 'm' | 'f'>('All');
+  const [sortIsReverse, setSortIsReverse] = useState(searchParams
+    .get('order') === 'desc');
+  const [filterSex, setFilterSex] = useState<Sex>(searchParams
+    .get('sex') as Sex || 'All');
   const [filterCentury, setFilterCentury]
-  = useState<Centuries[]>([]);
-  const [filterQuery, setFilterQuery] = useState<string>('');
+  = useState<Centuries[]>(searchParams
+    .getAll('centuries') as Centuries[] || []);
+  const [filterQuery, setFilterQuery] = useState<string>(searchParams
+    .get('query') || '');
 
   useEffect(() => {
     getPeople()
@@ -96,13 +101,13 @@ export const People = () => {
 
   const handleSexLink = (sex:string) => {
     if (sex !== filterSex) {
-      setFilterSex(sex as 'All' | 'm' | 'f');
+      setFilterSex(sex as Sex);
     }
   };
 
-  const handleInput = (query: string) => {
-    setFilterQuery(query);
-    const search = getSearchWith(searchParams, { query: query || null });
+  const handleInput = (queryString: string) => {
+    setFilterQuery(queryString);
+    const search = getSearchWith(searchParams, { query: queryString || null });
 
     setSearchParams(search);
   };
@@ -142,7 +147,7 @@ export const People = () => {
   };
 
   const getSortParam = (column: string) => {
-    if (column === sortColumn) {
+    if (column === sortColumn.toLowerCase()) {
       if (sortIsReverse) {
         return null;
       }
@@ -154,7 +159,7 @@ export const People = () => {
   };
 
   const getOrderParam = (column: string) => {
-    if (column === sortColumn) {
+    if (column === sortColumn.toLowerCase()) {
       if (sortIsReverse) {
         return null;
       }
