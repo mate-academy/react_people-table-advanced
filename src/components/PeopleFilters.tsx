@@ -1,4 +1,5 @@
 import { useSearchParams } from 'react-router-dom';
+import { useMemo } from 'react';
 import cn from 'classnames';
 import { SearchLink } from './SearchLink';
 import { getSearchWith } from '../utils/searchHelper';
@@ -12,13 +13,13 @@ export const PeopleFilters = () => {
   const query = searchParams.get('query') || '';
   const centuries = searchParams.getAll('centuries');
 
-  function toggleCentury(num: string) {
+  const toggleCentury = useMemo(() => (num: string) => {
     const newCentury = centuries.includes(num)
       ? centuries.filter((century) => century !== num)
       : [...centuries, num];
 
     return newCentury;
-  }
+  }, [centuries]);
 
   const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchParams(

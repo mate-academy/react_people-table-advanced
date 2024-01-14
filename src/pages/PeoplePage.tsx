@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
 import { getPeople } from '../api';
@@ -20,51 +20,55 @@ export const PeoplePage = () => {
   const sort = searchParams.get('sort');
   const order = searchParams.get('order');
 
-  let filteredPeople = [...people];
+  const filteredPeople = useMemo(() => {
+    let result = [...people];
 
-  if (sex) {
-    filteredPeople = filteredPeople.filter(person => person.sex === sex);
-  }
+    if (sex) {
+      result = result.filter(person => person.sex === sex);
+    }
 
-  if (query) {
-    const queryNormalize = query.trim().toLowerCase();
+    if (query) {
+      const queryNormalize = query.trim().toLowerCase();
 
-    filteredPeople = filteredPeople.filter((person) => {
-      return (
-        person.name.toLowerCase().includes(queryNormalize)
+      result = result.filter((person) => {
+        return (
+          person.name.toLowerCase().includes(queryNormalize)
         || person.motherName?.toLowerCase().includes(queryNormalize)
         || person.fatherName?.toLowerCase().includes(queryNormalize));
-    });
-  }
-
-  if (centuries.length) {
-    filteredPeople = filteredPeople.filter((person) => {
-      return (
-        centuries.includes(Math.ceil(person.born / 100).toString())
-      );
-    });
-  }
-
-  if (sort) {
-    filteredPeople = filteredPeople.sort((a, b) => {
-      switch (sort) {
-        case 'Name':
-          return a.name.localeCompare(b.name);
-        case 'Sex':
-          return a.sex.localeCompare(b.sex);
-        case 'Born':
-          return a.born - b.born;
-        case 'Died':
-          return a.died - b.died;
-        default:
-          return 0;
-      }
-    });
-
-    if (order === 'desc') {
-      filteredPeople.reverse();
+      });
     }
-  }
+
+    if (centuries.length) {
+      result = result.filter((person) => {
+        return (
+          centuries.includes(Math.ceil(person.born / 100).toString())
+        );
+      });
+    }
+
+    if (sort) {
+      result = result.sort((a, b) => {
+        switch (sort) {
+          case 'Name':
+            return a.name.localeCompare(b.name);
+          case 'Sex':
+            return a.sex.localeCompare(b.sex);
+          case 'Born':
+            return a.born - b.born;
+          case 'Died':
+            return a.died - b.died;
+          default:
+            return 0;
+        }
+      });
+
+      if (order === 'desc') {
+        result.reverse();
+      }
+    }
+
+    return result;
+  }, [people, sex, query, centuries, sort, order]);
 
   useEffect(() => {
     setLoading(true);
