@@ -6,6 +6,7 @@ import { Person } from '../types';
 import { Loader } from '../components/Loader';
 import { PeopleFilters } from '../components/PeopleFilters';
 import { PeopleTable } from '../components/PeopleTable';
+import { SortedFields } from '../types/SortedFields';
 
 export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);
@@ -49,13 +50,13 @@ export const PeoplePage = () => {
     if (sort) {
       result = result.sort((a, b) => {
         switch (sort) {
-          case 'Name':
+          case SortedFields.Name:
             return a.name.localeCompare(b.name);
-          case 'Sex':
+          case SortedFields.Sex:
             return a.sex.localeCompare(b.sex);
-          case 'Born':
+          case SortedFields.Born:
             return a.born - b.born;
-          case 'Died':
+          case SortedFields.Died:
             return a.died - b.died;
           default:
             return 0;
@@ -86,7 +87,9 @@ export const PeoplePage = () => {
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
           <div className="column is-7-tablet is-narrow-desktop">
-            <PeopleFilters />
+            {!loading && (
+              <PeopleFilters />
+            )}
           </div>
 
           <div className="column">
@@ -105,11 +108,11 @@ export const PeoplePage = () => {
                 </p>
               )}
 
-              {!filteredPeople.length && (
+              {!!people.length && !filteredPeople.length && (
                 <p>There are no people matching the current search criteria</p>
               )}
 
-              {!loading && !!people?.length && (
+              {!loading && !!people?.length && !!filteredPeople.length && (
                 <PeopleTable people={filteredPeople} />
               )}
             </div>

@@ -3,6 +3,7 @@ import { useMemo } from 'react';
 import cn from 'classnames';
 import { SearchLink } from './SearchLink';
 import { getSearchWith } from '../utils/searchHelper';
+import { Gender } from '../types/PersonGender';
 
 const filteredCenturies = ['16', '17', '18', '19', '20'];
 
@@ -44,18 +45,18 @@ export const PeopleFilters = () => {
         </SearchLink>
 
         <SearchLink
-          params={{ sex: 'm' }}
+          params={{ sex: Gender.Male }}
           className={cn({
-            'is-active': sex === 'm',
+            'is-active': sex === Gender.Male,
           })}
         >
           Male
         </SearchLink>
 
         <SearchLink
-          params={{ sex: 'f' }}
+          params={{ sex: Gender.Female }}
           className={cn({
-            'is-active': sex === 'f',
+            'is-active': sex === Gender.Female,
           })}
         >
           Female
