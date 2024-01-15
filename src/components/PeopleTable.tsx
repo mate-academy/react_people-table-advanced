@@ -1,8 +1,11 @@
 /* eslint-disable jsx-a11y/control-has-associated-label */
 import { FC, useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
+import classNames from 'classnames';
 import { Person } from '../types';
 import { PersonInfo } from './PersonInfo';
+import { SearchLink } from './SearchLink';
+import { SearchParams } from '../utils/searchHelper';
 
 type Props = {
   people: Person[]
@@ -13,6 +16,22 @@ export const PeopleTable: FC<Props> = ({ people }) => {
   const sexFilter = searchParams.get('sex');
   const centuryFilter = searchParams.getAll('centuries');
   const query = searchParams.get('query');
+  const sort = searchParams.get('sort');
+  const order = searchParams.get('order');
+
+  const handleSort = (category: string) => {
+    let sortingParams: SearchParams = { sort: null, order: null };
+
+    if (sort !== category) {
+      sortingParams = { sort: category, order: null };
+    }
+
+    if (sort === category && !order) {
+      sortingParams = { sort: category, order: 'desc' };
+    }
+
+    return sortingParams;
+  };
 
   const visiblePeople = useMemo(() => {
     let newPeople = [...people];
@@ -39,8 +58,27 @@ export const PeopleTable: FC<Props> = ({ people }) => {
       });
     }
 
+    if (sort) {
+      newPeople = newPeople.sort((a, b) => {
+        switch (sort) {
+          case 'name':
+          case 'sex':
+            return a[sort].localeCompare(b[sort]);
+          case 'born':
+          case 'died':
+            return a[sort] - b[sort];
+          default:
+            return 0;
+        }
+      });
+    }
+
+    if (order) {
+      newPeople = newPeople.reverse();
+    }
+
     return newPeople;
-  }, [people, sexFilter, centuryFilter, query]);
+  }, [people, sexFilter, centuryFilter, query, sort, order]);
 
   return (
     <table
@@ -52,44 +90,66 @@ export const PeopleTable: FC<Props> = ({ people }) => {
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Name
-              <a href="#/people?sort=name">
+              <SearchLink
+                params={handleSort('name')}
+              >
                 <span className="icon">
-                  <i className="fas fa-sort" />
+                  <i className={classNames('fas', {
+                    'fa-sort': sort !== 'name',
+                    'fa-sort-up': sort === 'name' && order !== 'desc',
+                    'fa-sort-down': sort === 'name' && order === 'desc',
+                  })}
+                  />
                 </span>
-              </a>
+              </SearchLink>
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Sex
-              <a href="#/people?sort=sex">
+              <SearchLink params={handleSort('sex')}>
                 <span className="icon">
-                  <i className="fas fa-sort" />
+                  <i className={classNames('fas', {
+                    'fa-sort': sort !== 'sex',
+                    'fa-sort-up': sort === 'sex' && order !== 'desc',
+                    'fa-sort-down': sort === 'sex' && order === 'desc',
+                  })}
+                  />
                 </span>
-              </a>
+              </SearchLink>
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Born
-              <a href="#/people?sort=born&amp;order=desc">
+              <SearchLink params={handleSort('born')}>
                 <span className="icon">
-                  <i className="fas fa-sort-up" />
+                  <i className={classNames('fas', {
+                    'fa-sort': sort !== 'born',
+                    'fa-sort-up': sort === 'born' && order !== 'desc',
+                    'fa-sort-down': sort === 'born' && order === 'desc',
+                  })}
+                  />
                 </span>
-              </a>
+              </SearchLink>
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Died
-              <a href="#/people?sort=died">
+              <SearchLink params={handleSort('died')}>
                 <span className="icon">
-                  <i className="fas fa-sort" />
+                  <i className={classNames('fas', {
+                    'fa-sort': sort !== 'died',
+                    'fa-sort-up': sort === 'died' && order !== 'desc',
+                    'fa-sort-down': sort === 'died' && order === 'desc',
+                  })}
+                  />
                 </span>
-              </a>
+              </SearchLink>
             </span>
           </th>
 
