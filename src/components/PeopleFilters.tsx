@@ -1,12 +1,37 @@
+import { Link } from 'react-router-dom';
+import cn from 'classnames';
+import { SexFilter } from '../types/SexFilter';
+import { usePeopleListContext } from '../context/PeopleListContext';
+
 export const PeopleFilters = () => {
+  const { sexFilter, handleSexFilterChange } = usePeopleListContext();
+
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        <a className="is-active" href="#/people">All</a>
-        <a className="" href="#/people?sex=m">Male</a>
-        <a className="" href="#/people?sex=f">Female</a>
+        <Link
+          className={cn({ 'is-active': sexFilter === SexFilter.ALL })}
+          to="/people"
+          onClick={() => handleSexFilterChange(SexFilter.ALL)}
+        >
+          All
+        </Link>
+        <Link
+          className={cn({ 'is-active': sexFilter === SexFilter.MALE })}
+          to="/people?sex=m"
+          onClick={() => handleSexFilterChange(SexFilter.MALE)}
+        >
+          Male
+        </Link>
+        <Link
+          className={cn({ 'is-active': sexFilter === SexFilter.FEMALE })}
+          to="/people?sex=f"
+          onClick={() => handleSexFilterChange(SexFilter.FEMALE)}
+        >
+          Female
+        </Link>
       </p>
 
       <div className="panel-block">
