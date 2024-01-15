@@ -1,35 +1,67 @@
 import {
-  FC, PropsWithChildren, createContext, useContext, useState,
+  ChangeEvent,
+  // eslint-disable-next-line max-len
+  FC, PropsWithChildren, createContext, useCallback, useContext, useEffect, useState,
 } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { SexFilter } from '../types/SexFilter';
 
+// TYPE
 type PeopleListContextType = {
   sexFilter: SexFilter,
-  handleSexFilterChange: (filter: SexFilter) => void;
+  query: string,
+  handleInputChange: (event: ChangeEvent<HTMLInputElement>) => void,
+  centuriesFilter: string[],
 };
 
+// DEFAULT VALUES
 const PeopleListContextDefault = {
-  sexFilter: SexFilter.ALL,
-  handleSexFilterChange: () => { },
+  sexFilter: null,
+  query: '',
+  handleInputChange: () => { },
+  centuriesFilter: [],
 };
 
+// CREATE CONTEXT
 export const PeopleListContext
   = createContext<PeopleListContextType>(PeopleListContextDefault);
 
+// CUSTOM PROVIDER
 type Props = PropsWithChildren;
 
 export const PeopleListProvider: FC<Props> = ({ children }) => {
-  const [sexFilter, setSexFilter] = useState<SexFilter>(SexFilter.ALL);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [sexFilter, setSexFilter] = useState<SexFilter>(null);
+  const [query, setQuery] = useState<string>('');
+  const centuriesFilter = searchParams.getAll('centuries');
 
-  const handleSexFilterChange = (filter: SexFilter) => {
+  const handleSexFilterChange = useCallback((filter: SexFilter) => {
     if (sexFilter !== filter) {
       setSexFilter(filter);
     }
-  };
+  }, [sexFilter]);
 
+  const handleInputChange
+    = useCallback((event: ChangeEvent<HTMLInputElement>) => {
+      const value = event.target.value.trim() || '';
+
+      setQuery(value);
+      searchParams.set('q', value);
+
+      setSearchParams(searchParams);
+    }, [searchParams, setSearchParams]);
+
+  useEffect(() => {
+    handleSexFilterChange(searchParams.get('sex') as SexFilter);
+    setQuery(searchParams.get('q') || '');
+  }, [handleSexFilterChange, searchParams]);
+
+  // CONTEXT VALUE
   const PeopleListContextValue = {
     sexFilter,
-    handleSexFilterChange,
+    query,
+    handleInputChange,
+    centuriesFilter,
   };
 
   return (
@@ -39,6 +71,7 @@ export const PeopleListProvider: FC<Props> = ({ children }) => {
   );
 };
 
+// CUSTOM HOOK
 export const usePeopleListContext = () => {
   const context = useContext(PeopleListContext);
 
