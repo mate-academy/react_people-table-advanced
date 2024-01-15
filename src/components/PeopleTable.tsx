@@ -5,14 +5,16 @@ import { getPeople } from '../api';
 import { Person as PersonType } from '../types/Person';
 import { Person } from './person';
 import { PeopleFilters } from './PeopleFilters';
+import { SearchLink } from './SearchLink';
 
 export const People = () => {
   const [people, setPeople] = useState<PersonType[]>([]);
   const [error, setError] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [searchParams] = useSearchParams();
-  const q = searchParams.get('q');
+  const query = searchParams.get('query');
   const sex = searchParams.get('sex');
+  const centuries = searchParams.getAll('centuries');
 
   useEffect(() => {
     setIsLoading(true);
@@ -25,9 +27,9 @@ export const People = () => {
   const visiblePeople = useMemo(() => {
     let peopleToShow = [...people];
 
-    if (q) {
+    if (query) {
       peopleToShow = peopleToShow.filter(person => {
-        const lowQ = q.toLowerCase();
+        const lowQ = query.toLowerCase();
 
         return (
           person.name.toLowerCase().includes(lowQ)
@@ -41,8 +43,16 @@ export const People = () => {
       peopleToShow = peopleToShow.filter(person => person.sex === sex);
     }
 
+    if (centuries.length) {
+      peopleToShow = peopleToShow.filter(person => {
+        const century = Math.ceil(person.born / 100);
+
+        return centuries.includes(String(century));
+      });
+    }
+
     return peopleToShow;
-  }, [people, q, sex]);
+  }, [people, query, sex, centuries]);
 
   return (
     <>
@@ -80,21 +90,21 @@ export const People = () => {
                       <th>
                         <span className="is-flex is-flex-wrap-nowrap">
                           Name
-                          {/* <a href="#/people?sort=name">
+                          <SearchLink params={{ sort: 'name' }}>
                             <span className="icon">
                               <i className="fas fa-sort" />
                             </span>
-                          </a> */}
+                          </SearchLink>
                         </span>
                       </th>
                       <th>
                         <span className="is-flex is-flex-wrap-nowrap">
                           Sex
-                          {/* <a href="#/people?sort=sex">
+                          <SearchLink params={{ sort: 'sex' }}>
                             <span className="icon">
                               <i className="fas fa-sort" />
                             </span>
-                          </a> */}
+                          </SearchLink>
                         </span>
                       </th>
 

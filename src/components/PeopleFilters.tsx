@@ -4,15 +4,16 @@ import { useState } from 'react';
 import { SearchLink } from './SearchLink';
 
 export const PeopleFilters = () => {
-  // const CENTURIES_VALUE: number[] = [16, 17, 18, 19, 20];
+  const CENTURIES_VALUE: number[] = [16, 17, 18, 19, 20];
   const [searchParams, setSearchParams] = useSearchParams();
   const [query, setQuery] = useState('');
   const sex = searchParams.get('sex');
-  const centuries = searchParams.get('centuries');
+  const centuries = searchParams.getAll('centuries');
+  const q = searchParams.get('query');
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setQuery(event.target.value);
-    searchParams.set('q', event.target.value);
+    searchParams.set('query', event.target.value);
     setSearchParams(searchParams);
   };
 
@@ -54,7 +55,7 @@ export const PeopleFilters = () => {
             type="search"
             className="input"
             placeholder="Search"
-            value={query}
+            value={q || query}
             onChange={(event) => handleChange(event)}
           />
 
@@ -67,7 +68,7 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            {/* {CENTURIES_VALUE.map(el => (
+            {CENTURIES_VALUE.map(el => (
               <SearchLink
                 key={el}
                 data-cy="century"
@@ -83,7 +84,7 @@ export const PeopleFilters = () => {
               >
                 {el}
               </SearchLink>
-            ))} */}
+            ))}
           </div>
 
           <div className="level-right ml-4">
@@ -92,7 +93,7 @@ export const PeopleFilters = () => {
               className={classNames('button is-success', {
                 'is-outlined': centuries?.length,
               })}
-              params={{ century: [] }}
+              params={{ centuries: [] }}
             >
               All
             </SearchLink>
@@ -103,7 +104,9 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <SearchLink
           className="button is-link is-outlined is-fullwidth"
-          params={{ sex: null, centuries: null, q: null }}
+          params={{
+            sex: null, centuries: null, query: null, sort: null,
+          }}
           onClick={() => setQuery('')}
         >
           Reset all filters
