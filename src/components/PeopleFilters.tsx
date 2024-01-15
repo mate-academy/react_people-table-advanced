@@ -3,8 +3,8 @@ import React from 'react';
 import classNames from 'classnames';
 import { getSearchWith } from '../utils/searchHelper';
 import { SearchLink } from './SearchLink';
-
-const centuriesPoints = ['16', '17', '18', '19', '20'];
+import { CENTURIES_POINTS } from '../constants/CENTURIES_POINTS';
+import { Sex } from '../types/Sex';
 
 export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -42,10 +42,10 @@ export const PeopleFilters = () => {
 
         <SearchLink
           className={classNames(
-            { 'is-active': sex === 'm' },
+            { 'is-active': sex === Sex.Male },
           )}
           params={{
-            sex: 'm',
+            sex: Sex.Male,
           }}
         >
           Male
@@ -53,10 +53,10 @@ export const PeopleFilters = () => {
 
         <SearchLink
           className={classNames(
-            { 'is-active': sex === 'f' },
+            { 'is-active': sex === Sex.Female },
           )}
           params={{
-            sex: 'f',
+            sex: Sex.Female,
           }}
         >
           Female
@@ -83,7 +83,7 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            {centuriesPoints.map(age => (
+            {CENTURIES_POINTS.map(age => (
               <SearchLink
                 key={age}
                 data-cy="century"

@@ -1,4 +1,5 @@
 import { Person } from '../types';
+import { Sex } from '../types/Sex';
 import { Sort } from '../types/Sort';
 
 type PropsParams = {
@@ -60,13 +61,13 @@ export const getPreparedPeople = (
 
   if (sex) {
     switch (sex) {
-      case '':
+      case Sex.All:
         return preparedPeople;
 
-      case 'm':
+      case Sex.Male:
         return preparedPeople.filter(person => person.sex === 'm');
 
-      case 'f':
+      case Sex.Female:
         return preparedPeople.filter(person => person.sex === 'f');
 
       default:
