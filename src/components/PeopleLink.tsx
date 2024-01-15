@@ -5,7 +5,7 @@ import { Person } from '../types';
 interface PersonLinkProps {
   person: Person;
   people: Person[];
-  personSlug: string;
+  personSlug: string | undefined;
 }
 
 export const PersonLink: React.FC<PersonLinkProps> = (
