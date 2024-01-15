@@ -51,21 +51,19 @@ export const PeoplePage = () => {
       result = result.sort((a, b) => {
         switch (sort) {
           case SortedFields.Name:
-            return a.name.localeCompare(b.name);
           case SortedFields.Sex:
-            return a.sex.localeCompare(b.sex);
+            return a[sort].localeCompare(b[sort]);
           case SortedFields.Born:
-            return a.born - b.born;
           case SortedFields.Died:
-            return a.died - b.died;
+            return a[sort] - b[sort];
           default:
             return 0;
         }
       });
+    }
 
-      if (order === 'desc') {
-        result.reverse();
-      }
+    if (order) {
+      result.reverse();
     }
 
     return result;

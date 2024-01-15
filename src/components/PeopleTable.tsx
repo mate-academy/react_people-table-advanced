@@ -15,17 +15,29 @@ const sortedFields = ['Name', 'Sex', 'Born', 'Died'];
 /* eslint-disable jsx-a11y/control-has-associated-label */
 export const PeopleTable: React.FC<Props> = ({ people }) => {
   const [searchParams] = useSearchParams();
-  const sortField = searchParams.get('sort') || '';
-  const isReversed = searchParams.get('order') === 'desc';
+  const sortField = searchParams.get('sort');
+  const isReversed = searchParams.get('order');
 
-  const getSortParams = (field: string) => ({
-    sort: field === sortField && !isReversed
-      ? null
-      : field,
-    order: field === sortField && !isReversed
-      ? 'desc'
-      : null,
-  });
+  const getSortParams = (field: string) => {
+    if (sortField !== field) {
+      return {
+        sort: field,
+        order: null,
+      };
+    }
+
+    if (sortField === field && !isReversed) {
+      return {
+        sort: field,
+        order: 'desc',
+      };
+    }
+
+    return {
+      sort: null,
+      order: null,
+    };
+  };
 
   const peopleDuplication = [...people].map(person => {
     const mother = people.find(p => p.name === person.motherName);
