@@ -9,7 +9,7 @@ import { PeopleFilters } from './PeopleFilters';
 import { SearchLink } from './SearchLink';
 import { SearchParams } from '../utils/searchHelper';
 
-export const People = () => {
+export const PeopleTable = () => {
   const [people, setPeople] = useState<PersonType[]>([]);
   const [error, setError] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(true);

@@ -1,7 +1,7 @@
 import {
   Routes, Route, Navigate,
 } from 'react-router-dom';
-import { People } from './components/peopleTable';
+import { PeopleTable } from './components/peopleTable';
 import { PageNotFound } from './components/pageNotFound';
 import { HomePage } from './components/homePage';
 
@@ -10,18 +10,8 @@ import { Navbar } from './components/Navbar';
 
 export const App = () => (
   <div data-cy="app">
-    <nav
-      data-cy="nav"
-      className="navbar is-fixed-top has-shadow"
-      role="navigation"
-      aria-label="main navigation"
-    >
-      <div className="container">
-        <div className="navbar-brand">
-          <Navbar />
-        </div>
-      </div>
-    </nav>
+
+    <Navbar />
 
     <main className="section">
       <div className="container">
@@ -29,8 +19,8 @@ export const App = () => (
           <Route path="/" element={<HomePage />} />
           <Route path="/home" element={<Navigate to="/" replace />} />
           <Route path="/people">
-            <Route index element={<People />} />
-            <Route path=":slug?" element={<People />} />
+            <Route index element={<PeopleTable />} />
+            <Route path=":slug?" element={<PeopleTable />} />
           </Route>
           <Route path="*" element={<PageNotFound />} />
         </Routes>
