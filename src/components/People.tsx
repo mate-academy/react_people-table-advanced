@@ -178,8 +178,6 @@ export const People = () => {
       <h1 className="title">People Page</h1>
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
-          {!loadingDone && <Loader />}
-
           <div className="column is-7-tablet is-narrow-desktop">
             {(loadingDone && people.length > 0)
             && (
@@ -198,6 +196,7 @@ export const People = () => {
           <div className="column">
 
             <div className="box table-container">
+              {!loadingDone && <Loader />}
               {errorMessage
               && (
                 <p data-cy="peopleLoadingError" className="has-text-danger">
