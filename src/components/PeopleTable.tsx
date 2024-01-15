@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
+import classNames from 'classnames';
 import { Loader } from './Loader/Loader';
 import { getPeople } from '../api';
 import { Person as PersonType } from '../types/Person';
@@ -125,7 +126,15 @@ export const People = () => {
                           Name
                           <SearchLink params={handleSortClick('name')}>
                             <span className="icon">
-                              <i className="fas fa-sort" />
+                              <i
+                                className={classNames('fas', {
+                                  'fa-sort': sort !== 'name',
+                                  'fa-sort-up': sort === 'name'
+                                    && order !== 'desc',
+                                  'fa-sort-down': sort === 'name'
+                                    && order === 'desc',
+                                })}
+                              />
                             </span>
                           </SearchLink>
                         </span>
@@ -135,7 +144,15 @@ export const People = () => {
                           Sex
                           <SearchLink params={handleSortClick('sex')}>
                             <span className="icon">
-                              <i className="fas fa-sort" />
+                              <i
+                                className={classNames('fas', {
+                                  'fa-sort': sort !== 'sex',
+                                  'fa-sort-up': sort === 'sex'
+                                    && order !== 'desc',
+                                  'fa-sort-down': sort === 'sex'
+                                    && order === 'desc',
+                                })}
+                              />
                             </span>
                           </SearchLink>
                         </span>
@@ -146,7 +163,15 @@ export const People = () => {
                           Born
                           <SearchLink params={handleSortClick('born')}>
                             <span className="icon">
-                              <i className="fas fa-sort-up" />
+                              <i
+                                className={classNames('fas', {
+                                  'fa-sort': sort !== 'born',
+                                  'fa-sort-up': sort === 'born'
+                                    && order !== 'desc',
+                                  'fa-sort-down': sort === 'born'
+                                    && order === 'desc',
+                                })}
+                              />
                             </span>
                           </SearchLink>
                         </span>
@@ -157,7 +182,15 @@ export const People = () => {
                           Died
                           <SearchLink params={handleSortClick('died')}>
                             <span className="icon">
-                              <i className="fas fa-sort" />
+                              <i
+                                className={classNames('fas', {
+                                  'fa-sort': sort !== 'died',
+                                  'fa-sort-up': sort === 'died'
+                                  && order !== 'desc',
+                                  'fa-sort-down': sort === 'died'
+                                  && order === 'desc',
+                                })}
+                              />
                             </span>
                           </SearchLink>
                         </span>
