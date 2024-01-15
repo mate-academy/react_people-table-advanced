@@ -15,6 +15,8 @@ export const People = () => {
   const query = searchParams.get('query');
   const sex = searchParams.get('sex');
   const centuries = searchParams.getAll('centuries');
+  const sort = searchParams.get('sort');
+  const order = searchParams.get('order');
 
   useEffect(() => {
     setIsLoading(true);
@@ -23,6 +25,18 @@ export const People = () => {
       .catch(() => setError(true))
       .finally(() => setIsLoading(false));
   }, []);
+
+  const handleSortClick = (sortType: string) => {
+    if (sort !== sortType) {
+      return { sort: sortType };
+    }
+
+    if (sort === sortType && !order) {
+      return { sort: sortType, order: 'desc' };
+    }
+
+    return ({ sort: null, order: null });
+  };
 
   const visiblePeople = useMemo(() => {
     let peopleToShow = [...people];
@@ -51,8 +65,27 @@ export const People = () => {
       });
     }
 
+    if (sort) {
+      peopleToShow = peopleToShow.sort((a, b) => {
+        switch (sort) {
+          case 'name':
+          case 'sex':
+            return a[sort].localeCompare(b[sort]);
+          case 'born':
+          case 'died':
+            return a[sort] - b[sort];
+          default:
+            return 0;
+        }
+      });
+    }
+
+    if (order) {
+      peopleToShow = peopleToShow.reverse();
+    }
+
     return peopleToShow;
-  }, [people, query, sex, centuries]);
+  }, [people, query, sex, centuries, sort, order]);
 
   return (
     <>
@@ -90,7 +123,7 @@ export const People = () => {
                       <th>
                         <span className="is-flex is-flex-wrap-nowrap">
                           Name
-                          <SearchLink params={{ sort: 'name' }}>
+                          <SearchLink params={handleSortClick('name')}>
                             <span className="icon">
                               <i className="fas fa-sort" />
                             </span>
@@ -100,7 +133,7 @@ export const People = () => {
                       <th>
                         <span className="is-flex is-flex-wrap-nowrap">
                           Sex
-                          <SearchLink params={{ sort: 'sex' }}>
+                          <SearchLink params={handleSortClick('sex')}>
                             <span className="icon">
                               <i className="fas fa-sort" />
                             </span>
@@ -111,22 +144,22 @@ export const People = () => {
                       <th>
                         <span className="is-flex is-flex-wrap-nowrap">
                           Born
-                          {/* <a href="#/people?sort=born&amp;order=desc">
+                          <SearchLink params={handleSortClick('born')}>
                             <span className="icon">
                               <i className="fas fa-sort-up" />
                             </span>
-                          </a> */}
+                          </SearchLink>
                         </span>
                       </th>
 
                       <th>
                         <span className="is-flex is-flex-wrap-nowrap">
                           Died
-                          {/* <a href="#/people?sort=died">
+                          <SearchLink params={handleSortClick('died')}>
                             <span className="icon">
                               <i className="fas fa-sort" />
                             </span>
-                          </a> */}
+                          </SearchLink>
                         </span>
                       </th>
 
