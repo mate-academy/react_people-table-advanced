@@ -11,6 +11,17 @@ export const PeopleFilters = () => {
   const centuries = searchParams.getAll('centuries');
   const q = searchParams.get('query');
 
+  const isCenturyActive = (el: number) => {
+    if (!centuries?.includes(String(el))) {
+      return { centuries: [...centuries, String(el)] };
+    }
+
+    return {
+      centuries: centuries.filter(e => (
+        e !== String(el))),
+    };
+  };
+
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
 
@@ -82,12 +93,7 @@ export const PeopleFilters = () => {
                 className={classNames('button mr-1', {
                   'is-info': centuries?.includes(String(el)),
                 })}
-                params={!centuries?.includes(String(el))
-                  ? { centuries: [...centuries, String(el)] }
-                  : {
-                    centuries: centuries.filter(e => (
-                      e !== String(el))),
-                  }}
+                params={isCenturyActive(el)}
               >
                 {el}
               </SearchLink>

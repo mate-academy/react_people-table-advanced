@@ -6,11 +6,10 @@ import { PersonLink } from './personLink';
 
 type Props = {
   person: PersonType;
-  key: string;
   people: PersonType[];
 };
 
-export const Person: React.FC<Props> = ({ person, key, people }) => {
+export const Person: React.FC<Props> = ({ person, people }) => {
   const mother = people.find(m => m.name === person.motherName) || null;
   const father = people.find(f => f.name === person.fatherName) || null;
 
@@ -18,7 +17,7 @@ export const Person: React.FC<Props> = ({ person, key, people }) => {
 
   return (
     <tr
-      key={key}
+      key={person.slug}
       data-cy="person"
       className={classNames({
         'has-background-warning': slug === person.slug,
