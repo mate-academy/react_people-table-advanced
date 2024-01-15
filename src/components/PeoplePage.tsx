@@ -1,8 +1,56 @@
-import { PeopleFilters } from './PeopleFilters';
+import { useSearchParams } from 'react-router-dom';
+import { useEffect, useMemo, useState } from 'react';
 import { Loader } from './Loader';
 import { PeopleTable } from './PeopleTable';
+import { Person } from '../types';
+import { getPeople } from '../api';
+import { PeopleFilters } from './PeopleFilters';
+import { getPreparedPeople } from '../utils/filterPeople';
 
 export const PeoplePage = () => {
+  const [searchParams] = useSearchParams();
+
+  const [people, setPeople] = useState<Person[]>([]);
+  const [errorMessage, setErrorMessage] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+
+  const query = searchParams.get('query');
+  const sort = searchParams.get('sort');
+  const order = searchParams.get('order') || '';
+  const sex = searchParams.get('sex');
+  const centuries = searchParams.getAll('centuries');
+
+  const visiblePeople = useMemo(() => {
+    return getPreparedPeople(people, {
+      query,
+      sort,
+      order,
+      sex,
+      centuries,
+    });
+  }, [people, query, sort, order, sex, centuries]);
+
+  const preparedParents = (parents: Person[]) => parents.map(parent => ({
+    ...parent,
+    mother: parents.find(({ name }) => name === parent.motherName),
+    father: parents.find(({ name }) => name === parent.fatherName),
+  }));
+
+  useEffect(() => {
+    setErrorMessage(false);
+    setIsLoading(true);
+
+    getPeople()
+      .then(data => setPeople(preparedParents(data)))
+      .catch((error) => {
+        setErrorMessage(true);
+        throw error;
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  }, []);
+
   return (
     <>
       <h1 className="title">People Page</h1>
@@ -15,17 +63,29 @@ export const PeoplePage = () => {
 
           <div className="column">
             <div className="box table-container">
-              <Loader />
+              {isLoading && (<Loader />)}
 
-              <p data-cy="peopleLoadingError">Something went wrong</p>
+              {errorMessage && (
+                <p data-cy="peopleLoadingError" className="has-text-danger">
+                  Something went wrong
+                </p>
+              )}
 
-              <p data-cy="noPeopleMessage">
-                There are no people on the server
-              </p>
+              {!people.length && !isLoading && (
+                <p data-cy="noPeopleMessage">
+                  There are no people on the server
+                </p>
+              )}
 
-              <p>There are no people matching the current search criteria</p>
+              {!visiblePeople.length && (
+                <p>There are no people matching the current search criteria</p>
+              )}
 
-              <PeopleTable />
+              {!isLoading && !errorMessage && !!visiblePeople.length && (
+                <PeopleTable
+                  people={visiblePeople}
+                />
+              )}
             </div>
           </div>
         </div>
