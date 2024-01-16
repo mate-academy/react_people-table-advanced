@@ -48,12 +48,13 @@ export const PeopleListProvider: FC<Props> = ({ children }) => {
 
   const handleInputChange
     = useCallback((event: ChangeEvent<HTMLInputElement>) => {
-      const value = event.target.value.trim() === ''
+      const inputValue = event.target.value.trim();
+      const queryValue = inputValue === ''
         ? null
-        : event.target.value.trim();
+        : inputValue;
 
       setSearchParams(
-        getSearchWith(searchParams, { q: value }),
+        getSearchWith(searchParams, { q: queryValue }),
       );
     }, [searchParams, setSearchParams]);
 
