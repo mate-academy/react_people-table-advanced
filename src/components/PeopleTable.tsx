@@ -154,9 +154,13 @@ export const PeopleTable = () => {
                       <span className="icon">
                         <i className={cn(
                           'fas',
-                          'fa-sort',
-                          // 'fa-sort-up',
-                          // 'fa-sort-down',
+                          {
+                            'fa-sort': sortBy !== Categories.NAME,
+                            // eslint-disable-next-line max-len
+                            'fa-sort-up': sortBy === Categories.NAME && order === Order.ASC,
+                            // eslint-disable-next-line max-len
+                            'fa-sort-down': sortBy === Categories.NAME && order === Order.DESC,
+                          },
                         )}
                         />
                       </span>
@@ -171,9 +175,13 @@ export const PeopleTable = () => {
                       <span className="icon">
                         <i className={cn(
                           'fas',
-                          'fa-sort',
-                          // 'fa-sort-up',
-                          // 'fa-sort-down',
+                          {
+                            'fa-sort': sortBy !== Categories.SEX,
+                            // eslint-disable-next-line max-len
+                            'fa-sort-up': sortBy === Categories.SEX && order === Order.ASC,
+                            // eslint-disable-next-line max-len
+                            'fa-sort-down': sortBy === Categories.SEX && order === Order.DESC,
+                          },
                         )}
                         />
                       </span>
@@ -188,9 +196,13 @@ export const PeopleTable = () => {
                       <span className="icon">
                         <i className={cn(
                           'fas',
-                          'fa-sort',
-                          // 'fa-sort-up',
-                          // 'fa-sort-down',
+                          {
+                            'fa-sort': sortBy !== Categories.BORN,
+                            // eslint-disable-next-line max-len
+                            'fa-sort-up': sortBy === Categories.BORN && order === Order.ASC,
+                            // eslint-disable-next-line max-len
+                            'fa-sort-down': sortBy === Categories.BORN && order === Order.DESC,
+                          },
                         )}
                         />
                       </span>
@@ -205,9 +217,13 @@ export const PeopleTable = () => {
                       <span className="icon">
                         <i className={cn(
                           'fas',
-                          'fa-sort',
-                          // 'fa-sort-up',
-                          // 'fa-sort-down',
+                          {
+                            'fa-sort': sortBy !== Categories.DIED,
+                            // eslint-disable-next-line max-len
+                            'fa-sort-up': sortBy === Categories.DIED && order === Order.ASC,
+                            // eslint-disable-next-line max-len
+                            'fa-sort-down': sortBy === Categories.DIED && order === Order.DESC,
+                          },
                         )}
                         />
                       </span>
