@@ -49,10 +49,11 @@ export const PeopleListProvider: FC<Props> = ({ children }) => {
     = useCallback((event: ChangeEvent<HTMLInputElement>) => {
       const value = event.target.value.trim() || '';
 
-      searchParams.set('q', value);
-
-      setSearchParams(searchParams);
-    }, [searchParams, setSearchParams]);
+      setSearchParams((prevParams) => ({
+        ...prevParams,
+        q: value,
+      }));
+    }, [setSearchParams]);
 
   // CONTEXT VALUE
   const PeopleListContextValue = {
