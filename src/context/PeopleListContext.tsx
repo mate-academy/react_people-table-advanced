@@ -7,9 +7,7 @@ import {
   useContext,
 } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { SexFilter } from '../types/SexFilter';
-import { SortType } from '../types/SortCategory';
-import { OrderType } from '../types/Order';
+import { SexFilter, SortType, OrderType } from '../types';
 
 // TYPE
 type PeopleListContextType = {
