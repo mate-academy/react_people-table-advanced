@@ -92,12 +92,12 @@ export const PeopleFilters = () => {
       </div>
 
       <div className="panel-block">
-        <a
+        <SearchLink
           className="button is-link is-outlined is-fullwidth"
-          href="#/people"
+          params={{ sex: null, centuries: null, q: '' }}
         >
           Reset all filters
-        </a>
+        </SearchLink>
       </div>
     </nav>
   );

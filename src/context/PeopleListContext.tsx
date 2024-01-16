@@ -1,10 +1,17 @@
 import {
   ChangeEvent,
-  // eslint-disable-next-line max-len
-  FC, PropsWithChildren, createContext, useCallback, useContext, useEffect, useState,
+  FC,
+  PropsWithChildren,
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
 } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { SexFilter } from '../types/SexFilter';
+import { SortType } from '../types/SortCategory';
+import { OrderType } from '../types/Order';
 
 // TYPE
 type PeopleListContextType = {
@@ -12,6 +19,8 @@ type PeopleListContextType = {
   query: string,
   handleInputChange: (event: ChangeEvent<HTMLInputElement>) => void,
   centuriesFilter: string[],
+  sortBy: SortType,
+  order: OrderType,
 };
 
 // DEFAULT VALUES
@@ -20,6 +29,8 @@ const PeopleListContextDefault = {
   query: '',
   handleInputChange: () => { },
   centuriesFilter: [],
+  sortBy: null,
+  order: null,
 };
 
 // CREATE CONTEXT
@@ -31,9 +42,15 @@ type Props = PropsWithChildren;
 
 export const PeopleListProvider: FC<Props> = ({ children }) => {
   const [searchParams, setSearchParams] = useSearchParams();
+
   const [sexFilter, setSexFilter] = useState<SexFilter>(null);
   const [query, setQuery] = useState<string>('');
   const centuriesFilter = searchParams.getAll('centuries');
+  const sortBy = searchParams.get('sort') as SortType;
+  const order = searchParams.get('order') as OrderType;
+
+  // eslint-disable-next-line no-console
+  console.log(sortBy, order);
 
   const handleSexFilterChange = useCallback((filter: SexFilter) => {
     if (sexFilter !== filter) {
@@ -62,6 +79,8 @@ export const PeopleListProvider: FC<Props> = ({ children }) => {
     query,
     handleInputChange,
     centuriesFilter,
+    sortBy,
+    order,
   };
 
   return (
