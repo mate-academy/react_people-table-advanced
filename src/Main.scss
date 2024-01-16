@@ -1,0 +1,20 @@
+/* App.scss */
+
+@import 'https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css';
+
+a {
+  color: #3273dc;
+  transition: all 0.3s linear;
+  &:hover {
+    color: #073e96;
+  }
+}
+
+.icon {
+  margin-left: 5px;
+  opacity: 0.7;
+  transition: opacity 0.3s;
+  &:hover {
+    opacity: 1;
+  }
+}
