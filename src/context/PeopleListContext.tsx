@@ -8,6 +8,7 @@ import {
 } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { SexFilter, SortType, OrderType } from '../types';
+import { getSearchWith } from '../utils';
 
 // TYPE
 type PeopleListContextType = {
@@ -47,13 +48,14 @@ export const PeopleListProvider: FC<Props> = ({ children }) => {
 
   const handleInputChange
     = useCallback((event: ChangeEvent<HTMLInputElement>) => {
-      const value = event.target.value.trim() || '';
+      const value = event.target.value.trim() === ''
+        ? null
+        : event.target.value.trim();
 
-      setSearchParams((prevParams) => ({
-        ...prevParams,
-        q: value,
-      }));
-    }, [setSearchParams]);
+      setSearchParams(
+        getSearchWith(searchParams, { q: value }),
+      );
+    }, [searchParams, setSearchParams]);
 
   // CONTEXT VALUE
   const PeopleListContextValue = {
