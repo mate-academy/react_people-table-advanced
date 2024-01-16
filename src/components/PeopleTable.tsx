@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import cn from 'classnames';
 import { Person } from '../types';
-import { getPeople, matchParents } from '../utils';
+import { matchParents } from '../utils';
 import { Loader } from './Loader';
 import { PersonLink } from './PersonLink';
 import { usePeopleListContext } from '../context/PeopleListContext';
@@ -9,6 +9,7 @@ import { Sex } from '../types/SexFilter';
 import { SearchLink } from './SearchLink';
 import { Categories } from '../types/SortCategory';
 import { Order } from '../types/Order';
+import { getPeople } from '../api';
 
 export const PeopleTable = () => {
   const [people, setPeople] = useState<Person[] | null>(null);
