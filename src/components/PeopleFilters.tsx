@@ -1,5 +1,5 @@
 import cn from 'classnames';
-import { Sex } from '../types/SexFilter';
+import { Sex } from '../types';
 import { usePeopleListContext } from '../context/PeopleListContext';
 import { SearchLink } from './SearchLink';
 

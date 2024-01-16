@@ -135,7 +135,11 @@ export const PeopleTable = () => {
         </p>
       )}
 
-      {/* <p>There are no people matching the current search criteria</p> */}
+      {
+        !peopleToRender?.length && (
+          <p>There are no people matching the current search criteria</p>
+        )
+      }
 
       {
         peopleToRender && (
