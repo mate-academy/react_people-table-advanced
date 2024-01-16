@@ -61,10 +61,10 @@ export const getPreparedPeople = (
         return preparedPeople;
 
       case Sex.Male:
-        return preparedPeople.filter(person => person.sex === 'm');
+        return preparedPeople.filter(person => person.sex === Sex.Male);
 
       case Sex.Female:
-        return preparedPeople.filter(person => person.sex === 'f');
+        return preparedPeople.filter(person => person.sex === Sex.Female);
 
       default:
         return preparedPeople;
