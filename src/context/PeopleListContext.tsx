@@ -43,7 +43,7 @@ type Props = PropsWithChildren;
 export const PeopleListProvider: FC<Props> = ({ children }) => {
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const [sexFilter, setSexFilter] = useState<SexFilter>(null);
+  const sexFilter = searchParams.get('sex') as SexFilter;
   const [query, setQuery] = useState<string>('');
   const centuriesFilter = searchParams.getAll('centuries');
   const sortBy = searchParams.get('sort') as SortType;
@@ -52,11 +52,11 @@ export const PeopleListProvider: FC<Props> = ({ children }) => {
   // eslint-disable-next-line no-console
   console.log(sortBy, order);
 
-  const handleSexFilterChange = useCallback((filter: SexFilter) => {
-    if (sexFilter !== filter) {
-      setSexFilter(filter);
-    }
-  }, [sexFilter]);
+  // const handleSexFilterChange = useCallback((filter: SexFilter) => {
+  //   if (sexFilter !== filter) {
+  //     setSexFilter(filter);
+  //   }
+  // }, [sexFilter]);
 
   const handleInputChange
     = useCallback((event: ChangeEvent<HTMLInputElement>) => {
@@ -69,9 +69,9 @@ export const PeopleListProvider: FC<Props> = ({ children }) => {
     }, [searchParams, setSearchParams]);
 
   useEffect(() => {
-    handleSexFilterChange(searchParams.get('sex') as SexFilter);
+    // handleSexFilterChange(searchParams.get('sex') as SexFilter);
     setQuery(searchParams.get('q') || '');
-  }, [handleSexFilterChange, searchParams]);
+  }, [searchParams]);
 
   // CONTEXT VALUE
   const PeopleListContextValue = {
