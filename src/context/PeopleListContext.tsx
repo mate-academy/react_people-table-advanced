@@ -5,8 +5,6 @@ import {
   createContext,
   useCallback,
   useContext,
-  useEffect,
-  useState,
 } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { SexFilter } from '../types/SexFilter';
@@ -44,7 +42,7 @@ export const PeopleListProvider: FC<Props> = ({ children }) => {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const sexFilter = searchParams.get('sex') as SexFilter;
-  const [query, setQuery] = useState<string>('');
+  const query = searchParams.get('q') || '';
   const centuriesFilter = searchParams.getAll('centuries');
   const sortBy = searchParams.get('sort') as SortType;
   const order = searchParams.get('order') as OrderType;
@@ -53,15 +51,10 @@ export const PeopleListProvider: FC<Props> = ({ children }) => {
     = useCallback((event: ChangeEvent<HTMLInputElement>) => {
       const value = event.target.value.trim() || '';
 
-      setQuery(value);
       searchParams.set('q', value);
 
       setSearchParams(searchParams);
     }, [searchParams, setSearchParams]);
-
-  useEffect(() => {
-    setQuery(searchParams.get('q') || '');
-  }, [searchParams]);
 
   // CONTEXT VALUE
   const PeopleListContextValue = {
