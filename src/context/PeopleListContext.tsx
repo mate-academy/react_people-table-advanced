@@ -49,15 +49,6 @@ export const PeopleListProvider: FC<Props> = ({ children }) => {
   const sortBy = searchParams.get('sort') as SortType;
   const order = searchParams.get('order') as OrderType;
 
-  // eslint-disable-next-line no-console
-  console.log(sortBy, order);
-
-  // const handleSexFilterChange = useCallback((filter: SexFilter) => {
-  //   if (sexFilter !== filter) {
-  //     setSexFilter(filter);
-  //   }
-  // }, [sexFilter]);
-
   const handleInputChange
     = useCallback((event: ChangeEvent<HTMLInputElement>) => {
       const value = event.target.value.trim() || '';
@@ -69,7 +60,6 @@ export const PeopleListProvider: FC<Props> = ({ children }) => {
     }, [searchParams, setSearchParams]);
 
   useEffect(() => {
-    // handleSexFilterChange(searchParams.get('sex') as SexFilter);
     setQuery(searchParams.get('q') || '');
   }, [searchParams]);
 
