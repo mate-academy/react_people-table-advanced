@@ -34,16 +34,12 @@ export const getPreparedPeople = (
     preparedPeople = preparedPeople.sort((person1, person2) => {
       switch (sort) {
         case Sort.Name:
-          return person1.name.localeCompare(person2.name);
-
         case Sort.Sex:
-          return person1.sex.localeCompare(person2.sex);
+          return person1[sort].localeCompare(person2[sort]);
 
         case Sort.Born:
-          return person1.born - person2.born;
-
         case Sort.Died:
-          return person1.died - person2.died;
+          return person1[sort] - person2[sort];
 
         default:
           return 0;
