@@ -20,7 +20,7 @@ export const App = () => (
           <Route path="/home" element={<Navigate to="/" replace />} />
           <Route path="/people">
             <Route index element={<PeopleTable />} />
-            <Route path=":slug?" element={<PeopleTable />} />
+            <Route path=":slug" element={<PeopleTable />} />
           </Route>
           <Route path="*" element={<PageNotFound />} />
         </Routes>

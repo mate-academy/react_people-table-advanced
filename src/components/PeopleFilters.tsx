@@ -91,7 +91,7 @@ export const PeopleFilters = () => {
                 key={el}
                 data-cy="century"
                 className={classNames('button mr-1', {
-                  'is-info': centuries?.includes(String(el)),
+                  'is-info': centuries.includes(String(el)),
                 })}
                 params={isCenturyActive(el)}
               >
@@ -104,7 +104,7 @@ export const PeopleFilters = () => {
             <SearchLink
               data-cy="centuryALL"
               className={classNames('button is-success', {
-                'is-outlined': centuries?.length,
+                'is-outlined': centuries.length,
               })}
               params={{ centuries: [] }}
             >
