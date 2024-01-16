@@ -1,12 +1,39 @@
 /* eslint-disable jsx-a11y/control-has-associated-label */
-import { Person } from '../../types';
+import { useSearchParams } from 'react-router-dom';
+import classNames from 'classnames';
+import { Person, SortType } from '../../types';
 import { PersonItem } from '../personItem';
+import { SearchLink } from '../SearchLink';
 
 type Props = {
   people: Person[];
 };
 
 export const PeopleList = ({ people }: Props) => {
+  const [searchParams] = useSearchParams();
+
+  const sort = searchParams.get('sort') || '';
+  const order = searchParams.get('order') || '';
+
+  const getSortParams = (param: string) => {
+    if (param === sort && !order) {
+      return { sort: param, order: SortType.DESC };
+    }
+
+    if (param === sort && order) {
+      return { sort: null, order: null };
+    }
+
+    return { sort: param, order: null };
+  };
+
+  const getClassLink = (param: string) => classNames(
+    'fas',
+    { 'fa-sort': param !== sort },
+    { 'fa-sort-up': sort && sort === param && !order },
+    { 'fa-sort-down': sort && sort === param && order === SortType.DESC },
+  );
+
   return (
     <>
       <table
@@ -15,50 +42,27 @@ export const PeopleList = ({ people }: Props) => {
       >
         <thead>
           <tr>
-            <th>
-              <span className="is-flex is-flex-wrap-nowrap">
-                Name
-                <a href="#/people?sort=name">
-                  <span className="icon">
-                    <i className="fas fa-sort" />
-                  </span>
-                </a>
-              </span>
-            </th>
+            {(Object.keys(SortType) as (keyof typeof SortType)[])
+              .map((key) => {
+                if (key === 'DESC') {
+                  return null;
+                }
 
-            <th>
-              <span className="is-flex is-flex-wrap-nowrap">
-                Sex
-                <a href="#/people?sort=sex">
-                  <span className="icon">
-                    <i className="fas fa-sort" />
-                  </span>
-                </a>
-              </span>
-            </th>
-
-            <th>
-              <span className="is-flex is-flex-wrap-nowrap">
-                Born
-                <a href="#/people?sort=born&amp;order=desc">
-                  <span className="icon">
-                    <i className="fas fa-sort-up" />
-                  </span>
-                </a>
-              </span>
-            </th>
-
-            <th>
-              <span className="is-flex is-flex-wrap-nowrap">
-                Died
-                <a href="#/people?sort=died">
-                  <span className="icon">
-                    <i className="fas fa-sort" />
-                  </span>
-                </a>
-              </span>
-            </th>
-
+                return (
+                  <th key={SortType[key]}>
+                    <span className="is-flex is-flex-wrap-nowrap">
+                      {`${key.charAt(0) + key.slice(1).toLowerCase()}`}
+                      <SearchLink
+                        params={getSortParams(SortType[key])}
+                      >
+                        <span className="icon">
+                          <i className={getClassLink(SortType[key])} />
+                        </span>
+                      </SearchLink>
+                    </span>
+                  </th>
+                );
+              })}
             <th>Mother</th>
             <th>Father</th>
           </tr>

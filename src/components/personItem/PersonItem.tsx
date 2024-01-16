@@ -28,21 +28,13 @@ export const PersonItem = ({ person }: Props) => {
         <td>{died}</td>
         <td>
           {mother
-            ? (
-              <PersonLink parrent={mother} />
-            )
-            : (
-              motherName || '-'
-            )}
+            ? <PersonLink parrent={mother} />
+            : (motherName || '-')}
         </td>
         <td>
           {father
-            ? (
-              <PersonLink parrent={father} />
-            )
-            : (
-              fatherName || '-'
-            )}
+            ? <PersonLink parrent={father} />
+            : (fatherName || '-')}
         </td>
       </tr>
     </>
