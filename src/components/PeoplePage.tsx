@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { PeopleFilters } from './PeopleFilters';
 import { Loader } from './Loader';
@@ -31,7 +31,7 @@ export const PeoplePage = () => {
   const order = searchParams.get('order') || '';
   const query = searchParams.get('query') || '';
   const sex = searchParams.get('sex') || '';
-  const centuries = searchParams.getAll('centuries') || [];
+  const centuries = searchParams.getAll('centuries');
 
   function getPreparedPeople() {
     let result = [...people];
@@ -50,35 +50,22 @@ export const PeoplePage = () => {
     }
 
     if (sex) {
-      result = result.filter((person) => {
-        switch (sex) {
-          case 'm':
-            return person.sex === 'm';
-
-          case 'f':
-            return person.sex === 'f';
-
-          default:
-            return true;
-        }
-      });
+      result = result.filter((person) => person.sex === sex);
     }
 
     if (centuries.length) {
-      let peopleOfCentyries: Person[] = [];
+      let peopleOfCenturies: Person[] = [];
 
-      for (let i = 16; i < 21; i += 1) {
-        if (centuries.includes(`${i}`)) {
-          peopleOfCentyries = [
-            ...peopleOfCentyries,
-            ...result.filter(
-              (person: Person) => Math.ceil(person.born / 100) === i,
-            ),
-          ];
-        }
-      }
+      peopleOfCenturies = [
+        ...peopleOfCenturies,
+        ...result.filter(
+          (person: Person) => centuries.includes(
+            Math.ceil(person.born / 100).toString(),
+          ),
+        ),
+      ];
 
-      result = peopleOfCentyries;
+      result = peopleOfCenturies;
     }
 
     if (sort) {
@@ -103,7 +90,8 @@ export const PeoplePage = () => {
     return result;
   }
 
-  const preparedPeople = getPreparedPeople();
+  const preparedPeople = useMemo(() => getPreparedPeople(),
+    [searchParams]);
 
   return (
     <>
