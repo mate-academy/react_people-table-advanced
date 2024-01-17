@@ -136,15 +136,18 @@ export const PeopleTable = () => {
       )}
 
       {
-        peopleToRender !== null
+        peopleToRender
         && peopleToRender?.length === 0
-        && !isLoading && (
+        && !isLoading
+        && (
           <p>There are no people matching the current search criteria</p>
         )
       }
 
       {
-        peopleToRender && (
+        peopleToRender
+        && peopleToRender?.length > 0
+        && (
           <table
             data-cy="peopleTable"
             className="table is-striped is-hoverable is-narrow is-fullwidth"
