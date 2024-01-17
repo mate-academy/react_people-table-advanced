@@ -26,7 +26,7 @@ export const PeoplePage = () => {
   const order = searchParams.get('order') || '';
 
   const visiblePeople = useMemo(() => {
-    const centuries = searchParams.getAll('centuries') || [];
+    const centuries = searchParams.getAll('centuries');
     let result = [...people];
 
     if (sex) {

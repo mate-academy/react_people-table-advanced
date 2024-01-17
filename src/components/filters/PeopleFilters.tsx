@@ -10,7 +10,7 @@ export const PeopleFilters = () => {
 
   const query = searchParams.get('query') || '';
   const sex = searchParams.get('sex') || '';
-  const centuries = searchParams.getAll('centuries') || [];
+  const centuries = searchParams.getAll('centuries');
   const centuryFilters = ['16', '17', '18', '19', '20'];
 
   function handleChangeInput(event: ChangeEvent<HTMLInputElement>) {
