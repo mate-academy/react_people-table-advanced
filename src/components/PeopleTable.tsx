@@ -136,7 +136,9 @@ export const PeopleTable = () => {
       )}
 
       {
-        !peopleToRender?.length && (
+        peopleToRender !== null
+        && peopleToRender?.length === 0
+        && !isLoading && (
           <p>There are no people matching the current search criteria</p>
         )
       }
