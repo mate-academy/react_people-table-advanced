@@ -1,0 +1,15 @@
+.navbar-container {
+  display: flex;
+}
+
+.navbar-item{
+  margin: 10px 0;
+  padding: 0 20px;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.has-background-grey-lighter {
+  border-radius: 10px;
+  position: relative;
+}
