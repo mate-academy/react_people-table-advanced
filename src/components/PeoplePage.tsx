@@ -8,12 +8,10 @@ import { getPeople } from '../api';
 
 export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);
-  const [isLoading, setIsloading] = useState(false);
+  const [isLoading, setIsloading] = useState(true);
   const [error, setError] = useState(false);
 
   function loadPeople() {
-    setIsloading(true);
-
     return getPeople()
       .then(setPeople)
       .catch(() => {
@@ -91,7 +89,7 @@ export const PeoplePage = () => {
   }
 
   const preparedPeople = useMemo(() => getPreparedPeople(),
-    [searchParams]);
+    [searchParams, getPreparedPeople]);
 
   return (
     <>
