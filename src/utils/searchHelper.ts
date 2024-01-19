@@ -28,9 +28,10 @@ export function getSearchWith(
 
   Object.entries(paramsToUpdate)
     .forEach(([key, value]) => {
-      if (value === null) {
+      if (value === null || value === '') {
         newParams.delete(key);
       } else if (Array.isArray(value)) {
+        console.log('else if', value);
         // we delete the key to remove old values
         newParams.delete(key);
 
