@@ -15,6 +15,7 @@ export const PeoplePage = () => {
 
   const sex = searchParams.get('sex') || '';
   const query = searchParams.get('query') || '';
+  const centuries = searchParams.getAll('centuries') || [];
 
   let normalizePeople = people.map(person => {
     const father = people.find(parent => person.fatherName === parent.name);
@@ -37,13 +38,17 @@ export const PeoplePage = () => {
     }
 
     if (query) {
-      normalizePeople = normalizePeople.filter(person => {
-        const normQuery = query.toLowerCase();
+      normalizePeople = normalizePeople.filter(person => (
+        person.name.toLowerCase().includes(query.toLowerCase())
+        || person.fatherName?.toLowerCase().includes(query.toLowerCase())
+        || person.motherName?.toLowerCase().includes(query.toLowerCase())
+      ));
+    }
 
-        return person.name.toLowerCase().includes(normQuery)
-          || person.fatherName?.toLowerCase().includes(normQuery)
-          || person.motherName?.toLowerCase().includes(normQuery);
-      });
+    if (centuries.length) {
+      normalizePeople = normalizePeople.filter(person => (
+        centuries.includes(Math.ceil(person.born / 100).toString())
+      ));
     }
 
     return normalizePeople;
@@ -51,7 +56,7 @@ export const PeoplePage = () => {
 
   const filteredPeople = filterPeople();
   const noErrorAndLoad = !isError && !isLoading;
-  const noErrorAndLoadAndIsPeople = noErrorAndLoad && !!people.length;
+  const noErrorAndLoadAndIsPeople = noErrorAndLoad && filteredPeople.length;
   const noCurrentSearchCriteria
     = noErrorAndLoadAndIsPeople && !filteredPeople.length;
 
@@ -73,11 +78,9 @@ export const PeoplePage = () => {
 
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
-          {noErrorAndLoadAndIsPeople && (
-            <div className="column is-7-tablet is-narrow-desktop">
-              <PeopleFilters />
-            </div>
-          )}
+          <div className="column is-7-tablet is-narrow-desktop">
+            <PeopleFilters />
+          </div>
 
           <div className="column">
             <div className="box table-container">
@@ -99,7 +102,7 @@ export const PeoplePage = () => {
                 <p>There are no people matching the current search criteria</p>
               )}
 
-              {!noCurrentSearchCriteria && (
+              {noErrorAndLoadAndIsPeople && (
                 <PeopleTable people={filteredPeople} />
               )}
             </div>

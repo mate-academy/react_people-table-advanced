@@ -1,27 +1,25 @@
-import React from 'react';
 import { SexFilter } from './SexFilter';
 import { NameFilter } from './NameFilter';
 import { CenturyFilter } from './CenturyFilter';
+import { SearchLink } from './SearchLink';
 
-export const PeopleFilters: React.FC = () => {
-  return (
-    <nav className="panel">
-      <p className="panel-heading">Filters</p>
+export const PeopleFilters = () => (
+  <nav className="panel">
+    <p className="panel-heading">Filters</p>
 
-      <SexFilter />
+    <SexFilter />
 
-      <NameFilter />
+    <NameFilter />
 
-      <CenturyFilter />
+    <CenturyFilter />
 
-      <div className="panel-block">
-        <a
-          className="button is-link is-outlined is-fullwidth"
-          href="#/people"
-        >
-          Reset all filters
-        </a>
-      </div>
-    </nav>
-  );
-};
+    <div className="panel-block">
+      <SearchLink
+        params={{ sex: null, centuries: null, query: null }}
+        className="button is-link is-outlined is-fullwidth"
+      >
+        Reset all filters
+      </SearchLink>
+    </div>
+  </nav>
+);
