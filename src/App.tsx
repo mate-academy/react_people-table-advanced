@@ -1,10 +1,10 @@
 /* eslint-disable max-len */
 import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
-import { PeoplePage } from './components/PeoplePage/PeoplePage';
+import { PeoplePage } from './components/PeoplePage';
 
 import './App.scss';
-import { NavBar } from './components/NavBar/NavBar';
+import { NavBar } from './components/NavBar';
 
 export const App: React.FC = () => (
   <div data-cy="app">

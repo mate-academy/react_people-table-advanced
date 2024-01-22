@@ -1,7 +1,7 @@
 /* eslint-disable max-len */
 import React from 'react';
 import classNames from 'classnames';
-import { Person } from '../../types';
+import { Person } from '../types';
 
 interface Props {
   person: Person

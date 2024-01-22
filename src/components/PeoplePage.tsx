@@ -2,9 +2,9 @@
 /* eslint-disable max-len */
 import React, { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { PeopleTable } from '../PeopleTable/PeopleTable';
-import { PeopleFilters } from '../PeopleFilters';
-import { Person, Sex } from '../../types';
+import { PeopleTable } from './PeopleTable';
+import { PeopleFilters } from './PeopleFilters';
+import { Person, Sex } from '../types';
 
 export const PeoplePage: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -74,9 +74,6 @@ export const PeoplePage: React.FC = () => {
         </div>
         <div className="column">
           <div className="box table-container">
-
-            {/* <p data-cy="peopleLoadingError">Something went wrong</p> */}
-
             <PeopleTable
               people={people}
               setPeople={setPeople}

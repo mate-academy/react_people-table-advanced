@@ -4,11 +4,11 @@ import React, {
 } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
 import classNames from 'classnames';
-import { PersonLink } from '../PersonLink/PersonLink';
-import { Person, Sex, SortType } from '../../types';
-import { Loader } from '../Loader';
-import { getPeople } from '../../api';
-import { SearchLink } from '../SearchLink';
+import { PersonLink } from './PersonLink';
+import { Person, Sex, SortType } from '../types';
+import { Loader } from './Loader';
+import { getPeople } from '../api';
+import { SearchLink } from './SearchLink';
 
 interface Props {
   people: Person[]
@@ -48,7 +48,7 @@ export const PeopleTable: React.FC<Props> = (props) => {
   }, []);
 
   const getPeopleArray = (): Person[] => {
-    let peopleArray = people;
+    let peopleArray = [...people];
 
     if (sortSex !== '') {
       peopleArray = peopleArray.filter(person => person.sex === sortSex);
@@ -71,19 +71,19 @@ export const PeopleTable: React.FC<Props> = (props) => {
     }
 
     if (sortType === SortType.NAME) {
-      peopleArray = peopleArray.sort((a, b) => a.name.localeCompare(b.name));
+      peopleArray.sort((a, b) => a.name.localeCompare(b.name));
     }
 
     if (sortType === SortType.SEX) {
-      peopleArray = peopleArray.sort((a, b) => a.sex.localeCompare(b.sex));
+      peopleArray.sort((a, b) => a.sex.localeCompare(b.sex));
     }
 
     if (sortType === SortType.BORN) {
-      peopleArray = peopleArray.sort((a, b) => a.born - b.born);
+      peopleArray.sort((a, b) => a.born - b.born);
     }
 
     if (sortType === SortType.DIED) {
-      peopleArray = peopleArray.sort((a, b) => a.died - b.died);
+      peopleArray.sort((a, b) => a.died - b.died);
     }
 
     return sortOrder === 'desc' ? peopleArray.reverse() : peopleArray;
