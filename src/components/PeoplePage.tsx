@@ -73,15 +73,13 @@ export const PeoplePage: React.FC = () => {
           />
         </div>
         <div className="column">
-          <div className="box table-container">
-            <PeopleTable
-              people={people}
-              setPeople={setPeople}
-              sortSex={sortSex}
-              searchQuery={searchQuery}
-              centuriesFilter={centuriesFilter}
-            />
-          </div>
+          <PeopleTable
+            people={people}
+            setPeople={setPeople}
+            sortSex={sortSex}
+            searchQuery={searchQuery}
+            centuriesFilter={centuriesFilter}
+          />
         </div>
       </div>
     </div>
