@@ -9,13 +9,23 @@ import { getPeople } from './api';
 import './App.scss';
 
 export const PeopleContext = createContext([]);
+export const ErrorsContext = createContext({});
 
 export const App = () => {
-  const [people, setPeople] = useState();
+  const [people, setPeople] = useState([]);
+  const [isError, setIsError] = useState(false);
+  const [isLoad, setIsLoad] = useState(false);
   const fetchData = async () => {
-    const peopleData = await getPeople();
+    setIsLoad(true);
+    try {
+      const peopleData = await getPeople();
 
-    setPeople(peopleData);
+      setPeople(peopleData);
+    } catch (error) {
+      setIsError(true);
+    }
+
+    setTimeout(() => setIsLoad(false), 1000);
   };
 
   useEffect(() => {
@@ -30,8 +40,14 @@ export const App = () => {
         <div className="container">
           <PeopleContext.Provider value={people}>
             <Routes>
-              <Route path="/" element={<h1 className="title">Home Page</h1>} />
-              <Route path="/people" element={<PeoplePage />} />
+              <Route
+                path="/"
+                element={<h1 className="title">Home Page</h1>}
+              />
+              <Route
+                path="/people"
+                element={<PeoplePage isLoad={isLoad} isError={isError} />}
+              />
               <Route
                 path="*"
                 element={

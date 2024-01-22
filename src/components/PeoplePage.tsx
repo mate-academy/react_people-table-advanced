@@ -1,8 +1,21 @@
+import { useContext } from 'react';
 import { PeopleFilters } from './PeopleFilters';
 import { Loader } from './Loader';
 import { PeopleTable } from './PeopleTable';
+import { PeopleContext } from '../App';
+import { Errors } from '../types/Errors';
 
-export const PeoplePage = () => {
+interface Props {
+  isError: boolean;
+  isLoad: boolean
+}
+
+export const PeoplePage: React.FC<Props> = ({
+  isError,
+  isLoad,
+}) => {
+  const arrayOfPeople = useContext(PeopleContext);
+
   return (
     <>
       <h1 className="title">People Page</h1>
@@ -15,14 +28,18 @@ export const PeoplePage = () => {
 
           <div className="column">
             <div className="box table-container">
-              <Loader />
+              {isLoad && (
+                <Loader />
+              )}
 
-              <p data-cy="peopleLoadingError">Something went wrong</p>
-
-              <p data-cy="noPeopleMessage">
-                There are no people on the server
-              </p>
-
+              {isError && (
+                <p data-cy="peopleLoadingError">Something went wrong</p>
+              )}
+              {!arrayOfPeople && (
+                <p data-cy="noPeopleMessage">
+                  {Errors.no_people}
+                </p>
+              )}
               <p>There are no people matching the current search criteria</p>
 
               <PeopleTable />

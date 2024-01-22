@@ -1,13 +1,27 @@
-import { useContext, useEffect } from 'react';
+import { useContext, useState } from 'react';
+import { NavLink } from 'react-router-dom';
+import classNames from 'classnames';
 import { PeopleContext } from '../App';
 
 /* eslint-disable jsx-a11y/control-has-associated-label */
 export const PeopleTable = () => {
   const arrayOfPeople = useContext(PeopleContext);
+  const [activePersonSlug, setActivePersonSlug] = useState('');
 
-  useEffect(() => {
-    console.log(`I use context ${arrayOfPeople}`);
-  });
+  const getParentSlug = (parentName) => {
+    const findParent = arrayOfPeople
+      .find((person) => person.name === parentName);
+
+    if (findParent) {
+      setActivePersonSlug(findParent?.slug);
+    }
+  };
+
+  const handleActivePersonSlug = (slug) => {
+    setActivePersonSlug(slug);
+    getParentSlug(slug);
+    console.log(activePersonSlug)
+  };
 
   return (
     <table
@@ -66,19 +80,31 @@ export const PeopleTable = () => {
       </thead>
 
       <tbody>
-        {arrayOfPeople.map(() => (
-          <tr data-cy="person">
+        {arrayOfPeople.map((person) => (
+          <tr key={person.slug} data-cy="person">
             <td>
-              <a href="#/people/pieter-haverbeke-1602">a</a>
+              <NavLink onClick={() => handleActivePersonSlug(person.slug)} to={`#/people/${person.slug}`} className={classNames({ 'has-text-danger': person.sex === 'f' })}>{person.name}</NavLink>
             </td>
-            <td>m</td>
-            <td>1602</td>
-            <td>1642</td>
-            <td>-</td>
+            <td>{person.sex}</td>
+            <td>{person.born}</td>
+            <td>{person.died}</td>
             <td>
-              <a href="#/people/lieven-van-haverbeke-1570">
-                Lieven van Haverbeke
-              </a>
+              {arrayOfPeople.find((p) => p.name === person.motherName) ? (
+                <NavLink onClick={() => handleActivePersonSlug(person.motherName)} to={`#/people/${activePersonSlug}`}>
+                  {person.motherName}
+                </NavLink>
+              ) : (
+                <p> {person.motherName}</p>
+              )}
+            </td>
+            <td>
+              {arrayOfPeople.find((p) => p.name === person.fatherName) ? (
+                <NavLink onClick={() => handleActivePersonSlug(person.fatherName)} to={`#/people/${activePersonSlug}`}>
+                  {person.fatherName}
+                </NavLink>
+              ) : (
+                <p> {person.fatherName}</p>
+              )}
             </td>
           </tr>
         ))}
