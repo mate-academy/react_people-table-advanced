@@ -1,6 +1,7 @@
 import cn from 'classnames';
 import React from 'react';
 import { useLocation } from 'react-router-dom';
+import { Centuries } from '../utils/constants';
 
 type Props = {
   query: string;
@@ -23,7 +24,7 @@ export const PeopleFilters: React.FC<Props> = ({
   const selectedSex = params.get('sex');
   const selectedCenturies = params.getAll('centuries');
 
-  const centuries = [16, 17, 18, 19, 20];
+  const centuries = Centuries;
 
   return (
     <nav className="panel">
@@ -70,7 +71,7 @@ export const PeopleFilters: React.FC<Props> = ({
             className="input"
             placeholder="Search"
             value={query}
-            onChange={(e) => handleQueryChange(e)}
+            onChange={handleQueryChange}
           />
 
           <span className="icon is-left">

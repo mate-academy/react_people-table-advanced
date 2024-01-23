@@ -10,6 +10,15 @@ type Props = {
   preparedPeople: Person[];
 };
 
+const columns = [
+  { columnName: 'Name', sortURL: 'name' },
+  { columnName: 'Sex', sortURL: 'sex' },
+  { columnName: 'Born', sortURL: 'born' },
+  { columnName: 'Died', sortURL: 'died' },
+  { columnName: 'Mother', sortURL: null },
+  { columnName: 'Father', sortURL: null },
+];
+
 export const PeopleTable: React.FC<Props> = ({ people, preparedPeople }) => {
   const { slug } = useParams();
   const [searchParams] = useSearchParams();
@@ -43,15 +52,6 @@ export const PeopleTable: React.FC<Props> = ({ people, preparedPeople }) => {
 
     return newSortParams;
   }
-
-  const columns = [
-    { columnName: 'Name', sortURL: 'name' },
-    { columnName: 'Sex', sortURL: 'sex' },
-    { columnName: 'Born', sortURL: 'born' },
-    { columnName: 'Died', sortURL: 'died' },
-    { columnName: 'Mother', sortURL: null },
-    { columnName: 'Father', sortURL: null },
-  ];
 
   return (
     <table

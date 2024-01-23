@@ -7,6 +7,7 @@ import { getPeople } from '../api';
 import { Person } from '../types';
 import { SearchParams, getSearchWith } from '../utils/searchHelper';
 import { getPreparedPeople } from '../utils/getPreparedPeople';
+import { ERROR_MESSAGES } from '../utils/constants';
 
 export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);
@@ -90,17 +91,21 @@ export const PeoplePage = () => {
               {isLoading && <Loader />}
 
               {hasError && (
-                <p data-cy="peopleLoadingError">Something went wrong</p>
+                <p
+                  data-cy="peopleLoadingError"
+                >
+                  {ERROR_MESSAGES.loadingError}
+                </p>
               )}
 
               {!people.length && !isLoading && (
                 <p data-cy="noPeopleMessage">
-                  There are no people on the server
+                  {ERROR_MESSAGES.noPeopleOnServer}
                 </p>
               )}
 
               {!preparedPeople.length && !isLoading && (
-                <p>There are no people matching the current search criteria</p>
+                <p>{ERROR_MESSAGES.noMatchingCriteria}</p>
               )}
 
               {!!preparedPeople.length && (
