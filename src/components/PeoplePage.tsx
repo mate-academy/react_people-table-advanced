@@ -1,76 +1,10 @@
-import { useEffect, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
 import { PeopleFilters } from './PeopleFilters';
 import { Loader } from './Loader';
 import { PeopleTable } from './PeopleTable';
-import { Person } from '../types';
-import { getPeople } from '../api';
-
-const prepareData = (people: Person[]) => {
-  return people.map(person => {
-    const mother = people.find(
-      motherObject => motherObject.name === person.motherName,
-    );
-    const father = people.find(
-      fatherObject => fatherObject.name === person.fatherName,
-    );
-
-    const personCopy = {
-      ...person,
-      mother,
-      father,
-    };
-
-    return personCopy;
-  });
-};
-
-const filterData = (people: Person[], searchParams: URLSearchParams) => {
-  let filteredData = [...people];
-
-  const sex = searchParams.get('sex');
-  const centuries = searchParams.getAll('centuries');
-  const input = searchParams.get('query');
-
-  if (sex) {
-    filteredData = filteredData.filter((person) => person.sex === sex);
-  }
-
-  if (centuries.length > 0) {
-    filteredData = filteredData.filter(
-      (person) => centuries.find(
-        century => Math.floor(person.born / 100) === Number(century),
-      ),
-    );
-  }
-
-  if (input) {
-    const preparedInput = input.toLocaleLowerCase().trim();
-
-    filteredData = filteredData.filter(
-      (person) => person.name.toLocaleLowerCase().includes(preparedInput),
-    );
-  }
-
-  return filteredData;
-};
+import { useFilters } from '../context/FilterProvider';
 
 export const PeoplePage = () => {
-  const [people, setPeople] = useState<Person[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(false);
-
-  const [URLSearchParams] = useSearchParams();
-
-  useEffect(() => {
-    setIsLoading(true);
-    getPeople()
-      .then((data) => {
-        setPeople(prepareData(filterData(data, URLSearchParams)));
-      })
-      .catch(() => setError(true))
-      .finally(() => setIsLoading(false));
-  }, [URLSearchParams]);
+  const { people, isLoading, error } = useFilters();
 
   const tableVisible = !isLoading && !error && people.length > 0;
 

@@ -1,5 +1,4 @@
 import { useSearchParams } from 'react-router-dom';
-// import { useEffect } from 'react';
 import classNames from 'classnames';
 import { SearchLink } from './SearchLink';
 import { getSearchWith } from '../utils/searchHelper';
@@ -12,16 +11,6 @@ export const PeopleFilters = () => {
 
   const handleInputChange = (value: string) => {
     setURLSearchParams(getSearchWith(URLSearchParams, { query: value }));
-
-    console.log(value);
-    // URLSearchParams.set('query', value);
-    // setURLSearchParams(URLSearchParams);
-
-    // if (value.length === 0) {
-    //   URLSearchParams.delete('query');
-    // }
-
-    // URLSearchParams.delete('query');
   };
 
   return (
@@ -110,7 +99,7 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <SearchLink
           className="button is-link is-outlined is-fullwidth"
-          params={{ centuries: null, sex: null }}
+          params={{ centuries: null, sex: null, query: null }}
         >
           Reset all filters
         </SearchLink>

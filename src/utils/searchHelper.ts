@@ -31,7 +31,6 @@ export function getSearchWith(
       if (value === null || value === '') {
         newParams.delete(key);
       } else if (Array.isArray(value)) {
-        console.log('else if', value);
         // we delete the key to remove old values
         newParams.delete(key);
 

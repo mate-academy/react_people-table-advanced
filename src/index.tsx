@@ -5,10 +5,13 @@ import 'bulma/css/bulma.css';
 import '@fortawesome/fontawesome-free/css/all.css';
 
 import { App } from './App';
+import FilterProvider from './context/FilterProvider';
 
 createRoot(document.getElementById('root') as HTMLDivElement)
   .render(
     <HashRouter>
-      <App />
+      <FilterProvider>
+        <App />
+      </FilterProvider>
     </HashRouter>,
   );
