@@ -1,8 +1,15 @@
 import { PeopleFilters } from './PeopleFilters';
 import { Loader } from './Loader';
 import { PeopleTable } from './PeopleTable';
+import { useFilters } from '../context/FilterProvider';
 
 export const PeoplePage = () => {
+  const {
+    people, peopleToRender, isLoading, error,
+  } = useFilters();
+
+  const tableVisible = !isLoading && !error && peopleToRender.length > 0;
+
   return (
     <>
       <h1 className="title">People Page</h1>
@@ -15,17 +22,26 @@ export const PeoplePage = () => {
 
           <div className="column">
             <div className="box table-container">
-              <Loader />
+              {isLoading && <Loader />}
 
-              <p data-cy="peopleLoadingError">Something went wrong</p>
+              {error && !isLoading
+              && <p data-cy="peopleLoadingError">Something went wrong</p>}
 
-              <p data-cy="noPeopleMessage">
-                There are no people on the server
-              </p>
+              {people.length === 0 && !isLoading
+              && (
+                <p data-cy="noPeopleMessage">
+                  There are no people on the server
+                </p>
+              )}
 
-              <p>There are no people matching the current search criteria</p>
+              {peopleToRender.length === 0 && !isLoading
+              && (
+                <p data-cy="noPeopleMessage">
+                  There are no people matching the current search criteria
+                </p>
+              )}
 
-              <PeopleTable />
+              {tableVisible && <PeopleTable people={peopleToRender} />}
             </div>
           </div>
         </div>
