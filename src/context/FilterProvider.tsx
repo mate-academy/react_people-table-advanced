@@ -11,31 +11,25 @@ type Props = {
 
 type FilterProviderT = {
   people: Person[],
+  peopleToRender: Person[],
   isLoading: boolean,
   error: boolean,
-//   sortType: any,
-//   isReversed: boolean,
+  sortType: string | null,
+  isReversed: string | null,
 };
 
-// enum SortType {
-//   NONE,
-//   NAME,
-//   SEX,
-//   BORN,
-//   DIED,
-// }
-
-//   type ReorderOptions = {
-//     sortType: SortType,
-//     isReversed: boolean,
-//   };
+  type ReorderOptions = {
+    sortType: string | null,
+    isReversed: string | null,
+  };
 
 const FilterContext = createContext<FilterProviderT>({
   people: [],
+  peopleToRender: [],
   isLoading: false,
   error: false,
-//   sortType: '',
-//   isReversed: false,
+  sortType: '',
+  isReversed: '',
 });
 
 const prepareData = (people: Person[]) => {
@@ -89,100 +83,79 @@ const filterData = (people: Person[], { sex, centuries, query }: Filters) => {
   return filteredData;
 };
 
-// const getReorderedPeople = (
-//   people: Person[],
-//   { sortType, isReversed }: ReorderOptions,
-// ) => {
-//   let visiblePeople = [...people];
+const getReorderedPeople = (
+  people: Person[],
+  { sortType, isReversed }: ReorderOptions,
+) => {
+  let visiblePeople = [...people];
 
-//   if (sortType === SortType.NAME) {
-//     visiblePeople = visiblePeople.sort((a, b) => {
-//       return a.name.localeCompare(b.name);
-//     });
-//   }
+  if (sortType === 'name') {
+    visiblePeople = visiblePeople.sort((a, b) => {
+      return a.name.localeCompare(b.name);
+    });
+  }
 
-//   if (sortType === SortType.NAME) {
-//     visiblePeople = visiblePeople.sort((a, b) => {
-//       return a.sex.localeCompare(b.sex);
-//     });
-//   }
+  if (sortType === 'sex') {
+    visiblePeople = visiblePeople.sort((a, b) => {
+      return a.sex.localeCompare(b.sex);
+    });
+  }
 
-//   if (sortType === SortType.BORN) {
-//     visiblePeople = visiblePeople.sort((a, b) => {
-//       return a.born - b.born;
-//     });
-//   }
+  if (sortType === 'born') {
+    visiblePeople = visiblePeople.sort((a, b) => {
+      return a.born - b.born;
+    });
+  }
 
-//   if (sortType === SortType.DIED) {
-//     visiblePeople = visiblePeople.sort((a, b) => {
-//       return a.born - b.born;
-//     });
-//   }
+  if (sortType === 'died') {
+    visiblePeople = visiblePeople.sort((a, b) => {
+      return a.born - b.born;
+    });
+  }
 
-//   if (isReversed) {
-//     visiblePeople = visiblePeople.reverse();
-//   }
+  if (isReversed) {
+    visiblePeople = visiblePeople.reverse();
+  }
 
-//   return visiblePeople;
-// };
+  return visiblePeople;
+};
 
 const FilterProvider: FC<Props> = ({ children }) => {
   const [URLSearchParams] = useSearchParams();
   const centuries = URLSearchParams.getAll('centuries');
   const query = URLSearchParams.get('query');
   const sex = URLSearchParams.get('sex');
+  const isReversed = URLSearchParams.get('order');
+  const sortType = URLSearchParams.get('sort');
 
   const [people, setPeople] = useState<Person[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(false);
-  const peopleToRender = useMemo(() => {
+  const filteredPeople = useMemo(() => {
     return filterData(people, { sex, centuries, query });
   }, [people, centuries, query, sex]);
 
-  //   const [isReversed, setIsReversed] = useState(false);
-  //   const [sortType, setSortType] = useState(SortType.NONE);
+  const peopleToRender = useMemo(() => {
+    return getReorderedPeople(filteredPeople, { sortType, isReversed });
+  }, [filteredPeople, sortType, isReversed]);
 
   useEffect(() => {
     setIsLoading(true);
     getPeople()
       .then((data) => {
         setPeople(prepareData(data));
-        // setPeople(getReorderedPeople(people, { sortType, isReversed }));
       })
       .catch(() => setError(true))
       .finally(() => setIsLoading(false));
   }, []);
 
-  //   const handleSortByName = () => {
-  //     setSortType(SortType.NAME);
-  //     setIsReversed(!isReversed);
-  //   };
-
-  //   const handleSortBySex = () => {
-  //     setSortType(SortType.SEX);
-  //     setIsReversed(!isReversed);
-  //   };
-
-  //   const handleSortByBorn = () => {
-  //     setSortType(SortType.BORN);
-  //     setIsReversed(!isReversed);
-  //   };
-
-  //   const handleSortByDied = () => {
-  //     setSortType(SortType.DIED);
-  //     setIsReversed(!isReversed);
-  //   };
-
   const value: FilterProviderT = {
-    people: peopleToRender,
+    people,
+    peopleToRender,
     isLoading,
     error,
-    // sortType,
-    // isReversed,
-    // handleSortByBorn,
-    // handleSortByDied,
-    // handleSortByName,
-    // handleSortBySex,
+    sortType,
+    isReversed,
   };
 
   return (

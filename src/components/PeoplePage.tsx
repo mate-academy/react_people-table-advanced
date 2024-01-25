@@ -4,9 +4,11 @@ import { PeopleTable } from './PeopleTable';
 import { useFilters } from '../context/FilterProvider';
 
 export const PeoplePage = () => {
-  const { people, isLoading, error } = useFilters();
+  const {
+    people, peopleToRender, isLoading, error,
+  } = useFilters();
 
-  const tableVisible = !isLoading && !error && people.length > 0;
+  const tableVisible = !isLoading && !error && peopleToRender.length > 0;
 
   return (
     <>
@@ -32,9 +34,14 @@ export const PeoplePage = () => {
                 </p>
               )}
 
-              <p>There are no people matching the current search criteria</p>
+              {peopleToRender.length === 0 && !isLoading
+              && (
+                <p data-cy="noPeopleMessage">
+                  There are no people matching the current search criteria
+                </p>
+              )}
 
-              {tableVisible && <PeopleTable people={people} />}
+              {tableVisible && <PeopleTable people={peopleToRender} />}
             </div>
           </div>
         </div>

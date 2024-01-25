@@ -1,15 +1,42 @@
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams, useSearchParams } from 'react-router-dom';
 import classNames from 'classnames';
 import { Person } from '../types';
+import { SearchLink } from './SearchLink';
 
 interface PeopleTableProps {
   people: Person[],
 }
 
+const getSortParams = (sortType:any, isReversed:any, newSort:any) => {
+  const sortParams = {
+    sort: '',
+    order: '',
+  };
+
+  if (sortType !== newSort && !isReversed) {
+    sortParams.sort = newSort;
+  }
+
+  if (sortType === newSort && !isReversed) {
+    sortParams.sort = newSort;
+    sortParams.order = 'desc';
+  }
+
+  if (isReversed) {
+    sortParams.order = '';
+    sortParams.sort = '';
+  }
+
+  return sortParams;
+};
+
 /* eslint-disable jsx-a11y/control-has-associated-label */
 export const PeopleTable = (props: PeopleTableProps) => {
+  const [URLSearchParams] = useSearchParams();
   const { people } = props;
   const { slug } = useParams();
+  const isReversed = URLSearchParams.get('order');
+  const sortType = URLSearchParams.get('sort');
 
   return (
     <table
@@ -21,44 +48,72 @@ export const PeopleTable = (props: PeopleTableProps) => {
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Name
-              <a href="#/people?sort=name">
+              <SearchLink
+                params={getSortParams(sortType, isReversed, 'name')}
+              >
                 <span className="icon">
-                  <i className="fas fa-sort" />
+                  <i className={classNames('fas', {
+                    'fa-sort': sortType !== 'name',
+                    'fa-sort-up': sortType === 'name' && !isReversed,
+                    'fa-sort-down': sortType === 'name' && isReversed,
+                  })}
+                  />
                 </span>
-              </a>
+              </SearchLink>
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Sex
-              <a href="#/people?sort=sex">
+              <SearchLink
+                params={getSortParams(sortType, isReversed, 'sex')}
+              >
                 <span className="icon">
-                  <i className="fas fa-sort" />
+                  <i className={classNames('fas', {
+                    'fa-sort': sortType !== 'sex',
+                    'fa-sort-up': sortType === 'sex' && !isReversed,
+                    'fa-sort-down': sortType === 'sex' && isReversed,
+                  })}
+                  />
                 </span>
-              </a>
+              </SearchLink>
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Born
-              <a href="#/people?sort=born&amp;order=desc">
+              <SearchLink
+                params={getSortParams(sortType, isReversed, 'born')}
+              >
                 <span className="icon">
-                  <i className="fas fa-sort-up" />
+                  <i className={classNames('fas', {
+                    'fa-sort': sortType !== 'born',
+                    'fa-sort-up': sortType === 'born' && !isReversed,
+                    'fa-sort-down': sortType === 'born' && isReversed,
+                  })}
+                  />
                 </span>
-              </a>
+              </SearchLink>
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Died
-              <a href="#/people?sort=died">
+              <SearchLink
+                params={getSortParams(sortType, isReversed, 'died')}
+              >
                 <span className="icon">
-                  <i className="fas fa-sort" />
+                  <i className={classNames('fas', {
+                    'fa-sort': sortType !== 'died',
+                    'fa-sort-up': sortType === 'died' && !isReversed,
+                    'fa-sort-down': sortType === 'died' && isReversed,
+                  })}
+                  />
                 </span>
-              </a>
+              </SearchLink>
             </span>
           </th>
 
