@@ -1,27 +1,36 @@
-import { useContext, useState } from 'react';
-import { NavLink } from 'react-router-dom';
+import { useContext, useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import classNames from 'classnames';
 import { PeopleContext } from '../App';
 
 /* eslint-disable jsx-a11y/control-has-associated-label */
-export const PeopleTable = () => {
+export const PeopleTable = ({ filtering, slug }) => {
   const arrayOfPeople = useContext(PeopleContext);
   const [activePersonSlug, setActivePersonSlug] = useState('');
 
-  const getParentSlug = (parentName) => {
-    const findParent = arrayOfPeople
-      .find((person) => person.name === parentName);
-
-    if (findParent) {
-      setActivePersonSlug(findParent?.slug);
-    }
-  };
-
-  const handleActivePersonSlug = (slug) => {
-    setActivePersonSlug(slug);
-    getParentSlug(slug);
-    console.log(activePersonSlug)
-  };
+  const peopleWithParents = filtering.map((person) => ({
+    ...person,
+    mother: arrayOfPeople.find((p) => p.name === person.fatherName) ? (
+      <Link
+        to={`#/${arrayOfPeople.find((p) => p.name === person.motherName)?.slug}`}
+        onClick={() => setActivePersonSlug(arrayOfPeople.find((p) => p.name === person.motherName)?.slug)}
+      >
+        {person.motherName}
+      </Link>
+    ) : (
+      null
+    ),
+    father: arrayOfPeople.find((p) => p.name === person.fatherName) ? (
+      <Link
+        to={`#/${arrayOfPeople.find((p) => p.name === person.fatherName)?.slug}`}
+        onClick={() => setActivePersonSlug(arrayOfPeople.find((p) => p.name === person.fatherName)?.slug)}
+      >
+        {person.fatherName}
+      </Link>
+    ) : (
+      null
+    ),
+  }));
 
   return (
     <table
@@ -80,31 +89,33 @@ export const PeopleTable = () => {
       </thead>
 
       <tbody>
-        {arrayOfPeople.map((person) => (
-          <tr key={person.slug} data-cy="person">
+        {peopleWithParents.map((person) => (
+          <tr
+            key={person.slug}
+            data-cy="person"
+            className={classNames('tr', {
+              'has-background-warning': person.slug === activePersonSlug
+            })}
+          >
             <td>
-              <NavLink onClick={() => handleActivePersonSlug(person.slug)} to={`#/people/${person.slug}`} className={classNames({ 'has-text-danger': person.sex === 'f' })}>{person.name}</NavLink>
+              <Link
+                to={`#/${person.slug}`}
+                onClick={() => setActivePersonSlug(person.slug)}
+                className={classNames({
+                  'has-text-danger': person.sex === 'f'
+                })}
+              >
+                {person.name}
+              </Link>
             </td>
             <td>{person.sex}</td>
             <td>{person.born}</td>
             <td>{person.died}</td>
             <td>
-              {arrayOfPeople.find((p) => p.name === person.motherName) ? (
-                <NavLink onClick={() => handleActivePersonSlug(person.motherName)} to={`#/people/${activePersonSlug}`}>
-                  {person.motherName}
-                </NavLink>
-              ) : (
-                <p> {person.motherName}</p>
-              )}
+              <td>{person.mother || <p>{person.motherName}</p>}</td>
             </td>
             <td>
-              {arrayOfPeople.find((p) => p.name === person.fatherName) ? (
-                <NavLink onClick={() => handleActivePersonSlug(person.fatherName)} to={`#/people/${activePersonSlug}`}>
-                  {person.fatherName}
-                </NavLink>
-              ) : (
-                <p> {person.fatherName}</p>
-              )}
+              <td>{person.father || <p>{person.fatherName}</p>}</td>
             </td>
           </tr>
         ))}

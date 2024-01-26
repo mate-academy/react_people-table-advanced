@@ -1,4 +1,5 @@
-import { useContext } from 'react';
+import { useContext, useState, useEffect } from 'react';
+import { useParams, useSearchParams } from 'react-router-dom';
 import { PeopleFilters } from './PeopleFilters';
 import { Loader } from './Loader';
 import { PeopleTable } from './PeopleTable';
@@ -14,7 +15,33 @@ export const PeoplePage: React.FC<Props> = ({
   isError,
   isLoad,
 }) => {
+  const { slug } = useParams();
   const arrayOfPeople = useContext(PeopleContext);
+  const [filteringType, setFilteringType] = useState();
+  const [chosenCentury, setChosenCentury] = useState();
+  const [chosenSex, setChosenSex] = useState();
+  const [enteredText, setEnteredText] = useState('');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const getQuery = searchParams.get('query');
+  const getSexQuery = searchParams.get('sex');
+  let filtering;
+
+  switch (filteringType) {
+    case 'by_sex':
+      filtering = arrayOfPeople.filter((p) => p.sex === getSexQuery);
+      break;
+    case 'by_text':
+      filtering = arrayOfPeople
+        .filter((p) => p.name.toLowerCase().includes(getQuery));
+      break;
+    case 'by_century':
+      filtering = arrayOfPeople.filter((p) => Math
+        .floor(p.born / 100) === chosenCentury - 1);
+      break;
+
+    default:
+      filtering = arrayOfPeople;
+  }
 
   return (
     <>
@@ -23,7 +50,14 @@ export const PeoplePage: React.FC<Props> = ({
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
           <div className="column is-7-tablet is-narrow-desktop">
-            <PeopleFilters />
+            <PeopleFilters
+              setChosenCentury={setChosenCentury}
+              setChosenSex={setChosenSex}
+              setFilteringType={setFilteringType}
+              enteredText={enteredText}
+              setEnteredText={setEnteredText}
+              setSearchParams={setSearchParams}
+            />
           </div>
 
           <div className="column">
@@ -42,7 +76,7 @@ export const PeoplePage: React.FC<Props> = ({
               )}
               <p>There are no people matching the current search criteria</p>
 
-              <PeopleTable />
+              <PeopleTable filtering={filtering} slug={slug} />
             </div>
           </div>
         </div>

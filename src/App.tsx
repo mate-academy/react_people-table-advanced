@@ -44,10 +44,12 @@ export const App = () => {
                 path="/"
                 element={<h1 className="title">Home Page</h1>}
               />
-              <Route
-                path="/people"
-                element={<PeoplePage isLoad={isLoad} isError={isError} />}
-              />
+              <Route path="/people">
+                <Route
+                  path=":slug?"
+                  element={<PeoplePage isLoad={isLoad} isError={isError} />}
+                />
+              </Route>
               <Route
                 path="*"
                 element={
