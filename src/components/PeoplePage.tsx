@@ -1,31 +1,180 @@
 import { PeopleFilters } from './PeopleFilters';
 import { Loader } from './Loader';
 import { PeopleTable } from './PeopleTable';
+import { useEffect, useMemo, useState } from 'react';
+import { Person } from '../types';
+import { getPeople } from '../api';
+import { useSearchParams } from 'react-router-dom';
+import { getSearchWith } from '../utils/searchHelper';
+import { PersonSort } from '../types/PersonSort';
 
 export const PeoplePage = () => {
+  const [isLoader, setIsLoader] = useState(false);
+  const [people, setPeople] = useState<Person[]>([]);
+  const [isError, setIsError] = useState(false);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const sex = searchParams.get('sex') || '';
+  const century = searchParams.getAll('century') || [];
+  const query = searchParams.get('query') || '';
+  const sortFild = searchParams.get('sort') || '';
+  const order = searchParams.get('order') || '';
+
+  useEffect(() => {
+    setIsError(false);
+    setIsLoader(true);
+    getPeople()
+      .then(setPeople)
+      .catch((error) => {
+        setIsError(true);
+        throw error;
+      })
+      .finally(() => {
+        setIsLoader(false);
+      });
+  }, []);
+
+  const setSearchWith = (params: any) => {
+    console.log('params', params)
+
+    const search = getSearchWith(searchParams, params);
+    console.log('search', search)
+    
+    setSearchParams(search);
+  };
+
+  const peopleFilter = useMemo (() => {
+    let prependPeople = [...people];
+
+    if (sex) {
+      prependPeople = prependPeople.filter(person => person.sex === sex);
+    }
+
+    if (century.length) {
+      prependPeople = prependPeople.filter((person) => {
+        const centutyDeid = Math.round(person.died / 100);
+        const centuryBorn = Math.round(person.born / 100);
+
+       return century.includes(centuryBorn.toString())
+        || century.includes(centutyDeid.toString())});
+    }
+
+    if (query.trim()) {
+      const editedQuery = query.toLowerCase();
+      prependPeople = prependPeople.filter((person) => {
+
+       return person.name.toLowerCase().includes(editedQuery)
+        || person.fatherName?.toLowerCase().includes(editedQuery)
+        || person.motherName?.toLowerCase().includes(editedQuery)
+      });
+    }
+
+    prependPeople = prependPeople.sort((person1, person2) => {
+      switch(sortFild) {
+        case PersonSort.Name:
+        case PersonSort.Sex:
+          return person1[sortFild].localeCompare(person2[sortFild]);
+
+        case PersonSort.Born:
+        case PersonSort.Died:
+          return +person1[sortFild] - +person2[sortFild];
+        default:
+          return 0;
+      }
+    });
+
+    if (order) {
+      prependPeople.reverse();
+    }
+
+    return prependPeople;
+  }, [sex, query, century, sortFild, order]);
+
+  const newPeople = peopleFilter;
+
+  const handleFilter = (value: string) => {
+    setSearchWith({ sex: value || null});
+    peopleFilter;
+  };
+
+  const handleCentury = (num: string) => {
+    const newCentury = century.includes(num)
+      ? century.filter(item => item !== num)
+      : [...century, num];
+
+    setSearchWith({ century: +newCentury || null});
+    peopleFilter;
+  };
+
+  const hendleQuery = (value: string) => {
+    setSearchWith({ query: value || null});
+  };
+
+  const personSort = (value: string) => {
+    console.log('value', value)
+    setSearchWith({ sort: value || null});
+    checkOrder(value);
+  };
+
+  const checkOrder = (value: string) => {
+    if (order) {
+      setSearchWith({
+        sort: null,
+        order: null,
+      });
+    }
+
+    if (sortFild === value && !order) {
+      setSearchWith({
+        sort: value,
+        order: 'desc' || null
+      });
+    }
+  };
+
   return (
     <>
       <h1 className="title">People Page</h1>
 
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
-          <div className="column is-7-tablet is-narrow-desktop">
-            <PeopleFilters />
-          </div>
+          {!isLoader && (
+            <div className="column is-7-tablet is-narrow-desktop">
+              <PeopleFilters
+                  handleFilter={handleFilter}
+                  handleCentury={handleCentury}
+                  century={century}
+                  sex={sex}
+                  hendleQuery={hendleQuery}
+                  query={query}
+              />
+            </div>
+          )}
 
           <div className="column">
             <div className="box table-container">
-              <Loader />
+              {isLoader && (<Loader />)}
 
-              <p data-cy="peopleLoadingError">Something went wrong</p>
+              {isError && (
+                <p data-cy="peopleLoadingError">Something went wrong</p>
+              )}
 
-              <p data-cy="noPeopleMessage">
-                There are no people on the server
-              </p>
+              {people?.length === 0 && !isLoader && (
+                <p data-cy="noPeopleMessage">
+                  There are no people on the server
+                </p>
+              )}
 
-              <p>There are no people matching the current search criteria</p>
-
-              <PeopleTable />
+              {false && (
+                <p>There are no people matching the current search criteria</p>
+              )}
+              {!isLoader && (
+                <PeopleTable 
+                  people={newPeople}
+                  personSort={personSort}
+                  sortFild={sortFild}
+                  order={order}
+                />
+              )}
             </div>
           </div>
         </div>

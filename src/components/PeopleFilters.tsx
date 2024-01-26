@@ -1,12 +1,63 @@
-export const PeopleFilters = () => {
+import classNames from "classnames";
+import { Link, useLocation } from "react-router-dom";
+
+type Props = {
+  handleFilter: (value: string) => void,
+  handleCentury:(value: string) => void,
+  century: string[],
+  sex: string,
+  query: string
+  hendleQuery: (value: string) => void,
+}
+
+export const PeopleFilters:React.FC<Props> = ({
+  handleFilter,
+  handleCentury,
+  century,
+  sex,
+  query,
+  hendleQuery,
+}) => {
+  const { search } = useLocation();
+  const centuryArray = [16, 17, 18, 19, 20]
+
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        <a className="is-active" href="#/people">All</a>
-        <a className="" href="#/people?sex=m">Male</a>
-        <a className="" href="#/people?sex=f">Female</a>
+        <a
+          className={classNames({
+            'is-active': sex === ''
+           })}
+          href="#/people"
+          >
+            All
+          </a>
+        <a
+           href="#/people?sex=m"
+           className={classNames({
+            'is-active': sex === 'm'
+           })}
+           onClick={(e) => {
+            e.preventDefault();
+            handleFilter('m')
+           }}
+        >
+          Male
+        </a>
+        <a
+          href="#/people?sex=f"
+          className={classNames({
+            'is-active': sex === 'f'
+           })}
+          onClick={(e) => {
+            e.preventDefault();
+            handleFilter('f')
+           }}
+        >
+          Female
+        </a>
       </p>
 
       <div className="panel-block">
@@ -14,8 +65,10 @@ export const PeopleFilters = () => {
           <input
             data-cy="NameFilter"
             type="search"
+            value={query}
             className="input"
             placeholder="Search"
+            onChange={(e) => hendleQuery(e.target.value)}
           />
 
           <span className="icon is-left">
@@ -27,52 +80,31 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            <a
-              data-cy="century"
-              className="button mr-1"
-              href="#/people?centuries=16"
-            >
-              16
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=17"
-            >
-              17
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=18"
-            >
-              18
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=19"
-            >
-              19
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1"
-              href="#/people?centuries=20"
-            >
-              20
-            </a>
+            {centuryArray.map(num => (
+              <a
+                key={num}
+                data-cy="century"
+                className={classNames('button mr-1',{
+                  'is-info': century.includes(num.toString())
+                })}
+                href={`#/people?centuries=${num}`}
+                onClick={(e) => {
+                  e.preventDefault()
+                  handleCentury(num.toString())
+                }}
+              >
+                {num}
+              </a>
+            ))}
           </div>
 
           <div className="level-right ml-4">
             <a
               data-cy="centuryALL"
-              className="button is-success is-outlined"
-              href="#/people"
+              className={classNames('button is-success',{
+                'is-outlined': century.length
+              })}
+              href={`#/people/${search}`}
             >
               All
             </a>
@@ -81,12 +113,13 @@ export const PeopleFilters = () => {
       </div>
 
       <div className="panel-block">
-        <a
+        <Link
           className="button is-link is-outlined is-fullwidth"
-          href="#/people"
+          to="#/people"
+          onClick={() => hendleQuery('')}
         >
           Reset all filters
-        </a>
+        </Link>
       </div>
     </nav>
   );
