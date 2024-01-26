@@ -91,7 +91,6 @@ export const PeoplePage = () => {
 
   const handleFilter = (value: string) => {
     setSearchWith({ sex: value || null });
-    // peopleFilter;
   };
 
   const handleCentury = (num: string) => {
@@ -100,7 +99,6 @@ export const PeoplePage = () => {
       : [...century, num];
 
     setSearchWith({ century: newCentury || null });
-    // peopleFilter;
   };
 
   const hendleQuery = (value: string) => {
