@@ -8,7 +8,7 @@ type Props = Omit<LinkProps, 'to'> & {
 export const SearchLink: React.FC<Props> = ({
   children,
   params,
-  ...props 
+  ...props
 }) => {
   const [searchParams] = useSearchParams();
 

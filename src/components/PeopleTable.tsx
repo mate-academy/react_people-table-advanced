@@ -1,8 +1,8 @@
-import React from "react";
-import { Person } from "../types";
-import { Link, useLocation, useParams } from "react-router-dom";
-import classNames from "classnames";
-import { PersonSort } from "../types/PersonSort";
+import React from 'react';
+import { Link, useLocation, useParams } from 'react-router-dom';
+import classNames from 'classnames';
+import { Person } from '../types';
+import { PersonSort } from '../types/PersonSort';
 
 /* eslint-disable jsx-a11y/control-has-associated-label */
 type Props = {
@@ -18,20 +18,19 @@ export const PeopleTable: React.FC<Props> = ({
   sortFild,
   order,
 }) => {
-
   const { search } = useLocation();
 
   const findFather = (name: string | null) => {
     const father = people.find(person => person.name === name);
-    
+
     return father;
-  }
+  };
 
   const findMother = (name: string | null) => {
     const mother = people.find(person => person.name === name);
-    
+
     return mother;
-  }
+  };
 
   const { slug } = useParams();
 
@@ -56,8 +55,8 @@ export const PeopleTable: React.FC<Props> = ({
               >
                 <span className="icon">
                   <i
-                    className={classNames('fas ',{
-                      'fa-sort' : sortFild !== PersonSort.Name,
+                    className={classNames('fas ', {
+                      'fa-sort': sortFild !== PersonSort.Name,
                       'fa-sort-up': sortFild === PersonSort.Name && !order,
                       'fa-sort-down': sortFild === PersonSort.Name && order,
                     })}
@@ -73,14 +72,14 @@ export const PeopleTable: React.FC<Props> = ({
               <a
                 onClick={(e) => {
                   e.preventDefault();
-                  personSort(PersonSort.Sex)
+                  personSort(PersonSort.Sex);
                 }}
                 href="#/people?sort=sex"
               >
                 <span className="icon">
                   <i
-                    className={classNames('fas ',{
-                      'fa-sort' : sortFild !== PersonSort.Sex,
+                    className={classNames('fas ', {
+                      'fa-sort': sortFild !== PersonSort.Sex,
                       'fa-sort-up': sortFild === PersonSort.Sex && !order,
                       'fa-sort-down': sortFild === PersonSort.Sex && order,
                     })}
@@ -97,13 +96,13 @@ export const PeopleTable: React.FC<Props> = ({
                 href="#/people?sort=born&amp;order=desc"
                 onClick={(e) => {
                   e.preventDefault();
-                  personSort(PersonSort.Born)
+                  personSort(PersonSort.Born);
                 }}
               >
                 <span className="icon">
                   <i
-                    className={classNames('fas ',{
-                      'fa-sort' : sortFild !== PersonSort.Born,
+                    className={classNames('fas ', {
+                      'fa-sort': sortFild !== PersonSort.Born,
                       'fa-sort-up': sortFild === PersonSort.Born && !order,
                       'fa-sort-down': sortFild === PersonSort.Born && order,
                     })}
@@ -120,13 +119,13 @@ export const PeopleTable: React.FC<Props> = ({
                 href="#/people?sort=died"
                 onClick={(e) => {
                   e.preventDefault();
-                  personSort(PersonSort.Died)
+                  personSort(PersonSort.Died);
                 }}
               >
                 <span className="icon">
                   <i
-                    className={classNames('fas',{
-                      'fa-sort' : sortFild !== PersonSort.Died,
+                    className={classNames('fas', {
+                      'fa-sort': sortFild !== PersonSort.Died,
                       'fa-sort-up': sortFild === PersonSort.Died && !order,
                       'fa-sort-down': sortFild === PersonSort.Died && order,
                     })}
@@ -152,7 +151,7 @@ export const PeopleTable: React.FC<Props> = ({
           >
             <td>
               <Link
-                to={{pathname: `/people/${person.slug}` , search}}
+                to={{ pathname: `/people/${person.slug}`, search }}
                 className={classNames({
                   'has-text-danger': person.sex === 'f',
                 })}
@@ -170,31 +169,37 @@ export const PeopleTable: React.FC<Props> = ({
               {person.died}
             </td>
             <td>
-            {findMother(person.motherName)
-                ? (<Link
+              {findMother(person.motherName)
+                ? (
+                  <Link
                     to={
-                      { pathname: `/people/${findFather(person.motherName)?.slug}`,
-                      search }
+                      {
+                        pathname: `/people/${findFather(person.motherName)?.slug}`,
+                        search,
+                      }
                     }
                     className="has-text-danger"
                   >
                     {person.motherName || '-'}
-                  </Link>)
-                : person.motherName || '-'
-              }
+                  </Link>
+                )
+                : person.motherName || '-'}
             </td>
             <td>
               {findFather(person.fatherName)
-                ? (<Link
-                      to={
-                        { pathname: `/people/${findFather(person.fatherName)?.slug}`,
-                        search }
+                ? (
+                  <Link
+                    to={
+                      {
+                        pathname: `/people/${findFather(person.fatherName)?.slug}`,
+                        search,
                       }
-                    >
+                    }
+                  >
                     {person.fatherName || '-'}
-                  </Link>)
-                : person.fatherName || '-'
-              }
+                  </Link>
+                )
+                : person.fatherName || '-'}
             </td>
           </tr>
         ))}

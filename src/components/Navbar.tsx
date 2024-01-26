@@ -1,5 +1,5 @@
-import classNames from "classnames";
-import { NavLink } from "react-router-dom";
+import classNames from 'classnames';
+import { NavLink } from 'react-router-dom';
 
 export const Navbar = () => {
   const getLinkClas = ({

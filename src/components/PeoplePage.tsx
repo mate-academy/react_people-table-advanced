@@ -1,11 +1,11 @@
+import { useEffect, useMemo, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { PeopleFilters } from './PeopleFilters';
 import { Loader } from './Loader';
 import { PeopleTable } from './PeopleTable';
-import { useEffect, useMemo, useState } from 'react';
 import { Person } from '../types';
 import { getPeople } from '../api';
-import { useSearchParams } from 'react-router-dom';
-import { getSearchWith } from '../utils/searchHelper';
+import { SearchParams, getSearchWith } from '../utils/searchHelper';
 import { PersonSort } from '../types/PersonSort';
 
 export const PeoplePage = () => {
@@ -33,16 +33,13 @@ export const PeoplePage = () => {
       });
   }, []);
 
-  const setSearchWith = (params: any) => {
-    console.log('params', params)
-
+  const setSearchWith = (params: SearchParams) => {
     const search = getSearchWith(searchParams, params);
-    console.log('search', search)
-    
+
     setSearchParams(search);
   };
 
-  const peopleFilter = useMemo (() => {
+  const peopleFilter = useMemo(() => {
     let prependPeople = [...people];
 
     if (sex) {
@@ -54,22 +51,23 @@ export const PeoplePage = () => {
         const centutyDeid = Math.round(person.died / 100);
         const centuryBorn = Math.round(person.born / 100);
 
-       return century.includes(centuryBorn.toString())
-        || century.includes(centutyDeid.toString())});
+        return century.includes(centuryBorn.toString())
+        || century.includes(centutyDeid.toString());
+      });
     }
 
     if (query.trim()) {
       const editedQuery = query.toLowerCase();
-      prependPeople = prependPeople.filter((person) => {
 
-       return person.name.toLowerCase().includes(editedQuery)
+      prependPeople = prependPeople.filter((person) => {
+        return person.name.toLowerCase().includes(editedQuery)
         || person.fatherName?.toLowerCase().includes(editedQuery)
-        || person.motherName?.toLowerCase().includes(editedQuery)
+        || person.motherName?.toLowerCase().includes(editedQuery);
       });
     }
 
     prependPeople = prependPeople.sort((person1, person2) => {
-      switch(sortFild) {
+      switch (sortFild) {
         case PersonSort.Name:
         case PersonSort.Sex:
           return person1[sortFild].localeCompare(person2[sortFild]);
@@ -87,13 +85,13 @@ export const PeoplePage = () => {
     }
 
     return prependPeople;
-  }, [sex, query, century, sortFild, order]);
+  }, [sex, query, sortFild, order, people, century]);
 
   const newPeople = peopleFilter;
 
   const handleFilter = (value: string) => {
-    setSearchWith({ sex: value || null});
-    peopleFilter;
+    setSearchWith({ sex: value || null });
+    // peopleFilter;
   };
 
   const handleCentury = (num: string) => {
@@ -101,18 +99,12 @@ export const PeoplePage = () => {
       ? century.filter(item => item !== num)
       : [...century, num];
 
-    setSearchWith({ century: +newCentury || null});
-    peopleFilter;
+    setSearchWith({ century: newCentury || null });
+    // peopleFilter;
   };
 
   const hendleQuery = (value: string) => {
-    setSearchWith({ query: value || null});
-  };
-
-  const personSort = (value: string) => {
-    console.log('value', value)
-    setSearchWith({ sort: value || null});
-    checkOrder(value);
+    setSearchWith({ query: value || null });
   };
 
   const checkOrder = (value: string) => {
@@ -126,9 +118,14 @@ export const PeoplePage = () => {
     if (sortFild === value && !order) {
       setSearchWith({
         sort: value,
-        order: 'desc' || null
+        order: 'desc' || null,
       });
     }
+  };
+
+  const personSort = (value: string) => {
+    setSearchWith({ sort: value || null });
+    checkOrder(value);
   };
 
   return (
@@ -139,14 +136,17 @@ export const PeoplePage = () => {
         <div className="columns is-desktop is-flex-direction-row-reverse">
           {!isLoader && (
             <div className="column is-7-tablet is-narrow-desktop">
-              <PeopleFilters
-                  handleFilter={handleFilter}
-                  handleCentury={handleCentury}
-                  century={century}
-                  sex={sex}
-                  hendleQuery={hendleQuery}
-                  query={query}
-              />
+              {!!people.length
+                && (
+                  <PeopleFilters
+                    handleFilter={handleFilter}
+                    handleCentury={handleCentury}
+                    century={century}
+                    sex={sex}
+                    hendleQuery={hendleQuery}
+                    query={query}
+                  />
+                )}
             </div>
           )}
 
@@ -158,17 +158,17 @@ export const PeoplePage = () => {
                 <p data-cy="peopleLoadingError">Something went wrong</p>
               )}
 
-              {people?.length === 0 && !isLoader && (
+              {people?.length === 0 && !isError && !isLoader && (
                 <p data-cy="noPeopleMessage">
                   There are no people on the server
                 </p>
               )}
 
-              {false && (
+              {newPeople.length === 0 && !isLoader && (
                 <p>There are no people matching the current search criteria</p>
               )}
-              {!isLoader && (
-                <PeopleTable 
+              {!isLoader && !!newPeople.length && (
+                <PeopleTable
                   people={newPeople}
                   personSort={personSort}
                   sortFild={sortFild}
