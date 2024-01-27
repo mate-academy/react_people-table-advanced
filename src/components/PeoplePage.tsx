@@ -14,7 +14,8 @@ export const PeoplePage = () => {
   const [isError, setIsError] = useState(false);
   const [searchParams, setSearchParams] = useSearchParams();
   const sex = searchParams.get('sex') || '';
-  const century = searchParams.getAll('century') || [];
+  const century = useMemo(() => searchParams.getAll('century')
+    || [], [searchParams]);
   const query = searchParams.get('query') || '';
   const sortFild = searchParams.get('sort') || '';
   const order = searchParams.get('order') || '';
@@ -24,9 +25,8 @@ export const PeoplePage = () => {
     setIsLoader(true);
     getPeople()
       .then(setPeople)
-      .catch((error) => {
+      .catch(() => {
         setIsError(true);
-        throw error;
       })
       .finally(() => {
         setIsLoader(false);
@@ -39,7 +39,7 @@ export const PeoplePage = () => {
     setSearchParams(search);
   };
 
-  const peopleFilter = useMemo(() => {
+  const filteredPeople = useMemo(() => {
     let prependPeople = [...people];
 
     if (sex) {
@@ -86,8 +86,6 @@ export const PeoplePage = () => {
 
     return prependPeople;
   }, [sex, query, sortFild, order, people, century]);
-
-  const newPeople = peopleFilter;
 
   const handleFilter = (value: string) => {
     setSearchWith({ sex: value || null });
@@ -162,12 +160,12 @@ export const PeoplePage = () => {
                 </p>
               )}
 
-              {newPeople.length === 0 && !isLoader && (
+              {filteredPeople.length === 0 && !isLoader && (
                 <p>There are no people matching the current search criteria</p>
               )}
-              {!isLoader && !!newPeople.length && (
+              {!isLoader && !!filteredPeople.length && (
                 <PeopleTable
-                  people={newPeople}
+                  people={filteredPeople}
                   personSort={personSort}
                   sortFild={sortFild}
                   order={order}

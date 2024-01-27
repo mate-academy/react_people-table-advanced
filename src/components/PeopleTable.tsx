@@ -3,6 +3,7 @@ import { Link, useLocation, useParams } from 'react-router-dom';
 import classNames from 'classnames';
 import { Person } from '../types';
 import { PersonSort } from '../types/PersonSort';
+import { SearchLink } from './SearchLink';
 
 /* eslint-disable jsx-a11y/control-has-associated-label */
 type Props = {
@@ -19,7 +20,6 @@ export const PeopleTable: React.FC<Props> = ({
   order,
 }) => {
   const { search } = useLocation();
-
   const findFather = (name: string | null) => {
     const father = people.find(person => person.name === name);
 
@@ -33,7 +33,6 @@ export const PeopleTable: React.FC<Props> = ({
   };
 
   const { slug } = useParams();
-
   const sortWithName = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
     e.preventDefault();
     personSort(PersonSort.Name);
@@ -49,8 +48,8 @@ export const PeopleTable: React.FC<Props> = ({
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Name
-              <a
-                href="?sort=name"
+              <SearchLink
+                params={{ sort: PersonSort.Name }}
                 onClick={sortWithName}
               >
                 <span className="icon">
@@ -62,19 +61,19 @@ export const PeopleTable: React.FC<Props> = ({
                     })}
                   />
                 </span>
-              </a>
+              </SearchLink>
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Sex
-              <a
+              <SearchLink
                 onClick={(e) => {
                   e.preventDefault();
                   personSort(PersonSort.Sex);
                 }}
-                href="#/people?sort=sex"
+                params={{ sort: PersonSort.Sex }}
               >
                 <span className="icon">
                   <i
@@ -85,15 +84,15 @@ export const PeopleTable: React.FC<Props> = ({
                     })}
                   />
                 </span>
-              </a>
+              </SearchLink>
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Born
-              <a
-                href="#/people?sort=born&amp;order=desc"
+              <SearchLink
+                params={{ sort: PersonSort.Born }}
                 onClick={(e) => {
                   e.preventDefault();
                   personSort(PersonSort.Born);
@@ -108,15 +107,15 @@ export const PeopleTable: React.FC<Props> = ({
                     })}
                   />
                 </span>
-              </a>
+              </SearchLink>
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Died
-              <a
-                href="#/people?sort=died"
+              <SearchLink
+                params={{ sort: PersonSort.Died }}
                 onClick={(e) => {
                   e.preventDefault();
                   personSort(PersonSort.Died);
@@ -131,7 +130,7 @@ export const PeopleTable: React.FC<Props> = ({
                     })}
                   />
                 </span>
-              </a>
+              </SearchLink>
             </span>
           </th>
 
