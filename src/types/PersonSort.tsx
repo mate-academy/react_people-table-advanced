@@ -3,5 +3,4 @@ export enum PersonSort {
   Sex = 'sex',
   Born = 'born',
   Died = 'died',
-
-}
+};

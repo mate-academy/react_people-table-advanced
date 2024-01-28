@@ -48,11 +48,9 @@ export const PeoplePage = () => {
 
     if (century.length) {
       prependPeople = prependPeople.filter((person) => {
-        const centutyDeid = Math.round(person.died / 100);
-        const centuryBorn = Math.round(person.born / 100);
+        const centuryBorn = Math.ceil(person.born / 100);
 
         return century.includes(centuryBorn.toString())
-        || century.includes(centutyDeid.toString());
       });
     }
 
