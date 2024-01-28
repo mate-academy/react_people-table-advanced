@@ -1,12 +1,64 @@
-export const PeopleFilters = () => {
+import classNames from 'classnames';
+import { SearchLink } from './SearchLink';
+import { SortBy } from '../types/SortBy';
+
+type Props = {
+  handleFilter: (value: string) => void,
+  handleCentury:(value: string) => void,
+  century: string[],
+  sex: string,
+  query: string
+  hendleQuery: (value: string) => void,
+};
+
+export const PeopleFilters:React.FC<Props> = ({
+  handleFilter,
+  handleCentury,
+  century,
+  sex,
+  query,
+  hendleQuery,
+}) => {
+  const centuryArray = ['16', '17', '18', '19', '20'];
+
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        <a className="is-active" href="#/people">All</a>
-        <a className="" href="#/people?sex=m">Male</a>
-        <a className="" href="#/people?sex=f">Female</a>
+        <SearchLink
+          className={classNames({
+            'is-active': sex === '',
+          })}
+          params={{ sex: null }}
+        >
+          All
+        </SearchLink>
+        <SearchLink
+          params={{ sex: SortBy.Male }}
+          // "#/people?sex=m"
+          className={classNames({
+            'is-active': sex === 'm',
+          })}
+          onClick={(e) => {
+            e.preventDefault();
+            handleFilter('m');
+          }}
+        >
+          Male
+        </SearchLink>
+        <SearchLink
+          params={{ sex: SortBy.Female }}
+          className={classNames({
+            'is-active': sex === 'f',
+          })}
+          onClick={(e) => {
+            e.preventDefault();
+            handleFilter('f');
+          }}
+        >
+          Female
+        </SearchLink>
       </p>
 
       <div className="panel-block">
@@ -14,8 +66,10 @@ export const PeopleFilters = () => {
           <input
             data-cy="NameFilter"
             type="search"
+            value={query}
             className="input"
             placeholder="Search"
+            onChange={(e) => hendleQuery(e.target.value)}
           />
 
           <span className="icon is-left">
@@ -27,66 +81,49 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            <a
-              data-cy="century"
-              className="button mr-1"
-              href="#/people?centuries=16"
-            >
-              16
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=17"
-            >
-              17
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=18"
-            >
-              18
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=19"
-            >
-              19
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1"
-              href="#/people?centuries=20"
-            >
-              20
-            </a>
+            {centuryArray.map(num => (
+              <SearchLink
+                key={num}
+                data-cy="century"
+                className={classNames('button mr-1', {
+                  'is-info': century.includes(num.toString()),
+                })}
+                params={{ century: num }}
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleCentury(num.toString());
+                }}
+              >
+                {num}
+              </SearchLink>
+            ))}
           </div>
 
           <div className="level-right ml-4">
-            <a
+            <SearchLink
               data-cy="centuryALL"
-              className="button is-success is-outlined"
-              href="#/people"
+              className={classNames('button is-success', {
+                'is-outlined': century.length,
+              })}
+              params={{ century: null }}
             >
               All
-            </a>
+            </SearchLink>
           </div>
         </div>
       </div>
 
       <div className="panel-block">
-        <a
+        <SearchLink
           className="button is-link is-outlined is-fullwidth"
-          href="#/people"
+          params={{
+            century: null,
+            query: null,
+            sex: null,
+          }}
         >
           Reset all filters
-        </a>
+        </SearchLink>
       </div>
     </nav>
   );
