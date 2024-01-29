@@ -1,3 +1,18 @@
 iframe {
   display: none;
 }
+
+.button-as-link {
+  background: none;
+  border: none;
+  color: blue;
+  text-decoration: underline;
+  padding: 0;
+  font: inherit;
+  cursor: pointer;
+}
+
+.button-as-link:hover,
+.button-as-link:focus {
+  text-decoration: none;
+}
