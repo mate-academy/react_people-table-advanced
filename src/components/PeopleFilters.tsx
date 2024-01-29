@@ -75,14 +75,6 @@ export const PeopleFilters = () => {
                 </SearchLink>
               ))
             }
-
-            <a
-              data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=17"
-            >
-              17
-            </a>
           </div>
           <div className="level-right ml-4">
             <SearchLink
