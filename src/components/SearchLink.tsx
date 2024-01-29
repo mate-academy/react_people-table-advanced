@@ -2,7 +2,7 @@ import { Link, LinkProps, useSearchParams } from 'react-router-dom';
 import { getSearchWith, SearchParams } from '../utils/searchHelper';
 
 /**
- * To replace the the standard `Link` we take all it props except for `to`
+ * To replace the  standard `Link` we take all it props except for `to`
  * along with the custom `params` prop that we use for updating the search
  */
 type Props = Omit<LinkProps, 'to'> & {
