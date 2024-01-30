@@ -1,4 +1,4 @@
-import { useContext, useState, useEffect } from 'react';
+import { useContext, useState } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
 import { PeopleFilters } from './PeopleFilters';
 import { Loader } from './Loader';
@@ -22,17 +22,19 @@ export const PeoplePage: React.FC<Props> = ({
   const [chosenSex, setChosenSex] = useState();
   const [enteredText, setEnteredText] = useState('');
   const [searchParams, setSearchParams] = useSearchParams();
-  const getQuery = searchParams.get('query');
-  const getSexQuery = searchParams.get('sex');
+
+  const query = searchParams.get('query') || '';
+  const sex = searchParams.get('sex') || '';
+  const centuries = searchParams.getAll('centuries') || [];
   let filtering;
 
   switch (filteringType) {
     case 'by_sex':
-      filtering = arrayOfPeople.filter((p) => p.sex === getSexQuery);
+      filtering = arrayOfPeople.filter((p) => p.sex === sex);
       break;
     case 'by_text':
       filtering = arrayOfPeople
-        .filter((p) => p.name.toLowerCase().includes(getQuery));
+        .filter((p) => p.name.toLowerCase().includes(query));
       break;
     case 'by_century':
       filtering = arrayOfPeople.filter((p) => Math
@@ -56,7 +58,9 @@ export const PeoplePage: React.FC<Props> = ({
               setFilteringType={setFilteringType}
               enteredText={enteredText}
               setEnteredText={setEnteredText}
+              searchParams={searchParams}
               setSearchParams={setSearchParams}
+              centuries={centuries}
             />
           </div>
 
@@ -76,7 +80,12 @@ export const PeoplePage: React.FC<Props> = ({
               )}
               <p>There are no people matching the current search criteria</p>
 
-              <PeopleTable filtering={filtering} slug={slug} />
+              <PeopleTable
+                searchParams={searchParams}
+                setSearchParams={setSearchParams}
+                filtering={filtering}
+                slug={slug}
+              />
             </div>
           </div>
         </div>

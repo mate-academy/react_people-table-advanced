@@ -1,7 +1,5 @@
-import { useContext, useEffect } from "react";
-import { useSearchParams, NavLink, Link, useLocation } from "react-router-dom";
-import classNames from "classnames";
-import { PeopleContext } from "../App";
+import { Link } from "react-router-dom";
+import { customSearchHelper } from "../utils/customSearchHelper";
 
 export const PeopleFilters = ({
   setChosenCentury,
@@ -9,61 +7,69 @@ export const PeopleFilters = ({
   setFilteringType,
   enteredText,
   setEnteredText,
+  searchParams,
   setSearchParams,
+  centuries,
 }) => {
-  const searchParamsHelper = (params) => {
-    const params = new URLSearchParams();
-    params.set(query, value)
-  };
-
   const handleInput = (e) => {
     setEnteredText(e.target.value);
     setFilteringType('by_text');
-    const params = new URLSearchParams();
+    const params = new URLSearchParams(searchParams);
 
     params.set('query', e.target.value);
+
+    if (!e.target.value) {
+      params.delete('query');
+    }
+
     setSearchParams(params);
-    console.log(searchParams)
   };
 
   const handleSex = (sexType) => {
     setChosenSex(sexType);
     setFilteringType('by_sex');
-    const params = new URLSearchParams();
-
-    params.set('sex', sexType);
-    setSearchParams(params);
   };
 
-  const arrayOfPeople = useContext(PeopleContext);
-  const location = useLocation();
+  const toggleCenturies = (century) => {
+    setChosenCentury(century);
+    setFilteringType('by_century');
+  };
+
+
+  const clearCenturies = () => {
+    setFilteringType('');
+    const params = new URLSearchParams(searchParams);
+
+    params.delete('centuries');
+    setSearchParams(params);
+  };
 
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        <a
+        <Link
           onClick={() => {
             setFilteringType('');
           }}
-          href="#/people"
+          to="/people"
 
         >
           All
-        </a>
-        <a
+        </Link>
+        <Link
           onClick={() => handleSex('m')}
-          href="#/people?sex=m"
+          to={customSearchHelper(searchParams, { sex: 'm' })}
         >
           Male
-        </a>
-        <a
+        </Link>
+        <Link
           onClick={() => handleSex('f')}
-          href="#/people?sex=f"
+          to={customSearchHelper(searchParams, { sex: 'f' })}
         >
           Female
-        </a>
+        </Link>
       </p>
 
       <div className="panel-block">
@@ -86,72 +92,23 @@ export const PeopleFilters = ({
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            <a
-              onClick={() => {
-                setChosenCentury(16);
-                setFilteringType('by_century');
-              }}
-              data-cy="century"
-              className="button mr-1"
-              href="#/people?centuries=16"
-            >
-              16
-            </a>
+            {[16, 17, 18, 19, 20].map((century) => (
+              <Link
+                data-cy="century"
+                className="button mr-1"
+                onClick={() => toggleCenturies(century)}
+                to={customSearchHelper(searchParams,
+                  { centuries: [...centuries, century] })}
+              >
+                {century}
+              </Link>
+            ))}
 
-            <a
-              onClick={() => {
-                setChosenCentury(17);
-                setFilteringType('by_century');
-              }}
-              data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=17"
-            >
-              17
-            </a>
-
-            <a
-              onClick={() => {
-                setChosenCentury(18);
-                setFilteringType('by_century');
-              }}
-              data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=18"
-            >
-              18
-            </a>
-
-            <a
-              onClick={() => {
-                setChosenCentury(19);
-                setFilteringType('by_century');
-              }}
-              data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=19"
-            >
-              19
-            </a>
-
-            <a
-              onClick={() => {
-                setChosenCentury(20);
-                setFilteringType('by_century');
-              }}
-              data-cy="century"
-              className="button mr-1"
-              href="#/people?centuries=20"
-            >
-              20
-            </a>
           </div>
 
           <div className="level-right ml-4">
             <a
-              onClick={() => {
-                setFilteringType('');
-              }}
+              onClick={clearCenturies}
               data-cy="centuryALL"
               className="button is-success is-outlined"
               href="#/people"
