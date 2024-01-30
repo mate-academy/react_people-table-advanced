@@ -1,4 +1,6 @@
-import { Navigate, Route, Routes, useSearchParams } from 'react-router-dom';
+import {
+  Navigate, Route, Routes, useSearchParams,
+} from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { PeoplePage } from './components/PeoplePage';
 import { Navbar } from './components/Navbar';
