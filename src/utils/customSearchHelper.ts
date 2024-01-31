@@ -10,20 +10,24 @@
 // };
 
 // this is extended helper function with some bugs
+
 export const getSearch = (params, search?) => {
   const newParams = new URLSearchParams(search);
 
-  Object.entries(params).forEach(([key, value]) => {
+  for (const [key, value] of Object.entries(params)) {
     if (value === null) {
       newParams.delete(key);
     } else if (Array.isArray(value)) {
-      const existingValues = newParams.getAll(key);
       newParams.delete(key);
-      newParams.append(key, ...existingValues, ...value.map(String));
+      value.forEach((item) => newParams.append(key, item.toString()))
     } else {
       newParams.set(key, value.toString());
     }
-  });
+  }
+
+  // Object.entries(params).forEach(([key, value]) => {
+
+  // });
 
   return newParams.toString();
 };

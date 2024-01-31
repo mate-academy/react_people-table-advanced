@@ -18,15 +18,15 @@ export const PeoplePage: React.FC<Props> = ({
   const { slug } = useParams();
   const arrayOfPeople = useContext(PeopleContext);
   const [filteringType, setFilteringType] = useState();
-  const [chosenCentury, setChosenCentury] = useState();
-  const [chosenSex, setChosenSex] = useState();
-  const [enteredText, setEnteredText] = useState('');
+  // const [chosenCentury, setChosenCentury] = useState();
+  // const [chosenSex, setChosenSex] = useState();
+  // const [enteredText, setEnteredText] = useState('');
   const [searchParams, setSearchParams] = useSearchParams();
 
   const query = searchParams.get('query') || '';
   const sex = searchParams.get('sex') || '';
   const centuries = searchParams.getAll('centuries') || [];
-  console.log(centuries)
+
   let filtering;
 
   switch (filteringType) {
@@ -39,7 +39,7 @@ export const PeoplePage: React.FC<Props> = ({
       break;
     case 'by_century':
       filtering = arrayOfPeople.filter((p) => Math
-        .floor(p.born / 100) === chosenCentury - 1);
+        .floor(p.born / 100) === centuries - 1);
       break;
 
     default:
@@ -54,13 +54,11 @@ export const PeoplePage: React.FC<Props> = ({
         <div className="columns is-desktop is-flex-direction-row-reverse">
           <div className="column is-7-tablet is-narrow-desktop">
             <PeopleFilters
-              setChosenCentury={setChosenCentury}
-              setChosenSex={setChosenSex}
               setFilteringType={setFilteringType}
-              enteredText={enteredText}
-              setEnteredText={setEnteredText}
               searchParams={searchParams}
               setSearchParams={setSearchParams}
+              query={query}
+              sex={sex}
               centuries={centuries}
             />
           </div>

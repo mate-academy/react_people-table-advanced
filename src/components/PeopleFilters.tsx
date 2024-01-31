@@ -1,55 +1,50 @@
 import { Link } from 'react-router-dom';
-// import { customSearchHelper } from '../utils/customSearchHelper';
+import throttle from 'lodash/throttle';
 import { getSearch } from '../utils/customSearchHelper';
+import { useMemo } from 'react';
 
 export const PeopleFilters = ({
-  setChosenCentury,
-  setChosenSex,
   setFilteringType,
-  enteredText,
-  setEnteredText,
   searchParams,
   setSearchParams,
+  query,
+  sex,
   centuries,
 }) => {
   // function that transfer params into the helper function and set searchParams
+  const memorizedGetSearch = useMemo(() => getSearch, []);
+
   const setSearchWith = (params) => {
-    const search = getSearch(params, searchParams);
+    const search = memorizedGetSearch(params, searchParams);
 
     setSearchParams(search);
   };
 
-  const handleInput = (e) => {
-    setEnteredText(e.target.value);
+  const throttledHandleInput = throttle((e) => {
     setFilteringType('by_text');
-    const params = new URLSearchParams(searchParams);
-
-    params.set('query', e.target.value);
+    setSearchWith({ query: e.target.value });
 
     if (!e.target.value) {
-      params.delete('query');
+      setSearchWith({ query: null });
     }
 
-    setSearchParams(params);
-  };
+    console.log(query);
+  }, 500); // Adjust the throttle duration as needed
 
-  const handleSex = (sexType) => {
-    setChosenSex(sexType);
+  const throttledHandleSex = throttle((sexType) => {
     setFilteringType('by_sex');
-  };
+    setSearchWith({ sex: sexType });
+  }, 500);
 
-  const toggleCenturies = (century) => {
+  const throttledToggleCenturies = throttle((century) => {
     setFilteringType('by_century');
-    setChosenCentury(century);
-  };
+  }, 500);
 
-  const clearCenturies = () => {
-    setFilteringType('');
+  const throttledClearCenturies = throttle(() => {
     const params = new URLSearchParams(searchParams);
-
     params.delete('centuries');
     setSearchParams(params);
-  };
+  }, 500);
 
   return (
     <nav className="panel">
@@ -58,7 +53,6 @@ export const PeopleFilters = ({
       <p className="panel-tabs" data-cy="SexFilter">
         <Link
           onClick={() => {
-            setFilteringType('');
           }}
           to="/people"
 
@@ -66,14 +60,14 @@ export const PeopleFilters = ({
           All
         </Link>
         <Link
-          onClick={() => handleSex('m')}
-          to={setSearchWith({ sex: 'm' })}
+          onClick={() => throttledHandleSex('m')}
+          to={{ search: getSearch({ sex: 'm' }) }}
         >
           Male
         </Link>
         <Link
-          onClick={() => handleSex('f')}
-          to={setSearchWith({ sex: 'f' })}
+          onClick={() => throttledHandleSex('f')}
+          to={{ search: getSearch({ sex: 'f' }) }}
         >
           Female
         </Link>
@@ -82,8 +76,8 @@ export const PeopleFilters = ({
       <div className="panel-block">
         <p className="control has-icons-left">
           <input
-            onChange={handleInput}
-            value={enteredText}
+            onChange={throttledHandleInput}
+            value={query}
             data-cy="NameFilter"
             type="search"
             className="input"
@@ -103,7 +97,7 @@ export const PeopleFilters = ({
               <Link
                 data-cy="century"
                 className="button mr-1"
-                onClick={() => toggleCenturies(century)}
+                onClick={() => throttledToggleCenturies(century)}
                 to={setSearchWith({ centuries: century })}
               >
                 {century}
@@ -114,7 +108,7 @@ export const PeopleFilters = ({
 
           <div className="level-right ml-4">
             <a
-              onClick={clearCenturies}
+              onClick={throttledClearCenturies}
               data-cy="centuryALL"
               className="button is-success is-outlined"
               href="#/people"
@@ -127,9 +121,6 @@ export const PeopleFilters = ({
 
       <div className="panel-block">
         <a
-          onClick={() => {
-            setFilteringType('');
-          }}
           className="button is-link is-outlined is-fullwidth"
           href="#/people"
         >
