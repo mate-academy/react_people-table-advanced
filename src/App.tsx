@@ -15,7 +15,7 @@ export const App = () => {
   const [people, setPeople] = useState<Person[]>([]);
   const [isError, setIsError] = useState(false);
   const [searchParams] = useSearchParams();
-  const sex = searchParams.get('sex' || '');
+  const sex = searchParams.get('sex') || '';
   const query = searchParams.get('query') || '';
   const centuries = searchParams.getAll('centuries') || [];
   const sort = searchParams.get('sort') || '';

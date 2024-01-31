@@ -7,14 +7,14 @@ type Props = {
 };
 
 export const PersonLink: React.FC<Props> = ({ person }) => {
-  const isFemale = person?.sex === 'f';
+  const isFemale = person.sex === 'f';
 
   return (
     <NavLink
-      to={`/people/${person?.slug}`}
+      to={`/people/${person.slug}`}
       className={cn({ 'has-text-danger': isFemale })}
     >
-      {person?.name}
+      {person.name}
     </NavLink>
   );
 };
