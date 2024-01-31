@@ -1,5 +1,6 @@
-import { Link } from "react-router-dom";
-import { customSearchHelper } from "../utils/customSearchHelper";
+import { Link } from 'react-router-dom';
+// import { customSearchHelper } from '../utils/customSearchHelper';
+import { getSearch } from '../utils/customSearchHelper';
 
 export const PeopleFilters = ({
   setChosenCentury,
@@ -11,6 +12,13 @@ export const PeopleFilters = ({
   setSearchParams,
   centuries,
 }) => {
+  // function that transfer params into the helper function and set searchParams
+  const setSearchWith = (params) => {
+    const search = getSearch(params, searchParams);
+
+    setSearchParams(search);
+  };
+
   const handleInput = (e) => {
     setEnteredText(e.target.value);
     setFilteringType('by_text');
@@ -31,10 +39,9 @@ export const PeopleFilters = ({
   };
 
   const toggleCenturies = (century) => {
-    setChosenCentury(century);
     setFilteringType('by_century');
+    setChosenCentury(century);
   };
-
 
   const clearCenturies = () => {
     setFilteringType('');
@@ -60,13 +67,13 @@ export const PeopleFilters = ({
         </Link>
         <Link
           onClick={() => handleSex('m')}
-          to={customSearchHelper(searchParams, { sex: 'm' })}
+          to={setSearchWith({ sex: 'm' })}
         >
           Male
         </Link>
         <Link
           onClick={() => handleSex('f')}
-          to={customSearchHelper(searchParams, { sex: 'f' })}
+          to={setSearchWith({ sex: 'f' })}
         >
           Female
         </Link>
@@ -97,8 +104,7 @@ export const PeopleFilters = ({
                 data-cy="century"
                 className="button mr-1"
                 onClick={() => toggleCenturies(century)}
-                to={customSearchHelper(searchParams,
-                  { centuries: [...centuries, century] })}
+                to={setSearchWith({ centuries: century })}
               >
                 {century}
               </Link>

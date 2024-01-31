@@ -1,9 +1,15 @@
 import { Link } from "react-router-dom";
-import { customSearchHelper } from "../../../utils/customSearchHelper";
+import { getSearch } from "../../../utils/customSearchHelper";
 
 export const SortingLayout = ({
   searchParams,
+  setSearchParams,
 }) => {
+  const setSearchWith = (params) => {
+    const search = getSearch(params, searchParams);
+
+    setSearchParams(search);
+  };
 
   return (
     <thead>
@@ -12,7 +18,7 @@ export const SortingLayout = ({
           <span className="is-flex is-flex-wrap-nowrap">
             Name
             <Link
-              to={customSearchHelper(searchParams, { sort: 'name' })}
+              to={setSearchWith({ sort: 'name' })}
             >
               <span className="icon">
                 <i className="fas fa-sort" />
@@ -24,7 +30,7 @@ export const SortingLayout = ({
         <th>
           <span className="is-flex is-flex-wrap-nowrap">
             Sex
-            <Link to={customSearchHelper(searchParams, { sort: 'sex' })}>
+            <Link to={setSearchWith({ sort: 'sex' })}>
               <span className="icon">
                 <i className="fas fa-sort" />
               </span>
@@ -35,7 +41,7 @@ export const SortingLayout = ({
         <th>
           <span className="is-flex is-flex-wrap-nowrap">
             Born
-            <Link to={customSearchHelper(searchParams, { sort: 'born' })}>
+            <Link to={setSearchWith({ sort: 'born' })}>
               <span className="icon">
                 <i className="fas fa-sort-up" />
               </span>
@@ -46,7 +52,7 @@ export const SortingLayout = ({
         <th>
           <span className="is-flex is-flex-wrap-nowrap">
             Died
-            <Link to={customSearchHelper(searchParams, { sort: 'died' })}>
+            <Link to={setSearchWith({ sort: 'died' })}>
               <span className="icon">
                 <i className="fas fa-sort" />
               </span>

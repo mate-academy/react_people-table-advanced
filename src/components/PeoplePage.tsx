@@ -26,6 +26,7 @@ export const PeoplePage: React.FC<Props> = ({
   const query = searchParams.get('query') || '';
   const sex = searchParams.get('sex') || '';
   const centuries = searchParams.getAll('centuries') || [];
+  console.log(centuries)
   let filtering;
 
   switch (filteringType) {

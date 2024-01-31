@@ -9,7 +9,8 @@ export const PeopleTable = ({
   searchParams,
   setSearchParams,
   filtering,
-  slug }) => {
+  slug,
+}) => {
   const arrayOfPeople = useContext(PeopleContext);
   const [activePersonSlug, setActivePersonSlug] = useState('');
 
