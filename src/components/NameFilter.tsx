@@ -28,5 +28,5 @@ export const NameFilter = () => {
         </span>
       </p>
     </div>
-  )
-}
+  );
+};
