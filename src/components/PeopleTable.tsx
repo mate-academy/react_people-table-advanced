@@ -2,14 +2,15 @@
 import React from 'react';
 import { useSearchParams } from 'react-router-dom';
 import cn from 'classnames';
-import { Person } from '../types';
+// import { Person } from '../types';
 import { PersonLink } from './PersonLink';
 import { SearchLink } from './SearchLink';
+import { PeopleManipulation } from '../types/PeopleManipulation';
 
 const tableColumns = ['name', 'sex', 'born', 'died'];
 
 interface Props {
-  people?: Person[],
+  people: PeopleManipulation,
 }
 
 export const PeopleTable: React.FC<Props> = ({ people }) => {
@@ -23,7 +24,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
   };
 
   const getSortConfig = (sortName: string) => {
-    if (!sortValue) {
+    if (sortValue !== sortName) {
       return {
         sort: sortName,
         order: null,
@@ -84,7 +85,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
       </thead>
 
       <tbody>
-        {people && people.map(person => (
+        {people && people.filteredPeople.map(person => (
           <PersonLink
             people={people}
             person={person}

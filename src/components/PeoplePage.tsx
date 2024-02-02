@@ -69,14 +69,20 @@ export const PeoplePage: React.FC = () => {
         filteredPeople.sort((a, b) => a[sortBy] - b[sortBy]);
         break;
       default:
-        return filteredPeople;
+        return {
+          filteredPeople,
+          allPeople: people,
+        };
     }
 
     if (order) {
       filteredPeople = filteredPeople.reverse();
     }
 
-    return filteredPeople;
+    return {
+      filteredPeople,
+      allPeople: people,
+    };
   };
 
   const filteredAndSortedPeople = getFilteredAndSortedPeople();

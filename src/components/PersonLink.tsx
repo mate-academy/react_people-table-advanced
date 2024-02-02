@@ -2,9 +2,10 @@ import React from 'react';
 import { Link, useParams } from 'react-router-dom';
 import cn from 'classnames';
 import { Person } from '../types';
+import { PeopleManipulation } from '../types/PeopleManipulation';
 
 interface Props {
-  people: Person[],
+  people: PeopleManipulation,
   person: Person,
 }
 
@@ -12,11 +13,11 @@ export const PersonLink: React.FC<Props> = ({ people, person }) => {
   const { slug } = useParams();
 
   const hasMother = (currPerson: Person) => {
-    return people.some(mom => mom.name === currPerson.motherName);
+    return people.allPeople.some(mom => mom.name === currPerson.motherName);
   };
 
   const hasFather = (currPerson: Person) => {
-    return people.some(dad => dad.name === currPerson.fatherName);
+    return people.allPeople.some(dad => dad.name === currPerson.fatherName);
   };
 
   return (

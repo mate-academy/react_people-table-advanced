@@ -4,30 +4,25 @@ import cn from 'classnames';
 import { SearchLink } from './SearchLink';
 import { SearchParams, getSearchWith } from '../utils/searchHelper';
 
+enum Sex {
+  Male = 'm',
+  Female = 'f',
+}
 export const PeopleFilters: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
+
   const query = searchParams.get('query') || '';
   const sex = searchParams.get('sex') || '';
   const centuries = searchParams.getAll('centuries') || [];
 
-  const centuriesArr = ['16', '17', '18', '19', '20'];
-
-  const handleFilterByName = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const params = new URLSearchParams(searchParams);
-
-    if (event.target.value === '') {
-      params.delete('query');
-    }
-
-    if (event.target.value) {
-      params.set('query', event.target.value);
-    }
-
-    setSearchParams(params);
-  };
+  const CENTURIES = ['16', '17', '18', '19', '20'];
 
   const setSearchWith = (params: SearchParams) => {
     setSearchParams(getSearchWith(searchParams, params));
+  };
+
+  const changeQuery = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchWith({ query: event.target.value || null });
   };
 
   const handleFilterByCenturies = (el: string) => {
@@ -35,7 +30,8 @@ export const PeopleFilters: React.FC = () => {
       ? centuries.filter(century => century !== el)
       : [...centuries, el];
 
-    setSearchWith({ centuries: updatedCenturies });
+    return updatedCenturies;
+    // setSearchWith({ centuries: updatedCenturies });
   };
 
   const resetAllFilters = {
@@ -50,21 +46,21 @@ export const PeopleFilters: React.FC = () => {
       <p className="panel-tabs" data-cy="SexFilter">
         <SearchLink
           params={{ sex: null }}
-          className={cn({ 'is-active': sex === '' })}
+          className={cn({ 'is-active': !sex })}
         >
           All
         </SearchLink>
 
         <SearchLink
-          params={{ sex: 'm' }}
-          className={cn({ 'is-active': sex === 'm' })}
+          params={{ sex: Sex.Male }}
+          className={cn({ 'is-active': sex === Sex.Male })}
         >
           Male
         </SearchLink>
 
         <SearchLink
-          params={{ sex: 'f' }}
-          className={cn({ 'is-active': sex === 'f' })}
+          params={{ sex: Sex.Female }}
+          className={cn({ 'is-active': sex === Sex.Female })}
         >
           Female
         </SearchLink>
@@ -78,7 +74,7 @@ export const PeopleFilters: React.FC = () => {
             className="input"
             placeholder="Search"
             value={query}
-            onChange={handleFilterByName}
+            onChange={changeQuery}
           />
 
           <span className="icon is-left">
@@ -90,13 +86,9 @@ export const PeopleFilters: React.FC = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            {centuriesArr.map(century => (
-              <a
-                href={`#/people?centuries=${century}`}
-                onClick={event => {
-                  event.preventDefault();
-                  handleFilterByCenturies(century);
-                }}
+            {CENTURIES.map(century => (
+              <SearchLink
+                params={{ centuries: handleFilterByCenturies(century) }}
                 className={cn(
                   'button',
                   'mr-1',
@@ -105,7 +97,22 @@ export const PeopleFilters: React.FC = () => {
                 key={century}
               >
                 {century}
-              </a>
+              </SearchLink>
+              // <a
+              //   href={`#/people?centuries=${century}`}
+              //   onClick={event => {
+              //     event.preventDefault();
+              //     handleFilterByCenturies(century);
+              //   }}
+              //   className={cn(
+              //     'button',
+              //     'mr-1',
+              //     { 'is-info': centuries.includes(century) },
+              //   )}
+              //   key={century}
+              // >
+              //   {century}
+              // </a>
             ))}
           </div>
 
