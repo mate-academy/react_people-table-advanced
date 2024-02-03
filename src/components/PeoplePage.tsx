@@ -113,13 +113,13 @@ export const PeoplePage: React.FC = () => {
 
               {!isShowingError && isLoading && <Loader />}
 
-              {isValidData && people.length === 0 && (
+              {isValidData && filteredAndSortedPeople.filteredPeople.length === 0 && (
                 <p data-cy="noPeopleMessage">
-                  There are no people on the server
+                  There are no people matching the current search criteria
                 </p>
               )}
 
-              {isValidData && people.length !== 0 && (
+              {isValidData && filteredAndSortedPeople.filteredPeople.length !== 0 && (
                 <PeopleTable people={filteredAndSortedPeople} />
               )}
             </div>

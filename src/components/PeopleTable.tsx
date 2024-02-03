@@ -2,7 +2,7 @@
 import React from 'react';
 import { useSearchParams } from 'react-router-dom';
 import cn from 'classnames';
-// import { Person } from '../types';
+
 import { PersonLink } from './PersonLink';
 import { SearchLink } from './SearchLink';
 import { PeopleManipulation } from '../types/PeopleManipulation';

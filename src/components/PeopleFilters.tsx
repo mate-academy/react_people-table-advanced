@@ -8,6 +8,7 @@ enum Sex {
   Male = 'm',
   Female = 'f',
 }
+
 export const PeopleFilters: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -31,7 +32,6 @@ export const PeopleFilters: React.FC = () => {
       : [...centuries, el];
 
     return updatedCenturies;
-    // setSearchWith({ centuries: updatedCenturies });
   };
 
   const resetAllFilters = {
@@ -98,21 +98,6 @@ export const PeopleFilters: React.FC = () => {
               >
                 {century}
               </SearchLink>
-              // <a
-              //   href={`#/people?centuries=${century}`}
-              //   onClick={event => {
-              //     event.preventDefault();
-              //     handleFilterByCenturies(century);
-              //   }}
-              //   className={cn(
-              //     'button',
-              //     'mr-1',
-              //     { 'is-info': centuries.includes(century) },
-              //   )}
-              //   key={century}
-              // >
-              //   {century}
-              // </a>
             ))}
           </div>
 
