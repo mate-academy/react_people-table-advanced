@@ -50,12 +50,13 @@ export const PeoplePage = () => {
                 </p>
               )}
 
-              {!preparedPeople.length
-                ? (
-                  <p>
-                    There are no people matching the current search criteria
-                  </p>
-                ) : <PeopleTable people={preparedPeople} />}
+              {!preparedPeople.length && !isLoader && (
+                <p>
+                  There are no people matching the current search criteria
+                </p>
+              )}
+
+              {!!people.length && <PeopleTable people={preparedPeople} />}
             </div>
           </div>
         </div>
