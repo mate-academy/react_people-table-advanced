@@ -1,5 +1,5 @@
-import { PeoplePage } from './components/PeoplePage';
 import { Navbar } from './components/Navbar';
+import { Router } from './router/Router';
 
 import './App.scss';
 
@@ -10,11 +10,10 @@ export const App = () => {
 
       <div className="section">
         <div className="container">
-          <h1 className="title">Home Page</h1>
-          <h1 className="title">Page not found</h1>
-          <PeoplePage />
+          <Router />
         </div>
       </div>
+
     </div>
   );
 };
