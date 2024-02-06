@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { PeopleFilters }
-  from '../components/PersonItem/PeopleFilters/PeopleFilters';
+import { PeopleFilters } from '../components/PeopleFilters';
 import { Loader } from '../components/Loader';
 import { PeopleTable } from '../components/PeopleTable';
 import { Person } from '../types';
@@ -20,23 +19,47 @@ export const PeoplePage = () => {
       .finally(() => setLoading(false));
   }, []);
 
-  const filteredPeople = people.filter(person => {
-    const century = person.born.toFixed(2).slice(0, 2);
-    const sex = searchParams.get('sex');
-    const centuries = searchParams.getAll('century');
-    const query = searchParams.get('query')?.toLowerCase() || '';
+  function getPreparedList(initialPeople: Person[]) {
+    const sort = searchParams.get('sort') as keyof Person;
+    const order = searchParams.get('order');
 
-    const matchSex = !sex || person.sex === sex;
+    const filteredPeople = [...initialPeople].filter(person => {
+      const century = person.born.toFixed(2).slice(0, 2);
+      const sex = searchParams.get('sex');
+      const centuries = searchParams.getAll('century');
+      const query = searchParams.get('query')?.toLowerCase() || '';
 
-    const matchCentury = !centuries?.length || centuries.includes(century);
+      const matchSex = !sex || person.sex === sex;
 
-    const matchQuery
-      = person.name.toLowerCase().includes(query)
-      || person.motherName?.toLowerCase().includes(query)
-      || person.fatherName?.toLowerCase()?.includes(query);
+      const matchCentury = !centuries?.length || centuries.includes(century);
 
-    return matchQuery && matchSex && matchCentury;
-  });
+      const matchQuery
+        = person.name.toLowerCase().includes(query)
+        || person.motherName?.toLowerCase().includes(query)
+        || person.fatherName?.toLowerCase()?.includes(query);
+
+      return matchQuery && matchSex && matchCentury;
+    });
+
+    const sorted = filteredPeople.sort((person1, person2) => {
+      const value1 = person1[sort];
+      const value2 = person2[sort];
+
+      if (typeof value1 === 'number' && typeof value2 === 'number') {
+        return value1 - value2;
+      }
+
+      if (typeof value1 === 'string' && typeof value2 === 'string') {
+        return value1.localeCompare(value2);
+      }
+
+      return 0;
+    });
+
+    return order ? sorted.reverse() : sorted;
+  }
+
+  const filteredAndSortedPeople = getPreparedList(people);
 
   return (
     <>
@@ -56,7 +79,7 @@ export const PeoplePage = () => {
                   <>
                     {errorMessage
                       ? (<p data-cy="peopleLoadingError">{errorMessage}</p>)
-                      : (<PeopleTable people={filteredPeople} />)}
+                      : (<PeopleTable people={filteredAndSortedPeople} />)}
 
                     {!people.length && (
                       <p data-cy="noPeopleMessage">
@@ -64,7 +87,7 @@ export const PeoplePage = () => {
                       </p>
                     )}
 
-                    {!filteredPeople.length && (
+                    {!filteredAndSortedPeople.length && (
                       <p>
                         There are no people matching the current search criteria
                       </p>

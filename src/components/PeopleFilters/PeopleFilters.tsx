@@ -1,8 +1,8 @@
 import classNames from 'classnames';
 import { Link, useSearchParams } from 'react-router-dom';
-import { SexFilter } from '../../../types/SexFilter';
-import { getSearchWith } from '../../../utils/searchHelper';
-import { Params } from '../../../types/Params';
+import { SexFilter } from '../../types/SexFilter';
+import { getSearchWith } from '../../utils/searchHelper';
+import { Params } from '../../types/Params';
 
 const CENTURIES = [16, 17, 18, 19];
 
@@ -133,7 +133,13 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <Link
           className="button is-link is-outlined is-fullwidth"
-          to="../people"
+          to={{
+            search: getSearchWith({
+              century: null,
+              sex: null,
+              query: null,
+            }, searchParams),
+          }}
         >
           Reset all filters
         </Link>

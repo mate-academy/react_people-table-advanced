@@ -1,6 +1,8 @@
+import { Link, useSearchParams } from 'react-router-dom';
 import { Person } from '../types';
 import { Parents } from '../types/Parents';
 import { PersonItem } from './PersonItem';
+import { getSearchWith } from '../utils/searchHelper';
 
 /* eslint-disable jsx-a11y/control-has-associated-label */
 type Props = {
@@ -15,6 +17,36 @@ function findParents(people: Person[], person: Person): Parents {
 }
 
 export const PeopleTable: React.FC<Props> = ({ people }) => {
+  const [searchParams] = useSearchParams();
+  const sort = searchParams.get('sort');
+  const order = searchParams.get('order');
+
+  function getPreparedSearch(sortBy: string): string {
+    let isOrderDeleted = false;
+
+    if (order) {
+      isOrderDeleted = true;
+    }
+
+    if (sort === sortBy) {
+      return isOrderDeleted
+        ? getSearchWith({ sort: null, order: null }, searchParams)
+        : getSearchWith({ order: 'desc' }, searchParams);
+    }
+
+    return getSearchWith({ sort: sortBy, order: null }, searchParams);
+  }
+
+  function getIconStyle(name: string): string {
+    let secondClass = 'fa-sort';
+
+    if (sort === name) {
+      secondClass = order && sort ? 'fas fa-sort-down' : 'fas fa-sort-up';
+    }
+
+    return `fas ${secondClass}`;
+  }
+
   return (
     <table
       data-cy="peopleTable"
@@ -25,44 +57,52 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Name
-              <a href="#/people?sort=name">
+              <Link
+                to={{ search: getPreparedSearch('name') }}
+              >
                 <span className="icon">
-                  <i className="fas fa-sort" />
+                  <i className={getIconStyle('name')} />
                 </span>
-              </a>
+              </Link>
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Sex
-              <a href="#/people?sort=sex">
+              <Link
+                to={{ search: getPreparedSearch('sex') }}
+              >
                 <span className="icon">
-                  <i className="fas fa-sort" />
+                  <i className={getIconStyle('sex')} />
                 </span>
-              </a>
+              </Link>
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Born
-              <a href="#/people?sort=born&amp;order=desc">
+              <Link
+                to={{ search: getPreparedSearch('born') }}
+              >
                 <span className="icon">
-                  <i className="fas fa-sort-up" />
+                  <i className={getIconStyle('born')} />
                 </span>
-              </a>
+              </Link>
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Died
-              <a href="#/people?sort=died">
+              <Link
+                to={{ search: getPreparedSearch('died') }}
+              >
                 <span className="icon">
-                  <i className="fas fa-sort" />
+                  <i className={getIconStyle('died')} />
                 </span>
-              </a>
+              </Link>
             </span>
           </th>
 
