@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
-import { PeopleFilters } from '../components/PersonItem/PeopleFilters/PeopleFilters';
+import { useSearchParams } from 'react-router-dom';
+import { PeopleFilters }
+  from '../components/PersonItem/PeopleFilters/PeopleFilters';
 import { Loader } from '../components/Loader';
 import { PeopleTable } from '../components/PeopleTable';
 import { Person } from '../types';
@@ -9,6 +11,7 @@ export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);
   const [loading, setLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState('');
+  const [searchParams] = useSearchParams();
 
   useEffect(() => {
     getPeople()
@@ -16,6 +19,24 @@ export const PeoplePage = () => {
       .catch(() => setErrorMessage('Something went wrong'))
       .finally(() => setLoading(false));
   }, []);
+
+  const filteredPeople = people.filter(person => {
+    const century = person.born.toFixed(2).slice(0, 2);
+    const sex = searchParams.get('sex');
+    const centuries = searchParams.getAll('century');
+    const query = searchParams.get('query')?.toLowerCase() || '';
+
+    const matchSex = !sex || person.sex === sex;
+
+    const matchCentury = !centuries?.length || centuries.includes(century);
+
+    const matchQuery
+      = person.name.toLowerCase().includes(query)
+      || person.motherName?.toLowerCase().includes(query)
+      || person.fatherName?.toLowerCase()?.includes(query);
+
+    return matchQuery && matchSex && matchCentury;
+  });
 
   return (
     <>
@@ -35,7 +56,7 @@ export const PeoplePage = () => {
                   <>
                     {errorMessage
                       ? (<p data-cy="peopleLoadingError">{errorMessage}</p>)
-                      : (<PeopleTable people={people} />)}
+                      : (<PeopleTable people={filteredPeople} />)}
 
                     {!people.length && (
                       <p data-cy="noPeopleMessage">
@@ -43,12 +64,13 @@ export const PeoplePage = () => {
                       </p>
                     )}
 
-                    <p>
-                      There are no people matching the current search criteria
-                    </p>
+                    {!filteredPeople.length && (
+                      <p>
+                        There are no people matching the current search criteria
+                      </p>
+                    )}
                   </>
                 )}
-
             </div>
           </div>
         </div>

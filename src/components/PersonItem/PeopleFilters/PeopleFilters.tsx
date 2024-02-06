@@ -1,35 +1,16 @@
 import classNames from 'classnames';
-import { ChangeEvent } from 'react';
-import { Link, useLocation, useSearchParams } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { SexFilter } from '../../../types/SexFilter';
+import { getSearchWith } from '../../../utils/searchHelper';
+import { Params } from '../../../types/Params';
 
 const CENTURIES = [16, 17, 18, 19];
 
 export const PeopleFilters = () => {
-  const { pathname } = useLocation();
   const [searchParams, setSearchParams] = useSearchParams();
   const query = searchParams.get('query') || '';
   const centuries = searchParams.getAll('century');
   const sex = searchParams.get('sex');
-
-  function handleSearchChange(event: ChangeEvent<HTMLInputElement>) {
-    const params = new URLSearchParams(searchParams);
-
-    if (!event.target.value) {
-      params.delete('query');
-    } else {
-      params.set('query', event.target.value);
-    }
-
-    setSearchParams(params);
-  }
-
-  function deleteCenturies() {
-    const params = new URLSearchParams(searchParams);
-
-    params.delete('century');
-    setSearchParams(params);
-  }
 
   function toggleCentury(data: number) {
     const century = data.toString();
@@ -49,16 +30,10 @@ export const PeopleFilters = () => {
     setSearchParams(params);
   }
 
-  function handleSexFilter(filter: SexFilter) {
-    const params = new URLSearchParams(searchParams);
+  function setSearchWith(params: Params) {
+    const search = getSearchWith(params, searchParams);
 
-    if (!filter) {
-      params.delete('sex');
-    } else {
-      params.set('sex', filter);
-    }
-
-    return `${pathname}?${params.toString()}`;
+    setSearchParams(search);
   }
 
   return (
@@ -72,8 +47,12 @@ export const PeopleFilters = () => {
         <Link
           type="button"
           className={classNames({ 'is-active': !sex })}
-          to={`${handleSexFilter(SexFilter.all)}`}
-          onClick={() => handleSexFilter(SexFilter.all)}
+          to={{
+            search: getSearchWith(
+              { sex: +SexFilter.all || null },
+              searchParams,
+            ),
+          }}
         >
           All
         </Link>
@@ -81,15 +60,21 @@ export const PeopleFilters = () => {
         <Link
           type="button"
           className={classNames({ 'is-active': sex === 'm' })}
-          to={`${handleSexFilter(SexFilter.male)}`}
+          to={{ search: getSearchWith({ sex: SexFilter.male }, searchParams) }}
         >
+
           Male
         </Link>
 
         <Link
           type="button"
           className={classNames({ 'is-active': sex === 'f' })}
-          to={`${handleSexFilter(SexFilter.female)}`}
+          to={{
+            search: getSearchWith(
+              { sex: SexFilter.female },
+              searchParams,
+            ),
+          }}
         >
           Female
         </Link>
@@ -103,7 +88,9 @@ export const PeopleFilters = () => {
             className="input"
             placeholder="Search"
             value={query || ''}
-            onChange={handleSearchChange}
+            onChange={event => setSearchWith({
+              query: event.target.value || null,
+            })}
           />
 
           <span className="icon is-left">
@@ -131,14 +118,14 @@ export const PeopleFilters = () => {
           </div>
 
           <div className="level-right ml-4">
-            <button
+            <Link
               type="button"
               data-cy="centuryALL"
               className="button is-success is-outlined"
-              onClick={() => deleteCenturies()}
+              to={{ search: getSearchWith({ century: null }, searchParams) }}
             >
               All
-            </button>
+            </Link>
           </div>
         </div>
       </div>
