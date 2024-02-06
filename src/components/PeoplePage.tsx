@@ -14,11 +14,11 @@ export const PeoplePage = () => {
 
   const query = searchParams.get('query') || '';
   const sex = searchParams.get('sex') || '';
-  const centuries = (searchParams.getAll('centuries') || []);
   const sort = searchParams.get('sort') || '';
   const order = searchParams.get('order') || '';
-
-  let visiblePeople = people;
+  const centuries = useMemo(() => {
+    return searchParams.getAll('centuries') || [];
+  }, [searchParams]);
 
   useEffect(() => {
     setIsLoading(true);
@@ -33,9 +33,11 @@ export const PeoplePage = () => {
       });
   }, []);
 
-  useMemo(() => {
+  const visiblePeople = useMemo(() => {
+    let peopleCopy = people;
+
     if (query) {
-      visiblePeople = visiblePeople.filter(body => body.name
+      peopleCopy = peopleCopy.filter(body => body.name
         .toLowerCase()
         .includes(query.toLowerCase())
         || body.fatherName?.toLowerCase().includes(query.toLowerCase())
@@ -43,29 +45,33 @@ export const PeoplePage = () => {
     }
 
     if (centuries.length) {
-      visiblePeople = visiblePeople.filter(body => centuries
+      peopleCopy = peopleCopy.filter(body => centuries
         .includes(Math.ceil(body.born / 100).toString())
         || centuries.includes((Math.ceil(body.died / 100)).toString()));
     }
 
     if (sex) {
-      visiblePeople = visiblePeople.filter(body => body.sex === sex);
+      peopleCopy = peopleCopy.filter(body => body.sex === sex);
     }
 
     if (sort) {
-      visiblePeople = [...visiblePeople].sort((a, b) => {
-        if (sort === a.name || sort === a.sex) {
-          return a.name.localeCompare(b.name) || a.sex.localeCompare(b.sex);
-        }
+      peopleCopy = [...peopleCopy].sort((a, b) => {
+        switch (sort) {
+          case a.name || a.sex:
+            return a.name.localeCompare(b.name) || a.sex.localeCompare(b.sex);
 
-        return a.died - b.died || a.born - b.born;
+          default:
+            return a.died - b.died || a.born - b.born;
+        }
       });
     }
 
     if (order) {
-      visiblePeople = visiblePeople.reverse();
+      peopleCopy = peopleCopy.reverse();
     }
-  }, [query, centuries.length, sex, sort, order]);
+
+    return peopleCopy;
+  }, [query, sex, sort, order, people, centuries]);
 
   return (
     <>
