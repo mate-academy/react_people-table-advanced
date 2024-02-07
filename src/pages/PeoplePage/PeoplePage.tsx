@@ -41,24 +41,21 @@ export const PeoplePage = () => {
   });
 
   const getSortedPeople = () => {
-    if (!sortType) {
-      return filteredPeople;
-    }
-
-    if (sortType === 'name') {
-      filteredPeople?.sort((a, b) => a.name.localeCompare(b.name));
-    }
-
-    if (sortType === 'sex') {
-      filteredPeople?.sort((a, b) => a.sex.localeCompare(b.sex));
-    }
-
-    if (sortType === 'born') {
-      filteredPeople?.sort((a, b) => a.born - b.born);
-    }
-
-    if (sortType === 'died') {
-      filteredPeople?.sort((a, b) => a.died - b.died);
+    switch (sortType) {
+      case 'name':
+        filteredPeople?.sort((a, b) => a.name.localeCompare(b.name));
+        break;
+      case 'sex':
+        filteredPeople?.sort((a, b) => a.sex.localeCompare(b.sex));
+        break;
+      case 'born':
+        filteredPeople?.sort((a, b) => a.born - b.born);
+        break;
+      case 'died':
+        filteredPeople?.sort((a, b) => a.died - b.died);
+        break;
+      default:
+        return filteredPeople;
     }
 
     return sortOrder === 'desc' ? filteredPeople?.reverse() : filteredPeople;
@@ -92,13 +89,13 @@ export const PeoplePage = () => {
                 </p>
               )}
 
-              {!loading && !filteredPeople && (
+              {!loading && !preparePeople?.length && (
                 <p>
                   There are no people matching the current search criteria
                 </p>
               )}
 
-              {!loading && preparePeople && (
+              {!loading && !!preparePeople?.length && (
                 <PeopleTable people={preparePeople} />
               )}
             </div>
