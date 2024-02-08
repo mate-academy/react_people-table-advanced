@@ -1,3 +1,11 @@
+import { NavLink } from 'react-router-dom';
+import cn from 'classnames';
+
+const links = [
+  { title: 'Home', path: '/' },
+  { title: 'People', path: 'people' },
+];
+
 export const Navbar = () => {
   return (
     <nav
@@ -8,15 +16,17 @@ export const Navbar = () => {
     >
       <div className="container">
         <div className="navbar-brand">
-          <a className="navbar-item" href="#/">Home</a>
-
-          <a
-            aria-current="page"
-            className="navbar-item has-background-grey-lighter"
-            href="#/people"
-          >
-            People
-          </a>
+          {links.map(({ title, path }) => (
+            <NavLink
+              key={title}
+              to={path}
+              className={({ isActive }) => cn('navbar-item', {
+                'has-background-grey-lighter': isActive,
+              })}
+            >
+              {title}
+            </NavLink>
+          ))}
         </div>
       </div>
     </nav>
