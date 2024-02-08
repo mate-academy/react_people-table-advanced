@@ -59,7 +59,7 @@ export const PeopleFilters = () => {
 
         <Link
           type="button"
-          className={classNames({ 'is-active': sex === 'm' })}
+          className={classNames({ 'is-active': sex === SexFilter.male })}
           to={{ search: getSearchWith({ sex: SexFilter.male }, searchParams) }}
         >
 
@@ -68,7 +68,7 @@ export const PeopleFilters = () => {
 
         <Link
           type="button"
-          className={classNames({ 'is-active': sex === 'f' })}
+          className={classNames({ 'is-active': sex === SexFilter.female })}
           to={{
             search: getSearchWith(
               { sex: SexFilter.female },
