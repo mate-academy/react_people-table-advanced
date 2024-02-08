@@ -150,7 +150,7 @@ export const PeoplePage: React.FC = () => {
                 </p>
               )}
 
-              {hasNoPeople && false && (
+              {hasNoPeople && (
                 <p>There are no people matching the current search criteria</p>
               )}
 
