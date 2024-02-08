@@ -100,7 +100,9 @@ export const PeopleFilters = () => {
           <div className="level-right ml-4">
             <Link
               data-cy="centuryALL"
-              className="button is-success is-outlined"
+              className={classNames('button', 'is-success', {
+                'is-outlined': !!centuries.length,
+              })}
               to={{
                 search: getSearchWith(searchParams, { centuries: null }),
               }}
@@ -112,12 +114,18 @@ export const PeopleFilters = () => {
       </div>
 
       <div className="panel-block">
-        <a
+        <Link
           className="button is-link is-outlined is-fullwidth"
-          href="#/people"
+          to={{
+            search: getSearchWith(searchParams, {
+              centuries: null,
+              sex: null,
+              query: null,
+            }),
+          }}
         >
           Reset all filters
-        </a>
+        </Link>
       </div>
     </nav>
   );
