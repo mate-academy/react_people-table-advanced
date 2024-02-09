@@ -4,11 +4,12 @@ import { useSearchParams, Link } from 'react-router-dom';
 import { getSearchWith } from '../utils/searchHelper';
 import { PersonSex } from '../types/PersonSex';
 
+const centuries = ['16', '17', '18', '19', '20'];
+
 export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const sexFilter = searchParams.get('sex') || '';
   const query = searchParams.get('query') || '';
-  const centuries = ['16', '17', '18', '19', '20'];
   const selectedCenturies = useMemo(
     () => searchParams.getAll('centuries') || [],
     [searchParams],

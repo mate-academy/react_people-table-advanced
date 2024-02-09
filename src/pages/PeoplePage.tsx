@@ -69,16 +69,12 @@ export const PeoplePage = () => {
       .sort((person1, person2) => {
         switch (sortBy) {
           case SortBy.name:
-            return person1.name.localeCompare(person2.name);
-
           case SortBy.sex:
-            return person1.sex.localeCompare(person2.sex);
+            return person1[sortBy].localeCompare(person2[sortBy]);
 
           case SortBy.born:
-            return person1.born - person2.born;
-
           case SortBy.died:
-            return person1.died - person2.died;
+            return person1[sortBy] - person2[sortBy];
 
           default:
             return 0;
