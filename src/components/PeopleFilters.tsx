@@ -2,11 +2,14 @@ import React, { useCallback, useMemo } from 'react';
 import classNames from 'classnames';
 import { useSearchParams, Link } from 'react-router-dom';
 import { getSearchWith } from '../utils/searchHelper';
+import { PersonSex } from '../types/PersonSex';
 
 export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const sexFilter = searchParams.get('sex') || '';
-  const centuries = useMemo(
+  const query = searchParams.get('query') || '';
+  const centuries = ['16', '17', '18', '19', '20'];
+  const selectedCenturies = useMemo(
     () => searchParams.getAll('centuries') || [],
     [searchParams],
   );
@@ -25,11 +28,11 @@ export const PeopleFilters = () => {
 
   const toggleCenturies = useCallback((century: string) => {
     return getSearchWith(searchParams, {
-      centuries: centuries.includes(century)
-        ? centuries.filter(c => c !== century)
-        : [...centuries, century],
+      centuries: selectedCenturies.includes(century)
+        ? selectedCenturies.filter(c => c !== century)
+        : [...selectedCenturies, century],
     });
-  }, [searchParams, centuries]);
+  }, [searchParams, selectedCenturies]);
 
   return (
     <nav className="panel">
@@ -45,17 +48,19 @@ export const PeopleFilters = () => {
           All
         </Link>
         <Link
-          className={classNames({ 'is-active': sexFilter === 'm' })}
+          className={classNames({ 'is-active': sexFilter === PersonSex.male })}
           to={{
-            search: getSearchWith(searchParams, { sex: 'm' }),
+            search: getSearchWith(searchParams, { sex: PersonSex.male }),
           }}
         >
           Male
         </Link>
         <Link
-          className={classNames({ 'is-active': sexFilter === 'f' })}
+          className={classNames({
+            'is-active': sexFilter === PersonSex.female,
+          })}
           to={{
-            search: getSearchWith(searchParams, { sex: 'f' }),
+            search: getSearchWith(searchParams, { sex: PersonSex.female }),
           }}
         >
           Female
@@ -69,6 +74,7 @@ export const PeopleFilters = () => {
             type="search"
             className="input"
             placeholder="Search"
+            value={query}
             onChange={handleQueryChange}
           />
 
@@ -81,12 +87,13 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            {['16', '17', '18', '19', '20']
+            {centuries
               .map(century => (
                 <Link
+                  key={century}
                   data-cy="century"
                   className={classNames('button', 'mr-1', {
-                    'is-info': centuries.includes(century),
+                    'is-info': selectedCenturies.includes(century),
                   })}
                   to={{
                     search: toggleCenturies(century),
@@ -101,7 +108,7 @@ export const PeopleFilters = () => {
             <Link
               data-cy="centuryALL"
               className={classNames('button', 'is-success', {
-                'is-outlined': !!centuries.length,
+                'is-outlined': !!selectedCenturies.length,
               })}
               to={{
                 search: getSearchWith(searchParams, { centuries: null }),

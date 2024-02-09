@@ -5,6 +5,7 @@ import { Loader } from '../components/Loader';
 import { PeopleTable } from '../components/PeopleTable';
 import { Person } from '../types';
 import { getPeople } from '../api';
+import { SortBy } from '../types/SortBy';
 
 export const PeoplePage = () => {
   const [searchParams] = useSearchParams();
@@ -67,16 +68,16 @@ export const PeoplePage = () => {
       })
       .sort((person1, person2) => {
         switch (sortBy) {
-          case 'name':
+          case SortBy.name:
             return person1.name.localeCompare(person2.name);
 
-          case 'sex':
+          case SortBy.sex:
             return person1.sex.localeCompare(person2.sex);
 
-          case 'born':
+          case SortBy.born:
             return person1.born - person2.born;
 
-          case 'died':
+          case SortBy.died:
             return person1.died - person2.died;
 
           default:
