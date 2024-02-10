@@ -8,6 +8,8 @@ export const PeopleFilters = () => {
   const sex = searchParams.get('sex') || '';
   const centuries = searchParams.getAll('centuries') || [];
 
+  const allCenturies = ['16', '17', '18', '19', '20'];
+
   const handleQueryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newQuery = event.target.value;
 
@@ -87,45 +89,15 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            <SearchLink
-              params={definitionParamsCenturies('16')}
-              data-cy="century"
-              className={getCenturyClass('16')}
-            >
-              16
-            </SearchLink>
-
-            <SearchLink
-              params={definitionParamsCenturies('17')}
-              data-cy="century"
-              className={getCenturyClass('17')}
-            >
-              17
-            </SearchLink>
-
-            <SearchLink
-              params={definitionParamsCenturies('18')}
-              data-cy="century"
-              className={getCenturyClass('18')}
-            >
-              18
-            </SearchLink>
-
-            <SearchLink
-              params={definitionParamsCenturies('19')}
-              data-cy="century"
-              className={getCenturyClass('19')}
-            >
-              19
-            </SearchLink>
-
-            <SearchLink
-              params={definitionParamsCenturies('20')}
-              data-cy="century"
-              className={getCenturyClass('20')}
-            >
-              20
-            </SearchLink>
+            {allCenturies.map(century => (
+              <SearchLink
+                params={definitionParamsCenturies(century)}
+                data-cy="century"
+                className={getCenturyClass(century)}
+              >
+                {century}
+              </SearchLink>
+            ))}
           </div>
 
           <div className="level-right ml-4">
