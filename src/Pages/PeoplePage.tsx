@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { PeopleFilters } from './PeopleFilters';
-import { Loader } from './Loader';
-import { PeopleTable } from './PeopleTable';
+import { PeopleFilters } from '../components/PeopleFilters';
+import { Loader } from '../components/Loader';
+import { PeopleTable } from '../components/PeopleTable';
 import { Person } from '../types';
 import { getParent } from '../utils/getParent';
 import { getPeople } from '../api';
@@ -18,6 +18,7 @@ export const PeoplePage = () => {
   const currentOrder = searchParams.get('order') || '';
   const currentSex = searchParams.get('sex') || '';
   const currentQuery = searchParams.get('query') || '';
+  const currentCenturies = searchParams.getAll('centuries') || [];
 
   const preparedPeople: Person[] = people.map(person => {
     const mother = person.motherName
@@ -59,25 +60,22 @@ export const PeoplePage = () => {
     }
 
     if (currentQuery) {
-      const normalizesQuery = currentQuery.toLowerCase();
+      const normalizedQuery = currentQuery.toLowerCase();
 
       filteredPeople = filteredPeople.filter(person => {
-        const result = [];
+        const { name, motherName, fatherName } = person;
 
-        result
-          .push(person.name.toLowerCase().includes(normalizesQuery));
+        return [name, motherName, fatherName].some(field => {
+          return field && field.toLowerCase().includes(normalizedQuery);
+        });
+      });
+    }
 
-        if (person.motherName) {
-          result
-            .push(person.motherName.toLowerCase().includes(normalizesQuery));
-        }
+    if (currentCenturies.length > 0) {
+      filteredPeople = filteredPeople.filter(person => {
+        const millennium = Math.ceil(person.born / 100);
 
-        if (person.fatherName) {
-          result
-            .push(person.fatherName.toLowerCase().includes(normalizesQuery));
-        }
-
-        return result.some(v => v);
+        return currentCenturies.includes(millennium.toString());
       });
     }
 
@@ -133,9 +131,7 @@ export const PeoplePage = () => {
                     </p>
                   )}
                   {!!filteredPeople.length && (
-                    <PeopleTable
-                      people={filteredPeople}
-                    />
+                    <PeopleTable people={filteredPeople} />
                   )}
                 </>
               )}

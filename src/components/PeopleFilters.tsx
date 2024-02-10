@@ -6,6 +6,7 @@ export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const query = searchParams.get('query') || '';
   const sex = searchParams.get('sex') || '';
+  const centuries = searchParams.getAll('centuries') || [];
 
   const handleQueryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newQuery = event.target.value;
@@ -19,6 +20,24 @@ export const PeopleFilters = () => {
     }
 
     setSearchParams(params);
+  };
+
+  const definitionParamsCenturies = (newValue: string) => {
+    if (!newValue) {
+      return { centuries: [] };
+    }
+
+    const newCenturies = centuries.includes(newValue)
+      ? centuries.filter(number => number !== newValue)
+      : [...centuries, newValue];
+
+    return { centuries: newCenturies };
+  };
+
+  const getCenturyClass = (value: string) => {
+    return classNames(
+      'button', 'mr-1', { 'is-info': centuries.includes(value) },
+    );
   };
 
   return (
@@ -68,63 +87,68 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            <a
+            <SearchLink
+              params={definitionParamsCenturies('16')}
               data-cy="century"
-              className="button mr-1"
-              href="#/people?centuries=16"
+              className={getCenturyClass('16')}
             >
               16
-            </a>
+            </SearchLink>
 
-            <a
+            <SearchLink
+              params={definitionParamsCenturies('17')}
               data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=17"
+              className={getCenturyClass('17')}
             >
               17
-            </a>
+            </SearchLink>
 
-            <a
+            <SearchLink
+              params={definitionParamsCenturies('18')}
               data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=18"
+              className={getCenturyClass('18')}
             >
               18
-            </a>
+            </SearchLink>
 
-            <a
+            <SearchLink
+              params={definitionParamsCenturies('19')}
               data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=19"
+              className={getCenturyClass('19')}
             >
               19
-            </a>
+            </SearchLink>
 
-            <a
+            <SearchLink
+              params={definitionParamsCenturies('20')}
               data-cy="century"
-              className="button mr-1"
-              href="#/people?centuries=20"
+              className={getCenturyClass('20')}
             >
               20
-            </a>
+            </SearchLink>
           </div>
 
           <div className="level-right ml-4">
-            <a
+            <SearchLink
+              params={definitionParamsCenturies('')}
               data-cy="centuryALL"
-              className="button is-success is-outlined"
-              href="#/people"
+              className={classNames(
+                'button', 'is-success', { 'is-outlined': !!centuries.length },
+              )}
             >
               All
-            </a>
+            </SearchLink>
           </div>
         </div>
       </div>
 
       <div className="panel-block">
-        <a className="button is-link is-outlined is-fullwidth" href="#/people">
+        <SearchLink
+          className="button is-link is-outlined is-fullwidth"
+          params={{ sex: null, query: null, centuries: [] }}
+        >
           Reset all filters
-        </a>
+        </SearchLink>
       </div>
     </nav>
   );

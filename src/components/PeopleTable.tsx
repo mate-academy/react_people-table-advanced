@@ -1,8 +1,3 @@
-/* eslint-disable jsx-a11y/click-events-have-key-events */
-/* eslint-disable jsx-a11y/no-static-element-interactions */
-/* eslint-disable no-console */
-/* eslint-disable @typescript-eslint/no-unused-expressions */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import React from 'react';
 import classNames from 'classnames';
 import { useSearchParams } from 'react-router-dom';
@@ -32,7 +27,7 @@ export const PeopleTable: React.FC<Props> = React.memo(({ people }) => {
     );
   };
 
-  const definitionParams = (newSort: string) => {
+  const definitionSortParams = (newSort: string) => {
     let sortToUpdate = '';
     let orderToUpdate = '';
 
@@ -58,7 +53,7 @@ export const PeopleTable: React.FC<Props> = React.memo(({ people }) => {
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Name
-              <SearchLink params={definitionParams(Sort.Name)}>
+              <SearchLink params={definitionSortParams(Sort.Name)}>
                 <span className="icon">
                   <i className={getIconClasses(Sort.Name)} />
                 </span>
@@ -69,7 +64,7 @@ export const PeopleTable: React.FC<Props> = React.memo(({ people }) => {
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Sex
-              <SearchLink params={definitionParams(Sort.Sex)}>
+              <SearchLink params={definitionSortParams(Sort.Sex)}>
                 <span className="icon">
                   <i className={getIconClasses(Sort.Sex)} />
                 </span>
@@ -80,7 +75,7 @@ export const PeopleTable: React.FC<Props> = React.memo(({ people }) => {
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Born
-              <SearchLink params={definitionParams(Sort.Born)}>
+              <SearchLink params={definitionSortParams(Sort.Born)}>
                 <span className="icon">
                   <i className={getIconClasses(Sort.Born)} />
                 </span>
@@ -91,7 +86,7 @@ export const PeopleTable: React.FC<Props> = React.memo(({ people }) => {
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Died
-              <SearchLink params={definitionParams(Sort.Died)}>
+              <SearchLink params={definitionSortParams(Sort.Died)}>
                 <span className="icon">
                   <i className={getIconClasses(Sort.Died)} />
                 </span>
