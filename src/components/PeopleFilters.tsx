@@ -1,21 +1,62 @@
+import classNames from 'classnames';
+import { useSearchParams } from 'react-router-dom';
+import { SearchLink } from './SearchLink';
+
 export const PeopleFilters = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const query = searchParams.get('query') || '';
+  const sex = searchParams.get('sex') || '';
+
+  const handleQueryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const newQuery = event.target.value;
+
+    const params = new URLSearchParams(searchParams);
+
+    if (newQuery) {
+      params.set('query', newQuery);
+    } else {
+      params.delete('query');
+    }
+
+    setSearchParams(params);
+  };
+
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        <a className="is-active" href="#/people">All</a>
-        <a className="" href="#/people?sex=m">Male</a>
-        <a className="" href="#/people?sex=f">Female</a>
+        <SearchLink
+          className={classNames({ 'is-active': !sex })}
+          params={{ sex: '' || null }}
+        >
+          All
+        </SearchLink>
+
+        <SearchLink
+          className={classNames({ 'is-active': sex === 'm' })}
+          params={{ sex: 'm' || null }}
+        >
+          Male
+        </SearchLink>
+
+        <SearchLink
+          className={classNames({ 'is-active': sex === 'f' })}
+          params={{ sex: 'f' || null }}
+        >
+          Female
+        </SearchLink>
       </p>
 
       <div className="panel-block">
         <p className="control has-icons-left">
           <input
+            value={query}
             data-cy="NameFilter"
             type="search"
             className="input"
             placeholder="Search"
+            onChange={handleQueryChange}
           />
 
           <span className="icon is-left">
@@ -81,10 +122,7 @@ export const PeopleFilters = () => {
       </div>
 
       <div className="panel-block">
-        <a
-          className="button is-link is-outlined is-fullwidth"
-          href="#/people"
-        >
+        <a className="button is-link is-outlined is-fullwidth" href="#/people">
           Reset all filters
         </a>
       </div>

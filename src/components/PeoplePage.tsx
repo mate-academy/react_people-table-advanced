@@ -16,8 +16,10 @@ export const PeoplePage = () => {
   const [searchParams] = useSearchParams();
   const currentSort = searchParams.get('sort') || '';
   const currentOrder = searchParams.get('order') || '';
+  const currentSex = searchParams.get('sex') || '';
+  const currentQuery = searchParams.get('query') || '';
 
-  const preparedPeople = people.map(person => {
+  const preparedPeople: Person[] = people.map(person => {
     const mother = person.motherName
       ? getParent(person.motherName, people) : undefined;
     const father = person.fatherName
@@ -46,6 +48,43 @@ export const PeoplePage = () => {
         return 0;
     }
   });
+
+  const filteringPeople = (peopleToFilter: Person[]) => {
+    let filteredPeople = peopleToFilter;
+
+    if (currentSex) {
+      filteredPeople = filteredPeople.filter(person => {
+        return person.sex === currentSex;
+      });
+    }
+
+    if (currentQuery) {
+      const normalizesQuery = currentQuery.toLowerCase();
+
+      filteredPeople = filteredPeople.filter(person => {
+        const result = [];
+
+        result
+          .push(person.name.toLowerCase().includes(normalizesQuery));
+
+        if (person.motherName) {
+          result
+            .push(person.motherName.toLowerCase().includes(normalizesQuery));
+        }
+
+        if (person.fatherName) {
+          result
+            .push(person.fatherName.toLowerCase().includes(normalizesQuery));
+        }
+
+        return result.some(v => v);
+      });
+    }
+
+    return filteredPeople;
+  };
+
+  const filteredPeople = filteringPeople(sortedPeople);
 
   useEffect(() => {
     setLoading(true);
@@ -86,15 +125,19 @@ export const PeoplePage = () => {
                 </p>
               )}
 
-              {false && !loading && (
-                <p>There are no people matching the current search criteria</p>
-              )}
-
               {!loading && (
-                <PeopleTable
-                  people={sortedPeople}
-                  setPeople={setPeople}
-                />
+                <>
+                  {!filteredPeople.length && (
+                    <p>
+                      There are no people matching the current search criteria
+                    </p>
+                  )}
+                  {!!filteredPeople.length && (
+                    <PeopleTable
+                      people={filteredPeople}
+                    />
+                  )}
+                </>
               )}
             </div>
           </div>

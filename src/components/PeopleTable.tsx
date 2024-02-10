@@ -14,7 +14,6 @@ import { Order } from '../types/Order';
 
 interface Props {
   people: Person[];
-  setPeople: React.Dispatch<React.SetStateAction<Person[]>>;
 }
 
 export const PeopleTable: React.FC<Props> = React.memo(({ people }) => {
