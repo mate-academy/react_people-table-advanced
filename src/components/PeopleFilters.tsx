@@ -11,6 +11,7 @@ export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const sex = searchParams.get('sex') || '';
   const centuries = searchParams.getAll('centuries') || [];
+  const query = searchParams.get('query') || '';
 
   const handleCenturies = (currentCentury: string) => {
     return centuries.includes(currentCentury)
@@ -70,6 +71,7 @@ export const PeopleFilters = () => {
             type="search"
             className="input"
             placeholder="Search"
+            value={query}
             onChange={handleQueryChange}
           />
 
