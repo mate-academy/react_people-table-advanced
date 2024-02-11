@@ -15,33 +15,36 @@ export const CenturyFilter = () => {
   );
 
   return (
-    <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
-      <div className="level-left">
-        {CENTURIES.map(century => (
+    <div className="panel-block">
+      <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
+        <div className="level-left">
+          {CENTURIES.map(century => (
+            <SearchLink
+              data-cy="century"
+              key={century}
+              params={{ centuries: getCenturyFilter(century.toString()) }}
+              className={classNames('button mr-1', {
+                'is-info': centuries.includes(century.toString()),
+              })}
+            >
+              {century}
+            </SearchLink>
+          ))}
+        </div>
+
+        <div className="level-right ml-4">
           <SearchLink
-            data-cy="century"
-            key={century}
-            params={{ centuries: getCenturyFilter(century.toString()) }}
-            className={classNames('button mr-1', {
-              'is-info': centuries.includes(century.toString()),
+            data-cy="centuryALL"
+            params={{ centuries: null }}
+            className={classNames('button is-success', {
+              'is-outlined': !!centuries.length,
             })}
           >
-            {century}
+            All
           </SearchLink>
-        ))}
-      </div>
-
-      <div className="level-right ml-4">
-        <SearchLink
-          data-cy="centuryALL"
-          params={{ centuries: null }}
-          className={classNames('button is-success', {
-            'is-outlined': !!centuries.length,
-          })}
-        >
-          All
-        </SearchLink>
+        </div>
       </div>
     </div>
+
   );
 };

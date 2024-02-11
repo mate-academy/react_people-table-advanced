@@ -91,7 +91,7 @@ export const PeoplePage = () => {
             </div>
           )}
 
-          <div className="box table-container">
+          <div className="box table-container column">
             <h1 className="title">People Page</h1>
 
             {isLoading && (<Loader />)}

@@ -1,11 +1,48 @@
 import React from 'react';
+import { useParams, useSearchParams } from 'react-router-dom';
+import classNames from 'classnames';
 import { Person } from '../types';
-import { PersonItem } from './PersonItem';
+import { SearchLink } from './SearchLink';
+import { PersonLink } from './PersonLink';
 
 type Props = {
   people: Person[],
 };
+
+const SORT = ['name', 'sex', 'born', 'died'];
+
 export const PeopleTable: React.FC<Props> = ({ people }) => {
+  const { slug } = useParams();
+  const [searchParams] = useSearchParams();
+  const isSorted = searchParams.get('sort');
+  const isReversed = searchParams.get('order') === 'desc';
+
+  let sortedPeople = [...people].sort((a, b) => {
+    switch (isSorted) {
+      case 'name':
+      case 'sex':
+        return a[isSorted].localeCompare(b[isSorted]);
+
+      case 'born':
+      case 'died':
+        return a[isSorted] - b[isSorted];
+
+      default:
+        return 0;
+    }
+  });
+
+  if (isReversed) {
+    sortedPeople = sortedPeople.reverse();
+  }
+
+  const getSortParams = (param: string) => {
+    return {
+      sort: param === isSorted && isReversed ? null : param,
+      order: param === isSorted && !isReversed ? 'desc' : null,
+    };
+  };
+
   return (
     <>
       <table
@@ -14,34 +51,55 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
       >
         <thead>
           <tr>
-            <th>Name</th>
-            <th>Sex</th>
-            <th>Born</th>
-            <th>Died</th>
+            {SORT.map(field => (
+              <th key={field}>
+                <span className="is-flex is-flex-wrap-nowrap">
+                  {field[0].toUpperCase() + field.slice(1)}
+                  <SearchLink params={getSortParams(field)}>
+                    <span className="icon">
+                      <i className={classNames('fas', {
+                        'fa-sort': field !== isSorted,
+                        'fa-sort-up': field === isSorted && !isReversed,
+                        'fa-sort-down': field === isSorted && isReversed,
+                      })}
+                      />
+                    </span>
+                  </SearchLink>
+                </span>
+              </th>
+            ))}
             <th>Mother</th>
             <th>Father</th>
           </tr>
         </thead>
 
         <tbody>
-          {people.map(person => {
-            const fatherLink = people.find(
-              dad => dad.name === person.fatherName,
-            )?.slug || null;
-            const motherLink = people.find(
-              mom => mom.name === person.motherName,
-            )?.slug || null;
-
-            return (
-              <PersonItem
-                key={person.slug}
-                person={person}
-                motherLink={motherLink}
-                fatherLink={fatherLink}
-              />
-            );
-          })}
-
+          {sortedPeople.map(person => (
+            <tr
+              key={person.slug}
+              data-cy="person"
+              className={classNames({
+                'has-background-warning': person.slug === slug,
+              })}
+            >
+              <td aria-label="Link">
+                <PersonLink person={person} />
+              </td>
+              <td>{person.sex}</td>
+              <td>{person.born}</td>
+              <td>{person.died}</td>
+              <td aria-label="Link">
+                {person.mother
+                  ? <PersonLink person={person.mother} />
+                  : person.motherName || '-'}
+              </td>
+              <td aria-label="Link">
+                {person.father
+                  ? <PersonLink person={person.father} />
+                  : person.fatherName || '-'}
+              </td>
+            </tr>
+          ))}
         </tbody>
       </table>
 
