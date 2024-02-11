@@ -2,11 +2,11 @@ import { NavLink } from 'react-router-dom';
 import classNames from 'classnames';
 
 export const Navbar = () => {
-  const getLinkClass = ({ isActive }: { isActive: boolean }) => classNames(
-    'navbar-item', {
-      'has-background-grey-lighter': isActive,
-    },
-  );
+  const getLinkClass = (
+    { isActive }: { isActive: boolean },
+  ) => classNames('navbar-item', {
+    'has-background-grey-lighter': isActive,
+  });
 
   return (
     <nav
