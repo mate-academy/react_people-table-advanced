@@ -11,6 +11,8 @@ import { SearchParams } from '../../utils/searchHelper';
 import { SortBy } from '../../types/SortBy';
 import { SearchLink } from '../SearchLink';
 
+const SORT_HEADERS = ['Name', 'Sex', 'Born', 'Died'];
+
 interface Props {
   people: Person[],
 }
@@ -57,8 +59,6 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
     query,
     centuries,
   );
-
-  const SORT_HEADERS = ['Name', 'Sex', 'Born', 'Died'];
 
   return (
     peopleToRender.length ? (
