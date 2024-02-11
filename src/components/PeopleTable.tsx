@@ -1,17 +1,14 @@
 /* eslint-disable jsx-a11y/control-has-associated-label */
-import { Link, useParams } from 'react-router-dom';
-import classNames from 'classnames';
 import React from 'react';
 
 import { Person } from '../types';
+import { PersonLink } from './PersonLink';
 
 interface Props {
   people: Person[],
 }
 
 export const PeopleTable: React.FC<Props> = ({ people }) => {
-  const { slug } = useParams();
-
   const allNamesOnServer = people.map(person => person.name);
 
   const getParentSlug = (choseName: string) => people
@@ -74,65 +71,14 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
       </thead>
 
       <tbody>
-        {people.map(person => {
-          const {
-            name,
-            sex,
-            born,
-            died,
-            fatherName,
-            motherName,
-            slug: currentSlug,
-          } = person;
-
-          return (
-            <tr
-              key={currentSlug}
-              data-cy="person"
-              className={classNames({
-                'has-background-warning': currentSlug === slug,
-              })}
-            >
-              <td>
-                <Link
-                  to={`../${currentSlug}`}
-                  className={classNames({
-                    'has-text-danger': sex === 'f',
-                  })}
-                >
-                  {name}
-                </Link>
-              </td>
-
-              <td>{sex}</td>
-              <td>{born}</td>
-              <td>{died}</td>
-
-              {motherName && allNamesOnServer.includes(motherName) ? (
-                <td>
-                  <Link
-                    className="has-text-danger"
-                    to={`../${getParentSlug(motherName)}`}
-                  >
-                    {motherName}
-                  </Link>
-                </td>
-              ) : (
-                <td>{motherName || '-'}</td>
-              )}
-
-              {fatherName && allNamesOnServer.includes(fatherName) ? (
-                <td>
-                  <Link to={`../${getParentSlug(fatherName)}`}>
-                    {fatherName}
-                  </Link>
-                </td>
-              ) : (
-                <td>{fatherName || '-'}</td>
-              )}
-            </tr>
-          );
-        })}
+        {people.map(person => (
+          <PersonLink
+            key={person.slug}
+            person={person}
+            names={allNamesOnServer}
+            getParentSlug={getParentSlug}
+          />
+        ))}
       </tbody>
     </table>
   );
