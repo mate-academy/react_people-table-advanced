@@ -5,6 +5,7 @@ export function preparePeople(
   sex: string,
   query: string,
   centuries: string[],
+  sort: string,
 ) {
   let preparedPeople = [...people];
 
@@ -28,6 +29,10 @@ export function preparePeople(
       .filter(person => centuries.includes(
         Math.ceil(person.born / 100).toString(),
       ));
+  }
+
+  if (sort) {
+    
   }
 
   return preparedPeople;

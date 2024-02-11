@@ -59,8 +59,6 @@ export const PeoplePage = () => {
                   </p>
                 )}
 
-              <p>There are no people matching the current search criteria</p>
-
               {!!people.length && (
                 <PeopleTable people={people} />
               )}
