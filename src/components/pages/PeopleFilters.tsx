@@ -121,6 +121,7 @@ export const PeopleFilters = () => {
 
       <div className="panel-block">
         <SearchLink
+          onClick={() => setValueQuery('')}
           className="button is-link is-outlined is-fullwidth"
           params={{
             centuries: [],
