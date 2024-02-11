@@ -37,7 +37,7 @@ export const PeoplePage = () => {
 
               {errorMessage && (
                 <p data-cy="peopleLoadingError">
-                  Something went wrong
+                  {errorMessage}
                 </p>
               )}
 

@@ -5,7 +5,7 @@ import { TableHeadItem } from '../TableHeadItem/TableHeadItem';
 import { TableBody } from '../TableBody/TableBody';
 
 interface Props {
-  people: Person[];
+  people: Person[]
 }
 
 export const PeopleTable: React.FC<Props> = ({ people }) => {
@@ -25,12 +25,10 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
     }
 
     if (query) {
-      const normalizedQuery = query.toLowerCase().trim();
-
       preparedPeople = preparedPeople
-        .filter(person => person.name.toLowerCase().includes(normalizedQuery)
-          || person.fatherName?.toLowerCase().includes(normalizedQuery)
-          || person.motherName?.toLowerCase().includes(normalizedQuery));
+        .filter(person => person.name.toLowerCase().includes(query)
+          || person.fatherName?.toLowerCase().includes(query)
+          || person.motherName?.toLowerCase().includes(query));
     }
 
     if (centuries.length > 0) {

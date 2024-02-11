@@ -1,4 +1,5 @@
 import classNames from 'classnames';
+import { useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Status } from '../../types/Status';
 import { SearchLink } from '../SearchLink/SearchLink';
@@ -11,11 +12,19 @@ export const PeopleFilters = () => {
   const sex = searchParams.get('sex') || '';
   const centuries = searchParams.getAll('centuries') || [];
 
+  const [valueQuery, setValueQuery] = useState(query);
+
   const handlerChange
     = (event: React.ChangeEvent<HTMLInputElement>) => {
       const params = new URLSearchParams(searchParams);
 
-      params.set('query', event.target.value);
+      if (!event.target.value.trim()) {
+        params.delete('query');
+      } else {
+        params.set('query', event.target.value.trim().toLowerCase());
+      }
+
+      setValueQuery(event.target.value);
       setSearchParams(params);
     };
 
@@ -65,7 +74,7 @@ export const PeopleFilters = () => {
         <p className="control has-icons-left">
           <input
             onChange={handlerChange}
-            value={query}
+            value={valueQuery}
             data-cy="NameFilter"
             type="search"
             className="input"
