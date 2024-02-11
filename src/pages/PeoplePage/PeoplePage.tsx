@@ -58,7 +58,7 @@ export const PeoplePage = () => {
           <div className="column">
             <div className="box table-container">
               {(!!people?.length && !error) && <PeopleTable people={people} />}
-              {(people?.length === 0 && !error) && (
+              {(!people?.length && !error) && (
                 <p data-cy="noPeopleMessage">
                   There are no people on the server
                 </p>
