@@ -1,7 +1,7 @@
 import React from 'react';
 import classNames from 'classnames';
-import { SortHeaderCells } from '../types/SortHeaderCells';
 import { SearchLink } from './SearchLink';
+import { SORT_CELLS } from '../constants/searchConsts';
 
 interface Props {
   sort: string;
@@ -9,17 +9,10 @@ interface Props {
 }
 
 export const TableHeader: React.FC<Props> = ({ sort, order }) => {
-  const sortCells = [
-    SortHeaderCells.Name,
-    SortHeaderCells.Sex,
-    SortHeaderCells.Born,
-    SortHeaderCells.Died,
-  ];
-
   return (
     <thead>
       <tr>
-        {sortCells.map(cellName => {
+        {SORT_CELLS.map(cellName => {
           const normilezedCellName = cellName.toLowerCase();
 
           return (
@@ -56,4 +49,4 @@ export const TableHeader: React.FC<Props> = ({ sort, order }) => {
       </tr>
     </thead>
   );
-}
+};

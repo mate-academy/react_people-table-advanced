@@ -4,7 +4,7 @@ import classNames from 'classnames';
 
 import { SearchLink } from './SearchLink';
 import { Sex } from '../types/Sex';
-import { CENTURIES } from '../constants/filterConst';
+import { CENTURIES } from '../constants/searchConsts';
 import { setSearchWith } from '../utils/searchHelper';
 
 export const PeopleFilters = () => {

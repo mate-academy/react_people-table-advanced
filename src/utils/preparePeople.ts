@@ -1,4 +1,5 @@
 import { Person } from '../types';
+import { SortNames } from '../types/SortNames';
 
 export function preparePeople(
   people: Person[],
@@ -6,6 +7,7 @@ export function preparePeople(
   query: string,
   centuries: string[],
   sort: string,
+  order: string,
 ) {
   let preparedPeople = [...people];
 
@@ -32,7 +34,24 @@ export function preparePeople(
   }
 
   if (sort) {
-    
+    preparedPeople.sort((p1, p2) => {
+      switch (sort) {
+        case SortNames.Name:
+        case SortNames.Sex:
+          return p1[sort].localeCompare(p2[sort]);
+
+        case SortNames.Born:
+        case SortNames.Died:
+          return p1[sort] - p2[sort];
+
+        default:
+          return 0;
+      }
+    });
+  }
+
+  if (order) {
+    preparedPeople.reverse();
   }
 
   return preparedPeople;

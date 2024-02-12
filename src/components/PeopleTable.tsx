@@ -19,7 +19,14 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
   const sort = searchParams.get('sort') || '';
   const order = searchParams.get('order') || '';
 
-  const preparedPeople = preparePeople(people, sex, query, centuries, sort);
+  const preparedPeople = preparePeople(
+    people,
+    sex,
+    query,
+    centuries,
+    sort,
+    order,
+  );
 
   const allNamesOnServer = people.map(person => person.name);
 
