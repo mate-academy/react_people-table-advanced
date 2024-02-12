@@ -1,7 +1,7 @@
 import React from 'react';
 import classNames from 'classnames';
 import { SearchLink } from './SearchLink';
-import { SORT_CELLS } from '../constants/searchConsts';
+import { SORT_CELLS as cells } from '../constants/searchConsts';
 
 interface Props {
   sort: string;
@@ -12,12 +12,12 @@ export const TableHeader: React.FC<Props> = ({ sort, order }) => {
   return (
     <thead>
       <tr>
-        {SORT_CELLS.map(cellName => {
+        {cells.map(cellName => {
           const normilezedCellName = cellName.toLowerCase();
 
           return (
             <th key={cellName}>
-              <span className="is-flex is-flex-wrap-nowrap">
+              <span className="is-flex is-flex-wrap-nowrap is-capitalized">
                 {cellName}
                 <SearchLink
                   params={{

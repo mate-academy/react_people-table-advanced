@@ -1,12 +1,21 @@
 import { Person } from '../types';
 import { SortNames } from '../types/SortNames';
 
+const nameMatchesQuery = (
+  name: string | undefined | null,
+  queryMethod: string,
+): boolean => {
+  const normalizedQuery = queryMethod.toLowerCase().trim();
+
+  return !!name && name.toLowerCase().includes(normalizedQuery);
+};
+
 export function preparePeople(
   people: Person[],
   sex: string,
   query: string,
   centuries: string[],
-  sort: string,
+  sortMethod: string,
   order: string,
 ) {
   let preparedPeople = [...people];
@@ -15,14 +24,13 @@ export function preparePeople(
     preparedPeople = preparedPeople.filter(person => person.sex === sex);
   }
 
+  // створити функцію яка буде приймати query та name та буде нормалізувати
   if (query) {
-    const normilezedQuery = query.toLowerCase().trim();
-
     preparedPeople = preparedPeople
       .filter(({ name, fatherName, motherName }) => (
-        name.toLowerCase().includes(normilezedQuery)
-        || fatherName?.toLowerCase().includes(normilezedQuery)
-        || motherName?.toLowerCase().includes(normilezedQuery)
+        nameMatchesQuery(name, query)
+        || nameMatchesQuery(fatherName, query)
+        || nameMatchesQuery(motherName, query)
       ));
   }
 
@@ -33,16 +41,16 @@ export function preparePeople(
       ));
   }
 
-  if (sort) {
+  if (sortMethod) {
     preparedPeople.sort((p1, p2) => {
-      switch (sort) {
+      switch (sortMethod) {
         case SortNames.Name:
         case SortNames.Sex:
-          return p1[sort].localeCompare(p2[sort]);
+          return p1[sortMethod].localeCompare(p2[sortMethod]);
 
         case SortNames.Born:
         case SortNames.Died:
-          return p1[sort] - p2[sort];
+          return p1[sortMethod] - p2[sortMethod];
 
         default:
           return 0;
