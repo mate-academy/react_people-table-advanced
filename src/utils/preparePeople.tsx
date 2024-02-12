@@ -22,7 +22,7 @@ export function preparePeople(
   if (centuries.length) {
     preparingPeople = preparingPeople
       .filter(person => centuries
-        .includes((Math.floor(person.born / 100)).toString()));
+        .includes((Math.ceil(person.born / 100)).toString()));
   }
 
   if (sex) {
