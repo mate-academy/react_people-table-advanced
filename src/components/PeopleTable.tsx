@@ -7,7 +7,7 @@ import { SearchLink } from './SearchLink';
 import { Props } from '../types/Props';
 import { preparePeople } from '../utils/preparePeople';
 import { SortField } from '../types/SortField';
-import { SortFieldPrepare } from '../types/SortFieldForMap';
+import { SortFieldPrepare } from '../types/SortFieldPrepare';
 
 interface SortParams {
   sort: string | null,

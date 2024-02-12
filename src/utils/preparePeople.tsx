@@ -1,12 +1,12 @@
 import { Person } from '../types';
-import { SortFieldPrepare } from '../types/SortFieldForMap';
+import { SortFieldPrepare } from '../types/SortFieldPrepare';
 
 export function preparePeople(
   query: string,
   centuries: string[],
   sex: string,
   normalizedPeople: Person[],
-  sort: SortFieldPrepare,
+  sort: string,
   order: string,
 ) {
   let preparingPeople = [...normalizedPeople];
@@ -41,16 +41,23 @@ export function preparePeople(
   }
 
   if (sort) {
-    preparingPeople.sort((person1, person2) => {
-      switch (typeof person1[sort]) {
-        case 'string':
-          return (person1[sort] as string)
-            .localeCompare(person2[sort] as string);
+    preparingPeople = preparingPeople.sort((person1, person2) => {
+      const normalizedSort = sort
+        .toLowerCase() as SortFieldPrepare;
 
-        case 'number':
-          return +person1[sort] - +person2[sort];
-        default:
+      switch (typeof person1[normalizedSort]) {
+        case 'string': {
+          return (person1[normalizedSort] as string)
+            .localeCompare(person2[normalizedSort] as string);
+        }
+
+        case 'number': {
+          return +person1[normalizedSort] - +person2[normalizedSort];
+        }
+
+        default: {
           return 0;
+        }
       }
     });
   }
