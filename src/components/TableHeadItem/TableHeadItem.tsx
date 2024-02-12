@@ -1,7 +1,7 @@
 import classNames from 'classnames';
 import { useSearchParams } from 'react-router-dom';
 import { SearchLink } from '../SearchLink/SearchLink';
-import { TableItem } from '../../types';
+import { TableItem } from '../../types/TableItem';
 
 export const TableHeadItem = () => {
   const [searchParams] = useSearchParams();
