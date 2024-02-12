@@ -1,5 +1,5 @@
-import { Person } from '../../types';
 import { FilterFields } from '../../types/FilterFields';
+import { Person } from '../../types/Person';
 
 export const preparePeople = (peopleFromServer: Person[], {
   sex,
