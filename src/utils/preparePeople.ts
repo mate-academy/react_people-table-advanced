@@ -24,7 +24,6 @@ export function preparePeople(
     preparedPeople = preparedPeople.filter(person => person.sex === sex);
   }
 
-  // створити функцію яка буде приймати query та name та буде нормалізувати
   if (query) {
     preparedPeople = preparedPeople
       .filter(({ name, fatherName, motherName }) => (
