@@ -16,6 +16,9 @@ export const PeopleFilters: React.FC = () => {
     if (normalizedQuery) {
       params.set('query', normalizedQuery);
       setSearchParams(params);
+    } else {
+      params.delete('query');
+      setSearchParams(params);
     }
   };
 
