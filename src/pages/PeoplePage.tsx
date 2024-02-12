@@ -30,6 +30,8 @@ export const PeoplePage = () => {
     fetchData();
   }, []);
 
+  const noPeople = !errorMessage && !people.length && !isLoading;
+
   return (
     <>
       <h1 className="title">People Page</h1>
@@ -50,14 +52,11 @@ export const PeoplePage = () => {
                 <p data-cy="peopleLoadingError">{errorMessage}</p>
               )}
 
-              {!errorMessage
-                && !people.length
-                && !isLoading
-                && (
-                  <p data-cy="noPeopleMessage">
-                    There are no people on the server
-                  </p>
-                )}
+              {noPeople && (
+                <p data-cy="noPeopleMessage">
+                  There are no people on the server
+                </p>
+              )}
 
               {!!people.length && (
                 <PeopleTable people={people} />

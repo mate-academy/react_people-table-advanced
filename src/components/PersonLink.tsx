@@ -6,15 +6,15 @@ import { Person } from '../types';
 
 interface Props {
   person: Person,
-  names: string[],
   getParentSlug: (parentName: string) => string | undefined,
 }
 
 export const PersonLink: React.FC<Props> = ({
   person,
-  names,
   getParentSlug,
 }) => {
+  const { slug } = useParams();
+
   const {
     name,
     sex,
@@ -24,7 +24,9 @@ export const PersonLink: React.FC<Props> = ({
     motherName,
     slug: currentSlug,
   } = person;
-  const { slug } = useParams();
+
+  const fatherSlug = getParentSlug(fatherName ?? '');
+  const motherSlug = getParentSlug(motherName ?? '');
 
   return (
     <tr
@@ -49,11 +51,11 @@ export const PersonLink: React.FC<Props> = ({
       <td>{born}</td>
       <td>{died}</td>
 
-      {motherName && names.includes(motherName) ? (
+      {motherName && motherSlug ? (
         <td>
           <Link
             className="has-text-danger"
-            to={`../${getParentSlug(motherName)}`}
+            to={`../${motherSlug}`}
           >
             {motherName}
           </Link>
@@ -62,9 +64,9 @@ export const PersonLink: React.FC<Props> = ({
         <td>{motherName || '-'}</td>
       )}
 
-      {fatherName && names.includes(fatherName) ? (
+      {fatherName && fatherSlug ? (
         <td>
-          <Link to={`../${getParentSlug(fatherName)}`}>
+          <Link to={`../${fatherSlug}`}>
             {fatherName}
           </Link>
         </td>

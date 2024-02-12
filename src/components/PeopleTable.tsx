@@ -28,8 +28,6 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
     order,
   );
 
-  const allNamesOnServer = people.map(person => person.name);
-
   const getParentSlug = (choseName: string) => people
     .find(person => person.name === choseName)?.slug;
 
@@ -49,7 +47,6 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
               <PersonLink
                 key={person.slug}
                 person={person}
-                names={allNamesOnServer}
                 getParentSlug={getParentSlug}
               />
             ))}
