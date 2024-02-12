@@ -26,7 +26,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
   });
 
   return (
-    (filteredPeople.length === 0) ? (
+    (filteredPeople.length) ? (
       <p>There are no people matching the current search criteria</p>
     ) : (
       <table

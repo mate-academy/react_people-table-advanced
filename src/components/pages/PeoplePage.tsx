@@ -35,7 +35,7 @@ export const PeoplePage = () => {
                 <Loader />
               )}
 
-              {errorMessage && (
+              {!!errorMessage && (
                 <p data-cy="peopleLoadingError">
                   {errorMessage}
                 </p>
@@ -47,7 +47,7 @@ export const PeoplePage = () => {
                 </p>
               )}
 
-              {people.length > 0 && (
+              {!!people?.length && (
                 <PeopleTable people={people} />
               )}
             </div>

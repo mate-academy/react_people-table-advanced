@@ -70,7 +70,7 @@ export const TableBody: React.FC<Props> = ({ people, filteredPeople }) => {
                   </Link>
                 </td>
               ) : (
-                <td>{motherName || '-'}</td>
+                <td>{!!motherName || '-'}</td>
               )}
 
             {fatherName
@@ -84,7 +84,7 @@ export const TableBody: React.FC<Props> = ({ people, filteredPeople }) => {
                   </Link>
                 </td>
               ) : (
-                <td>{fatherName || '-'}</td>
+                <td>{!!fatherName || '-'}</td>
               )}
           </tr>
         );
