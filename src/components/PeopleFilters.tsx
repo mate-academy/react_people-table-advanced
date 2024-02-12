@@ -1,8 +1,9 @@
 import cn from 'classnames';
 import { useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { setSearchWith } from '../utils/setSearchWith';
 import { SearchLink } from './SearchLink';
+import { getSearchWith } from '../utils/searchHelper';
+import { Sex } from '../types/Sex';
 
 export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -13,12 +14,13 @@ export const PeopleFilters = () => {
 
   const handleQueryChanged = (newQuery: string) => {
     const normalizedQuery = newQuery.trim().toLowerCase();
-
-    setSearchWith(
+    const newParams = getSearchWith(
       searchParams,
       { query: normalizedQuery || null },
-      setSearchParams,
     );
+
+    setSearchParams(newParams);
+
     setQuery(newQuery);
   };
 
@@ -43,17 +45,17 @@ export const PeopleFilters = () => {
         </SearchLink>
         <SearchLink
           className={cn({
-            'is-active': sex === 'm',
+            'is-active': sex === Sex.Male,
           })}
-          params={{ sex: 'm' }}
+          params={{ sex: Sex.Male }}
         >
           Male
         </SearchLink>
         <SearchLink
           className={cn({
-            'is-active': sex === 'f',
+            'is-active': sex === Sex.Female,
           })}
-          params={{ sex: 'f' }}
+          params={{ sex: Sex.Female }}
         >
           Female
         </SearchLink>
