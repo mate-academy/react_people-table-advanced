@@ -27,8 +27,6 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
 
   return (
     (filteredPeople.length) ? (
-      <p>There are no people matching the current search criteria</p>
-    ) : (
       <table
         data-cy="peopleTable"
         className="table is-striped is-hoverable is-narrow is-fullwidth"
@@ -40,6 +38,8 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
           filteredPeople={filteredPeople}
         />
       </table>
+    ) : (
+      <p>There are no people matching the current search criteria</p>
     )
   );
 };

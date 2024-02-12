@@ -58,7 +58,7 @@ export const TableBody: React.FC<Props> = ({ people, filteredPeople }) => {
             <td>{born}</td>
             <td>{died}</td>
 
-            {motherName
+            {!!motherName
               && listOfNames.includes(motherName)
               ? (
                 <td>
@@ -70,10 +70,10 @@ export const TableBody: React.FC<Props> = ({ people, filteredPeople }) => {
                   </Link>
                 </td>
               ) : (
-                <td>{!!motherName || '-'}</td>
+                <td>{motherName || '-'}</td>
               )}
 
-            {fatherName
+            {!!fatherName
               && listOfNames.includes(fatherName)
               ? (
                 <td>
@@ -84,7 +84,7 @@ export const TableBody: React.FC<Props> = ({ people, filteredPeople }) => {
                   </Link>
                 </td>
               ) : (
-                <td>{!!fatherName || '-'}</td>
+                <td>{fatherName || '-'}</td>
               )}
           </tr>
         );
