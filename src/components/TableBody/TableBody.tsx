@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import classNames from 'classnames';
 import { Link, useLocation, useParams } from 'react-router-dom';
-import { Person } from '../../types';
+import { Person } from '../../types/Person';
 
 interface Props {
   people: Person[];

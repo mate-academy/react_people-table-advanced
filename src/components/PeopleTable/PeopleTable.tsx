@@ -1,9 +1,9 @@
 import React from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { Person } from '../../types';
 import { TableHeadItem } from '../TableHeadItem/TableHeadItem';
 import { TableBody } from '../TableBody/TableBody';
 import { preparePeople } from '../services/preparePeople';
+import { Person } from '../../types/Person';
 
 interface Props {
   people: Person[]
