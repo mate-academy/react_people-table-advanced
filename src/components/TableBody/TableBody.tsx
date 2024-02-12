@@ -5,10 +5,10 @@ import { Person } from '../../types';
 
 interface Props {
   people: Person[];
-  preparePeople: (peopleFromServer: Person[]) => Person[]
+  filteredPeople: Person[]
 }
 
-export const TableBody: React.FC<Props> = ({ people, preparePeople }) => {
+export const TableBody: React.FC<Props> = ({ people, filteredPeople }) => {
   const { slug } = useParams();
   const { search } = useLocation();
 
@@ -23,7 +23,7 @@ export const TableBody: React.FC<Props> = ({ people, preparePeople }) => {
 
   return (
     <tbody>
-      {preparePeople(people).map(person => {
+      {filteredPeople.map(person => {
         const {
           name,
           sex: personSex,
