@@ -4,9 +4,15 @@ export const PeopleFilters = () => {
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        <a className="is-active" href="#/people">All</a>
-        <a className="" href="#/people?sex=m">Male</a>
-        <a className="" href="#/people?sex=f">Female</a>
+        <a className="is-active" href="#/people">
+          All
+        </a>
+        <a className="" href="#/people?sex=m">
+          Male
+        </a>
+        <a className="" href="#/people?sex=f">
+          Female
+        </a>
       </p>
 
       <div className="panel-block">
@@ -81,10 +87,7 @@ export const PeopleFilters = () => {
       </div>
 
       <div className="panel-block">
-        <a
-          className="button is-link is-outlined is-fullwidth"
-          href="#/people"
-        >
+        <a className="button is-link is-outlined is-fullwidth" href="#/people">
           Reset all filters
         </a>
       </div>

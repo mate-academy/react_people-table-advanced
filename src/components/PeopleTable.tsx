@@ -74,10 +74,7 @@ export const PeopleTable = () => {
 
         <tr data-cy="person">
           <td>
-            <a
-              className="has-text-danger"
-              href="#/people/anna-van-hecke-1607"
-            >
+            <a className="has-text-danger" href="#/people/anna-van-hecke-1607">
               Anna van Hecke
             </a>
           </td>
@@ -96,10 +93,7 @@ export const PeopleTable = () => {
           <td>1631</td>
           <td>1676</td>
           <td>
-            <a
-              className="has-text-danger"
-              href="#/people/anna-van-hecke-1607"
-            >
+            <a className="has-text-danger" href="#/people/anna-van-hecke-1607">
               Anna van Hecke
             </a>
           </td>
@@ -146,10 +140,7 @@ export const PeopleTable = () => {
 
         <tr data-cy="person">
           <td>
-            <a
-              className="has-text-danger"
-              href="#/people/joanna-de-pape-1654"
-            >
+            <a className="has-text-danger" href="#/people/joanna-de-pape-1654">
               Joanna de Pape
             </a>
           </td>
@@ -162,10 +153,7 @@ export const PeopleTable = () => {
 
         <tr data-cy="person">
           <td>
-            <a
-              className="has-text-danger"
-              href="#/people/martina-de-pape-1666"
-            >
+            <a className="has-text-danger" href="#/people/martina-de-pape-1666">
               Martina de Pape
             </a>
           </td>
@@ -218,10 +206,7 @@ export const PeopleTable = () => {
 
         <tr data-cy="person" className="has-background-warning">
           <td>
-            <a
-              className="has-text-danger"
-              href="#/people/maria-de-rycke-1683"
-            >
+            <a className="has-text-danger" href="#/people/maria-de-rycke-1683">
               Maria de Rycke
             </a>
           </td>
@@ -245,10 +230,7 @@ export const PeopleTable = () => {
           <td>1692</td>
           <td>1743</td>
           <td>
-            <a
-              className="has-text-danger"
-              href="#/people/joanna-de-pape-1654"
-            >
+            <a className="has-text-danger" href="#/people/joanna-de-pape-1654">
               Joanna de Pape
             </a>
           </td>
@@ -287,10 +269,7 @@ export const PeopleTable = () => {
 
         <tr data-cy="person">
           <td>
-            <a
-              className="has-text-danger"
-              href="#/people/jacoba-lammens-1699"
-            >
+            <a className="has-text-danger" href="#/people/jacoba-lammens-1699">
               Jacoba Lammens
             </a>
           </td>
@@ -325,10 +304,7 @@ export const PeopleTable = () => {
           <td>1710</td>
           <td>1786</td>
           <td>
-            <a
-              className="has-text-danger"
-              href="#/people/maria-de-rycke-1683"
-            >
+            <a className="has-text-danger" href="#/people/maria-de-rycke-1683">
               Maria de Rycke
             </a>
           </td>
@@ -350,10 +326,7 @@ export const PeopleTable = () => {
           <td>1711</td>
           <td>1754</td>
           <td>
-            <a
-              className="has-text-danger"
-              href="#/people/maria-de-rycke-1683"
-            >
+            <a className="has-text-danger" href="#/people/maria-de-rycke-1683">
               Maria de Rycke
             </a>
           </td>
@@ -524,10 +497,7 @@ export const PeopleTable = () => {
 
         <tr data-cy="person">
           <td>
-            <a
-              className="has-text-danger"
-              href="#/people/livina-sierens-1761"
-            >
+            <a className="has-text-danger" href="#/people/livina-sierens-1761">
               Livina Sierens
             </a>
           </td>
@@ -566,10 +536,7 @@ export const PeopleTable = () => {
           <td>1796</td>
           <td>1837</td>
           <td>
-            <a
-              className="has-text-danger"
-              href="#/people/livina-sierens-1761"
-            >
+            <a className="has-text-danger" href="#/people/livina-sierens-1761">
               Livina Sierens
             </a>
           </td>
@@ -629,10 +596,7 @@ export const PeopleTable = () => {
 
         <tr data-cy="person">
           <td>
-            <a
-              className="has-text-danger"
-              href="#/people/maria-sturm-1835"
-            >
+            <a className="has-text-danger" href="#/people/maria-sturm-1835">
               Maria Sturm
             </a>
           </td>
@@ -667,10 +631,7 @@ export const PeopleTable = () => {
           <td>1877</td>
           <td>1968</td>
           <td>
-            <a
-              className="has-text-danger"
-              href="#/people/maria-sturm-1835"
-            >
+            <a className="has-text-danger" href="#/people/maria-sturm-1835">
               Maria Sturm
             </a>
           </td>

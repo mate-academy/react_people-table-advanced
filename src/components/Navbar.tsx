@@ -8,7 +8,9 @@ export const Navbar = () => {
     >
       <div className="container">
         <div className="navbar-brand">
-          <a className="navbar-item" href="#/">Home</a>
+          <a className="navbar-item" href="#/">
+            Home
+          </a>
 
           <a
             aria-current="page"
