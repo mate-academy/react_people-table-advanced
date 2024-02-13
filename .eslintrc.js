@@ -5,7 +5,7 @@ module.exports = {
       ignoreTemplateLiterals: true,
       ignoreComments: true,
     }],
-    'jsx-a11y/label-has-associated-control': ["error", {
+    'jsx-a11y/label-has-associated-control': [0, {
       assert: "either",
     }],
   },

@@ -22,7 +22,9 @@ export const TodoModal: React.FC = () => {
         </header>
 
         <div className="modal-card-body">
-          <p className="block" data-cy="modal-title">fugiat veniam minus</p>
+          <p className="block" data-cy="modal-title">
+            fugiat veniam minus
+          </p>
 
           <p className="block" data-cy="modal-user">
             {/* For not completed */}
