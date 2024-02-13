@@ -3,7 +3,7 @@ import React from 'react';
 import classNames from 'classnames';
 
 import { SearchLink } from './SearchLink';
-import { Sex } from '../types/Sex';
+import { Sex } from '../enums/Sex';
 import { CENTURIES } from '../constants/searchConsts';
 import { setSearchWith } from '../utils/searchHelper';
 
