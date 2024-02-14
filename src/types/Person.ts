@@ -1,5 +1,5 @@
 export interface Person {
-  id: Key | null | undefined;
+  id: null | undefined;
   century: any;
   name: string,
   sex: string,
