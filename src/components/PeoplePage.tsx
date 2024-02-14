@@ -31,8 +31,11 @@ export const PeoplePage = () => {
           setLoader(false);
         })
         .catch(() => {
-          setLoader(false);
-        });
+          <p data-cy="peopleLoadingError" className="has-text-danger">
+            Something went wrong
+          </p>;
+        })
+        .finally(() => setLoader(false));
     }, 300);
   }, []);
 
@@ -56,6 +59,7 @@ export const PeoplePage = () => {
         return order === 'desc'
           ? b[sort].localeCompare(a[sort])
           : a[sort].localeCompare(b[sort]);
+
       case 'born':
       case 'died':
         return order === 'desc'
@@ -128,6 +132,7 @@ export const PeoplePage = () => {
                         <PeopleTable
                           personSlug={personSlug}
                           persons={filteredPersons}
+                          filteredPersons={filteredPersons}
                         />
                       )}
                     </>

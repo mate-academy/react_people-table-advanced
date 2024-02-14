@@ -14,7 +14,7 @@ export const Navbar = () => {
       role="navigation"
       aria-label="main navigation"
     >
-      <div className="container">
+      <div className="navbar-container">
         <div className="navbar-brand">
           <NavLink className={activ} to="/">Home</NavLink>
 

@@ -23,11 +23,13 @@ export const PersonLink: React.FC<Props> = ({
     born,
     died,
   } = person;
+
   const isFemale = person.sex === 'f' ? 'has-text-danger' : '';
-  const selectPerson
- = slug === personSlug
- || motherName === personSlug
+
+  const selectPerson = slug === personSlug
+  || motherName === personSlug
   || fatherName === personSlug ? 'has-background-warning' : '';
+
   const father = persons.find(
     dad => dad.name === fatherName,
   )?.slug;
@@ -63,7 +65,7 @@ export const PersonLink: React.FC<Props> = ({
           >
             {motherName}
           </Link>
-        ) : (<>{motherName || '-'}</>)}
+        ) : '-'}
       </td>
       <td>
         {fatherName ? (
@@ -74,7 +76,7 @@ export const PersonLink: React.FC<Props> = ({
           >
             {fatherName}
           </Link>
-        ) : fatherName || '-'}
+        ) : '-'}
       </td>
     </tr>
   );
