@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import { SearchLink } from './SearchLink';
 import { getSearchWith } from '../utils/searchHelper';
 
-const centuriesArr = ['16', '17', '18', '19', '20'];
+const CENTURIES_SELECTOR = ['16', '17', '18', '19', '20'];
 
 export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -62,7 +62,7 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            {centuriesArr.map(element => (
+            {CENTURIES_SELECTOR.map(element => (
               <SearchLink
                 key={element}
                 data-cy="century"
