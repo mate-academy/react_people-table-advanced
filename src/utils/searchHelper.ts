@@ -1,3 +1,5 @@
+import { Person } from '../types';
+
 export type SearchParams = {
   [key: string]: string | string[] | null,
 };
@@ -45,3 +47,7 @@ export function getSearchWith(
   // we return a string to use it inside links
   return newParams.toString();
 }
+
+export const getParent = (name: string, people: Person[]) => {
+  return people.find(person => person.name === name);
+};
