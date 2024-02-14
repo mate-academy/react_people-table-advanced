@@ -2,6 +2,8 @@ import React from 'react';
 import { useSearchParams } from 'react-router-dom';
 import cn from 'classnames';
 import { SearchLink } from './SearchLink';
+import { getSearchWith } from '../utils/searchHelper';
+import { Sex } from '../types';
 
 const CENTURIES: number[] = [16, 17, 18, 19, 20];
 
@@ -9,23 +11,20 @@ export const PeopleFilters: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const selectedCenturies = searchParams.getAll('centuries');
 
-  const newCenturies = (century: string) => {
+  const getNewCenturies = (century: string) => {
     return selectedCenturies.includes(century)
       ? selectedCenturies.filter(currentCentury => currentCentury !== century)
       : [...selectedCenturies, century];
   };
 
   const handleQueryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const params = new URLSearchParams(searchParams);
     const normalizedQuery = e.target.value.trim().toLowerCase();
+    const newParams = getSearchWith(
+      searchParams,
+      { query: normalizedQuery || null },
+    );
 
-    if (normalizedQuery) {
-      params.set('query', normalizedQuery);
-      setSearchParams(params);
-    } else {
-      params.delete('query');
-      setSearchParams(params);
-    }
+    setSearchParams(newParams);
   };
 
   return (
@@ -40,13 +39,13 @@ export const PeopleFilters: React.FC = () => {
           All
         </SearchLink>
         <SearchLink
-          params={{ sex: 'm' }}
+          params={{ sex: Sex.male }}
           className={cn({ 'is-active': searchParams.get('sex') === 'm' })}
         >
           Male
         </SearchLink>
         <SearchLink
-          params={{ sex: 'f' }}
+          params={{ sex: Sex.female }}
           className={cn({ 'is-active': searchParams.get('sex') === 'f' })}
         >
           Female
@@ -57,6 +56,7 @@ export const PeopleFilters: React.FC = () => {
         <p className="control has-icons-left">
           <input
             data-cy="NameFilter"
+            value={searchParams.get('query') || ''}
             type="search"
             className="input"
             placeholder="Search"
@@ -78,7 +78,7 @@ export const PeopleFilters: React.FC = () => {
                 data-cy="century"
                 className={cn('button mr-1',
                   { 'is-info': selectedCenturies.includes(`${century}`) })}
-                params={{ centuries: newCenturies(`${century}`) }}
+                params={{ centuries: getNewCenturies(`${century}`) }}
               >
                 {century}
               </SearchLink>
@@ -105,8 +105,6 @@ export const PeopleFilters: React.FC = () => {
             centuries: [],
             sex: null,
             query: null,
-            sort: null,
-            order: null,
           }}
         >
           Reset all filters

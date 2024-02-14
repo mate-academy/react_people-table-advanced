@@ -12,6 +12,9 @@ export const PeoplePage = () => {
   const [isLoading, setLoading] = useState(true);
   const [isError, setIsError] = useState(false);
 
+  const noPeopleOnServer = !people.length && !isLoading && !isError;
+  const loadError = isError && !isLoading;
+
   const [searchParams] = useSearchParams();
 
   useEffect(() => {
@@ -21,15 +24,19 @@ export const PeoplePage = () => {
       .finally(() => setLoading(false));
   }, []);
 
-  const options = {
+  const filterOptions = {
     sex: searchParams.get('sex'),
     name: searchParams.get('query'),
     centuries: searchParams.getAll('centuries'),
+  };
+  const sortOptions = {
     column: searchParams.get('sort'),
     order: searchParams.get('order'),
   };
 
-  const preparedPeople = preparePeople(people, options);
+  const preparedPeople = preparePeople(people, filterOptions, sortOptions);
+  const noMatchPeople = !preparedPeople.length && !isLoading && !isError;
+  const showPeople = !isLoading && !isError && !!preparedPeople.length;
 
   return (
     <>
@@ -47,23 +54,23 @@ export const PeoplePage = () => {
             <div className="box table-container">
               {isLoading && <Loader />}
 
-              {(isError && !isLoading) && (
+              {loadError && (
                 <p data-cy="peopleLoadingError">
                   Something went wrong
                 </p>
               )}
 
-              {(!people.length && !isLoading && !isError) && (
+              {noPeopleOnServer && (
                 <p data-cy="noPeopleMessage">
                   There are no people on the server
                 </p>
               )}
 
-              {(!preparedPeople.length && !isLoading && !isError) && (
+              {noMatchPeople && (
                 <p>There are no people matching the current search criteria</p>
               )}
 
-              {(!isLoading && !isError && !!preparedPeople.length) && (
+              {showPeople && (
                 <PeopleTable people={preparedPeople} />
               )}
             </div>

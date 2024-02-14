@@ -32,12 +32,15 @@ export function getPersonParent(
 }
 
 export function preparePeople(
-  people: Person[], options: Filter & SortOptions,
+  people: Person[],
+  filterOptions: Filter,
+  sortOptions: SortOptions,
 ) {
   // eslint-disable-next-line object-curly-newline
-  const { sex, name, centuries, column, order } = options;
+  const { sex, name, centuries } = filterOptions;
+  const { column, order } = sortOptions;
 
-  const peopleCopy = people.filter(person => {
+  const filteredPeople = people.filter(person => {
     if (sex && person.sex !== sex) {
       return false;
     }
@@ -65,12 +68,8 @@ export function preparePeople(
     return true;
   });
 
-  if (!column && !order) {
-    return peopleCopy;
-  }
-
   if (column) {
-    peopleCopy.sort((person1, person2) => {
+    filteredPeople.sort((person1, person2) => {
       switch (column) {
         case 'born':
         case 'died':
@@ -85,8 +84,8 @@ export function preparePeople(
   }
 
   if (order) {
-    peopleCopy.reverse();
+    filteredPeople.reverse();
   }
 
-  return peopleCopy;
+  return filteredPeople;
 }
