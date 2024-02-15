@@ -34,7 +34,10 @@ export const PeopleFilters = () => {
   );
 
   const handleCenturyAllClick = () => {
-    setSearchParams(new URLSearchParams());
+    const params = new URLSearchParams(searchParams);
+
+    params.set('centuries', '');
+    setSearchParams(params);
   };
 
   return (
@@ -100,7 +103,7 @@ export const PeopleFilters = () => {
             <SearchLink
               data-cy="centuryALL"
               className="button is-success is-outlined"
-              params={{ sex: null, query: null, centuries: [] }}
+              params={{ sex, query, centuries: [] }}
               onClick={handleCenturyAllClick}
             >
               All
