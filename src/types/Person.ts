@@ -1,4 +1,6 @@
 export interface Person {
+  id: null | undefined;
+  century: string;
   name: string,
   sex: string,
   born: number,
