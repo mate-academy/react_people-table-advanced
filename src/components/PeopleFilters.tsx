@@ -29,7 +29,9 @@ export const PeopleFilters = () => {
     return { centuries: newCenturies };
   }
 
-  const buttonClassName = `button mr-1 ${centuries.includes(centuries.toString()) ? 'is-info' : ''}`;
+  const buttonClassName = (century: string) => (
+    `button mr-1 ${centuries.includes(century) ? 'is-info' : ''}`
+  );
 
   const handleCenturyAllClick = () => {
     setSearchParams(new URLSearchParams());
@@ -86,7 +88,7 @@ export const PeopleFilters = () => {
               <SearchLink
                 key={century}
                 data-cy={`century-${century}`}
-                className={buttonClassName}
+                className={buttonClassName(century.toString())}
                 params={handelCenturyChange(century.toString())}
               >
                 {century}
