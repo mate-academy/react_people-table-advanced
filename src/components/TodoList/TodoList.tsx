@@ -1,4 +1,4 @@
-/* eslint-disable max-len */
+/* eslint-disable */
 import React from 'react';
 
 export const TodoList: React.FC = () => {
@@ -47,7 +47,9 @@ export const TodoList: React.FC = () => {
             <td className="is-vcentered"> </td>
 
             <td className="is-vcentered is-expanded">
-              <p className="has-text-danger">quis ut nam facilis et officia qui</p>
+              <p className="has-text-danger">
+                quis ut nam facilis et officia qui
+              </p>
             </td>
 
             <td className="has-text-right is-vcentered">
@@ -78,7 +80,11 @@ export const TodoList: React.FC = () => {
 
           <tr data-cy="todo">
             <td className="is-vcentered">4</td>
-            <td className="is-vcentered"><span className="icon" data-cy="iconCompleted"><i className="fas fa-check" /></span></td>
+            <td className="is-vcentered">
+              <span className="icon" data-cy="iconCompleted">
+                <i className="fas fa-check" />
+              </span>
+            </td>
             <td className="is-vcentered is-expanded">
               <p className="has-text-success">et porro tempora</p>
             </td>
@@ -97,7 +103,9 @@ export const TodoList: React.FC = () => {
             <td className="is-vcentered"> </td>
 
             <td className="is-vcentered is-expanded">
-              <p className="has-text-danger">laboriosam mollitia et enim quasi adipisci quia provident illum</p>
+              <p className="has-text-danger">
+                laboriosam mollitia et enim quasi adipisci quia provident illum
+              </p>
             </td>
 
             <td className="has-text-right is-vcentered">
@@ -114,7 +122,9 @@ export const TodoList: React.FC = () => {
             <td className="is-vcentered"> </td>
 
             <td className="is-vcentered is-expanded">
-              <p className="has-text-danger">qui ullam ratione quibusdam voluptatem quia omnis</p>
+              <p className="has-text-danger">
+                qui ullam ratione quibusdam voluptatem quia omnis
+              </p>
             </td>
 
             <td className="has-text-right is-vcentered">
@@ -131,7 +141,9 @@ export const TodoList: React.FC = () => {
             <td className="is-vcentered"> </td>
 
             <td className="is-vcentered is-expanded">
-              <p className="has-text-danger">illo expedita consequatur quia in</p>
+              <p className="has-text-danger">
+                illo expedita consequatur quia in
+              </p>
             </td>
 
             <td className="has-text-right is-vcentered">
@@ -192,7 +204,9 @@ export const TodoList: React.FC = () => {
             </td>
 
             <td className="is-vcentered is-expanded">
-              <p className="has-text-success">illo est ratione doloremque quia maiores aut</p>
+              <p className="has-text-success">
+                illo est ratione doloremque quia maiores aut
+              </p>
             </td>
 
             <td className="has-text-right is-vcentered">
