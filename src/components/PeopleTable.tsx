@@ -21,7 +21,7 @@ export const PeopleTable: React.FC<Props> = ({
 
   const controlClasses = (value: string) => {
     return classNames('fas', {
-      'fa-sort': sort !== value || order !== 'desc',
+      'fa-sort': sort !== value,
       'fa-sort-up': sort === value && order !== 'desc',
       'fa-sort-down': sort === value && order === 'desc',
     });

@@ -1,6 +1,6 @@
 import cn from 'classnames';
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { NavLink, useLocation } from 'react-router-dom';
 import { Person } from '../types';
 
 type Props = {
@@ -24,6 +24,8 @@ export const PersonLink: React.FC<Props> = ({
     died,
   } = person;
 
+  const { search } = useLocation();
+
   const isFemale = person.sex === 'f' ? 'has-text-danger' : '';
 
   const selectPerson = slug === personSlug
@@ -44,13 +46,13 @@ export const PersonLink: React.FC<Props> = ({
       className={cn(selectPerson)}
     >
       <td>
-        <Link
-          to={`/people/${slug}`}
+        <NavLink
+          to={{ pathname: `/people/${slug}`, search }}
           className={isFemale}
           key={personSlug}
         >
           {name}
-        </Link>
+        </NavLink>
       </td>
 
       <td>{sex}</td>
@@ -58,24 +60,24 @@ export const PersonLink: React.FC<Props> = ({
       <td>{died}</td>
       <td>
         {motherName ? (
-          <Link
-            to={`/people/${mother}`}
+          <NavLink
+            to={{ pathname: `/people/${mother}`, search }}
             className={isFemale}
             key={personSlug}
           >
             {motherName}
-          </Link>
+          </NavLink>
         ) : '-'}
       </td>
       <td>
         {fatherName ? (
-          <Link
-            to={`/people/${father}`}
+          <NavLink
+            to={{ pathname: `/people/${father}`, search }}
             className={isFemale}
             key={personSlug}
           >
             {fatherName}
-          </Link>
+          </NavLink>
         ) : '-'}
       </td>
     </tr>
