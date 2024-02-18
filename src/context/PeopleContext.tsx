@@ -14,18 +14,16 @@ type PeopleContextType = {
   setSelectedPerson: Dispatch<SetStateAction<Person | null>>,
 };
 
-export const PeopleContext
-  = createContext<PeopleContextType>({
-    people: [],
-    setPeople: () => {},
-    selectedPerson: null,
-    setSelectedPerson: () => {},
-  });
+export const PeopleContext = createContext<PeopleContextType>({
+  people: [],
+  setPeople: () => {},
+  selectedPerson: null,
+  setSelectedPerson: () => {},
+});
 
 export const PeopleProvider: React.FC<Props> = ({ children }) => {
   const [people, setPeople] = useState<Person[] | []>([]);
-  const [selectedPerson, setSelectedPerson]
-    = useState<null | Person>(null);
+  const [selectedPerson, setSelectedPerson] = useState<null | Person>(null);
 
   const value = {
     people,

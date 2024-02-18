@@ -77,6 +77,10 @@ export const PeoplePage = () => {
         There are no people on the server
       </p>
     );
+  } else if (filteredPeople.length === 0) {
+    content = (
+      <p>There are no people matching the current search criteria</p>
+    );
   } else if (!isLoading && !!people.length) {
     content = <PeopleTable people={filteredPeople} />;
   }
@@ -93,9 +97,6 @@ export const PeoplePage = () => {
 
           <div className="column">
             <div className="box table-container">
-
-              {/* <p>There are no people matching the current search criteria</p> */}
-
               {content}
             </div>
           </div>

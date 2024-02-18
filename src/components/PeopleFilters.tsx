@@ -59,7 +59,7 @@ export const PeopleFilters = () => {
           type="button"
           onClick={() => handleStateChange(Sex.All)}
           className={cn('button', 'mr-1', {
-            'is-active': sexQury === Sex.All,
+            'is-active': !sexQury,
           })}
         >
           All
@@ -163,7 +163,10 @@ export const PeopleFilters = () => {
           <div className="level-right ml-4">
             <button
               data-cy="centuryALL"
-              className="button is-success is-outlined"
+              // className="button is-success is-outlined"
+              className={cn('button', 'is-success', {
+                'is-outlined': centuries.length !== 0,
+              })}
               type="button"
               onClick={() => handleCenturyChange('all')}
             >
