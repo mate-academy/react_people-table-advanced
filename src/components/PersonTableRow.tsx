@@ -28,11 +28,7 @@ export const PersonTableRow: React.FC<Props> = ({ person }) => {
       return <PersonLink person={parent} />;
     }
 
-    if (parentName) {
-      return parentName;
-    }
-
-    return '-';
+    return parentName || '-';
   };
 
   return (

@@ -59,26 +59,16 @@ export const PeoplePage = () => {
 
     switch (currentSort) {
       case 'name':
-        filteredPeople = filteredPeople.sort((a, b) => {
-          return a.name.localeCompare(b.name);
-        });
-        break;
-
       case 'sex':
         filteredPeople = filteredPeople.sort((a, b) => {
-          return a.sex.localeCompare(b.sex);
+          return a[currentSort].localeCompare(b[currentSort]);
         });
         break;
 
       case 'born':
-        filteredPeople = filteredPeople.sort((a, b) => {
-          return a.born - b.born;
-        });
-        break;
-
       case 'died':
         filteredPeople = filteredPeople.sort((a, b) => {
-          return a.died - b.died;
+          return a[currentSort] - b[currentSort];
         });
         break;
 
