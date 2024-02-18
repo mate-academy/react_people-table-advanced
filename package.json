@@ -15,7 +15,8 @@
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.20.0",
     "react-scripts": "5.0.1",
-    "react-transition-group": "^4.4.5"
+    "react-transition-group": "^4.4.5",
+    "regenerator-runtime": "^0.14.1"
   },
   "devDependencies": {
     "@cypress/webpack-dev-server": "^1.8.4",

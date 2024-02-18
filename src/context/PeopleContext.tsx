@@ -11,7 +11,7 @@ type PeopleContextType = {
   people: Person[];
   setPeople: Dispatch<SetStateAction<Person[]>>;
   selectedPerson: null | Person,
-  setSelectedPerson: Dispatch<SetStateAction<Person | null>>
+  setSelectedPerson: Dispatch<SetStateAction<Person | null>>,
 };
 
 export const PeopleContext

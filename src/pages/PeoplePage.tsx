@@ -1,5 +1,6 @@
+import { useSearchParams } from 'react-router-dom';
 import {
-  useContext, useEffect, useState,
+  useContext, useLayoutEffect, useMemo, useState,
 } from 'react';
 import { PeopleFilters } from '../components/PeopleFilters';
 import { Loader } from '../components/Loader/Loader';
@@ -11,56 +12,74 @@ export const PeoplePage = () => {
   const { people, setPeople } = useContext(PeopleContext);
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
+  const [searchParams] = useSearchParams();
+  const query = searchParams.get('query') || '';
+  const sex = searchParams.get('sex') || '';
+  const centuries = searchParams.getAll('centuries') || [];
 
-  const loadAllPeople = async () => {
-    try {
+  const isBornInCenturies = (birthYear: number, centuriess: string[]) => {
+    for (let i = 0; i < centuriess.length; i += 1) {
+      const startYear = (+centuriess[i] - 1) * 100 + 1;
+      const endYear = +centuriess[i] * 100;
+
+      if (birthYear >= startYear && birthYear <= endYear) {
+        return true;
+      }
+    }
+
+    return false;
+  };
+
+  const filteredPeople = useMemo(() => {
+    return people.filter(person => {
+      return (person.name.includes(query)
+      || (person.motherName && person.motherName.includes(query))
+      || (person.fatherName && person.fatherName.includes(query)))
+      && (sex ? person.sex === sex : true)
+      && (centuries.length > 0
+        ? isBornInCenturies(person.born, centuries) : true);
+    });
+  }, [people, query, sex, centuries]);
+
+  useLayoutEffect(() => {
+    (() => {
       setIsLoading(true);
-      const allPeople = await getPeople();
+      setTimeout(async () => {
+        try {
+          const allPeople = await getPeople();
 
-      return allPeople;
-    } catch {
-      setIsError(true);
-      setTimeout(() => {
-        setIsError(false);
-      }, 3000);
-    } finally {
-      setIsLoading(false);
-    }
+          setPeople(allPeople);
+        } catch {
+          setIsError(true);
+          setTimeout(() => {
+            setIsError(false);
+          }, 3000);
+        } finally {
+          setIsLoading(false);
+        }
+      }, 1000);
+    })();
+  }, [setPeople]);
 
-    return undefined;
-  };
+  let content;
 
-  const updateAllPeople = async () => {
-    const allPeople = await loadAllPeople();
-
-    if (allPeople) {
-      setPeople(allPeople);
-    }
-  };
-
-  useEffect(() => {
-    updateAllPeople();
-  }, [people]);
-
-  // let content;
-
-  // if (isLoading) {
-  //   content = <Loader />;
-  // } else if (isError) {
-  //   content = (
-  //     <p data-cy="peopleLoadingError" className="has-text-danger">
-  //       Something went wrong
-  //     </p>
-  //   );
-  // } else if (!isLoading && people.length === 0) {
-  //   content = (
-  //     <p data-cy="noPeopleMessage">
-  //       There are no people on the server
-  //     </p>
-  //   );
-  // } else if (!isLoading && people.length !== 0) {
-  //   content = <PeopleTable people={people} />;
-  // }
+  if (isLoading) {
+    content = <Loader />;
+  } else if (isError) {
+    content = (
+      <p data-cy="peopleLoadingError" className="has-text-danger">
+        Something went wrong
+      </p>
+    );
+  } else if (!isLoading && !people.length) {
+    content = (
+      <p data-cy="noPeopleMessage">
+        There are no people on the server
+      </p>
+    );
+  } else if (!isLoading && !!people.length) {
+    content = <PeopleTable people={filteredPeople} />;
+  }
 
   return (
     <>
@@ -69,28 +88,15 @@ export const PeoplePage = () => {
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
           <div className="column is-7-tablet is-narrow-desktop">
-            <PeopleFilters />
+            {!!people.length && <PeopleFilters />}
           </div>
 
           <div className="column">
             <div className="box table-container">
 
               {/* <p>There are no people matching the current search criteria</p> */}
-              {isLoading && <Loader />}
-              {isError && (
-                <p data-cy="peopleLoadingError" className="has-text-danger">
-                  Something went wrong
-                </p>
-              )}
-              {!isLoading && people.length === 0 && (
-                <p data-cy="noPeopleMessage">
-                  There are no people on the server
-                </p>
-              )}
-              {!isLoading && people.length !== 0 && (
-                <PeopleTable people={people} />
-              )}
-              {/* {content} */}
+
+              {content}
             </div>
           </div>
         </div>

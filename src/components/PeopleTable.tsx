@@ -1,5 +1,9 @@
+import { useMemo } from 'react';
+import cn from 'classnames';
+import { useSearchParams } from 'react-router-dom';
 import { Person } from '../types/Person';
 import { PersonComponent } from './PersonComponent';
+import { SortPeople } from '../types/sortPeople';
 
 /* eslint-disable jsx-a11y/control-has-associated-label */
 type Props = {
@@ -7,6 +11,57 @@ type Props = {
 };
 
 export const PeopleTable: React.FC<Props> = ({ people }) => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const sort = searchParams.get('sort') as SortPeople || '';
+  const order = searchParams.get('order') || '';
+
+  const handleSortState = (value: SortPeople) => {
+    const params = new URLSearchParams(searchParams);
+
+    if (!searchParams.has('sort')
+      || (searchParams.has('sort') && sort !== value)
+      || (searchParams.has('sort') && sort !== value)) {
+      params.set('sort', value);
+      if (searchParams.has('order')) {
+        params.delete('order');
+      }
+    } else if (searchParams.has('sort') && sort === value) {
+      params.set('order', 'desc');
+    }
+
+    if (searchParams.has('sort') && searchParams.has('order')
+    && sort === value) {
+      params.delete('order');
+      params.delete('sort');
+    }
+
+    setSearchParams(params);
+  };
+
+  const sortedPeople = useMemo(() => {
+    let sortedPeopleCopy = [...people];
+
+    if (sort) {
+      sortedPeopleCopy = people.sort((pers1, pers2) => {
+        const value1 = pers1[sort];
+        const value2 = pers2[sort];
+        let res = 0;
+
+        if (typeof value1 === 'number' && typeof value2 === 'number') {
+          res = value1 - value2;
+        }
+
+        if (typeof value1 === 'string' && typeof value2 === 'string') {
+          res = value1.localeCompare(value2);
+        }
+
+        return order === 'desc' ? res * -1 : res;
+      });
+    }
+
+    return sortedPeopleCopy;
+  }, [sort, people, order]);
+
   return (
     <table
       data-cy="peopleTable"
@@ -17,44 +72,76 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Name
-              <a href="#/people?sort=name">
+              <button
+                onClick={() => handleSortState(SortPeople.Name)}
+                type="button"
+              >
                 <span className="icon">
-                  <i className="fas fa-sort" />
+                  <i className={cn('fas', {
+                    'fa-sort': sort !== SortPeople.Name,
+                    'fa-sort-up': sort === SortPeople.Name && !order,
+                    'fa-sort-down': sort === SortPeople.Name && order,
+                  })}
+                  />
                 </span>
-              </a>
+              </button>
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Sex
-              <a href="#/people?sort=sex">
+              <button
+                onClick={() => handleSortState(SortPeople.Sex)}
+                type="button"
+              >
                 <span className="icon">
-                  <i className="fas fa-sort" />
+                  <i className={cn('fas', {
+                    'fa-sort': sort !== SortPeople.Sex,
+                    'fa-sort-up': sort === SortPeople.Sex && !order,
+                    'fa-sort-down': sort === SortPeople.Sex && order,
+                  })}
+                  />
                 </span>
-              </a>
+              </button>
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Born
-              <a href="#/people?sort=born&amp;order=desc">
+              <button
+                onClick={() => handleSortState(SortPeople.Born)}
+                type="button"
+              >
                 <span className="icon">
-                  <i className="fas fa-sort-up" />
+                  <i className={cn('fas', {
+                    'fa-sort': sort !== SortPeople.Born,
+                    'fa-sort-up': sort === SortPeople.Born && !order,
+                    'fa-sort-down': sort === SortPeople.Born && order,
+                  })}
+                  />
                 </span>
-              </a>
+              </button>
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Died
-              <a href="#/people?sort=died">
+              <button
+                onClick={() => handleSortState(SortPeople.Died)}
+                type="button"
+              >
                 <span className="icon">
-                  <i className="fas fa-sort" />
+                  <i className={cn('fas', {
+                    'fa-sort': sort !== SortPeople.Died,
+                    'fa-sort-up': sort === SortPeople.Died && !order,
+                    'fa-sort-down': sort === SortPeople.Died && order,
+                  })}
+                  />
                 </span>
-              </a>
+              </button>
             </span>
           </th>
 
@@ -64,7 +151,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
       </thead>
 
       <tbody>
-        {people.map((person) => (
+        {sortedPeople.map((person) => (
           <PersonComponent person={person} key={Math.random()} />
         ))}
       </tbody>
