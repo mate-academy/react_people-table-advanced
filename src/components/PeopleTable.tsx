@@ -28,14 +28,24 @@ export const PeopleTable: React.FC<Props> = ({
   };
 
   const stateManagement = (sorting: string) => {
-    const sortUp = sorting;
-    let orderUp = '';
+    const newSearchParams = {
+      sort: '',
+      order: '',
+    };
 
-    if (sort === sorting && order !== 'desc') {
-      orderUp = 'desc';
+    if (sorting !== sort) {
+      newSearchParams.sort = sorting;
     }
 
-    return { sort: sortUp, order: orderUp };
+    if (sorting === sort && order !== 'desc') {
+      newSearchParams.sort = sort;
+      newSearchParams.order = 'desc';
+    }
+
+    return {
+      sort: newSearchParams.sort || null,
+      order: newSearchParams.order || null,
+    };
   };
 
   return (
