@@ -2,8 +2,8 @@ import cn from 'classnames';
 import { NavLink } from 'react-router-dom';
 
 export const Navbar = () => {
-  const getLinkClass = ({ isActive }: { isActive: boolean }) => cn(
-    'navbar-item', {
+  const getLinkClass = ({ isActive }: { isActive: boolean }) =>
+    cn('navbar-item', {
       'has-background-grey-lighter': isActive,
     });
 

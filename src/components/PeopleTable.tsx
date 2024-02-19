@@ -1,13 +1,107 @@
 /* eslint-disable jsx-a11y/control-has-associated-label */
 
 import React, { useState, useEffect } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import {
+  Link,
+  useLocation,
+  useParams,
+  useSearchParams,
+} from 'react-router-dom';
 import cn from 'classnames';
 import { Person } from '../types/Person';
 import { PersonLink } from './PersonLink';
 
 type Props = {
   people: Person[];
+};
+
+const makeGoodList = (people: Person[], order: string, cell: string) => {
+  const correctPeopleList = people;
+
+  switch (cell) {
+    case 'Name':
+      switch (order) {
+        case 'increase':
+          correctPeopleList.sort((a: Person, b: Person) =>
+            a.name.localeCompare(b.name),
+          );
+
+          return correctPeopleList;
+
+        case 'decrease':
+          correctPeopleList.sort((a: Person, b: Person) =>
+            b.name.localeCompare(a.name),
+          );
+
+          return correctPeopleList;
+
+        default:
+          return correctPeopleList;
+      }
+
+      break;
+
+    case 'Sex':
+      switch (order) {
+        case 'increase':
+          correctPeopleList.sort((a: Person, b: Person) =>
+            a.sex.localeCompare(b.sex),
+          );
+
+          return correctPeopleList;
+
+        case 'decrease':
+          correctPeopleList.sort((a: Person, b: Person) =>
+            b.sex.localeCompare(a.sex),
+          );
+
+          return correctPeopleList;
+
+        default:
+          return correctPeopleList;
+      }
+
+      break;
+
+    case 'Born':
+      switch (order) {
+        case 'increase':
+          correctPeopleList.sort((a, b) => a.born - b.born);
+
+          return correctPeopleList;
+
+        case 'decrease':
+          correctPeopleList.sort((a, b) => b.born - a.born);
+
+          return correctPeopleList;
+
+        default:
+          return correctPeopleList;
+      }
+
+      break;
+
+    case 'Died':
+      switch (order) {
+        case 'increase':
+          correctPeopleList.sort((a, b) => a.died - b.died);
+
+          return correctPeopleList;
+
+        case 'decrease':
+          correctPeopleList.sort((a, b) => b.died - a.died);
+
+          return correctPeopleList;
+
+        default:
+          return correctPeopleList;
+      }
+
+      break;
+
+    default:
+      return correctPeopleList;
+  }
 };
 
 export const PeopleTable: React.FC<Props> = ({ people }) => {
@@ -21,11 +115,12 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
     return parent ? <PersonLink person={parent} /> : parentName;
   };
 
+  const { pathname } = useLocation();
+  const [searchParams, setSearchParams] = useSearchParams();
+
   const { slug } = useParams();
 
   const selectedPerson = slug;
-
-  let correctPeopleList = [...people];
 
   useEffect(() => {
     if (comparePart === '') {
@@ -42,88 +137,14 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
     }
   }, [activeCell, comparePart, order]);
 
-  const sort = () => {
-    // if (comparePart === '') {
-    //   setOrder('increase');
-    //   setComparePart(`${activeCell}`);
-    // } else if (comparePart !== `${activeCell}`) {
-    //   setOrder('increase');
-    //   setComparePart(`${activeCell}`);
-    // } else if (comparePart === `${activeCell}` && order !== 'decrease') {
-    //   setOrder('decrease');
-    // } else if (comparePart === `${activeCell}` && order === 'decrease') {
-    //   setOrder('');
-    //   setComparePart('');
-    // }
+  const sort = () => {};
 
-    switch (activeCell) {
-      case 'Name':
-        switch (order) {
-          case 'increase':
-            correctPeopleList.sort((a, b) => a.name.localeCompare(b.name));
-            break;
+  const handlePartChange = (field: string) => {
+    const params = new URLSearchParams(searchParams);
 
-          case 'decrease':
-            correctPeopleList.sort((a, b) => b.name.localeCompare(a.name));
-            break;
+    params.set(`${field}`, order);
 
-          default:
-            correctPeopleList = [...people];
-        }
-
-        break;
-
-      case 'Sex':
-        switch (order) {
-          case 'increase':
-            correctPeopleList.sort((a, b) => a.sex.localeCompare(b.sex));
-            break;
-
-          case 'decrease':
-            correctPeopleList.sort((a, b) => b.sex.localeCompare(a.sex));
-            break;
-
-          default:
-            correctPeopleList = [...people];
-        }
-
-        break;
-
-      case 'Born':
-        switch (order) {
-          case 'increase':
-            correctPeopleList.sort((a, b) => a.born - b.born);
-            break;
-
-          case 'decrease':
-            correctPeopleList.sort((a, b) => b.born - a.born);
-            break;
-
-          default:
-            correctPeopleList = [...people];
-        }
-
-        break;
-
-      case 'Died':
-        switch (order) {
-          case 'increase':
-            correctPeopleList.sort((a, b) => a.died - b.died);
-            break;
-
-          case 'decrease':
-            correctPeopleList.sort((a, b) => b.died - a.died);
-            break;
-
-          default:
-            correctPeopleList = [...people];
-        }
-
-        break;
-
-      default:
-        correctPeopleList = [...people];
-    }
+    setSearchParams(params);
   };
 
   return (
@@ -131,16 +152,19 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
       data-cy="peopleTable"
       className="table is-striped is-hoverable is-narrow is-fullwidth"
     >
+      <p> {pathname} </p>
+      <p> {searchParams} </p>
       <thead>
         <tr>
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Name
               <Link
-                to="#/people?sort=name"
+                to="?sort=name"
                 onClick={() => {
+                  handlePartChange('name');
                   setActiveCell('Name');
-                  sort();
+                  makeGoodList(people, order, activeCell);
                 }}
               >
                 <span className="icon">
@@ -192,7 +216,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
       </thead>
 
       <tbody>
-        {correctPeopleList.map(person => (
+        {people.map(person => (
           <tr
             data-cy="person"
             key={person.slug}
