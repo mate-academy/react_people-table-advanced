@@ -8,6 +8,8 @@ export const App = () => {
     <div data-cy="app">
       <Navbar />
 
+      <h1>Feature 01 title</h1>
+
       <div className="section">
         <div className="container">
           <h1 className="title">Home Page</h1>
@@ -15,6 +17,8 @@ export const App = () => {
           <PeoplePage />
         </div>
       </div>
+
+      <footer>Feature 01 footer</footer>
     </div>
   );
 };
