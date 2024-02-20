@@ -1,16 +1,33 @@
 /* eslint-disable jsx-a11y/control-has-associated-label */
 
-import { useParams } from 'react-router-dom';
+import { useParams, useSearchParams } from 'react-router-dom';
 import classNames from 'classnames';
 import { Person } from '../types';
 import { PersonLink } from './PersonLink';
+import { SearchLink } from './SearchLink';
 
 type PeopleTableProps = {
   people: Person[] | null;
 };
 
+enum Sort {
+  Name = 'Name',
+  Sex = 'Sex',
+  Born = 'Born',
+  Died = 'Died',
+}
+
 export const PeopleTable = ({ people }: PeopleTableProps) => {
   const { slug } = useParams();
+  const [searchParams] = useSearchParams();
+  const sortableHeaders = [
+    Sort.Name,
+    Sort.Sex,
+    Sort.Born,
+    Sort.Died,
+  ];
+  const sort = searchParams.get('sort') || '';
+  const order = searchParams.get('order') || '';
 
   return (
     <table
@@ -19,49 +36,39 @@ export const PeopleTable = ({ people }: PeopleTableProps) => {
     >
       <thead>
         <tr>
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Name
-              <a href="#/people?sort=name">
-                <span className="icon">
-                  <i className="fas fa-sort" />
-                </span>
-              </a>
-            </span>
-          </th>
+          {sortableHeaders.map((header) => {
+            const headerToLowercase = header.toLowerCase();
 
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Sex
-              <a href="#/people?sort=sex">
-                <span className="icon">
-                  <i className="fas fa-sort" />
+            return (
+              <th>
+                <span className="is-flex is-flex-wrap-nowrap">
+                  {header}
+                  <SearchLink
+                    params={{
+                      sort: sort === headerToLowercase && order
+                        ? null
+                        : headerToLowercase,
+                      order: sort === headerToLowercase && !order
+                        ? 'desc'
+                        : null,
+                    }}
+                  >
+                    <span className="icon">
+                      <i className={classNames(
+                        'fas',
+                        {
+                          'fa-sort': sort !== headerToLowercase,
+                          'fa-sort-up': sort === headerToLowercase && !order,
+                          'fa-sort-down': sort === headerToLowercase && order,
+                        },
+                      )}
+                      />
+                    </span>
+                  </SearchLink>
                 </span>
-              </a>
-            </span>
-          </th>
-
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Born
-              <a href="#/people?sort=born&amp;order=desc">
-                <span className="icon">
-                  <i className="fas fa-sort-up" />
-                </span>
-              </a>
-            </span>
-          </th>
-
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Died
-              <a href="#/people?sort=died">
-                <span className="icon">
-                  <i className="fas fa-sort" />
-                </span>
-              </a>
-            </span>
-          </th>
+              </th>
+            );
+          })}
 
           <th>Mother</th>
           <th>Father</th>
