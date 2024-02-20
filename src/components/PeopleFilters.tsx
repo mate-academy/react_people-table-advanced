@@ -1,10 +1,10 @@
-import { useSearchParams } from "react-router-dom";
+// import { useSearchParams } from 'react-router-dom';
 
 export const PeopleFilters = () => {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const query = searchParams.get('query') || '';
-  const sex = searchParams.get('sex') || '';
-  const centuries = searchParams.getAll('centuries') || [];
+  // const [searchParams, setSearchParams] = useSearchParams();
+  // const query = searchParams.get('query') || '';
+  // const sex = searchParams.get('sex') || '';
+  // const centuries = searchParams.getAll('centuries') || [];
 
   return (
     <nav className="panel">

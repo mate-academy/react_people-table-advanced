@@ -60,6 +60,10 @@ const makeGoodList = (people: Person[], part?: string, order?: string) => {
     }
   }
 
+  if (!part && !order) {
+    return correctPeopleList;
+  }
+
   return correctPeopleList;
 };
 
@@ -85,18 +89,20 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
     if (sort && order) {
       params.delete(order);
       params.delete(sort);
+      makeGoodList(people, sort, order);
     }
 
     if (!sort) {
       params.set(sort, field);
+      makeGoodList(people, sort, order);
     }
 
     if (sort && !order) {
       params.set(order, 'desc');
+      makeGoodList(people, sort, order);
     }
 
     setSearchParams(params);
-    makeGoodList(people, sort, order);
   };
 
   return (
@@ -105,14 +111,18 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
       className="table is-striped is-hoverable is-narrow is-fullwidth"
     >
       <p> {pathname} </p>
-      <p> {searchParams.get('sort')} </p>
+      <p> {searchParams.toString()} </p>
       <thead>
         <tr>
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Name
               <Link
-                to="?sort=name"
+                to={{
+                  pathname: searchParams.toString(),
+                  // search: searchParams.toString(),
+                }}
+                state={searchParams.toString()}
                 onClick={() => {
                   handlePartChange('name');
                 }}
