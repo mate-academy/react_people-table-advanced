@@ -14,10 +14,6 @@ export const PeoplePage = () => {
 
   const [searchParams] = useSearchParams();
 
-  const query = searchParams.get('query') || '';
-  const sex = searchParams.get('sex' || '');
-  const centuries = searchParams.getAll('centuries') || [];
-
   useEffect(() => {
     setError(false);
     setLoading(true);
@@ -47,6 +43,10 @@ export const PeoplePage = () => {
       return null;
     }
 
+    const query = searchParams.get('query') || '';
+    const sex = searchParams.get('sex' || '');
+    const centuries = searchParams.getAll('centuries') || [];
+
     return people.filter(person => {
       return sex ? person.sex === sex : true;
     })
@@ -68,7 +68,7 @@ export const PeoplePage = () => {
         return centuries.includes(personBirthCentury.toString())
         || centuries.includes(personDeathCentury.toString());
       });
-  }, [centuries, people, query, sex]);
+  }, [people, searchParams]);
 
   return (
     <>
