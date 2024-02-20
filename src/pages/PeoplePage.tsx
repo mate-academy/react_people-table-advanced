@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { PeopleFilters } from '../components/PeopleFilters';
 import { Loader } from '../components/Loader';
 import { PeopleTable } from '../components/PeopleTable';
@@ -10,6 +11,12 @@ export const PeoplePage = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
   const hasPeopleLoaded = !!people?.length && !loading;
+
+  const [searchParams] = useSearchParams();
+
+  const query = searchParams.get('query') || '';
+  const sex = searchParams.get('sex' || '');
+  const centuries = searchParams.getAll('centuries') || [];
 
   useEffect(() => {
     setError(false);
@@ -34,6 +41,34 @@ export const PeoplePage = () => {
         setLoading(false);
       });
   }, []);
+
+  const filteredPeople = useMemo(() => {
+    if (!people) {
+      return null;
+    }
+
+    return people.filter(person => {
+      return sex ? person.sex === sex : true;
+    })
+      .filter(person => {
+        const normalizedQuery = query.toLowerCase().trim();
+
+        return person.name.toLowerCase().includes(normalizedQuery)
+        || person.motherName?.toLowerCase().includes(normalizedQuery)
+        || person.fatherName?.toLowerCase().includes(normalizedQuery);
+      })
+      .filter(person => {
+        const personBirthCentury = Math.floor(person.born / 100) + 1;
+        const personDeathCentury = Math.floor(person.died / 100) + 1;
+
+        if (centuries.length === 0) {
+          return true;
+        }
+
+        return centuries.includes(personBirthCentury.toString())
+        || centuries.includes(personDeathCentury.toString());
+      });
+  }, [centuries, people, query, sex]);
 
   return (
     <>
@@ -63,7 +98,7 @@ export const PeoplePage = () => {
 
               <p>There are no people matching the current search criteria</p>
 
-              {hasPeopleLoaded && <PeopleTable people={people} />}
+              {hasPeopleLoaded && <PeopleTable people={filteredPeople} />}
             </div>
           </div>
         </div>
