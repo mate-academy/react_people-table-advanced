@@ -40,7 +40,7 @@ export const PeopleTable = ({ people }: PeopleTableProps) => {
             const headerToLowercase = header.toLowerCase();
 
             return (
-              <th>
+              <th key={header}>
                 <span className="is-flex is-flex-wrap-nowrap">
                   {header}
                   <SearchLink
