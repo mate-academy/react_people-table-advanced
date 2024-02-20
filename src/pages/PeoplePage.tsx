@@ -1,18 +1,24 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { PeopleFilters } from '../components/PeopleFilters';
 import { Loader } from '../components/Loader';
 import { PeopleTable } from '../components/PeopleTable';
 import { Person } from '../types';
 import { getPeople } from '../api';
+import { filterAndSort } from '../utils';
 
 export const PeoplePage = () => {
-  const [people, setPeople] = useState<Person[] | null>(null);
+  const [people, setPeople] = useState<Person[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
   const hasPeopleLoaded = !!people?.length && !loading;
 
   const [searchParams] = useSearchParams();
+  const query = searchParams.get('query') || '';
+  const sex = searchParams.get('sex') || '';
+  const centuries = searchParams.getAll('centuries');
+  const sort = searchParams.get('sort') || '';
+  const order = searchParams.get('order') || '';
 
   useEffect(() => {
     setError(false);
@@ -38,37 +44,12 @@ export const PeoplePage = () => {
       });
   }, []);
 
-  const filteredPeople = useMemo(() => {
-    if (!people) {
-      return null;
-    }
-
-    const query = searchParams.get('query') || '';
-    const sex = searchParams.get('sex' || '');
-    const centuries = searchParams.getAll('centuries') || [];
-
-    return people.filter(person => {
-      return sex ? person.sex === sex : true;
-    })
-      .filter(person => {
-        const normalizedQuery = query.toLowerCase().trim();
-
-        return person.name.toLowerCase().includes(normalizedQuery)
-        || person.motherName?.toLowerCase().includes(normalizedQuery)
-        || person.fatherName?.toLowerCase().includes(normalizedQuery);
-      })
-      .filter(person => {
-        const personBirthCentury = Math.floor(person.born / 100) + 1;
-        const personDeathCentury = Math.floor(person.died / 100) + 1;
-
-        if (centuries.length === 0) {
-          return true;
-        }
-
-        return centuries.includes(personBirthCentury.toString())
-        || centuries.includes(personDeathCentury.toString());
-      });
-  }, [people, searchParams]);
+  const filteredPeople = filterAndSort(
+    people,
+    {
+      sex, query, centuries, sort, order,
+    },
+  );
 
   return (
     <>
@@ -90,15 +71,19 @@ export const PeoplePage = () => {
                 </p>
               )}
 
-              {people?.length === 0 && !loading && (
+              {!people.length && !loading && (
                 <p data-cy="noPeopleMessage">
                   There are no people on the server
                 </p>
               )}
 
-              <p>There are no people matching the current search criteria</p>
+              {!!people.length && !filteredPeople.length && (
+                <p>There are no people matching the current search criteria</p>
+              )}
 
-              {hasPeopleLoaded && <PeopleTable people={filteredPeople} />}
+              {hasPeopleLoaded && !!filteredPeople.length && (
+                <PeopleTable people={filteredPeople} />
+              )}
             </div>
           </div>
         </div>
