@@ -12,13 +12,11 @@ const sortingPeople = (list: Person[], sorter: Param, order?: string) => {
     if (order?.length === 0) {
       switch (sorter) {
         case 'name':
-          return a.name.localeCompare(b.name);
         case 'sex':
-          return a.sex.localeCompare(b.sex);
+          return a[sorter].localeCompare(b[sorter]);
         case 'born':
-          return a.born - b.born;
         case 'died':
-          return a.died - b.died;
+          return a[sorter] - b[sorter];
         default:
           return 0;
       }
@@ -26,13 +24,11 @@ const sortingPeople = (list: Person[], sorter: Param, order?: string) => {
 
     switch (sorter) {
       case 'name':
-        return b.name.localeCompare(a.name);
       case 'sex':
-        return b.sex.localeCompare(a.sex);
+        return b[sorter].localeCompare(a[sorter]);
       case 'born':
-        return b.born - a.born;
       case 'died':
-        return b.died - a.died;
+        return b[sorter] - a[sorter];
       default:
         return 0;
     }

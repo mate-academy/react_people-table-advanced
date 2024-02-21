@@ -9,8 +9,8 @@ interface Props {
 }
 
 export const PersonLink: React.FC<Props> = ({ person, people }) => {
-  const mother = people.filter(mom => mom.name === person.motherName)[0];
-  const father = people.filter(dad => dad.name === person.fatherName)[0];
+  const mother = people.find(mom => mom.name === person.motherName);
+  const father = people.find(dad => dad.name === person.fatherName);
   const { slug } = useParams();
   const activeSlug = slug;
 
