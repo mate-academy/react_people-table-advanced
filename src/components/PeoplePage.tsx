@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-// import { useLocation } from 'react-router-dom';
 import { PeopleFilters } from './PeopleFilters';
 import { Loader } from './Loader';
 import { PeopleTable } from './PeopleTable';
@@ -19,13 +18,9 @@ export const PeoplePage = () => {
       .finally(() => setIsLoading(false));
   }, []);
 
-  // const { pathname, search } = useLocation();
-
   return (
     <>
       <h1 className="title">People Page</h1>
-      {/* <p>pathname: {pathname}</p>
-      <p>search:{search}</p> */}
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
           <div className="column is-7-tablet is-narrow-desktop">

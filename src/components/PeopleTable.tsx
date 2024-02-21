@@ -61,7 +61,6 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
       return b.name.localeCompare(a.name);
     }
 
-    // sex
     if (sortBy === 'sex' && orderType !== 'desc') {
       return a.sex.localeCompare(b.sex);
     }
@@ -70,7 +69,6 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
       return b.sex.localeCompare(a.sex);
     }
 
-    // born
     if (sortBy === 'born' && orderType !== 'desc') {
       return a.born - b.born;
     }
@@ -79,7 +77,6 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
       return b.born - a.born;
     }
 
-    // died
     if (sortBy === 'died' && orderType !== 'desc') {
       return a.died - b.died;
     }

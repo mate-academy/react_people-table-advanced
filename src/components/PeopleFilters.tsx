@@ -1,4 +1,3 @@
-// import { useState } from 'react';
 import cn from 'classnames';
 import { useSearchParams } from 'react-router-dom';
 import { SearchLink } from './SearchLink';
