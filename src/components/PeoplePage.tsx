@@ -8,31 +8,24 @@ import { getPeople } from '../api';
 import { Param } from '../types/Param';
 
 const sortingPeople = (list: Person[], sorter: Param, order?: string) => {
-  return list.sort((a: Person, b: Person) => {
-    if (order?.length === 0) {
-      switch (sorter) {
-        case 'name':
-        case 'sex':
-          return a[sorter].localeCompare(b[sorter]);
-        case 'born':
-        case 'died':
-          return a[sorter] - b[sorter];
-        default:
-          return 0;
-      }
-    }
-
+  list.sort((a: Person, b: Person) => {
     switch (sorter) {
       case 'name':
       case 'sex':
-        return b[sorter].localeCompare(a[sorter]);
+        return a[sorter].localeCompare(b[sorter]);
       case 'born':
       case 'died':
-        return b[sorter] - a[sorter];
+        return a[sorter] - b[sorter];
       default:
         return 0;
     }
   });
+
+  if (order !== undefined && order.length > 0) {
+    return list.reverse();
+  }
+
+  return list;
 };
 
 export const PeoplePage = () => {
