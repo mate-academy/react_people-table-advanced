@@ -23,6 +23,8 @@ export const PersonLink: React.FC<Props> = ({ person, people }) => {
     return person.motherName || '-';
   };
 
+  // this is not pushing to Git
+
   const dada = () => {
     if (father) {
       return <Link to={`/people/${father.slug}?${searchParams}`}>{father.name}</Link>;
