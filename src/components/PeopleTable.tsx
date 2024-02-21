@@ -1,22 +1,29 @@
 /* eslint-disable jsx-a11y/control-has-associated-label */
 
 import React from 'react';
-import {
-  Link,
-  useLocation,
-  useParams,
-  useSearchParams,
-} from 'react-router-dom';
+import { Link, useParams, useSearchParams } from 'react-router-dom';
 import cn from 'classnames';
 import { Person } from '../types/Person';
 import { PersonLink } from './PersonLink';
+import { SearchLink } from './SearchLink';
 
 type Props = {
   people: Person[];
 };
 
-const makeGoodList = (people: Person[], part?: string, order?: string) => {
-  const correctPeopleList = people;
+const makeGoodList = (
+  people: Person[],
+  part?: string,
+  order?: string,
+  sex?: string,
+) => {
+  const correctPeopleList = [...people];
+
+  if (sex === 'm') {
+    correctPeopleList.filter(person => person.sex === 'm');
+
+    return correctPeopleList;
+  }
 
   if (part && order) {
     switch (part) {
@@ -61,7 +68,7 @@ const makeGoodList = (people: Person[], part?: string, order?: string) => {
   }
 
   if (!part && !order) {
-    return correctPeopleList;
+    return people;
   }
 
   return correctPeopleList;
@@ -74,35 +81,43 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
     return parent ? <PersonLink person={parent} /> : parentName;
   };
 
-  const { pathname } = useLocation();
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
   const sort = searchParams.get('sort') || '';
   const order = searchParams.get('order') || '';
+  const sex = searchParams.get('sex') || '';
 
   const { slug } = useParams();
 
   const selectedPerson = slug;
 
-  const handlePartChange = (field: string) => {
-    const params = new URLSearchParams(searchParams);
+  const returnedPeople = makeGoodList(people, sort, order, sex);
 
-    if (sort && order) {
-      params.delete(order);
-      params.delete(sort);
-      makeGoodList(people, sort, order);
+  const handlePartChange = (field: string) => {
+    if (sort && order && field === sort) {
+      return {
+        sort: null,
+        order: null,
+      };
     }
 
-    if (!sort) {
-      params.set(sort, field);
-      makeGoodList(people, sort, order);
+    if (!sort || order || field !== sort) {
+      return {
+        sort: field,
+        order: null,
+      };
     }
 
     if (sort && !order) {
-      params.set(order, 'desc');
-      makeGoodList(people, sort, order);
+      return {
+        sort: field,
+        order: 'desc',
+      };
     }
 
-    setSearchParams(params);
+    return {
+      sort: null,
+      order: null,
+    };
   };
 
   return (
@@ -110,75 +125,91 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
       data-cy="peopleTable"
       className="table is-striped is-hoverable is-narrow is-fullwidth"
     >
-      <p> {pathname} </p>
+      <p> {sex} </p>
       <p> {searchParams.toString()} </p>
       <thead>
         <tr>
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Name
-              <Link
-                to={{
-                  pathname: searchParams.toString(),
-                  // search: searchParams.toString(),
-                }}
-                state={searchParams.toString()}
-                onClick={() => {
-                  handlePartChange('name');
+              <SearchLink
+                params={{
+                  ...handlePartChange('name'),
                 }}
               >
                 <span className="icon">
-                  <i className="fas fa-sort" />
+                  <i
+                    className={cn('fas', {
+                      'fa-sort': !sort || sort !== 'name',
+                      'fa-sort-up': sort === 'name' && !order,
+                      'fa-sort-down': sort && order,
+                    })}
+                  />
                 </span>
-              </Link>
+              </SearchLink>
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Sex
-              <Link
-                to="#/people?sort=sex"
-                onClick={() => {
-                  handlePartChange('sex');
+              <SearchLink
+                params={{
+                  ...handlePartChange('sex'),
                 }}
               >
                 <span className="icon">
-                  <i className="fas fa-sort" />
+                  <i
+                    className={cn('fas', {
+                      'fa-sort': !sort || sort !== 'sex',
+                      'fa-sort-up': sort === 'sex' && !order,
+                      'fa-sort-down': sort && order,
+                    })}
+                  />
                 </span>
-              </Link>
+              </SearchLink>
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Born
-              <Link
-                to="#/people?sort=born&amp;order=desc"
-                onClick={() => {
-                  handlePartChange('born');
+              <SearchLink
+                params={{
+                  ...handlePartChange('born'),
                 }}
               >
                 <span className="icon">
-                  <i className="fas fa-sort-up" />
+                  <i
+                    className={cn('fas', {
+                      'fa-sort': !sort || sort !== 'born',
+                      'fa-sort-up': sort === 'born' && !order,
+                      'fa-sort-down': sort && order,
+                    })}
+                  />
                 </span>
-              </Link>
+              </SearchLink>
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Died
-              <Link
-                to="#/people?sort=died"
-                onClick={() => {
-                  handlePartChange('died');
+              <SearchLink
+                params={{
+                  ...handlePartChange('died'),
                 }}
               >
                 <span className="icon">
-                  <i className="fas fa-sort" />
+                  <i
+                    className={cn('fas', {
+                      'fa-sort': !sort || sort !== 'died',
+                      'fa-sort-up': sort === 'died' && !order,
+                      'fa-sort-down': sort && order,
+                    })}
+                  />
                 </span>
-              </Link>
+              </SearchLink>
             </span>
           </th>
 
@@ -188,7 +219,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
       </thead>
 
       <tbody>
-        {people.map(person => (
+        {returnedPeople.map(person => (
           <tr
             data-cy="person"
             key={person.slug}

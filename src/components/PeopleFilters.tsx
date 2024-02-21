@@ -1,25 +1,60 @@
-// import { useSearchParams } from 'react-router-dom';
+import cn from 'classnames';
+import { useSearchParams } from 'react-router-dom';
+import { SearchLink } from './SearchLink';
 
 export const PeopleFilters = () => {
-  // const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
   // const query = searchParams.get('query') || '';
-  // const sex = searchParams.get('sex') || '';
+  const sex = searchParams.get('sex') || '';
   // const centuries = searchParams.getAll('centuries') || [];
+
+  const handleSexChange = (field: string) => {
+    if (field === '') {
+      return {
+        sex: null,
+      };
+    }
+
+    return {
+      sex: field,
+    };
+  };
 
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        <a className="is-active" href="#/people">
+        <SearchLink
+          params={{
+            ...handleSexChange(''),
+          }}
+          className={cn({
+            'is-active': !sex,
+          })}
+        >
           All
-        </a>
-        <a className="" href="#/people?sex=m">
+        </SearchLink>
+        <SearchLink
+          params={{
+            ...handleSexChange('m'),
+          }}
+          className={cn({
+            'is-active': sex === 'm',
+          })}
+        >
           Male
-        </a>
-        <a className="" href="#/people?sex=f">
+        </SearchLink>
+        <SearchLink
+          params={{
+            ...handleSexChange('f'),
+          }}
+          className={cn({
+            'is-active': sex === 'f',
+          })}
+        >
           Female
-        </a>
+        </SearchLink>
       </p>
 
       <div className="panel-block">
