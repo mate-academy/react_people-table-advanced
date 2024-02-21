@@ -5,7 +5,9 @@ import { Navbar } from './components';
 
 export const App = () => (
   <div data-cy="app">
+    
     <Navbar />
+    
     <main className="section">
       <div className="container">
         <Outlet />
