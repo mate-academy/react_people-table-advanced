@@ -16,14 +16,40 @@ const makeGoodList = (
   part?: string,
   order?: string,
   sex?: string,
+  query?: string,
+  centuries?: string[],
 ) => {
-  const correctPeopleList = [...people];
+  const filter = () => {
+    let filteredList = [...people];
 
-  if (sex === 'm') {
-    correctPeopleList.filter(person => person.sex === 'm');
+    if (sex) {
+      filteredList = filteredList.filter(person => person.sex === sex);
+    }
 
-    return correctPeopleList;
-  }
+    if (query) {
+      filteredList = filteredList.filter(
+        person =>
+          person.name.toLowerCase().includes(query.toLowerCase()) ||
+          person.motherName
+            ?.toLocaleLowerCase()
+            .includes(query.toLocaleLowerCase()) ||
+          person.fatherName
+            ?.toLocaleLowerCase()
+            .includes(query.toLocaleLowerCase()),
+      );
+    }
+
+    filteredList =
+      centuries?.length && centuries.length > 0
+        ? filteredList.filter(person =>
+          centuries.includes(Math.ceil(Number(person.born) / 100).toString()),
+        )
+        : filteredList;
+
+    return filteredList;
+  };
+
+  const correctPeopleList = filter();
 
   if (part && order) {
     switch (part) {
@@ -67,7 +93,7 @@ const makeGoodList = (
     }
   }
 
-  if (!part && !order) {
+  if (!part && !order && !sex && !query && !centuries) {
     return people;
   }
 
@@ -85,12 +111,21 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
   const sort = searchParams.get('sort') || '';
   const order = searchParams.get('order') || '';
   const sex = searchParams.get('sex') || '';
+  const query = searchParams.get('query') || '';
+  const centuries = searchParams.getAll('centuries') || [];
 
   const { slug } = useParams();
 
   const selectedPerson = slug;
 
-  const returnedPeople = makeGoodList(people, sort, order, sex);
+  const returnedPeople = makeGoodList(
+    people,
+    sort,
+    order,
+    sex,
+    query,
+    centuries,
+  );
 
   const handlePartChange = (field: string) => {
     if (sort && order && field === sort) {
@@ -125,8 +160,6 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
       data-cy="peopleTable"
       className="table is-striped is-hoverable is-narrow is-fullwidth"
     >
-      <p> {sex} </p>
-      <p> {searchParams.toString()} </p>
       <thead>
         <tr>
           <th>
