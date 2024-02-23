@@ -7,6 +7,7 @@ export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const sex = searchParams.get('sex') || '';
   const centuries = searchParams.getAll('centuries') || [];
+  const query = searchParams.get('query') || '';
 
   function toggleCentury(num: string) {
     return centuries.includes(num)
@@ -67,6 +68,7 @@ export const PeopleFilters = () => {
             type="search"
             className="input"
             placeholder="Search"
+            value={query}
             onChange={event => {
               handleInputChange(event);
             }}

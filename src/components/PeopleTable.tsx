@@ -6,9 +6,11 @@ import cn from 'classnames';
 import { Person } from '../types/Person';
 import { PersonLink } from './PersonLink';
 import { SearchLink } from './SearchLink';
+import '../App.scss';
 
 type Props = {
   people: Person[];
+  match: (status: boolean) => void;
 };
 
 const makeGoodList = (
@@ -100,7 +102,7 @@ const makeGoodList = (
   return correctPeopleList;
 };
 
-export const PeopleTable: React.FC<Props> = ({ people }) => {
+export const PeopleTable: React.FC<Props> = ({ people, match }) => {
   const findParent = (parentName: string | null) => {
     const parent = people.find(p => p.name === parentName);
 
@@ -126,6 +128,17 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
     query,
     centuries,
   );
+
+  if (returnedPeople.length === 0 && people) {
+    match(true);
+  }
+
+  if (returnedPeople.length > 0) {
+    match(false);
+  }
+
+  // eslint-disable-next-line no-console
+  console.log(returnedPeople.length);
 
   const handlePartChange = (field: string) => {
     if (sort && order && field === sort) {
@@ -158,7 +171,16 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
   return (
     <table
       data-cy="peopleTable"
-      className="table is-striped is-hoverable is-narrow is-fullwidth"
+      className={cn(
+        'table',
+        'is-striped',
+        'is-hoverable',
+        'is-narrow',
+        'is-fullwidth',
+        {
+          hidden: returnedPeople.length === 0,
+        },
+      )}
     >
       <thead>
         <tr>

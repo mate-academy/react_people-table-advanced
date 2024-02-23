@@ -1,18 +1,22 @@
 import React, { useState, useEffect } from 'react';
+import cn from 'classnames';
 import { PeopleFilters } from './PeopleFilters';
 import { Loader } from './Loader';
 import { getPeople } from '../api';
 import { PeopleTable } from './PeopleTable';
 import { Person } from '../types';
+import '../App.scss';
 
 export const PeoplePage: React.FC = () => {
   const [people, setPeople] = useState<Person[]>([]);
   const [hasError, setHasError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [hasNoPeople, setHasNoPeople] = useState(false);
+  const [hasNoMatching, setHasNoMatching] = useState(false);
 
   useEffect(() => {
     setIsLoading(true);
+    setHasNoMatching(false);
 
     getPeople()
       .then(response => {
@@ -35,6 +39,9 @@ export const PeoplePage: React.FC = () => {
         }, 2000);
       });
   }, []);
+
+  // eslint-disable-next-line no-console
+  console.log(hasNoMatching);
 
   return (
     <>
@@ -63,9 +70,15 @@ export const PeoplePage: React.FC = () => {
                   </p>
                 )}
 
-                <p>There are no people matching the current search criteria</p>
+                {hasNoMatching && (
+                  <p className={cn({ hidden: !hasNoMatching })}>
+                    There are no people matching the current search criteria
+                  </p>
+                )}
 
-                {!hasNoPeople && !hasError && <PeopleTable people={people} />}
+                {!hasNoPeople && !hasError && (
+                  <PeopleTable people={people} match={setHasNoMatching} />
+                )}
               </div>
             </div>
           </div>
