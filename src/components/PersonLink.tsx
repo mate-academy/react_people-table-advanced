@@ -1,3 +1,4 @@
+import React from 'react';
 import classNames from 'classnames';
 import { NavLink, useLocation } from 'react-router-dom';
 import { Person } from '../types';
