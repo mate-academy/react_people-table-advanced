@@ -50,12 +50,6 @@ export function getPeoplePrepeared(
 
   if (sortField) {
     prepearedPeople = prepearedPeople.sort((current, next) => {
-      // switch (sortField) {
-      //   case 'name':
-      //   case 'sex':
-      //     return current[sortField].localeCompare(next[sortField]);
-      //   case 'born':
-      //   case 'died':
       switch (sortField) {
         case SortField.NAME:
         case SortField.SEX:
