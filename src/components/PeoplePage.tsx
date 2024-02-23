@@ -40,9 +40,6 @@ export const PeoplePage: React.FC = () => {
       });
   }, []);
 
-  // eslint-disable-next-line no-console
-  console.log(hasNoMatching);
-
   return (
     <>
       <h1 className="title">People Page</h1>

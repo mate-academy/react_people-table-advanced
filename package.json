@@ -20,7 +20,7 @@
   "devDependencies": {
     "@cypress/webpack-dev-server": "^1.8.4",
     "@mate-academy/cypress-tools": "^1.0.5",
-    "@mate-academy/eslint-config": "^0.0.27",
+    "@mate-academy/eslint-config": "0.0.25",
     "@mate-academy/eslint-config-react-typescript": "^1.0.15",
     "@mate-academy/scripts": "^1.7.2",
     "@mate-academy/students-ts-config": "*",

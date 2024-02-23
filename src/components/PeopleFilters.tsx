@@ -120,8 +120,7 @@ export const PeopleFilters = () => {
           to={{
             search: getSearchWith(
               searchParams,
-              { centuries: [], sex: null, query: null},
-            )
+              { centuries: [], sex: null, query: null})
           }}
           className="button is-link is-outlined is-fullwidth"
         >

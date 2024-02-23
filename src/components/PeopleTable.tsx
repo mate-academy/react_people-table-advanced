@@ -137,9 +137,6 @@ export const PeopleTable: React.FC<Props> = ({ people, match }) => {
     match(false);
   }
 
-  // eslint-disable-next-line no-console
-  console.log(returnedPeople.length);
-
   const handlePartChange = (field: string) => {
     if (sort && order && field === sort) {
       return {
