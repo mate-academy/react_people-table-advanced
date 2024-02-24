@@ -1,16 +1,63 @@
+/* eslint-disable prettier/prettier */
+import classNames from 'classnames';
+import { useSearchParams } from 'react-router-dom';
+import { Status } from '../types/Status';
+
 export const PeopleFilters = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const centuries = searchParams.getAll('centuries') || [];
+  const query = searchParams.get('query') || '';
+
+  function taggleCenturies(num: string) {
+    const params = new URLSearchParams(searchParams);
+
+    const newcenturies = centuries.includes(num)
+      ? centuries.filter(el => el !== num)
+      : [...centuries, num];
+
+    params.delete('centuries');
+    newcenturies.forEach(number => params.append('centuries', number));
+    setSearchParams(params);
+  }
+
+  function handleStateFilter(newValue: Status) {
+    const params = new URLSearchParams(searchParams);
+
+    params.set('sex', newValue);
+    setSearchParams(params);
+  }
+
+  const handleQueryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const params = new URLSearchParams(searchParams);
+
+    params.set('query', event.target.value);
+    setSearchParams(params);
+  };
+
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        <a className="is-active" href="#/people">
+        <a
+          className="is-active"
+          href={`#/people?${searchParams}`}
+          onClick={() => handleStateFilter(Status.All)}
+        >
           All
         </a>
-        <a className="" href="#/people?sex=m">
+        <a
+          className=""
+          href={`#/people?${searchParams}`}
+          onClick={() => handleStateFilter(Status.Male)}
+        >
           Male
         </a>
-        <a className="" href="#/people?sex=f">
+        <a
+          className=""
+          href={`#/people?${searchParams}`}
+          onClick={() => handleStateFilter(Status.Female)}
+        >
           Female
         </a>
       </p>
@@ -22,6 +69,8 @@ export const PeopleFilters = () => {
             type="search"
             className="input"
             placeholder="Search"
+            value={query}
+            onChange={handleQueryChange}
           />
 
           <span className="icon is-left">
@@ -32,47 +81,20 @@ export const PeopleFilters = () => {
 
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
-          <div className="level-left">
-            <a
-              data-cy="century"
-              className="button mr-1"
-              href="#/people?centuries=16"
-            >
-              16
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=17"
-            >
-              17
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=18"
-            >
-              18
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=19"
-            >
-              19
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1"
-              href="#/people?centuries=20"
-            >
-              20
-            </a>
-          </div>
+          {['16', '17', '18', '19', '20'].map(num => (
+            <div className="level-left" key={num}>
+              <a
+                data-cy="century"
+                className={classNames('button mr-1', {
+                  'is-info': centuries.includes(num),
+                })}
+                href={`#/people?${searchParams}`}
+                onClick={() => taggleCenturies(num)}
+              >
+                {num}
+              </a>
+            </div>
+          ))}
 
           <div className="level-right ml-4">
             <a
