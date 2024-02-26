@@ -5,6 +5,7 @@ import { Loader } from './Loader';
 import { PeopleTable } from './PeopleTable';
 import { Person } from '../types';
 import { getPeople } from '../api';
+import { getSearchWith } from '../utils/searchHelper';
 
 export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);
@@ -18,7 +19,6 @@ export const PeoplePage = () => {
 
   const centuries = searchParams.getAll('centuries') || [];
   const query = searchParams.get('query') || '';
-  const [sexOption, setSexOption] = useState('All');
   const sort = searchParams.get('sort') || '';
   const order = searchParams.get('order') || '';
 
@@ -89,55 +89,23 @@ export const PeoplePage = () => {
     return preparedPeople;
   };
 
+  const setSearchWith = (params: any) => {
+    const search = getSearchWith(searchParams, params);
+
+    setSearchParams(search);
+  };
+
   const handleQueryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const params = new URLSearchParams(searchParams);
-
-    params.set('query', event.target.value);
-    setSearchParams(params);
+    setSearchWith({ query: event.target.value });
   };
 
-  const handleSexChange = (chosenSex: string) => {
-    setSexOption(chosenSex);
-    const params = new URLSearchParams(searchParams);
+  const toggleCentury = (century: number) => {
+    setSelectedCenturies(prevSelectedCenturies => {
+      if (prevSelectedCenturies.includes(century)) {
+        return prevSelectedCenturies.filter(num => num !== century);
+      }
 
-    params.delete('sex');
-
-    if (chosenSex === 'Female') {
-      params.set('sex', 'f');
-    } else if (chosenSex === 'Male') {
-      params.set('sex', 'm');
-    }
-
-    setSearchParams(params);
-  };
-
-  const toggleCentury = (num: string) => {
-    const params = new URLSearchParams(searchParams);
-    const newCenturies = centuries.includes(num)
-      ? centuries.filter(century => century !== num)
-      : [...centuries, num];
-
-    setSelectedCenturies(
-      newCenturies.map(newCentury => parseInt(newCentury, 10)),
-    );
-
-    params.delete('centuries');
-    newCenturies.forEach(century => params.append('centuries', century));
-    setSearchParams(params);
-  };
-
-  const toggleAllCenturies = () => {
-    const params = new URLSearchParams(searchParams);
-
-    params.delete('centuries');
-    setSearchParams(params);
-  };
-
-  const handleDeleteParams = () => {
-    setSearchParams({
-      centuries: [],
-      sex: '',
-      query: '',
+      return [...prevSelectedCenturies, century];
     });
   };
 
@@ -192,12 +160,8 @@ export const PeoplePage = () => {
               <PeopleFilters
                 query={query}
                 centuries={centuries}
-                sexOption={sexOption}
                 handleQueryChange={handleQueryChange}
-                handleSexChange={handleSexChange}
                 toggleCentury={toggleCentury}
-                toggleAllCenturies={toggleAllCenturies}
-                handleDeleteParams={handleDeleteParams}
               />
             </div>
           )}

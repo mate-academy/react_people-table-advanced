@@ -1,46 +1,54 @@
+import { useState } from 'react';
 import classNames from 'classnames';
+import { SearchLink } from './SearchLink';
 
 type Props = {
   query: string;
   centuries: string[];
-  sexOption: string;
   handleQueryChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  handleSexChange: (chosenSex: string) => void;
-  toggleCentury: (num: string) => void;
-  toggleAllCenturies: () => void;
-  handleDeleteParams: () => void;
+  toggleCentury: (century: number) => void;
 };
 
 export const PeopleFilters: React.FC<Props> = ({
   query,
   centuries,
-  sexOption,
   handleQueryChange,
-  handleSexChange,
   toggleCentury,
-  toggleAllCenturies,
-  handleDeleteParams,
 }) => {
+  const [sexOption, setSexOption] = useState('All');
+
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
-      {/* eslint-disable jsx-a11y/anchor-is-valid */}
+
       <p className="panel-tabs" data-cy="SexFilter">
-        {['All', 'Male', 'Female'].map(sex => (
-          <a
-            key={sex}
-            className={classNames('', {
-              'is-active': sexOption === sex,
-            })}
-            onClick={e => {
-              e.preventDefault();
-              handleSexChange(sex);
-            }}
-            href="#"
-          >
-            {sex}
-          </a>
-        ))}
+        {['All', 'Male', 'Female'].map(sex => {
+          let sexValue = null;
+
+          switch (sex) {
+            case 'Female':
+              sexValue = 'f';
+              break;
+            case 'Male':
+              sexValue = 'm';
+              break;
+            default:
+              sexValue = null;
+          }
+
+          return (
+            <SearchLink
+              params={{ sex: sexValue }}
+              key={sex}
+              className={classNames('', {
+                'is-active': sexOption === sex,
+              })}
+              onClick={() => setSexOption(sex)}
+            >
+              {sex}
+            </SearchLink>
+          );
+        })}
       </p>
 
       <div className="panel-block">
@@ -64,44 +72,50 @@ export const PeopleFilters: React.FC<Props> = ({
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
             {['16', '17', '18', '19', '20'].map(century => (
-              <button
+              <SearchLink
+                params={{
+                  centuries: centuries.includes(century)
+                    ? centuries.filter(num => century !== num)
+                    : [...centuries, century],
+                }}
                 key={century}
                 type="button"
                 data-cy="century"
-                onClick={e => {
-                  e.preventDefault();
-                  toggleCentury(century);
-                }}
                 className={classNames('button mr-1', {
                   'is-info': centuries.includes(century),
                 })}
+                onClick={() => toggleCentury(+century)}
               >
                 {century}
-              </button>
+              </SearchLink>
             ))}
           </div>
 
           <div className="level-right ml-4">
-            <button
+            <SearchLink
+              params={{ centuries: [] }}
               type="button"
               data-cy="centuryALL"
-              onClick={() => toggleAllCenturies()}
               className="button is-success is-outlined"
             >
               All
-            </button>
+            </SearchLink>
           </div>
         </div>
       </div>
 
       <div className="panel-block">
-        <a
+        <SearchLink
+          params={{
+            centuries: [],
+            sex: null,
+            query: null,
+          }}
           className="button is-link is-outlined is-fullwidth"
-          onClick={handleDeleteParams}
-          href="#/people"
+          onClick={() => setSexOption('All')}
         >
           Reset all filters
-        </a>
+        </SearchLink>
       </div>
     </nav>
   );
