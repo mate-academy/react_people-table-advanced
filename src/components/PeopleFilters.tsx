@@ -118,8 +118,10 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <Link
           to={{
+            // eslint-disable-next-line prettier/prettier
             search: getSearchWith(
               searchParams,
+              // eslint-disable-next-line prettier/prettier
               { centuries: [], sex: null, query: null})
           }}
           className="button is-link is-outlined is-fullwidth"
