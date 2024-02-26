@@ -102,7 +102,7 @@ export const PeoplePage = () => {
   const toggleCentury = (century: number) => {
     setSelectedCenturies(prevSelectedCenturies => {
       if (prevSelectedCenturies.includes(century)) {
-        return prevSelectedCenturies.filter(num => num !== century);
+        return prevSelectedCenturies.filter(num => num === century);
       }
 
       return [...prevSelectedCenturies, century];
