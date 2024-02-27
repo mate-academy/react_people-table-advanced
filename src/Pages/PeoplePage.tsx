@@ -1,11 +1,14 @@
 /* eslint-disable jsx-a11y/control-has-associated-label */
-import { useSearchParams } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { useContext, useEffect } from 'react';
 import { Loader } from '../components/Loader';
 import { PeopleTable } from '../components/PeopleTable';
 import { PeopleContex } from '../store/PeopleContex';
 import { PeopleFilters } from '../components/PeopleFilters';
 import { getPeople } from '../api';
+import { filterPeople } from '../services/filter';
+import { getSearchWith } from '../utils/searchHelper';
+import { SortType } from '../types/SortType';
 
 export const PeoplePage = () => {
   const {
@@ -20,15 +23,33 @@ export const PeoplePage = () => {
   const [searchParams] = useSearchParams();
 
   const query = searchParams.get('query') || '';
-  const filteredPeople = people?.filter(person =>
-    person.name.toLowerCase().includes(query.toLowerCase()),
-  );
+  const centuries = searchParams.getAll('centuries') || [];
+  const sex = searchParams.get('sex') || '';
+  const sort = searchParams.get('sort') || '';
+  const order = searchParams.get('order') || '';
 
-  const isFiltered = !filteredPeople?.length && !loading;
-  const isPeopleList = people && !!people.length && !loading;
-  const noPeopleMessage = (!people?.length && !loading) || isFiltered;
+  const filteredPeople =
+    people && filterPeople(people, query, centuries, sex, sort, order);
+
+  // const isFiltred = filteredPeople && !!filteredPeople?.length && !loading;
+
+  const isPeopleList = people && !!people?.length && !loading;
+
+  const noPeopleMessage = !filteredPeople?.length && !loading;
   const isErrorMassage = errorMassage && !loading;
   const isLoading = loading && !query && !!people?.length;
+
+  const handleSorting = (sortType: SortType) => {
+    if (sort === sortType && order === 'desc') {
+      return { sort: null, order: null };
+    }
+
+    if (sort === sortType) {
+      return { sort: sortType, order: 'desc' };
+    }
+
+    return { sort: sortType, order: null };
+  };
 
   useEffect(() => {
     setLoading(true);
@@ -41,7 +62,6 @@ export const PeoplePage = () => {
         setErrorMassage(true);
       })
       .finally(() => setLoading(false));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -50,9 +70,11 @@ export const PeoplePage = () => {
 
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
-          <div className="column is-7-tablet is-narrow-desktop">
-            <PeopleFilters />
-          </div>
+          {isPeopleList && (
+            <div className="column is-7-tablet is-narrow-desktop">
+              <PeopleFilters />
+            </div>
+          )}
 
           <div className="column">
             <div className="box table-container">
@@ -70,44 +92,72 @@ export const PeoplePage = () => {
                         <th>
                           <span className="is-flex is-flex-wrap-nowrap">
                             Name
-                            <a href="#/people?sort=name">
+                            <Link
+                              to={{
+                                search: getSearchWith(
+                                  searchParams,
+                                  handleSorting(SortType.Name),
+                                ),
+                              }}
+                            >
                               <span className="icon">
                                 <i className="fas fa-sort" />
                               </span>
-                            </a>
+                            </Link>
                           </span>
                         </th>
 
                         <th>
                           <span className="is-flex is-flex-wrap-nowrap">
                             Sex
-                            <a href="#/people?sort=sex">
+                            <Link
+                              to={{
+                                search: getSearchWith(
+                                  searchParams,
+                                  handleSorting(SortType.Sex),
+                                ),
+                              }}
+                            >
                               <span className="icon">
                                 <i className="fas fa-sort" />
                               </span>
-                            </a>
+                            </Link>
                           </span>
                         </th>
 
                         <th>
                           <span className="is-flex is-flex-wrap-nowrap">
                             Born
-                            <a href="#/people?sort=born&amp;order=desc">
+                            <Link
+                              to={{
+                                search: getSearchWith(
+                                  searchParams,
+                                  handleSorting(SortType.Born),
+                                ),
+                              }}
+                            >
                               <span className="icon">
                                 <i className="fas fa-sort-up" />
                               </span>
-                            </a>
+                            </Link>
                           </span>
                         </th>
 
                         <th>
                           <span className="is-flex is-flex-wrap-nowrap">
                             Died
-                            <a href="#/people?sort=died">
+                            <Link
+                              to={{
+                                search: getSearchWith(
+                                  searchParams,
+                                  handleSorting(SortType.Died),
+                                ),
+                              }}
+                            >
                               <span className="icon">
                                 <i className="fas fa-sort" />
                               </span>
-                            </a>
+                            </Link>
                           </span>
                         </th>
 
@@ -115,8 +165,7 @@ export const PeoplePage = () => {
                         <th>Father</th>
                       </tr>
                     </thead>
-
-                    <PeopleTable people={filteredPeople || people} />
+                    {filteredPeople && <PeopleTable people={filteredPeople} />}
                   </table>
                 )
               )}

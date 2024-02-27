@@ -10,7 +10,7 @@ interface Prop {
 export const PersonLink: React.FC<Prop> = ({ person }) => {
   const { slug } = useParams();
   const selectedPerson = slug;
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
 
   const { people } = useContext(PeopleContex);
 
@@ -20,14 +20,6 @@ export const PersonLink: React.FC<Prop> = ({ person }) => {
   const samePersonMother = people?.find(el => el.name === person.motherName);
 
   const samePersonFather = people?.find(el => el.name === person.fatherName);
-
-  const handleName = (value: string) => {
-    const params = new URLSearchParams(searchParams);
-
-    params.set('person', value);
-
-    setSearchParams(params);
-  };
 
   return (
     <tr
@@ -43,7 +35,6 @@ export const PersonLink: React.FC<Prop> = ({ person }) => {
             search: searchParams.toString(),
           }}
           className={cn('', { 'has-text-danger': women })}
-          onClick={() => handleName(person.slug)}
         >
           {person.name}
         </Link>

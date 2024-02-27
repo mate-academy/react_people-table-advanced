@@ -1,37 +1,33 @@
 /* eslint-disable prettier/prettier */
 import classNames from 'classnames';
-import { useSearchParams } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { Status } from '../types/Status';
+import { getSearchWith } from '../utils/searchHelper';
 
 export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const centuries = searchParams.getAll('centuries') || [];
   const query = searchParams.get('query') || '';
+  const sex = searchParams.get('sex') || '';
 
-  function taggleCenturies(num: string) {
-    const params = new URLSearchParams(searchParams);
+  const setSearchWith = (params: any) => {
+    const search = getSearchWith(searchParams, params);
 
+    setSearchParams(search);
+  };
+
+  function handleCenturies(num: string ) {
     const newcenturies = centuries.includes(num)
       ? centuries.filter(el => el !== num)
       : [...centuries, num];
 
-    params.delete('centuries');
-    newcenturies.forEach(number => params.append('centuries', number));
-    setSearchParams(params);
-  }
-
-  function handleStateFilter(newValue: Status) {
-    const params = new URLSearchParams(searchParams);
-
-    params.set('sex', newValue);
-    setSearchParams(params);
+    return newcenturies;
   }
 
   const handleQueryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const params = new URLSearchParams(searchParams);
-
-    params.set('query', event.target.value);
-    setSearchParams(params);
+    setSearchWith({query: event.target.value || null});
+    
+    
   };
 
   return (
@@ -39,27 +35,25 @@ export const PeopleFilters = () => {
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        <a
-          className="is-active"
-          href={`#/people?${searchParams}`}
-          onClick={() => handleStateFilter(Status.All)}
+        <Link
+          className={classNames('', {'is-active' : sex === Status.All })}
+  
+          to={{search: getSearchWith(searchParams,{sex: Status.All})}}
         >
           All
-        </a>
-        <a
-          className=""
-          href={`#/people?${searchParams}`}
-          onClick={() => handleStateFilter(Status.Male)}
+        </Link>
+        <Link
+          to={{search: getSearchWith(searchParams,{sex: Status.Male })}}
+          className={classNames('', {'is-active' : sex === Status.Male })}
         >
           Male
-        </a>
-        <a
-          className=""
-          href={`#/people?${searchParams}`}
-          onClick={() => handleStateFilter(Status.Female)}
+        </Link>
+        <Link
+          to={{search: getSearchWith(searchParams,{sex: Status.Female })}}
+          className={classNames('', {'is-active' : sex === Status.Female })}
         >
           Female
-        </a>
+        </Link>
       </p>
 
       <div className="panel-block">
@@ -83,27 +77,30 @@ export const PeopleFilters = () => {
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           {['16', '17', '18', '19', '20'].map(num => (
             <div className="level-left" key={num}>
-              <a
+              <Link
                 data-cy="century"
                 className={classNames('button mr-1', {
                   'is-info': centuries.includes(num),
                 })}
-                href={`#/people?${searchParams}`}
-                onClick={() => taggleCenturies(num)}
+                to={{
+                  search: getSearchWith(searchParams ,
+                    { centuries: handleCenturies(num)})
+                } 
+                }
               >
                 {num}
-              </a>
+              </Link>
             </div>
           ))}
 
           <div className="level-right ml-4">
-            <a
+            <Link
               data-cy="centuryALL"
               className="button is-success is-outlined"
-              href="#/people"
+              to="#/people"
             >
               All
-            </a>
+            </Link>
           </div>
         </div>
       </div>
