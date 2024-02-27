@@ -293,8 +293,8 @@ export const PeopleTable: React.FC<Props> = ({ people, match }) => {
             <td>{person.sex}</td>
             <td>{person.born}</td>
             <td>{person.died}</td>
-            <td> {person.motherName ? findParent(person.motherName) : '-'} </td>
-            <td> {person.fatherName ? findParent(person.fatherName) : '-'} </td>
+            <td>{person.motherName ? findParent(person.motherName) : '-'}</td>
+            <td>{person.fatherName ? findParent(person.fatherName) : '-'}</td>
           </tr>
         ))}
       </tbody>
