@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import classNames from 'classnames';
 import { Link, useSearchParams } from 'react-router-dom';
 import { Status } from '../types/Status';
@@ -10,13 +9,14 @@ export const PeopleFilters = () => {
   const query = searchParams.get('query') || '';
   const sex = searchParams.get('sex') || '';
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const setSearchWith = (params: any) => {
     const search = getSearchWith(searchParams, params);
 
     setSearchParams(search);
   };
 
-  function handleCenturies(num: string ) {
+  function handleCenturies(num: string) {
     const newcenturies = centuries.includes(num)
       ? centuries.filter(el => el !== num)
       : [...centuries, num];
@@ -25,9 +25,7 @@ export const PeopleFilters = () => {
   }
 
   const handleQueryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchWith({query: event.target.value || null});
-    
-    
+    setSearchWith({ query: event.target.value || null });
   };
 
   return (
@@ -36,21 +34,20 @@ export const PeopleFilters = () => {
 
       <p className="panel-tabs" data-cy="SexFilter">
         <Link
-          className={classNames('', {'is-active' : sex === Status.All })}
-  
-          to={{search: getSearchWith(searchParams,{sex: Status.All})}}
+          className={classNames('', { 'is-active': sex === Status.All })}
+          to={{ search: getSearchWith(searchParams, { sex: Status.All }) }}
         >
           All
         </Link>
         <Link
-          to={{search: getSearchWith(searchParams,{sex: Status.Male })}}
-          className={classNames('', {'is-active' : sex === Status.Male })}
+          to={{ search: getSearchWith(searchParams, { sex: Status.Male }) }}
+          className={classNames('', { 'is-active': sex === Status.Male })}
         >
           Male
         </Link>
         <Link
-          to={{search: getSearchWith(searchParams,{sex: Status.Female })}}
-          className={classNames('', {'is-active' : sex === Status.Female })}
+          to={{ search: getSearchWith(searchParams, { sex: Status.Female }) }}
+          className={classNames('', { 'is-active': sex === Status.Female })}
         >
           Female
         </Link>
@@ -83,10 +80,10 @@ export const PeopleFilters = () => {
                   'is-info': centuries.includes(num),
                 })}
                 to={{
-                  search: getSearchWith(searchParams ,
-                    { centuries: handleCenturies(num)})
-                } 
-                }
+                  search: getSearchWith(searchParams, {
+                    centuries: handleCenturies(num),
+                  }),
+                }}
               >
                 {num}
               </Link>
@@ -96,8 +93,12 @@ export const PeopleFilters = () => {
           <div className="level-right ml-4">
             <Link
               data-cy="centuryALL"
-              className="button is-success is-outlined"
-              to="#/people"
+              className={classNames('button is-success', {
+                'is-outlined': !!centuries.length,
+              })}
+              to={{
+                search: getSearchWith(searchParams, { centuries: null }),
+              }}
             >
               All
             </Link>
@@ -106,9 +107,12 @@ export const PeopleFilters = () => {
       </div>
 
       <div className="panel-block">
-        <a className="button is-link is-outlined is-fullwidth" href="#/people">
+        <Link
+          className="button is-link is-outlined is-fullwidth"
+          to={{ search: '' }}
+        >
           Reset all filters
-        </a>
+        </Link>
       </div>
     </nav>
   );

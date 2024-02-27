@@ -1,6 +1,7 @@
 /* eslint-disable jsx-a11y/control-has-associated-label */
 import { Link, useSearchParams } from 'react-router-dom';
 import { useContext, useEffect } from 'react';
+import classNames from 'classnames';
 import { Loader } from '../components/Loader';
 import { PeopleTable } from '../components/PeopleTable';
 import { PeopleContex } from '../store/PeopleContex';
@@ -30,14 +31,9 @@ export const PeoplePage = () => {
 
   const filteredPeople =
     people && filterPeople(people, query, centuries, sex, sort, order);
-
-  // const isFiltred = filteredPeople && !!filteredPeople?.length && !loading;
-
   const isPeopleList = people && !!people?.length && !loading;
-
   const noPeopleMessage = !filteredPeople?.length && !loading;
   const isErrorMassage = errorMassage && !loading;
-  const isLoading = loading && !query && !!people?.length;
 
   const handleSorting = (sortType: SortType) => {
     if (sort === sortType && order === 'desc') {
@@ -62,10 +58,11 @@ export const PeoplePage = () => {
         setErrorMassage(true);
       })
       .finally(() => setLoading(false));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
-    <div className="container">
+    <>
       <h1 className="title">People Page</h1>
 
       <div className="block">
@@ -78,7 +75,7 @@ export const PeoplePage = () => {
 
           <div className="column">
             <div className="box table-container">
-              {isLoading ? (
+              {loading ? (
                 <Loader />
               ) : (
                 isPeopleList && (
@@ -101,7 +98,15 @@ export const PeoplePage = () => {
                               }}
                             >
                               <span className="icon">
-                                <i className="fas fa-sort" />
+                                <i
+                                  className={classNames('fas', {
+                                    'fa-sort': sort !== SortType.Name,
+                                    'fa-sort-up':
+                                      sort && !order && sort === SortType.Name,
+                                    'fa-sort-down':
+                                      sort && order && sort === SortType.Name,
+                                  })}
+                                />
                               </span>
                             </Link>
                           </span>
@@ -119,7 +124,15 @@ export const PeoplePage = () => {
                               }}
                             >
                               <span className="icon">
-                                <i className="fas fa-sort" />
+                                <i
+                                  className={classNames('fas', {
+                                    'fa-sort': sort !== SortType.Sex,
+                                    'fa-sort-up':
+                                      sort && !order && sort === SortType.Sex,
+                                    'fa-sort-down':
+                                      sort && order && sort === SortType.Sex,
+                                  })}
+                                />
                               </span>
                             </Link>
                           </span>
@@ -137,7 +150,15 @@ export const PeoplePage = () => {
                               }}
                             >
                               <span className="icon">
-                                <i className="fas fa-sort-up" />
+                                <i
+                                  className={classNames('fas', {
+                                    'fa-sort': sort !== SortType.Born,
+                                    'fa-sort-up':
+                                      sort && !order && sort === SortType.Born,
+                                    'fa-sort-down':
+                                      sort && order && sort === SortType.Born,
+                                  })}
+                                />
                               </span>
                             </Link>
                           </span>
@@ -155,7 +176,15 @@ export const PeoplePage = () => {
                               }}
                             >
                               <span className="icon">
-                                <i className="fas fa-sort" />
+                                <i
+                                  className={classNames('fas', {
+                                    'fa-sort': sort !== SortType.Died,
+                                    'fa-sort-up':
+                                      sort && !order && sort === SortType.Died,
+                                    'fa-sort-down':
+                                      sort && order && sort === SortType.Died,
+                                  })}
+                                />
                               </span>
                             </Link>
                           </span>
@@ -185,6 +214,6 @@ export const PeoplePage = () => {
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };

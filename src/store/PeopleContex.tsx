@@ -2,25 +2,21 @@ import React, { useMemo, useState } from 'react';
 import { Person } from '../types';
 
 interface Props {
-  people: Person[] | null;
+  people: Person[];
   errorMassage: boolean;
-  setPeople: (value: Person[] | null) => void;
+  setPeople: (value: Person[]) => void;
   setErrorMassage: (value: boolean) => void;
   setLoading: (value: boolean) => void;
   loading: boolean;
-  query: string;
-  setQuery: (value: string) => void;
 }
 
 export const PeopleContex = React.createContext<Props>({
-  people: null,
+  people: [],
   setPeople: () => {},
   setErrorMassage: () => {},
   errorMassage: false,
   setLoading: () => {},
   loading: false,
-  query: '',
-  setQuery: () => {},
 });
 
 type Prop = {
@@ -28,10 +24,9 @@ type Prop = {
 };
 
 export const PeopleProvider: React.FC<Prop> = ({ children }) => {
-  const [people, setPeople] = useState<Person[] | null>(null);
+  const [people, setPeople] = useState<Person[]>([]);
   const [errorMassage, setErrorMassage] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [query, setQuery] = useState('');
 
   const value = useMemo(
     () => ({
@@ -41,11 +36,9 @@ export const PeopleProvider: React.FC<Prop> = ({ children }) => {
       setErrorMassage,
       setLoading,
       setPeople,
-      setQuery,
-      query,
     }),
 
-    [people, errorMassage, loading, query],
+    [people, errorMassage, loading],
   );
 
   return (
