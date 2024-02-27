@@ -2,7 +2,7 @@ import { Navigate, Route, Routes } from 'react-router-dom';
 import { PeoplePage } from './components/PeoplePage';
 import { NavBar } from './components/NavBar';
 import { HomePage } from './components/HomePage';
-import { NotFoundPage } from './components/NotFound';
+import { NotFound } from './components/NotFound';
 import './App.scss';
 
 export const App = () => {
@@ -16,7 +16,7 @@ export const App = () => {
         <Route path="people">
           <Route path=":slug?" element={<PeoplePage />} />
         </Route>
-        <Route path="*" element={<NotFoundPage />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </div>
   );

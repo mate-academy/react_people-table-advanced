@@ -1,17 +1,59 @@
-/* eslint-disable jsx-a11y/control-has-associated-label */
+import { Link, useParams, useSearchParams } from 'react-router-dom';
 import React from 'react';
 import classNames from 'classnames';
-import { useParams } from 'react-router-dom';
 import { Person } from '../types';
 import { PersonLink } from './PersonLink';
-import { SortLink } from './SortLink';
+import { getSearchWith } from '../utils/searchHelper';
+
+/* eslint-disable jsx-a11y/control-has-associated-label */
 
 type Props = {
   people: Person[];
+  preparedPeople: Person[];
 };
 
-export const PeopleTable: React.FC<Props> = ({ people }) => {
+const columns = [
+  { columnName: 'Name', sortURL: 'name' },
+  { columnName: 'Sex', sortURL: 'sex' },
+  { columnName: 'Born', sortURL: 'born' },
+  { columnName: 'Died', sortURL: 'died' },
+  { columnName: 'Mother', sortURL: null },
+  { columnName: 'Father', sortURL: null },
+];
+
+export const PeopleTable: React.FC<Props> = ({ people, preparedPeople }) => {
   const { slug } = useParams();
+  const [searchParams] = useSearchParams();
+
+  const arrowSort = searchParams.get('sort') || '';
+  const orderSort = searchParams.get('order') || '';
+
+  function getSortURL(sortURL: string) {
+    let newSortParams = getSearchWith(searchParams, {
+      sort: sortURL,
+    });
+
+    if (arrowSort !== sortURL) {
+      newSortParams = getSearchWith(newSortParams, {
+        order: null,
+      });
+    }
+
+    if (arrowSort === sortURL) {
+      newSortParams = getSearchWith(newSortParams, {
+        order: 'desc',
+      });
+    }
+
+    if (orderSort && arrowSort === sortURL) {
+      newSortParams = getSearchWith(newSortParams, {
+        order: null,
+        sort: null,
+      });
+    }
+
+    return newSortParams;
+  }
 
   return (
     <table
@@ -20,66 +62,72 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
     >
       <thead>
         <tr>
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Name
-              <SortLink field="name" />
-            </span>
-          </th>
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Sex
-              <SortLink field="sex" />
-            </span>
-          </th>
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Born
-              <SortLink field="born" />
-            </span>
-          </th>
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Died
-              <SortLink field="died" />
-            </span>
-          </th>
-          <th>Mother</th>
-          <th>Father</th>
+          {columns.map(({ columnName, sortURL }) =>
+            sortURL ? (
+              <th key={sortURL}>
+                <span className="is-flex is-flex-wrap-nowrap">
+                  {columnName}
+                  <Link to={{ search: getSortURL(sortURL) }}>
+                    <span className="icon">
+                      <i
+                        className={classNames('fas', {
+                          'fa-sort': arrowSort !== sortURL,
+                          'fa-sort-up': arrowSort === sortURL && !orderSort,
+                          'fa-sort-down': arrowSort === sortURL && orderSort,
+                        })}
+                      />
+                    </span>
+                  </Link>
+                </span>
+              </th>
+            ) : (
+              <th key={columnName}>{columnName}</th>
+            ),
+          )}
         </tr>
       </thead>
 
       <tbody>
-        {people.map(person => (
-          <tr
-            key={person.slug}
-            data-cy="person"
-            className={classNames({
-              'has-background-warning': person.slug === slug,
-            })}
-          >
-            <td aria-label="Link">
-              <PersonLink person={person} />
-            </td>
-            <td>{person.sex}</td>
-            <td>{person.born}</td>
-            <td>{person.died}</td>
-            <td aria-label="Link">
-              {person.mother ? (
-                <PersonLink person={person.mother} />
-              ) : (
-                person.motherName || '-'
-              )}
-            </td>
-            <td aria-label="Link">
-              {person.father ? (
-                <PersonLink person={person.father} />
-              ) : (
-                person.fatherName || '-'
-              )}
-            </td>
-          </tr>
-        ))}
+        {preparedPeople?.map(person => {
+          const {
+            sex,
+            born,
+            died,
+            fatherName,
+            motherName,
+            slug: personSlug,
+          } = person;
+
+          const mother = people.find(
+            parent => parent.name === person.motherName,
+          );
+          const father = people.find(
+            parent => parent.name === person.fatherName,
+          );
+
+          return (
+            <tr
+              data-cy="person"
+              key={personSlug}
+              className={classNames({
+                'has-background-warning': personSlug === slug,
+              })}
+            >
+              <td>{person && <PersonLink person={person} />}</td>
+
+              <td>{sex}</td>
+              <td>{born}</td>
+              <td>{died}</td>
+
+              <td>
+                {mother ? <PersonLink person={mother} /> : motherName || '-'}
+              </td>
+              <td>
+                {father ? <PersonLink person={father} /> : fatherName || '-'}
+              </td>
+            </tr>
+          );
+        })}
       </tbody>
     </table>
   );

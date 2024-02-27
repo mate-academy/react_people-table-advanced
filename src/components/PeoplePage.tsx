@@ -1,119 +1,127 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
+import { getPeoplePrepared } from '../utils/getPeoplePrepered';
 import { PeopleFilters } from './PeopleFilters';
 import { Loader } from './Loader';
 import { PeopleTable } from './PeopleTable';
-import { Person } from '../types';
 import { getPeople } from '../api';
+import { Person } from '../types';
+import { SearchParams, getSearchWith } from '../utils/searchHelper';
 
 export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<boolean>(false);
-  const [searchParams] = useSearchParams();
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(false);
+
+  const [searchParams, setSearchParams] = useSearchParams();
+
   const query = searchParams.get('query') || '';
-  const sex = searchParams.get('sex') || '';
-  const centuries = searchParams.getAll('centuries') || [];
-  const sortField = searchParams.get('sort');
-  const isReversed = searchParams.get('order') === 'desc';
+  const selectedSex = searchParams.get('sex') || '';
+  const selectedCenturies = searchParams.getAll('centuries') || [];
+  const sortField = searchParams.get('sort') || '';
+  const sortOrder = searchParams.get('order') || '';
+
+  const preparedPeople = getPeoplePrepared(
+    people,
+    query,
+    selectedSex,
+    selectedCenturies,
+    sortField,
+    sortOrder,
+  );
 
   useEffect(() => {
+    setLoading(true);
     getPeople()
       .then(setPeople)
       .catch(() => setError(true))
       .finally(() => setLoading(false));
   }, []);
 
-  const preparedPeople = people.map(person => ({
-    ...person,
-    mother: people.find(p => p.name === person.motherName),
-    father: people.find(p => p.name === person.fatherName),
-  }));
+  function setSearchWith(params: SearchParams) {
+    const search = getSearchWith(searchParams, params);
 
-  const filterPeople = () => {
-    let filteredPeople = [...preparedPeople];
-
-    if (query) {
-      filteredPeople = filteredPeople.filter(person => {
-        return (
-          person.name.toLowerCase().includes(query.toLowerCase()) ||
-          person.fatherName?.toLowerCase().includes(query.toLowerCase()) ||
-          person.motherName?.toLowerCase().includes(query.toLowerCase())
-        );
-      });
-    }
-
-    if (sex) {
-      filteredPeople = filteredPeople.filter(person => person.sex === sex);
-    }
-
-    if (centuries.length) {
-      filteredPeople = filteredPeople.filter(person => {
-        return centuries.includes(Math.ceil(person.born / 100).toString());
-      });
-    }
-
-    return filteredPeople;
-  };
-
-  const readyPeople = filterPeople();
-
-  if (sortField) {
-    readyPeople.sort((a, b) => {
-      switch (sortField) {
-        case 'name':
-        case 'sex':
-          return a[sortField].localeCompare(b[sortField]);
-
-        case 'born':
-        case 'died':
-          return a[sortField] - b[sortField];
-
-        default:
-          return 0;
-      }
-    });
-
-    if (isReversed) {
-      readyPeople.reverse();
-    }
+    setSearchParams(search);
   }
 
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchWith({ query: e.target.value });
+  };
+
+  const toggleSex = (sex: string | null) => {
+    setSearchWith({ sex });
+  };
+
+  const toggleCentury = (cent: string | null) => {
+    if (!cent) {
+      setSearchWith({ centuries: null });
+
+      return;
+    }
+
+    const cents = selectedCenturies.includes(cent)
+      ? selectedCenturies.filter(century => century !== cent)
+      : [...selectedCenturies, cent];
+
+    setSearchWith({ centuries: cents });
+  };
+
+  const handleReset = () => {
+    setSearchWith({
+      sex: null,
+      query: null,
+      centuries: null,
+    });
+  };
+
   return (
-    <>
-      <h1 className="title">People Page</h1>
+    <div className="section">
+      <div className="container">
+        <h1 className="title">People Page</h1>
 
-      <div className="block">
-        <div className="columns is-desktop is-flex-direction-row-reverse">
-          {!loading && !error && people.length > 0 && (
+        <div className="block">
+          <div className="columns is-desktop is-flex-direction-row-reverse">
             <div className="column is-7-tablet is-narrow-desktop">
-              <PeopleFilters />
+              <PeopleFilters
+                query={query}
+                handleInputChange={handleInputChange}
+                toggleSex={toggleSex}
+                toggleCentury={toggleCentury}
+                handleReset={handleReset}
+              />
             </div>
-          )}
 
-          <div className="column">
-            <div className="box table-container">
-              {loading && <Loader />}
+            <div className="column">
+              <div className="box table-container">
+                {loading && <Loader />}
 
-              {error && (
-                <p data-cy="peopleLoadingError" className="has-text-danger">
-                  Something went wrong
-                </p>
-              )}
+                {error && (
+                  <p data-cy="peopleLoadingError">Something went wrong</p>
+                )}
 
-              {!loading &&
-                !error &&
-                (!people.length ? (
+                {!loading && !people.length && (
                   <p data-cy="noPeopleMessage">
                     There are no people on the server
                   </p>
-                ) : (
-                  <PeopleTable people={readyPeople} />
-                ))}
+                )}
+
+                {!loading && !preparedPeople.length && (
+                  <p>
+                    There are no people matching the current search criteria
+                  </p>
+                )}
+
+                {!!preparedPeople.length && (
+                  <PeopleTable
+                    people={people}
+                    preparedPeople={preparedPeople}
+                  />
+                )}
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
