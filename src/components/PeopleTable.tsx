@@ -281,7 +281,11 @@ export const PeopleTable: React.FC<Props> = ({ people, match }) => {
           >
             <td>
               <Link
-                to={`../${person.slug}`}
+                // to={`../${person.slug}`}
+                to={{
+                  pathname: `../${person.slug}`,
+                  search: searchParams.toString(),
+                }}
                 className={cn({
                   'has-text-danger': person.sex === 'f',
                 })}
