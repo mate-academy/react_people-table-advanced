@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
 import { PeopleTable } from '../components/PeopleTable';
 import { Person } from '../types';
 import { Loader } from '../components/Loader';
@@ -7,8 +6,6 @@ import { getPeople } from '../api';
 import { PeopleFilters } from '../components/PeopleFilters';
 
 export const PeoplePage = () => {
-  const { slug } = useParams();
-
   const [people, setPeople] = useState<Person[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
@@ -58,7 +55,7 @@ export const PeoplePage = () => {
               )}
 
               {!isLoading && !error && people.length > 0 && (
-                <PeopleTable people={people} slug={slug} />
+                <PeopleTable people={people} />
               )}
             </div>
           </div>
