@@ -27,6 +27,8 @@ export const PeoplePage = () => {
       });
   }, []);
 
+  // const filteredPeople = people.filter(person => {
+
   return (
     <>
       <h1 className="title">People Page</h1>
