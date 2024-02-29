@@ -1,3 +1,4 @@
+import React from 'react';
 import { useSearchParams } from 'react-router-dom';
 import classNames from 'classnames';
 import { SearchParams, getSearchWith } from '../utils/searchHelper';

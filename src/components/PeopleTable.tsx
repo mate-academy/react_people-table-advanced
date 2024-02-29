@@ -1,7 +1,7 @@
 /* eslint-disable jsx-a11y/control-has-associated-label */
-
+import React from 'react';
 import classNames from 'classnames';
-import { useParams } from 'react-router-dom';
+import { useParams, useSearchParams } from 'react-router-dom';
 import { Person } from '../types';
 import { PersonLink } from './PersonLink';
 import { SearchLink } from './SearchLink';
@@ -14,6 +14,21 @@ const titleArr = ['Name', 'Sex', 'Born', 'Died'];
 
 export const PeopleTable: React.FC<Props> = ({ people }) => {
   const { slug } = useParams();
+  const [searchParams] = useSearchParams();
+  const sort = searchParams.get('sort') || '';
+  const order = searchParams.get('order') || '';
+
+  const getSortParams = (newSort: string) => {
+    if (sort === newSort && order !== 'desc') {
+      return { sort: newSort, order: 'desc' };
+    }
+
+    if (sort === newSort && order === 'desc') {
+      return { sort: null, order: null };
+    }
+
+    return { sort: newSort, order: null };
+  };
 
   return (
     <table
@@ -27,10 +42,10 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
               <span className="is-flex is-flex-wrap-nowrap">
                 {title}
                 <SearchLink
-                  params={{ sort: title.toLowerCase() }}
+                  params={getSortParams(title.toLowerCase())}
                   className="icon"
                 >
-                  <i className="fas fa-sort" />
+                  <i className="fas fa-sort" role="button" />
                 </SearchLink>
               </span>
             </th>
