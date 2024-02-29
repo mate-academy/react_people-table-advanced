@@ -1,27 +1,60 @@
+import classNames from 'classnames';
+import { useState } from 'react';
+import { Link, useSearchParams } from 'react-router-dom';
+import { getSearchWith } from '../utils/searchHelper';
+
 export const PeopleFilters = () => {
+  const [valueSearch, setValueSearch] = useState('');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const sex = searchParams.get('sex') || '';
+
+  const handleInput = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setValueSearch(event.target.value);
+    setSearchParams(
+      getSearchWith(searchParams, { query: event.target.value || null }),
+    );
+  };
+
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        <a className="is-active" href="#/people">
+        <Link
+          className={classNames({
+            'is-active': sex === '',
+          })}
+          to={{ search: getSearchWith(searchParams, { sex: null }) }}
+        >
           All
-        </a>
-        <a className="" href="#/people?sex=m">
+        </Link>
+        <Link
+          className={classNames({
+            'is-active': sex === 'm',
+          })}
+          to={{ search: getSearchWith(searchParams, { sex: 'm' }) }}
+        >
           Male
-        </a>
-        <a className="" href="#/people?sex=f">
+        </Link>
+        <Link
+          className={classNames({
+            'is-active': sex === 'f',
+          })}
+          to={{ search: getSearchWith(searchParams, { sex: 'f' }) }}
+        >
           Female
-        </a>
+        </Link>
       </p>
 
       <div className="panel-block">
         <p className="control has-icons-left">
           <input
+            value={valueSearch}
             data-cy="NameFilter"
             type="search"
             className="input"
             placeholder="Search"
+            onChange={handleInput}
           />
 
           <span className="icon is-left">
