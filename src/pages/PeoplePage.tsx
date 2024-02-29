@@ -15,8 +15,8 @@ export const PeoplePage = () => {
   const query = searchParams.get('query') || '';
   const sex = searchParams.get('sex') || '';
   const centuries = searchParams.getAll('centuries') || [];
-  // const sort = searchParams.get('sort') || '';
-  // const order = searchParams.get('order') || '';
+  const sort = searchParams.get('sort') || '';
+  const order = searchParams.get('order') || '';
 
   useEffect(() => {
     setIsLoading(true);
@@ -33,11 +33,11 @@ export const PeoplePage = () => {
   }, []);
 
   const preparePeople = (
-    curQuery,
-    curSex,
-    curCenturies,
-    // curSort,
-    // curOrder
+    curQuery: string,
+    curSex: string,
+    curCenturies: string[],
+    curSort: string,
+    curOrder: string,
   ) => {
     let newPeople = [...people];
 
@@ -65,12 +65,31 @@ export const PeoplePage = () => {
       });
     }
 
+    if (curSort) {
+      newPeople.sort((a, b) => {
+        const valueA = a[curSort];
+        const valueB = b[curSort];
+
+        if (typeof valueA === 'string' && typeof valueB === 'string') {
+          return valueA.localeCompare(valueB);
+        }
+
+        if (typeof valueA === 'number' && typeof valueB === 'number') {
+          return valueA - valueB;
+        }
+
+        return 0;
+      });
+    }
+
+    if (curOrder) {
+      newPeople.reverse();
+    }
+
     return newPeople;
   };
 
-  const preparedPeople = preparePeople(query, sex, centuries);
-  // curSort,
-  // curOrder
+  const preparedPeople = preparePeople(query, sex, centuries, sort, order);
 
   return (
     <>

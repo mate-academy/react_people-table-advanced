@@ -30,6 +30,10 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
     return { sort: newSort, order: null };
   };
 
+  const noSort = !sort;
+  const sortUp = sort && !order;
+  const sortDown = sort && order;
+
   return (
     <table
       data-cy="peopleTable"
@@ -45,7 +49,14 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
                   params={getSortParams(title.toLowerCase())}
                   className="icon"
                 >
-                  <i className="fas fa-sort" role="button" />
+                  <i
+                    className={classNames('fas', {
+                      'fa-sort': noSort,
+                      'fa-sort-up': sortUp,
+                      'fa-sort-down': sortDown,
+                    })}
+                    role="button"
+                  />
                 </SearchLink>
               </span>
             </th>
