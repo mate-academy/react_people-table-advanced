@@ -1,4 +1,4 @@
-import { Link, SetURLSearchParams, useLocation, useParams } from 'react-router-dom';
+import { Link, SetURLSearchParams, useParams } from 'react-router-dom';
 import classNames from 'classnames';
 import React, { useEffect, useState } from 'react';
 import { Person } from '../types';
@@ -16,24 +16,27 @@ export const PeopleTable: React.FC<Props> = ({
 }) => {
   const [visibilePeople, setVisibilePeople] = useState<Person[]>([]);
   const { slug } = useParams();
+
+  const params = new URLSearchParams(searchParams);
+  const [currentParams, setCurrentParams] = useState('');
+
   const sort = searchParams.get('sort');
   const order = searchParams.get('order');
-  const params = new URLSearchParams(searchParams);
-  // const [currentParams, setCurrentParams] = useState(params.toString());
 
   const handleClick = (par: string) => {
     if (!sort) {
       params.set('sort', par);
-      // setCurrentParams(params.toString());
       setSearchParams(params);
+
+      setCurrentParams(`sort=${par}`);
 
       return;
     }
 
     if (sort === par && !order) {
-      params.append('order', 'desc');
+      params.set('order', 'desc');
       setSearchParams(params);
-      // setCurrentParams(params.toString());
+      setCurrentParams(`sort=${par}&order=desc`);
 
       return;
     }
@@ -41,16 +44,17 @@ export const PeopleTable: React.FC<Props> = ({
     params.delete('order');
     params.delete('sort');
     setSearchParams(params);
-    // setCurrentParams(params.toString());
+    setCurrentParams('');
   };
 
   useEffect(() => {
     const sortedPeople = handleSort();
+    console.log(sortedPeople);
 
     if (sortedPeople) {
       setVisibilePeople(sortedPeople);
     }
-  }, [handleSort]);
+  }, [handleSort, searchParams]);
 
   const getLinkPerson = (name: string) => {
     const foundPerson = visibilePeople.find((p: Person) => p.name === name);
@@ -69,13 +73,12 @@ export const PeopleTable: React.FC<Props> = ({
     return name;
   };
 
-  // const getLink = () => {
-  //   return setTimeout(() => {
-  //     return `/people?${currentParams}`;
-  //   }, 200);
-  // };
-
-  // const link = getLink();
+  const getFasClass = (name: string) =>
+    classNames('fas', {
+      'fa-sort': currentParams === '',
+      'fa-sort-up': currentParams === `?sort=${name}`,
+      'fa-sort-down': currentParams === `?sort=${name}&order=desc`,
+    });
 
   return (
     <table
@@ -88,11 +91,18 @@ export const PeopleTable: React.FC<Props> = ({
             <span className="is-flex is-flex-wrap-nowrap">
               Name
               <Link
-                to={{ search: params.toString() }}
+                to={`${currentParams}`}
                 onClick={() => handleClick('name')}
+                aria-label="Sort by Name"
               >
                 <span className="icon">
-                  <i className="fas fa-sort" />
+                  <i
+                    className={classNames('fas', 'fa-sort', {
+                      'fa-sort': currentParams === '',
+                      'fa-sort-up': currentParams === '?sort=name',
+                      'fa-sort-down': currentParams === '?sort=name&order=desc',
+                    })}
+                  />
                 </span>
               </Link>
             </span>
@@ -101,10 +111,19 @@ export const PeopleTable: React.FC<Props> = ({
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Sex
-              <a href="#/people?sort=sex" onClick={() => handleClick('sex')} >
-
+              <a
+                href={`#/people${currentParams}`}
+                onClick={() => handleClick('sex')}
+                aria-label="Sort by Sex"
+              >
                 <span className="icon">
-                  <i className="fas fa-sort" />
+                  <i
+                    className={classNames('fas', {
+                      'fa-sort': currentParams === '',
+                      'fa-sort-up': currentParams === '?sort=sex',
+                      'fa-sort-down': currentParams === '?sort=sex&order=desc',
+                    })}
+                  />
                 </span>
               </a>
             </span>
@@ -114,8 +133,9 @@ export const PeopleTable: React.FC<Props> = ({
             <span className="is-flex is-flex-wrap-nowrap">
               Born
               <a
-                href="#/people?sort=born&amp;order=desc"
+                href={`#/people${currentParams}`}
                 onClick={() => handleClick('born')}
+                aria-label="Sort by Born"
               >
                 <span className="icon">
                   <i className="fas fa-sort-up" />
@@ -127,9 +147,13 @@ export const PeopleTable: React.FC<Props> = ({
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Died
-              <a href="#/people?sort=died" onClick={() => handleClick('died')}>
+              <a
+                href={`#/people${currentParams}`}
+                onClick={() => handleClick('died')}
+                aria-label="Sort by Died"
+              >
                 <span className="icon">
-                  <i className="fas fa-sort" />
+                  <i className={getFasClass('died')} />
                 </span>
               </a>
             </span>
@@ -138,7 +162,7 @@ export const PeopleTable: React.FC<Props> = ({
           <th>Mother</th>
           <th>Father</th>
         </tr>
-      </thead>
+      </thead >
 
       <tbody>
         {visibilePeople.map((person: Person, index) => (
@@ -159,6 +183,6 @@ export const PeopleTable: React.FC<Props> = ({
           </tr>
         ))}
       </tbody>
-    </table>
+    </table >
   );
 };

@@ -1,16 +1,72 @@
-export const PeopleFilters = () => {
+import React, { useState } from "react";
+import { useSearchParams } from "react-router-dom";
+
+type Props = {
+  people: Person[];
+  setFilterPeople: React.Dispatch<React.SetStateAction<Person[]>>;
+};
+
+enum SexFilter {
+  All = 'All',
+  Male = 'Male',
+  Female = 'Female',
+}
+
+export const PeopleFilters: React.FC<Props> = ({ setFilterPeople, people }) => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const params = new URLSearchParams(searchParams);
+
+  // const [sexFilter, setSexFilter] = useState<SexFilter>(SexFilter.All);
+
+  const handleClickSex = (sex: string) => {
+    if (sex === '') {
+      params.delete('sex');
+      setSearchParams(params);
+
+      return;
+    }
+
+    params.append('sex', sex);
+    setSearchParams(params);
+  };
+
+
+  const applyFilters = () => {
+    let filteredPeople = [...people];
+
+    const sex = searchParams.get('sex');
+    const centuries = searchParams.get('centuries');
+    const query = searchParams.get('query');
+
+    // if (sex) {
+    //   filteredPeople = filteredPeople.filter(person => person.sex === sex);
+    // }
+  };
+
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        <a className="is-active" href="#/people">
+        <a
+          className="is-active"
+          href="#/people"
+          onClick={() => handleClickSex('')}
+        >
           All
         </a>
-        <a className="" href="#/people?sex=m">
+        <a
+          className=""
+          href="#/people?sex=m"
+          onClick={() => handleClickSex('m')}
+        >
           Male
         </a>
-        <a className="" href="#/people?sex=f">
+        <a
+          className=""
+          href="#/people?sex=f"
+          onClick={() => handleClickSex('f')}
+        >
           Female
         </a>
       </p>

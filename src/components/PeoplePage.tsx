@@ -10,10 +10,13 @@ import { getPeople } from '../api';
 export const PeoplePage = () => {
   const [loader, setLoader] = useState<boolean>(false);
   const [people, setPeople] = useState<Person[]>([]);
+  const [filterPeople, setFilterPeople] = useState<Person[]>([]);
   const [searchParams, setSearchParams] = useSearchParams();
 
   const sort = searchParams.get('sort');
   const order = searchParams.get('order');
+
+  console.log(searchParams.toString());
 
   useEffect(() => {
     setLoader(true);
@@ -71,7 +74,7 @@ export const PeoplePage = () => {
         return [...people];
     }
 
-    return sortedPeople;
+    return [...sortedPeople];
   };
 
   return (
@@ -81,7 +84,7 @@ export const PeoplePage = () => {
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
           <div className="column is-7-tablet is-narrow-desktop">
-            <PeopleFilters />
+            <PeopleFilters setFilterPeople={setFilterPeople} people={people} />
           </div>
 
           <div className="column">
