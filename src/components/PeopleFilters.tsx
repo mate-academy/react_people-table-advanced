@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import React from 'react';
+import { useSearchParams } from 'react-router-dom';
 
 type Props = {
   people: Person[];
@@ -30,9 +30,8 @@ export const PeopleFilters: React.FC<Props> = ({ setFilterPeople, people }) => {
     setSearchParams(params);
   };
 
-
   const applyFilters = () => {
-    let filteredPeople = [...people];
+    const filteredPeople = [...people];
 
     const sex = searchParams.get('sex');
     const centuries = searchParams.get('centuries');

@@ -49,6 +49,7 @@ export const PeopleTable: React.FC<Props> = ({
 
   useEffect(() => {
     const sortedPeople = handleSort();
+
     console.log(sortedPeople);
 
     if (sortedPeople) {
@@ -111,58 +112,58 @@ export const PeopleTable: React.FC<Props> = ({
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Sex
-              <a
+              {/* <a
                 href={`#/people${currentParams}`}
                 onClick={() => handleClick('sex')}
                 aria-label="Sort by Sex"
-              >
-                <span className="icon">
-                  <i
-                    className={classNames('fas', {
-                      'fa-sort': currentParams === '',
-                      'fa-sort-up': currentParams === '?sort=sex',
-                      'fa-sort-down': currentParams === '?sort=sex&order=desc',
-                    })}
-                  />
-                </span>
-              </a>
+              > */}
+              <span className="icon">
+                <i
+                  className={classNames('fas', {
+                    'fa-sort': currentParams === '',
+                    'fa-sort-up': currentParams === '?sort=sex',
+                    'fa-sort-down': currentParams === '?sort=sex&order=desc',
+                  })}
+                />
+              </span>
+              {/* </a> */}
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Born
-              <a
+              {/* <a
                 href={`#/people${currentParams}`}
                 onClick={() => handleClick('born')}
                 aria-label="Sort by Born"
-              >
-                <span className="icon">
-                  <i className="fas fa-sort-up" />
-                </span>
-              </a>
+              > */}
+              <span className="icon">
+                <i className="fas fa-sort-up" />
+              </span>
+              {/* </a> */}
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Died
-              <a
+              {/* <a
                 href={`#/people${currentParams}`}
                 onClick={() => handleClick('died')}
                 aria-label="Sort by Died"
-              >
-                <span className="icon">
-                  <i className={getFasClass('died')} />
-                </span>
-              </a>
+              > */}
+              <span className="icon">
+                <i className={getFasClass('died')} />
+              </span>
+              {/* </a> */}
             </span>
           </th>
 
           <th>Mother</th>
           <th>Father</th>
         </tr>
-      </thead >
+      </thead>
 
       <tbody>
         {visibilePeople.map((person: Person, index) => (
@@ -183,6 +184,6 @@ export const PeopleTable: React.FC<Props> = ({
           </tr>
         ))}
       </tbody>
-    </table >
+    </table>
   );
 };
