@@ -5,6 +5,7 @@ import { Person } from '../types';
 import { Loader } from '../components/Loader';
 import { getPeople } from '../api';
 import { PeopleFilters } from '../components/PeopleFilters';
+import { preparePeople } from '../utils/prepareListOfPeople';
 
 export const PeoplePage = () => {
   const [searchParams] = useSearchParams();
@@ -32,64 +33,14 @@ export const PeoplePage = () => {
       });
   }, []);
 
-  const preparePeople = (
-    curQuery: string,
-    curSex: string,
-    curCenturies: string[],
-    curSort: string,
-    curOrder: string,
-  ) => {
-    let newPeople = [...people];
-
-    if (curQuery) {
-      const normalizedQuery = curQuery.toLocaleLowerCase();
-
-      newPeople = newPeople.filter(person => {
-        return (
-          person.name.toLocaleLowerCase().includes(normalizedQuery) ||
-          person.motherName?.toLocaleLowerCase().includes(normalizedQuery) ||
-          person.fatherName?.toLocaleLowerCase().includes(normalizedQuery)
-        );
-      });
-    }
-
-    if (curSex) {
-      newPeople = newPeople.filter(person => {
-        return person.sex === curSex;
-      });
-    }
-
-    if (curCenturies.length > 0) {
-      newPeople = newPeople.filter(person => {
-        return curCenturies.includes(String(Math.floor(person.born / 100)));
-      });
-    }
-
-    if (curSort) {
-      newPeople.sort((a, b) => {
-        const valueA = a[curSort];
-        const valueB = b[curSort];
-
-        if (typeof valueA === 'string' && typeof valueB === 'string') {
-          return valueA.localeCompare(valueB);
-        }
-
-        if (typeof valueA === 'number' && typeof valueB === 'number') {
-          return valueA - valueB;
-        }
-
-        return 0;
-      });
-    }
-
-    if (curOrder) {
-      newPeople.reverse();
-    }
-
-    return newPeople;
-  };
-
-  const preparedPeople = preparePeople(query, sex, centuries, sort, order);
+  const preparedPeople = preparePeople(
+    query,
+    sex,
+    centuries,
+    sort,
+    order,
+    people,
+  );
 
   return (
     <>
@@ -119,7 +70,13 @@ export const PeoplePage = () => {
                 </p>
               )}
 
-              {!isLoading && !error && people.length > 0 && (
+              {!isLoading && !error && !preparedPeople.length && (
+                <p data-cy="noPeopleMessage">
+                  There are no people matching the current search criteria
+                </p>
+              )}
+
+              {!isLoading && !error && preparedPeople.length > 0 && (
                 <PeopleTable people={preparedPeople} />
               )}
             </div>
@@ -129,4 +86,3 @@ export const PeoplePage = () => {
     </>
   );
 };
-// There are no people matching the current search criteria
