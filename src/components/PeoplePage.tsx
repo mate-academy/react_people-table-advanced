@@ -30,23 +30,21 @@ export const PeoplePage = () => {
     const centuries = searchParams.getAll('centuries') || [];
     let preparedPeople = [...people];
 
-    if (sex) {
-      switch (sex) {
-        case SexFilter.MALE:
-          preparedPeople = preparedPeople.filter(
-            person => person.sex === SexFilter.MALE,
-          );
-          break;
+    switch (sex) {
+      case SexFilter.MALE:
+        preparedPeople = preparedPeople.filter(
+          person => person.sex === SexFilter.MALE,
+        );
+        break;
 
-        case SexFilter.FEMALE:
-          preparedPeople = preparedPeople.filter(
-            person => person.sex === SexFilter.FEMALE,
-          );
-          break;
+      case SexFilter.FEMALE:
+        preparedPeople = preparedPeople.filter(
+          person => person.sex === SexFilter.FEMALE,
+        );
+        break;
 
-        default:
-          break;
-      }
+      default:
+        break;
     }
 
     if (query) {
@@ -73,33 +71,22 @@ export const PeoplePage = () => {
     }
 
     if (sort) {
-      if (sort && !order) {
-        preparedPeople = preparedPeople.sort((param1, param2) => {
-          switch (sort) {
-            case Sorted.NAME:
-            case Sorted.SEX:
-              return param1[sort].localeCompare(param2[sort]);
-            case Sorted.BORN:
-            case Sorted.DIED:
-              return param1[sort] - param2[sort];
-            default:
-              return 0;
-          }
-        });
-      } else if (sort && order) {
-        preparedPeople = preparedPeople.sort((param1, param2) => {
-          switch (sort) {
-            case Sorted.NAME:
-            case Sorted.SEX:
-              return param2[sort].localeCompare(param1[sort]);
-            case Sorted.BORN:
-            case Sorted.DIED:
-              return param2[sort] - param1[sort];
-            default:
-              return 0;
-          }
-        });
-      }
+      preparedPeople = preparedPeople.sort((param1, param2) => {
+        switch (sort) {
+          case Sorted.NAME:
+          case Sorted.SEX:
+            return param1[sort].localeCompare(param2[sort]);
+          case Sorted.BORN:
+          case Sorted.DIED:
+            return param1[sort] - param2[sort];
+          default:
+            return 0;
+        }
+      });
+    }
+
+    if (order) {
+      preparedPeople = preparedPeople.reverse();
     }
 
     return preparedPeople;

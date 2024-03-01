@@ -6,9 +6,7 @@ import { SexFilter } from '../types';
 
 const numbers = ['16', '17', '18', '19', '20'];
 
-type Props = {};
-
-export const PeopleFilters: React.FC<Props> = () => {
+export const PeopleFilters: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const sex = searchParams.get('sex');
