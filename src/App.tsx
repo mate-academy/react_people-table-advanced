@@ -29,10 +29,7 @@ export const App: React.FC = () => {
                 <h1 className="title">Page not found</h1>
               }
             />
-            <Route
-              path="/people/:slug?"
-              element={<PeoplePage />}
-            />
+            <Route path="/people/:slug?" element={<PeoplePage />} />
           </Routes>
         </div>
       </div>

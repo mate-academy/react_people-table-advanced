@@ -10,11 +10,12 @@ export const PeoplePage = () => {
   const {
     dataComes,
     loading,
-    err,
+    error,
     setloading,
     setDataComes,
     setPeople,
-    setErr,
+    setError,
+    filteredPeople,
   } = useContext(PeopleContext);
 
   useEffect(() => {
@@ -29,7 +30,7 @@ export const PeoplePage = () => {
         }
       })
       .catch((er) => {
-        setErr(er);
+        setError(er);
         setDataComes('NO');
       })
       .finally(() => {
@@ -56,7 +57,7 @@ export const PeoplePage = () => {
             <div className="box table-container">
               {loading && <Loader />}
 
-              {err && (
+              {error && (
                 <p data-cy="peopleLoadingError">
                   Something went wrong
                 </p>
@@ -68,7 +69,7 @@ export const PeoplePage = () => {
                 </p>
               )}
 
-              {false && (
+              {(filteredPeople.length === 0 && dataComes === 'Exist') && (
                 <p>There are no people matching the current search criteria</p>
               )}
               {(dataComes === 'Exist' && !loading) && (

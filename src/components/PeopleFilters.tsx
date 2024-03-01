@@ -5,6 +5,8 @@ import { SearchLink } from './SearchLink';
 import { getSearchWith } from '../utils/searchHelper';
 import { PeopleContext } from '../Context';
 
+const AVAILABLE_CENTURIES = ['16', '17', '18', '19', '20'];
+
 export const PeopleFilters = () => {
   const {
     filters,
@@ -24,25 +26,34 @@ export const PeopleFilters = () => {
     handleChangeFilter('centuries', centuries);
   }, [query, sex, centuries, handleChangeFilter]);
 
-  const AVAILABLE_CENTURIES = ['16', '17', '18', '19', '20'];
+  const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchParams((
+      getSearchWith(searchParams, {
+        query: event.target.value || null,
+      })
+    ));
+  };
 
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
+
         <SearchLink
           className={cn({ 'is-active': !filters.sex })}
           params={{ sex: null }}
         >
           All
         </SearchLink>
+
         <SearchLink
           className={cn({ 'is-active': filters.sex === 'm' })}
           params={{ sex: 'm' }}
         >
           Male
         </SearchLink>
+
         <SearchLink
           className={cn({ 'is-active': filters.sex === 'f' })}
           params={{ sex: 'f' }}
@@ -58,13 +69,7 @@ export const PeopleFilters = () => {
             type="search"
             className="input"
             placeholder="Search"
-            onChange={(event) => {
-              setSearchParams((
-                getSearchWith(searchParams, {
-                  query: event.target.value || null,
-                })
-              ));
-            }}
+            onChange={handleSearch}
           />
 
           <span className="icon is-left">
@@ -85,7 +90,7 @@ export const PeopleFilters = () => {
                 })}
                 params={{
                   centuries: filters.centuries.includes(century)
-                    ? filters.centuries.filter(c => c !== century)
+                    ? filters.centuries.filter(cent => cent !== century)
                     : [...filters.centuries, century],
                 }}
               >
@@ -99,7 +104,6 @@ export const PeopleFilters = () => {
               data-cy="centuryALL"
               className="button is-success is-outlined"
               to="/people"
-              onClick={() => { }}
             >
               All
             </Link>

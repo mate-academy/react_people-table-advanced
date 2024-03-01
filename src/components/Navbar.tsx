@@ -3,6 +3,16 @@ import {
 } from 'react-router-dom';
 import classNames from 'classnames';
 
+type IsActiveClassChangerType = {
+  isActive: boolean;
+};
+
+const isActiveClassChanger = (
+  { isActive }: IsActiveClassChangerType,
+) => classNames('navbar-item', {
+  'has-background-grey-lighter': isActive,
+});
+
 export const Navbar = () => {
   return (
     <nav
@@ -15,18 +25,14 @@ export const Navbar = () => {
         <div className="navbar-brand">
           <NavLink
             to="/"
-            className={({ isActive }) => classNames('navbar-item', {
-              'has-background-grey-lighter': isActive,
-            })}
+            className={isActiveClassChanger}
           >
             Home
           </NavLink>
 
           <NavLink
             to="/people"
-            className={({ isActive }) => classNames('navbar-item', {
-              'has-background-grey-lighter': isActive,
-            })}
+            className={isActiveClassChanger}
           >
             People
           </NavLink>

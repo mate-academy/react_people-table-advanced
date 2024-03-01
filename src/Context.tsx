@@ -7,17 +7,11 @@ import React, {
   useCallback,
 } from 'react';
 import { Person } from './types';
+import { filterAndSorting } from './utils/filter';
+import { FiltersType } from './types/FiltersType';
 
 interface PeopleContextProps {
   children: ReactNode;
-}
-
-interface FiltersType {
-  query: string;
-  sex: string;
-  centuries: string[];
-  sortField: string;
-  isReversed: boolean;
 }
 
 type HandleFilterValue = string | boolean | string[];
@@ -27,8 +21,7 @@ interface PeopleContextValue {
   setDataComes: (data: string) => void,
   setloading: React.Dispatch<React.SetStateAction<boolean>>,
   setFilteredPeople: React.Dispatch<React.SetStateAction<Person[]>>,
-  setFilters: React.Dispatch<React.SetStateAction<FiltersType>>
-  setErr: (err: boolean) => void,
+  setError: (err: boolean) => void,
   existingPerson: (Name: string | null) => Person | null | undefined,
   handleChangeFilter: (
     key: keyof FiltersType,
@@ -38,24 +31,23 @@ interface PeopleContextValue {
   people: Person[],
   dataComes: string,
   loading: boolean,
-  err: boolean,
+  error: boolean,
   filters: FiltersType,
 }
 
 export const PeopleContext = createContext<PeopleContextValue>({
-  setPeople: () => { },
-  setDataComes: () => { },
-  setloading: () => { },
-  setErr: () => { },
-  setFilters: () => { },
+  setPeople: () => {},
+  setDataComes: () => {},
+  setloading: () => {},
+  setError: () => {},
   existingPerson: () => null,
-  setFilteredPeople: () => { },
-  handleChangeFilter: () => { },
+  setFilteredPeople: () => {},
+  handleChangeFilter: () => {},
   people: [],
   filteredPeople: [],
   dataComes: 'Loading',
   loading: false,
-  err: false,
+  error: false,
   filters: {
     query: '',
     sex: '',
@@ -70,7 +62,7 @@ export const PeopleProvider: React.FC<PeopleContextProps> = ({ children }) => {
   const [filteredPeople, setFilteredPeople] = useState<Person[]>([]);
   const [dataComes, setDataComes] = useState('Loading');
   const [loading, setloading] = useState(false);
-  const [err, setErr] = useState(false);
+  const [error, setError] = useState(false);
 
   const initialFilters: FiltersType = useMemo(() => {
     return {
@@ -89,9 +81,9 @@ export const PeopleProvider: React.FC<PeopleContextProps> = ({ children }) => {
       return null;
     }
 
-    const exPerson = people.find((per) => {
-      if (per.name === Name) {
-        return per;
+    const exPerson = people.find((person) => {
+      if (person.name === Name) {
+        return person;
       }
 
       return false;
@@ -104,12 +96,10 @@ export const PeopleProvider: React.FC<PeopleContextProps> = ({ children }) => {
     key: keyof FiltersType,
     value: HandleFilterValue,
   ) => {
-    setFilters(currentFilters => {
-      return {
-        ...currentFilters,
-        [key]: value,
-      };
-    });
+    setFilters(currentFilters => ({
+      ...currentFilters,
+      [key]: value,
+    }));
   }, []);
 
   useEffect(() => {
@@ -133,26 +123,11 @@ export const PeopleProvider: React.FC<PeopleContextProps> = ({ children }) => {
       });
     };
 
-    if (!filters.isReversed) {
-      const reversedFilteredPeople = filterPeople().sort((person1, person2) => {
-        switch (filters.sortField) {
-          case 'born':
-            return person1.born - person2.born;
-          case 'died':
-            return person1.died - person2.died;
-          case 'sex':
-            return person1.sex.localeCompare(person2.sex);
-          case 'name':
-            return person1.name.localeCompare(person2.name);
-          default:
-            return 0;
-        }
-      });
-
-      setFilteredPeople(reversedFilteredPeople);
-    } else {
-      setFilteredPeople(filterPeople());
-    }
+    filterAndSorting(
+      filters,
+      filterPeople,
+      setFilteredPeople,
+    );
   }, [people, filters]);
 
   const value = {
@@ -162,11 +137,10 @@ export const PeopleProvider: React.FC<PeopleContextProps> = ({ children }) => {
     handleChangeFilter,
     setPeople,
     setDataComes,
-    setErr,
+    setError,
     setloading,
-    setFilters,
     loading,
-    err,
+    error,
     existingPerson,
     filteredPeople,
     filters,
