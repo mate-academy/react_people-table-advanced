@@ -1,3 +1,26 @@
 iframe {
   display: none;
 }
+
+.custom-active-style {
+  border-bottom-color: #000;
+  color: #363636;
+  border: none;
+  background-color: white;
+  margin-bottom: -1px;
+  padding: 0.5em;
+  border-bottom: 1px solid #444444;
+  cursor: pointer;
+}
+
+.custom-style {
+  color: #485fc7;
+  cursor: pointer;
+  text-decoration: none;
+  border: none;
+  background-color: white;
+  margin-bottom: -1px;
+  padding: 0.5em;
+  border-bottom: 1px solid #dbdbdb;
+  cursor: pointer;
+}

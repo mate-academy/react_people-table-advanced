@@ -10,68 +10,99 @@ import { getPeople } from '../api';
 export const PeoplePage = () => {
   const [loader, setLoader] = useState<boolean>(false);
   const [people, setPeople] = useState<Person[]>([]);
-  const [filterPeople, setFilterPeople] = useState<Person[]>([]);
+  const [filterPeople, setFilterPeople] = useState<Person[]>([...people]);
+
   const [searchParams, setSearchParams] = useSearchParams();
-
-  const sort = searchParams.get('sort');
-  const order = searchParams.get('order');
-
-  console.log(searchParams.toString());
 
   useEffect(() => {
     setLoader(true);
     getPeople()
       .then((data: Person[]) => {
         setPeople(data);
+        setFilterPeople(data);
       })
       .finally(() => setLoader(false));
   }, [setLoader]);
 
+  const handleFilter = () => {
+    let filteredPeople = [...people];
+    const century = searchParams.getAll('century');
+    const sex = searchParams.get('sex');
+    const query = searchParams.get('query');
+
+    if (sex) {
+      filteredPeople = filteredPeople.filter(person => person.sex === sex);
+    }
+
+    if (query) {
+      filteredPeople = filteredPeople.filter(
+        person =>
+          person.name.toLowerCase().includes(query) ||
+          person.fatherName?.toLowerCase().includes(query) ||
+          person.motherName?.toLowerCase().includes(query),
+      );
+    }
+
+    if (century.length > 0) {
+      filteredPeople = filteredPeople.filter(person =>
+        century.includes(`${Math.ceil(person.born / 100)}`),
+      );
+    }
+
+    return filteredPeople;
+  };
+
   const handleSort = () => {
-    const sortedPeople = [...people];
+    const sort = searchParams.get('sort');
+    const order = searchParams.get('order');
 
-    switch (sort) {
-      case 'name':
-        if (!order) {
-          sortedPeople.sort((a, b) => a.name.localeCompare(b.name));
+    const sortedPeople = handleFilter();
 
+    if (sort) {
+      switch (sort) {
+        case 'name':
+          if (!order) {
+            sortedPeople.sort((a, b) => a.name.localeCompare(b.name));
+
+            break;
+          }
+
+          sortedPeople.sort((a, b) => b.name.localeCompare(a.name));
           break;
-        }
 
-        sortedPeople.sort((a, b) => b.name.localeCompare(a.name));
-        break;
+        case 'sex':
+          if (!order) {
+            sortedPeople.sort((a, b) => a.sex.localeCompare(b.sex));
 
-      case 'sex':
-        if (!order) {
-          sortedPeople.sort((a, b) => a.sex.localeCompare(b.sex));
+            break;
+          }
 
+          sortedPeople.sort((a, b) => b.sex.localeCompare(a.sex));
           break;
-        }
 
-        sortedPeople.sort((a, b) => b.sex.localeCompare(a.sex));
-        break;
+        case 'born':
+          if (!order) {
+            sortedPeople.sort((a, b) => a.born - b.born);
 
-      case 'born':
-        if (!order) {
-          sortedPeople.sort((a, b) => a.born - b.born);
+            break;
+          }
 
+          sortedPeople.sort((a, b) => b.born - a.born);
           break;
-        }
 
-        sortedPeople.sort((a, b) => b.born - a.born);
-        break;
+        case 'died':
+          if (!order) {
+            sortedPeople.sort((a, b) => a.died - b.died);
 
-      case 'died':
-        if (!order) {
-          sortedPeople.sort((a, b) => a.died - b.died);
+            break;
+          }
 
+          sortedPeople.sort((a, b) => b.died - a.died);
           break;
-        }
 
-        sortedPeople.sort((a, b) => b.died - a.died);
-        break;
-      default:
-        return [...people];
+        default:
+          return filterPeople;
+      }
     }
 
     return [...sortedPeople];
@@ -83,9 +114,11 @@ export const PeoplePage = () => {
 
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
-          <div className="column is-7-tablet is-narrow-desktop">
-            <PeopleFilters setFilterPeople={setFilterPeople} people={people} />
-          </div>
+          {!loader && (
+            <div className="column is-7-tablet is-narrow-desktop">
+              <PeopleFilters handleFilter={handleFilter} />
+            </div>
+          )}
 
           <div className="column">
             <div className="box table-container">
@@ -105,11 +138,13 @@ export const PeoplePage = () => {
                 <p>There are no people matching the current search criteria</p>
               )}
 
-              <PeopleTable
-                handleSort={handleSort}
-                searchParams={searchParams}
-                setSearchParams={setSearchParams}
-              />
+              {!loader && (
+                <PeopleTable
+                  searchParams={searchParams}
+                  setSearchParams={setSearchParams}
+                  handleSort={handleSort}
+                />
+              )}
             </div>
           </div>
         </div>

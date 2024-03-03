@@ -4,9 +4,9 @@ import React, { useEffect, useState } from 'react';
 import { Person } from '../types';
 
 type Props = {
-  handleSort: () => Person[] | undefined;
   searchParams: URLSearchParams;
   setSearchParams: SetURLSearchParams;
+  handleSort: () => void | Person[];
 };
 
 export const PeopleTable: React.FC<Props> = ({
@@ -14,11 +14,17 @@ export const PeopleTable: React.FC<Props> = ({
   searchParams,
   setSearchParams,
 }) => {
-  const [visibilePeople, setVisibilePeople] = useState<Person[]>([]);
   const { slug } = useParams();
-
+  const [visibilePeople, setVisibilePeople] = useState<Person[]>([]);
   const params = new URLSearchParams(searchParams);
-  const [currentParams, setCurrentParams] = useState('');
+
+  useEffect(() => {
+    const sortedPeople = handleSort();
+
+    if (sortedPeople) {
+      setVisibilePeople(sortedPeople);
+    }
+  }, [handleSort, searchParams]);
 
   const sort = searchParams.get('sort');
   const order = searchParams.get('order');
@@ -28,15 +34,12 @@ export const PeopleTable: React.FC<Props> = ({
       params.set('sort', par);
       setSearchParams(params);
 
-      setCurrentParams(`sort=${par}`);
-
       return;
     }
 
     if (sort === par && !order) {
       params.set('order', 'desc');
       setSearchParams(params);
-      setCurrentParams(`sort=${par}&order=desc`);
 
       return;
     }
@@ -44,18 +47,13 @@ export const PeopleTable: React.FC<Props> = ({
     params.delete('order');
     params.delete('sort');
     setSearchParams(params);
-    setCurrentParams('');
   };
 
-  useEffect(() => {
-    const sortedPeople = handleSort();
-
-    console.log(sortedPeople);
-
-    if (sortedPeople) {
-      setVisibilePeople(sortedPeople);
-    }
-  }, [handleSort, searchParams]);
+  const getStyleButton = () => ({
+    cursor: 'pointer',
+    border: 'none',
+    background: 'none',
+  });
 
   const getLinkPerson = (name: string) => {
     const foundPerson = visibilePeople.find((p: Person) => p.name === name);
@@ -76,9 +74,9 @@ export const PeopleTable: React.FC<Props> = ({
 
   const getFasClass = (name: string) =>
     classNames('fas', {
-      'fa-sort': currentParams === '',
-      'fa-sort-up': currentParams === `?sort=${name}`,
-      'fa-sort-down': currentParams === `?sort=${name}&order=desc`,
+      'fa-sort': !sort || sort !== name,
+      'fa-sort-up': sort === name && !order,
+      'fa-sort-down': sort === name && order,
     });
 
   return (
@@ -91,72 +89,68 @@ export const PeopleTable: React.FC<Props> = ({
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Name
-              <Link
-                to={`${currentParams}`}
-                onClick={() => handleClick('name')}
-                aria-label="Sort by Name"
-              >
-                <span className="icon">
-                  <i
-                    className={classNames('fas', 'fa-sort', {
-                      'fa-sort': currentParams === '',
-                      'fa-sort-up': currentParams === '?sort=name',
-                      'fa-sort-down': currentParams === '?sort=name&order=desc',
-                    })}
-                  />
-                </span>
-              </Link>
+              <span className="icon">
+                <button
+                  type="button"
+                  onClick={() => handleClick('name')}
+                  aria-label="Sort by Name"
+                  className="icon-text"
+                  style={getStyleButton()}
+                >
+                  <i className={getFasClass('name')} />
+                </button>
+              </span>
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Sex
-              {/* <a
-                href={`#/people${currentParams}`}
+              <button
+                type="button"
                 onClick={() => handleClick('sex')}
-                aria-label="Sort by Sex"
-              > */}
-              <span className="icon">
-                <i
-                  className={classNames('fas', {
-                    'fa-sort': currentParams === '',
-                    'fa-sort-up': currentParams === '?sort=sex',
-                    'fa-sort-down': currentParams === '?sort=sex&order=desc',
-                  })}
-                />
-              </span>
-              {/* </a> */}
+                aria-label="Sort by Name"
+                className="icon-text"
+                style={getStyleButton()}
+              >
+                <span className="icon">
+                  <i className={getFasClass('sex')} />
+                </span>
+              </button>
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Born
-              {/* <a
-                href={`#/people${currentParams}`}
+              <button
+                type="button"
                 onClick={() => handleClick('born')}
-                aria-label="Sort by Born"
-              > */}
-              <span className="icon">
-                <i className="fas fa-sort-up" />
-              </span>
-              {/* </a> */}
+                aria-label="Sort by Name"
+                className="icon-text"
+                style={getStyleButton()}
+              >
+                <span className="icon">
+                  <i className={getFasClass('born')} />
+                </span>
+              </button>
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Died
-              {/* <a
-                href={`#/people${currentParams}`}
+              <button
+                type="button"
                 onClick={() => handleClick('died')}
-                aria-label="Sort by Died"
-              > */}
-              <span className="icon">
-                <i className={getFasClass('died')} />
-              </span>
-              {/* </a> */}
+                aria-label="Sort by Name"
+                className="icon-text"
+                style={getStyleButton()}
+              >
+                <span className="icon">
+                  <i className={getFasClass('died')} />
+                </span>
+              </button>
             </span>
           </th>
 
