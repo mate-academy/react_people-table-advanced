@@ -10,7 +10,7 @@ type Props = {
 export const PeopleFilters: React.FC<Props> = ({ handleFilter }) => {
   const [searchParams, setSearchParams] = useSearchParams();
   const params = new URLSearchParams(searchParams);
-  const query = searchParams.get('query');
+  const query = searchParams.get('query') || '';
   const sex = searchParams.get('sex');
   const century = searchParams.getAll('century');
 
@@ -121,7 +121,7 @@ export const PeopleFilters: React.FC<Props> = ({ handleFilter }) => {
             className="input"
             placeholder="Search"
             onChange={handleOnChancge}
-            value={query || ''}
+            value={query}
           />
 
           <span className="icon is-left">

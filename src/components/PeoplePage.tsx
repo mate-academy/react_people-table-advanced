@@ -35,12 +35,18 @@ export const PeoplePage = () => {
     }
 
     if (query) {
-      filteredPeople = filteredPeople.filter(
-        person =>
-          person.name.toLowerCase().includes(query) ||
-          person.fatherName?.toLowerCase().includes(query) ||
-          person.motherName?.toLowerCase().includes(query),
-      );
+      filteredPeople = filteredPeople.filter(person => {
+        const lowerCaseQuery = query.toLowerCase();
+        const nameQuery = person.name.toLowerCase().includes(lowerCaseQuery);
+        const fatherNameQuery = person.fatherName
+          ?.toLowerCase()
+          .includes(lowerCaseQuery);
+        const motherNameQuery = person.motherName
+          ?.toLowerCase()
+          .includes(lowerCaseQuery);
+
+        return nameQuery || fatherNameQuery || motherNameQuery;
+      });
     }
 
     if (century.length > 0) {
