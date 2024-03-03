@@ -34,9 +34,16 @@ export const PeopleFilters: React.FC<Props> = ({ handleFilter }) => {
       const arrCentury = searchParams.getAll('century');
 
       if (name && arrCentury.includes(name)) {
-        params.delete(param, name);
+        const newArray = arrCentury.filter(item => item !== name);
+
+        params.delete(param);
         setSearchParams(params);
-        handleFilter();
+
+        newArray.forEach(e => {
+          params.append(param, e);
+          setSearchParams(params);
+          handleFilter();
+        });
 
         return;
       }
