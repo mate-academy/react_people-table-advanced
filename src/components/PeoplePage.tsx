@@ -76,45 +76,49 @@ export const PeoplePage = () => {
   };
 
   return (
-    <div>
-      <h1 className="title">People Page</h1>
+    <div className="section">
+      <div className="container">
+        <h1 className="title">People Page</h1>
 
-      <div className="block">
-        <div className="columns is-desktop is-flex-direction-row-reverse">
-          <div className="column is-7-tablet is-narrow-desktop">
-            <PeopleFilters
-              query={query}
-              handleInputChange={handleInputChange}
-              toggleCentuary={toggleCentuary}
-              toggleSex={toggleSex}
-              handleReset={handleReset}
-            />
-          </div>
+        <div className="block">
+          <div className="columns is-desktop is-flex-direction-row-reverse">
+            <div className="column is-7-tablet is-narrow-desktop">
+              <PeopleFilters
+                query={query}
+                handleInputChange={handleInputChange}
+                toggleCentuary={toggleCentuary}
+                toggleSex={toggleSex}
+                handleReset={handleReset}
+              />
+            </div>
 
-          <div className="column">
-            <div className="box table-container">
-              {loading && <Loader />}
+            <div className="column">
+              <div className="box table-container">
+                {loading && <Loader />}
 
-              {error && (
-                <p data-cy="peopleLoadingError">Something went wrong</p>
-              )}
+                {error && (
+                  <p data-cy="peopleLoadingError">Something went wrong</p>
+                )}
 
-              {!loading && !people.length && (
-                <p data-cy="noPeopleMessage">
-                  There are no people on the server
-                </p>
-              )}
+                {!loading && !people.length && (
+                  <p data-cy="noPeopleMessage">
+                    There are no people on the server
+                  </p>
+                )}
 
-              {!loading && !prepearedPeople && (
-                <p>There are no people matching the current search criteria</p>
-              )}
+                {!loading && !prepearedPeople && (
+                  <p>
+                    There are no people matching the current search criteria
+                  </p>
+                )}
 
-              {!!prepearedPeople.length && (
-                <PeopleTable
-                  people={people}
-                  prepearedPeople={prepearedPeople}
-                />
-              )}
+                {!!prepearedPeople.length && (
+                  <PeopleTable
+                    people={people}
+                    prepearedPeople={prepearedPeople}
+                  />
+                )}
+              </div>
             </div>
           </div>
         </div>
