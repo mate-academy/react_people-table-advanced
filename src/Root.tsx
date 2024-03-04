@@ -26,5 +26,3 @@ export const Root = () => (
     </Routes>
   </Router>
 );
-
-// поменять в роуте People page path

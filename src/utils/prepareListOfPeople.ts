@@ -36,18 +36,16 @@ export const preparePeople = (
 
   if (curSort) {
     newPeople.sort((a: Person, b: Person) => {
-      const valueA: string | number = a[curSort];
-      const valueB: string | number = b[curSort];
-
-      if (typeof valueA === 'string' && typeof valueB === 'string') {
-        return valueA.localeCompare(valueB);
+      switch (curSort) {
+        case 'name':
+        case 'sex':
+          return a[curSort].localeCompare(b[curSort]);
+        case 'born':
+        case 'died':
+          return +a[curSort] - +b[curSort];
+        default:
+          return 0;
       }
-
-      if (typeof valueA === 'number' && typeof valueB === 'number') {
-        return valueA - valueB;
-      }
-
-      return 0;
     });
   }
 
