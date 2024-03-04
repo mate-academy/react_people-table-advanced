@@ -23,14 +23,9 @@ export const PeoplePage = () => {
     setIsLoading(true);
 
     getPeople()
-      .then(data => {
-        setPeople(data);
-        setIsLoading(false);
-      })
-      .catch(err => {
-        setError(err);
-        setIsLoading(false);
-      });
+      .then(setPeople)
+      .catch(setError)
+      .finally(() => setIsLoading(false));
   }, []);
 
   const preparedPeople = preparePeople(
