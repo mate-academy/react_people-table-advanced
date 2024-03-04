@@ -1,9 +1,10 @@
 import classNames from 'classnames';
 import React, { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams, useSearchParams } from 'react-router-dom';
 import { Person } from '../types';
 import { getPeople } from '../api';
 import { Loader } from './Loader';
+import { getSearchWith } from '../utils/searchHelper';
 
 type Props = {
   setIsLoaded: React.Dispatch<React.SetStateAction<boolean>>;
@@ -11,9 +12,20 @@ type Props = {
 
 export const PeopleTable: React.FC<Props> = ({ setIsLoaded }) => {
   const { slug } = useParams();
+
   const [people, setPeople] = useState<Person[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
+
+  const isNoPeopleMessage = !isLoading && !people.length && !isError;
+  const isPeopleTable = !isError && !isLoading;
+
+  const [searchParams] = useSearchParams();
+  const sort = searchParams.get('sort');
+  const order = searchParams.get('order');
+  const sex = searchParams.get('sex');
+  const query = searchParams.get('query');
+  const centuries = searchParams.getAll('centuries');
 
   useEffect(() => {
     setIsLoading(true);
@@ -47,6 +59,46 @@ export const PeopleTable: React.FC<Props> = ({ setIsLoaded }) => {
       .finally(() => setIsLoading(false));
   }, []);
 
+  const getSortSearchParams = (sortField: string) => {
+    if (sortField === sort) {
+      return order === 'desc' ? { sort: null, order: null } : { order: 'desc' };
+    }
+
+    return { sort: sortField};
+  };
+
+  const filteredPeople = people.filter(person => {
+    const passesSex = person.sex !== sex;
+    let passesQuery = !query;
+    let passesCentury = !centuries.length;
+
+    if (query) {
+      const queryLower = query.toLowerCase();
+      const isInName = person.name.toLowerCase().includes(queryLower);
+      const isInMotherName =
+        person.motherName &&
+        person.motherName.toLowerCase().includes(queryLower);
+      const isInFatherName =
+        person.fatherName &&
+        person.fatherName.toLowerCase().includes(queryLower);
+
+      passesQuery = !!(isInName || isInMotherName || isInFatherName);
+    }
+
+    if (centuries.length) {
+      const birthYear = person.born;
+
+      passesCentury = centuries.some(century => {
+        const startYear = (+century - 1) * 100;
+        const endYear = +century * 100 - 1;
+
+        return birthYear >= startYear && birthYear <= endYear;
+      });
+    }
+
+    return passesCentury && passesSex && passesQuery;
+  });
+
   function renderParentContent(
     name: string | null,
     person: Person | undefined,
@@ -69,9 +121,6 @@ export const PeopleTable: React.FC<Props> = ({ setIsLoaded }) => {
     return name;
   }
 
-  const isNoPeopleMessage = !isLoading && !people.length && !isError;
-  const isPeopleTable = !isError && !isLoading;
-
   return (
     <>
       {isLoading && <Loader />}
@@ -93,17 +142,85 @@ export const PeopleTable: React.FC<Props> = ({ setIsLoaded }) => {
         >
           <thead>
             <tr>
-              <th>Name</th>
-              <th>Sex</th>
-              <th>Born</th>
-              <th>Died</th>
+              <th>
+                <span className="is-flex is-flex-wrap-nowrap">
+                  Name
+                  <Link
+                    to={{
+                      search: getSearchWith(
+                        searchParams,
+                        getSortSearchParams('name'),
+                      ),
+                    }}
+                  >
+                    <span className="icon">
+                      <i className="fas fa-sort" />
+                    </span>
+                  </Link>
+                </span>
+              </th>
+
+              <th>
+                <span className="is-flex is-flex-wrap-nowrap">
+                  Sex
+                  <Link
+                    to={{
+                      search: getSearchWith(
+                        searchParams,
+                        getSortSearchParams('sex'),
+                      ),
+                    }}
+                  >
+                    <span className="icon">
+                      <i className="fas fa-sort" />
+                    </span>
+                  </Link>
+                </span>
+              </th>
+
+              <th>
+                <span className="is-flex is-flex-wrap-nowrap">
+                  Born
+                  <Link
+                    to={{
+                      search: getSearchWith(
+                        searchParams,
+                        getSortSearchParams('born'),
+                      ),
+                    }}
+                  >
+                    <span className="icon">
+                      <i className="fas fa-sort-up" />
+                    </span>
+                  </Link>
+                </span>
+              </th>
+
+              <th>
+                <span className="is-flex is-flex-wrap-nowrap">
+                  Died
+                  <Link
+                    to={{
+                      search: getSearchWith(
+                        searchParams,
+                        getSortSearchParams('died'),
+                      ),
+                    }}
+                  >
+                    <span className="icon">
+                      <i className="fas fa-sort" />
+                    </span>
+                  </Link>
+                </span>
+              </th>
+
               <th>Mother</th>
               <th>Father</th>
             </tr>
           </thead>
 
           <tbody>
-            {people.map(person => (
+            {filteredPeople.map(person => (
               <tr
                 data-cy="person"
                 className={classNames({
