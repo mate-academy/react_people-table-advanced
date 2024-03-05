@@ -7,7 +7,7 @@ import { filterPeople, sortPeople } from '../utils/people';
 import { SortFields } from '../types/SortFields';
 
 type Props = {
-  people: Person[],
+  people: Person[];
 };
 
 export const PeopleTable: React.FC<Props> = ({ people }) => {
@@ -111,51 +111,51 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
       <tbody>
         {filteredPeople.map(person => {
           return (
-            (
-              <tr
-                data-cy="person"
-                key={person.slug}
-                className={cn({
-                  'has-background-warning': person.slug === slug,
-                })}
-              >
+            <tr
+              data-cy="person"
+              key={person.slug}
+              className={cn({
+                'has-background-warning': person.slug === slug,
+              })}
+            >
+              <td>
+                <Link
+                  to={`/people/${person.slug}?${searchParams.toString()}`}
+                  className={person.sex === 'f' ? 'has-text-danger' : ''}
+                >
+                  {person.name}
+                </Link>
+              </td>
+
+              <td>{person.sex}</td>
+              <td>{person.born}</td>
+              <td>{person.died}</td>
+
+              {person.mother ? (
                 <td>
                   <Link
-                    to={`/people/${person.slug}?${searchParams.toString()}`}
-                    className={person.sex === 'f' ? 'has-text-danger' : ''}
+                    to={`/people/${person.mother.slug}?${searchParams.toString()}`}
+                    className="has-text-danger"
                   >
-                    {person.name}
+                    {person.motherName}
                   </Link>
                 </td>
+              ) : (
+                <td>{person.motherName ? person.motherName : '-'}</td>
+              )}
 
-                <td>{person.sex}</td>
-                <td>{person.born}</td>
-                <td>{person.died}</td>
-
-                {person.mother ? (
-                  <td>
-                    <Link
-                      to={`/people/${person.mother.slug}?${searchParams.toString()}`}
-                      className="has-text-danger"
-                    >
-                      {person.motherName}
-                    </Link>
-                  </td>
-                ) : (
-                  <td>{person.motherName ? person.motherName : '-'}</td>
-                )}
-
-                {person.father ? (
-                  <td>
-                    <Link to={`/people/${person.father.slug}?${searchParams.toString()}`}>
-                      {person.fatherName}
-                    </Link>
-                  </td>
-                ) : (
-                  <td>{person.fatherName ? person.fatherName : '-'}</td>
-                )}
-              </tr>
-            )
+              {person.father ? (
+                <td>
+                  <Link
+                    to={`/people/${person.father.slug}?${searchParams.toString()}`}
+                  >
+                    {person.fatherName}
+                  </Link>
+                </td>
+              ) : (
+                <td>{person.fatherName ? person.fatherName : '-'}</td>
+              )}
+            </tr>
           );
         })}
       </tbody>

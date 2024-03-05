@@ -4,50 +4,49 @@ import { SortFields } from '../types/SortFields';
 export const filterPeople = (people: Person[], filterSettings: object) => {
   let filteredPeople = [...people];
 
-  Object.entries(filterSettings)
-    .forEach(([key, val]) => {
-      if (val) {
-        switch (key) {
-          case 'query':
-            filteredPeople = filteredPeople
-              .filter(person => person.name.toLowerCase()
-                .includes(val.toLowerCase())
-                || person.fatherName?.toLowerCase()
-                  .includes(val.toLowerCase())
-                || person.motherName?.toLowerCase()
-                  .includes(val.toLowerCase()));
+  Object.entries(filterSettings).forEach(([key, val]) => {
+    if (val) {
+      switch (key) {
+        case 'query':
+          filteredPeople = filteredPeople.filter(
+            person =>
+              person.name.toLowerCase().includes(val.toLowerCase()) ||
+              person.fatherName?.toLowerCase().includes(val.toLowerCase()) ||
+              person.motherName?.toLowerCase().includes(val.toLowerCase()),
+          );
+          break;
+
+        case 'sex':
+          if (val === 'all') {
             break;
+          }
 
-          case 'sex':
-            if (val === 'all') {
-              break;
-            }
+          filteredPeople = filteredPeople.filter(person => person.sex === val);
+          break;
 
-            filteredPeople = filteredPeople
-              .filter(person => person.sex === val);
+        case 'centuries':
+          if (!val.length) {
             break;
+          }
 
-          case 'centuries':
-            if (!val.length) {
-              break;
-            }
+          filteredPeople = filteredPeople.filter(person =>
+            val.includes(`${Math.ceil(person.born / 100)}`),
+          );
+          break;
 
-            filteredPeople = filteredPeople
-              .filter(person => val.includes(`${Math.ceil(person.born / 100)}`));
-            break;
-
-          default:
-            break;
-        }
+        default:
+          break;
       }
-    });
+    }
+  });
 
   return filteredPeople;
 };
 
 export const sortPeople = (
   people: Person[],
-  sortField: SortFields | null, sortOrder: string | null,
+  sortField: SortFields | null,
+  sortOrder: string | null,
 ) => {
   if (!sortField) {
     return people;
@@ -63,8 +62,8 @@ export const sortPeople = (
       case SortFields.Died:
       case SortFields.Born:
         return sortOrder
-          ? person2[sortField] - (person1[sortField])
-          : person1[sortField] - (person2[sortField]);
+          ? person2[sortField] - person1[sortField]
+          : person1[sortField] - person2[sortField];
       default:
         return 0;
     }

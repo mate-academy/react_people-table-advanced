@@ -14,22 +14,20 @@ import { NotFoundPage } from './pages/NotFoundPage';
 import { PeoplePage } from './pages/PeoplePage';
 import { HomePage } from './pages/HomePage';
 
-createRoot(document.getElementById('root') as HTMLDivElement)
-  .render(
-    <Router>
-      <Routes>
-        <Route path="/" element={<App />}>
-          <Route index element={<HomePage />} />
+createRoot(document.getElementById('root') as HTMLDivElement).render(
+  <Router>
+    <Routes>
+      <Route path="/" element={<App />}>
+        <Route index element={<HomePage />} />
 
-          <Route path="people">
-            <Route index element={<PeoplePage />} />
-            <Route path=":slug" element={<PeoplePage />} />
-          </Route>
-
-          <Route path="*" element={<NotFoundPage />} />
-          <Route path="home" element={<Navigate to="/" replace />} />
+        <Route path="people">
+          <Route index element={<PeoplePage />} />
+          <Route path=":slug" element={<PeoplePage />} />
         </Route>
-      </Routes>
 
-    </Router>,
-  );
+        <Route path="*" element={<NotFoundPage />} />
+        <Route path="home" element={<Navigate to="/" replace />} />
+      </Route>
+    </Routes>
+  </Router>,
+);

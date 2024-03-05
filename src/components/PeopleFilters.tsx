@@ -9,10 +9,9 @@ export const PeopleFilters = () => {
   const centuries = searchParams.getAll('centuries') || [];
 
   const onSearchFilterChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchParams(getSearchWith(
-      searchParams,
-      { query: e.target.value || null },
-    ));
+    setSearchParams(
+      getSearchWith(searchParams, { query: e.target.value || null }),
+    );
   };
 
   const getCenturies = (newCentury: string) => {
@@ -30,9 +29,7 @@ export const PeopleFilters = () => {
       <p className="panel-tabs" data-cy="SexFilter">
         <SearchLink
           params={{ sex: 'all' }}
-          className={sex === 'all' || sex === null
-            ? 'is-active'
-            : ''}
+          className={sex === 'all' || sex === null ? 'is-active' : ''}
         >
           All
         </SearchLink>
