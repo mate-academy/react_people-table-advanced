@@ -28,25 +28,12 @@ export const PeoplePage = () => {
 
           <div className="column">
             <div className="box table-container">
-              {isError ? (
-                <ErrorMsg />
-              ) : (
-                <>
-                  {isLoading ? (
-                    <Loader />
-                  ) : (
-                    <>
-                      {people.length === 0 ? (
-                        <NoPeopleMsg />
-                      ) : (
-                        <Table people={people} />
-                      )}
-                    </>
-                  )}
-                </>
+              {isLoading && <Loader />}
+              {!isLoading && isError && <ErrorMsg />}
+              {!isLoading && people.length === 0 && <NoPeopleMsg />}
+              {!isLoading && !isError && people.length && (
+                <Table people={people} />
               )}
-
-              {/* <p>There are no people matching the current search criteria</p> */}
             </div>
           </div>
         </div>

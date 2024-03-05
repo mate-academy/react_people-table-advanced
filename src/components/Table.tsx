@@ -42,6 +42,7 @@ export const Table = ({ people }: { people: Person[] }) => {
     const tempPeople = [...computedPeople];
 
     switch (activeSort) {
+
       case SortType.NAME:
         tempPeople.sort((prev, next) => prev.name.localeCompare(next.name));
         break;
@@ -69,20 +70,19 @@ export const Table = ({ people }: { people: Person[] }) => {
     return tempPeople;
   }, [computedPeople, activeSort, activeOrder]);
 
-  const filteredPeople = useMemo(() => {
-    return sortedPeople.filter(person => {
-      if (activeSex && person.sex !== activeSex) {
-        return false;
-      }
+  const filteredPeople = sortedPeople.filter(person => {
+    if (activeSex && person.sex !== activeSex) {
+      return false;
+    }
 
-      if (
-        activeCenturies.length > 0 && !activeCenturies.includes(`${Math.floor(person.born / 100) + 1}`)
-      ) {
-        return false;
-      }
+    if (
+      activeCenturies.length > 0 && !activeCenturies.includes(`${Math.floor(person.born / 100) + 1}`)
+    ) {
+      return false;
+    }
 
-      if (
-        activeQuery
+    if (
+      activeQuery
         && !person.name.toLowerCase().includes(activeQuery.toLowerCase())
         && !person.motherName
           ?.toLocaleLowerCase()
@@ -90,13 +90,13 @@ export const Table = ({ people }: { people: Person[] }) => {
         && !person.fatherName
           ?.toLocaleLowerCase()
           .includes(activeQuery.toLowerCase())
-      ) {
-        return false;
-      }
+    ) {
+      return false;
+    }
 
-      return true;
-    });
-  }, [sortedPeople, activeSex, activeCenturies, activeQuery]);
+    return true;
+  });
+
 
   const toggleOrder = (sortType: SortType) => {
     if (activeSort === sortType) {

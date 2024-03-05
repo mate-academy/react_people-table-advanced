@@ -2,9 +2,10 @@ import { useSearchParams } from 'react-router-dom';
 import cn from 'classnames';
 import { SearchLink } from './SearchLink';
 
+const centuries = [16, 17, 18, 19, 20];
+
 export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const centuries = [16, 17, 18, 19, 20];
   const activeSex = searchParams.get('sex');
   const activeCenturies = searchParams.getAll('centuries') || [];
   const activeQuery = searchParams.get('query') || '';
@@ -15,6 +16,18 @@ export const PeopleFilters = () => {
       : activeCenturies.filter(century => century !== String(centuryVal));
 
     return tempCenturies;
+  };
+
+  const handleQueryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newSearchParams = new URLSearchParams(searchParams);
+
+    if (e.target.value === '') {
+      newSearchParams.delete('query');
+    } else {
+      newSearchParams.set('query', e.target.value);
+    }
+
+    setSearchParams(newSearchParams);
   };
 
   return (
@@ -50,17 +63,7 @@ export const PeopleFilters = () => {
             className="input"
             placeholder="Search"
             value={activeQuery}
-            onChange={e => {
-              const newSearchParams = new URLSearchParams(searchParams);
-
-              if (e.target.value === '') {
-                newSearchParams.delete('query');
-              } else {
-                newSearchParams.set('query', e.target.value);
-              }
-
-              setSearchParams(newSearchParams);
-            }}
+            onChange={handleQueryChange}
           />
 
           <span className="icon is-left">

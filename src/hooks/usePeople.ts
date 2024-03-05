@@ -9,9 +9,8 @@ const usePeople = () => {
 
   useEffect(() => {
     const getData = async () => {
-      setIsLoading(true);
-
       try {
+        setIsLoading(true);
         const response = await getPeople();
 
         setPeople(response);
