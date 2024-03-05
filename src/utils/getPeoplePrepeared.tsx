@@ -8,38 +8,47 @@ export enum SortField {
   DIED = 'died',
 }
 
-export function getPeoplePrepeared(
-  people: Person[],
-  query: string,
-  selectedSex: string,
-  centuries: string[],
-  sortField: SortField | null,
-  sortOrder: string,
-): Person[] {
+export function getPeoplePrepeared({
+  people,
+  query,
+  selectedSex,
+  centuries,
+  sortField,
+  sortOrder,
+}: {
+  people: Person[];
+  query: string;
+  selectedSex: string;
+  centuries: string[];
+  sortField: SortField | null;
+  sortOrder: string;
+}): Person[] {
   let prepearedPeople = [...people];
 
   if (query) {
     const prepearedQuery = query.toLowerCase().trim();
 
-    prepearedPeople = prepearedPeople.filter(person => {
-      return (
-        person.name.toLowerCase().includes(prepearedQuery) ||
-        person.motherName?.toLowerCase().includes(prepearedQuery) ||
-        person.fatherName?.toLowerCase().includes(prepearedQuery)
-      );
-    });
+    prepearedPeople = prepearedPeople.filter(
+      ({ name, motherName, fatherName }) => {
+        return (
+          name.toLowerCase().includes(prepearedQuery) ||
+          motherName?.toLowerCase().includes(prepearedQuery) ||
+          fatherName?.toLowerCase().includes(prepearedQuery)
+        );
+      },
+    );
   }
 
   if (selectedSex) {
-    prepearedPeople = prepearedPeople.filter(person => {
-      return person.sex === selectedSex;
+    prepearedPeople = prepearedPeople.filter(({ sex }) => {
+      return sex === selectedSex;
     });
   }
 
   if (centuries.length) {
-    prepearedPeople = prepearedPeople.filter(person => {
-      const bornInCent = Math.ceil(person.born / 100);
-      const diedInCent = Math.ceil(person.died / 100);
+    prepearedPeople = prepearedPeople.filter(({ born, died }) => {
+      const bornInCent = Math.ceil(born / 100);
+      const diedInCent = Math.ceil(died / 100);
 
       return (
         centuries.includes(`${bornInCent}`) ||

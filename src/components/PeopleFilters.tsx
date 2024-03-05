@@ -1,6 +1,7 @@
 import classNames from 'classnames';
 import React from 'react';
-import { useLocation } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
+import { CenturyButton } from './CenturyButton';
 
 type Props = {
   query: string;
@@ -10,6 +11,25 @@ type Props = {
   handleReset: () => void;
 };
 
+const usePeopleFilters = () => {
+  const { search } = useLocation();
+  const params = new URLSearchParams(search);
+  const selectedSex = params.get('sex');
+  const selectedCenturies = params.getAll('centuries');
+  const centuries = [16, 17, 18, 19, 20];
+
+  return { selectedSex, selectedCenturies, centuries };
+};
+
+const preventDefaultAndToggle = (
+  e: React.MouseEvent<HTMLAnchorElement>,
+  toggleFunction: (value: string | null) => void,
+  value: string | null,
+) => {
+  e.preventDefault();
+  toggleFunction(value);
+};
+
 export const PeopleFilters: React.FC<Props> = ({
   query,
   handleInputChange,
@@ -17,11 +37,7 @@ export const PeopleFilters: React.FC<Props> = ({
   toggleCentuary,
   handleReset,
 }) => {
-  const { search } = useLocation();
-  const params = new URLSearchParams(search);
-  const selectedSex = params.get('sex');
-  const selectedCenturies = params.getAll('centuries');
-  const centuries = [16, 17, 18, 19, 20];
+  const { selectedSex, selectedCenturies, centuries } = usePeopleFilters();
 
   return (
     <nav className="panel">
@@ -31,30 +47,21 @@ export const PeopleFilters: React.FC<Props> = ({
         <a
           className={classNames({ 'is-active': selectedSex === null })}
           href="#/people"
-          onClick={e => {
-            e.preventDefault();
-            toggleSex(null);
-          }}
+          onClick={e => preventDefaultAndToggle(e, toggleSex, null)}
         >
           All
         </a>
         <a
           className={classNames({ 'is-active': selectedSex === 'm' })}
           href="#/people?sex=m"
-          onClick={e => {
-            e.preventDefault();
-            toggleSex('m');
-          }}
+          onClick={e => preventDefaultAndToggle(e, toggleSex, 'm')}
         >
           Male
         </a>
         <a
           className={classNames({ 'is-active': selectedSex === 'f' })}
           href="#/people?sex=f"
-          onClick={e => {
-            e.preventDefault();
-            toggleSex('f');
-          }}
+          onClick={e => preventDefaultAndToggle(e, toggleSex, 'f')}
         >
           Female
         </a>
@@ -81,20 +88,12 @@ export const PeopleFilters: React.FC<Props> = ({
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
             {centuries.map(century => (
-              <a
+              <CenturyButton
                 key={century}
-                data-cy="century"
-                className={classNames('button mr-1', {
-                  'is-info': selectedCenturies.includes(`${century}`),
-                })}
-                href={`#/people?centuries=${century}`}
-                onClick={e => {
-                  e.preventDefault();
-                  toggleCentuary(`${century}`);
-                }}
-              >
-                {century}
-              </a>
+                century={century}
+                selectedCenturies={selectedCenturies}
+                toggleCentuary={toggleCentuary}
+              />
             ))}
           </div>
 
@@ -105,10 +104,7 @@ export const PeopleFilters: React.FC<Props> = ({
                 'is-outlined': selectedCenturies.length,
               })}
               href="#/people"
-              onClick={e => {
-                e.preventDefault();
-                toggleCentuary(null);
-              }}
+              onClick={e => preventDefaultAndToggle(e, toggleCentuary, null)}
             >
               All
             </a>
@@ -117,16 +113,15 @@ export const PeopleFilters: React.FC<Props> = ({
       </div>
 
       <div className="panel-block">
-        <a
+        <Link
           className="button is-link is-outlined is-fullwidth"
-          href="#/people"
-          onClick={e => {
-            e.preventDefault();
+          to="/people"
+          onClick={() => {
             handleReset();
           }}
         >
           Reset all filters
-        </a>
+        </Link>
       </div>
     </nav>
   );

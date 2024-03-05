@@ -7,6 +7,7 @@ import { Person } from '../types';
 import { SearchParams, getSearchWith } from '../utils/searchHelper';
 import { SortField, getPeoplePrepeared } from '../utils/getPeoplePrepeared';
 import { getPeople } from '../api';
+import { ErrorMessage } from './ErrorMessage';
 
 export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);
@@ -22,14 +23,14 @@ export const PeoplePage = () => {
   const sortField = sortFieldParam as SortField | '';
   const sortOrder = searchParams.get('order') || '';
 
-  const prepearedPeople = getPeoplePrepeared(
+  const prepearedPeople = getPeoplePrepeared({
     people,
     query,
     selectedSex,
-    selectedCenturies,
-    sortField !== '' ? sortField : null,
+    centuries: selectedCenturies,
+    sortField: sortField !== '' ? sortField : null,
     sortOrder,
-  );
+  });
 
   useEffect(() => {
     setLoading(true);
@@ -97,19 +98,21 @@ export const PeoplePage = () => {
                 {loading && <Loader />}
 
                 {error && (
-                  <p data-cy="peopleLoadingError">Something went wrong</p>
+                  <ErrorMessage
+                    data-cy="peopleLoadingError"
+                    message="Something went wrong"
+                  />
                 )}
 
                 {!loading && !people.length && (
-                  <p data-cy="noPeopleMessage">
-                    There are no people on the server
-                  </p>
+                  <ErrorMessage
+                    data-cy="noPeopleMessage"
+                    message="There are no people on the server"
+                  />
                 )}
-
                 {!loading && !prepearedPeople && (
-                  <p>
-                    There are no people matching the current search criteria
-                  </p>
+                  // eslint-disable-next-line max-len
+                  <ErrorMessage message="There are no people matching the current search criteria" />
                 )}
 
                 {!!prepearedPeople.length && (
