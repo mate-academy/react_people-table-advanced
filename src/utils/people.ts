@@ -1,36 +1,46 @@
 import { Person } from '../types';
 import { SortFields } from '../types/SortFields';
 
-export const filterPeople = (people: Person[], filterSettings: object) => {
+interface FilterSettings {
+  query?: string;
+  sex?: string;
+  centuries?: number[];
+}
+export const filterPeople = (
+  people: Person[],
+  filterSettings: FilterSettings,
+) => {
   let filteredPeople = [...people];
 
-  Object.entries(filterSettings).forEach(([key, val]) => {
-    if (val) {
+  Object.entries(filterSettings).forEach(([key, value]) => {
+    if (value) {
       switch (key) {
         case 'query':
           filteredPeople = filteredPeople.filter(
             person =>
-              person.name.toLowerCase().includes(val.toLowerCase()) ||
-              person.fatherName?.toLowerCase().includes(val.toLowerCase()) ||
-              person.motherName?.toLowerCase().includes(val.toLowerCase()),
+              person.name.toLowerCase().includes(value.toLowerCase()) ||
+              person.fatherName?.toLowerCase().includes(value.toLowerCase()) ||
+              person.motherName?.toLowerCase().includes(value.toLowerCase()),
           );
           break;
 
         case 'sex':
-          if (val === 'all') {
+          if (value === 'all') {
             break;
           }
 
-          filteredPeople = filteredPeople.filter(person => person.sex === val);
+          filteredPeople = filteredPeople.filter(
+            person => person.sex === value,
+          );
           break;
 
         case 'centuries':
-          if (!val.length) {
+          if (!value.length) {
             break;
           }
 
           filteredPeople = filteredPeople.filter(person =>
-            val.includes(`${Math.ceil(person.born / 100)}`),
+            value.includes(`${Math.ceil(person.born / 100)}`),
           );
           break;
 
