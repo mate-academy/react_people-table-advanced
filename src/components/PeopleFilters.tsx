@@ -8,8 +8,9 @@ export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const sex = searchParams.get('sex') || '';
   const centuries = searchParams.getAll('centuries') || [];
+  const filterCenturies = ['16', '17', '18', '19', '20'];
 
-  const handleInput = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleSearchInput = (event: React.ChangeEvent<HTMLInputElement>) => {
     setValueSearch(event.target.value);
     setSearchParams(
       getSearchWith(searchParams, { query: event.target.value || null }),
@@ -55,7 +56,7 @@ export const PeopleFilters = () => {
             type="search"
             className="input"
             placeholder="Search"
-            onChange={handleInput}
+            onChange={handleSearchInput}
           />
 
           <span className="icon is-left">
@@ -67,7 +68,7 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            {['16', '17', '18', '19', '20'].map(century => (
+            {filterCenturies.map(century => (
               <Link
                 data-cy="century"
                 key={century}
