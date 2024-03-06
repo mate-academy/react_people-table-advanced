@@ -36,7 +36,9 @@ export const PeoplePage = () => {
       centuryFilter = selectedCentury.includes(centery.toString());
     }
 
-    const queryFilter = person.name.toLowerCase().includes(selectedQuery || '');
+    const queryFilter = person.name
+      .toLocaleLowerCase()
+      .includes(selectedQuery?.toLocaleLowerCase() || '');
 
     return sexFilter && centuryFilter && queryFilter;
   });

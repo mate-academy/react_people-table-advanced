@@ -24,7 +24,7 @@ export const PersonLink: React.FC<Props> = ({ person, people }) => {
     >
       <td>
         <Link
-          to={`/people/${slug}`}
+          to={`/people/${slug}?${searchParams.toString()}`}
           className={classNames({
             'has-text-danger': sex === 'f',
           })}
