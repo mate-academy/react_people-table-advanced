@@ -41,7 +41,7 @@ export const PeopleFilters: React.FC<Props> = ({
     let filtered = people;
     const query4Filter = query.toLowerCase().trim();
 
-    if (sex === 'm' || sex === 'f') {
+    if (sex) {
       filtered = people.filter(p => p.sex === sex);
     }
 
@@ -54,7 +54,7 @@ export const PeopleFilters: React.FC<Props> = ({
       );
     }
 
-    if (century.length > 0) {
+    if (century.length) {
       filtered = filtered.filter(p =>
         century.some(cen => {
           const birthYear = Math.floor(p.born);

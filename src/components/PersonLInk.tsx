@@ -10,7 +10,16 @@ type Props = {
 };
 
 export const PersonLink: React.FC<Props> = ({ person, filteredPeople }) => {
-  const { born, died, fatherName, motherName, name, sex, slug } = person;
+  // eslint-disable-next-line prettier/prettier
+  const {
+    born,
+    died,
+    fatherName,
+    motherName,
+    name,
+    sex,
+    slug,
+  } = person;
 
   const { slugParam } = useParams();
   const [searchParams] = useSearchParams();

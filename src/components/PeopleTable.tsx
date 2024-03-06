@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { useSearchParams } from 'react-router-dom';
 import { Dispatch, SetStateAction, useCallback, useEffect } from 'react';
 import { Person } from '../types';
@@ -34,11 +35,15 @@ export const PeopleTable: React.FC<Props> = ({
       }
 
       if (sortParam === 'born') {
-        return orderParam !== 'desc' ? a.born - b.born : b.born - a.born;
+        return orderParam !== 'desc'
+          ? a.born - b.born
+          : b.born - a.born;
       }
 
       if (sortParam === 'died') {
-        return orderParam !== 'desc' ? a.died - b.died : b.died - a.died;
+        return orderParam !== 'desc'
+          ? a.died - b.died
+          : b.died - a.died;
       }
 
       return 0;
