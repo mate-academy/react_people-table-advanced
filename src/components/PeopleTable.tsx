@@ -143,7 +143,7 @@ export const PeopleTable: FC<Props> = ({ setIsLoaded }) => {
     if (person) {
       return (
         <Link
-          to={person.slug}
+          to={`${person.slug}?${searchParams.toString()}`}
           className={classNames({ 'has-text-danger': person.sex === 'f' })}
         >
           {name}
@@ -255,7 +255,7 @@ export const PeopleTable: FC<Props> = ({ setIsLoaded }) => {
               >
                 <td>
                   <Link
-                    to={person.slug}
+                    to={`${person.slug}?${searchParams.toString()}`}
                     className={classNames({
                       'has-text-danger': person.sex === 'f',
                     })}
