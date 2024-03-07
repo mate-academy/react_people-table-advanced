@@ -1,13 +1,8 @@
 import classNames from 'classnames';
-import React from 'react';
+import React, { useCallback } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { SearchParams, getSearchWith } from '../utils/searchHelper';
 import { SearchLink } from './SearchLink';
-
-/* type Props = {
-  people: Person[],
-  setPeople: Dispatch<SetStateAction<Person[]>>,
-} */
 
 export const PeopleFilters: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -15,15 +10,21 @@ export const PeopleFilters: React.FC = () => {
   const centuries = searchParams.getAll('centuries') || [];
   const sex = searchParams.get('sex') || '';
 
-  function setSearchWith(params: SearchParams) {
-    const search = getSearchWith(searchParams, params);
+  const setSearchWith = useCallback(
+    (params: SearchParams) => {
+      const search = getSearchWith(searchParams, params);
 
-    setSearchParams(search);
-  }
+      setSearchParams(search);
+    },
+    [searchParams, setSearchParams],
+  );
 
-  function handleQueryChange(event: React.ChangeEvent<HTMLInputElement>) {
-    setSearchWith({ query: event.target.value || null });
-  }
+  const handleQueryChange = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      setSearchWith({ query: event.target.value || null });
+    },
+    [setSearchWith],
+  );
 
   return (
     <nav className="panel">
