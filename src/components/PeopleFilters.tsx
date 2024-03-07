@@ -1,24 +1,9 @@
 import { useSearchParams } from 'react-router-dom';
 import cn from 'classnames';
-import {
-  Dispatch,
-  SetStateAction,
-  useCallback,
-  useEffect,
-  useMemo,
-} from 'react';
-import { Person } from '../types';
+import { useMemo } from 'react';
 import { SearchLink } from './SearchLink';
 
-type Props = {
-  people: Person[];
-  setFilteredPeople: Dispatch<SetStateAction<Person[]>>;
-};
-
-export const PeopleFilters: React.FC<Props> = ({
-  people,
-  setFilteredPeople,
-}) => {
+export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const currentCenturies = ['16', '17', '18', '19', '20'];
@@ -36,42 +21,6 @@ export const PeopleFilters: React.FC<Props> = ({
 
     return newCenturies;
   }
-
-  const filterPeople = useCallback(() => {
-    let filtered = people;
-    const query4Filter = query.toLowerCase().trim();
-
-    if (sex) {
-      filtered = people.filter(p => p.sex === sex);
-    }
-
-    if (query) {
-      filtered = filtered.filter(
-        p =>
-          p.name.toLowerCase().includes(query4Filter) ||
-          p.motherName?.toLowerCase().includes(query4Filter) ||
-          p.fatherName?.toLowerCase().includes(query4Filter),
-      );
-    }
-
-    if (century.length) {
-      filtered = filtered.filter(p =>
-        century.some(cen => {
-          const birthYear = Math.floor(p.born);
-          const centuryStart = +cen * 100 - 100;
-          const centuryEnd = +cen * 100 - 1;
-
-          return birthYear >= centuryStart && birthYear <= centuryEnd;
-        }),
-      );
-    }
-
-    setFilteredPeople(filtered);
-  }, [people, sex, query, century, setFilteredPeople]);
-
-  useEffect(() => {
-    filterPeople();
-  }, [filterPeople]);
 
   function handleNameFilter(e: React.ChangeEvent<HTMLInputElement>) {
     const inputValue = e.target.value;

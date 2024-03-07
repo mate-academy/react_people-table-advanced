@@ -11,15 +11,7 @@ type Props = {
 
 export const PersonLink: React.FC<Props> = ({ person, filteredPeople }) => {
   // eslint-disable-next-line prettier/prettier
-  const {
-    born,
-    died,
-    fatherName,
-    motherName,
-    name,
-    sex,
-    slug,
-  } = person;
+  const { born, died, fatherName, motherName, name, sex, slug } = person;
 
   const { slugParam } = useParams();
   const [searchParams] = useSearchParams();
@@ -44,7 +36,7 @@ export const PersonLink: React.FC<Props> = ({ person, filteredPeople }) => {
         <Link
           className={cn({ 'has-text-danger': sex === 'f' })}
           to={{
-            pathname: `/people/${person.slug}`,
+            pathname: `/people/${slug}`,
             search: searchParams.toString(),
           }}
         >
@@ -57,7 +49,7 @@ export const PersonLink: React.FC<Props> = ({ person, filteredPeople }) => {
       <td>
         {hasMother ? (
           <Link
-            className={cn({ 'has-text-danger': hasMother?.sex === 'f' })}
+            className={cn({ 'has-text-danger': hasMother.sex === 'f' })}
             to={{
               pathname: `/people/${hasMother.slug}`,
               search: searchParams.toString(),

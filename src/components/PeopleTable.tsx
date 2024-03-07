@@ -1,17 +1,26 @@
-/* eslint-disable prettier/prettier */
+/* eslint-disable max-len */
 import { useSearchParams } from 'react-router-dom';
-import { Dispatch, SetStateAction, useCallback, useEffect } from 'react';
+import cn from 'classnames';
+import {
+  Dispatch,
+  SetStateAction,
+  useCallback,
+  useEffect,
+  useMemo,
+} from 'react';
 import { Person } from '../types';
 import { PersonLink } from './PersonLInk';
 import { SearchLink } from './SearchLink';
+import { SearchParams } from '../types/SearchParams';
 
-/* eslint-disable jsx-a11y/control-has-associated-label */
 type Props = {
+  people: Person[];
   filteredPeople: Person[];
   setFilteredPeople: Dispatch<SetStateAction<Person[]>>;
 };
 
 export const PeopleTable: React.FC<Props> = ({
+  people,
   filteredPeople,
   setFilteredPeople,
 }) => {
@@ -19,44 +28,100 @@ export const PeopleTable: React.FC<Props> = ({
 
   const sortParam = searchParams.get('sort') || null;
   const orderParam = searchParams.get('order') || null;
+  const query = searchParams.get('query') || '';
+  const sex = searchParams.get('sex') || '';
+  const century = useMemo(
+    () => searchParams.getAll('centuries') || [],
+    [searchParams],
+  );
 
-  const sortPeople = useCallback(() => {
-    const sorted = [...filteredPeople].sort((a, b) => {
-      if (sortParam === 'name') {
-        return orderParam !== 'desc'
-          ? a.name.localeCompare(b.name)
-          : b.name.localeCompare(a.name);
-      }
+  const filterPeople = useCallback(() => {
+    let filtered = [...people];
 
-      if (sortParam === 'sex') {
-        return orderParam !== 'desc'
-          ? a.sex.localeCompare(b.sex)
-          : b.sex.localeCompare(a.sex);
-      }
-
-      if (sortParam === 'born') {
-        return orderParam !== 'desc'
-          ? a.born - b.born
-          : b.born - a.born;
-      }
-
-      if (sortParam === 'died') {
-        return orderParam !== 'desc'
-          ? a.died - b.died
-          : b.died - a.died;
-      }
-
-      return 0;
-    });
-
-    if (JSON.stringify(sorted) !== JSON.stringify(filteredPeople)) {
-      setFilteredPeople(sorted);
+    if (sortParam) {
+      filtered.sort((a, b) => {
+        switch (sortParam) {
+          case 'name':
+          case 'sex':
+            return orderParam !== 'desc'
+              ? a[sortParam].localeCompare(b[sortParam])
+              : b[sortParam].localeCompare(a[sortParam]);
+          case 'born':
+          case 'died':
+            return orderParam !== 'desc'
+              ? a[sortParam] - b[sortParam]
+              : b[sortParam] - a[sortParam];
+          default:
+            return 0;
+        }
+      });
     }
-  }, [filteredPeople, setFilteredPeople, sortParam, orderParam]);
+
+    if (sex) {
+      filtered = filtered.filter(p => p.sex === sex);
+    }
+
+    if (query) {
+      const query4Filter = query.toLowerCase().trim();
+
+      filtered = filtered.filter(
+        p =>
+          p.name.toLowerCase().includes(query4Filter) ||
+          p.motherName?.toLowerCase().includes(query4Filter) ||
+          p.fatherName?.toLowerCase().includes(query4Filter),
+      );
+    }
+
+    if (century.length) {
+      filtered = filtered.filter(p =>
+        century.some(cen => {
+          const birthYear = Math.floor(p.born);
+          const centuryStart = +cen * 100 - 100;
+          const centuryEnd = +cen * 100 - 1;
+
+          return birthYear >= centuryStart && birthYear <= centuryEnd;
+        }),
+      );
+    }
+
+    setFilteredPeople(filtered);
+  }, [people, sex, query, setFilteredPeople, orderParam, sortParam, century]);
 
   useEffect(() => {
-    sortPeople();
-  }, [sortPeople, setFilteredPeople, sortParam, orderParam, filteredPeople]);
+    filterPeople();
+  }, [filterPeople]);
+
+  const getParams = (param: string): SearchParams => {
+    if (sortParam !== param) {
+      return { sort: param };
+    }
+
+    if (sortParam === param && !orderParam) {
+      return { sort: param, order: 'desc' };
+    }
+
+    if (sortParam === param && orderParam === 'desc') {
+      return { sort: null, order: null };
+    }
+
+    return { sort: null };
+  };
+
+  const getIconClass = (param: string): string => {
+    if (sortParam !== param) {
+      return 'fa-sort';
+    }
+
+    if (sortParam === param && !orderParam) {
+      return 'fa-sort-up';
+    }
+
+    if (sortParam === param && orderParam === 'desc') {
+      return 'fa-sort-down';
+    }
+
+    return '';
+  };
 
   return (
     <table
@@ -68,108 +133,44 @@ export const PeopleTable: React.FC<Props> = ({
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Name
-              {sortParam !== 'name' && (
-                <SearchLink params={{ sort: 'name' }}>
-                  <span className="icon">
-                    <i className="fas fa-sort" />
-                  </span>
-                </SearchLink>
-              )}
-              {sortParam === 'name' && orderParam !== 'desc' && (
-                <SearchLink params={{ sort: 'name', order: 'desc' }}>
-                  <span className="icon">
-                    <i className="fas fa-sort-up" />
-                  </span>
-                </SearchLink>
-              )}
-              {sortParam === 'name' && orderParam === 'desc' && (
-                <SearchLink params={{ sort: null, order: null }}>
-                  <span className="icon">
-                    <i className="fas fa-sort-down" />
-                  </span>
-                </SearchLink>
-              )}
+              <SearchLink params={getParams('name')}>
+                <span className="icon">
+                  <i className={cn('fas', getIconClass('name'))} />
+                </span>
+              </SearchLink>
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Sex
-              {sortParam !== 'sex' && (
-                <SearchLink params={{ sort: 'sex' }}>
-                  <span className="icon">
-                    <i className="fas fa-sort" />
-                  </span>
-                </SearchLink>
-              )}
-              {sortParam === 'sex' && orderParam !== 'desc' && (
-                <SearchLink params={{ sort: 'sex', order: 'desc' }}>
-                  <span className="icon">
-                    <i className="fas fa-sort-up" />
-                  </span>
-                </SearchLink>
-              )}
-              {sortParam === 'sex' && orderParam === 'desc' && (
-                <SearchLink params={{ sort: null, order: null }}>
-                  <span className="icon">
-                    <i className="fas fa-sort-down" />
-                  </span>
-                </SearchLink>
-              )}
+              <SearchLink params={getParams('sex')}>
+                <span className="icon">
+                  <i className={cn('fas', getIconClass('sex'))} />
+                </span>
+              </SearchLink>
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Born
-              {sortParam !== 'born' && (
-                <SearchLink params={{ sort: 'born' }}>
-                  <span className="icon">
-                    <i className="fas fa-sort" />
-                  </span>
-                </SearchLink>
-              )}
-              {sortParam === 'born' && orderParam !== 'desc' && (
-                <SearchLink params={{ sort: 'born', order: 'desc' }}>
-                  <span className="icon">
-                    <i className="fas fa-sort-up" />
-                  </span>
-                </SearchLink>
-              )}
-              {sortParam === 'born' && orderParam === 'desc' && (
-                <SearchLink params={{ sort: null, order: null }}>
-                  <span className="icon">
-                    <i className="fas fa-sort-down" />
-                  </span>
-                </SearchLink>
-              )}
+              <SearchLink params={getParams('born')}>
+                <span className="icon">
+                  <i className={cn('fas', getIconClass('born'))} />
+                </span>
+              </SearchLink>
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Died
-              {sortParam !== 'died' && (
-                <SearchLink params={{ sort: 'died' }}>
-                  <span className="icon">
-                    <i className="fas fa-sort" />
-                  </span>
-                </SearchLink>
-              )}
-              {sortParam === 'died' && orderParam !== 'desc' && (
-                <SearchLink params={{ sort: 'died', order: 'desc' }}>
-                  <span className="icon">
-                    <i className="fas fa-sort-up" />
-                  </span>
-                </SearchLink>
-              )}
-              {sortParam === 'died' && orderParam === 'desc' && (
-                <SearchLink params={{ sort: null, order: null }}>
-                  <span className="icon">
-                    <i className="fas fa-sort-down" />
-                  </span>
-                </SearchLink>
-              )}
+              <SearchLink params={getParams('died')}>
+                <span className="icon">
+                  <i className={cn('fas', getIconClass('died'))} />
+                </span>
+              </SearchLink>
             </span>
           </th>
 

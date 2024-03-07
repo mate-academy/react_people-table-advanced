@@ -27,12 +27,7 @@ export const PeoplePage = () => {
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
           <div className="column is-7-tablet is-narrow-desktop">
-            {!isLoader && !!people.length && !isError && (
-              <PeopleFilters
-                people={people}
-                setFilteredPeople={setFilteredPeople}
-              />
-            )}
+            {!isLoader && !!people.length && !isError && <PeopleFilters />}
           </div>
 
           <div className="column">
@@ -53,8 +48,9 @@ export const PeoplePage = () => {
                 <p>There are no people matching the current search criteria</p>
               )}
 
-              {!!filteredPeople.length && !isLoader && !isError && (
+              {!!people.length && !isLoader && !isError && (
                 <PeopleTable
+                  people={people}
                   filteredPeople={filteredPeople}
                   setFilteredPeople={setFilteredPeople}
                 />
