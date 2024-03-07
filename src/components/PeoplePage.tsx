@@ -10,7 +10,9 @@ import { getPeople } from '../api';
 export const PeoplePage = () => {
   const [loader, setLoader] = useState<boolean>(false);
   const [people, setPeople] = useState<Person[]>([]);
-  const [filterPeople, setFilterPeople] = useState<Person[]>([...people]);
+  const [errorServer, setErrorServer] = useState<boolean>(false);
+  const [errorNoPeople, setErrorNoPeople] = useState<boolean>(false);
+  const [errorFilter, setErrorFilter] = useState<boolean>(false);
 
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -19,12 +21,22 @@ export const PeoplePage = () => {
     getPeople()
       .then((data: Person[]) => {
         setPeople(data);
-        setFilterPeople(data);
+        // setFilterPeople(data);
+
+        if (!data.length) {
+          setErrorNoPeople(true);
+        }
       })
+      .catch(() => setErrorServer(true))
       .finally(() => setLoader(false));
   }, [setLoader]);
 
   const handleFilter = () => {
+    if (people.length === 0) {
+      return [];
+    }
+
+    setErrorFilter(false);
     let filteredPeople = [...people];
     const century = searchParams.getAll('century');
     const sex = searchParams.get('sex');
@@ -55,6 +67,14 @@ export const PeoplePage = () => {
       );
     }
 
+    if (!filteredPeople.length) {
+      setErrorFilter(true);
+    }
+
+    if (filteredPeople.length) {
+      setErrorFilter(false);
+    }
+
     return filteredPeople;
   };
 
@@ -67,47 +87,27 @@ export const PeoplePage = () => {
     if (sort) {
       switch (sort) {
         case 'name':
-          if (!order) {
-            sortedPeople.sort((a, b) => a.name.localeCompare(b.name));
-
-            break;
-          }
-
-          sortedPeople.sort((a, b) => b.name.localeCompare(a.name));
-          break;
-
         case 'sex':
           if (!order) {
-            sortedPeople.sort((a, b) => a.sex.localeCompare(b.sex));
-
+            sortedPeople.sort((a, b) => a[sort].localeCompare(b[sort]));
             break;
           }
 
-          sortedPeople.sort((a, b) => b.sex.localeCompare(a.sex));
+          sortedPeople.sort((a, b) => b[sort].localeCompare(a[sort]));
           break;
 
         case 'born':
-          if (!order) {
-            sortedPeople.sort((a, b) => a.born - b.born);
-
-            break;
-          }
-
-          sortedPeople.sort((a, b) => b.born - a.born);
-          break;
-
         case 'died':
           if (!order) {
-            sortedPeople.sort((a, b) => a.died - b.died);
-
+            sortedPeople.sort((a, b) => a[sort] - b[sort]);
             break;
           }
 
-          sortedPeople.sort((a, b) => b.died - a.died);
+          sortedPeople.sort((a, b) => b[sort] - a[sort]);
           break;
 
         default:
-          return filterPeople;
+          return [...sortedPeople];
       }
     }
 
@@ -120,7 +120,7 @@ export const PeoplePage = () => {
 
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
-          {!loader && (
+          {!loader && !errorNoPeople && (
             <div className="column is-7-tablet is-narrow-desktop">
               <PeopleFilters handleFilter={handleFilter} />
             </div>
@@ -130,25 +130,26 @@ export const PeoplePage = () => {
             <div className="box table-container">
               {loader && <Loader />}
 
-              {false && (
+              {errorServer && !loader && (
                 <p data-cy="peopleLoadingError">Something went wrong</p>
               )}
 
-              {false && (
+              {errorNoPeople && !loader && (
                 <p data-cy="noPeopleMessage">
                   There are no people on the server
                 </p>
               )}
 
-              {false && (
+              {errorFilter && !loader && (
                 <p>There are no people matching the current search criteria</p>
               )}
 
-              {!loader && (
+              {!loader && !errorFilter && (
                 <PeopleTable
                   searchParams={searchParams}
                   setSearchParams={setSearchParams}
                   handleSort={handleSort}
+                  loader={loader}
                 />
               )}
             </div>

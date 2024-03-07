@@ -7,12 +7,14 @@ type Props = {
   searchParams: URLSearchParams;
   setSearchParams: SetURLSearchParams;
   handleSort: () => void | Person[];
+  loader: boolean;
 };
 
 export const PeopleTable: React.FC<Props> = ({
   handleSort,
   searchParams,
   setSearchParams,
+  loader,
 }) => {
   const { slug } = useParams();
   const [visibilePeople, setVisibilePeople] = useState<Person[]>([]);
@@ -24,7 +26,7 @@ export const PeopleTable: React.FC<Props> = ({
     if (sortedPeople) {
       setVisibilePeople(sortedPeople);
     }
-  }, [handleSort, searchParams]);
+  }, [handleSort, searchParams, loader]);
 
   const sort = searchParams.get('sort');
   const order = searchParams.get('order');
