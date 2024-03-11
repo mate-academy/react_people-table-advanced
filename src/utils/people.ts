@@ -4,8 +4,9 @@ import { SortFields } from '../types/SortField';
 interface FilterSettings {
   query?: string;
   sex?: string;
-  centuries?: number[];
+  centuries?: string[];
 }
+
 export const filterPeople = (
   people: Person[],
   filterSettings: FilterSettings,
@@ -39,8 +40,11 @@ export const filterPeople = (
             break;
           }
 
+          // eslint-disable-next-line no-case-declarations
+          const centuriesAsNumbers = value.map(Number);
+
           filteredPeople = filteredPeople.filter(person =>
-            value.includes(`${Math.ceil(person.born / 100)}`),
+            centuriesAsNumbers.includes(Math.ceil(person.born / 100)),
           );
           break;
 

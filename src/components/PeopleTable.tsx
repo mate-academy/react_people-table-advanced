@@ -17,7 +17,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
   const sortBy = searchParams.get('sort') as SortFields;
   const order = searchParams.get('order');
   const query = searchParams.get('query') || '';
-  const centuries = searchParams.getAll('centuries').map(Number) || [];
+  const centuries = searchParams.getAll('centuries') || [];
   const sex = searchParams.get('sex') || '';
 
   const filterSettings = {
