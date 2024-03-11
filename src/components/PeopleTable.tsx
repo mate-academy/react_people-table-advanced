@@ -9,14 +9,21 @@ type Props = {
   people: Person[];
 };
 
-const PersonLink = ({ person }: { person: Person }) => (
-  <Link
-    to={`/people/${person.slug}`}
-    className={cn({ 'has-text-danger': person.sex === 'f' })}
-  >
-    {person.name}
-  </Link>
-);
+const PersonLink = ({ person }: { person: Person }) => {
+  const [searchParams] = useSearchParams();
+
+  return (
+    <Link
+      to={{
+        pathname: `/people/${person.slug}`,
+        search: searchParams.toString(),
+      }}
+      className={cn({ 'has-text-danger': person.sex === 'f' })}
+    >
+      {person.name}
+    </Link>
+  );
+};
 
 export const PeopleTable: React.FC<Props> = ({ people }) => {
   const [searchParams] = useSearchParams();
