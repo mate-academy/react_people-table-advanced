@@ -6,7 +6,7 @@ import { Loader } from './Loader';
 import { PeopleTable } from './PeopleTable';
 
 export const PeoplePage = () => {
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [people, setPeople] = useState<Person[]>([]);
   const [error, setError] = useState(false);
 

@@ -1,40 +1,27 @@
-import { useParams, Link, useSearchParams } from 'react-router-dom';
+import { useParams, useSearchParams } from 'react-router-dom';
 import cn from 'classnames';
 import { useCallback, useMemo } from 'react';
 import { Person } from '../types';
 import { SearchParams } from '../utils/searchHelper';
 import { SearchLink } from './SearchLink';
+import { PersonLink } from './PersonLink';
 
 type Props = {
   people: Person[];
-};
-
-const PersonLink = ({ person }: { person: Person }) => {
-  const [searchParams] = useSearchParams();
-
-  return (
-    <Link
-      to={{
-        pathname: `/people/${person.slug}`,
-        search: searchParams.toString(),
-      }}
-      className={cn({ 'has-text-danger': person.sex === 'f' })}
-    >
-      {person.name}
-    </Link>
-  );
 };
 
 export const PeopleTable: React.FC<Props> = ({ people }) => {
   const [searchParams] = useSearchParams();
   const { slugParam } = useParams();
 
-  const computedPeople = people.map(person => {
-    const mother = people.find(per => per.name === person.motherName);
-    const father = people.find(per => per.name === person.fatherName);
+  const computedPeople = useMemo(() => {
+    return people.map(person => {
+      const mother = people.find(per => per.name === person.motherName);
+      const father = people.find(per => per.name === person.fatherName);
 
-    return { ...person, mother, father };
-  });
+      return { ...person, mother, father };
+    });
+  }, [people]);
 
   const query = searchParams.get('query') || '';
   const sort = searchParams.get('sort') || null;
@@ -89,24 +76,22 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
     }
 
     return filtered;
-  }, [order, sort, century, query, sex, computedPeople]);
+  }, [century, computedPeople, order, sex, query, sort]);
 
-  const filteredPeople = filterPeople();
+  const filteredPeople = useMemo(() => {
+    return filterPeople();
+  }, [filterPeople]);
 
   const getParams = (param: string): SearchParams => {
-    if (sort !== param) {
-      return { sort: param };
-    }
-
-    if (sort === param && !order) {
-      return { sort: param, order: 'desc' };
-    }
-
-    if (sort === param && order === 'desc') {
+    if (sort === param && order) {
       return { sort: null, order: null };
     }
 
-    return { sort: null };
+    if (sort === param) {
+      return { sort: param, order: 'desc' };
+    }
+
+    return { sort: param, order: null };
   };
 
   const getClass = useCallback(
