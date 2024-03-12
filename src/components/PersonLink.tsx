@@ -1,4 +1,5 @@
 import cn from 'classnames';
+import { useMemo } from 'react';
 import { Link, useParams, useLocation } from 'react-router-dom';
 import { Person } from '../types';
 
@@ -12,8 +13,13 @@ export const PersonLink: React.FC<Props> = ({ person, people }) => {
   const location = useLocation();
 
   const { sex, born, died, fatherName, motherName, name, slug } = person;
-  const mother = people.find(p => p.name === person.motherName);
-  const father = people.find(p => p.name === person.fatherName);
+  const mother = useMemo(() => {
+    return people.find(p => p.name === motherName);
+  }, [people, motherName]);
+
+  const father = useMemo(() => {
+    return people.find(p => p.name === fatherName);
+  }, [people, fatherName]);
 
   return (
     <tr
@@ -49,7 +55,7 @@ export const PersonLink: React.FC<Props> = ({ person, people }) => {
             {motherName}
           </Link>
         ) : (
-          motherName || '-'
+          motherName ?? '-'
         )}
       </td>
       <td>
@@ -63,7 +69,7 @@ export const PersonLink: React.FC<Props> = ({ person, people }) => {
             {fatherName}
           </Link>
         ) : (
-          fatherName || '-'
+          fatherName ?? '-'
         )}
       </td>
     </tr>

@@ -20,7 +20,7 @@ export const PeopleFilters = () => {
   function handleNameFilter(event: React.ChangeEvent<HTMLInputElement>) {
     const newQuery = event.target.value;
 
-    setSearchWith({ query: newQuery !== '' ? newQuery : null });
+    setSearchWith({ query: newQuery || null });
   }
 
   function updateCenturies(ch: string, centuriesArray: string[]) {
