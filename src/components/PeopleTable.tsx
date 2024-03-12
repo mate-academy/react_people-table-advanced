@@ -1,88 +1,52 @@
 /* eslint-disable jsx-a11y/control-has-associated-label */
-import React from 'react';
+import React, { useCallback } from 'react';
 import cn from 'classnames';
 import { useSearchParams } from 'react-router-dom';
 import { Person } from '../types';
 import { PersonLink } from './PersonLink';
 import { SearchLink } from './SearchLink';
+import { getPreparedPeople } from '../utils/getPreparedPeople';
 
 type Props = {
   people: Person[];
 };
 
-type SortParams = {
-  sortField: string | null;
-  descending: string | null;
-};
-
-function getPreparedPeople(people: Person[], sortParams: SortParams) {
-  const preparedPeople = [...people];
-  const { sortField, descending } = sortParams;
-
-  if (sortField) {
-    preparedPeople.sort((person1, person2) => {
-      switch (sortField) {
-        case 'name':
-          return person1.name.localeCompare(person2.name);
-
-        case 'sex':
-          return person1.sex.localeCompare(person2.sex);
-
-        case 'born':
-          return person1.born - person2.born;
-
-        case 'died':
-          return person1.died - person2.died;
-
-        default:
-          return 0;
-      }
-    });
-  }
-
-  if (descending) {
-    preparedPeople.reverse();
-  }
-
-  return preparedPeople;
-}
-
-// function getClass(sortParams: SortParams) {
-//   const { sortField, descending } = sortParams;
-
-//   if (sortField && descending) {
-//     return 'fas fa-sort-down';
-//   }
-
-//   if (sortField && !descending) {
-//     return 'fas fa-sort-up';
-//   }
-
-//   return 'fas fa-sort';
-// }
-
-export const PeopleTable: React.FC<Props> = ({ people }) => {
+export const PeopleTable: React.FC<Props> = React.memo(({ people }) => {
   const [searchParams] = useSearchParams();
   const sortField = searchParams.get('sort');
   const descending = searchParams.get('order');
+  const query = searchParams.get('query') || '';
+  const centuries = searchParams.getAll('centuries') || [];
+  const filterField = searchParams.get('sex');
 
-  const sortName = sortField === 'name' && !descending;
-  const sortSex = sortField === 'sex' && !descending;
-  const sortBorn = sortField === 'born' && !descending;
-  const sortDied = sortField === 'died' && !descending;
-  const descSort = sortField && descending;
+  const preparedPeople = getPreparedPeople(
+    people,
+    { sortField, descending },
+    { filterField, centuries, query },
+  );
 
-  const setSortField = (typeSort: string) => {
-    if (sortField && !descending) {
-      return { sort: `${typeSort}`, order: 'desc' };
-    }
+  const setSortField = useCallback(
+    (typeSort: string) => {
+      if (typeSort !== sortField) {
+        return { sort: `${typeSort}`, order: null };
+      }
 
-    if (sortField && descending) {
-      return { sort: null, order: null };
-    }
+      if (sortField && !descending) {
+        return { sort: `${typeSort}`, order: 'desc' };
+      }
 
-    return { sort: `${typeSort}`, order: null };
-  };
+      if (sortField && descending) {
+        return { sort: null, order: null };
+      }
+
+      return { sort: `${typeSort}`, order: null };
+    },
+    [descending, sortField],
+  );
+
+  if (preparedPeople.length === 0) {
+    return <p>There are no people matching the current search criteria</p>;
+  }
 
   return (
     <table
@@ -97,9 +61,10 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
               <SearchLink params={setSortField('name')}>
                 <span className="icon">
                   <i
-                    className={cn('fas fa-sort', {
-                      'fa-sort-up': sortName,
-                      'fa-sort-down': descSort,
+                    className={cn('fas', {
+                      'fa-sort': sortField !== 'name',
+                      'fa-sort-up': sortField === 'name' && !descending,
+                      'fa-sort-down': sortField === 'name' && descending,
                     })}
                   />
                 </span>
@@ -113,9 +78,10 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
               <SearchLink params={setSortField('sex')}>
                 <span className="icon">
                   <i
-                    className={cn('fas fa-sort', {
-                      'fa-sort-up': sortSex,
-                      'fa-sort-down': descSort,
+                    className={cn('fas', {
+                      'fa-sort': sortField !== 'sex',
+                      'fa-sort-up': sortField === 'sex' && !descending,
+                      'fa-sort-down': sortField === 'sex' && descending,
                     })}
                   />
                 </span>
@@ -129,9 +95,10 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
               <SearchLink params={setSortField('born')}>
                 <span className="icon">
                   <i
-                    className={cn('fas fa-sort', {
-                      'fa-sort-up': sortBorn,
-                      'fa-sort-down': descSort,
+                    className={cn('fas', {
+                      'fa-sort': sortField !== 'born',
+                      'fa-sort-up': sortField === 'born' && !descending,
+                      'fa-sort-down': sortField === 'born' && descending,
                     })}
                   />
                 </span>
@@ -145,9 +112,10 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
               <SearchLink params={setSortField('died')}>
                 <span className="icon">
                   <i
-                    className={cn('fas fa-sort', {
-                      'fa-sort-up': sortDied,
-                      'fa-sort-down': descSort,
+                    className={cn('fas', {
+                      'fa-sort': sortField !== 'died',
+                      'fa-sort-up': sortField === 'died' && !descending,
+                      'fa-sort-down': sortField === 'died' && descending,
                     })}
                   />
                 </span>
@@ -161,10 +129,10 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
       </thead>
 
       <tbody>
-        {getPreparedPeople(people, { sortField, descending }).map(person => (
+        {preparedPeople.map(person => (
           <PersonLink person={person} key={person.name} />
         ))}
       </tbody>
     </table>
   );
-};
+});

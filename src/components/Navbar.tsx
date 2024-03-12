@@ -1,10 +1,11 @@
+import React from 'react';
 import classNames from 'classnames';
 import { NavLink } from 'react-router-dom';
 
 const getLinkClass = ({ isActive }: { isActive: boolean }) =>
   classNames('navbar-item', { 'has-background-grey-lighter': isActive });
 
-export const Navbar = () => {
+export const Navbar = React.memo(() => {
   return (
     <nav
       data-cy="nav"
@@ -25,4 +26,4 @@ export const Navbar = () => {
       </div>
     </nav>
   );
-};
+});

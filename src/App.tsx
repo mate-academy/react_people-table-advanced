@@ -12,7 +12,6 @@ export const App = React.memo(() => {
 
       <div className="section">
         <div className="container">
-          {/* <PeoplePage /> */}
           <Outlet />
         </div>
       </div>
