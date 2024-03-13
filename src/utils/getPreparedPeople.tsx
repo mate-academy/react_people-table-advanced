@@ -1,5 +1,4 @@
 import { Person } from '../types';
-// import { SortParams } from '../components/PeopleTable';
 
 type SortParams = {
   sortField: string | null;

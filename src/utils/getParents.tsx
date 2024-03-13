@@ -1,22 +1,32 @@
-import { NavLink } from 'react-router-dom';
+import React from 'react';
 import classNames from 'classnames';
+import { NavLink, useSearchParams } from 'react-router-dom';
 import { Person } from '../types';
 
-export function getParents(parents?: Person, parentsName?: string | null) {
-  if (parents) {
-    return (
-      <NavLink
-        to={parents.slug}
-        className={classNames({ 'has-text-danger': parents.sex === 'f' })}
-      >
-        {parents.name}
-      </NavLink>
-    );
-  }
+type Props = {
+  parents?: Person;
+};
 
+export function getParents(parentsName?: string | null) {
   if (parentsName) {
     return parentsName;
   }
 
   return '-';
 }
+
+export const ParentsLink: React.FC<Props> = ({ parents }) => {
+  const [searchParams] = useSearchParams();
+
+  return (
+    <NavLink
+      to={{
+        pathname: `${parents?.slug}`,
+        search: searchParams.toString(),
+      }}
+      className={classNames({ 'has-text-danger': parents?.sex === 'f' })}
+    >
+      {parents?.name}
+    </NavLink>
+  );
+};

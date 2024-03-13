@@ -1,8 +1,8 @@
 import React from 'react';
 import cn from 'classnames';
-import { NavLink, useParams } from 'react-router-dom';
+import { NavLink, useParams, useSearchParams } from 'react-router-dom';
 import { Person } from '../types';
-import { getParents } from '../utils/getParents';
+import { ParentsLink, getParents } from '../utils/getParents';
 
 type Props = {
   person: Person;
@@ -22,6 +22,8 @@ export const PersonLink: React.FC<Props> = React.memo(({ person }) => {
     fatherName,
   } = person;
 
+  const [searchParams] = useSearchParams();
+
   return (
     <>
       <tr
@@ -32,7 +34,10 @@ export const PersonLink: React.FC<Props> = React.memo(({ person }) => {
       >
         <td>
           <NavLink
-            to={person.slug}
+            to={{
+              pathname: `${person.slug}`,
+              search: searchParams.toString(),
+            }}
             className={cn({ 'has-text-danger': sex === 'f' })}
           >
             {name}
@@ -41,8 +46,12 @@ export const PersonLink: React.FC<Props> = React.memo(({ person }) => {
         <td>{sex}</td>
         <td>{born}</td>
         <td>{died}</td>
-        <td>{getParents(mother, motherName)}</td>
-        <td>{getParents(father, fatherName)}</td>
+        <td>
+          {mother ? <ParentsLink parents={mother} /> : getParents(motherName)}
+        </td>
+        <td>
+          {father ? <ParentsLink parents={father} /> : getParents(fatherName)}
+        </td>
       </tr>
     </>
   );
