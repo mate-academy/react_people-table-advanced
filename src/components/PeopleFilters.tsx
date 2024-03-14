@@ -18,7 +18,7 @@ export const PeopleFilters = () => {
     setSearchParams(search);
   }
 
-  function getLinkForCenturies(c: string) {
+  function getLinkCenturies(c: string) {
     return {
       search: getSearchWith(
         {
@@ -29,6 +29,12 @@ export const PeopleFilters = () => {
         searchParams,
       ),
     };
+  }
+
+  function getClassCenturies(c: string) {
+    return classNames('button mr-1', {
+      'is-info': century.includes(c),
+    });
   }
 
   return (
@@ -85,10 +91,8 @@ export const PeopleFilters = () => {
             {centuries.map(c => (
               <Link
                 data-cy="century"
-                className={classNames('button mr-1', {
-                  'is-info': century.includes(c),
-                })}
-                to={getLinkForCenturies(c)}
+                className={getClassCenturies(c)}
+                to={getLinkCenturies(c)}
               >
                 {c}
               </Link>
