@@ -50,13 +50,16 @@ export const PeoplePage = () => {
                     There are no people on the server
                   </p>
                 )}
-                {error ? (
+                {error && (
                   <p data-cy="peopleLoadingError">Something went wrong</p>
+                )}
+                {!filteredPeople.length && !error ? (
+                  <p>
+                    There are no people matching the current search criteria
+                  </p>
                 ) : (
                   <PeopleTable people={filteredPeople} />
                 )}
-
-                {/* <p>There are no people matching the current search criteria</p> */}
               </div>
             </div>
           </div>

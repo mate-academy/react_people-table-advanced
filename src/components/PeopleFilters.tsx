@@ -18,6 +18,19 @@ export const PeopleFilters = () => {
     setSearchParams(search);
   }
 
+  function getLinkForCenturies(c: string) {
+    return {
+      search: getSearchWith(
+        {
+          century: century.includes(c)
+            ? century.filter(cen => cen !== c)
+            : [...century, c],
+        },
+        searchParams,
+      ),
+    };
+  }
+
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
@@ -75,16 +88,7 @@ export const PeopleFilters = () => {
                 className={classNames('button mr-1', {
                   'is-info': century.includes(c),
                 })}
-                to={{
-                  search: getSearchWith(
-                    {
-                      century: century.includes(c)
-                        ? century.filter(cen => cen !== c)
-                        : [...century, c],
-                    },
-                    searchParams,
-                  ),
-                }}
+                to={getLinkForCenturies(c)}
               >
                 {c}
               </Link>
