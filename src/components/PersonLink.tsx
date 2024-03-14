@@ -2,7 +2,7 @@ import React from 'react';
 import cn from 'classnames';
 import { NavLink, useParams, useSearchParams } from 'react-router-dom';
 import { Person } from '../types';
-import { ParentsLink, getParents } from '../utils/getParents';
+import { ParentLink } from './ParentLink';
 
 type Props = {
   person: Person;
@@ -25,34 +25,28 @@ export const PersonLink: React.FC<Props> = React.memo(({ person }) => {
   const [searchParams] = useSearchParams();
 
   return (
-    <>
-      <tr
-        data-cy="person"
-        className={cn({
-          'has-background-warning': personId === slug,
-        })}
-      >
-        <td>
-          <NavLink
-            to={{
-              pathname: `${person.slug}`,
-              search: searchParams.toString(),
-            }}
-            className={cn({ 'has-text-danger': sex === 'f' })}
-          >
-            {name}
-          </NavLink>
-        </td>
-        <td>{sex}</td>
-        <td>{born}</td>
-        <td>{died}</td>
-        <td>
-          {mother ? <ParentsLink parents={mother} /> : getParents(motherName)}
-        </td>
-        <td>
-          {father ? <ParentsLink parents={father} /> : getParents(fatherName)}
-        </td>
-      </tr>
-    </>
+    <tr
+      data-cy="person"
+      className={cn({
+        'has-background-warning': personId === slug,
+      })}
+    >
+      <td>
+        <NavLink
+          to={{
+            pathname: `${person.slug}`,
+            search: searchParams.toString(),
+          }}
+          className={cn({ 'has-text-danger': sex === 'f' })}
+        >
+          {name}
+        </NavLink>
+      </td>
+      <td>{sex}</td>
+      <td>{born}</td>
+      <td>{died}</td>
+      <td>{mother ? <ParentLink parent={mother} /> : motherName || '-'}</td>
+      <td>{father ? <ParentLink parent={father} /> : fatherName || '-'}</td>
+    </tr>
   );
 });

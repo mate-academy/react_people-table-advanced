@@ -31,16 +31,12 @@ export function getPreparedPeople(
     preparedPeople.sort((person1, person2) => {
       switch (sortField) {
         case 'name':
-          return person1.name.localeCompare(person2.name);
-
         case 'sex':
-          return person1.sex.localeCompare(person2.sex);
+          return person1[sortField].localeCompare(person2[sortField]);
 
         case 'born':
-          return person1.born - person2.born;
-
         case 'died':
-          return person1.died - person2.died;
+          return person1[sortField] - person2[sortField];
 
         default:
           return 0;
