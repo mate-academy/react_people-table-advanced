@@ -1,4 +1,4 @@
-import cn from 'classnames';
+import classNames from 'classnames';
 import { useSearchParams } from 'react-router-dom';
 import { Person } from '../types';
 import { PersonLink } from './PersonLink';
@@ -31,7 +31,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
     columnParam: string | null,
     orderParam: string | null,
   ) => {
-    return cn('fas', {
+    return classNames('fas', {
       'fa-sort': columnParam !== column,
       'fa-sort-up': columnParam === column && !orderParam,
       'fa-sort-down': columnParam === column && orderParam,
