@@ -1,7 +1,9 @@
-import { NavLink } from 'react-router-dom';
+import { NavLink, useLocation } from 'react-router-dom';
 import { getLinkClass } from '../../utils/getLinkClass';
 
 export const Navbar = () => {
+  const { search } = useLocation();
+
   return (
     <nav
       data-cy="nav"
@@ -15,7 +17,13 @@ export const Navbar = () => {
             Home
           </NavLink>
 
-          <NavLink className={getLinkClass} to="/people">
+          <NavLink
+            className={getLinkClass}
+            to={{
+              pathname: '/people',
+              search: search.toString(),
+            }}
+          >
             People
           </NavLink>
         </div>

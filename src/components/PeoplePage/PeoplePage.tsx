@@ -5,7 +5,7 @@ import { PeopleFilters } from '../PeopleFilters';
 import { PeopleTable } from '../PeopleTable';
 import { Loader } from '../Loader';
 import { getPeople } from '../../api';
-import { Person } from '../../types';
+import { FilterParams, Person, SortParams } from '../../types';
 import { getFilteredPeople } from '../../utils/getFilteredPeople';
 import { getSortedPeople } from '../../utils/getSortedPeople';
 
@@ -25,9 +25,9 @@ export const PeoplePage = () => {
 
   const filteredPeople = useMemo(() => {
     const filters = {
-      sex: searchParams.get('sex'),
-      name: searchParams.get('query'),
-      centuries: searchParams.getAll('centuries'),
+      sex: searchParams.get(FilterParams.Sex),
+      name: searchParams.get(FilterParams.Query),
+      centuries: searchParams.getAll(FilterParams.Centuries),
     };
 
     return getFilteredPeople(people, filters);
@@ -36,8 +36,8 @@ export const PeoplePage = () => {
   const sortedPeople = useMemo(() => {
     return getSortedPeople(
       filteredPeople,
-      searchParams.get('sort'),
-      searchParams.get('order'),
+      searchParams.get(SortParams.Sort),
+      searchParams.get(SortParams.Order),
     );
   }, [filteredPeople, searchParams]);
 

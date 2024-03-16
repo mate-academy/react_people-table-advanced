@@ -15,3 +15,14 @@ export type FilterType = {
   sex: string | null;
   centuries: string[];
 };
+
+export enum FilterParams {
+  Sex = 'sex',
+  Query = 'query',
+  Centuries = 'centuries',
+}
+
+export enum SortParams {
+  Sort = 'sort',
+  Order = 'order',
+}
