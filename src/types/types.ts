@@ -9,3 +9,9 @@ export interface Person {
   mother?: Person;
   father?: Person;
 }
+
+export type FilterType = {
+  name: string | null;
+  sex: string | null;
+  centuries: string[];
+};
