@@ -1,6 +1,6 @@
 /* eslint-disable operator-linebreak */
-import { Filter } from '../types/Filter';
-import { Person } from '../types/Person';
+import { Filter } from '../types';
+import { Person } from '../types/Types';
 
 export const getFilteredPeople = (people: Person[], filters: Filter) => {
   const { sex, centuries, name } = filters;

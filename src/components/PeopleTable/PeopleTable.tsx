@@ -1,7 +1,7 @@
 import React from 'react';
 import classNames from 'classnames';
-import { useParams, useSearchParams } from 'react-router-dom';
-import { Person } from '../../types/Person';
+import { useSearchParams } from 'react-router-dom';
+import { Person, SortParams } from '../../types/Types';
 import { PersonLink } from '../PersonLink';
 import { SearchLink } from '../SearchLink';
 
@@ -11,12 +11,9 @@ type Props = {
 
 /* eslint-disable jsx-a11y/control-has-associated-label */
 export const PeopleTable: React.FC<Props> = ({ people }) => {
-  const { slug } = useParams();
-  const selectedPerson = slug ? `${slug}` : '';
-
   const [searchParams] = useSearchParams();
-  const sort = searchParams.get('sort');
-  const order = searchParams.get('order');
+  const sort = searchParams.get(SortParams.Sort);
+  const order = searchParams.get(SortParams.Order);
 
   const getSortParams = (column: string) => {
     if (sort !== column) {
@@ -100,12 +97,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
 
       <tbody>
         {people.map(person => (
-          <PersonLink
-            key={person.slug}
-            person={person}
-            people={people}
-            selectedPerson={selectedPerson}
-          />
+          <PersonLink key={person.slug} person={person} people={people} />
         ))}
       </tbody>
     </table>

@@ -18,7 +18,7 @@ export const Root = () => (
 
         <Route path="/people">
           <Route index element={<PeoplePage />} />
-          <Route path=":slug" element={<PeoplePage />} />
+          <Route path=":slugParam" element={<PeoplePage />} />
         </Route>
 
         <Route path="*" element={<NotFoundPage />} />

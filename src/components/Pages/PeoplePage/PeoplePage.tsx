@@ -4,9 +4,9 @@ import { Loader } from '../../Loader';
 import { PeopleFilters } from '../../PeopleFilter';
 import { getPeople } from '../../../api';
 import { PeopleTable } from '../../PeopleTable/PeopleTable';
-import { Person } from '../../../types/Person';
 import { getFilteredPeople } from '../../../utils/filteredPeople';
 import { getSortedPeople } from '../../../utils/sortedPeople';
+import { FilterParams, Person, SortParams } from '../../../types';
 
 export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);
@@ -26,17 +26,17 @@ export const PeoplePage = () => {
 
   const filteredPeople = useMemo(() => {
     const filters = {
-      sex: searchParams.get('sex'),
-      name: searchParams.get('query'),
-      centuries: searchParams.getAll('centuries'),
+      sex: searchParams.get(FilterParams.Sex),
+      name: searchParams.get(FilterParams.Query),
+      centuries: searchParams.getAll(FilterParams.Centuries),
     };
 
     return getFilteredPeople(people, filters);
   }, [people, searchParams]);
 
   const sortedPeople = useMemo(() => {
-    const sort = searchParams.get('sort');
-    const order = searchParams.get('order');
+    const sort = searchParams.get(SortParams.Sort);
+    const order = searchParams.get(SortParams.Order);
 
     return getSortedPeople(filteredPeople, sort, order);
   }, [searchParams, filteredPeople]);

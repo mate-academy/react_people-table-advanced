@@ -1,20 +1,17 @@
 import React from 'react';
 import classNames from 'classnames';
-import { Link } from 'react-router-dom';
-import { Person } from '../types/Person';
+import { Link, useLocation, useParams } from 'react-router-dom';
+import { Person } from '../types';
 
 type Props = {
   person: Person;
   people: Person[];
-  selectedPerson: string | null;
 };
 
-export const PersonLink: React.FC<Props> = ({
-  person,
-  people,
-  selectedPerson,
-}) => {
+export const PersonLink: React.FC<Props> = ({ person, people }) => {
   const { name, sex, born, died, fatherName, motherName, slug } = person;
+  const { search } = useLocation();
+  const { slugParam } = useParams();
 
   const findParent = (parentName: string) =>
     people.find(({ name: curName }) => curName === parentName);
@@ -32,7 +29,10 @@ export const PersonLink: React.FC<Props> = ({
 
     return (
       <Link
-        to={`/people/${foundedParent.slug}`}
+        to={{
+          pathname: `/people/${foundedParent.slug}`,
+          search: search.toString(),
+        }}
         className={classNames({ 'has-text-danger': status === 'mother' })}
       >
         {parentName}
@@ -44,12 +44,15 @@ export const PersonLink: React.FC<Props> = ({
     <tr
       data-cy="person"
       className={classNames({
-        'has-background-warning': selectedPerson === slug,
+        'has-background-warning': slugParam === slug,
       })}
     >
       <td>
         <Link
-          to={`/people/${slug}`}
+          to={{
+            pathname: `/people/${slug}`,
+            search: search.toString(),
+          }}
           className={classNames({ 'has-text-danger': sex === 'f' })}
         >
           {name}
