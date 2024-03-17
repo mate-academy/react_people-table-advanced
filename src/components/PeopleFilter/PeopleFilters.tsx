@@ -3,12 +3,14 @@ import { useCallback } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { SearchParams, getSearchWith } from '../../utils/searchHelper';
 import { SearchLink } from '../SearchLink';
+import { SexParam } from '../../types';
 
 export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const sex = searchParams.get('sex') || '';
   const query = searchParams.get('query') || '';
   const centuries = searchParams.getAll('centuries') || [];
+  const centuriesArr = ['16', '17', '18', '19', '20'];
 
   const setSearchWith = useCallback(
     (params: SearchParams) => {
@@ -34,7 +36,7 @@ export const PeopleFilters = () => {
         {/* FILTER_All_m_f */}
         <p className="panel-tabs" data-cy="SexFilter">
           <SearchLink
-            className={classNames('', {
+            className={classNames({
               'is-active': !sex,
             })}
             params={{ sex: null }}
@@ -43,19 +45,19 @@ export const PeopleFilters = () => {
           </SearchLink>
 
           <SearchLink
-            className={classNames('', {
-              'is-active': sex === 'm',
+            className={classNames({
+              'is-active': sex === SexParam.Male,
             })}
-            params={{ sex: 'm' }}
+            params={{ sex: SexParam.Male }}
           >
             Male
           </SearchLink>
 
           <SearchLink
             className={classNames({
-              'is-active': sex === 'f',
+              'is-active': sex === SexParam.Female,
             })}
-            params={{ sex: 'f' }}
+            params={{ sex: SexParam.Female }}
           >
             Female
           </SearchLink>
@@ -86,7 +88,7 @@ export const PeopleFilters = () => {
             data-cy="CenturyFilter"
           >
             <div className="level-left">
-              {['16', '17', '18', '19', '20'].map(century => (
+              {centuriesArr.map(century => (
                 <SearchLink
                   key={century}
                   className={classNames('button mr-1', {

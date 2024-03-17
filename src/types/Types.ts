@@ -26,3 +26,8 @@ export enum SortParams {
   Sort = 'sort',
   Order = 'order',
 }
+
+export enum SexParam {
+  Male = 'm',
+  Female = 'f',
+}
