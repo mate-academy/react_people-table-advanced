@@ -28,7 +28,10 @@ export const PersonLink: React.FC<Props> = ({ person, people }) => {
 
     return (
       <Link
-        to={`/people/${foundedParent.slug}`}
+        to={{
+          pathname: `/people/${foundedParent.slug}`,
+          search: search.toString(),
+        }}
         className={classNames({ 'has-text-danger': status === 'mother' })}
       >
         {parentName}
