@@ -7,6 +7,10 @@ const centuriesArr = ['16', '17', '18', '19', '20'];
 
 type Sex = 'f' | 'm' | '';
 
+interface SearchParams {
+  [key: string]: string | string[];
+}
+
 export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -14,7 +18,7 @@ export const PeopleFilters = () => {
   const sex = searchParams.get('sex') || '';
   const centuries = searchParams.getAll('centuries') || [];
 
-  function setSearchWith(params: any) {
+  function setSearchWith(params: SearchParams) {
     const search = getSearchWith(searchParams, params);
 
     setSearchParams(search);
