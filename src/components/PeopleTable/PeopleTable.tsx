@@ -30,6 +30,20 @@ export const PeopleTable: React.FC<PeopleTableProps> = ({ people }) => {
     return { sort: field, order: 'asc' };
   };
 
+  const getIconClassName = (field: string): string => {
+    if (sort === field) {
+      if (order === 'asc') {
+        return 'fas fa-sort-up';
+      }
+
+      if (order === 'desc') {
+        return 'fas fa-sort-down';
+      }
+    }
+
+    return 'fa fa-sort';
+  };
+
   return (
     <table
       data-cy="peopleTable"
@@ -42,7 +56,7 @@ export const PeopleTable: React.FC<PeopleTableProps> = ({ people }) => {
               Name
               <SearchLink params={getSortParams('name')}>
                 <span className="icon">
-                  <i className="fas fa-sort" />
+                  <i className={getIconClassName('name')} />
                 </span>
               </SearchLink>
             </span>
@@ -53,7 +67,7 @@ export const PeopleTable: React.FC<PeopleTableProps> = ({ people }) => {
               Sex
               <SearchLink params={getSortParams('sex')}>
                 <span className="icon">
-                  <i className="fas fa-sort" />
+                  <i className={getIconClassName('sex')} />
                 </span>
               </SearchLink>
             </span>
@@ -64,7 +78,7 @@ export const PeopleTable: React.FC<PeopleTableProps> = ({ people }) => {
               Born
               <SearchLink params={getSortParams('born')}>
                 <span className="icon">
-                  <i className="fas fa-sort" />
+                  <i className={getIconClassName('born')} />
                 </span>
               </SearchLink>
             </span>
@@ -75,7 +89,7 @@ export const PeopleTable: React.FC<PeopleTableProps> = ({ people }) => {
               Died
               <SearchLink params={getSortParams('died')}>
                 <span className="icon">
-                  <i className="fas fa-sort" />
+                  <i className={getIconClassName('died')} />
                 </span>
               </SearchLink>
             </span>

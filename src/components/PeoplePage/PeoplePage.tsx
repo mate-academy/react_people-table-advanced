@@ -14,6 +14,8 @@ export const People = () => {
 
   const [searchParams] = useSearchParams();
 
+  const query = searchParams.get('query');
+
   useEffect(() => {
     setIsLoading(true);
     setError(false);
@@ -70,7 +72,15 @@ export const People = () => {
                 </p>
               )}
 
-              {!isLoading && <PeopleTable people={filteredPeople} />}
+              {!isLoading && !error && !filteredPeople.length && query && (
+                <p data-cy="noPeopleMessage">
+                  There are no people matching the current search criteria
+                </p>
+              )}
+
+              {!isLoading && !error && filteredPeople.length > 0 && (
+                <PeopleTable people={filteredPeople} />
+              )}
             </div>
           </div>
         </div>
