@@ -1,4 +1,5 @@
 import { Person } from '../types';
+import { SortType } from '../types/SortType';
 import { getCorrectData } from './getCorrectData';
 
 export const getPreperedPeople = (
@@ -39,11 +40,11 @@ export const getPreperedPeople = (
   if (sort) {
     preperedPeople.sort((a, b) => {
       switch (sort) {
-        case 'name':
-        case 'sex':
+        case SortType.NAME:
+        case SortType.SEX:
           return a[sort].localeCompare(b[sort]);
-        case 'born':
-        case 'died':
+        case SortType.BORN:
+        case SortType.DIED:
           return a[sort] - b[sort];
         default:
           return 0;
@@ -54,11 +55,11 @@ export const getPreperedPeople = (
   if (sort && order) {
     preperedPeople.reverse().sort((a, b) => {
       switch (sort) {
-        case 'name':
-        case 'sex':
+        case SortType.NAME:
+        case SortType.SEX:
           return b[sort].localeCompare(a[sort]);
-        case 'born':
-        case 'died':
+        case SortType.BORN:
+        case SortType.DIED:
           return b[sort] - a[sort];
 
         default:

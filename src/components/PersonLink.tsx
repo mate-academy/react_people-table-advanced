@@ -2,6 +2,7 @@ import classNames from 'classnames';
 import React from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { Person } from '../types';
+import { FilterType } from '../types/FilterType';
 
 type Props = {
   people: Person[];
@@ -30,7 +31,9 @@ export const PersonLink: React.FC<Props> = ({ people, person }) => {
       <td>
         <Link
           to={`../${person.slug}`}
-          className={classNames({ 'has-text-danger': sex === 'f' })}
+          className={classNames({
+            'has-text-danger': sex === FilterType.FEMALE,
+          })}
         >
           {name}
         </Link>

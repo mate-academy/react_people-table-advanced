@@ -8,7 +8,7 @@ import { getPeople } from '../api';
 import { getPreperedPeople } from '../utils/getPreperedPeople';
 
 export const PeoplePage = () => {
-  const [peopleFromServer, setPeopleFromServer] = useState<Person[] | []>([]);
+  const [peopleFromServer, setPeopleFromServer] = useState<Person[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [hasError, setHasError] = useState(false);
 

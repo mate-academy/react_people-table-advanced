@@ -2,6 +2,7 @@ import classNames from 'classnames';
 import React from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Person } from '../types';
+import { SortType } from '../types/SortType';
 import { PersonLink } from './PersonLink';
 import { SearchLink } from './SearchLink';
 
@@ -15,12 +16,12 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
   const order = searchParams.get('order') || '';
 
   const getSortParams = (sortBy: string) => {
-    if (sort === sortBy && order === 'desc') {
+    if (sort === sortBy && order === SortType.ORDER) {
       return { sort: null, order: null };
     }
 
     if (sort === sortBy) {
-      return { sort: sortBy, order: 'desc' };
+      return { sort: sortBy, order: SortType.ORDER };
     }
 
     return { sort: sortBy, order: null };
@@ -36,13 +37,13 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Name
-              <SearchLink params={getSortParams('name')}>
+              <SearchLink params={getSortParams(SortType.NAME)}>
                 <span className="icon">
                   <i
                     className={classNames('fas', {
-                      'fa-sort': sort !== 'name',
-                      'fa-sort-up': sort === 'name' && !order,
-                      'fa-sort-down': sort === 'name' && order,
+                      'fa-sort': sort !== SortType.NAME,
+                      'fa-sort-up': sort === SortType.NAME && !order,
+                      'fa-sort-down': sort === SortType.NAME && order,
                     })}
                   />
                 </span>
@@ -53,13 +54,13 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Sex
-              <SearchLink params={getSortParams('sex')}>
+              <SearchLink params={getSortParams(SortType.SEX)}>
                 <span className="icon">
                   <i
                     className={classNames('fas', {
-                      'fa-sort': sort !== 'sex',
-                      'fa-sort-up': sort === 'sex' && !order,
-                      'fa-sort-down': sort === 'sex' && order,
+                      'fa-sort': sort !== SortType.SEX,
+                      'fa-sort-up': sort === SortType.SEX && !order,
+                      'fa-sort-down': sort === SortType.SEX && order,
                     })}
                   />
                 </span>
@@ -70,13 +71,13 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Born
-              <SearchLink params={getSortParams('born')}>
+              <SearchLink params={getSortParams(SortType.BORN)}>
                 <span className="icon">
                   <i
                     className={classNames('fas', {
-                      'fa-sort': sort !== 'born',
-                      'fa-sort-up': sort === 'born' && !order,
-                      'fa-sort-down': sort === 'born' && order,
+                      'fa-sort': sort !== SortType.BORN,
+                      'fa-sort-up': sort === SortType.BORN && !order,
+                      'fa-sort-down': sort === SortType.BORN && order,
                     })}
                   />
                 </span>
@@ -87,13 +88,13 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Died
-              <SearchLink params={getSortParams('died')}>
+              <SearchLink params={getSortParams(SortType.DIED)}>
                 <span className="icon">
                   <i
                     className={classNames('fas', {
-                      'fa-sort': sort !== 'died',
-                      'fa-sort-up': sort === 'died' && !order,
-                      'fa-sort-down': sort && order,
+                      'fa-sort': sort !== SortType.DIED,
+                      'fa-sort-up': sort === SortType.DIED && !order,
+                      'fa-sort-down': sort === SortType.DIED && order,
                     })}
                   />
                 </span>
