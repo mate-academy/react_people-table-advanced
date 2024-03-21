@@ -9,6 +9,7 @@ export const App = () => {
       <Navbar />
 
       <div className="section">
+        <div>test</div>
         <div className="container">
           <h1 className="title">Home Page</h1>
           <h1 className="title">Page not found</h1>
