@@ -1,4 +1,18 @@
+import { Link, useLocation } from 'react-router-dom';
+
 export const Navbar = () => {
+  const location = useLocation();
+
+  const isActive = (path: string) => {
+    if (path === '/') {
+      return location.pathname === '/';
+    }
+
+    return (
+      location.pathname === path || location.pathname.startsWith(`${path}/`)
+    );
+  };
+
   return (
     <nav
       data-cy="nav"
@@ -7,19 +21,18 @@ export const Navbar = () => {
       aria-label="main navigation"
     >
       <div className="container">
-        <div className="navbar-brand">
-          <a className="navbar-item" href="#/">
-            Home
-          </a>
-
-          <a
-            aria-current="page"
-            className="navbar-item has-background-grey-lighter"
-            href="#/people"
-          >
-            People
-          </a>
-        </div>
+        <Link
+          to="/"
+          className={`navbar-item ${isActive('/') ? 'has-background-grey-lighter' : ''}`}
+        >
+          Home
+        </Link>
+        <Link
+          to="/people"
+          className={`navbar-item ${isActive('/people') ? 'has-background-grey-lighter' : ''}`}
+        >
+          People
+        </Link>
       </div>
     </nav>
   );
