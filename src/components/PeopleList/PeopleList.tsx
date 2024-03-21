@@ -96,7 +96,7 @@ export const PeopleList = () => {
               <p data-cy="noPeopleMessage">There are no people on the server</p>
             )}
 
-            {visiblePeople.length === 0 && (
+            {visiblePeople.length === 0 && isLoading && isError && (
               <p>There are no people matching the current search criteria</p>
             )}
 
