@@ -7,6 +7,9 @@ import { Person } from '../../types';
 import { PeopleFilters } from '../PeopleFilters';
 import { filterPeople } from '../../utils/filterPeople';
 
+type SortField = 'name' | 'sex' | 'born' | 'died' | undefined;
+type OrderField = 'asc' | 'desc' | undefined;
+
 export const People = () => {
   const [people, setPeople] = useState<Person[]>([]);
   const [error, setError] = useState(false);
@@ -33,13 +36,8 @@ export const People = () => {
         sex: searchParams.get('sex') || undefined,
         query: searchParams.get('query') || undefined,
         centuries: searchParams.getAll('centuries'),
-        sort: searchParams.get('sort') as
-          | 'name'
-          | 'sex'
-          | 'born'
-          | 'died'
-          | undefined,
-        order: searchParams.get('order') as 'asc' | 'desc' | undefined,
+        sort: searchParams.get('sort') as SortField,
+        order: searchParams.get('order') as OrderField,
       }),
     [people, searchParams],
   );
