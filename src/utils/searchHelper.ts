@@ -7,11 +7,11 @@ export type SearchParams = {
  * from a given currentParams and paramsToUpdate.
  */
 export function getSearchWith(
-  currentParams: URLSearchParams,
-  paramsToUpdate: SearchParams, // it's our custom type
+  paramsToUpdate: SearchParams,
+  currentParams?: URLSearchParams, // it's our custom type
 ): string {
   // copy currentParams by creating new object from a string
-  const newParams = new URLSearchParams(currentParams.toString());
+  const newParams = new URLSearchParams(currentParams);
 
   // Here is the example of paramsToUpdate
   // {
