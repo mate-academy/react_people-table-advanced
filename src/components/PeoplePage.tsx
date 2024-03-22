@@ -15,7 +15,9 @@ export const PeoplePage: React.FC = () => {
   const [searchParams] = useSearchParams();
   const sex = searchParams.get('sex') || '';
   const query = searchParams.get('query') || '';
-  const centuries = searchParams.getAll('centuries') || [];
+  const centuries = useMemo(() => {
+    return searchParams.getAll('centuries') || [];
+  }, [searchParams]);
 
   const filteringPeople = useMemo(() => {
     let filteredPeople = [...people];
