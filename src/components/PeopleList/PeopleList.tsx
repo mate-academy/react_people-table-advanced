@@ -55,9 +55,9 @@ export const PeopleList = () => {
     try {
       setIsLoading(true);
       setIsError(false);
-      const People = await getPeople();
+      const peopleData = await getPeople();
 
-      setPeople(People);
+      setPeople(peopleData);
     } catch (error) {
       setIsError(true);
     } finally {
