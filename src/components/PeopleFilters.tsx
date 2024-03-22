@@ -13,13 +13,13 @@ export const PeopleFilters = () => {
     setsearchParams(params);
   }
 
-  function handleGenderChange(gender: string) {
+  function handleGenderChange(newGender: string) {
     const params = new URLSearchParams(searchParams);
 
-    if (gender === 'all') {
+    if (newGender === 'all') {
       params.delete('gender');
     } else {
-      params.set('gender', gender);
+      params.set('gender', newGender);
     }
 
     setsearchParams(params);
@@ -61,21 +61,33 @@ export const PeopleFilters = () => {
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
+        {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
         <a
           className={gender === 'all' ? 'is-active' : ''}
           onClick={() => handleGenderChange('all')}
+          onKeyDown={e => e.key === 'Enter' && handleGenderChange('all')}
+          tabIndex={0}
+          role="button"
         >
           All
         </a>
+        {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
         <a
           className={gender === 'm' ? 'is-active' : ''}
           onClick={() => handleGenderChange('m')}
+          onKeyDown={e => e.key === 'Enter' && handleGenderChange('m')}
+          tabIndex={0}
+          role="button"
         >
           Male
         </a>
+        {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
         <a
           className={gender === 'f' ? 'is-active' : ''}
           onClick={() => handleGenderChange('f')}
+          onKeyDown={e => e.key === 'Enter' && handleGenderChange('f')}
+          role="button"
+          tabIndex={0}
         >
           Female
         </a>
@@ -104,6 +116,7 @@ export const PeopleFilters = () => {
               data-cy="century"
               className={`button mr-1 ${centuries.includes('16') ? 'is-info' : ''}`}
               onClick={() => toggleCenturies('16')}
+              type="button"
             >
               16
             </button>
@@ -112,6 +125,7 @@ export const PeopleFilters = () => {
               data-cy="century"
               className={`button mr-1 ${centuries.includes('17') ? 'is-info' : ''}`}
               onClick={() => toggleCenturies('17')}
+              type="button"
             >
               17
             </button>
@@ -120,6 +134,7 @@ export const PeopleFilters = () => {
               data-cy="century"
               className={`button mr-1 ${centuries.includes('18') ? 'is-info' : ''}`}
               onClick={() => toggleCenturies('18')}
+              type="button"
             >
               18
             </button>
@@ -128,6 +143,7 @@ export const PeopleFilters = () => {
               data-cy="century"
               className={`button mr-1 ${centuries.includes('19') ? 'is-info' : ''}`}
               onClick={() => toggleCenturies('19')}
+              type="button"
             >
               19
             </button>
@@ -136,16 +152,21 @@ export const PeopleFilters = () => {
               data-cy="century"
               className={`button mr-1 ${centuries.includes('20') ? 'is-info' : ''}`}
               onClick={() => toggleCenturies('20')}
+              type="button"
             >
               20
             </button>
           </div>
 
           <div className="level-right ml-4">
+            {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
             <a
               data-cy="centuryALL"
               className="button is-success is-outlined"
               onClick={toggleAllCenturies}
+              onKeyDown={e => e.key === 'Enter' && toggleAllCenturies}
+              tabIndex={0}
+              role="button"
             >
               All
             </a>
@@ -154,9 +175,13 @@ export const PeopleFilters = () => {
       </div>
 
       <div className="panel-block">
+        {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
         <a
           className="button is-link is-outlined is-fullwidth"
           onClick={clearAllFilters}
+          onKeyDown={e => e.key === 'Enter' && clearAllFilters}
+          tabIndex={0}
+          role="button"
         >
           Reset all filters
         </a>

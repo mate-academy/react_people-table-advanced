@@ -18,15 +18,18 @@ export const PeopleTable = ({ people }: PeopleTableProps) => {
 
   const handleSort = (field: string) => {
     let newOrder = 'asc';
+
     if (searchParams.get('sort') === field) {
       newOrder = searchParams.get('order') === 'asc' ? 'desc' : 'asc';
     }
+
     const newSearchParams = new URLSearchParams(searchParams);
+
     newSearchParams.set('sort', field);
     newSearchParams.set('order', newOrder);
-  
+
     setSearchParams(newSearchParams);
-  }
+  };
 
   const applyFilters = () => {
     return people
@@ -45,10 +48,47 @@ export const PeopleTable = ({ people }: PeopleTableProps) => {
       })
       .filter(person => {
         return (
-          selectedGenders.length === 0 ||
-          selectedGenders.includes(person.sex)
+          selectedGenders.length === 0 || selectedGenders.includes(person.sex)
         );
       });
+  };
+
+  const sortPeople = (
+    newPeople: Person[],
+    sortField: string,
+    sortOrder: 'asc' | 'desc',
+  ) => {
+    if (
+      !sortField ||
+      ![
+        'name',
+        'sex',
+        'born',
+        'died',
+        'fatherName',
+        'motherName',
+        'slug',
+      ].includes(sortField)
+    ) {
+      return newPeople;
+    }
+
+    return newPeople.sort((a, b) => {
+      const valueA = a[sortField as keyof Person];
+      const valueB = b[sortField as keyof Person];
+
+      if (typeof valueA === 'string' && typeof valueB === 'string') {
+        return sortOrder === 'asc'
+          ? valueA.localeCompare(valueB)
+          : valueB.localeCompare(valueA);
+      }
+
+      if (typeof valueA === 'number' && typeof valueB === 'number') {
+        return sortOrder === 'asc' ? valueA - valueB : valueB - valueA;
+      }
+
+      return 0;
+    });
   };
 
   const getSortedFilteredPeople = () => {
@@ -60,29 +100,8 @@ export const PeopleTable = ({ people }: PeopleTableProps) => {
     if (sortField) {
       filtered = sortPeople(filtered, sortField, sortOrder);
     }
-  
-    return filtered;
-  }
 
-  const sortPeople = (people: Person[], sortField: string, sortOrder: 'asc' | 'desc') => {
-    if (!sortField || !['name', 'sex', 'born', 'died', 'fatherName', 'motherName', 'slug'].includes(sortField)) {
-      return people;
-    }
-  
-    return people.sort((a, b) => {
-      const valueA = a[sortField as keyof Person];
-      const valueB = b[sortField as keyof Person];
-  
-      if (typeof valueA === 'string' && typeof valueB === 'string') {
-        return sortOrder === 'asc' ? valueA.localeCompare(valueB) : valueB.localeCompare(valueA);
-      }
-  
-      if (typeof valueA === 'number' && typeof valueB === 'number') {
-        return sortOrder === 'asc' ? valueA - valueB : valueB - valueA;
-      }
-  
-      return 0;
-    });
+    return filtered;
   };
 
   const filteredSortedPeople = getSortedFilteredPeople();
@@ -94,10 +113,30 @@ export const PeopleTable = ({ people }: PeopleTableProps) => {
     >
       <thead>
         <tr>
-          <th onClick={() => handleSort('name')}>Name<span className="icon"><i className="fas fa-sort"></i></span></th>
-          <th onClick={() => handleSort('sex')}>Sex<span className="icon"><i className="fas fa-sort"></i></span></th>
-          <th onClick={() => handleSort('born')}>Born<span className="icon"><i className="fas fa-sort"></i></span></th>
-          <th onClick={() => handleSort('died')}>Died<span className="icon"><i className="fas fa-sort"></i></span></th>
+          <th onClick={() => handleSort('name')}>
+            Name
+            <span className="icon">
+              <i className="fas fa-sort" />
+            </span>
+          </th>
+          <th onClick={() => handleSort('sex')}>
+            Sex
+            <span className="icon">
+              <i className="fas fa-sort" />
+            </span>
+          </th>
+          <th onClick={() => handleSort('born')}>
+            Born
+            <span className="icon">
+              <i className="fas fa-sort" />
+            </span>
+          </th>
+          <th onClick={() => handleSort('died')}>
+            Died
+            <span className="icon">
+              <i className="fas fa-sort" />
+            </span>
+          </th>
           <th>Mother</th>
           <th>Father</th>
         </tr>
