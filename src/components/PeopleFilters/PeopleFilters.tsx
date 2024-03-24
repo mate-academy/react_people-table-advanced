@@ -73,7 +73,7 @@ export const PeopleFilters = () => {
             className="input"
             placeholder="Search"
             value={query}
-            onChange={(event) => handleQueryChange(event)}
+            onChange={event => handleQueryChange(event)}
           />
 
           <span className="icon is-left">
@@ -117,15 +117,13 @@ export const PeopleFilters = () => {
 
       <div className="panel-block">
         <Link
-          to={
-            {
-              search: getSearchWith(searchParams, {
-                sex: null,
-                numbers: null,
-                query: null,
-              }),
-            }
-          }
+          to={{
+            search: getSearchWith(searchParams, {
+              sex: null,
+              numbers: null,
+              query: null,
+            }),
+          }}
           className="button is-link is-outlined is-fullwidth"
         >
           Reset all filters

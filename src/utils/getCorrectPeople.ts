@@ -14,27 +14,29 @@ export const getCorrectPeople = (
   correctPeople = correctPeople.map(person => {
     const newPerson = { ...person };
 
-    newPerson.father = people
-      .find(father => father.name === newPerson.fatherName);
+    newPerson.father = people.find(
+      father => father.name === newPerson.fatherName,
+    );
 
-    newPerson.mother = people
-      .find(mother => mother.name === newPerson.motherName);
+    newPerson.mother = people.find(
+      mother => mother.name === newPerson.motherName,
+    );
 
     return newPerson;
   });
 
   switch (sort) {
     case SortType.Name: {
-      correctPeople = correctPeople.sort(
-        (person1, perosn2) => person1.name.localeCompare(perosn2.name),
+      correctPeople = correctPeople.sort((person1, perosn2) =>
+        person1.name.localeCompare(perosn2.name),
       );
 
       break;
     }
 
     case SortType.Sex: {
-      correctPeople = correctPeople.sort(
-        (person1, perosn2) => person1.sex.localeCompare(perosn2.sex),
+      correctPeople = correctPeople.sort((person1, perosn2) =>
+        person1.sex.localeCompare(perosn2.sex),
       );
 
       break;
@@ -69,9 +71,11 @@ export const getCorrectPeople = (
     const correctQuery = query.toLowerCase().trim();
 
     correctPeople = correctPeople.filter(person => {
-      return person.name.toLowerCase().includes(correctQuery)
-        || person.fatherName?.toLowerCase().includes(correctQuery)
-        || person.motherName?.toLowerCase().includes(correctQuery);
+      return (
+        person.name.toLowerCase().includes(correctQuery) ||
+        person.fatherName?.toLowerCase().includes(correctQuery) ||
+        person.motherName?.toLowerCase().includes(correctQuery)
+      );
     });
   }
 

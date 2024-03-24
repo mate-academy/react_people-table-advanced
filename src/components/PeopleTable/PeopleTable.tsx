@@ -5,7 +5,7 @@ import { PeopleItem } from '../PeopleItem';
 import { getSearchWith } from '../../utils/searchHelper';
 
 type Props = {
-  people: Person[],
+  people: Person[];
 };
 
 const titleArr = ['Name', 'Sex', 'Born', 'Died'];

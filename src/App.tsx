@@ -9,7 +9,7 @@ export const App = () => {
       <Navbar />
 
       <div className="section">
-      <Outlet />
+        <Outlet />
       </div>
     </div>
   );

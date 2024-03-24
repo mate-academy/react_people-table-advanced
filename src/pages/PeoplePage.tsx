@@ -46,14 +46,12 @@ export const PeoplePage = () => {
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
           <div className="column is-7-tablet is-narrow-desktop">
-            {!!people.length && (
-              <PeopleFilters />
-            )}
+            {!!people.length && <PeopleFilters />}
           </div>
 
           <div className="column">
             <div className="box table-container">
-              {isLoading && (<Loader />)}
+              {isLoading && <Loader />}
 
               {isError && (
                 <p data-cy="peopleLoadingError">Something went wrong</p>
@@ -72,7 +70,6 @@ export const PeoplePage = () => {
               {!correctPeople.length && !isLoading && (
                 <p>There are no people matching the current search criteria</p>
               )}
-
             </div>
           </div>
         </div>

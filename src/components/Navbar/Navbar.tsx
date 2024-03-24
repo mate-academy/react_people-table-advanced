@@ -17,18 +17,11 @@ export const Navbar = () => {
     >
       <div className="container">
         <div className="navbar-brand">
-          <NavLink
-            to="/"
-            className={getLinkClass}
-          >
+          <NavLink to="/" className={getLinkClass}>
             Home
           </NavLink>
 
-          <NavLink
-            to="/people"
-            aria-current="page"
-            className={getLinkClass}
-          >
+          <NavLink to="/people" aria-current="page" className={getLinkClass}>
             People
           </NavLink>
         </div>

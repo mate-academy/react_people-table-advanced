@@ -1,2 +1,1 @@
-
-export * from './SearchLink'
+export * from './SearchLink';

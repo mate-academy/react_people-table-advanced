@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import { Person } from '../../types/Person';
 
 type Props = {
-  person: Person,
+  person: Person;
 };
 
 export const PeopleItem: React.FC<Props> = ({ person }) => {
