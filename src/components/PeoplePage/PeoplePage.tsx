@@ -5,6 +5,8 @@ import { useEffect, useState } from 'react';
 import { Person } from '../../types';
 import { getPeople } from '../../api';
 import { useSearchParams } from 'react-router-dom';
+import { getPreparedPeople } from '../../utils/getPreparedPeople';
+import { SortType } from '../../types/SortType';
 
 export const PeoplePage: React.FC = () => {
   const [searchParams] = useSearchParams();
@@ -15,6 +17,14 @@ export const PeoplePage: React.FC = () => {
   const currentSex = searchParams.get('sex');
   const query = searchParams.get('query') || '';
   const currentCentury = searchParams.getAll('centuries') || [''];
+  const sortType = searchParams.get('sort')?.toLowerCase() || '';
+  const sortDirection = searchParams.get('order') || '';
+
+  const preparedPeople = getPreparedPeople(
+    people,
+    sortType as SortType,
+    !!sortDirection,
+  );
 
   useEffect(() => {
     const fetchPeople = async () => {
@@ -34,13 +44,19 @@ export const PeoplePage: React.FC = () => {
     fetchPeople();
   }, []);
 
-  let filteredPeople = people.filter(({ sex }) =>
+  let filteredPeople = preparedPeople.filter(({ sex }) =>
     currentSex ? sex === currentSex : true,
   );
 
   if (query) {
     filteredPeople = filteredPeople.filter(({ name }) =>
       name.toLocaleLowerCase().includes(query.toLocaleLowerCase().trim()),
+    );
+  }
+
+  if (!!currentCentury.length) {
+    filteredPeople = filteredPeople.filter(({ born }) =>
+      currentCentury.includes(String(Math.ceil(born / 100))),
     );
   }
 
@@ -58,6 +74,7 @@ export const PeoplePage: React.FC = () => {
                 <PeopleFilters
                   currentSex={currentSex}
                   currentCentury={currentCentury}
+                  query={query}
                 />
               </div>
 
@@ -74,7 +91,14 @@ export const PeoplePage: React.FC = () => {
                   </p>
                 )}
 
-                {!!people.length && <PeopleTable people={filteredPeople} />}
+                {!!people.length && (
+                  <PeopleTable
+                    filteredPeople={filteredPeople}
+                    people={people}
+                    sortType={sortType}
+                    sortDirection={sortDirection}
+                  />
+                )}
 
                 {!filteredPeople.length && (
                   <p>

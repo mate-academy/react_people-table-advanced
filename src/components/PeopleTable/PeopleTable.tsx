@@ -1,19 +1,21 @@
 import { Person } from '../../types';
+import { SortType } from '../../types/SortType';
 import { PersonInfo } from '../PersonInfo';
 import { TableHeadItem } from '../TableHeadItem';
 
 interface Props {
+  filteredPeople: Person[];
   people: Person[];
+  sortType: string;
+  sortDirection: string;
 }
 
-export const PeopleTable: React.FC<Props> = ({ people }) => {
-  const tableHeadItems = ['Name', 'Sex', 'Born', 'Died', 'Mother', 'Father'];
-
-  const parents = ['Mother', 'Father'];
-  const canAddIcon = (value: string): boolean => {
-    return !parents.includes(value);
-  };
-
+export const PeopleTable: React.FC<Props> = ({
+  filteredPeople,
+  people,
+  sortType,
+  sortDirection,
+}) => {
   return (
     <table
       data-cy="peopleTable"
@@ -21,14 +23,20 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
     >
       <thead>
         <tr>
-          {tableHeadItems.map(item => (
-            <TableHeadItem key={item} item={item} canAddIcon={canAddIcon} />
+          {Object.entries(SortType).map(([key, value]) => (
+            <TableHeadItem
+              key={key}
+              itemKey={key}
+              itemValue={value}
+              sortType={sortType}
+              sortDirection={sortDirection}
+            />
           ))}
         </tr>
       </thead>
 
       <tbody>
-        {people.map(person => (
+        {filteredPeople.map(person => (
           <PersonInfo person={person} people={people} key={person.slug} />
         ))}
       </tbody>

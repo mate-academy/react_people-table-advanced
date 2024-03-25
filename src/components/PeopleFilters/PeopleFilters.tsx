@@ -7,11 +7,13 @@ import { SearchLink } from '../SearchLink';
 interface Props {
   currentSex: string | null;
   currentCentury: string[];
+  query: string;
 }
 
 export const PeopleFilters: React.FC<Props> = ({
   currentSex,
   currentCentury,
+  query,
 }) => {
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -59,6 +61,7 @@ export const PeopleFilters: React.FC<Props> = ({
       <div className="panel-block">
         <p className="control has-icons-left">
           <input
+            value={query}
             onChange={handleQueryChange}
             data-cy="NameFilter"
             type="search"
@@ -110,9 +113,16 @@ export const PeopleFilters: React.FC<Props> = ({
       </div>
 
       <div className="panel-block">
-        <a className="button is-link is-outlined is-fullwidth" href="#/people">
+        <SearchLink
+          className="button is-link is-outlined is-fullwidth"
+          params={{
+            sex: null,
+            query: null,
+            centuries: null,
+          }}
+        >
           Reset all filters
-        </a>
+        </SearchLink>
       </div>
     </nav>
   );
