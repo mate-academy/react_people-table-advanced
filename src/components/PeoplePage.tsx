@@ -30,15 +30,15 @@ export const PeoplePage: React.FC = () => {
       .finally(() => setLoading(false));
   }, []);
 
-  const isQueryMatch = (person: Person) => {
-    const { name, fatherName, motherName } = person;
-
-    return [name, fatherName, motherName].some(field =>
-      field?.toLowerCase().includes(query.toLocaleLowerCase()),
-    );
-  };
-
   const filteredPeople = useMemo(() => {
+    const isQueryMatch = (person: Person) => {
+      const { name, fatherName, motherName } = person;
+
+      return [name, fatherName, motherName].some(field =>
+        field?.toLowerCase().includes(query.toLocaleLowerCase()),
+      );
+    };
+
     return people.filter(person => {
       const queryFilter = isQueryMatch(person);
       const sexFilter = searchParams.get('sex')
