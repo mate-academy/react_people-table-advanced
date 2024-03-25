@@ -16,7 +16,23 @@ export const TableHeadItem: React.FC<Props> = ({
   sortType,
   sortDirection,
 }) => {
-  const [clickCounter, setClickCounter] = useState(0);
+  const getInitialClickCounterValue = (
+    sortTypeVal: string,
+    sortDirectionVal: string,
+  ) => {
+    if (sortTypeVal && !sortDirectionVal) {
+      return 1;
+    }
+    if (sortTypeVal && sortDirectionVal) {
+      return 2;
+    }
+
+    return 0;
+  };
+
+  const [clickCounter, setClickCounter] = useState(
+    getInitialClickCounterValue(sortType, sortDirection),
+  );
 
   const parents = [SortType.Mother, SortType.Father];
 
@@ -32,15 +48,15 @@ export const TableHeadItem: React.FC<Props> = ({
         <span className="is-flex is-flex-wrap-nowrap">
           {itemKey}
           <SearchLink
+            params={{
+              sort: clickCounter === 0 || clickCounter === 1 ? itemValue : null,
+              order: clickCounter === 1 ? reverseDirection : null,
+            }}
             onBlur={() => setClickCounter(0)}
             onClick={() => {
               setClickCounter(prevCount =>
                 prevCount === 2 ? 0 : prevCount + 1,
               );
-            }}
-            params={{
-              sort: clickCounter === 0 || clickCounter === 1 ? itemValue : null,
-              order: clickCounter === 1 ? reverseDirection : null,
             }}
             className="is-flex is-flex-wrap-nowrap"
           >
