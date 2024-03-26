@@ -1,5 +1,6 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Person } from '../types';
+import { getPeople } from '../api';
 
 interface ContextProps {
   people: Person[];
@@ -27,6 +28,15 @@ export const PeopleProvider: React.FC<Props> = ({ children }) => {
   const [people, setPeople] = useState<Person[]>([]);
   const [errorMessage, setErrorMessage] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    setLoading(true);
+
+    getPeople()
+      .then(setPeople)
+      .catch(() => setErrorMessage(true))
+      .finally(() => setLoading(false));
+  }, []);
 
   const value = useMemo(
     () => ({

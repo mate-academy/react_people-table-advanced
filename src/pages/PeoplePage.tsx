@@ -1,28 +1,15 @@
 import { PeopleFilters } from '../components/PeopleFilters';
 import { Loader } from '../components/Loader';
 import { PeopleTable } from '../components/PeopleTable';
-import { useContext, useEffect } from 'react';
-import { getPeople } from '../api';
+import { useContext } from 'react';
 import { PeopleContext } from '../store/PeopleContext';
 
 export const PeoplePage = () => {
   const {
     people,
-    setPeople,
     loading,
-    setLoading,
     errorMessage,
-    setErrorMessage,
   } = useContext(PeopleContext);
-
-  useEffect(() => {
-    setLoading(true);
-
-    getPeople()
-      .then(setPeople)
-      .catch(() => setErrorMessage(true))
-      .finally(() => setLoading(false));
-  }, [setLoading, setPeople, setErrorMessage]);
 
   return (
     <>
