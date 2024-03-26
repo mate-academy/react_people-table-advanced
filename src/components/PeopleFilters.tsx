@@ -52,10 +52,7 @@ export const PeopleFilters = () => {
         <Link
           className={classNames('', { 'is-active': sex === SexStatus.Female })}
           to={{
-            search: getSearchWith(
-              searchParams,
-              { sex: SexStatus.Female },
-            ),
+            search: getSearchWith(searchParams, { sex: SexStatus.Female }),
           }}
         >
           Female
