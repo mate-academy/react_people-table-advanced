@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { SearchLink } from '../SearchLink';
 import classNames from 'classnames';
 import { SortType } from '../../types/SortType';
@@ -16,24 +15,6 @@ export const TableHeadItem: React.FC<Props> = ({
   sortType,
   sortDirection,
 }) => {
-  const getInitialClickCounterValue = (
-    sortTypeVal: string,
-    sortDirectionVal: string,
-  ) => {
-    if (sortTypeVal && !sortDirectionVal) {
-      return 1;
-    }
-    if (sortTypeVal && sortDirectionVal) {
-      return 2;
-    }
-
-    return 0;
-  };
-
-  const [clickCounter, setClickCounter] = useState(
-    getInitialClickCounterValue(sortType, sortDirection),
-  );
-
   const parents = [SortType.Mother, SortType.Father];
 
   const canAddIcon = (value: string): boolean => {
@@ -49,14 +30,14 @@ export const TableHeadItem: React.FC<Props> = ({
           {itemKey}
           <SearchLink
             params={{
-              sort: clickCounter === 0 || clickCounter === 1 ? itemValue : null,
-              order: clickCounter === 1 ? reverseDirection : null,
-            }}
-            onBlur={() => setClickCounter(0)}
-            onClick={() => {
-              setClickCounter(prevCount =>
-                prevCount === 2 ? 0 : prevCount + 1,
-              );
+              sort:
+                sortDirection === reverseDirection && sortType === itemValue
+                  ? null
+                  : itemValue,
+              order:
+                itemValue === sortType && sortDirection !== reverseDirection
+                  ? reverseDirection
+                  : null,
             }}
             className="is-flex is-flex-wrap-nowrap"
           >

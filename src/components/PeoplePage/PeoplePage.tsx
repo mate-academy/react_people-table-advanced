@@ -16,7 +16,7 @@ export const PeoplePage: React.FC = () => {
 
   const currentSex = searchParams.get('sex');
   const query = searchParams.get('query') || '';
-  const currentCentury = searchParams.getAll('centuries') || [''];
+  const currentCentury = searchParams.getAll('centuries') || [];
   const sortType = searchParams.get('sort')?.toLowerCase() || '';
   const sortDirection = searchParams.get('order') || '';
 
