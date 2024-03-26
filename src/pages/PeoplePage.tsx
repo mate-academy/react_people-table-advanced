@@ -5,11 +5,7 @@ import { useContext } from 'react';
 import { PeopleContext } from '../store/PeopleContext';
 
 export const PeoplePage = () => {
-  const {
-    people,
-    loading,
-    errorMessage,
-  } = useContext(PeopleContext);
+  const { people, loading, errorMessage } = useContext(PeopleContext);
 
   return (
     <>
