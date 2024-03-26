@@ -4,7 +4,7 @@ import { PersonLink } from './PersonLink';
 import { getSearchWith } from '../utils/searchHelper';
 import { SortType } from '../types/SortType';
 import classNames from 'classnames';
-import { filterPeople } from '../services/filterPeople';
+import { filterPeople } from '../utils/filterPeople';
 import { useContext } from 'react';
 import { PeopleContext } from '../store/PeopleContext';
 
