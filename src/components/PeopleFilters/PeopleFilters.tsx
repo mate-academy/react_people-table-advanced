@@ -10,6 +10,8 @@ interface Props {
   query: string;
 }
 
+const centuries = ['16', '17', '18', '19', '20'];
+
 export const PeopleFilters: React.FC<Props> = ({
   currentSex,
   currentCentury,
@@ -33,8 +35,6 @@ export const PeopleFilters: React.FC<Props> = ({
   const handleQueryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchWith({ query: event.target.value || null });
   };
-
-  const centuries = ['16', '17', '18', '19', '20'];
 
   return (
     <nav className="panel">

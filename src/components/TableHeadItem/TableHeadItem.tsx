@@ -9,6 +9,8 @@ interface Props {
   sortDirection: string;
 }
 
+const reverseDirection = 'desc';
+
 export const TableHeadItem: React.FC<Props> = ({
   itemKey,
   itemValue,
@@ -21,7 +23,7 @@ export const TableHeadItem: React.FC<Props> = ({
     return !parents.includes(value as SortType);
   };
 
-  const reverseDirection = 'desc';
+  const isItemValueEqualToSortType = itemValue === sortType;
 
   return (
     <th>
@@ -31,11 +33,11 @@ export const TableHeadItem: React.FC<Props> = ({
           <SearchLink
             params={{
               sort:
-                sortDirection === reverseDirection && sortType === itemValue
+                sortDirection === reverseDirection && isItemValueEqualToSortType
                   ? null
                   : itemValue,
               order:
-                itemValue === sortType && sortDirection !== reverseDirection
+                isItemValueEqualToSortType && sortDirection !== reverseDirection
                   ? reverseDirection
                   : null,
             }}
@@ -44,9 +46,9 @@ export const TableHeadItem: React.FC<Props> = ({
             <span className="icon">
               <i
                 className={classNames('fas', {
-                  'fa-sort': itemValue !== sortType,
-                  'fa-sort-up': itemValue === sortType && !sortDirection,
-                  'fa-sort-down': itemValue === sortType && sortDirection,
+                  'fa-sort': !isItemValueEqualToSortType,
+                  'fa-sort-up': isItemValueEqualToSortType && !sortDirection,
+                  'fa-sort-down': isItemValueEqualToSortType && sortDirection,
                 })}
               />
             </span>

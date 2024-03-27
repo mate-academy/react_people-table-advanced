@@ -5,8 +5,8 @@ import { useEffect, useState } from 'react';
 import { Person } from '../../types';
 import { getPeople } from '../../api';
 import { useSearchParams } from 'react-router-dom';
-import { getPreparedPeople } from '../../utils/getPreparedPeople';
 import { SortType } from '../../types/SortType';
+import { getFilteredPeople, getPreparedPeople } from '../../utils';
 
 export const PeoplePage: React.FC = () => {
   const [searchParams] = useSearchParams();
@@ -26,6 +26,13 @@ export const PeoplePage: React.FC = () => {
     !!sortDirection,
   );
 
+  const filteredPeople = getFilteredPeople(
+    preparedPeople,
+    currentSex,
+    query,
+    currentCentury,
+  );
+
   useEffect(() => {
     const fetchPeople = async () => {
       setError('');
@@ -43,22 +50,6 @@ export const PeoplePage: React.FC = () => {
 
     fetchPeople();
   }, []);
-
-  let filteredPeople = preparedPeople.filter(({ sex }) =>
-    currentSex ? sex === currentSex : true,
-  );
-
-  if (query) {
-    filteredPeople = filteredPeople.filter(({ name }) =>
-      name.toLocaleLowerCase().includes(query.toLocaleLowerCase().trim()),
-    );
-  }
-
-  if (!!currentCentury.length) {
-    filteredPeople = filteredPeople.filter(({ born }) =>
-      currentCentury.includes(String(Math.ceil(born / 100))),
-    );
-  }
 
   return (
     <>
@@ -91,16 +82,14 @@ export const PeoplePage: React.FC = () => {
                   </p>
                 )}
 
-                {!!people.length && (
+                {!!people.length ? (
                   <PeopleTable
                     filteredPeople={filteredPeople}
                     people={people}
                     sortType={sortType}
                     sortDirection={sortDirection}
                   />
-                )}
-
-                {!filteredPeople.length && (
+                ) : (
                   <p>
                     There are no people matching the current search criteria
                   </p>

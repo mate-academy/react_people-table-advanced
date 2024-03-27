@@ -1,6 +1,8 @@
 import { Link, useParams, useSearchParams } from 'react-router-dom';
 import { Person } from '../../types';
 import classNames from 'classnames';
+import { findPerson } from '../../utils';
+import { GenderType } from '../../types/GenderType';
 
 interface Props {
   person: Person;
@@ -14,15 +16,8 @@ export const PersonInfo: React.FC<Props> = ({ person, people }) => {
   const [searchParams] = useSearchParams();
   const search = searchParams.toString();
 
-  const motherSlug = people.find(
-    ({ name: personName }) => personName === motherName,
-  );
-
-  const fatherSlug = people.find(
-    ({ name: personName }) => personName === fatherName,
-  );
-
-  const female = 'f';
+  const mother = findPerson(people, motherName);
+  const father = findPerson(people, fatherName);
 
   return (
     <tr
@@ -33,7 +28,9 @@ export const PersonInfo: React.FC<Props> = ({ person, people }) => {
     >
       <td>
         <Link
-          className={classNames({ 'has-text-danger': sex === female })}
+          className={classNames({
+            'has-text-danger': sex === GenderType.Female,
+          })}
           to={{
             pathname: `/people/${slug}`,
             search,
@@ -50,15 +47,15 @@ export const PersonInfo: React.FC<Props> = ({ person, people }) => {
       <td>{died}</td>
 
       <td>
-        {motherSlug ? (
+        {mother ? (
           <Link
             className="has-text-danger"
             to={{
-              pathname: `/people/${motherSlug.slug}`,
+              pathname: `/people/${mother.slug}`,
               search,
             }}
           >
-            {motherSlug.name}
+            {mother.name}
           </Link>
         ) : (
           motherName || '-'
@@ -66,14 +63,14 @@ export const PersonInfo: React.FC<Props> = ({ person, people }) => {
       </td>
 
       <td>
-        {fatherSlug ? (
+        {father ? (
           <Link
             to={{
-              pathname: `/people/${fatherSlug.slug}`,
+              pathname: `/people/${father.slug}`,
               search,
             }}
           >
-            {fatherSlug.name}
+            {father.name}
           </Link>
         ) : (
           fatherName || '-'
