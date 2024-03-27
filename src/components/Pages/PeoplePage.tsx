@@ -55,7 +55,7 @@ export const PeoplePage = () => {
             <div className="box table-container">
               {isLoader && <Loader />}
 
-              {isError && !isLoader && (
+              {isError && (
                 <p data-cy="peopleLoadingError" className="has-text-danger">
                   Something went wrong
                 </p>
@@ -63,15 +63,13 @@ export const PeoplePage = () => {
 
               {!isLoader && !isError && !filteredPeople.length && (
                 <p data-cy="noPeopleMessage">
-                  There are no people on the server
+                  There are no people matching the current search criteria
                 </p>
               )}
 
-              {!filteredPeople.length && !isLoader && !isError && (
-                <p>There are no people matching the current search criteria</p>
-              )}
+              {false && <p>There are no people on the server</p>}
 
-              {!isLoader && !!filteredPeople.length && !isError && (
+              {!isLoader && !!sortedPeople.length && !isError && (
                 <PeopleTable people={sortedPeople} />
               )}
             </div>
