@@ -43,7 +43,11 @@ export const PersonLink: React.FC<Props> = ({ person }) => {
       <td>{died}</td>
       <td>
         {hasMother ? (
-          <Link to={`/people/${hasMother.slug}`} className="has-text-danger">
+          <Link to={{
+            pathname: `/people/${hasMother.slug}`,
+            search: searchParams.toString(),
+          }}
+            className="has-text-danger">
             {motherName}
           </Link>
         ) : (
@@ -52,7 +56,12 @@ export const PersonLink: React.FC<Props> = ({ person }) => {
       </td>
       <td>
         {hasFather ? (
-          <Link to={`/people/${hasFather.slug}`}>{fatherName}</Link>
+          <Link to={{
+            pathname: `/people/${hasFather.slug}`,
+            search: searchParams.toString(),
+          }}>
+            {fatherName}
+          </Link>
         ) : (
           fatherName || '-'
         )}
