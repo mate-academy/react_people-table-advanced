@@ -70,7 +70,7 @@ export const PeoplePage = () => {
               {false && <p>There are no people on the server</p>}
 
               {!isLoader && !!sortedPeople.length && !isError && (
-                <PeopleTable people={sortedPeople} />
+                <PeopleTable people={sortedPeople} originPeople={people} />
               )}
             </div>
           </div>

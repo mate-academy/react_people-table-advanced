@@ -6,10 +6,11 @@ import { SearchLink } from './SearchLink';
 
 type Props = {
   people: Person[];
+  originPeople: Person[];
 };
 
 /* eslint-disable jsx-a11y/control-has-associated-label */
-export const PeopleTable: React.FC<Props> = ({ people }) => {
+export const PeopleTable: React.FC<Props> = ({ people, originPeople }) => {
   const [searchParams] = useSearchParams();
   const sort = searchParams.get('sort');
   const order = searchParams.get('order');
@@ -96,7 +97,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
 
       <tbody>
         {people.map(person => (
-          <PersonLink key={person.name} person={person} people={people} />
+          <PersonLink key={person.name} person={person} people={originPeople} />
         ))}
       </tbody>
     </table>

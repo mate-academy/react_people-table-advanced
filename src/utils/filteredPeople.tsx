@@ -10,9 +10,9 @@ export const getFilteredPeople = (people: Person[], filters: Filter) => {
 
     if (
       name &&
-      !person.name.includes(name) &&
-      !person.fatherName?.toLowerCase().includes(name) &&
-      !person.motherName?.toLowerCase().includes(name)
+      !person.name.includes(name.toLowerCase()) &&
+      !person.fatherName?.toLowerCase().includes(name.toLowerCase()) &&
+      !person.motherName?.toLowerCase().includes(name.toLowerCase())
     ) {
       return false;
     }
