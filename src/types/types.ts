@@ -15,3 +15,8 @@ export type Filter = {
   sex: string | null;
   centuries: string[];
 };
+
+export enum Sex {
+  MALE = 'm',
+  FEMALE = 'f',
+}

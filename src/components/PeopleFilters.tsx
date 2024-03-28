@@ -3,12 +3,15 @@ import { useCallback } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { SearchLink } from './SearchLink';
 import { SearchParams, getSearchWith } from '../utils/searchHelper';
+import { Sex } from '../types';
 
 export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const sex = searchParams.get('sex') || '';
   const query = searchParams.get('query') || '';
   const centuries = searchParams.getAll('centuries') || [];
+
+  const centuriesButton = ['16', '17', '18', '19', '20'];
 
   const setSearchWith = useCallback(
     (params: SearchParams) => {
@@ -43,19 +46,19 @@ export const PeopleFilters = () => {
           </SearchLink>
 
           <SearchLink
-            className={cn('', {
-              'is-active': sex === 'm',
+            className={cn({
+              'is-active': sex === Sex.MALE,
             })}
-            params={{ sex: 'm' }}
+            params={{ sex: Sex.MALE }}
           >
             Male
           </SearchLink>
 
           <SearchLink
             className={cn({
-              'is-active': sex === 'f',
+              'is-active': sex === Sex.FEMALE,
             })}
-            params={{ sex: 'f' }}
+            params={{ sex: Sex.FEMALE }}
           >
             Female
           </SearchLink>
@@ -86,7 +89,7 @@ export const PeopleFilters = () => {
             data-cy="CenturyFilter"
           >
             <div className="level-left">
-              {['16', '17', '18', '19', '20'].map(century => (
+              {centuriesButton.map(century => (
                 <SearchLink
                   key={century}
                   className={cn('button mr-1', {
