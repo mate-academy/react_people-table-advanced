@@ -9,7 +9,6 @@ export const PeoplePage = () => {
   const [isLoader, setIsLoader] = useState(false);
   const [isError, setIsError] = useState(false);
   const [people, setPeople] = useState<Person[]>([]);
-  const [filteredPeople, setFilteredPeople] = useState<Person[]>(people);
 
   useEffect(() => {
     setIsLoader(true);
@@ -51,8 +50,6 @@ export const PeoplePage = () => {
               {!!people.length && !isLoader && !isError && (
                 <PeopleTable
                   people={people}
-                  filteredPeople={filteredPeople}
-                  setFilteredPeople={setFilteredPeople}
                 />
               )}
             </div>

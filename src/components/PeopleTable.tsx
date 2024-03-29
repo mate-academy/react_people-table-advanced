@@ -1,28 +1,16 @@
 import { useSearchParams } from 'react-router-dom';
 import cn from 'classnames';
-import {
-  Dispatch,
-  SetStateAction,
-  useCallback,
-  useEffect,
-  useMemo,
-} from 'react';
-import { PersonLink } from './PersonLInk';
+import { useMemo } from 'react';
+import { PersonLink } from './PersonLink';
 import { SearchParams } from '../types/SearchParams';
 import { Person } from '../types';
 import { SearchLink } from './SearchLink';
 
 type Props = {
   people: Person[];
-  filteredPeople: Person[];
-  setFilteredPeople: Dispatch<SetStateAction<Person[]>>;
 };
 
-export const PeopleTable: React.FC<Props> = ({
-  people,
-  filteredPeople,
-  setFilteredPeople,
-}) => {
+export const PeopleTable: React.FC<Props> = ({ people }) => {
   const [searchParams] = useSearchParams();
 
   const sortParam = searchParams.get('sort') || null;
@@ -50,7 +38,7 @@ export const PeopleTable: React.FC<Props> = ({
     return '';
   };
 
-  const filterPeople = useCallback(() => {
+  const filteredPeople = useMemo(() => {
     let filtered = [...people];
 
     if (sortParam) {
@@ -99,12 +87,8 @@ export const PeopleTable: React.FC<Props> = ({
       );
     }
 
-    setFilteredPeople(filtered);
-  }, [people, sex, query, setFilteredPeople, orderParam, sortParam, century]);
-
-  useEffect(() => {
-    filterPeople();
-  }, [filterPeople]);
+    return filtered;
+  }, [people, sex, query, orderParam, sortParam, century]);
 
   const getParams = (param: string): SearchParams => {
     if (sortParam !== param) {

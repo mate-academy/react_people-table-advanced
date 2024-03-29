@@ -15,12 +15,12 @@ export const PersonLink: React.FC<Props> = ({ person, filteredPeople }) => {
   const { slugParam } = useParams();
   const [searchParams] = useSearchParams();
 
-  const hasMother = useMemo(
+  const maybeMother = useMemo(
     () => filteredPeople.find(p => p.name === motherName),
     [filteredPeople, motherName],
   );
 
-  const hasFather = useMemo(
+  const maybeFather = useMemo(
     () => filteredPeople.find(p => p.name === fatherName),
     [filteredPeople, fatherName],
   );
@@ -46,11 +46,11 @@ export const PersonLink: React.FC<Props> = ({ person, filteredPeople }) => {
       <td>{born}</td>
       <td>{died}</td>
       <td>
-        {hasMother ? (
+        {maybeMother ? (
           <Link
-            className={cn({ 'has-text-danger': hasMother.sex === 'f' })}
+            className={cn({ 'has-text-danger': maybeMother.sex === 'f' })}
             to={{
-              pathname: `/people/${hasMother.slug}`,
+              pathname: `/people/${maybeMother.slug}`,
               search: searchParams.toString(),
             }}
           >
@@ -61,10 +61,10 @@ export const PersonLink: React.FC<Props> = ({ person, filteredPeople }) => {
         )}
       </td>
       <td>
-        {hasFather ? (
+        {maybeFather ? (
           <Link
             to={{
-              pathname: `/people/${hasFather.slug}`,
+              pathname: `/people/${maybeFather.slug}`,
               search: searchParams.toString(),
             }}
           >
