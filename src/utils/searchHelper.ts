@@ -1,7 +1,4 @@
-export type SearchParams = {
-  [key: string]: string | string[] | null;
-};
-
+import { SearchParams } from '../types/SearchParams';
 /**
  * This function prepares a correct search string
  * from a given currentParams and paramsToUpdate.
@@ -42,3 +39,5 @@ export function getSearchWith(
   // we return a string to use it inside links
   return newParams.toString();
 }
+
+export type { SearchParams };
