@@ -1,4 +1,5 @@
 import { Link, useParams, useSearchParams } from 'react-router-dom';
+import { Sex } from '../types/enums';
 import cn from 'classnames';
 
 import { useMemo } from 'react';
@@ -33,7 +34,7 @@ export const PersonLink: React.FC<Props> = ({ person, filteredPeople }) => {
     >
       <td>
         <Link
-          className={cn({ 'has-text-danger': sex === 'f' })}
+          className={cn({ 'has-text-danger': sex === Sex.f })}
           to={{
             pathname: `/people/${slug}`,
             search: searchParams.toString(),
@@ -48,7 +49,7 @@ export const PersonLink: React.FC<Props> = ({ person, filteredPeople }) => {
       <td>
         {maybeMother ? (
           <Link
-            className={cn({ 'has-text-danger': maybeMother.sex === 'f' })}
+            className={cn({ 'has-text-danger': maybeMother.sex === Sex.f })}
             to={{
               pathname: `/people/${maybeMother.slug}`,
               search: searchParams.toString(),

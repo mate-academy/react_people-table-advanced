@@ -2,6 +2,7 @@ import cn from 'classnames';
 import { useSearchParams } from 'react-router-dom';
 import { SearchLink } from './SearchLink';
 import { ARRAY_OF_CENTURIES } from '../utils/constants';
+import { Sex } from '../types/enums';
 
 export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -50,8 +51,8 @@ export const PeopleFilters = () => {
         </SearchLink>
 
         <SearchLink
-          params={{ sex: 'f' }}
-          className={cn({ 'is-active': sex === 'f' })}
+          params={{ sex: Sex.f }}
+          className={cn({ 'is-active': sex === Sex.f })}
         >
           Female
         </SearchLink>

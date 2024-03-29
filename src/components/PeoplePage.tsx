@@ -48,9 +48,7 @@ export const PeoplePage = () => {
               )}
 
               {!!people.length && !isLoader && !isError && (
-                <PeopleTable
-                  people={people}
-                />
+                <PeopleTable people={people} />
               )}
             </div>
           </div>

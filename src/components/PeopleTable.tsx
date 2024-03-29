@@ -168,7 +168,6 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
             person={person}
             filteredPeople={filteredPeople}
             key={person.name}
-            data-cy="person"
           />
         ))}
       </tbody>
