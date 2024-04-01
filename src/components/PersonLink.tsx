@@ -1,6 +1,6 @@
 import classNames from 'classnames';
 import React from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams, useSearchParams } from 'react-router-dom';
 import { Person } from '../types';
 import { FilterType } from '../types/FilterType';
 
@@ -10,6 +10,7 @@ type Props = {
 };
 
 export const PersonLink: React.FC<Props> = ({ people, person }) => {
+  const [searchParams] = useSearchParams();
   const { name, sex, born, died, fatherName, motherName } = person;
   const { slug } = useParams();
 
@@ -30,7 +31,10 @@ export const PersonLink: React.FC<Props> = ({ people, person }) => {
     >
       <td>
         <Link
-          to={`../${person.slug}`}
+          to={{
+            pathname: `../${person.slug}`,
+            search: searchParams.toString(),
+          }}
           className={classNames({
             'has-text-danger': sex === FilterType.FEMALE,
           })}
@@ -43,34 +47,36 @@ export const PersonLink: React.FC<Props> = ({ people, person }) => {
       <td>{born}</td>
       <td>{died}</td>
 
-      {!motherName ? (
-        <td>-</td>
-      ) : (
-        <td>
-          {!motherNameAsPerson ? (
-            motherName
-          ) : (
-            <Link
-              to={`../${motherNameAsPerson.slug}`}
-              className="has-text-danger"
-            >
-              {motherName}
-            </Link>
-          )}
-        </td>
-      )}
+      <td>
+        {!motherNameAsPerson ? (
+          motherName || '-'
+        ) : (
+          <Link
+            to={{
+              pathname: `../${motherNameAsPerson.slug}`,
+              search: searchParams.toString(),
+            }}
+            className="has-text-danger"
+          >
+            {motherName}
+          </Link>
+        )}
+      </td>
 
-      {!fatherName ? (
-        <td>-</td>
-      ) : (
-        <td>
-          {!fatherNameAsPerson ? (
-            fatherName
-          ) : (
-            <Link to={`../${fatherNameAsPerson.slug}`}>{fatherName}</Link>
-          )}
-        </td>
-      )}
+      <td>
+        {!fatherNameAsPerson ? (
+          fatherName || '-'
+        ) : (
+          <Link
+            to={{
+              pathname: `../${fatherNameAsPerson.slug}`,
+              search: searchParams.toString(),
+            }}
+          >
+            {fatherName}
+          </Link>
+        )}
+      </td>
     </tr>
   );
 };
