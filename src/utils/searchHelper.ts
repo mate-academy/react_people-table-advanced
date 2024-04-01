@@ -42,3 +42,12 @@ export function getSearchWith(
   // we return a string to use it inside links
   return newParams.toString();
 }
+
+export function createArrayOfSearchParams(
+  searchParams: string[],
+  newSearchValue: string,
+) {
+  return searchParams.includes(newSearchValue)
+    ? searchParams.filter(searchParam => searchParam !== newSearchValue)
+    : [...searchParams, newSearchValue];
+}

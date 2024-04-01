@@ -1,3 +1,10 @@
+import classNames from 'classnames';
+import { NavLink } from 'react-router-dom';
+
+function configureLinkClassNames({ isActive }: { isActive: boolean }) {
+  return classNames('navbar-item', { 'has-background-grey-lighter': isActive });
+}
+
 export const Navbar = () => {
   return (
     <nav
@@ -8,17 +15,13 @@ export const Navbar = () => {
     >
       <div className="container">
         <div className="navbar-brand">
-          <a className="navbar-item" href="#/">
+          <NavLink className={configureLinkClassNames} to="/">
             Home
-          </a>
+          </NavLink>
 
-          <a
-            aria-current="page"
-            className="navbar-item has-background-grey-lighter"
-            href="#/people"
-          >
+          <NavLink className={configureLinkClassNames} to="/people">
             People
-          </a>
+          </NavLink>
         </div>
       </div>
     </nav>
