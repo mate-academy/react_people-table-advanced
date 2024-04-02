@@ -53,12 +53,12 @@ export const PeoplePage = React.memo(() => {
 
               {loading && <Loader />}
 
-              {!loading && !!people.length && (
-                <PeopleTable people={people} />
-              )}
+              {!loading && !!people.length && <PeopleTable people={people} />}
 
               {!loading && !people.length && (
-                <p data-cy="noPeopleMessage">There are no people on the server</p>
+                <p data-cy="noPeopleMessage">
+                  There are no people on the server
+                </p>
               )}
             </div>
           </div>

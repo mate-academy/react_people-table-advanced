@@ -32,7 +32,7 @@ export const PersonLink: React.FC<Props> = ({ person, people }) => {
         <td>
           <Link
             to={{
-              pathname: `../${person.slug}`,
+              pathname: `/people/${person.slug}`,
               search: searchParams.toString(),
             }}
             className={classNames({
@@ -53,7 +53,7 @@ export const PersonLink: React.FC<Props> = ({ person, people }) => {
           ) : (
             <Link
               to={{
-                pathname: `../${motherNameAsPerson.slug}`,
+                pathname: `/people/${motherNameAsPerson?.slug}`,
                 search: searchParams.toString(),
               }}
               className="has-text-danger"
@@ -69,7 +69,7 @@ export const PersonLink: React.FC<Props> = ({ person, people }) => {
           ) : (
             <Link
               to={{
-                pathname: `../${fatherNameAsPerson.slug}`,
+                pathname: `/people/${fatherNameAsPerson?.slug}`,
                 search: searchParams.toString(),
               }}
             >
