@@ -5,7 +5,7 @@ import { NavLink } from 'react-router-dom';
 const getLinkClass = ({ isActive }: { isActive: boolean }) =>
   classNames('navbar-item', { 'has-background-grey-lighter': isActive });
 
-export const Navbar: React.FC = React.memo(() => {
+const Navbar: React.FC = React.memo(() => {
   return (
     <nav
       data-cy="nav"
@@ -15,11 +15,11 @@ export const Navbar: React.FC = React.memo(() => {
     >
       <div className="container">
         <div className="navbar-brand">
-          <NavLink className={getLinkClass({ isActive: false })} to="/">
+          <NavLink className={getLinkClass} to="/">
             Home
           </NavLink>
 
-          <NavLink className={getLinkClass({ isActive: false })} to="/people">
+          <NavLink className={getLinkClass} to="/people">
             People
           </NavLink>
         </div>
@@ -27,3 +27,5 @@ export const Navbar: React.FC = React.memo(() => {
     </nav>
   );
 });
+
+export default Navbar;

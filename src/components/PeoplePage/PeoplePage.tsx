@@ -8,7 +8,7 @@ import { getPreperedPeople } from '../../utils/getPreparedPeople';
 import { PeopleFilters } from '../PeopleFilters';
 import { PeopleTable } from '../PeopleTable';
 
-export const PeoplePage: React.FC = React.memo(() => {
+const PeoplePage: React.FC = React.memo(() => {
   const [peopleFromServer, setPeopleFromServer] = useState<Person[]>([]);
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -67,3 +67,5 @@ export const PeoplePage: React.FC = React.memo(() => {
     </>
   );
 });
+
+export default PeoplePage;
