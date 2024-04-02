@@ -7,7 +7,7 @@ import {
 import { App } from './App';
 import { HomePage } from './components/HomePage';
 import { PageNotFound } from './components/PageNotFound';
-import PeoplePage from './components/PeoplePage/PeoplePage';
+import { PeoplePage } from './components/PeoplePage/PeoplePage';
 
 export const Root = () => {
   return (

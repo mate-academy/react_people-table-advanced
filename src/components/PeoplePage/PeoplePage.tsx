@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
 import { Person } from '../../types/Person';
@@ -8,7 +8,7 @@ import { getPreperedPeople } from '../../utils/getPreparedPeople';
 import { PeopleFilters } from '../PeopleFilters';
 import { PeopleTable } from '../PeopleTable';
 
-const PeoplePage: React.FC = React.memo(() => {
+export const PeoplePage = () => {
   const [peopleFromServer, setPeopleFromServer] = useState<Person[]>([]);
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -66,6 +66,4 @@ const PeoplePage: React.FC = React.memo(() => {
       </div>
     </>
   );
-});
-
-export default PeoplePage;
+};
