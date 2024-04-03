@@ -6,11 +6,13 @@ type Props = {
   person: Person;
 };
 
+const FEMALE_SEX_IDENTIFIER = 'f';
+
 export const PersonLink: React.FC<Props> = ({ person }) => {
   const [searchParams] = useSearchParams();
 
   const { name, sex, slug } = person;
-  const isFemale = sex === 'f';
+  const isFemale = sex === FEMALE_SEX_IDENTIFIER;
 
   return (
     <Link

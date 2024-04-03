@@ -12,6 +12,10 @@ export const PeoplePage = () => {
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(true);
 
+  const isNotLoadingAndPeopleExists = !isLoading && !!people.length;
+  const isLoadingAndNoError = isLoading && !error;
+  const isNotLoadingAndNoError = !isLoading && !error;
+
   useEffect(() => {
     getPeople()
       .then(data => {
@@ -29,7 +33,7 @@ export const PeoplePage = () => {
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
           <div className="column is-7-tablet is-narrow-desktop">
-            {!isLoading && people.length > 1 && <PeopleFilters />}
+            {isNotLoadingAndPeopleExists && <PeopleFilters />}
           </div>
 
           <div className="column">
@@ -40,16 +44,16 @@ export const PeoplePage = () => {
                 </p>
               )}
 
-              {isLoading && !error && <Loader />}
+              {isLoadingAndNoError && <Loader />}
 
-              {!isLoading && !error && (
+              {isNotLoadingAndNoError && (
                 <>
-                  {people.length < 1 ? (
+                  {people.length ? (
+                    <PeopleTable people={people} />
+                  ) : (
                     <p data-cy="noPeopleMessage">
                       There are no people on the server
                     </p>
-                  ) : (
-                    <PeopleTable people={people} />
                   )}
                 </>
               )}

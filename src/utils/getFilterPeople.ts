@@ -1,6 +1,6 @@
 import { Person } from '../types';
 
-export const filterPeople = (
+export const getFilterPeople = (
   people: Person[],
   query: string | null,
   sex: string | null,

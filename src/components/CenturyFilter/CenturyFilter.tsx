@@ -2,14 +2,15 @@ import classNames from 'classnames';
 import { SearchLink } from '../SearchLink';
 import { useSearchParams } from 'react-router-dom';
 
+const CENTURIES = ['16', '17', '18', '19', '20'];
+
 export const CenturyFilter = () => {
   const [searchParams] = useSearchParams();
-  const centuries = ['16', '17', '18', '19', '20'];
   const centuryParams = searchParams.getAll('centuries') || [];
 
   const toggleCentury = (century: string) => {
     if (centuryParams.includes(century)) {
-      return centuryParams.filter(cent => cent !== century);
+      return centuryParams.filter(centuryParam => centuryParam !== century);
     } else {
       return [...centuryParams, century];
     }
@@ -19,7 +20,7 @@ export const CenturyFilter = () => {
     <div className="panel-block">
       <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
         <div className="level-left">
-          {centuries.map(century => (
+          {CENTURIES.map(century => (
             <SearchLink
               key={century}
               params={{ centuries: toggleCentury(century) }}
@@ -36,7 +37,7 @@ export const CenturyFilter = () => {
           <SearchLink
             data-cy="centuryALL"
             className={classNames('button is-success', {
-              'is-outlined': centuryParams.length > 0,
+              'is-outlined': !!centuryParams.length,
             })}
             params={{ centuries: null }}
           >

@@ -2,7 +2,7 @@ import { useSearchParams } from 'react-router-dom';
 
 import { Person } from '../../types';
 import { sortPeopleBy } from '../../utils/sortPeopleBy';
-import { filterPeople } from '../../utils/filterPeople';
+import { getFilterPeople } from '../../utils/getFilterPeople';
 import { useSortParams } from '../../hooks/useSortParams';
 
 import { PersonRow } from '../PersonRow';
@@ -12,12 +12,14 @@ type Props = {
   people: Person[];
 };
 
+const SORT_COLUMNS = ['name', 'sex', 'born', 'died'];
+
 export const PeopleTable: React.FC<Props> = ({ people }) => {
   const { sortParam, orderParam } = useSortParams();
   const [searchParams] = useSearchParams();
 
-  const visiblePeople = filterPeople(
-    [...people],
+  const visiblePeople = getFilterPeople(
+    people,
     searchParams.get('query'),
     searchParams.get('sex'),
     searchParams.getAll('centuries'),
@@ -36,13 +38,9 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
     >
       <thead>
         <tr>
-          <SortColumn column={'name'} />
-
-          <SortColumn column={'sex'} />
-
-          <SortColumn column={'born'} />
-
-          <SortColumn column={'died'} />
+          {SORT_COLUMNS.map(column => (
+            <SortColumn key={column} column={column} />
+          ))}
 
           <th>Mother</th>
 
