@@ -1,8 +1,45 @@
 import { PeopleFilters } from './PeopleFilters';
 import { Loader } from './Loader';
 import { PeopleTable } from './PeopleTable';
+import { useEffect, useState } from 'react';
+import { getPeople } from '../api';
+import { Person } from '../types/Person';
+import { Sort } from '../utils/Sort';
+import { Filter } from '../utils/Filter';
+import { useSearchParams } from 'react-router-dom';
 
 export const PeoplePage = () => {
+  const [people, setPeople] = useState<Person[]>([]);
+  const [errorMessage, setErrorMessage] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [searchParams] = useSearchParams();
+
+  const preparedParents = (parents: Person[]) =>
+    parents.map(parent => ({
+      ...parent,
+      mother: parents.find(({ name }) => name === parent.motherName),
+      father: parents.find(({ name }) => name === parent.fatherName),
+    }));
+
+  useEffect(() => {
+    setErrorMessage(false);
+    setIsLoading(true);
+
+    getPeople()
+      .then(data => setPeople(preparedParents(data)))
+      .catch(error => {
+        setErrorMessage(true);
+        throw error;
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  }, []);
+
+  let visiblePeople = Filter(people, searchParams);
+
+  visiblePeople = Sort(visiblePeople, searchParams);
+
   return (
     <>
       <h1 className="title">People Page</h1>
@@ -15,15 +52,25 @@ export const PeoplePage = () => {
 
           <div className="column">
             <div className="box table-container">
-              <Loader />
+              {isLoading && <Loader />}
 
-              <p data-cy="peopleLoadingError">Something went wrong</p>
+              {errorMessage && (
+                <p data-cy="peopleLoadingError" className="has-text-danger">
+                  Something went wrong
+                </p>
+              )}
 
-              <p data-cy="noPeopleMessage">There are no people on the server</p>
+              {!people.length && !isLoading && (
+                <p data-cy="noPeopleMessage">
+                  There are no people on the server
+                </p>
+              )}
 
               <p>There are no people matching the current search criteria</p>
 
-              <PeopleTable />
+              {!isLoading && !errorMessage && (
+                <PeopleTable people={visiblePeople} />
+              )}
             </div>
           </div>
         </div>
