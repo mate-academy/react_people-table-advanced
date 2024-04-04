@@ -18,6 +18,11 @@ export const PeopleFilters = () => {
     setSearchWith({ query: event.target.value || null });
   }
 
+  const centuriesParams = (cent: number) =>
+    centuries.includes(cent.toString())
+      ? centuries.filter(c => cent.toString() !== c)
+      : [...centuries, cent.toString()];
+
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
@@ -73,9 +78,7 @@ export const PeopleFilters = () => {
               <SearchLink
                 key={cent}
                 params={{
-                  centuries: centuries.includes(cent.toString())
-                    ? centuries.filter(c => cent.toString() !== c)
-                    : [...centuries, cent.toString()],
+                  centuries: centuriesParams(cent),
                 }}
                 data-cy="century"
                 className={classNames('button mr-1', {

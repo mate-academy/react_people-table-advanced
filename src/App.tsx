@@ -3,9 +3,8 @@ import { PeoplePage } from './components/PeoplePage';
 import { Navbar } from './components/Navbar';
 
 import './App.scss';
-const HomePage = () => <h1 className="title">Home Page</h1>;
-
-const NotFoundPage = () => <h1 className="title">Page not found</h1>;
+import { HomePage } from './components/HomePage';
+import { NotFoundPage } from './components/NotFoundPage';
 
 export const App = () => {
   return (

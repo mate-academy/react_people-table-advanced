@@ -1,48 +1,20 @@
-import { Link, useParams, useLocation } from 'react-router-dom';
+import { useParams, useLocation } from 'react-router-dom';
 
 import classNames from 'classnames';
 
 import { Person } from '../types';
 import { SearchLink } from './SearchLink';
+import { PersonLink } from './PersonLink';
 
 /* eslint-disable jsx-a11y/control-has-associated-label */
 type Props = {
   people: Person[];
 };
 
-type PersonLinkProps = {
-  person?: Person;
-  name?: string | null;
-};
-
 export const PeopleTable: React.FC<Props> = ({ people }) => {
   const { peopleSlug } = useParams();
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
-
-  const PersonLink = ({ person, name }: PersonLinkProps) => {
-    const slug = person?.slug;
-    const linkName = person?.name || name || '-';
-    const parentsName = people.find(p => p.name === linkName);
-    const isWoman = person?.sex === 'f' || parentsName?.sex === 'f';
-
-    if (slug || parentsName) {
-      return (
-        <td>
-          <Link
-            to={`/people/${slug || parentsName?.slug}`}
-            className={classNames({
-              'has-text-danger': isWoman,
-            })}
-          >
-            {linkName}
-          </Link>
-        </td>
-      );
-    }
-
-    return <td>{linkName}</td>;
-  };
 
   const getSortLinkProps = (sortKey: string | null) => {
     const isActiveSort = searchParams.get('sort') === sortKey;
@@ -120,8 +92,8 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
             <td>{person.sex}</td>
             <td>{person.born}</td>
             <td>{person.died}</td>
-            <PersonLink name={person.motherName} />
-            <PersonLink name={person.fatherName} />
+            <PersonLink name={person.motherName} people={people} />
+            <PersonLink name={person.fatherName} people={people} />
           </tr>
         ))}
       </tbody>

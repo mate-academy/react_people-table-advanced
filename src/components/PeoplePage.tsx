@@ -40,7 +40,7 @@ export const PeoplePage = () => {
   };
 
   const filteredPeople = people.filter(person => {
-    const personName = [person.name, person.motherName, person.motherName].some(
+    const personName = [person.name, person.motherName, person.fatherName].some(
       name => name && name.toLowerCase().includes(query.toLowerCase()),
     );
 
@@ -56,18 +56,24 @@ export const PeoplePage = () => {
   const sortedPeople = filteredPeople.sort((a, b) => {
     const sortOrder = searchParams.get('order') === 'desc' ? -1 : 1;
 
-    if (searchParams.get('sort') === 'name') {
-      return sortOrder * a.name.localeCompare(b.name);
-    } else if (searchParams.get('sort') === 'sex') {
-      return (
-        sortOrder * (a.sex.localeCompare(b.sex) || a.name.localeCompare(b.name))
-      );
-    } else if (searchParams.get('sort') === 'born') {
-      return sortOrder * (a.born - b.born);
-    } else if (searchParams.get('sort') === 'died') {
-      return sortOrder * (a.died - b.died);
-    } else {
-      return 0;
+    switch (searchParams.get('sort')) {
+      case 'name':
+        return sortOrder * a.name.localeCompare(b.name);
+
+      case 'sex':
+        return (
+          sortOrder *
+          (a.sex.localeCompare(b.sex) || a.name.localeCompare(b.name))
+        );
+
+      case 'born':
+        return sortOrder * (a.born - b.born);
+
+      case 'died':
+        return sortOrder * (a.died - b.died);
+
+      default:
+        return 0;
     }
   });
 
@@ -95,7 +101,7 @@ export const PeoplePage = () => {
                 </p>
               )}
 
-              {!sortedPeople.length && (
+              {!sortedPeople.length && !loading && !peopleLoadingError && (
                 <p>There are no people matching the current search criteria</p>
               )}
 
