@@ -1,4 +1,21 @@
-export const PeopleFilters = () => {
+import React from 'react';
+import { useSearchParams } from 'react-router-dom';
+
+export const PeopleFilters: React.FC = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const query = searchParams.get('query') || '';
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (!event.target.value) {
+      searchParams.delete('query');
+    } else {
+      searchParams.set('query', event.target.value);
+    }
+
+    setSearchParams(searchParams);
+  };
+
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
@@ -22,6 +39,8 @@ export const PeopleFilters = () => {
             type="search"
             className="input"
             placeholder="Search"
+            value={query}
+            onChange={handleChange}
           />
 
           <span className="icon is-left">

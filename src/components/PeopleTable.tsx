@@ -1,5 +1,43 @@
+import React from 'react';
+// import { useParams } from 'react-router-dom';
+import { Person } from '../types';
+import { Link, useParams, useSearchParams } from 'react-router-dom';
+import classNames from 'classnames';
+import PersonLink from './PersonLink';
+import { SearchLink } from './SearchLink';
+
+type Props = {
+  sortedPeople: Person[];
+  getSortIcon: (sorted: string) => string;
+  peoples: Person[];
+};
+
 /* eslint-disable jsx-a11y/control-has-associated-label */
-export const PeopleTable = () => {
+export const PeopleTable: React.FC<Props> = ({
+  sortedPeople,
+  getSortIcon,
+  peoples,
+}) => {
+  const [searchParams] = useSearchParams();
+  const { peopleId } = useParams();
+
+  const sort = searchParams.get('sort');
+  const reversed = searchParams.get('reversed');
+
+  const clikButtonsSort = (sorted: string) => {
+    if (sort === sorted && reversed) {
+      return { sort: null, reversed: null };
+    } else if (sort === sorted) {
+      return { sort: sorted, reversed: 'true' };
+    } else {
+      return { sort: sorted, reversed: null };
+    }
+  };
+
+  // useEffect(() => {
+  //   setSortedPeopleState(sortedPeople);
+  // }, [sort, reversed, peoples, setSortedPeopleState]);
+
   return (
     <table
       data-cy="peopleTable"
@@ -10,44 +48,44 @@ export const PeopleTable = () => {
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Name
-              <a href="#/people?sort=name">
+              <SearchLink params={clikButtonsSort('name')}>
                 <span className="icon">
-                  <i className="fas fa-sort" />
+                  <i className={getSortIcon('name')} />
                 </span>
-              </a>
+              </SearchLink>
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Sex
-              <a href="#/people?sort=sex">
+              <SearchLink params={clikButtonsSort('sex')}>
                 <span className="icon">
-                  <i className="fas fa-sort" />
+                  <i className={getSortIcon('sex')} />
                 </span>
-              </a>
+              </SearchLink>
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Born
-              <a href="#/people?sort=born&amp;order=desc">
+              <SearchLink params={clikButtonsSort('born')}>
                 <span className="icon">
-                  <i className="fas fa-sort-up" />
+                  <i className={getSortIcon('born')} />
                 </span>
-              </a>
+              </SearchLink>
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Died
-              <a href="#/people?sort=died">
+              <SearchLink params={clikButtonsSort('died')}>
                 <span className="icon">
-                  <i className="fas fa-sort" />
+                  <i className={getSortIcon('died')} />
                 </span>
-              </a>
+              </SearchLink>
             </span>
           </th>
 
@@ -57,22 +95,65 @@ export const PeopleTable = () => {
       </thead>
 
       <tbody>
-        <tr data-cy="person">
-          <td>
-            <a href="#/people/pieter-haverbeke-1602">Pieter Haverbeke</a>
-          </td>
-          <td>m</td>
-          <td>1602</td>
-          <td>1642</td>
-          <td>-</td>
-          <td>
-            <a href="#/people/lieven-van-haverbeke-1570">
-              Lieven van Haverbeke
-            </a>
-          </td>
-        </tr>
+        {sortedPeople.map(person => (
+          <tr
+            key={person.slug}
+            data-cy="person"
+            className={classNames({
+              'has-background-warning': peopleId === person.slug,
+            })}
+          >
+            <td>
+              <Link
+                to={`/people/${person.slug}`}
+                className={classNames({
+                  'has-text-danger': person.sex === 'f',
+                })}
+              >
+                {person.name}
+              </Link>
+            </td>
+            <td>{person.sex}</td>
+            <td>{person.born}</td>
+            <td>{person.died}</td>
+            <td>
+              {person.motherName ? (
+                <>
+                  {peoples.find(mother => mother.name === person.motherName) ? (
+                    <PersonLink
+                      person={peoples.find(
+                        mother => mother.name === person.motherName,
+                      )}
+                    />
+                  ) : (
+                    person.motherName
+                  )}
+                </>
+              ) : (
+                '-'
+              )}
+            </td>
+            <td>
+              {person.fatherName ? (
+                <>
+                  {peoples.find(father => father.name === person.fatherName) ? (
+                    <PersonLink
+                      person={peoples.find(
+                        father => father.name === person.fatherName,
+                      )}
+                    />
+                  ) : (
+                    person.fatherName
+                  )}
+                </>
+              ) : (
+                '-'
+              )}
+            </td>
+          </tr>
+        ))}
 
-        <tr data-cy="person">
+        {/* <tr data-cy="person">
           <td>
             <a className="has-text-danger" href="#/people/anna-van-hecke-1607">
               Anna van Hecke
@@ -638,7 +719,7 @@ export const PeopleTable = () => {
           <td>
             <a href="#/people/carolus-haverbeke-1832">Carolus Haverbeke</a>
           </td>
-        </tr>
+        </tr> */}
       </tbody>
     </table>
   );
