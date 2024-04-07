@@ -49,7 +49,7 @@ export const PeopleFilters: React.FC<Props> = ({ toggleCentury }) => {
 
       <p className="panel-tabs" data-cy="SexFilter">
         <SearchLink
-          className={getSortIcon('all')}
+          className={classNames(getSortIcon('all'), 'all')}
           params={handlerClickButton('all')}
         >
           All

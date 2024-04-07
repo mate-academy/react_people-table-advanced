@@ -1,6 +1,6 @@
 import React from 'react';
 import { Person } from '../types';
-import { Link, useParams, useSearchParams } from 'react-router-dom';
+import { useParams, useSearchParams } from 'react-router-dom';
 import classNames from 'classnames';
 import PersonLink from './PersonLink';
 import { SearchLink } from './SearchLink';
@@ -26,11 +26,13 @@ export const PeopleTable: React.FC<Props> = ({
   const clikButtonsSort = (sorted: string) => {
     if (sort === sorted && reversed) {
       return { sort: null, reversed: null };
-    } else if (sort === sorted) {
-      return { sort: sorted, reversed: 'true' };
-    } else {
-      return { sort: sorted, reversed: null };
     }
+
+    if (sort === sorted) {
+      return { sort: sorted, reversed: 'true' };
+    }
+
+    return { sort: sorted, reversed: null };
   };
 
   return (
@@ -90,63 +92,57 @@ export const PeopleTable: React.FC<Props> = ({
       </thead>
 
       <tbody>
-        {sortedPeople.map(person => (
-          <tr
-            key={person.slug}
-            data-cy="person"
-            className={classNames({
-              'has-background-warning': peopleId === person.slug,
-            })}
-          >
-            <td>
-              <Link
-                to={`/people/${person.slug}`}
-                className={classNames({
-                  'has-text-danger': person.sex === 'f',
-                })}
-              >
-                {person.name}
-              </Link>
-            </td>
-            <td>{person.sex}</td>
-            <td>{person.born}</td>
-            <td>{person.died}</td>
-            <td>
-              {person.motherName ? (
-                <>
-                  {peoples.find(mother => mother.name === person.motherName) ? (
-                    <PersonLink
-                      person={peoples.find(
-                        mother => mother.name === person.motherName,
-                      )}
-                    />
-                  ) : (
-                    person.motherName
-                  )}
-                </>
-              ) : (
-                '-'
-              )}
-            </td>
-            <td>
-              {person.fatherName ? (
-                <>
-                  {peoples.find(father => father.name === person.fatherName) ? (
-                    <PersonLink
-                      person={peoples.find(
-                        father => father.name === person.fatherName,
-                      )}
-                    />
-                  ) : (
-                    person.fatherName
-                  )}
-                </>
-              ) : (
-                '-'
-              )}
-            </td>
-          </tr>
-        ))}
+        {sortedPeople.map(person => {
+          const motherFind = peoples.find(
+            mother => mother.name === person.motherName,
+          );
+          const fatherFind = peoples.find(
+            father => father.name === person.fatherName,
+          );
+
+          return (
+            <tr
+              key={person.slug}
+              data-cy="person"
+              className={classNames({
+                'has-background-warning': peopleId === person.slug,
+              })}
+            >
+              <td>
+                <PersonLink person={person} />
+              </td>
+              <td>{person.sex}</td>
+              <td>{person.born}</td>
+              <td>{person.died}</td>
+              <td>
+                {person.motherName ? (
+                  <>
+                    {motherFind ? (
+                      <PersonLink person={motherFind} />
+                    ) : (
+                      person.motherName
+                    )}
+                  </>
+                ) : (
+                  '-'
+                )}
+              </td>
+              <td>
+                {person.fatherName ? (
+                  <>
+                    {fatherFind ? (
+                      <PersonLink person={fatherFind} />
+                    ) : (
+                      person.fatherName
+                    )}
+                  </>
+                ) : (
+                  '-'
+                )}
+              </td>
+            </tr>
+          );
+        })}
       </tbody>
     </table>
   );

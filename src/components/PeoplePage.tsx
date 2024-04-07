@@ -41,16 +41,12 @@ export const PeoplePage = () => {
     if (sortedPeople && sort) {
       switch (sort) {
         case 'name':
-          sortedPeople.sort((a, b) => a.name.localeCompare(b.name));
-          break;
         case 'sex':
-          sortedPeople.sort((a, b) => a.sex.localeCompare(b.sex));
+          sortedPeople.sort((a, b) => a[sort].localeCompare(b[sort]));
           break;
         case 'born':
-          sortedPeople.sort((a, b) => a.born - b.born);
-          break;
         case 'died':
-          sortedPeople.sort((a, b) => a.died - b.died);
+          sortedPeople.sort((a, b) => a[sort] - b[sort]);
           break;
       }
     }
@@ -78,17 +74,8 @@ export const PeoplePage = () => {
 
   let sortedPeople = useMemo(() => getSortedPeople(), [getSortedPeople]);
 
-  if (sex) {
-    switch (sex) {
-      case 'f':
-        sortedPeople = sortedPeople.filter(person => person.sex === 'f');
-        break;
-      case 'm':
-        sortedPeople = sortedPeople.filter(person => person.sex === 'm');
-        break;
-      default:
-        break;
-    }
+  if (sex && sex !== 'all') {
+    sortedPeople = sortedPeople.filter(person => person.sex === sex);
   }
 
   const toggleCentury = (centuryProp: string) => {
@@ -132,7 +119,7 @@ export const PeoplePage = () => {
                   There are no people on the server
                 </p>
               )}
-              {sortedPeople.length === 0 && (
+              {sortedPeople.length === 0 && !loader && (
                 <p>There are no people matching the current search criteria</p>
               )}
 
