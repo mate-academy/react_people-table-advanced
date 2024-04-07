@@ -1,10 +1,21 @@
 import React from 'react';
 import { useSearchParams } from 'react-router-dom';
+import { SearchLink } from './SearchLink';
+import classNames from 'classnames';
+import { Person } from '../types';
 
-export const PeopleFilters: React.FC = () => {
+type Props = {
+  toggleCentury: (centuryProp: string) => Person[];
+};
+
+export const PeopleFilters: React.FC<Props> = () => {
   const [searchParams, setSearchParams] = useSearchParams();
 
+  const currentCenturies = ['16', '17', '18', '19', '20'];
+  const century = searchParams.getAll('centuries') || [];
+
   const query = searchParams.get('query') || '';
+  const sex = searchParams.get('sex') || '';
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (!event.target.value) {
@@ -16,20 +27,45 @@ export const PeopleFilters: React.FC = () => {
     setSearchParams(searchParams);
   };
 
+  const handlerClickButton = (sorted: string) => {
+    if (sex === sorted) {
+      return { sex: sorted };
+    }
+
+    return { sex: sorted };
+  };
+
+  const getSortIcon = (sorted: string) => {
+    if (sex === sorted) {
+      return 'is-active';
+    }
+
+    return '';
+  };
+
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        <a className="is-active" href="#/people">
+        <SearchLink
+          className={getSortIcon('all')}
+          params={handlerClickButton('all')}
+        >
           All
-        </a>
-        <a className="" href="#/people?sex=m">
+        </SearchLink>
+        <SearchLink
+          className={getSortIcon('m')}
+          params={handlerClickButton('m')}
+        >
           Male
-        </a>
-        <a className="" href="#/people?sex=f">
+        </SearchLink>
+        <SearchLink
+          className={getSortIcon('f')}
+          params={handlerClickButton('f')}
+        >
           Female
-        </a>
+        </SearchLink>
       </p>
 
       <div className="panel-block">
@@ -52,7 +88,20 @@ export const PeopleFilters: React.FC = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            <a
+            {currentCenturies.map(currentCentury => (
+              <SearchLink
+                data-cy="century"
+                key={currentCentury}
+                className={classNames('button mr-1', {
+                  'is-info': century.includes(currentCentury),
+                })}
+                params={{ centuries: [currentCentury] }}
+              >
+                {currentCentury}
+              </SearchLink>
+            ))}
+
+            {/* <a
               data-cy="century"
               className="button mr-1"
               href="#/people?centuries=16"
@@ -90,23 +139,29 @@ export const PeopleFilters: React.FC = () => {
               href="#/people?centuries=20"
             >
               20
-            </a>
+            </a> */}
           </div>
 
           <div className="level-right ml-4">
-            <a
+            <SearchLink
               data-cy="centuryALL"
-              className="button is-success is-outlined"
-              href="#/people"
+              className={classNames('button is-success', {
+                'is-outlined': !!century.length,
+              })}
+              params={{ centuries: [] }}
             >
               All
-            </a>
+            </SearchLink>
           </div>
         </div>
       </div>
 
       <div className="panel-block">
-        <a className="button is-link is-outlined is-fullwidth" href="#/people">
+        <a
+          className="button is-link is-outlined is-fullwidth"
+          href="#/people"
+          onClick={() => handlerClickButton('all')}
+        >
           Reset all filters
         </a>
       </div>

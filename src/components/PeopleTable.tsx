@@ -34,10 +34,6 @@ export const PeopleTable: React.FC<Props> = ({
     }
   };
 
-  // useEffect(() => {
-  //   setSortedPeopleState(sortedPeople);
-  // }, [sort, reversed, peoples, setSortedPeopleState]);
-
   return (
     <table
       data-cy="peopleTable"

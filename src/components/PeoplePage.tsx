@@ -15,6 +15,8 @@ export const PeoplePage = () => {
   const sort = searchParams.get('sort');
   const reversed = searchParams.get('reversed');
   const query = searchParams.get('query');
+  const sex = searchParams.get('sex');
+  const century = searchParams.getAll('centuries') || [];
 
   useEffect(() => {
     setLoader(true);
@@ -50,16 +52,16 @@ export const PeoplePage = () => {
           sortedPeople.sort((a, b) => a.died - b.died);
           break;
       }
+    }
 
-      if (reversed) {
-        sortedPeople.reverse();
-      }
+    if (reversed) {
+      sortedPeople.reverse();
+    }
 
-      if (query) {
-        sortedPeople = sortedPeople.filter(person =>
-          person.name.toLowerCase().includes(query.trim().toLowerCase()),
-        );
-      }
+    if (query) {
+      sortedPeople = sortedPeople.filter(person =>
+        person.name.toLowerCase().includes(query.trim().toLowerCase()),
+      );
     }
 
     return sortedPeople;
@@ -73,7 +75,31 @@ export const PeoplePage = () => {
     return 'fas fa-sort';
   };
 
-  const sortedPeople = useMemo(() => getSortedPeople(), [getSortedPeople]);
+  let sortedPeople = useMemo(() => getSortedPeople(), [getSortedPeople]);
+
+  // console.log(sex, 'dfdf');
+  if (sex) {
+    switch (sex) {
+      case 'f':
+        sortedPeople = sortedPeople.filter(person => person.sex === 'f');
+        break;
+      case 'm':
+        sortedPeople = sortedPeople.filter(person => person.sex === 'm');
+        break;
+      default:
+        break;
+    }
+  }
+
+  function toggleCentury(centuryProp: string) {
+    const newCenturies = century.includes(centuryProp)
+      ? century.filter(c => c !== centuryProp)
+      : [...century, centuryProp];
+
+    return sortedPeople.filter(person =>
+      person.century.some((c: string) => newCenturies.includes(c)),
+    );
+  }
 
   return (
     <>
@@ -82,7 +108,9 @@ export const PeoplePage = () => {
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
           <div className="column is-7-tablet is-narrow-desktop">
-            {!loader && !error && <PeopleFilters />}
+            {!loader && !error && (
+              <PeopleFilters toggleCentury={toggleCentury} />
+            )}
           </div>
 
           <div className="column">

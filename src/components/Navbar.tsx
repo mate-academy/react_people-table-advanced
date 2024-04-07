@@ -21,7 +21,7 @@ export const Navbar = () => {
             Home
           </NavLink>
 
-          <NavLink aria-current="page" className={getLinkClass} to="people">
+          <NavLink aria-current="page" className={getLinkClass} to="/people">
             People
           </NavLink>
         </div>
