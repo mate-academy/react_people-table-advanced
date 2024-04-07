@@ -1,5 +1,4 @@
 import React from 'react';
-// import { useParams } from 'react-router-dom';
 import { Person } from '../types';
 import { Link, useParams, useSearchParams } from 'react-router-dom';
 import classNames from 'classnames';
