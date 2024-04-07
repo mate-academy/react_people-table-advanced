@@ -2,13 +2,13 @@ import React from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { SearchLink } from './SearchLink';
 import classNames from 'classnames';
-import { Person } from '../types';
+import { SearchParams } from '../utils/searchHelper';
 
 type Props = {
-  toggleCentury: (centuryProp: string) => Person[];
+  toggleCentury: (centuryProp: string) => SearchParams;
 };
 
-export const PeopleFilters: React.FC<Props> = () => {
+export const PeopleFilters: React.FC<Props> = ({ toggleCentury }) => {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const currentCenturies = ['16', '17', '18', '19', '20'];
@@ -95,51 +95,11 @@ export const PeopleFilters: React.FC<Props> = () => {
                 className={classNames('button mr-1', {
                   'is-info': century.includes(currentCentury),
                 })}
-                params={{ centuries: [currentCentury] }}
+                params={toggleCentury(currentCentury)}
               >
                 {currentCentury}
               </SearchLink>
             ))}
-
-            {/* <a
-              data-cy="century"
-              className="button mr-1"
-              href="#/people?centuries=16"
-            >
-              16
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=17"
-            >
-              17
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=18"
-            >
-              18
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=19"
-            >
-              19
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1"
-              href="#/people?centuries=20"
-            >
-              20
-            </a> */}
           </div>
 
           <div className="level-right ml-4">

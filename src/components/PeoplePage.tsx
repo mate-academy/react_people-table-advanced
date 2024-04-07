@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/indent */
 import { PeopleFilters } from './PeopleFilters';
 import { Loader } from './Loader';
 import { PeopleTable } from './PeopleTable';
@@ -77,7 +78,6 @@ export const PeoplePage = () => {
 
   let sortedPeople = useMemo(() => getSortedPeople(), [getSortedPeople]);
 
-  // console.log(sex, 'dfdf');
   if (sex) {
     switch (sex) {
       case 'f':
@@ -91,14 +91,22 @@ export const PeoplePage = () => {
     }
   }
 
-  function toggleCentury(centuryProp: string) {
+  const toggleCentury = (centuryProp: string) => {
     const newCenturies = century.includes(centuryProp)
       ? century.filter(c => c !== centuryProp)
       : [...century, centuryProp];
 
-    return sortedPeople.filter(person =>
-      person.century.some((c: string) => newCenturies.includes(c)),
-    );
+    return {
+      centuries: newCenturies || null,
+    };
+  };
+
+  if (century.length) {
+    sortedPeople = sortedPeople.filter(p => {
+      const cent = Math.floor(p.born / 100 + 1).toString();
+
+      return century.includes(cent);
+    });
   }
 
   return (
@@ -124,15 +132,22 @@ export const PeoplePage = () => {
                   There are no people on the server
                 </p>
               )}
-
-              {/* <p>There are no people matching the current search criteria</p> */}
-              {peoples.length > 0 && !error && !loader && (
-                <PeopleTable
-                  sortedPeople={sortedPeople}
-                  getSortIcon={getSortIcon}
-                  peoples={peoples}
-                />
+              {sortedPeople.length === 0 && (
+                <p>There are no people matching the current search criteria</p>
               )}
+
+              {!loader &&
+                !error &&
+                peoples.length > 0 &&
+                sortedPeople.length > 0 && (
+                  <div className="box table-container">
+                    <PeopleTable
+                      sortedPeople={sortedPeople}
+                      getSortIcon={getSortIcon}
+                      peoples={peoples}
+                    />
+                  </div>
+                )}
             </div>
           </div>
         </div>
