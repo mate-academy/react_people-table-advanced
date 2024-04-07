@@ -11,8 +11,8 @@ export const filterPeople = (
     sex?: string;
     centuries?: string[];
   } = {
-    query: searchParams.get('query'),
-    sex: searchParams.get('sex'),
+    query: searchParams.get('query') ?? '',
+    sex: searchParams.get('sex') ?? '',
     centuries: searchParams.getAll('centuries'),
   };
 
@@ -20,12 +20,16 @@ export const filterPeople = (
     if (value) {
       switch (key) {
         case 'query':
-          filteredPeople = filteredPeople.filter(
-            person =>
-              person.name.toLowerCase().includes(value.toLowerCase()) ||
-              person.fatherName?.toLowerCase().includes(value.toLowerCase()) ||
-              person.motherName?.toLowerCase().includes(value.toLowerCase()),
-          );
+          if (typeof value === 'string') {
+            filteredPeople = filteredPeople.filter(
+              person =>
+                person.name.toLowerCase().includes(value.toLowerCase()) ||
+                person.fatherName
+                  ?.toLowerCase()
+                  .includes(value.toLowerCase()) ||
+                person.motherName?.toLowerCase().includes(value.toLowerCase()),
+            );
+          }
 
           break;
 
