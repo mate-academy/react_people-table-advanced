@@ -8,7 +8,7 @@ import { getSortedPeople } from '../utils/getSortedPeople';
 import classNames from 'classnames';
 
 interface Props {
-  people: Person[] | [];
+  people: Person[];
   isLoading: boolean;
   hasError: boolean;
 }
