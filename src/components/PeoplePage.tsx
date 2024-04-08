@@ -72,7 +72,7 @@ export const PeoplePage = () => {
     return 'fas fa-sort';
   };
 
-  let sortedPeople = useMemo(() => getSortedPeople(), [getSortedPeople]);
+  const sortedPeople = useMemo(() => getSortedPeople(), [getSortedPeople]);
 
   const toggleCentury = (centuryProp: string) => {
     const newCenturies = century.includes(centuryProp)
@@ -89,15 +89,15 @@ export const PeoplePage = () => {
     sexSort: string,
     centurySort: string | string[],
   ) => {
-    const filteredPeople = sortedPeople;
+    let filteredPeople = sortedPeople;
 
     if (sex && sex !== 'all') {
-      sortedPeople = sortedPeople.filter(person => person.sex === sexSort);
+      filteredPeople = filteredPeople.filter(person => person.sex === sexSort);
     }
 
     if (century.length) {
       if (century.length) {
-        sortedPeople = sortedPeople.filter(p => {
+        filteredPeople = filteredPeople.filter(p => {
           const cent = Math.floor(p.born / 100 + 1).toString();
 
           return centurySort.includes(cent);
