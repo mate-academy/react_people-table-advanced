@@ -37,7 +37,7 @@ export const PeopleFilters: React.FC<Props> = ({ toggleCentury }) => {
   };
 
   const getSortIcon = (sorted: string) => {
-    if (sex === sorted) {
+    if (sex === sorted || (!sex && sorted === Sex.All)) {
       return 'is-active';
     }
 
