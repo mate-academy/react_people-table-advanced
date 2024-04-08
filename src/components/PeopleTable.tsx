@@ -6,19 +6,19 @@ import PersonLink from './PersonLink';
 import { SearchLink } from './SearchLink';
 
 type Props = {
-  sortedPeople: Person[];
+  filteredPeople: Person[];
   getSortIcon: (sorted: string) => string;
-  peoples: Person[];
+  people: Person[];
 };
 
 /* eslint-disable jsx-a11y/control-has-associated-label */
 export const PeopleTable: React.FC<Props> = ({
-  sortedPeople,
+  filteredPeople,
   getSortIcon,
-  peoples,
+  people,
 }) => {
   const [searchParams] = useSearchParams();
-  const { peopleId } = useParams();
+  const { personId } = useParams();
 
   const sort = searchParams.get('sort');
   const reversed = searchParams.get('reversed');
@@ -92,20 +92,16 @@ export const PeopleTable: React.FC<Props> = ({
       </thead>
 
       <tbody>
-        {sortedPeople.map(person => {
-          const motherFind = peoples.find(
-            mother => mother.name === person.motherName,
-          );
-          const fatherFind = peoples.find(
-            father => father.name === person.fatherName,
-          );
+        {filteredPeople.map(person => {
+          const mother = people.find(m => m.name === person.motherName);
+          const father = people.find(f => f.name === person.fatherName);
 
           return (
             <tr
               key={person.slug}
               data-cy="person"
               className={classNames({
-                'has-background-warning': peopleId === person.slug,
+                'has-background-warning': personId === person.slug,
               })}
             >
               <td>
@@ -115,29 +111,17 @@ export const PeopleTable: React.FC<Props> = ({
               <td>{person.born}</td>
               <td>{person.died}</td>
               <td>
-                {person.motherName ? (
-                  <>
-                    {motherFind ? (
-                      <PersonLink person={motherFind} />
-                    ) : (
-                      person.motherName
-                    )}
-                  </>
+                {mother ? (
+                  <PersonLink person={mother} />
                 ) : (
-                  '-'
+                  person.motherName || '-'
                 )}
               </td>
               <td>
-                {person.fatherName ? (
-                  <>
-                    {fatherFind ? (
-                      <PersonLink person={fatherFind} />
-                    ) : (
-                      person.fatherName
-                    )}
-                  </>
+                {father ? (
+                  <PersonLink person={father} />
                 ) : (
-                  '-'
+                  person.fatherName || '-'
                 )}
               </td>
             </tr>

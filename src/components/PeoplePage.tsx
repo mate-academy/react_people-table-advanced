@@ -8,7 +8,7 @@ import { Person } from '../types';
 import { useSearchParams } from 'react-router-dom';
 
 export const PeoplePage = () => {
-  const [peoples, setPeoples] = useState<Person[]>([]);
+  const [people, setPeople] = useState<Person[]>([]);
   const [loader, setLoader] = useState(false);
   const [error, setError] = useState(false);
   const [searchParams] = useSearchParams();
@@ -24,7 +24,7 @@ export const PeoplePage = () => {
     getPeople()
       .then(data => {
         if (data) {
-          setPeoples(data);
+          setPeople(data);
         }
       })
       .catch(() => {
@@ -36,7 +36,7 @@ export const PeoplePage = () => {
   }, []);
 
   const getSortedPeople = useCallback(() => {
-    let sortedPeople = [...peoples];
+    let sortedPeople = [...people];
 
     if (sortedPeople && sort) {
       switch (sort) {
@@ -62,7 +62,7 @@ export const PeoplePage = () => {
     }
 
     return sortedPeople;
-  }, [peoples, sort, reversed, query]);
+  }, [people, sort, reversed, query]);
 
   const getSortIcon = (sorted: string) => {
     if (sort === sorted) {
@@ -74,10 +74,6 @@ export const PeoplePage = () => {
 
   let sortedPeople = useMemo(() => getSortedPeople(), [getSortedPeople]);
 
-  if (sex && sex !== 'all') {
-    sortedPeople = sortedPeople.filter(person => person.sex === sex);
-  }
-
   const toggleCentury = (centuryProp: string) => {
     const newCenturies = century.includes(centuryProp)
       ? century.filter(c => c !== centuryProp)
@@ -88,13 +84,31 @@ export const PeoplePage = () => {
     };
   };
 
-  if (century.length) {
-    sortedPeople = sortedPeople.filter(p => {
-      const cent = Math.floor(p.born / 100 + 1).toString();
+  const getFilteredPeople = (
+    _sorted: Person[],
+    sexSort: string,
+    centurySort: string | string[],
+  ) => {
+    const filteredPeople = sortedPeople;
 
-      return century.includes(cent);
-    });
-  }
+    if (sex && sex !== 'all') {
+      sortedPeople = sortedPeople.filter(person => person.sex === sexSort);
+    }
+
+    if (century.length) {
+      if (century.length) {
+        sortedPeople = sortedPeople.filter(p => {
+          const cent = Math.floor(p.born / 100 + 1).toString();
+
+          return centurySort.includes(cent);
+        });
+      }
+    }
+
+    return filteredPeople;
+  };
+
+  const filteredPeople = getFilteredPeople(sortedPeople, sex || 'all', century);
 
   return (
     <>
@@ -114,24 +128,24 @@ export const PeoplePage = () => {
               {error && (
                 <p data-cy="peopleLoadingError">Something went wrong</p>
               )}
-              {!peoples.length && !loader && (
+              {!people.length && !loader && (
                 <p data-cy="noPeopleMessage">
                   There are no people on the server
                 </p>
               )}
-              {sortedPeople.length === 0 && !loader && (
+              {filteredPeople.length === 0 && !loader && (
                 <p>There are no people matching the current search criteria</p>
               )}
 
               {!loader &&
                 !error &&
-                peoples.length > 0 &&
-                sortedPeople.length > 0 && (
+                people.length > 0 &&
+                filteredPeople.length > 0 && (
                   <div className="box table-container">
                     <PeopleTable
-                      sortedPeople={sortedPeople}
+                      filteredPeople={filteredPeople}
                       getSortIcon={getSortIcon}
-                      peoples={peoples}
+                      people={people}
                     />
                   </div>
                 )}
