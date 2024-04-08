@@ -6,6 +6,7 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { getPeople } from '../api';
 import { Person } from '../types';
 import { useSearchParams } from 'react-router-dom';
+import { Sex } from '../types/sex';
 
 export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);
@@ -91,7 +92,7 @@ export const PeoplePage = () => {
   ) => {
     let filteredPeople = sortedPeople;
 
-    if (sex && sex !== 'all') {
+    if (sex && sex !== Sex.All) {
       filteredPeople = filteredPeople.filter(person => person.sex === sexSort);
     }
 
@@ -108,7 +109,11 @@ export const PeoplePage = () => {
     return filteredPeople;
   };
 
-  const filteredPeople = getFilteredPeople(sortedPeople, sex || 'all', century);
+  const filteredPeople = getFilteredPeople(
+    sortedPeople,
+    sex || Sex.All,
+    century,
+  );
 
   return (
     <>
@@ -133,14 +138,14 @@ export const PeoplePage = () => {
                   There are no people on the server
                 </p>
               )}
-              {filteredPeople.length === 0 && !loader && (
+              {!filteredPeople.length && !loader && (
                 <p>There are no people matching the current search criteria</p>
               )}
 
               {!loader &&
                 !error &&
-                people.length > 0 &&
-                filteredPeople.length > 0 && (
+                !!people.length &&
+                !!filteredPeople.length && (
                   <div className="box table-container">
                     <PeopleTable
                       filteredPeople={filteredPeople}

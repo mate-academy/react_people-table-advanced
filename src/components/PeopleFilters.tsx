@@ -3,6 +3,7 @@ import { useSearchParams } from 'react-router-dom';
 import { SearchLink } from './SearchLink';
 import classNames from 'classnames';
 import { SearchParams } from '../utils/searchHelper';
+import { Sex } from '../types/sex';
 
 type Props = {
   toggleCentury: (centuryProp: string) => SearchParams;
@@ -49,20 +50,20 @@ export const PeopleFilters: React.FC<Props> = ({ toggleCentury }) => {
 
       <p className="panel-tabs" data-cy="SexFilter">
         <SearchLink
-          className={classNames(getSortIcon('all'), 'all')}
-          params={handlerClickButton('all')}
+          className={classNames(getSortIcon(Sex.All), Sex.All)}
+          params={handlerClickButton(Sex.All)}
         >
           All
         </SearchLink>
         <SearchLink
-          className={getSortIcon('m')}
-          params={handlerClickButton('m')}
+          className={getSortIcon(Sex.Male)}
+          params={handlerClickButton(Sex.Male)}
         >
           Male
         </SearchLink>
         <SearchLink
-          className={getSortIcon('f')}
-          params={handlerClickButton('f')}
+          className={getSortIcon(Sex.Female)}
+          params={handlerClickButton(Sex.Female)}
         >
           Female
         </SearchLink>
@@ -120,7 +121,7 @@ export const PeopleFilters: React.FC<Props> = ({ toggleCentury }) => {
         <a
           className="button is-link is-outlined is-fullwidth"
           href="#/people"
-          onClick={() => handlerClickButton('all')}
+          onClick={() => handlerClickButton(Sex.All)}
         >
           Reset all filters
         </a>
