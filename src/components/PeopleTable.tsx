@@ -5,6 +5,7 @@ import { useLocation, useSearchParams } from 'react-router-dom';
 import { filterPeople } from '../utils/getFilteredPeople';
 import { SearchLink } from './SearchLink';
 import { getSortedPeople } from '../utils/getSortedPeople';
+import classNames from 'classnames';
 
 interface Props {
   people: Person[] | [];
@@ -52,7 +53,7 @@ export const PeopleTable: React.FC<Props> = ({
     <div className="column">
       <div className="box table-container">
         {isLoading && <Loader />}
-        {hasError && (
+        {hasError && !isLoading && (
           <p data-cy="peopleLoadingError" className="has-text-danger">
             Something went wrong
           </p>
@@ -78,7 +79,13 @@ export const PeopleTable: React.FC<Props> = ({
                     Name
                     <SearchLink params={sortToggle('name')}>
                       <span className="icon">
-                        <i className="fas fa-sort" />
+                        <i
+                          className={classNames('fas', {
+                            'fa-sort': sort !== 'name',
+                            'fa-sort-up': sort === 'name' && !order,
+                            'fa-sort-down': sort === 'name' && order === 'desc',
+                          })}
+                        />
                       </span>
                     </SearchLink>
                   </span>
@@ -89,7 +96,13 @@ export const PeopleTable: React.FC<Props> = ({
                     Sex
                     <SearchLink params={sortToggle('sex')}>
                       <span className="icon">
-                        <i className="fas fa-sort" />
+                        <i
+                          className={classNames('fas', {
+                            'fa-sort': sort !== 'sex',
+                            'fa-sort-up': sort === 'sex' && !order,
+                            'fa-sort-down': sort === 'sex' && order === 'desc',
+                          })}
+                        />
                       </span>
                     </SearchLink>
                   </span>
@@ -100,7 +113,13 @@ export const PeopleTable: React.FC<Props> = ({
                     Born
                     <SearchLink params={sortToggle('born')}>
                       <span className="icon">
-                        <i className="fas fa-sort" />
+                        <i
+                          className={classNames('fas', {
+                            'fa-sort': sort !== 'born',
+                            'fa-sort-up': sort === 'born' && !order,
+                            'fa-sort-down': sort === 'born' && order === 'desc',
+                          })}
+                        />
                       </span>
                     </SearchLink>
                   </span>
@@ -111,7 +130,13 @@ export const PeopleTable: React.FC<Props> = ({
                     Died
                     <SearchLink params={sortToggle('died')}>
                       <span className="icon">
-                        <i className="fas fa-sort" />
+                        <i
+                          className={classNames('fas', {
+                            'fa-sort': sort !== 'died',
+                            'fa-sort-up': sort === 'died' && !order,
+                            'fa-sort-down': sort === 'died' && order === 'desc',
+                          })}
+                        />
                       </span>
                     </SearchLink>
                   </span>
