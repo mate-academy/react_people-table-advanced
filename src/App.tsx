@@ -13,15 +13,7 @@ export const App = () => {
         <div className="container">
           <Routes>
             <Route path="/" element={<h1 className="title">Home Page</h1>} />
-            <Route
-              path="/people"
-              element={
-                <>
-                  <h1 className="title">People Page</h1>
-                  <PeoplePage />
-                </>
-              }
-            >
+            <Route path="/people" element={<PeoplePage />}>
               <Route path=":personSlug" element={<PeoplePage />} />
             </Route>
             <Route path="/home" element={<Navigate to="/" replace />} />

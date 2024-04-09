@@ -1,6 +1,6 @@
 import { useSearchParams } from 'react-router-dom';
-import { SearchLink } from '../SearchLink';
 import cn from 'classnames';
+import { SearchLink } from '../SearchLink';
 
 const sortTypes = ['name', 'sex', 'born', 'died'];
 
