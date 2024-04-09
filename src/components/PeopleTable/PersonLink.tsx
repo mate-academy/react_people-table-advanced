@@ -1,4 +1,4 @@
-import { Link, useParams } from 'react-router-dom';
+import { Link, useLocation, useParams } from 'react-router-dom';
 import { Person } from '../../types';
 
 type Props = {
@@ -20,6 +20,14 @@ export const PersonLink: React.FC<Props> = ({ person }) => {
     father,
   } = person;
 
+  const location = useLocation();
+
+  const addQueryToUrl = (url: string) => {
+    const currentUrl = new URLSearchParams(location.search);
+
+    return `${url}${currentUrl ? '?' + currentUrl.toString() : ''}${location.hash}`;
+  };
+
   return (
     <tr
       className={`some-class ${slug === personSlug ? 'has-background-warning' : ''}`}
@@ -27,7 +35,7 @@ export const PersonLink: React.FC<Props> = ({ person }) => {
     >
       <td>
         <Link
-          to={`/people/${slug}`}
+          to={addQueryToUrl(`/people/${slug}`)}
           className={`${sex === 'f' ? 'has-text-danger' : ''}`}
         >
           {name}
@@ -39,7 +47,10 @@ export const PersonLink: React.FC<Props> = ({ person }) => {
       <td>{died}</td>
       <td>
         {mother ? (
-          <Link to={`/people/${mother.slug}`} className="has-text-danger">
+          <Link
+            to={addQueryToUrl(`/people/${mother.slug}`)}
+            className="has-text-danger"
+          >
             {motherName}
           </Link>
         ) : (
@@ -48,7 +59,7 @@ export const PersonLink: React.FC<Props> = ({ person }) => {
       </td>
       <td>
         {father ? (
-          <Link to={`/people/${father.slug}`}>{fatherName}</Link>
+          <Link to={addQueryToUrl(`/people/${father.slug}`)}>{fatherName}</Link>
         ) : (
           fatherName || '-'
         )}
