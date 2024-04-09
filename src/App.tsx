@@ -1,8 +1,7 @@
-import { PeoplePage } from './components/PeoplePage';
-
-import './App.scss';
 import { Navigate, Route, Routes } from 'react-router-dom';
 import { Layout } from './Layout';
+import { PeoplePage } from './components/PeoplePage';
+import './App.scss';
 
 export const App = () => {
   return (
