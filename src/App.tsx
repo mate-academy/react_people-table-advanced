@@ -6,10 +6,10 @@ import './App.scss';
 export const App = () => {
   return (
     <Routes>
-      <Route element={<Layout />}>
-        <Route path="/" element={<h1 className="title">Home Page</h1>} />
-        <Route path="/people" element={<PeoplePage />}>
-          <Route path=":personSlug" element={<PeoplePage />} />
+      <Route path="/" element={<Layout />}>
+        <Route index element={<h1 className="title">Home Page</h1>} />
+        <Route path="/people">
+          <Route path=":personSlug?" element={<PeoplePage />} />
         </Route>
         <Route path="/home" element={<Navigate to="/" replace />} />
         <Route path="*" element={<h1 className="title">Page not found</h1>} />
