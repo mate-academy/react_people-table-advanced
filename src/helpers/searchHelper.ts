@@ -1,6 +1,4 @@
-export type SearchParams = {
-  [key: string]: string | string[] | null;
-};
+import { SearchParams } from '../types';
 
 /**
  * This function prepares a correct search string
