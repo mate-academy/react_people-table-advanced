@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { Person } from '../types';
 import { useSearchParams } from 'react-router-dom';
 import { Loader } from './Loader';
+import { getPeople } from '../api';
 
 function getExtendedPersonList(data: Person[]): Person[] {
   return data.map(person => {
@@ -103,22 +104,11 @@ export const PeoplePage = () => {
   );
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch(
-          'https://mate-academy.github.io/react_people-table/api/people.json',
-        );
-        const jsonData = await response.json();
-
-        setData(getExtendedPersonList(jsonData));
-      } catch (error) {
-        setHasError(true);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchData();
+    setIsLoading(true);
+    getPeople()
+      .then(response => setData(getExtendedPersonList(response)))
+      .catch(() => setHasError(true))
+      .finally(() => setIsLoading(false));
   }, []);
 
   return (
@@ -134,16 +124,24 @@ export const PeoplePage = () => {
             <div className="box table-container">
               {isLoading ? (
                 <Loader></Loader>
-              ) : hasError ? (
-                <p data-cy="peopleLoadingError" className="has-text-danger">
-                  Something went wrong
-                </p>
-              ) : !data.length ? (
-                <p data-cy="noPeopleMessage">
-                  There are no people on the server
-                </p>
               ) : (
-                <PeopleTable data={visiblePersonList} />
+                <>
+                  {hasError && (
+                    <p data-cy="peopleLoadingError" className="has-text-danger">
+                      Something went wrong
+                    </p>
+                  )}
+
+                  {!data.length && !hasError && (
+                    <p data-cy="noPeopleMessage">
+                      There are no people on the server
+                    </p>
+                  )}
+
+                  {!!data.length && !hasError && (
+                    <PeopleTable data={visiblePersonList} />
+                  )}
+                </>
               )}
             </div>
           </div>
