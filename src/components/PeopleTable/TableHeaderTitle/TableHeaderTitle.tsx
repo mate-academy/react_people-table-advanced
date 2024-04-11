@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import cn from 'classnames';
 
 import { useSortParams } from '../../../hooks/useSortParams';
 import { TableHeader } from '../../../types/TableHeader';
@@ -20,6 +21,8 @@ const TableHeaderInfo: React.FC<Props> = ({ title }) => {
     }
   }, [title]);
 
+  const isSortVisible = sortParam === title.toLowerCase();
+
   return (
     <th>
       <span className="is-flex is-flex-wrap-nowrap">
@@ -30,7 +33,13 @@ const TableHeaderInfo: React.FC<Props> = ({ title }) => {
             params={setSortParams(title.toLowerCase(), sortParam, orderParam)}
           >
             <span className="icon">
-              <i className="fas fa-sort" />
+              <i
+                className={cn('fas', {
+                  'fa-sort': !isSortVisible,
+                  'fa-sort-up': isSortVisible && !orderParam,
+                  'fa-sort-down': isSortVisible && orderParam,
+                })}
+              />
             </span>
           </SearchLink>
         )}

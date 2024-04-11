@@ -9,17 +9,25 @@ export const getVisiblePeople = (
   orderParam: string,
 ) => {
   let peopleCopy = [...people];
+  const lowerCaseQuery = query?.toLowerCase();
+
+  const isIncluded = (value: string | null) => {
+    if (value && lowerCaseQuery) {
+      return value.toLowerCase().includes((lowerCaseQuery));
+    }
+    return false;
+  };
 
   if (sex) {
     peopleCopy = peopleCopy.filter(person => person.sex === sex);
   }
 
-  if (query) {
+  if (lowerCaseQuery) {
     peopleCopy = peopleCopy.filter(person => {
       return (
-        person.name.toLowerCase().includes(query) ||
-        person.motherName?.toLowerCase().includes(query) ||
-        person.fatherName?.toLowerCase().includes(query)
+        isIncluded(person.name) ||
+        isIncluded(person.motherName) ||
+        isIncluded(person.fatherName)
       );
     });
   }
