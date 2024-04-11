@@ -1,10 +1,8 @@
 import { FC } from 'react';
-import { Link, useLocation } from 'react-router-dom';
 import { CenturyFilter, NameFilter, SexFilter } from './';
+import { SearchLink } from '../SearchLink';
 
 export const PeopleFilters: FC = () => {
-  const location = useLocation();
-
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
@@ -13,12 +11,12 @@ export const PeopleFilters: FC = () => {
       <CenturyFilter />
 
       <div className="panel-block">
-        <Link
+        <SearchLink
           className="button is-link is-outlined is-fullwidth"
-          to={location.pathname}
+          params={{ centuries: null, sex: null, query: null }}
         >
           Reset all filters
-        </Link>
+        </SearchLink>
       </div>
     </nav>
   );
