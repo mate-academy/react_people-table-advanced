@@ -50,10 +50,8 @@ export const PeoplePage = () => {
 
       switch (sort) {
         case 'name':
-          res = p1.name.localeCompare(p2.name);
-          break;
         case 'sex':
-          res = p1.sex.localeCompare(p2.sex);
+          res = p1[sort].localeCompare(p2[sort]);
           break;
 
         case 'born':
