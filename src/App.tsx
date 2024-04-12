@@ -1,20 +1,45 @@
-import { PeoplePage } from './components/PeoplePage';
+import './App.scss';
+import { Outlet } from 'react-router-dom';
 import { Navbar } from './components/Navbar';
 
-import './App.scss';
+import { createContext, useState } from 'react';
+import { TableContextType } from './types/TableContextType';
+import { Person } from './types/Person';
+
+export const TableContext = createContext<TableContextType>({
+  people: [],
+  setPeople: () => {},
+  isLoading: false,
+  setIsLoading: () => {},
+  isError: false,
+  setIsError: () => {},
+});
 
 export const App = () => {
-  return (
-    <div data-cy="app">
-      <Navbar />
+  const [people, setPeople] = useState<Person[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isError, setIsError] = useState(false);
 
-      <div className="section">
-        <div className="container">
-          <h1 className="title">Home Page</h1>
-          <h1 className="title">Page not found</h1>
-          <PeoplePage />
+  return (
+    <TableContext.Provider
+      value={{
+        people,
+        setPeople,
+        isLoading,
+        setIsLoading,
+        isError,
+        setIsError,
+      }}
+    >
+      <div data-cy="app">
+        <Navbar />
+
+        <div className="section">
+          <div className="container">
+            <Outlet />
+          </div>
         </div>
       </div>
-    </div>
+    </TableContext.Provider>
   );
 };
