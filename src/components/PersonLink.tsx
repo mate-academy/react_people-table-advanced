@@ -1,6 +1,7 @@
 import { Link, useParams, useSearchParams } from 'react-router-dom';
 import { Person } from '../types';
 import classNames from 'classnames';
+import { NO_PARENT_LABEL } from '../utils/constants';
 
 type Props = {
   person: Person;
@@ -10,7 +11,6 @@ export const PersonLink: React.FC<Props> = ({ person }) => {
   const [searchParams] = useSearchParams();
 
   const { slug } = useParams();
-  const noParent = '-';
 
   return (
     <tr
@@ -43,7 +43,7 @@ export const PersonLink: React.FC<Props> = ({ person }) => {
             {person.motherName}
           </Link>
         ) : (
-          person.motherName || noParent
+          person.motherName || NO_PARENT_LABEL
         )}
       </td>
       <td>
@@ -57,7 +57,7 @@ export const PersonLink: React.FC<Props> = ({ person }) => {
             {person.fatherName}
           </Link>
         ) : (
-          person.fatherName || noParent
+          person.fatherName || NO_PARENT_LABEL
         )}
       </td>
     </tr>

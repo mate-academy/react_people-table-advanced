@@ -10,6 +10,10 @@ export const TableHeader = () => {
   const sortTypes = ['Name', 'Sex', 'Born', 'Died'];
 
   const handleOrderSort = (sortType: string) => {
+    if (sort !== sortType) {
+      return { sort: sortType, order: null };
+    }
+
     if (order === 'desc') {
       return { sort: null, order: null };
     } else {
@@ -20,7 +24,7 @@ export const TableHeader = () => {
   return (
     <tr>
       {sortTypes.map(type => (
-        <th key={sortTypes.indexOf(type)}>
+        <th key={type}>
           <span className="is-flex is-flex-wrap-nowrap">
             {type}
             <SearchLink params={handleOrderSort(type.toLowerCase())}>

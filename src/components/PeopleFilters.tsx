@@ -8,7 +8,7 @@ type Props = {
   setPeople: React.Dispatch<React.SetStateAction<Person[]>>;
 };
 
-const allCenturies = '16, 17, 18, 19, 20';
+const allCenturies = ['16', '17', '18', '19', '20'];
 
 export const PeopleFilters: React.FC<Props> = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -75,7 +75,7 @@ export const PeopleFilters: React.FC<Props> = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            {allCenturies.split(', ').map(century => (
+            {allCenturies.map(century => (
               <SearchLink
                 key={century}
                 data-cy="century"

@@ -27,16 +27,7 @@ export const getPreparedPeople = (
   });
 
   if (sex) {
-    preparedPeople = preparedPeople.filter(person => {
-      switch (sex) {
-        case 'm':
-          return person.sex === 'm';
-        case 'f':
-          return person.sex === 'f';
-        default:
-          return true;
-      }
-    });
+    preparedPeople = preparedPeople.filter(person => person.sex === sex);
   }
 
   if (query) {
@@ -61,17 +52,13 @@ export const getPreparedPeople = (
     preparedPeople = preparedPeople.sort((a, b) => {
       switch (sort) {
         case 'name':
-          return order
-            ? b.name.localeCompare(a.name)
-            : a.name.localeCompare(b.name);
         case 'sex':
           return order
-            ? b.sex.localeCompare(a.sex)
-            : a.sex.localeCompare(b.sex);
+            ? b[sort].localeCompare(a[sort])
+            : a[sort].localeCompare(b[sort]);
         case 'born':
-          return order ? +b.born - +a.born : +a.born - +b.born;
         case 'died':
-          return order ? +b.died - +a.died : +a.died - +b.died;
+          return order ? +b[sort] - +a[sort] : +a[sort] - +b[sort];
         default:
           return 0;
       }
