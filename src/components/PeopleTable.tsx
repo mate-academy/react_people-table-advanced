@@ -8,10 +8,12 @@ type Props = {
   people: Person[];
 };
 
-const NAME = 'name';
-const SEX = 'sex';
-const BORN = 'born';
-const DIED = 'died';
+enum SortBy {
+  NAME = 'name',
+  SEX = 'sex',
+  BORN = 'born',
+  DIED = 'died',
+}
 
 export const PeopleTable: React.FC<Props> = ({ people }) => {
   const { slug } = useParams();
@@ -50,13 +52,13 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Name
-              <SearchLink params={sortToggle(NAME)}>
+              <SearchLink params={sortToggle(SortBy.NAME)}>
                 <span className="icon">
                   <i
                     className={classNames('fas', {
-                      'fa-sort': sort !== NAME,
-                      'fa-sort-up': sort === NAME && !order,
-                      'fa-sort-down': sort === NAME && order,
+                      'fa-sort': sort !== SortBy.NAME,
+                      'fa-sort-up': sort === SortBy.NAME && !order,
+                      'fa-sort-down': sort === SortBy.NAME && order,
                     })}
                   />
                 </span>
@@ -67,13 +69,13 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Sex
-              <SearchLink params={sortToggle(SEX)}>
+              <SearchLink params={sortToggle(SortBy.SEX)}>
                 <span className="icon">
                   <i
                     className={classNames('fas', {
-                      'fa-sort': sort !== SEX,
-                      'fa-sort-up': sort === SEX && !order,
-                      'fa-sort-down': sort === SEX && order,
+                      'fa-sort': sort !== SortBy.SEX,
+                      'fa-sort-up': sort === SortBy.SEX && !order,
+                      'fa-sort-down': sort === SortBy.SEX && order,
                     })}
                   />
                 </span>
@@ -84,13 +86,13 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Born
-              <SearchLink params={sortToggle(BORN)}>
+              <SearchLink params={sortToggle(SortBy.BORN)}>
                 <span className="icon">
                   <i
                     className={classNames('fas', {
-                      'fa-sort': sort !== BORN,
-                      'fa-sort-up': sort === BORN && !order,
-                      'fa-sort-down': sort === BORN && order,
+                      'fa-sort': sort !== SortBy.BORN,
+                      'fa-sort-up': sort === SortBy.BORN && !order,
+                      'fa-sort-down': sort === SortBy.BORN && order,
                     })}
                   />
                 </span>
@@ -101,13 +103,13 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Died
-              <SearchLink params={sortToggle(DIED)}>
+              <SearchLink params={sortToggle(SortBy.DIED)}>
                 <span className="icon">
                   <i
                     className={classNames('fas', {
-                      'fa-sort': sort !== DIED,
-                      'fa-sort-up': sort === DIED && !order,
-                      'fa-sort-down': sort === DIED && order,
+                      'fa-sort': sort !== SortBy.DIED,
+                      'fa-sort-up': sort === SortBy.DIED && !order,
+                      'fa-sort-down': sort === SortBy.DIED && order,
                     })}
                   />
                 </span>

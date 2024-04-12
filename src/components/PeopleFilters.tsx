@@ -9,7 +9,7 @@ export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const query = searchParams.get('query') || '';
   const sex = searchParams.get('sex') || '';
-  const centuries = searchParams.getAll('century');
+  const centuries = searchParams.getAll('century' || []);
 
   function handleQueryChange(event: React.ChangeEvent<HTMLInputElement>) {
     setSearchParams(
@@ -81,11 +81,11 @@ export const PeopleFilters = () => {
             {centuriesArr.map(century => (
               <SearchLink
                 data-cy="century"
-                className={classNames('button', 'mr-1', {
+                key={century}
+                className={classNames('button mr-1', {
                   'is-info': centuries.includes(century),
                 })}
                 params={toggleCentury(century)}
-                key={century}
               >
                 {century}
               </SearchLink>
