@@ -1,52 +1,23 @@
-import classNames from 'classnames';
+import React from 'react';
 import { Person } from '../types';
-import { PersonTableRow } from './PersonTableRow';
+import { PersonLink } from './PersonLink';
 import { SearchLink } from './SearchLink';
-import { useSearchParams } from 'react-router-dom';
+import { SearchParams } from '../utils/searchHelper';
 
 interface Props {
-  people: Person[];
+  preparePeopleList: Person[];
+  toggleByParams: (param: string) => SearchParams;
+  getClassParams: (
+    param: string,
+  ) => 'fas fa-sort-up' | 'fas fa-sort-down' | 'fas fa-sort';
 }
 
-type ConfigureNewParamsReturnType =
-  | { sort: string; order: null }
-  | { order: string }
-  | { order: null; sort: null };
-
-const configureIcon = (isActive: boolean, isOrderDesc: boolean) =>
-  classNames('fas', {
-    'fa-sort': !isActive,
-    'fa-sort-down': isActive && isOrderDesc,
-    'fa-sort-up': isActive && !isOrderDesc,
-  });
-
-const configureNewParams = (
-  targetSortedBy: string,
-  isOrderDesc: boolean,
-  selectedSortedBy: null | string = '',
-): ConfigureNewParamsReturnType => {
-  if (selectedSortedBy !== targetSortedBy) {
-    return { sort: targetSortedBy, order: null };
-  }
-
-  if (!isOrderDesc) {
-    return { order: 'desc' };
-  }
-
-  return { order: null, sort: null };
-};
-
-export const PeopleTable: React.FC<Props> = ({ people }) => {
-  const [searchParams] = useSearchParams();
-  const sortedBy = searchParams.get('sort');
-
-  const isOrderDesc = searchParams.get('order') === 'desc';
-  const preparedPeople = people.map(person => ({
-    ...person,
-    mother: people.find(personItem => personItem.name === person.motherName),
-    father: people.find(personItem => personItem.name === person.fatherName),
-  }));
-
+/* eslint-disable jsx-a11y/control-has-associated-label */
+export const PeopleTable: React.FC<Props> = ({
+  preparePeopleList,
+  toggleByParams,
+  getClassParams,
+}) => {
   return (
     <table
       data-cy="peopleTable"
@@ -57,13 +28,9 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Name
-              <SearchLink
-                params={configureNewParams('name', isOrderDesc, sortedBy)}
-              >
+              <SearchLink params={toggleByParams('name')}>
                 <span className="icon">
-                  <i
-                    className={configureIcon(sortedBy === 'name', isOrderDesc)}
-                  />
+                  <i className={getClassParams('name')} />
                 </span>
               </SearchLink>
             </span>
@@ -72,13 +39,9 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Sex
-              <SearchLink
-                params={configureNewParams('sex', isOrderDesc, sortedBy)}
-              >
+              <SearchLink params={toggleByParams('sex')}>
                 <span className="icon">
-                  <i
-                    className={configureIcon(sortedBy === 'sex', isOrderDesc)}
-                  />
+                  <i className={getClassParams('sex')} />
                 </span>
               </SearchLink>
             </span>
@@ -87,13 +50,9 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Born
-              <SearchLink
-                params={configureNewParams('born', isOrderDesc, sortedBy)}
-              >
+              <SearchLink params={toggleByParams('born')}>
                 <span className="icon">
-                  <i
-                    className={configureIcon(sortedBy === 'born', isOrderDesc)}
-                  />
+                  <i className={getClassParams('born')} />
                 </span>
               </SearchLink>
             </span>
@@ -102,13 +61,9 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Died
-              <SearchLink
-                params={configureNewParams('died', isOrderDesc, sortedBy)}
-              >
+              <SearchLink params={toggleByParams('died')}>
                 <span className="icon">
-                  <i
-                    className={configureIcon(sortedBy === 'died', isOrderDesc)}
-                  />
+                  <i className={getClassParams('died')} />
                 </span>
               </SearchLink>
             </span>
@@ -120,8 +75,12 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
       </thead>
 
       <tbody>
-        {preparedPeople.map(person => (
-          <PersonTableRow key={person.slug} person={person} />
+        {preparePeopleList.map(person => (
+          <PersonLink
+            people={preparePeopleList}
+            person={person}
+            key={person.slug}
+          />
         ))}
       </tbody>
     </table>

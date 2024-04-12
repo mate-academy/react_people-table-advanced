@@ -1,23 +1,75 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
 import classNames from 'classnames';
 import { Person } from '../types';
+import { Link, useParams, useSearchParams } from 'react-router-dom';
 
-const FEMALE = 'f';
+interface Props {
+  people: Person[];
+  person: Person;
+}
 
-type Props = {
-  person: Pick<Person, 'name' | 'sex' | 'slug'>;
+const emptyField = '-';
+
+const findPersonByName = (name: string | null, peopleList: Person[]) => {
+  return peopleList.find(person => person.name === name);
 };
 
-export const PersonLink: React.FC<Props> = ({ person }) => {
-  const female = person.sex === FEMALE;
+export const PersonLink: React.FC<Props> = ({ person, people }) => {
+  const [searchParams] = useSearchParams();
+  const { slug: slugValue } = useParams();
+  const { name, sex, born, died, fatherName, motherName, slug } = person;
+
+  const fatherSlug = findPersonByName(fatherName, people);
+  const matherSlug = findPersonByName(motherName, people);
 
   return (
-    <Link
-      to={`/people/${person.slug}`}
-      className={classNames({ 'has-text-danger': female })}
+    <tr
+      data-cy="person"
+      className={classNames({
+        'has-background-warning': slug === slugValue,
+      })}
     >
-      {person.name}
-    </Link>
+      <td>
+        <Link
+          className={classNames({ 'has-text-danger': sex === 'f' })}
+          to={{ pathname: `../${slug}`, search: searchParams.toString() }}
+        >
+          {name}
+        </Link>
+      </td>
+      <td>{sex}</td>
+      <td>{born}</td>
+      <td>{died}</td>
+      <td>
+        {matherSlug ? (
+          <Link
+            className={classNames({
+              'has-text-danger': matherSlug.sex === 'f',
+            })}
+            to={{
+              pathname: `../${matherSlug?.slug}`,
+              search: searchParams.toString(),
+            }}
+          >
+            {motherName}
+          </Link>
+        ) : (
+          motherName || emptyField
+        )}
+      </td>
+      <td>
+        {fatherSlug ? (
+          <Link
+            to={{
+              pathname: `../${fatherSlug?.slug}`,
+              search: searchParams.toString(),
+            }}
+          >
+            {fatherName}
+          </Link>
+        ) : (
+          fatherName || emptyField
+        )}
+      </td>
+    </tr>
   );
 };

@@ -1,50 +1,30 @@
 import classNames from 'classnames';
+import { useSearchParams } from 'react-router-dom';
+import { SearchParams, getSearchWith } from '../utils/searchHelper';
 import { SearchLink } from './SearchLink';
-import { Link, useSearchParams } from 'react-router-dom';
-import { getSearchWith } from '../utils/searchHelper';
 
-type FilterSearchParams = {
-  centuries: ('16' | '17' | '18' | '19' | '20')[] | null;
-  sex: 'f' | 'm' | null;
-  query: string | null;
-};
-
-const defaultFilterSearchParams: FilterSearchParams = {
-  centuries: null,
-  query: null,
-  sex: null,
-};
-
-const availableCenturies: FilterSearchParams['centuries'] = [
-  '16',
-  '17',
-  '18',
-  '19',
-  '20',
-];
-
-export function createArrayOfSearchParams(
-  searchParams: string[],
-  newSearchValue: string,
-) {
-  return searchParams.includes(newSearchValue)
-    ? searchParams.filter(searchParam => searchParam !== newSearchValue)
-    : [...searchParams, newSearchValue];
-}
+const centuriesButtons = ['16', '17', '18', '19', '20'];
 
 export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
+  const query = searchParams.get('query') || '';
+  const centuries = searchParams.getAll('centuries') || [];
+  const sex = searchParams.get('sex') || '';
 
-  const sex = (searchParams.get('sex') as FilterSearchParams['sex']) || '';
-  const query =
-    (searchParams.get('query') as FilterSearchParams['query']) || '';
-  const centuries =
-    (searchParams.getAll('centuries') as FilterSearchParams['centuries']) || [];
+  const setSearchWith = (params: SearchParams) => {
+    const search = getSearchWith(searchParams, params);
+
+    setSearchParams(search);
+  };
 
   const handleQueryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newValue = e.target.value || null;
+    setSearchWith({ query: e.target.value || null });
+  };
 
-    setSearchParams(getSearchWith(searchParams, { query: newValue }));
+  const handleToggleCenturies = (ch: string) => {
+    return centuries.includes(ch)
+      ? centuries.filter(num => num !== ch)
+      : [...centuries, ch];
   };
 
   return (
@@ -53,22 +33,20 @@ export const PeopleFilters = () => {
 
       <p className="panel-tabs" data-cy="SexFilter">
         <SearchLink
+          className={classNames({ 'is-active': sex === '' })}
           params={{ sex: null }}
-          className={classNames({ 'is-active': !sex })}
         >
           All
         </SearchLink>
-
         <SearchLink
-          params={{ sex: 'm' }}
           className={classNames({ 'is-active': sex === 'm' })}
+          params={{ sex: 'm' }}
         >
           Male
         </SearchLink>
-
         <SearchLink
-          params={{ sex: 'f' }}
           className={classNames({ 'is-active': sex === 'f' })}
+          params={{ sex: 'f' }}
         >
           Female
         </SearchLink>
@@ -94,18 +72,16 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            {availableCenturies.map(century => (
+            {centuriesButtons.map(num => (
               <SearchLink
-                key={century}
+                key={num}
+                params={{ centuries: handleToggleCenturies(num) }}
                 data-cy="century"
                 className={classNames('button', 'mr-1', {
-                  'is-info': centuries.includes(century),
+                  'is-info': centuries.includes(num),
                 })}
-                params={{
-                  centuries: createArrayOfSearchParams(centuries, century),
-                }}
               >
-                {century}
+                {num}
               </SearchLink>
             ))}
           </div>
@@ -114,11 +90,9 @@ export const PeopleFilters = () => {
             <SearchLink
               data-cy="centuryALL"
               className={classNames('button', 'is-success', {
-                'is-outlined': centuries.length > 0,
+                'is-outlined': centuries.length,
               })}
-              params={{
-                centuries: [],
-              }}
+              params={{ centuries: [] }}
             >
               All
             </SearchLink>
@@ -127,15 +101,12 @@ export const PeopleFilters = () => {
       </div>
 
       <div className="panel-block">
-        <Link
+        <SearchLink
           className="button is-link is-outlined is-fullwidth"
-          to={{
-            pathname: '/people',
-            search: getSearchWith(searchParams, defaultFilterSearchParams),
-          }}
+          params={{ query: null, centuries: null, sex: null }}
         >
           Reset all filters
-        </Link>
+        </SearchLink>
       </div>
     </nav>
   );
