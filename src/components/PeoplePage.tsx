@@ -96,7 +96,7 @@ export const PeoplePage = () => {
   const sortedPeople = handleSort();
 
   return (
-    <>
+    <div className="container">
       <h1 className="title">People Page</h1>
 
       <div className="block">
@@ -130,6 +130,6 @@ export const PeoplePage = () => {
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
