@@ -10,9 +10,6 @@ export const App = () => {
 
       <div className="section">
         <Outlet />
-        {/* <div className="container">
-          <PeoplePage />
-        </div> */}
       </div>
     </div>
   );
