@@ -55,11 +55,8 @@ export const PeoplePage = () => {
           break;
 
         case 'born':
-          res = p2.born - p1.born;
-          break;
-
         case 'died':
-          res = p2.died - p1.died;
+          res = p2[sort] - p1[sort];
           break;
 
         default:
