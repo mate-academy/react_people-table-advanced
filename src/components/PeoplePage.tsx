@@ -11,6 +11,8 @@ export const PeoplePage = () => {
   const [isError, setIsError] = useState(false);
   const [people, setPeople] = useState<Person[]>([]);
   const [searchParams] = useSearchParams();
+  const Male = 'm';
+  const Female = 'f';
 
   const preparedPeople = people.map(personValue => ({
     ...personValue,
@@ -50,9 +52,9 @@ export const PeoplePage = () => {
 
     if (sex) {
       switch (sex) {
-        case 'm':
+        case Male:
           return filteredPeople.filter(person => person.sex === 'm');
-        case 'f':
+        case Female:
           return filteredPeople.filter(person => person.sex === 'f');
         default:
           return filteredPeople;
@@ -96,7 +98,7 @@ export const PeoplePage = () => {
   const sortedPeople = handleSort();
 
   return (
-    <div className="container">
+    <>
       <h1 className="title">People Page</h1>
 
       <div className="block">
@@ -130,6 +132,6 @@ export const PeoplePage = () => {
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };

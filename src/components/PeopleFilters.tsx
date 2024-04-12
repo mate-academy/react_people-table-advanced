@@ -43,7 +43,7 @@ export const PeopleFilters: React.FC<Props> = ({ handleFilter }) => {
   const centuries = searchParams.getAll('centuries') || [];
   const ages = ['16', '17', '18', '19', '20'];
 
-  function setSearchWith(params: any) {
+  function setSearchWith(params: Params) {
     const search = getSearchWith(params, searchParams);
 
     setSearchParams(search);
@@ -60,7 +60,7 @@ export const PeopleFilters: React.FC<Props> = ({ handleFilter }) => {
 
   const hasAgeInCenturies = (age: string) => {
     return centuries.includes(age)
-      ? centuries.filter(ch => ch !== age)
+      ? centuries.filter(century => century !== age)
       : [...centuries, age];
   };
 
@@ -68,13 +68,12 @@ export const PeopleFilters: React.FC<Props> = ({ handleFilter }) => {
     <nav className="panel">
       <p className="panel-heading">Filters</p>
 
-      {/* SexFilter */}
       <p className="panel-tabs" data-cy="SexFilter">
         {Object.entries(Status).map(([key, value]) => (
           <SearchLink
             key={key}
             className={classNames({ 'is-active': sex === value })}
-            params={{ sex: value === '' ? null : value }}
+            params={{ sex: !value ? null : value }}
             onClick={() => handleSexStatus(value)}
           >
             {key}
@@ -82,7 +81,6 @@ export const PeopleFilters: React.FC<Props> = ({ handleFilter }) => {
         ))}
       </p>
 
-      {/*query*/}
       <div className="panel-block">
         <p className="control has-icons-left">
           <input
@@ -100,7 +98,6 @@ export const PeopleFilters: React.FC<Props> = ({ handleFilter }) => {
         </p>
       </div>
 
-      {/*panelNumbers*/}
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
@@ -134,7 +131,6 @@ export const PeopleFilters: React.FC<Props> = ({ handleFilter }) => {
         </div>
       </div>
 
-      {/*panelReset*/}
       <div className="panel-block">
         <SearchLink
           className="button is-link is-outlined is-fullwidth"
