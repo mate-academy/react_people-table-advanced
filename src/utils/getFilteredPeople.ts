@@ -9,13 +9,11 @@ export const getFilteredPeople = (
   if (searchParams.has('sex')) {
     switch (searchParams.get('sex')) {
       case 'm':
-        return (filteringPeople = filteringPeople.filter(
-          person => person.sex === 'm',
-        ));
+        filteringPeople = filteringPeople.filter(person => person.sex === 'm');
+        break;
       case 'f':
-        return (filteringPeople = filteringPeople.filter(
-          person => person.sex === 'f',
-        ));
+        filteringPeople = filteringPeople.filter(person => person.sex === 'f');
+        break;
       default:
         throw new Error('Invalid filter value');
     }
