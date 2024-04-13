@@ -47,80 +47,82 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
       data-cy="peopleTable"
       className="table is-striped is-hoverable is-narrow is-fullwidth"
     >
-      <thead>
-        <tr>
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Name
-              <SearchLink params={sortToggle(SortBy.NAME)}>
-                <span className="icon">
-                  <i
-                    className={classNames('fas', {
-                      'fa-sort': sort !== SortBy.NAME,
-                      'fa-sort-up': sort === SortBy.NAME && !order,
-                      'fa-sort-down': sort === SortBy.NAME && order,
-                    })}
-                  />
-                </span>
-              </SearchLink>
-            </span>
-          </th>
+      {!!people.length && (
+        <thead>
+          <tr>
+            <th>
+              <span className="is-flex is-flex-wrap-nowrap">
+                Name
+                <SearchLink params={sortToggle(SortBy.NAME)}>
+                  <span className="icon">
+                    <i
+                      className={classNames('fas', {
+                        'fa-sort': sort !== SortBy.NAME,
+                        'fa-sort-up': sort === SortBy.NAME && !order,
+                        'fa-sort-down': sort === SortBy.NAME && order,
+                      })}
+                    />
+                  </span>
+                </SearchLink>
+              </span>
+            </th>
 
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Sex
-              <SearchLink params={sortToggle(SortBy.SEX)}>
-                <span className="icon">
-                  <i
-                    className={classNames('fas', {
-                      'fa-sort': sort !== SortBy.SEX,
-                      'fa-sort-up': sort === SortBy.SEX && !order,
-                      'fa-sort-down': sort === SortBy.SEX && order,
-                    })}
-                  />
-                </span>
-              </SearchLink>
-            </span>
-          </th>
+            <th>
+              <span className="is-flex is-flex-wrap-nowrap">
+                Sex
+                <SearchLink params={sortToggle(SortBy.SEX)}>
+                  <span className="icon">
+                    <i
+                      className={classNames('fas', {
+                        'fa-sort': sort !== SortBy.SEX,
+                        'fa-sort-up': sort === SortBy.SEX && !order,
+                        'fa-sort-down': sort === SortBy.SEX && order,
+                      })}
+                    />
+                  </span>
+                </SearchLink>
+              </span>
+            </th>
 
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Born
-              <SearchLink params={sortToggle(SortBy.BORN)}>
-                <span className="icon">
-                  <i
-                    className={classNames('fas', {
-                      'fa-sort': sort !== SortBy.BORN,
-                      'fa-sort-up': sort === SortBy.BORN && !order,
-                      'fa-sort-down': sort === SortBy.BORN && order,
-                    })}
-                  />
-                </span>
-              </SearchLink>
-            </span>
-          </th>
+            <th>
+              <span className="is-flex is-flex-wrap-nowrap">
+                Born
+                <SearchLink params={sortToggle(SortBy.BORN)}>
+                  <span className="icon">
+                    <i
+                      className={classNames('fas', {
+                        'fa-sort': sort !== SortBy.BORN,
+                        'fa-sort-up': sort === SortBy.BORN && !order,
+                        'fa-sort-down': sort === SortBy.BORN && order,
+                      })}
+                    />
+                  </span>
+                </SearchLink>
+              </span>
+            </th>
 
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Died
-              <SearchLink params={sortToggle(SortBy.DIED)}>
-                <span className="icon">
-                  <i
-                    className={classNames('fas', {
-                      'fa-sort': sort !== SortBy.DIED,
-                      'fa-sort-up': sort === SortBy.DIED && !order,
-                      'fa-sort-down': sort === SortBy.DIED && order,
-                    })}
-                  />
-                </span>
-              </SearchLink>
-            </span>
-          </th>
+            <th>
+              <span className="is-flex is-flex-wrap-nowrap">
+                Died
+                <SearchLink params={sortToggle(SortBy.DIED)}>
+                  <span className="icon">
+                    <i
+                      className={classNames('fas', {
+                        'fa-sort': sort !== SortBy.DIED,
+                        'fa-sort-up': sort === SortBy.DIED && !order,
+                        'fa-sort-down': sort === SortBy.DIED && order,
+                      })}
+                    />
+                  </span>
+                </SearchLink>
+              </span>
+            </th>
 
-          <th>Mother</th>
-          <th>Father</th>
-        </tr>
-      </thead>
+            <th>Mother</th>
+            <th>Father</th>
+          </tr>
+        </thead>
+      )}
 
       <tbody>
         {people.map(human => (

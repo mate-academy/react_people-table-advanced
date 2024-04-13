@@ -1,6 +1,9 @@
 import { Person } from '../types';
 
-export const Filter = (people: Person[], searchParams: URLSearchParams) => {
+export const filterPeople = (
+  people: Person[],
+  searchParams: URLSearchParams,
+) => {
   const searchSex = searchParams.get('sex') || '';
   const searchCenturies = searchParams.getAll('century') || [];
   const searchQuery = searchParams.get('query') || '';

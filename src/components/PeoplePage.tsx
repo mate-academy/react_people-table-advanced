@@ -4,8 +4,8 @@ import { PeopleTable } from './PeopleTable';
 import { useEffect, useState } from 'react';
 import { getPeople } from '../api';
 import { Person } from '../types/Person';
-import { Sort } from '../utils/Sort';
-import { Filter } from '../utils/Filter';
+import { sortPeople } from '../utils/Sort';
+import { filterPeople } from '../utils/Filter';
 import { useSearchParams } from 'react-router-dom';
 
 export const PeoplePage = () => {
@@ -36,9 +36,9 @@ export const PeoplePage = () => {
       });
   }, []);
 
-  let visiblePeople = Filter(people, searchParams);
+  let visiblePeople = filterPeople(people, searchParams);
 
-  visiblePeople = Sort(visiblePeople, searchParams);
+  visiblePeople = sortPeople(visiblePeople, searchParams);
 
   return (
     <>
@@ -66,7 +66,11 @@ export const PeoplePage = () => {
                 </p>
               )}
 
-              <p>There are no people matching the current search criteria</p>
+              {!!people.length && !visiblePeople.length && (
+                <p data-cy="noPeopleMessage">
+                  There are no people matching the current search criteria
+                </p>
+              )}
 
               {!isLoading && !errorMessage && (
                 <PeopleTable people={visiblePeople} />

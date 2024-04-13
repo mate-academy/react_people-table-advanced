@@ -1,6 +1,6 @@
 import { Person } from '../types';
 
-export const Sort = (people: Person[], searchParams: URLSearchParams) => {
+export const sortPeople = (people: Person[], searchParams: URLSearchParams) => {
   const sortBy = searchParams.get('sort') || '';
   const orderBy = searchParams.get('order') || '';
 
