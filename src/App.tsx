@@ -1,18 +1,23 @@
-import { PeoplePage } from './components/PeoplePage';
-import { Navbar } from './components/Navbar';
+// import { PeoplePage } from './components/PeoplePage/PeoplePage';
+import { Navbar } from './components/Navbar/Navbar';
 
 import './App.scss';
+import { Navigate, Outlet, useParams } from 'react-router-dom';
 
 export const App = () => {
+  const { currentText } = useParams();
+
+  if (currentText === 'home') {
+    return <Navigate to="/" replace={true} />;
+  }
+
   return (
     <div data-cy="app">
       <Navbar />
 
       <div className="section">
         <div className="container">
-          <h1 className="title">Home Page</h1>
-          <h1 className="title">Page not found</h1>
-          <PeoplePage />
+          <Outlet />
         </div>
       </div>
     </div>
