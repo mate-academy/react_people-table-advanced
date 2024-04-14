@@ -11,20 +11,22 @@ export const SortLink: React.FC<Props> = ({ field }) => {
   const [searchParams] = useSearchParams();
   const sortField = searchParams.get('fieldSort') || '';
   const isOrdered = searchParams.get('order') === 'desc';
+  const isSortAsc = sortField === field;
 
   const params = {
-    fieldSort: field === sortField && isOrdered ? null : field,
-    order: field === sortField && !isOrdered ? 'desc' : null,
+    fieldSort: isSortAsc && isOrdered ? null : field,
+    order: isSortAsc && !isOrdered ? 'desc' : null,
   };
+
 
   return (
     <SearchLink params={params}>
       <span className="icon">
         <i
           className={cn('fas', {
-            'fa-sort': sortField !== field,
-            'fa-sort-up': sortField === field && !isOrdered,
-            'fa-sort-down': sortField === field && isOrdered,
+            'fa-sort': !isSortAsc,
+            'fa-sort-up': isSortAsc && !isOrdered,
+            'fa-sort-down': isSortAsc && isOrdered,
           })}
         />
       </span>

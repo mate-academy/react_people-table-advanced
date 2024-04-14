@@ -5,7 +5,7 @@ export const QueryFilter: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const query = searchParams.get('query') || '';
 
-  const handlerChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleQueryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const search = getSearchWith(searchParams, { query: event.target.value });
 
     setSearchParams(search);
@@ -19,7 +19,7 @@ export const QueryFilter: React.FC = () => {
         className="input"
         value={query}
         placeholder="Search"
-        onChange={e => handlerChange(e)}
+        onChange={e => handleQueryChange(e)}
       />
 
       <span className="icon is-left">
