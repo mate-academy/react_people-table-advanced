@@ -7,7 +7,7 @@ type Option = {
   centuries: string[];
 };
 
-const sortByCenturies = (centuries: string[], man: Person) => {
+const belongsToCentury = (centuries: string[], man: Person) => {
   return centuries.map(Number).includes(Math.ceil(man.born / 100));
 };
 
@@ -18,18 +18,30 @@ export function getFilterPeople(people: Person[], params: URLSearchParams) {
     centuries: params.getAll('centuries'),
   };
 
-  const normalizeQuery = filterOptions.query?.trim().toLowerCase() || '';
+  const normalizedQuery = filterOptions.query?.trim().toLowerCase() || '';
 
   const filteredPeople = people.filter(person => {
-    if (filterOptions.sex) {
-      return person.sex === filterOptions.sex;
-    } else if (filterOptions.query) {
-      return person.name.toLocaleLowerCase().includes(normalizeQuery);
-    } else if (filterOptions.centuries.length) {
-      return sortByCenturies(filterOptions.centuries, person);
-    } else {
-      return person;
+    let shouldInclude = true;
+
+    if (filterOptions.centuries.length) {
+      shouldInclude = belongsToCentury(filterOptions.centuries, person);
+
+      if (!shouldInclude) {
+        return false;
+      }
     }
+
+    if (filterOptions.sex) {
+      shouldInclude = shouldInclude && person.sex === filterOptions.sex;
+    }
+
+    if (normalizedQuery) {
+      shouldInclude =
+        shouldInclude &&
+        person.name.toLocaleLowerCase().includes(normalizedQuery);
+    }
+
+    return shouldInclude;
   });
 
   return filteredPeople;

@@ -37,7 +37,10 @@ export const PeopleFilters = () => {
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        <SearchLink params={{ sex: [] }} className={cn({ 'is-active': !sex })}>
+        <SearchLink
+          params={{ sex: null }}
+          className={cn({ 'is-active': !sex })}
+        >
           All
         </SearchLink>
 
@@ -107,7 +110,7 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <SearchLink
           className="button is-link is-outlined is-fullwidth"
-          params={{ query: [], sex: [], centuries: [] }}
+          params={{ query: null, sex: null, centuries: null }}
         >
           Reset all filters
         </SearchLink>
