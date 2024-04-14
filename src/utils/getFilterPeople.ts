@@ -11,9 +11,12 @@ export const getFilterPeople = (people: Person[], filters: FilterParams) => {
     const { sex, name, motherName, fatherName } = person;
 
     const matchesSex = filters.sex ? sex === filters.sex : true;
-    const allNames = [name, motherName, fatherName].join('\n').toLowerCase();;
+    const allNames = [name, motherName, fatherName].join('\n').toLowerCase();
+
     const normalizedQuery = filters.query?.trim().toLowerCase();
-    const matchesQuery = filters.query ? allNames.includes(normalizedQuery || '') : true;
+    const matchesQuery = filters.query
+      ? allNames.includes(normalizedQuery || '')
+      : true;
 
     const getCentury = ({ born }: Person) => {
       return Math.ceil(born / 100);
