@@ -10,7 +10,7 @@ import { getSortedPeople } from '../utils/getSortedPeople';
 
 export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);
-  const [error, setError] = useState(false);
+  const [hasError, setHasError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
   const [searchParams] = useSearchParams();
@@ -20,7 +20,7 @@ export const PeoplePage = () => {
 
     getPeople()
       .then(setPeople)
-      .catch(() => setError(true))
+      .catch(() => setHasError(true))
       .finally(() => setIsLoading(false));
   }, []);
 
@@ -47,7 +47,7 @@ export const PeoplePage = () => {
 
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
-          {!!people.length && !isLoading && !error && (
+          {!!people.length && !isLoading && !hasError && (
             <div className="column is-7-tablet is-narrow-desktop">
               <PeopleFilters />
             </div>
@@ -56,20 +56,20 @@ export const PeoplePage = () => {
           <div className="column">
             <div className="box table-container">
               {isLoading && <Loader />}
-              {error && (
+              {hasError && (
                 <p data-cy="peopleLoadingError" className="has-text-danger">
                   Something went wrong
                 </p>
               )}
-              {!people.length && !isLoading && !error && (
+              {!people.length && !isLoading && !hasError && (
                 <p data-cy="noPeopleMessage">
                   There are no people on the server
                 </p>
               )}
-              {!filteredPeople.length && !isLoading && !error && (
+              {!filteredPeople.length && !isLoading && !hasError && (
                 <p>There are no people matching the current search criteria</p>
               )}
-              {!!filteredPeople.length && !isLoading && !error && (
+              {!!filteredPeople.length && !isLoading && !hasError && (
                 <PeopleTable people={sortedPeople} />
               )}
             </div>
