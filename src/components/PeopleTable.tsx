@@ -3,7 +3,7 @@ import { FC } from 'react';
 import { useParams } from 'react-router-dom';
 import { Person } from '../types/Person';
 import { PersonLink } from './PersonLink';
-import { SortButton } from './SortLink';
+import { SortButton } from './SortButton';
 
 type Props = {
   people: Person[];
