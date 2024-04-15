@@ -14,7 +14,7 @@ type Props = {
   handleFilter: () => Person[];
 };
 
-function getSearchWith(params: Params, search?: string | URLSearchParams) {
+const getSearchWith = (params: Params, search?: string | URLSearchParams) => {
   const newParams = new URLSearchParams(search);
 
   for (const [key, value] of Object.entries(params)) {
@@ -34,7 +34,7 @@ function getSearchWith(params: Params, search?: string | URLSearchParams) {
   }
 
   return newParams.toString();
-}
+};
 
 export const PeopleFilters: React.FC<Props> = ({ handleFilter }) => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -43,14 +43,14 @@ export const PeopleFilters: React.FC<Props> = ({ handleFilter }) => {
   const centuries = searchParams.getAll('centuries') || [];
   const ages = ['16', '17', '18', '19', '20'];
 
-  function setSearchWith(params: Params) {
+  const setSearchWith = (params: Params) => {
     const search = getSearchWith(params, searchParams);
 
     setSearchParams(search);
     handleFilter();
-  }
+  };
 
-  const handleSexStatus = (value: Status) => {
+  const handleSexStatusChange = (value: Status) => {
     setSearchWith({ sex: value || null });
   };
 
@@ -58,7 +58,7 @@ export const PeopleFilters: React.FC<Props> = ({ handleFilter }) => {
     setSearchWith({ query: event.target.value || null });
   };
 
-  const hasAgeInCenturies = (age: string) => {
+  const updateCenturies = (age: string) => {
     return centuries.includes(age)
       ? centuries.filter(century => century !== age)
       : [...centuries, age];
@@ -73,8 +73,8 @@ export const PeopleFilters: React.FC<Props> = ({ handleFilter }) => {
           <SearchLink
             key={key}
             className={classNames({ 'is-active': sex === value })}
-            params={{ sex: !value ? null : value }}
-            onClick={() => handleSexStatus(value)}
+            params={{ sex: value || null }}
+            onClick={() => handleSexStatusChange(value)}
           >
             {key}
           </SearchLink>
@@ -106,7 +106,7 @@ export const PeopleFilters: React.FC<Props> = ({ handleFilter }) => {
                 data-cy="century"
                 key={age}
                 params={{
-                  centuries: hasAgeInCenturies(age),
+                  centuries: updateCenturies(age),
                 }}
                 className={classNames('button mr-1', {
                   'is-info': centuries.includes(age),

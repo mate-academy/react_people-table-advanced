@@ -1,18 +1,24 @@
-import { PeopleFilters } from './PeopleFilters';
-import { Loader } from './Loader';
-import { PeopleTable } from './PeopleTable';
+import { PeopleFilters } from '../PeopleFilters';
+import { Loader } from '../Loader';
+import { PeopleTable } from '../PeopleTable';
 import React, { useEffect, useState } from 'react';
-import { getPeople } from '../api';
-import { Person } from '../types';
+import { getPeople } from '../../api';
+import { Person } from '../../types';
 import { useSearchParams } from 'react-router-dom';
+import { filterPeople } from '../helpers/filterPeople';
+import { sortPeople } from '../helpers/sortPeople';
 
 export const PeoplePage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
   const [people, setPeople] = useState<Person[]>([]);
   const [searchParams] = useSearchParams();
-  const Male = 'm';
-  const Female = 'f';
+
+  const query = searchParams.get('query') || '';
+  const centuries = searchParams.getAll('centuries') || [];
+  const sex = searchParams.get('sex') || '';
+  const sort = (searchParams.get('sort') || '') as keyof Person;
+  const order = searchParams.get('order') || '';
 
   const preparedPeople = people.map(personValue => ({
     ...personValue,
@@ -33,66 +39,17 @@ export const PeoplePage = () => {
   }, []);
 
   const handleFilter = () => {
-    let filteredPeople = [...preparedPeople];
-    const query = searchParams.get('query') || '';
-    const centuries = searchParams.getAll('centuries') || [];
-    const sex = searchParams.get('sex') || '';
-
-    if (query) {
-      filteredPeople = filteredPeople.filter(person =>
-        person.name.toLowerCase().includes(query.toLowerCase()),
-      );
-    }
-
-    if (centuries.length) {
-      filteredPeople = filteredPeople.filter(person => {
-        return centuries.includes(`${Math.ceil(person.born / 100)}`);
-      });
-    }
-
-    if (sex) {
-      switch (sex) {
-        case Male:
-          return filteredPeople.filter(person => person.sex === 'm');
-        case Female:
-          return filteredPeople.filter(person => person.sex === 'f');
-        default:
-          return filteredPeople;
-      }
-    }
-
-    return filteredPeople;
+    return filterPeople(query, centuries, sex, preparedPeople);
   };
 
   const handleSort = () => {
     const sortedPeople = handleFilter();
-    const sort = (searchParams.get('sort') || '') as keyof Person;
-    const order = searchParams.get('order') || '';
 
-    const newOutPut = sortedPeople.sort((a: Person, b: Person) => {
-      const valueA = a[sort];
-      const valueB = b[sort];
-
-      if (typeof valueA === 'string' && typeof valueB === 'string') {
-        return valueA.localeCompare(valueB);
-      }
-
-      if (typeof valueA === 'number' && typeof valueB === 'number') {
-        return valueA - valueB;
-      }
-
-      return 0;
-    });
-
-    if (sort && !order) {
-      return newOutPut;
+    if (sort) {
+      return sortPeople(sort, order, sortedPeople);
     }
 
-    if (sort && order) {
-      return newOutPut.reverse();
-    }
-
-    return [...sortedPeople];
+    return sortedPeople;
   };
 
   const sortedPeople = handleSort();

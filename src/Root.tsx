@@ -6,7 +6,7 @@ import {
   Routes,
 } from 'react-router-dom';
 import { HomePage } from './components/HomePage/HomePage';
-import { PeoplePage } from './components/PeoplePage';
+import { PeoplePage } from './components/PeoplePage/PeoplePage';
 import { ErrorPage } from './components/ErrorPage/ErrorPage';
 import { App } from './App';
 

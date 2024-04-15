@@ -11,7 +11,7 @@ interface Props {
 export const PersonItem: React.FC<Props> = ({ person }) => {
   const { personId } = useParams();
   const { sex, born, died, motherName, fatherName, mother, father } = person;
-  const haveNoParent = '-';
+  const HAVE_NO_PARENT = '-';
 
   return (
     <tr
@@ -35,7 +35,7 @@ export const PersonItem: React.FC<Props> = ({ person }) => {
             {!mother && <span>{motherName}</span>}
           </>
         ) : (
-          haveNoParent
+          HAVE_NO_PARENT
         )}
       </td>
       <td>
@@ -46,7 +46,7 @@ export const PersonItem: React.FC<Props> = ({ person }) => {
             {!father && <span>{fatherName}</span>}
           </>
         ) : (
-          haveNoParent
+          HAVE_NO_PARENT
         )}
       </td>
     </tr>
