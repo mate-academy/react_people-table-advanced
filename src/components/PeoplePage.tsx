@@ -60,13 +60,13 @@ export const PeoplePage = () => {
   }
 
   if (query) {
-    const lowerQuery = query.toLocaleLowerCase();
+    const normalizedQuery = query.toLocaleLowerCase();
 
     visiblePeople = visiblePeople.filter(person => {
       return [person.name, person.motherName || '', person.fatherName || '']
-        .join('\n')
+        .join('')
         .toLocaleLowerCase()
-        .includes(lowerQuery);
+        .includes(normalizedQuery);
     });
   }
 

@@ -9,18 +9,19 @@ type Props = {
 
 export const PersonLink: React.FC<Props> = ({ person }) => {
   const { search } = useLocation();
+  const { name, sex, slug } = person;
 
   return (
     <Link
       to={{
-        pathname: `/people/${person.slug}`,
+        pathname: `/people/${slug}`,
         search,
       }}
       className={classNames({
-        'has-text-danger': person.sex === 'f',
+        'has-text-danger': sex === 'f',
       })}
     >
-      {person.name}
+      {name}
     </Link>
   );
 };
