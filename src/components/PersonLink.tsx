@@ -1,6 +1,6 @@
 import React from 'react';
 import { Person } from '../types';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams, useSearchParams } from 'react-router-dom';
 import classNames from 'classnames';
 
 type Props = {
@@ -19,6 +19,7 @@ const PersonLink: React.FC<Props> = ({ person, people }) => {
     motherName,
   } = person;
   const { slug } = useParams();
+  const [searchParams] = useSearchParams();
   const mother = people.find(p => p.name === motherName);
   const father = people.find(p => p.name === fatherName);
 
@@ -29,7 +30,10 @@ const PersonLink: React.FC<Props> = ({ person, people }) => {
     >
       <td>
         <Link
-          to={`/people/${personSlug}`}
+          to={{
+            pathname: `/people/${personSlug}`,
+            search: searchParams.toString(),
+          }}
           className={classNames({ 'has-text-danger': sex === 'f' })}
         >
           {name}
@@ -41,7 +45,13 @@ const PersonLink: React.FC<Props> = ({ person, people }) => {
       <td>{died}</td>
       <td>
         {mother ? (
-          <Link to={`/people/${mother.slug}`} className="has-text-danger">
+          <Link
+            to={{
+              pathname: `/people/${mother.slug}`,
+              search: searchParams.toString(),
+            }}
+            className="has-text-danger"
+          >
             {motherName}
           </Link>
         ) : (
@@ -50,7 +60,14 @@ const PersonLink: React.FC<Props> = ({ person, people }) => {
       </td>
       <td>
         {father ? (
-          <Link to={`/people/${father.slug}`}>{fatherName}</Link>
+          <Link
+            to={{
+              pathname: `/people/${father.slug}`,
+              search: searchParams.toString(),
+            }}
+          >
+            {fatherName}
+          </Link>
         ) : (
           fatherName || '-'
         )}
