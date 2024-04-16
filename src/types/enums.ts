@@ -19,4 +19,7 @@ export enum ColumnsFilter {
   Died = 'died',
 }
 
-export const Male = 'm';
+export enum Sex {
+  MALE = 'm',
+  FEMALE = 'm',
+}

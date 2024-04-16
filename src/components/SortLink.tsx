@@ -18,7 +18,6 @@ export const SortLink: React.FC<Props> = ({ field }) => {
     order: isSortAsc && !isOrdered ? 'desc' : null,
   };
 
-
   return (
     <SearchLink params={params}>
       <span className="icon">

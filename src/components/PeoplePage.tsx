@@ -16,6 +16,7 @@ export const PeoplePage: React.FC = () => {
   const sex = searchParams.get('sex') as '';
   const query = searchParams.get('query') || '';
   const centuries = searchParams.getAll('centuries') || [];
+  const isVisiblePeople = !errorMessage && !!people.length;
 
   let visiblePeople = [...people];
 
@@ -50,10 +51,8 @@ export const PeoplePage: React.FC = () => {
                 </p>
               )}
 
-              {!isLoading && !errorMessage && !!people.length && (
-                <PeopleTable visiblePeople={visiblePeople} />
-              )}
-              {!isLoading && (!people.length || errorMessage) && (
+              {isVisiblePeople && <PeopleTable visiblePeople={visiblePeople} />}
+              {!isLoading && !isVisiblePeople && (
                 <p data-cy="noPeopleMessage">{PeopleError.noPeopleMessage}</p>
               )}
             </div>

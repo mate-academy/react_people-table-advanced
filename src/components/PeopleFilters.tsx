@@ -5,10 +5,12 @@ import { useSearchParams } from 'react-router-dom';
 import { SearchLink } from './SearchLink';
 import { QueryFilter } from './QueryFilter';
 import { CenturyFilter } from './CenturyFilter';
+import { PeopleFilter, Sex } from '../types/enums';
 
 export const PeopleFilters = () => {
   const [searchParams] = useSearchParams();
   const sex = searchParams.get('sex') || '';
+  const isMale = sex === `${Sex.MALE}`;
 
   return (
     <nav className="panel">
@@ -18,19 +20,19 @@ export const PeopleFilters = () => {
           params={{ sex: null }}
           className={cn({ 'is-active': !sex })}
         >
-          All
+          {PeopleFilter.All}
         </SearchLink>
         <SearchLink
-          params={{ sex: 'm' }}
-          className={cn({ 'is-active': sex === 'm' })}
+          params={{ sex: `${Sex.MALE}` }}
+          className={cn({ 'is-active': isMale })}
         >
-          Male
+          {PeopleFilter.Male}
         </SearchLink>
         <SearchLink
           params={{ sex: 'f' }}
-          className={cn({ 'is-active': sex === 'f' })}
+          className={cn({ 'is-active': !isMale })}
         >
-          Female
+          {PeopleFilter.Female}
         </SearchLink>
       </p>
 

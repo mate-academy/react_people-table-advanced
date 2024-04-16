@@ -19,7 +19,7 @@ export const QueryFilter: React.FC = () => {
         className="input"
         value={query}
         placeholder="Search"
-        onChange={e => handleQueryChange(e)}
+        onChange={event => handleQueryChange(event)}
       />
 
       <span className="icon is-left">
