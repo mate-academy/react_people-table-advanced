@@ -92,23 +92,15 @@ export const PeopleTable = () => {
 
       switch (normalizedSort) {
         case TitleTableHeaders.name:
-          sortedPeople = sortedPeople.sort((person1, person2) =>
-            person1.name.localeCompare(person2.name),
-          );
-          break;
         case TitleTableHeaders.sex:
           sortedPeople = sortedPeople.sort((person1, person2) =>
-            person1.sex.localeCompare(person2.sex),
+            person1[sort].localeCompare(person2[sort]),
           );
           break;
         case TitleTableHeaders.born:
-          sortedPeople = sortedPeople.sort(
-            (person1, person2) => person1.born - person2.born,
-          );
-          break;
         case TitleTableHeaders.died:
           sortedPeople = sortedPeople.sort(
-            (person1, person2) => person1.died - person2.died,
+            (person1, person2) => person1.born - person2.born,
           );
           break;
         default:
@@ -127,6 +119,22 @@ export const PeopleTable = () => {
 
   const getFilteredPeople = () => {
     let filteredPeople = [...sortedPeople];
+
+    if (query) {
+      const normalizedQuery = query.toLowerCase().trim();
+
+      filteredPeople = filteredPeople.filter(person => {
+        const normalizedName = person.name.toLowerCase().trim();
+        const normalizedFatherName = person.fatherName?.toLowerCase().trim();
+        const normalizedMotherName = person.motherName?.toLowerCase().trim();
+
+        return (
+          normalizedName.includes(normalizedQuery) ||
+          normalizedFatherName?.includes(normalizedQuery) ||
+          normalizedMotherName?.includes(normalizedQuery)
+        );
+      });
+    }
 
     if (sex) {
       filteredPeople = filteredPeople.filter(person => person.sex === sex);
