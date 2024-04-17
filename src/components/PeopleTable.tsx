@@ -82,7 +82,14 @@ export const PeopleTable: React.FC<Props> = ({ persons }) => {
               })}
             >
               <td>
-                <SearchLink params={{ test: 'test' }} />
+                <SearchLink
+                  params={{ test: 'test' }}
+                  className={classNames({
+                    'has-text-danger': person.sex === 'f',
+                  })}
+                >
+                  {person.name}
+                </SearchLink>
               </td>
 
               <td>{person.sex}</td>
@@ -90,7 +97,14 @@ export const PeopleTable: React.FC<Props> = ({ persons }) => {
               <td>{person.died}</td>
               <td>
                 {person.mother ? (
-                  <SearchLink params={{ test: 'test' }} />
+                  <SearchLink
+                    params={{ test: 'test' }}
+                    className={classNames({
+                      'has-text-danger': person.mother.sex === 'f',
+                    })}
+                  >
+                    {person.motherName}
+                  </SearchLink>
                 ) : person.motherName ? (
                   person.motherName
                 ) : (
@@ -99,7 +113,9 @@ export const PeopleTable: React.FC<Props> = ({ persons }) => {
               </td>
               <td>
                 {person.father ? (
-                  <SearchLink params={{ test: 'test' }} />
+                  <SearchLink params={{ test: 'test' }}>
+                    {person.fatherName}
+                  </SearchLink>
                 ) : person.fatherName ? (
                   person.fatherName
                 ) : (
