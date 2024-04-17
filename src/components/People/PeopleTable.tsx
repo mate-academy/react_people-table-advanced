@@ -17,6 +17,7 @@ const DESCENDING_ORDER = 'desc';
 export const PeopleTable = () => {
   const [people, setPeople] = useState<Person[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [isMatchSearch, setIsMatchSearch] = useState(true);
   const [isError, setIsError] = useState(false);
 
   useEffect(() => {
@@ -41,7 +42,7 @@ export const PeopleTable = () => {
   const query = searchParams.get('query') || '';
   const centuries = searchParams.getAll('centuries') || [];
 
-  const showTable = !isLoading && !isError;
+  const showTable = !isLoading && !isError && isMatchSearch;
   const showSideBar = !isLoading && !isError;
 
   const setSearchWith = (params: any) => {
@@ -153,6 +154,14 @@ export const PeopleTable = () => {
 
   const visiblePeople = getFilteredPeople();
 
+  useEffect(() => {
+    if (!visiblePeople.length) {
+      setIsMatchSearch(false);
+    } else {
+      setIsMatchSearch(true);
+    }
+  }, [visiblePeople]);
+
   return (
     <div className="block">
       <div className="columns is-desktop is-flex-direction-row-reverse">
@@ -183,6 +192,10 @@ export const PeopleTable = () => {
 
             {!people.length && !isLoading && (
               <p data-cy="noPeopleMessage">There are no people on the server</p>
+            )}
+
+            {!isMatchSearch && (
+              <p>There are no people matching the current search criteria</p>
             )}
 
             {showTable && (
