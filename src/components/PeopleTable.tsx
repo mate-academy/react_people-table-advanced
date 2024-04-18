@@ -1,9 +1,8 @@
 import React from 'react';
-import { useParams, useSearchParams } from 'react-router-dom';
-import cn from 'classnames';
+import { useSearchParams } from 'react-router-dom';
 import { Person } from '../types';
-import { PersonLink } from './PersonLink';
 import { SearchLink } from './SearchLink';
+import PersonItem from './PersonItem';
 
 type Props = {
   people: Person[];
@@ -20,8 +19,6 @@ const preperadPeople = (people: Person[]) => {
 const tableList = ['Name', 'Sex', 'Born', 'Died', 'Mother', 'Father'];
 
 const PeopleTable: React.FC<Props> = ({ people }) => {
-  const { slug } = useParams();
-
   const [searchParams] = useSearchParams();
 
   const query = searchParams.get('query') || '';
@@ -144,41 +141,9 @@ const PeopleTable: React.FC<Props> = ({ people }) => {
       </thead>
 
       <tbody>
-        {visiblePeople.map(person => {
-          const { born, died, motherName, fatherName, mother, father } = person;
-          const selected = slug === person.slug;
-
-          return (
-            <tr
-              data-cy="person"
-              className={cn({ 'has-background-warning': selected })}
-              key={person.slug}
-            >
-              <td>
-                <PersonLink person={person} />
-              </td>
-
-              <td>{person.sex}</td>
-              <td>{born}</td>
-              <td>{died}</td>
-              <td>
-                {mother ? (
-                  <PersonLink person={mother} />
-                ) : (
-                  <span>{motherName || '-'}</span>
-                )}
-              </td>
-
-              <td>
-                {father ? (
-                  <PersonLink person={father} />
-                ) : (
-                  <span>{fatherName || '-'}</span>
-                )}
-              </td>
-            </tr>
-          );
-        })}
+        {visiblePeople.map(person => (
+          <PersonItem person={person} key={person.name} />
+        ))}
       </tbody>
     </table>
   );

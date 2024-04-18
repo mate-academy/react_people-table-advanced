@@ -30,7 +30,7 @@ export const PeopleFilters: React.FC = () => {
 
   const handleToggleCenturies = (century: string) => {
     return centuries.includes(century)
-      ? centuries.filter(prev => prev !== century)
+      ? centuries.filter(prevCentury => prevCentury !== century)
       : [...centuries, century];
   };
 
@@ -70,18 +70,18 @@ export const PeopleFilters: React.FC = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            {centuriesList.map(item => (
+            {centuriesList.map(century => (
               <SearchLink
                 data-cy="century"
-                key={item}
+                key={century}
                 params={{
-                  centuries: handleToggleCenturies(item),
+                  centuries: handleToggleCenturies(century),
                 }}
                 className={cn('button mr-1', {
-                  'is-info': centuries.includes(item),
+                  'is-info': centuries.includes(century),
                 })}
               >
-                {item}
+                {century}
               </SearchLink>
             ))}
           </div>
