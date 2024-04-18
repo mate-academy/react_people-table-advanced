@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Person } from '../types';
 import { SearchLink } from './SearchLink';
@@ -6,6 +6,8 @@ import PersonItem from './PersonItem';
 
 type Props = {
   people: Person[];
+  setVisible: (type: boolean) => void;
+  onVisible: boolean;
 };
 
 const preperadPeople = (people: Person[]) => {
@@ -18,7 +20,7 @@ const preperadPeople = (people: Person[]) => {
 
 const tableList = ['Name', 'Sex', 'Born', 'Died', 'Mother', 'Father'];
 
-const PeopleTable: React.FC<Props> = ({ people }) => {
+const PeopleTable: React.FC<Props> = ({ people, setVisible, onVisible }) => {
   const [searchParams] = useSearchParams();
 
   const query = searchParams.get('query') || '';
@@ -50,10 +52,6 @@ const PeopleTable: React.FC<Props> = ({ people }) => {
     );
   }
 
-  if (order) {
-    visiblePeople = visiblePeople.reverse();
-  }
-
   const sortPeople = (persons: Person[], sortBy: keyof Person) => {
     return [...persons].sort((personA, personB) => {
       const valueA = personA[sortBy];
@@ -75,10 +73,14 @@ const PeopleTable: React.FC<Props> = ({ people }) => {
     visiblePeople = sortPeople(visiblePeople, sort as keyof Person);
   }
 
+  if (order) {
+    visiblePeople = visiblePeople.reverse();
+  }
+
   const handleIcon = (sortBy: string) => {
     let classIcon = 'fa-sort';
 
-    if (sortBy.toLowerCase() === sortBy) {
+    if (sortBy.toLowerCase() === sort) {
       if (order !== 'desc') {
         classIcon = 'fa-sort-up';
       } else {
@@ -109,35 +111,45 @@ const PeopleTable: React.FC<Props> = ({ people }) => {
     return sortBy.toLowerCase();
   };
 
+  useEffect(() => {
+    if (visiblePeople.length === 0) {
+      setVisible(true);
+    } else {
+      setVisible(false);
+    }
+  }, [visiblePeople, setVisible]);
+
   return (
     <table
       data-cy="peopleTable"
       className="table is-striped is-hoverable is-narrow is-fullwidth"
     >
       <thead>
-        <tr>
-          {tableList.map(item => (
-            <th key={item}>
-              <span className="is-flex is-flex-wrap-nowrap">
-                {item !== 'Mother' && item !== 'Father' ? (
-                  <>
-                    {item}
-                    <SearchLink
-                      params={{
-                        sort: handleSort(item),
-                        order: handleOrder(),
-                      }}
-                    >
-                      {handleIcon(item)}
-                    </SearchLink>
-                  </>
-                ) : (
-                  <>{item}</>
-                )}
-              </span>
-            </th>
-          ))}
-        </tr>
+        {!onVisible && (
+          <tr>
+            {tableList.map(item => (
+              <th key={item}>
+                <span className="is-flex is-flex-wrap-nowrap">
+                  {item !== 'Mother' && item !== 'Father' ? (
+                    <>
+                      {item}
+                      <SearchLink
+                        params={{
+                          sort: handleSort(item),
+                          order: handleOrder(),
+                        }}
+                      >
+                        {handleIcon(item)}
+                      </SearchLink>
+                    </>
+                  ) : (
+                    <>{item}</>
+                  )}
+                </span>
+              </th>
+            ))}
+          </tr>
+        )}
       </thead>
 
       <tbody>

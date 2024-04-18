@@ -9,6 +9,7 @@ export const PeoplePage: React.FC = () => {
   const [people, setPeople] = useState<Person[]>([]);
   const [errorMessage, setErrorMessage] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [isNotVisible, setIsNotVisible] = useState(false);
 
   useEffect(() => {
     setIsLoading(true);
@@ -47,7 +48,17 @@ export const PeoplePage: React.FC = () => {
                 </p>
               )}
 
-              {!isLoading && !errorMessage && <PeopleTable people={people} />}
+              {!errorMessage && isNotVisible && !isLoading && (
+                <p>There are no people matching the current search criteria</p>
+              )}
+
+              {!isLoading && !errorMessage && (
+                <PeopleTable
+                  people={people}
+                  setVisible={setIsNotVisible}
+                  onVisible={isNotVisible}
+                />
+              )}
             </div>
           </div>
         </div>
