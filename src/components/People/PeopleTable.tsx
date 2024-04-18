@@ -1,11 +1,13 @@
 /* eslint-disable jsx-a11y/control-has-associated-label */
 import classNames from 'classnames';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { getPeople } from '../../api';
 import type { Person } from '../../types';
 import { TitleTableHeaders } from '../../types';
+import { getFilteredPeople } from '../../utils/getFilteredPeople';
 import { getPreparedPeople } from '../../utils/getPreparedPeople';
+import { getSortedPeople } from '../../utils/getSortedPeople';
 import { getSearchWith } from '../../utils/searchHelper';
 import { Loader } from '../Loader';
 import { PeopleFilters } from './PeopleFilters';
@@ -40,12 +42,16 @@ export const PeopleTable = () => {
 
   const sex = searchParams.get('sex') || null;
   const query = searchParams.get('query') || '';
-  const centuries = searchParams.getAll('centuries') || [];
+  const centuries = useMemo(
+    () => searchParams.getAll('centuries') || [],
+    [searchParams],
+  );
 
   const showTable = !isLoading && !isError && isMatchSearch;
   const showSideBar = !isLoading && !isError;
+  const showPlaceHolderMatch = !isMatchSearch && !isLoading && !isError;
 
-  const setSearchWith = (params: any) => {
+  const setSearchWith = (params: Record<string, string | null>) => {
     const search = getSearchWith(searchParams, params);
 
     setSearchParams(search);
@@ -85,74 +91,13 @@ export const PeopleTable = () => {
 
   const preparedPeople = getPreparedPeople(people);
 
-  const getSortedPeople = () => {
-    let sortedPeople = [...preparedPeople];
+  const sortedPeople = useMemo(() => {
+    return getSortedPeople(preparedPeople, sort, order);
+  }, [order, preparedPeople, sort]);
 
-    if (sort) {
-      const normalizedSort = sort.charAt(0).toUpperCase() + sort.slice(1);
-
-      switch (normalizedSort) {
-        case TitleTableHeaders.name:
-        case TitleTableHeaders.sex:
-          sortedPeople = sortedPeople.sort((person1, person2) =>
-            person1[sort].localeCompare(person2[sort]),
-          );
-          break;
-        case TitleTableHeaders.born:
-        case TitleTableHeaders.died:
-          sortedPeople = sortedPeople.sort(
-            (person1, person2) => person1.born - person2.born,
-          );
-          break;
-        default:
-          break;
-      }
-    }
-
-    if (order) {
-      sortedPeople = sortedPeople.reverse();
-    }
-
-    return [...sortedPeople];
-  };
-
-  const sortedPeople = getSortedPeople();
-
-  const getFilteredPeople = () => {
-    let filteredPeople = [...sortedPeople];
-
-    if (query) {
-      const normalizedQuery = query.toLowerCase().trim();
-
-      filteredPeople = filteredPeople.filter(person => {
-        const normalizedName = person.name.toLowerCase().trim();
-        const normalizedFatherName = person.fatherName?.toLowerCase().trim();
-        const normalizedMotherName = person.motherName?.toLowerCase().trim();
-
-        return (
-          normalizedName.includes(normalizedQuery) ||
-          normalizedFatherName?.includes(normalizedQuery) ||
-          normalizedMotherName?.includes(normalizedQuery)
-        );
-      });
-    }
-
-    if (sex) {
-      filteredPeople = filteredPeople.filter(person => person.sex === sex);
-    }
-
-    if (!!centuries.length) {
-      filteredPeople = filteredPeople.filter(person => {
-        const century = Math.ceil(person.born / 100).toString();
-
-        return centuries.includes(century);
-      });
-    }
-
-    return filteredPeople;
-  };
-
-  const visiblePeople = getFilteredPeople();
+  const visiblePeople = useMemo(() => {
+    return getFilteredPeople(sortedPeople, query, sex, centuries);
+  }, [centuries, query, sex, sortedPeople]);
 
   useEffect(() => {
     if (!visiblePeople.length) {
@@ -194,7 +139,7 @@ export const PeopleTable = () => {
               <p data-cy="noPeopleMessage">There are no people on the server</p>
             )}
 
-            {!isMatchSearch && (
+            {showPlaceHolderMatch && (
               <p>There are no people matching the current search criteria</p>
             )}
 

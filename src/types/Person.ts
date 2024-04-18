@@ -1,5 +1,4 @@
 export interface Person {
-  [key: string]: any;
   name: string;
   sex: string;
   born: number;
