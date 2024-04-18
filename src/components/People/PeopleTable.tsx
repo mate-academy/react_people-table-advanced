@@ -118,7 +118,13 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
               <td>{died}</td>
               <td>
                 {personMother ? (
-                  <Link className="has-text-danger" to={`${personMother.slug}`}>
+                  <Link
+                    className="has-text-danger"
+                    to={{
+                      pathname: `${personMother.slug}`,
+                      search: searchParams.toString(),
+                    }}
+                  >
                     {personMother.name}
                   </Link>
                 ) : (
@@ -127,7 +133,14 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
               </td>
               <td>
                 {personFather ? (
-                  <Link to={`${personFather.slug}`}>{personFather.name}</Link>
+                  <Link
+                    to={{
+                      pathname: `${personFather.slug}`,
+                      search: searchParams.toString(),
+                    }}
+                  >
+                    {personFather.name}
+                  </Link>
                 ) : (
                   fatherName || '-'
                 )}
