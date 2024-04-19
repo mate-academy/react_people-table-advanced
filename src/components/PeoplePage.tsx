@@ -4,11 +4,21 @@ import { Loader } from './Loader';
 import { PeopleTable } from './PeopleTable';
 import { Person } from '../types';
 import { getPeople } from '../api';
+import { useSearchParams } from 'react-router-dom';
+import { TableFilter } from '../enums/TableFilter';
 
 export const PeoplePage: React.FC = () => {
   const [persons, setPersons] = useState<Person[] | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState('Something went wrong');
+  const [searchParams] = useSearchParams();
+
+  const sexFilter = searchParams.get('sex');
+  const queryFilter = searchParams.get('query');
+  const centuryFilter = searchParams.getAll('centuries').map(Number);
+
+  const sort = searchParams.get('sort');
+  const order = searchParams.get('order');
 
   useEffect(() => {
     setIsLoading(true);
@@ -36,6 +46,63 @@ export const PeoplePage: React.FC = () => {
         setErrorMessage('');
       });
   }, []);
+
+  const tableSort = (arr: Person[]) => {
+    const result = [...arr];
+
+    switch (sort) {
+      case TableFilter.Name:
+      case TableFilter.Sex:
+        result.sort((a, b) => a[sort].localeCompare(b[sort]));
+        break;
+      case TableFilter.Born:
+      case TableFilter.Died:
+        result.sort((a, b) => a[sort] - b[sort]);
+        break;
+      default:
+        return result;
+    }
+
+    if (order === TableFilter.DescOrder) {
+      result.reverse();
+    }
+
+    return result;
+  };
+
+  const filterPersons = () => {
+    if (persons === null) {
+      return [];
+    }
+
+    let filteredPersons = [...persons];
+
+    if (sort) {
+      filteredPersons = tableSort(filteredPersons);
+    }
+
+    if (sexFilter) {
+      filteredPersons = filteredPersons.filter(
+        person => person.sex === sexFilter,
+      );
+    }
+
+    if (queryFilter) {
+      filteredPersons = filteredPersons.filter(person =>
+        person.name.toLowerCase().includes(queryFilter.toLowerCase()),
+      );
+    }
+
+    if (!!centuryFilter.length) {
+      filteredPersons = filteredPersons.filter(person => {
+        return centuryFilter.includes(Math.ceil(person.born / 100));
+      });
+    }
+
+    return filteredPersons;
+  };
+
+  const filteredPersons = filterPersons();
 
   return (
     <>
@@ -65,13 +132,15 @@ export const PeoplePage: React.FC = () => {
                     </p>
                   )}
 
-                  {persons?.length === 0 && (
+                  {filteredPersons?.length === 0 && (
                     <p>
                       There are no people matching the current search criteria
                     </p>
                   )}
 
-                  {persons && <PeopleTable persons={persons} />}
+                  {!!filteredPersons.length && (
+                    <PeopleTable persons={filteredPersons} />
+                  )}
                 </>
               )}
             </div>

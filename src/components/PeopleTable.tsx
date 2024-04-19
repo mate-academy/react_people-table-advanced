@@ -2,6 +2,10 @@ import { useState } from 'react';
 import { Person } from '../types';
 import classNames from 'classnames';
 import { SearchLink } from './SearchLink';
+import { Gender } from '../enums/Filter';
+import { useSearchParams } from 'react-router-dom';
+import { TableFilter } from '../enums/TableFilter';
+import { SearchParams } from '../utils/searchHelper';
 
 /* eslint-disable jsx-a11y/control-has-associated-label */
 type Props = {
@@ -10,10 +14,28 @@ type Props = {
 
 export const PeopleTable: React.FC<Props> = ({ persons }) => {
   const [selectedPersonSlug] = useState('');
+  const [searchParams] = useSearchParams();
+
+  const sort = searchParams.get('sort') || '';
+  const order = searchParams.get('order') || '';
+  // const slug = searchParams.get('slug') || '';
 
   // const handleSelectedPerson = (slug: string) => {
   //   setSelectedPersonSlug(slug);
   // };
+
+  const tableSort = (sortBy: string): SearchParams => {
+    switch (true) {
+      case sort !== sortBy || (!sort.trim() && !order?.trim()):
+        return { sort: sortBy, order: null };
+
+      case sort === sortBy && !order:
+        return { sort: sortBy, order: TableFilter.DescOrder };
+
+      default:
+        return { sort: null, order: null };
+    }
+  };
 
   return (
     <table
@@ -25,44 +47,96 @@ export const PeopleTable: React.FC<Props> = ({ persons }) => {
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Name
-              <a href="#/people?sort=name">
+              <SearchLink params={tableSort(TableFilter.Name)}>
                 <span className="icon">
-                  <i className="fas fa-sort" />
+                  <i
+                    className={classNames(
+                      'fas',
+                      {
+                        'fa-sort': sort !== TableFilter.Name,
+                      },
+                      { 'fa-sort-up': sort === TableFilter.Name && !order },
+                      {
+                        'fa-sort-down':
+                          sort === TableFilter.Name &&
+                          order === TableFilter.DescOrder,
+                      },
+                    )}
+                  />
                 </span>
-              </a>
+              </SearchLink>
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Sex
-              <a href="#/people?sort=sex">
+              <SearchLink params={tableSort(TableFilter.Sex)}>
                 <span className="icon">
-                  <i className="fas fa-sort" />
+                  <i
+                    className={classNames(
+                      'fas',
+                      {
+                        'fa-sort': sort !== TableFilter.Sex,
+                      },
+                      { 'fa-sort-up': sort === TableFilter.Sex && !order },
+                      {
+                        'fa-sort-down':
+                          sort === TableFilter.Sex &&
+                          order === TableFilter.DescOrder,
+                      },
+                    )}
+                  />
                 </span>
-              </a>
+              </SearchLink>
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Born
-              <a href="#/people?sort=born&amp;order=desc">
+              <SearchLink params={tableSort(TableFilter.Born)}>
                 <span className="icon">
-                  <i className="fas fa-sort-up" />
+                  <i
+                    className={classNames(
+                      'fas',
+                      {
+                        'fa-sort': sort !== TableFilter.Born,
+                      },
+                      { 'fa-sort-up': sort === TableFilter.Born && !order },
+                      {
+                        'fa-sort-down':
+                          sort === TableFilter.Born &&
+                          order === TableFilter.DescOrder,
+                      },
+                    )}
+                  />
                 </span>
-              </a>
+              </SearchLink>
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Died
-              <a href="#/people?sort=died">
+              <SearchLink params={tableSort(TableFilter.Died)}>
                 <span className="icon">
-                  <i className="fas fa-sort" />
+                  <i
+                    className={classNames(
+                      'fas',
+                      {
+                        'fa-sort': sort !== TableFilter.Died,
+                      },
+                      { 'fa-sort-up': sort === TableFilter.Died && !order },
+                      {
+                        'fa-sort-down':
+                          sort === TableFilter.Died &&
+                          order === TableFilter.DescOrder,
+                      },
+                    )}
+                  />
                 </span>
-              </a>
+              </SearchLink>
             </span>
           </th>
 
@@ -83,9 +157,9 @@ export const PeopleTable: React.FC<Props> = ({ persons }) => {
             >
               <td>
                 <SearchLink
-                  params={{ test: 'test' }}
+                  params={{ slug: person.slug }}
                   className={classNames({
-                    'has-text-danger': person.sex === 'f',
+                    'has-text-danger': person.sex === Gender.Female,
                   })}
                 >
                   {person.name}
@@ -98,9 +172,9 @@ export const PeopleTable: React.FC<Props> = ({ persons }) => {
               <td>
                 {person.mother ? (
                   <SearchLink
-                    params={{ test: 'test' }}
+                    params={{ slug: person.mother.slug }}
                     className={classNames({
-                      'has-text-danger': person.mother.sex === 'f',
+                      'has-text-danger': person.mother.sex === Gender.Female,
                     })}
                   >
                     {person.motherName}
@@ -113,7 +187,7 @@ export const PeopleTable: React.FC<Props> = ({ persons }) => {
               </td>
               <td>
                 {person.father ? (
-                  <SearchLink params={{ test: 'test' }}>
+                  <SearchLink params={{ slug: person.father.slug }}>
                     {person.fatherName}
                   </SearchLink>
                 ) : person.fatherName ? (
