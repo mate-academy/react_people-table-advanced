@@ -65,9 +65,11 @@ export const PeoplePage: React.FC = () => {
                     </p>
                   )}
 
-                  <p>
-                    There are no people matching the current search criteria
-                  </p>
+                  {persons?.length === 0 && (
+                    <p>
+                      There are no people matching the current search criteria
+                    </p>
+                  )}
 
                   {persons && <PeopleTable persons={persons} />}
                 </>
