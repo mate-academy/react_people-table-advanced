@@ -1,9 +1,8 @@
-import { useState } from 'react';
 import { Person } from '../types';
 import classNames from 'classnames';
 import { SearchLink } from './SearchLink';
 import { Gender } from '../enums/Filter';
-import { useSearchParams } from 'react-router-dom';
+import { Link, useParams, useSearchParams } from 'react-router-dom';
 import { TableFilter } from '../enums/TableFilter';
 import { SearchParams } from '../utils/searchHelper';
 
@@ -13,16 +12,12 @@ type Props = {
 };
 
 export const PeopleTable: React.FC<Props> = ({ persons }) => {
-  const [selectedPersonSlug] = useState('');
   const [searchParams] = useSearchParams();
 
   const sort = searchParams.get('sort') || '';
   const order = searchParams.get('order') || '';
-  // const slug = searchParams.get('slug') || '';
 
-  // const handleSelectedPerson = (slug: string) => {
-  //   setSelectedPersonSlug(slug);
-  // };
+  const { slug } = useParams();
 
   const tableSort = (sortBy: string): SearchParams => {
     switch (true) {
@@ -152,18 +147,21 @@ export const PeopleTable: React.FC<Props> = ({ persons }) => {
               data-cy="person"
               key={person.slug}
               className={classNames({
-                'has-background-warning': person.slug === selectedPersonSlug,
+                'has-background-warning': person.slug === slug,
               })}
             >
               <td>
-                <SearchLink
-                  params={{ slug: person.slug }}
+                <Link
+                  to={{
+                    pathname: `/people/${person.slug}`,
+                    search: searchParams.toString(),
+                  }}
                   className={classNames({
                     'has-text-danger': person.sex === Gender.Female,
                   })}
                 >
                   {person.name}
-                </SearchLink>
+                </Link>
               </td>
 
               <td>{person.sex}</td>
