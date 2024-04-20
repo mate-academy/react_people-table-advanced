@@ -16,13 +16,17 @@ export const PeopleFilters: React.FC<Props> = ({
   searchParams,
   setSearchParams,
   query,
-  sex,
+  sex: currentSex,
   centuries,
 }) => {
   const setSearchWith = (params: SearchParams) => {
     const search = getSearchWith(searchParams, params);
 
     setSearchParams(search);
+  };
+
+  const handleSexFilterClick = (newSex: string | null) => {
+    setSearchWith({ sex: newSex });
   };
 
   const handleQueryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -59,9 +63,9 @@ export const PeopleFilters: React.FC<Props> = ({
           <SearchLink
             params={{ sex: filter.sex }}
             className={cn({
-              'is-active': filter.sex === sex,
+              'is-active': filter.sex === currentSex,
             })}
-            // "is-active"
+            onClick={() => handleSexFilterClick(filter.sex)}
             key={filter.name}
           >
             {filter.name}
