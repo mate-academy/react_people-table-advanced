@@ -38,6 +38,7 @@ const configureNewParams = (
 
 export const PeopleTable: React.FC<Props> = ({ people }) => {
   const [searchParams] = useSearchParams();
+
   const sortedBy = searchParams.get('sort');
 
   const isOrderDesc = searchParams.get('order') === 'desc';
