@@ -28,13 +28,11 @@ export const PeopleTable: React.FC = () => {
         dispatch({ type: Actions.getPeople, people: response });
         dispatch({ type: Actions.setIsLoading, status: false });
       })
-      .catch(error => {
+      .catch(() => {
         dispatch({
           type: Actions.setErrorMessage,
           errorMessage: 'Something went wrong',
         });
-
-        throw error;
       });
   }, [dispatch]);
 

@@ -7,16 +7,6 @@ type Props = {
   person: Person;
 };
 
-const objectNames = (people: Person[]) =>
-  people.map((p: Person) => {
-    return p.name ? p.name : null;
-  });
-
-const getParentIndex = (names: (string | null)[], name: string | null) =>
-  names
-    .map((sexName, i) => (sexName === name ? i : null))
-    .filter(index => index !== null);
-
 export const PersonLink: React.FC<Props> = ({ person }) => {
   const { name, sex, born, died, fatherName, motherName, slug } = person;
   const [searchParams] = useSearchParams();
@@ -26,11 +16,10 @@ export const PersonLink: React.FC<Props> = ({ person }) => {
   const isMotherName = motherName ? motherName : '-';
   const isFatherName = motherName ? fatherName : '-';
 
-  const isNameMother = objectNames(people).includes(motherName);
-  const isNameFather = objectNames(people).includes(fatherName);
-
-  const indexMotherSlug = getParentIndex(objectNames(people), motherName);
-  const indexFatherSlug = getParentIndex(objectNames(people), fatherName);
+  // eslint-disable-next-line @typescript-eslint/no-shadow
+  const indexMotherSlug = people.find(({ name }) => name === person.motherName);
+  // eslint-disable-next-line @typescript-eslint/no-shadow
+  const indexFatherSlug = people.find(({ name }) => name === person.fatherName);
 
   return (
     <tr
@@ -56,11 +45,11 @@ export const PersonLink: React.FC<Props> = ({ person }) => {
       <td>{sex}</td>
       <td>{born}</td>
       <td>{died}</td>
-      {isNameMother && indexMotherSlug !== null ? (
+      {indexMotherSlug ? (
         <td>
           <Link
             to={{
-              pathname: `/people/${people[+indexMotherSlug].slug}`,
+              pathname: `/people/${indexMotherSlug?.slug}`,
               search: searchParams.toString(),
             }}
             className="has-text-danger"
@@ -71,11 +60,11 @@ export const PersonLink: React.FC<Props> = ({ person }) => {
       ) : (
         <td>{isMotherName}</td>
       )}
-      {isNameFather && indexFatherSlug !== null ? (
+      {indexFatherSlug ? (
         <td>
           <Link
             to={{
-              pathname: `/people/${people[+indexFatherSlug].slug}`,
+              pathname: `/people/${indexFatherSlug?.slug}`,
               search: searchParams.toString(),
             }}
           >
