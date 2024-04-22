@@ -1,32 +1,24 @@
 import React from 'react';
-import cn from 'classnames';
-
+import classNames from 'classnames';
+import { useSearchParams } from 'react-router-dom';
 import { SearchLink } from '../SearchLink';
+import { Sex } from '../../types/Sex';
 import { SearchParams, getSearchWith } from '../../utils/searchHelper';
 
-type Props = {
-  searchParams: URLSearchParams;
-  setSearchParams: (searchParams: URLSearchParams | string) => void;
-  query: string;
-  sex: string | null;
-  centuries: string[];
-};
+const CENTERIES = ['16', '17', '18', '19', '20'];
 
-export const PeopleFilters: React.FC<Props> = ({
-  searchParams,
-  setSearchParams,
-  query,
-  sex: currentSex,
-  centuries,
-}) => {
+export const PeopleFilters = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const query = searchParams.get('query') || '';
+
+  const sex = searchParams.get('sex');
+
+  const centeryParams = searchParams.getAll('centuries') || [];
+
   const setSearchWith = (params: SearchParams) => {
     const search = getSearchWith(searchParams, params);
 
     setSearchParams(search);
-  };
-
-  const handleSexFilterClick = (newSex: string | null) => {
-    setSearchWith({ sex: newSex });
   };
 
   const handleQueryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -37,40 +29,30 @@ export const PeopleFilters: React.FC<Props> = ({
     setSearchWith({ query: null });
   };
 
-  const sexFilters = [
-    {
-      name: 'All',
-      sex: null,
-    },
-    {
-      name: 'Male',
-      sex: 'm',
-    },
-    {
-      name: 'Female',
-      sex: 'f',
-    },
-  ];
-
-  const allCenturies = ['16', '17', '18', '19', '20'];
+  const toogleCenteries = (cent: string) => {
+    if (centeryParams.includes(cent)) {
+      return centeryParams.filter(centeryFilter => centeryFilter !== cent);
+    } else {
+      return [...centeryParams, cent];
+    }
+  };
 
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        {sexFilters.map(filter => (
-          <SearchLink
-            params={{ sex: filter.sex }}
-            className={cn({
-              'is-active': filter.sex === currentSex,
-            })}
-            onClick={() => handleSexFilterClick(filter.sex)}
-            key={filter.name}
-          >
-            {filter.name}
-          </SearchLink>
-        ))}
+        {Object.entries(Sex).map(([sexKey, sexValue]) => {
+          return (
+            <SearchLink
+              key={sexKey}
+              className={classNames({ 'is-active': sex === sexValue })}
+              params={{ sex: sexValue === '' ? null : sexValue }}
+            >
+              {sexKey}
+            </SearchLink>
+          );
+        })}
       </p>
 
       <div className="panel-block">
@@ -93,20 +75,15 @@ export const PeopleFilters: React.FC<Props> = ({
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            {allCenturies.map(century => (
+            {CENTERIES.map(centery => (
               <SearchLink
-                key={century}
-                data-cy="century"
-                className={cn('button mr-1', {
-                  'is-info': centuries.includes(century),
+                key={centery}
+                className={classNames('button mr-1', {
+                  'is-info': centeryParams.includes(centery),
                 })}
-                params={{
-                  centuries: centuries.includes(century)
-                    ? centuries.filter(ch => century !== ch)
-                    : [...centuries, century],
-                }}
+                params={{ centuries: toogleCenteries(centery) }}
               >
-                {century}
+                {centery}
               </SearchLink>
             ))}
           </div>

@@ -1,30 +1,63 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Loader } from '../../components/Loader';
 import { getPeople } from '../../api';
 import { Person } from '../../types';
-import { PeopleTable } from '../../components/People';
 import { PeopleFilters } from '../../components/People/PeopleFilters';
-import { useSearchParams } from 'react-router-dom';
+import { PeopleList } from '../../components/People/PeopleList';
+import { useParams, useSearchParams } from 'react-router-dom';
 
-export const PeoplePage: React.FC = () => {
-  const [searchParams, setSearchParams] = useSearchParams();
+const peopleFilter = (visiblesPeople: Person[], query: string) => {
+  return visiblesPeople.filter(
+    person =>
+      person.name.toLowerCase().includes(query.trim().toLowerCase()) ||
+      person.motherName?.toLowerCase().includes(query.trim().toLowerCase()) ||
+      person.fatherName?.toLowerCase().includes(query.trim().toLowerCase()),
+  );
+};
+
+export const PeoplePage = () => {
+  const [searchParams] = useSearchParams();
   const query = searchParams.get('query') || '';
   const sex = searchParams.get('sex');
   const centuries = searchParams.getAll('centuries') || [];
 
   const [people, setPeople] = useState<Person[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [isError, setIsError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string>('');
+  const [isLoading, setIsLoading] = useState(false);
 
-  const isPeopleErrorShown = !isError && people.length === 0;
-  const isPeopleTableShown = !isError && people.length > 0;
+  let visiblesPeople = [...people];
+
+  if (query) {
+    visiblesPeople = peopleFilter(visiblesPeople, query);
+  }
+
+  if (sex) {
+    visiblesPeople = visiblesPeople.filter(personSex => personSex.sex === sex);
+  }
+
+  if (centuries.length > 0) {
+    visiblesPeople = visiblesPeople.filter(person =>
+      centuries.some(centery => Math.ceil(person.born / 100) === +centery),
+    );
+  }
+
+  const { personId = '' } = useParams();
 
   useEffect(() => {
+    setIsLoading(true);
     getPeople()
       .then(setPeople)
-      .catch(() => setIsError(true))
+      .catch(error => {
+        setErrorMessage(`Something went wrong: ${error.message}`);
+      })
       .finally(() => setIsLoading(false));
-  }, []);
+  }, [errorMessage]);
+
+  const getFather = (name: string | null) =>
+    visiblesPeople.find(person => person.name === name);
+
+  const getMother = (name: string | null) =>
+    visiblesPeople.find(person => person.name === name);
 
   return (
     <>
@@ -33,43 +66,36 @@ export const PeoplePage: React.FC = () => {
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
           <div className="column is-7-tablet is-narrow-desktop">
-            {!isLoading && (
-              <PeopleFilters
-                searchParams={searchParams}
-                setSearchParams={setSearchParams}
-                query={query}
-                sex={sex}
-                centuries={centuries}
-              />
-            )}
+            <PeopleFilters />
           </div>
+
           <div className="column">
             <div className="box table-container">
               {isLoading ? (
                 <Loader />
               ) : (
                 <>
-                  {isError && (
+                  {errorMessage && (
                     <p data-cy="peopleLoadingError" className="has-text-danger">
-                      Something went wrong
+                      {errorMessage}
                     </p>
                   )}
 
-                  {isPeopleErrorShown && (
+                  {!people?.length && (
                     <p data-cy="noPeopleMessage">
                       There are no people on the server
                     </p>
                   )}
-
-                  {isPeopleTableShown && (
-                    <PeopleTable
-                      people={people}
-                      query={query}
-                      sex={sex}
-                      centuries={centuries}
-                    />
-                  )}
                 </>
+              )}
+
+              {!!people.length && (
+                <PeopleList
+                  people={visiblesPeople}
+                  personId={personId}
+                  getFather={getFather}
+                  getMother={getMother}
+                />
               )}
             </div>
           </div>
