@@ -6,7 +6,7 @@ import classNames from 'classnames';
 const findPersonByName = (people: Person[], name: string) =>
   people.find(item => item.name === name);
 
-const renderMotherCell = (person: Person, people: Person[]) => {
+const renderMotherCell = (person: Person, people: Person[], search: string) => {
   const { motherName } = person;
 
   if (!motherName) {
@@ -21,14 +21,17 @@ const renderMotherCell = (person: Person, people: Person[]) => {
 
   return (
     <td>
-      <Link to={`../${mother.slug}`} className="has-text-danger">
+      <Link
+        to={{ pathname: `../${mother.slug}`, search }}
+        className="has-text-danger"
+      >
         {motherName}
       </Link>
     </td>
   );
 };
 
-const renderFatherCell = (person: Person, people: Person[]) => {
+const renderFatherCell = (person: Person, people: Person[], search: string) => {
   const { fatherName } = person;
 
   if (!fatherName) {
@@ -43,7 +46,7 @@ const renderFatherCell = (person: Person, people: Person[]) => {
 
   return (
     <td>
-      <Link to={`../${father.slug}`}>{fatherName}</Link>
+      <Link to={{ pathname: `../${father.slug}`, search }}>{fatherName}</Link>
     </td>
   );
 };
@@ -82,8 +85,8 @@ export const PersonLink: React.FC<Props> = ({ person, people }) => {
       <td>{sex}</td>
       <td>{born}</td>
       <td>{died}</td>
-      {renderMotherCell(person, people)}
-      {renderFatherCell(person, people)}
+      {renderMotherCell(person, people, search)}
+      {renderFatherCell(person, people, search)}
     </tr>
   );
 };

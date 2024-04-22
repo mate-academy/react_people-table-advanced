@@ -1,14 +1,15 @@
 import classNames from 'classnames';
 import { Link, NavLink, useSearchParams } from 'react-router-dom';
 import { getSearchWith } from '../utils/searchHelper';
+import { QueryParams } from '../types/QueryParams';
 
 export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const sex = searchParams.get('sex') || '';
-  const query = searchParams.get('query') || '';
+  const sex = searchParams.get(QueryParams.Sex) || '';
+  const query = searchParams.get(QueryParams.Query) || '';
 
-  const centuries = searchParams.getAll('centuries') || [];
+  const centuries = searchParams.getAll(QueryParams.Centuries) || [];
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   function setSearchWith(params: any) {
@@ -72,7 +73,7 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            {[17, 18, 19, 20].map(number => (
+            {[16, 17, 18, 19, 20].map(number => (
               <Link
                 key={number}
                 to={{

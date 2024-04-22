@@ -7,6 +7,7 @@ import { getSearchWith } from '../utils/searchHelper';
 import classNames from 'classnames';
 import { checkSorts } from '../utils/checkSorts';
 import { Person } from '../types';
+import { QueryParams } from '../types/QueryParams';
 
 /* eslint-disable jsx-a11y/control-has-associated-label */
 export const PeopleTable = () => {
@@ -16,13 +17,13 @@ export const PeopleTable = () => {
 
   const [searchParams] = useSearchParams();
 
-  const sex = searchParams.get('sex') || '';
-  const query = searchParams.get('query') || '';
-  const sort = searchParams.get('sort') || '';
-  const order = searchParams.get('order') || '';
+  const sex = searchParams.get(QueryParams.Sex) || '';
+  const query = searchParams.get(QueryParams.Query) || '';
+  const sort = searchParams.get(QueryParams.Sort) || '';
+  const order = searchParams.get(QueryParams.Order) || '';
 
   const centuries = useMemo(
-    () => searchParams.getAll('centuries') || [],
+    () => searchParams.getAll(QueryParams.Centuries) || [],
     [searchParams],
   );
 
@@ -93,12 +94,12 @@ export const PeopleTable = () => {
   }, [sex, people, centuries, query]);
 
   useEffect(() => {
-    sortByText('name');
+    sortByText(QueryParams.Name);
 
-    sortByText('sex');
+    sortByText(QueryParams.Sex);
 
-    sortByNumber('born');
-    sortByNumber('died');
+    sortByNumber(QueryParams.Born);
+    sortByNumber(QueryParams.Died);
   }, [sort, order, sortByNumber, sortByText]);
 
   return (
@@ -119,16 +120,16 @@ export const PeopleTable = () => {
                     to={{
                       search: getSearchWith(
                         searchParams,
-                        checkSorts(order, sort, 'name'),
+                        checkSorts(order, sort, QueryParams.Name),
                       ),
                     }}
                   >
                     <span className="icon">
                       <i
                         className={classNames('fas', {
-                          'fa-sort': sort !== 'name',
-                          'fa-sort-down': sort === 'name',
-                          'fa-sort-up': sort === 'name' && order,
+                          'fa-sort': sort !== QueryParams.Name,
+                          'fa-sort-down': sort === QueryParams.Name,
+                          'fa-sort-up': sort === QueryParams.Name && order,
                         })}
                       />
                     </span>
@@ -143,16 +144,16 @@ export const PeopleTable = () => {
                     to={{
                       search: getSearchWith(
                         searchParams,
-                        checkSorts(order, sort, 'sex'),
+                        checkSorts(order, sort, QueryParams.Sex),
                       ),
                     }}
                   >
                     <span className="icon">
                       <i
                         className={classNames('fas', {
-                          'fa-sort': sort !== 'sex',
-                          'fa-sort-down': sort === 'sex',
-                          'fa-sort-up': sort === 'sex' && order,
+                          'fa-sort': sort !== QueryParams.Sex,
+                          'fa-sort-down': sort === QueryParams.Sex,
+                          'fa-sort-up': sort === QueryParams.Sex && order,
                         })}
                       />
                     </span>
@@ -167,16 +168,16 @@ export const PeopleTable = () => {
                     to={{
                       search: getSearchWith(
                         searchParams,
-                        checkSorts(order, sort, 'born'),
+                        checkSorts(order, sort, QueryParams.Born),
                       ),
                     }}
                   >
                     <span className="icon">
                       <i
                         className={classNames('fas', {
-                          'fa-sort': sort !== 'born',
-                          'fa-sort-down': sort === 'born',
-                          'fa-sort-up': sort === 'born' && order,
+                          'fa-sort': sort !== QueryParams.Born,
+                          'fa-sort-down': sort === QueryParams.Born,
+                          'fa-sort-up': sort === QueryParams.Born && order,
                         })}
                       />
                     </span>
@@ -191,16 +192,16 @@ export const PeopleTable = () => {
                     to={{
                       search: getSearchWith(
                         searchParams,
-                        checkSorts(order, sort, 'died'),
+                        checkSorts(order, sort, QueryParams.Died),
                       ),
                     }}
                   >
                     <span className="icon">
                       <i
                         className={classNames('fas', {
-                          'fa-sort': sort !== 'died',
-                          'fa-sort-down': sort === 'died',
-                          'fa-sort-up': sort === 'died' && order,
+                          'fa-sort': sort !== QueryParams.Died,
+                          'fa-sort-down': sort === QueryParams.Died,
+                          'fa-sort-up': sort === QueryParams.Died && order,
                         })}
                       />
                     </span>
