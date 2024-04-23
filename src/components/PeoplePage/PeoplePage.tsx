@@ -27,7 +27,12 @@ export const PeoplePage = () => {
       return false;
     }
 
-    if (query && !person.name.toLowerCase().includes(query.toLowerCase())) {
+    if (
+      query &&
+      !person.name.toLowerCase().includes(query.toLowerCase()) &&
+      !person.fatherName?.toLowerCase().includes(query.toLowerCase()) &&
+      !person.motherName?.toLowerCase().includes(query.toLowerCase())
+    ) {
       return false;
     }
 
