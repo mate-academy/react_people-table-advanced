@@ -1,63 +1,45 @@
+/* eslint-disable prettier/prettier */
 import { useEffect, useState } from 'react';
 import { Loader } from '../../components/Loader';
+import { PeopleTable } from '../../components/People';
 import { getPeople } from '../../api';
 import { Person } from '../../types';
 import { PeopleFilters } from '../../components/People/PeopleFilters';
-import { PeopleList } from '../../components/People/PeopleList';
-import { useParams, useSearchParams } from 'react-router-dom';
-
-const peopleFilter = (visiblesPeople: Person[], query: string) => {
-  return visiblesPeople.filter(
-    person =>
-      person.name.toLowerCase().includes(query.trim().toLowerCase()) ||
-      person.motherName?.toLowerCase().includes(query.trim().toLowerCase()) ||
-      person.fatherName?.toLowerCase().includes(query.trim().toLowerCase()),
-  );
-};
+import { useSearchParams } from 'react-router-dom';
 
 export const PeoplePage = () => {
-  const [searchParams] = useSearchParams();
-  const query = searchParams.get('query') || '';
-  const sex = searchParams.get('sex');
-  const centuries = searchParams.getAll('centuries') || [];
-
   const [people, setPeople] = useState<Person[]>([]);
-  const [errorMessage, setErrorMessage] = useState<string>('');
-  const [isLoading, setIsLoading] = useState(false);
-
-  let visiblesPeople = [...people];
-
-  if (query) {
-    visiblesPeople = peopleFilter(visiblesPeople, query);
-  }
-
-  if (sex) {
-    visiblesPeople = visiblesPeople.filter(personSex => personSex.sex === sex);
-  }
-
-  if (centuries.length > 0) {
-    visiblesPeople = visiblesPeople.filter(person =>
-      centuries.some(centery => Math.ceil(person.born / 100) === +centery),
-    );
-  }
-
-  const { personId = '' } = useParams();
+  const [loading, setLoading] = useState(true);
+  const [hasError, setHasError] = useState(false);
+  const [searchParams] = useSearchParams();
+  const query = (searchParams.get('query') || '').toLowerCase();
+  const centuries = (searchParams.getAll('centuries') || []).map(
+    value => +value,
+  );
+  const sex = searchParams.get('sex') || '';
 
   useEffect(() => {
-    setIsLoading(true);
     getPeople()
-      .then(setPeople)
-      .catch(error => {
-        setErrorMessage(`Something went wrong: ${error.message}`);
-      })
-      .finally(() => setIsLoading(false));
-  }, [errorMessage]);
+      .then(data => setPeople(data))
+      .catch(() => setHasError(true))
+      .finally(() => {
+        setLoading(false);
+      });
+  }, []);
 
-  const getFather = (name: string | null) =>
-    visiblesPeople.find(person => person.name === name);
+  const visiblePeople = people.filter(person => {
+    const queryResult = query
+      ? person.name.toLowerCase().includes(query) ||
+      person.motherName?.toLowerCase().includes(query) ||
+      person.fatherName?.toLowerCase().includes(query)
+      : true;
+    const centuriesResult = centuries.length
+      ? centuries.includes(+`${person.born}`.slice(0, 2) + 1)
+      : true;
+    const sexResult = sex ? person.sex === sex : true;
 
-  const getMother = (name: string | null) =>
-    visiblesPeople.find(person => person.name === name);
+    return queryResult && centuriesResult && sexResult;
+  });
 
   return (
     <>
@@ -66,36 +48,23 @@ export const PeoplePage = () => {
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
           <div className="column is-7-tablet is-narrow-desktop">
-            <PeopleFilters />
+            {!loading && <PeopleFilters />}
           </div>
 
           <div className="column">
             <div className="box table-container">
-              {isLoading ? (
+              {loading ? (
                 <Loader />
+              ) : hasError ? (
+                <p data-cy="peopleLoadingError" className="has-text-danger">
+                  Something went wrong
+                </p>
+              ) : !people.length ? (
+                <p data-cy="noPeopleMessage">
+                  There are no people on the server
+                </p>
               ) : (
-                <>
-                  {errorMessage && (
-                    <p data-cy="peopleLoadingError" className="has-text-danger">
-                      {errorMessage}
-                    </p>
-                  )}
-
-                  {!people?.length && (
-                    <p data-cy="noPeopleMessage">
-                      There are no people on the server
-                    </p>
-                  )}
-                </>
-              )}
-
-              {!!people.length && (
-                <PeopleList
-                  people={visiblesPeople}
-                  personId={personId}
-                  getFather={getFather}
-                  getMother={getMother}
-                />
+                <PeopleTable people={visiblePeople} />
               )}
             </div>
           </div>

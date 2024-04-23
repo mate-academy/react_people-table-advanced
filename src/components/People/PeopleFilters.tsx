@@ -2,57 +2,66 @@ import React from 'react';
 import classNames from 'classnames';
 import { useSearchParams } from 'react-router-dom';
 import { SearchLink } from '../SearchLink';
-import { Sex } from '../../types/Sex';
-import { SearchParams, getSearchWith } from '../../utils/searchHelper';
-
-const CENTERIES = ['16', '17', '18', '19', '20'];
+import { SearchParams } from '../../utils/searchHelper';
 
 export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
+
   const query = searchParams.get('query') || '';
+  const centuries = searchParams.getAll('centuries');
 
-  const sex = searchParams.get('sex');
+  function handleQueryChange(event: React.ChangeEvent<HTMLInputElement>) {
+    const params = new URLSearchParams(searchParams);
+    const value = event.target.value;
 
-  const centeryParams = searchParams.getAll('centuries') || [];
-
-  const setSearchWith = (params: SearchParams) => {
-    const search = getSearchWith(searchParams, params);
-
-    setSearchParams(search);
-  };
-
-  const handleQueryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchWith({ query: event.target.value || null });
-  };
-
-  const clearInput = () => {
-    setSearchWith({ query: null });
-  };
-
-  const toogleCenteries = (cent: string) => {
-    if (centeryParams.includes(cent)) {
-      return centeryParams.filter(centeryFilter => centeryFilter !== cent);
+    if (value.trim()) {
+      params.set('query', value);
     } else {
-      return [...centeryParams, cent];
+      params.delete('query');
     }
-  };
+
+    setSearchParams(params);
+  }
+
+  function getCenturyParams(century: string): SearchParams {
+    return {
+      centuries: centuries.includes(century)
+        ? centuries.filter(c => c !== century)
+        : [...centuries, century],
+    };
+  }
+
+  const centryValues = ['16', '17', '18', '19', '20'];
 
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        {Object.entries(Sex).map(([sexKey, sexValue]) => {
-          return (
-            <SearchLink
-              key={sexKey}
-              className={classNames({ 'is-active': sex === sexValue })}
-              params={{ sex: sexValue === '' ? null : sexValue }}
-            >
-              {sexKey}
-            </SearchLink>
-          );
-        })}
+        <SearchLink
+          params={{ sex: null }}
+          className={classNames({
+            'is-active': searchParams.get('sex') === null,
+          })}
+        >
+          All
+        </SearchLink>
+        <SearchLink
+          params={{ sex: 'm' }}
+          className={classNames({
+            'is-active': searchParams.get('sex') === 'm',
+          })}
+        >
+          Male
+        </SearchLink>
+        <SearchLink
+          params={{ sex: 'f' }}
+          className={classNames({
+            'is-active': searchParams.get('sex') === 'f',
+          })}
+        >
+          Female
+        </SearchLink>
       </p>
 
       <div className="panel-block">
@@ -66,7 +75,7 @@ export const PeopleFilters = () => {
             onChange={handleQueryChange}
           />
 
-          <span className="icon is-left" onClick={clearInput}>
+          <span className="icon is-left">
             <i className="fas fa-search" aria-hidden="true" />
           </span>
         </p>
@@ -75,15 +84,16 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            {CENTERIES.map(centery => (
+            {centryValues.map(value => (
               <SearchLink
-                key={centery}
-                className={classNames('button mr-1', {
-                  'is-info': centeryParams.includes(centery),
+                key={value}
+                data-cy="century"
+                params={getCenturyParams(value)}
+                className={classNames('button', 'mr-1', {
+                  'is-info': centuries.includes(value),
                 })}
-                params={{ centuries: toogleCenteries(centery) }}
               >
-                {centery}
+                {value}
               </SearchLink>
             ))}
           </div>
@@ -91,8 +101,10 @@ export const PeopleFilters = () => {
           <div className="level-right ml-4">
             <SearchLink
               data-cy="centuryALL"
-              className="button is-success is-outlined"
               params={{ centuries: null }}
+              className={classNames('button', 'is-success', {
+                'is-outlined': centuries.length,
+              })}
             >
               All
             </SearchLink>
@@ -102,8 +114,8 @@ export const PeopleFilters = () => {
 
       <div className="panel-block">
         <SearchLink
+          params={{ sex: null, query: null, centuries: null }}
           className="button is-link is-outlined is-fullwidth"
-          params={{ centuries: null, query: null, sex: null }}
         >
           Reset all filters
         </SearchLink>
