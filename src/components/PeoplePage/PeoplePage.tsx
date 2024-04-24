@@ -71,10 +71,14 @@ export const PeoplePage = () => {
                 <PeopleTable people={filteredPeople} />
               )}
 
-              {people.length === 0 && !loading && (
+              {!people.length && !loading && (
                 <p data-cy="noPeopleMessage">
                   There are no people on the server
                 </p>
+              )}
+
+              {!filteredPeople.length && people.length > 0 && (
+                <p>There are no people matching the current search criteria</p>
               )}
             </div>
           </div>
