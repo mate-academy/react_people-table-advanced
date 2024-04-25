@@ -67,7 +67,7 @@ export const PeoplePage = () => {
                 </p>
               )}
 
-              {filteredPeople.length > 0 && (
+              {!!filteredPeople.length && (
                 <PeopleTable people={filteredPeople} />
               )}
 
