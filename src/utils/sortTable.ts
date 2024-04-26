@@ -29,58 +29,24 @@ export function sortTable(
   }
 
   switch (true) {
-    case sort === 'name' && !order:
+    case sort === 'name':
+    case sort === 'sex':
       sortedPeople = sortedPeople.sort((personA, personB) =>
         personA.name.localeCompare(personB.name),
       );
 
       break;
 
-    case sort === 'name' && order:
-      sortedPeople = sortedPeople.sort((personA, personB) =>
-        personA.name.localeCompare(personB.name),
-      );
-
-      break;
-
-    case sort === 'sex' && !order:
-      sortedPeople = sortedPeople.sort((personA, personB) =>
-        personA.sex.localeCompare(personB.sex),
-      );
-
-      break;
-
-    case sort === 'sex' && order:
-      sortedPeople = sortedPeople.sort((personA, personB) =>
-        personB.sex.localeCompare(personA.sex),
-      );
-
-      break;
-
-    case sort === 'born' && !order:
+    case sort === 'born':
       sortedPeople = sortedPeople.sort(
         (personA, personB) => personA.born - personB.born,
       );
 
       break;
 
-    case sort === 'born' && order:
-      sortedPeople = sortedPeople.sort(
-        (personA, personB) => personB.born - personA.born,
-      );
-
-      break;
-
-    case sort === 'died' && !order:
+    case sort === 'died':
       sortedPeople = sortedPeople.sort(
         (personA, personB) => personA.died - personB.died,
-      );
-
-      break;
-
-    case sort === 'died' && order:
-      sortedPeople = sortedPeople.sort(
-        (personA, personB) => personB.died - personA.died,
       );
 
       break;
@@ -89,5 +55,9 @@ export function sortTable(
       return sortedPeople;
   }
 
-  return sortedPeople;
+  if (order) {
+     return sortedPeople.reverse()
+  } else {
+    return sortedPeople
+  }
 }

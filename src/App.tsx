@@ -5,12 +5,12 @@ import './App.scss';
 import classNames from 'classnames';
 
 export const App = () => {
-  const { pathname, search } = useLocation();
+  const { search } = useLocation();
 
   return (
     <div data-cy="app">
       <div className="section">
-        <p>{pathname}</p>
+        {/* <p>{pathname}</p> */}
         <p>{search && search.replaceAll('&', ' &')}</p>
       </div>
       <nav
