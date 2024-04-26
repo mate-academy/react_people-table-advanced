@@ -56,8 +56,8 @@ export function sortTable(
   }
 
   if (order) {
-     return sortedPeople.reverse()
-  } else {
-    return sortedPeople
+    return sortedPeople.reverse();
   }
+
+  return sortedPeople;
 }
