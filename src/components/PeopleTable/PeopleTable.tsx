@@ -120,25 +120,29 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
       </thead>
 
       <tbody>
-        {people.sort(sortByFields).map(person => (
-          <tr
-            data-cy="person"
-            className={classNames({
-              'has-background-warning': slug === person.slug,
-            })}
-            key={person.slug}
-          >
-            <td>
-              <PersonLink person={person} />
-            </td>
+        {people.sort(sortByFields).map(person => {
+          const { sex, born, died, motherName, fatherName } = person;
 
-            <td>{person.sex}</td>
-            <td>{person.born}</td>
-            <td>{person.died}</td>
-            <td>{person.motherName ? findPerson(person.motherName) : '-'}</td>
-            <td>{person.fatherName ? findPerson(person.fatherName) : '-'}</td>
-          </tr>
-        ))}
+          return (
+            <tr
+              data-cy="person"
+              className={classNames({
+                'has-background-warning': slug === person.slug,
+              })}
+              key={slug}
+            >
+              <td>
+                <PersonLink person={person} />
+              </td>
+
+              <td>{sex}</td>
+              <td>{born}</td>
+              <td>{died}</td>
+              <td>{motherName ? findPerson(motherName) : '-'}</td>
+              <td>{fatherName ? findPerson(fatherName) : '-'}</td>
+            </tr>
+          );
+        })}
       </tbody>
     </table>
   );

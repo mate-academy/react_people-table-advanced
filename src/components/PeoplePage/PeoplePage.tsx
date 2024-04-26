@@ -8,9 +8,9 @@ import { useSearchParams } from 'react-router-dom';
 
 export const PeoplePage = () => {
   const [searchParams] = useSearchParams();
-  const [loading, setLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
   const [people, setPeople] = useState<Person[]>([]);
-  const [error, setError] = useState(false);
+  const [hasError, setHasError] = useState(false);
 
   const sex = searchParams.get('sex');
   const query = searchParams.get('query') || '';
@@ -40,11 +40,11 @@ export const PeoplePage = () => {
   });
 
   useEffect(() => {
-    setLoading(true);
+    setIsLoading(true);
     getPeople()
       .then(setPeople)
-      .catch(() => setError(true))
-      .finally(() => setLoading(false));
+      .catch(() => setHasError(true))
+      .finally(() => setIsLoading(false));
   }, []);
 
   return (
@@ -54,14 +54,14 @@ export const PeoplePage = () => {
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
           <div className="column is-7-tablet is-narrow-desktop">
-            {!loading && <PeopleFilters />}
+            {!isLoading && <PeopleFilters />}
           </div>
 
           <div className="column">
             <div className="box table-container">
-              {loading && <Loader />}
+              {isLoading && <Loader />}
 
-              {error && (
+              {hasError && (
                 <p data-cy="peopleLoadingError" className="has-text-danger">
                   Something went wrong
                 </p>
@@ -71,7 +71,7 @@ export const PeoplePage = () => {
                 <PeopleTable people={filteredPeople} />
               )}
 
-              {!people.length && !loading && (
+              {!people.length && !isLoading && (
                 <p data-cy="noPeopleMessage">
                   There are no people on the server
                 </p>
