@@ -129,7 +129,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
               className={classNames({
                 'has-background-warning': slug === person.slug,
               })}
-              key={slug}
+              key={person.slug}
             >
               <td>
                 <PersonLink person={person} />
