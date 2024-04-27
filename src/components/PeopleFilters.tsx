@@ -31,6 +31,8 @@ export const PeopleFilters = () => {
     { key: 'f', label: 'Female', param: 'f' },
   ];
 
+  const centuriesArray = ['16', '17', '18', '19', '20'];
+
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
@@ -40,7 +42,7 @@ export const PeopleFilters = () => {
           <SearchLink
             key={filter.key}
             params={{ sex: filter.param }}
-            className={currentSex === filter.param ? 'is-active' : ''}
+            className={classNames({ 'is-active': currentSex === filter.param })}
           >
             {filter.label}
           </SearchLink>
@@ -54,7 +56,7 @@ export const PeopleFilters = () => {
             type="search"
             className="input"
             placeholder="Search"
-            value={`${query || ''}`}
+            value={query}
             onChange={handleQueryChange}
           />
 
@@ -66,7 +68,7 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            {['16', '17', '18', '19', '20'].map(century => (
+            {centuriesArray.map(century => (
               <SearchLink
                 key={century}
                 data-cy="century"

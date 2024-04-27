@@ -75,11 +75,11 @@ export const PeoplePage = () => {
                 </p>
               )}
 
-              {!loading && !error && filteredPeople.length === 0 && (
+              {!loading && !error && !filteredPeople.length && (
                 <p>There are no people matching the current search criteria</p>
               )}
 
-              {!loading && !error && filteredPeople.length > 0 && (
+              {!loading && !error && !!filteredPeople.length && (
                 <PeopleTable people={filteredPeople} />
               )}
             </div>
