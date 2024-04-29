@@ -4,19 +4,18 @@ import { Person } from '../types';
 
 type Props = {
   person: Person;
-  children: React.ReactNode;
 };
 
 const GENDER_FEMALE = 'f';
 
-export const PersonLink: React.FC<Props> = ({ person, children }) => {
-  const { slug } = person;
+export const PersonLink: React.FC<Props> = ({ person }) => {
+  const { name, slug, sex } = person;
   const to = `../people/${slug}`;
-  const className = person.sex === GENDER_FEMALE ? 'has-text-danger' : '';
+  const className = sex === GENDER_FEMALE ? 'has-text-danger' : '';
 
   return (
     <Link to={to} className={className}>
-      {children}
+      {name}
     </Link>
   );
 };
