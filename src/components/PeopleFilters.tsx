@@ -17,7 +17,7 @@ export const PeopleFilters = () => {
   const handleQueryChange = (
     e: React.ChangeEvent<HTMLInputElement>,
     // eslint-disable-next-line
-    dispatch: (Action: Action<string>) => void,
+    dispatch: (Action: Action) => void,
   ) => {
     dispatch({ type: 'SET_FILTERED_ERROR', payload: '' });
 
