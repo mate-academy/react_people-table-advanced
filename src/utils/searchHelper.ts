@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export type SearchParams = {
   [key: string]: string | string[] | null;
 };
@@ -41,4 +42,14 @@ export function getSearchWith(
 
   // we return a string to use it inside links
   return newParams.toString();
+}
+
+export function setSearchWith(
+  searchParams: URLSearchParams,
+  setSearchParams: any,
+  params: any,
+) {
+  const search = getSearchWith(searchParams, params);
+
+  setSearchParams(search);
 }
