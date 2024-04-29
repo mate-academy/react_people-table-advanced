@@ -3,7 +3,7 @@ import { PersonType } from '../../types';
 import { PersonLink } from '../PersonLink/PersonLink';
 import classNames from 'classnames';
 
-const noParents = '-';
+const NO_PARENTS = '-';
 
 type Props = {
   person: PersonType;
@@ -27,10 +27,10 @@ export const Person: React.FC<Props> = ({ person }) => {
       <td>{born}</td>
       <td>{died}</td>
       <td>
-        {mother ? <PersonLink person={mother} /> : motherName || noParents}
+        {mother ? <PersonLink person={mother} /> : motherName || NO_PARENTS}
       </td>
       <td>
-        {father ? <PersonLink person={father} /> : fatherName || noParents}
+        {father ? <PersonLink person={father} /> : fatherName || NO_PARENTS}
       </td>
     </tr>
   );

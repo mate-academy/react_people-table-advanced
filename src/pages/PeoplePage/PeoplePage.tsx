@@ -1,11 +1,10 @@
 import { PeopleFilters } from '../../components/PeopleFilters/PeopleFilters';
 import { Loader } from '../../components/Loader';
 import { PeopleTable } from '../../components/PeopleTable/PeopleTable';
-import { useContext } from 'react';
-import { PeopleContext } from '../../context/PeopleContext';
+import { usePeople } from '../../hooks/usePeople';
 
 export const PeoplePage = () => {
-  const { people, error, isLoading } = useContext(PeopleContext);
+  const { people, error, isLoading } = usePeople();
 
   return (
     <>
@@ -13,7 +12,7 @@ export const PeoplePage = () => {
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
           <div className="column is-7-tablet is-narrow-desktop">
-            {people.length !== 0 && <PeopleFilters />}
+            {!!people.length && <PeopleFilters />}
           </div>
 
           <div className="column">
@@ -22,12 +21,12 @@ export const PeoplePage = () => {
 
               {error && <p data-cy="peopleLoadingError">{error}</p>}
 
-              {!isLoading && people.length === 0 && (
+              {!isLoading && !people.length && (
                 <p data-cy="noPeopleMessage">
                   There are no people on the server
                 </p>
               )}
-              {people.length !== 0 && <PeopleTable />}
+              {!!people.length && <PeopleTable />}
             </div>
           </div>
         </div>

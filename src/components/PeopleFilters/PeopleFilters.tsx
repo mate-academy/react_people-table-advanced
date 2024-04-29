@@ -3,7 +3,7 @@ import { getSearchWith } from '../../utils/searchHelper';
 import classNames from 'classnames';
 import { SearchLink } from '../SearchLink';
 
-const centuries = ['16', '17', '18', '19', '20'];
+const CENTURIES = ['16', '17', '18', '19', '20'];
 
 enum PersonGender {
   All = '',
@@ -27,7 +27,7 @@ export const PeopleFilters = () => {
 
   const toggleCentury = (century: string) => {
     return selectedCenturies.includes(century)
-      ? selectedCenturies.filter(c => c !== century)
+      ? selectedCenturies.filter(selectedCentury => selectedCentury !== century)
       : [...selectedCenturies, century];
   };
 
@@ -36,30 +36,17 @@ export const PeopleFilters = () => {
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        <SearchLink
-          className={classNames(
-            currentSex === PersonGender.All ? 'is-active' : '',
-          )}
-          params={{ sex: PersonGender.All }}
-        >
-          All
-        </SearchLink>
-        <SearchLink
-          className={classNames(
-            currentSex === PersonGender.Male ? 'is-active' : '',
-          )}
-          params={{ sex: PersonGender.Male }}
-        >
-          Male
-        </SearchLink>
-        <SearchLink
-          className={classNames(
-            currentSex === PersonGender.Female ? 'is-active' : '',
-          )}
-          params={{ sex: PersonGender.Female }}
-        >
-          Female
-        </SearchLink>
+        {Object.entries(PersonGender).map(([key, value]) => (
+          <SearchLink
+            key={key}
+            className={classNames({
+              'is-active': currentSex === value,
+            })}
+            params={{ sex: value }}
+          >
+            {key}
+          </SearchLink>
+        ))}
       </p>
 
       <div className="panel-block">
@@ -82,7 +69,7 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            {centuries.map(century => (
+            {CENTURIES.map(century => (
               <SearchLink
                 key={century}
                 data-cy="century"
@@ -99,10 +86,10 @@ export const PeopleFilters = () => {
           <div className="level-right ml-4">
             <SearchLink
               data-cy="centuryALL"
-              className={`button ${
-                selectedCenturies.length === 0 ? 'is-success' : 'is-outlined'
-              }`}
-              params={{ scenturie: [] }}
+              className={classNames('button is-success', {
+                'is-outlined': selectedCenturies.length,
+              })}
+              params={{ centuries: [] }}
             >
               All
             </SearchLink>

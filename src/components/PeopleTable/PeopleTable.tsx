@@ -1,15 +1,14 @@
-import { useContext } from 'react';
-import { PeopleContext } from '../../context/PeopleContext';
 import { Person } from '../Person/Person';
 import { SearchLink } from '../SearchLink';
 import { useSearchParams } from 'react-router-dom';
 import { getVisiblePeople } from '../../utils/getVisiblePeople';
 import classNames from 'classnames';
+import { usePeople } from '../../hooks/usePeople';
 
-const columns = ['Name', 'Sex', 'Born', 'Died', 'Mother', 'Father'];
+const COLUMNS = ['Name', 'Sex', 'Born', 'Died', 'Mother', 'Father'];
 
 export const PeopleTable = () => {
-  const { people } = useContext(PeopleContext);
+  const { people } = usePeople();
   const [searchParams] = useSearchParams();
   const sort = searchParams.get('sort');
   const order = searchParams.get('order');
@@ -47,7 +46,7 @@ export const PeopleTable = () => {
         <>
           <thead>
             <tr>
-              {columns.map(column => (
+              {COLUMNS.map(column => (
                 <th key={column}>
                   {isParentColumn(column) ? (
                     column

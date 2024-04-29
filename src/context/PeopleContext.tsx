@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { getPeople } from '../api';
 import { PersonType } from '../types';
 
-interface PeopleContextType {
+export interface PeopleContextType {
   people: PersonType[];
   error: string;
   isLoading: boolean;
