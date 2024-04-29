@@ -4,7 +4,7 @@ import { PersonItem } from './PersonItem';
 import { useLocation } from 'react-router-dom';
 import { usePeople } from '../store/PeopleContext';
 import { columnHeaders } from '../utils/columnHeaders';
-import { TableHeader } from './TableHeader';
+import { SortNames } from './TableHeader';
 import { sortPeople, filterPeople } from '../helpers/utils';
 
 enum ErrorMessages {
@@ -53,7 +53,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
               <tr>
                 {columnHeaders.map(({ columnName, sortParam }) => (
                   <th key={columnName}>
-                    <TableHeader
+                    <SortNames
                       columnName={columnName}
                       sortParam={sortParam}
                       sortColumn={sortColumn}

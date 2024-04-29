@@ -8,7 +8,7 @@ type Props = {
   sortParam: string | null;
 };
 
-export const TableHeader: React.FC<Props> = ({
+export const SortNames: React.FC<Props> = ({
   columnName,
   sortColumn,
   isReversed,

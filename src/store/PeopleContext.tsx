@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Person } from '../types';
-import { getPeople } from '../api';
+import { preparePeopleData } from '../helpers/utils';
 
 interface Props {
   children: React.ReactNode;
@@ -28,25 +28,9 @@ export const PeopleProvider: React.FC<Props> = ({ children }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const fetchedPeople = await getPeople();
+        const preparedPeople = await preparePeopleData();
 
-        const preparedPeople = fetchedPeople.map(person => {
-          const mother = person.motherName
-            ? fetchedPeople.find(p => p.name === person.motherName) ?? null
-            : null;
-
-          const father = person.fatherName
-            ? fetchedPeople.find(p => p.name === person.fatherName) ?? null
-            : null;
-
-          return {
-            ...person,
-            mother,
-            father,
-          };
-        });
-
-        setPeople(preparedPeople as Person[]);
+        setPeople(preparedPeople);
         setIsError(false);
       } catch (error) {
         setIsError(true);
