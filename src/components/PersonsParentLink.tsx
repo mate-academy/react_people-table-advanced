@@ -14,20 +14,20 @@ export const PersonsParentLink: React.FC<Props> = ({
   const [searchParams] = useSearchParams();
   const targetPerson = peopleList.find(human => human.name === personName);
 
-  if (targetPerson) {
-    const { name, slug, sex } = targetPerson;
-
-    return (
-      <Link
-        to={`/people/${slug}?${searchParams}`}
-        className={classNames({
-          'has-text-danger': sex === 'f',
-        })}
-      >
-        {name}
-      </Link>
-    );
+  if (!targetPerson) {
+    return undefined;
   }
 
-  return undefined;
+  const { name, slug, sex } = targetPerson;
+
+  return (
+    <Link
+      to={`/people/${slug}?${searchParams}`}
+      className={classNames({
+        'has-text-danger': sex === 'f',
+      })}
+    >
+      {name}
+    </Link>
+  );
 };

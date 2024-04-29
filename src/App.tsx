@@ -13,7 +13,10 @@ export const App = () => {
           <Routes>
             <Route path="/" element={<h1 className="title">Home Page</h1>} />
             <Route path="/home" element={<Navigate to="/" />} />
-            <Route path="/people/:slug?/:?params?" element={<PeoplePage />} />
+            <Route
+              path="/people/:personSlug?/:?params?"
+              element={<PeoplePage />}
+            />
 
             <Route
               path="*"

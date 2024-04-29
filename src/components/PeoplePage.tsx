@@ -21,7 +21,7 @@ export const PeoplePage = () => {
   const [searchParams] = useSearchParams();
   const [peopleList, setPeopleList] = useState<Person[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [isloadingError, setIsLoadingError] = useState(false);
+  const [isLoadingError, setIsLoadingError] = useState(false);
 
   const filterBySex = searchParams.get('sex') || '';
   const filterByQuery = searchParams.get('query') || '';
@@ -122,21 +122,21 @@ export const PeoplePage = () => {
             <div className="box table-container">
               {isLoading && <Loader />}
 
-              {!isLoading && isloadingError && (
+              {!isLoading && isLoadingError && (
                 <p data-cy="peopleLoadingError">Something went wrong</p>
               )}
 
-              {!isLoading && !isloadingError && !peopleList.length && (
+              {!isLoading && !isLoadingError && !peopleList.length && (
                 <p data-cy="noPeopleMessage">
                   There are no people on the server
                 </p>
               )}
 
-              {!isLoading && !isloadingError && !preparedList.length && (
+              {!isLoading && !isLoadingError && !preparedList.length && (
                 <p>There are no people matching the current search criteria</p>
               )}
 
-              {!isLoading && !isloadingError && !!preparedList.length && (
+              {!isLoading && !isLoadingError && !!preparedList.length && (
                 <PeopleTable
                   preparedList={preparedList}
                   sortBy={sortBy}

@@ -9,9 +9,9 @@ type Props = {
 };
 
 export const PersonLink: React.FC<Props> = ({ person, peopleList }) => {
-  const { name, sex, born, died, fatherName, motherName } = person;
-  const { slug } = useParams();
-  const selectedPerson = slug;
+  const { name, slug, sex, born, died, fatherName, motherName } = person;
+  const { personSlug } = useParams();
+  const selectedPerson = personSlug;
 
   const isPersonInList = (personName: string) => {
     return peopleList.find(human => human.name === personName);
@@ -21,13 +21,13 @@ export const PersonLink: React.FC<Props> = ({ person, peopleList }) => {
     <tr
       data-cy="person"
       className={classNames({
-        'has-background-warning': person.slug === selectedPerson,
+        'has-background-warning': slug === selectedPerson,
       })}
-      key={person.slug}
+      key={slug}
     >
       <td>
         <Link
-          to={`/people/${person.slug}`}
+          to={`/people/${slug}`}
           className={classNames({ 'has-text-danger': sex === 'f' })}
         >
           {name}
@@ -37,6 +37,7 @@ export const PersonLink: React.FC<Props> = ({ person, peopleList }) => {
       <td>{sex}</td>
       <td>{born}</td>
       <td>{died}</td>
+
       <td>
         {motherName ? (
           isPersonInList(motherName) ? (
@@ -51,6 +52,7 @@ export const PersonLink: React.FC<Props> = ({ person, peopleList }) => {
           '-'
         )}
       </td>
+
       <td>
         {fatherName ? (
           isPersonInList(fatherName) ? (
