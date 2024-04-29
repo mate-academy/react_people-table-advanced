@@ -11,7 +11,7 @@ import { PeopleTable } from '../components/PeopleTable';
 export const PeoplePage = () => {
   const { pathname } = useLocation();
 
-  const { people, error, loading } = usePeopleState();
+  const { people, error, filteredError, loading } = usePeopleState();
   const dispatch = usePeopleDispatch();
 
   React.useEffect(() => {
@@ -29,7 +29,6 @@ export const PeoplePage = () => {
       });
 
       getPeople()
-        // eslint-disable-next-line
         .then(people => {
           dispatch({
             type: 'SET_PEOPLE',
@@ -48,7 +47,7 @@ export const PeoplePage = () => {
           });
         });
     }
-  }, []);
+  }, [dispatch, pathname]);
 
   if (error) {
     return (
@@ -74,7 +73,7 @@ export const PeoplePage = () => {
 
           <div className="column">
             <div className="box table-container">
-              <PeopleTable />
+              {!filteredError ? <PeopleTable /> : <p>{filteredError}</p>}
             </div>
           </div>
         </div>
@@ -82,7 +81,3 @@ export const PeoplePage = () => {
     </>
   );
 };
-
-{
-  /* <p>There are no people matching the current search criteria</p> */
-}

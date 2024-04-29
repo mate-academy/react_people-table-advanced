@@ -1,9 +1,11 @@
 import React from 'react';
-import { State } from '../../types/State';
-import { Action } from '../../types/Action';
+import { State } from '../types/State';
+import { Action } from '../types/Action';
 
 const initialState: State = {
   people: [],
+  filteredPeople: null,
+  filteredError: '',
   error: '',
   loading: false,
 };
@@ -20,6 +22,12 @@ const reducer = (state: State, { type, payload }: Action) => {
         people: payload,
       };
 
+    case 'SET_FILTERED_PEOPLE':
+      return {
+        ...state,
+        filteredPeople: payload,
+      };
+
     case 'SET_LOADING':
       return {
         ...state,
@@ -31,6 +39,12 @@ const reducer = (state: State, { type, payload }: Action) => {
         ...state,
         error: payload,
         loading: false,
+      };
+
+    case 'SET_FILTERED_ERROR':
+      return {
+        ...state,
+        filteredError: payload,
       };
 
     default:
@@ -48,7 +62,7 @@ export const PeopleProvider: React.FC<Props> = ({ children }) => {
   return (
     <PeopleStateContext.Provider value={state}>
       <PeopleDispatchContext.Provider value={dispatch}>
-        {children} 
+        {children}
       </PeopleDispatchContext.Provider>
     </PeopleStateContext.Provider>
   );

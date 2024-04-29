@@ -2,19 +2,44 @@ import React from 'react';
 import { Link, useLocation, useSearchParams } from 'react-router-dom';
 import cn from 'classnames';
 
-import { usePeopleState } from '../store/PeopleContext';
+import { usePeopleDispatch, usePeopleState } from '../store/PeopleContext';
 
 import { Person } from '../types';
+import { getFilteredPeople } from '../services/getFilteredPeople';
 
 export const People: React.FC = () => {
-  const { people } = usePeopleState();
+  const { people, filteredPeople } = usePeopleState();
+  const dispatch = usePeopleDispatch();
 
   const { pathname } = useLocation();
-
   const [searchParams] = useSearchParams();
-  const sex = searchParams.get('sex') || "";
-  const q = searchParams.get('q') || "";
-  const centuries = Number(searchParams.get('centuries') || 0);
+
+  const params = React.useMemo(
+    () => ({
+      sex: searchParams.get('sex') || '',
+      q: searchParams.get('q') || '',
+      centuries: searchParams.getAll('centuries') || [],
+      sort: (searchParams.get('sort') as keyof Person) || '',
+      order: (searchParams.get('order') as 'desc') || '',
+    }),
+    [searchParams],
+  );
+
+  React.useEffect(() => {
+    const result = getFilteredPeople(people, params);
+
+    if (!result.length) {
+      dispatch({
+        type: 'SET_FILTERED_ERROR',
+        payload: 'There are no people matching the current search criteria',
+      });
+    }
+
+    dispatch({
+      type: 'SET_FILTERED_PEOPLE',
+      payload: result,
+    });
+  }, [params, dispatch, people]);
 
   const getSlugByName = (name: string) => {
     const human = people.find((person: Person) => person.name === name);
@@ -33,106 +58,63 @@ export const People: React.FC = () => {
     });
   };
 
-  const getFilteredPeople = (people: Person[]) => {
-    if(sex === 'm') {
-      return people
-        .filter((person: Person) => person.sex === 'm')
-    } else if(sex === 'f') {
-      return people
-        .filter((person: Person) => person.sex === 'f')
-    } else if (q) {
-      return people
-        .filter((person: Person) =>
-          person.name.toLowerCase().includes(q.toLowerCase())
-          || person.motherName?.toLowerCase().includes(q.toLowerCase())
-          || person.fatherName?.toLowerCase().includes(q.toLowerCase())
-        )
-    } else if (centuries) {
-      return people
-        .filter((person: Person) =>
-          person.born >= (centuries * 100 - 99)
-          && person.born <= centuries * 100
-        )
-    }
-
-    return people;
-  }
-
-  const filteredPeople = getFilteredPeople(people);
-
   return (
     <>
-      {filteredPeople.map((person: Person) => {
-                  const {
-                    name,
-                    sex,
-                    born,
-                    died,
-                    motherName,
-                    fatherName,
-                    slug,
-                  } = person;
+      {filteredPeople?.map((person: Person) => {
+        const { name, sex, born, died, motherName, fatherName, slug } = person;
 
-                  const motherSlug = motherName
-                    ? getSlugByName(motherName)
-                    : null;
+        const motherSlug = motherName ? getSlugByName(motherName) : null;
 
-                  const fatherSlug = fatherName
-                    ? getSlugByName(fatherName)
-                    : null;
+        const fatherSlug = fatherName ? getSlugByName(fatherName) : null;
 
-                  return (
-                    <tr
-                      key={Math.random()}
-                      data-cy="person"
-                      className={cn({
-                        'has-background-warning':
-                          slug === pathname.slice(8),
-                      })}
-                    >
-                      <td>
-                        <Link
-                          to={`/people/${slug}`}
-                          className={setNameColor(sex)}
-                        >
-                          {name}
-                        </Link>
-                      </td>
+        return (
+          <tr
+            key={Math.random()}
+            data-cy="person"
+            className={cn({
+              'has-background-warning': slug === pathname.slice(8),
+            })}
+          >
+            <td>
+              <Link to={`/people/${slug}`} className={setNameColor(sex)}>
+                {name}
+              </Link>
+            </td>
 
-                      <td>{sex}</td>
+            <td>{sex}</td>
 
-                      <td>{born}</td>
+            <td>{born}</td>
 
-                      <td>{died}</td>
+            <td>{died}</td>
 
-                      <td>
-                        {motherSlug ? (
-                          <Link
-                            to={`/people/${motherSlug}`}
-                            className={setNameColor('f')}
-                          >
-                            {motherName}
-                          </Link>
-                        ) : (
-                          <p>{motherName ? motherName : '-'}</p>
-                        )}
-                      </td>
+            <td>
+              {motherSlug ? (
+                <Link
+                  to={`/people/${motherSlug}`}
+                  className={setNameColor('f')}
+                >
+                  {motherName}
+                </Link>
+              ) : (
+                <p>{motherName ? motherName : '-'}</p>
+              )}
+            </td>
 
-                      <td>
-                        {fatherSlug ? (
-                          <Link
-                            to={`/people/${fatherSlug}`}
-                            className={setNameColor('m')}
-                          >
-                            {fatherName}
-                          </Link>
-                        ) : (
-                          <p>{fatherName ? fatherName : '-'}</p>
-                        )}
-                      </td>
-                    </tr>
-                  );
-                })}
+            <td>
+              {fatherSlug ? (
+                <Link
+                  to={`/people/${fatherSlug}`}
+                  className={setNameColor('m')}
+                >
+                  {fatherName}
+                </Link>
+              ) : (
+                <p>{fatherName ? fatherName : '-'}</p>
+              )}
+            </td>
+          </tr>
+        );
+      })}
     </>
   );
-}
+};
