@@ -1,37 +1,20 @@
 import classNames from 'classnames';
 import { Person } from '../types';
-import { Link, useParams, useSearchParams } from 'react-router-dom';
-import { useContext } from 'react';
-import { PeopleContext } from './PeopleContext';
+import { Link, useParams } from 'react-router-dom';
+import { PersonsParentLink } from './PersonsParentLink';
 
 type Props = {
   person: Person;
+  peopleList: Person[];
 };
 
-export const PersonLink: React.FC<Props> = ({ person }) => {
+export const PersonLink: React.FC<Props> = ({ person, peopleList }) => {
   const { name, sex, born, died, fatherName, motherName } = person;
   const { slug } = useParams();
-  const { peopleList } = useContext(PeopleContext);
   const selectedPerson = slug;
-  const [searchParams] = useSearchParams();
 
   const isPersonInList = (personName: string) => {
-    const targetPerson = peopleList.find(human => human.name === personName);
-
-    if (targetPerson) {
-      return (
-        <Link
-          to={`/people/${targetPerson.slug}?${searchParams}`}
-          className={classNames({
-            'has-text-danger': targetPerson.sex === 'f',
-          })}
-        >
-          {targetPerson.name}
-        </Link>
-      );
-    }
-
-    return undefined;
+    return peopleList.find(human => human.name === personName);
   };
 
   return (
@@ -55,18 +38,32 @@ export const PersonLink: React.FC<Props> = ({ person }) => {
       <td>{born}</td>
       <td>{died}</td>
       <td>
-        {motherName
-          ? isPersonInList(motherName)
-            ? isPersonInList(motherName)
-            : motherName
-          : '-'}
+        {motherName ? (
+          isPersonInList(motherName) ? (
+            <PersonsParentLink
+              peopleList={peopleList}
+              personName={motherName}
+            />
+          ) : (
+            motherName
+          )
+        ) : (
+          '-'
+        )}
       </td>
       <td>
-        {fatherName
-          ? isPersonInList(fatherName)
-            ? isPersonInList(fatherName)
-            : fatherName
-          : '-'}
+        {fatherName ? (
+          isPersonInList(fatherName) ? (
+            <PersonsParentLink
+              peopleList={peopleList}
+              personName={fatherName}
+            />
+          ) : (
+            fatherName
+          )
+        ) : (
+          '-'
+        )}
       </td>
     </tr>
   );

@@ -1,12 +1,12 @@
 import { PeopleFilters } from './PeopleFilters';
 import { Loader } from './Loader';
 import { PeopleTable } from './PeopleTable';
-import { useContext, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { getPeople } from '../api';
-import { PeopleContext } from './PeopleContext';
 import { Person } from '../types';
+import { useSearchParams } from 'react-router-dom';
 
-enum SortingType {
+export enum SortingType {
   name = 'name',
   nameReversed = 'nameReversed',
   sex = 'sex',
@@ -18,26 +18,35 @@ enum SortingType {
 }
 
 export const PeoplePage = () => {
-  const {
-    peopleList,
-    setPeopleList,
-    filterBySex,
-    filterByQuery,
-    filterByCenturies,
-    sortBy,
-  } = useContext(PeopleContext);
-  const [isLoading, setIsloading] = useState(false);
-  const [loadingError, setLoadingError] = useState(false);
+  const [searchParams] = useSearchParams();
+  const [peopleList, setPeopleList] = useState<Person[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isloadingError, setIsLoadingError] = useState(false);
+
+  const filterBySex = searchParams.get('sex') || '';
+  const filterByQuery = searchParams.get('query') || '';
+  const filterByCenturies = searchParams.getAll('centuries');
+  const sortBy = searchParams.get('sortBy') || '';
 
   useEffect(() => {
-    setLoadingError(false);
-    setIsloading(true);
+    setIsLoadingError(false);
+    setIsLoading(true);
 
     getPeople()
       .then(people => setPeopleList(people))
-      .catch(() => setLoadingError(true))
-      .finally(() => setIsloading(false));
+      .catch(() => setIsLoadingError(true))
+      .finally(() => setIsLoading(false));
   }, [setPeopleList]);
+
+  function searchByQuery(human: Person) {
+    const { name, motherName, fatherName } = human;
+
+    return (
+      name.toLowerCase().includes(filterByQuery.toLowerCase()) ||
+      motherName?.toLowerCase().includes(filterByQuery.toLowerCase()) ||
+      fatherName?.toLowerCase().includes(filterByQuery.toLowerCase())
+    );
+  }
 
   function prepareList(list: Person[]) {
     let prepared = [...list];
@@ -47,14 +56,7 @@ export const PeoplePage = () => {
     }
 
     if (filterByQuery) {
-      prepared = prepared.filter(
-        human =>
-          human.name.toLowerCase().includes(filterByQuery.toLowerCase()) ||
-          human.motherName
-            ?.toLowerCase()
-            .includes(filterByQuery.toLowerCase()) ||
-          human.fatherName?.toLowerCase().includes(filterByQuery.toLowerCase()),
-      );
+      prepared = prepared.filter(human => searchByQuery(human));
     }
 
     if (!!filterByCenturies.length) {
@@ -120,22 +122,26 @@ export const PeoplePage = () => {
             <div className="box table-container">
               {isLoading && <Loader />}
 
-              {!isLoading && loadingError && (
+              {!isLoading && isloadingError && (
                 <p data-cy="peopleLoadingError">Something went wrong</p>
               )}
 
-              {!isLoading && !loadingError && !peopleList.length && (
+              {!isLoading && !isloadingError && !peopleList.length && (
                 <p data-cy="noPeopleMessage">
                   There are no people on the server
                 </p>
               )}
 
-              {!isLoading && !loadingError && !preparedList.length && (
+              {!isLoading && !isloadingError && !preparedList.length && (
                 <p>There are no people matching the current search criteria</p>
               )}
 
-              {!isLoading && !loadingError && !!preparedList.length && (
-                <PeopleTable preparedList={preparedList} />
+              {!isLoading && !isloadingError && !!preparedList.length && (
+                <PeopleTable
+                  preparedList={preparedList}
+                  sortBy={sortBy}
+                  peopleList={peopleList}
+                />
               )}
             </div>
           </div>

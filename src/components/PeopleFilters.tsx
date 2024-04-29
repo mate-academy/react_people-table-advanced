@@ -1,6 +1,5 @@
-import { useContext, useEffect } from 'react';
+import { useEffect } from 'react';
 import { SearchLink } from './SearchLink';
-import { PeopleContext } from './PeopleContext';
 import classNames from 'classnames';
 import { useSearchParams } from 'react-router-dom';
 import { getSearchWith } from '../utils/searchHelper';
@@ -8,9 +7,12 @@ import { getSearchWith } from '../utils/searchHelper';
 const centuries = [16, 17, 18, 19, 20];
 
 export const PeopleFilters = () => {
-  const { filterBySex, filterByQuery, filterByCenturies, sortBy } =
-    useContext(PeopleContext);
   const [searchParams, setSearchParams] = useSearchParams();
+
+  const filterBySex = searchParams.get('sex') || '';
+  const filterByQuery = searchParams.get('query') || '';
+  const filterByCenturies = searchParams.getAll('centuries');
+  const sortBy = searchParams.get('sortBy') || '';
 
   const handleSearchQuery = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newQuery = event.target.value.trim() ? event.target.value : '';
@@ -21,11 +23,11 @@ export const PeopleFilters = () => {
     setSearchParams(newSearchParams);
   };
 
-  const centuriesUpdate = (century: string) => {
+  const centuriesUpdate = (newCentury: string) => {
     return {
-      centuries: filterByCenturies.includes(century)
-        ? [...filterByCenturies].filter(a => a !== century)
-        : [...filterByCenturies, century],
+      centuries: filterByCenturies.includes(newCentury)
+        ? [...filterByCenturies].filter(century => century !== newCentury)
+        : [...filterByCenturies, newCentury],
     };
   };
 
@@ -92,17 +94,17 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            {centuries.map(num => {
+            {centuries.map(century => {
               return (
                 <SearchLink
                   data-cy="century"
                   className={classNames('button', 'mr-1', {
-                    'is-info': filterByCenturies.includes(num.toString()),
+                    'is-info': filterByCenturies.includes(century.toString()),
                   })}
-                  params={centuriesUpdate(num.toString())}
-                  key={num}
+                  params={centuriesUpdate(century.toString())}
+                  key={century}
                 >
-                  {num}
+                  {century}
                 </SearchLink>
               );
             })}

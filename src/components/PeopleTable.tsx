@@ -1,13 +1,7 @@
-import { useContext } from 'react';
 import { Person } from '../types';
 import { PersonLink } from './PersonLink';
-import { PeopleContext } from './PeopleContext';
 import { SearchLink } from './SearchLink';
 import classNames from 'classnames';
-
-type Props = {
-  preparedList: Person[];
-};
 
 enum SortSettings {
   born = 'born',
@@ -16,9 +10,17 @@ enum SortSettings {
   sex = 'sex',
 }
 
-export const PeopleTable: React.FC<Props> = ({ preparedList }) => {
-  const { sortBy } = useContext(PeopleContext);
+type Props = {
+  preparedList: Person[];
+  sortBy: string;
+  peopleList: Person[];
+};
 
+export const PeopleTable: React.FC<Props> = ({
+  preparedList,
+  sortBy,
+  peopleList,
+}) => {
   function setSortSettings(settings: SortSettings) {
     switch (settings) {
       case SortSettings.name:
@@ -149,7 +151,11 @@ export const PeopleTable: React.FC<Props> = ({ preparedList }) => {
 
       <tbody>
         {preparedList.map(person => (
-          <PersonLink person={person} key={person.slug} />
+          <PersonLink
+            person={person}
+            key={person.slug}
+            peopleList={peopleList}
+          />
         ))}
       </tbody>
     </table>
