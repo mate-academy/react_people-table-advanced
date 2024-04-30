@@ -6,6 +6,7 @@ import { PeopleFilters } from './PeopleFilters';
 import { Loader } from './Loader';
 import { PeopleTable } from './PeopleTable';
 import { Person } from '../types';
+import { getPreparedPeople } from '../utils/getPreparedPeople';
 
 export const PeoplePage = () => {
   const [isLoaded, setIsLoaded] = useState(false);
@@ -18,6 +19,10 @@ export const PeoplePage = () => {
   const centuries = searchParams.getAll('centuries');
   const sortField = searchParams.get('sort');
   const isReversed = searchParams.get('order') === 'desc';
+
+  const isNotPeopleListEmpty = isLoaded && !hasError && people.length;
+  const isPeopleListEmpty = isLoaded && !hasError && !people.length;
+  const isResponseNotOk = isLoaded && hasError;
 
   useEffect(() => {
     setIsLoaded(false);
@@ -45,51 +50,13 @@ export const PeoplePage = () => {
       .finally(() => setIsLoaded(true));
   }, []);
 
-  let visiblePeople = [...people];
-
-  if (sex) {
-    visiblePeople = visiblePeople.filter(person => person.sex === sex);
-  }
-
-  if (centuries.length > 0) {
-    const getCentury = (person: Person) => Math.ceil(person.born / 100);
-
-    visiblePeople = visiblePeople.filter(person =>
-      centuries.includes(getCentury(person).toString()),
-    );
-  }
-
-  if (query) {
-    const normalizedQuery = query.toLocaleLowerCase();
-
-    visiblePeople = visiblePeople.filter(person => {
-      return [person.name, person.motherName || '', person.fatherName || '']
-        .join('')
-        .toLocaleLowerCase()
-        .includes(normalizedQuery);
-    });
-  }
-
-  if (sortField) {
-    visiblePeople.sort((a, b) => {
-      switch (sortField) {
-        case 'name':
-        case 'sex':
-          return a[sortField].localeCompare(b[sortField]);
-
-        case 'born':
-        case 'died':
-          return a[sortField] - b[sortField];
-
-        default:
-          return 0;
-      }
-    });
-
-    if (isReversed) {
-      visiblePeople.reverse();
-    }
-  }
+  const preparedPeople = getPreparedPeople(people, {
+    sex,
+    query,
+    centuries,
+    sortField,
+    isReversed,
+  });
 
   return (
     <>
@@ -107,19 +74,17 @@ export const PeoplePage = () => {
             <div className="box table-container">
               {!isLoaded && <Loader />}
 
-              {isLoaded && hasError && (
+              {isResponseNotOk && (
                 <p data-cy="peopleLoadingError">Something went wrong</p>
               )}
 
-              {isLoaded && !hasError && people.length === 0 && (
+              {isPeopleListEmpty && (
                 <p data-cy="noPeopleMessage">
                   There are no people on the server
                 </p>
               )}
 
-              {isLoaded && !hasError && people.length > 0 && (
-                <PeopleTable people={visiblePeople} />
-              )}
+              {isNotPeopleListEmpty && <PeopleTable people={preparedPeople} />}
             </div>
           </div>
         </div>

@@ -5,18 +5,20 @@ export const NameFilter = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const query = searchParams.get('query') || '';
 
+  const handleQueryParams = (event: React.ChangeEvent<HTMLInputElement>) => {
+    return setSearchParams(
+      getSearchWith(searchParams, {
+        query: event.target.value || null,
+      }),
+    );
+  };
+
   return (
     <p className="control has-icons-left">
       <input
         data-cy="NameFilter"
         value={query}
-        onChange={event =>
-          setSearchParams(
-            getSearchWith(searchParams, {
-              query: event.target.value || null,
-            }),
-          )
-        }
+        onChange={handleQueryParams}
         className="input"
         type="text"
         placeholder="Search"
