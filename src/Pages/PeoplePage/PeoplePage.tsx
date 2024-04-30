@@ -6,13 +6,51 @@ import { getPeople } from '../../api';
 import { PeopleList } from '../../components/PeopleList';
 import { Person } from '../../types';
 
-const peopleFilter = (visiblesPeople: Person[], query: string) => {
+const addParentReferences = (people: Person[]) => {
+  return people.map(person => {
+    const mother = people.find(human => human.name === person.motherName);
+    const father = people.find(human => human.name === person.fatherName);
+
+    return {
+      ...person,
+      mother,
+      father,
+    };
+  });
+};
+
+const filteredPeople = (visiblesPeople: Person[], query: string) => {
   return visiblesPeople.filter(
     person =>
       person.name.toLowerCase().includes(query.trim().toLowerCase()) ||
       person.motherName?.toLowerCase().includes(query.trim().toLowerCase()) ||
       person.fatherName?.toLowerCase().includes(query.trim().toLowerCase()),
   );
+};
+
+const filterVisiblePeople = (
+  people: Person[],
+  query: string,
+  sex: string | null,
+  centuries: string[],
+) => {
+  let visiblePeople = [...people];
+
+  if (query) {
+    visiblePeople = filteredPeople(visiblePeople, query);
+  }
+
+  if (sex) {
+    visiblePeople = visiblePeople.filter(personSex => personSex.sex === sex);
+  }
+
+  if (centuries.length > 0) {
+    visiblePeople = visiblePeople.filter(person =>
+      centuries.some(centery => Math.ceil(person.born / 100) === +centery),
+    );
+  }
+
+  return visiblePeople;
 };
 
 export const PeoplePage = () => {
@@ -25,28 +63,18 @@ export const PeoplePage = () => {
   const [errorMessage, setErrorMessage] = useState<string>('');
   const [isLoading, setIsLoading] = useState(false);
 
-  let visiblesPeople = [...people];
-
-  if (query) {
-    visiblesPeople = peopleFilter(visiblesPeople, query);
-  }
-
-  if (sex) {
-    visiblesPeople = visiblesPeople.filter(personSex => personSex.sex === sex);
-  }
-
-  if (centuries.length > 0) {
-    visiblesPeople = visiblesPeople.filter(person =>
-      centuries.some(centery => Math.ceil(person.born / 100) === +centery),
-    );
-  }
+  const visiblesPeople = filterVisiblePeople(people, query, sex, centuries);
 
   const { personId = '' } = useParams();
 
   useEffect(() => {
     setIsLoading(true);
     getPeople()
-      .then(setPeople)
+      .then(rawPeople => {
+        const updatePeople = addParentReferences(rawPeople);
+
+        setPeople(updatePeople);
+      })
       .catch(error => {
         setErrorMessage(`Something went wrong: ${error.message}`);
       })
@@ -66,7 +94,7 @@ export const PeoplePage = () => {
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
           <div className="column is-7-tablet is-narrow-desktop">
-            <PeopleFilters />
+            {!isLoading && <PeopleFilters />}
           </div>
 
           <div className="column">

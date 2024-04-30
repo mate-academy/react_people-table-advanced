@@ -28,11 +28,13 @@ export const PeopleFilters = () => {
     setSearchWith({ query: null });
   };
 
-  const toogleCenteries = (cent: string) => {
-    if (centeryParams.includes(cent)) {
-      return centeryParams.filter(centeryFilter => centeryFilter !== cent);
+  const toogleCenteries = (targetCentury: string) => {
+    if (centeryParams.includes(targetCentury)) {
+      return centeryParams.filter(
+        centeryFilter => centeryFilter !== targetCentury,
+      );
     } else {
-      return [...centeryParams, cent];
+      return [...centeryParams, targetCentury];
     }
   };
 

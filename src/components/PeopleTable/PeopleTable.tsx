@@ -10,6 +10,8 @@ type Props = {
   getMother: (name: string | null) => Person | undefined;
 };
 
+const NO_NAME = '-';
+
 export const PeopleTable: React.FC<Props> = ({
   person,
   personId,
@@ -41,14 +43,14 @@ export const PeopleTable: React.FC<Props> = ({
         {mother ? (
           <PersonLink person={mother} />
         ) : (
-          <span>{motherName || '-'}</span>
+          <span>{motherName || NO_NAME}</span>
         )}
       </td>
       <td>
         {father ? (
           <PersonLink person={father} />
         ) : (
-          <span>{fatherName || '-'}</span>
+          <span>{fatherName || NO_NAME}</span>
         )}
       </td>
     </tr>

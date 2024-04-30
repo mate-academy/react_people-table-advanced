@@ -2,11 +2,11 @@ import classNames from 'classnames';
 import React from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { Person } from '../../types';
+import { Sex } from '../../types/Sex';
 
 type Props = {
   person: Person;
 };
-const FEMALE_SEX = 'f';
 
 export const PersonLink: React.FC<Props> = ({ person }) => {
   const { slug, name, sex } = person;
@@ -19,7 +19,7 @@ export const PersonLink: React.FC<Props> = ({ person }) => {
         search: searchParams.toString(),
       }}
       className={classNames({
-        'has-text-danger': sex === FEMALE_SEX,
+        'has-text-danger': sex === Sex.Female,
       })}
     >
       {name}
