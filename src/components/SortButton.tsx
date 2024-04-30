@@ -2,6 +2,7 @@ import React from 'react';
 import classNames from 'classnames';
 import { useSearchParams } from 'react-router-dom';
 import { SearchLink } from './SearchLink';
+import { Order } from '../types/order';
 
 type SortButtonProps = {
   field: string;
@@ -10,11 +11,11 @@ type SortButtonProps = {
 export const SortButton: React.FC<SortButtonProps> = ({ field }) => {
   const [searchParams] = useSearchParams();
   const sortField = searchParams.get('sort') || '';
-  const isReversed = searchParams.get('order') === 'desc';
+  const isReversed = searchParams.get('order') === Order.DESC;
 
   const params = {
     sort: field === sortField && isReversed ? null : field,
-    order: field === sortField && !isReversed ? 'desc' : null,
+    order: field === sortField && !isReversed ? Order.DESC : null,
   };
 
   return (

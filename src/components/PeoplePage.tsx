@@ -7,6 +7,7 @@ import { Loader } from './Loader';
 import { PeopleTable } from './PeopleTable';
 import { Person } from '../types';
 import { getPreparedPeople } from '../utils/getPreparedPeople';
+import { Order } from '../types/order';
 
 export const PeoplePage = () => {
   const [isLoaded, setIsLoaded] = useState(false);
@@ -18,7 +19,7 @@ export const PeoplePage = () => {
   const query = searchParams.get('query');
   const centuries = searchParams.getAll('centuries');
   const sortField = searchParams.get('sort');
-  const isReversed = searchParams.get('order') === 'desc';
+  const isReversed = searchParams.get('order') === Order.DESC;
 
   const isNotPeopleListEmpty = isLoaded && !hasError && people.length;
   const isPeopleListEmpty = isLoaded && !hasError && !people.length;

@@ -4,6 +4,7 @@ import classNames from 'classnames';
 import { CenturyFilter } from './CenturyFilter';
 import { SearchLink } from './SearchLink';
 import { NameFilter } from './NameFilter';
+import { PersonSex } from '../types/PersonSex';
 
 export const PeopleFilters = () => {
   const [searchParams] = useSearchParams();
@@ -22,15 +23,15 @@ export const PeopleFilters = () => {
         </SearchLink>
 
         <SearchLink
-          params={{ sex: 'm' }}
-          className={classNames({ 'is-active': sex === 'm' })}
+          params={{ sex: PersonSex.MALE }}
+          className={classNames({ 'is-active': sex === PersonSex.MALE })}
         >
           Male
         </SearchLink>
 
         <SearchLink
-          params={{ sex: 'f' }}
-          className={classNames({ 'is-active': sex === 'f' })}
+          params={{ sex: PersonSex.FEMALE }}
+          className={classNames({ 'is-active': sex === PersonSex.FEMALE })}
         >
           Female
         </SearchLink>
