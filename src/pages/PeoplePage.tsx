@@ -29,10 +29,10 @@ export const PeoplePage = () => {
       });
 
       getPeople()
-        .then(people => {
+        .then(localPeople => {
           dispatch({
             type: 'SET_PEOPLE',
-            payload: people,
+            payload: localPeople,
           });
 
           dispatch({

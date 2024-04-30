@@ -3,7 +3,7 @@ import cn from 'classnames';
 import { usePeopleState } from '../store/PeopleContext';
 
 import { Loader } from './Loader';
-import { People } from './People';
+import { TableRowPeople } from './TableRowPeople';
 
 enum Column {
   name = 'name',
@@ -30,17 +30,31 @@ export const PeopleTable = () => {
 
     const newSearchParams = new URLSearchParams(searchParams);
 
-    if (!sort && sort !== sortColumn) {
-      newSearchParams.set('sort', sortColumn);
-    } else if (sort === sortColumn && order !== 'desc') {
-      newSearchParams.set('order', 'desc');
+    if (sort === sortColumn) {
+      if (order === 'desc') {
+        newSearchParams.delete('order');
+        newSearchParams.delete('sort');
+      } else {
+        newSearchParams.set('order', 'desc');
+      }
     } else {
-      newSearchParams.delete('order');
-      newSearchParams.delete('sort');
+      newSearchParams.set('sort', sortColumn);
     }
 
     setSearchParams(newSearchParams);
   };
+
+  const formatAsCapitalized = (column: string) => {
+    return column.charAt(0).toUpperCase() + column.slice(1);
+  };
+
+  const getSortIconClasses = (columnName: string) => {
+    return cn('fas', {
+      'fa-sort': sort !== columnName,
+      'fa-sort-up': sort === columnName && order !== 'desc',
+      'fa-sort-down': sort === columnName && order === 'desc'
+    });
+  }
 
   return (
     <>
@@ -56,16 +70,11 @@ export const PeopleTable = () => {
               {sortColumns.map(column => (
                 <th key={column}>
                   <span className="is-flex is-flex-wrap-nowrap">
-                    {Column[column].charAt(0).toUpperCase() +
-                      Column[column].slice(1)}
+                    {formatAsCapitalized(column)}
                     <a href="" onClick={e => handleLinkOnClick(e, column)}>
                       <span className="icon">
                         <i
-                          className={cn('fas', {
-                            'fa-sort': sort !== column,
-                            'fa-sort-up': sort === column && order !== 'desc',
-                            'fa-sort-down': sort === column && order,
-                          })}
+                          className={getSortIconClasses(column)}
                         />
                       </span>
                     </a>
@@ -79,7 +88,7 @@ export const PeopleTable = () => {
           </thead>
 
           <tbody>
-            <People />
+            <TableRowPeople />
           </tbody>
         </table>
       )}

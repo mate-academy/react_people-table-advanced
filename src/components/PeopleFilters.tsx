@@ -11,33 +11,32 @@ export const PeopleFilters = () => {
 
   const [searchParams, setSearchParams] = useSearchParams();
   const sex = searchParams.get('sex') || '';
-  const q = searchParams.get('q') || '';
+  const query = searchParams.get('query') || '';
   const centuries = searchParams.getAll('centuries') || [];
 
   const handleQueryChange = (
     e: React.ChangeEvent<HTMLInputElement>,
-    // eslint-disable-next-line
-    dispatch: (Action: Action) => void,
+    localDispatch: (Action: Action) => void,
   ) => {
-    dispatch({ type: 'SET_FILTERED_ERROR', payload: '' });
+    localDispatch({ type: 'SET_FILTERED_ERROR', payload: '' });
 
     const newSearchParams = new URLSearchParams(searchParams);
-    const query = e.target.value;
+    const localQuery = e.target.value;
 
-    if (query) {
-      newSearchParams.set('q', query);
+    if (localQuery) {
+      newSearchParams.set('query', localQuery);
     } else {
-      newSearchParams.delete('q');
+      newSearchParams.delete('query');
     }
 
     setSearchParams(newSearchParams);
   };
 
-  const handleSexChange = (sex: string) => {
+  const handleSexChange = (localSex: string) => {
     const newSearchParams = new URLSearchParams(searchParams);
 
-    if (sex) {
-      newSearchParams.set('sex', sex);
+    if (localSex) {
+      newSearchParams.set('sex', localSex);
     } else {
       newSearchParams.delete('sex');
     }
@@ -51,10 +50,14 @@ export const PeopleFilters = () => {
     params.delete('centuries');
 
     const newCenturies = centuries.includes(century.toString())
-      ? centuries.filter(c => c !== century.toString())
+      ? centuries.filter(
+          currentCentury => currentCentury !== century.toString(),
+        )
       : [...centuries, century];
 
-    newCenturies.forEach(c => params.append('centuries', c.toString()));
+    newCenturies.forEach(currentCentury =>
+      params.append('centuries', currentCentury.toString()),
+    );
 
     setSearchParams(params);
   };
@@ -64,7 +67,11 @@ export const PeopleFilters = () => {
     dispatch({ type: 'SET_FILTERED_ERROR', payload: '' });
   };
 
+  const isCenturySelected = (century: number) =>
+    centuries.includes(century.toString());
+
   const clearCenturies = () => setSearchParams({ centuries: [] });
+  const isExistingCentury = getExistingCenturies(people);
 
   return (
     <nav className="panel">
@@ -106,7 +113,7 @@ export const PeopleFilters = () => {
             type="search"
             className="input"
             placeholder="Search"
-            value={q}
+            value={query}
             onChange={e => handleQueryChange(e, dispatch)}
           />
 
@@ -119,12 +126,12 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            {getExistingCenturies(people).map((century: number) => (
+            {isExistingCentury.map((century: number) => (
               <button
                 key={century}
                 data-cy="century"
                 className={cn('button', 'mr-1', {
-                  'is-info': centuries.includes(century.toString()),
+                  'is-info': isCenturySelected(century),
                 })}
                 onClick={() => toggleCenturies(century)}
               >

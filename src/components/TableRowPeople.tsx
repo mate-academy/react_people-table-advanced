@@ -7,7 +7,7 @@ import { usePeopleDispatch, usePeopleState } from '../store/PeopleContext';
 import { Person } from '../types';
 import { getFilteredPeople } from '../services/getFilteredPeople';
 
-export const People: React.FC = () => {
+export const TableRowPeople: React.FC = () => {
   const { people, filteredPeople } = usePeopleState();
   const dispatch = usePeopleDispatch();
 
@@ -17,7 +17,7 @@ export const People: React.FC = () => {
   const params = React.useMemo(
     () => ({
       sex: searchParams.get('sex') || '',
-      q: searchParams.get('q') || '',
+      query: searchParams.get('query') || '',
       centuries: searchParams.getAll('centuries') || [],
       sort: (searchParams.get('sort') as keyof Person) || '',
       order: (searchParams.get('order') as 'desc') || '',
@@ -26,9 +26,9 @@ export const People: React.FC = () => {
   );
 
   React.useEffect(() => {
-    const result = getFilteredPeople(people, params);
+    const filteredPeopleResult = getFilteredPeople(people, params);
 
-    if (!result.length) {
+    if (!filteredPeopleResult.length) {
       dispatch({
         type: 'SET_FILTERED_ERROR',
         payload: 'There are no people matching the current search criteria',
@@ -37,14 +37,16 @@ export const People: React.FC = () => {
 
     dispatch({
       type: 'SET_FILTERED_PEOPLE',
-      payload: result,
+      payload: filteredPeopleResult,
     });
   }, [params, dispatch, people]);
 
   const getSlugByName = (name: string) => {
-    const human = people.find((person: Person) => person.name === name);
+    const selectedPerson = people.find(
+      (person: Person) => person.name === name,
+    );
 
-    return human?.slug || null;
+    return selectedPerson?.slug || null;
   };
 
   const setNameColor = (sex: string) => {
@@ -69,7 +71,7 @@ export const People: React.FC = () => {
 
         return (
           <tr
-            key={Math.random()}
+            key={crypto.randomUUID()}
             data-cy="person"
             className={cn({
               'has-background-warning': slug === pathname.slice(8),

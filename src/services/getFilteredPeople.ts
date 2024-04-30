@@ -2,22 +2,22 @@ import { Person } from '../types/Person';
 
 interface FilterParams {
   sex?: string;
-  q?: string;
+  query?: string;
   centuries?: string[];
   sort?: keyof Person | '';
   order?: 'desc' | '';
 }
 
 export const getFilteredPeople = (people: Person[], params: FilterParams) => {
-  const { sex, q, centuries, sort, order } = params;
+  const { sex, query, centuries, sort, order } = params;
 
   const filteredPeople = people.filter((person: Person) => {
     const isSexMatch = sex ? person.sex === sex : true;
 
-    const isQueryMatch = q
-      ? person.name.toLowerCase().includes(q?.toLowerCase()) ||
-        person.fatherName?.toLowerCase().includes(q?.toLowerCase()) ||
-        person.motherName?.toLowerCase().includes(q?.toLowerCase())
+    const isQueryMatch = query
+      ? person.name.toLowerCase().includes(query?.toLowerCase()) ||
+        person.fatherName?.toLowerCase().includes(query?.toLowerCase()) ||
+        person.motherName?.toLowerCase().includes(query?.toLowerCase())
       : true;
 
     const isCenturyMatch =
