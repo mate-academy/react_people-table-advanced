@@ -36,6 +36,14 @@ export const PeopleTable: React.FC = () => {
     return { sort: item, order: null };
   }
 
+  const styled = (item: string) => {
+    if (sort === item) {
+      return { color: 'red' };
+    }
+
+    return {};
+  };
+
   return (
     <table
       data-cy="peopleTable"
@@ -58,6 +66,7 @@ export const PeopleTable: React.FC = () => {
                       'fa-sort-up': people && !order && sort,
                       'fa-sort-down': people && order && sort,
                     })}
+                    style={styled(SortType.Name)}
                   />
                 </span>
               </Link>
@@ -79,6 +88,7 @@ export const PeopleTable: React.FC = () => {
                       'fa-sort-up': people && !order && sort,
                       'fa-sort-down': people && order && sort,
                     })}
+                    style={styled(SortType.Sex)}
                   />
                 </span>
               </Link>
@@ -100,6 +110,7 @@ export const PeopleTable: React.FC = () => {
                       'fa-sort-up': people && !order && sort,
                       'fa-sort-down': people && order && sort,
                     })}
+                    style={styled(SortType.Born)}
                   />
                 </span>
               </Link>
@@ -121,6 +132,7 @@ export const PeopleTable: React.FC = () => {
                       'fa-sort-up': people && !order && sort,
                       'fa-sort-down': people && order && sort,
                     })}
+                    style={styled(SortType.Died)}
                   />
                 </span>
               </Link>

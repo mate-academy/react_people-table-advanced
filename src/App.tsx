@@ -1,18 +1,13 @@
-import { NavLink, Outlet, useLocation } from 'react-router-dom';
+import { NavLink, Outlet } from 'react-router-dom';
 
 import './App.scss';
 
 import classNames from 'classnames';
 
 export const App = () => {
-  const { search } = useLocation();
-
   return (
     <div data-cy="app">
-      <div className="section">
-        {/* <p>{pathname}</p> */}
-        <p>{search && search.replaceAll('&', ' &')}</p>
-      </div>
+      <div className="section" />
       <nav
         data-cy="nav"
         className="navbar is-fixed-top has-shadow"
