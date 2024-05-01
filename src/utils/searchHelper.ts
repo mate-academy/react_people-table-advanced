@@ -45,7 +45,7 @@ export function getSearchWith(
 export const createCenturiesParams = (centuries: string[], century: string) => {
   return {
     centuries: centuries.includes(century)
-      ? [...centuries.filter(c => c !== century)]
+      ? centuries.filter(c => c !== century)
       : [...centuries, century],
   };
 };

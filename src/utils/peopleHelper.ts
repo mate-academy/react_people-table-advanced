@@ -7,17 +7,15 @@ const sortPeopleWithSearch = (people: Person[], search: URLSearchParams) => {
 
   switch (sort) {
     case 'name':
-      return people.sort((a, b) =>
-        order ? b.name.localeCompare(a.name) : a.name.localeCompare(b.name),
-      );
     case 'sex':
       return people.sort((a, b) =>
         order ? b.sex.localeCompare(a.sex) : a.sex.localeCompare(b.sex),
       );
     case 'born':
-      return people.sort((a, b) => (order ? b.born - a.born : a.born - b.born));
     case 'died':
-      return people.sort((a, b) => (order ? b.died - a.died : a.died - b.died));
+      return people.sort((a, b) =>
+        order ? b[sort] - a[sort] : a[sort] - b[sort],
+      );
     default:
       return people;
   }
