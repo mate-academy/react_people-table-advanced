@@ -18,6 +18,7 @@ export const PeoplePage = () => {
 
   const query = searchParams.get('query');
   const centuries = searchParams.getAll('centuries');
+  const sex = searchParams.get('sex');
 
   // const getFilteredPeople = useCallback(() => {
   //   // eslint-disable-next-line no-console
@@ -52,7 +53,7 @@ export const PeoplePage = () => {
   //   return filteredPersons;
   // }, [nameFilter, people, searchParams]);
 
-  const filteredPeople = getFilteredPeople(people, query, centuries);
+  const filteredPeople = getFilteredPeople(people, query, centuries, sex);
 
   useEffect(() => {
     setIsLoading(true);

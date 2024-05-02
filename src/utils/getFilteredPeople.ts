@@ -4,6 +4,7 @@ export const getFilteredPeople = (
   people: Person[],
   query: string | null,
   centuries: string[],
+  sex: string | null,
 ) => {
   // eslint-disable-next-line no-console
   console.log('started filtering');
@@ -27,6 +28,12 @@ export const getFilteredPeople = (
 
       return centuries.includes(centuryBorn);
     });
+  }
+
+  if (sex) {
+    filteredPeople = filteredPeople.filter(
+      (person: Person) => person.sex === sex,
+    );
   }
 
   return filteredPeople;
