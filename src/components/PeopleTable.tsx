@@ -152,11 +152,11 @@ export const PeopleTable: React.FC = () => {
             const mother = person.motherName || '-';
             const father = person.fatherName || '-';
 
-            const samePersonMother = people?.find(
+            const samePersonMother = people.find(
               el => el.name === person.motherName,
             );
 
-            const samePersonFather = people?.find(
+            const samePersonFather = people.find(
               el => el.name === person.fatherName,
             );
 
