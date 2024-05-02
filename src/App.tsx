@@ -1,31 +1,14 @@
-import { NavLink, Navigate, Route, Routes } from 'react-router-dom';
+import { Navigate, Route, Routes } from 'react-router-dom';
 
 import './App.scss';
 import { PeoplePage } from './pages/PeoplePage';
-import { setLinkClass } from './utils/setLinkClass';
 import { NotFoundPage } from './pages/NotFoundPage';
 import { HomePage } from './pages/HomePage';
+import { Navbar } from './components/Navbar';
 
 export const App = () => (
   <div data-cy="app">
-    <nav
-      data-cy="nav"
-      className="navbar is-fixed-top has-shadow"
-      role="navigation"
-      aria-label="main navigation"
-    >
-      <div className="container">
-        <div className="navbar-brand">
-          <NavLink className={setLinkClass} to="/">
-            Home
-          </NavLink>
-
-          <NavLink className={setLinkClass} to="/people">
-            People
-          </NavLink>
-        </div>
-      </div>
-    </nav>
+    <Navbar />
 
     <main className="section">
       <div className="container">

@@ -14,10 +14,10 @@ export const PeoplePage = () => {
   const [searchParams] = useSearchParams();
 
   const [people, setPeople] = useState<Person[]>([]);
-  const [error, setError] = useState<Errors | null>(null);
+  const [error, setError] = useState<Errors>(Errors.Default);
 
   useEffect(() => {
-    setError(null);
+    setError(Errors.Default);
 
     getPeople()
       .then(peopleFromServer => {
@@ -43,7 +43,7 @@ export const PeoplePage = () => {
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
           <div className="column is-7-tablet is-narrow-desktop">
-            <PeopleFilters />
+            {isPeopleTableVisible && <PeopleFilters />}
           </div>
 
           <div className="column">

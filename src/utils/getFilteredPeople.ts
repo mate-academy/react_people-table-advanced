@@ -1,4 +1,5 @@
 import { Person } from '../types/Person';
+import { Sex } from '../types/Sex';
 
 export const getFilteredPeople = (
   people: Person[],
@@ -8,11 +9,15 @@ export const getFilteredPeople = (
 
   if (searchParams.has('sex')) {
     switch (searchParams.get('sex')) {
-      case 'm':
-        filteringPeople = filteringPeople.filter(person => person.sex === 'm');
+      case Sex.Male:
+        filteringPeople = filteringPeople.filter(
+          person => person.sex === Sex.Male,
+        );
         break;
-      case 'f':
-        filteringPeople = filteringPeople.filter(person => person.sex === 'f');
+      case Sex.Female:
+        filteringPeople = filteringPeople.filter(
+          person => person.sex === Sex.Female,
+        );
         break;
       default:
         throw new Error('Invalid filter value');

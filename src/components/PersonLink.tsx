@@ -3,6 +3,7 @@ import { FC } from 'react';
 import cn from 'classnames';
 
 import { Person } from '../types/Person';
+import { Sex } from '../types/Sex';
 
 interface Props {
   person: Person;
@@ -10,8 +11,7 @@ interface Props {
 
 export const PersonLink: FC<Props> = ({ person }) => {
   const [searchParams] = useSearchParams();
-  const female = 'f';
-  const isFemale = person.sex === female;
+  const isFemale = person.sex === Sex.Female;
 
   return (
     <Link

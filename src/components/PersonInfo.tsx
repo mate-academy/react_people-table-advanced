@@ -10,6 +10,7 @@ interface Props {
 
 export const PersonInfo: FC<Props> = ({ person }) => {
   const { personSlug } = useParams();
+  const missingData = '-';
 
   const { sex, born, died, motherName, fatherName, slug, mother, father } =
     person;
@@ -29,8 +30,12 @@ export const PersonInfo: FC<Props> = ({ person }) => {
       <td>{sex}</td>
       <td>{born}</td>
       <td>{died}</td>
-      <td>{mother ? <PersonLink person={mother} /> : motherName || '-'}</td>
-      <td>{father ? <PersonLink person={father} /> : fatherName || '-'}</td>
+      <td>
+        {mother ? <PersonLink person={mother} /> : motherName || missingData}
+      </td>
+      <td>
+        {father ? <PersonLink person={father} /> : fatherName || missingData}
+      </td>
     </tr>
   );
 };

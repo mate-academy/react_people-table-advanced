@@ -6,16 +6,16 @@ import { SearchLink } from './SearchLink';
 import { Century } from '../types/Century';
 import { getSearchWith } from '../utils/searchHelper';
 
+const CENTURIES_FOR_FILTERING: Century[] = ['16', '17', '18', '19', '20'];
+
 export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const searchCenturies = searchParams.getAll('centuries') || [];
   const query = searchParams.get('query') || '';
 
-  const centuriesForFiltering: Century[] = ['16', '17', '18', '19', '20'];
-
   const toggleCentury = (century: Century) => {
     return searchCenturies.includes(century)
-      ? searchCenturies.filter(cent => cent !== century)
+      ? searchCenturies.filter(iterated_century => iterated_century !== century)
       : [...searchCenturies, century];
   };
 
@@ -74,7 +74,7 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            {centuriesForFiltering.map(century => (
+            {CENTURIES_FOR_FILTERING.map(century => (
               <SearchLink
                 key={century}
                 data-cy="century"
