@@ -11,19 +11,15 @@ import { getSortedPeople } from '../utils/getSortedPeople';
 
 export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);
-  // const [filteredPeople, setFilteredPeople] = useState<Person[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [hasLoadingError, setHasLoadingError] = useState<boolean>(false);
   const [searchParams] = useSearchParams();
-  // const [nameFilter, setNameFilter] = useState<string>('');
 
   const query = searchParams.get('query');
   const centuries = searchParams.getAll('centuries');
   const sex = searchParams.get('sex');
   const sortBy = searchParams.get('sort');
   const order = searchParams.get('order');
-
-  // const getFilteredPeople = useCallback(() => {
   //   // eslint-disable-next-line no-console
   //   console.log('started filtering');
 
@@ -70,28 +66,6 @@ export const PeoplePage = () => {
       .finally(() => setIsLoading(false));
   }, []);
 
-  // // Filter people's array
-  // useEffect(() => {
-  //   // If it has nameFilter -> set the name filter
-  //   if (searchParams.has('query')) {
-  //     setNameFilter(searchParams.get('query') ?? '');
-  //   }
-
-  //   // setFilteredPeople(getFilteredPeople());
-  // }, [people, searchParams]);
-
-  // const handleToggleCentury = (century: number) => {
-  //   const centuryString = century.toString();
-
-  //   if (searchParams.has('centuries', centuryString)) {
-  //     searchParams.delete('centuries', centuryString);
-  //     setSearchParams(searchParams);
-  //   } else {
-  //     searchParams.append('centuries', centuryString);
-  //     setSearchParams(searchParams);
-  //   }
-  // };
-
   return (
     <>
       <h1 className="title">People Page</h1>
@@ -99,13 +73,7 @@ export const PeoplePage = () => {
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
           <div className="column is-7-tablet is-narrow-desktop">
-            {!isLoading && (
-              <PeopleFilters
-              // nameFilter={nameFilter}
-              // setNameFilter={setNameFilter}
-              // handleToggleCentury={handleToggleCentury}
-              />
-            )}
+            {!isLoading && <PeopleFilters />}
           </div>
 
           <div className="column">

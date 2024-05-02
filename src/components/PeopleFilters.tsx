@@ -3,12 +3,6 @@ import { SearchLink } from './SearchLink';
 import classNames from 'classnames';
 import { useSearchParams } from 'react-router-dom';
 
-// type Props = {
-//   nameFilter: string;
-//   setNameFilter: React.Dispatch<React.SetStateAction<string>>;
-//   searchParams: URLSearchParams;
-// };
-
 export const PeopleFilters: React.FC = () => {
   const [nameFilter, setNameFilter] = useState<string>('');
   const [searchParams, setSearchParams] = useSearchParams();
@@ -16,8 +10,8 @@ export const PeopleFilters: React.FC = () => {
   const sex = searchParams.get('sex');
   const centuries = searchParams.getAll('centuries');
 
+  // If the query is empty, remove it from the URL
   useEffect(() => {
-    // If the query is empty
     if (!nameFilter.length) {
       searchParams.delete('query');
       setSearchParams(searchParams);
