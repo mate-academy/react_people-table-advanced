@@ -14,6 +14,7 @@ export const PeopleFilters: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const sex = searchParams.get('sex');
+  const centuries = searchParams.getAll('centuries');
 
   useEffect(() => {
     // If the query is empty
@@ -28,19 +29,13 @@ export const PeopleFilters: React.FC = () => {
 
   const getCenturies = useCallback(
     (century: string) => {
-      const centuries = searchParams.getAll('centuries');
-
       // If the century is selected now
       return centuries.includes(century)
         ? centuries.filter((currentCent: string) => currentCent !== century)
         : [...centuries, century];
     },
-    [searchParams],
+    [centuries],
   );
-
-  // const handleQueryChange = (event: React.ChangeEvent<HTMLInputElement>) => [
-  //   const newSearchParams =
-  // ]
 
   return (
     <nav className="panel">
@@ -118,9 +113,13 @@ export const PeopleFilters: React.FC = () => {
       </div>
 
       <div className="panel-block">
-        <a className="button is-link is-outlined is-fullwidth" href="#/people">
+        <SearchLink
+          params={{ sex: null, centuries: [] }}
+          onClick={() => setNameFilter('')}
+          className="button is-link is-outlined is-fullwidth"
+        >
           Reset all filters
-        </a>
+        </SearchLink>
       </div>
     </nav>
   );
