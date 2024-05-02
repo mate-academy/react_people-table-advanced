@@ -1,63 +1,58 @@
 import { PeopleFilters } from './PeopleFilters';
 import { Loader } from './Loader';
 import { PeopleTable } from './PeopleTable';
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { getPeople } from '../api';
 import { getPeopleWithParents } from '../helpers';
 import { Person } from '../types';
 import { useSearchParams } from 'react-router-dom';
+import { getFilteredPeople } from '../utils/getFilteredPeople';
 
 export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);
-  const [filteredPeople, setFilteredPeople] = useState<Person[]>([]);
+  // const [filteredPeople, setFilteredPeople] = useState<Person[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [hasLoadingError, setHasLoadingError] = useState<boolean>(false);
-  const [searchParams, setSearchParams] = useSearchParams();
-  const [nameFilter, setNameFilter] = useState<string>('');
+  const [searchParams] = useSearchParams();
+  // const [nameFilter, setNameFilter] = useState<string>('');
 
-  const getFilteredPeople = useCallback(() => {
-    // eslint-disable-next-line no-console
-    console.log('started filtering');
+  const query = searchParams.get('query');
+  const centuries = searchParams.getAll('centuries');
 
-    let filteredPersons = [...people];
-    const centuries = searchParams.getAll('centuries');
+  // const getFilteredPeople = useCallback(() => {
+  //   // eslint-disable-next-line no-console
+  //   console.log('started filtering');
 
-    if (nameFilter) {
-      filteredPersons = filteredPersons.filter((currentPerson: Person) => {
-        // Does their name match the query
-        return (
-          currentPerson.name.toLowerCase().includes(nameFilter.toLowerCase()) ||
-          currentPerson.motherName
-            ?.toLowerCase()
-            .includes(nameFilter.toLowerCase()) ||
-          currentPerson.fatherName
-            ?.toLowerCase()
-            .includes(nameFilter.toLowerCase())
-        );
-      });
-    }
+  //   let filteredPersons = [...people];
+  //   const centuries = searchParams.getAll('centuries');
 
-    if (centuries.length > 0 && centuries.length < 5) {
-      filteredPersons = filteredPersons.filter((currentPerson: Person) => {
-        const centuryBorn = Math.ceil(currentPerson.born / 100).toString();
+  //   if (nameFilter) {
+  //     filteredPersons = filteredPersons.filter((currentPerson: Person) => {
+  //       // Does their name match the query
+  //       return (
+  //         currentPerson.name.toLowerCase().includes(nameFilter.toLowerCase()) ||
+  //         currentPerson.motherName
+  //           ?.toLowerCase()
+  //           .includes(nameFilter.toLowerCase()) ||
+  //         currentPerson.fatherName
+  //           ?.toLowerCase()
+  //           .includes(nameFilter.toLowerCase())
+  //       );
+  //     });
+  //   }
 
-        return centuries.includes(centuryBorn);
-      });
-    }
+  //   if (centuries.length > 0 && centuries.length < 5) {
+  //     filteredPersons = filteredPersons.filter((currentPerson: Person) => {
+  //       const centuryBorn = Math.ceil(currentPerson.born / 100).toString();
 
-    return filteredPersons;
-  }, [nameFilter, people, searchParams]);
+  //       return centuries.includes(centuryBorn);
+  //     });
+  //   }
 
-  useEffect(() => {
-    // If the query is empty
-    if (!nameFilter.length) {
-      searchParams.delete('query');
-      setSearchParams(searchParams);
-    } else {
-      searchParams.set('query', nameFilter);
-      setSearchParams(searchParams);
-    }
-  }, [nameFilter, nameFilter.length, searchParams, setSearchParams]);
+  //   return filteredPersons;
+  // }, [nameFilter, people, searchParams]);
+
+  const filteredPeople = getFilteredPeople(people, query, centuries);
 
   useEffect(() => {
     setIsLoading(true);
@@ -69,20 +64,15 @@ export const PeoplePage = () => {
       .finally(() => setIsLoading(false));
   }, []);
 
-  // Clear the query from URL if it's empty
-  useEffect(() => {
-    // If it has nameFilter -> set the name filter
-    if (searchParams.has('query')) {
-      // If query is empty, delete query from URL
-      if (searchParams.get('query') === '') {
-        searchParams.delete('query');
-      } else {
-        setNameFilter(searchParams.get('query') ?? '');
-      }
-    }
+  // // Filter people's array
+  // useEffect(() => {
+  //   // If it has nameFilter -> set the name filter
+  //   if (searchParams.has('query')) {
+  //     setNameFilter(searchParams.get('query') ?? '');
+  //   }
 
-    setFilteredPeople(getFilteredPeople());
-  }, [getFilteredPeople, people, searchParams]);
+  //   // setFilteredPeople(getFilteredPeople());
+  // }, [people, searchParams]);
 
   // const handleToggleCentury = (century: number) => {
   //   const centuryString = century.toString();
@@ -105,10 +95,9 @@ export const PeoplePage = () => {
           <div className="column is-7-tablet is-narrow-desktop">
             {!isLoading && (
               <PeopleFilters
-                nameFilter={nameFilter}
-                setNameFilter={setNameFilter}
-                searchParams={searchParams}
-                // handleToggleCentury={handleToggleCentury}
+              // nameFilter={nameFilter}
+              // setNameFilter={setNameFilter}
+              // handleToggleCentury={handleToggleCentury}
               />
             )}
           </div>

@@ -1,18 +1,29 @@
-import { useCallback } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { SearchLink } from './SearchLink';
 import classNames from 'classnames';
+import { useSearchParams } from 'react-router-dom';
 
-type Props = {
-  nameFilter: string;
-  setNameFilter: React.Dispatch<React.SetStateAction<string>>;
-  searchParams: URLSearchParams;
-};
+// type Props = {
+//   nameFilter: string;
+//   setNameFilter: React.Dispatch<React.SetStateAction<string>>;
+//   searchParams: URLSearchParams;
+// };
 
-export const PeopleFilters: React.FC<Props> = ({
-  nameFilter,
-  setNameFilter,
-  searchParams,
-}) => {
+export const PeopleFilters: React.FC = () => {
+  const [nameFilter, setNameFilter] = useState<string>('');
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  useEffect(() => {
+    // If the query is empty
+    if (!nameFilter.length) {
+      searchParams.delete('query');
+      setSearchParams(searchParams);
+    } else {
+      searchParams.set('query', nameFilter);
+      setSearchParams(searchParams);
+    }
+  }, [nameFilter, searchParams, setSearchParams]);
+
   const getCenturies = useCallback(
     (century: string) => {
       const centuries = searchParams.getAll('centuries');
@@ -24,6 +35,10 @@ export const PeopleFilters: React.FC<Props> = ({
     },
     [searchParams],
   );
+
+  // const handleQueryChange = (event: React.ChangeEvent<HTMLInputElement>) => [
+  //   const newSearchParams =
+  // ]
 
   return (
     <nav className="panel">
