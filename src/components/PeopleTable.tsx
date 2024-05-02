@@ -2,6 +2,7 @@ import classNames from 'classnames';
 import React, { useContext } from 'react';
 import { Link, useParams, useSearchParams } from 'react-router-dom';
 import { Person } from '../types/Person';
+import { Status } from '../types/sortGender';
 import { SortType } from '../types/sortTypes';
 import { getSearchWith } from '../utils/searchHelper';
 import { sortTable } from '../utils/sortTable';
@@ -22,7 +23,8 @@ export const PeopleTable: React.FC = () => {
   const { people } = useContext(PeopleContext);
 
   const filteredTable =
-    people && sortTable(people, query, centuries, sex, sort, order);
+    people &&
+    sortTable(people, query, centuries, sex as Status, sort as SortType, order);
 
   function getOrder(item: SortType) {
     if (sort === item && order === 'desc') {
@@ -145,75 +147,79 @@ export const PeopleTable: React.FC = () => {
       </thead>
 
       <tbody>
-        {filteredTable.map((person: Person) => {
-          const mother = person.motherName || '-';
-          const father = person.fatherName || '-';
+        {filteredTable.length !== 0 ? (
+          filteredTable.map((person: Person) => {
+            const mother = person.motherName || '-';
+            const father = person.fatherName || '-';
 
-          const samePersonMother = people?.find(
-            el => el.name === person.motherName,
-          );
+            const samePersonMother = people?.find(
+              el => el.name === person.motherName,
+            );
 
-          const samePersonFather = people?.find(
-            el => el.name === person.fatherName,
-          );
+            const samePersonFather = people?.find(
+              el => el.name === person.fatherName,
+            );
 
-          return (
-            <tr
-              data-cy="person"
-              key={person.slug}
-              className={classNames({
-                'has-background-warning': slug === person.slug,
-              })}
-            >
-              <td>
-                <Link
-                  to={{
-                    pathname: `/people/${person.slug}`,
-                    search: searchParams.toString(),
-                  }}
-                  className={classNames('', {
-                    'has-text-danger': person.sex === 'f',
-                  })}
-                >
-                  {person.name}
-                </Link>
-              </td>
-
-              <td>{person.sex}</td>
-              <td>{person.born}</td>
-              <td>{person.died}</td>
-              <td>
-                {samePersonMother ? (
+            return (
+              <tr
+                data-cy="person"
+                key={person.slug}
+                className={classNames({
+                  'has-background-warning': slug === person.slug,
+                })}
+              >
+                <td>
                   <Link
                     to={{
-                      pathname: `/people/${samePersonMother.slug}`,
+                      pathname: `/people/${person.slug}`,
                       search: searchParams.toString(),
                     }}
-                    className="has-text-danger"
+                    className={classNames('', {
+                      'has-text-danger': person.sex === 'f',
+                    })}
                   >
-                    {mother}
+                    {person.name}
                   </Link>
-                ) : (
-                  mother
-                )}
-              </td>
-              <td>
-                {samePersonFather ? (
-                  <Link
-                    to={{
-                      pathname: `/people/${samePersonFather.slug}`,
-                      search: searchParams.toString(),
-                    }}
-                  >
-                    {father}
-                  </Link>
-                ) : (
-                  father
-                )}
-              </td>
-            </tr>
-          );
-        })}
+                </td>
+
+                <td>{person.sex}</td>
+                <td>{person.born}</td>
+                <td>{person.died}</td>
+                <td>
+                  {samePersonMother ? (
+                    <Link
+                      to={{
+                        pathname: `/people/${samePersonMother.slug}`,
+                        search: searchParams.toString(),
+                      }}
+                      className="has-text-danger"
+                    >
+                      {mother}
+                    </Link>
+                  ) : (
+                    mother
+                  )}
+                </td>
+                <td>
+                  {samePersonFather ? (
+                    <Link
+                      to={{
+                        pathname: `/people/${samePersonFather.slug}`,
+                        search: searchParams.toString(),
+                      }}
+                    >
+                      {father}
+                    </Link>
+                  ) : (
+                    father
+                  )}
+                </td>
+              </tr>
+            );
+          })
+        ) : (
+          <p>There are no people matching the current search criteria</p>
+        )}
       </tbody>
     </table>
   );

@@ -1,11 +1,13 @@
 import { Person } from '../types';
+import { Status } from '../types/sortGender';
+import { SortType } from '../types/sortTypes';
 
 export function sortTable(
   people: Person[],
   query: string,
   centuries: string[],
-  sex: string,
-  sort: string,
+  sex: Status,
+  sort: SortType,
   order: string,
 ) {
   let sortedPeople = [...people];
@@ -22,31 +24,23 @@ export function sortTable(
     );
   }
 
-  if (sex === 'm') {
-    sortedPeople = sortedPeople.filter(person => person.sex === 'm');
-  } else if (sex === 'f') {
-    sortedPeople = sortedPeople.filter(person => person.sex === 'f');
+  if (sex !== Status.All) {
+    sortedPeople = sortedPeople.filter(person => person.sex === sex);
   }
 
-  switch (true) {
-    case sort === 'name':
-    case sort === 'sex':
+  switch (sort) {
+    case 'name':
+    case 'sex':
       sortedPeople = sortedPeople.sort((personA, personB) =>
         personA.name.localeCompare(personB.name),
       );
 
       break;
 
-    case sort === 'born':
+    case 'born':
+    case 'died':
       sortedPeople = sortedPeople.sort(
-        (personA, personB) => personA.born - personB.born,
-      );
-
-      break;
-
-    case sort === 'died':
-      sortedPeople = sortedPeople.sort(
-        (personA, personB) => personA.died - personB.died,
+        (personA, personB) => personA[sort] - personB[sort],
       );
 
       break;

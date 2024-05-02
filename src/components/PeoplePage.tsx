@@ -15,7 +15,7 @@ export const PeoplePage: React.FC = () => {
         <div className="block">
           <div className="columns is-desktop is-flex-direction-row-reverse">
             <div className="column is-7-tablet is-narrow-desktop">
-              {!!people && !loader && <PeopleFilters />}
+              {people && !loader && <PeopleFilters />}
             </div>
 
             <div className="column">
@@ -26,15 +26,13 @@ export const PeoplePage: React.FC = () => {
                   <p data-cy="peopleLoadingError">Something went wrong</p>
                 )}
 
-                {!loader && people.length === 0 && (
+                {!loader && !people && (
                   <p data-cy="noPeopleMessage">
                     There are no people on the server
                   </p>
                 )}
 
-                {/* <p>There are no people matching the current search criteria</p> */}
-
-                {!loader && !!people && <PeopleTable />}
+                {!loader && people && <PeopleTable />}
               </div>
             </div>
           </div>

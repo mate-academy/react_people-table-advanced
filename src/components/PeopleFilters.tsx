@@ -9,7 +9,7 @@ export const PeopleFilters: React.FC = () => {
 
   const centuries = searchParams.getAll('centuries') || [];
   const query = searchParams.get('query') || '';
-  const sex = searchParams.get('sex') || '';
+  const sex = searchParams.get('sex') || Status.All;
 
   const setSearchWith = (params: SearchParams) => {
     const search = getSearchWith(searchParams, params);
