@@ -93,13 +93,15 @@ export const PeopleFilters: React.FC = () => {
           </div>
 
           <div className="level-right ml-4">
-            <a
+            <SearchLink
+              params={{ centuries: [] }}
+              className={classNames('button', 'is-success', {
+                'is-outlined': searchParams.has('centuries'),
+              })}
               data-cy="centuryALL"
-              className="button is-success is-outlined"
-              href="#/people"
             >
               All
-            </a>
+            </SearchLink>
           </div>
         </div>
       </div>
