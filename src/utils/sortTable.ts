@@ -32,7 +32,7 @@ export function sortTable(
     case 'name':
     case 'sex':
       sortedPeople = sortedPeople.sort((personA, personB) =>
-        personA.name.localeCompare(personB.name),
+        personA[sort].localeCompare(personB[sort]),
       );
 
       break;

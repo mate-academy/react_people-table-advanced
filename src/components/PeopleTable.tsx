@@ -64,9 +64,9 @@ export const PeopleTable: React.FC = () => {
                 <span className="icon">
                   <i
                     className={classNames('fas', {
-                      'fa-sort': people && !order && !sort,
-                      'fa-sort-up': people && !order && sort,
-                      'fa-sort-down': people && order && sort,
+                      'fa-sort': people && sort !== SortType.Name,
+                      'fa-sort-up': people && !order && sort === SortType.Name,
+                      'fa-sort-down': people && order && sort === SortType.Name,
                     })}
                     style={styled(SortType.Name)}
                   />
@@ -86,9 +86,9 @@ export const PeopleTable: React.FC = () => {
                 <span className="icon">
                   <i
                     className={classNames('fas', {
-                      'fa-sort': people && !order && !sort,
-                      'fa-sort-up': people && !order && sort,
-                      'fa-sort-down': people && order && sort,
+                      'fa-sort': people && sort !== SortType.Sex,
+                      'fa-sort-up': people && !order && sort === SortType.Sex,
+                      'fa-sort-down': people && order && sort === SortType.Sex,
                     })}
                     style={styled(SortType.Sex)}
                   />
@@ -108,9 +108,9 @@ export const PeopleTable: React.FC = () => {
                 <span className="icon">
                   <i
                     className={classNames('fas', {
-                      'fa-sort': people && !order && !sort,
-                      'fa-sort-up': people && !order && sort,
-                      'fa-sort-down': people && order && sort,
+                      'fa-sort': people && sort !== SortType.Born,
+                      'fa-sort-up': people && !order && sort === SortType.Born,
+                      'fa-sort-down': people && order && sort === SortType.Born,
                     })}
                     style={styled(SortType.Born)}
                   />
@@ -130,9 +130,9 @@ export const PeopleTable: React.FC = () => {
                 <span className="icon">
                   <i
                     className={classNames('fas', {
-                      'fa-sort': people && !order && !sort,
-                      'fa-sort-up': people && !order && sort,
-                      'fa-sort-down': people && order && sort,
+                      'fa-sort': people && sort !== SortType.Died,
+                      'fa-sort-up': people && !order && sort === SortType.Died,
+                      'fa-sort-down': people && order && sort === SortType.Died,
                     })}
                     style={styled(SortType.Died)}
                   />
