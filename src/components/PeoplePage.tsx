@@ -7,6 +7,7 @@ import { getPeopleWithParents } from '../helpers';
 import { Person } from '../types';
 import { useSearchParams } from 'react-router-dom';
 import { getFilteredPeople } from '../utils/getFilteredPeople';
+import { getSortedPeople } from '../utils/getSortedPeople';
 
 export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);
@@ -19,6 +20,8 @@ export const PeoplePage = () => {
   const query = searchParams.get('query');
   const centuries = searchParams.getAll('centuries');
   const sex = searchParams.get('sex');
+  const sortBy = searchParams.get('sort');
+  const order = searchParams.get('order');
 
   // const getFilteredPeople = useCallback(() => {
   //   // eslint-disable-next-line no-console
@@ -54,6 +57,8 @@ export const PeoplePage = () => {
   // }, [nameFilter, people, searchParams]);
 
   const filteredPeople = getFilteredPeople(people, query, centuries, sex);
+
+  const sortedPeople = getSortedPeople(filteredPeople, sortBy, order);
 
   useEffect(() => {
     setIsLoading(true);
@@ -123,7 +128,7 @@ export const PeoplePage = () => {
                 <p>There are no people matching the current search criteria</p>
               )}
 
-              {!!people.length && <PeopleTable people={filteredPeople} />}
+              {!!people.length && <PeopleTable people={sortedPeople} />}
             </div>
           </div>
         </div>
