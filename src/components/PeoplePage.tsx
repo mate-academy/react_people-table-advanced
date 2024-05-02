@@ -1,7 +1,7 @@
 import { PeopleFilters } from './PeopleFilters';
 import { Loader } from './Loader';
 import { PeopleTable } from './PeopleTable';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { getPeople } from '../api';
 import { getPeopleWithParents } from '../helpers';
 import { Person } from '../types';
@@ -9,10 +9,48 @@ import { useSearchParams } from 'react-router-dom';
 
 export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);
-  // const [filteredPeople, setFilteredPeople] = useState<Person[]>([]);
+  const [filteredPeople, setFilteredPeople] = useState<Person[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [hasLoadingError, setHasLoadingError] = useState<boolean>(false);
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [nameFilter, setNameFilter] = useState<string>('');
+
+  // (event: React.ChangeEvent<HTMLInputElement>) => {
+  //   searchParams.set('query', event.target.value);
+  //   handleQueryChange(searchParams);
+  // }
+
+  const getFilteredPeople = useCallback(() => {
+    let filteredPersons = [...people];
+
+    if (nameFilter) {
+      filteredPersons = filteredPersons.filter((currentPerson: Person) => {
+        // Does their name match the query
+        return (
+          currentPerson.name.toLowerCase().includes(nameFilter.toLowerCase()) ||
+          currentPerson.motherName
+            ?.toLowerCase()
+            .includes(nameFilter.toLowerCase()) ||
+          currentPerson.fatherName
+            ?.toLowerCase()
+            .includes(nameFilter.toLowerCase())
+        );
+      });
+    }
+
+    return filteredPersons;
+  }, [nameFilter, people]);
+
+  useEffect(() => {
+    // If the query is empty
+    if (!nameFilter.length) {
+      searchParams.delete('query');
+      setSearchParams(searchParams);
+    } else {
+      searchParams.set('query', nameFilter);
+      setSearchParams(searchParams);
+    }
+  }, [nameFilter, nameFilter.length, searchParams, setSearchParams]);
 
   useEffect(() => {
     setIsLoading(true);
@@ -24,11 +62,25 @@ export const PeoplePage = () => {
       .finally(() => setIsLoading(false));
   }, []);
 
-  // useEffect(() => {
-  //   setPeople((currentPeople: Person[]) =>
-  //     filterPeople(currentPeople, searchParams),
-  //   );
-  // }, [searchParams]);
+  useEffect(() => {
+    // eslint-disable-next-line no-console
+    // console.log(
+    //   'search params changed. New search params (sort, query): ',
+    //   searchParams.get('sort'),
+    //   searchParams.get('query'),
+    // );
+
+    // If it has nameFilter -> set the name filter
+    if (searchParams.has('query')) {
+      if (searchParams.get('query') === '') {
+        searchParams.delete('query');
+      } else {
+        setNameFilter(searchParams.get('query') ?? '');
+      }
+    }
+
+    setFilteredPeople(getFilteredPeople());
+  }, [getFilteredPeople, people, searchParams]);
 
   return (
     <>
@@ -37,7 +89,12 @@ export const PeoplePage = () => {
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
           <div className="column is-7-tablet is-narrow-desktop">
-            {!isLoading && <PeopleFilters />}
+            {!isLoading && (
+              <PeopleFilters
+                nameFilter={nameFilter}
+                setNameFilter={setNameFilter}
+              />
+            )}
           </div>
 
           <div className="column">
@@ -60,7 +117,7 @@ export const PeoplePage = () => {
                 <p>There are no people matching the current search criteria</p>
               )}
 
-              {!!people.length && <PeopleTable people={people} />}
+              {!!people.length && <PeopleTable people={filteredPeople} />}
             </div>
           </div>
         </div>

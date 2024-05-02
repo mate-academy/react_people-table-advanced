@@ -1,4 +1,12 @@
-export const PeopleFilters = () => {
+type Props = {
+  nameFilter: string;
+  setNameFilter: React.Dispatch<React.SetStateAction<string>>;
+};
+
+export const PeopleFilters: React.FC<Props> = ({
+  nameFilter,
+  setNameFilter,
+}) => {
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
@@ -22,6 +30,10 @@ export const PeopleFilters = () => {
             type="search"
             className="input"
             placeholder="Search"
+            value={nameFilter}
+            onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+              setNameFilter(event.target.value);
+            }}
           />
 
           <span className="icon is-left">
