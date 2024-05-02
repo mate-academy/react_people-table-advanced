@@ -15,13 +15,12 @@ export const PeoplePage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [nameFilter, setNameFilter] = useState<string>('');
 
-  // (event: React.ChangeEvent<HTMLInputElement>) => {
-  //   searchParams.set('query', event.target.value);
-  //   handleQueryChange(searchParams);
-  // }
-
   const getFilteredPeople = useCallback(() => {
+    // eslint-disable-next-line no-console
+    console.log('started filtering');
+
     let filteredPersons = [...people];
+    const centuries = searchParams.getAll('centuries');
 
     if (nameFilter) {
       filteredPersons = filteredPersons.filter((currentPerson: Person) => {
@@ -38,8 +37,16 @@ export const PeoplePage = () => {
       });
     }
 
+    if (centuries.length > 0 && centuries.length < 5) {
+      filteredPersons = filteredPersons.filter((currentPerson: Person) => {
+        const centuryBorn = Math.ceil(currentPerson.born / 100).toString();
+
+        return centuries.includes(centuryBorn);
+      });
+    }
+
     return filteredPersons;
-  }, [nameFilter, people]);
+  }, [nameFilter, people, searchParams]);
 
   useEffect(() => {
     // If the query is empty
@@ -62,16 +69,11 @@ export const PeoplePage = () => {
       .finally(() => setIsLoading(false));
   }, []);
 
+  // Clear the query from URL if it's empty
   useEffect(() => {
-    // eslint-disable-next-line no-console
-    // console.log(
-    //   'search params changed. New search params (sort, query): ',
-    //   searchParams.get('sort'),
-    //   searchParams.get('query'),
-    // );
-
     // If it has nameFilter -> set the name filter
     if (searchParams.has('query')) {
+      // If query is empty, delete query from URL
       if (searchParams.get('query') === '') {
         searchParams.delete('query');
       } else {
@@ -81,6 +83,18 @@ export const PeoplePage = () => {
 
     setFilteredPeople(getFilteredPeople());
   }, [getFilteredPeople, people, searchParams]);
+
+  // const handleToggleCentury = (century: number) => {
+  //   const centuryString = century.toString();
+
+  //   if (searchParams.has('centuries', centuryString)) {
+  //     searchParams.delete('centuries', centuryString);
+  //     setSearchParams(searchParams);
+  //   } else {
+  //     searchParams.append('centuries', centuryString);
+  //     setSearchParams(searchParams);
+  //   }
+  // };
 
   return (
     <>
@@ -93,6 +107,8 @@ export const PeoplePage = () => {
               <PeopleFilters
                 nameFilter={nameFilter}
                 setNameFilter={setNameFilter}
+                searchParams={searchParams}
+                // handleToggleCentury={handleToggleCentury}
               />
             )}
           </div>

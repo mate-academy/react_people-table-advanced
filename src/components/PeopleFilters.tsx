@@ -1,12 +1,30 @@
+import { useCallback } from 'react';
+import { SearchLink } from './SearchLink';
+import classNames from 'classnames';
+
 type Props = {
   nameFilter: string;
   setNameFilter: React.Dispatch<React.SetStateAction<string>>;
+  searchParams: URLSearchParams;
 };
 
 export const PeopleFilters: React.FC<Props> = ({
   nameFilter,
   setNameFilter,
+  searchParams,
 }) => {
+  const getCenturies = useCallback(
+    (century: string) => {
+      const centuries = searchParams.getAll('centuries');
+
+      // If the century is selected now
+      return centuries.includes(century)
+        ? centuries.filter((currentCent: string) => currentCent !== century)
+        : [...centuries, century];
+    },
+    [searchParams],
+  );
+
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
@@ -45,45 +63,18 @@ export const PeopleFilters: React.FC<Props> = ({
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            <a
-              data-cy="century"
-              className="button mr-1"
-              href="#/people?centuries=16"
-            >
-              16
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=17"
-            >
-              17
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=18"
-            >
-              18
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=19"
-            >
-              19
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1"
-              href="#/people?centuries=20"
-            >
-              20
-            </a>
+            {['16', '17', '18', '19', '20'].map((century: string) => (
+              <SearchLink
+                params={{ centuries: getCenturies(century) }}
+                className={classNames('button', 'mr-1', {
+                  'is-info': !getCenturies(century).includes(century),
+                })}
+                data-cy="century"
+                key={century}
+              >
+                {century}
+              </SearchLink>
+            ))}
           </div>
 
           <div className="level-right ml-4">
