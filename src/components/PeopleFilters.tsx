@@ -13,6 +13,8 @@ export const PeopleFilters: React.FC = () => {
   const [nameFilter, setNameFilter] = useState<string>('');
   const [searchParams, setSearchParams] = useSearchParams();
 
+  const sex = searchParams.get('sex');
+
   useEffect(() => {
     // If the query is empty
     if (!nameFilter.length) {
@@ -45,15 +47,24 @@ export const PeopleFilters: React.FC = () => {
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        <a className="is-active" href="#/people">
+        <SearchLink
+          className={classNames({ 'is-active': sex === null })}
+          params={{ sex: null }}
+        >
           All
-        </a>
-        <a className="" href="#/people?sex=m">
+        </SearchLink>
+        <SearchLink
+          className={classNames({ 'is-active': sex === 'm' })}
+          params={{ sex: 'm' }}
+        >
           Male
-        </a>
-        <a className="" href="#/people?sex=f">
+        </SearchLink>
+        <SearchLink
+          className={classNames({ 'is-active': sex === 'f' })}
+          params={{ sex: 'f' }}
+        >
           Female
-        </a>
+        </SearchLink>
       </p>
 
       <div className="panel-block">
