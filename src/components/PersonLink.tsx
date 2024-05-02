@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
-import { Person } from '../types';
+import { Person, Sex } from '../types';
 import classNames from 'classnames';
 
 type Props = {
@@ -9,15 +9,16 @@ type Props = {
 
 export const PersonLink: React.FC<Props> = ({ person }) => {
   const [searchParams] = useSearchParams();
+  const { slug, sex, name } = person;
 
   return (
     <Link
-      to={`../${person.slug}?${searchParams.toString()}`}
+      to={`../${slug}?${searchParams.toString()}`}
       className={classNames({
-        'has-text-danger': person.sex === 'f',
+        'has-text-danger': sex === Sex.Female,
       })}
     >
-      {person.name}
+      {name}
     </Link>
   );
 };

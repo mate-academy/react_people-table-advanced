@@ -1,8 +1,9 @@
-import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { SearchLink } from './SearchLink';
 import { getSearchWith } from '../utils/searchHelper';
 import classNames from 'classnames';
+import { SexFilter } from '../types/enums';
+import { CENTURIES } from '../types/consts';
 
 export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -11,39 +12,13 @@ export const PeopleFilters = () => {
   const currentSexFilter = searchParams.get('sex') || '';
   const currentCenturies = searchParams.getAll('centuries');
 
-  const [query, setQuery] = useState(currentQuery);
-
-  useEffect(() => {
-    let queryValue: null | string = query;
-
-    if (query === '') {
-      queryValue = null;
-    }
-
-    const newParams = getSearchWith(searchParams, { query: queryValue });
-
-    setSearchParams(newParams);
-  }, [query, searchParams, setSearchParams, currentQuery]);
-
-  const isSexFilterSelected = (param: string) => {
-    return currentSexFilter === param;
+  const handleQueryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchParams(
+      getSearchWith(searchParams, {
+        query: e.target.value === '' ? null : e.target.value,
+      }),
+    );
   };
-
-  const isCenturySelected = (param: string) => {
-    return currentCenturies.includes(param);
-  };
-
-  const isNoneCenturySelected = () => {
-    return currentCenturies.length === 0;
-  };
-
-  enum SexFilter {
-    All = '',
-    Male = 'm',
-    Female = 'f',
-  }
-
-  const CENTURIES = ['16', '17', '18', '19', '20'];
 
   return (
     <nav className="panel">
@@ -54,7 +29,9 @@ export const PeopleFilters = () => {
           return (
             <SearchLink
               params={{ sex: value === '' ? null : value }}
-              className={isSexFilterSelected(value) ? 'is-active' : ''}
+              className={classNames({
+                'is-active': currentSexFilter === value,
+              })}
               key={key}
             >
               {key}
@@ -70,10 +47,8 @@ export const PeopleFilters = () => {
             type="search"
             className="input"
             placeholder="Search"
-            value={query}
-            onChange={event => {
-              setQuery(event.target.value);
-            }}
+            value={currentQuery}
+            onChange={handleQueryChange}
           />
 
           <span className="icon is-left">
@@ -86,23 +61,21 @@ export const PeopleFilters = () => {
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
             {CENTURIES.map(century => {
-              const addCentury = () => {
-                return [...currentCenturies, century];
-              };
+              const toggleCentury = () => {
+                if (currentCenturies.includes(century)) {
+                  return currentCenturies.filter(cen => cen !== century);
+                }
 
-              const removeCentury = () => {
-                return currentCenturies.filter(cen => cen !== century);
+                return [...currentCenturies, century];
               };
 
               return (
                 <SearchLink
                   params={{
-                    centuries: isCenturySelected(century)
-                      ? removeCentury()
-                      : addCentury(),
+                    centuries: toggleCentury(),
                   }}
                   className={classNames('button', 'mr-1', {
-                    'is-info': isCenturySelected(century),
+                    'is-info': currentCenturies.includes(century),
                   })}
                   key={century}
                 >
@@ -119,7 +92,7 @@ export const PeopleFilters = () => {
                 centuries: [],
               }}
               className={classNames('button', 'is-success', {
-                'is-outlined': !isNoneCenturySelected(),
+                'is-outlined': currentCenturies.length !== 0,
               })}
             >
               All
@@ -131,9 +104,6 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <SearchLink
           params={{ sex: null, query: null, centuries: [] }}
-          onClick={() => {
-            setQuery('');
-          }}
           className="button is-link is-outlined is-fullwidth"
         >
           Reset all filters

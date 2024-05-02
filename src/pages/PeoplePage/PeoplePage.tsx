@@ -6,78 +6,11 @@ import { PeopleTable } from '../../components/PeopleTable';
 import { useParams, useSearchParams } from 'react-router-dom';
 import { LoadingError } from '../../components/LoadingError';
 import { PeopleFilters } from '../../components/PeopleFilters';
-import { normalize } from '../../utils/stringManipulation';
 import { Orders, SortKeys } from '../../types/sortTypes';
 import { NoPeopleMessage } from '../../components/NoPeopleMessage';
 import { NoVisiblePeople } from '../../components/NoVisiblePeople';
-
-type FilterParams = {
-  query: string;
-  sex: string;
-  centuries: string[];
-};
-
-const getFilteredPeople = (people: Person[], params: FilterParams) => {
-  const { query, sex, centuries } = params;
-
-  let peopleCopy = [...people];
-
-  if (query) {
-    peopleCopy = peopleCopy.filter(person => {
-      const normalizedQuery = normalize(query);
-
-      return (
-        normalize(person.name).includes(normalizedQuery) ||
-        normalize(person.fatherName ?? '-').includes(normalizedQuery) ||
-        normalize(person.motherName ?? '-').includes(normalizedQuery)
-      );
-    });
-  }
-
-  if (sex) {
-    peopleCopy = peopleCopy.filter(person => person.sex === sex);
-  }
-
-  if (centuries.length !== 0) {
-    peopleCopy = peopleCopy.filter(person => {
-      const centurie = Math.ceil(person.born / 100);
-
-      return centuries.includes(String(centurie));
-    });
-  }
-
-  return peopleCopy;
-};
-
-type SortParams = {
-  order: string;
-  sort: string;
-};
-
-const getSortedPeople = (people: Person[], params: SortParams) => {
-  const { order, sort } = params;
-
-  if (!sort) {
-    return people;
-  }
-
-  const reverseMultiplier = order === Orders.Descending ? -1 : 1;
-
-  return [...people].sort((a, b) => {
-    switch (sort) {
-      case SortKeys.Name:
-      case SortKeys.Sex:
-        return (
-          reverseMultiplier * normalize(a.name).localeCompare(normalize(b.name))
-        );
-      case SortKeys.Born:
-      case SortKeys.Died:
-        return reverseMultiplier * (a[sort] - b[sort]);
-      default:
-        return 0;
-    }
-  });
-};
+import { getFilteredPeople } from '../../utils/getFilteredPeople';
+import { getSortedPeople } from '../../utils/getSortedPeople';
 
 export const PeoplePage = () => {
   const { selectedSlug } = useParams();
@@ -104,6 +37,12 @@ export const PeoplePage = () => {
     sort: currentSort,
   });
 
+  const isLoadingSuccessful = !isLoading && !isFailed;
+  const isNoPeopleMessageShown = !people.length && isLoadingSuccessful;
+  const isNoVisiblePeopleMessageShown =
+    !!people.length && isLoadingSuccessful && !preparedPeople.length;
+  const isPeopleTableShown = isLoadingSuccessful && !!preparedPeople.length;
+
   useEffect(() => {
     setIsLoading(true);
     getPeople()
@@ -124,19 +63,16 @@ export const PeoplePage = () => {
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
           <div className="column is-7-tablet is-narrow-desktop">
-            <PeopleFilters />
+            {isLoadingSuccessful && <PeopleFilters />}
           </div>
 
           <div className="column">
             <div className="box table-container">
               {isLoading && <Loader />}
               {isFailed && <LoadingError />}
-              {!people.length && !isLoading && !isFailed && <NoPeopleMessage />}
-              {!!people.length &&
-                !isLoading &&
-                !isFailed &&
-                !preparedPeople.length && <NoVisiblePeople />}
-              {!isLoading && !isFailed && !!preparedPeople.length && (
+              {isNoPeopleMessageShown && <NoPeopleMessage />}
+              {isNoVisiblePeopleMessageShown && <NoVisiblePeople />}
+              {isPeopleTableShown && (
                 <PeopleTable
                   selectedSlug={selectedSlug}
                   people={preparedPeople}
