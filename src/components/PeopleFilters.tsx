@@ -10,6 +10,8 @@ export const PeopleFilters: React.FC = () => {
   const sex = searchParams.get('sex');
   const centuries = searchParams.getAll('centuries');
 
+  const centuriesArray: string[] = ['16', '17', '18', '19', '20'];
+
   // If the query is empty, remove it from the URL
   useEffect(() => {
     if (!nameFilter.length) {
@@ -75,7 +77,7 @@ export const PeopleFilters: React.FC = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            {['16', '17', '18', '19', '20'].map((century: string) => (
+            {centuriesArray.map((century: string) => (
               <SearchLink
                 params={{ centuries: getUpdatedCenturies(century) }}
                 className={classNames('button', 'mr-1', {
