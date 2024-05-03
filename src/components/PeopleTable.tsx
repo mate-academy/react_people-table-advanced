@@ -54,6 +54,8 @@ export const PeopleTable: React.FC = () => {
         }
       }
     }
+
+    return p;
   });
 
   const renderPeople = centuries.length ? filterCenturies : sortPeople;
