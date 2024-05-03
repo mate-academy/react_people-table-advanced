@@ -1,11 +1,7 @@
 import { useSearchParams } from 'react-router-dom';
 import classNames from 'classnames';
 import { SearchLink } from '../SearchLink';
-enum Sex {
-  All = '',
-  Male = 'm',
-  Gemale = 'f',
-}
+import { Sex } from '../../types/sex';
 
 export const SexFilter = () => {
   const [searchParams] = useSearchParams();

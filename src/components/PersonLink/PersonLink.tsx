@@ -1,6 +1,7 @@
 import { Link, useParams } from 'react-router-dom';
 import { Person } from '../../types';
 import classNames from 'classnames';
+import { Sex } from '../../types/sex';
 
 type Props = {
   person: Person;
@@ -9,7 +10,7 @@ export const PersonLink: React.FC<Props> = ({ person }) => {
   const { slug } = useParams();
   const { name, sex, born, died, fatherName, motherName, mother, father } =
     person;
-  const female = sex === 'f';
+  const female = sex === Sex.Female;
   const notParents = '-';
 
   return (

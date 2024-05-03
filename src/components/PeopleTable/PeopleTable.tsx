@@ -1,6 +1,6 @@
 import { useSearchParams } from 'react-router-dom';
 import { Person } from '../../types';
-import { getFilterPeople } from '../../utils/getFilteredPeople';
+import { getFilteredPeople } from '../../utils/getFilteredPeople';
 import { PersonLink } from '../PersonLink/PersonLink';
 import { sortPeopleBy } from '../../utils/sortPeopleBy';
 import { SortColumns } from '../SortColumns/SortColumns';
@@ -13,16 +13,25 @@ type Props = {
 const SORT_COLUMNS = ['Name', 'Sex', 'Born', 'Died'];
 
 export const PeopleTable: React.FC<Props> = ({ people }) => {
-  const preparedPeople = people?.map(person => ({
-    ...person,
-    mother: people.find(personItem => personItem.name === person.motherName),
-    father: people.find(personItem => personItem.name === person.fatherName),
-  }));
+  function getPreparedPeople(peopleItems: Person[]) {
+    return peopleItems.map(person => ({
+      ...person,
+      mother: peopleItems.find(
+        personItem => personItem.name === person.motherName,
+      ),
+      father: peopleItems.find(
+        personItem => personItem.name === person.fatherName,
+      ),
+    }));
+  }
+
+  const preparedPeople = getPreparedPeople(people);
+
   const [searchParams] = useSearchParams();
   const sortParam = searchParams.get('sort') || '';
   const orderParam = searchParams.get('order') || '';
 
-  const visiblePeople = getFilterPeople(
+  const visiblePeople = getFilteredPeople(
     preparedPeople,
     searchParams.get('query'),
     searchParams.get('sex'),
@@ -36,7 +45,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
       data-cy="peopleTable"
       className="table is-striped is-hoverable is-narrow is-fullwidth"
     >
-      {visiblePeople.length > 0 ? (
+      {visiblePeople.length ? (
         <>
           <thead>
             <tr>

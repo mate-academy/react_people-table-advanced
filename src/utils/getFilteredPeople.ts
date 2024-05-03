@@ -1,6 +1,7 @@
 import { Person } from '../types';
+import { Sex } from '../types/sex';
 
-export const getFilterPeople = (
+export const getFilteredPeople = (
   people: Person[],
   query: string | null,
   sex: string | null,
@@ -9,9 +10,9 @@ export const getFilterPeople = (
   let peopleCopy = [...people];
   const normalizedQuery = query?.toLowerCase();
 
-  if (sex === 'm') {
+  if (sex === Sex.Male) {
     peopleCopy = people.filter(person => person.sex === 'm');
-  } else if (sex === 'f') {
+  } else if (sex === Sex.Female) {
     peopleCopy = people.filter(person => person.sex === 'f');
   }
 
