@@ -3,8 +3,8 @@ import { Person } from '../types';
 import { PersonRow } from './PersonRow';
 import { SearchLink } from './SearchLink';
 import classNames from 'classnames';
+import { Sort } from '../types/Sort';
 
-/* eslint-disable jsx-a11y/control-has-associated-label */
 type Props = {
   people: Person[];
 };
@@ -40,9 +40,9 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Name
-              <SearchLink params={getSearchParams('name')}>
+              <SearchLink params={getSearchParams(Sort.Name)}>
                 <span className="icon">
-                  <i className={getSortLinkClassName('name')} />
+                  <i className={getSortLinkClassName(Sort.Name)} />
                 </span>
               </SearchLink>
             </span>
@@ -62,9 +62,9 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Born
-              <SearchLink params={getSearchParams('born')}>
+              <SearchLink params={getSearchParams(Sort.Born)}>
                 <span className="icon">
-                  <i className={getSortLinkClassName('born')} />
+                  <i className={getSortLinkClassName(Sort.Born)} />
                 </span>
               </SearchLink>
             </span>
@@ -73,9 +73,9 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Died
-              <SearchLink params={getSearchParams('died')}>
+              <SearchLink params={getSearchParams(Sort.Died)}>
                 <span className="icon">
-                  <i className={getSortLinkClassName('died')} />
+                  <i className={getSortLinkClassName(Sort.Died)} />
                 </span>
               </SearchLink>
             </span>

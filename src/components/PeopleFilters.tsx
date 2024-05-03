@@ -3,12 +3,13 @@ import { SearchLink } from './SearchLink';
 import classNames from 'classnames';
 import { useSearchParams } from 'react-router-dom';
 import { Sex } from '../types/sex';
+import { Sort } from '../types/Sort';
 
 export const PeopleFilters: React.FC = () => {
   const [nameFilter, setNameFilter] = useState<string>('');
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const sex = searchParams.get('sex');
+  const sex = searchParams.get(Sort.Sex);
   const centuries = searchParams.getAll('centuries');
 
   const centuriesArray: string[] = ['16', '17', '18', '19', '20'];

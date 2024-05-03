@@ -1,4 +1,5 @@
 import { Person } from '../types';
+import { Sort } from '../types/Sort';
 
 export const getSortedPeople = (
   people: Person[],
@@ -9,22 +10,22 @@ export const getSortedPeople = (
 
   if (sortBy) {
     switch (sortBy) {
-      case 'name':
+      case Sort.Name:
         sortedPeople.sort((personA: Person, personB: Person) =>
           personA.name.localeCompare(personB.name),
         );
         break;
-      case 'sex':
+      case Sort.Sex:
         sortedPeople.sort((personA: Person, personB: Person) =>
           personA.sex.localeCompare(personB.sex),
         );
         break;
-      case 'born':
+      case Sort.Born:
         sortedPeople.sort(
           (personA: Person, personB: Person) => personA.born - personB.born,
         );
         break;
-      case 'died':
+      case Sort.Died:
         sortedPeople.sort(
           (personA: Person, personB: Person) => personA.died - personB.died,
         );
