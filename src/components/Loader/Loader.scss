@@ -11,11 +11,11 @@
     margin: 1em auto;
     border: 0.3em solid #ddd;
     border-left-color: #000;
-    animation: load8 1.2s infinite linear;
+    animation: rotating 1.2s infinite linear;
   }
 }
 
-@keyframes load8 {
+@keyframes rotating {
   0% {
     transform: rotate(0deg);
   }

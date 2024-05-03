@@ -15,7 +15,7 @@ export const PeopleFilters = () => {
   const handleQueryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchParams(
       getSearchWith(searchParams, {
-        query: e.target.value === '' ? null : e.target.value,
+        query: !e.target.value ? null : e.target.value,
       }),
     );
   };
@@ -25,19 +25,17 @@ export const PeopleFilters = () => {
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        {Object.entries(SexFilter).map(([key, value]) => {
-          return (
-            <SearchLink
-              params={{ sex: value === '' ? null : value }}
-              className={classNames({
-                'is-active': currentSexFilter === value,
-              })}
-              key={key}
-            >
-              {key}
-            </SearchLink>
-          );
-        })}
+        {Object.entries(SexFilter).map(([key, value]) => (
+          <SearchLink
+            params={{ sex: !value ? null : value }}
+            className={classNames({
+              'is-active': currentSexFilter === value,
+            })}
+            key={key}
+          >
+            {key}
+          </SearchLink>
+        ))}
       </p>
 
       <div className="panel-block">

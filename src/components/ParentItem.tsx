@@ -2,7 +2,7 @@ import { Person } from '../types';
 import { PersonLink } from './PersonLink';
 
 type Props = {
-  parent: Person | undefined;
+  parent?: Person;
   name: string | null;
 };
 
