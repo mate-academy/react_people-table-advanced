@@ -1,7 +1,7 @@
-import classNames from 'classnames';
-import { Person } from '../types';
-import { PersonLink } from './PersonLink';
 import { useParams } from 'react-router-dom';
+import classNames from 'classnames';
+import { Person } from '../types/Person';
+import { PersonLink } from './PersonLink';
 
 type Props = {
   person: Person;

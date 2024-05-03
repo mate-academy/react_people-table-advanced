@@ -1,4 +1,4 @@
-import { Person } from '../types';
+import { Person } from '../types/Person';
 
 export const getFilteredPeople = (
   people: Person[],

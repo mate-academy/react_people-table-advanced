@@ -1,9 +1,9 @@
 import { useSearchParams } from 'react-router-dom';
-import { Person } from '../types';
+import classNames from 'classnames';
+import { Person } from '../types/Person';
+import { Sort } from '../types/Sort';
 import { PersonRow } from './PersonRow';
 import { SearchLink } from './SearchLink';
-import classNames from 'classnames';
-import { Sort } from '../types/Sort';
 
 type Props = {
   people: Person[];

@@ -1,13 +1,13 @@
+import { useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
+import { getPeople } from '../api';
+import { Person } from '../types/Person';
+import { getFilteredPeople } from '../utils/getFilteredPeople';
+import { getSortedPeople } from '../utils/getSortedPeople';
+import { getPeopleWithParents } from '../helpers';
 import { PeopleFilters } from './PeopleFilters';
 import { Loader } from './Loader';
 import { PeopleTable } from './PeopleTable';
-import { useEffect, useState } from 'react';
-import { getPeople } from '../api';
-import { getPeopleWithParents } from '../helpers';
-import { Person } from '../types';
-import { useSearchParams } from 'react-router-dom';
-import { getFilteredPeople } from '../utils/getFilteredPeople';
-import { getSortedPeople } from '../utils/getSortedPeople';
 
 export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);

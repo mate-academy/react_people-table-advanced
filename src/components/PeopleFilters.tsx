@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
-import { SearchLink } from './SearchLink';
-import classNames from 'classnames';
 import { useSearchParams } from 'react-router-dom';
+import classNames from 'classnames';
 import { Sex } from '../types/sex';
 import { Sort } from '../types/Sort';
+import { SearchLink } from './SearchLink';
 
 export const PeopleFilters: React.FC = () => {
   const [nameFilter, setNameFilter] = useState<string>('');

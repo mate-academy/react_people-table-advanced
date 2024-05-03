@@ -1,4 +1,4 @@
-import { Person } from '../types';
+import { Person } from '../types/Person';
 import { Sort } from '../types/Sort';
 
 export const getSortedPeople = (
