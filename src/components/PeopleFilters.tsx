@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { SearchLink } from './SearchLink';
 import classNames from 'classnames';
 import { useSearchParams } from 'react-router-dom';
+import { Sex } from '../types/sex';
 
 export const PeopleFilters: React.FC = () => {
   const [nameFilter, setNameFilter] = useState<string>('');
@@ -42,14 +43,14 @@ export const PeopleFilters: React.FC = () => {
           All
         </SearchLink>
         <SearchLink
-          className={classNames({ 'is-active': sex === 'm' })}
-          params={{ sex: 'm' }}
+          className={classNames({ 'is-active': sex === Sex.M })}
+          params={{ sex: Sex.M }}
         >
           Male
         </SearchLink>
         <SearchLink
-          className={classNames({ 'is-active': sex === 'f' })}
-          params={{ sex: 'f' }}
+          className={classNames({ 'is-active': sex === Sex.F })}
+          params={{ sex: Sex.F }}
         >
           Female
         </SearchLink>
