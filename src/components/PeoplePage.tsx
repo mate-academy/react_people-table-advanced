@@ -20,37 +20,6 @@ export const PeoplePage = () => {
   const sex = searchParams.get('sex');
   const sortBy = searchParams.get('sort');
   const order = searchParams.get('order');
-  //   // eslint-disable-next-line no-console
-  //   console.log('started filtering');
-
-  //   let filteredPersons = [...people];
-  //   const centuries = searchParams.getAll('centuries');
-
-  //   if (nameFilter) {
-  //     filteredPersons = filteredPersons.filter((currentPerson: Person) => {
-  //       // Does their name match the query
-  //       return (
-  //         currentPerson.name.toLowerCase().includes(nameFilter.toLowerCase()) ||
-  //         currentPerson.motherName
-  //           ?.toLowerCase()
-  //           .includes(nameFilter.toLowerCase()) ||
-  //         currentPerson.fatherName
-  //           ?.toLowerCase()
-  //           .includes(nameFilter.toLowerCase())
-  //       );
-  //     });
-  //   }
-
-  //   if (centuries.length > 0 && centuries.length < 5) {
-  //     filteredPersons = filteredPersons.filter((currentPerson: Person) => {
-  //       const centuryBorn = Math.ceil(currentPerson.born / 100).toString();
-
-  //       return centuries.includes(centuryBorn);
-  //     });
-  //   }
-
-  //   return filteredPersons;
-  // }, [nameFilter, people, searchParams]);
 
   const filteredPeople = getFilteredPeople(people, query, centuries, sex);
 
