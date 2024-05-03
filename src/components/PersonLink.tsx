@@ -1,19 +1,25 @@
-import { Link } from 'react-router-dom';
-import cn from 'classnames';
-import { Person } from '../types';
+import React from 'react';
+import classNames from 'classnames';
+import { Link, useLocation } from 'react-router-dom';
+import { Person } from '../types/Person';
+import { PersonSex } from '../types/PersonSex';
 
 type Props = {
   person: Person;
 };
 
 export const PersonLink: React.FC<Props> = ({ person }) => {
-  const { slug, sex, name } = person;
+  const { search } = useLocation();
+  const { name, sex, slug } = person;
 
   return (
     <Link
-      to={`./${slug}`}
-      className={cn({
-        'has-text-danger': sex === 'f',
+      to={{
+        pathname: `/people/${slug}`,
+        search,
+      }}
+      className={classNames({
+        'has-text-danger': sex === PersonSex.FEMALE,
       })}
     >
       {name}

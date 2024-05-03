@@ -12,6 +12,7 @@ export function getSearchWith(
 ): string {
   // copy currentParams by creating new object from a string
   const newParams = new URLSearchParams(currentParams.toString());
+
   // Here is the example of paramsToUpdate
   // {
   //   sex: 'm',                ['sex', 'm']
@@ -41,11 +42,3 @@ export function getSearchWith(
   // we return a string to use it inside links
   return newParams.toString();
 }
-
-export const createCenturiesParams = (centuries: string[], century: string) => {
-  return {
-    centuries: centuries.includes(century)
-      ? centuries.filter(c => c !== century)
-      : [...centuries, century],
-  };
-};

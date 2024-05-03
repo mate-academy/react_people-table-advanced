@@ -1,35 +1,63 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
+
+import { getPeople } from '../api';
 import { PeopleFilters } from './PeopleFilters';
+import { Loader } from './Loader';
 import { PeopleTable } from './PeopleTable';
 import { Person } from '../types';
-import { getPeople } from '../api';
-import { useSearchParams } from 'react-router-dom';
-import { findParents, preparePeople } from '../utils/peopleHelper';
+import { getPreparedPeople } from '../utils/getPreparedPeople';
+import { Order } from '../types/order';
 
 export const PeoplePage = () => {
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [hasError, setError] = useState(false);
   const [people, setPeople] = useState<Person[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [hasError, setHasError] = useState(false);
-  const [search] = useSearchParams();
+  const [searchParams] = useSearchParams();
+
+  const sex = searchParams.get('sex');
+  const query = searchParams.get('query');
+  const centuries = searchParams.getAll('centuries');
+  const sortField = searchParams.get('sort');
+  const isReversed = searchParams.get('order') === Order.DESC;
+
+  const isNotPeopleListEmpty = isLoaded && !hasError && people.length;
+  const isPeopleListEmpty = isLoaded && !hasError && !people.length;
+  const isResponseNotOk = isLoaded && hasError;
 
   useEffect(() => {
-    setIsLoading(true);
-    setHasError(false);
+    setIsLoaded(false);
 
     getPeople()
       .then(peopleFromServer => {
-        const peopleWithParents = findParents(peopleFromServer);
+        const preparedPeople = peopleFromServer.map(person => ({ ...person }));
 
-        setPeople(peopleWithParents);
+        preparedPeople.forEach(person => {
+          Object.assign(person, {
+            mother:
+              preparedPeople.find(
+                mother => mother.name === person.motherName,
+              ) || null,
+            father:
+              preparedPeople.find(
+                father => father.name === person.fatherName,
+              ) || null,
+          });
+        });
+
+        setPeople(preparedPeople);
       })
-      .catch(() => setHasError(true))
-      .finally(() => setIsLoading(false));
+      .catch(() => setError(true))
+      .finally(() => setIsLoaded(true));
   }, []);
 
-  const preparedPeople = useMemo(
-    () => preparePeople(people, search),
-    [people, search],
-  );
+  const preparedPeople = getPreparedPeople(people, {
+    sex,
+    query,
+    centuries,
+    sortField,
+    isReversed,
+  });
 
   return (
     <>
@@ -37,17 +65,27 @@ export const PeoplePage = () => {
 
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
-          <div className="column is-7-tablet is-narrow-desktop">
-            {!isLoading && <PeopleFilters />}
-          </div>
+          {isLoaded && (
+            <div className="column is-7-tablet is-narrow-desktop">
+              <PeopleFilters />
+            </div>
+          )}
 
           <div className="column">
             <div className="box table-container">
-              <PeopleTable
-                people={preparedPeople}
-                isLoading={isLoading}
-                hasError={hasError}
-              />
+              {!isLoaded && <Loader />}
+
+              {isResponseNotOk && (
+                <p data-cy="peopleLoadingError">Something went wrong</p>
+              )}
+
+              {isPeopleListEmpty && (
+                <p data-cy="noPeopleMessage">
+                  There are no people on the server
+                </p>
+              )}
+
+              {isNotPeopleListEmpty && <PeopleTable people={preparedPeople} />}
             </div>
           </div>
         </div>

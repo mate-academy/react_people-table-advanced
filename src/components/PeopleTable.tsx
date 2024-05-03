@@ -1,48 +1,98 @@
-import { useSearchParams } from 'react-router-dom';
-import { Person } from '../types';
-import { Loader } from './Loader';
-import { PersonItem } from './PersonItem';
-import { TableHead } from './TableHead';
+import classNames from 'classnames';
+import { FC } from 'react';
+import { useParams } from 'react-router-dom';
+import { Person } from '../types/Person';
+import { PersonLink } from './PersonLink';
+import { SortButton } from './SortButton';
 
 type Props = {
   people: Person[];
-  isLoading: boolean;
-  hasError: boolean;
 };
-/* eslint-disable jsx-a11y/control-has-associated-label */
-export const PeopleTable: React.FC<Props> = ({
-  people,
-  isLoading,
-  hasError,
-}) => {
-  const [search] = useSearchParams();
+
+export const PeopleTable: FC<Props> = ({ people }) => {
+  const { personSlug } = useParams();
+
+  if (people.length === 0) {
+    return <p>There are no people matching the current search criteria</p>;
+  }
 
   return (
-    <>
-      {(isLoading && <Loader />) ||
-        (hasError && (
-          <p data-cy="peopleLoadingError" className="has-text-danger">
-            Something went wrong
-          </p>
-        )) ||
-        (!people.length && search.size && (
-          <p>There are no people matching the current search criteria</p>
-        )) ||
-        (!people.length ? (
-          <p data-cy="noPeopleMessage">There are no people on the server</p>
-        ) : (
-          <table
-            data-cy="peopleTable"
-            className="table is-striped is-hoverable is-narrow is-fullwidth"
-          >
-            <TableHead />
-            <tbody>
-              {people.map(person => (
-                <PersonItem key={person.slug} person={person} />
-              ))}
-            </tbody>
-          </table>
-        ))}
-    </>
+    <table
+      data-cy="peopleTable"
+      className="table is-striped is-hoverable is-narrow is-fullwidth"
+    >
+      <thead>
+        <tr>
+          <th>
+            <span className="is-flex is-flex-wrap-nowrap">
+              Name
+              <SortButton field="name" />
+            </span>
+          </th>
+
+          <th>
+            <span className="is-flex is-flex-wrap-nowrap">
+              Sex
+              <SortButton field="sex" />
+            </span>
+          </th>
+
+          <th>
+            <span className="is-flex is-flex-wrap-nowrap">
+              Born
+              <SortButton field="born" />
+            </span>
+          </th>
+
+          <th>
+            <span className="is-flex is-flex-wrap-nowrap">
+              Died
+              <SortButton field="died" />
+            </span>
+          </th>
+
+          <th>Mother</th>
+          <th>Father</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        {people.map(person => {
+          const {
+            sex,
+            born,
+            died,
+            motherName,
+            fatherName,
+            mother,
+            father,
+            slug,
+          } = person;
+
+          return (
+            <tr
+              key={slug}
+              data-cy="person"
+              className={classNames({
+                'has-background-warning': slug === personSlug,
+              })}
+            >
+              <td>
+                <PersonLink person={person} />
+              </td>
+              <td>{sex}</td>
+              <td>{born}</td>
+              <td>{died}</td>
+              <td>
+                {mother ? <PersonLink person={mother} /> : motherName || '-'}
+              </td>
+              <td>
+                {father ? <PersonLink person={father} /> : fatherName || '-'}
+              </td>
+            </tr>
+          );
+        })}
+      </tbody>
+    </table>
   );
 };
