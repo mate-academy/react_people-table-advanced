@@ -7,6 +7,12 @@ import { SearchParams, getSearchWith } from '../utils/searchHelper';
 
 const CENTURIES = [16, 17, 18, 19, 20];
 
+const genderOptions = [
+  { label: 'All', params: { sex: null } },
+  { label: 'Male', params: { sex: GenderFields.Male } },
+  { label: 'Female', params: { sex: GenderFields.Female } },
+];
+
 export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -25,11 +31,9 @@ export const PeopleFilters = () => {
   };
 
   const getNewCenturies = (century: string) => {
-    const newCentury = centuries.includes(century)
+    return centuries.includes(century)
       ? centuries.filter(prevCentury => prevCentury !== century)
       : [...centuries, century];
-
-    return newCentury;
   };
 
   return (
@@ -37,26 +41,15 @@ export const PeopleFilters = () => {
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        <SearchLink
-          params={{ sex: null }}
-          className={cn({ 'is-active': !sex })}
-        >
-          All
-        </SearchLink>
-
-        <SearchLink
-          params={{ sex: GenderFields.Male }}
-          className={cn({ 'is-active': sex === GenderFields.Male })}
-        >
-          Male
-        </SearchLink>
-
-        <SearchLink
-          params={{ sex: GenderFields.Female }}
-          className={cn({ 'is-active': sex === GenderFields.Female })}
-        >
-          Female
-        </SearchLink>
+        {genderOptions.map(({ label, params }) => (
+          <SearchLink
+            key={label}
+            params={params}
+            className={cn({ 'is-active': sex === params.sex })}
+          >
+            {label}
+          </SearchLink>
+        ))}
       </p>
 
       <div className="panel-block">

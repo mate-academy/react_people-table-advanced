@@ -11,7 +11,7 @@ const belongsToCentury = (centuries: string[], man: Person) => {
   return centuries.map(Number).includes(Math.ceil(man.born / 100));
 };
 
-export function getFilterPeople(people: Person[], params: URLSearchParams) {
+export function getFilteredPeople(people: Person[], params: URLSearchParams) {
   const filterOptions: Option = {
     sex: params.get('sex'),
     query: params.get('query')?.trim().toLowerCase() || null,

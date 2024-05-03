@@ -7,7 +7,7 @@ import { Person } from '../types';
 import { PersonInfo } from './PersonInfo';
 import { getPreparedPeople } from '../utils/getPreparedPeople';
 import { SearchLink } from './SearchLink';
-import { getFilterPeople } from '../utils/getFilterPeople';
+import { getFilteredPeople } from '../utils/getFilteredPeople';
 import { getSortPeople } from '../utils/getSortPeople';
 
 const COLUMN_NAMES = ['Name', 'Sex', 'Born', 'Died'];
@@ -37,7 +37,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
     return { sort: sortedField, order: newOrder };
   };
 
-  const filteredPeople = getFilterPeople(preperedPeople, searchParams);
+  const filteredPeople = getFilteredPeople(preperedPeople, searchParams);
   const sortPeople = getSortPeople(filteredPeople, searchParams);
 
   {

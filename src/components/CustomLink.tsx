@@ -8,15 +8,14 @@ type Props = {
   person: Person | null;
 };
 
-const FEMALE = 'f';
+enum Gender {
+  FEMALE = 'f',
+}
 
 export const CustomLink: React.FC<Props> = ({ to, person }) => {
-  const isDanger = person?.sex === FEMALE;
-  let name = '';
+  const isDanger = person?.sex === Gender.FEMALE;
 
-  if (person) {
-    name = person.name;
-  }
+  const name = person?.name || '';
 
   return (
     <Link

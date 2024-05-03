@@ -9,6 +9,8 @@ type Props = {
   person: Person;
 };
 
+const USER_NOT_FOUND = '-';
+
 export const PersonInfo: React.FC<Props> = ({ person }) => {
   const { slug } = useParams();
   const { mother, father, sex, born, died } = person;
@@ -33,7 +35,7 @@ export const PersonInfo: React.FC<Props> = ({ person }) => {
             person={person?.mother || null}
           />
         ) : (
-          person.motherName || '-'
+          person.motherName || USER_NOT_FOUND
         )}
       </td>
 
@@ -44,7 +46,7 @@ export const PersonInfo: React.FC<Props> = ({ person }) => {
             person={person?.father || null}
           />
         ) : (
-          person.fatherName || '-'
+          person.fatherName || USER_NOT_FOUND
         )}
       </td>
     </tr>
