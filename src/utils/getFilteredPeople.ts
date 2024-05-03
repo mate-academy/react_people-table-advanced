@@ -6,9 +6,6 @@ export const getFilteredPeople = (
   centuries: string[],
   sex: string | null,
 ) => {
-  // eslint-disable-next-line no-console
-  console.log('started filtering');
-
   let filteredPeople = [...people];
 
   if (query?.length) {
