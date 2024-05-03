@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { SearchLink } from './SearchLink';
 import classNames from 'classnames';
 import { useSearchParams } from 'react-router-dom';
@@ -21,15 +21,12 @@ export const PeopleFilters: React.FC = () => {
     }
   }, [nameFilter, searchParams, setSearchParams]);
 
-  const getCenturies = useCallback(
-    (century: string) => {
-      // If the century is selected now
-      return centuries.includes(century)
-        ? centuries.filter((currentCent: string) => currentCent !== century)
-        : [...centuries, century];
-    },
-    [centuries],
-  );
+  const getUpdatedCenturies = (century: string) => {
+    // If the century is selected now, remove it - else - add it to the array
+    return centuries.includes(century)
+      ? centuries.filter((currentCent: string) => currentCent !== century)
+      : [...centuries, century];
+  };
 
   return (
     <nav className="panel">
@@ -80,9 +77,9 @@ export const PeopleFilters: React.FC = () => {
           <div className="level-left">
             {['16', '17', '18', '19', '20'].map((century: string) => (
               <SearchLink
-                params={{ centuries: getCenturies(century) }}
+                params={{ centuries: getUpdatedCenturies(century) }}
                 className={classNames('button', 'mr-1', {
-                  'is-info': !getCenturies(century).includes(century),
+                  'is-info': !getUpdatedCenturies(century).includes(century),
                 })}
                 data-cy="century"
                 key={century}
