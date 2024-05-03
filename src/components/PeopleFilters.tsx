@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import classNames from 'classnames';
-import { Sex } from '../types/sex';
+import { Sex } from '../types/Sex';
 import { Sort } from '../types/Sort';
 import { SearchLink } from './SearchLink';
 

@@ -1,4 +1,4 @@
-import { Person } from './types';
+import { Person } from './types/Person';
 
 export const getPeopleWithParents = (people: Person[]) => {
   return people.map((person: Person) => {
