@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import cn from 'classnames';
 import { getSearchWith } from '../utils/searchHelper';
-import { DispatchContext, StateContex } from '../context/reducer';
+import { DispatchContext } from '../context/reducer';
 
 enum SexFilter {
   'male',
@@ -10,10 +10,9 @@ enum SexFilter {
 }
 
 export const PeopleFilters = () => {
-  const { centuries } = useContext(StateContex);
-  const dispatch = useContext(DispatchContext);
-
   const [searchParams, setSearchParams] = useSearchParams();
+  const centuries = searchParams.getAll('centuries') || [];
+  const dispatch = useContext(DispatchContext);
 
   const handleClickFilter = (sortParam: SexFilter | null) => {
     switch (sortParam) {

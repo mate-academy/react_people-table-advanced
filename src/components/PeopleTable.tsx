@@ -8,7 +8,7 @@ import { filterPeople } from '../utils/filterPeople';
 import { getSearchWith } from '../utils/searchHelper';
 
 export const PeopleTable: React.FC = () => {
-  const { people, centuries } = useContext(StateContex);
+  const { people } = useContext(StateContex);
 
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -47,18 +47,20 @@ export const PeopleTable: React.FC = () => {
   const sortPeople = filterPeople(searchParams, people);
 
   const filterCenturies = sortPeople.filter(p => {
-    if (centuries) {
-      for (const cent of centuries) {
+    if (searchParams.get('centuries')) {
+      for (const cent of searchParams.getAll('centuries')) {
         if (p.born >= (+cent - 1) * 100 && p.born <= (+cent - 1) * 100 + 99) {
           return p;
         }
       }
     }
 
-    return p;
+    return;
   });
 
-  const renderPeople = centuries.length ? filterCenturies : sortPeople;
+  const renderPeople = searchParams.get('centuries')
+    ? filterCenturies
+    : sortPeople;
 
   const { slugName } = useParams();
 

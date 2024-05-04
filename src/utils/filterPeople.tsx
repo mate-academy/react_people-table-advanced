@@ -7,6 +7,22 @@ export const filterPeople = (params: URLSearchParams, people: Person[]) => {
 
   let filteredPeople = people.slice();
 
+  // const centuriesParam = params.get('centuries');
+  // const centuries: number[] = centuriesParam
+  //   ? centuriesParam.split(',').map(century => parseInt(century))
+  //   : [];
+
+  // if (centuries.length) {
+  //   return filteredPeople.filter(person =>
+  //     centuries.some(century => {
+  //       const centuryStart = century * 100;
+  //       const centuryEnd = centuryStart + 99;
+
+  //       return person.born >= centuryStart && person.born <= centuryEnd;
+  //     }),
+  //   );
+  // }
+
   if (queryString) {
     filteredPeople = filteredPeople.filter(
       person =>
