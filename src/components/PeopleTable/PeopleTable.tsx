@@ -1,14 +1,15 @@
 import { useContext, useEffect } from 'react';
 import { Loader } from '../Loader';
-import { getPeople } from '../../api';
 import { TableList } from '../TableList';
-import { TableContext } from '../../App';
+import { TableContext } from '../../store/TableContextProvider';
+import { getPeople } from '../../api';
 
 export const PeopleTable = () => {
-  const { people, setPeople } = useContext(TableContext);
-  const { isLoading, setIsLoading } = useContext(TableContext);
-  const { isError, setIsError } = useContext(TableContext);
+  const { people, setPeople, isLoading, setIsLoading, isError, setIsError } =
+    useContext(TableContext);
   const isPeopleEmpty = !people.length;
+  const isDataNotAvailable = !isLoading && !isError && isPeopleEmpty;
+  const isDataAvailable = !isLoading && !isError && !isPeopleEmpty;
 
   useEffect(() => {
     setIsLoading(true);
@@ -31,13 +32,11 @@ export const PeopleTable = () => {
           </p>
         )}
 
-        {!isLoading && !isError && isPeopleEmpty && (
+        {isDataNotAvailable && (
           <p data-cy="noPeopleMessage">There are no people on the server</p>
         )}
 
-        {!isLoading && !isError && !isPeopleEmpty && (
-          <TableList people={people} />
-        )}
+        {isDataAvailable && <TableList people={people} />}
       </div>
     </div>
   );
