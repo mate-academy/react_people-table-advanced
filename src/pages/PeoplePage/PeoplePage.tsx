@@ -1,9 +1,10 @@
 import { useContext } from 'react';
 import { PeopleFilters } from '../../components/PeopleFilters';
 import { PeopleTable } from '../../components/PeopleTable';
-import { TableContext } from '../../App';
+import { TableContext } from '../../store/TableContextProvider';
+
 export const PeoplePage = () => {
-  const { isLoading } = useContext(TableContext);
+  const { isLoading, isEmptyMessage } = useContext(TableContext);
 
   return (
     <>
@@ -14,7 +15,12 @@ export const PeoplePage = () => {
           {!isLoading && <PeopleFilters />}
           <div className="column">
             <div className="box table-container">
-              <PeopleTable />
+              <div style={{ display: isEmptyMessage ? 'none' : 'block' }}>
+                <PeopleTable />
+              </div>
+              {isEmptyMessage && (
+                <p>There are no people matching the current search criteria</p>
+              )}
             </div>
           </div>
         </div>

@@ -8,4 +8,6 @@ export interface TableContextType {
   setIsError: (error: boolean) => void;
   isLoading: boolean;
   setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  isEmptyMessage: boolean;
+  setIsEmptyMessage: (error: boolean) => void;
 }

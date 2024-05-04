@@ -1,25 +1,17 @@
+import { useContext } from 'react';
 import { PersonComponent } from '../PersonComponent';
 import { Person } from '../../types/Person';
 import { useSearchParams } from 'react-router-dom';
 import { SearchLink } from '../SearchLink';
+import { filterPeople } from '../../utils/filterPeople';
+import { sortPeople } from '../../utils/sortPeople';
+import { preparePeopleWithLinks } from '../../utils/preparePeopleWithLinks';
+import { TableContext } from '../../store/TableContextProvider';
 
 export const TABLE_FIELDS = ['Name', 'Sex', 'Born', 'Died', 'Mother', 'Father'];
 
-const preparePeopleWithLinks = (peopleList: Person[]) => {
-  return peopleList.map(person => {
-    return {
-      ...person,
-      father:
-        peopleList.find(candidate => candidate.name === person.fatherName) ||
-        null,
-      mother:
-        peopleList.find(candidate => candidate.name === person.motherName) ||
-        null,
-    };
-  });
-};
-
 export const TableList = ({ people }: { people: Person[] }) => {
+  const { setIsEmptyMessage } = useContext(TableContext);
   const [searchParams] = useSearchParams();
   const sortBy = searchParams.get('sort') || '';
   const order = searchParams.get('order') || '';
@@ -29,45 +21,11 @@ export const TableList = ({ people }: { people: Person[] }) => {
 
   let preparedPeople = preparePeopleWithLinks(people);
 
-  if (centuries.length > 0) {
-    preparedPeople = preparedPeople.filter(person =>
-      centuries.includes(String(Math.ceil(person.born / 100))),
-    );
-  }
-
-  if (query) {
-    preparedPeople = preparedPeople.filter(person =>
-      person.name.toLowerCase().includes(query.trim().toLowerCase()),
-    );
-  }
-
-  if (sex) {
-    preparedPeople = preparedPeople.filter(person => person.sex === sex);
-  }
-
-  function sortPeople(persons: Person[], field: keyof Person) {
-    return [...persons].sort((person1, person2) => {
-      const valueA = person1[field];
-      const valueB = person2[field];
-
-      if (typeof valueA === 'string' && typeof valueB === 'string') {
-        return valueA.localeCompare(valueB);
-      }
-
-      if (typeof valueA === 'number' && typeof valueB === 'number') {
-        return valueA - valueB;
-      }
-
-      return 0;
-    });
-  }
+  preparedPeople = filterPeople(preparedPeople, centuries, query, sex);
+  setIsEmptyMessage(preparedPeople.length === 0);
 
   if (sortBy) {
-    preparedPeople = sortPeople(preparedPeople, sortBy as keyof Person);
-  }
-
-  if (order) {
-    preparedPeople = preparedPeople.reverse();
+    preparedPeople = sortPeople(preparedPeople, sortBy as keyof Person, order);
   }
 
   const handleSortIcon = (field: string) => {
