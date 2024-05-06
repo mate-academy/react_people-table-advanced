@@ -7,13 +7,11 @@ import { Loader } from './Loader';
 import { getPeople } from '../api';
 
 function getExtendedPersonList(data: Person[]): Person[] {
-  return data.map(person => {
-    return {
-      ...person,
-      mother: data.find(curPerson => person.motherName === curPerson.name),
-      father: data.find(curPerson => person.fatherName === curPerson.name),
-    };
-  });
+  return data.map(person => ({
+    ...person,
+    mother: data.find(curPerson => person.motherName === curPerson.name),
+    father: data.find(curPerson => person.fatherName === curPerson.name),
+  }));
 }
 
 function getFilteredPersonList(
@@ -32,25 +30,15 @@ function getFilteredPersonList(
 
   if (query) {
     resultData = resultData.filter(person => {
-      if (person.name.toLocaleLowerCase().includes(query.toLocaleLowerCase())) {
-        return true;
-      }
+      const { name, motherName, fatherName } = person;
+      const lowerQuery = query.toLocaleLowerCase();
+      const nameMatches = name.toLocaleLowerCase().includes(lowerQuery);
+      const motherNameMatches =
+        motherName && motherName.toLocaleLowerCase().includes(lowerQuery);
+      const fatherNameMatches =
+        fatherName && fatherName.toLocaleLowerCase().includes(lowerQuery);
 
-      let result = false;
-
-      if (person.motherName) {
-        result = person.motherName
-          .toLocaleLowerCase()
-          .includes(query.toLocaleLowerCase());
-      }
-
-      if (person.fatherName && !result) {
-        result = person.fatherName
-          .toLocaleLowerCase()
-          .includes(query.toLocaleLowerCase());
-      }
-
-      return result;
+      return nameMatches || motherNameMatches || fatherNameMatches;
     });
   }
 
@@ -111,6 +99,8 @@ export const PeoplePage = () => {
       .finally(() => setIsLoading(false));
   }, []);
 
+  const isEmptyList = !data.length && !hasError;
+
   return (
     <>
       <h1 className="title">People Page</h1>
@@ -132,15 +122,13 @@ export const PeoplePage = () => {
                     </p>
                   )}
 
-                  {!data.length && !hasError && (
+                  {isEmptyList && (
                     <p data-cy="noPeopleMessage">
                       There are no people on the server
                     </p>
                   )}
 
-                  {!!data.length && !hasError && (
-                    <PeopleTable data={visiblePersonList} />
-                  )}
+                  {!isEmptyList && <PeopleTable data={visiblePersonList} />}
                 </>
               )}
             </div>

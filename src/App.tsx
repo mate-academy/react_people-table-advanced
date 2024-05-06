@@ -15,7 +15,7 @@ export const App = () => {
         <div className="container">
           <Routes>
             <Route path="/" element={<HomePage />} />
-            <Route path="/home" element={<Navigate to="/" />} />
+            <Route path="/home" element={<Navigate to="/" replace />} />
             <Route path="people">
               <Route path=":personSlug?" element={<PeoplePage />} />
             </Route>
