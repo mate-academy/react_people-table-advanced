@@ -13,10 +13,10 @@ export const GenderFilter = () => {
       {Object.entries(Gender).map(([key, value]) => (
         <SearchLink
           key={key}
-          params={{ sex: value }}
+          params={{ sex: value || null }}
           className={classNames({ 'is-active': gender === value })}
         >
-          {key === 'All' ? 'All' : key}
+          {key}
         </SearchLink>
       ))}
     </p>

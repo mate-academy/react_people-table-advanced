@@ -1,5 +1,4 @@
 import { Person } from '../types';
-import { getPeople } from '../api';
 
 export const sortPeople = (
   people: Person[],
@@ -65,28 +64,22 @@ export const filterPeople = (
   return filteredPeople;
 };
 
-export const preparePeopleData = async (): Promise<Person[]> => {
-  try {
-    const fetchedPeople = await getPeople();
+export const preparePeopleData = (people: Person[]) => {
+  const preparedPeople = people.map(person => {
+    const mother = person.motherName
+      ? people.find(p => p.name === person.motherName) ?? null
+      : null;
 
-    const preparedPeople = fetchedPeople.map(person => {
-      const mother = person.motherName
-        ? fetchedPeople.find(p => p.name === person.motherName) ?? null
-        : null;
+    const father = person.fatherName
+      ? people.find(p => p.name === person.fatherName) ?? null
+      : null;
 
-      const father = person.fatherName
-        ? fetchedPeople.find(p => p.name === person.fatherName) ?? null
-        : null;
+    return {
+      ...person,
+      mother,
+      father,
+    };
+  });
 
-      return {
-        ...person,
-        mother,
-        father,
-      };
-    });
-
-    return preparedPeople as Person[];
-  } catch (error) {
-    throw new Error('Error preparing people data');
-  }
+  return preparedPeople;
 };

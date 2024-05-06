@@ -1,6 +1,6 @@
 import React from 'react';
 import classNames from 'classnames';
-import { Link } from 'react-router-dom';
+import { SearchLink } from './SearchLink';
 
 type Props = {
   columnName: string;
@@ -14,15 +14,15 @@ export const SortLink: React.FC<Props> = ({
   isReversed,
 }) => {
   function getSortOrderParams() {
-    const row =
-      '/people' +
-      (sortColumn !== columnName
-        ? `?sort=${columnName}`
-        : !isReversed
-          ? `?sort=${columnName}&order=desc`
-          : '');
+    if (sortColumn !== columnName) {
+      return { sort: columnName, order: null };
+    }
 
-    return row;
+    if (isReversed) {
+      return { sort: null, order: null };
+    }
+
+    return { sort: columnName, order: 'desc' };
   }
 
   const getSortIconClass = () => {
@@ -34,12 +34,12 @@ export const SortLink: React.FC<Props> = ({
   };
 
   return (
-    <Link to={getSortOrderParams()}>
+    <SearchLink params={getSortOrderParams()}>
       <span className="is-flex is-flex-wrap-nowrap">
         <span className="icon">
           <i className={getSortIconClass()} />
         </span>
       </span>
-    </Link>
+    </SearchLink>
   );
 };

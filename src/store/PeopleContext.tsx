@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Person } from '../types';
 import { preparePeopleData } from '../helpers/utils';
+import { getPeople } from '../api';
 
 interface Props {
   children: React.ReactNode;
@@ -28,7 +29,8 @@ export const PeopleProvider: React.FC<Props> = ({ children }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const preparedPeople = await preparePeopleData();
+        const fetchedPeople = await getPeople();
+        const preparedPeople = preparePeopleData(fetchedPeople);
 
         setPeople(preparedPeople);
         setIsError(false);
