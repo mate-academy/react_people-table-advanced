@@ -6,7 +6,7 @@ export const filterPeople = (
   query: string,
   sex: string,
 ): Person[] => {
-  let filteredPeople = [...people];
+  let filteredPeople = people;
 
   if (centuries.length > 0) {
     filteredPeople = filteredPeople.filter(person =>
