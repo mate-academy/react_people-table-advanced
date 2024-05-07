@@ -45,16 +45,12 @@ const filterSet = (
     tempPeople = tempPeople.sort((per1, per2) => {
       switch (sort) {
         case 'name':
-          return per2.name.localeCompare(per1.name);
-
         case 'sex':
-          return per1.sex.localeCompare(per2.sex);
+          return per1[sort].localeCompare(per2[sort]);
 
         case 'born':
-          return per1.born - per2.born;
-
         case 'died':
-          return per1.died - per2.died;
+          return per1[sort] - per2[sort];
 
         default:
           return 0;

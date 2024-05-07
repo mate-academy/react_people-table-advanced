@@ -1,6 +1,6 @@
 import React from 'react';
 import { Person } from '../types';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams, useSearchParams } from 'react-router-dom';
 import cn from 'classnames';
 import { SearchLink } from './SearchLink';
 
@@ -13,6 +13,7 @@ type Props = {
 /* eslint-disable jsx-a11y/control-has-associated-label */
 export const PeopleTable: React.FC<Props> = ({ people, sort, order }) => {
   const { userFromId } = useParams();
+  const [searchParams] = useSearchParams();
 
   return (
     <table
@@ -140,7 +141,10 @@ export const PeopleTable: React.FC<Props> = ({ people, sort, order }) => {
               <td>
                 <Link
                   className={cn({ 'has-text-danger': sex === 'f' })}
-                  to={`../${slug}`}
+                  to={{
+                    pathname: `../${slug}`,
+                    search: searchParams.toString(),
+                  }}
                 >
                   {name}
                 </Link>
@@ -151,7 +155,13 @@ export const PeopleTable: React.FC<Props> = ({ people, sort, order }) => {
               <td>{died}</td>
               <td>
                 {mother ? (
-                  <Link className="has-text-danger" to={`../${mother.slug}`}>
+                  <Link
+                    className="has-text-danger"
+                    to={{
+                      pathname: `../${mother.slug}`,
+                      search: searchParams.toString(),
+                    }}
+                  >
                     {motherName}
                   </Link>
                 ) : (
@@ -161,7 +171,14 @@ export const PeopleTable: React.FC<Props> = ({ people, sort, order }) => {
 
               <td>
                 {father ? (
-                  <Link to={`../${father.slug}`}>{fatherName}</Link>
+                  <Link
+                    to={{
+                      pathname: `../${father.slug}`,
+                      search: searchParams.toString(),
+                    }}
+                  >
+                    {fatherName}
+                  </Link>
                 ) : (
                   isFatherName
                 )}
