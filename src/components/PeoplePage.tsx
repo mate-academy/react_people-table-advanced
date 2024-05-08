@@ -115,24 +115,27 @@ export const PeoplePage = () => {
           </div>
 
           <div className="column">
-            <div className="box table-container">
-              {isLoading && !isError && <Loader />}
-              {isError && (
-                <p data-cy="peopleLoadingError" className="has-text-danger">
-                  Something went wrong
-                </p>
-              )}
-              {!isError && !isLoading && people.length === 0 && (
-                <p data-cy="noPeopleMessage">
-                  There are no people on the server
-                </p>
-              )}
-              {isValidToLoad ? (
-                <p>There are no people matching the current search criteria</p>
-              ) : (
-                <PeopleTable people={visiblePeople} />
-              )}
-            </div>
+            {isError ? (
+              <p data-cy="peopleLoadingError" className="has-text-danger">
+                Something went wrong
+              </p>
+            ) : (
+              <div className="box table-container">
+                {isLoading && !isError && <Loader />}
+                {!isError && !isLoading && people.length === 0 && (
+                  <p data-cy="noPeopleMessage">
+                    There are no people on the server
+                  </p>
+                )}
+                {isValidToLoad ? (
+                  <p>
+                    There are no people matching the current search criteria
+                  </p>
+                ) : (
+                  <PeopleTable people={visiblePeople} />
+                )}
+              </div>
+            )}
           </div>
         </div>
       </div>
