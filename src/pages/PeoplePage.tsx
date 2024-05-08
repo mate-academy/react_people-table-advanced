@@ -5,7 +5,7 @@ import { PeopleContext } from '../store/PeopleContext';
 import { getPeople } from '../api';
 import { ErrorText } from '../types/ErrorText';
 import { peopleWithParents } from '../utils/util';
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { getFilteredPeople } from '../utils/filter';
 
@@ -34,7 +34,9 @@ export const PeoplePage = () => {
   }, [setPeople]);
 
   const displayPeople = !loading && !error;
-  const displayedPeople = getFilteredPeople(people, searchParams);
+  const displayedPeople = useMemo(() => {
+    return getFilteredPeople(people, searchParams);
+  }, [people, searchParams]);
 
   return (
     <>

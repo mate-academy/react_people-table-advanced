@@ -39,14 +39,13 @@ function handleSelectedCenturies(
 
 export function getFilteredPeople(
   people: Person[],
-  filterParams: URLSearchParams,
+  searchParams: URLSearchParams,
 ): Person[] {
   let newPeople = [...people];
-  const query = filterParams.get('query');
-  const gender = filterParams.get('sex');
-  const centuries = filterParams.getAll('centuries');
-  const order = filterParams.get('order');
-  const sort = filterParams.get('sort') as keyof Person;
+  const filterParams = Object.fromEntries(searchParams.entries());
+  const { query, gender, order } = filterParams;
+  const centuries = searchParams.getAll('centuries');
+  const sort = searchParams.get('sort') as keyof Person;
 
   if (query) {
     newPeople = handleQueryChange(newPeople, query);

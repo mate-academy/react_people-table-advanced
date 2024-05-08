@@ -1,4 +1,4 @@
-import { Link, useParams, useSearchParams } from 'react-router-dom';
+import { Link, useLocation, useParams } from 'react-router-dom';
 import { Person } from '../../../types';
 import classNames from 'classnames';
 import { getTheClassName, getTheParentName } from '../../../utils/util';
@@ -24,7 +24,7 @@ export const PersonItem: React.FC<Props> = ({ person }) => {
   const isThePersonSelected = person.slug === currentSlug;
   const motherSlug = mother?.slug;
   const fatherSlug = father?.slug;
-  const [searchParams] = useSearchParams();
+  const location = useLocation();
 
   return (
     <tr
@@ -35,7 +35,7 @@ export const PersonItem: React.FC<Props> = ({ person }) => {
         <Link
           to={{
             pathname: `../${slug}`,
-            search: searchParams.toString(),
+            search: location.search,
           }}
           replace
           className={getTheClassName(person)}
@@ -51,7 +51,10 @@ export const PersonItem: React.FC<Props> = ({ person }) => {
       <td>
         {motherSlug ? (
           <Link
-            to={`../${motherSlug}`}
+            to={{
+              pathname: `../${motherSlug}`,
+              search: location.search,
+            }}
             replace={true}
             className="has-text-danger"
           >
@@ -64,7 +67,13 @@ export const PersonItem: React.FC<Props> = ({ person }) => {
 
       <td>
         {fatherSlug ? (
-          <Link to={`../${fatherSlug}`} replace={true}>
+          <Link
+            to={{
+              pathname: `../${fatherSlug}`,
+              search: location.search,
+            }}
+            replace={true}
+          >
             {normalizedFatherName}
           </Link>
         ) : (
