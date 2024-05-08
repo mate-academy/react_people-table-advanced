@@ -1,4 +1,4 @@
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams, useSearchParams } from 'react-router-dom';
 import { Person } from '../../../types';
 import classNames from 'classnames';
 import { getTheClassName, getTheParentName } from '../../../utils/util';
@@ -24,6 +24,7 @@ export const PersonItem: React.FC<Props> = ({ person }) => {
   const isThePersonSelected = person.slug === currentSlug;
   const motherSlug = mother?.slug;
   const fatherSlug = father?.slug;
+  const [searchParams] = useSearchParams();
 
   return (
     <tr
@@ -31,15 +32,16 @@ export const PersonItem: React.FC<Props> = ({ person }) => {
       className={classNames({ 'has-background-warning': isThePersonSelected })}
     >
       <td>
-        {isThePersonSelected ? (
-          <Link to={`..`} replace className={getTheClassName(person)}>
-            {name}
-          </Link>
-        ) : (
-          <Link to={`../${slug}`} replace className={getTheClassName(person)}>
-            {name}
-          </Link>
-        )}
+        <Link
+          to={{
+            pathname: `../${slug}`,
+            search: searchParams.toString(),
+          }}
+          replace
+          className={getTheClassName(person)}
+        >
+          {name}
+        </Link>
       </td>
 
       <td>{sex}</td>
