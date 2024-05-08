@@ -11,11 +11,11 @@ type Props = {
 };
 
 export const PeopleTable: React.FC<Props> = ({ people }) => {
+  const [searchParams] = useSearchParams();
+
   if (!people.length) {
     return <p>There are no people matching the current search criteria</p>;
   }
-
-  const [searchParams] = useSearchParams();
 
   const sex = searchParams.get('sex');
   const query = searchParams.get('query');

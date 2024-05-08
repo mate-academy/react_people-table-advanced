@@ -9,12 +9,15 @@ type Props = {
 
 export const SortLink: React.FC<Props> = ({ field }) => {
   const [searchParams] = useSearchParams();
-  const selectedSortParam = searchParams.get('sort') || '';
+
+  const sortParam = searchParams.get('sort');
   const orderReversed = searchParams.get('order') === 'desc';
 
+  const isButtonSelected = field === sortParam;
+
   const params = {
-    sort: field === selectedSortParam && orderReversed ? null : field,
-    order: field === selectedSortParam && !orderReversed ? 'desc' : null,
+    sort: isButtonSelected && orderReversed ? null : field,
+    order: isButtonSelected && !orderReversed ? 'desc' : null,
   };
 
   return (
@@ -22,9 +25,9 @@ export const SortLink: React.FC<Props> = ({ field }) => {
       <span className="icon">
         <i
           className={classNames('fas', {
-            'fa-sort': selectedSortParam !== field,
-            'fa-sort-up': selectedSortParam === field && !orderReversed,
-            'fa-sort-down': selectedSortParam === field && orderReversed,
+            'fa-sort': sortParam !== field,
+            'fa-sort-up': sortParam === field && !orderReversed,
+            'fa-sort-down': sortParam === field && orderReversed,
           })}
         />
       </span>

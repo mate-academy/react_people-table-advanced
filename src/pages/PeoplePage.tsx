@@ -15,6 +15,7 @@ export const PeoplePage = () => {
     const fetchData = async () => {
       try {
         const res = await getPeople();
+
         setPeople(getPeopleWithParents(res));
       } catch (error) {
         setIsError(true);
