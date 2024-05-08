@@ -1,20 +1,18 @@
-import { Outlet } from 'react-router-dom';
 import { Navbar } from './components/Navbar';
-import { TableContextProvider } from './store/TableContextProvider';
+
 import './App.scss';
+import { Outlet } from 'react-router-dom';
 
 export const App = () => {
   return (
-    <TableContextProvider>
-      <div data-cy="app">
-        <Navbar />
+    <div data-cy="app">
+      <Navbar />
 
-        <div className="section">
-          <div className="container">
-            <Outlet />
-          </div>
+      <div className="section">
+        <div className="container">
+          <Outlet />
         </div>
       </div>
-    </TableContextProvider>
+    </div>
   );
 };

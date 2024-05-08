@@ -1,43 +1,81 @@
-import { useContext, useEffect } from 'react';
-import { Loader } from '../Loader';
-import { TableList } from '../TableList';
-import { TableContext } from '../../store/TableContextProvider';
-import { getPeople } from '../../api';
+import { useSearchParams } from 'react-router-dom';
+import classNames from 'classnames';
+import { Person } from '../../types/Person';
+import { sortPeople } from '../../utils/sortPeople';
+import { SearchLink } from '../SearchLink';
+import PersonLink from '../PersonLink/PersonLink';
 
-export const PeopleTable = () => {
-  const { people, setPeople, isLoading, setIsLoading, isError, setIsError } =
-    useContext(TableContext);
-  const isPeopleEmpty = !people.length;
-  const isDataNotAvailable = !isLoading && !isError && isPeopleEmpty;
-  const isDataAvailable = !isLoading && !isError && !isPeopleEmpty;
+type Props = {
+  people: Person[];
+};
 
-  useEffect(() => {
-    setIsLoading(true);
-    getPeople()
-      .then(setPeople)
-      .catch(() => {
-        setIsError(true);
-      })
-      .finally(() => setIsLoading(false));
-  }, [setPeople, setIsLoading, setIsError]);
+export const PeopleTable: React.FC<Props> = ({ people }) => {
+  const [searchParams] = useSearchParams();
+
+  const getSortIcon = (field: string | null) => {
+    const sortField = searchParams.get('sort' || null);
+    const sortOrder = searchParams.get('order' || null);
+
+    if (sortField === field) {
+      return sortOrder === null ? 'fa-sort-up' : 'fa-sort-down';
+    }
+
+    return 'fa-sort';
+  };
+
+  const toggleSortParams = (field: string) => {
+    const currentSort = searchParams.get('sort');
+    const currentOrder = searchParams.get('order');
+
+    if (currentSort === field) {
+      return currentOrder === null
+        ? { sort: field, order: 'desc' }
+        : { sort: null, order: null };
+    }
+
+    return { sort: field, order: null };
+  };
+
+  const visiblePeople = sortPeople(
+    people,
+    searchParams.get('sort'),
+    searchParams.get('order') as 'desc',
+  );
 
   return (
-    <div className="container">
-      <div className="block">
-        {isLoading && <Loader />}
+    <table
+      data-cy="peopleTable"
+      className="table is-striped is-hoverable is-narrow is-fullwidth"
+    >
+      <thead>
+        <tr>
+          {['name', 'sex', 'born', 'died'].map(field => (
+            <th key={field}>
+              <span className="is-flex is-flex-wrap-nowrap">
+                {field.charAt(0).toUpperCase() + field.slice(1)}
+                <SearchLink params={toggleSortParams(field)}>
+                  <span className="icon">
+                    <i className={classNames('fas', getSortIcon(field))} />
+                  </span>
+                </SearchLink>
+              </span>
+            </th>
+          ))}
 
-        {isError && (
-          <p data-cy="peopleLoadingError" className="has-text-danger">
-            Something went wrong
-          </p>
-        )}
+          <th>Mother</th>
+          <th>Father</th>
+        </tr>
+      </thead>
 
-        {isDataNotAvailable && (
-          <p data-cy="noPeopleMessage">There are no people on the server</p>
-        )}
-
-        {isDataAvailable && <TableList people={people} />}
-      </div>
-    </div>
+      <tbody>
+        {visiblePeople.map(person => (
+          <PersonLink
+            key={person.slug}
+            person={person}
+            people={visiblePeople}
+          />
+        ))}
+      </tbody>
+    </table>
   );
 };
