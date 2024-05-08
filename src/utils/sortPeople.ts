@@ -1,24 +1,28 @@
 import { Person } from '../types/Person';
 
 export const sortPeople = (
-  persons: Person[],
-  field: keyof Person,
-  order: string,
-): Person[] => {
-  return [...persons].sort((person1, person2) => {
-    const valueA = person1[field];
-    const valueB = person2[field];
+  people: Person[],
+  sortKey: string | null,
+  order: 'desc',
+) => {
+  const peopleCopy = [...people];
 
-    if (typeof valueA === 'string' && typeof valueB === 'string') {
-      return order === 'desc'
-        ? valueA.localeCompare(valueB)
-        : valueB.localeCompare(valueA);
-    }
+  switch (sortKey) {
+    case 'name':
+    case 'sex':
+      return peopleCopy.sort((a, b) =>
+        order === 'desc'
+          ? b[sortKey].localeCompare(a[sortKey])
+          : a[sortKey].localeCompare(b[sortKey]),
+      );
 
-    if (typeof valueA === 'number' && typeof valueB === 'number') {
-      return order === 'desc' ? valueA - valueB : valueB - valueA;
-    }
+    case 'born':
+    case 'died':
+      return peopleCopy.sort((a, b) =>
+        order === 'desc' ? b[sortKey] - a[sortKey] : a[sortKey] - b[sortKey],
+      );
 
-    return 0;
-  });
+    default:
+      return people;
+  }
 };

@@ -1,10 +1,54 @@
-import { useContext } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
+import { Person } from '../../types/Person';
+import { getPeople } from '../../api';
 import { PeopleFilters } from '../../components/PeopleFilters';
+import { Loader } from '../../components/Loader';
 import { PeopleTable } from '../../components/PeopleTable';
-import { TableContext } from '../../store/TableContextProvider';
 
 export const PeoplePage = () => {
-  const { isLoading, isEmptyMessage } = useContext(TableContext);
+  const [people, setPeople] = useState<Person[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
+
+  const [searchParams] = useSearchParams();
+  const query = searchParams.get('query') || '';
+  const sex = searchParams.get('sex') || null;
+  const centuries = searchParams.getAll('centuries').map(Number);
+
+  useEffect(() => {
+    getPeople()
+      .then(setPeople)
+      .catch(() => setError(true))
+      .finally(() => setLoading(false));
+  }, []);
+
+  const filteredPeople = useMemo(() => {
+    let result = [...people];
+
+    if (query) {
+      const lowerCaseQuery = query.toLowerCase();
+
+      result = people.filter(
+        person =>
+          person.name.toLowerCase().includes(lowerCaseQuery) ||
+          person.motherName?.toLowerCase().includes(lowerCaseQuery) ||
+          person.fatherName?.toLowerCase().includes(lowerCaseQuery),
+      );
+    }
+
+    if (sex) {
+      result = result.filter(person => person.sex === sex);
+    }
+
+    if (centuries.length > 0) {
+      result = result.filter(person =>
+        centuries.includes(Math.ceil(person.born / 100)),
+      );
+    }
+
+    return result;
+  }, [people, query, sex, centuries]);
 
   return (
     <>
@@ -12,14 +56,32 @@ export const PeoplePage = () => {
 
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
-          {!isLoading && <PeopleFilters />}
+          <div className="column is-7-tablet is-narrow-desktop">
+            <PeopleFilters />
+          </div>
+
           <div className="column">
             <div className="box table-container">
-              <div style={{ display: isEmptyMessage ? 'none' : 'block' }}>
-                <PeopleTable />
-              </div>
-              {isEmptyMessage && (
+              {loading && <Loader />}
+
+              {!loading && error && (
+                <p data-cy="peopleLoadingError" className="has-text-danger">
+                  Something went wrong
+                </p>
+              )}
+
+              {!loading && !error && people.length === 0 && (
+                <p data-cy="noPeopleMessage">
+                  There are no people on the server
+                </p>
+              )}
+
+              {!loading && !error && filteredPeople.length === 0 && (
                 <p>There are no people matching the current search criteria</p>
+              )}
+
+              {!loading && !error && filteredPeople.length > 0 && (
+                <PeopleTable people={filteredPeople} />
               )}
             </div>
           </div>
