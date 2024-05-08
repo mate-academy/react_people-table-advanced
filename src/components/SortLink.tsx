@@ -11,13 +11,11 @@ export const SortLink: React.FC<Props> = ({ field }) => {
   const [searchParams] = useSearchParams();
 
   const sortParam = searchParams.get('sort');
-  const orderReversed = searchParams.get('order') === 'desc';
-
-  const isButtonSelected = field === sortParam;
+  const orderParam = searchParams.get('order');
 
   const params = {
-    sort: isButtonSelected && orderReversed ? null : field,
-    order: isButtonSelected && !orderReversed ? 'desc' : null,
+    sort: !orderParam || sortParam !== field ? field : null,
+    order: sortParam === field && !orderParam ? 'desc' : null,
   };
 
   return (
@@ -26,8 +24,8 @@ export const SortLink: React.FC<Props> = ({ field }) => {
         <i
           className={classNames('fas', {
             'fa-sort': sortParam !== field,
-            'fa-sort-up': sortParam === field && !orderReversed,
-            'fa-sort-down': sortParam === field && orderReversed,
+            'fa-sort-up': sortParam === field && !orderParam,
+            'fa-sort-down': sortParam === field && !orderParam,
           })}
         />
       </span>
