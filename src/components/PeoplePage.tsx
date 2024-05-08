@@ -5,13 +5,17 @@ import { Person } from '../types';
 import { useSearchParams } from 'react-router-dom';
 import { Loader } from './Loader';
 import { getPeople } from '../api';
+import { getExtendedPersonList } from '../utils/getExtendedPersonList';
 
-function getExtendedPersonList(data: Person[]): Person[] {
-  return data.map(person => ({
-    ...person,
-    mother: data.find(curPerson => person.motherName === curPerson.name),
-    father: data.find(curPerson => person.fatherName === curPerson.name),
-  }));
+const SortType = {
+  NAME: 'name',
+  SEX: 'sex',
+  BORN: 'born',
+  DIED: 'died',
+};
+
+function getNameMatches(name: string, query: string) {
+  return name.toLocaleLowerCase().includes(query);
 }
 
 function getFilteredPersonList(
@@ -32,11 +36,11 @@ function getFilteredPersonList(
     resultData = resultData.filter(person => {
       const { name, motherName, fatherName } = person;
       const lowerQuery = query.toLocaleLowerCase();
-      const nameMatches = name.toLocaleLowerCase().includes(lowerQuery);
+      const nameMatches = getNameMatches(name, lowerQuery);
       const motherNameMatches =
-        motherName && motherName.toLocaleLowerCase().includes(lowerQuery);
+        motherName && getNameMatches(motherName, lowerQuery);
       const fatherNameMatches =
-        fatherName && fatherName.toLocaleLowerCase().includes(lowerQuery);
+        fatherName && getNameMatches(fatherName, lowerQuery);
 
       return nameMatches || motherNameMatches || fatherNameMatches;
     });
@@ -48,16 +52,17 @@ function getFilteredPersonList(
     });
   }
 
-  if (sort) {
+  if (sort && Object.values(SortType).includes(sort)) {
     resultData = resultData.sort((person1, person2) => {
       switch (sort) {
-        case 'name':
-        case 'sex':
+        case SortType.NAME:
+        case SortType.SEX:
           return person1[sort].localeCompare(person2[sort]);
 
-        case 'born':
-        case 'died':
+        case SortType.DIED:
+        case SortType.BORN:
           return person1[sort] - person2[sort];
+
         default:
           return 0;
       }
