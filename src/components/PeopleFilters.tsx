@@ -3,6 +3,12 @@ import { getSearchWith } from '../utils/searchHelper';
 import { SearchLink } from './SearchLink';
 import classNames from 'classnames';
 
+const sexFilters = [
+  { key: 'all', label: 'All', param: null },
+  { key: 'm', label: 'Male', param: 'm' },
+  { key: 'f', label: 'Female', param: 'f' },
+];
+
 export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const query = searchParams.get('query' || '');
@@ -24,12 +30,6 @@ export const PeopleFilters = () => {
 
     return updatedCenturies;
   };
-
-  const sexFilters = [
-    { key: 'all', label: 'All', param: null },
-    { key: 'm', label: 'Male', param: 'm' },
-    { key: 'f', label: 'Female', param: 'f' },
-  ];
 
   return (
     <nav className="panel">

@@ -3,7 +3,7 @@ import { Person } from '../types/Person';
 export const sortPeople = (
   people: Person[],
   sortKey: string | null,
-  order: 'desc',
+  order: string | null,
 ) => {
   const peopleCopy = [...people];
 

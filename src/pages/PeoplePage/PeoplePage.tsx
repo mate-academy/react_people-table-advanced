@@ -1,15 +1,16 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Person } from '../../types/Person';
 import { getPeople } from '../../api';
 import { PeopleFilters } from '../../components/PeopleFilters';
 import { Loader } from '../../components/Loader';
 import { PeopleTable } from '../../components/PeopleTable';
+import { useFilter } from '../../utils/useFilter';
 
 export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isError, setIsError] = useState(false);
 
   const [searchParams] = useSearchParams();
   const query = searchParams.get('query') || '';
@@ -19,36 +20,11 @@ export const PeoplePage = () => {
   useEffect(() => {
     getPeople()
       .then(setPeople)
-      .catch(() => setError(true))
-      .finally(() => setLoading(false));
+      .catch(() => setIsError(true))
+      .finally(() => setIsLoading(false));
   }, []);
 
-  const filteredPeople = useMemo(() => {
-    let result = [...people];
-
-    if (query) {
-      const lowerCaseQuery = query.toLowerCase();
-
-      result = people.filter(
-        person =>
-          person.name.toLowerCase().includes(lowerCaseQuery) ||
-          person.motherName?.toLowerCase().includes(lowerCaseQuery) ||
-          person.fatherName?.toLowerCase().includes(lowerCaseQuery),
-      );
-    }
-
-    if (sex) {
-      result = result.filter(person => person.sex === sex);
-    }
-
-    if (centuries.length > 0) {
-      result = result.filter(person =>
-        centuries.includes(Math.ceil(person.born / 100)),
-      );
-    }
-
-    return result;
-  }, [people, query, sex, centuries]);
+  const filteredPeople = useFilter(people, query, sex, centuries);
 
   return (
     <>
@@ -62,25 +38,25 @@ export const PeoplePage = () => {
 
           <div className="column">
             <div className="box table-container">
-              {loading && <Loader />}
+              {isLoading && <Loader />}
 
-              {!loading && error && (
+              {!isLoading && isError && (
                 <p data-cy="peopleLoadingError" className="has-text-danger">
                   Something went wrong
                 </p>
               )}
 
-              {!loading && !error && people.length === 0 && (
+              {!isLoading && !isError && people.length === 0 && (
                 <p data-cy="noPeopleMessage">
                   There are no people on the server
                 </p>
               )}
 
-              {!loading && !error && filteredPeople.length === 0 && (
+              {!isLoading && !isError && filteredPeople.length === 0 && (
                 <p>There are no people matching the current search criteria</p>
               )}
 
-              {!loading && !error && filteredPeople.length > 0 && (
+              {!isLoading && !isError && filteredPeople.length > 0 && (
                 <PeopleTable people={filteredPeople} />
               )}
             </div>

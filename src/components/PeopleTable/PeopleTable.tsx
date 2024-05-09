@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import { Person } from '../../types/Person';
 import { sortPeople } from '../../utils/sortPeople';
 import { SearchLink } from '../SearchLink';
-import PersonLink from '../PersonLink/PersonLink';
+import { PersonInfo } from '../PersonInfo/PersonInfo';
 
 type Props = {
   people: Person[];
@@ -11,11 +11,10 @@ type Props = {
 
 export const PeopleTable: React.FC<Props> = ({ people }) => {
   const [searchParams] = useSearchParams();
+  const sortField = searchParams.get('sort' || null);
+  const sortOrder = searchParams.get('order' || null);
 
   const getSortIcon = (field: string | null) => {
-    const sortField = searchParams.get('sort' || null);
-    const sortOrder = searchParams.get('order' || null);
-
     if (sortField === field) {
       return sortOrder === null ? 'fa-sort-up' : 'fa-sort-down';
     }
@@ -24,11 +23,8 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
   };
 
   const toggleSortParams = (field: string) => {
-    const currentSort = searchParams.get('sort');
-    const currentOrder = searchParams.get('order');
-
-    if (currentSort === field) {
-      return currentOrder === null
+    if (sortField === field) {
+      return sortOrder === null
         ? { sort: field, order: 'desc' }
         : { sort: null, order: null };
     }
@@ -39,7 +35,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
   const visiblePeople = sortPeople(
     people,
     searchParams.get('sort'),
-    searchParams.get('order') as 'desc',
+    searchParams.get('order'),
   );
 
   return (
@@ -69,7 +65,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
 
       <tbody>
         {visiblePeople.map(person => (
-          <PersonLink
+          <PersonInfo
             key={person.slug}
             person={person}
             people={visiblePeople}
