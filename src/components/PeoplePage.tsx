@@ -6,75 +6,7 @@ import { useSearchParams } from 'react-router-dom';
 import { Loader } from './Loader';
 import { getPeople } from '../api';
 import { getExtendedPersonList } from '../utils/getExtendedPersonList';
-
-const SortType = {
-  NAME: 'name',
-  SEX: 'sex',
-  BORN: 'born',
-  DIED: 'died',
-};
-
-function getNameMatches(name: string, query: string) {
-  return name.toLocaleLowerCase().includes(query);
-}
-
-function getFilteredPersonList(
-  data: Person[],
-  query: string | null,
-  filterStatus: string,
-  centuries: string[],
-  sort: string,
-  order: string,
-) {
-  let resultData = [...data];
-
-  if (filterStatus) {
-    resultData = resultData.filter(person => person.sex === filterStatus);
-  }
-
-  if (query) {
-    resultData = resultData.filter(person => {
-      const { name, motherName, fatherName } = person;
-      const lowerQuery = query.toLocaleLowerCase();
-      const nameMatches = getNameMatches(name, lowerQuery);
-      const motherNameMatches =
-        motherName && getNameMatches(motherName, lowerQuery);
-      const fatherNameMatches =
-        fatherName && getNameMatches(fatherName, lowerQuery);
-
-      return nameMatches || motherNameMatches || fatherNameMatches;
-    });
-  }
-
-  if (centuries.length) {
-    resultData = resultData.filter(person => {
-      return centuries.includes(Math.ceil(person.born / 100).toString());
-    });
-  }
-
-  if (sort && Object.values(SortType).includes(sort)) {
-    resultData = resultData.sort((person1, person2) => {
-      switch (sort) {
-        case SortType.NAME:
-        case SortType.SEX:
-          return person1[sort].localeCompare(person2[sort]);
-
-        case SortType.DIED:
-        case SortType.BORN:
-          return person1[sort] - person2[sort];
-
-        default:
-          return 0;
-      }
-    });
-  }
-
-  if (order === 'desc') {
-    resultData.reverse();
-  }
-
-  return resultData;
-}
+import { getVisiblePersonList } from '../utils/getVisiblePersonList';
 
 export const PeoplePage = () => {
   const [data, setData] = useState<Person[]>([]);
@@ -82,19 +14,19 @@ export const PeoplePage = () => {
   const [hasError, setHasError] = useState(false);
   const [searchParams] = useSearchParams();
 
-  const currentQuery = searchParams.get('query');
+  const currentQuery = searchParams.get('query') || '';
   const currentFilter = searchParams.get('sex') || '';
   const selectedCenturies = searchParams.getAll('centuries');
   const sortBy = searchParams.get('sort') || '';
   const order = searchParams.get('order') || '';
-  const visiblePersonList = getFilteredPersonList(
-    data,
-    currentQuery,
-    currentFilter,
-    selectedCenturies,
-    sortBy,
+
+  const visiblePersonList = getVisiblePersonList(data, {
+    query: currentQuery,
+    filterStatus: currentFilter,
+    centuries: selectedCenturies,
+    sort: sortBy,
     order,
-  );
+  });
 
   useEffect(() => {
     setIsLoading(true);
@@ -130,6 +62,12 @@ export const PeoplePage = () => {
                   {isEmptyList && (
                     <p data-cy="noPeopleMessage">
                       There are no people on the server
+                    </p>
+                  )}
+
+                  {!isEmptyList && !visiblePersonList.length && (
+                    <p>
+                      There are no people matching the current search criteria
                     </p>
                   )}
 

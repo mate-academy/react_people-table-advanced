@@ -8,5 +8,4 @@ export interface Person {
   slug: string;
   mother?: Person;
   father?: Person;
-  [key: string]: any;
 }

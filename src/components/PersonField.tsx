@@ -13,14 +13,13 @@ const PersonField: React.FC<Props> = ({ person }) => {
     person;
 
   const { personSlug } = useParams();
-  const selectedPersonSlug = personSlug ? personSlug : null;
 
   return (
     <tr
       key={slug}
       data-cy="person"
       className={cn({
-        'has-background-warning': selectedPersonSlug === slug,
+        'has-background-warning': personSlug === slug,
       })}
     >
       <td>

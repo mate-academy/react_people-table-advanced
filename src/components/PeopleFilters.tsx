@@ -2,6 +2,7 @@ import { useSearchParams } from 'react-router-dom';
 import { getSearchWith } from '../utils/searchHelper';
 import cn from 'classnames';
 import PanelFilterBlock from './PanelFilterBlock';
+import { SearchLink } from './SearchLink';
 
 enum FilterStatus {
   All = '',
@@ -23,28 +24,18 @@ export const PeopleFilters = () => {
     setSearchParams(newSearchParams);
   }
 
-  function handleFilterStatus(filterBy: FilterStatus) {
-    const newSearchParams = getSearchWith(searchParams, {
-      sex: filterBy || null,
-    });
-
-    setSearchParams(newSearchParams);
-  }
-
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
       <p className="panel-tabs" data-cy="SexFilter">
         {Object.entries(FilterStatus).map(([key, value]) => (
-          <a
+          <SearchLink
             key={key}
             className={cn({ 'is-active': curFilter === value })}
-            onClick={() => {
-              handleFilterStatus(value);
-            }}
+            params={{ sex: value || null }}
           >
             {key}
-          </a>
+          </SearchLink>
         ))}
       </p>
 

@@ -38,9 +38,7 @@ export const PeopleTable: React.FC<Props> = ({ data }) => {
 
   return (
     <>
-      {!data.length ? (
-        <p>There are no people matching the current search criteria</p>
-      ) : (
+      {!!data.length && (
         <table
           data-cy="peopleTable"
           className="table is-striped is-hoverable is-narrow is-fullwidth"
