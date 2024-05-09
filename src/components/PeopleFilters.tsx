@@ -1,14 +1,14 @@
 import { useSearchParams } from 'react-router-dom';
 import { SexFilters } from '../types/SexFilters';
 import classNames from 'classnames';
-import { ChangeEvent, useMemo } from 'react';
+import { ChangeEvent } from 'react';
+
+const centuriesData = [16, 17, 18, 19, 20];
 
 export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const sexFilter = searchParams.get('sex');
   const centuriesArray = searchParams.getAll('centuries');
-
-  const centuriesData = useMemo(() => [16, 17, 18, 19, 20], []);
 
   const setSexFilter = (filter: SexFilters) => {
     if (filter === SexFilters.All) {

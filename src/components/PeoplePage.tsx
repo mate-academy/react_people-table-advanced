@@ -6,7 +6,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { getPeople } from '../api';
 import { useSearchParams } from 'react-router-dom';
 import { SortTypes } from '../types/SortTypes';
-import { SexFilters } from '../types/SexFilters';
+import { addParents } from '../utils/addParents';
 
 export const PeoplePage = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -15,17 +15,6 @@ export const PeoplePage = () => {
   const [searchParams] = useSearchParams();
   const query = searchParams.get('query');
   const centuries = searchParams.getAll('centuries');
-
-  function addParents(person: Person, peopleFromServer: Person[]) {
-    const mother = peopleFromServer.find(
-      pers => pers.name === person.motherName,
-    );
-    const father = peopleFromServer.find(
-      pers => pers.name === person.fatherName,
-    );
-
-    return { ...person, father, mother };
-  }
 
   useEffect(() => {
     setIsLoading(true);
@@ -45,21 +34,19 @@ export const PeoplePage = () => {
   const visiblePeople = useMemo(() => {
     let formattedPeople = [...people];
 
-    switch (searchParams.get('sort')) {
-      case SortTypes.Name:
-        formattedPeople.sort((a, b) => a.name.localeCompare(b.name));
-        break;
+    const sortParam = searchParams.get('sort');
 
+    switch (sortParam) {
+      case SortTypes.Name:
       case SortTypes.Sex:
-        formattedPeople.sort((a, b) => a.sex.localeCompare(b.sex));
+        formattedPeople.sort((a, b) =>
+          a[sortParam].localeCompare(b[sortParam]),
+        );
         break;
 
       case SortTypes.Born:
-        formattedPeople.sort((a, b) => a.born - b.born);
-        break;
-
       case SortTypes.Died:
-        formattedPeople.sort((a, b) => a.died - b.died);
+        formattedPeople.sort((a, b) => a[sortParam] - b[sortParam]);
         break;
 
       default:
@@ -70,17 +57,12 @@ export const PeoplePage = () => {
       formattedPeople.reverse();
     }
 
-    switch (searchParams.get('sex')) {
-      case SexFilters.Male:
-        formattedPeople = formattedPeople.filter(person => person.sex === 'm');
-        break;
+    const sexParam = searchParams.get('sex');
 
-      case SexFilters.Female:
-        formattedPeople = formattedPeople.filter(person => person.sex === 'f');
-        break;
-
-      default:
-        break;
+    if (sexParam) {
+      formattedPeople = formattedPeople.filter(
+        person => person.sex === sexParam,
+      );
     }
 
     if (query) {
