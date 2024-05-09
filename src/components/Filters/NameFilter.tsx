@@ -6,7 +6,7 @@ export const NameFilter = () => {
   const query = searchParams.get('query') || '';
 
   const handleQueryParams = (event: React.ChangeEvent<HTMLInputElement>) => {
-    return setSearchParams(
+    setSearchParams(
       getSearchWith(searchParams, {
         query: event.target.value || null,
       }),

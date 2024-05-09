@@ -47,7 +47,7 @@ export const PeoplePage = () => {
             <div className="box table-container">
               {!isLoaded && <Loader />}
 
-              {isError && isLoaded && (
+              {isLoaded && isError && (
                 <p data-cy="peopleLoadingError" className="has-text-danger">
                   Something went wrong
                 </p>

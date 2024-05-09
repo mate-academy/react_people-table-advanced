@@ -1,7 +1,7 @@
 import React from 'react';
 import { Person } from '../types';
 import { PersonRow } from './PersonRow';
-import { SortLink } from './SortLink';
+import { SortButton } from './SortButton';
 import { useSearchParams } from 'react-router-dom';
 import { getPreparedPeople } from '../utils/utils';
 
@@ -12,10 +12,6 @@ type Props = {
 
 export const PeopleTable: React.FC<Props> = ({ people }) => {
   const [searchParams] = useSearchParams();
-
-  if (!people.length) {
-    return <p>There are no people matching the current search criteria</p>;
-  }
 
   const sex = searchParams.get('sex');
   const query = searchParams.get('query');
@@ -32,6 +28,12 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
     order,
   });
 
+  if (!filteredPeople.length) {
+    return <p>There are no people matching the current search criteria</p>;
+  }
+
+  const sortFields = ['Name', 'Sex', 'Born', 'Died'];
+
   return (
     <table
       data-cy="peopleTable"
@@ -39,11 +41,11 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
     >
       <thead>
         <tr>
-          {['Name', 'Sex', 'Born', 'Died'].map(el => (
-            <th key={el}>
+          {sortFields.map(field => (
+            <th key={field}>
               <span className="is-flex is-flex-wrap-nowrap">
-                {el}
-                <SortLink field={el.toLowerCase()} />
+                {field}
+                <SortButton field={field.toLowerCase()} />
               </span>
             </th>
           ))}
