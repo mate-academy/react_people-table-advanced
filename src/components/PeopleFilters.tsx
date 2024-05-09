@@ -1,12 +1,14 @@
 import { useSearchParams } from 'react-router-dom';
 import { SexFilters } from '../types/SexFilters';
 import classNames from 'classnames';
-import { ChangeEvent } from 'react';
+import { ChangeEvent, useMemo } from 'react';
 
 export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const sexFilter = searchParams.get('sex');
   const centuriesArray = searchParams.getAll('centuries');
+
+  const centuriesData = useMemo(() => [16, 17, 18, 19, 20], []);
 
   const setSexFilter = (filter: SexFilters) => {
     if (filter === SexFilters.All) {
@@ -47,31 +49,33 @@ export const PeopleFilters = () => {
     }
   };
 
+  const handleClearFilters = () => {
+    searchParams.delete('query');
+    searchParams.delete('centuries');
+    searchParams.delete('sex');
+    setSearchParams(searchParams);
+  };
+
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        <a
-          className={classNames({ 'is-active': !sexFilter })}
-          onClick={() => setSexFilter(SexFilters.All)}
-        >
-          All
-        </a>
-        <a
-          className={classNames({ 'is-active': sexFilter === SexFilters.Male })}
-          onClick={() => setSexFilter(SexFilters.Male)}
-        >
-          Male
-        </a>
-        <a
-          className={classNames({
-            'is-active': sexFilter === SexFilters.Female,
-          })}
-          onClick={() => setSexFilter(SexFilters.Female)}
-        >
-          Female
-        </a>
+        {Object.values(SexFilters).map(filter => (
+          <a
+            key={filter}
+            className={classNames({
+              'is-active':
+                sexFilter === filter ||
+                (filter === SexFilters.All && !sexFilter),
+            })}
+            onClick={() => setSexFilter(filter)}
+          >
+            {filter === SexFilters.All && 'All'}
+            {filter === SexFilters.Male && 'Male'}
+            {filter === SexFilters.Female && 'Female'}
+          </a>
+        ))}
       </p>
 
       <div className="panel-block">
@@ -100,55 +104,18 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            <a
-              data-cy="century"
-              className={classNames('button mr-1', {
-                'is-info': centuriesArray.includes('16'),
-              })}
-              onClick={() => toggleCenturies(16)}
-            >
-              16
-            </a>
-
-            <a
-              data-cy="century"
-              className={classNames('button mr-1', {
-                'is-info': centuriesArray.includes('17'),
-              })}
-              onClick={() => toggleCenturies(17)}
-            >
-              17
-            </a>
-
-            <a
-              data-cy="century"
-              className={classNames('button mr-1', {
-                'is-info': centuriesArray.includes('18'),
-              })}
-              onClick={() => toggleCenturies(18)}
-            >
-              18
-            </a>
-
-            <a
-              data-cy="century"
-              className={classNames('button mr-1', {
-                'is-info': centuriesArray.includes('19'),
-              })}
-              onClick={() => toggleCenturies(19)}
-            >
-              19
-            </a>
-
-            <a
-              data-cy="century"
-              className={classNames('button mr-1', {
-                'is-info': centuriesArray.includes('20'),
-              })}
-              onClick={() => toggleCenturies(20)}
-            >
-              20
-            </a>
+            {centuriesData.map(century => (
+              <a
+                key={century}
+                data-cy="century"
+                className={classNames('button mr-1', {
+                  'is-info': centuriesArray.includes(String(century)),
+                })}
+                onClick={() => toggleCenturies(century)}
+              >
+                {century}
+              </a>
+            ))}
           </div>
 
           <div className="level-right ml-4">
@@ -171,12 +138,7 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <a
           className="button is-link is-outlined is-fullwidth"
-          onClick={() => {
-            searchParams.delete('query');
-            searchParams.delete('centuries');
-            searchParams.delete('sex');
-            setSearchParams(searchParams);
-          }}
+          onClick={handleClearFilters}
         >
           Reset all filters
         </a>
