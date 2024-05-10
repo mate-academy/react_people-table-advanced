@@ -20,6 +20,11 @@ export const PeopleFilters = () => {
     setSearchParams(searchParams);
   };
 
+  const handleDeleteCenturies = () => {
+    searchParams.delete('centuries');
+    setSearchParams(searchParams);
+  };
+
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     if (event.target.value.trim()) {
       searchParams.set('query', event.target.value);
@@ -124,10 +129,7 @@ export const PeopleFilters = () => {
               className={classNames('button is-success', {
                 'is-outlined': centuriesArray.length > 0,
               })}
-              onClick={() => {
-                searchParams.delete('centuries');
-                setSearchParams(searchParams);
-              }}
+              onClick={handleDeleteCenturies}
             >
               All
             </a>
