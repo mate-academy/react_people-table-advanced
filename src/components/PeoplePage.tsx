@@ -2,7 +2,7 @@ import { PeopleFilters } from './PeopleFilters';
 import { Loader } from './Loader';
 import { PeopleTable } from './PeopleTable';
 import { Person } from '../types';
-import { useEffect, useMemo, useState } from 'react';
+import { Fragment, useEffect, useMemo, useState } from 'react';
 import { getPeople } from '../api';
 import { useSearchParams } from 'react-router-dom';
 import { SortTypes } from '../types/SortTypes';
@@ -97,27 +97,33 @@ export const PeoplePage = () => {
           </div>
 
           <div className="column">
-            {isError ? (
-              <p data-cy="peopleLoadingError" className="has-text-danger">
-                Something went wrong
-              </p>
-            ) : (
-              <div className="box table-container">
-                {isLoading && !isError && <Loader />}
-                {!isError && !isLoading && people.length === 0 && (
-                  <p data-cy="noPeopleMessage">
-                    There are no people on the server
-                  </p>
-                )}
-                {isValidToLoad ? (
-                  <p>
-                    There are no people matching the current search criteria
-                  </p>
-                ) : (
-                  <PeopleTable people={visiblePeople} />
-                )}
-              </div>
-            )}
+            <div className="box table-container">
+              {isError ? (
+                <p data-cy="peopleLoadingError">Something went wrong</p>
+              ) : (
+                <Fragment>
+                  {isLoading ? (
+                    <Loader />
+                  ) : (
+                    <Fragment>
+                      {!isLoading && people.length === 0 && (
+                        <p data-cy="noPeopleMessage">
+                          There are no people on the server
+                        </p>
+                      )}
+                      {isValidToLoad ? (
+                        <p>
+                          There are no people matching the current search
+                          criteria
+                        </p>
+                      ) : (
+                        <PeopleTable people={visiblePeople} />
+                      )}
+                    </Fragment>
+                  )}
+                </Fragment>
+              )}
+            </div>
           </div>
         </div>
       </div>

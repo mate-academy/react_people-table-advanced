@@ -1,6 +1,11 @@
 import { Fragment } from 'react/jsx-runtime';
 import { Person } from '../types';
-import { Link, useParams, useSearchParams } from 'react-router-dom';
+import {
+  Link,
+  useLocation,
+  useParams,
+  useSearchParams,
+} from 'react-router-dom';
 import classNames from 'classnames';
 import { SortTypes } from '../types/SortTypes';
 
@@ -13,6 +18,8 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
   const [searchParams, setSearchParams] = useSearchParams();
   const sortParam = searchParams.get('sort');
   const orderParam = searchParams.get('order');
+
+  const location = useLocation();
 
   const sortBy = (name: SortTypes) => {
     if (!sortParam || sortParam !== name) {
@@ -155,7 +162,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
                 className={classNames({
                   'has-text-danger': person.sex === 'f',
                 })}
-                to={`/people/${person.slug}`}
+                to={`/people/${person.slug}${location.search}`}
               >
                 {person.name}
               </Link>
@@ -169,9 +176,9 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
                   {person.mother ? (
                     <Link
                       className={classNames({
-                        'has-text-danger': person.sex === 'f',
+                        'has-text-danger': person.mother.sex === 'f',
                       })}
-                      to={`/people/${person.mother.slug}`}
+                      to={`/people/${person.mother.slug}${location.search}`}
                     >
                       {person.motherName}
                     </Link>
@@ -189,9 +196,9 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
                   {person.father ? (
                     <Link
                       className={classNames({
-                        'has-text-danger': person.sex === 'f',
+                        'has-text-danger': person.father.sex === 'f',
                       })}
-                      to={`/people/${person.father.slug}`}
+                      to={`/people/${person.father.slug}${location.search}`}
                     >
                       {person.fatherName}
                     </Link>
