@@ -1,8 +1,31 @@
 import { PeopleFilters } from './PeopleFilters';
 import { Loader } from './Loader';
 import { PeopleTable } from './PeopleTable';
+import { useEffect, useState } from 'react';
+import { Person } from '../types';
+import { getPeople } from '../api';
 
 export const PeoplePage = () => {
+  const [people, setPeople] = useState<Person[] | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [err, setErr] = useState(false);
+
+  //@-dev load and setPeople
+  useEffect(() => {
+    const loadPeople = async () => {
+      try {
+        setIsLoading(true);
+        await getPeople().then(setPeople);
+      } catch {
+        setErr(true);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadPeople();
+  }, []);
+
   return (
     <>
       <h1 className="title">People Page</h1>
@@ -10,20 +33,28 @@ export const PeoplePage = () => {
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
           <div className="column is-7-tablet is-narrow-desktop">
-            <PeopleFilters />
+            {!isLoading && <PeopleFilters />}
           </div>
 
           <div className="column">
             <div className="box table-container">
-              <Loader />
+              {isLoading && <Loader />}
 
-              <p data-cy="peopleLoadingError">Something went wrong</p>
+              {err && (
+                <p data-cy="peopleLoadingError" className="has-text-danger">
+                  Something went wrong
+                </p>
+              )}
 
-              <p data-cy="noPeopleMessage">There are no people on the server</p>
+              {!isLoading && !people?.length && !err && (
+                <p data-cy="noPeopleMessage">
+                  There are no people on the server
+                </p>
+              )}
 
               <p>There are no people matching the current search criteria</p>
 
-              <PeopleTable />
+              {!!people?.length && <PeopleTable people={people} />}
             </div>
           </div>
         </div>
