@@ -1,5 +1,5 @@
 import { useSearchParams } from 'react-router-dom';
-import { SexFilters } from '../types/SexFilters';
+import { SexFilters, SexText } from '../types/SexFilters';
 import classNames from 'classnames';
 import { ChangeEvent } from 'react';
 
@@ -71,9 +71,9 @@ export const PeopleFilters = () => {
             })}
             onClick={() => setSexFilter(filter)}
           >
-            {filter === SexFilters.All && 'All'}
-            {filter === SexFilters.Male && 'Male'}
-            {filter === SexFilters.Female && 'Female'}
+            {filter === SexFilters.All && SexText.All}
+            {filter === SexFilters.Male && SexText.Male}
+            {filter === SexFilters.Female && SexText.Female}
           </a>
         ))}
       </p>
