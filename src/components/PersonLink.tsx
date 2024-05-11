@@ -52,7 +52,7 @@ export const PersonLink: React.FC<PersonLinkProps> = ({
           className={classNames({
             'has-text-danger': person.sex === 'f',
           })}
-          to={`/people/${person.slug}`}
+          to={`/people/${person.slug}?${params.toString()}`}
         >
           {person.name}
         </Link>

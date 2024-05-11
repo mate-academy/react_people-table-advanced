@@ -115,6 +115,8 @@ export const PeopleTable: React.FC<PeopleTableProps> = ({ people }) => {
         }
 
         break;
+      default:
+        break;
     }
 
     if (!params.has('sort')) {
@@ -180,7 +182,7 @@ export const PeopleTable: React.FC<PeopleTableProps> = ({ people }) => {
         ),
       );
     }
-  }, [sortedPeople, searchParams, filteredPeople, setSortedPeople]);
+  }, [sortedPeople, searchParams, setSortedPeople]);
 
   return (
     <table
