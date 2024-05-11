@@ -1,8 +1,8 @@
 import classNames from 'classnames';
-import { Link, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 
 export const Navbar = () => {
-  const location = useLocation();
+  const { pathname, search } = useLocation();
 
   return (
     <nav
@@ -13,24 +13,23 @@ export const Navbar = () => {
     >
       <div className="container">
         <div className="navbar-brand">
-          <Link
+          <a
             className={classNames('navbar-item', {
-              'has-background-grey-lighter': location.pathname === '/',
+              'has-background-grey-lighter': pathname === '/',
             })}
-            to="/"
+            href="/"
           >
             Home
-          </Link>
+          </a>
 
-          <Link
+          <a
             className={classNames('navbar-item', {
-              'has-background-grey-lighter':
-                location.pathname.startsWith('/people'),
+              'has-background-grey-lighter': pathname.startsWith('/people'),
             })}
-            to="/people"
+            href={`#/people${pathname.slice(7)}${search}`}
           >
             People
-          </Link>
+          </a>
         </div>
       </div>
     </nav>

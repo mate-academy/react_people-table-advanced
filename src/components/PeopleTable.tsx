@@ -3,120 +3,21 @@ import React, { useEffect, useState } from 'react';
 import { Person } from '../types';
 import { PersonLink } from './PersonLink';
 import { useLocation, useSearchParams } from 'react-router-dom';
+import { sortFunction } from '../utils/sorter';
 
 interface PeopleTableProps {
   people: Person[];
 }
 
 export const PeopleTable: React.FC<PeopleTableProps> = ({ people }) => {
-  const initialPeople = [...people];
   const [searchParams, setSearchParams] = useSearchParams();
   const [visiblePeople, setVisiblePeople] = useState(people);
-  const [sortedPeople, setSortedPeople] = useState(people);
 
   const { pathname, search } = useLocation();
 
   const names: string[] = [];
 
   people.forEach(pers => names.push(pers.name));
-
-  const switchSort = searchParams.get('sort');
-
-  switch (switchSort) {
-    case 'name':
-      if (!searchParams.has('sort', switchSort)) {
-        setSortedPeople(
-          initialPeople.sort((elem1, elem2) => {
-            return elem1.name.localeCompare(elem2.name);
-          }),
-        );
-      }
-
-      if (searchParams.has('sort', switchSort) && !searchParams.has('order')) {
-        setSortedPeople(
-          initialPeople.sort((elem1, elem2) => {
-            return elem2.name.localeCompare(elem1.name);
-          }),
-        );
-      }
-
-      if (searchParams.has('sort', switchSort) && searchParams.has('order')) {
-        setSortedPeople(people);
-      }
-
-      break;
-
-    case 'sex':
-      if (!searchParams.has('sort', switchSort)) {
-        setSortedPeople(
-          initialPeople.sort((elem1, elem2) => {
-            return elem1.sex.localeCompare(elem2.sex);
-          }),
-        );
-      }
-
-      if (searchParams.has('sort', switchSort) && !searchParams.has('order')) {
-        setSortedPeople(
-          initialPeople.sort((elem1, elem2) => {
-            return elem2.sex.localeCompare(elem1.sex);
-          }),
-        );
-      }
-
-      if (searchParams.has('sort', switchSort) && searchParams.has('order')) {
-        setSortedPeople(people);
-      }
-
-      break;
-
-    case 'born':
-      if (!searchParams.has('sort', switchSort)) {
-        setSortedPeople(
-          initialPeople.sort((elem1, elem2) => {
-            return +elem1.born - +elem2.born;
-          }),
-        );
-      }
-
-      if (searchParams.has('sort', switchSort) && !params.has('order')) {
-        setSortedPeople(
-          initialPeople.sort((elem1, elem2) => {
-            return elem2.born - elem1.born;
-          }),
-        );
-      }
-
-      if (searchParams.has('sort', switchSort) && searchParams.has('order')) {
-        setSortedPeople(people);
-      }
-
-      break;
-
-    case 'died':
-      if (!searchParams.has('sort', switchSort)) {
-        setSortedPeople(
-          initialPeople.sort((elem1, elem2) => {
-            return +elem1.died - +elem2.died;
-          }),
-        );
-      }
-
-      if (searchParams.has('sort', switchSort) && !searchParams.has('order')) {
-        setSortedPeople(
-          initialPeople.sort((elem1, elem2) => {
-            return elem2.died - elem1.died;
-          }),
-        );
-      }
-
-      if (searchParams.has('sort', switchSort) && searchParams.has('order')) {
-        setSortedPeople(people);
-      }
-
-      break;
-    default:
-      break;
-  }
 
   const handleSort = (atribute: string) => {
     const params = new URLSearchParams(searchParams);
@@ -148,43 +49,57 @@ export const PeopleTable: React.FC<PeopleTableProps> = ({ people }) => {
 
     if (currentSex && chosenCenturies.length > 0) {
       setVisiblePeople(
-        sortedPeople.filter(
-          pers =>
-            pers.sex === currentSex &&
-            pers.name
-              .toLowerCase()
-              .includes(currentQuerry.toLowerCase().trim()) &&
-            chosenCenturies.includes(Math.ceil(+pers.born / 100).toString()),
+        sortFunction(
+          people.filter(
+            pers =>
+              pers.sex === currentSex &&
+              pers.name
+                .toLowerCase()
+                .includes(currentQuerry.toLowerCase().trim()) &&
+              chosenCenturies.includes(Math.ceil(+pers.born / 100).toString()),
+          ),
+          searchParams,
         ),
       );
     } else if (currentSex && chosenCenturies.length === 0) {
       setVisiblePeople(
-        sortedPeople.filter(
-          pers =>
-            pers.sex === currentSex &&
-            pers.name
-              .toLowerCase()
-              .includes(currentQuerry.toLowerCase().trim()),
+        sortFunction(
+          people.filter(
+            pers =>
+              pers.sex === currentSex &&
+              pers.name
+                .toLowerCase()
+                .includes(currentQuerry.toLowerCase().trim()),
+          ),
+          searchParams,
         ),
       );
     } else if (!currentSex && chosenCenturies.length > 0) {
       setVisiblePeople(
-        sortedPeople.filter(
-          pers =>
-            pers.name
-              .toLowerCase()
-              .includes(currentQuerry.toLowerCase().trim()) &&
-            chosenCenturies.includes(Math.ceil(+pers.born / 100).toString()),
+        sortFunction(
+          people.filter(
+            pers =>
+              pers.name
+                .toLowerCase()
+                .includes(currentQuerry.toLowerCase().trim()) &&
+              chosenCenturies.includes(Math.ceil(+pers.born / 100).toString()),
+          ),
+          searchParams,
         ),
       );
     } else {
       setVisiblePeople(
-        sortedPeople.filter(pers =>
-          pers.name.toLowerCase().includes(currentQuerry.toLowerCase().trim()),
+        sortFunction(
+          people.filter(pers =>
+            pers.name
+              .toLowerCase()
+              .includes(currentQuerry.toLowerCase().trim()),
+          ),
+          searchParams,
         ),
       );
     }
-  }, [searchParams]);
+  }, [searchParams, people]);
 
   return (
     <table
