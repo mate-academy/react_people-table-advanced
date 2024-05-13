@@ -38,13 +38,24 @@ export const PeoplePage = () => {
       .finally(() => setIsLoading(false));
   }, [setPeopleList]);
 
+  function includesIgnoreCase(
+    text: string | null | undefined,
+    query: string | null | undefined,
+  ): boolean {
+    if (!text || !query) {
+      return false;
+    }
+
+    return text.toLowerCase().includes(query.toLowerCase());
+  }
+
   function searchByQuery(human: Person) {
     const { name, motherName, fatherName } = human;
 
     return (
-      name.toLowerCase().includes(filterByQuery.toLowerCase()) ||
-      motherName?.toLowerCase().includes(filterByQuery.toLowerCase()) ||
-      fatherName?.toLowerCase().includes(filterByQuery.toLowerCase())
+      includesIgnoreCase(name, filterByQuery) ||
+      includesIgnoreCase(motherName, filterByQuery) ||
+      includesIgnoreCase(fatherName, filterByQuery)
     );
   }
 

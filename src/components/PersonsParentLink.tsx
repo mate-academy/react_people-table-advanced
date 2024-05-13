@@ -2,6 +2,11 @@ import classNames from 'classnames';
 import { Person } from '../types';
 import { Link, useSearchParams } from 'react-router-dom';
 
+enum Sex {
+  Male = 'm',
+  Female = 'f',
+}
+
 type Props = {
   personName: string;
   peopleList: Person[];
@@ -24,7 +29,7 @@ export const PersonsParentLink: React.FC<Props> = ({
     <Link
       to={`/people/${slug}?${searchParams}`}
       className={classNames({
-        'has-text-danger': sex === 'f',
+        'has-text-danger': sex === Sex.Female,
       })}
     >
       {name}

@@ -8,6 +8,11 @@ type Props = {
   peopleList: Person[];
 };
 
+enum Sex {
+  Male = 'm',
+  Female = 'f',
+}
+
 export const PersonLink: React.FC<Props> = ({ person, peopleList }) => {
   const { name, slug, sex, born, died, fatherName, motherName } = person;
   const { personSlug } = useParams();
@@ -28,7 +33,7 @@ export const PersonLink: React.FC<Props> = ({ person, peopleList }) => {
       <td>
         <Link
           to={`/people/${slug}`}
-          className={classNames({ 'has-text-danger': sex === 'f' })}
+          className={classNames({ 'has-text-danger': sex === Sex.Female })}
         >
           {name}
         </Link>

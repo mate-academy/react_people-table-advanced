@@ -54,26 +54,15 @@ export const PeopleFilters = () => {
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        <SearchLink
-          params={{ sex: '' }}
-          className={classNames({ 'is-active': filterBySex === '' })}
-        >
-          All
-        </SearchLink>
-
-        <SearchLink
-          params={{ sex: 'm' }}
-          className={classNames({ 'is-active': filterBySex === 'm' })}
-        >
-          Male
-        </SearchLink>
-
-        <SearchLink
-          params={{ sex: 'f' }}
-          className={classNames({ 'is-active': filterBySex === 'f' })}
-        >
-          Female
-        </SearchLink>
+        {['', 'm', 'f'].map(sex => (
+          <SearchLink
+            key={sex || 'all'}
+            params={{ sex: sex || '' }}
+            className={classNames({ 'is-active': filterBySex === sex })}
+          >
+            {sex ? (sex === 'm' ? 'Male' : 'Female') : 'All'}
+          </SearchLink>
+        ))}
       </p>
 
       <div className="panel-block">
