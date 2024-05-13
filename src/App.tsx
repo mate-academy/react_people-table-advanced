@@ -2,6 +2,7 @@ import { Navbar } from './components/Navbar';
 
 import './App.scss';
 import { AppRoutes } from './components/AppRoutes';
+import { PeopleContext } from './PeopleContext';
 
 export const App = () => {
   return (
@@ -10,7 +11,9 @@ export const App = () => {
 
       <div className="section">
         <div className="container">
-          <AppRoutes />
+          <PeopleContext>
+            <AppRoutes />
+          </PeopleContext>
         </div>
       </div>
     </div>

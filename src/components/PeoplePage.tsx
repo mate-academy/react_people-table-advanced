@@ -1,16 +1,17 @@
 import { PeopleFilters } from './PeopleFilters';
 import { Loader } from './Loader';
 import { PeopleTable } from './PeopleTable';
-import { useEffect, useState } from 'react';
-import { Person } from '../types';
+import { useContext, useEffect } from 'react';
+import { ContextPeople } from '../PeopleContext';
 import { getPeople } from '../api';
 
 export const PeoplePage = () => {
-  const [people, setPeople] = useState<Person[] | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const [err, setErr] = useState(false);
+  // const [isLoading, setIsLoading] = useState(false);
+  // const [err, setErr] = useState(false);
+  const { people, setPeople, isLoading, setIsLoading, err, setErr } =
+    useContext(ContextPeople);
 
-  //@-dev load and setPeople
+  // @-dev load and setPeople
   useEffect(() => {
     const loadPeople = async () => {
       try {
@@ -54,7 +55,7 @@ export const PeoplePage = () => {
 
               <p>There are no people matching the current search criteria</p>
 
-              {!!people?.length && <PeopleTable people={people} />}
+              {!!people?.length && !isLoading && <PeopleTable />}
             </div>
           </div>
         </div>

@@ -1,78 +1,32 @@
-import {
-  Link,
-  useLocation,
-  useNavigate,
-  useParams,
-  useSearchParams,
-} from 'react-router-dom';
-import { Person } from '../types';
+import { useParams } from 'react-router-dom';
 import { LinkPerson } from './LinkPerson';
 import cn from 'classnames';
-import { useState } from 'react';
+import { useContext } from 'react';
 import { SearchLink } from './SearchLink';
+import { SearchParams } from '../utils/searchHelper';
+import { Sort } from '../enums/Sort';
+import { ContextPeople } from '../PeopleContext';
 
 /* eslint-disable jsx-a11y/control-has-associated-label */
-type Props = {
-  people: Person[];
-};
 
-enum Sort {
-  name = 'name',
-  sex = 'sex',
-  died = 'died',
-  born = 'born',
-}
-
-type SortOrder = 'asc' | 'desc';
-
-export const PeopleTable = ({ people }: Props) => {
+export const PeopleTable = () => {
+  const { searchParams, handlerSortBy, sortOrder, sort, sortedPeople, people } =
+    useContext(ContextPeople);
   const { personSlug } = useParams();
-  const [sortOrder, setSortOrder] = useState<SortOrder>('asc');
-  const [sortedPeople, setSortedPeople] = useState<Person[]>(people);
-  const [searchParams, setSearchParams] = useSearchParams();
 
-  const location = useLocation();
-  const navigate = useNavigate();
+  const generateSortBy = (value: string): SearchParams => {
+    if (
+      searchParams.get('sort') !== null &&
+      searchParams.get('order') !== null
+    ) {
+      return { order: null, sort: null };
+    }
 
-  // const searchParams = new URLSearchParams(prevParams.toString());
+    if (searchParams.get('sort') === value) {
+      return { order: 'desc' };
+    }
 
-  const toggleSortOrder = () => {
-    return setSortOrder(prevState => (prevState === 'asc' ? 'desc' : 'asc'));
-  };
-
-  const sortPeople = (column: Sort): Person[] => {
-    const sorted = [...people];
-
-    sorted.sort((a, b) => {
-      const columnA = a[column];
-      const columnB = b[column];
-
-      if (typeof columnA === 'string' && typeof columnB === 'string') {
-        return sortOrder === 'asc'
-          ? columnA.localeCompare(columnB)
-          : columnB.localeCompare(columnA);
-      } else {
-        return sortOrder === 'asc'
-          ? Number(columnA) - Number(columnB)
-          : Number(columnB) - Number(columnA);
-      }
-    });
-
-    return sorted;
-  };
-
-  const handlerSortBy = (column: Sort) => {
-    toggleSortOrder();
-    setSortedPeople(sortPeople(column));
-
-    searchParams.set('order', 'desc');
-    setSearchParams(searchParams);
-
-    navigate(`${location.pathname}?${searchParams.toString()}`, {
-      replace: true,
-    });
-
-    // console.log(`${location.pathname}?${searchParams.toString()}`);
+    return { sort: value };
   };
 
   return (
@@ -85,14 +39,20 @@ export const PeopleTable = ({ people }: Props) => {
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Name
-              <SearchLink params={{ sort: 'name' }}>
+              <SearchLink params={generateSortBy(Sort.name)}>
                 <span
                   onClick={() => {
                     handlerSortBy(Sort.name);
                   }}
                   className="icon"
                 >
-                  <i className="fas fa-sort" />
+                  <i
+                    className={cn('fas', {
+                      'fa-sort': sortOrder === 'org' || sort !== 'name',
+                      'fa-sort-up': sortOrder === 'asc' && sort === 'name',
+                      'fa-sort-down': sortOrder === 'desc' && sort === 'name',
+                    })}
+                  />
                 </span>
               </SearchLink>
             </span>
@@ -101,33 +61,51 @@ export const PeopleTable = ({ people }: Props) => {
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Sex
-              <Link to="?sort=sex">
+              <SearchLink params={generateSortBy(Sort.sex)}>
                 <span onClick={() => handlerSortBy(Sort.sex)} className="icon">
-                  <i className="fas fa-sort" />
+                  <i
+                    className={cn('fas', {
+                      'fa-sort': sortOrder === 'org' || sort !== 'sex',
+                      'fa-sort-up': sortOrder === 'asc' && sort === 'sex',
+                      'fa-sort-down': sortOrder === 'desc' && sort === 'sex',
+                    })}
+                  />
                 </span>
-              </Link>
+              </SearchLink>
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Born
-              <Link to="?sort=born">
+              <SearchLink params={generateSortBy(Sort.born)}>
                 <span onClick={() => handlerSortBy(Sort.born)} className="icon">
-                  <i className="fas fa-sort-up" />
+                  <i
+                    className={cn('fas', {
+                      'fa-sort': sortOrder === 'org' || sort !== 'born',
+                      'fa-sort-up': sortOrder === 'asc' && sort === 'born',
+                      'fa-sort-down': sortOrder === 'desc' && sort === 'born',
+                    })}
+                  />
                 </span>
-              </Link>
+              </SearchLink>
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Died
-              <Link to="?sort=died">
+              <SearchLink params={generateSortBy(Sort.died)}>
                 <span onClick={() => handlerSortBy(Sort.died)} className="icon">
-                  <i className="fas fa-sort" />
+                  <i
+                    className={cn('fas', {
+                      'fa-sort': sortOrder === 'org' || sort !== 'died',
+                      'fa-sort-up': sortOrder === 'asc' && sort === 'died',
+                      'fa-sort-down': sortOrder === 'desc' && sort === 'died',
+                    })}
+                  />
                 </span>
-              </Link>
+              </SearchLink>
             </span>
           </th>
 
@@ -139,8 +117,8 @@ export const PeopleTable = ({ people }: Props) => {
       <tbody>
         {sortedPeople.map(person => {
           const { slug, born, died, sex, fatherName, motherName } = person;
-          const mother = people.find(p => p.name === person.motherName);
-          const father = people.find(p => p.name === person.fatherName);
+          const mother = people?.find(p => p.name === person.motherName);
+          const father = people?.find(p => p.name === person.fatherName);
 
           return (
             <tr
