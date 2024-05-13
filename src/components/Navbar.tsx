@@ -1,4 +1,19 @@
-export const Navbar = () => {
+import { FC } from 'react';
+import { NavLink } from 'react-router-dom';
+import cn from 'classnames';
+
+const navLinks = [
+  {
+    to: '/',
+    title: 'Home',
+  },
+  {
+    to: '/people',
+    title: 'People',
+  },
+];
+
+export const Navbar: FC = () => {
   return (
     <nav
       data-cy="nav"
@@ -8,17 +23,19 @@ export const Navbar = () => {
     >
       <div className="container">
         <div className="navbar-brand">
-          <a className="navbar-item" href="#/">
-            Home
-          </a>
-
-          <a
-            aria-current="page"
-            className="navbar-item has-background-grey-lighter"
-            href="#/people"
-          >
-            People
-          </a>
+          {navLinks.map(({ to, title }) => (
+            <NavLink
+              className={({ isActive }) =>
+                cn('navbar-item', {
+                  'has-background-grey-lighter': isActive,
+                })
+              }
+              to={to}
+              key={title}
+            >
+              {title}
+            </NavLink>
+          ))}
         </div>
       </div>
     </nav>
