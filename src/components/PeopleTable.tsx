@@ -2,8 +2,9 @@
 import React, { useEffect, useState } from 'react';
 import { Person } from '../types';
 import { PersonLink } from './PersonLink';
-import { useLocation, useSearchParams } from 'react-router-dom';
+import { Link, useLocation, useSearchParams } from 'react-router-dom';
 import { sortFunction } from '../utils/sorter';
+import classNames from 'classnames';
 
 interface PeopleTableProps {
   people: Person[];
@@ -24,22 +25,45 @@ export const PeopleTable: React.FC<PeopleTableProps> = ({ people }) => {
 
     if (!params.has('sort')) {
       params.set('sort', atribute);
-      setSearchParams(params);
+
+      return params.toString();
     } else if (params.has('sort', atribute) && !params.has('order')) {
       params.set('order', 'desc');
-      setSearchParams(params);
+
+      return params.toString();
     } else if (params.has('sort') && !params.has('order')) {
       params.set('sort', atribute);
-      setSearchParams(params);
+
+      return params.toString();
     } else if (params.has('sort', atribute) && params.has('order')) {
       params.delete('sort');
       params.delete('order');
-      setSearchParams(params);
+
+      return params.toString();
     } else {
       params.set('sort', atribute);
       params.delete('order');
-      setSearchParams(params);
+
+      return params.toString();
     }
+  };
+
+  const filterByQuery = (pers: Person, currentQuerry: string) => {
+    if (
+      pers.name.toLowerCase().includes(currentQuerry.toLowerCase().trim()) ||
+      (pers.motherName &&
+        pers.motherName
+          .toLowerCase()
+          .includes(currentQuerry.toLowerCase().trim())) ||
+      (pers.fatherName &&
+        pers.fatherName
+          .toLowerCase()
+          .includes(currentQuerry.toLowerCase().trim()))
+    ) {
+      return true;
+    }
+
+    return;
   };
 
   useEffect(() => {
@@ -53,9 +77,7 @@ export const PeopleTable: React.FC<PeopleTableProps> = ({ people }) => {
           people.filter(
             pers =>
               pers.sex === currentSex &&
-              pers.name
-                .toLowerCase()
-                .includes(currentQuerry.toLowerCase().trim()) &&
+              filterByQuery(pers, currentQuerry) &&
               chosenCenturies.includes(Math.ceil(+pers.born / 100).toString()),
           ),
           searchParams,
@@ -66,10 +88,7 @@ export const PeopleTable: React.FC<PeopleTableProps> = ({ people }) => {
         sortFunction(
           people.filter(
             pers =>
-              pers.sex === currentSex &&
-              pers.name
-                .toLowerCase()
-                .includes(currentQuerry.toLowerCase().trim()),
+              pers.sex === currentSex && filterByQuery(pers, currentQuerry),
           ),
           searchParams,
         ),
@@ -79,9 +98,7 @@ export const PeopleTable: React.FC<PeopleTableProps> = ({ people }) => {
         sortFunction(
           people.filter(
             pers =>
-              pers.name
-                .toLowerCase()
-                .includes(currentQuerry.toLowerCase().trim()) &&
+              filterByQuery(pers, currentQuerry) &&
               chosenCenturies.includes(Math.ceil(+pers.born / 100).toString()),
           ),
           searchParams,
@@ -90,16 +107,25 @@ export const PeopleTable: React.FC<PeopleTableProps> = ({ people }) => {
     } else {
       setVisiblePeople(
         sortFunction(
-          people.filter(pers =>
-            pers.name
-              .toLowerCase()
-              .includes(currentQuerry.toLowerCase().trim()),
-          ),
+          people.filter(pers => filterByQuery(pers, currentQuerry)),
           searchParams,
         ),
       );
     }
   }, [searchParams, people]);
+
+  const getClass = (sortBy: string) => {
+    const propperClass = {
+      fas: true,
+      'fa-sort': !search.includes(`sort=${sortBy}`),
+      'fa-sort-up':
+        search.includes(`sort=${sortBy}`) && !search.includes('order=desc'),
+      'fa-sort-down':
+        search.includes(`sort=${sortBy}`) && search.includes('order=desc'),
+    };
+
+    return propperClass;
+  };
 
   return (
     <table
@@ -111,53 +137,41 @@ export const PeopleTable: React.FC<PeopleTableProps> = ({ people }) => {
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Name
-              <a
-                onClick={() => handleSort('name')}
-                href={`#${pathname}${search}`}
-              >
+              <Link to={`${pathname}?${handleSort('name')}`}>
                 <span className="icon">
-                  <i className="fas fa-sort" />
+                  <i className={classNames(getClass('name'))} />
                 </span>
-              </a>
+              </Link>
             </span>
           </th>
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Sex
-              <a
-                onClick={() => handleSort('sex')}
-                href={`#${pathname}${search}`}
-              >
+              <Link to={`${pathname}?${handleSort('sex')}`}>
                 <span className="icon">
-                  <i className="fas fa-sort" />
+                  <i className={classNames(getClass('sex'))} />
                 </span>
-              </a>
+              </Link>
             </span>
           </th>
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Born
-              <a
-                onClick={() => handleSort('born')}
-                href={`#${pathname}${search}`}
-              >
+              <Link to={`${pathname}?${handleSort('born')}`}>
                 <span className="icon">
-                  <i className="fas fa-sort" />
+                  <i className={classNames(getClass('born'))} />
                 </span>
-              </a>
+              </Link>
             </span>
           </th>
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Died
-              <a
-                onClick={() => handleSort('died')}
-                href={`#${pathname}${search}`}
-              >
+              <Link to={`${pathname}?${handleSort('died')}`}>
                 <span className="icon">
-                  <i className="fas fa-sort" />
+                  <i className={classNames(getClass('died'))} />
                 </span>
-              </a>
+              </Link>
             </span>
           </th>
           <th>Mother</th>

@@ -3,8 +3,8 @@ import { Loader } from './Loader';
 import { PeopleTable } from './PeopleTable';
 import { Person } from '../types';
 import { getPeople } from '../api';
-import { useEffect, useState } from 'react';
 import { PeopleFilters } from './PeopleFilters';
+import React, { useEffect, useState } from 'react';
 
 export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);
