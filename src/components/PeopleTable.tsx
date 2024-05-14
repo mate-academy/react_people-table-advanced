@@ -11,7 +11,7 @@ interface PeopleTableProps {
 }
 
 export const PeopleTable: React.FC<PeopleTableProps> = ({ people }) => {
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
   const [visiblePeople, setVisiblePeople] = useState(people);
 
   const { pathname, search } = useLocation();
@@ -27,7 +27,11 @@ export const PeopleTable: React.FC<PeopleTableProps> = ({ people }) => {
       params.set('sort', atribute);
 
       return params.toString();
-    } else if (params.has('sort', atribute) && !params.has('order')) {
+    } else if (
+      params.has('sort') &&
+      params.get('sort') === atribute &&
+      !params.has('order')
+    ) {
       params.set('order', 'desc');
 
       return params.toString();
@@ -35,7 +39,11 @@ export const PeopleTable: React.FC<PeopleTableProps> = ({ people }) => {
       params.set('sort', atribute);
 
       return params.toString();
-    } else if (params.has('sort', atribute) && params.has('order')) {
+    } else if (
+      params.has('sort') &&
+      params.get('sort') === atribute &&
+      params.has('order')
+    ) {
       params.delete('sort');
       params.delete('order');
 
