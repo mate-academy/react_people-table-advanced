@@ -1,22 +1,41 @@
+import React from 'react';
 import classNames from 'classnames';
-import { Person } from '../types';
 import { Link, useParams } from 'react-router-dom';
+import { Person } from '../types';
 import { PersonsParentLink } from './PersonsParentLink';
-
-type Props = {
-  person: Person;
-  peopleList: Person[];
-};
 
 enum Sex {
   Male = 'm',
   Female = 'f',
 }
 
+type PersonLinkElementProps = {
+  slug: string;
+  name: string;
+  sex: string;
+};
+
+export const PersonLinkElement: React.FC<PersonLinkElementProps> = ({
+  slug,
+  name,
+  sex,
+}) => (
+  <Link
+    to={`/people/${slug}`}
+    className={classNames({ 'has-text-danger': sex === Sex.Female })}
+  >
+    {name}
+  </Link>
+);
+
+type Props = {
+  person: Person;
+  peopleList: Person[];
+};
+
 export const PersonLink: React.FC<Props> = ({ person, peopleList }) => {
   const { name, slug, sex, born, died, fatherName, motherName } = person;
-  const { personSlug } = useParams();
-  const selectedPerson = personSlug;
+  const selectedPerson = useParams().personSlug;
 
   const isPersonInList = (personName: string) => {
     return peopleList.find(human => human.name === personName);
@@ -31,12 +50,7 @@ export const PersonLink: React.FC<Props> = ({ person, peopleList }) => {
       key={slug}
     >
       <td>
-        <Link
-          to={`/people/${slug}`}
-          className={classNames({ 'has-text-danger': sex === Sex.Female })}
-        >
-          {name}
-        </Link>
+        <PersonLinkElement slug={slug} name={name} sex={sex} />
       </td>
 
       <td>{sex}</td>

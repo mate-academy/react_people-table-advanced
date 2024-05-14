@@ -11,15 +11,15 @@ enum SortSettings {
 }
 
 type Props = {
-  preparedList: Person[];
-  sortBy: string;
-  peopleList: Person[];
+  processedList: Person[];
+  selectedSort: string;
+  personnelList: Person[];
 };
 
 export const PeopleTable: React.FC<Props> = ({
-  preparedList,
-  sortBy,
-  peopleList,
+  processedList: preparedList,
+  selectedSort: sortBy,
+  personnelList: peopleList,
 }) => {
   function setSortSettings(settings: SortSettings) {
     switch (settings) {
