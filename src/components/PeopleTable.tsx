@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/control-has-associated-label */
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Person } from '../types';
 import { PersonLink } from './PersonLink';
 import { Link, useLocation, useSearchParams } from 'react-router-dom';
