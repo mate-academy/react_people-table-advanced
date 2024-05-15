@@ -10,6 +10,7 @@ export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);
   const [fetchError, setFetchError] = useState(false);
   const [showLoader, setShowLoader] = useState(false);
+  const [renderedPeople, setRenderedPeople] = useState<Person[]>([]);
 
   useEffect(() => {
     setShowLoader(true);
@@ -17,6 +18,7 @@ export const PeoplePage = () => {
     getPeople()
       .then(peops => {
         setPeople(peops);
+        setRenderedPeople(peops);
       })
       .catch(() => setFetchError(true))
       .finally(() => setShowLoader(false));
@@ -48,7 +50,13 @@ export const PeoplePage = () => {
                 </p>
               )}
 
-              {people.length > 0 && <PeopleTable people={people} />}
+              {people.length > 0 && (
+                <PeopleTable
+                  visiblePeople={renderedPeople}
+                  setVisiblePeople={() => setRenderedPeople}
+                  people={people}
+                />
+              )}
             </div>
           </div>
         </div>

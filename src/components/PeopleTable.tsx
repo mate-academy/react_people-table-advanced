@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/control-has-associated-label */
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { Person } from '../types';
 import { PersonLink } from './PersonLink';
 import { Link, useLocation, useSearchParams } from 'react-router-dom';
@@ -8,11 +8,16 @@ import classNames from 'classnames';
 
 interface PeopleTableProps {
   people: Person[];
+  visiblePeople: Person[];
+  setVisiblePeople: (visiblePeople: Person[]) => void;
 }
 
-export const PeopleTable: React.FC<PeopleTableProps> = ({ people }) => {
+export const PeopleTable: React.FC<PeopleTableProps> = ({
+  people,
+  visiblePeople,
+  setVisiblePeople,
+}) => {
   const [searchParams] = useSearchParams();
-  const [visiblePeople, setVisiblePeople] = useState(people);
 
   const { pathname, search } = useLocation();
 
@@ -120,7 +125,7 @@ export const PeopleTable: React.FC<PeopleTableProps> = ({ people }) => {
         ),
       );
     }
-  }, [searchParams, people]);
+  }, [searchParams, people, setVisiblePeople]);
 
   const getClass = (sortBy: string) => {
     const propperClass = {
