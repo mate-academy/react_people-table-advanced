@@ -10,7 +10,7 @@ export const PeopleFilters = () => {
     if (sParams.getAll('centuries').includes(centNum)) {
       sParams.delete('centuries', centNum);
     } else {
-      sParams.append('centuries', '' + centNum);
+      sParams.append('centuries', centNum);
     }
 
     // if (sParams.getAll('centuries').length === 5) {

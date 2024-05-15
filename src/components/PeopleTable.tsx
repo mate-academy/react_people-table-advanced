@@ -4,6 +4,7 @@ import { useParams, useSearchParams } from 'react-router-dom';
 import { Person } from '../types';
 import PersonLink from './PersonLink';
 import classNames from 'classnames';
+import { useMemo } from 'react';
 
 type Props = { people: Person[] };
 export default function PeopleTable({ people }: Props) {
@@ -38,33 +39,43 @@ export default function PeopleTable({ people }: Props) {
   const nameFilter = sParams.get('name')?.toLowerCase();
   const centuryFilters = sParams.getAll('centuries');
 
-  let displayPeople = people.filter(person => {
-    const sexMatches = sexFilter === null || person.sex === sexFilter;
-    const nameMatches =
-      nameFilter === undefined ||
-      person.name.toLowerCase().includes(nameFilter) ||
-      person.fatherName?.toLowerCase().includes(nameFilter) ||
-      person.motherName?.toLowerCase().includes(nameFilter);
-    const centuryMatches =
-      centuryFilters.length === 0 ||
-      centuryFilters.includes(Math.floor(person.born / 100) + 1 + '');
+  const displayPeople = useMemo(
+    () =>
+      people.filter(person => {
+        const sexMatches = sexFilter === null || person.sex === sexFilter;
+        const nameMatches =
+          nameFilter === undefined ||
+          person.name.toLowerCase().includes(nameFilter) ||
+          person.fatherName?.toLowerCase().includes(nameFilter) ||
+          person.motherName?.toLowerCase().includes(nameFilter);
+        const centuryMatches =
+          centuryFilters.length === 0 ||
+          centuryFilters.includes(Math.floor(person.born / 100) + 1 + '');
 
-    return sexMatches && nameMatches && centuryMatches;
-  });
+        return sexMatches && nameMatches && centuryMatches;
+      }),
+    [centuryFilters, nameFilter, sexFilter, people],
+  );
 
-  if (currentSort !== null) {
-    displayPeople = displayPeople.sort((a: Person, b: Person) =>
-      ['born', 'died'].includes(currentSort)
-        ? +a[currentSort] - +b[currentSort]
-        : a[currentSort as 'sex' | 'name'].localeCompare(
-            b[currentSort as 'sex' | 'name'],
-          ),
-    );
+  const sortedPeople = useMemo(() => {
+    let tempPeople = displayPeople;
 
-    if (currentOrder !== null) {
-      displayPeople.reverse();
+    if (currentSort !== null) {
+      tempPeople = displayPeople.sort((a: Person, b: Person) =>
+        ['born', 'died'].includes(currentSort)
+          ? +a[currentSort] - +b[currentSort]
+          : a[currentSort as 'sex' | 'name'].localeCompare(
+              b[currentSort as 'sex' | 'name'],
+            ),
+      );
+
+      if (currentOrder !== null) {
+        tempPeople.reverse();
+      }
     }
-  }
+
+    return tempPeople;
+  }, [currentOrder, currentSort, displayPeople]);
 
   return (
     <div className="column">
@@ -106,7 +117,7 @@ export default function PeopleTable({ people }: Props) {
             </tr>
           </thead>
           <tbody>
-            {displayPeople.map(person => {
+            {sortedPeople.map(person => {
               return (
                 <tr
                   key={person.slug}
