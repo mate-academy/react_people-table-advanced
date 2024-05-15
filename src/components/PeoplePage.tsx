@@ -5,12 +5,15 @@ import { Person } from '../types';
 import { getPeople } from '../api';
 import { PeopleFilters } from './PeopleFilters';
 import React, { useEffect, useState } from 'react';
+import { sortFunction } from '../utils/sorter';
+import { useSearchParams } from 'react-router-dom';
 
 export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);
   const [fetchError, setFetchError] = useState(false);
   const [showLoader, setShowLoader] = useState(false);
   const [renderedPeople, setRenderedPeople] = useState<Person[]>([]);
+  const [searchParams] = useSearchParams();
 
   useEffect(() => {
     setShowLoader(true);
@@ -23,6 +26,72 @@ export const PeoplePage = () => {
       .catch(() => setFetchError(true))
       .finally(() => setShowLoader(false));
   }, []);
+
+  const filterByQuery = (pers: Person, currentQuerry: string) => {
+    if (
+      pers.name.toLowerCase().includes(currentQuerry.toLowerCase().trim()) ||
+      (pers.motherName &&
+        pers.motherName
+          .toLowerCase()
+          .includes(currentQuerry.toLowerCase().trim())) ||
+      (pers.fatherName &&
+        pers.fatherName
+          .toLowerCase()
+          .includes(currentQuerry.toLowerCase().trim()))
+    ) {
+      return true;
+    }
+
+    return;
+  };
+
+  useEffect(() => {
+    const currentSex = searchParams.get('sex');
+    const currentQuerry = searchParams.get('query') || '';
+    const chosenCenturies = searchParams.getAll('centuries');
+
+    if (currentSex && chosenCenturies.length > 0) {
+      setRenderedPeople(
+        sortFunction(
+          people.filter(
+            pers =>
+              pers.sex === currentSex &&
+              filterByQuery(pers, currentQuerry) &&
+              chosenCenturies.includes(Math.ceil(+pers.born / 100).toString()),
+          ),
+          searchParams,
+        ),
+      );
+    } else if (currentSex && chosenCenturies.length === 0) {
+      setRenderedPeople(
+        sortFunction(
+          people.filter(
+            pers =>
+              pers.sex === currentSex && filterByQuery(pers, currentQuerry),
+          ),
+          searchParams,
+        ),
+      );
+    } else if (!currentSex && chosenCenturies.length > 0) {
+      setRenderedPeople(
+        sortFunction(
+          people.filter(
+            pers =>
+              filterByQuery(pers, currentQuerry) &&
+              chosenCenturies.includes(Math.ceil(+pers.born / 100).toString()),
+          ),
+          searchParams,
+        ),
+      );
+    } else {
+      setRenderedPeople(
+        sortFunction(
+          people.filter(pers => filterByQuery(pers, currentQuerry)),
+          searchParams,
+        ),
+      );
+    }
+  }, [searchParams, people, setRenderedPeople]);
 
   return (
     <>
@@ -50,12 +119,12 @@ export const PeoplePage = () => {
                 </p>
               )}
 
-              {people.length > 0 && (
-                <PeopleTable
-                  visiblePeople={renderedPeople}
-                  setVisiblePeople={() => setRenderedPeople}
-                  people={people}
-                />
+              {renderedPeople.length === 0 && !showLoader && !fetchError && (
+                <p>There are no people matching the current search criteria</p>
+              )}
+
+              {renderedPeople.length > 0 && (
+                <PeopleTable visiblePeople={renderedPeople} people={people} />
               )}
             </div>
           </div>

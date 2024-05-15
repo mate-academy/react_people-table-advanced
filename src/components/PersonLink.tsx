@@ -73,16 +73,15 @@ export const PersonLink: React.FC<PersonLinkProps> = ({
       ) : (
         <td>{person.motherName || '-'}</td>
       )}
-
-      {person.fatherName && names.includes(person.fatherName) ? (
-        <td>
+      <td>
+        {person.fatherName && names.includes(person.fatherName) ? (
           <Link to={`/people/${handleFatherClick()}`}>
             {person.fatherName || '-'}
           </Link>
-        </td>
-      ) : (
-        <td>{person.fatherName || '-'}</td>
-      )}
+        ) : (
+          person.fatherName || '-'
+        )}
+      </td>
     </tr>
   );
 };

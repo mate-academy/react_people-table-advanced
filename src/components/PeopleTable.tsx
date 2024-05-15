@@ -3,19 +3,16 @@ import React, { useEffect } from 'react';
 import { Person } from '../types';
 import { PersonLink } from './PersonLink';
 import { Link, useLocation, useSearchParams } from 'react-router-dom';
-import { sortFunction } from '../utils/sorter';
 import classNames from 'classnames';
 
 interface PeopleTableProps {
   people: Person[];
   visiblePeople: Person[];
-  setVisiblePeople: (visiblePeople: Person[]) => void;
 }
 
 export const PeopleTable: React.FC<PeopleTableProps> = ({
   people,
   visiblePeople,
-  setVisiblePeople,
 }) => {
   const [searchParams] = useSearchParams();
 
@@ -60,72 +57,6 @@ export const PeopleTable: React.FC<PeopleTableProps> = ({
       return params.toString();
     }
   };
-
-  const filterByQuery = (pers: Person, currentQuerry: string) => {
-    if (
-      pers.name.toLowerCase().includes(currentQuerry.toLowerCase().trim()) ||
-      (pers.motherName &&
-        pers.motherName
-          .toLowerCase()
-          .includes(currentQuerry.toLowerCase().trim())) ||
-      (pers.fatherName &&
-        pers.fatherName
-          .toLowerCase()
-          .includes(currentQuerry.toLowerCase().trim()))
-    ) {
-      return true;
-    }
-
-    return;
-  };
-
-  useEffect(() => {
-    const currentSex = searchParams.get('sex');
-    const currentQuerry = searchParams.get('query') || '';
-    const chosenCenturies = searchParams.getAll('centuries');
-
-    if (currentSex && chosenCenturies.length > 0) {
-      setVisiblePeople(
-        sortFunction(
-          people.filter(
-            pers =>
-              pers.sex === currentSex &&
-              filterByQuery(pers, currentQuerry) &&
-              chosenCenturies.includes(Math.ceil(+pers.born / 100).toString()),
-          ),
-          searchParams,
-        ),
-      );
-    } else if (currentSex && chosenCenturies.length === 0) {
-      setVisiblePeople(
-        sortFunction(
-          people.filter(
-            pers =>
-              pers.sex === currentSex && filterByQuery(pers, currentQuerry),
-          ),
-          searchParams,
-        ),
-      );
-    } else if (!currentSex && chosenCenturies.length > 0) {
-      setVisiblePeople(
-        sortFunction(
-          people.filter(
-            pers =>
-              filterByQuery(pers, currentQuerry) &&
-              chosenCenturies.includes(Math.ceil(+pers.born / 100).toString()),
-          ),
-          searchParams,
-        ),
-      );
-    } else {
-      setVisiblePeople(
-        sortFunction(
-          people.filter(pers => filterByQuery(pers, currentQuerry)),
-          searchParams,
-        ),
-      );
-    }
-  }, [searchParams, people, setVisiblePeople]);
 
   const getClass = (sortBy: string) => {
     const propperClass = {
