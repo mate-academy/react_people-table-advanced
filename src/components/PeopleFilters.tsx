@@ -1,18 +1,65 @@
+import { useSearchParams } from 'react-router-dom';
+import { SearchLink } from './SearchLink';
+import { SearchParams } from '../utils/searchHelper';
+import classNames from 'classnames';
+import { useContext, useEffect, useState } from 'react';
+import { PeopleContext } from './PeopleProvider.tsx/PeopleProvider';
+
 export const PeopleFilters = () => {
+  const [searchParams] = useSearchParams();
+  const [isActive, setIsActive] = useState('');
+  const { setPeople, people } = useContext(PeopleContext);
+  const sex = searchParams.get('sex');
+  const copyByPeople = [...people];
+
+  const sortBySex = () => {
+    if (sex === null) {
+      setPeople(copyByPeople);
+    } else if (sex === 'f') {
+      const filterByMen = copyByPeople.filter(item => item.sex === 'f');
+
+      setPeople(filterByMen);
+    } else if (sex === 'm') {
+      const filterByMen = copyByPeople.filter(item => item.sex === 'm');
+
+      setPeople(filterByMen);
+    }
+  };
+
+  useEffect(() => {
+    sortBySex();
+  }, [sex]);
+
+  const handleSex = (item: string): SearchParams => {
+    switch (item) {
+      case 'All':
+        return { sex: null };
+      case 'Male':
+        return { sex: 'm' };
+      case 'Female':
+        return { sex: 'f' };
+      default:
+        return { sex: null };
+    }
+  };
+
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        <a className="is-active" href="#/people">
-          All
-        </a>
-        <a className="" href="#/people?sex=m">
-          Male
-        </a>
-        <a className="" href="#/people?sex=f">
-          Female
-        </a>
+        {['All', 'Male', 'Female'].map(item => (
+          <SearchLink
+            className={classNames({
+              'is-active': (item === 'All' && !isActive) || isActive === item,
+            })}
+            params={handleSex(item)}
+            key={item}
+            onClick={() => setIsActive(item)}
+          >
+            {item}
+          </SearchLink>
+        ))}
       </p>
 
       <div className="panel-block">

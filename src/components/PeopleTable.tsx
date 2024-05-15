@@ -1,45 +1,54 @@
 /* eslint-disable @typescript-eslint/indent */
 /* eslint-disable prettier/prettier */
-
-import { useContext, useState } from 'react';
+enum ClassFor {
+  each = 'fa-sort',
+  up = 'fa-sort-up',
+  down = 'fa-sort-down',
+}
+import { useContext } from 'react';
 import { PeopleContext } from './PeopleProvider.tsx/PeopleProvider';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams, useSearchParams } from 'react-router-dom';
 import classNames from 'classnames';
 import { PersonLink } from './PersonLink';
-import { sortClass } from '../utils/sortClass';
-import { StateType } from '../types/StateType';
-
-const initialHandlePosition = {
-  name: 1,
-  sex: 1,
-  born: 1,
-  died: 1,
-};
+import { SearchLink } from './SearchLink';
+import { SearchParams } from '../utils/searchHelper';
 
 export const PeopleTable = () => {
   const { slug } = useParams();
-  const { people } = useContext(PeopleContext);
-  const [namesCount, setNamesCount] = useState<StateType>(
-    initialHandlePosition,
-  );
+  const { sortedPeople } = useContext(PeopleContext);
+  const [searchParams] = useSearchParams();
+  const sort = searchParams.get('sort');
+  const order = searchParams.get('order');
 
-  const handleOnClick = (count: number, key: string) => {
-    return count !== 3
-      ? setNamesCount(prevObject => {
-          const newObject: StateType = prevObject;
+  const handleSearch = (it: string): SearchParams => {
+    const item = it.toLowerCase();
 
-          for (const [k, value] of Object.entries(namesCount)) {
-            if (k !== key) {
-              newObject[k] = 1;
-            } else {
-              newObject[k] = value + 1;
-            }
-          }
-
-          return { ...newObject };
-        })
-      : setNamesCount(prevOb => ({ ...prevOb, [key]: 1 }));
+    if (sort === item && order !== 'desc') {
+      return { order: 'desc' };
+    } else if (
+      (sort === item && order === 'desc') ||
+      (sort !== item && order === 'desc')
+    ) {
+      return { order: null, sort: null };
+    } else {
+      return { sort: item };
+    }
   };
+
+  const getArrow = (it: string): string => {
+    const item = it.toLowerCase();
+
+    if (sort === item && order !== 'desc') {
+      return ClassFor.up;
+    } else if (sort === item && order === 'desc') {
+      return ClassFor.down;
+    } else {
+      return ClassFor.each;
+    }
+  };
+
+
+  const sortedList = sortedPeople(sort, order);
 
   return (
     <table
@@ -53,36 +62,25 @@ export const PeopleTable = () => {
               <th key={item}>
                 <span className="is-flex is-flex-wrap-nowrap">
                   {item}
-                  <Link
-                    to={{ search: '?sort=name' }}
-                    onClick={() =>
-                      handleOnClick(
-                        namesCount[item.toLocaleLowerCase()],
-                        item.toLocaleLowerCase(),
-                      )
-                    }
+                  <SearchLink
+                    params={handleSearch(item)}
+                    onClick={() => handleSearch(item)}
                   >
                     <span className="icon">
-                      <i
-                        className={classNames(
-                          `fas ${sortClass(namesCount[item.toLocaleLowerCase()])}`,
-                        )}
-                      />
+                      <i className={classNames(`fas ${getArrow(item)}`)} />
                     </span>
-                  </Link>
+                  </SearchLink>
                 </span>
               </th>
             ) : (
-              <>
-                <th>{item}</th>
-              </>
+              <th key={item}>{item}</th>
             ),
           )}
         </tr>
       </thead>
 
       <tbody>
-        {people.map(person => (
+        {sortedList.map(person => (
           <tr
             data-cy="person"
             key={person.name}
