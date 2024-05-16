@@ -1,48 +1,15 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
+import { Person } from '../types';
+import { getPeople } from '../api';
+import { getPeopleWithParents } from '../utils/getPeopleWithParents';
 import { PeopleFilters } from '../components/PeopleFilters';
 import { Loader } from '../components/Loader';
 import { PeopleTable } from '../components/PeopleTable';
-import { Person } from '../types';
-import { getPeople } from '../api';
-import { useSearchParams } from 'react-router-dom';
-import { getPeopleWithParents } from '../utils/getPeopleWithParents';
 
 export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [searchParams] = useSearchParams();
-  const query = searchParams.get('query')?.trim().toLowerCase();
-  const sex = searchParams.get('sex') || null;
-  const centuries = useMemo(
-    () => searchParams.getAll('centuries') || [],
-    [searchParams],
-  );
-
-  const getFilteredPeople = useCallback(() => {
-    let visiblePeople = [...people];
-
-    if (query) {
-      visiblePeople = visiblePeople.filter(
-        person =>
-          person.name.toLowerCase().includes(query) ||
-          person.fatherName?.toLowerCase().includes(query) ||
-          person.motherName?.toLowerCase().includes(query),
-      );
-    }
-
-    if (sex) {
-      visiblePeople = visiblePeople.filter(person => person.sex === sex);
-    }
-
-    if (centuries.length) {
-      visiblePeople = visiblePeople.filter(person =>
-        centuries.includes(Math.ceil(person.born / 100).toString()),
-      );
-    }
-
-    return visiblePeople;
-  }, [query, sex, centuries, people]);
 
   useEffect(() => {
     setError(false);
@@ -53,8 +20,6 @@ export const PeoplePage = () => {
       .catch(() => setError(true))
       .finally(() => setLoading(false));
   }, []);
-
-  const visiblePeople = getFilteredPeople();
 
   return (
     <>
@@ -80,11 +45,11 @@ export const PeoplePage = () => {
                 </p>
               )}
 
-              {!visiblePeople.length && (
+              {!people.length && (
                 <p>There are no people matching the current search criteria</p>
               )}
 
-              {!!people.length && <PeopleTable people={visiblePeople} />}
+              {!!people.length && <PeopleTable people={people} />}
             </div>
           </div>
         </div>
