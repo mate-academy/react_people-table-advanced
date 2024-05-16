@@ -1,0 +1,74 @@
+{
+    "sourceFile": "src/components/Navbar/Navbar.tsx",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 14,
+            "patches": [
+                {
+                    "date": 1715718578456,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1715718595152,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,4 +1,7 @@\n+import classNames from \"classnames\";\n+import { NavLink } from \"react-router-dom\";\n+\n export const Navbar = () => {\n   return (\n     <nav\n       data-cy=\"nav\"\n"
+                },
+                {
+                    "date": 1715854939608,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -11,9 +11,9 @@\n     >\n       <div className=\"container\">\n         <div className=\"navbar-brand\">\n           <NavLink\n-            to=\"/\"\n+            to=\"#/\"\n             className={({ isActive }) =>\n               classNames('navbar-item', {\n                 'has-background-grey-lighter': isActive,\n               })\n"
+                },
+                {
+                    "date": 1715854956261,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -11,9 +11,9 @@\n     >\n       <div className=\"container\">\n         <div className=\"navbar-brand\">\n           <NavLink\n-            to=\"#/\"\n+            to=\"/\"\n             className={({ isActive }) =>\n               classNames('navbar-item', {\n                 'has-background-grey-lighter': isActive,\n               })\n"
+                },
+                {
+                    "date": 1715854983715,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -11,9 +11,9 @@\n     >\n       <div className=\"container\">\n         <div className=\"navbar-brand\">\n           <NavLink\n-            to=\"/\"\n+            to=\"#/\"\n             className={({ isActive }) =>\n               classNames('navbar-item', {\n                 'has-background-grey-lighter': isActive,\n               })\n"
+                },
+                {
+                    "date": 1715854999510,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -11,9 +11,9 @@\n     >\n       <div className=\"container\">\n         <div className=\"navbar-brand\">\n           <NavLink\n-            to=\"#/\"\n+            to=\"/\"\n             className={({ isActive }) =>\n               classNames('navbar-item', {\n                 'has-background-grey-lighter': isActive,\n               })\n"
+                },
+                {
+                    "date": 1715855013842,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,6 +1,6 @@\n-import classNames from \"classnames\";\n-import { NavLink } from \"react-router-dom\";\n+import classNames from 'classnames';\n+import { NavLink } from 'react-router-dom';\n \n export const Navbar = () => {\n   return (\n     <nav\n@@ -11,9 +11,9 @@\n     >\n       <div className=\"container\">\n         <div className=\"navbar-brand\">\n           <NavLink\n-            to=\"/\"\n+            to=\"#/\"\n             className={({ isActive }) =>\n               classNames('navbar-item', {\n                 'has-background-grey-lighter': isActive,\n               })\n"
+                },
+                {
+                    "date": 1715855022176,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -11,9 +11,9 @@\n     >\n       <div className=\"container\">\n         <div className=\"navbar-brand\">\n           <NavLink\n-            to=\"#/\"\n+            to=\"/\"\n             className={({ isActive }) =>\n               classNames('navbar-item', {\n                 'has-background-grey-lighter': isActive,\n               })\n"
+                },
+                {
+                    "date": 1715855402696,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -11,9 +11,9 @@\n     >\n       <div className=\"container\">\n         <div className=\"navbar-brand\">\n           <NavLink\n-            to=\"/\"\n+            to=\"#/\"\n             className={({ isActive }) =>\n               classNames('navbar-item', {\n                 'has-background-grey-lighter': isActive,\n               })\n"
+                },
+                {
+                    "date": 1715855412403,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -11,9 +11,9 @@\n     >\n       <div className=\"container\">\n         <div className=\"navbar-brand\">\n           <NavLink\n-            to=\"#/\"\n+            to=\"/\"\n             className={({ isActive }) =>\n               classNames('navbar-item', {\n                 'has-background-grey-lighter': isActive,\n               })\n"
+                },
+                {
+                    "date": 1715857297702,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -11,9 +11,9 @@\n     >\n       <div className=\"container\">\n         <div className=\"navbar-brand\">\n           <NavLink\n-            to=\"/\"\n+            to=\"/#/\"\n             className={({ isActive }) =>\n               classNames('navbar-item', {\n                 'has-background-grey-lighter': isActive,\n               })\n"
+                },
+                {
+                    "date": 1715857329234,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -11,9 +11,9 @@\n     >\n       <div className=\"container\">\n         <div className=\"navbar-brand\">\n           <NavLink\n-            to=\"/#/\"\n+            to=\"#\"\n             className={({ isActive }) =>\n               classNames('navbar-item', {\n                 'has-background-grey-lighter': isActive,\n               })\n"
+                },
+                {
+                    "date": 1715857578421,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -11,9 +11,9 @@\n     >\n       <div className=\"container\">\n         <div className=\"navbar-brand\">\n           <NavLink\n-            to=\"#\"\n+            to=\"/\"\n             className={({ isActive }) =>\n               classNames('navbar-item', {\n                 'has-background-grey-lighter': isActive,\n               })\n"
+                },
+                {
+                    "date": 1715857860366,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -11,9 +11,9 @@\n     >\n       <div className=\"container\">\n         <div className=\"navbar-brand\">\n           <NavLink\n-            to=\"/\"\n+            to=\"#/\"\n             className={({ isActive }) =>\n               classNames('navbar-item', {\n                 'has-background-grey-lighter': isActive,\n               })\n"
+                },
+                {
+                    "date": 1715857976494,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -11,9 +11,10 @@\n     >\n       <div className=\"container\">\n         <div className=\"navbar-brand\">\n           <NavLink\n-            to=\"#/\"\n+            to=\"/\"\n+\n             className={({ isActive }) =>\n               classNames('navbar-item', {\n                 'has-background-grey-lighter': isActive,\n               })\n"
+                }
+            ],
+            "date": 1715718578456,
+            "name": "Commit-0",
+            "content": "export const Navbar = () => {\n  return (\n    <nav\n      data-cy=\"nav\"\n      className=\"navbar is-fixed-top has-shadow\"\n      role=\"navigation\"\n      aria-label=\"main navigation\"\n    >\n      <div className=\"container\">\n        <div className=\"navbar-brand\">\n          <NavLink\n            to=\"/\"\n            className={({ isActive }) =>\n              classNames('navbar-item', {\n                'has-background-grey-lighter': isActive,\n              })\n            }\n          >\n            Home\n          </NavLink>\n\n          <NavLink\n            to=\"/people\"\n            className={({ isActive }) =>\n              classNames('navbar-item', {\n                'has-background-grey-lighter': isActive,\n              })\n            }\n          >\n            People\n          </NavLink>\n        </div>\n      </div>\n    </nav>\n  );\n};\n"
+        }
+    ]
+}
