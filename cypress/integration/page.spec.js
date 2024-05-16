@@ -358,7 +358,7 @@ describe('', () => {
       page.people().should('have.length', 6);
     });
 
-    describe.skip('People table', () => {
+    describe('People table', () => {
       beforeEach(() => {
         page.mockPeople();
         page.visit('/#/people');
