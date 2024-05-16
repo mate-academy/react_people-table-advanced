@@ -1,0 +1,22 @@
+{
+    "sourceFile": "src/components/Navbar.tsx",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 1,
+            "patches": [
+                {
+                    "date": 1715775303598,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1715782879313,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,7 +1,27 @@\n-import React from \"react\";\n+import { useEffect, useState } from 'react';\n+import { NavLink, useLocation } from 'react-router-dom';\n \n-export const Navbar = () => {\n+export const NavBar = () => {\n+  const location = useLocation();\n+  const [isActive, setIsActive] = useState<string>('');\n+\n+  useEffect(() => {\n+    const currentLink = location.pathname;\n+\n+    if (currentLink === '/' || currentLink === '/home') {\n+      setIsActive('home');\n+    } else if (currentLink.startsWith('/people')) {\n+      setIsActive('people');\n+    } else {\n+      setIsActive('');\n+    }\n+  }, [location]);\n+\n+  const handleClick = (link: string) => {\n+    setIsActive(link);\n+  };\n+\n   return (\n     <nav\n       data-cy=\"nav\"\n       className=\"navbar is-fixed-top has-shadow\"\n@@ -9,19 +29,23 @@\n       aria-label=\"main navigation\"\n     >\n       <div className=\"container\">\n         <div className=\"navbar-brand\">\n-          <a className=\"navbar-item\" href=\"#/\">\n+          <NavLink\n+            className={`navbar-item ${isActive === 'home' && 'has-background-grey-lighter'}`}\n+            to=\"/\"\n+            onClick={() => handleClick('home')}\n+          >\n             Home\n-          </a>\n+          </NavLink>\n \n-          <a\n-            aria-current=\"page\"\n-            className=\"navbar-item has-background-grey-lighter\"\n-            href=\"#/people\"\n+          <NavLink\n+            className={`navbar-item ${isActive === 'people' && 'has-background-grey-lighter'}`}\n+            to=\"/people\"\n+            onClick={() => handleClick('people')}\n           >\n             People\n-          </a>\n+          </NavLink>\n         </div>\n       </div>\n     </nav>\n   );\n"
+                }
+            ],
+            "date": 1715775303598,
+            "name": "Commit-0",
+            "content": "import React from \"react\";\n\nexport const Navbar = () => {\n  return (\n    <nav\n      data-cy=\"nav\"\n      className=\"navbar is-fixed-top has-shadow\"\n      role=\"navigation\"\n      aria-label=\"main navigation\"\n    >\n      <div className=\"container\">\n        <div className=\"navbar-brand\">\n          <a className=\"navbar-item\" href=\"#/\">\n            Home\n          </a>\n\n          <a\n            aria-current=\"page\"\n            className=\"navbar-item has-background-grey-lighter\"\n            href=\"#/people\"\n          >\n            People\n          </a>\n        </div>\n      </div>\n    </nav>\n  );\n};\n"
+        }
+    ]
+}

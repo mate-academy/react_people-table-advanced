@@ -1,0 +1,22 @@
+{
+    "sourceFile": "src/components/People.tsx",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 1,
+            "patches": [
+                {
+                    "date": 1715782902839,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1715782909271,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,3 +1,5 @@\n+import React from 'react';\n+\n export const People = () => {\n   return <h1 className=\"title\">People Page</h1>;\n };\n"
+                }
+            ],
+            "date": 1715782902839,
+            "name": "Commit-0",
+            "content": "export const People = () => {\n  return <h1 className=\"title\">People Page</h1>;\n};\n"
+        }
+    ]
+}

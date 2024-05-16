@@ -1,0 +1,18 @@
+{
+    "sourceFile": "src/components/SearchLink.tsx",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1715775339814,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1715775339814,
+            "name": "Commit-0",
+            "content": "import { Link, LinkProps, useSearchParams } from 'react-router-dom';\nimport { getSearchWith, SearchParams } from '../utils/searchHelper';\nimport React from 'react';\n\n/**\n * To replace the the standard `Link` we take all it props except for `to`\n * along with the custom `params` prop that we use for updating the search\n */\ntype Props = Omit<LinkProps, 'to'> & {\n  params: SearchParams;\n};\n\n/**\n * SearchLink updates the given `params` in the search keeping the `pathname`\n * and the other existing search params (see `getSearchWith`)\n */\nexport const SearchLink: React.FC<Props> = ({\n  children, // this is the content between the open and closing tags\n  params, // the params to be updated in the `search`\n  ...props // all usual Link props like `className`, `style` and `id`\n}) => {\n  const [searchParams] = useSearchParams();\n\n  return (\n    <Link\n      // to={{ search: getSearchWith(searchParams, { query: 'sdf' }) }}\n      // to={{ search: getSearchWith(searchParams, { query: null }) }}\n      // to={{ search: getSearchWith(searchParams, { centuries: ['16', '18'] }) }}\n      to={{\n        search: getSearchWith(searchParams, params),\n      }}\n      {...props} // copy all the other props\n    >\n      {children}\n    </Link>\n  );\n};\n"
+        }
+    ]
+}

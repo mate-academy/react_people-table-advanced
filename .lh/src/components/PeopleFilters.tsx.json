@@ -1,0 +1,30 @@
+{
+    "sourceFile": "src/components/PeopleFilters.tsx",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 3,
+            "patches": [
+                {
+                    "date": 1715775314840,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1715839082258,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,14 +1,14 @@\n-import React from \"react\";\n+import React from 'react';\n \n export const PeopleFilters = () => {\n   return (\n     <nav className=\"panel\">\n       <p className=\"panel-heading\">Filters</p>\n \n       <p className=\"panel-tabs\" data-cy=\"SexFilter\">\n         <a className=\"is-active\" href=\"#/people\">\n-          All\n+          All \n         </a>\n         <a className=\"\" href=\"#/people?sex=m\">\n           Male\n         </a>\n"
+                },
+                {
+                    "date": 1715840180839,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -6,9 +6,9 @@\n       <p className=\"panel-heading\">Filters</p>\n \n       <p className=\"panel-tabs\" data-cy=\"SexFilter\">\n         <a className=\"is-active\" href=\"#/people\">\n-          All \n+          All\n         </a>\n         <a className=\"\" href=\"#/people?sex=m\">\n           Male\n         </a>\n"
+                },
+                {
+                    "date": 1715851435197,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -12,9 +12,9 @@\n         <a className=\"\" href=\"#/people?sex=m\">\n           Male\n         </a>\n         <a className=\"\" href=\"#/people?sex=f\">\n-          Female\n+          Femalee\n         </a>\n       </p>\n \n       <div className=\"panel-block\">\n"
+                }
+            ],
+            "date": 1715775314840,
+            "name": "Commit-0",
+            "content": "import React from \"react\";\n\nexport const PeopleFilters = () => {\n  return (\n    <nav className=\"panel\">\n      <p className=\"panel-heading\">Filters</p>\n\n      <p className=\"panel-tabs\" data-cy=\"SexFilter\">\n        <a className=\"is-active\" href=\"#/people\">\n          All\n        </a>\n        <a className=\"\" href=\"#/people?sex=m\">\n          Male\n        </a>\n        <a className=\"\" href=\"#/people?sex=f\">\n          Female\n        </a>\n      </p>\n\n      <div className=\"panel-block\">\n        <p className=\"control has-icons-left\">\n          <input\n            data-cy=\"NameFilter\"\n            type=\"search\"\n            className=\"input\"\n            placeholder=\"Search\"\n          />\n\n          <span className=\"icon is-left\">\n            <i className=\"fas fa-search\" aria-hidden=\"true\" />\n          </span>\n        </p>\n      </div>\n\n      <div className=\"panel-block\">\n        <div className=\"level is-flex-grow-1 is-mobile\" data-cy=\"CenturyFilter\">\n          <div className=\"level-left\">\n            <a\n              data-cy=\"century\"\n              className=\"button mr-1\"\n              href=\"#/people?centuries=16\"\n            >\n              16\n            </a>\n\n            <a\n              data-cy=\"century\"\n              className=\"button mr-1 is-info\"\n              href=\"#/people?centuries=17\"\n            >\n              17\n            </a>\n\n            <a\n              data-cy=\"century\"\n              className=\"button mr-1 is-info\"\n              href=\"#/people?centuries=18\"\n            >\n              18\n            </a>\n\n            <a\n              data-cy=\"century\"\n              className=\"button mr-1 is-info\"\n              href=\"#/people?centuries=19\"\n            >\n              19\n            </a>\n\n            <a\n              data-cy=\"century\"\n              className=\"button mr-1\"\n              href=\"#/people?centuries=20\"\n            >\n              20\n            </a>\n          </div>\n\n          <div className=\"level-right ml-4\">\n            <a\n              data-cy=\"centuryALL\"\n              className=\"button is-success is-outlined\"\n              href=\"#/people\"\n            >\n              All\n            </a>\n          </div>\n        </div>\n      </div>\n\n      <div className=\"panel-block\">\n        <a className=\"button is-link is-outlined is-fullwidth\" href=\"#/people\">\n          Reset all filters\n        </a>\n      </div>\n    </nav>\n  );\n};\n"
+        }
+    ]
+}

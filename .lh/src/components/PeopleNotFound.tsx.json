@@ -1,0 +1,22 @@
+{
+    "sourceFile": "src/components/PeopleNotFound.tsx",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 1,
+            "patches": [
+                {
+                    "date": 1715782938883,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1715782944266,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,3 +1,5 @@\n+import React from 'react';\n+\n export const PeopleNotFound = () => {\n   return <h1 className=\"title\">Page not found</h1>;\n };\n"
+                }
+            ],
+            "date": 1715782938883,
+            "name": "Commit-0",
+            "content": "export const PeopleNotFound = () => {\n  return <h1 className=\"title\">Page not found</h1>;\n};\n"
+        }
+    ]
+}
