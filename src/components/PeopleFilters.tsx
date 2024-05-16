@@ -6,6 +6,7 @@ export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const sex = searchParams.get('sex');
 
+  // eslint-disable-next-line @typescript-eslint/no-shadow
   const handleSexFilter = (sex: string) => () => {
     setSearchParams(prev => {
       const newParams = new URLSearchParams(prev);
