@@ -21,6 +21,10 @@ export const PeopleFilters = () => {
     });
   };
 
+  const handleResetFilters = () => {
+    setSearchParams({});
+  };
+
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
@@ -118,7 +122,11 @@ export const PeopleFilters = () => {
       </div>
 
       <div className="panel-block">
-        <a className="button is-link is-outlined is-fullwidth" href="#/people">
+        <a
+          onClick={handleResetFilters}
+          className="button is-link is-outlined is-fullwidth"
+          href="#/people"
+        >
           Reset all filters
         </a>
       </div>
