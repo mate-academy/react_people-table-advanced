@@ -6,7 +6,6 @@ import { PageNotFound } from './components/PageNotFound/PageNotFound';
 import { PeopleProvider } from './providers/PeopleProvider';
 import { PeoplePage } from './components/PeoplePage/PeoplePage';
 import { Navbar } from './components/Navbar/Navbar';
-import { PeopleFilters } from './components/PeopleFilters';
 
 export const App = () => (
   <div data-cy="app">
@@ -14,7 +13,6 @@ export const App = () => (
     <PeopleProvider>
       <main className="section">
         <div className="container">
-          <PeopleFilters />
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/home" element={<Navigate replace to="/" />} />

@@ -1,0 +1,26 @@
+{
+    "sourceFile": "src/components/PeoplePage/PeoplePage.tsx",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 2,
+            "patches": [
+                {
+                    "date": 1715866871748,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1715866932509,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,14 +1,16 @@\n import { FC } from 'react';\n import { Loader } from '../Loader';\n-import { usePeople } from '../../providers/PeopleProvider';\n+import { PeopleProvider, usePeople } from '../../providers/PeopleProvider';\n import { PeopleTable } from '../PeopleTable/PeopleTable';\n import { PeopleFilters } from '../PeopleFilters';\n \n export const PeoplePage: FC = () => {\n   const { people, pending, error } = usePeople();\n \n   return (\n+    <PeopleProvider>\n+\n     <div className=\"block\">\n       <h1 className=\"title\">People Page</h1>\n       <div className=\"box table-container\">\n         <PeopleFilters />\n@@ -22,7 +24,8 @@\n           <p data-cy=\"noPeopleMessage\">There are no people on the server</p>\n         )}\n         {!pending && !!people.length && <PeopleTable />}\n       </div>\n-    </div>\n+      </div>\n+      <PeopleProvider/>\n   );\n };\n"
+                },
+                {
+                    "date": 1715866988191,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -7,25 +7,26 @@\n export const PeoplePage: FC = () => {\n   const { people, pending, error } = usePeople();\n \n   return (\n+    <>\n     <PeopleProvider>\n-\n-    <div className=\"block\">\n-      <h1 className=\"title\">People Page</h1>\n-      <div className=\"box table-container\">\n-        <PeopleFilters />\n-        {pending && <Loader />}\n-        {error && (\n-          <p data-cy=\"peopleLoadingError\" className=\"has-text-danger\">\n-            Something went wrong\n-          </p>\n-        )}\n-        {!pending && !people.length && (\n-          <p data-cy=\"noPeopleMessage\">There are no people on the server</p>\n-        )}\n-        {!pending && !!people.length && <PeopleTable />}\n+      <div className=\"block\">\n+        <h1 className=\"title\">People Page</h1>\n+        <div className=\"box table-container\">\n+          <PeopleFilters />\n+          {pending && <Loader />}\n+          {error && (\n+            <p data-cy=\"peopleLoadingError\" className=\"has-text-danger\">\n+              Something went wrong\n+            </p>\n+          )}\n+          {!pending && !people.length && (\n+            <p data-cy=\"noPeopleMessage\">There are no people on the server</p>\n+          )}\n+          {!pending && !!people.length && <PeopleTable />}\n+        </div>\n       </div>\n-      </div>\n-      <PeopleProvider/>\n+      <PeopleProvider />\n+      </>\n   );\n };\n"
+                }
+            ],
+            "date": 1715866871748,
+            "name": "Commit-0",
+            "content": "import { FC } from 'react';\nimport { Loader } from '../Loader';\nimport { usePeople } from '../../providers/PeopleProvider';\nimport { PeopleTable } from '../PeopleTable/PeopleTable';\nimport { PeopleFilters } from '../PeopleFilters';\n\nexport const PeoplePage: FC = () => {\n  const { people, pending, error } = usePeople();\n\n  return (\n    <div className=\"block\">\n      <h1 className=\"title\">People Page</h1>\n      <div className=\"box table-container\">\n        <PeopleFilters/>\n        {pending && <Loader />}\n        {error && (\n          <p data-cy=\"peopleLoadingError\" className=\"has-text-danger\">\n            Something went wrong\n          </p>\n        )}\n        {!pending && !people.length && (\n          <p data-cy=\"noPeopleMessage\">There are no people on the server</p>\n        )}\n        {!pending && !!people.length && <PeopleTable />}\n      </div>\n    </div>\n  );\n};\n"
+        }
+    ]
+}
