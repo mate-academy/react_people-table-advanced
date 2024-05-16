@@ -1,18 +1,46 @@
+import classNames from 'classnames';
 import React from 'react';
+import { useSearchParams } from 'react-router-dom';
 
 export const PeopleFilters = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const sex = searchParams.get('sex');
+
+  const handleSexFilter = (sex: string) => () => {
+    setSearchParams(prev => {
+      const newParams = new URLSearchParams(prev);
+
+      if (sex) {
+        newParams.set('sex', sex);
+      } else {
+        newParams.delete('sex');
+      }
+
+      return newParams;
+    });
+  };
+
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        <a className="is-active" href="#/people">
+        <a
+          className={classNames({ 'is-active': !sex })}
+          onClick={handleSexFilter('')}
+        >
           All
         </a>
-        <a className="" href="#/people?sex=m">
+        <a
+          className={classNames({ 'is-active': sex === 'm' })}
+          onClick={handleSexFilter('m')}
+        >
           Male
         </a>
-        <a className="" href="#/people?sex=f">
+        <a
+          className={classNames({ 'is-active': sex === 'f' })}
+          onClick={handleSexFilter('f')}
+        >
           Female
         </a>
       </p>

@@ -3,7 +3,7 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 25,
+            "activePatchIndex": 27,
             "patches": [
                 {
                     "date": 1715775326732,
@@ -108,6 +108,14 @@
                 {
                     "date": 1715786128972,
                     "content": "Index: \n===================================================================\n--- \n+++ \n@@ -55,9 +55,9 @@\n   if (users.length === 0) {\n     return <p data-cy=\"noPeopleMessage\">There are no people on the server</p>;\n   }\n \n-  \n+  // <p>There are no people matching the current search criteria</p>\n \n   return (\n     <div className=\"box table-container\">\n       <table\n"
+                },
+                {
+                    "date": 1715854455025,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -21,26 +21,8 @@\n       })),\n     [users],\n   );\n \n-  useEffect(() => {\n-    const fetchPersons = async () => {\n-      try {\n-        setLoading(true);\n-        const data = await getPeople();\n-\n-        setUsers(data);\n-        setLoading(false);\n-      } catch (err) {\n-        setLoading(false);\n-\n-        setError('Error');\n-      }\n-    };\n-\n-    fetchPersons();\n-  }, [setLoading]);\n-\n   if (error) {\n     return (\n       <p data-cy=\"peopleLoadingError\" className=\"has-text-danger\">\n         Something went wrong\n"
+                },
+                {
+                    "date": 1715854460878,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -21,8 +21,26 @@\n       })),\n     [users],\n   );\n \n+  useEffect(() => {\n+    const fetchPersons = async () => {\n+      try {\n+        setLoading(true);\n+        const data = await getPeople();\n+\n+        setUsers(data);\n+        setLoading(false);\n+      } catch (err) {\n+        setLoading(false);\n+\n+        setError('Error');\n+      }\n+    };\n+\n+    fetchPersons();\n+  }, [setLoading]);\n+\n   if (error) {\n     return (\n       <p data-cy=\"peopleLoadingError\" className=\"has-text-danger\">\n         Something went wrong\n"
                 }
             ],
             "date": 1715775326732,

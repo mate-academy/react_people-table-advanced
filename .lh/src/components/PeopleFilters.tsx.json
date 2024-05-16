@@ -3,7 +3,7 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 3,
+            "activePatchIndex": 51,
             "patches": [
                 {
                     "date": 1715775314840,
@@ -20,6 +20,198 @@
                 {
                     "date": 1715851435197,
                     "content": "Index: \n===================================================================\n--- \n+++ \n@@ -12,9 +12,9 @@\n         <a className=\"\" href=\"#/people?sex=m\">\n           Male\n         </a>\n         <a className=\"\" href=\"#/people?sex=f\">\n-          Female\n+          Femalee\n         </a>\n       </p>\n \n       <div className=\"panel-block\">\n"
+                },
+                {
+                    "date": 1715855644576,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,7 +1,8 @@\n import React from 'react';\n \n export const PeopleFilters = () => {\n+  \n   return (\n     <nav className=\"panel\">\n       <p className=\"panel-heading\">Filters</p>\n \n@@ -12,9 +13,9 @@\n         <a className=\"\" href=\"#/people?sex=m\">\n           Male\n         </a>\n         <a className=\"\" href=\"#/people?sex=f\">\n-          Femalee\n+          Female\n         </a>\n       </p>\n \n       <div className=\"panel-block\">\n"
+                },
+                {
+                    "date": 1715855649945,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,8 +1,10 @@\n import React from 'react';\n \n export const PeopleFilters = () => {\n+\n   \n+\n   return (\n     <nav className=\"panel\">\n       <p className=\"panel-heading\">Filters</p>\n \n"
+                },
+                {
+                    "date": 1715855658564,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,9 +1,9 @@\n import React from 'react';\n \n export const PeopleFilters = () => {\n \n-  \n+  const handle\n \n   return (\n     <nav className=\"panel\">\n       <p className=\"panel-heading\">Filters</p>\n"
+                },
+                {
+                    "date": 1715855663677,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,9 +1,9 @@\n import React from 'react';\n \n export const PeopleFilters = () => {\n \n-  const handle\n+  const handleSexFilter = ()\n \n   return (\n     <nav className=\"panel\">\n       <p className=\"panel-heading\">Filters</p>\n"
+                },
+                {
+                    "date": 1715855669118,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,9 +1,9 @@\n import React from 'react';\n \n export const PeopleFilters = () => {\n \n-  const handleSexFilter = ()\n+  const handleSexFilter = () => \n \n   return (\n     <nav className=\"panel\">\n       <p className=\"panel-heading\">Filters</p>\n"
+                },
+                {
+                    "date": 1715855701743,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,9 +1,9 @@\n import React from 'react';\n \n export const PeopleFilters = () => {\n \n-  const handleSexFilter = () => \n+  const handleSexFilter = () =>  {}\n \n   return (\n     <nav className=\"panel\">\n       <p className=\"panel-heading\">Filters</p>\n"
+                },
+                {
+                    "date": 1715855717154,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,9 +1,9 @@\n import React from 'react';\n \n export const PeopleFilters = () => {\n \n-  const handleSexFilter = () =>  {}\n+  const handleSexFilter = (e) => () => {}\n \n   return (\n     <nav className=\"panel\">\n       <p className=\"panel-heading\">Filters</p>\n"
+                },
+                {
+                    "date": 1715855730640,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,9 +1,9 @@\n import React from 'react';\n \n export const PeopleFilters = () => {\n \n-  const handleSexFilter = (e) => () => {}\n+  const handleSexFilter = (sex: string) => () => {}\n \n   return (\n     <nav className=\"panel\">\n       <p className=\"panel-heading\">Filters</p>\n"
+                },
+                {
+                    "date": 1715855739106,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,10 +1,9 @@\n import React from 'react';\n \n export const PeopleFilters = () => {\n+  const handleSexFilter = (sex: string) => () => {};\n \n-  const handleSexFilter = (sex: string) => () => {}\n-\n   return (\n     <nav className=\"panel\">\n       <p className=\"panel-heading\">Filters</p>\n \n"
+                },
+                {
+                    "date": 1715855765836,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,8 +1,10 @@\n import React from 'react';\n \n export const PeopleFilters = () => {\n-  const handleSexFilter = (sex: string) => () => {};\n+  const handleSexFilter = (sex: string) => () => {\n+    con\n+  };\n \n   return (\n     <nav className=\"panel\">\n       <p className=\"panel-heading\">Filters</p>\n"
+                },
+                {
+                    "date": 1715855772023,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,9 +1,9 @@\n import React from 'react';\n \n export const PeopleFilters = () => {\n   const handleSexFilter = (sex: string) => () => {\n-    con\n+    const newParams = new \n   };\n \n   return (\n     <nav className=\"panel\">\n"
+                },
+                {
+                    "date": 1715855777382,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,9 +1,9 @@\n import React from 'react';\n \n export const PeopleFilters = () => {\n   const handleSexFilter = (sex: string) => () => {\n-    const newParams = new \n+    const newParams = new URL\n   };\n \n   return (\n     <nav className=\"panel\">\n"
+                },
+                {
+                    "date": 1715855783429,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,9 +1,9 @@\n import React from 'react';\n \n export const PeopleFilters = () => {\n   const handleSexFilter = (sex: string) => () => {\n-    const newParams = new URL\n+    const newParams = new URLSearchParams();\n   };\n \n   return (\n     <nav className=\"panel\">\n"
+                },
+                {
+                    "date": 1715855822505,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,7 +1,8 @@\n import React from 'react';\n \n export const PeopleFilters = () => {\n+  \n   const handleSexFilter = (sex: string) => () => {\n     const newParams = new URLSearchParams();\n   };\n \n"
+                },
+                {
+                    "date": 1715855832706,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,10 +1,9 @@\n import React from 'react';\n \n export const PeopleFilters = () => {\n-  \n+\n   const handleSexFilter = (sex: string) => () => {\n-    const newParams = new URLSearchParams();\n   };\n \n   return (\n     <nav className=\"panel\">\n"
+                },
+                {
+                    "date": 1715855868904,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -2,9 +2,9 @@\n \n export const PeopleFilters = () => {\n \n   const handleSexFilter = (sex: string) => () => {\n-  };\n+const   };\n \n   return (\n     <nav className=\"panel\">\n       <p className=\"panel-heading\">Filters</p>\n"
+                },
+                {
+                    "date": 1715855874722,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,10 +1,10 @@\n import React from 'react';\n \n export const PeopleFilters = () => {\n-\n+const \n   const handleSexFilter = (sex: string) => () => {\n-const   };\n+  };\n \n   return (\n     <nav className=\"panel\">\n       <p className=\"panel-heading\">Filters</p>\n"
+                },
+                {
+                    "date": 1715855879886,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,8 +1,8 @@\n import React from 'react';\n \n export const PeopleFilters = () => {\n-const \n+const [serch]\n   const handleSexFilter = (sex: string) => () => {\n   };\n \n   return (\n"
+                },
+                {
+                    "date": 1715855885684,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,8 +1,8 @@\n import React from 'react';\n \n export const PeopleFilters = () => {\n-const [serch]\n+const [serchParams, setSearch]\n   const handleSexFilter = (sex: string) => () => {\n   };\n \n   return (\n"
+                },
+                {
+                    "date": 1715855891535,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,8 +1,8 @@\n import React from 'react';\n \n export const PeopleFilters = () => {\n-const [serchParams, setSearch]\n+const [serchParams, setSearchParams] = \n   const handleSexFilter = (sex: string) => () => {\n   };\n \n   return (\n"
+                },
+                {
+                    "date": 1715855898327,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,8 +1,10 @@\n import React from 'react';\n+import { useSearchParams } from 'react-router-dom';\n \n export const PeopleFilters = () => {\n-const [serchParams, setSearchParams] = \n+  const [serchParams, setSearchParams] = useSearchParams();\n+  \n   const handleSexFilter = (sex: string) => () => {\n   };\n \n   return (\n"
+                },
+                {
+                    "date": 1715855905732,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -2,10 +2,11 @@\n import { useSearchParams } from 'react-router-dom';\n \n export const PeopleFilters = () => {\n   const [serchParams, setSearchParams] = useSearchParams();\n-  \n+\n   const handleSexFilter = (sex: string) => () => {\n+    \n   };\n \n   return (\n     <nav className=\"panel\">\n"
+                },
+                {
+                    "date": 1715855912272,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -4,9 +4,9 @@\n export const PeopleFilters = () => {\n   const [serchParams, setSearchParams] = useSearchParams();\n \n   const handleSexFilter = (sex: string) => () => {\n-    \n+    const newParams = new\n   };\n \n   return (\n     <nav className=\"panel\">\n"
+                },
+                {
+                    "date": 1715855917452,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -4,9 +4,9 @@\n export const PeopleFilters = () => {\n   const [serchParams, setSearchParams] = useSearchParams();\n \n   const handleSexFilter = (sex: string) => () => {\n-    const newParams = new\n+    const newParams = new URLSearchParams\n   };\n \n   return (\n     <nav className=\"panel\">\n"
+                },
+                {
+                    "date": 1715855943472,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -4,9 +4,10 @@\n export const PeopleFilters = () => {\n   const [serchParams, setSearchParams] = useSearchParams();\n \n   const handleSexFilter = (sex: string) => () => {\n-    const newParams = new URLSearchParams\n+    const newParams = new URLSearchParams();\n+    \n   };\n \n   return (\n     <nav className=\"panel\">\n"
+                },
+                {
+                    "date": 1715855950078,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -5,9 +5,9 @@\n   const [serchParams, setSearchParams] = useSearchParams();\n \n   const handleSexFilter = (sex: string) => () => {\n     const newParams = new URLSearchParams();\n-    \n+    setSearchParams(())\n   };\n \n   return (\n     <nav className=\"panel\">\n"
+                },
+                {
+                    "date": 1715855955934,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -5,9 +5,9 @@\n   const [serchParams, setSearchParams] = useSearchParams();\n \n   const handleSexFilter = (sex: string) => () => {\n     const newParams = new URLSearchParams();\n-    setSearchParams(())\n+    setSearchParams((prev) =>)\n   };\n \n   return (\n     <nav className=\"panel\">\n"
+                },
+                {
+                    "date": 1715855964504,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -5,9 +5,9 @@\n   const [serchParams, setSearchParams] = useSearchParams();\n \n   const handleSexFilter = (sex: string) => () => {\n     const newParams = new URLSearchParams();\n-    setSearchParams((prev) =>)\n+    setSearchParams((prev) => )\n   };\n \n   return (\n     <nav className=\"panel\">\n"
+                },
+                {
+                    "date": 1715855976076,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -4,10 +4,11 @@\n export const PeopleFilters = () => {\n   const [serchParams, setSearchParams] = useSearchParams();\n \n   const handleSexFilter = (sex: string) => () => {\n-    const newParams = new URLSearchParams();\n-    setSearchParams((prev) => )\n+    setSearchParams((prev) => {\n+\n+    })\n   };\n \n   return (\n     <nav className=\"panel\">\n"
+                },
+                {
+                    "date": 1715855984772,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -5,8 +5,9 @@\n   const [serchParams, setSearchParams] = useSearchParams();\n \n   const handleSexFilter = (sex: string) => () => {\n     setSearchParams((prev) => {\n+      const newParams = new URLSearchParams(prev);\n \n     })\n   };\n \n"
+                },
+                {
+                    "date": 1715856031148,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -4,12 +4,12 @@\n export const PeopleFilters = () => {\n   const [serchParams, setSearchParams] = useSearchParams();\n \n   const handleSexFilter = (sex: string) => () => {\n-    setSearchParams((prev) => {\n+    setSearchParams(prev => {\n       const newParams = new URLSearchParams(prev);\n-\n-    })\n+      if\n+    });\n   };\n \n   return (\n     <nav className=\"panel\">\n"
+                },
+                {
+                    "date": 1715856040430,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -6,9 +6,9 @@\n \n   const handleSexFilter = (sex: string) => () => {\n     setSearchParams(prev => {\n       const newParams = new URLSearchParams(prev);\n-      if\n+      if (se)\n     });\n   };\n \n   return (\n"
+                },
+                {
+                    "date": 1715856049903,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -6,9 +6,11 @@\n \n   const handleSexFilter = (sex: string) => () => {\n     setSearchParams(prev => {\n       const newParams = new URLSearchParams(prev);\n-      if (se)\n+      if (sex) {\n+        new\n+      }\n     });\n   };\n \n   return (\n"
+                },
+                {
+                    "date": 1715856055030,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -7,9 +7,9 @@\n   const handleSexFilter = (sex: string) => () => {\n     setSearchParams(prev => {\n       const newParams = new URLSearchParams(prev);\n       if (sex) {\n-        new\n+        newParams.set\n       }\n     });\n   };\n \n"
+                },
+                {
+                    "date": 1715856066422,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -7,9 +7,9 @@\n   const handleSexFilter = (sex: string) => () => {\n     setSearchParams(prev => {\n       const newParams = new URLSearchParams(prev);\n       if (sex) {\n-        newParams.set\n+        newParams.set(sex)\n       }\n     });\n   };\n \n"
+                },
+                {
+                    "date": 1715856071596,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -7,9 +7,9 @@\n   const handleSexFilter = (sex: string) => () => {\n     setSearchParams(prev => {\n       const newParams = new URLSearchParams(prev);\n       if (sex) {\n-        newParams.set(sex)\n+        newParams.set(s)\n       }\n     });\n   };\n \n"
+                },
+                {
+                    "date": 1715856076993,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -7,9 +7,9 @@\n   const handleSexFilter = (sex: string) => () => {\n     setSearchParams(prev => {\n       const newParams = new URLSearchParams(prev);\n       if (sex) {\n-        newParams.set(s)\n+        newParams.set('sex')\n       }\n     });\n   };\n \n"
+                },
+                {
+                    "date": 1715856083684,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -7,9 +7,9 @@\n   const handleSexFilter = (sex: string) => () => {\n     setSearchParams(prev => {\n       const newParams = new URLSearchParams(prev);\n       if (sex) {\n-        newParams.set('sex')\n+        newParams.set('sex', )\n       }\n     });\n   };\n \n"
+                },
+                {
+                    "date": 1715856106296,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -7,9 +7,9 @@\n   const handleSexFilter = (sex: string) => () => {\n     setSearchParams(prev => {\n       const newParams = new URLSearchParams(prev);\n       if (sex) {\n-        newParams.set('sex', )\n+        newParams.set('sex', sex)\n       }\n     });\n   };\n \n"
+                },
+                {
+                    "date": 1715856112373,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -8,8 +8,10 @@\n     setSearchParams(prev => {\n       const newParams = new URLSearchParams(prev);\n       if (sex) {\n         newParams.set('sex', sex)\n+      } else {\n+        \n       }\n     });\n   };\n \n"
+                },
+                {
+                    "date": 1715856118080,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -9,9 +9,9 @@\n       const newParams = new URLSearchParams(prev);\n       if (sex) {\n         newParams.set('sex', sex)\n       } else {\n-        \n+        newParams.dele\n       }\n     });\n   };\n \n"
+                },
+                {
+                    "date": 1715856125679,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -9,9 +9,9 @@\n       const newParams = new URLSearchParams(prev);\n       if (sex) {\n         newParams.set('sex', sex)\n       } else {\n-        newParams.dele\n+        newParams.delete(sex)\n       }\n     });\n   };\n \n"
+                },
+                {
+                    "date": 1715856142700,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -7,11 +7,11 @@\n   const handleSexFilter = (sex: string) => () => {\n     setSearchParams(prev => {\n       const newParams = new URLSearchParams(prev);\n       if (sex) {\n-        newParams.set('sex', sex)\n+        newParams.set('sex', sex);\n       } else {\n-        newParams.delete(sex)\n+        newParams.delete('sex');\n       }\n     });\n   };\n \n"
+                },
+                {
+                    "date": 1715856163751,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -6,13 +6,15 @@\n \n   const handleSexFilter = (sex: string) => () => {\n     setSearchParams(prev => {\n       const newParams = new URLSearchParams(prev);\n+\n       if (sex) {\n         newParams.set('sex', sex);\n       } else {\n         newParams.delete('sex');\n       }\n+      return \n     });\n   };\n \n   return (\n"
+                },
+                {
+                    "date": 1715856169095,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -12,9 +12,9 @@\n         newParams.set('sex', sex);\n       } else {\n         newParams.delete('sex');\n       }\n-      return \n+      return new\n     });\n   };\n \n   return (\n"
+                },
+                {
+                    "date": 1715856174524,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -12,9 +12,10 @@\n         newParams.set('sex', sex);\n       } else {\n         newParams.delete('sex');\n       }\n-      return new\n+      \n+      return newParams;\n     });\n   };\n \n   return (\n"
+                },
+                {
+                    "date": 1715856202314,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -22,9 +22,9 @@\n     <nav className=\"panel\">\n       <p className=\"panel-heading\">Filters</p>\n \n       <p className=\"panel-tabs\" data-cy=\"SexFilter\">\n-        <a className=\"is-active\" on=\"#/people\">\n+        <a className=\"is-active\" onC=\"#/people\">\n           All\n         </a>\n         <a className=\"\" href=\"#/people?sex=m\">\n           Male\n"
+                },
+                {
+                    "date": 1715856370891,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -0,0 +1,118 @@\n+import React from 'react';\n+import { useSearchParams } from 'react-router-dom';\n+\n+export const PeopleFilters = () => {\n+  const [serchParams, setSearchParams] = useSearchParams();\n+  const sex = setSearchParams.get('sex);\n+\n+  const handleSexFilter = (sex: string) => () => {\n+    setSearchParams(prev => {\n+      const newParams = new URLSearchParams(prev);\n+\n+      if (sex) {\n+        newParams.set('sex', sex);\n+      } else {\n+        newParams.delete('sex');\n+      }\n+\n+      return newParams;\n+    });\n+  };\n+\n+\n+\n+  return (\n+    <nav className=\"panel\">\n+      <p className=\"panel-heading\">Filters</p>\n+\n+      <p className=\"panel-tabs\" data-cy=\"SexFilter\">\n+        <a className=\"is-active\" onClick={handleSexFilter('')}>\n+          All\n+        </a>\n+        <a className=\"\" onClick={handleSexFilter('m')}>\n+          Male\n+        </a>\n+        <a className=\"\" onClick={handleSexFilter('f')}>\n+          Female\n+        </a>\n+      </p>\n+\n+      <div className=\"panel-block\">\n+        <p className=\"control has-icons-left\">\n+          <input\n+            data-cy=\"NameFilter\"\n+            type=\"search\"\n+            className=\"input\"\n+            placeholder=\"Search\"\n+          />\n+\n+          <span className=\"icon is-left\">\n+            <i className=\"fas fa-search\" aria-hidden=\"true\" />\n+          </span>\n+        </p>\n+      </div>\n+\n+      <div className=\"panel-block\">\n+        <div className=\"level is-flex-grow-1 is-mobile\" data-cy=\"CenturyFilter\">\n+          <div className=\"level-left\">\n+            <a\n+              data-cy=\"century\"\n+              className=\"button mr-1\"\n+              href=\"#/people?centuries=16\"\n+            >\n+              16\n+            </a>\n+\n+            <a\n+              data-cy=\"century\"\n+              className=\"button mr-1 is-info\"\n+              href=\"#/people?centuries=17\"\n+            >\n+              17\n+            </a>\n+\n+            <a\n+              data-cy=\"century\"\n+              className=\"button mr-1 is-info\"\n+              href=\"#/people?centuries=18\"\n+            >\n+              18\n+            </a>\n+\n+            <a\n+              data-cy=\"century\"\n+              className=\"button mr-1 is-info\"\n+              href=\"#/people?centuries=19\"\n+            >\n+              19\n+            </a>\n+\n+            <a\n+              data-cy=\"century\"\n+              className=\"button mr-1\"\n+              href=\"#/people?centuries=20\"\n+            >\n+              20\n+            </a>\n+          </div>\n+\n+          <div className=\"level-right ml-4\">\n+            <a\n+              data-cy=\"centuryALL\"\n+              className=\"button is-success is-outlined\"\n+              href=\"#/people\"\n+            >\n+              All\n+            </a>\n+          </div>\n+        </div>\n+      </div>\n+\n+      <div className=\"panel-block\">\n+        <a className=\"button is-link is-outlined is-fullwidth\" href=\"#/people\">\n+          Reset all filters\n+        </a>\n+      </div>\n+    </nav>\n+  );\n+};\n"
                 }
             ],
             "date": 1715775314840,
