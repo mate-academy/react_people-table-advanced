@@ -14,6 +14,7 @@ export const PeopleTable: React.FC = () => {
   const { selected } = useParams();
   const [searchParams] = useSearchParams();
   const sexFilter = searchParams.get('sex');
+  const titleFilter = searchParams.get('title');
 
   const filteredPeople = useMemo(() => {
     const peopleWithParents = users.map(user => ({
@@ -22,12 +23,23 @@ export const PeopleTable: React.FC = () => {
       father: users.find(u => u.name === user.fatherName),
     }));
 
+    let filtered = peopleWithParents;
+
     if (sexFilter) {
-      return peopleWithParents.filter(person => person.sex === sexFilter);
+      filtered = filtered.filter(person => person.sex === sexFilter);
     }
 
-    return peopleWithParents;
-  }, [users, sexFilter]);
+    if (titleFilter) {
+      filtered = filtered.filter(
+        person =>
+          person.name.toLowerCase().includes(titleFilter) ||
+          person.motherName?.toLowerCase().includes(titleFilter) ||
+          person.fatherName?.toLowerCase().includes(titleFilter),
+      );
+    }
+
+    return filtered;
+  }, [users, sexFilter, titleFilter]);
 
   useEffect(() => {
     const fetchPersons = async () => {

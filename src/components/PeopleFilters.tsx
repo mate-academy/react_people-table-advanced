@@ -1,10 +1,11 @@
 import classNames from 'classnames';
-import React from 'react';
+import React, { ChangeEventHandler } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
 export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const sex = searchParams.get('sex');
+  const filterTitle = searchParams.get('title') ?? '';
 
   // eslint-disable-next-line @typescript-eslint/no-shadow
   const handleSexFilter = (sex: string) => () => {
@@ -16,6 +17,18 @@ export const PeopleFilters = () => {
       } else {
         newParams.delete('sex');
       }
+
+      return newParams;
+    });
+  };
+
+  const handleTitleFilter: ChangeEventHandler<HTMLInputElement> = event => {
+    const title = event.target.value;
+
+    setSearchParams(prev => {
+      const newParams = new URLSearchParams(prev);
+
+      newParams.set('title', title);
 
       return newParams;
     });
@@ -56,6 +69,8 @@ export const PeopleFilters = () => {
             data-cy="NameFilter"
             type="search"
             className="input"
+            value={filterTitle}
+            onChange={handleTitleFilter}
             placeholder="Search"
           />
 
