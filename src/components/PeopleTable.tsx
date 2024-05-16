@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { getPeople } from '../api';
 import { Person } from '../types/Person';
 import { Loader } from './Loader';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams, useSearchParams } from 'react-router-dom';
 import classNames from 'classnames';
 import React from 'react';
 import { PersonLink } from './PersonLink';
@@ -12,15 +12,22 @@ export const PeopleTable: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const { selected } = useParams();
-  const people = useMemo(
-    () =>
-      users.map(user => ({
-        ...user,
-        mother: users.find(u => u.name === user.motherName),
-        father: users.find(u => u.name === user.fatherName),
-      })),
-    [users],
-  );
+  const [searchParams] = useSearchParams();
+  const sexFilter = searchParams.get('sex');
+
+  const filteredPeople = useMemo(() => {
+    const peopleWithParents = users.map(user => ({
+      ...user,
+      mother: users.find(u => u.name === user.motherName),
+      father: users.find(u => u.name === user.fatherName),
+    }));
+
+    if (sexFilter) {
+      return peopleWithParents.filter(person => person.sex === sexFilter);
+    }
+
+    return peopleWithParents;
+  }, [users, sexFilter]);
 
   useEffect(() => {
     const fetchPersons = async () => {
@@ -56,7 +63,13 @@ export const PeopleTable: React.FC = () => {
     return <p data-cy="noPeopleMessage">There are no people on the server</p>;
   }
 
-  // <p>There are no people matching the current search criteria</p>
+  if (filteredPeople.length === 0) {
+    return (
+      <p data-cy="noPeopleMessage">
+        There are no people matching the current search criteria
+      </p>
+    );
+  }
 
   return (
     <div className="box table-container">
@@ -111,7 +124,7 @@ export const PeopleTable: React.FC = () => {
           </tr>
         </thead>
         <tbody>
-          {people.map(person => (
+          {filteredPeople.map(person => (
             <tr
               className={classNames({
                 'has-background-warning': selected === person.slug,
