@@ -106,7 +106,9 @@ export const PeopleFilters = () => {
           <div className="level-left">
             <a
               data-cy="century"
-              className="button mr-1"
+              className={classNames('button mr-1', {
+                'is-info': centuries.includes('16'),
+              })}
               onClick={handleFilterCentury('16')}
             >
               16
@@ -114,7 +116,9 @@ export const PeopleFilters = () => {
 
             <a
               data-cy="century"
-              className="button mr-1 is-info"
+              className={classNames('button mr-1', {
+                'is-info': centuries.includes('17'),
+              })}
               onClick={handleFilterCentury('17')}
             >
               17
@@ -122,7 +126,9 @@ export const PeopleFilters = () => {
 
             <a
               data-cy="century"
-              className="button mr-1 is-info"
+              className={classNames('button mr-1', {
+                'is-info': centuries.includes('18'),
+              })}
               onClick={handleFilterCentury('18')}
             >
               18
@@ -130,7 +136,9 @@ export const PeopleFilters = () => {
 
             <a
               data-cy="century"
-              className="button mr-1 is-info"
+              className={classNames('button mr-1', {
+                'is-info': centuries.includes('19'),
+              })}
               onClick={handleFilterCentury('19')}
             >
               19
@@ -138,7 +146,9 @@ export const PeopleFilters = () => {
 
             <a
               data-cy="century"
-              className="button mr-1"
+              className={classNames('button mr-1', {
+                'is-info': centuries.includes('20'),
+              })}
               onClick={handleFilterCentury('20')}
             >
               20
@@ -149,7 +159,7 @@ export const PeopleFilters = () => {
             <a
               data-cy="centuryALL"
               className="button is-success is-outlined"
-              href="#/people"
+              onClick={handleResetFilters}
             >
               All
             </a>
