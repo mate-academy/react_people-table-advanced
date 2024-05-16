@@ -6,6 +6,7 @@ export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const sex = searchParams.get('sex');
   const filterTitle = searchParams.get('title') ?? '';
+  const centuries = searchParams.getAll('century');
 
   // eslint-disable-next-line @typescript-eslint/no-shadow
   const handleSexFilter = (sex: string) => () => {
@@ -29,6 +30,26 @@ export const PeopleFilters = () => {
       const newParams = new URLSearchParams(prev);
 
       newParams.set('title', title);
+
+      return newParams;
+    });
+  };
+
+  const handleFilterCentury = (century: string) => () => {
+    setSearchParams(prev => {
+      const newParams = new URLSearchParams(prev);
+
+      newParams.delete('century');
+
+      if (centuries.includes(century)) {
+        centuries
+          .filter(cen => cen !== century)
+          .forEach(element => newParams.append('century', element));
+      } else {
+        [...centuries, century].forEach(element =>
+          newParams.append('century', element),
+        );
+      }
 
       return newParams;
     });
@@ -86,7 +107,7 @@ export const PeopleFilters = () => {
             <a
               data-cy="century"
               className="button mr-1"
-              href="#/people?centuries=16"
+              onClick={handleFilterCentury('16')}
             >
               16
             </a>
@@ -94,7 +115,7 @@ export const PeopleFilters = () => {
             <a
               data-cy="century"
               className="button mr-1 is-info"
-              href="#/people?centuries=17"
+              onClick={handleFilterCentury('17')}
             >
               17
             </a>
@@ -102,7 +123,7 @@ export const PeopleFilters = () => {
             <a
               data-cy="century"
               className="button mr-1 is-info"
-              href="#/people?centuries=18"
+              onClick={handleFilterCentury('18')}
             >
               18
             </a>
@@ -110,7 +131,7 @@ export const PeopleFilters = () => {
             <a
               data-cy="century"
               className="button mr-1 is-info"
-              href="#/people?centuries=19"
+              onClick={handleFilterCentury('19')}
             >
               19
             </a>
@@ -118,7 +139,7 @@ export const PeopleFilters = () => {
             <a
               data-cy="century"
               className="button mr-1"
-              href="#/people?centuries=20"
+              onClick={handleFilterCentury('20')}
             >
               20
             </a>

@@ -15,6 +15,7 @@ export const PeopleTable: React.FC = () => {
   const [searchParams] = useSearchParams();
   const sexFilter = searchParams.get('sex');
   const titleFilter = searchParams.get('title');
+  const centuries = searchParams.getAll('century');
 
   const filteredPeople = useMemo(() => {
     const peopleWithParents = users.map(user => ({
@@ -38,8 +39,14 @@ export const PeopleTable: React.FC = () => {
       );
     }
 
+    if (centuries.length > 0) {
+      filtered = filtered.filter(person =>
+        centuries.includes(Math.ceil(person.born / 100).toString()),
+      );
+    }
+
     return filtered;
-  }, [users, sexFilter, titleFilter]);
+  }, [users, sexFilter, titleFilter, centuries]);
 
   useEffect(() => {
     const fetchPersons = async () => {
