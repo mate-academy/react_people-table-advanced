@@ -3,6 +3,7 @@ import { NavLink, useParams, useSearchParams } from 'react-router-dom';
 import { Person } from '../../types';
 import { TableTitles } from '../../types/TableTitles';
 import { sortPeople } from '../../helpers/sortPeople';
+import { useChangeSearchParams } from '../../helpers/useChangeSearchParams';
 
 type PersonListProps = {
   people: Person[];
@@ -10,7 +11,8 @@ type PersonListProps = {
 
 export const PersonList: React.FC<PersonListProps> = ({ people }) => {
   const { name } = useParams();
-  const [searchParams, setSeachParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
+  const [setSearhParams] = useChangeSearchParams();
 
   const column = searchParams.get('sort') || '';
   const order = searchParams.get('order') || '';
@@ -19,27 +21,7 @@ export const PersonList: React.FC<PersonListProps> = ({ people }) => {
   const query = searchParams.get('query') || '';
 
   const handleSort = (prop: TableTitles) => {
-    const params = new URLSearchParams(searchParams);
-
-    if (column) {
-      if (order) {
-        if (column === prop) {
-          params.delete('order');
-          params.delete('sort');
-        } else {
-          params.delete('order');
-          params.set('sort', prop);
-        }
-      } else if (column === prop) {
-        params.set('order', 'desc');
-      } else {
-        params.set('sort', prop);
-      }
-    } else {
-      params.set('sort', prop);
-    }
-
-    setSeachParams(params);
+    setSearhParams(prop);
   };
 
   const arrowDirection = (prop: TableTitles) => {
@@ -66,7 +48,6 @@ export const PersonList: React.FC<PersonListProps> = ({ people }) => {
     );
   };
 
-  // console.log(centuries);
   const sortedPeople = sortPeople(people, {
     column,
     male,

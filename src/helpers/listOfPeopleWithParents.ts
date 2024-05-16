@@ -1,8 +1,6 @@
 import { Person } from '../types';
 
 export const listOfPeopleWithParents = (people: Person[]): Person[] => {
-  // const copyListOfPeople = people.map(person => ({ ...person }));
-
   return people.map((person: Person) => {
     const copyPerson = { ...person };
     const father =
