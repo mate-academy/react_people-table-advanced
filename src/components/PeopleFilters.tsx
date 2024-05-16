@@ -158,7 +158,12 @@ export const PeopleFilters = () => {
           <div className="level-right ml-4">
             <a
               data-cy="centuryALL"
-              className="button is-success is-outlined"
+              className={classNames('button', {
+                'is-outlined':
+                  sex || filterTitle !== '' || centuries.length > 0,
+                'is-success':
+                  !sex && filterTitle === '' && centuries.length === 0,
+              })}
               onClick={handleResetFilters}
             >
               All

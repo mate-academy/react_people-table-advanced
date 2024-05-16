@@ -16,6 +16,25 @@ export const PeopleTable: React.FC = () => {
   const sexFilter = searchParams.get('sex');
   const titleFilter = searchParams.get('title');
   const centuries = searchParams.getAll('century');
+  const [sortField, setSortField] = useState<string | null>(null);
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc' | null>(null);
+
+  const toggleSort = (field: string) => {
+    if (sortField === field) {
+      if (sortOrder === 'asc') {
+        setSortOrder('desc');
+      } else if (sortOrder === 'desc') {
+        setSortField(null);
+        setSortOrder(null);
+      } else {
+        setSortField(field);
+        setSortOrder('asc');
+      }
+    } else {
+      setSortField(field);
+      setSortOrder('asc');
+    }
+  };
 
   const filteredPeople = useMemo(() => {
     const peopleWithParents = users.map(user => ({
@@ -48,6 +67,31 @@ export const PeopleTable: React.FC = () => {
     return filtered;
   }, [users, sexFilter, titleFilter, centuries]);
 
+  const sortedPeople = useMemo(() => {
+    const sorted = [...filteredPeople];
+
+    if (sortField) {
+      sorted.sort((a, b) => {
+        const order = sortOrder === 'desc' ? -1 : 1;
+
+        switch (sortField) {
+          case 'name':
+            return order * a.name.localeCompare(b.name);
+          case 'sex':
+            return order * a.sex.localeCompare(b.sex);
+          case 'born':
+            return order * (a.born - b.born);
+          case 'died':
+            return order * ((a.died || 0) - (b.died || 0));
+          default:
+            return 0;
+        }
+      });
+    }
+
+    return sorted;
+  }, [filteredPeople, sortField, sortOrder]);
+
   useEffect(() => {
     const fetchPersons = async () => {
       try {
@@ -65,6 +109,18 @@ export const PeopleTable: React.FC = () => {
 
     fetchPersons();
   }, [setLoading]);
+
+  const getSortIconClass = (field: string) => {
+    if (sortField !== field) {
+      return '';
+    }
+
+    if (!sortOrder) {
+      return '-up';
+    }
+
+    return sortOrder === 'asc' ? '-up' : '-down';
+  };
 
   if (error) {
     return (
@@ -102,8 +158,8 @@ export const PeopleTable: React.FC = () => {
               <span className="is-flex is-flex-wrap-nowrap">
                 Name
                 <a href="#/people?sort=name">
-                  <span className="icon">
-                    <i className="fas fa-sort" />
+                  <span className="icon" onClick={() => toggleSort('name')}>
+                    <i className={`fas fa-sort${getSortIconClass('name')}`} />
                   </span>
                 </a>
               </span>
@@ -112,8 +168,8 @@ export const PeopleTable: React.FC = () => {
               <span className="is-flex is-flex-wrap-nowrap">
                 Sex
                 <a href="#/people?sort=sex">
-                  <span className="icon">
-                    <i className="fas fa-sort" />
+                  <span className="icon" onClick={() => toggleSort('sex')}>
+                    <i className={`fas fa-sort${getSortIconClass('sex')}`} />
                   </span>
                 </a>
               </span>
@@ -122,8 +178,8 @@ export const PeopleTable: React.FC = () => {
               <span className="is-flex is-flex-wrap-nowrap">
                 Born
                 <a href="#/people?sort=born&amp;order=desc">
-                  <span className="icon">
-                    <i className="fas fa-sort-up" />
+                  <span className="icon" onClick={() => toggleSort('born')}>
+                    <i className={`fas fa-sort${getSortIconClass('born')}`} />
                   </span>
                 </a>
               </span>
@@ -132,8 +188,8 @@ export const PeopleTable: React.FC = () => {
               <span className="is-flex is-flex-wrap-nowrap">
                 Died
                 <a href="#/people?sort=died">
-                  <span className="icon">
-                    <i className="fas fa-sort" />
+                  <span className="icon" onClick={() => toggleSort('died')}>
+                    <i className={`fas fa-sort${getSortIconClass('died')}`} />
                   </span>
                 </a>
               </span>
@@ -143,7 +199,7 @@ export const PeopleTable: React.FC = () => {
           </tr>
         </thead>
         <tbody>
-          {filteredPeople.map(person => (
+          {sortedPeople.map(person => (
             <tr
               className={classNames({
                 'has-background-warning': selected === person.slug,
