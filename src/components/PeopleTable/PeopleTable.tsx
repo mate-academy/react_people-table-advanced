@@ -10,9 +10,15 @@ export const PeopleTable: FC = () => {
 
   const getSortIconClass = (type: string) => {
     if (sort === type) {
-      if (sortOrder === 'asc') return ' fa-sort-up';
-      if (sortOrder === 'desc') return ' fa-sort-down';
+      if (sortOrder === 'asc') {
+        return ' fa-sort-up';
+      }
+
+      if (sortOrder === 'desc') {
+        return ' fa-sort-down';
+      }
     }
+
     return '';
   };
 

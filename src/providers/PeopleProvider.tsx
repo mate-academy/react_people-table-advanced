@@ -91,13 +91,22 @@ export const PeopleProvider: FC<PropsWithChildren> = ({ children }) => {
   );
 
   const sortedPeople = useMemo(() => {
-    if (!sort) return filteredPeople;
+    if (!sort) {
+      return filteredPeople;
+    }
 
     return [...filteredPeople].sort((a, b) => {
       const aValue = a[sort as keyof Person] ?? '';
       const bValue = b[sort as keyof Person] ?? '';
-      if (aValue < bValue) return sortOrder === 'asc' ? -1 : 1;
-      if (aValue > bValue) return sortOrder === 'asc' ? 1 : -1;
+
+      if (aValue < bValue) {
+        return sortOrder === 'asc' ? -1 : 1;
+      }
+
+      if (aValue > bValue) {
+        return sortOrder === 'asc' ? 1 : -1;
+      }
+
       return 0;
     });
   }, [filteredPeople, sort, sortOrder]);

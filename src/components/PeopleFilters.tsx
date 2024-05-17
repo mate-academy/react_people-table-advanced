@@ -8,21 +8,21 @@ export const PeopleFilters = () => {
   const {
     filters: { sex, centuries, q },
   } = usePeople();
-  const [value, setValue] = useState(q);
+  const [query, setQuery] = useState(q);
 
   useEffect(() => {
     setSearchParams(prevParams => {
       const newParams = new URLSearchParams(prevParams);
 
-      if (value) {
-        newParams.set('q', value);
+      if (query) {
+        newParams.set('q', query);
       } else {
         newParams.delete('q');
       }
 
       return newParams;
     });
-  }, [value]);
+  }, [query, setSearchParams]);
 
   const handleSexFilter = (sexParam: string) => () => {
     setSearchParams(prevParams => {
@@ -41,22 +41,24 @@ export const PeopleFilters = () => {
   const handleSearchFilter = (e: ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
 
-    setValue(value);
+    setQuery(value);
   };
 
   const handleCenturySelectionFilter = (century: string) => () => {
     setSearchParams(prevParams => {
       const newParams = new URLSearchParams(prevParams);
-      const centuries = newParams.getAll('century');
+      const centuriesParams = newParams.getAll('century');
 
       newParams.delete('century');
 
-      if (centuries.includes(century)) {
-        centuries
+      if (centuriesParams.includes(century)) {
+        centuriesParams
           .filter(c => c !== century)
           .forEach(el => newParams.append('century', el));
       } else {
-        [...centuries, century].forEach(el => newParams.append('century', el));
+        [...centuriesParams, century].forEach(el =>
+          newParams.append('century', el),
+        );
       }
 
       return newParams;
@@ -75,7 +77,7 @@ export const PeopleFilters = () => {
 
   const handleResetFilters = () => {
     setSearchParams({});
-    setValue('');
+    setQuery('');
   };
 
   return (
@@ -111,7 +113,7 @@ export const PeopleFilters = () => {
             className="input"
             placeholder="Search"
             onChange={handleSearchFilter}
-            value={value}
+            value={query}
           />
 
           <span className="icon is-left">
