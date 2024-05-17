@@ -18,7 +18,8 @@ interface IPeopleContext {
   pending: boolean;
   filters: Record<string, any>;
   handleSortFilter: (type: string) => void;
-  getSortIconClass: (field: string) => void;
+  sort: string | null;
+  sortOrder: string | null;
 }
 
 const PeopleContext = createContext<IPeopleContext>({
@@ -27,7 +28,8 @@ const PeopleContext = createContext<IPeopleContext>({
   pending: false,
   filters: {},
   handleSortFilter: () => {},
-  getSortIconClass: () => {},
+  sort: null,
+  sortOrder: null,
 });
 
 export const PeopleProvider: FC<PropsWithChildren> = ({ children }) => {
@@ -62,6 +64,7 @@ export const PeopleProvider: FC<PropsWithChildren> = ({ children }) => {
             father: d.fatherName ? mapped[d.fatherName] : undefined,
           })),
         );
+        setError(false);
       })
       .catch(() => setError(true))
       .finally(() => setPending(false));
@@ -87,46 +90,51 @@ export const PeopleProvider: FC<PropsWithChildren> = ({ children }) => {
     [people, sex, q, centuries],
   );
 
+  const sortedPeople = useMemo(() => {
+    if (!sort) return filteredPeople;
+
+    return [...filteredPeople].sort((a, b) => {
+      const aValue = a[sort as keyof Person] ?? '';
+      const bValue = b[sort as keyof Person] ?? '';
+      if (aValue < bValue) return sortOrder === 'asc' ? -1 : 1;
+      if (aValue > bValue) return sortOrder === 'asc' ? 1 : -1;
+      return 0;
+    });
+  }, [filteredPeople, sort, sortOrder]);
+
   const handleSortFilter = (type: string) => {
     setSearchParams(prev => {
       const newParams = new URLSearchParams(prev);
+      const currentSort = newParams.get('sort');
+      const currentOrder = newParams.get('order');
 
-      if (type) {
-        newParams.set('sort', type);
-        if (sort === type) {
-          newParams.set('order', sortOrder === 'asc' ? 'desc' : 'asc');
+      if (currentSort === type) {
+        if (currentOrder === 'asc') {
+          newParams.set('order', 'desc');
+        } else if (currentOrder === 'desc') {
+          newParams.delete('order');
+          newParams.delete('sort');
         } else {
           newParams.set('order', 'asc');
         }
       } else {
-        newParams.delete('sort');
-        newParams.delete('order');
+        newParams.set('sort', type);
+        newParams.set('order', 'asc');
       }
 
       return newParams;
     });
   };
 
-  const getSortIconClass = (field: string) => {
-    if (sort !== field) {
-      return '';
-    }
-
-    if (!sortOrder) {
-      return '-up';
-    }
-
-    return sortOrder === 'desc' ? '-down' : '-up';
-  };
-
   const value = {
-    people: filteredPeople,
+    people: sortedPeople,
     activePerson,
     error,
     pending,
     filters: { sex, centuries, q },
     handleSortFilter,
-    getSortIconClass,
+    sort,
+    sortOrder,
   };
 
   return (

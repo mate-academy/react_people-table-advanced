@@ -5,8 +5,16 @@ import classNames from 'classnames';
 import { Person } from '../../types';
 
 export const PeopleTable: FC = () => {
-  const { people, activePerson, handleSortFilter, getSortIconClass } =
+  const { people, activePerson, handleSortFilter, sort, sortOrder } =
     usePeople();
+
+  const getSortIconClass = (type: string) => {
+    if (sort === type) {
+      if (sortOrder === 'asc') return ' fa-sort-up';
+      if (sortOrder === 'desc') return ' fa-sort-down';
+    }
+    return '';
+  };
 
   return (
     <table
@@ -72,7 +80,6 @@ export const PeopleTable: FC = () => {
               <td className="has-text-danger">
                 <PersonPage person={p} />
               </td>
-
               <td>{p.sex}</td>
               <td>{p.born}</td>
               <td>{p.died}</td>
