@@ -7,8 +7,14 @@ export const PeopleFilters = () => {
   const [sParams, setSParams] = useSearchParams();
 
   function handleCenturies(centNum: string) {
-    if (sParams.getAll('centuries').includes(centNum)) {
-      sParams.delete('centuries', centNum);
+    const prevCenturies = sParams.getAll('centuries');
+
+    if (prevCenturies.includes(centNum)) {
+      sParams.delete('centuries');
+
+      prevCenturies
+        .filter(century => century !== centNum)
+        .forEach(century => sParams.append('centuries', century));
     } else {
       sParams.append('centuries', centNum);
     }
