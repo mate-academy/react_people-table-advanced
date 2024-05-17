@@ -24,12 +24,12 @@ export const PeopleFilters = () => {
     });
   }, [value]);
 
-  const handleSexFilter = (sex: string) => () => {
+  const handleSexFilter = (sexParam: string) => () => {
     setSearchParams(prevParams => {
       const newParams = new URLSearchParams(prevParams);
 
-      if (sex) {
-        newParams.set('sex', sex);
+      if (sexParam) {
+        newParams.set('sex', sexParam);
       } else {
         newParams.delete('sex');
       }

@@ -5,7 +5,7 @@ import classNames from 'classnames';
 import { Person } from '../../types';
 
 export const PeopleTable: FC = () => {
-  const { people, activePerson } = usePeople();
+  const { people, activePerson, handleSortFilter } = usePeople();
 
   return (
     <table
@@ -14,10 +14,46 @@ export const PeopleTable: FC = () => {
     >
       <thead>
         <tr>
-          <th>Name</th>
-          <th>Sex</th>
-          <th>Born</th>
-          <th>Died</th>
+          <th>
+            <span className="is-flex is-flex-wrap-nowrap">
+              Name
+              <a onClick={handleSortFilter('name')}>
+                <span className="icon">
+                  <i className={`fas fa-sort${getSortIconClass('name')}`} />
+                </span>
+              </a>
+            </span>
+          </th>
+          <th>
+            <span className="is-flex is-flex-wrap-nowrap">
+              Sex
+              <a onClick={handleSortFilter('sex')}>
+                <span className="icon">
+                  <i className={`fas fa-sort${getSortIconClass('sex')}`} />
+                </span>
+              </a>
+            </span>
+          </th>
+          <th>
+            <span className="is-flex is-flex-wrap-nowrap">
+              Born
+              <a onClick={handleSortFilter('born')}>
+                <span className="icon">
+                  <i className={`fas fa-sort${getSortIconClass('born')}`} />
+                </span>
+              </a>
+            </span>
+          </th>
+          <th>
+            <span className="is-flex is-flex-wrap-nowrap">
+              Died
+              <a onClick={handleSortFilter('died')}>
+                <span className="icon">
+                  <i className={`fas fa-sort${getSortIconClass('died')}`} />
+                </span>
+              </a>
+            </span>
+          </th>
           <th>Mother</th>
           <th>Father</th>
         </tr>

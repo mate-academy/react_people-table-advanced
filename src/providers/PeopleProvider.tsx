@@ -17,6 +17,7 @@ interface IPeopleContext {
   error: boolean;
   pending: boolean;
   filters: Record<string, any>;
+  handleSortFilter: (type: string) => void;
 }
 
 const PeopleContext = createContext<IPeopleContext>({
@@ -24,6 +25,7 @@ const PeopleContext = createContext<IPeopleContext>({
   error: false,
   pending: false,
   filters: {},
+  handleSortFilter: () => void,
 });
 
 export const PeopleProvider: FC<PropsWithChildren> = ({ children }) => {
@@ -32,10 +34,12 @@ export const PeopleProvider: FC<PropsWithChildren> = ({ children }) => {
   const [pending, setPending] = useState(false);
   const { slug } = useParams();
 
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const sex = searchParams.get('sex');
   const q = searchParams.get('q');
   const centuries = searchParams.getAll('century');
+  const sort = searchParams.get('sort');
+  const sortOrder = searchParams.get('order');
 
   useEffect(() => {
     setPending(true);
@@ -81,14 +85,37 @@ export const PeopleProvider: FC<PropsWithChildren> = ({ children }) => {
     [people, sex, q, centuries],
   );
 
+  const handleSortFilter = (type: string) => {
+    setSearchParams(prev => {
+      const newParams = new URLSearchParams(prev);
+
+      if (type) {
+        newParams.set('sort', type);
+      }
+
+      if (sort === type) {
+        newParams.set('order', 'desc');
+      } else {
+        newParams.delete('order');
+      }
+
+      if (sortOrder && sort === type) {
+        newParams.delete('order');
+        newParams.delete('sort');
+      }
+
+      return newParams;
+    });
+  };
+
   const value = {
     people: filteredPeople,
     activePerson,
     error,
     pending,
     filters: { sex, centuries, q },
+    handleSortFilter,
   };
-  console.log(slug);
   return (
     <PeopleContext.Provider value={value}>{children}</PeopleContext.Provider>
   );
