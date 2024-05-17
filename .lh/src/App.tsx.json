@@ -1,0 +1,30 @@
+{
+    "sourceFile": "src/App.tsx",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 3,
+            "patches": [
+                {
+                    "date": 1715775148461,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1715783114008,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,21 +1,26 @@\n+import './App.scss';\n+import { NavBar } from './components/NavBar';\n+import { Route, Routes, Navigate } from 'react-router-dom';\n+import { Home } from './components/Home';\n+import { PeopleNotFound } from './components/PeopleNotFound';\n import { PeoplePage } from './components/PeoplePage';\n-import { Navbar } from './components/Navbar';\n \n-\n-import './App.scss';\n-\n export const App = () => {\n   return (\n     <div data-cy=\"app\">\n-      <Navbar />\n+      <NavBar />\n \n-      <div className=\"section\">\n+      <main className=\"section\">\n         <div className=\"container\">\n-          <h1 className=\"title\">Home Page</h1>\n-          <h1 className=\"title\">Page not found</h1>\n-          <PeoplePage />\n+          <Routes>\n+            <Route path=\"/\" element={<Home />} />\n+            <Route path=\"/home\" element={<Navigate to=\"/\" replace />} />\n+            <Route path=\"/people/:selected?\" element={<PeoplePage />} />\n+\n+            <Route path=\"*\" element={<PeopleNotFound />} />\n+          </Routes>\n         </div>\n-      </div>\n+      </main>\n     </div>\n   );\n };\n"
+                },
+                {
+                    "date": 1715783138070,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,10 +1,10 @@\n import './App.scss';\n import { NavBar } from './components/NavBar';\n import { Route, Routes, Navigate } from 'react-router-dom';\n-import { Home } from './components/Home';\n import { PeopleNotFound } from './components/PeopleNotFound';\n import { PeoplePage } from './components/PeoplePage';\n+import React from 'react';\n \n export const App = () => {\n   return (\n     <div data-cy=\"app\">\n"
+                },
+                {
+                    "date": 1715783145293,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,10 +1,10 @@\n import './App.scss';\n-import { NavBar } from './components/NavBar';\n import { Route, Routes, Navigate } from 'react-router-dom';\n import { PeopleNotFound } from './components/PeopleNotFound';\n import { PeoplePage } from './components/PeoplePage';\n import React from 'react';\n+import { NavBar } from './components/Navbar';\n \n export const App = () => {\n   return (\n     <div data-cy=\"app\">\n"
+                }
+            ],
+            "date": 1715775148461,
+            "name": "Commit-0",
+            "content": "import { PeoplePage } from './components/PeoplePage';\nimport { Navbar } from './components/Navbar';\n\n\nimport './App.scss';\n\nexport const App = () => {\n  return (\n    <div data-cy=\"app\">\n      <Navbar />\n\n      <div className=\"section\">\n        <div className=\"container\">\n          <h1 className=\"title\">Home Page</h1>\n          <h1 className=\"title\">Page not found</h1>\n          <PeoplePage />\n        </div>\n      </div>\n    </div>\n  );\n};\n"
+        }
+    ]
+}

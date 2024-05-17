@@ -1,0 +1,22 @@
+{
+    "sourceFile": "src/components/Loader/Home.tsx",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 1,
+            "patches": [
+                {
+                    "date": 1715782850723,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1715782856956,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,3 +1,5 @@\n+import React from \"react\";\n+\n export const Home = () => {\n   return <h1 className=\"title\">Home Page</h1>;\n };\n"
+                }
+            ],
+            "date": 1715782850723,
+            "name": "Commit-0",
+            "content": "export const Home = () => {\n  return <h1 className=\"title\">Home Page</h1>;\n};\n"
+        }
+    ]
+}

@@ -1,0 +1,18 @@
+{
+    "sourceFile": "src/components/PersonLink.tsx",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1715783051886,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1715783051886,
+            "name": "Commit-0",
+            "content": "import React from 'react';\nimport { Link } from 'react-router-dom';\n\ninterface Props {\n  person: {\n    slug: string;\n    name: string;\n    sex: string;\n  };\n}\n\nexport const PersonLink: React.FC<Props> = ({ person }) => {\n  // console.log(person)\n  return (\n    <Link\n      className={person.sex === 'f' ? 'has-text-danger' : ''}\n      to={`/people/${person.slug}`}\n    >\n      {person.name.trim()}\n    </Link>\n  );\n};\n"
+        }
+    ]
+}
