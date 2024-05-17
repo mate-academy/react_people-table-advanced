@@ -10,21 +10,21 @@ export const useChangeSearchParams = () => {
   const setSearhParams = (prop: TableTitles) => {
     const params = new URLSearchParams(searchParams);
 
-    if (column) {
-      if (order) {
-        if (column === prop) {
-          params.delete('order');
-          params.delete('sort');
-        } else {
-          params.delete('order');
-          params.set('sort', prop);
-        }
-      } else if (column === prop) {
-        params.set('order', 'desc');
-      } else {
-        params.set('sort', prop);
-      }
-    } else {
+    if (!column) {
+      params.set('sort', prop);
+    }
+
+    if (column === prop) {
+      params.set('order', 'desc');
+    }
+
+    if (order && column === prop) {
+      params.delete('order');
+      params.delete('sort');
+    }
+
+    if (order && column !== prop) {
+      params.delete('order');
       params.set('sort', prop);
     }
 
