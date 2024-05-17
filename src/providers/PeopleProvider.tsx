@@ -18,6 +18,7 @@ interface IPeopleContext {
   pending: boolean;
   filters: Record<string, any>;
   handleSortFilter: (type: string) => void;
+  getSortIconClass: (field: string) => void;
 }
 
 const PeopleContext = createContext<IPeopleContext>({
@@ -25,14 +26,15 @@ const PeopleContext = createContext<IPeopleContext>({
   error: false,
   pending: false,
   filters: {},
-  handleSortFilter: () => void,
+  handleSortFilter: () => {},
+  getSortIconClass: () => {},
 });
 
 export const PeopleProvider: FC<PropsWithChildren> = ({ children }) => {
   const [people, setPeople] = useState<Person[]>([]);
   const [error, setError] = useState(false);
   const [pending, setPending] = useState(false);
-  const { slug } = useParams();
+  const { slug } = useParams<{ slug: string }>();
 
   const [searchParams, setSearchParams] = useSearchParams();
   const sex = searchParams.get('sex');
@@ -91,21 +93,30 @@ export const PeopleProvider: FC<PropsWithChildren> = ({ children }) => {
 
       if (type) {
         newParams.set('sort', type);
-      }
-
-      if (sort === type) {
-        newParams.set('order', 'desc');
+        if (sort === type) {
+          newParams.set('order', sortOrder === 'asc' ? 'desc' : 'asc');
+        } else {
+          newParams.set('order', 'asc');
+        }
       } else {
-        newParams.delete('order');
-      }
-
-      if (sortOrder && sort === type) {
-        newParams.delete('order');
         newParams.delete('sort');
+        newParams.delete('order');
       }
 
       return newParams;
     });
+  };
+
+  const getSortIconClass = (field: string) => {
+    if (sort !== field) {
+      return '';
+    }
+
+    if (!sortOrder) {
+      return '-up';
+    }
+
+    return sortOrder === 'desc' ? '-down' : '-up';
   };
 
   const value = {
@@ -115,7 +126,9 @@ export const PeopleProvider: FC<PropsWithChildren> = ({ children }) => {
     pending,
     filters: { sex, centuries, q },
     handleSortFilter,
+    getSortIconClass,
   };
+
   return (
     <PeopleContext.Provider value={value}>{children}</PeopleContext.Provider>
   );

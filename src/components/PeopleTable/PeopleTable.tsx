@@ -5,7 +5,8 @@ import classNames from 'classnames';
 import { Person } from '../../types';
 
 export const PeopleTable: FC = () => {
-  const { people, activePerson, handleSortFilter } = usePeople();
+  const { people, activePerson, handleSortFilter, getSortIconClass } =
+    usePeople();
 
   return (
     <table
@@ -17,7 +18,7 @@ export const PeopleTable: FC = () => {
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Name
-              <a onClick={handleSortFilter('name')}>
+              <a onClick={() => handleSortFilter('name')}>
                 <span className="icon">
                   <i className={`fas fa-sort${getSortIconClass('name')}`} />
                 </span>
@@ -27,7 +28,7 @@ export const PeopleTable: FC = () => {
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Sex
-              <a onClick={handleSortFilter('sex')}>
+              <a onClick={() => handleSortFilter('sex')}>
                 <span className="icon">
                   <i className={`fas fa-sort${getSortIconClass('sex')}`} />
                 </span>
@@ -37,7 +38,7 @@ export const PeopleTable: FC = () => {
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Born
-              <a onClick={handleSortFilter('born')}>
+              <a onClick={() => handleSortFilter('born')}>
                 <span className="icon">
                   <i className={`fas fa-sort${getSortIconClass('born')}`} />
                 </span>
@@ -47,7 +48,7 @@ export const PeopleTable: FC = () => {
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Died
-              <a onClick={handleSortFilter('died')}>
+              <a onClick={() => handleSortFilter('died')}>
                 <span className="icon">
                   <i className={`fas fa-sort${getSortIconClass('died')}`} />
                 </span>
