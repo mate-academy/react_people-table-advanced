@@ -7,7 +7,7 @@ enum ClassFor {
 }
 import { useContext } from 'react';
 import { PeopleContext } from './PeopleProvider.tsx/PeopleProvider';
-import { Link, useParams, useSearchParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import classNames from 'classnames';
 import { PersonLink } from './PersonLink';
 import { SearchLink } from './SearchLink';
@@ -15,21 +15,17 @@ import { SearchParams } from '../utils/searchHelper';
 
 export const PeopleTable = () => {
   const { slug } = useParams();
-  const { sortedPeople } = useContext(PeopleContext);
-  const [searchParams] = useSearchParams();
-  const sort = searchParams.get('sort');
-  const order = searchParams.get('order');
+  const { people, sort, order } = useContext(PeopleContext);
 
   const handleSearch = (it: string): SearchParams => {
     const item = it.toLowerCase();
 
     if (sort === item && order !== 'desc') {
       return { order: 'desc' };
-    } else if (
-      (sort === item && order === 'desc') ||
-      (sort !== item && order === 'desc')
-    ) {
+    } else if (sort === item && order === 'desc') {
       return { order: null, sort: null };
+    } else if (sort !== item && order === 'desc') {
+      return { sort: item, order: null };
     } else {
       return { sort: item };
     }
@@ -46,9 +42,6 @@ export const PeopleTable = () => {
       return ClassFor.each;
     }
   };
-
-
-  const sortedList = sortedPeople(sort, order);
 
   return (
     <table
@@ -80,7 +73,7 @@ export const PeopleTable = () => {
       </thead>
 
       <tbody>
-        {sortedList.map(person => (
+        {people.map(person => (
           <tr
             data-cy="person"
             key={person.name}
@@ -89,14 +82,14 @@ export const PeopleTable = () => {
             })}
           >
             <td>
-              <Link
-                to={{ pathname: person.slug }}
+              <SearchLink
+                params={{ pathname: person.slug }}
                 className={classNames({
                   'has-text-danger': person.sex === 'f',
                 })}
               >
                 {person.name}
-              </Link>
+              </SearchLink>
             </td>
             <td>{person.sex}</td>
             <td>{person.born}</td>

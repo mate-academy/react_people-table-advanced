@@ -8,9 +8,9 @@ import { Root } from './Root';
 import { PeopleProvider } from './components/PeopleProvider.tsx/PeopleProvider';
 
 createRoot(document.getElementById('root') as HTMLDivElement).render(
-  <PeopleProvider>
-    <Router>
+  <Router>
+    <PeopleProvider>
       <Root />
-    </Router>
-  </PeopleProvider>,
+    </PeopleProvider>
+  </Router>,
 );

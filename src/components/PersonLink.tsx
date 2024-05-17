@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { getLink } from '../utils/getLink';
 import { PeopleContext } from './PeopleProvider.tsx/PeopleProvider';
 import { useContext } from 'react';
@@ -9,13 +9,17 @@ type Props = {
   sex: string;
 };
 export const PersonLink: React.FC<Props> = ({ person, sex }) => {
-  const { people } = useContext(PeopleContext);
+  const { peopleCopy } = useContext(PeopleContext);
+  const [searchParams] = useSearchParams();
 
   return (
     <>
-      {person && !!getLink(people, person, sex) ? (
+      {person && !!getLink(peopleCopy, person, sex) ? (
         <Link
-          to={`${getLink(people, person, sex).slug}`}
+          to={{
+            pathname: `${getLink(peopleCopy, person, sex).slug}`,
+            search: searchParams.toString(),
+          }}
           className={classNames({ 'has-text-danger': sex === 'f' })}
         >
           {person}

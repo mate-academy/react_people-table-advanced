@@ -1,34 +1,14 @@
-import { useSearchParams } from 'react-router-dom';
 import { SearchLink } from './SearchLink';
-import { SearchParams } from '../utils/searchHelper';
+import { SearchParams, getSearchWith } from '../utils/searchHelper';
 import classNames from 'classnames';
-import { useContext, useEffect, useState } from 'react';
+import { useContext } from 'react';
 import { PeopleContext } from './PeopleProvider.tsx/PeopleProvider';
-
+import { useSearchParams } from 'react-router-dom';
 export const PeopleFilters = () => {
-  const [searchParams] = useSearchParams();
-  const [isActive, setIsActive] = useState('');
-  const { setPeople, people } = useContext(PeopleContext);
-  const sex = searchParams.get('sex');
-  const copyByPeople = [...people];
-
-  const sortBySex = () => {
-    if (sex === null) {
-      setPeople(copyByPeople);
-    } else if (sex === 'f') {
-      const filterByMen = copyByPeople.filter(item => item.sex === 'f');
-
-      setPeople(filterByMen);
-    } else if (sex === 'm') {
-      const filterByMen = copyByPeople.filter(item => item.sex === 'm');
-
-      setPeople(filterByMen);
-    }
-  };
-
-  useEffect(() => {
-    sortBySex();
-  }, [sex]);
+  const { sex } = useContext(PeopleContext);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const querty = searchParams.get('query') || '';
+  const century = searchParams.getAll('centuries') || [];
 
   const handleSex = (item: string): SearchParams => {
     switch (item) {
@@ -43,6 +23,12 @@ export const PeopleFilters = () => {
     }
   };
 
+  const handleInputQuery = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newParams = getSearchWith(searchParams, { query: e.target.value });
+
+    setSearchParams(newParams);
+  };
+
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
@@ -51,11 +37,12 @@ export const PeopleFilters = () => {
         {['All', 'Male', 'Female'].map(item => (
           <SearchLink
             className={classNames({
-              'is-active': (item === 'All' && !isActive) || isActive === item,
+              'is-active':
+                sex === item[0].toLowerCase() ||
+                (sex === null && item === 'All'),
             })}
             params={handleSex(item)}
             key={item}
-            onClick={() => setIsActive(item)}
           >
             {item}
           </SearchLink>
@@ -69,6 +56,8 @@ export const PeopleFilters = () => {
             type="search"
             className="input"
             placeholder="Search"
+            onChange={e => handleInputQuery(e)}
+            value={querty}
           />
 
           <span className="icon is-left">
@@ -80,45 +69,22 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            <a
-              data-cy="century"
-              className="button mr-1"
-              href="#/people?centuries=16"
-            >
-              16
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=17"
-            >
-              17
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=18"
-            >
-              18
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=19"
-            >
-              19
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1"
-              href="#/people?centuries=20"
-            >
-              20
-            </a>
+            {['16', '17', '18', '19', '20'].map(item => (
+              <SearchLink
+                data-cy="century"
+                params={{
+                  centuries: century.includes(item)
+                    ? century.filter(cent => cent !== item)
+                    : [...century, item],
+                }}
+                className={classNames('button mr-1', {
+                  'is-info': century.includes(item),
+                })}
+                key={item}
+              >
+                {item}
+              </SearchLink>
+            ))}
           </div>
 
           <div className="level-right ml-4">
