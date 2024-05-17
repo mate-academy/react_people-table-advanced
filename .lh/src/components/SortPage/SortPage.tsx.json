@@ -1,0 +1,38 @@
+{
+    "sourceFile": "src/components/SortPage/SortPage.tsx",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 5,
+            "patches": [
+                {
+                    "date": 1715929248269,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1715929463595,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -19,11 +19,11 @@\n     order: newOrderValue,\n   };\n \n   return (\n-    <SearchLink params={params}>\n+    <a>\n       <span className=\"icon\">\n         <i className=\"fas fa-sort\" />\n       </span>\n-    </SearchLink>\n+    </a>\n   );\n };\n"
+                },
+                {
+                    "date": 1715929474080,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,6 +1,5 @@\n import { FC } from 'react';\n-import { SearchLink } from './SearchLink';\n import { useSearchParams } from 'react-router-dom';\n \n interface Props {\n   sortBy: string;\n"
+                },
+                {
+                    "date": 1715929484180,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -12,12 +12,12 @@\n \n   const newSortValue = sort !== sortBy || (sort && !order) ? sortBy : null;\n   const newOrderValue = sort === sortBy && !order ? 'desc' : null;\n \n-  const params = {\n-    sort: newSortValue,\n-    order: newOrderValue,\n-  };\n+  // const params = {\n+  //   sort: newSortValue,\n+  //   order: newOrderValue,\n+  // };\n \n   return (\n     <a>\n       <span className=\"icon\">\n"
+                },
+                {
+                    "date": 1715929498287,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -4,15 +4,15 @@\n interface Props {\n   sortBy: string;\n }\n \n-export const SortLink: FC<Props> = ({ sortBy }) => {\n-  const [searchParams] = useSearchParams();\n-  const sort = searchParams.get('sort');\n-  const order = searchParams.get('order');\n+export const SortLink: FC<Props> = () => {\n+  // const [searchParams] = useSearchParams();\n+  // const sort = searchParams.get('sort');\n+  // const order = searchParams.get('order');\n \n-  const newSortValue = sort !== sortBy || (sort && !order) ? sortBy : null;\n-  const newOrderValue = sort === sortBy && !order ? 'desc' : null;\n+  // const newSortValue = sort !== sortBy || (sort && !order) ? sortBy : null;\n+  // const newOrderValue = sort === sortBy && !order ? 'desc' : null;\n \n   // const params = {\n   //   sort: newSortValue,\n   //   order: newOrderValue,\n"
+                },
+                {
+                    "date": 1715929503701,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,6 +1,6 @@\n import { FC } from 'react';\n-import { useSearchParams } from 'react-router-dom';\n+// import { useSearchParams } from 'react-router-dom';\n \n interface Props {\n   sortBy: string;\n }\n"
+                }
+            ],
+            "date": 1715929248269,
+            "name": "Commit-0",
+            "content": "import { FC } from 'react';\nimport { SearchLink } from './SearchLink';\nimport { useSearchParams } from 'react-router-dom';\n\ninterface Props {\n  sortBy: string;\n}\n\nexport const SortLink: FC<Props> = ({ sortBy }) => {\n  const [searchParams] = useSearchParams();\n  const sort = searchParams.get('sort');\n  const order = searchParams.get('order');\n\n  const newSortValue = sort !== sortBy || (sort && !order) ? sortBy : null;\n  const newOrderValue = sort === sortBy && !order ? 'desc' : null;\n\n  const params = {\n    sort: newSortValue,\n    order: newOrderValue,\n  };\n\n  return (\n    <SearchLink params={params}>\n      <span className=\"icon\">\n        <i className=\"fas fa-sort\" />\n      </span>\n    </SearchLink>\n  );\n};"
+        }
+    ]
+}
