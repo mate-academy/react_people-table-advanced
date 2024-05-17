@@ -10,7 +10,6 @@ interface Props {
 }
 
 export const PersonLink: React.FC<Props> = ({ person }) => {
-  // console.log(person)
   return (
     <Link
       className={person.sex === 'f' ? 'has-text-danger' : ''}
