@@ -21,16 +21,18 @@ export const PeoplePage = () => {
           <div className="column">
             <div className="box table-container">
               {loader ? <Loader /> : <PeopleTable />}
-              {!errorFromServer && (
-                <p data-cy="peopleLoadingError">{errorFromServer}</p>
+              {!loader && errorFromServer && (
+                <p data-cy="peopleLoadingError">Something went wrong</p>
               )}
-              {!loader && people.length === 0 && (
+              {!loader && people.length === 0 && !errorFromServer && (
                 <p data-cy="noPeopleMessage">
                   There are no people on the server
                 </p>
               )}
-              {/*
-              <p>There are no people matching the current search criteria</p> */}
+
+              {/* {people.length === 0 && searchParams.toString().length === 0 && (
+                <p>There are no people matching the current search criteria</p>
+              )} */}
             </div>
           </div>
         </div>

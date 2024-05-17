@@ -7,12 +7,12 @@ import { PeoplePage } from './components/PeoplePage';
 export const Root: React.FC = () => (
   <Routes>
     <Route path="/" element={<App />}>
+      <Route path="*" element={<NotFoundPage />} />
       <Route index element={<HomePage />} />
-      <Route path="home" element={<Navigate to={'../'} />} />
+      <Route path="home" element={<Navigate to={'../'} replace />} />
       <Route path="people" element={<PeoplePage />}>
         <Route path=":slug?" element={<PeoplePage />} />
       </Route>
     </Route>
-    <Route path="*" element={<NotFoundPage />} />
   </Routes>
 );

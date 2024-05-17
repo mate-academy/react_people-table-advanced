@@ -7,7 +7,7 @@ enum ClassFor {
 }
 import { useContext } from 'react';
 import { PeopleContext } from './PeopleProvider.tsx/PeopleProvider';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import classNames from 'classnames';
 import { PersonLink } from './PersonLink';
 import { SearchLink } from './SearchLink';
@@ -82,14 +82,14 @@ export const PeopleTable = () => {
             })}
           >
             <td>
-              <SearchLink
-                params={{ pathname: person.slug }}
+              <Link
+                to={`${person.slug}`}
                 className={classNames({
                   'has-text-danger': person.sex === 'f',
                 })}
               >
                 {person.name}
-              </SearchLink>
+              </Link>
             </td>
             <td>{person.sex}</td>
             <td>{person.born}</td>

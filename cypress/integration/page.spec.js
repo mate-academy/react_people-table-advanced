@@ -139,7 +139,7 @@ describe('', () => {
   });
 
   describe('Non existing page', () => {
-    it.only('should have correct address', () => {
+    it('should have correct address', () => {
       page.mockPeople();
       page.visit('/#/some/not/existing/page');
       page.assertHash('#/some/not/existing/page');

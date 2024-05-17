@@ -131,7 +131,6 @@ export const PeopleProvider: React.FC<Props> = ({ children }) => {
         }
       } catch (error) {
         setErrorFromServer('Something went wrong');
-        throw new Error('Something went wrong');
       } finally {
         setLoader(false);
       }
