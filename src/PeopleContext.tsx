@@ -9,9 +9,9 @@ type Props = {
   children: React.ReactNode;
 };
 type PeopleContextProps = {
-  generateCentury: (
-    century: string,
-  ) => { centuries: null } | { centuries: string[] };
+  // generateCentury: (
+  //   century: string,
+  // ) => { centuries: null } | { centuries: string[] };
   handleCenturyClick: (century: string) => void;
   people: Person[] | null;
   setPeople: React.Dispatch<React.SetStateAction<Person[] | null>>;
@@ -49,6 +49,7 @@ export const PeopleContext: React.FC<Props> = ({ children }) => {
   const sex = searchParams.get('sex') || 'all';
   const [selectedFilter, setSelectedFilter] = useState<Filter>(sex as Filter);
   const cent = searchParams.getAll('centuries');
+
   const [sortByCentury, setSortByCentury] = useState(cent);
 
   // const sexFlter = (sorted: Person[]) => {
@@ -126,27 +127,30 @@ export const PeopleContext: React.FC<Props> = ({ children }) => {
     setSortedPeople(sortPeople(SortBy));
   };
 
-  const generateCentury = (century: string) => {
-    if (century === 'all') {
-      return { centuries: null };
-    }
+  // const generateCentury = (century: string) => {
+  //   if (century === 'all') {
+  //     return { centuries: null };
+  //   }
 
-    return {
-      centuries: sortByCentury.includes(century)
-        ? sortByCentury
-        : [...sortByCentury, century],
-    };
-  };
+  //   return {
+  //     centuries: sortByCentury.includes(century)
+  //       ? sortByCentury
+  //       : [...sortByCentury, century],
+  //   };
+  // };
 
   const handleCenturyClick = (century: string) => {
-    let updatedCenturies = sortByCentury.includes(century)
-      ? sortByCentury.filter(item => item !== century)
-      : [...sortByCentury, century];
+    let updatedCenturies: React.SetStateAction<string[]>;
 
     if (century === 'all') {
       updatedCenturies = [];
+    } else if (sortByCentury.includes(century)) {
+      updatedCenturies = sortByCentury.filter(item => item !== century);
+    } else {
+      updatedCenturies = [...sortByCentury, century];
     }
 
+    // generateCentury(century);
     setSortByCentury(updatedCenturies);
   };
 
@@ -176,7 +180,7 @@ export const PeopleContext: React.FC<Props> = ({ children }) => {
   return (
     <ContextPeople.Provider
       value={{
-        generateCentury,
+        // generateCentury,
         handleCenturyClick,
         cent,
         setSortByCentury,

@@ -6,12 +6,10 @@ import { Filter } from '../types/Filter';
 
 export const PeopleFilters = () => {
   const {
-    searchParams,
     // cent,
     selectedFilter,
     setSelectedFilter,
     sortByCentury,
-    generateCentury,
     handleCenturyClick,
   } = useContext(ContextPeople);
 
@@ -98,9 +96,16 @@ export const PeopleFilters = () => {
                 key={century}
                 data-cy="century"
                 className={cn('button mr-1', {
-                  'is-info': searchParams.has('centuries', century),
+                  'is-info': sortByCentury.includes(century),
                 })}
-                params={generateCentury(century)}
+                params={
+                  {
+                    centuries: sortByCentury.includes(century)
+                      ? sortByCentury.filter(cent => cent !== century)
+                      : [...sortByCentury, century],
+                  }
+                  // generateCentury(century),
+                }
                 onClick={() => handleCenturyClick(century)}
               >
                 {century}
@@ -109,16 +114,13 @@ export const PeopleFilters = () => {
           </div>
 
           <div className="level-right ml-4">
-            <SearchLink
+            <a
               data-cy="centuryALL"
-              className={cn('button is-success', {
-                'is-outlined': sortByCentury.length,
-              })}
-              params={generateCentury('all')}
-              onClick={() => handleCenturyClick('all')}
+              className="button is-success is-outlined"
+              href="#/people"
             >
               All
-            </SearchLink>
+            </a>
           </div>
         </div>
       </div>
