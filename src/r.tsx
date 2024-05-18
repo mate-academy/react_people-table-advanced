@@ -8,7 +8,6 @@ import { Filter } from './types/Filter';
 type Props = {
   children: React.ReactNode;
 };
-
 type PeopleContextProps = {
   people: Person[] | null;
   setPeople: React.Dispatch<React.SetStateAction<Person[] | null>>;
@@ -71,11 +70,9 @@ export const PeopleContext: React.FC<Props> = ({ children }) => {
       }
 
       if (selectedFilter === 'female') {
-        return sorted.filter(person => person.sex === 'f');
-      }
-
-      if (selectedFilter === 'male') {
-        return sorted.filter(person => person.sex === 'm');
+        sorted = sorted.filter(person => person.sex === 'f');
+      } else if (selectedFilter === 'male') {
+        sorted = sorted.filter(person => person.sex === 'm');
       }
 
       if (sortByCentury.length > 0) {
@@ -138,26 +135,26 @@ export const PeopleContext: React.FC<Props> = ({ children }) => {
   return (
     <ContextPeople.Provider
       value={{
-        people,
-        setPeople,
-        searchParams,
-        order,
-        sort,
-        sortOrder,
-        setSortOrder,
-        sortPeople,
-        sortedPeople,
-        setSortedPeople,
-        toggleSortOrder,
-        handlerSortBy,
-        isLoading,
-        setIsLoading,
-        err,
-        setErr,
-        selectedFilter,
-        setSelectedFilter,
         sortByCentury,
         setSortByCentury,
+        selectedFilter,
+        setSelectedFilter,
+        err,
+        isLoading,
+        setErr,
+        setIsLoading,
+        handlerSortBy,
+        toggleSortOrder,
+        setSortedPeople,
+        sortedPeople,
+        order,
+        people,
+        searchParams,
+        setPeople,
+        setSortOrder,
+        sort,
+        sortOrder,
+        sortPeople,
       }}
     >
       {children}

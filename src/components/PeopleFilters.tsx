@@ -5,13 +5,8 @@ import cn from 'classnames';
 import { Filter } from '../types/Filter';
 
 export const PeopleFilters = () => {
-  const {
-    // cent,
-    selectedFilter,
-    setSelectedFilter,
-    sortByCentury,
-    handleCenturyClick,
-  } = useContext(ContextPeople);
+  const { setSortByCentury, selectedFilter, setSelectedFilter, sortByCentury } =
+    useContext(ContextPeople);
 
   const generateFilter = (filterBy: Filter) => {
     if (filterBy === 'all') {
@@ -21,29 +16,19 @@ export const PeopleFilters = () => {
     return { sex: filterBy };
   };
 
-  // const generateCentury = (century: string) => {
-  //   if (century === 'all') {
-  //     return { centuries: null };
-  //   }
+  const handleCenturyClick = (century: string) => {
+    let updatedCenturies: string[];
 
-  //   return {
-  //     centuries: sortByCentury.includes(century)
-  //       ? sortByCentury
-  //       : [...sortByCentury, century],
-  //   };
-  // };
+    if (century === 'all') {
+      updatedCenturies = [];
+    } else if (sortByCentury.includes(century)) {
+      updatedCenturies = sortByCentury.filter(item => item !== century);
+    } else {
+      updatedCenturies = [...sortByCentury, century];
+    }
 
-  // const handleCenturyClick = (century: string) => {
-  //   let updatedCenturies = sortByCentury.includes(century)
-  //     ? sortByCentury.filter(item => item !== century)
-  //     : [...sortByCentury, century];
-
-  //   if (century === 'all') {
-  //     updatedCenturies = [];
-  //   }
-
-  //   setSortByCentury(updatedCenturies);
-  // };
+    setSortByCentury(updatedCenturies);
+  };
 
   return (
     <nav className="panel">
@@ -81,7 +66,6 @@ export const PeopleFilters = () => {
             className="input"
             placeholder="Search"
           />
-
           <span className="icon is-left">
             <i className="fas fa-search" aria-hidden="true" />
           </span>
@@ -98,14 +82,11 @@ export const PeopleFilters = () => {
                 className={cn('button mr-1', {
                   'is-info': sortByCentury.includes(century),
                 })}
-                params={
-                  {
-                    centuries: sortByCentury.includes(century)
-                      ? sortByCentury.filter(cent => cent !== century)
-                      : [...sortByCentury, century],
-                  }
-                  // generateCentury(century),
-                }
+                params={{
+                  centuries: sortByCentury.includes(century)
+                    ? sortByCentury.filter(cent => cent !== century)
+                    : [...sortByCentury, century],
+                }}
                 onClick={() => handleCenturyClick(century)}
               >
                 {century}
@@ -114,13 +95,14 @@ export const PeopleFilters = () => {
           </div>
 
           <div className="level-right ml-4">
-            <a
+            <SearchLink
               data-cy="centuryALL"
               className="button is-success is-outlined"
-              href="#/people"
+              params={{ centuries: null }}
+              onClick={() => setSortByCentury([])}
             >
               All
-            </a>
+            </SearchLink>
           </div>
         </div>
       </div>
