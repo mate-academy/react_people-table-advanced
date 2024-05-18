@@ -1,18 +1,78 @@
+import { useContext } from 'react';
+import { ContextPeople } from '../PeopleContext';
+import { SearchLink } from './SearchLink';
+import cn from 'classnames';
+import { Filter } from '../types/Filter';
+
 export const PeopleFilters = () => {
+  const {
+    searchParams,
+    // cent,
+    selectedFilter,
+    setSelectedFilter,
+    sortByCentury,
+    generateCentury,
+    handleCenturyClick,
+  } = useContext(ContextPeople);
+
+  const generateFilter = (filterBy: Filter) => {
+    if (filterBy === 'all') {
+      return { sex: null };
+    }
+
+    return { sex: filterBy };
+  };
+
+  // const generateCentury = (century: string) => {
+  //   if (century === 'all') {
+  //     return { centuries: null };
+  //   }
+
+  //   return {
+  //     centuries: sortByCentury.includes(century)
+  //       ? sortByCentury
+  //       : [...sortByCentury, century],
+  //   };
+  // };
+
+  // const handleCenturyClick = (century: string) => {
+  //   let updatedCenturies = sortByCentury.includes(century)
+  //     ? sortByCentury.filter(item => item !== century)
+  //     : [...sortByCentury, century];
+
+  //   if (century === 'all') {
+  //     updatedCenturies = [];
+  //   }
+
+  //   setSortByCentury(updatedCenturies);
+  // };
+
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        <a className="is-active" href="#/people">
+        <SearchLink
+          className={cn({ 'is-active': selectedFilter === 'all' })}
+          params={generateFilter('all')}
+          onClick={() => setSelectedFilter('all')}
+        >
           All
-        </a>
-        <a className="" href="#/people?sex=m">
+        </SearchLink>
+        <SearchLink
+          className={cn({ 'is-active': selectedFilter === 'male' })}
+          params={generateFilter('male')}
+          onClick={() => setSelectedFilter('male')}
+        >
           Male
-        </a>
-        <a className="" href="#/people?sex=f">
+        </SearchLink>
+        <SearchLink
+          className={cn({ 'is-active': selectedFilter === 'female' })}
+          params={generateFilter('female')}
+          onClick={() => setSelectedFilter('female')}
+        >
           Female
-        </a>
+        </SearchLink>
       </p>
 
       <div className="panel-block">
@@ -33,55 +93,32 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            <a
-              data-cy="century"
-              className="button mr-1"
-              href="#/people?centuries=16"
-            >
-              16
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=17"
-            >
-              17
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=18"
-            >
-              18
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=19"
-            >
-              19
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1"
-              href="#/people?centuries=20"
-            >
-              20
-            </a>
+            {['16', '17', '18', '19', '20'].map(century => (
+              <SearchLink
+                key={century}
+                data-cy="century"
+                className={cn('button mr-1', {
+                  'is-info': searchParams.has('centuries', century),
+                })}
+                params={generateCentury(century)}
+                onClick={() => handleCenturyClick(century)}
+              >
+                {century}
+              </SearchLink>
+            ))}
           </div>
 
           <div className="level-right ml-4">
-            <a
+            <SearchLink
               data-cy="centuryALL"
-              className="button is-success is-outlined"
-              href="#/people"
+              className={cn('button is-success', {
+                'is-outlined': sortByCentury.length,
+              })}
+              params={generateCentury('all')}
+              onClick={() => handleCenturyClick('all')}
             >
               All
-            </a>
+            </SearchLink>
           </div>
         </div>
       </div>

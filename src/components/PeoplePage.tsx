@@ -6,8 +6,6 @@ import { ContextPeople } from '../PeopleContext';
 import { getPeople } from '../api';
 
 export const PeoplePage = () => {
-  // const [isLoading, setIsLoading] = useState(false);
-  // const [err, setErr] = useState(false);
   const { people, setPeople, isLoading, setIsLoading, err, setErr } =
     useContext(ContextPeople);
 
