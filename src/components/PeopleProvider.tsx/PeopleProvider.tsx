@@ -1,45 +1,42 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+// eslint-disable-next-line
 import React, { useEffect, useMemo, useState } from 'react';
 import { Person } from '../../types';
 import { getPeople } from '../../api';
 import { useSearchParams } from 'react-router-dom';
+import { SortType } from '../../types/SortType';
+import { getSorted } from '../../utils/getSorted';
+import { getSortQuery } from '../../utils/getSortQuery';
+import { getSortCentury } from '../../utils/getSortCentury';
 type Props = {
   children: React.ReactNode;
 };
 
-type SortType = string | null;
-
 type ContextType = {
+  query: string;
   peopleCopy: Person[];
   order: SortType;
   sort: SortType;
   sex: SortType;
-  people: Person[];
-  setPeople: (v: Person[]) => void;
+  visiblePeople: Person[];
   loader: boolean;
   errorFromServer: string;
-  sortedPeople: (
-    o: SortType,
-    s: SortType,
-    x: SortType,
-    y: SortType,
-    c: string[],
-  ) => void;
+  sortedPeople: (s: SortType, x: SortType, c: string[]) => void;
 };
 
 export const PeopleContext = React.createContext<ContextType>({
+  query: '',
   peopleCopy: [],
   order: null,
   sort: null,
   sex: null,
-  people: [],
-  setPeople: () => [],
+  visiblePeople: [],
   loader: false,
   errorFromServer: '',
   sortedPeople: () => [],
 });
 
 export const PeopleProvider: React.FC<Props> = ({ children }) => {
-  const [people, setPeople] = useState<Person[]>([]);
   const [peopleCopy, setPeopleCopy] = useState<Person[]>([]);
   const [loader, setLoader] = useState(false);
   const [errorFromServer, setErrorFromServer] = useState('');
@@ -48,75 +45,30 @@ export const PeopleProvider: React.FC<Props> = ({ children }) => {
   const sort = searchParams.get('sort');
   const order = searchParams.get('order');
   const query = searchParams.get('query') || '';
-  const century = useMemo(
-    () => searchParams.getAll('centuries'),
-    [searchParams],
-  );
+  const century = searchParams.getAll('centuries') || [];
 
-  const sortedPeople = (
-    sorts: SortType,
-    orders: SortType,
-    sexx: SortType,
-    querty: SortType,
-    cent: string[],
-  ) => {
+  const sortedPeople = (orders: SortType, sexx: SortType, cent: string[]) => {
     const copyPeople = [...peopleCopy];
-    const sorted = copyPeople.sort((a, b) => {
-      if ((sorts === 'name' || sorts === 'sex') && !orders) {
-        return a[sorts].localeCompare(b[sorts]);
-      } else if ((sorts === 'born' || sorts === 'died') && !orders) {
-        return a[sorts] - b[sorts];
-      } else if (sorts === 'name' && orders) {
-        return b[sorts].localeCompare(a[sorts]);
-      } else if ((sorts === 'born' || sorts === 'died') && orders) {
-        return b[sorts] - a[sorts];
-      } else {
-        return 0;
-      }
-    });
+    let sorted = getSorted(copyPeople, sort);
 
-    if (sexx && !orders) {
-      setPeople(sorted.filter(p => p.sex === sexx));
-    } else if (sorts === 'sex' && orders && !sexx) {
-      const newSorted = copyPeople
-        .sort((a, b) => a.sex.localeCompare(b.sex))
-        .reverse();
-
-      setPeople(newSorted);
-    } else if (sorts === 'sex' && orders && sexx) {
-      const newSorted = copyPeople.filter(a => a.sex === sexx).reverse();
-
-      setPeople(newSorted);
-    } else {
-      setPeople(sorted);
+    if (orders) {
+      sorted = sorted.reverse();
     }
 
-    if (querty) {
-      const lowerQuerty = querty.toLowerCase();
-
-      setPeople(prevPeople =>
-        prevPeople.filter(
-          person =>
-            person.name.toLowerCase().includes(lowerQuerty) ||
-            person.motherName?.toLowerCase().includes(lowerQuerty) ||
-            person.fatherName?.toLowerCase().includes(lowerQuerty),
-        ),
-      );
+    if (sexx) {
+      sorted = sorted.filter(p => p.sex === sexx);
     }
+
+    sorted = getSortQuery(sorted, query);
 
     if (cent.length > 0) {
-      const min = Math.min(...cent.map(Number)) * 100 - 100;
-      const max = Math.max(...cent.map(Number)) * 100;
-
-      setPeople(prevPeople =>
-        prevPeople.filter(pers => pers.born >= min && pers.born <= max),
-      );
+      sorted = getSortCentury(sorted, century);
     }
+
+    return sorted;
   };
 
-  useEffect(() => {
-    sortedPeople(sort, order, sex, query, century);
-  }, [sort, order, sex, loader, query, century]);
+  const visiblePeople = sortedPeople(order, sex, century);
 
   useEffect(() => {
     setErrorFromServer('');
@@ -126,7 +78,6 @@ export const PeopleProvider: React.FC<Props> = ({ children }) => {
         const persons = await getPeople();
 
         if (persons) {
-          setPeople(persons);
           setPeopleCopy(persons);
         }
       } catch (error) {
@@ -139,17 +90,29 @@ export const PeopleProvider: React.FC<Props> = ({ children }) => {
     loadPersons();
   }, []);
 
-  const peopleTools = {
-    peopleCopy,
-    sort,
-    order,
-    sex,
-    sortedPeople,
-    people,
-    setPeople,
-    loader,
-    errorFromServer,
-  };
+  const peopleTools = useMemo(
+    () => ({
+      query,
+      peopleCopy,
+      sort,
+      order,
+      sex,
+      sortedPeople,
+      visiblePeople,
+      loader,
+      errorFromServer,
+    }),
+    [
+      peopleCopy,
+      errorFromServer,
+      loader,
+      visiblePeople,
+      query,
+      sort,
+      order,
+      sex,
+    ],
+  );
 
   return (
     <PeopleContext.Provider value={peopleTools}>

@@ -15,20 +15,31 @@ import { SearchParams } from '../utils/searchHelper';
 
 export const PeopleTable = () => {
   const { slug } = useParams();
-  const { people, sort, order } = useContext(PeopleContext);
+  const { visiblePeople, sort, order } = useContext(PeopleContext);
 
   const handleSearch = (it: string): SearchParams => {
     const item = it.toLowerCase();
 
-    if (sort === item && order !== 'desc') {
-      return { order: 'desc' };
-    } else if (sort === item && order === 'desc') {
-      return { order: null, sort: null };
-    } else if (sort !== item && order === 'desc') {
-      return { sort: item, order: null };
-    } else {
-      return { sort: item };
+    switch (true) {
+      case sort === item && order !== 'desc':
+        return { order: 'desc' };
+      case sort === item && order === 'desc':
+        return { order: null, sort: null };
+      case sort !== item && order === 'desc':
+        return { sort: item, order: null };
+      default:
+        return { sort: item };
     }
+
+    // if (sort === item && order !== 'desc') {
+    //   return { order: 'desc' };
+    // } else if (sort === item && order === 'desc') {
+    //   return { order: null, sort: null };
+    // } else if (sort !== item && order === 'desc') {
+    //   return { sort: item, order: null };
+    // } else {
+    //   return { sort: item };
+    // }
   };
 
   const getArrow = (it: string): string => {
@@ -73,7 +84,7 @@ export const PeopleTable = () => {
       </thead>
 
       <tbody>
-        {people.map(person => (
+        {visiblePeople.map(person => (
           <tr
             data-cy="person"
             key={person.name}

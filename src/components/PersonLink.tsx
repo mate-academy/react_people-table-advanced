@@ -17,7 +17,7 @@ export const PersonLink: React.FC<Props> = ({ person, sex }) => {
       {person && !!getLink(peopleCopy, person, sex) ? (
         <Link
           to={{
-            pathname: `${getLink(peopleCopy, person, sex).slug}`,
+            pathname: `${getLink(peopleCopy, person, sex)?.slug}`,
             search: searchParams.toString(),
           }}
           className={classNames({ 'has-text-danger': sex === 'f' })}

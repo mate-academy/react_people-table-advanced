@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 /* eslint-disable max-len */
 import { useContext } from 'react';
 import { PeopleFilters } from './PeopleFilters';
@@ -6,7 +7,7 @@ import { PeopleTable } from './PeopleTable';
 import { PeopleContext } from './PeopleProvider.tsx/PeopleProvider';
 
 export const PeoplePage = () => {
-  const { loader, errorFromServer, people } = useContext(PeopleContext);
+  const { loader, errorFromServer, visiblePeople, query } = useContext(PeopleContext);
 
   return (
     <>
@@ -24,15 +25,18 @@ export const PeoplePage = () => {
               {!loader && errorFromServer && (
                 <p data-cy="peopleLoadingError">Something went wrong</p>
               )}
-              {!loader && people.length === 0 && !errorFromServer && (
+              {!loader &&
+                !errorFromServer &&
+                query.length === 0 &&
+                visiblePeople.length === 0 && (
                 <p data-cy="noPeopleMessage">
-                  There are no people on the server
+                    There are no people on the server
                 </p>
               )}
 
-              {/* {people.length === 0 && searchParams.toString().length === 0 && (
+              {!loader && visiblePeople.length === 0 && query.length !== 0 && (
                 <p>There are no people matching the current search criteria</p>
-              )} */}
+              )}
             </div>
           </div>
         </div>
