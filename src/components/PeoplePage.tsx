@@ -25,14 +25,6 @@ export const PeoplePage = () => {
       .finally(() => setLoader(false));
   }, []);
 
-  useEffect(() => {
-    if (!peoples.length && !loader) {
-      setError('Current search');
-    } else {
-      setError('');
-    }
-  }, [peoples, loader]);
-
   return (
     <>
       <h1 className="title">People Page</h1>
@@ -56,9 +48,10 @@ export const PeoplePage = () => {
                 <p data-cy="peopleLoadingError">Something went wrong</p>
               )}
 
-              {!peoples.length && !loader && (
-                <p>There are no people matching the current search criteria</p>
-              )}
+              {!peoples.length &&
+                !loader && (
+                  <p data-cy="noPeopleMessage">There are no people on the server</p>
+                )}
 
               {error === 'server' && (
                 <p data-cy="noPeopleMessage">

@@ -201,7 +201,7 @@ export const PeopleTable = ({ peoples, originalPeoples }: Props) => {
                   isDangerous={false}
                 />
               ) : (
-                ''
+                '-'
               )}
             </td>
           </tr>
