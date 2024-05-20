@@ -5,14 +5,15 @@ import { Person } from '../types';
 import { getPeople } from '../api';
 import { PeopleFilters } from './PeopleFilters';
 import React, { useEffect, useState } from 'react';
-import { sortFunction } from '../utils/sorter';
+// import { sortFunction } from '../utils/sorter';
 import { useSearchParams } from 'react-router-dom';
+import { getRenderedPeople } from '../utils/getRenderedPeople';
 
 export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);
   const [fetchError, setFetchError] = useState(false);
   const [showLoader, setShowLoader] = useState(false);
-  const [renderedPeople, setRenderedPeople] = useState<Person[]>([]);
+  // const [renderedPeople, setRenderedPeople] = useState<Person[]>([]);
   const [searchParams] = useSearchParams();
 
   useEffect(() => {
@@ -21,77 +22,23 @@ export const PeoplePage = () => {
     getPeople()
       .then(peops => {
         setPeople(peops);
-        setRenderedPeople(peops);
+        // setRenderedPeople(peops);
       })
       .catch(() => setFetchError(true))
       .finally(() => setShowLoader(false));
   }, []);
 
-  const filterByQuery = (pers: Person, currentQuerry: string) => {
-    if (
-      pers.name.toLowerCase().includes(currentQuerry.toLowerCase().trim()) ||
-      (pers.motherName &&
-        pers.motherName
-          .toLowerCase()
-          .includes(currentQuerry.toLowerCase().trim())) ||
-      (pers.fatherName &&
-        pers.fatherName
-          .toLowerCase()
-          .includes(currentQuerry.toLowerCase().trim()))
-    ) {
-      return true;
-    }
+  const currentSex = searchParams.get('sex');
+  const currentQuerry = searchParams.get('query') || '';
+  const chosenCenturies = searchParams.getAll('centuries');
 
-    return;
-  };
-
-  useEffect(() => {
-    const currentSex = searchParams.get('sex');
-    const currentQuerry = searchParams.get('query') || '';
-    const chosenCenturies = searchParams.getAll('centuries');
-
-    if (currentSex && chosenCenturies.length > 0) {
-      setRenderedPeople(
-        sortFunction(
-          people.filter(
-            pers =>
-              pers.sex === currentSex &&
-              filterByQuery(pers, currentQuerry) &&
-              chosenCenturies.includes(Math.ceil(+pers.born / 100).toString()),
-          ),
-          searchParams,
-        ),
-      );
-    } else if (currentSex && chosenCenturies.length === 0) {
-      setRenderedPeople(
-        sortFunction(
-          people.filter(
-            pers =>
-              pers.sex === currentSex && filterByQuery(pers, currentQuerry),
-          ),
-          searchParams,
-        ),
-      );
-    } else if (!currentSex && chosenCenturies.length > 0) {
-      setRenderedPeople(
-        sortFunction(
-          people.filter(
-            pers =>
-              filterByQuery(pers, currentQuerry) &&
-              chosenCenturies.includes(Math.ceil(+pers.born / 100).toString()),
-          ),
-          searchParams,
-        ),
-      );
-    } else {
-      setRenderedPeople(
-        sortFunction(
-          people.filter(pers => filterByQuery(pers, currentQuerry)),
-          searchParams,
-        ),
-      );
-    }
-  }, [searchParams, people, setRenderedPeople]);
+  const renderedPeople = getRenderedPeople(
+    currentSex,
+    currentQuerry,
+    chosenCenturies,
+    people,
+    searchParams,
+  );
 
   return (
     <>

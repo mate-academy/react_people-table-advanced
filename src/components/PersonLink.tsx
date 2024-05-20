@@ -61,18 +61,18 @@ export const PersonLink: React.FC<PersonLinkProps> = ({
       <td>{person.sex}</td>
       <td>{person.born}</td>
       <td>{person.died}</td>
-      {person.motherName && names.includes(person.motherName) ? (
-        <td>
+      <td>
+        {person.motherName && names.includes(person.motherName) ? (
           <Link
             className="has-text-danger"
             to={`/people/${handleMotherClick()}`}
           >
-            {person.motherName || '-'}
+            {person.motherName}
           </Link>
-        </td>
-      ) : (
-        <td>{person.motherName || '-'}</td>
-      )}
+        ) : (
+          person.motherName || '-'
+        )}
+      </td>
       <td>
         {person.fatherName && names.includes(person.fatherName) ? (
           <Link to={`/people/${handleFatherClick()}`}>{person.fatherName}</Link>

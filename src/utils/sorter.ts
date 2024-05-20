@@ -19,7 +19,7 @@ export const sortFunction = (
 
       case 'born':
       case 'died':
-        return (elem1.born - elem2.born) * direction;
+        return (elem1[switchSort] - elem2[switchSort]) * direction;
 
       default:
         return 0;
