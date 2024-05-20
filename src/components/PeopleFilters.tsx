@@ -5,8 +5,14 @@ import cn from 'classnames';
 import { Filter } from '../types/Filter';
 
 export const PeopleFilters = () => {
-  const { setSortByCentury, selectedFilter, setSelectedFilter, sortByCentury } =
-    useContext(ContextPeople);
+  const {
+    setSortByCentury,
+    query,
+    setQuery,
+    selectedFilter,
+    setSelectedFilter,
+    sortByCentury,
+  } = useContext(ContextPeople);
 
   const generateFilter = (filterBy: Filter) => {
     if (filterBy === 'all') {
@@ -28,6 +34,11 @@ export const PeopleFilters = () => {
     }
 
     setSortByCentury(updatedCenturies);
+  };
+
+  const resetFilters = () => {
+    setSelectedFilter('all');
+    setSortByCentury([]);
   };
 
   return (
@@ -61,6 +72,8 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <p className="control has-icons-left">
           <input
+            value={query}
+            onChange={event => setQuery(event.target.value)}
             data-cy="NameFilter"
             type="search"
             className="input"
@@ -108,9 +121,13 @@ export const PeopleFilters = () => {
       </div>
 
       <div className="panel-block">
-        <a className="button is-link is-outlined is-fullwidth" href="#/people">
+        <SearchLink
+          className="button is-link is-outlined is-fullwidth"
+          onClick={() => resetFilters()}
+          params={{ sex: null, centuries: null }}
+        >
           Reset all filters
-        </a>
+        </SearchLink>
       </div>
     </nav>
   );

@@ -10,6 +10,8 @@ type Props = {
 };
 
 type PeopleContextProps = {
+  query: string;
+  setQuery: React.Dispatch<React.SetStateAction<string>>;
   people: Person[] | null;
   setPeople: React.Dispatch<React.SetStateAction<Person[] | null>>;
   searchParams: URLSearchParams;
@@ -40,6 +42,8 @@ export const PeopleContext: React.FC<Props> = ({ children }) => {
   const centuriesArr = searchParams.getAll('centuries');
   const order = searchParams.get('order') || '';
   const sort = searchParams.get('sort') || '';
+  const urlQuery = searchParams.get('query') || '';
+  const [query, setQuery] = useState(urlQuery);
   const [isLoading, setIsLoading] = useState(false);
   const [err, setErr] = useState(false);
   const [people, setPeople] = useState<Person[] | null>(null);
@@ -86,9 +90,17 @@ export const PeopleContext: React.FC<Props> = ({ children }) => {
         );
       }
 
+      if (query) {
+        sorted = sorted.filter(person =>
+          Object.values(person).some(value =>
+            value.toString().toLowerCase().includes(query.toLowerCase()),
+          ),
+        );
+      }
+
       return sorted;
     },
-    [people, selectedFilter, sortByCentury, sortOrder],
+    [people, query, selectedFilter, sortByCentury, sortOrder],
   );
 
   const [sortedPeople, setSortedPeople] = useState<Person[]>(
@@ -138,6 +150,8 @@ export const PeopleContext: React.FC<Props> = ({ children }) => {
   return (
     <ContextPeople.Provider
       value={{
+        query,
+        setQuery,
         people,
         setPeople,
         searchParams,
