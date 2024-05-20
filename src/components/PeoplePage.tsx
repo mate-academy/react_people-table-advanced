@@ -6,7 +6,7 @@ import { ContextPeople } from '../PeopleContext';
 import { getPeople } from '../api';
 
 export const PeoplePage = () => {
-  const { people, setPeople, isLoading, setIsLoading, err, setErr } =
+  const { people, setPeople, isLoading, setIsLoading, filterErr, err, setErr } =
     useContext(ContextPeople);
 
   // @-dev load and setPeople
@@ -51,9 +51,11 @@ export const PeoplePage = () => {
                 </p>
               )}
 
-              <p>There are no people matching the current search criteria</p>
+              {filterErr && (
+                <p>There are no people matching the current search criteria</p>
+              )}
 
-              {!!people?.length && !isLoading && <PeopleTable />}
+              {!!people?.length && !isLoading && !filterErr && <PeopleTable />}
             </div>
           </div>
         </div>

@@ -39,6 +39,7 @@ export const PeopleFilters = () => {
   const resetFilters = () => {
     setSelectedFilter('all');
     setSortByCentury([]);
+    setQuery('');
   };
 
   return (
@@ -73,7 +74,12 @@ export const PeopleFilters = () => {
         <p className="control has-icons-left">
           <input
             value={query}
-            onChange={event => setQuery(event.target.value)}
+            onChange={event => {
+              const newParams = new URLSearchParams();
+
+              newParams.append('topic', 'webdev');
+              setQuery(event.target.value);
+            }}
             data-cy="NameFilter"
             type="search"
             className="input"
