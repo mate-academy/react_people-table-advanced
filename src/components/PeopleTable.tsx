@@ -6,6 +6,7 @@ import { TableHeader } from './TableHeader';
 import { ErrorNotification } from './ErrorNotification';
 import { Loader } from './Loader';
 import { TableItem } from './TableItem';
+import { NOT_PEOPLE_MESSAGE } from '../constants';
 
 /* eslint-disable jsx-a11y/control-has-associated-label */
 type Props = {
@@ -30,7 +31,7 @@ export const PeopleTable: React.FC<Props> = ({
   }
 
   if (!dataPeople.length) {
-    return <p data-cy="noPeopleMessage">There are no people on the server</p>;
+    return <p data-cy="noPeopleMessage">{NOT_PEOPLE_MESSAGE}</p>;
   }
 
   return (
