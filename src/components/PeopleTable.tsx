@@ -29,6 +29,10 @@ export const PeopleTable: React.FC<Props> = ({
     return <ErrorNotification error={errorMessage} />;
   }
 
+  if (!dataPeople.length) {
+    return <p data-cy="noPeopleMessage">There are no people on the server</p>;
+  }
+
   return (
     <table
       data-cy="peopleTable"

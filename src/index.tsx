@@ -1,5 +1,11 @@
 import { createRoot } from 'react-dom/client';
-import { Route, HashRouter as Router, Routes } from 'react-router-dom';
+import {
+  Navigate,
+  Route,
+  HashRouter as Router,
+  Routes,
+  useLocation,
+} from 'react-router-dom';
 
 import 'bulma/css/bulma.css';
 import '@fortawesome/fontawesome-free/css/all.css';
@@ -10,6 +16,12 @@ import { PeoplePage } from './components/PeoplePage';
 import { NotFoundPage } from './components/NotFoundPage';
 
 export const Root = () => {
+  const { pathname } = useLocation();
+
+  if (pathname === '/home') {
+    return <Navigate to="/"></Navigate>;
+  }
+
   return (
     <Routes>
       <Route path="/" element={<App />}>
