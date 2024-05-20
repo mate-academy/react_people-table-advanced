@@ -6,6 +6,7 @@ import { getPreparedPeople } from '../utils/getPreparedPeople';
 import { PeopleFilters } from './PeopleFilters';
 // import { Loader } from './Loader';
 import { PeopleTable } from './PeopleTable';
+import { getSortedPeople } from '../utils/getSortedPeople';
 
 export const PeoplePage = () => {
   const { peopleData, errorMessage, isLoading } = useFetchPeople();
@@ -13,6 +14,7 @@ export const PeoplePage = () => {
 
   const preparedPeople = getPreparedPeople(peopleData);
   const filteredPeople = getFilteredPeople(preparedPeople, searchParams);
+  const sortedPeople = getSortedPeople(filteredPeople, searchParams);
 
   return (
     <>
@@ -26,16 +28,8 @@ export const PeoplePage = () => {
 
           <div className="column">
             <div className="box table-container">
-              {/* <Loader /> */}
-
-              {/* <p data-cy="peopleLoadingError">Something went wrong</p>
-
-              <p data-cy="noPeopleMessage">There are no people on the server</p>
-
-              <p>There are no people matching the current search criteria</p> */}
-
               <PeopleTable
-                dataPeople={filteredPeople}
+                dataPeople={sortedPeople}
                 errorMessage={errorMessage}
                 isLoading={isLoading}
               />

@@ -13,16 +13,12 @@ export const getFilteredPeople = (
 
   const normalizeQuery = filterByQuery.toLowerCase();
 
-  if (filterBySex === 'm') {
-    currentPeople = currentPeople.filter(item => item.sex === 'm');
-  }
-
-  if (filterBySex === 'f') {
-    currentPeople = currentPeople.filter(item => item.sex === 'f');
+  if (filterBySex) {
+    currentPeople = currentPeople.filter(item => item.sex === filterBySex);
   }
 
   if (filterByQuery) {
-    currentPeople = getFilterByQuery(people, normalizeQuery);
+    currentPeople = getFilterByQuery(currentPeople, normalizeQuery);
   }
 
   if (centuries.length) {

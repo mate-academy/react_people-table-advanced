@@ -12,23 +12,23 @@ type Props = {
 export const SortLink: React.FC<Props> = ({ name }) => {
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const orderParams = searchParams.get('order') || '';
-  const sortParams = searchParams.get('sort') || '';
+  const orderParam = searchParams.get('order') || '';
+  const sortParam = searchParams.get('sort') || '';
 
-  const handleChangeSort = (sort: Sorts) => {
-    const result = getSortByParams(orderParams, sortParams, sort);
+  const handleChangeSort = () => {
+    const result = getSortByParams(orderParam, sortParam, name);
 
     setSearchParams(getSearchWith(searchParams, result));
   };
 
   return (
-    <a onClick={() => handleChangeSort(name)}>
+    <a onClick={() => handleChangeSort()}>
       <span className="icon">
         <i
           className={cn('fas', {
-            'fa-sort-up': sortParams && !orderParams,
-            'fa-sort-down': orderParams,
-            'fa-sort': !orderParams && !sortParams,
+            'fa-sort-up': sortParam === name && !orderParam,
+            'fa-sort-down': sortParam === name && orderParam,
+            'fa-sort': sortParam !== name,
           })}
         />
       </span>

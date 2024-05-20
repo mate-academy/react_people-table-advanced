@@ -1,16 +1,16 @@
 import { defaultSortOrder } from '../constants';
-import { CurrentParamsType } from '../types/CurrentParamsType';
+import { SortsParamsType } from '../types/SortsParamsType';
 import { Sorts } from '../types/Sorts';
 
 export const getSortByParams = (
   orderParam: string,
   sortParam: string,
-  sort: Sorts,
+  currentSort: Sorts,
 ) => {
-  const currentParams: Partial<CurrentParamsType> = {};
+  const currentParams: Partial<SortsParamsType> = {};
 
-  if (sortParam && sortParam === sort) {
-    currentParams.sort = sort;
+  if (sortParam && sortParam === currentSort) {
+    currentParams.sort = currentSort;
     currentParams.order = defaultSortOrder;
   }
 
@@ -19,8 +19,8 @@ export const getSortByParams = (
     currentParams.order = null;
   }
 
-  if (sortParam !== sort) {
-    currentParams.sort = sort;
+  if (sortParam !== currentSort) {
+    currentParams.sort = currentSort;
   }
 
   return currentParams;

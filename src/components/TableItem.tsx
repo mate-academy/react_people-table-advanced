@@ -17,7 +17,9 @@ export const TableItem: React.FC<Props> = ({ person, slug }) => {
       data-cy="person"
     >
       <td>
-        <PersonLink person={person}>{person.name}</PersonLink>
+        <PersonLink isName={true} person={person}>
+          {person.name}
+        </PersonLink>
       </td>
       <td>{person.sex}</td>
       <td>{person.born}</td>
