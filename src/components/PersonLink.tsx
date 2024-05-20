@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import cn from 'classnames';
 import { Person } from '../types';
 import { getPerson } from '../utils/getPerson';
@@ -15,6 +15,7 @@ export const PersonLink: React.FC<Props> = ({
   isName = false,
 }) => {
   const currentPerson = getPerson(person, children);
+  const { search } = useLocation();
 
   if (!children) {
     return '-';
@@ -31,7 +32,7 @@ export const PersonLink: React.FC<Props> = ({
       className={cn({
         'has-text-danger': currentPerson?.sex === 'f',
       })}
-      to={`/people/${currentPerson?.slug}`}
+      to={`/people/${currentPerson?.slug}${search}`}
     >
       {children}
     </Link>
