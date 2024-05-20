@@ -10,19 +10,19 @@ interface Props {
 export const PersonLink = ({ slug, name, isDangerous }: Props) => {
   const [searchParams] = useSearchParams();
 
-  if (slug) {
-    return (
-      <Link
-        className={cn({ 'has-text-danger': isDangerous })}
-        to={{
-          pathname: `/people/${slug}`,
-          search: searchParams.toString(),
-        }}
-      >
-        {name}
-      </Link>
-    );
-  } else {
+  if (!slug) {
     return <span>{name}</span>;
   }
+
+  return (
+    <Link
+      className={cn({ 'has-text-danger': isDangerous })}
+      to={{
+        pathname: `/people/${slug}`,
+        search: searchParams.toString(),
+      }}
+    >
+      {name}
+    </Link>
+  );
 };

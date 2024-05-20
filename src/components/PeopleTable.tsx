@@ -7,10 +7,10 @@ import { getSearchWith } from '../utils/searchHelper';
 /* eslint-disable jsx-a11y/control-has-associated-label */
 interface Props {
   peoples: Person[];
-  originalPeoples: Person[];
+  filteredPeople: Person[];
 }
 
-export const PeopleTable = ({ peoples, originalPeoples }: Props) => {
+export const PeopleTable = ({ peoples, filteredPeople }: Props) => {
   const { newId } = useParams();
   const [searchParams] = useSearchParams();
 
@@ -18,7 +18,7 @@ export const PeopleTable = ({ peoples, originalPeoples }: Props) => {
   const currentOrder = searchParams.get('order');
 
   const filteredPeoples = () => {
-    const sortedPeoples = [...peoples];
+    const sortedPeoples = [...filteredPeople];
 
     sortedPeoples.sort((people1: Person, people2: Person) => {
       let result = 0;
@@ -180,8 +180,7 @@ export const PeopleTable = ({ peoples, originalPeoples }: Props) => {
               {people.motherName ? (
                 <PersonLink
                   slug={
-                    originalPeoples.find(p => p.name === people.motherName)
-                      ?.slug || ''
+                    peoples.find(p => p.name === people.motherName)?.slug || ''
                   }
                   name={people.motherName}
                   isDangerous={true}
@@ -194,8 +193,7 @@ export const PeopleTable = ({ peoples, originalPeoples }: Props) => {
               {people.fatherName ? (
                 <PersonLink
                   slug={
-                    originalPeoples.find(p => p.name === people.fatherName)
-                      ?.slug || ''
+                    peoples.find(p => p.name === people.fatherName)?.slug || ''
                   }
                   name={people.fatherName}
                   isDangerous={false}
