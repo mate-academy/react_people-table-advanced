@@ -26,36 +26,23 @@ export const getRenderedPeople = (
   people: Person[],
   searchParams: URLSearchParams,
 ) => {
-  if (currentSex && chosenCenturies.length > 0) {
-    return sortFunction(
-      people.filter(
-        pers =>
-          pers.sex === currentSex &&
-          filterByQuery(pers, currentQuerry) &&
-          chosenCenturies.includes(Math.ceil(+pers.born / 100).toString()),
-      ),
-      searchParams,
-    );
-  } else if (currentSex && chosenCenturies.length === 0) {
-    return sortFunction(
-      people.filter(
-        pers => pers.sex === currentSex && filterByQuery(pers, currentQuerry),
-      ),
-      searchParams,
-    );
-  } else if (!currentSex && chosenCenturies.length > 0) {
-    return sortFunction(
-      people.filter(
-        pers =>
-          filterByQuery(pers, currentQuerry) &&
-          chosenCenturies.includes(Math.ceil(+pers.born / 100).toString()),
-      ),
-      searchParams,
-    );
-  } else {
-    return sortFunction(
-      people.filter(pers => filterByQuery(pers, currentQuerry)),
-      searchParams,
+  let filteredPeople = [...people];
+
+  if (currentSex) {
+    filteredPeople = filteredPeople.filter(pers => pers.sex === currentSex);
+  }
+
+  if (chosenCenturies) {
+    filteredPeople = filteredPeople.filter(pers =>
+      chosenCenturies.includes(Math.ceil(+pers.born / 100).toString()),
     );
   }
+
+  if (currentQuerry) {
+    filteredPeople = filteredPeople.filter(pers =>
+      filterByQuery(pers, currentQuerry),
+    );
+  }
+
+  return sortFunction(filteredPeople, searchParams);
 };
