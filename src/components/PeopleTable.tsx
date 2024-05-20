@@ -1,4 +1,4 @@
-import { useParams } from 'react-router-dom';
+import { useParams, useSearchParams } from 'react-router-dom';
 import { Person } from '../types';
 
 import { TableHeader } from './TableHeader';
@@ -7,6 +7,7 @@ import { ErrorNotification } from './ErrorNotification';
 import { Loader } from './Loader';
 import { TableItem } from './TableItem';
 import { NOT_PEOPLE_MESSAGE } from '../constants';
+import { getFilters } from '../utils/getFilters';
 
 /* eslint-disable jsx-a11y/control-has-associated-label */
 type Props = {
@@ -21,6 +22,8 @@ export const PeopleTable: React.FC<Props> = ({
   isLoading,
 }) => {
   const { slug } = useParams();
+  const [searchParams] = useSearchParams();
+  const { filterByQuery } = getFilters(searchParams);
 
   if (isLoading) {
     return <Loader />;
@@ -30,7 +33,7 @@ export const PeopleTable: React.FC<Props> = ({
     return <ErrorNotification error={errorMessage} />;
   }
 
-  if (!dataPeople.length) {
+  if (!dataPeople.length && !filterByQuery) {
     return <p data-cy="noPeopleMessage">{NOT_PEOPLE_MESSAGE}</p>;
   }
 
@@ -39,7 +42,7 @@ export const PeopleTable: React.FC<Props> = ({
       data-cy="peopleTable"
       className="table is-striped is-hoverable is-narrow is-fullwidth"
     >
-      <TableHeader />
+      {dataPeople.length !== 0 && <TableHeader />}
 
       <tbody>
         {dataPeople.length !== 0 ? (

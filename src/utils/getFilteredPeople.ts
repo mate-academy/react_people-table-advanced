@@ -1,4 +1,3 @@
-// import { useSearchParams } from 'react-router-dom';
 import { Person } from '../types';
 import { getFilterByQuery } from './getFilterByQuery';
 import { getFilters } from './getFilters';
