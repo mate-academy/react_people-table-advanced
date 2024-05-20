@@ -1,4 +1,5 @@
 export interface Person {
+  toLowerCase(): unknown;
   name: string;
   sex: string;
   born: number;
