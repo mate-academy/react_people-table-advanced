@@ -1,4 +1,4 @@
-import { defaultSortOrder } from '../constants';
+import { DEFAULT_SORT_ORDER } from '../constants';
 import { SortsParamsType } from '../types/SortsParamsType';
 import { Sorts } from '../types/Sorts';
 
@@ -11,7 +11,7 @@ export const getSortByParams = (
 
   if (sortParam && sortParam === currentSort) {
     currentParams.sort = currentSort;
-    currentParams.order = defaultSortOrder;
+    currentParams.order = DEFAULT_SORT_ORDER;
   }
 
   if (sortParam && orderParam) {

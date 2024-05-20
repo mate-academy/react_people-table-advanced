@@ -1,4 +1,4 @@
-import { defaultSortOrder } from '../constants';
+import { DEFAULT_SORT_ORDER } from '../constants';
 import { Person } from '../types';
 import { Sorts } from '../types/Sorts';
 
@@ -11,17 +11,20 @@ export const getSortedPeople = (
   const sort = searchParams.get('sort');
   const order = searchParams.get('order');
 
-  if (sort === Sorts.name || sort === Sorts.sex) {
-    currentPeople = currentPeople.sort((a, b) =>
-      a[sort].localeCompare(b[sort]),
-    );
+  switch (sort) {
+    case Sorts.name || Sorts.sex:
+      currentPeople = currentPeople.sort((a, b) =>
+        a[sort].localeCompare(b[sort]),
+      );
+      break;
+    case Sorts.born || Sorts.died:
+      currentPeople = currentPeople.sort((a, b) => a[sort] - b[sort]);
+      break;
+    default:
+      break;
   }
 
-  if (sort === Sorts.born || sort === Sorts.died) {
-    currentPeople = currentPeople.sort((a, b) => a[sort] - b[sort]);
-  }
-
-  if (order === defaultSortOrder) {
+  if (order === DEFAULT_SORT_ORDER) {
     currentPeople = currentPeople.reverse();
   }
 
