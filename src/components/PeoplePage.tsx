@@ -1,11 +1,9 @@
-// import { PeopleFilters } from './PeopleFilters';
 import { Loader } from './Loader';
 import { PeopleTable } from './PeopleTable';
 import { Person } from '../types';
 import { getPeople } from '../api';
 import { PeopleFilters } from './PeopleFilters';
 import React, { useEffect, useState } from 'react';
-// import { sortFunction } from '../utils/sorter';
 import { useSearchParams } from 'react-router-dom';
 import { getRenderedPeople } from '../utils/getRenderedPeople';
 
@@ -13,7 +11,6 @@ export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);
   const [fetchError, setFetchError] = useState(false);
   const [showLoader, setShowLoader] = useState(false);
-  // const [renderedPeople, setRenderedPeople] = useState<Person[]>([]);
   const [searchParams] = useSearchParams();
 
   useEffect(() => {
@@ -22,7 +19,6 @@ export const PeoplePage = () => {
     getPeople()
       .then(peops => {
         setPeople(peops);
-        // setRenderedPeople(peops);
       })
       .catch(() => setFetchError(true))
       .finally(() => setShowLoader(false));
