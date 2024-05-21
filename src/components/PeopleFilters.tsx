@@ -1,7 +1,7 @@
 import React from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
 import { getSearchWith } from '../utils/searchHelper';
-import cn from 'classnames';
+import classNames from 'classnames';
 
 interface Props {
   getSex: string | null;
@@ -31,19 +31,19 @@ export const PeopleFilters: React.FC<Props> = ({
       <p className="panel-heading">Filters</p>
       <p className="panel-tabs" data-cy="SexFilter">
         <Link
-          className={cn({ 'is-active': !getSex })}
+          className={classNames({ 'is-active': !getSex })}
           to={{ search: getSearchWith(searchParams, { sex: null }) }}
         >
           All
         </Link>
         <Link
-          className={cn({ 'is-active': getSex === 'm' })}
+          className={classNames({ 'is-active': getSex === 'm' })}
           to={{ search: getSearchWith(searchParams, { sex: 'm' }) }}
         >
           Male
         </Link>
         <Link
-          className={cn({ 'is-active': getSex === 'f' })}
+          className={classNames({ 'is-active': getSex === 'f' })}
           to={{ search: getSearchWith(searchParams, { sex: 'f' }) }}
         >
           Female
@@ -73,7 +73,7 @@ export const PeopleFilters: React.FC<Props> = ({
               <Link
                 data-cy="century"
                 key={value}
-                className={cn('button mr-1', {
+                className={classNames('button mr-1', {
                   'is-info': centuries.includes(value.toString()),
                 })}
                 to={{
@@ -85,7 +85,6 @@ export const PeopleFilters: React.FC<Props> = ({
                         )
                       : [...centuries, value.toString()],
                   }),
-                  /* eslint-enable @typescript-eslint/indent */
                 }}
               >
                 {value}
@@ -96,7 +95,7 @@ export const PeopleFilters: React.FC<Props> = ({
           <div className="level-right ml-4">
             <Link
               data-cy="centuryALL"
-              className={cn('button is-success', {
+              className={classNames('button is-success', {
                 'is-outlined': centuries.length > 0,
               })}
               to={{ search: getSearchWith(searchParams, { centuries: [] }) }}
