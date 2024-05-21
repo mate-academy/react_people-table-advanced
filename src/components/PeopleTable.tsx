@@ -9,6 +9,15 @@ type Props = {
   people: Person[];
 };
 
+const headers = [
+  { label: 'Name', column: 'name', hasIcon: true },
+  { label: 'Sex', column: 'sex', hasIcon: true },
+  { label: 'Born', column: 'born', hasIcon: true },
+  { label: 'Died', column: 'died', hasIcon: true },
+  { label: 'Mother', column: 'mother', hasIcon: false },
+  { label: 'Father', column: 'father', hasIcon: false },
+];
+
 export const PeopleTable: React.FC<Props> = ({ people }) => {
   const [searchParams] = useSearchParams();
   const sort = searchParams.get('sort');
@@ -32,7 +41,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
     orderParam: string | null,
   ) => {
     return classNames('fas', {
-      'fa-sort': columnParam !== column,
+      'fa-sort': columnParam !== column || !columnParam,
       'fa-sort-up': columnParam === column && !orderParam,
       'fa-sort-down': columnParam === column && orderParam,
     });
@@ -45,51 +54,22 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
     >
       <thead>
         <tr>
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Name
-              <SearchLink params={{ ...getSortParams('name') }}>
-                <span className="icon">
-                  <i className={sortingIconClass('name', sort, order)} />
-                </span>
-              </SearchLink>
-            </span>
-          </th>
-
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Sex
-              <SearchLink params={{ ...getSortParams('sex') }}>
-                <span className="icon">
-                  <i className={sortingIconClass('sex', sort, order)} />
-                </span>
-              </SearchLink>
-            </span>
-          </th>
-
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Born
-              <SearchLink params={{ ...getSortParams('born') }}>
-                <span className="icon">
-                  <i className={sortingIconClass('born', sort, order)} />
-                </span>
-              </SearchLink>
-            </span>
-          </th>
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Died
-              <SearchLink params={{ ...getSortParams('died') }}>
-                <span className="icon">
-                  <i className={sortingIconClass('died', sort, order)} />
-                </span>
-              </SearchLink>
-            </span>
-          </th>
-
-          <th>Mother</th>
-          <th>Father</th>
+          {headers.map(header => (
+            <th key={header.label}>
+              <span className="is-flex is-flex-wrap-nowrap">
+                {header.label}
+                {header.hasIcon && (
+                  <SearchLink params={getSortParams(header.column)}>
+                    <span className="icon">
+                      <i
+                        className={sortingIconClass(header.column, sort, order)}
+                      />
+                    </span>
+                  </SearchLink>
+                )}
+              </span>
+            </th>
+          ))}
         </tr>
       </thead>
 
