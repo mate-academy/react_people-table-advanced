@@ -25,14 +25,14 @@ export const getRenderedPeople = (
   chosenCenturies: string[],
   people: Person[],
   searchParams: URLSearchParams,
-) => {
+): Person[] => {
   let filteredPeople = [...people];
 
   if (currentSex) {
     filteredPeople = filteredPeople.filter(pers => pers.sex === currentSex);
   }
 
-  if (chosenCenturies) {
+  if (chosenCenturies.length > 0) {
     filteredPeople = filteredPeople.filter(pers =>
       chosenCenturies.includes(Math.ceil(+pers.born / 100).toString()),
     );
