@@ -1,4 +1,5 @@
 import classNames from 'classnames';
+import { Link, useLocation } from 'react-router-dom';
 
 type Props = {
   isWoman: boolean;
@@ -7,14 +8,16 @@ type Props = {
 };
 
 export const PersonLink: React.FC<Props> = ({ slug, isWoman, name }) => {
+  const { search } = useLocation();
+
   if (slug) {
     return (
-      <a
-        href={`#/people/${slug}`}
+      <Link
+        to={{ pathname: `/people/${slug}`, search }}
         className={classNames({ 'has-text-danger': isWoman })}
       >
         {name}
-      </a>
+      </Link>
     );
   } else {
     return `${name}`;
