@@ -110,7 +110,7 @@ export const PeopleFilters = () => {
               <button
                 key={cent}
                 onClick={() => toggleCentury(cent)}
-                className={classNames('button', {
+                className={classNames('button mr-1', {
                   'is-info': century.includes(cent),
                 })}
               >
