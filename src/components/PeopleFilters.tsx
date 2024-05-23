@@ -27,17 +27,11 @@ export const PeopleFilters = () => {
   };
 
   const handleCentury = (cent: string) => {
-    // const params = new URLSearchParams(searchParams);
-
     const newCent = century.includes(cent)
       ? century.filter(num => num !== cent)
       : [...century, cent];
 
     setSearchWith({ century: newCent || null });
-
-    // params.delete('century');
-    // newCent.forEach(num => params.append('century', num));
-    // setSearchParams(params);
   };
 
   return (
