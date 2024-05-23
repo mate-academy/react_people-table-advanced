@@ -4,13 +4,18 @@ import { PeopleTable } from './PeopleTable';
 import { getPeople } from '../api';
 import { useEffect, useState } from 'react';
 import { Person } from '../types';
+import { useSearchParams } from 'react-router-dom';
+import { filter } from './filter/filter';
 
 export const PeoplePage = () => {
-  const [people, setPeople] = useState<Person[]>();
+  const [people, setPeople] = useState<Person[]>([]);
   const [errorMessage, setErrorMessage] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const whenVisible = !loading && !errorMessage && !!people?.length;
+  const [searchParams] = useSearchParams();
+
+  const whenVisible = !loading && !errorMessage;
+  const filteredPeople = filter(people, searchParams);
 
   useEffect(() => {
     setLoading(true);
@@ -46,8 +51,10 @@ export const PeoplePage = () => {
                 </p>
               )}
 
-              {whenVisible && <PeopleTable people={people} />}
-              {!!people && !people?.length && (
+              {whenVisible && !!filteredPeople.length && (
+                <PeopleTable people={filteredPeople} />
+              )}
+              {!loading && !filteredPeople.length && (
                 <p>There are no people matching the current search criteria</p>
               )}
             </div>

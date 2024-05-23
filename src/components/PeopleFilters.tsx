@@ -1,5 +1,7 @@
 import React from 'react';
+import { SearchLink } from './SearchLink';
 import { useSearchParams } from 'react-router-dom';
+import { getSearchWith } from '../utils/searchHelper';
 
 export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -11,55 +13,32 @@ export const PeopleFilters = () => {
   const getActiveClass = (filt: string) => (sex === filt ? 'is-active' : '');
   const filtCentury = ['16', '17', '18', '19', '20'];
 
-  // set region
-  const handleSex = (gend: string) => {
-    const params = new URLSearchParams(searchParams);
+  const setSearchWith = (params: {
+    sex?: string | null;
+    query?: string | null;
+    century?: string[] | null;
+  }) => {
+    const search = getSearchWith(searchParams, params);
 
-    params.set('sex', gend);
-    setSearchParams(params);
+    setSearchParams(search);
   };
 
   const handleQuery = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const params = new URLSearchParams(searchParams);
-
-    params.set('query', event.target.value);
-    setSearchParams(params);
+    setSearchWith({ query: event.target.value || null });
   };
 
   const handleCentury = (cent: string) => {
-    const params = new URLSearchParams(searchParams);
+    // const params = new URLSearchParams(searchParams);
 
     const newCent = century.includes(cent)
       ? century.filter(num => num !== cent)
       : [...century, cent];
 
-    params.delete('century');
-    newCent.forEach(num => params.append('century', num));
-    setSearchParams(params);
-  };
+    setSearchWith({ century: newCent || null });
 
-  // reset region
-  const handleReset = () => {
-    const params = new URLSearchParams(searchParams);
-
-    params.delete('query');
-    params.delete('century');
-    params.delete('sex');
-    setSearchParams(params);
-  };
-
-  const handleResetCentury = () => {
-    const params = new URLSearchParams(searchParams);
-
-    params.delete('century');
-    setSearchParams(params);
-  };
-
-  const handleResetSex = () => {
-    const params = new URLSearchParams(searchParams);
-
-    params.delete('sex');
-    setSearchParams(params);
+    // params.delete('century');
+    // newCent.forEach(num => params.append('century', num));
+    // setSearchParams(params);
   };
 
   return (
@@ -67,27 +46,30 @@ export const PeopleFilters = () => {
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        <a
-          onClick={() => handleResetSex()}
+        <SearchLink
+          params={{ sex: null }}
+          // onClick={() => handleResetSex()}
           className={getActiveClass('')}
           // href="#/people"
         >
           All
-        </a>
-        <a
-          onClick={() => handleSex('m')}
+        </SearchLink>
+        <SearchLink
+          params={{ sex: 'm' }}
+          // onClick={() => handleSex('m')}
           className={getActiveClass('m')}
           // href="#/people?sex=m"
         >
           Male
-        </a>
-        <a
-          onClick={() => handleSex('f')}
+        </SearchLink>
+        <SearchLink
+          params={{ sex: 'f' }}
+          // onClick={() => handleSex('f')}
           className={getActiveClass('f')}
           // href="#/people?sex=f"
         >
           Female
-        </a>
+        </SearchLink>
       </p>
 
       <div className="panel-block">
@@ -112,6 +94,7 @@ export const PeopleFilters = () => {
           <div className="level-left">
             {filtCentury.map(cent => (
               <a
+                // params={{ century: [...century, cent] }}
                 key={cent}
                 onClick={() => handleCentury(cent)}
                 data-cy="century"
@@ -124,26 +107,28 @@ export const PeopleFilters = () => {
           </div>
 
           <div className="level-right ml-4">
-            <a
+            <SearchLink
+              params={{ century: null }}
               data-cy="centuryALL"
               className={`button is-success ${!!century.length && 'is-outlined'}`}
               // href="#/people"
-              onClick={() => handleResetCentury()}
+              // onClick={handleResetCentury}
             >
               All
-            </a>
+            </SearchLink>
           </div>
         </div>
       </div>
 
       <div className="panel-block">
-        <a
-          onClick={() => handleReset()}
+        <SearchLink
+          params={{ sex: null, century: null, query: null }}
+          // onClick={handleReset}
           className="button is-link is-outlined is-fullwidth"
           // href="#/people"
         >
           Reset all filters
-        </a>
+        </SearchLink>
       </div>
     </nav>
   );

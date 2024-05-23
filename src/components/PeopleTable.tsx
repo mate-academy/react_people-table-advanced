@@ -16,14 +16,15 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
       data-cy="peopleTable"
       className="table is-striped is-hoverable is-narrow is-fullwidth"
     >
-      <thead>
-        <tr>
-          <TableTitle />
+        <thead>
+          <tr>
+            <TableTitle />
 
-          <th>Mother</th>
-          <th>Father</th>
-        </tr>
-      </thead>
+            <th>Mother</th>
+            <th>Father</th>
+          </tr>
+        </thead>
+
 
       <tbody>
         {people.map(person => (
