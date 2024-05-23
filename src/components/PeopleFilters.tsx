@@ -8,13 +8,12 @@ export const PeopleFilters = () => {
 
   const sex = searchParams.get('sex') || '';
   const query = searchParams.get('query') || '';
-  const century = searchParams.getAll('century') || [];
+  const century = searchParams.getAll('century');
 
   const getActiveClass = (filt: string) => (sex === filt ? 'is-active' : '');
   const filtCentury = ['16', '17', '18', '19', '20'];
 
   const setSearchWith = (params: {
-    sex?: string | null;
     query?: string | null;
     century?: string[] | null;
   }) => {
@@ -46,28 +45,13 @@ export const PeopleFilters = () => {
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        <SearchLink
-          params={{ sex: null }}
-          // onClick={() => handleResetSex()}
-          className={getActiveClass('')}
-          // href="#/people"
-        >
+        <SearchLink params={{ sex: null }} className={getActiveClass('')}>
           All
         </SearchLink>
-        <SearchLink
-          params={{ sex: 'm' }}
-          // onClick={() => handleSex('m')}
-          className={getActiveClass('m')}
-          // href="#/people?sex=m"
-        >
+        <SearchLink params={{ sex: 'm' }} className={getActiveClass('m')}>
           Male
         </SearchLink>
-        <SearchLink
-          params={{ sex: 'f' }}
-          // onClick={() => handleSex('f')}
-          className={getActiveClass('f')}
-          // href="#/people?sex=f"
-        >
+        <SearchLink params={{ sex: 'f' }} className={getActiveClass('f')}>
           Female
         </SearchLink>
       </p>
@@ -94,12 +78,10 @@ export const PeopleFilters = () => {
           <div className="level-left">
             {filtCentury.map(cent => (
               <a
-                // params={{ century: [...century, cent] }}
                 key={cent}
                 onClick={() => handleCentury(cent)}
                 data-cy="century"
                 className={`button mr-1 ${century.includes(cent) ? 'is-info' : ''}`}
-                // href="#/people?centuries=16"
               >
                 {cent}
               </a>
@@ -111,8 +93,6 @@ export const PeopleFilters = () => {
               params={{ century: null }}
               data-cy="centuryALL"
               className={`button is-success ${!!century.length && 'is-outlined'}`}
-              // href="#/people"
-              // onClick={handleResetCentury}
             >
               All
             </SearchLink>
@@ -123,9 +103,7 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <SearchLink
           params={{ sex: null, century: null, query: null }}
-          // onClick={handleReset}
           className="button is-link is-outlined is-fullwidth"
-          // href="#/people"
         >
           Reset all filters
         </SearchLink>

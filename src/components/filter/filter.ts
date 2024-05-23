@@ -8,7 +8,7 @@ export const filter = (
   const query = searchParams.get('query') || '';
   const century = searchParams.getAll('century');
   const sort = searchParams.get('sort') || '';
-  const order = searchParams.get('query') || '';
+  const order = searchParams.get('order') || '';
 
   let copy = [...people];
 
