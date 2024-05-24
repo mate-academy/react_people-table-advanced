@@ -1,26 +1,37 @@
-export const Navbar = () => {
-  return (
-    <nav
-      data-cy="nav"
-      className="navbar is-fixed-top has-shadow"
-      role="navigation"
-      aria-label="main navigation"
-    >
-      <div className="container">
-        <div className="navbar-brand">
-          <a className="navbar-item" href="#/">
-            Home
-          </a>
+import React from 'react';
+import { Link, useLocation } from 'react-router-dom';
 
-          <a
-            aria-current="page"
-            className="navbar-item has-background-grey-lighter"
-            href="#/people"
-          >
-            People
-          </a>
+function Navbar() {
+  const { pathname } = useLocation();
+
+  return (
+    <div>
+      <nav
+        data-cy="nav"
+        className="navbar is-fixed-top has-shadow"
+        role="navigation"
+        aria-label="main navigation"
+      >
+        <div className="container">
+          <div className="navbar-brand">
+            <Link
+              className={`navbar-item ${pathname === '/' && 'has-background-grey-lighter'}`}
+              to="/"
+            >
+              Home
+            </Link>
+
+            <Link
+              className={`navbar-item ${pathname.includes('/people') && 'has-background-grey-lighter'}`}
+              to="/people"
+            >
+              People
+            </Link>
+          </div>
         </div>
-      </div>
-    </nav>
+      </nav>
+    </div>
   );
-};
+}
+
+export default Navbar;
