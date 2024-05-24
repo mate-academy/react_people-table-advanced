@@ -11,6 +11,7 @@ export function getSearchWith(
   paramsToUpdate: SearchParams, // it's our custom type
 ): string {
   // copy currentParams by creating new object from a string
+
   const newParams = new URLSearchParams(currentParams.toString());
 
   // Here is the example of paramsToUpdate
