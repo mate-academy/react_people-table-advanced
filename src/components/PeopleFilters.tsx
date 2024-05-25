@@ -40,7 +40,7 @@ export const PeopleFilters: React.FC<Props> = ({}) => {
   const selectLinkCentury = (tempCenturies: string[], century: string) => {
     return getSearchWith(
       {
-        tempCenturies: tempCenturies.includes(century)
+        centuries: tempCenturies.includes(century)
           ? tempCenturies.filter(tempCentury => tempCentury !== century)
           : [...tempCenturies, century],
       },

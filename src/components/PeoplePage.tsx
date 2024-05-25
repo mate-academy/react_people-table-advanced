@@ -5,7 +5,6 @@ import { getPeople } from '../api';
 import { PeopleTable } from './PeopleTable';
 import { PeopleFilters } from './PeopleFilters';
 import { useSearchParams } from 'react-router-dom';
-
 export const PeoplePage = () => {
   const [searchParams] = useSearchParams();
 
