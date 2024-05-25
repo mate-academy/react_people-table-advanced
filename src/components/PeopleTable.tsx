@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { Person } from '../types';
 import { PersonLink } from './PersonLink';
+import { sortByKey } from '../utils/sortByKey';
+import { sortPeople } from '../utils/sortPeopleTable';
 
 type SortOrder = 'asc' | 'desc' | 'none';
 
@@ -9,41 +11,6 @@ export const PeopleTable = ({ people }: { people: Person[] }) => {
     key: keyof Person;
     order: SortOrder;
   }>({ key: 'name', order: 'none' });
-
-  const sortByKey = (key: keyof Person) => {
-    setSortConfig(prevConfig => {
-      if (prevConfig.key === key) {
-        if (prevConfig.order === 'none') {
-          return { key, order: 'asc' };
-        } else if (prevConfig.order === 'asc') {
-          return { key, order: 'desc' };
-        } else {
-          return { key, order: 'none' };
-        }
-      } else {
-        return { key, order: 'asc' };
-      }
-    });
-  };
-
-  const sortedPeople = [...people].sort((a, b) => {
-    if (sortConfig.order === 'none') {
-      return 0;
-    }
-
-    const aKey = a[sortConfig.key] ?? '';
-    const bKey = b[sortConfig.key] ?? '';
-
-    if (aKey < bKey) {
-      return sortConfig.order === 'asc' ? -1 : 1;
-    }
-
-    if (aKey > bKey) {
-      return sortConfig.order === 'asc' ? 1 : -1;
-    }
-
-    return 0;
-  });
 
   const getIconClass = (key: keyof Person) => {
     if (sortConfig.key !== key) {
@@ -71,7 +38,7 @@ export const PeopleTable = ({ people }: { people: Person[] }) => {
           <th>
             <span
               className="is-flex is-flex-wrap-nowrap"
-              onClick={() => sortByKey('name')}
+              onClick={() => sortByKey('name', setSortConfig)}
             >
               Name
               <span className="icon">
@@ -82,7 +49,7 @@ export const PeopleTable = ({ people }: { people: Person[] }) => {
           <th>
             <span
               className="is-flex is-flex-wrap-nowrap"
-              onClick={() => sortByKey('sex')}
+              onClick={() => sortByKey('sex', setSortConfig)}
             >
               Sex
               <span className="icon">
@@ -93,7 +60,7 @@ export const PeopleTable = ({ people }: { people: Person[] }) => {
           <th>
             <span
               className="is-flex is-flex-wrap-nowrap"
-              onClick={() => sortByKey('born')}
+              onClick={() => sortByKey('born', setSortConfig)}
             >
               Born
               <span className="icon">
@@ -104,7 +71,7 @@ export const PeopleTable = ({ people }: { people: Person[] }) => {
           <th>
             <span
               className="is-flex is-flex-wrap-nowrap"
-              onClick={() => sortByKey('died')}
+              onClick={() => sortByKey('died', setSortConfig)}
             >
               Died
               <span className="icon">
@@ -117,7 +84,7 @@ export const PeopleTable = ({ people }: { people: Person[] }) => {
         </tr>
       </thead>
       <tbody>
-        {sortedPeople.map(person => (
+        {sortPeople(people, sortConfig).map(person => (
           <PersonLink person={person} people={people} key={person.slug} />
         ))}
       </tbody>

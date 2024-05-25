@@ -1,16 +1,16 @@
 import { PeopleFilters } from './PeopleFilters';
 import { Loader } from './Loader';
-import { PeopleTable } from './PeopleTable';
 import { getPeople } from '../api';
 import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Person } from '../types';
+import { filterPeople } from '../utils/filterPeople';
+import { PeopleTable } from './PeopleTable';
 
 export const PeoplePage = () => {
   const [peopleFromServer, setPeopleFromServer] = useState<Person[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
-  const [noPeople, setNoPeople] = useState(false);
   const [filtredPeople, setFiltredPeople] =
     useState<Person[]>(peopleFromServer);
 
@@ -20,11 +20,7 @@ export const PeoplePage = () => {
     setLoading(true);
     getPeople()
       .then(people => {
-        if (!people.length) {
-          setNoPeople(true);
-        } else {
-          setPeopleFromServer(people);
-        }
+        setPeopleFromServer(people);
       })
       .catch(() => {
         setError(true);
@@ -35,35 +31,7 @@ export const PeoplePage = () => {
   }, []);
 
   useEffect(() => {
-    let filteredPeoples = peopleFromServer;
-
-    const query = searchParams.get('query') || '';
-    const sex = searchParams.get('sex') || '';
-    const centuries = searchParams.getAll('centuries') || [];
-
-    if (sex) {
-      filteredPeoples = filteredPeoples.filter(
-        (person: Person) => person.sex === sex,
-      );
-    }
-
-    if (centuries.length) {
-      filteredPeoples = filteredPeoples.filter((person: Person) => {
-        return centuries.includes(person.born.toString().slice(0, 2));
-      });
-    }
-
-    if (query !== '') {
-      filteredPeoples = filteredPeoples.filter((person: Person) => {
-        return (
-          person.name.toLowerCase().includes(query.toLowerCase()) ||
-          person.fatherName?.toLowerCase().includes(query.toLowerCase()) ||
-          person.motherName?.toLowerCase().includes(query.toLowerCase())
-        );
-      });
-    }
-
-    setFiltredPeople(filteredPeoples);
+    setFiltredPeople(filterPeople(peopleFromServer, searchParams));
   }, [searchParams, peopleFromServer]);
 
   return (
@@ -86,13 +54,13 @@ export const PeoplePage = () => {
                 </p>
               )}
 
-              {noPeople && (
+              {!peopleFromServer.length && !loading && (
                 <p data-cy="noPeopleMessage">
                   There are no people on the server
                 </p>
               )}
 
-              {!noPeople && !error && !loading && (
+              {!!peopleFromServer.length && !error && !loading && (
                 <PeopleTable people={filtredPeople} />
               )}
             </div>
