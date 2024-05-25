@@ -66,158 +66,155 @@ export const PeopleTable: React.FC = () => {
 
   if (renderPeople.length) {
     return (
-      <>
-        <h1 className="title">People Page</h1>
-        <div className="block">
-          <div className="box table-container">
-            <table
-              data-cy="peopleTable"
-              className="table is-striped is-hoverable is-narrow is-fullwidth"
-            >
-              <thead>
-                <tr>
-                  <th>
-                    <span className="is-flex is-flex-wrap-nowrap">
-                      Name
-                      <a onClick={() => handleClickFilter('name')}>
-                        <span className="icon">
-                          <i
-                            className={cn('fas', {
-                              'fa-sort-up':
-                                searchParams.get('sort') === 'name' &&
-                                !searchParams.get('order'),
-                              'fa-sort-down':
-                                searchParams.get('order') === 'desc',
-                              'fa-sort': searchParams.get('sort') !== 'name',
-                            })}
-                          />
-                        </span>
-                      </a>
-                    </span>
-                  </th>
+      <div className="block">
+        <div className="box table-container">
+          <table
+            data-cy="peopleTable"
+            className="table is-striped is-hoverable is-narrow is-fullwidth"
+          >
+            <thead>
+              <tr>
+                <th>
+                  <span className="is-flex is-flex-wrap-nowrap">
+                    Name
+                    <a onClick={() => handleClickFilter('name')}>
+                      <span className="icon">
+                        <i
+                          className={cn('fas', {
+                            'fa-sort-up':
+                              searchParams.get('sort') === 'name' &&
+                              !searchParams.get('order'),
+                            'fa-sort-down':
+                              searchParams.get('order') === 'desc',
+                            'fa-sort': searchParams.get('sort') !== 'name',
+                          })}
+                        />
+                      </span>
+                    </a>
+                  </span>
+                </th>
 
-                  <th>
-                    <span className="is-flex is-flex-wrap-nowrap">
-                      Sex
-                      <a onClick={() => handleClickFilter('sex')}>
-                        <span className="icon">
-                          <i
-                            className={cn('fas', {
-                              'fa-sort-up':
-                                searchParams.get('sort') === 'sex' &&
-                                !searchParams.get('order'),
-                              'fa-sort-down':
-                                searchParams.get('sort') === 'sex' &&
-                                searchParams.get('order') === 'desc',
-                              'fa-sort': searchParams.get('sort') !== 'sex',
-                            })}
-                          />
-                        </span>
-                      </a>
-                    </span>
-                  </th>
+                <th>
+                  <span className="is-flex is-flex-wrap-nowrap">
+                    Sex
+                    <a onClick={() => handleClickFilter('sex')}>
+                      <span className="icon">
+                        <i
+                          className={cn('fas', {
+                            'fa-sort-up':
+                              searchParams.get('sort') === 'sex' &&
+                              !searchParams.get('order'),
+                            'fa-sort-down':
+                              searchParams.get('sort') === 'sex' &&
+                              searchParams.get('order') === 'desc',
+                            'fa-sort': searchParams.get('sort') !== 'sex',
+                          })}
+                        />
+                      </span>
+                    </a>
+                  </span>
+                </th>
 
-                  <th>
-                    <span className="is-flex is-flex-wrap-nowrap">
-                      Born
-                      <a onClick={() => handleClickFilter('born')}>
-                        <span className="icon">
-                          <i
-                            className={cn('fas', {
-                              'fa-sort-up':
-                                searchParams.get('sort') === 'born' &&
-                                !searchParams.get('order'),
-                              'fa-sort-down':
-                                searchParams.get('sort') === 'born' &&
-                                searchParams.get('order') === 'desc',
-                              'fa-sort': searchParams.get('sort') !== 'born',
-                            })}
-                          />
-                        </span>
-                      </a>
-                    </span>
-                  </th>
+                <th>
+                  <span className="is-flex is-flex-wrap-nowrap">
+                    Born
+                    <a onClick={() => handleClickFilter('born')}>
+                      <span className="icon">
+                        <i
+                          className={cn('fas', {
+                            'fa-sort-up':
+                              searchParams.get('sort') === 'born' &&
+                              !searchParams.get('order'),
+                            'fa-sort-down':
+                              searchParams.get('sort') === 'born' &&
+                              searchParams.get('order') === 'desc',
+                            'fa-sort': searchParams.get('sort') !== 'born',
+                          })}
+                        />
+                      </span>
+                    </a>
+                  </span>
+                </th>
 
-                  <th>
-                    <span className="is-flex is-flex-wrap-nowrap">
-                      Died
-                      <a onClick={() => handleClickFilter('died')}>
-                        <span className="icon">
-                          <i
-                            className={cn('fas', {
-                              'fa-sort-up':
-                                searchParams.get('sort') === 'died' &&
-                                !searchParams.get('order'),
-                              'fa-sort-down':
-                                searchParams.get('sort') === 'died' &&
-                                searchParams.get('order') === 'desc',
-                              'fa-sort': searchParams.get('sort') !== 'died',
-                            })}
-                          />
-                        </span>
-                      </a>
-                    </span>
-                  </th>
+                <th>
+                  <span className="is-flex is-flex-wrap-nowrap">
+                    Died
+                    <a onClick={() => handleClickFilter('died')}>
+                      <span className="icon">
+                        <i
+                          className={cn('fas', {
+                            'fa-sort-up':
+                              searchParams.get('sort') === 'died' &&
+                              !searchParams.get('order'),
+                            'fa-sort-down':
+                              searchParams.get('sort') === 'died' &&
+                              searchParams.get('order') === 'desc',
+                            'fa-sort': searchParams.get('sort') !== 'died',
+                          })}
+                        />
+                      </span>
+                    </a>
+                  </span>
+                </th>
 
-                  <th>Mother</th>
-                  <th>Father</th>
-                </tr>
-              </thead>
+                <th>Mother</th>
+                <th>Father</th>
+              </tr>
+            </thead>
 
-              <tbody>
-                {renderPeople.map((p: Person, index) => (
-                  <tr
-                    key={index}
-                    data-cy="person"
-                    className={cn({
-                      'has-background-warning': p.slug === slugName,
-                    })}
-                  >
-                    <td>
+            <tbody>
+              {renderPeople.map((p: Person, index) => (
+                <tr
+                  key={index}
+                  data-cy="person"
+                  className={cn({
+                    'has-background-warning': p.slug === slugName,
+                  })}
+                >
+                  <td>
+                    <Link
+                      to={`${p.slug}`}
+                      className={cn({ 'has-text-danger': p.sex === 'f' })}
+                    >
+                      {p.name}
+                    </Link>
+                  </td>
+
+                  <td>{p.sex}</td>
+                  <td>{p.born}</td>
+                  <td>{p.died}</td>
+
+                  <td>
+                    {checkPerents(p, Sex.f) ? (
                       <Link
-                        to={`${p.slug}`}
-                        className={cn({ 'has-text-danger': p.sex === 'f' })}
+                        to={`${checkPerents(p, Sex.f)?.slug}`}
+                        className="has-text-danger"
                       >
-                        {p.name}
+                        {p.motherName}
                       </Link>
-                    </td>
+                    ) : (
+                      <p>{p.motherName || '-'}</p>
+                    )}
+                  </td>
 
-                    <td>{p.sex}</td>
-                    <td>{p.born}</td>
-                    <td>{p.died}</td>
-
-                    <td>
-                      {checkPerents(p, Sex.f) ? (
-                        <Link
-                          to={`${checkPerents(p, Sex.f)?.slug}`}
-                          className="has-text-danger"
-                        >
-                          {p.motherName}
-                        </Link>
-                      ) : (
-                        <p>{p.motherName || '-'}</p>
-                      )}
-                    </td>
-
-                    <td>
-                      {checkPerents(p, Sex.m) ? (
-                        <Link
-                          to={`${checkPerents(p, Sex.m)?.slug}`}
-                          className="has-text-danger"
-                        >
-                          {p.fatherName}
-                        </Link>
-                      ) : (
-                        <p>{p.fatherName || '-'}</p>
-                      )}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                  <td>
+                    {checkPerents(p, Sex.m) ? (
+                      <Link
+                        to={`${checkPerents(p, Sex.m)?.slug}`}
+                        className="has-text-danger"
+                      >
+                        {p.fatherName}
+                      </Link>
+                    ) : (
+                      <p>{p.fatherName || '-'}</p>
+                    )}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
-      </>
+      </div>
     );
   }
 

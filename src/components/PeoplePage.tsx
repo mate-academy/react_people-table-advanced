@@ -53,9 +53,7 @@ export const PeoplePage = () => {
               </div>
 
               <div className="column">
-                <div className="box table-container">
-                  <PeopleTable />
-                </div>
+                <PeopleTable />
               </div>
             </div>
           </>
