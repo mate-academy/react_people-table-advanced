@@ -1,5 +1,5 @@
 import { Person } from '../types';
-type SortOrder = 'asc' | 'desc' | 'none';
+import { SortOrder } from '../types/sortOrder';
 
 export const sortPeople = (
   people: Person[],

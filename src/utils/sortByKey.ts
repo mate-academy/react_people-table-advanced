@@ -1,6 +1,5 @@
 import { Person } from '../types';
-
-type SortOrder = 'none' | 'asc' | 'desc';
+import { SortOrder } from '../types/sortOrder';
 
 type SortConfig = {
   key: keyof Person;
