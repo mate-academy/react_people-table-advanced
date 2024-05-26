@@ -12,6 +12,18 @@ interface Params {
   setError: Dispatch<SetStateAction<ErrorType>>;
 }
 
+function getIconClasses(
+  sortField: SortField,
+  currentSortField: SortField,
+  sortOrder: string | null,
+) {
+  return cn('fas', {
+    'fa-sort': currentSortField !== sortField,
+    'fa-sort-up': currentSortField === sortField && sortOrder === null,
+    'fa-sort-down': currentSortField === sortField && sortOrder === 'desc',
+  });
+}
+
 export const PeopleTable: React.FC<Params> = ({ people, setError }) => {
   const { slug } = useParams();
   const normalizedSlug = slug || null;
@@ -120,13 +132,11 @@ export const PeopleTable: React.FC<Params> = ({ people, setError }) => {
                 <a onClick={() => setSort(SortField.Name)}>
                   <span className="icon">
                     <i
-                      className={cn('fas', {
-                        'fa-sort': sortField !== SortField.Name,
-                        'fa-sort-up':
-                          sortField === SortField.Name && sortOrder === null,
-                        'fa-sort-down':
-                          sortField === SortField.Name && sortOrder === 'desc',
-                      })}
+                      className={getIconClasses(
+                        SortField.Name,
+                        sortField as SortField,
+                        sortOrder,
+                      )}
                     />
                   </span>
                 </a>
@@ -139,13 +149,11 @@ export const PeopleTable: React.FC<Params> = ({ people, setError }) => {
                 <a onClick={() => setSort(SortField.Sex)}>
                   <span className="icon">
                     <i
-                      className={cn('fas', {
-                        'fa-sort': sortField !== SortField.Sex,
-                        'fa-sort-up':
-                          sortField === SortField.Sex && sortOrder === null,
-                        'fa-sort-down':
-                          sortField === SortField.Sex && sortOrder === 'desc',
-                      })}
+                      className={getIconClasses(
+                        SortField.Sex,
+                        sortField as SortField,
+                        sortOrder,
+                      )}
                     />
                   </span>
                 </a>
@@ -158,13 +166,11 @@ export const PeopleTable: React.FC<Params> = ({ people, setError }) => {
                 <a onClick={() => setSort(SortField.Born)}>
                   <span className="icon">
                     <i
-                      className={cn('fas', {
-                        'fa-sort': sortField !== SortField.Born,
-                        'fa-sort-up':
-                          sortField === SortField.Born && sortOrder === null,
-                        'fa-sort-down':
-                          sortField === SortField.Born && sortOrder === 'desc',
-                      })}
+                      className={getIconClasses(
+                        SortField.Born,
+                        sortField as SortField,
+                        sortOrder,
+                      )}
                     />
                   </span>
                 </a>
@@ -177,13 +183,11 @@ export const PeopleTable: React.FC<Params> = ({ people, setError }) => {
                 <a onClick={() => setSort(SortField.Died)}>
                   <span className="icon">
                     <i
-                      className={cn('fas', {
-                        'fa-sort': sortField !== SortField.Died,
-                        'fa-sort-up':
-                          sortField === SortField.Died && sortOrder === null,
-                        'fa-sort-down':
-                          sortField === SortField.Died && sortOrder === 'desc',
-                      })}
+                      className={getIconClasses(
+                        SortField.Died,
+                        sortField as SortField,
+                        sortOrder,
+                      )}
                     />
                   </span>
                 </a>
