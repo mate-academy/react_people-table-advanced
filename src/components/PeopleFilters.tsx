@@ -3,6 +3,7 @@ import { useSearchParams } from 'react-router-dom';
 import cn from 'classnames';
 import { getSearchWith } from '../utils/searchHelper';
 import { DispatchContext } from '../context/reducer';
+import { SearchLink } from './SearchLink';
 
 enum SexFilter {
   'male',
@@ -18,10 +19,8 @@ export const PeopleFilters = () => {
     switch (sortParam) {
       case SexFilter.male:
         return setSearchParams(getSearchWith(searchParams, { sex: 'm' }));
-
       case SexFilter.female:
         return setSearchParams(getSearchWith(searchParams, { sex: 'f' }));
-
       default:
         return setSearchParams(getSearchWith(searchParams, { sex: null }));
     }
@@ -44,26 +43,29 @@ export const PeopleFilters = () => {
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        <a
+        <SearchLink
+          params={{ sex: null }}
           onClick={() => handleClickFilter(null)}
           className={cn({ 'is-active': !searchParams.get('sex') })}
         >
           All
-        </a>
+        </SearchLink>
 
-        <a
+        <SearchLink
+          params={{ sex: 'm' }}
           onClick={() => handleClickFilter(SexFilter.male)}
           className={cn({ 'is-active': searchParams.get('sex') === 'm' })}
         >
           Male
-        </a>
+        </SearchLink>
 
-        <a
+        <SearchLink
+          params={{ sex: 'f' }}
           onClick={() => handleClickFilter(SexFilter.female)}
           className={cn({ 'is-active': searchParams.get('sex') === 'f' })}
         >
           Female
-        </a>
+        </SearchLink>
       </p>
 
       <div className="panel-block">
@@ -97,7 +99,12 @@ export const PeopleFilters = () => {
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
             {[16, 17, 18, 19, 20].map(century => (
-              <a
+              <SearchLink
+                params={{
+                  centuries: centuries.includes(`${century}`)
+                    ? centuries.filter(c => c !== `${century}`)
+                    : [...centuries, `${century}`],
+                }}
                 key={century}
                 data-cy="century"
                 className={cn('button mr-1', {
@@ -106,12 +113,13 @@ export const PeopleFilters = () => {
                 onClick={() => handleClickCentury(`${century}`)}
               >
                 {century}
-              </a>
+              </SearchLink>
             ))}
           </div>
 
           <div className="level-right ml-4">
-            <a
+            <SearchLink
+              params={{ centuries: [] }}
               data-cy="centuryALL"
               className={cn('button is-success', {
                 'is-outlined': centuries.length,
@@ -124,13 +132,20 @@ export const PeopleFilters = () => {
               }}
             >
               All
-            </a>
+            </SearchLink>
           </div>
         </div>
       </div>
 
       <div className="panel-block">
-        <a
+        <SearchLink
+          params={{
+            sex: null,
+            centuries: null,
+            sort: null,
+            order: null,
+            query: null,
+          }}
           className="button is-link is-outlined is-fullwidth"
           onClick={() => {
             setSearchParams(
@@ -146,7 +161,7 @@ export const PeopleFilters = () => {
           }}
         >
           Reset all filters
-        </a>
+        </SearchLink>
       </div>
     </nav>
   );
