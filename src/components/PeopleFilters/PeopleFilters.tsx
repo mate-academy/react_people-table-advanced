@@ -1,5 +1,5 @@
 import cn from 'classnames';
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { SearchParams, getSearchWith } from '../../utils/searchHelper';
 
@@ -10,8 +10,6 @@ export const PeopleFilters = () => {
   const centuries = searchParams.getAll('centuries') || [];
 
   const [queryInput, setQueryInput] = useState('');
-
-  const queryRef = useRef(null);
 
   const setSearchWith = (params: SearchParams) => {
     setSearchParams(getSearchWith(searchParams, params));
@@ -42,8 +40,7 @@ export const PeopleFilters = () => {
   };
 
   const handleClear = () => {
-    setSearchWith({ sex: null, centuries: [], query: null });
-
+    setSearchParams({});
     setQueryInput('');
   };
 
@@ -78,7 +75,6 @@ export const PeopleFilters = () => {
             placeholder="Search"
             value={queryInput}
             onChange={handleQueryChange}
-            ref={queryRef}
           />
 
           <span className="icon is-left">
@@ -144,7 +140,9 @@ export const PeopleFilters = () => {
           <div className="level-right ml-4">
             <a
               data-cy="centuryALL"
-              className="button is-success is-outlined"
+              className={cn('button', 'mr-1', 'is-success', {
+                'is-outlined': centuries.length > 0,
+              })}
               onClick={() => setSearchWith({ centuries: [] })}
             >
               All

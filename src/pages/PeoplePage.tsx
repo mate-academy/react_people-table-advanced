@@ -6,26 +6,86 @@ import { PeopleTable } from '../components/PeopleTable';
 
 import { getPeople } from '../api';
 
-import { ErrorType } from '../types/ErrorType';
 import { Person } from '../types';
+import { useSearchParams } from 'react-router-dom';
+import { SortField } from './SortTypes';
 
 export const PeoplePage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [people, setPeople] = useState<Person[]>([]);
-  const [error, setError] = useState(ErrorType.NoError);
+
+  const [searchParams] = useSearchParams();
+
+  const sex = searchParams.get('sex') || null;
+  const query = searchParams.get('query') || null;
+  const centuries = searchParams.getAll('centuries') || [];
+  const sortField = searchParams.get('sort') || null;
+
+  const [isServerError, setIsServerError] = useState(false);
 
   useEffect(() => {
     getPeople()
       .then(response => {
         setPeople(response);
-
-        if (response.length === 0) {
-          setError(ErrorType.NoPeopleOnServer);
-        }
       })
-      .catch(() => setError(ErrorType.ServerError))
+      .catch(() => setIsServerError(true))
       .finally(() => setIsLoading(false));
   }, []);
+
+  const visiblePeople = people.filter(person => {
+    // check if sex was set and filter people by sex
+    if (sex && person.sex !== sex) {
+      return false;
+    }
+
+    // checks if query was set and filters people by their name, father name and mother name
+    if (
+      query &&
+      !person.name.includes(query) &&
+      !person.motherName?.includes(query) &&
+      !person.fatherName?.includes(query)
+    ) {
+      return false;
+    }
+
+    // checks if born or death year is within certain century
+    if (
+      centuries.length > 0 &&
+      !centuries.includes(`${Math.ceil(person.born / 100)}`)
+    ) {
+      return false;
+    }
+
+    return true;
+  });
+
+  // SORTING
+  if (sortField) {
+    visiblePeople.sort((person1, person2) => {
+      switch (sortField) {
+        case SortField.Name:
+          const name1 = person1.name.toLowerCase();
+          const name2 = person2.name.toLowerCase();
+
+          return name1.localeCompare(name2);
+
+        case SortField.Sex:
+          const sex1 = person1.sex.toLowerCase();
+          const sex2 = person2.sex.toLowerCase();
+
+          return sex1.localeCompare(sex2);
+
+        case SortField.Born:
+          return person1.born - person2.born;
+
+        case SortField.Died:
+          return person1.died - person2.died;
+
+        default:
+          return 0;
+      }
+    });
+  }
 
   return (
     <>
@@ -41,22 +101,22 @@ export const PeoplePage = () => {
             <div className="box table-container">
               {isLoading && <Loader />}
 
-              {error === ErrorType.ServerError && (
+              {isServerError && (
                 <p data-cy="peopleLoadingError">Something went wrong</p>
               )}
 
-              {error === ErrorType.NoPeopleOnServer && !isLoading && (
+              {!people.length && !isLoading && (
                 <p data-cy="noPeopleMessage">
                   There are no people on the server
                 </p>
               )}
 
-              {error === ErrorType.NoPeopleMatching && !isLoading && (
+              {!isLoading && !visiblePeople.length && !!people.length && (
                 <p>There are no people matching the current search criteria</p>
               )}
 
-              {!isLoading && error === ErrorType.NoError && (
-                <PeopleTable people={people} setError={setError} />
+              {!isLoading && !!visiblePeople.length && (
+                <PeopleTable people={visiblePeople} />
               )}
             </div>
           </div>

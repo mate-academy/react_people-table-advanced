@@ -1,15 +1,12 @@
 import { PersonRow } from '../PersonRow';
 import { Person } from '../../types';
 import { useParams, useSearchParams } from 'react-router-dom';
-import { Dispatch, SetStateAction } from 'react';
-import { ErrorType } from '../../types/ErrorType';
 import { SearchParams, getSearchWith } from '../../utils/searchHelper';
 import cn from 'classnames';
 import { SortField } from '../../pages/SortTypes';
 
 interface Params {
   people: Person[];
-  setError: Dispatch<SetStateAction<ErrorType>>;
 }
 
 function getIconClasses(
@@ -24,87 +21,17 @@ function getIconClasses(
   });
 }
 
-export const PeopleTable: React.FC<Params> = ({ people, setError }) => {
+export const PeopleTable: React.FC<Params> = ({ people }) => {
   const { slug } = useParams();
   const normalizedSlug = slug || null;
 
   const [searchParams, setSearchParams] = useSearchParams();
-  const sex = searchParams.get('sex') || null;
-  const query = searchParams.get('query') || null;
-  const centuries = searchParams.get('centuries') || null;
-  const sortField = searchParams.get('sort');
-  const sortOrder = searchParams.get('order');
+  const sortField = searchParams.get('sort') || null;
+  const sortOrder = searchParams.get('order') || null;
 
   const setSearchWith = (params: SearchParams) => {
     setSearchParams(getSearchWith(searchParams, params));
   };
-
-  // FILTERING
-  const visiblePeople = [...people].filter(person => {
-    // check if sex was set and filter people by sex
-    if (sex && person.sex !== sex) {
-      return false;
-    }
-
-    // checks if query was set and filters people by their name, father name and mother name
-    if (
-      query &&
-      !person.name.includes(query) &&
-      !person.motherName?.includes(query) &&
-      !person.fatherName?.includes(query)
-    ) {
-      return false;
-    }
-
-    // checks if born or death year is within certain century
-    if (
-      centuries &&
-      !centuries.includes((person.born % 100).toString()) &&
-      !centuries.includes((person.died % 100).toString())
-    ) {
-      return false;
-    }
-
-    return true;
-  });
-
-  // SORTING
-  if (sortField) {
-    visiblePeople.sort((person1, person2) => {
-      switch (sortField) {
-        case SortField.Name:
-          const name1 = person1.name.toLowerCase();
-          const name2 = person2.name.toLowerCase();
-
-          return name1.localeCompare(name2);
-
-        case SortField.Sex:
-          const sex1 = person1.sex.toLowerCase();
-          const sex2 = person2.sex.toLowerCase();
-
-          return sex1.localeCompare(sex2);
-
-        case SortField.Born:
-          return person1.born - person2.born;
-
-        case SortField.Died:
-          return person1.died - person2.died;
-
-        default:
-          return 0;
-      }
-    });
-  }
-
-  if (sortOrder === 'desc') {
-    visiblePeople.reverse();
-  }
-
-  if (visiblePeople.length === 0) {
-    setError(ErrorType.NoPeopleMatching);
-  } else {
-    setError(ErrorType.NoError);
-  }
 
   const setSort = (value: SortField) => {
     if (sortField !== value) {
@@ -200,7 +127,7 @@ export const PeopleTable: React.FC<Params> = ({ people, setError }) => {
         </thead>
 
         <tbody>
-          {visiblePeople.map(person => (
+          {people.map(person => (
             <PersonRow
               people={people}
               person={person}
