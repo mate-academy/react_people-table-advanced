@@ -1,5 +1,12 @@
 /* eslint-disable jsx-a11y/control-has-associated-label */
-export const PeopleTable = () => {
+
+import { Person } from '../types';
+
+interface Props {
+  people: Person[];
+}
+
+export const PeopleTable: React.FC<Props> = ({  }) => {
   return (
     <table
       data-cy="peopleTable"
