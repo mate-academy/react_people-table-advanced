@@ -1,42 +1,12 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { useSearchParams } from 'react-router-dom';
 import cn from 'classnames';
 import { getSearchWith } from '../utils/searchHelper';
-import { DispatchContext } from '../context/reducer';
 import { SearchLink } from './SearchLink';
-
-enum SexFilter {
-  'male',
-  'female',
-}
 
 export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const centuries = searchParams.getAll('centuries') || [];
-  const dispatch = useContext(DispatchContext);
-
-  const handleClickFilter = (sortParam: SexFilter | null) => {
-    switch (sortParam) {
-      case SexFilter.male:
-        return setSearchParams(getSearchWith(searchParams, { sex: 'm' }));
-      case SexFilter.female:
-        return setSearchParams(getSearchWith(searchParams, { sex: 'f' }));
-      default:
-        return setSearchParams(getSearchWith(searchParams, { sex: null }));
-    }
-  };
-
-  const handleClickCentury = (centurie: string) => {
-    const updatedCenturies = centuries.includes(centurie)
-      ? centuries.filter(c => c !== centurie)
-      : [...centuries, centurie];
-
-    dispatch({ type: 'setCenturies', payload: updatedCenturies });
-
-    setSearchParams(
-      getSearchWith(searchParams, { centuries: updatedCenturies }),
-    );
-  };
 
   return (
     <nav className="panel">
@@ -45,7 +15,6 @@ export const PeopleFilters = () => {
       <p className="panel-tabs" data-cy="SexFilter">
         <SearchLink
           params={{ sex: null }}
-          onClick={() => handleClickFilter(null)}
           className={cn({ 'is-active': !searchParams.get('sex') })}
         >
           All
@@ -53,7 +22,6 @@ export const PeopleFilters = () => {
 
         <SearchLink
           params={{ sex: 'm' }}
-          onClick={() => handleClickFilter(SexFilter.male)}
           className={cn({ 'is-active': searchParams.get('sex') === 'm' })}
         >
           Male
@@ -61,7 +29,6 @@ export const PeopleFilters = () => {
 
         <SearchLink
           params={{ sex: 'f' }}
-          onClick={() => handleClickFilter(SexFilter.female)}
           className={cn({ 'is-active': searchParams.get('sex') === 'f' })}
         >
           Female
@@ -110,7 +77,6 @@ export const PeopleFilters = () => {
                 className={cn('button mr-1', {
                   'is-info': centuries.includes(`${century}`),
                 })}
-                onClick={() => handleClickCentury(`${century}`)}
               >
                 {century}
               </SearchLink>
@@ -124,12 +90,6 @@ export const PeopleFilters = () => {
               className={cn('button is-success', {
                 'is-outlined': centuries.length,
               })}
-              onClick={() => {
-                dispatch({ type: 'setCenturies', payload: [] });
-                setSearchParams(
-                  getSearchWith(searchParams, { centuries: null }),
-                );
-              }}
             >
               All
             </SearchLink>
@@ -145,20 +105,9 @@ export const PeopleFilters = () => {
             sort: null,
             order: null,
             query: null,
+            slug: null,
           }}
           className="button is-link is-outlined is-fullwidth"
-          onClick={() => {
-            setSearchParams(
-              getSearchWith(searchParams, {
-                sex: null,
-                centuries: null,
-                sort: null,
-                order: null,
-                query: null,
-              }),
-            );
-            dispatch({ type: 'setCenturies', payload: [] });
-          }}
         >
           Reset all filters
         </SearchLink>

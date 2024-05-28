@@ -2,10 +2,11 @@ import React, { useContext } from 'react';
 import { StateContex } from '../context/reducer';
 import { Person } from '../types';
 import cn from 'classnames';
-import { Link, useParams, useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import { Sex } from '../types/Sex';
 import { filterPeople } from '../utils/filterPeople';
 import { getSearchWith } from '../utils/searchHelper';
+import { SearchLink } from './SearchLink';
 
 export const PeopleTable: React.FC = () => {
   const { people } = useContext(StateContex);
@@ -15,10 +16,13 @@ export const PeopleTable: React.FC = () => {
   const checkPerents = (perent: Person, sex: Sex) => {
     switch (sex) {
       case Sex.m:
-        return people.find(person => person.name === perent.fatherName);
+        return people.find(person => person.name === perent.fatherName)!;
 
       case Sex.f:
-        return people.find(person => person.name === perent.motherName);
+        return people.find(person => person.name === perent.motherName)!;
+
+      default:
+        return perent;
     }
   };
 
@@ -61,8 +65,6 @@ export const PeopleTable: React.FC = () => {
   const renderPeople = searchParams.get('centuries')
     ? filterCenturies
     : sortPeople;
-
-  const { slugName } = useParams();
 
   if (renderPeople.length) {
     return (
@@ -168,16 +170,17 @@ export const PeopleTable: React.FC = () => {
                   key={index}
                   data-cy="person"
                   className={cn({
-                    'has-background-warning': p.slug === slugName,
+                    'has-background-warning':
+                      p.slug === searchParams.get('slug'),
                   })}
                 >
                   <td>
-                    <Link
-                      to={`${p.slug}`}
+                    <SearchLink
+                      params={{ slug: p.slug }}
                       className={cn({ 'has-text-danger': p.sex === 'f' })}
                     >
                       {p.name}
-                    </Link>
+                    </SearchLink>
                   </td>
 
                   <td>{p.sex}</td>
@@ -186,12 +189,12 @@ export const PeopleTable: React.FC = () => {
 
                   <td>
                     {checkPerents(p, Sex.f) ? (
-                      <Link
-                        to={`${checkPerents(p, Sex.f)?.slug}`}
+                      <SearchLink
+                        params={{ slug: checkPerents(p, Sex.f).slug }}
                         className="has-text-danger"
                       >
                         {p.motherName}
-                      </Link>
+                      </SearchLink>
                     ) : (
                       <p>{p.motherName || '-'}</p>
                     )}
@@ -199,12 +202,11 @@ export const PeopleTable: React.FC = () => {
 
                   <td>
                     {checkPerents(p, Sex.m) ? (
-                      <Link
-                        to={`${checkPerents(p, Sex.m)?.slug}`}
-                        className="has-text-danger"
+                      <SearchLink
+                        params={{ slug: checkPerents(p, Sex.m).slug }}
                       >
                         {p.fatherName}
-                      </Link>
+                      </SearchLink>
                     ) : (
                       <p>{p.fatherName || '-'}</p>
                     )}

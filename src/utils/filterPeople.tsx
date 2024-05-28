@@ -27,23 +27,22 @@ export const filterPeople = (params: URLSearchParams, people: Person[]) => {
   }
 
   if (sortBy) {
-    switch (sortBy) {
-      case 'name':
-        filteredPeople.sort((a, b) =>
-          a.name > b.name ? sortOrder : -sortOrder,
-        );
-        break;
-      case 'sex':
-        filteredPeople.sort((a, b) => (a.sex > b.sex ? sortOrder : -sortOrder));
-        break;
-      case 'born':
-        filteredPeople.sort((a, b) => sortOrder * (a.born - b.born));
-        break;
-      case 'died':
-        filteredPeople.sort((a, b) => sortOrder * (a.died - b.died));
-        break;
-      default:
-        break;
+    if (sortBy) {
+      switch (sortBy) {
+        case 'name':
+        case 'sex':
+          filteredPeople.sort((a, b) =>
+            a[sortBy] > b[sortBy] ? sortOrder : -sortOrder,
+          );
+          break;
+
+        case 'born':
+        case 'died':
+          filteredPeople.sort((a, b) => sortOrder * (a[sortBy] - b[sortBy]));
+          break;
+        default:
+          break;
+      }
     }
   }
 
