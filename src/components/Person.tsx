@@ -19,7 +19,7 @@ export const Person: React.FC<Props> = ({ person }) => {
     >
       <td>
         <Link
-          to={`#/${person.slug}`}
+          to={`./${person.slug}`}
           className={classNames({ "has-text-danger": person.sex === 'f' })}
         >
           {person.name}
