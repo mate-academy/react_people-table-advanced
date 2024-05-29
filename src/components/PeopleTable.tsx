@@ -1,58 +1,38 @@
 import React from 'react';
-import { Person } from './Person';
-import { PersonType } from '../types';
+import { SearchLink } from './SearchLink';
 import classNames from 'classnames';
-import { SearchParams, getSearchWith } from '../utils/searchHelper';
-import { SortField } from '../types/SortField';
+import { useParams, useSearchParams } from 'react-router-dom';
+import { PersonType } from '../types';
+import { Person } from './Person';
 
 interface Props {
   people: PersonType[];
-  setSearchParams: (params: URLSearchParams) => void;
-  searchParams: URLSearchParams;
 }
 
-const getIconClasses = (
-  sortField: SortField,
-  currentSortField: SortField,
-  sortOrder: string | null,
-) => {
-  return classNames('fas', {
-    'fa-sort': currentSortField !== sortField,
-    'fa-sort-up': currentSortField === sortField && sortOrder === null,
-    'fa-sort-down': currentSortField === sortField && sortOrder === 'desc',
-  });
-};
+export const PeopleTable: React.FC<Props> = ({ people }) => {
+  const [searchParams] = useSearchParams();
 
-export const PeopleTable: React.FC<Props> = ({
-  people,
-  setSearchParams,
-  searchParams,
-}) => {
-  const sortField = searchParams.get('sort') || null;
-  const sortOrder = searchParams.get('order') || null;
+  const currentSort = searchParams.get('sort');
+  const order = searchParams.get('order');
 
-  const setSearchWith = (params: Partial<SearchParams>) => {
-    const filteredParams: SearchParams = Object.fromEntries(
-      Object.entries(params).filter(([, value]) => value !== undefined)
-    ) as SearchParams;
+  const sortOptions = (newSort: string) => {
+    if (newSort !== currentSort) {
+      return { sort: newSort, order: null };
+    }
 
-    const newSearchParams = new URLSearchParams(
-      getSearchWith(searchParams, filteredParams)
-    );
+    if (newSort === currentSort && !order) {
+      return { sort: newSort, order: 'desc' };
+    }
 
-    setSearchParams(newSearchParams);
+    return { sort: null, order: null };
   };
 
-  const handleSort = (value: SortField) => {
-    if (sortField !== value) {
-      setSearchWith({ sort: value });
-    } else {
-      if (sortOrder !== 'desc') {
-        setSearchWith({ order: 'desc' });
-      } else {
-        setSearchWith({ sort: null, order: null });
-      }
-    }
+  const sortClass = (sort: string) => {
+    return classNames('fas', {
+      'fa-sort': sort !== currentSort,
+      'fa-sort-up': sort === currentSort && !order,
+      'fa-sort-down': sort === currentSort && !!order,
+    });
   };
 
   return (
@@ -65,66 +45,42 @@ export const PeopleTable: React.FC<Props> = ({
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Name
-              <a onClick={() => handleSort(SortField.Name)}>
+              <SearchLink params={{ ...sortOptions('name') }}>
                 <span className="icon">
-                  <i
-                    className={getIconClasses(
-                      SortField.Name,
-                      sortField as SortField,
-                      sortOrder,
-                    )}
-                  />
+                  <i className={sortClass('name')} />
                 </span>
-              </a>
+              </SearchLink>
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Sex
-              <a onClick={() => handleSort(SortField.Sex)}>
+              <SearchLink params={{ ...sortOptions('sex') }}>
                 <span className="icon">
-                  <i
-                    className={getIconClasses(
-                      SortField.Sex,
-                      sortField as SortField,
-                      sortOrder,
-                    )}
-                  />
+                  <i className={sortClass('sex')} />
                 </span>
-              </a>
+              </SearchLink>
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Born
-              <a onClick={() => handleSort(SortField.Born)}>
+              <SearchLink params={{ ...sortOptions('born') }}>
                 <span className="icon">
-                  <i
-                    className={getIconClasses(
-                      SortField.Born,
-                      sortField as SortField,
-                      sortOrder,
-                    )}
-                  />
+                  <i className={sortClass('died')} />
                 </span>
-              </a>
+              </SearchLink>
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Died
-              <a onClick={() => handleSort(SortField.Died)}>
+              <a href="#/people?sort=died">
                 <span className="icon">
-                  <i
-                    className={getIconClasses(
-                      SortField.Died,
-                      sortField as SortField,
-                      sortOrder,
-                    )}
-                  />
+                  <i className="fas fa-sort" />
                 </span>
               </a>
             </span>
@@ -137,7 +93,11 @@ export const PeopleTable: React.FC<Props> = ({
 
       <tbody>
         {people.map(person => (
-          <Person key={person.slug} person={person} />
+          <Person
+            key={person.slug}
+            people={people}
+            person={person}
+          />
         ))}
       </tbody>
     </table>
