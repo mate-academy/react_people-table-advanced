@@ -1,8 +1,8 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
 import { App } from './App';
+import { HomePage } from './pages/HomePage';
 import { PeoplePage } from './pages/PeoplePage';
 import { NotFoundPage } from './pages/NotFoundPage';
-import { HomePage } from './pages/HomePage';
 
 export const Root = () => (
   <Routes>
