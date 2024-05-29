@@ -8,18 +8,19 @@ import { App } from '../App';
 import { HomePage } from './HomePage/HomePage';
 import { PeoplePage } from './PeoplePage/PeoplePage';
 import { ErrorPage } from './ErrorPage/ErrorPage';
+import { ROUTES } from '../utils/routes';
 
 export const Root = () => {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<App />}>
+        <Route path={ROUTES.HOME} element={<App />}>
           <Route index element={<HomePage />} />
-          <Route path="/home" element={<Navigate to="/" />} />
-          <Route path="/people" element={<PeoplePage />}>
-            <Route path=":slug" element={<PeoplePage />} />
+          <Route path={ROUTES.HOME_PAGE} element={<Navigate to="/" />} />
+          <Route path={ROUTES.PEOPLE} element={<PeoplePage />}>
+            <Route path={ROUTES.SLUG} element={<PeoplePage />} />
           </Route>
-          <Route path="*" element={<ErrorPage />} />
+          <Route path={ROUTES.WILDCARD} element={<ErrorPage />} />
         </Route>
       </Routes>
     </Router>

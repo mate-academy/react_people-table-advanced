@@ -14,7 +14,7 @@ export const PeoplePage = () => {
 
   const visiblePeople = FilterPeople(people);
 
-  const isPeopleEmpty = people.length === 0;
+  const isPeopleEmpty = !people.length;
 
   useEffect(() => {
     getPeople()

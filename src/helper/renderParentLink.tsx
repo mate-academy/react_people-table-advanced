@@ -14,7 +14,9 @@ export const renderParentLink = (
     return '-';
   }
 
-  const parentPerson = people.find(p => p.name === parentName);
+  const parentPerson = people.find(
+    personFromPeople => personFromPeople.name === parentName,
+  );
 
   if (!parentPerson) {
     return parentName;
