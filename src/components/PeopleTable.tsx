@@ -166,6 +166,7 @@ export const PeopleTable: React.FC<Props> = ({
           <tr
             data-cy="person"
             key={person.name}
+            id={person.slug}
             className={classNames({
               'has-background-warning': person.slug === selectedPerson,
             })}

@@ -17,7 +17,7 @@ const getCenturyRange = (century: number): [number, number] => {
 export const PeoplePage = () => {
   const [searchParams] = useSearchParams();
   const [people, setPeople] = useState<Person[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   const getSex = searchParams.get('sex');
@@ -27,13 +27,21 @@ export const PeoplePage = () => {
   const { selectedPerson } = useParams();
 
   useEffect(() => {
-    setIsLoading(true);
-
     getPeople()
       .then(setPeople)
       .catch(() => setError('Something went wrong while fetching the data.'))
       .finally(() => setIsLoading(false));
   }, []);
+
+  useEffect(() => {
+    if (!people.length || !selectedPerson) {
+      return;
+    }
+
+    document
+      .getElementById(selectedPerson)
+      ?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }, [selectedPerson, people]);
 
   const filterPeople = useCallback(() => {
     let filtered = people;
