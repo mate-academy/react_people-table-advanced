@@ -74,7 +74,6 @@ export const PeoplePage = () => {
       const valueA = a[sortColumn];
       const valueB = b[sortColumn];
 
-      // Handle undefined values
       if (valueA === undefined) {
         return 1;
       }
@@ -114,10 +113,14 @@ export const PeoplePage = () => {
   );
 
   const toggleArrow = (column: string) => {
-    const order =
-      column === sortColumn ? (sortDirection ? null : 'desc') : null;
+    const [order, sort] =
+      column === sortColumn
+        ? sortDirection
+          ? [null, null]
+          : ['desc', column]
+        : [null, column];
 
-    return { sex, query, centuries, sort: column, order };
+    return { sex, query, centuries, sort, order };
   };
 
   return (
@@ -129,9 +132,9 @@ export const PeoplePage = () => {
           <div className="column is-7-tablet is-narrow-desktop">
             <PeopleFilters
               onSearchChange={handleSearchChange}
-              sex={sex ? sex : undefined}
-              centuries={centuries ? centuries : undefined}
-              query={query ? query : undefined}
+              sex={sex ?? undefined}
+              centuries={centuries ?? undefined}
+              query={query ?? undefined}
             />
           </div>
 
