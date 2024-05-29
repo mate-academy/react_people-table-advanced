@@ -7,6 +7,13 @@ import { PeopleFilters } from '../components/PeopleFilters';
 import { Loader } from '../components/Loader';
 import { PeopleTable } from '../components/PeopleTable';
 
+const getCenturyRange = (century: number): [number, number] => {
+  const start = (century - 1) * 100 + 1;
+  const end = century * 100;
+
+  return [start, end];
+};
+
 export const PeoplePage = () => {
   const [searchParams] = useSearchParams();
   const [people, setPeople] = useState<Person[]>([]);
@@ -15,7 +22,7 @@ export const PeoplePage = () => {
 
   const getSex = searchParams.get('sex');
   const query = searchParams.get('query') || '';
-  const centuries = searchParams.getAll('centuries ') || [];
+  const centuries = searchParams.getAll('centuries') || [];
 
   const { selectedPerson } = useParams();
 
@@ -27,13 +34,6 @@ export const PeoplePage = () => {
       .catch(() => setError('Something went wrong while fetching the data.'))
       .finally(() => setIsLoading(false));
   }, []);
-
-  const getCenturyRange = (century: number): [number, number] => {
-    const start = (century - 1) * 100 + 1;
-    const end = century * 100;
-
-    return [start, end];
-  };
 
   const filterPeople = useCallback(() => {
     let filtered = people;
