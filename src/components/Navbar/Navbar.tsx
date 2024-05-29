@@ -1,5 +1,6 @@
 import { NavLink } from 'react-router-dom';
 import cn from 'classnames';
+import { ROUTES } from '../../utils/routes';
 
 export const Navbar = () => {
   const isLinkActive = ({ isActive }: { isActive: boolean }) => {
@@ -15,11 +16,15 @@ export const Navbar = () => {
     >
       <div className="container">
         <div className="navbar-brand">
-          <NavLink className={isLinkActive} to="/">
+          <NavLink className={isLinkActive} to={ROUTES.HOME}>
             Home
           </NavLink>
 
-          <NavLink aria-current="page" className={isLinkActive} to="/people">
+          <NavLink
+            aria-current="page"
+            className={isLinkActive}
+            to={ROUTES.PEOPLE}
+          >
             People
           </NavLink>
         </div>

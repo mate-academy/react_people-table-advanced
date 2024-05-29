@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { Person } from '../types';
 import cn from 'classnames';
+import { ROUTES } from '../utils/routes';
 
 export const renderParentLink = (
   person: Person,
@@ -25,7 +26,7 @@ export const renderParentLink = (
   return (
     <Link
       className={cn({ 'has-text-danger': parentPerson.sex === 'f' })}
-      to={`/people/${parentPerson.slug}?${searchParams.toString()}`}
+      to={`/${ROUTES.PEOPLE}/${parentPerson.slug}?${searchParams.toString()}`}
     >
       {parentPerson.name}
     </Link>

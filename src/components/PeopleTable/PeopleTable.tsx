@@ -5,6 +5,7 @@ import { Person } from '../../types';
 import { renderParentLink } from '../../helper/renderParentLink';
 import { useFilterParams } from '../hooks/useFilterParam';
 import { useState } from 'react';
+import { ROUTES } from '../../utils/routes';
 
 type Props = {
   people: Person[];
@@ -108,7 +109,7 @@ export const PeopleTable: React.FC<Props> = ({ people, visiblePeople }) => {
             >
               <td>
                 <NavLink
-                  to={`/people/${person.slug}?${searchParams.toString()}`}
+                  to={`/${ROUTES.PEOPLE}/${person.slug}?${searchParams.toString()}`}
                   className={cn({ 'has-text-danger': person.sex === 'f' })}
                 >
                   {person.name}
