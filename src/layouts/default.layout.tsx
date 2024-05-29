@@ -1,9 +1,9 @@
 import { Outlet } from 'react-router-dom';
 
-import './App.scss';
+import '../App.scss';
 import { Navbar } from '../components/Navbar';
 
-export const App = () => {
+export const DefaultLayout = () => {
   return (
     <div data-cy="app">
       <Navbar />
