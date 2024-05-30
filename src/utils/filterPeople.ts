@@ -6,7 +6,7 @@ type FilterParams = {
   centuries: string[];
 };
 
-export function filterPeople(
+export default function filterPeople(
   people: Person[],
   { sex, query, centuries }: FilterParams,
 ): Person[] {

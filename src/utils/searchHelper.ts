@@ -1,3 +1,7 @@
+export type SearchParams = {
+  [key: string]: string | string[] | null;
+};
+
 type Param = string | number;
 type Params = {
   [key: string]: Param[] | Param | null;
