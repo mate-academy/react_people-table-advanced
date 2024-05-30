@@ -1,5 +1,5 @@
 import { FC, useMemo } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams, useSearchParams } from 'react-router-dom';
 
 import { Person } from '../types';
 import PersonName from './PersonName';
@@ -11,6 +11,7 @@ interface Props {
 
 const PersonLink: FC<Props> = ({ person: currentPerson, people }) => {
   const { slug } = useParams();
+  const [searchParams] = useSearchParams();
 
   const findMother = useMemo(
     () => people.find(person => person.name === currentPerson.motherName),
@@ -28,7 +29,10 @@ const PersonLink: FC<Props> = ({ person: currentPerson, people }) => {
     person ? (
       <Link
         className={person.sex === 'f' ? 'has-text-danger' : ''}
-        to={`${person.slug}`}
+        to={{
+          pathname: `/people/${person.slug}`,
+          search: searchParams.toString(),
+        }}
       >
         {name}
       </Link>
