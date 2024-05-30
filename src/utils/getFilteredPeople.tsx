@@ -5,7 +5,7 @@ export const getFilteredPeople = (
   query: string,
   centuries: string[],
   sex: string,
-) => {
+): Person[] => {
   let filteredPeople = people;
 
   if (query.includes(' ')) {
@@ -18,10 +18,8 @@ export const getFilteredPeople = (
     filteredPeople = people.filter(
       person =>
         person.name.toLowerCase().includes(trimmedQuery) ||
-        (person.fatherName &&
-          person.fatherName.toLowerCase().includes(trimmedQuery)) ||
-        (person.motherName &&
-          person.motherName.toLowerCase().includes(trimmedQuery)),
+        person.fatherName?.toLowerCase().includes(trimmedQuery) ||
+        person.motherName?.toLowerCase().includes(trimmedQuery),
     );
   }
 

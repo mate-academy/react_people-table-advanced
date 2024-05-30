@@ -1,8 +1,8 @@
 import { Link, useSearchParams } from 'react-router-dom';
+import { SearchParams, getSearchWith } from '../utils/searchHelper';
 
-import cn from 'classnames';
 import { ChangeEvent } from 'react';
-import { getSearchWith } from '../utils/searchHelper';
+import cn from 'classnames';
 
 export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -10,7 +10,7 @@ export const PeopleFilters = () => {
   const sex = searchParams.get('sex') || '';
   const centuries = searchParams.getAll('centuries') || [];
 
-  const setSearchWith = (param: any) => {
+  const setSearchWith = (param: SearchParams) => {
     const search = getSearchWith(searchParams, param);
 
     setSearchParams(search);

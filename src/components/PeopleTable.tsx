@@ -50,21 +50,19 @@ export const PeopleTable: FC<Props> = ({ people, isError }) => {
   const sortedPeople = [...visiblePeople];
 
   if (sort) {
-    sortedPeople.sort((a, b) => {
-      const sortField = sort as keyof Person;
+    const sortField = sort as keyof Person;
 
+    sortedPeople.sort((a, b) => {
       const aValue = a[sortField] ?? '';
       const bValue = b[sortField] ?? '';
 
-      if (aValue < bValue) {
-        return order === 'desc' ? 1 : -1;
+      if (aValue === bValue) {
+        return 0;
       }
 
-      if (aValue > bValue) {
-        return order === 'desc' ? -1 : 1;
-      }
+      const comparison = aValue < bValue ? -1 : 1;
 
-      return 0;
+      return order === 'desc' ? -comparison : comparison;
     });
   }
 
