@@ -24,7 +24,6 @@ export const PeoplePage = () => {
   const sortDirection = searchParams.get('order') === 'desc';
 
   useEffect(() => {
-    setIsLoading(true);
     getPeople()
       .then(fetchedPeople => {
         setPeople(
@@ -43,26 +42,36 @@ export const PeoplePage = () => {
   }, []);
 
   const filteredPeople = useMemo(() => {
-    let filtered = people;
     const centuriesAsNumbers = centuries.map(Number);
 
-    if (sex) {
-      filtered = filtered.filter(person => person.sex === sex);
-    }
+    const filters: { condition: boolean; callback: (p: Person) => boolean }[] =
+      [
+        {
+          condition: !!sex,
+          callback: (person: Person) => person.sex === sex,
+        },
+        {
+          condition: centuries.length > 0,
+          callback: (person: Person) =>
+            person.century !== undefined &&
+            centuriesAsNumbers.includes(person.century),
+        },
+        {
+          condition: !!query,
+          callback: (person: Person) =>
+            query
+              ? person.name.toLowerCase().includes(query.toLowerCase())
+              : true,
+        },
+      ];
 
-    if (centuries.length > 0) {
-      filtered = filtered.filter(
-        person => person.century && centuriesAsNumbers.includes(person.century),
-      );
-    }
+    return filters.reduce((acc, { condition, callback }) => {
+      if (condition) {
+        return acc.filter(callback);
+      }
 
-    if (query) {
-      filtered = filtered.filter(person =>
-        person.name.toLowerCase().includes(query.toLowerCase()),
-      );
-    }
-
-    return filtered;
+      return acc;
+    }, people);
   }, [people, centuries, query, sex]);
 
   const sortedFilteredPeople = useMemo(() => {
@@ -70,9 +79,13 @@ export const PeoplePage = () => {
       return filteredPeople;
     }
 
-    return [...filteredPeople].sort((a, b) => {
+    const comparePeople = (a: Person, b: Person) => {
       const valueA = a[sortColumn];
       const valueB = b[sortColumn];
+
+      if (valueA === undefined && valueB === undefined) {
+        return 0;
+      }
 
       if (valueA === undefined) {
         return 1;
@@ -82,22 +95,22 @@ export const PeoplePage = () => {
         return -1;
       }
 
-      if (valueA < valueB) {
-        return sortDirection ? 1 : -1;
+      if (sortDirection) {
+        return valueA > valueB ? -1 : valueA < valueB ? 1 : 0;
+      } else {
+        return valueA < valueB ? -1 : valueA > valueB ? 1 : 0;
       }
+    };
 
-      if (valueA > valueB) {
-        return sortDirection ? -1 : 1;
-      }
-
-      return 0;
-    });
+    return [...filteredPeople].sort(comparePeople);
   }, [filteredPeople, sortColumn, sortDirection]);
-  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const newParams = new URLSearchParams(searchParams);
 
-    newParams.set('query', event.target.value);
-    setSearchParams(newParams);
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchParams(newParams => {
+      newParams.set('query', event.target.value);
+
+      return newParams;
+    });
   };
 
   const peopleMap: PeopleMap = useMemo(
@@ -133,7 +146,7 @@ export const PeoplePage = () => {
             <PeopleFilters
               onSearchChange={handleSearchChange}
               sex={sex ?? undefined}
-              centuries={centuries ?? undefined}
+              centuries={centuries.length ? centuries : undefined}
               query={query ?? undefined}
             />
           </div>

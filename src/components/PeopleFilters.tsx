@@ -1,6 +1,5 @@
 import { ChangeEventHandler } from 'react';
 import { SearchLink } from './SearchLink';
-import { SearchParams } from '../utils/searchHelper';
 
 export const PeopleFilters = ({
   onSearchChange,
@@ -13,23 +12,15 @@ export const PeopleFilters = ({
   centuries?: string[];
   query?: string;
 }) => {
-  const isActive = (key: string, value: string) => {
-    if (key === 'sex') {
-      return sex === value;
-    } else {
-      return centuries.includes(value);
-    }
-  };
+  const isActive = (key: string, value: string) =>
+    (key === 'sex' && sex === value) || centuries.includes(value);
 
   const toggleCenturies = (centuryParam: string) => {
-    const params: SearchParams = { sex, query };
     const newCenturies = centuries.includes(centuryParam)
       ? centuries.filter(century => century !== centuryParam)
       : [...centuries, centuryParam];
 
-    params.centuries = newCenturies;
-
-    return params;
+    return { centuries: newCenturies };
   };
 
   const isAllActive = () => {
