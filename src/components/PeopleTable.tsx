@@ -13,7 +13,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
   const sortParam = searchParams.get('sort') || '';
   const orderParam = searchParams.get('order') || '';
   const [sortField, setSortField] = useState<string>(sortParam);
-  const [sortOrder, setSortOrder] = useState<'asc' | 'desc' | ''>(
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>(
     orderParam === 'desc' ? 'desc' : 'asc',
   );
 
