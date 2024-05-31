@@ -4,10 +4,11 @@ import { PeopleTable } from './PeopleTable';
 import { useEffect, useState } from 'react';
 import { getPeople } from '../api';
 import { Person } from '../types';
+import { Errors } from '../utils/errors';
 
 export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>();
-  const [errorMessage, setErrorMessage] = useState('');
+  const [loadingError, setLoadingError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
@@ -15,7 +16,7 @@ export const PeoplePage = () => {
 
     getPeople()
       .then(setPeople)
-      .catch(() => setErrorMessage('Something went wrong'))
+      .catch(() => setLoadingError(true))
       .finally(() => setIsLoading(false));
   }, []);
 
@@ -23,12 +24,12 @@ export const PeoplePage = () => {
     return <Loader />;
   }
 
-  if (errorMessage) {
-    return <p data-cy="peopleLoadingError">{errorMessage}</p>;
+  if (loadingError) {
+    return <p data-cy="peopleLoadingError">{Errors.LOADING_FAIL}</p>;
   }
 
   if (people?.length === 0) {
-    return <p data-cy="noPeopleMessage">There are no people on the server</p>;
+    return <p data-cy="noPeopleMessage">{Errors.NO_PEOPLE_ON_SERVER}</p>;
   }
 
   return (

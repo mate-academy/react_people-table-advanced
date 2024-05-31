@@ -5,13 +5,19 @@ import { SearchLink } from './SearchLink';
 
 const CENTURIES_OPTIONS = [16, 17, 18, 19, 20];
 
+interface SearchParams {
+  sex?: string | null;
+  query?: string | null;
+  centuries?: string[] | null;
+}
+
 export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const sex = searchParams.get('sex') || '';
   const query = searchParams.get('query') || '';
   const centuries = searchParams.getAll('centuries') || [];
 
-  function setSearchWith(params: any) {
+  function setSearchWith(params: Partial<SearchParams>) {
     const search = getSearchWith(params, searchParams);
 
     setSearchParams(search);

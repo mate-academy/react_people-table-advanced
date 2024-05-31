@@ -4,8 +4,9 @@ import classNames from 'classnames';
 import { SearchLink } from './SearchLink';
 import { useParams, useSearchParams } from 'react-router-dom';
 import filterPeople from '../utils/filterPeople';
-import sortArray from '../utils/sortArray';
+import sortPeople from '../utils/sortPeople';
 import { useMemo } from 'react';
+import { Errors } from '../utils/errors';
 
 type Props = {
   people: Person[];
@@ -37,7 +38,11 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
     centuries: searchParams.getAll('centuries') || [],
   });
 
-  filteredPeople = sortArray(filteredPeople, currentSort, currentOrder);
+  filteredPeople = sortPeople(
+    filteredPeople,
+    currentSort as keyof Person,
+    currentOrder,
+  );
 
   function handleSortClick(sortField: SortType) {
     if (sortField === currentSort) {
@@ -71,11 +76,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
   }
 
   if (filteredPeople.length === 0) {
-    return (
-      <p data-cy="noFilteredPeopleMessage">
-        There are no people matching the current search criteria
-      </p>
-    );
+    return <p data-cy="noFilteredPeopleMessage">{Errors.NO_FILTERED_PEOPLE}</p>;
   }
 
   return (

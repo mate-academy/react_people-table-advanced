@@ -1,8 +1,10 @@
-export default function sortArray(
-  array: any[],
-  sortType: string,
+import { Person } from '../types';
+
+export default function sortPeople(
+  array: Person[],
+  sortType: keyof Person,
   sortOrder: string,
-) {
+): Person[] {
   if (sortOrder === 'default') {
     return array;
   }
