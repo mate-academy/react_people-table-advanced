@@ -13,7 +13,7 @@ const getNavLinkClasses = ({ isActive }: ActiveLink): string =>
     'has-background-grey-lighter': isActive,
   });
 
-export const Navbar: React.FC = () => {
+export const Navigation: React.FC = () => {
   const { search } = useLocation();
 
   return (
