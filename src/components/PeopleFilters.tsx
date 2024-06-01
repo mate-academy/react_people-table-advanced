@@ -10,7 +10,7 @@ export const PeopleFilters = () => {
 
   const searchTerm = searchParams.get('searchTerm') || '';
   const sex = searchParams.get('sex') || null;
-  const selectedCenturies = searchParams.getAll('selectedCenturies') || [];
+  const centuries = searchParams.getAll('centuries') || [];
 
   const setSearchWith = useCallback(
     (params: FilterOptions) => {
@@ -34,9 +34,9 @@ export const PeopleFilters = () => {
   };
 
   const getNewCenturies = (newCentury: string) => {
-    const newSelectedCenturies = selectedCenturies.includes(newCentury)
-      ? selectedCenturies.filter(century => century !== newCentury)
-      : [...selectedCenturies, newCentury];
+    const newSelectedCenturies = centuries.includes(newCentury)
+      ? centuries.filter(century => century !== newCentury)
+      : [...centuries, newCentury];
 
     return newSelectedCenturies;
   };
@@ -82,9 +82,9 @@ export const PeopleFilters = () => {
             {['16', '17', '18', '19', '20'].map(century => (
               <SearchLink
                 key={century}
-                params={{ selectedCenturies: getNewCenturies(century) }}
+                params={{ centuries: getNewCenturies(century) }}
                 className={cn('button mr-1', {
-                  'is-info': selectedCenturies.includes(century),
+                  'is-info': centuries.includes(century),
                 })}
               >
                 {century}
@@ -94,9 +94,9 @@ export const PeopleFilters = () => {
 
           <div className="level-right ml-4">
             <SearchLink
-              params={{ selectedCenturies: [] }}
+              params={{ centuries: [] }}
               className={cn('button mr-1 is-success', {
-                'is-outlined': selectedCenturies.length,
+                'is-outlined': centuries.length,
               })}
               data-cy="centuryALL"
             >
