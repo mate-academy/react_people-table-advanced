@@ -12,6 +12,10 @@ interface Props {
 export const PeopleTable: React.FC<Props> = ({ people }) => {
   const [searchParams] = useSearchParams();
 
+  // {
+  //   console.log(people);
+  // }
+
   const currentSort = searchParams.get('sort') || '';
   const currentOrder = searchParams.get('order') || '';
 
@@ -100,7 +104,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
 
         <tbody>
           {people.map(person => (
-            <PersonLink key={person.born} person={person} people={people} />
+            <PersonLink key={person.slug} person={person} people={people} />
           ))}
         </tbody>
       </table>

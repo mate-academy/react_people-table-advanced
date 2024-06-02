@@ -1,4 +1,4 @@
-import { Link, useParams } from 'react-router-dom';
+import { Link, useLocation, useParams } from 'react-router-dom';
 import { Person } from '../types';
 import classNames from 'classnames';
 
@@ -7,10 +7,14 @@ type Props = {
   people: Person[];
 };
 
-const findPersonByName = (people: Person[], name: string) =>
+const findPersonByName = (people: Person[], name: string): Person | undefined =>
   people.find(item => item.name === name);
 
-const renderMotherCell = (person: Person, people: Person[]) => {
+const renderMotherCell = (
+  person: Person,
+  people: Person[],
+  search: string,
+): JSX.Element => {
   const { motherName } = person;
 
   if (!motherName) {
@@ -25,14 +29,21 @@ const renderMotherCell = (person: Person, people: Person[]) => {
 
   return (
     <td>
-      <Link to={`../${mother.slug}`} className="has-text-danger">
+      <Link
+        to={{ pathname: `/${mother.slug}`, search }}
+        className="has-text-danger"
+      >
         {motherName}
       </Link>
     </td>
   );
 };
 
-const renderFatherCell = (person: Person, people: Person[]) => {
+const renderFatherCell = (
+  person: Person,
+  people: Person[],
+  search: string,
+): JSX.Element => {
   const { fatherName } = person;
 
   if (!fatherName) {
@@ -47,15 +58,17 @@ const renderFatherCell = (person: Person, people: Person[]) => {
 
   return (
     <td>
-      <Link to={`../${father.slug}`}>{fatherName}</Link>
+      <Link to={{ pathname: `/people/${father.slug}`, search }}>
+        {fatherName}
+      </Link>
     </td>
   );
 };
 
 export const PersonLink: React.FC<Props> = ({ person, people }) => {
   const { name, sex, born, died, slug } = person;
-
-  const { personId } = useParams();
+  const { search } = useLocation();
+  const { personId } = useParams<{ personId: string }>();
 
   return (
     <tr
@@ -66,7 +79,7 @@ export const PersonLink: React.FC<Props> = ({ person, people }) => {
     >
       <td>
         <Link
-          to={`../${slug}`}
+          to={{ pathname: `/people/${slug}`, search }}
           className={classNames({
             'has-text-danger': sex === 'f',
           })}
@@ -77,8 +90,8 @@ export const PersonLink: React.FC<Props> = ({ person, people }) => {
       <td>{sex}</td>
       <td>{born}</td>
       <td>{died}</td>
-      {renderMotherCell(person, people)}
-      {renderFatherCell(person, people)}
+      {renderMotherCell(person, people, search)}
+      {renderFatherCell(person, people, search)}
     </tr>
   );
 };
