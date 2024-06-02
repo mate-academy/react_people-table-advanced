@@ -1,64 +1,109 @@
-import { useEffect, useState } from 'react';
-import { getPeople } from '../api';
+import classNames from 'classnames';
 import { Person } from '../types';
-import { Loader } from './Loader';
 import { PersonLink } from './PersonLink';
+import { SearchLink } from './SearchLink';
+import { useSearchParams } from 'react-router-dom';
+import { SearchParams } from '../utils/searchHelper';
 
-/* eslint-disable jsx-a11y/control-has-associated-label */
-export const PeopleTable = () => {
-  const [people, setPeople] = useState<Person[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [hasError, setHasError] = useState(false);
+interface Props {
+  people: Person[];
+}
 
-  useEffect(() => {
-    setIsLoading(true);
+export const PeopleTable: React.FC<Props> = ({ people }) => {
+  const [searchParams] = useSearchParams();
 
-    getPeople()
-      .then(response => setPeople(response))
-      .catch(() => setHasError(true))
-      .finally(() => setIsLoading(false));
-  }, []);
+  const currentSort = searchParams.get('sort') || '';
+  const currentOrder = searchParams.get('order') || '';
+
+  const handleToggleSort = (sortBy: string): SearchParams => {
+    if (!currentSort) {
+      return { sort: sortBy };
+    }
+
+    if (currentSort === sortBy && !currentOrder) {
+      return { sort: sortBy, order: 'desc' };
+    }
+
+    return { sort: null, order: null };
+  };
+
+  const getSortIconClass = (sortBy: string): string => {
+    if (currentSort !== sortBy) {
+      return 'fa-sort';
+    }
+
+    return currentOrder === 'desc' ? 'fa-sort-down' : 'fa-sort-up';
+  };
 
   return (
     <>
-      <div className="box table-container">
-        {isLoading && <Loader />}
+      <table
+        data-cy="peopleTable"
+        className="table is-striped is-hoverable is-narrow is-fullwidth"
+      >
+        <thead>
+          <tr>
+            <th>
+              <span className="is-flex is-flex-wrap-nowrap">
+                Name
+                <SearchLink params={handleToggleSort('name')}>
+                  <span className="icon">
+                    <i
+                      className={classNames('fas', getSortIconClass('name'))}
+                    />
+                  </span>
+                </SearchLink>
+              </span>
+            </th>
 
-        {hasError && (
-          <p data-cy="peopleLoadingError" className="has-text-danger">
-            Something went wrong
-          </p>
-        )}
+            <th>
+              <span className="is-flex is-flex-wrap-nowrap">
+                Sex
+                <SearchLink params={handleToggleSort('sex')}>
+                  <span className="icon">
+                    <i className={classNames('fas', getSortIconClass('sex'))} />
+                  </span>
+                </SearchLink>
+              </span>
+            </th>
 
-        {!people.length && !isLoading && !hasError && (
-          <p data-cy="noPeopleMessage">There are no people on the server</p>
-        )}
+            <th>
+              <span className="is-flex is-flex-wrap-nowrap">
+                Born
+                <SearchLink params={handleToggleSort('born')}>
+                  <span className="icon">
+                    <i
+                      className={classNames('fas', getSortIconClass('born'))}
+                    />
+                  </span>
+                </SearchLink>
+              </span>
+            </th>
 
-        {!!people.length && !isLoading && !hasError && (
-          <table
-            data-cy="peopleTable"
-            className="table is-striped is-hoverable is-narrow is-fullwidth"
-          >
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Sex</th>
-                <th>Born</th>
-                <th>Died</th>
-                <th>Mother</th>
-                <th>Father</th>
-              </tr>
-            </thead>
+            <th>
+              <span className="is-flex is-flex-wrap-nowrap">
+                Died
+                <SearchLink params={handleToggleSort('died')}>
+                  <span className="icon">
+                    <i
+                      className={classNames('fas', getSortIconClass('died'))}
+                    />
+                  </span>
+                </SearchLink>
+              </span>
+            </th>
 
-            <tbody>
-              {people.map(person => (
-                // eslint-disable-next-line react/jsx-key
-                <PersonLink key={person.born} person={person} people={people} />
-              ))}
-            </tbody>
-          </table>
-        )}
-      </div>
+            <th>Mother</th>
+            <th>Father</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          {people.map(person => (
+            <PersonLink key={person.born} person={person} people={people} />
+          ))}
+        </tbody>
+      </table>
     </>
   );
 };

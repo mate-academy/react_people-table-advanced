@@ -55,13 +55,13 @@ const renderFatherCell = (person: Person, people: Person[]) => {
 export const PersonLink: React.FC<Props> = ({ person, people }) => {
   const { name, sex, born, died, slug } = person;
 
-  const { slugLink } = useParams();
+  const { personId } = useParams();
 
   return (
     <tr
       data-cy="person"
       className={classNames({
-        'has-background-warning': slugLink === slug,
+        'has-background-warning': personId === slug,
       })}
     >
       <td>
