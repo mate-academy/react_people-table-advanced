@@ -5,6 +5,7 @@
   ],
   "compilerOptions": {
     "sourceMap": false,
+    "baseUrl": "./",
     "types": ["node", "cypress"]
   }
 }
