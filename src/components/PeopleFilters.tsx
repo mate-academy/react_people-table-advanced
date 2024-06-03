@@ -2,6 +2,7 @@ import { useSearchParams } from 'react-router-dom';
 import { getSearchWith } from '../utils/searchHelper';
 import { SearchLink } from './SearchLink';
 import classNames from 'classnames';
+import React from 'react';
 
 const possibleCenturies = ['16', '17', '18', '19', '20'];
 
@@ -39,7 +40,7 @@ export const PeopleFilters = () => {
 
         <SearchLink
           className={classNames({
-            'is-active': 'm',
+            'is-active': sex === 'm',
           })}
           params={{ sex: 'm' }}
         >
@@ -48,7 +49,7 @@ export const PeopleFilters = () => {
 
         <SearchLink
           className={classNames({
-            'is-active': 'f',
+            'is-active': sex === 'f',
           })}
           params={{ sex: 'f' }}
         >

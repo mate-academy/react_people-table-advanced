@@ -87,6 +87,10 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
       'fa-sort-down': sort === sortParam && !!order,
     });
 
+  if (visiblePeople.length === 0) {
+    return <p>There are no people matching the current search criteria</p>;
+  }
+
   return (
     <table
       data-cy="peopleTable"
