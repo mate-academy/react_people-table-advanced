@@ -12,23 +12,19 @@ interface Props {
 export const PeopleTable: React.FC<Props> = ({ people }) => {
   const [searchParams] = useSearchParams();
 
-  // {
-  //   console.log(people);
-  // }
-
   const currentSort = searchParams.get('sort') || '';
   const currentOrder = searchParams.get('order') || '';
 
   const handleToggleSort = (sortBy: string): SearchParams => {
-    if (!currentSort) {
-      return { sort: sortBy };
-    }
-
-    if (currentSort === sortBy && !currentOrder) {
+    if (!currentSort || currentSort !== sortBy) {
       return { sort: sortBy, order: 'desc' };
     }
 
-    return { sort: null, order: null };
+    if (currentSort === sortBy && currentOrder === 'desc') {
+      return { sort: sortBy, order: null };
+    }
+
+    return { sort: sortBy, order: 'desc' };
   };
 
   const getSortIconClass = (sortBy: string): string => {
