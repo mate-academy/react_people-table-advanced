@@ -90,10 +90,6 @@ export const PeoplePage = () => {
     <>
       <PeoplePageTitle />
 
-      <p>{`Centuries: ${activeCenturies}`}</p>
-      <p>{`Query: ${activeQuery}`}</p>
-      <p>{`Sex: ${activeSex}`}</p>
-
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
           {showFilters && (
