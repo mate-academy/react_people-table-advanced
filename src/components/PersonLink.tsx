@@ -30,7 +30,7 @@ const renderMotherCell = (
   return (
     <td>
       <Link
-        to={{ pathname: `/${mother.slug}`, search }}
+        to={{ pathname: `/people/${mother.slug}`, search }}
         className="has-text-danger"
       >
         {motherName}
