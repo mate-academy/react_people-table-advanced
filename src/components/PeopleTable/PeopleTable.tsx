@@ -1,5 +1,6 @@
-import { useParams } from 'react-router-dom';
+import { Link, useParams, useSearchParams } from 'react-router-dom';
 import { Person } from '../../types';
+import { getSortIcon, getSortLink } from '../../utils/sortHelper';
 import { PersonLink } from '../PersonLink/PersonLink';
 
 type Props = {
@@ -10,6 +11,10 @@ type Role = 'father' | 'mother';
 
 export const PeopleTable: React.FC<Props> = ({ people }) => {
   const { slug } = useParams();
+  const [searchParams] = useSearchParams();
+  const sort = searchParams.get('sort') || '';
+  const order = searchParams.get('order') || 'asc';
+
   const parent = (person: Person, role: Role) => {
     const parentName =
       role === 'father' ? person.fatherName : person.motherName;
@@ -36,44 +41,44 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Name
-              <a href="#/people?sort=name">
+              <Link to={getSortLink(searchParams, 'name')}>
                 <span className="icon">
-                  <i className="fas fa-sort" />
+                  <i className={getSortIcon(sort, order, 'name')} />
                 </span>
-              </a>
+              </Link>
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Sex
-              <a href="#/people?sort=sex">
+              <Link to={getSortLink(searchParams, 'sex')}>
                 <span className="icon">
-                  <i className="fas fa-sort" />
+                  <i className={getSortIcon(sort, order, 'sex')} />
                 </span>
-              </a>
+              </Link>
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Born
-              <a href="#/people?sort=born&amp;order=desc">
+              <Link to={getSortLink(searchParams, 'born')}>
                 <span className="icon">
-                  <i className="fas fa-sort-up" />
+                  <i className={getSortIcon(sort, order, 'born')} />
                 </span>
-              </a>
+              </Link>
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Died
-              <a href="#/people?sort=died">
+              <Link to={getSortLink(searchParams, 'died')}>
                 <span className="icon">
-                  <i className="fas fa-sort" />
+                  <i className={getSortIcon(sort, order, 'died')} />
                 </span>
-              </a>
+              </Link>
             </span>
           </th>
 
@@ -83,25 +88,22 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
       </thead>
 
       <tbody>
-        {people.map(person => {
-          return (
-            <tr
-              className={slug === person.slug ? 'has-background-warning' : ''}
-              key={person.slug}
-              data-cy="person"
-            >
-              <td>
-                <PersonLink person={person} />
-              </td>
-
-              <td>{person.sex}</td>
-              <td>{person.born}</td>
-              <td>{person.died}</td>
-              <td>{parent(person, 'mother')}</td>
-              <td>{parent(person, 'father')}</td>
-            </tr>
-          );
-        })}
+        {people.map(person => (
+          <tr
+            className={slug === person.slug ? 'has-background-warning' : ''}
+            key={person.slug}
+            data-cy="person"
+          >
+            <td>
+              <PersonLink person={person} />
+            </td>
+            <td>{person.sex}</td>
+            <td>{person.born}</td>
+            <td>{person.died}</td>
+            <td>{parent(person, 'mother')}</td>
+            <td>{parent(person, 'father')}</td>
+          </tr>
+        ))}
       </tbody>
     </table>
   );

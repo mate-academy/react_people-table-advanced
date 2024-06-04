@@ -1,3 +1,4 @@
+import { useCallback } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { SearchLink } from '../SearchLink';
 
@@ -7,18 +8,21 @@ export const PeopleFilters = () => {
   const sex = searchParams.get('sex') || '';
   const centuries = searchParams.getAll('centuries') || [];
 
-  const onQueryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const value = event.target.value;
-    const params = new URLSearchParams(searchParams);
+  const onQueryChange = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      const value = event.target.value;
+      const params = new URLSearchParams(searchParams);
 
-    if (value) {
-      params.set('query', value);
-    } else {
-      params.delete('query');
-    }
+      if (value) {
+        params.set('query', value);
+      } else {
+        params.delete('query');
+      }
 
-    setSearchParams(params);
-  };
+      setSearchParams(params);
+    },
+    [searchParams, setSearchParams],
+  );
 
   return (
     <nav className="panel">

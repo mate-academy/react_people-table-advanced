@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { getPeople } from '../../api';
 import { Loader } from '../../components/Loader';
@@ -14,7 +14,12 @@ export const PeoplePage = () => {
 
   const query = searchParams.get('query') || '';
   const sex = searchParams.get('sex') || '';
-  const centuries = searchParams.getAll('centuries') || [];
+  const centuries = useMemo(
+    () => searchParams.getAll('centuries'),
+    [searchParams],
+  );
+  const sort = searchParams.get('sort') || '';
+  const order = searchParams.get('order') || 'asc';
 
   useEffect(() => {
     setIsLoading(true);
@@ -25,21 +30,47 @@ export const PeoplePage = () => {
       .finally(() => setIsLoading(false));
   }, []);
 
-  const filteredPeople = people.filter(person => {
-    const matchesQuery = [
-      person.name,
-      person.fatherName,
-      person.motherName,
-    ].some(name => name?.toLowerCase().includes(query.toLowerCase()));
-    const matchesSex = sex ? person.sex === sex : true;
-    const matchesCentury = centuries.length
-      ? centuries.includes(Math.ceil(person.born / 100).toString())
-      : true;
+  const filteredPeople = useMemo(() => {
+    return people.filter(person => {
+      const matchesQuery = [
+        person.name,
+        person.fatherName,
+        person.motherName,
+      ].some(name => name?.toLowerCase().includes(query.toLowerCase()));
+      const matchesSex = sex ? person.sex === sex : true;
+      const matchesCentury = centuries.length
+        ? centuries.includes(Math.ceil(person.born / 100).toString())
+        : true;
 
-    return matchesQuery && matchesSex && matchesCentury;
-  });
+      return matchesQuery && matchesSex && matchesCentury;
+    });
+  }, [people, query, sex, centuries]);
 
-  //console.log(filteredPeople);
+  const sortedPeople = useMemo(() => {
+    return [...filteredPeople].sort((a, b) => {
+      if (!sort) {
+        return 0;
+      }
+
+      const itemOne = a[sort as keyof Person];
+      const itemTwo = b[sort as keyof Person];
+
+      if (itemOne == null || itemTwo == null) {
+        return 0;
+      }
+
+      if (itemOne < itemTwo) {
+        return order === 'asc' ? -1 : 1;
+      }
+
+      if (itemOne > itemTwo) {
+        return order === 'asc' ? 1 : -1;
+      }
+
+      return 0;
+    });
+  }, [filteredPeople, sort, order]);
+  //console.log('here')
 
   return (
     <>
@@ -59,15 +90,14 @@ export const PeoplePage = () => {
                 </p>
               )}
 
-              {!isLoading && !error && filteredPeople.length === 0 && (
+              {!isLoading && !error && sortedPeople.length === 0 && (
                 <p data-cy="noPeopleMessage">
-                  There are no people on the server
+                  There are no people matching the current search criteria
                 </p>
               )}
-              {/* <p>There are no people matching the current search criteria</p> */}
 
-              {!isLoading && !error && filteredPeople.length > 0 && (
-                <PeopleTable people={filteredPeople} />
+              {!isLoading && !error && sortedPeople.length > 0 && (
+                <PeopleTable people={sortedPeople} />
               )}
             </div>
           </div>
