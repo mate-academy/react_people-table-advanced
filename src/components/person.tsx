@@ -15,8 +15,7 @@ export const People: React.FC<Props> = ({
   mothers,
   currentPath,
 }) => {
-  const [searchParams] = useSearchParams()
-
+  const [searchParams] = useSearchParams();
 
   const currentParent = (parents: Person[], parentName: string | null) =>
     parents.map(parent => parent.name).includes(`${parentName}`);
@@ -32,7 +31,7 @@ export const People: React.FC<Props> = ({
         <Link
           to={{
             pathname: `/people/${person.slug}`,
-            search: searchParams.toString()
+            search: searchParams.toString(),
           }}
           className={classNames({ 'has-text-danger': person.sex === 'f' })}
         >
@@ -50,7 +49,7 @@ export const People: React.FC<Props> = ({
             className="has-text-danger"
             to={{
               pathname: `/people/${mothers.find(mother => mother.name === person.motherName)?.slug}`,
-              search: searchParams.toString()
+              search: searchParams.toString(),
             }}
           >
             {person.motherName}
@@ -65,7 +64,7 @@ export const People: React.FC<Props> = ({
           <Link
             to={{
               pathname: `/people/${fathers.find(father => father.name === person.fatherName)?.slug}`,
-              search: searchParams.toString()
+              search: searchParams.toString(),
             }}
           >
             {person.fatherName}

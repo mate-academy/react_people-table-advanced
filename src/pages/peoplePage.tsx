@@ -12,19 +12,21 @@ export const PeoplePage = () => {
   const [loader, setLoader] = useState(false);
   const [errorMessage, setErroroMessage] = useState('');
   const [searchParams] = useSearchParams();
-  const sort = searchParams.get('sort')
-  const order = searchParams.get('order')
-  const sex = searchParams.get('sex')
-  const query = searchParams.get('query')
-  const centuries = searchParams.getAll('centuries')
+  const sort = searchParams.get('sort');
+  const order = searchParams.get('order');
+  const sex = searchParams.get('sex');
+  const query = searchParams.get('query');
+  const centuries = searchParams.getAll('centuries');
   const location = useLocation();
   const currentPath = location.pathname;
+  const tableClassnames =
+    'table is-striped is-hoverable is-narrow is-fullwidth';
 
   const arrayOfMothers = people.filter(person => person.sex === 'f');
   const arrayOfFathers = people.filter(person => person.sex === 'm');
 
   const peopleToRender = function () {
-    let newArrayOfPeople = [...people]
+    let newArrayOfPeople = [...people];
 
     if (sort) {
       newArrayOfPeople.sort((a, b) => {
@@ -36,35 +38,41 @@ export const PeoplePage = () => {
           case 'died':
             return a[sort] - b[sort];
           default:
-            return 0
+            return 0;
         }
-      })
+      });
     }
 
     if (order) {
-      newArrayOfPeople.reverse()
+      newArrayOfPeople.reverse();
     }
 
     if (centuries.length > 0) {
       newArrayOfPeople = newArrayOfPeople.filter(a => {
-        const bornCentury = Math.ceil(a.born / 100)
-        return centuries.includes(bornCentury.toString())
-      })
+        const bornCentury = Math.ceil(a.born / 100);
+
+        return centuries.includes(bornCentury.toString());
+      });
     }
 
     if (sex) {
-      newArrayOfPeople = newArrayOfPeople.filter(a => a.sex === sex)
+      newArrayOfPeople = newArrayOfPeople.filter(a => a.sex === sex);
     }
 
     if (query) {
-      const queryLower = query.toLowerCase()
+      const queryLower = query.toLowerCase();
+
       newArrayOfPeople = newArrayOfPeople.filter(a => {
-        return a.name.toLowerCase().includes(queryLower) || a.fatherName?.toLowerCase().includes(queryLower) || a.motherName?.toLowerCase().includes(queryLower)
-      })
+        return (
+          a.name.toLowerCase().includes(queryLower) ||
+          a.fatherName?.toLowerCase().includes(queryLower) ||
+          a.motherName?.toLowerCase().includes(queryLower)
+        );
+      });
     }
 
-    return newArrayOfPeople
-  }
+    return newArrayOfPeople;
+  };
 
   useEffect(() => {
     setErroroMessage('');
@@ -83,7 +91,7 @@ export const PeoplePage = () => {
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
           <div className="column is-7-tablet is-narrow-desktop">
-            {!loader && (<PeopleFilters />)}
+            {!loader && <PeopleFilters />}
           </div>
           <div className="column">
             <div className="box table-container">
@@ -96,35 +104,36 @@ export const PeoplePage = () => {
               {!loader &&
                 !errorMessage &&
                 (people.length !== 0 ? (
-                  <table
-                    data-cy="peopleTable"
-                    className="table is-striped is-hoverable is-narrow is-fullwidth"
-                  >{peopleToRender().length > 0 ? (
-                    <>
-                      <thead>
-                        <Sorting />
-                      </thead>
-                      <tbody>
-                        {peopleToRender().map(person => {
-                          return (
-                            <People
-                              person={person}
-                              fathers={arrayOfFathers}
-                              mothers={arrayOfMothers}
-                              currentPath={currentPath}
-                              key={person.slug}
-                            />
-                          );
-                        })}
-                      </tbody>
-                    </>
-                  ) : (
-                    <p data-cy="noPeopleMessage">There are no people matching the current search criteria</p>
-                  )}
-
+                  <table data-cy="peopleTable" className={tableClassnames}>
+                    {peopleToRender().length > 0 ? (
+                      <>
+                        <thead>
+                          <Sorting />
+                        </thead>
+                        <tbody>
+                          {peopleToRender().map(person => {
+                            return (
+                              <People
+                                person={person}
+                                fathers={arrayOfFathers}
+                                mothers={arrayOfMothers}
+                                currentPath={currentPath}
+                                key={person.slug}
+                              />
+                            );
+                          })}
+                        </tbody>
+                      </>
+                    ) : (
+                      <p data-cy="noPeopleMessage">
+                        There are no people matching the current search criteria
+                      </p>
+                    )}
                   </table>
                 ) : (
-                  <p data-cy="noPeopleMessage">There are no people on the server</p>
+                  <p data-cy="noPeopleMessage">
+                    There are no people on the server
+                  </p>
                 ))}
             </div>
           </div>

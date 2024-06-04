@@ -43,31 +43,6 @@ export const App = () => (
   </div>
 );
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 // import { PeoplePage } from './components/PeoplePage';
 // import { Navbar } from './components/Navbar';
 
