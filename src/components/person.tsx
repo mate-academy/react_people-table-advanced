@@ -9,6 +9,10 @@ type Props = {
   currentPath: string;
 };
 
+function parentPathName(parents: Person[], personParent: string | null) {
+  return parents.find(parent => parent.name === personParent)?.slug
+}
+
 export const People: React.FC<Props> = ({
   person,
   fathers,
@@ -17,6 +21,8 @@ export const People: React.FC<Props> = ({
 }) => {
   const [searchParams] = useSearchParams();
 
+  const { name, sex, born, died, fatherName, motherName, slug, } = person
+
   const currentParent = (parents: Person[], parentName: string | null) =>
     parents.map(parent => parent.name).includes(`${parentName}`);
 
@@ -24,53 +30,53 @@ export const People: React.FC<Props> = ({
     <tr
       data-cy="person"
       className={classNames({
-        'has-background-warning': currentPath === `/people/${person.slug}`,
+        'has-background-warning': currentPath === `/people/${slug}`,
       })}
     >
       <td>
         <Link
           to={{
-            pathname: `/people/${person.slug}`,
+            pathname: `/people/${slug}`,
             search: searchParams.toString(),
           }}
-          className={classNames({ 'has-text-danger': person.sex === 'f' })}
+          className={classNames({ 'has-text-danger': sex === 'f' })}
         >
-          {person.name}
+          {name}
         </Link>
       </td>
 
-      <td>{person.sex}</td>
-      <td>{person.born}</td>
-      <td>{person.died}</td>
+      <td>{sex}</td>
+      <td>{born}</td>
+      <td>{died}</td>
 
       <td>
-        {currentParent(mothers, person.motherName) ? (
+        {currentParent(mothers, motherName) ? (
           <Link
             className="has-text-danger"
             to={{
-              pathname: `/people/${mothers.find(mother => mother.name === person.motherName)?.slug}`,
+              pathname: `/people/${parentPathName(mothers, motherName)}`,
               search: searchParams.toString(),
             }}
           >
-            {person.motherName}
+            {motherName}
           </Link>
         ) : (
-          `${person.motherName || '-'}`
+          `${motherName || '-'}`
         )}
       </td>
 
       <td>
-        {currentParent(fathers, person.fatherName) ? (
+        {currentParent(fathers, fatherName) ? (
           <Link
             to={{
-              pathname: `/people/${fathers.find(father => father.name === person.fatherName)?.slug}`,
+              pathname: `/people/${parentPathName(fathers, fatherName)}`,
               search: searchParams.toString(),
             }}
           >
-            {person.fatherName}
+            {fatherName}
           </Link>
         ) : (
-          `${person.fatherName || '-'}`
+          `${fatherName || '-'}`
         )}
       </td>
     </tr>

@@ -6,6 +6,7 @@ import { Loader } from '../components/Loader';
 import { useLocation, useSearchParams } from 'react-router-dom';
 import { Sorting } from '../components/sorting';
 import { PeopleFilters } from '../components/PeopleFilters';
+import { Sort } from '../types/sort';
 
 export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);
@@ -31,11 +32,11 @@ export const PeoplePage = () => {
     if (sort) {
       newArrayOfPeople.sort((a, b) => {
         switch (sort) {
-          case 'name':
-          case 'sex':
+          case Sort.name:
+          case Sort.sex:
             return a[sort].localeCompare(b[sort]);
-          case 'born':
-          case 'died':
+          case Sort.born:
+          case Sort.died:
             return a[sort] - b[sort];
           default:
             return 0;

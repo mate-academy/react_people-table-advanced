@@ -3,13 +3,13 @@ import { SearchLink } from './SearchLink';
 import classNames from 'classnames';
 import { SearchParams, getSearchWith } from '../utils/searchHelper';
 
+const availableCenturies = ['16', '17', '18', '19', '20'];
+
 export const PeopleFilters: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const sex = searchParams.get('sex') || '';
   const query = searchParams.get('query') || '';
   const centuries = searchParams.getAll('centuries') || [];
-
-  const availableCenturies = ['16', '17', '18', '19', '20'];
 
   function setSearchWith(params: SearchParams) {
     const search = getSearchWith(searchParams, params);
