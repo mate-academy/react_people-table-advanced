@@ -36,12 +36,8 @@ export const PeoplePage = () => {
   const filteredPeople = useMemo(() => {
     let visiblePeople = [...persons];
 
-    if (sex === 'm') {
-      visiblePeople = persons.filter(person => person.sex === 'm');
-    }
-
-    if (sex === 'f') {
-      visiblePeople = persons.filter(person => person.sex === 'f');
+    if (sex) {
+      visiblePeople = persons.filter(person => person.sex === sex);
     }
 
     if (query !== null) {
