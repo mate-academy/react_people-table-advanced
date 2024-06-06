@@ -12,6 +12,28 @@ export const PeopleFilters = () => {
   const handleQueryChange = (e: ChangeEvent<HTMLInputElement>) =>
     setQuery(e.target.value);
 
+  const centuryButtons = new Array(CENTAURIES_COUNT).fill(null).map((_, i) => {
+    const century = (i + STARTING_CENTAURY).toString();
+    const newCentauries = centauries.includes(century)
+      ? centauries.filter(c => c !== century)
+      : centauries.concat(century);
+
+    return (
+      <SearchLink
+        key={century}
+        params={{
+          centauries: newCentauries,
+        }}
+        data-cy="century"
+        className={classNames('button', 'mr-1', {
+          'is-info': centauries.includes(century),
+        })}
+      >
+        {century}
+      </SearchLink>
+    );
+  });
+
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
@@ -56,29 +78,7 @@ export const PeopleFilters = () => {
 
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
-          <div className="level-left">
-            {new Array(CENTAURIES_COUNT).fill(null).map((_, i) => {
-              const centaury = (i + STARTING_CENTAURY).toString();
-              const newCentauries = centauries.includes(centaury)
-                ? centauries.filter(c => c !== centaury)
-                : centauries.concat(centaury);
-
-              return (
-                <SearchLink
-                  key={centaury}
-                  params={{
-                    centauries: newCentauries,
-                  }}
-                  data-cy="century"
-                  className={classNames('button', 'mr-1', {
-                    'is-info': centauries.includes(centaury),
-                  })}
-                >
-                  {centaury}
-                </SearchLink>
-              );
-            })}
-          </div>
+          <div className="level-left">{centuryButtons}</div>
 
           <div className="level-right ml-4">
             <SearchLink
