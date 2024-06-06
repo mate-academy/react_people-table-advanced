@@ -3,6 +3,7 @@ import { Person } from '../types';
 import { SearchLink } from './SearchLink';
 import { useSearchParams } from 'react-router-dom';
 import classNames from 'classnames';
+import { SortFields } from '../types/Constants';
 
 type Props = {
   filteredPeople: Person[];
@@ -14,8 +15,6 @@ export const PeopleTable: React.FC<Props> = ({ filteredPeople, persons }) => {
   const [searchParams] = useSearchParams();
   const sortBy = searchParams.get('sort') || '';
   const sortOrder = searchParams.get('order') || '';
-
-  const sortFields = ['name', 'sex', 'born', 'died'];
 
   const handleSort = (currentSort: string) => {
     if (currentSort !== sortBy) {
@@ -45,7 +44,7 @@ export const PeopleTable: React.FC<Props> = ({ filteredPeople, persons }) => {
     >
       <thead>
         <tr>
-          {sortFields.map(sortField => {
+          {Object.values(SortFields).map(sortField => {
             return (
               <th key={sortField}>
                 <span className="is-flex is-flex-wrap-nowrap">

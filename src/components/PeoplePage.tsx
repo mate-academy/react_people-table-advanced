@@ -5,13 +5,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { Person } from '../types';
 import { getPeople } from '../api';
 import { useSearchParams } from 'react-router-dom';
-
-enum SortBy {
-  name = 'name',
-  sex = 'sex',
-  born = 'born',
-  died = 'died',
-}
+import { getFilteredPeople } from '../utils/getFilteredPeople';
 
 export const PeoplePage = () => {
   const [persons, setPersons] = useState<Person[]>([]);
@@ -33,51 +27,10 @@ export const PeoplePage = () => {
       .finally(() => setIsLoading(false));
   }, []);
 
-  const filteredPeople = useMemo(() => {
-    let visiblePeople = [...persons];
-
-    if (sex) {
-      visiblePeople = persons.filter(person => person.sex === sex);
-    }
-
-    if (query !== null) {
-      visiblePeople = visiblePeople.filter(
-        person =>
-          person.name.toLowerCase().includes(query.trim().toLowerCase()) ||
-          person.fatherName?.toLowerCase().includes(query.toLowerCase()) ||
-          person.motherName?.toLowerCase().includes(query.toLowerCase()),
-      );
-    }
-
-    if (centuries.length) {
-      visiblePeople = visiblePeople.filter(person =>
-        centuries.includes(Math.ceil(person.born / 100).toString()),
-      );
-    }
-
-    if (sortBy) {
-      visiblePeople.sort((pers1, pers2) => {
-        switch (sortBy) {
-          case SortBy.name:
-          case SortBy.sex:
-            return pers1[sortBy].localeCompare(pers2[sortBy]);
-
-          case SortBy.born:
-          case SortBy.died:
-            return pers1[sortBy] - pers2[sortBy];
-
-          default:
-            return 0;
-        }
-      });
-    }
-
-    if (sortOrder) {
-      visiblePeople.reverse();
-    }
-
-    return visiblePeople;
-  }, [persons, sex, query, centuries, sortBy, sortOrder]);
+  const filteredPeople = useMemo(
+    () => getFilteredPeople(persons, sex, query, centuries, sortBy, sortOrder),
+    [persons, sex, query, centuries, sortBy, sortOrder],
+  );
 
   return (
     <>

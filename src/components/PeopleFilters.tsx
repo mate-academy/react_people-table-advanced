@@ -2,6 +2,7 @@ import classNames from 'classnames';
 import { SearchLink } from './SearchLink';
 import { useSearchParams } from 'react-router-dom';
 import { getSearchWith } from '../utils/searchHelper';
+import { allCenturies, Sex } from '../types/Constants';
 
 export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -9,8 +10,6 @@ export const PeopleFilters = () => {
   const sex = searchParams.get('sex');
   const query = searchParams.get('query') || '';
   const centuries = searchParams.getAll('centuries') || [];
-
-  const allCenturies = ['16', '17', '18', '19', '20'];
 
   const handleQueryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newSearch = getSearchWith(searchParams, {
@@ -20,10 +19,10 @@ export const PeopleFilters = () => {
     setSearchParams(newSearch);
   };
 
-  const handleCentriesChange = (c: string) => {
-    const newCenturies = centuries.includes(c)
-      ? centuries.filter(currentCentury => currentCentury !== c)
-      : [...centuries, c];
+  const handleCentriesChange = (century: string) => {
+    const newCenturies = centuries.includes(century)
+      ? centuries.filter(currentCentury => currentCentury !== century)
+      : [...centuries, century];
 
     return newCenturies;
   };
@@ -40,14 +39,14 @@ export const PeopleFilters = () => {
           All
         </SearchLink>
         <SearchLink
-          params={{ sex: 'm' }}
-          className={classNames({ 'is-active': sex === 'm' })}
+          params={{ sex: Sex.man }}
+          className={classNames({ 'is-active': sex === Sex.man })}
         >
           Male
         </SearchLink>
         <SearchLink
-          params={{ sex: 'f' }}
-          className={classNames({ 'is-active': sex === 'f' })}
+          params={{ sex: Sex.woman }}
+          className={classNames({ 'is-active': sex === Sex.woman })}
         >
           Female
         </SearchLink>
