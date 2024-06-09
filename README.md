@@ -1,5 +1,7 @@
 # React + Redux list of TODOs
 
+> ❗ Read the lesson theory before solving this task
+
 You are given an `app` folder with already implemented `store` and `hooks`.
 Use them to implement [Dynamic list of TODOs](https://github.com/mate-academy/react_dynamic-list-of-todos#react-dynamic-list-of-todos)
 using the Redux. It should look and work identically, so use the same markup.

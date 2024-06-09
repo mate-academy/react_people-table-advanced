@@ -1,12 +1,12 @@
-export const actions = {
-  /* put action creators here */
+import { createSlice } from '@reduxjs/toolkit';
+
+const initialState = {
+  query: '',
+  status: 'all',
 };
 
-const filterReducer = () => {
-  return {
-    query: '',
-    status: 'all',
-  };
-};
-
-export default filterReducer;
+export const filterSlice = createSlice({
+  name: 'filter',
+  initialState,
+  reducers: {},
+});
