@@ -6,6 +6,7 @@ export const getPreparedPeople = (
   century: string[],
   sex: string,
   sort: string,
+  order: 'asc' | 'desc',
 ) => {
   let visiblePeople = [...people];
 
@@ -32,22 +33,17 @@ export const getPreparedPeople = (
 
   if (sort) {
     visiblePeople.sort((a, b) => {
-      switch (sort) {
-        case 'name':
-          return a.name.localeCompare(b.name);
+      let result = 0;
 
-        case 'sex':
-          return a.sex.localeCompare(b.sex);
-
-        case 'born':
-          return a.born - b.born;
-
-        case 'died':
-          return a.died - b.died;
-
-        default:
-          return 0;
+      if (sort === 'name' || sort === 'sex') {
+        result = a[sort].localeCompare(b[sort]);
       }
+
+      if (sort === 'born' || sort === 'died') {
+        result = a[sort] - b[sort];
+      }
+
+      return order === 'asc' ? result : result * -1;
     });
   }
 

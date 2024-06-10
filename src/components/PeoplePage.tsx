@@ -17,6 +17,7 @@ export const PeoplePage = () => {
   const filteredBySex = searchParams.get('sex') || '';
   const filteredByCenturies = searchParams.getAll('centuries') || [];
   const sortedBy = searchParams.get('sort') || '';
+  const orderedBy = (searchParams.get('order') || 'asc') as 'asc' | 'desc';
 
   useEffect(() => {
     setLoading(true);
@@ -43,6 +44,7 @@ export const PeoplePage = () => {
     filteredByCenturies,
     filteredBySex,
     sortedBy,
+    orderedBy,
   );
 
   return (

@@ -3,7 +3,6 @@ import { Link, useParams, useSearchParams } from 'react-router-dom';
 import { Person } from '../types';
 import classNames from 'classnames';
 import { SearchLink } from './SearchLink';
-import { getSortedPeople } from '../utils/getSortedPeople';
 
 type Props = {
   preparedPeople: Person[];
@@ -50,12 +49,6 @@ export const PeopleTable: React.FC<Props> = ({ preparedPeople }) => {
     });
   };
 
-  const sortedPeople = getSortedPeople(
-    preparedPeople,
-    sortParam as keyof Person,
-    orderParam,
-  );
-
   return (
     <table
       data-cy="peopleTable"
@@ -86,7 +79,7 @@ export const PeopleTable: React.FC<Props> = ({ preparedPeople }) => {
       </thead>
 
       <tbody>
-        {sortedPeople.map(person => (
+        {preparedPeople.map(person => (
           <tr
             data-cy="person"
             className={classNames({
@@ -96,7 +89,10 @@ export const PeopleTable: React.FC<Props> = ({ preparedPeople }) => {
           >
             <td>
               <Link
-                to={`/people/${person.slug}`}
+                to={{
+                  pathname: `/people/${person.slug}`,
+                  search: searchParams.toString(),
+                }}
                 className={classNames({
                   'has-text-danger': person.sex === 'f',
                 })}

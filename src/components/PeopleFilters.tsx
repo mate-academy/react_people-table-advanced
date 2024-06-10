@@ -11,39 +11,39 @@ export const PeopleFilters = () => {
   const filteredByQuery = searchParams.get('query') || '';
   const filteredBySex = searchParams.get('sex') || '';
   const filteredByCenturies = searchParams.getAll('centuries');
-  const sortedBy = searchParams.get('sortedBy') || '';
+  const sortedBy = searchParams.get('sort') || '';
 
   const handleChangingQuery = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newQuery = event.target.value.trim() ? event.target.value : null;
-    const newSearchParam = getSearchWith(searchParams, { query: newQuery });
+    const params = getSearchWith(searchParams, { query: newQuery });
 
-    setSearchParams(newSearchParam);
+    setSearchParams(params);
   };
 
   const handleTogglingCenturies = (addedCentury: string) => {
     return {
       centuries: filteredByCenturies.includes(addedCentury)
-        ? [...filteredByCenturies].filter(century => century !== addedCentury)
+        ? filteredByCenturies.filter(century => century !== addedCentury)
         : [...filteredByCenturies, addedCentury],
     };
   };
 
   useEffect(() => {
-    const newSearchParams = new URLSearchParams(searchParams);
+    const params = new URLSearchParams(searchParams);
 
     if (!filteredByQuery) {
-      newSearchParams.delete('query');
+      params.delete('query');
     }
 
     if (!filteredBySex) {
-      newSearchParams.delete('sex');
+      params.delete('sex');
     }
 
     if (!sortedBy) {
-      newSearchParams.delete('sortedBy');
+      params.delete('sort');
     }
 
-    setSearchParams(newSearchParams);
+    setSearchParams(params);
   }, [filteredByQuery, filteredBySex, sortedBy, searchParams, setSearchParams]);
 
   return (
