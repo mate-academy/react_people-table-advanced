@@ -1,71 +1,60 @@
 /* eslint-disable jsx-a11y/control-has-associated-label */
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams, useSearchParams } from 'react-router-dom';
 import { Person } from '../types';
 import classNames from 'classnames';
 import { SearchLink } from './SearchLink';
+import { getSortedPeople } from '../utils/getSortedPeople';
 
 type Props = {
   preparedPeople: Person[];
-  sortedBy: string;
 };
 
-enum Sort {
-  name = 'name',
-  sex = 'sex',
-  born = 'born',
-  died = 'died',
-}
+type SortingCategories = 'name' | 'sex' | 'born' | 'died';
 
-export const PeopleTable: React.FC<Props> = ({ preparedPeople, sortedBy }) => {
+const columnsToSort: SortingCategories[] = ['name', 'sex', 'born', 'died'];
+
+export const PeopleTable: React.FC<Props> = ({ preparedPeople }) => {
+  const [searchParams] = useSearchParams();
   const { slug } = useParams();
+  const sortParam = searchParams.get('sort') || '';
+  const orderParam = searchParams.get('order') || '';
 
-  const handleSorting = (options: Sort) => {
-    switch (options) {
-      case Sort.name:
-        if (sortedBy === 'name') {
-          return 'nameRev';
-        }
+  const handleOrdering = (sortBy: SortingCategories) => {
+    if (sortBy === sortParam) {
+      if (orderParam === 'asc') {
+        return {
+          sort: sortParam,
+          order: 'desc',
+        };
+      }
 
-        if (sortedBy === 'nameRev') {
-          return '';
-        }
-
-        return 'name';
-
-      case Sort.sex:
-        if (sortedBy === 'sex') {
-          return 'sexRev';
-        }
-
-        if (sortedBy === 'sexRev') {
-          return '';
-        }
-
-        return 'sex';
-
-      case Sort.born:
-        if (sortedBy === 'born') {
-          return 'bornRev';
-        }
-
-        if (sortedBy === 'bornRev') {
-          return '';
-        }
-
-        return 'born';
-
-      case Sort.died:
-        if (sortedBy === 'died') {
-          return 'diedRev';
-        }
-
-        if (sortedBy === 'diedRev') {
-          return '';
-        }
-
-        return 'died';
+      if (orderParam === 'desc') {
+        return {
+          sort: null,
+          order: null,
+        };
+      }
     }
+
+    return {
+      sort: sortBy,
+      order: 'asc',
+    };
   };
+
+  const getClassesForOrder = (sortBy: SortingCategories) => {
+    return classNames('fas', {
+      'fa-sort': sortParam !== sortBy,
+      'fa-sort-up': sortParam === sortBy && orderParam === 'asc',
+      'fa-sort-down': sortParam === sortBy && orderParam === 'desc',
+    });
+  };
+
+  const sortedPeople = getSortedPeople(
+    preparedPeople,
+    sortParam as keyof Person,
+    orderParam,
+  );
 
   return (
     <table
@@ -74,71 +63,22 @@ export const PeopleTable: React.FC<Props> = ({ preparedPeople, sortedBy }) => {
     >
       <thead>
         <tr>
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Name
-              <SearchLink params={{ sortedBy: handleSorting(Sort.name) }}>
-                <span className="icon">
-                  <i
-                    className={classNames('fas', {
-                      'fa-sort': sortedBy !== 'name' && sortedBy !== 'nameRev',
-                      'fa-sort-up': sortedBy === 'name',
-                      'fa-sort-down': sortedBy === 'nameRev',
-                    })}
-                  />
-                </span>
-              </SearchLink>
-            </span>
-          </th>
+          {columnsToSort.map(column => {
+            const columnName = column[0].toUpperCase() + column.slice(1);
 
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Sex
-              <SearchLink params={{ sortedBy: handleSorting(Sort.sex) }}>
-                <span className="icon">
-                  <i
-                    className={classNames('fas', {
-                      'fa-sort': sortedBy !== 'sex' && sortedBy !== 'sexRev',
-                      'fa-sort-up': sortedBy === 'sex',
-                      'fa-sort-down': sortedBy === 'sexRev',
-                    })}
-                  />
+            return (
+              <th key={column}>
+                <span className="is-flex is-flex-wrap-nowrap">
+                  {columnName}
+                  <SearchLink params={handleOrdering(column)}>
+                    <span className="icon">
+                      <i className={getClassesForOrder(column)} />
+                    </span>
+                  </SearchLink>
                 </span>
-              </SearchLink>
-            </span>
-          </th>
-
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Born
-              <SearchLink params={{ sortedBy: handleSorting(Sort.born) }}>
-                <span className="icon">
-                  <i
-                    className={classNames('fas', {
-                      'fa-sort': sortedBy !== 'born' && sortedBy !== 'bornRev',
-                      'fa-sort-up': sortedBy === 'born',
-                      'fa-sort-down': sortedBy === 'bornRev',
-                    })}
-                  />
-                </span>
-              </SearchLink>
-            </span>
-          </th>
-
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Died
-              <SearchLink params={{ sortedBy: handleSorting(Sort.died) }}>
-                <i
-                  className={classNames('fas', {
-                    'fa-sort': sortedBy !== 'died' && sortedBy !== 'diedRev',
-                    'fa-sort-up': sortedBy === 'died',
-                    'fa-sort-down': sortedBy === 'diedRev',
-                  })}
-                />
-              </SearchLink>
-            </span>
-          </th>
+              </th>
+            );
+          })}
 
           <th>Mother</th>
           <th>Father</th>
@@ -146,7 +86,7 @@ export const PeopleTable: React.FC<Props> = ({ preparedPeople, sortedBy }) => {
       </thead>
 
       <tbody>
-        {preparedPeople.map(person => (
+        {sortedPeople.map(person => (
           <tr
             data-cy="person"
             className={classNames({

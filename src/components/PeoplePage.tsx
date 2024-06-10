@@ -5,17 +5,7 @@ import { Person } from '../types';
 import { getPeople } from '../api';
 import { PeopleTable } from './PeopleTable';
 import { PeopleFilters } from './PeopleFilters';
-
-export enum SortingOptions {
-  name = 'name',
-  nameRev = 'nameRev',
-  sex = 'sex',
-  sexRev = 'sexRev',
-  born = 'born',
-  bornRev = 'bornRev',
-  died = 'died',
-  diedRev = 'diedRev',
-}
+import { getPreparedPeople } from '../utils/getPreparedPeople';
 
 export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);
@@ -25,8 +15,8 @@ export const PeoplePage = () => {
 
   const filteredByQuery = searchParams.get('query') || '';
   const filteredBySex = searchParams.get('sex') || '';
-  const filteredByCenturies = searchParams.getAll('centuries');
-  const sortedBy = searchParams.get('sortedBy') || '';
+  const filteredByCenturies = searchParams.getAll('centuries') || [];
+  const sortedBy = searchParams.get('sort') || '';
 
   useEffect(() => {
     setLoading(true);
@@ -47,69 +37,13 @@ export const PeoplePage = () => {
       .finally(() => setLoading(false));
   }, []);
 
-  const getPreparedPeople = (allPeople: Person[]) => {
-    let visiblePeople = [...allPeople];
-
-    if (filteredByQuery) {
-      const preparedQuery = filteredByQuery.toLowerCase().trim();
-
-      visiblePeople = visiblePeople.filter(
-        person =>
-          person.name.toLowerCase().includes(preparedQuery) ||
-          person.motherName?.toLowerCase().includes(preparedQuery) ||
-          person.fatherName?.toLowerCase().includes(preparedQuery),
-      );
-    }
-
-    if (filteredByCenturies.length) {
-      visiblePeople = visiblePeople.filter(person =>
-        filteredByCenturies.includes(Math.ceil(person.born / 100).toString()),
-      );
-    }
-
-    if (filteredBySex) {
-      visiblePeople = visiblePeople.filter(
-        person => person.sex === filteredBySex,
-      );
-    }
-
-    if (sortedBy) {
-      visiblePeople.sort((a, b) => {
-        switch (sortedBy) {
-          case SortingOptions.name:
-            return a.name.localeCompare(b.name);
-
-          case SortingOptions.sex:
-            return a.sex.localeCompare(b.sex);
-
-          case SortingOptions.nameRev:
-            return b.name.localeCompare(a.name);
-
-          case SortingOptions.sexRev:
-            return b.sex.localeCompare(a.sex);
-
-          case SortingOptions.born:
-            return a.born - b.born;
-
-          case SortingOptions.died:
-            return a.died - b.died;
-
-          case SortingOptions.bornRev:
-            return b.born - a.born;
-
-          case SortingOptions.diedRev:
-            return b.died - a.died;
-
-          default:
-            return 0;
-        }
-      });
-    }
-
-    return visiblePeople;
-  };
-
-  const preparedPeople = getPreparedPeople(people);
+  const preparedPeople = getPreparedPeople(
+    people,
+    filteredByQuery,
+    filteredByCenturies,
+    filteredBySex,
+    sortedBy,
+  );
 
   return (
     <>
@@ -144,10 +78,7 @@ export const PeoplePage = () => {
               )}
 
               {!loading && !error && !!preparedPeople.length && (
-                <PeopleTable
-                  preparedPeople={preparedPeople}
-                  sortedBy={sortedBy}
-                />
+                <PeopleTable preparedPeople={preparedPeople} />
               )}
             </div>
           </div>
