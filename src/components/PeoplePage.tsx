@@ -6,6 +6,11 @@ import { Person } from '../types';
 import { getPeople } from '../api';
 import { useSearchParams } from 'react-router-dom';
 
+enum PersonSex {
+  'male' = 'm',
+  'female' = 'f',
+}
+
 export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);
   const [loadingModalIcon, setLoadingModalIcon] = useState(true);
@@ -26,13 +31,13 @@ export const PeoplePage = () => {
       .finally(() => setLoadingModalIcon(false));
   }, []);
 
-  const filterBySex = useMemo(() => {
+  const filteredBySex = useMemo(() => {
     return people.filter(person => {
       switch (sex) {
-        case 'm':
-          return person.sex === 'm';
-        case 'f':
-          return person.sex === 'f';
+        case PersonSex.male:
+          return person.sex === PersonSex.male;
+        case PersonSex.female:
+          return person.sex === PersonSex.female;
         default:
           return person;
       }
@@ -41,13 +46,13 @@ export const PeoplePage = () => {
 
   const filterByCenturies = useMemo(() => {
     if (centuries.length) {
-      return filterBySex.filter(person =>
+      return filteredBySex.filter(person =>
         centuries.includes(Math.ceil(person.born / 100)),
       );
     } else {
-      return filterBySex;
+      return filteredBySex;
     }
-  }, [centuries, filterBySex]);
+  }, [centuries, filteredBySex]);
 
   const filterPeople = filterByCenturies.filter(
     person =>

@@ -1,6 +1,7 @@
 import { useCallback, useMemo, useState } from 'react';
 import { SearchLink } from './SearchLink';
 import { useSearchParams } from 'react-router-dom';
+import classNames from 'classnames';
 
 export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -12,14 +13,11 @@ export const PeopleFilters = () => {
 
   const [query, setQuery] = useState('');
 
-  const centuriesNumbers = useCallback(
-    (century: string) => {
-      return centuries.includes(century)
-        ? centuries.filter(curentCentury => curentCentury !== century)
-        : [...centuries, century];
-    },
-    [centuries],
-  );
+  const centuriesNumbers = (century: string) => {
+    return centuries.includes(century)
+      ? centuries.filter(curentCentury => curentCentury !== century)
+      : [...centuries, century];
+  };
 
   const handlQueryChange = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -44,7 +42,9 @@ export const PeopleFilters = () => {
 
       <p className="panel-tabs" data-cy="SexFilter">
         <SearchLink
-          className={!sex ? 'is-active' : ''}
+          className={classNames({
+            'is-active': !sex,
+          })}
           params={{
             sex: null,
           }}
@@ -52,7 +52,9 @@ export const PeopleFilters = () => {
           All
         </SearchLink>
         <SearchLink
-          className={sex === 'm' ? 'is-active' : ''}
+          className={classNames({
+            'is-active': sex === 'm',
+          })}
           params={{
             sex: 'm',
           }}
@@ -60,7 +62,9 @@ export const PeopleFilters = () => {
           Male
         </SearchLink>
         <SearchLink
-          className={sex === 'f' ? 'is-active' : ''}
+          className={classNames({
+            'is-active': sex === 'f',
+          })}
           params={{
             sex: 'f',
           }}
