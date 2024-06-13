@@ -12,12 +12,14 @@ export const PeoplePage = () => {
   const [isError, setIsError] = useState(false);
 
   const [searchParams] = useSearchParams();
-  //object
-  const sexSearchParams = searchParams.get('sex') || '';
-  const querySearchParams = searchParams.get('query') || '';
-  const centurySearchParams = searchParams.getAll('century');
-  const sortedBySearchParams = searchParams.get('sort') || '';
-  const sortOrderSearchParams = searchParams.get('order') || '';
+
+  const searchParamsMap = {
+    sex: searchParams.get('sex') || '',
+    query: searchParams.get('query') || '',
+    century: searchParams.getAll('century'),
+    sortedBy: searchParams.get('sort') || '',
+    sortOrder: searchParams.get('order') || '',
+  };
 
   useEffect(() => {
     setIsLoading(true);
@@ -33,40 +35,43 @@ export const PeoplePage = () => {
     (peopleArr: Person[]) => {
       let filteredPeople = [...peopleArr];
 
-      if (sexSearchParams) {
+      if (searchParamsMap.sex) {
         filteredPeople = filteredPeople.filter(
-          person => person.sex === sexSearchParams,
+          person => person.sex === searchParamsMap.sex,
         );
       }
 
-      if (querySearchParams) {
+      if (searchParamsMap.query) {
+        const normalizedQuery = searchParamsMap.query.toLowerCase();
+
         filteredPeople = filteredPeople.filter(
           person =>
-            person.name.toLowerCase().includes(querySearchParams) ||
-            person.motherName?.toLowerCase().includes(querySearchParams) ||
-            person.fatherName?.toLowerCase().includes(querySearchParams),
+            person.name.toLowerCase().includes(normalizedQuery) ||
+            person.motherName?.toLowerCase().includes(normalizedQuery) ||
+            person.fatherName?.toLowerCase().includes(normalizedQuery),
         );
       }
 
-      if (centurySearchParams.length) {
+      if (searchParamsMap.century.length) {
         filteredPeople = filteredPeople.filter(person =>
-          centurySearchParams.includes(`${Math.ceil(person.born / 100)}`),
+          searchParamsMap.century.includes(`${Math.ceil(person.born / 100)}`),
         );
       }
 
-      if (sortedBySearchParams) {
+      if (searchParamsMap.sortedBy) {
         filteredPeople.sort((person1, person2) => {
-          switch (sortedBySearchParams) {
+          switch (searchParamsMap.sortedBy) {
             case 'name':
             case 'sex':
-              return person1[sortedBySearchParams].localeCompare(
-                person2[sortedBySearchParams],
+              return person1[searchParamsMap.sortedBy].localeCompare(
+                person2[searchParamsMap.sortedBy],
               );
 
             case 'born':
             case 'died':
               return (
-                person1[sortedBySearchParams] - person2[sortedBySearchParams]
+                person1[searchParamsMap.sortedBy] -
+                person2[searchParamsMap.sortedBy]
               );
 
             default:
@@ -75,18 +80,18 @@ export const PeoplePage = () => {
         });
       }
 
-      if (sortOrderSearchParams) {
+      if (searchParamsMap.sortOrder) {
         filteredPeople.reverse();
       }
 
       return filteredPeople;
     },
     [
-      sexSearchParams,
-      querySearchParams,
-      centurySearchParams,
-      sortedBySearchParams,
-      sortOrderSearchParams,
+      searchParamsMap.sex,
+      searchParamsMap.query,
+      searchParamsMap.century,
+      searchParamsMap.sortedBy,
+      searchParamsMap.sortOrder,
     ],
   );
 
