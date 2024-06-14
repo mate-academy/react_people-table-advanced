@@ -7,6 +7,7 @@ type Props = {
   searchParams: URLSearchParams;
   setSearchParams: (params: URLSearchParamsInit) => void;
   query: string | null;
+  sex: string | null;
   centuries: string[] | [];
 };
 
@@ -14,6 +15,7 @@ export const PeopleFilters: React.FC<Props> = ({
   searchParams,
   setSearchParams,
   query,
+  sex,
   centuries,
 }) => {
   function handleInput(event: ChangeEvent<HTMLInputElement>) {
@@ -26,19 +28,19 @@ export const PeopleFilters: React.FC<Props> = ({
 
       <p className="panel-tabs" data-cy="SexFilter">
         <Link
-          className="is-active"
+          className={classNames({ 'is-active': !sex })}
           to={{ search: getSearchWith(searchParams, { sex: null }) }}
         >
           All
         </Link>
         <Link
-          className=""
+          className={classNames({ 'is-active': sex === 'm' })}
           to={{ search: getSearchWith(searchParams, { sex: 'm' }) }}
         >
           Male
         </Link>
         <Link
-          className=""
+          className={classNames({ 'is-active': sex === 'f' })}
           to={{ search: getSearchWith(searchParams, { sex: 'f' }) }}
         >
           Female

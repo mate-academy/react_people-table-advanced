@@ -6,11 +6,42 @@ import { getSearchWith } from '../utils/searchHelper';
 type Props = {
   people: Person[];
   searchParams: URLSearchParams;
+  order: string | null;
+  sort: string | null;
 };
 
 /* eslint-disable jsx-a11y/control-has-associated-label */
-export const PeopleTable: React.FC<Props> = ({ people, searchParams }) => {
+export const PeopleTable: React.FC<Props> = ({
+  people,
+  searchParams,
+  order,
+  sort,
+}) => {
   const { tabId } = useParams();
+  const handleTo = (param: string) => {
+    if (sort && order) {
+      return {
+        search: getSearchWith(searchParams, {
+          sort: null,
+          order: null,
+        }),
+      };
+    }
+
+    if (sort && sort === param) {
+      return {
+        search: getSearchWith(searchParams, {
+          order: 'desc',
+        }),
+      };
+    }
+
+    return {
+      search: getSearchWith(searchParams, {
+        sort: param,
+      }),
+    };
+  };
 
   return (
     <table
@@ -22,15 +53,15 @@ export const PeopleTable: React.FC<Props> = ({ people, searchParams }) => {
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Name
-              <Link
-                to={{
-                  search: getSearchWith(searchParams, {
-                    sort: 'name',
-                  }),
-                }}
-              >
+              <Link to={handleTo('name')}>
                 <span className="icon">
-                  <i className="fas fa-sort" />
+                  <i
+                    className={classNames('fas', {
+                      'fa-sort': (!order && !sort) || sort !== 'name',
+                      'fa-sort-up': sort && !order && sort === 'name',
+                      'fa-sort-down': order && sort && sort === 'name',
+                    })}
+                  />
                 </span>
               </Link>
             </span>
@@ -39,33 +70,51 @@ export const PeopleTable: React.FC<Props> = ({ people, searchParams }) => {
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Sex
-              <a href="#/people?sort=sex">
+              <Link to={handleTo('sex')}>
                 <span className="icon">
-                  <i className="fas fa-sort" />
+                  <i
+                    className={classNames('fas', {
+                      'fa-sort': (!order && !sort) || sort !== 'sex',
+                      'fa-sort-up': sort && !order && sort === 'sex',
+                      'fa-sort-down': order && sort && sort === 'sex',
+                    })}
+                  />
                 </span>
-              </a>
+              </Link>
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Born
-              <a href="#/people?sort=born&amp;order=desc">
+              <Link to={handleTo('born')}>
                 <span className="icon">
-                  <i className="fas fa-sort-up" />
+                  <i
+                    className={classNames('fas', {
+                      'fa-sort': (!order && !sort) || sort !== 'born',
+                      'fa-sort-up': sort && !order && sort === 'born',
+                      'fa-sort-down': order && sort && sort === 'born',
+                    })}
+                  />
                 </span>
-              </a>
+              </Link>
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Died
-              <a href="#/people?sort=died">
+              <Link to={handleTo('died')}>
                 <span className="icon">
-                  <i className="fas fa-sort" />
+                  <i
+                    className={classNames('fas', {
+                      'fa-sort': (!order && !sort) || sort !== 'died',
+                      'fa-sort-up': sort && !order && sort === 'died',
+                      'fa-sort-down': order && sort && sort === 'died',
+                    })}
+                  />
                 </span>
-              </a>
+              </Link>
             </span>
           </th>
 
