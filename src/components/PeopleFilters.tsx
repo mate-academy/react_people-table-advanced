@@ -19,7 +19,11 @@ export const PeopleFilters: React.FC<Props> = ({
   centuries,
 }) => {
   function handleInput(event: ChangeEvent<HTMLInputElement>) {
-    setSearchParams(getSearchWith(searchParams, { query: event.target.value }));
+    setSearchParams(
+      getSearchWith(searchParams, {
+        query: event.target.value.trim() ? event.target.value : null,
+      }),
+    );
   }
 
   return (
@@ -55,7 +59,7 @@ export const PeopleFilters: React.FC<Props> = ({
             type="search"
             className="input"
             placeholder="Search"
-            onChange={event => handleInput(event)}
+            onChange={handleInput}
           />
 
           <span className="icon is-left">
