@@ -67,7 +67,9 @@ export const PeoplePage = () => {
       let personArr = arr;
 
       if (query?.trim()) {
-        personArr = personArr.filter(person => person.name.includes(query));
+        const reg = new RegExp(query, 'i');
+
+        personArr = personArr.filter(person => reg.test(person.name));
       }
 
       if (sex) {
