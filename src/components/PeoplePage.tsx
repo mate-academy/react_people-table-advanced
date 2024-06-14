@@ -34,21 +34,32 @@ export const PeoplePage = () => {
     }, 1000);
   }, []);
 
-  const sortPeople = (arr: Person[], index: number, key: string): Person[] => {
+  const sortPeople = (
+    arr: Person[],
+    index: number,
+    key: keyof Person,
+  ): Person[] => {
     return arr.sort((itemA, itemB) => {
-      const string =
-        typeof itemA[key] === 'string' && typeof itemB[key] === 'string';
-      const number =
-        typeof itemA[key] === 'number' && typeof itemB[key] === 'number';
+      const valueA = itemA[key];
+      const valueB = itemB[key];
 
-      if (string) {
-        return itemA[key].localeCompare(itemB[key]) * index;
+      const isString = typeof valueA === 'string' && typeof valueB === 'string';
+      const isNumber = typeof valueA === 'number' && typeof valueB === 'number';
+
+      if (isString) {
+        return valueA.localeCompare(valueB) * index;
       }
 
-      if (number) {
-        return (itemA[key] - itemB[key]) * index;
+      if (isNumber) {
+        return (valueA - valueB) * index;
       }
+
+      return 0;
     });
+  };
+
+  const isValidKey = (key: string): key is keyof Person => {
+    return ['name', 'sex', 'born', 'died'].includes(key);
   };
 
   const filterPeople = useCallback(
@@ -71,11 +82,11 @@ export const PeoplePage = () => {
         });
       }
 
-      if (sort) {
+      if (sort && isValidKey(sort)) {
         personArr = sortPeople(personArr, 1, sort);
       }
 
-      if (sort && order) {
+      if (sort && order && isValidKey(sort)) {
         personArr = personArr = sortPeople(personArr, -1, sort);
       }
 
