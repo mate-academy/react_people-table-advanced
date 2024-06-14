@@ -8,7 +8,7 @@ type Props = {
   setSearchParams: (params: URLSearchParamsInit) => void;
   query: string | null;
   sex: string | null;
-  centuries: string[] | [];
+  centuries: string[];
 };
 
 export const PeopleFilters: React.FC<Props> = ({
