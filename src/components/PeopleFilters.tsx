@@ -41,7 +41,7 @@ export const PeopleFilters = () => {
             to={{
               pathname: '/people',
               search: getSearchWith(searchParams, {
-                sex: value !== '' ? value : null,
+                sex: value || null,
               }),
             }}
           >
