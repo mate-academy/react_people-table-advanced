@@ -4,6 +4,7 @@ import { Link, useParams, useSearchParams } from 'react-router-dom';
 import cn from 'classnames';
 import { SearchLink } from './SearchLink';
 import { SearchParams } from '../utils/searchHelper';
+import { Sex } from '../types/Sex';
 
 type Props = {
   people: Person[];
@@ -126,9 +127,12 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
           >
             <td>
               <Link
-                to={`../${person.slug}`}
+                to={{
+                  pathname: `../${person.slug}`,
+                  search: searchParams.toString(),
+                }}
                 className={cn({
-                  'has-text-danger': person.sex === 'f',
+                  'has-text-danger': person.sex === Sex.FEMALE,
                 })}
               >
                 {person.name}
@@ -140,7 +144,10 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
             {!!person.mother ? (
               <td>
                 <Link
-                  to={`../${person.mother.slug}`}
+                  to={{
+                    pathname: `../${person.mother.slug}`,
+                    search: searchParams.toString(),
+                  }}
                   className="has-text-danger"
                 >
                   {person.mother.name}
@@ -152,7 +159,12 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
 
             {!!person.father ? (
               <td>
-                <Link to={`../${person.father.slug}`}>
+                <Link
+                  to={{
+                    pathname: `../${person.father.slug}`,
+                    search: searchParams.toString(),
+                  }}
+                >
                   {person.father.name}
                 </Link>
               </td>

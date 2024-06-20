@@ -5,6 +5,7 @@ import { Person } from '../types';
 import cn from 'classnames';
 import { SearchParams, getSearchWith } from '../utils/searchHelper';
 import { SearchLink } from './SearchLink';
+import { Sex } from '../types/Sex';
 
 type Props = {
   people: Person[];
@@ -96,23 +97,23 @@ export const PeopleFilters: React.FC<Props> = ({ people, onFilter }) => {
           className={cn({
             'is-active': !sex,
           })}
-          params={{}}
+          params={{ sex: null }}
         >
           All
         </SearchLink>
         <SearchLink
           className={cn({
-            'is-active': sex === 'm',
+            'is-active': sex === Sex.MALE,
           })}
-          params={{ sex: 'm' }}
+          params={{ sex: Sex.MALE }}
         >
           Male
         </SearchLink>
         <SearchLink
           className={cn({
-            'is-active': sex === 'f',
+            'is-active': sex === Sex.FEMALE,
           })}
-          params={{ sex: 'f' }}
+          params={{ sex: Sex.FEMALE }}
         >
           Female
         </SearchLink>
