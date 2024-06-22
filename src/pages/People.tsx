@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react';
-import { Loader } from '../components/Loader';
 import { getAllPeople } from '../api/people';
 import { Person } from '../types';
 import { listOfPeopleWithParents } from '../helpers/listOfPeopleWithParents';
-import { PersonList } from '../components/PersonList';
-import { PeopleFilters } from '../components/PeopleFilters';
 import { defineCentury } from '../helpers/defineCenturies';
+//components
+import { Loader } from '../components/Loader';
+import { PeopleFilters } from '../components/PeopleFilters';
+import { PersonList } from '../components/PersonList';
 
 const People = () => {
   const [peopleData, setPeopleData] = useState<Person[]>([]);

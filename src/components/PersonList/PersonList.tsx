@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink, useParams, useSearchParams } from 'react-router-dom';
-import { Person } from '../../types';
+import { Person, SearchParamsKeys } from '../../types';
 import { TableTitles } from '../../types/TableTitles';
 import { sortPeople } from '../../helpers/sortPeople';
 import { useChangeSearchParams } from '../../helpers/useChangeSearchParams';
@@ -9,41 +9,37 @@ type PersonListProps = {
   people: Person[];
 };
 
+const { SORT, ORDER, SEX, CENTURIES, QUERY } = SearchParamsKeys;
+
 export const PersonList: React.FC<PersonListProps> = ({ people }) => {
   const { name } = useParams();
   const [searchParams] = useSearchParams();
   const [setSearhParams] = useChangeSearchParams();
 
-  const column = searchParams.get('sort') || '';
-  const order = searchParams.get('order') || '';
-  const male = searchParams.get('sex') || '';
-  const centuries = searchParams.getAll('centuries') || [];
-  const query = searchParams.get('query') || '';
+  const column = searchParams.get(SORT) || '';
+  const order = searchParams.get(ORDER) || '';
+  const male = searchParams.get(SEX) || '';
+  const centuries = searchParams.getAll(CENTURIES) || [];
+  const query = searchParams.get(QUERY) || '';
 
   const handleSort = (prop: TableTitles) => {
     setSearhParams(prop);
   };
 
   const arrowDirection = (prop: TableTitles) => {
+    let vector = 'fa-sort';
+
     if (prop === column && !order) {
-      return (
-        <span className="icon">
-          <i className="fas fa-sort-up" />
-        </span>
-      );
+      vector = 'fa-sort-up';
     }
 
     if (prop === column && order) {
-      return (
-        <span className="icon">
-          <i className="fas fa-sort-down" />
-        </span>
-      );
+      vector = 'fa-sort-down';
     }
 
     return (
       <span className="icon">
-        <i className="fas fa-sort" />
+        <i className={`fas ${vector}`} />
       </span>
     );
   };
