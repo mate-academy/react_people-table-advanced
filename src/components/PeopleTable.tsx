@@ -14,13 +14,8 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
   const [searchParams] = useSearchParams();
   const sortColumn = searchParams.get('sort') || null;
   const isReversed = searchParams.get('order') === 'desc';
-  const peopleList = people?.map(person => ({
-    ...person,
-    mother: people.find(personItem => personItem.name === person.motherName),
-    father: people.find(personItem => personItem.name === person.fatherName),
-  }));
 
-  const preparedPeople = [...peopleList];
+  const preparedPeople = [...people];
 
   if (sortColumn) {
     preparedPeople.sort((personA, personB) => {

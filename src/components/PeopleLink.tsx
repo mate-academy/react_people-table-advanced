@@ -38,7 +38,7 @@ export const PeopleLink: React.FC<Props> = ({ person }) => {
         {mother ? (
           <Link
             to={preserveQueryParams(`${mother.slug}`)}
-            className={classNames({ 'has-text-danger': name !== motherName })}
+            className="has-text-danger"
           >
             {mother.name}
           </Link>

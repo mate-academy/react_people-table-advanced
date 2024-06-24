@@ -17,8 +17,6 @@ export const PeoplePage = () => {
   const query = searchParams.get('query') || '';
   const sex = searchParams.get('sex') || '';
 
-  const visiblePerson = getFiterPerson(people, query, centuries, sex);
-
   useEffect(() => {
     if (people.length === 0) {
       setLoading(true);
@@ -29,7 +27,15 @@ export const PeoplePage = () => {
         .catch(() => setErrorMessage('Something went wrong'))
         .finally(() => setLoading(false));
     }
-  }, [people.length, setPeople]);
+  }, [people, setPeople]);
+
+  const peopleList = people.map(person => ({
+    ...person,
+    mother: people.find(personItem => personItem.name === person.motherName),
+    father: people.find(personItem => personItem.name === person.fatherName),
+  }));
+
+  const visiblePerson = getFiterPerson(peopleList, query, centuries, sex);
 
   return (
     <>
