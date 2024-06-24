@@ -24,16 +24,7 @@ export const getFiterPerson = (
   }
 
   if (filterBy) {
-    switch (filterBy) {
-      case 'm':
-        visiblePeople = visiblePeople.filter(person => person.sex === 'm');
-        break;
-      case 'f':
-        visiblePeople = visiblePeople.filter(person => person.sex === 'f');
-        break;
-      default:
-        visiblePeople = visiblePeople;
-    }
+    visiblePeople = visiblePeople.filter(person => person.sex === filterBy);
   }
 
   return visiblePeople;

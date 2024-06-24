@@ -16,7 +16,6 @@ export const PeopleSort: React.FC<Props> = ({ sortName }) => {
   const sortBy = (columnName: string) => {
     const firstClick = columnName !== sortColumn;
     const secondClick = columnName === sortColumn && !isReversed;
-    const thirdClick = columnName === sortColumn && isReversed;
 
     if (firstClick) {
       return { sort: columnName, order: null };
@@ -24,10 +23,6 @@ export const PeopleSort: React.FC<Props> = ({ sortName }) => {
 
     if (secondClick) {
       return { sort: columnName, order: 'desc' };
-    }
-
-    if (thirdClick) {
-      return { sort: null, order: null };
     }
 
     return { sort: null, order: null };
