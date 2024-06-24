@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useLocation, useParams } from 'react-router-dom';
 import { Person } from '../types';
 
 type Props = {
@@ -11,6 +11,11 @@ export const PeopleLink: React.FC<Props> = ({ person }) => {
     person;
   const { slug } = useParams();
   const noParent = '-';
+  const location = useLocation();
+
+  const preserveQueryParams = (to: string): string => {
+    return `${to}${location.search}`;
+  };
 
   return (
     <tr
@@ -19,7 +24,7 @@ export const PeopleLink: React.FC<Props> = ({ person }) => {
     >
       <td>
         <Link
-          to={`/people/${person.slug}`}
+          to={preserveQueryParams(`${person.slug}`)}
           className={classNames({ 'has-text-danger': sex === 'f' })}
         >
           {name}
@@ -31,7 +36,10 @@ export const PeopleLink: React.FC<Props> = ({ person }) => {
       <td>{died}</td>
       <td>
         {mother ? (
-          <Link to={`/people/${mother.slug}`} className="has-text-danger">
+          <Link
+            to={preserveQueryParams(`${mother.slug}`)}
+            className={classNames({ 'has-text-danger': name !== motherName })}
+          >
             {mother.name}
           </Link>
         ) : (
@@ -40,7 +48,7 @@ export const PeopleLink: React.FC<Props> = ({ person }) => {
       </td>
       <td>
         {father ? (
-          <Link to={`/people/${father.slug}`}>{father.name}</Link>
+          <Link to={preserveQueryParams(`${father.slug}`)}>{father.name}</Link>
         ) : (
           fatherName || noParent
         )}
