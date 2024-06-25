@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
+import cn from 'classnames';
 import { Person } from '../../types/Person';
 import { Loader } from '../Loader';
 import { getPeople } from '../../api';
@@ -7,7 +8,6 @@ import { useParams } from 'react-router-dom';
 import { PeopleFilters } from '../PeopleFilters';
 import { useFilters } from '../../context/FiltersContext';
 import { SearchLink } from '../SearchLink';
-import cn from 'classnames';
 import { getPreparedPeople } from '../../utils/preparedPeople';
 
 export const PeopleTable = () => {
@@ -17,6 +17,7 @@ export const PeopleTable = () => {
   const [initialLoad, setInitialLoad] = useState(true);
 
   const { searchParams } = useFilters();
+
   const currentSort = searchParams.get('sort');
   const order = searchParams.get('order');
 
@@ -48,7 +49,7 @@ export const PeopleTable = () => {
     return getPreparedPeople(people, options);
   }, [people, searchParams]);
 
-  const getSortOption = (sortOption: string) => {
+  function getSortOption(sortOption: string) {
     if (sortOption !== currentSort) {
       return { sort: sortOption, order: null };
     }
@@ -58,15 +59,15 @@ export const PeopleTable = () => {
     }
 
     return { sort: null, order: null };
-  };
+  }
 
-  const getSortClass = (sortOption: string) => {
+  function getSortClass(sortOption: string) {
     return cn('fas', {
       'fa-sort': sortOption !== currentSort,
       'fa-sort-up': sortOption == currentSort && !order,
       'fa-sort-down': sortOption == currentSort && !!order,
     });
-  };
+  }
 
   const { slug } = useParams();
 

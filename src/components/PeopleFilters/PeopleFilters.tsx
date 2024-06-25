@@ -1,12 +1,7 @@
-import classnames from 'classnames';
+import cn from 'classnames';
 import { useFilters } from '../../context/FiltersContext';
 import { SearchLink } from '../SearchLink';
-
-enum Status {
-  All = '',
-  Male = 'm',
-  Female = 'f',
-}
+import { StatusSex } from '../../types/StatusSex';
 
 export const PeopleFilters = () => {
   const { searchParams, setSearchParams } = useFilters();
@@ -14,6 +9,8 @@ export const PeopleFilters = () => {
   const centuries = searchParams.getAll('century') || [];
   const query = searchParams.get('query') || '';
   const sex = searchParams.get('sex');
+
+  const centuriesList = ['16', '17', '18', '19', '20'];
 
   function handleQueryChange(event: React.ChangeEvent<HTMLInputElement>) {
     const params = new URLSearchParams(searchParams);
@@ -50,21 +47,21 @@ export const PeopleFilters = () => {
       <p className="panel-tabs" data-cy="SexFilter">
         <SearchLink
           params={{ sex: null }}
-          className={classnames({ 'is-active': !sex })}
+          className={cn({ 'is-active': !sex })}
         >
           All
         </SearchLink>
 
         <SearchLink
-          params={{ sex: Status.Male }}
-          className={classnames({ 'is-active': sex === Status.Male })}
+          params={{ sex: StatusSex.Male }}
+          className={cn({ 'is-active': sex === StatusSex.Male })}
         >
           Male
         </SearchLink>
 
         <SearchLink
-          params={{ sex: Status.Female }}
-          className={classnames({ 'is-active': sex === Status.Female })}
+          params={{ sex: StatusSex.Female }}
+          className={cn({ 'is-active': sex === StatusSex.Female })}
         >
           Female
         </SearchLink>
@@ -90,11 +87,11 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            {['16', '17', '18', '19', '20'].map(century => (
+            {centuriesList.map(century => (
               <SearchLink
                 key={century}
                 params={getUpdatedCenturyParams(century)}
-                className={classnames('button mr-1', {
+                className={cn('button mr-1', {
                   'is-info': centuries.includes(century),
                 })}
               >
@@ -106,12 +103,11 @@ export const PeopleFilters = () => {
           <div className="level-right ml-4">
             <a
               data-cy="centuryALL"
-              className={`button ${
-                searchParams.has('century')
-                  ? 'is-outlined is-success'
-                  : 'is-success'
-              }`}
-              onClick={() => handleCenturyFilterDelete()}
+              className={cn('button', {
+                'is-outlined is-success': searchParams.has('century'),
+                'is-success': !searchParams.has('century'),
+              })}
+              onClick={handleCenturyFilterDelete}
             >
               All
             </a>

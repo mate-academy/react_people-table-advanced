@@ -1,3 +1,4 @@
+import cn from 'classnames';
 import { Person } from '../../types/Person';
 import { PersonLink } from '../PersonLink';
 
@@ -8,32 +9,28 @@ type Props = {
 };
 
 export const PersonRow: React.FC<Props> = ({ person, slug, people }) => {
+  const { sex, born, died, fatherName, motherName } = person;
+
   return (
     <tr
       data-cy="person"
       key={person.slug}
-      className={person.slug === slug ? 'has-background-warning' : ''}
+      className={cn({
+        'has-background-warning': person.slug === slug,
+      })}
     >
       <td>
         <PersonLink person={person} people={people} />
       </td>
 
-      <td>{person.sex}</td>
-      <td>{person.born}</td>
-      <td>{person.died}</td>
+      <td>{sex}</td>
+      <td>{born}</td>
+      <td>{died}</td>
       <td>
-        {person.motherName ? (
-          <PersonLink name={person.motherName} people={people} />
-        ) : (
-          '-'
-        )}
+        {motherName ? <PersonLink name={motherName} people={people} /> : '-'}
       </td>
       <td>
-        {person.fatherName ? (
-          <PersonLink name={person.fatherName} people={people} />
-        ) : (
-          '-'
-        )}
+        {fatherName ? <PersonLink name={fatherName} people={people} /> : '-'}
       </td>
     </tr>
   );
