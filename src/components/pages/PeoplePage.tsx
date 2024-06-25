@@ -4,14 +4,13 @@ import { PeopleTable } from '../PeopleTable';
 import { useEffect, useMemo, useState } from 'react';
 import { Person } from '../../types';
 import { getPeople } from '../../api';
-import { useLocation } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 
 export const PeoplePage = () => {
   const [peoples, setPeoples] = useState<Person[]>([]);
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState(false);
-  const location = useLocation();
-  const searchParams = new URLSearchParams(location.search);
+  const [searchParams] = useSearchParams();
   const query = searchParams.get('query' || '');
   const sex = searchParams.get('sex' || null);
   const centuries = searchParams.getAll('centuries' || []);
