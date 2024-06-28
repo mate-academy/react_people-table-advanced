@@ -9,6 +9,9 @@ type Props = {
 export const PersonLink: React.FC<Props> = ({ person }) => {
   const { slug } = useParams();
   const location = useLocation();
+  const currentSearch = `/people/${person.slug}${location.search}`;
+  const { name, sex, born, died, mother, father, motherName, fatherName } =
+    person;
 
   return (
     <tr
@@ -17,37 +20,32 @@ export const PersonLink: React.FC<Props> = ({ person }) => {
     >
       <td>
         <Link
-          to={`/people/${person.slug}${location.search}`}
+          to={`${currentSearch}`}
           className={classNames({
-            'has-text-danger': person.sex === 'f',
+            'has-text-danger': sex === 'f',
           })}
         >
-          {person.name}
+          {name}
         </Link>
       </td>
 
-      <td>{person.sex}</td>
-      <td>{person.born}</td>
-      <td>{person.died}</td>
+      <td>{sex}</td>
+      <td>{born}</td>
+      <td>{died}</td>
       <td>
-        {person.mother ? (
-          <Link
-            to={`/people/${person.mother.slug}${location.search}`}
-            className="has-text-danger"
-          >
-            {person.motherName}
+        {mother ? (
+          <Link to={`${currentSearch}`} className="has-text-danger">
+            {motherName}
           </Link>
         ) : (
-          person.motherName || '-'
+          motherName || '-'
         )}
       </td>
       <td>
-        {person.father ? (
-          <Link to={`/people/${person.father.slug}${location.search}`}>
-            {person.fatherName}
-          </Link>
+        {father ? (
+          <Link to={`${currentSearch}`}>{fatherName}</Link>
         ) : (
-          person.fatherName || '-'
+          fatherName || '-'
         )}
       </td>
     </tr>
