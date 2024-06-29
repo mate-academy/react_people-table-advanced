@@ -104,14 +104,14 @@ export const PeopleFilters: React.FC<Props> = ({ people, onFilter }) => {
 
         <SearchLink
           className={cn({ 'is-active': sex === Sex.male })}
-          params={{ sex: 'm' }}
+          params={{ sex: Sex.male }}
         >
           Male
         </SearchLink>
 
         <SearchLink
           className={cn({ 'is-active': sex === Sex.famale })}
-          params={{ sex: 'f' }}
+          params={{ sex: Sex.famale }}
         >
           Female
         </SearchLink>
