@@ -4,6 +4,7 @@ import { Person } from '../types';
 import { SearchLink } from './SearchLink';
 import cn from 'classnames';
 import { SearchParams, getSearchWith } from '../utils/searchHelper';
+import { Sex } from '../types/Sex';
 
 type Props = {
   people: Person[];
@@ -102,14 +103,14 @@ export const PeopleFilters: React.FC<Props> = ({ people, onFilter }) => {
         </SearchLink>
 
         <SearchLink
-          className={cn({ 'is-active': sex === 'm' })}
+          className={cn({ 'is-active': sex === Sex.male })}
           params={{ sex: 'm' }}
         >
           Male
         </SearchLink>
 
         <SearchLink
-          className={cn({ 'is-active': sex === 'f' })}
+          className={cn({ 'is-active': sex === Sex.famale })}
           params={{ sex: 'f' }}
         >
           Female
@@ -153,7 +154,9 @@ export const PeopleFilters: React.FC<Props> = ({ people, onFilter }) => {
           <div className="level-right ml-4">
             <button
               data-cy="centuryALL"
-              className="button is-success is-outlined"
+              className={cn('button is-success', {
+                'is-outlined': centuries.length,
+              })}
               onClick={clearCenturies}
             >
               All
