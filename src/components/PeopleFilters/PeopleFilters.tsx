@@ -12,6 +12,7 @@ export const PeopleFilters = () => {
 
   function setSearchWith(params: SearchParams) {
     const search = getSearchWith(params, searchParams);
+
     setSearchParams(search);
   }
 
