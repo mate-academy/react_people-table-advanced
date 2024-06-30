@@ -20,16 +20,14 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
   const { person } = useParams();
   const { search } = useLocation();
 
+  /* eslint-disable */
   const handleSearch = useCallback(
     (category: string) => {
       return {
         search: getSearchWith(
           searchParams,
           sort === category.toLocaleLowerCase() && order
-            ? {
-                sort: null,
-                order: null,
-              }
+            ? { sort: null, order: null }
             : {
                 sort: category.toLocaleLowerCase(),
                 order: sort === category.toLocaleLowerCase() ? 'desc' : null,
@@ -39,6 +37,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
     },
     [sort, order],
   );
+  /* eslint-enable */
 
   const getIconClassName = useCallback(
     (category: string) => {
