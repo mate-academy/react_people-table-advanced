@@ -6,7 +6,7 @@ import {
 } from 'react-router-dom';
 import classNames from 'classnames';
 import { getSearchWith } from '../utils/searchHelper';
-import { Person } from '../types';
+import { Person, Sex } from '../types';
 import { useCallback } from 'react';
 
 type Props = {
@@ -80,7 +80,9 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
             <tr
               data-cy="person"
               key={slug}
-              className={slug === person ? 'has-background-warning' : ''}
+              className={classNames({
+                'has-background-warning': slug === person,
+              })}
             >
               <td>
                 <Link
@@ -88,7 +90,9 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
                     pathname: `./${slug}`,
                     search,
                   }}
-                  className={sex === 'f' ? 'has-text-danger' : ''}
+                  className={classNames({
+                    'has-text-danger': sex === Sex.female,
+                  })}
                 >
                   {name}
                 </Link>

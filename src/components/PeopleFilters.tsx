@@ -1,6 +1,7 @@
 import { useSearchParams, Link, useNavigate } from 'react-router-dom';
 import classNames from 'classnames';
 import { getSearchWith } from '../utils/searchHelper';
+import { Sex } from '../types';
 
 export const PeopleFilters = () => {
   const [searchParams] = useSearchParams();
@@ -23,7 +24,7 @@ export const PeopleFilters = () => {
 
       <p className="panel-tabs" data-cy="SexFilter">
         <Link
-          className={`${sex ? '' : 'is-active'}`}
+          className={classNames({ 'is-active': !sex })}
           to={{
             search: getSearchWith(searchParams, { sex: null }),
           }}
@@ -31,17 +32,17 @@ export const PeopleFilters = () => {
           All
         </Link>
         <Link
-          className={`${sex === 'm' ? 'is-active' : ''}`}
+          className={classNames({ 'is-active': sex === Sex.male })}
           to={{
-            search: getSearchWith(searchParams, { sex: 'm' }),
+            search: getSearchWith(searchParams, { sex: Sex.male }),
           }}
         >
           Male
         </Link>
         <Link
-          className={`${sex === 'f' ? 'is-active' : ''}`}
+          className={classNames({ 'is-active': sex === Sex.female })}
           to={{
-            search: getSearchWith(searchParams, { sex: 'f' }),
+            search: getSearchWith(searchParams, { sex: Sex.female }),
           }}
         >
           Female
@@ -72,9 +73,9 @@ export const PeopleFilters = () => {
               <Link
                 key={century}
                 data-cy="century"
-                className={`button mr-1 ${
-                  centuries.includes(century) ? 'is-info' : ''
-                }`}
+                className={classNames('button mr-1', {
+                  'is-info': centuries.includes(century),
+                })}
                 to={{
                   search: getSearchWith(searchParams, {
                     centuries: centuries.includes(century)
