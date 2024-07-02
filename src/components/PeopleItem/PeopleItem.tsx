@@ -1,5 +1,6 @@
 import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import classNames from 'classnames';
 
 import { Person } from '../../types';
@@ -17,11 +18,15 @@ export const PeopleItem: React.FC<Props> = ({
   fatherLink,
 }) => {
   const { current, setCurrent } = useContext(PeopleContext);
+  const [searchParams] = useSearchParams();
 
   const mother =
     person.motherName && motherLink ? (
       <Link
-        to={`/people/${motherLink.slug}`}
+        to={{
+          pathname: `/people/${motherLink.slug}`,
+          search: searchParams.toString(),
+        }}
         onClick={() => setCurrent(motherLink)}
         className="has-text-danger"
       >
@@ -33,7 +38,10 @@ export const PeopleItem: React.FC<Props> = ({
   const father =
     person.fatherName && fatherLink ? (
       <Link
-        to={`/people/${fatherLink.slug}`}
+        to={{
+          pathname: `/people/${fatherLink.slug}`,
+          search: searchParams.toString(),
+        }}
         onClick={() => setCurrent(fatherLink)}
       >
         {person.fatherName}
@@ -51,7 +59,10 @@ export const PeopleItem: React.FC<Props> = ({
     >
       <td>
         <Link
-          to={`/people/${person.slug}`}
+          to={{
+            pathname: `/people/${person.slug}`,
+            search: searchParams.toString(),
+          }}
           className={classNames({
             'has-text-danger': person.sex === 'f',
           })}

@@ -4,14 +4,14 @@ import { PeopleContext } from '../../peopleContext';
 import { useSearchParams } from 'react-router-dom';
 
 export const PeopleList = () => {
-  const { people } = useContext(PeopleContext);
+  const { people, setWarning } = useContext(PeopleContext);
   const [searchParams] = useSearchParams();
   let filteredPeople = [...people];
+  const sex = searchParams.get('sex');
+  const query = searchParams.get('query');
+  const centuries = searchParams.getAll('centuries');
 
-  if (searchParams.get('sex') || searchParams.get('query')) {
-    const sex = searchParams.get('sex');
-    const query = searchParams.get('query');
-
+  if (sex || query) {
     if (sex) {
       filteredPeople = filteredPeople.filter(
         item => item.sex === searchParams.get('sex'),
@@ -34,12 +34,16 @@ export const PeopleList = () => {
 
         return false;
       });
+
+      if (!filteredPeople.length) {
+        setWarning('There are no people matching the current search criteria');
+      } else {
+        setWarning('');
+      }
     }
   }
 
   if (searchParams.get('centuries')) {
-    const centuries = searchParams.getAll('centuries');
-
     if (centuries) {
       filteredPeople = filteredPeople.filter(item => {
         if (!centuries.includes((Math.floor(item.born / 100) + 1).toString())) {
