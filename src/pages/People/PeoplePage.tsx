@@ -17,6 +17,13 @@ export const PeoplePage = () => {
   const order = searchParams.get('order') || '';
 
   useEffect(() => {
+    if (warning) {
+      setWarning('');
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParams]);
+
+  useEffect(() => {
     getPeople()
       .then(res => {
         if (!res) {

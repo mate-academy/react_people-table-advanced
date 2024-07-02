@@ -10,6 +10,52 @@ export const PeopleList = () => {
   const sex = searchParams.get('sex');
   const query = searchParams.get('query');
   const centuries = searchParams.getAll('centuries');
+  const sort = searchParams.get('sort');
+  const order = searchParams.get('order');
+
+  if (!sort) {
+    filteredPeople = [...people];
+  }
+
+  if (sort === 'name') {
+    if (!order) {
+      filteredPeople = filteredPeople.sort((a, b) =>
+        a.name.localeCompare(b.name),
+      );
+    } else {
+      filteredPeople = filteredPeople.sort((a, b) =>
+        b.name.localeCompare(a.name),
+      );
+    }
+  }
+
+  if (sort === 'sex') {
+    if (!order) {
+      filteredPeople = filteredPeople.sort((a, b) =>
+        a.sex.localeCompare(b.sex),
+      );
+    } else {
+      filteredPeople = filteredPeople.sort((a, b) =>
+        b.sex.localeCompare(a.sex),
+      );
+    }
+  }
+
+  if (sort === 'born') {
+    if (!order) {
+      filteredPeople = filteredPeople.sort((a, b) => a.born - b.born);
+    } else {
+      filteredPeople = filteredPeople.sort((a, b) => b.born - a.born);
+    }
+  }
+
+  if (sort === 'died') {
+    if (!order) {
+      filteredPeople = filteredPeople.sort((a, b) => a.died - b.died);
+    } else {
+      filteredPeople = filteredPeople.sort((a, b) => b.died - a.died);
+    }
+  }
 
   if (sex || query) {
     if (sex) {
@@ -37,8 +83,6 @@ export const PeopleList = () => {
 
       if (!filteredPeople.length) {
         setWarning('There are no people matching the current search criteria');
-      } else {
-        setWarning('');
       }
     }
   }
