@@ -1,20 +1,22 @@
-import { PeoplePage } from './components/PeoplePage';
-import { Navbar } from './components/Navbar';
+import { Navigate, Outlet, useLocation } from 'react-router-dom';
+import { Navigation } from './components/Navigation/Navigation';
 
 import './App.scss';
 
 export const App = () => {
+  const detect = useLocation().pathname;
+
+  if (detect === '/home') {
+    return <Navigate to="/" />;
+  }
+
   return (
     <div data-cy="app">
-      <Navbar />
+      <Navigation />
 
-      <div className="section">
-        <div className="container">
-          <h1 className="title">Home Page</h1>
-          <h1 className="title">Page not found</h1>
-          <PeoplePage />
-        </div>
-      </div>
+      <main className="section">
+        <Outlet />
+      </main>
     </div>
   );
 };
