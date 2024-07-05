@@ -30,6 +30,9 @@ export const PeoplePage = () => {
         setPeopleFromServer(data);
         setFilteredPeopleList(data);
         setReqState('success');
+      })
+      .catch(() => {
+        setReqState('error');
       });
   }, []);
 
@@ -38,11 +41,12 @@ export const PeoplePage = () => {
       <h1 className="title">People Page</h1>
 
       <div className="block">
-        {reqState === 'loading'
-          ? <Loader />
-          : reqState === 'error'
-            ? <p data-cy="peopleLoadingError">Something went wrong</p>
-            : (<div className="columns is-desktop is-flex-direction-row-reverse">
+        {reqState === 'loading' ? (
+          <Loader />
+        ) : reqState === 'error' ? (
+          <p data-cy="peopleLoadingError">Something went wrong</p>
+        ) : (
+          <div className="columns is-desktop is-flex-direction-row-reverse">
             <div className="column is-7-tablet is-narrow-desktop">
               <PeopleFilters
                 setFilteredPeopleList={setFilteredPeopleList}
@@ -52,15 +56,17 @@ export const PeoplePage = () => {
 
             <div className="column">
               <div className="box table-container">
-
-                <p data-cy="noPeopleMessage">There are no people on the server</p>
+                <p data-cy="noPeopleMessage">
+                  There are no people on the server
+                </p>
 
                 <p>There are no people matching the current search criteria</p>
 
                 <PeopleTable filteredPeopleList={filteredPeopleList} />
               </div>
             </div>
-          </div>)}
+          </div>
+        )}
       </div>
     </>
   );

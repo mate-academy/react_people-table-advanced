@@ -1,13 +1,12 @@
 /* eslint-disable jsx-a11y/control-has-associated-label */
 import React from 'react';
 import { Person } from '../types';
-import { useParams, useSearchParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
 interface Props {
   filteredPeopleList: Person[];
 }
 export const PeopleTable: React.FC<Props> = ({ filteredPeopleList }) => {
-  const [searchParam] = useSearchParams();
   const { personSlug } = useParams();
 
   return (
@@ -87,7 +86,7 @@ export const PeopleTable: React.FC<Props> = ({ filteredPeopleList }) => {
               >
                 <td>
                   <a
-                    href={`#/people/${slug}?${searchParam.toString()}`}
+                    href={`#/people/${slug}`}
                     className={`${sex === 'f' && 'has-text-danger'}`}
                   >
                     {name}
@@ -100,7 +99,7 @@ export const PeopleTable: React.FC<Props> = ({ filteredPeopleList }) => {
                 <td>
                   {motherSlug ? (
                     <a
-                      href={`#/people/${motherSlug}?${searchParam.toString()}`}
+                      href={`#/people/${motherSlug}`}
                       className={'has-text-danger'}
                     >
                       {motherName}
@@ -111,7 +110,7 @@ export const PeopleTable: React.FC<Props> = ({ filteredPeopleList }) => {
                 </td>
                 <td>
                   {fatherSlug ? (
-                    <a href={`#/people/${fatherSlug}?${searchParam.toString()}`}>{fatherName}</a>
+                    <a href={`#/people/${fatherSlug}`}>{fatherName}</a>
                   ) : (
                     <span>{fatherName || '-'}</span>
                   )}

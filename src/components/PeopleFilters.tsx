@@ -42,7 +42,7 @@ export const PeopleFilters: React.FC<Props> = ({
   const [sexLinkM, setSexLinkM] = useState('');
   const [sexLinkF, setSexLinkF] = useState('');
   const [noSexLink, setNoSexLink] = useState('');
-  const {personSlug} = useParams();
+  const { personSlug } = useParams();
 
   const handleQueryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const param = new URLSearchParams(searchParams);
@@ -71,7 +71,7 @@ export const PeopleFilters: React.FC<Props> = ({
       } else {
         param.append('ct', ct);
       }
-      console.log('ct: ', ct, ' get: ', param.getAll('ct'));
+
       setSearchParams(param);
     };
   };
@@ -98,13 +98,22 @@ export const PeopleFilters: React.FC<Props> = ({
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        <a className="is-active" href={`#/people/${personSlug}?${noSexLink}`}>
+        <a
+          className={`${searchParams.get('sex') || 'is-active'}`}
+          href={`#/people/${personSlug}?${noSexLink}`}
+        >
           All
         </a>
-        <a className="" href={`#/people/${personSlug}?${sexLinkM}`}>
+        <a
+          className={`${searchParams.get('sex') === 'm' && 'is-active'}`}
+          href={`#/people/${personSlug}?${sexLinkM}`}
+        >
           Male
         </a>
-        <a className="" href={`#/people/${personSlug}?${sexLinkF}`}>
+        <a
+          className={`${searchParams.get('sex') === 'f' && 'is-active'}`}
+          href={`#/people/${personSlug}?${sexLinkF}`}
+        >
           Female
         </a>
       </p>
@@ -130,7 +139,7 @@ export const PeopleFilters: React.FC<Props> = ({
           <div className="level-left">
             <button
               data-cy="century"
-              className="button mr-1"
+              className={`button mr-1 ${searchParams.getAll('ct').includes('16') && 'is-info'}`}
               onClick={handleCenturyChange('16')}
             >
               16
@@ -138,7 +147,7 @@ export const PeopleFilters: React.FC<Props> = ({
 
             <button
               data-cy="century"
-              className="button mr-1 is-info"
+              className={`button mr-1 ${searchParams.getAll('ct').includes('17') && 'is-info'}`}
               onClick={handleCenturyChange('17')}
             >
               17
@@ -146,7 +155,7 @@ export const PeopleFilters: React.FC<Props> = ({
 
             <button
               data-cy="century"
-              className="button mr-1 is-info"
+              className={`button mr-1 ${searchParams.getAll('ct').includes('18') && 'is-info'}`}
               onClick={handleCenturyChange('18')}
             >
               18
@@ -154,7 +163,7 @@ export const PeopleFilters: React.FC<Props> = ({
 
             <button
               data-cy="century"
-              className="button mr-1 is-info"
+              className={`button mr-1 ${searchParams.getAll('ct').includes('19') && 'is-info'}`}
               onClick={handleCenturyChange('19')}
             >
               19
@@ -162,7 +171,7 @@ export const PeopleFilters: React.FC<Props> = ({
 
             <button
               data-cy="century"
-              className="button mr-1"
+              className={`button mr-1 ${searchParams.getAll('ct').includes('20') && 'is-info'}`}
               onClick={handleCenturyChange('20')}
             >
               20
@@ -172,7 +181,7 @@ export const PeopleFilters: React.FC<Props> = ({
           <div className="level-right ml-4">
             <button
               data-cy="centuryALL"
-              className="button is-success is-outlined"
+              className={`button is-success ${searchParams.getAll('ct').length && 'is-outlined'}`}
               onClick={handleCenturyChange('all')}
             >
               All
@@ -182,7 +191,10 @@ export const PeopleFilters: React.FC<Props> = ({
       </div>
 
       <div className="panel-block">
-        <a className="button is-link is-outlined is-fullwidth" href="#/people">
+        <a
+          className="button is-link is-outlined is-fullwidth"
+          href="#/people/noPeople"
+        >
           Reset all filters
         </a>
       </div>
