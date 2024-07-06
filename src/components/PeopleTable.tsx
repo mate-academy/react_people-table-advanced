@@ -126,7 +126,10 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
               <td>
                 <NavLink
                   className={classNames({ 'has-text-danger': sex === 'f' })}
-                  to={`../${slug}`}
+                  to={{
+                    pathname: `../${slug}`,
+                    search: searchParams.toString(),
+                  }}
                 >
                   {name}
                 </NavLink>
