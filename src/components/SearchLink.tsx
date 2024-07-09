@@ -6,7 +6,7 @@ import { getSearchWith, SearchParams } from '../utils/searchHelper';
  * along with the custom `params` prop that we use for updating the search
  */
 type Props = Omit<LinkProps, 'to'> & {
-  params: SearchParams;
+  params: SearchParams | string;
 };
 
 /**
@@ -19,6 +19,10 @@ export const SearchLink: React.FC<Props> = ({
   ...props // all usual Link props like `className`, `style` and `id`
 }) => {
   const [searchParams] = useSearchParams();
+
+  // useEffect(() => {
+  //   setSearchParams(params);
+  // })
 
   return (
     <Link
