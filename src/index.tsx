@@ -1,5 +1,10 @@
 import { createRoot } from 'react-dom/client';
-import { HashRouter as Router, Routes, Route } from 'react-router-dom';
+import {
+  HashRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from 'react-router-dom';
 
 import 'bulma/css/bulma.css';
 import '@fortawesome/fontawesome-free/css/all.css';
@@ -15,6 +20,7 @@ createRoot(document.getElementById('root') as HTMLDivElement).render(
       <Route path="/" element={<App />}>
         <Route index element={<HomePage />} />
         <Route path="people/:slug?" element={<PeoplePage />} />
+        <Route path="home" element={<Navigate to=".." replace />} />
         <Route path="*" element={<NotFoundPage />} />
       </Route>
     </Routes>
