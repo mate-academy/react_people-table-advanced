@@ -1,8 +1,8 @@
 import React from 'react';
 import { Person } from '../types';
-import { Link } from 'react-router-dom';
 import classNames from 'classnames';
 import { PersonLink } from './PersonLink';
+import { SearchLink } from './SearchLink';
 
 /* eslint-disable jsx-a11y/control-has-associated-label */
 type Props = {
@@ -57,8 +57,8 @@ export const PeopleTable: React.FC<Props> = ({
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Name
-              <a
-                href="#/people?sort=name"
+              <SearchLink
+                params={{ sort: 'name' }}
                 onClick={e => {
                   e.preventDefault();
                   handleSortFieldChange('name');
@@ -68,15 +68,15 @@ export const PeopleTable: React.FC<Props> = ({
                 <span className="icon">
                   <i className="fas fa-sort" />
                 </span>
-              </a>
+              </SearchLink>
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Sex
-              <a
-                href="#/people?sort=sex"
+              <SearchLink
+                params={{ sort: 'sex' }}
                 onClick={e => {
                   e.preventDefault();
                   handleSortFieldChange('sex');
@@ -86,15 +86,15 @@ export const PeopleTable: React.FC<Props> = ({
                 <span className="icon">
                   <i className="fas fa-sort" />
                 </span>
-              </a>
+              </SearchLink>
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Born
-              <a
-                href="#/people?sort=born&amp;order=desc"
+              <SearchLink
+                params={{ sort: 'born' }}
                 onClick={e => {
                   e.preventDefault();
                   handleSortFieldChange('born');
@@ -104,15 +104,15 @@ export const PeopleTable: React.FC<Props> = ({
                 <span className="icon">
                   <i className="fas fa-sort-up" />
                 </span>
-              </a>
+              </SearchLink>
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Died
-              <a
-                href="#/people?sort=died"
+              <SearchLink
+                params={{ sort: 'died' }}
                 onClick={e => {
                   e.preventDefault();
                   handleSortFieldChange('died');
@@ -122,7 +122,7 @@ export const PeopleTable: React.FC<Props> = ({
                 <span className="icon">
                   <i className="fas fa-sort" />
                 </span>
-              </a>
+              </SearchLink>
             </span>
           </th>
 
@@ -149,21 +149,14 @@ export const PeopleTable: React.FC<Props> = ({
             <td>{person.died}</td>
             <td>
               {person.mother && person.mother.slug ? (
-                <Link
-                  to={`/people/${person.mother.slug}`}
-                  className="has-text-danger"
-                >
-                  {person.motherName}
-                </Link>
+                <PersonLink person={person.mother} />
               ) : (
                 person.motherName || '-'
               )}
             </td>
             <td>
               {person.father ? (
-                <Link to={`/people/${person.father.slug}`}>
-                  {person.fatherName}
-                </Link>
+                <PersonLink person={person.father} />
               ) : (
                 person.fatherName || '-'
               )}

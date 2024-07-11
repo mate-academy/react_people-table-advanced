@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 import { Person } from '../types';
 import { useParams, useSearchParams } from 'react-router-dom';
 
-function preperedPeople(
+function getPreperedPeople(
   query: string,
   filterField: string,
   centuries: string[],
@@ -21,37 +21,21 @@ function preperedPeople(
     visiblePeople.sort((a: Person, b: Person) => {
       switch (sortField) {
         case 'name':
-          if (sortOrder === 'asc') {
-            return a.name.localeCompare(b.name);
-          } else if (sortOrder === 'desc') {
-            return b.name.localeCompare(a.name);
-          } else {
-            return 0;
-          }
-
         case 'sex':
           if (sortOrder === 'asc') {
-            return b.sex.localeCompare(a.sex);
+            return a[sortField].localeCompare(b[sortField]);
           } else if (sortOrder === 'desc') {
-            return a.sex.localeCompare(b.sex);
+            return b[sortField].localeCompare(a[sortField]);
           } else {
             return 0;
           }
 
         case 'born':
-          if (sortOrder === 'asc') {
-            return a.born - b.born;
-          } else if (sortOrder === 'desc') {
-            return b.born - a.born;
-          } else {
-            return 0;
-          }
-
         case 'died':
           if (sortOrder === 'asc') {
-            return a.died - b.died;
+            return a[sortField] - b[sortField];
           } else if (sortOrder === 'desc') {
-            return b.died - a.died;
+            return b[sortField] - a[sortField];
           } else {
             return 0;
           }
@@ -116,7 +100,7 @@ export const PeoplePage = () => {
   const initialSortOrder = searchParams.get('sortOrder') || '';
   const [sortOrder, setSortOrder] = useState(initialSortOrder);
 
-  const visiblePeople = preperedPeople(
+  const visiblePeople = getPreperedPeople(
     query,
     filterField,
     centuries,
