@@ -1,10 +1,17 @@
-import { PeopleFilters } from './PeopleFilters';
-import { Loader } from './Loader';
-import { PeopleTable } from './PeopleTable';
+import { PeopleFilters } from '../components/PeopleFilters';
+import { Loader } from '../components/Loader';
+import { PeopleTable } from '../components/PeopleTable';
 
 export const PeoplePage = () => {
+  // const [people, setPeople] = useState<Person[]>([]);
+  // const [visiblePeople, setVisiblePeople] = useState<Person[]>([]);
+
+  // useEffect(() => {
+  //   getPeople().then(setPeople);
+  // }, []);
+
   return (
-    <>
+    <div className="container">
       <h1 className="title">People Page</h1>
 
       <div className="block">
@@ -28,6 +35,6 @@ export const PeoplePage = () => {
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
