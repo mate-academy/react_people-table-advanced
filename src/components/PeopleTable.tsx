@@ -45,6 +45,9 @@ export const PeopleTable: React.FC<Props> = ({
 
     params.set('sort', sortField);
     setSearchParams(params);
+    setSortOrder(getNextSortOrder(sortOrder));
+
+    return Object.fromEntries(params.entries());
   }
 
   return (
@@ -57,14 +60,7 @@ export const PeopleTable: React.FC<Props> = ({
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Name
-              <SearchLink
-                params={{ sort: 'name' }}
-                onClick={e => {
-                  e.preventDefault();
-                  handleSortFieldChange('name');
-                  setSortOrder(getNextSortOrder(sortOrder));
-                }}
-              >
+              <SearchLink params={handleSortFieldChange('name')}>
                 <span className="icon">
                   <i className="fas fa-sort" />
                 </span>
@@ -75,14 +71,7 @@ export const PeopleTable: React.FC<Props> = ({
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Sex
-              <SearchLink
-                params={{ sort: 'sex' }}
-                onClick={e => {
-                  e.preventDefault();
-                  handleSortFieldChange('sex');
-                  setSortOrder(getNextSortOrder(sortOrder));
-                }}
-              >
+              <SearchLink params={handleSortFieldChange('sex')}>
                 <span className="icon">
                   <i className="fas fa-sort" />
                 </span>
@@ -93,14 +82,7 @@ export const PeopleTable: React.FC<Props> = ({
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Born
-              <SearchLink
-                params={{ sort: 'born' }}
-                onClick={e => {
-                  e.preventDefault();
-                  handleSortFieldChange('born');
-                  setSortOrder(getNextSortOrder(sortOrder));
-                }}
-              >
+              <SearchLink params={handleSortFieldChange('born')}>
                 <span className="icon">
                   <i className="fas fa-sort-up" />
                 </span>
@@ -111,14 +93,7 @@ export const PeopleTable: React.FC<Props> = ({
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Died
-              <SearchLink
-                params={{ sort: 'died' }}
-                onClick={e => {
-                  e.preventDefault();
-                  handleSortFieldChange('died');
-                  setSortOrder(getNextSortOrder(sortOrder));
-                }}
-              >
+              <SearchLink params={handleSortFieldChange('died')}>
                 <span className="icon">
                   <i className="fas fa-sort" />
                 </span>
