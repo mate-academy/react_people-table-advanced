@@ -1,7 +1,7 @@
 import { PeopleFilters } from './PeopleFilters';
 import { Loader } from './Loader';
 import { PeopleTable } from './PeopleTable';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { getPeople } from '../api';
 import { Person } from '../types';
 import { FilterBySex } from '../types/FilterBySex';
@@ -17,17 +17,13 @@ export const PeoplePage = () => {
   const query = searchParams.get('query') || '';
   const centuries = searchParams.getAll('centuries') || [];
 
-  const [activeSexFilter, setActiveSexFilter] = useState<FilterBySex>(
-    FilterBySex.ALL,
-  );
-
-  useEffect(() => {
+  const activeSexFilter = useMemo(() => {
     if (sex === 'm') {
-      setActiveSexFilter(FilterBySex.MALE);
+      return FilterBySex.MALE;
     } else if (sex === 'f') {
-      setActiveSexFilter(FilterBySex.FEMALE);
+      return FilterBySex.FEMALE;
     } else {
-      setActiveSexFilter(FilterBySex.ALL);
+      return FilterBySex.ALL;
     }
   }, [sex]);
 
@@ -38,7 +34,7 @@ export const PeoplePage = () => {
       .finally(() => setIsLoading(false));
   }, []);
 
-  const visibleList = () => {
+  const visiblePeople = useMemo(() => {
     let visible = [...people];
 
     if (sex) {
@@ -70,9 +66,9 @@ export const PeoplePage = () => {
     }
 
     return visible;
-  };
+  }, [activeSexFilter, sex, query, centuries, people]);
 
-  const visiblePeople = visibleList();
+  // const visiblePeople = visibleList();
 
   return (
     <>
