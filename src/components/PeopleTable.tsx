@@ -1,54 +1,37 @@
-import React from 'react';
-import { Person } from '../types';
+/* eslint-disable jsx-a11y/control-has-associated-label */
+
 import classNames from 'classnames';
 import { PersonLink } from './PersonLink';
+import { Person } from '../types';
 import { SearchLink } from './SearchLink';
 
-/* eslint-disable jsx-a11y/control-has-associated-label */
 type Props = {
   people: Person[];
   selectedPerson: Person | undefined;
-  searchParams: URLSearchParams;
-  setSearchParams: (params: URLSearchParams) => void;
   sortOrder: string;
-  setSortOrder: (order: string) => void;
 };
+
 export const PeopleTable: React.FC<Props> = ({
   people,
   selectedPerson,
-  searchParams,
-  setSearchParams,
   sortOrder,
-  setSortOrder,
 }) => {
   const getNextSortOrder = (currentOrder: string) => {
-    const params = new URLSearchParams(searchParams);
-
     switch (currentOrder) {
       case 'asc':
-        params.set('order', 'desc');
-        setSearchParams(params);
-
         return 'desc';
       case 'desc':
-        params.delete('order');
-        setSearchParams(params);
-
         return 'none';
       default:
         return 'asc';
     }
   };
 
-  function handleSortFieldChange(sortField: string) {
-    const params = new URLSearchParams(searchParams);
+  // const handleSort = (sortField: string) => {
+  //   const nextOrder = ;
 
-    params.set('sort', sortField);
-    setSearchParams(params);
-    setSortOrder(getNextSortOrder(sortOrder));
-
-    return Object.fromEntries(params.entries());
-  }
+  //   return { sort: sortField, order: nextOrder };
+  // };
 
   return (
     <table
@@ -60,7 +43,12 @@ export const PeopleTable: React.FC<Props> = ({
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Name
-              <SearchLink params={handleSortFieldChange('name')}>
+              <SearchLink
+                params={{
+                  sort: 'name',
+                  sortOrder: getNextSortOrder(sortOrder),
+                }}
+              >
                 <span className="icon">
                   <i className="fas fa-sort" />
                 </span>
@@ -71,7 +59,12 @@ export const PeopleTable: React.FC<Props> = ({
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Sex
-              <SearchLink params={handleSortFieldChange('sex')}>
+              <SearchLink
+                params={{
+                  sort: 'sex',
+                  sortOrder: getNextSortOrder(sortOrder),
+                }}
+              >
                 <span className="icon">
                   <i className="fas fa-sort" />
                 </span>
@@ -82,7 +75,12 @@ export const PeopleTable: React.FC<Props> = ({
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Born
-              <SearchLink params={handleSortFieldChange('born')}>
+              <SearchLink
+                params={{
+                  sort: 'born',
+                  sortOrder: getNextSortOrder(sortOrder),
+                }}
+              >
                 <span className="icon">
                   <i className="fas fa-sort-up" />
                 </span>
@@ -93,7 +91,12 @@ export const PeopleTable: React.FC<Props> = ({
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Died
-              <SearchLink params={handleSortFieldChange('died')}>
+              <SearchLink
+                params={{
+                  sort: 'died',
+                  sortOrder: getNextSortOrder(sortOrder),
+                }}
+              >
                 <span className="icon">
                   <i className="fas fa-sort" />
                 </span>

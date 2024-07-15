@@ -11,10 +11,10 @@ import { HomePage } from './components/HomePage';
 export const Root = () => (
   <Router>
     <Routes>
-      <Route path="home" element={<Navigate to="/" />} />
       <Route path="/" element={<App />}>
         <Route index element={<HomePage />} />
         <Route path="people/:slug?" element={<PeoplePage />} />
+        <Route path="home" element={<Navigate to="/" />} />
 
         <Route
           path="*"

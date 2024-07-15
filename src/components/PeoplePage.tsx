@@ -1,50 +1,22 @@
 import { PeopleFilters } from './PeopleFilters';
 import { Loader } from './Loader';
 import { PeopleTable } from './PeopleTable';
-import { getPeople } from '../api';
 import { useEffect, useState } from 'react';
 import { Person } from '../types';
 import { useParams, useSearchParams } from 'react-router-dom';
+import { getPeople } from '../api';
 
 function getPreperedPeople(
-  query: string,
   filterField: string,
+  query: string,
   centuries: string[],
-  sortField: string,
+  sort: string,
   sortOrder: string,
-  readyPeople: Person[],
+  people: Person[],
 ) {
-  let visiblePeople = [...readyPeople];
+  let visiblePeople = [...people];
+
   const preperedQuery = query.trim().toLowerCase();
-
-  if (sortField) {
-    visiblePeople.sort((a: Person, b: Person) => {
-      switch (sortField) {
-        case 'name':
-        case 'sex':
-          if (sortOrder === 'asc') {
-            return a[sortField].localeCompare(b[sortField]);
-          } else if (sortOrder === 'desc') {
-            return b[sortField].localeCompare(a[sortField]);
-          } else {
-            return 0;
-          }
-
-        case 'born':
-        case 'died':
-          if (sortOrder === 'asc') {
-            return a[sortField] - b[sortField];
-          } else if (sortOrder === 'desc') {
-            return b[sortField] - a[sortField];
-          } else {
-            return 0;
-          }
-
-        default:
-          return 0;
-      }
-    });
-  }
 
   visiblePeople = visiblePeople.filter(
     person =>
@@ -57,6 +29,35 @@ function getPreperedPeople(
     visiblePeople = visiblePeople.filter(person =>
       centuries.includes(Math.ceil(person.born / 100).toString()),
     );
+  }
+
+  if (sort) {
+    visiblePeople.sort((a: Person, b: Person) => {
+      switch (sort) {
+        case 'name':
+        case 'sex':
+          if (sortOrder === 'asc') {
+            return a[sort].localeCompare(b[sort]);
+          } else if (sortOrder === 'desc') {
+            return b[sort].localeCompare(a[sort]);
+          } else {
+            return 0;
+          }
+
+        case 'born':
+        case 'died':
+          if (sortOrder === 'asc') {
+            return a[sort] - b[sort];
+          } else if (sortOrder === 'desc') {
+            return b[sort] - a[sort];
+          } else {
+            return 0;
+          }
+
+        default:
+          return 0;
+      }
+    });
   }
 
   switch (filterField) {
@@ -93,18 +94,17 @@ export const PeoplePage = () => {
   }));
 
   const [searchParams, setSearchParams] = useSearchParams();
+  const filterField = searchParams.get('filterField') || 'all';
   const query = searchParams.get('query') || '';
-  const filterField = searchParams.get('filterField') || '';
   const centuries = searchParams.getAll('centuries') || [];
-  const sortField = searchParams.get('sort') || '';
-  const initialSortOrder = searchParams.get('sortOrder') || '';
-  const [sortOrder, setSortOrder] = useState(initialSortOrder);
+  const sort = searchParams.get('sort') || '';
+  const sortOrder = searchParams.get('sortOrder') || '';
 
   const visiblePeople = getPreperedPeople(
-    query,
     filterField,
+    query,
     centuries,
-    sortField,
+    sort,
     sortOrder,
     readyPeople,
   );
@@ -117,9 +117,11 @@ export const PeoplePage = () => {
         <div className="columns is-desktop is-flex-direction-row-reverse">
           <div className="column is-7-tablet is-narrow-desktop">
             <PeopleFilters
+              filterField={filterField}
+              query={query}
+              centuries={centuries}
               searchParams={searchParams}
               setSearchParams={setSearchParams}
-              query={query}
             />
           </div>
 
@@ -131,13 +133,13 @@ export const PeoplePage = () => {
                 <p data-cy="peopleLoadingError">Something went wrong</p>
               )}
 
-              {!isLoading && people.length < 1 && (
+              {!isLoading && visiblePeople.length === 0 && (
                 <p data-cy="noPeopleMessage">
                   There are no people on the server
                 </p>
               )}
 
-              {false && (
+              {visiblePeople.length === 0 && (
                 <p>There are no people matching the current search criteria</p>
               )}
 
@@ -145,10 +147,7 @@ export const PeoplePage = () => {
                 <PeopleTable
                   people={visiblePeople}
                   selectedPerson={selectedPerson}
-                  searchParams={searchParams}
-                  setSearchParams={setSearchParams}
                   sortOrder={sortOrder}
-                  setSortOrder={setSortOrder}
                 />
               )}
             </div>

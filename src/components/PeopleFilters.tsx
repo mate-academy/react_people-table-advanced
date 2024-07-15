@@ -1,111 +1,75 @@
 import classNames from 'classnames';
+import { SearchLink } from './SearchLink';
+import { getSearchWith } from '../utils/searchHelper';
 
 type Props = {
-  searchParams: URLSearchParams;
-  setSearchParams: (params: URLSearchParams) => void;
+  filterField: string;
   query: string;
+  centuries: string[];
+  searchParams: URLSearchParams;
+  setSearchParams: (searchParams: URLSearchParams) => void;
 };
 
 export const PeopleFilters: React.FC<Props> = ({
+  filterField,
+  query,
+  centuries,
   searchParams,
   setSearchParams,
-  query,
 }) => {
   const initialCenturies = ['16', '17', '18', '19', '20'];
 
-  function handleFilterFieldChange(filterField: string) {
-    const params = new URLSearchParams(searchParams);
+  const handleQueryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchParams(
+      new URLSearchParams(
+        getSearchWith(searchParams, { query: event.target.value || null }),
+      ),
+    );
+  };
 
-    params.set('filterField', filterField);
-    setSearchParams(params);
-  }
-
-  const currentFilter = searchParams.get('filterField') || 'all';
-
-  function handleQueryChange(event: React.ChangeEvent<HTMLInputElement>) {
-    const params = new URLSearchParams(searchParams);
-
-    params.set('query', event.target.value);
-    setSearchParams(params);
-  }
-
-  function handleCenturiesChange(ch: string) {
-    const params = new URLSearchParams(searchParams);
-    const centuries = searchParams.getAll('centuries') || [];
-
+  const toggleCenturies = (ch: string) => {
     const newCenturies = centuries.includes(ch)
-      ? centuries.filter(cen => cen !== ch)
+      ? centuries.filter(centurie => centurie !== ch)
       : [...centuries, ch];
 
-    params.delete('centuries');
+    return newCenturies;
+  };
 
-    newCenturies.forEach(centure => params.append('centuries', centure));
-    setSearchParams(params);
-  }
-
-  function handleAllCenturiesChange() {
-    const params = new URLSearchParams(searchParams);
-    const centuries = searchParams.getAll('centuries') || [];
-
-    if (centuries.length === initialCenturies.length) {
-      params.delete('centuries');
-    } else {
-      params.delete('centuries');
-
-      initialCenturies.forEach(c => {
-        params.append('centuries', c);
-      });
-    }
-
-    setSearchParams(params);
-  }
-
-  const currentCenturies = searchParams.getAll('centuries');
-
-  function handleClear() {
-    const params = new URLSearchParams(searchParams);
-
-    params.delete('filterField');
-    params.delete('query');
-    params.delete('centuries');
-    setSearchParams(params);
-  }
+  const toggleAllCenturies = () => {
+    return centuries.length === initialCenturies.length
+      ? null
+      : initialCenturies;
+  };
 
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        <a
-          className={currentFilter === 'all' ? 'is-active' : ''}
-          href="#/people"
-          onClick={e => {
-            e.preventDefault();
-            handleFilterFieldChange('all');
+        <SearchLink
+          className={classNames({ 'is-active': filterField === 'all' })}
+          params={{
+            filterField: 'all',
           }}
         >
           All
-        </a>
-        <a
-          className={currentFilter === 'm' ? 'is-active' : ''}
-          href="#/people?sex=m"
-          onClick={e => {
-            e.preventDefault();
-            handleFilterFieldChange('m');
+        </SearchLink>
+        <SearchLink
+          className={classNames({ 'is-active': filterField === 'm' })}
+          params={{
+            filterField: 'm',
           }}
         >
           Male
-        </a>
-        <a
-          className={currentFilter === 'f' ? 'is-active' : ''}
-          href="#/people?sex=f"
-          onClick={e => {
-            e.preventDefault();
-            handleFilterFieldChange('f');
+        </SearchLink>
+        <SearchLink
+          className={classNames({ 'is-active': filterField === 'f' })}
+          params={{
+            filterField: 'f',
           }}
         >
           Female
-        </a>
+        </SearchLink>
       </p>
 
       <div className="panel-block">
@@ -128,48 +92,47 @@ export const PeopleFilters: React.FC<Props> = ({
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            {initialCenturies.map(century => (
-              <a
-                key={century}
+            {initialCenturies.map(cen => (
+              <SearchLink
+                key={cen}
                 data-cy="century"
                 className={classNames('button mr-1', {
-                  'is-info': currentCenturies.includes(century),
+                  'is-info': centuries.includes(cen),
                 })}
-                href={`#/people?centuries=${century}`}
-                onClick={e => {
-                  e.preventDefault();
-                  handleCenturiesChange(century);
+                params={{
+                  centuries: toggleCenturies(cen),
                 }}
               >
-                {century}
-              </a>
+                {cen}
+              </SearchLink>
             ))}
           </div>
 
           <div className="level-right ml-4">
-            <a
+            <SearchLink
               data-cy="centuryALL"
               className="button is-success is-outlined"
-              href="#/people"
-              onClick={e => {
-                e.preventDefault();
-                handleAllCenturiesChange();
+              params={{
+                centuries: toggleAllCenturies(),
               }}
             >
               All
-            </a>
+            </SearchLink>
           </div>
         </div>
       </div>
 
       <div className="panel-block">
-        <a
+        <SearchLink
           className="button is-link is-outlined is-fullwidth"
-          href="#/people"
-          onClick={handleClear}
+          params={{
+            filterField: null,
+            query: null,
+            centuries: null,
+          }}
         >
           Reset all filters
-        </a>
+        </SearchLink>
       </div>
     </nav>
   );
