@@ -8,6 +8,7 @@ import { App } from './App';
 import { PageNotFound } from './pages/PageNotFound';
 import { HomePage } from './pages/HomePage';
 import { PeoplePage } from './pages/PeoplePage';
+import React from 'react';
 
 export const Root = () => {
   return (
