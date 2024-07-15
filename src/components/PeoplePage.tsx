@@ -60,15 +60,10 @@ function getPreperedPeople(
     });
   }
 
-  switch (filterField) {
-    case 'all':
-      return visiblePeople;
-    case 'm':
-      return visiblePeople.filter(person => person.sex === 'm');
-    case 'f':
-      return visiblePeople.filter(person => person.sex === 'f');
-    default:
-      return visiblePeople;
+  if (filterField && filterField !== 'all') {
+    return visiblePeople.filter(person => person.sex === filterField);
+  } else {
+    return visiblePeople;
   }
 }
 
@@ -77,7 +72,6 @@ export const PeoplePage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
   const { slug } = useParams();
-  const selectedPerson = people.find(person => person.slug === slug);
 
   useEffect(() => {
     setIsLoading(true);
@@ -108,6 +102,8 @@ export const PeoplePage = () => {
     sortOrder,
     readyPeople,
   );
+
+  const selectedPerson = visiblePeople.find(person => person.slug === slug);
 
   return (
     <>
