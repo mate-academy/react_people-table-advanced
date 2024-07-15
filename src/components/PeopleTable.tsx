@@ -9,12 +9,14 @@ type Props = {
   people: Person[];
   selectedPerson: Person | undefined;
   sortOrder: string;
+  searchParams: URLSearchParams;
 };
 
 export const PeopleTable: React.FC<Props> = ({
   people,
   selectedPerson,
   sortOrder,
+  searchParams,
 }) => {
   const getNextSortOrder = (currentOrder: string) => {
     switch (currentOrder) {
@@ -27,11 +29,22 @@ export const PeopleTable: React.FC<Props> = ({
     }
   };
 
-  // const handleSort = (sortField: string) => {
-  //   const nextOrder = ;
+  const getClassForIcon = (currentField: string) => {
+    const sortField = searchParams.get('sort');
 
-  //   return { sort: sortField, order: nextOrder };
-  // };
+    if (currentField === sortField) {
+      switch (sortOrder) {
+        case 'asc':
+          return 'fas fa-sort-up';
+        case 'desc':
+          return 'fas fa-sort-down';
+        default:
+          return 'fas fa-sort';
+      }
+    }
+
+    return 'fas fa-sort';
+  };
 
   return (
     <table
@@ -50,7 +63,7 @@ export const PeopleTable: React.FC<Props> = ({
                 }}
               >
                 <span className="icon">
-                  <i className="fas fa-sort" />
+                  <i className={getClassForIcon('name')} />
                 </span>
               </SearchLink>
             </span>
@@ -66,7 +79,7 @@ export const PeopleTable: React.FC<Props> = ({
                 }}
               >
                 <span className="icon">
-                  <i className="fas fa-sort" />
+                  <i className={getClassForIcon('sex')} />
                 </span>
               </SearchLink>
             </span>
@@ -82,7 +95,7 @@ export const PeopleTable: React.FC<Props> = ({
                 }}
               >
                 <span className="icon">
-                  <i className="fas fa-sort-up" />
+                  <i className={getClassForIcon('born')} />
                 </span>
               </SearchLink>
             </span>
@@ -98,7 +111,7 @@ export const PeopleTable: React.FC<Props> = ({
                 }}
               >
                 <span className="icon">
-                  <i className="fas fa-sort" />
+                  <i className={getClassForIcon('died')} />
                 </span>
               </SearchLink>
             </span>

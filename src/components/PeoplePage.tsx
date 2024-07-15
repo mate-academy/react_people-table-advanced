@@ -133,13 +133,13 @@ export const PeoplePage = () => {
                 <p data-cy="peopleLoadingError">Something went wrong</p>
               )}
 
-              {!isLoading && visiblePeople.length === 0 && (
+              {!isLoading && !isError && readyPeople.length === 0 && (
                 <p data-cy="noPeopleMessage">
                   There are no people on the server
                 </p>
               )}
 
-              {visiblePeople.length === 0 && (
+              {!isLoading && !isError && visiblePeople.length === 0 && (
                 <p>There are no people matching the current search criteria</p>
               )}
 
@@ -148,6 +148,7 @@ export const PeoplePage = () => {
                   people={visiblePeople}
                   selectedPerson={selectedPerson}
                   sortOrder={sortOrder}
+                  searchParams={searchParams}
                 />
               )}
             </div>
