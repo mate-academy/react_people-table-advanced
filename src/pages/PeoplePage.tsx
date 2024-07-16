@@ -59,9 +59,9 @@ export const PeoplePage = () => {
         case SortTypes.Sex:
           filteredPeople.sort((a, b) => {
             if (a.sex === 'f' && b.sex === 'm') {
-              return -1;
+              return searchParams.get('order') === 'desc' ? 1 : -1;
             } else if (a.sex === 'm' && b.sex === 'f') {
-              return 1;
+              return searchParams.get('order') === 'desc' ? -1 : 1;
             } else {
               return 0;
             }
@@ -70,13 +70,17 @@ export const PeoplePage = () => {
 
         case SortTypes.Born:
           filteredPeople.sort((a, b) => {
-            if (a.sex === 'f' && b.sex === 'm') {
-              return -1;
-            } else if (a.sex === 'm' && b.sex === 'f') {
-              return 1;
-            } else {
-              return 0;
-            }
+            return searchParams.get('order') === 'desc'
+              ? b.born - a.born
+              : a.born - b.born;
+          });
+          break;
+
+        case SortTypes.Died:
+          filteredPeople.sort((a, b) => {
+            return searchParams.get('order') === 'desc'
+              ? b.died - a.died
+              : a.died - b.died;
           });
           break;
 
