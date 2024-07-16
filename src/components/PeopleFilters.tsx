@@ -4,12 +4,7 @@ import { Link, useSearchParams } from 'react-router-dom';
 import { getSearchWith } from '../utils/searchHelper';
 import classNames from 'classnames';
 import { centuries } from '../utils/const';
-
-export enum SexRoutesFilter {
-  All = '',
-  Male = 'm',
-  Female = 'f',
-}
+import { SexRoutesFilter } from '../types/sort';
 
 export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();

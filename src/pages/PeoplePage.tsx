@@ -14,8 +14,6 @@ export const PeoplePage = () => {
   const [hasError, setHasError] = useState<boolean>(false);
   const [searchParams] = useSearchParams();
 
-  // const searchInput = searchParams.get('search') || '';
-
   const visiblePeople = useMemo(() => {
     const centuriesSearch = searchParams.getAll('centuries') || [];
     let filteredPeople = [...people];

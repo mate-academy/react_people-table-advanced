@@ -10,3 +10,9 @@ export enum FilterTypes {
   Centuries = 'centuries',
   Search = 'search',
 }
+
+export enum SexRoutesFilter {
+  All = '',
+  Male = 'm',
+  Female = 'f',
+}
