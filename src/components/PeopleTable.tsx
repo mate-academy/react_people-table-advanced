@@ -1,18 +1,23 @@
 import React, { useMemo } from 'react';
-import { useParams, useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import { PersonLink } from './PersonLink';
 import { Person } from '../types';
 
 interface Props {
   people: Person[];
+  selectedSlug: string | null;
+  onPersonClick: (slug: string) => void;
 }
 
 const sortFields = ['name', 'sex', 'born', 'died'] as const;
 
 type SortField = (typeof sortFields)[number];
 
-export const PeopleTable: React.FC<Props> = ({ people }) => {
-  const { slug } = useParams();
+export const PeopleTable: React.FC<Props> = ({
+  people,
+  selectedSlug,
+  onPersonClick,
+}) => {
   const [searchParams, setSearchParams] = useSearchParams();
   const query = searchParams.get('query');
   const sexFilter = searchParams.get('sex');
@@ -95,6 +100,38 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
     return sortOrder === 'desc' ? sorted.reverse() : sorted;
   }, [filteredPeople, sortField, sortOrder]);
 
+  const getSortIcon = (field: SortField) => {
+    if (sortField !== field) {
+      return (
+        <span className="icon">
+          <i className="fas fa-sort" />
+        </span>
+      );
+    }
+
+    if (sortOrder === 'asc') {
+      return (
+        <span className="icon">
+          <i className="fas fa-sort-up" />
+        </span>
+      );
+    }
+
+    if (sortOrder === 'desc') {
+      return (
+        <span className="icon">
+          <i className="fas fa-sort-down" />
+        </span>
+      );
+    }
+
+    return (
+      <span className="icon">
+        <i className="fas fa-sort" />
+      </span>
+    );
+  };
+
   return sortedPeople.length !== 0 ? (
     <table
       data-cy="peopleTable"
@@ -112,9 +149,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
                   handleSortClick('name');
                 }}
               >
-                <span className="icon">
-                  <i className="fas fa-sort" />
-                </span>
+                {getSortIcon('name')}
               </a>
             </span>
           </th>
@@ -128,9 +163,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
                   handleSortClick('sex');
                 }}
               >
-                <span className="icon">
-                  <i className="fas fa-sort" />
-                </span>
+                {getSortIcon('sex')}
               </a>
             </span>
           </th>
@@ -144,9 +177,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
                   handleSortClick('born');
                 }}
               >
-                <span className="icon">
-                  <i className="fas fa-sort-up" />
-                </span>
+                {getSortIcon('born')}
               </a>
             </span>
           </th>
@@ -160,9 +191,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
                   handleSortClick('died');
                 }}
               >
-                <span className="icon">
-                  <i className="fas fa-sort" />
-                </span>
+                {getSortIcon('died')}
               </a>
             </span>
           </th>
@@ -175,24 +204,26 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
           <tr
             data-cy="person"
             key={person.slug}
-            className={person.slug === slug ? 'has-background-warning' : ''}
+            className={
+              person.slug === selectedSlug ? 'has-background-warning' : ''
+            }
           >
             <td>
-              <PersonLink person={person} />
+              <PersonLink person={person} onClick={onPersonClick} />
             </td>
             <td>{person.sex}</td>
             <td>{person.born}</td>
             <td>{person.died}</td>
             <td>
               {person.mother ? (
-                <PersonLink person={person.mother} />
+                <PersonLink person={person.mother} onClick={onPersonClick} />
               ) : (
                 <span>{person.motherName || '-'}</span>
               )}
             </td>
             <td>
               {person.father ? (
-                <PersonLink person={person.father} />
+                <PersonLink person={person.father} onClick={onPersonClick} />
               ) : (
                 <span>{person.fatherName || '-'}</span>
               )}

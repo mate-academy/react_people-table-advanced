@@ -6,27 +6,23 @@ import { Loader } from './Loader';
 import { PeopleTable } from './PeopleTable';
 
 function assignParents(people: Person[]) {
-  const copyPeople = [...people];
+  return people.map(copyPerson => {
+    const father = people.find(person => person.name === copyPerson.fatherName);
+    const mother = people.find(person => person.name === copyPerson.motherName);
 
-  for (const copyPerson of copyPeople) {
-    people.forEach(person => {
-      if (person.name === copyPerson.fatherName) {
-        copyPerson.father = person;
-      }
-
-      if (person.name === copyPerson.motherName) {
-        copyPerson.mother = person;
-      }
-    });
-  }
-
-  return copyPeople;
+    return {
+      ...copyPerson,
+      father,
+      mother,
+    };
+  });
 }
 
 export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [selectedSlug, setSelectedSlug] = useState<string | null>(null);
 
   useEffect(() => {
     getPeople()
@@ -41,6 +37,10 @@ export const PeoplePage = () => {
         setIsLoading(false);
       });
   }, []);
+
+  const handlePersonClick = (slug: string) => {
+    setSelectedSlug(slug);
+  };
 
   return (
     <>
@@ -59,7 +59,11 @@ export const PeoplePage = () => {
                   {error}
                 </p>
               ) : people.length !== 0 ? (
-                <PeopleTable people={people} />
+                <PeopleTable
+                  people={people}
+                  selectedSlug={selectedSlug}
+                  onPersonClick={handlePersonClick}
+                />
               ) : (
                 <p data-cy="noPeopleMessage">
                   There are no people on the server
