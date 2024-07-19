@@ -4,6 +4,11 @@ import classNames from 'classnames';
 import React from 'react';
 import { getSearchWith } from '../utils/searchHelper';
 
+enum Sex {
+  male = 'm',
+  female = 'f',
+}
+
 export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const sex = searchParams.get('sex') || null;
@@ -44,17 +49,17 @@ export const PeopleFilters = () => {
 
         <SearchLink
           className={classNames({
-            'is-active': sex === 'm',
+            'is-active': sex === Sex.male,
           })}
-          params={{ sex: 'm' }}
+          params={{ sex: Sex.male }}
         >
           Male
         </SearchLink>
         <SearchLink
           className={classNames({
-            'is-active': sex === 'f',
+            'is-active': sex === Sex.female,
           })}
-          params={{ sex: 'f' }}
+          params={{ sex: Sex.female }}
         >
           Female
         </SearchLink>
