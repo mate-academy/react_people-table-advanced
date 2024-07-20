@@ -2,27 +2,34 @@ import { PeopleLink } from './PeopleLink';
 import { useSearchParams } from 'react-router-dom';
 import { Person } from '../types';
 import classNames from 'classnames';
+import { getSearchWith } from '../utils/searchHelper';
 
 type Props = {
   visiblePeople: Person[];
 };
 
 export const PeopleTable: React.FC<Props> = ({ visiblePeople }) => {
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
 
-  const sort = searchParams.get('sort' || '');
-  const order = searchParams.get('order' || '');
+  const sort = searchParams.get('sort' || null);
+  const order = searchParams.get('order' || null);
 
   const handleClickSortBy = (sortParam: string) => {
     if (sortParam !== sort) {
-      return { sort: sortParam, order: null };
+      return setSearchParams(
+        getSearchWith(searchParams, { sort: sortParam, order: null }),
+      );
     }
 
     if (sortParam === sort && !order) {
-      return { sort: sortParam, order: 'desc' };
+      return setSearchParams(
+        getSearchWith(searchParams, { sort: sortParam, order: 'desc' }),
+      );
     }
 
-    return { sort: null, order: null };
+    return setSearchParams(
+      getSearchWith(searchParams, { sort: null, order: null }),
+    );
   };
 
   return (
@@ -56,9 +63,9 @@ export const PeopleTable: React.FC<Props> = ({ visiblePeople }) => {
                 <span className="icon">
                   <i
                     className={classNames('fas', {
-                      'fa-sort': sort !== 'name',
-                      'fa-sort-up': sort === 'name' && !order,
-                      'fa-sort-down': sort === 'name' && order === 'desc',
+                      'fa-sort': sort !== 'sex',
+                      'fa-sort-up': sort === 'sex' && !order,
+                      'fa-sort-down': sort === 'sex' && order === 'desc',
                     })}
                   />
                 </span>
@@ -73,9 +80,9 @@ export const PeopleTable: React.FC<Props> = ({ visiblePeople }) => {
                 <span className="icon">
                   <i
                     className={classNames('fas', {
-                      'fa-sort': sort !== 'name',
-                      'fa-sort-up': sort === 'name' && !order,
-                      'fa-sort-down': sort === 'name' && order === 'desc',
+                      'fa-sort': sort !== 'born',
+                      'fa-sort-up': sort === 'born' && !order,
+                      'fa-sort-down': sort === 'born' && order === 'desc',
                     })}
                   />
                 </span>
@@ -90,9 +97,9 @@ export const PeopleTable: React.FC<Props> = ({ visiblePeople }) => {
                 <span className="icon">
                   <i
                     className={classNames('fas', {
-                      'fa-sort': sort !== 'name',
-                      'fa-sort-up': sort === 'name' && !order,
-                      'fa-sort-down': sort === 'name' && order === 'desc',
+                      'fa-sort': sort !== 'died',
+                      'fa-sort-up': sort === 'died' && !order,
+                      'fa-sort-down': sort === 'died' && order === 'desc',
                     })}
                   />
                 </span>

@@ -5,19 +5,19 @@ export const getPreparedPeople = (
   sex: string,
   query: string,
   centuries: string[],
-  sort: string,
-  order: string,
+  sort: string | null,
+  order: string | null,
 ) => {
-  const resulsPeopleList = [...people];
+  let resulsPeopleList = [...people];
 
   if (!!sex) {
-    resulsPeopleList.filter(person => person.sex === sex);
+    resulsPeopleList = resulsPeopleList.filter(person => person.sex === sex);
   }
 
   if (!!query) {
     const normalizedQuery = query.trim().toLowerCase();
 
-    resulsPeopleList.filter(
+    resulsPeopleList = resulsPeopleList.filter(
       person =>
         person.name.toLowerCase().includes(normalizedQuery) ||
         person.motherName?.toLowerCase().includes(normalizedQuery) ||
@@ -26,13 +26,13 @@ export const getPreparedPeople = (
   }
 
   if (!!centuries.length) {
-    resulsPeopleList.filter(person =>
+    resulsPeopleList = resulsPeopleList.filter(person =>
       centuries.includes(Math.ceil(person.born / 100).toString()),
     );
   }
 
   if (sort) {
-    resulsPeopleList.sort((person1, person2) => {
+    resulsPeopleList = resulsPeopleList.sort((person1, person2) => {
       switch (sort) {
         case 'name':
         case 'sex':
