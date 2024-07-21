@@ -1,5 +1,21 @@
-/* eslint-disable jsx-a11y/control-has-associated-label */
-export const PeopleTable = () => {
+import { useParams } from 'react-router-dom';
+import { Person } from '../types/Person';
+import classNames from 'classnames';
+import { PersonLink } from '../components/PersonLink';
+import { SortByLink } from './SortByLink';
+
+type PeopleTableProps = {
+  people: Person[];
+};
+
+export const PeopleTable: React.FC<PeopleTableProps> = ({ people }) => {
+  const { slug } = useParams<{ slug: string }>();
+  const selectedPerson = people.find(p => p.slug === slug);
+
+  if (people.length === 0) {
+    return <p>There are no people matching the current search criteria</p>;
+  }
+
   return (
     <table
       data-cy="peopleTable"
@@ -10,44 +26,28 @@ export const PeopleTable = () => {
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Name
-              <a href="#/people?sort=name">
-                <span className="icon">
-                  <i className="fas fa-sort" />
-                </span>
-              </a>
+              <SortByLink sortBy="name" />
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Sex
-              <a href="#/people?sort=sex">
-                <span className="icon">
-                  <i className="fas fa-sort" />
-                </span>
-              </a>
+              <SortByLink sortBy="sex" />
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Born
-              <a href="#/people?sort=born&amp;order=desc">
-                <span className="icon">
-                  <i className="fas fa-sort-up" />
-                </span>
-              </a>
+              <SortByLink sortBy="born" />
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Died
-              <a href="#/people?sort=died">
-                <span className="icon">
-                  <i className="fas fa-sort" />
-                </span>
-              </a>
+              <SortByLink sortBy="died" />
             </span>
           </th>
 
@@ -57,6 +57,50 @@ export const PeopleTable = () => {
       </thead>
 
       <tbody>
+        {people.map(person => {
+          // eslint-disable-next-line
+          const { slug, sex, born, died, fatherName, motherName } = person;
+
+          const motherPerson = people.find(p => p.name === motherName);
+          const fatherPerson = people.find(p => p.name === fatherName);
+
+          return (
+            <tr
+              key={slug}
+              data-cy="person"
+              className={classNames({
+                'has-background-warning': selectedPerson?.slug === slug,
+              })}
+            >
+              <td>
+                <PersonLink person={person} />
+              </td>
+
+              <td>{sex}</td>
+              <td>{born}</td>
+              <td>{died}</td>
+
+              <td>
+                {motherPerson ? (
+                  <PersonLink person={motherPerson} />
+                ) : (
+                  <span>{motherName ? motherName : '-'}</span>
+                )}
+              </td>
+
+              <td>
+                {fatherPerson ? (
+                  <PersonLink person={fatherPerson} />
+                ) : (
+                  <span>{fatherName ? fatherName : '-'}</span>
+                )}
+              </td>
+            </tr>
+          );
+        })}
+      </tbody>
+
+      {/* <tbody>
         <tr data-cy="person">
           <td>
             <a href="#/people/pieter-haverbeke-1602">Pieter Haverbeke</a>
@@ -639,7 +683,7 @@ export const PeopleTable = () => {
             <a href="#/people/carolus-haverbeke-1832">Carolus Haverbeke</a>
           </td>
         </tr>
-      </tbody>
+      </tbody> */}
     </table>
   );
 };
