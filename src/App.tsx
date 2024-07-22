@@ -37,10 +37,8 @@ export const App = () => {
 
     switch (sortType) {
       case 'name':
-        sortedPeople.sort((a, b) => a.name.localeCompare(b.name));
-        break;
       case 'sex':
-        sortedPeople.sort((a, b) => a.sex.localeCompare(b.sex));
+        sortedPeople.sort((a, b) => a[sortType].localeCompare(b[sortType]));
         break;
       case 'born':
         sortedPeople.sort((a, b) => a.born - b.born);
@@ -113,7 +111,7 @@ export const App = () => {
         <div className="container">
           <Routes>
             <Route path="/" element={<h1 className="title">Home Page</h1>} />
-            <Route path="home" element={<Navigate to="/" replace={true} />} />
+            <Route path="home" element={<Navigate to="/" replace />} />
             <Route
               path="/people/:personId?"
               element={
