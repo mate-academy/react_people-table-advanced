@@ -150,7 +150,10 @@ export const PeopleTable: React.FC<PeopleTableProps> = ({ people }) => {
             <td>
               {person.mother ? (
                 <NavLink
-                  to={`/people/${person.mother.slug}`}
+                  to={{
+                    pathname: `/people/${person.slug}`,
+                    search: searchParams.toString(),
+                  }}
                   className="has-text-danger"
                 >
                   {person.motherName}
@@ -162,7 +165,12 @@ export const PeopleTable: React.FC<PeopleTableProps> = ({ people }) => {
 
             <td>
               {person.father ? (
-                <NavLink to={`/people/${person.father.slug}`}>
+                <NavLink
+                  to={{
+                    pathname: `/people/${person.slug}`,
+                    search: searchParams.toString(),
+                  }}
+                >
                   {person.fatherName}
                 </NavLink>
               ) : (

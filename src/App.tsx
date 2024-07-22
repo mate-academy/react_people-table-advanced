@@ -103,7 +103,7 @@ export const App = () => {
       sortType: filterSort,
       desc: filterOrder,
     });
-  }, [filterSex, filterQuery, filterCentury, filterSort, filterOrder, people]);
+  }, [filterSex, filterQuery, filterCentury, filterSort, filterOrder]);
 
   return (
     <div data-cy="app">
@@ -118,7 +118,7 @@ export const App = () => {
               path="/people/:personId?"
               element={
                 <PeoplePage
-                  people={visiblePeople}
+                  people={people}
                   error={error}
                   loadingPeople={loadingPeople}
                   visiblePeople={visiblePeople}

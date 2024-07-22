@@ -38,10 +38,15 @@ export const PeopleFilters = () => {
     setSearchParams(params);
   }
 
-  function handleNameChange(event: React.ChangeEvent<HTMLInputElement>) {
+  function handleQueryChange(event: React.ChangeEvent<HTMLInputElement>) {
     const params = new URLSearchParams(searchParams);
 
-    params.set('query', event.target.value);
+    if (event.target.value) {
+      params.set('query', event.target.value);
+    } else {
+      params.delete('query');
+    }
+
     setSearchParams(params);
   }
 
@@ -82,7 +87,7 @@ export const PeopleFilters = () => {
             className="input"
             placeholder="Search"
             value={filterQuery}
-            onChange={handleNameChange}
+            onChange={handleQueryChange}
           />
           <span className="icon is-left">
             <i className="fas fa-search" aria-hidden="true" />
