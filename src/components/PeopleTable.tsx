@@ -282,7 +282,9 @@ export const PeopleTable = ({ people, allPeople }: PeopleTableProps) => {
                   <td>
                     <Link
                       to={`/people/${slug}?${searchParams.toString()}`}
-                      className={classNames({ 'has-text-danger': sex === 'f' })}
+                      className={classNames({
+                        'has-text-danger': sex === SexType.FEMALE,
+                      })}
                     >
                       {name}
                     </Link>
