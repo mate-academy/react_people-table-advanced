@@ -5,20 +5,21 @@ import {
   Routes,
 } from 'react-router-dom';
 import { App } from './App';
-import { HomePage } from './components/HomePage/HomePage';
 import { PeoplePage } from './components/PeoplePage/PeoplePage';
-import { NotFoundPage } from './components/NotFoundPage/NotFoundPage';
+import { HomePage } from './components/HomePage/HomePage';
 
 export const Root = () => (
   <Router>
     <Routes>
       <Route path="/" element={<App />}>
         <Route index element={<HomePage />} />
-        <Route path="home" element={<Navigate to={'/'} replace />} />
-        <Route path="people" element={<PeoplePage />}>
-          <Route path=":slug" />
-        </Route>
-        <Route path="*" element={<NotFoundPage />} />
+        <Route path="people/:slug?" element={<PeoplePage />} />
+        <Route path="home" element={<Navigate to="/" />} />
+
+        <Route
+          path="*"
+          element={<h1 className="title">Page not found</h1>}
+        ></Route>
       </Route>
     </Routes>
   </Router>
