@@ -17,9 +17,7 @@ export const PeoplePage = () => {
     setIsLoading(true);
 
     getPeople()
-      .then(data => {
-        setPeople(data);
-      })
+      .then(setPeople)
       .catch(() => setErrorMessage('Something went wrong'))
       .finally(() => setIsLoading(false));
   }, []);

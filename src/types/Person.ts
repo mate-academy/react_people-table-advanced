@@ -13,4 +13,4 @@ export interface Person {
 export enum Gender {
   Male = 'm',
   Female = 'f',
-};
+}
