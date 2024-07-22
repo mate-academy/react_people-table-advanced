@@ -45,19 +45,19 @@ export const PeopleFilters = () => {
 
       <p className="panel-tabs" data-cy="SexFilter">
         <SearchLink
-          className={!currentSex ? 'is-active' : ''}
+          className={classNames({ 'is-active': !currentSex })}
           params={{ sex: null }}
         >
           All
         </SearchLink>
         <SearchLink
-          className={currentSex === 'm' ? 'is-active' : ''}
+          className={classNames({ 'is-active': currentSex === 'm' })}
           params={{ sex: 'm' }}
         >
           Male
         </SearchLink>
         <SearchLink
-          className={currentSex === 'f' ? 'is-active' : ''}
+          className={classNames({ 'is-active': currentSex === 'f' })}
           params={{ sex: 'f' }}
         >
           Female

@@ -18,6 +18,7 @@ type Props = {
 export const PeopleTable: FC<Props> = ({ persons }) => {
   const { slug } = useParams();
   const [searchParams] = useSearchParams();
+
   const centuries = searchParams.getAll('centuries');
   const query = searchParams.get('query');
   const sex = searchParams.get('sex');
