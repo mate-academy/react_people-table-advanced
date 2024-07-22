@@ -46,7 +46,7 @@ export const filterPersonByQuery = (person: Person, query: string) => {
 };
 
 export const filterByCenturies = (centuries: string[], born: number) => {
-  centuries.includes(`${Math.ceil(born / 100)}`);
+  return centuries.includes(`${Math.ceil(born / 100)}`);
 };
 
 export const TABLE_THS = ['Name', 'Sex', 'Born', 'Died', 'Mother', 'Father'];
