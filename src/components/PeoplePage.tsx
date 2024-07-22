@@ -7,6 +7,7 @@ export const PeoplePage: React.FC<PeoplePageProps> = ({
   people,
   error,
   loadingPeople,
+  visiblePeople,
 }) => {
   return (
     <>
@@ -32,8 +33,9 @@ export const PeoplePage: React.FC<PeoplePageProps> = ({
                 </p>
               )}
 
-              {/*return back later */}
-              {/* <p>There are no people matching the current search criteria</p> */}
+              {people.length > 0 && visiblePeople.length === 0 && (
+                <p>There are no people matching the current search criteria</p>
+              )}
             </div>
           </div>
         </div>

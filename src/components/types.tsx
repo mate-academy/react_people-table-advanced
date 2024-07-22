@@ -10,6 +10,7 @@ export type PeoplePageProps = {
   people: Person[];
   error: boolean;
   loadingPeople: boolean;
+  visiblePeople: Person[];
 };
 
 export type PeopleTableProps = {

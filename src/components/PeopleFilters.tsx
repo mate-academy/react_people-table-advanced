@@ -6,6 +6,7 @@ export const PeopleFilters = () => {
   const filterSex = searchParams.get('sex') || '';
   const filterQuery = searchParams.get('query') || '';
   const filterCentury = searchParams.getAll('centuries') || [];
+  const centuriesList = ['16', '17', '18', '19', '20'];
 
   function handleCenturiesChange(century: string) {
     const params = new URLSearchParams(searchParams);
@@ -92,7 +93,7 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            {['16', '17', '18', '19', '20'].map(century => (
+            {centuriesList.map(century => (
               <a
                 key={century}
                 data-cy="century"

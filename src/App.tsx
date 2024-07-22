@@ -79,27 +79,22 @@ export const App = () => {
   }, []);
 
   useEffect(() => {
-    let filteredPeople = people;
+    const applyFilters = () => {
+      return people
+        .filter(person => !filterSex || person.sex === filterSex)
+        .filter(
+          person =>
+            !filterQuery ||
+            person.name.toLowerCase().includes(filterQuery.toLowerCase()),
+        )
+        .filter(
+          person =>
+            filterCentury.length === 0 ||
+            filterCentury.includes(getCentury(person.born)?.toString() || ''),
+        );
+    };
 
-    if (filterSex) {
-      filteredPeople = filteredPeople.filter(
-        person => person.sex === filterSex,
-      );
-    }
-
-    if (filterQuery) {
-      filteredPeople = filteredPeople.filter(person =>
-        person.name.toLowerCase().includes(filterQuery.toLowerCase()),
-      );
-    }
-
-    if (filterCentury.length > 0) {
-      filteredPeople = filteredPeople.filter(person => {
-        const century = getCentury(person.born);
-
-        return filterCentury.includes(century?.toString() || '');
-      });
-    }
+    const filteredPeople = applyFilters();
 
     setVisiblePeople(filteredPeople);
 
@@ -126,6 +121,7 @@ export const App = () => {
                   people={visiblePeople}
                   error={error}
                   loadingPeople={loadingPeople}
+                  visiblePeople={visiblePeople}
                 />
               }
             ></Route>
