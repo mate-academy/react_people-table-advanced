@@ -1,6 +1,6 @@
 export interface Person {
   name: string;
-  sex: string;
+  sex: Gender;
   born: number;
   died: number;
   fatherName: string | null;
@@ -9,3 +9,8 @@ export interface Person {
   mother?: Person;
   father?: Person;
 }
+
+export enum Gender {
+  Male = 'm',
+  Female = 'f',
+};

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Person } from '../types/Person';
+import { Gender, Person } from '../types/Person';
 import classNames from 'classnames';
 
 type PersonLinkProps = {
@@ -17,7 +17,7 @@ export const PersonLink: React.FC<PersonLinkProps> = ({ person }) => {
         pathname: `/people/${slug}`,
         search,
       }}
-      className={classNames({ 'has-text-danger': sex === 'f' })}
+      className={classNames({ 'has-text-danger': sex === Gender.Female })}
     >
       {name}
     </Link>
