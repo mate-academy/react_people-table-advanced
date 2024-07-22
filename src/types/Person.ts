@@ -9,3 +9,15 @@ export interface Person {
   mother?: Person;
   father?: Person;
 }
+
+export enum SortType {
+  NAME = 'name',
+  SEX = 'sex',
+  BORN = 'born',
+  DIED = 'died',
+}
+
+export enum SexType {
+  MALE = 'm',
+  FEMALE = 'f',
+}
