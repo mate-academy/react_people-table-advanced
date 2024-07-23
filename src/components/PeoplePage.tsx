@@ -36,6 +36,7 @@ export const PeoplePage = () => {
         tmpList.push(tmpCentury);
       }
     });
+
     tmpList.sort();
 
     setCenturiesList(tmpList);
@@ -52,13 +53,14 @@ export const PeoplePage = () => {
     }
   }, [people]);
 
-  useEffect(() => {
-    if (people && people.length > 0) {
-      const sexFilter = searchParams.get('sex');
-      const centuryFilter = searchParams.getAll('centuries');
-      const queryFilter = searchParams.get('query');
-      let tmp = people;
+  const handleFiltering = (
+    sexFilter: string | null,
+    centuryFilter: string[],
+    queryFilter: string | null,
+  ) => {
+    let tmp = people;
 
+    if (tmp) {
       if (sexFilter) {
         switch (sexFilter) {
           case SexType.MALE:
@@ -92,8 +94,18 @@ export const PeoplePage = () => {
                 .match(queryFilter.toLocaleLowerCase())),
         );
       }
+    }
 
-      setFilteredPeople(tmp);
+    return tmp;
+  };
+
+  useEffect(() => {
+    if (people && people.length > 0) {
+      const sexFilter = searchParams.get('sex');
+      const centuryFilter = searchParams.getAll('centuries');
+      const queryFilter = searchParams.get('query');
+
+      setFilteredPeople(handleFiltering(sexFilter, centuryFilter, queryFilter));
     }
   }, [people, searchParams]);
 
@@ -103,7 +115,7 @@ export const PeoplePage = () => {
 
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
-          {!error && people && people.length > 0 && (
+          {!error && people?.length && (
             <div className="column is-7-tablet is-narrow-desktop">
               <PeopleFilters centuriesList={centuriesList} />
             </div>
@@ -127,12 +139,9 @@ export const PeoplePage = () => {
                 <p>There are no people matching the current search criteria</p>
               )}
 
-              {!error &&
-                people &&
-                filteredPeople &&
-                filteredPeople?.length > 0 && (
-                  <PeopleTable people={filteredPeople} allPeople={people} />
-                )}
+              {!error && people && filteredPeople?.length && (
+                <PeopleTable people={filteredPeople} allPeople={people} />
+              )}
             </div>
           </div>
         </div>

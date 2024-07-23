@@ -15,8 +15,8 @@ export const PeopleFilters = ({ centuriesList }: PeopleFiltersProps) => {
   const query = searchParams.get('query') || '';
 
   const handleQuery = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.value.length > 0) {
-      searchParams.set('query', event.target.value);
+    if (event.target.value.trim().length > 0) {
+      searchParams.set('query', event.target.value.trim());
     } else {
       searchParams.delete('query');
     }
