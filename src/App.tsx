@@ -8,12 +8,12 @@ import { useEffect, useState } from 'react';
 import { getPeople } from './api';
 import { Person } from './types';
 import { SortParams } from './components/types';
+import { getCentury } from './components/AdditionalVars';
 
 export const App = () => {
   const [loadingPeople, setLoadingPeople] = useState<boolean>(true);
   const [error, setError] = useState<boolean>(false);
   const [people, setPeople] = useState<Person[]>([]);
-  const [visiblePeople, setVisiblePeople] = useState<Person[]>([]);
 
   const [searchParams] = useSearchParams();
 
@@ -23,15 +23,6 @@ export const App = () => {
   const filterSort = searchParams.get('sort') || '';
   const filterOrder = searchParams.get('order') || '';
 
-  const getCentury = (year: number) => {
-    if (year < 0) {
-      return null;
-    }
-
-    return Math.ceil(year / 100);
-  };
-
-  //func to sort the array
   const handleSortFunction = ({ peopleInFunc, sortType, desc }: SortParams) => {
     const sortedPeople = [...peopleInFunc];
 
@@ -54,7 +45,32 @@ export const App = () => {
       sortedPeople.reverse();
     }
 
-    setVisiblePeople(sortedPeople);
+    return sortedPeople;
+  };
+
+  const getVisiblePeople = () => {
+    const applyFilters = () => {
+      return people
+        .filter(person => !filterSex || person.sex === filterSex)
+        .filter(
+          person =>
+            !filterQuery ||
+            person.name.toLowerCase().includes(filterQuery.toLowerCase()),
+        )
+        .filter(
+          person =>
+            filterCentury.length === 0 ||
+            filterCentury.includes(getCentury(person.born)?.toString() || ''),
+        );
+    };
+
+    const filteredPeople = applyFilters();
+
+    return handleSortFunction({
+      peopleInFunc: filteredPeople,
+      sortType: filterSort,
+      desc: filterOrder,
+    });
   };
 
   useEffect(() => {
@@ -76,32 +92,7 @@ export const App = () => {
       .finally(() => setLoadingPeople(false));
   }, []);
 
-  useEffect(() => {
-    const applyFilters = () => {
-      return people
-        .filter(person => !filterSex || person.sex === filterSex)
-        .filter(
-          person =>
-            !filterQuery ||
-            person.name.toLowerCase().includes(filterQuery.toLowerCase()),
-        )
-        .filter(
-          person =>
-            filterCentury.length === 0 ||
-            filterCentury.includes(getCentury(person.born)?.toString() || ''),
-        );
-    };
-
-    const filteredPeople = applyFilters();
-
-    setVisiblePeople(filteredPeople);
-
-    handleSortFunction({
-      peopleInFunc: filteredPeople,
-      sortType: filterSort,
-      desc: filterOrder,
-    });
-  }, [filterSex, filterQuery, filterCentury, filterSort, filterOrder]);
+  const visiblePeople = getVisiblePeople();
 
   return (
     <div data-cy="app">
@@ -122,12 +113,11 @@ export const App = () => {
                   visiblePeople={visiblePeople}
                 />
               }
-            ></Route>
-
+            />
             <Route
               path="*"
               element={<h1 className="title">Page not found</h1>}
-            ></Route>
+            />
           </Routes>
         </div>
       </div>

@@ -9,6 +9,11 @@ export const PeoplePage: React.FC<PeoplePageProps> = ({
   loadingPeople,
   visiblePeople,
 }) => {
+  const errorNoPeople = !loadingPeople && people.length === 0;
+  const errorNoCommonPeople = people.length > 0 && visiblePeople.length === 0;
+  const launchTableCheck =
+    !error && people.length > 0 && visiblePeople.length > 0;
+
   return (
     <>
       <h1 className="title">People Page</h1>
@@ -31,21 +36,19 @@ export const PeoplePage: React.FC<PeoplePageProps> = ({
                     <p data-cy="peopleLoadingError">Something went wrong</p>
                   )}
 
-                  {!loadingPeople && people.length === 0 && (
+                  {errorNoPeople && (
                     <p data-cy="noPeopleMessage">
                       There are no people on the server
                     </p>
                   )}
 
-                  {people.length > 0 && visiblePeople.length === 0 && (
+                  {errorNoCommonPeople && (
                     <p>
                       There are no people matching the current search criteria
                     </p>
                   )}
 
-                  {!error && people.length > 0 && visiblePeople.length > 0 && (
-                    <PeopleTable people={visiblePeople} />
-                  )}
+                  {launchTableCheck && <PeopleTable people={visiblePeople} />}
                 </>
               )}
             </div>
