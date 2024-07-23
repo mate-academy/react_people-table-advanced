@@ -17,21 +17,23 @@ export const PeopleTable: React.FC<PeopleTableProps> = ({ people }) => {
 
     if (filterSort === '' && filterOrder === '') {
       params.set('sort', sort);
-      setSearchParams(params);
+      // setSearchParams(params);
     } else if (filterSort === sort && filterOrder === '') {
       params.set('order', 'desc');
-      setSearchParams(params);
+      // setSearchParams(params);
     } else if (filterSort === sort && filterOrder === 'desc') {
       params.delete('sort');
-      setSearchParams(params);
+      // setSearchParams(params);
       params.delete('order');
-      setSearchParams(params);
+      // setSearchParams(params);
     } else if (filterSort !== '' && filterSort !== sort) {
       params.set('sort', sort);
-      setSearchParams(params);
+      // setSearchParams(params);
       params.delete('order');
-      setSearchParams(params);
+      // setSearchParams(params);
     }
+
+    setSearchParams(params);
   };
 
   const getSortIconClass = (sort: string, order?: string) => {

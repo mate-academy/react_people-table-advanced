@@ -32,10 +32,8 @@ export const App = () => {
         sortedPeople.sort((a, b) => a[sortType].localeCompare(b[sortType]));
         break;
       case 'born':
-        sortedPeople.sort((a, b) => a.born - b.born);
-        break;
       case 'died':
-        sortedPeople.sort((a, b) => a.died - b.died);
+        sortedPeople.sort((a, b) => a[sortType] - b[sortType]);
         break;
       default:
         break;
