@@ -115,6 +115,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
             allNames={allNames}
             highlightedName={highlightedName}
             setHighlightedName={setHighlightedName}
+            searchParams={searchParams}
           />
         ))}
       </tbody>

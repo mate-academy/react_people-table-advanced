@@ -1,6 +1,6 @@
 import classNames from 'classnames';
 import { Person } from '../types/Person';
-import { Link, useParams, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import React from 'react';
 
 type Props = {
@@ -8,14 +8,16 @@ type Props = {
   allNames: { [key: string]: Person };
   highlightedName: string | null;
   setHighlightedName: (name: string) => void;
+  searchParams: URLSearchParams;
 };
 
 export const PersonLink: React.FC<Props> = ({
   person,
   allNames,
   highlightedName,
+  setHighlightedName,
+  searchParams,
 }) => {
-  const { slug } = useParams();
   const { name, sex, born, died, mother, father, fatherName, motherName } =
     person;
   const navigate = useNavigate();
@@ -32,7 +34,10 @@ export const PersonLink: React.FC<Props> = ({
 
   const handleClick = (personName: string | null | undefined) => {
     if (personName && allNames[personName]) {
-      navigate(`/people/${allNames[personName].slug}`);
+      const url = `/people/${allNames[personName].slug}?${searchParams.toString()}`;
+
+      navigate(url);
+      setHighlightedName(allNames[personName].slug);
     }
   };
 
@@ -56,13 +61,12 @@ export const PersonLink: React.FC<Props> = ({
     <tr
       data-cy="person"
       className={classNames({
-        'has-background-warning': slug === person.slug,
-        'has-background-info': highlightedName === name,
+        'has-background-warning': highlightedName === person.slug,
       })}
     >
-      <td>
+      <td onClick={() => handleClick(name)}>
         <Link
-          to={`/people/${person.slug}`}
+          to={`/people/${person.slug}?${searchParams.toString()}`}
           className={classNames({
             'has-text-danger': sex === 'f',
             'has-text-link': sex === 'm',
