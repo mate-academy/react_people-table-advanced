@@ -1,12 +1,12 @@
 import { PeopleFilters } from '../components/PeopleFilters';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { PeopleTable } from '../components/PeopleTable/PeopleTable';
 import { Loader } from '../components/Loader';
 import { getPeople } from '../api';
 import { Person } from '../types';
 import { useParams, useSearchParams } from 'react-router-dom';
 import { filterPeople } from '../utils/filterPeople';
-import { sortPeople } from '../utils/SortPeople';
+import { SortPeople } from '../utils/SortPeople';
 
 export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);
@@ -35,8 +35,15 @@ export const PeoplePage = () => {
   const query = searchParams.get('query');
   const centuries = searchParams.getAll('centuries');
 
-  const filteredPeople = filterPeople(people, { sex, query, centuries });
-  const sortedPeople = sortPeople(filteredPeople, { sort, order });
+  const filteredPeople = useMemo(
+    () => filterPeople(people, { sex, query, centuries }),
+    [people, sex, query, centuries],
+  );
+
+  const sortedPeople = useMemo(
+    () => SortPeople(filteredPeople, { sort, order }),
+    [filteredPeople, sort, order],
+  );
 
   return (
     <>

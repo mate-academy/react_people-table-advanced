@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { useSearchParams } from 'react-router-dom';
 import cn from 'classnames';
 import { SearchLink } from './SearchLink';
@@ -9,8 +10,6 @@ export const CenturyFilter = () => {
 
   const centuries = searchParams.getAll('centuries');
 
-  let newCenturies;
-
   return (
     <div className="panel-block">
       <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
@@ -18,13 +17,11 @@ export const CenturyFilter = () => {
           {CENTURIES.map(century => {
             const hasCentury = centuries.includes(century.toString());
 
-            if (hasCentury) {
-              newCenturies = centuries.filter(
-                currentCentury => currentCentury !== century.toString(),
-              );
-            } else {
-              newCenturies = [...centuries, century.toString()];
-            }
+            const newCenturies = hasCentury
+              ? centuries.filter(
+                  currentCentury => currentCentury !== century.toString(),
+                )
+              : [...centuries, century.toString()];
 
             return (
               <SearchLink

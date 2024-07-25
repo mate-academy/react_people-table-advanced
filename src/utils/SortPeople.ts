@@ -5,7 +5,7 @@ interface SortPeopleOptions {
   order: string | null;
 }
 
-export const sortPeople = (
+export const SortPeople = (
   people: Person[],
   { sort, order }: SortPeopleOptions,
 ) => {

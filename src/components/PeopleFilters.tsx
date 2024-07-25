@@ -1,4 +1,4 @@
-import { CenturyFilter } from './CentryFilter';
+import { CenturyFilter } from './CenturyFilter';
 import { QueryFilter } from './PeopleTable/QueryFilter';
 import { SearchLink } from './SearchLink';
 import { SexFilter } from './SexFilter';
