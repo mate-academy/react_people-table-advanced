@@ -15,8 +15,8 @@ export const PeoplePage = () => {
   const query = searchParams.get('query') || '';
   const sex = searchParams.get('sex') || '';
   const centuries = searchParams.getAll('centuries') || [];
-  const sortBy = searchParams.get('sort') as SortBy | null;
-  const sortOrder = searchParams.get('order') || 'asc';
+  const sortBy = searchParams.get('sort');
+  const sortOrder = searchParams.get('order');
 
   useEffect(() => {
     setIsLoading(true);
@@ -66,7 +66,7 @@ export const PeoplePage = () => {
       });
     }
 
-    if (sortOrder === 'desc') {
+    if (sortOrder) {
       filteredPeople.reverse();
     }
 
