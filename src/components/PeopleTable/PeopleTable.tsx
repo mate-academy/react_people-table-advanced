@@ -30,8 +30,10 @@ export const PeopleTable: React.FC<PeopleTableProps> = ({
               <tr>
                 {TABLE_HEAD.map(({ key, sort, title }) => (
                   <th key={key}>
-                    {title}
-                    {sort && <SortLink sortValue={title} />}
+                    <span className="is-flex is-flex-wrap-nowrap">
+                      {title}
+                      {sort && <SortLink sortValue={title} />}
+                    </span>
                   </th>
                 ))}
               </tr>
