@@ -2,7 +2,7 @@ import { useParams, Link, useSearchParams } from 'react-router-dom';
 import classNames from 'classnames';
 import { Person } from '../types';
 import { SearchLink } from './SearchLink';
-import { useState } from 'react';
+// import { useState } from 'react';
 
 type Props = {
   people: Person[];
@@ -11,7 +11,7 @@ type Props = {
 /* eslint-disable jsx-a11y/control-has-associated-label */
 export const PeopleTable: React.FC<Props> = ({ people }) => {
   const [searchParams] = useSearchParams();
-  const reversedSort = searchParams.get('order') || null;
+  // const reversedSort = searchParams.get('order') || null;
   const { humanId } = useParams();
 
   // let sorted = false;
@@ -71,8 +71,8 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
               <span className="is-flex is-flex-wrap-nowrap">
                 Sex
                 <SearchLink
-                  params={{ sort: 'sex', order: sorted ? 'decs' : null }}
-                  onClick={handleSetSorted}
+                  params={{ sort: 'sex' /*order: sorted ? 'decs' : null */ }}
+                  // onClick={handleSetSorted}
                 >
                   <span className="icon">
                     <i className="fas fa-sort" />
