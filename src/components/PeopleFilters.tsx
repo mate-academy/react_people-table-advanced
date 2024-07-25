@@ -1,30 +1,8 @@
 import classNames from 'classnames';
 import { ChangeEvent } from 'react';
-import {
-  Link,
-  LinkProps,
-  useSearchParams,
-  useLocation,
-} from 'react-router-dom';
-import { getSearchWith, SearchParams } from '../utils/searchHelper';
-
-type Props = Omit<LinkProps, 'to'> & {
-  params: SearchParams;
-};
-
-export const SearchLink: React.FC<Props> = ({
-  children,
-  params,
-  ...props
-}: Props) => {
-  const { search } = useLocation();
-
-  return (
-    <Link to={{ search: getSearchWith(search, params) }} {...props}>
-      {children}
-    </Link>
-  );
-};
+import { useSearchParams } from 'react-router-dom';
+import { getSearchWith } from '../utils/searchHelper';
+import { SearchLink } from './SearchLink';
 
 export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -112,7 +90,9 @@ export const PeopleFilters = () => {
           <div className="level-right ml-4">
             <SearchLink
               data-cy="centuryALL"
-              className="button is-success is-outlined"
+              className={classNames('button is-success', {
+                'is-outlined': centuries.length > 0,
+              })}
               params={{ centuries: null }}
             >
               All

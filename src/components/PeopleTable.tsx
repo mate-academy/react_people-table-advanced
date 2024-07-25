@@ -1,8 +1,7 @@
 import { useParams, Link, useSearchParams } from 'react-router-dom';
 import classNames from 'classnames';
 import { Person } from '../types';
-import { SearchLink } from './SearchLink';
-// import { useState } from 'react';
+import { SortLink } from '../utils/SortLink';
 
 type Props = {
   people: Person[];
@@ -11,42 +10,9 @@ type Props = {
 /* eslint-disable jsx-a11y/control-has-associated-label */
 export const PeopleTable: React.FC<Props> = ({ people }) => {
   const [searchParams] = useSearchParams();
-  // const reversedSort = searchParams.get('order') || null;
   const { humanId } = useParams();
 
-  // let sorted = false;
-  // const [sorted, setSorted] = useState(false);
-
   const isFemale = (sex: string) => sex === 'f';
-
-  // const handleSetSorted = () => {
-  //   if (!reversedSort) {
-  //     return (sorted = true);
-  //   }
-
-  //   return (sorted = false);
-
-  //   // sorted isn`t changing
-  // };
-
-  // const handleSetSorted = () => {
-  //   if (!reversedSort) {
-  //     return setSorted(true);
-  //   }
-
-  //   return setSorted(false);
-  //   // 2 clicks to set order
-  // };
-
-  // const handleSetSorted = () => {
-  //   if (sorted) {
-  //     searchParams.set('order', 'desc');
-  //   }
-
-  //   searchParams.delete('order', 'desc');
-
-  //   return (sorted = true);
-  // };
 
   return (
     <>
@@ -59,47 +25,28 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
             <th>
               <span className="is-flex is-flex-wrap-nowrap">
                 Name
-                <SearchLink params={{ sort: 'name' }}>
-                  <span className="icon">
-                    <i className="fas fa-sort" />
-                  </span>
-                </SearchLink>
+                <SortLink sortBy="name" />
               </span>
             </th>
 
             <th>
               <span className="is-flex is-flex-wrap-nowrap">
                 Sex
-                <SearchLink
-                  params={{ sort: 'sex' /*order: sorted ? 'decs' : null */ }}
-                  // onClick={handleSetSorted}
-                >
-                  <span className="icon">
-                    <i className="fas fa-sort" />
-                  </span>
-                </SearchLink>
+                <SortLink sortBy="sex" />
               </span>
             </th>
 
             <th>
               <span className="is-flex is-flex-wrap-nowrap">
                 Born
-                <SearchLink params={{ sort: 'born' }}>
-                  <span className="icon">
-                    <i className="fas fa-sort-up" />
-                  </span>
-                </SearchLink>
+                <SortLink sortBy="born" />
               </span>
             </th>
 
             <th>
               <span className="is-flex is-flex-wrap-nowrap">
                 Died
-                <SearchLink params={{ sort: 'died' }}>
-                  <span className="icon">
-                    <i className="fas fa-sort" />
-                  </span>
-                </SearchLink>
+                <SortLink sortBy="died" />
               </span>
             </th>
 
@@ -146,7 +93,13 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
                 <td>{died}</td>
                 {mum ? (
                   <td>
-                    <Link to={`${mum.slug}`} className="has-text-danger">
+                    <Link
+                      to={{
+                        pathname: `${mum.slug}`,
+                        search: searchParams.toString(),
+                      }}
+                      className="has-text-danger"
+                    >
                       {motherName}
                     </Link>
                   </td>
@@ -155,7 +108,14 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
                 )}
                 {papa ? (
                   <td>
-                    <Link to={`${papa.slug}`}>{fatherName}</Link>
+                    <Link
+                      to={{
+                        pathname: `${papa.slug}`,
+                        search: searchParams.toString(),
+                      }}
+                    >
+                      {fatherName}
+                    </Link>
                   </td>
                 ) : (
                   <td>{fatherName || '-'}</td>

@@ -4,12 +4,14 @@ import { PeopleFilters } from './PeopleFilters';
 import { Loader } from './Loader';
 import { Person } from '../types';
 import { PeopleTable } from './PeopleTable';
-import { useSearchParams } from 'react-router-dom';
+import { useLocation, useSearchParams } from 'react-router-dom';
 
 export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<boolean>(false);
+
+  const location = useLocation();
 
   const [searchParams] = useSearchParams();
 
@@ -74,6 +76,14 @@ export const PeoplePage = () => {
       }
     });
 
+  const chooseComponent = () => {
+    if (filteredPeople.length === 0 && location.search.length > 0) {
+      return <p>There are no people matching the current search criteria</p>;
+    }
+
+    return <PeopleTable people={filteredPeople} />;
+  };
+
   if (reversedSearch) {
     filteredPeople.reverse();
   }
@@ -92,13 +102,7 @@ export const PeoplePage = () => {
 
           <div className="column">
             <div className="box table-container">
-              {isLoading && !error ? (
-                <Loader />
-              ) : (
-                <PeopleTable people={filteredPeople} />
-              )}
-
-              <p>There are no people matching the current search criteria</p>
+              {isLoading && !error ? <Loader /> : chooseComponent()}
 
               {error && !isLoading && (
                 <p data-cy="peopleLoadingError" className="has-text-danger">
