@@ -50,20 +50,22 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
   };
 
   const renderSortArrows = (key: SortKey) => {
+    const iconStyle = { color: '#007bff' };
+
     if (sortConfig && sortConfig.key === key) {
       return sortConfig.direction === 'asc' ? (
-        <span className="icon">
+        <span className="icon" style={iconStyle}>
           <i className="fas fa-sort-up" />
         </span>
       ) : (
-        <span className="icon">
+        <span className="icon" style={iconStyle}>
           <i className="fas fa-sort-down" />
         </span>
       );
     }
 
     return (
-      <span className="icon">
+      <span className="icon" style={iconStyle}>
         <i className="fas fa-sort" />
       </span>
     );
