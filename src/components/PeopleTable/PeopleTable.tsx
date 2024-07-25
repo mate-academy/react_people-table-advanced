@@ -1,5 +1,5 @@
 import { Person } from '../../types';
-import { TableHead } from '../../utils/TableHead';
+import { tableHead } from '../../utils/TableHead';
 import { PersonLink } from '../PersonLink';
 import { SortLink } from '../SortLink/SortLink';
 
@@ -26,7 +26,7 @@ export const PeopleTable: React.FC<PeopleTableProps> = ({
       >
         <thead>
           <tr>
-            {TableHead.map(({ key, sort, title }) => (
+            {tableHead.map(({ key, sort, title }) => (
               <th key={key}>
                 {title}
                 {sort && <SortLink sortValue={title} />}

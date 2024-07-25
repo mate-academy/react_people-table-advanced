@@ -1,4 +1,4 @@
-export const TableHead = [
+export const tableHead = [
   {
     key: 'name',
     title: 'Name',
