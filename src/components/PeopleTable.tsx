@@ -120,17 +120,61 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
     >
       <thead>
         <tr>
-          <th onClick={() => handleSort('name')}>
-            Name {renderSortArrows('name')}
+          <th>
+            <span className="is-flex is-flex-wrap-nowrap">
+              <span>Name</span>
+              <a
+                href="#/people?sort=name"
+                onClick={e => {
+                  e.preventDefault();
+                  handleSort('name');
+                }}
+              >
+                {renderSortArrows('name')}
+              </a>
+            </span>
           </th>
-          <th onClick={() => handleSort('sex')}>
-            Sex {renderSortArrows('sex')}
+          <th>
+            <span className="is-flex is-flex-wrap-nowrap">
+              <span>Sex</span>
+              <a
+                href="#/people?sort=sex"
+                onClick={e => {
+                  e.preventDefault();
+                  handleSort('sex');
+                }}
+              >
+                {renderSortArrows('sex')}
+              </a>
+            </span>
           </th>
-          <th onClick={() => handleSort('born')}>
-            Born {renderSortArrows('born')}
+          <th>
+            <span className="is-flex is-flex-wrap-nowrap">
+              <span>Born</span>
+              <a
+                href="#/people?sort=born"
+                onClick={e => {
+                  e.preventDefault();
+                  handleSort('born');
+                }}
+              >
+                {renderSortArrows('born')}
+              </a>
+            </span>
           </th>
-          <th onClick={() => handleSort('died')}>
-            Died {renderSortArrows('died')}
+          <th>
+            <span className="is-flex is-flex-wrap-nowrap">
+              <span>Died</span>
+              <a
+                href="#/people?sort=died"
+                onClick={e => {
+                  e.preventDefault();
+                  handleSort('died');
+                }}
+              >
+                {renderSortArrows('died')}
+              </a>
+            </span>
           </th>
           <th>Mother</th>
           <th>Father</th>
