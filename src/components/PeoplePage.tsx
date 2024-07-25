@@ -15,8 +15,8 @@ export const PeoplePage = () => {
   const query = searchParams.get('query') || '';
   const sex = searchParams.get('sex') || '';
   const centuries = searchParams.getAll('centuries') || [];
-  const sortBy = searchParams.get('sort');
-  const sortOrder = searchParams.get('order');
+  const sortBy = searchParams.get('sort') as SortBy | null;
+  const sortOrder = searchParams.get('order') || 'asc';
 
   useEffect(() => {
     setIsLoading(true);
@@ -66,7 +66,7 @@ export const PeoplePage = () => {
       });
     }
 
-    if (sortOrder) {
+    if (sortOrder === 'desc') {
       filteredPeople.reverse();
     }
 
@@ -95,17 +95,17 @@ export const PeoplePage = () => {
                 </p>
               )}
 
-              {peopleFromServer.length === 0 && !hasError && !isLoading && (
+              {!peopleFromServer.length && !hasError && !isLoading && (
                 <p data-cy="noPeopleMessage">
                   There are no people on the server
                 </p>
               )}
 
-              {preparedPeople.length === 0 && !isLoading && (
+              {!preparedPeople.length && !isLoading && (
                 <p>There are no people matching the current search criteria</p>
               )}
 
-              {preparedPeople.length > 0 && !isLoading && (
+              {!!preparedPeople.length && !isLoading && (
                 <PeopleTable people={preparedPeople} />
               )}
             </div>
