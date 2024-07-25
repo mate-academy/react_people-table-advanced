@@ -25,14 +25,22 @@ export const PeopleTable: React.FC<PeopleTableProps> = ({ people }) => {
 
   const renderSortArrows = (column: SortBy) => {
     if (currentSort === column) {
-      return currentOrder === 'asc' ? (
-        <img src="/images/sort_asc.png" alt="Ascending" />
-      ) : (
-        <img src="/images/sort_desc.png" alt="Descending" />
+      return (
+        <span className="icon">
+          {currentOrder === 'asc' ? (
+            <i className="fas fa-sort-up" />
+          ) : (
+            <i className="fas fa-sort-down" />
+          )}
+        </span>
       );
     }
 
-    return <img src="/images/sort_both.png" alt="Unsorted" />;
+    return (
+      <span className="icon">
+        <i className="fas fa-sort" />
+      </span>
+    );
   };
 
   return (
@@ -43,25 +51,33 @@ export const PeopleTable: React.FC<PeopleTableProps> = ({ people }) => {
             onClick={() => handleSortChange(SortBy.name)}
             style={{ cursor: 'pointer' }}
           >
-            Name {renderSortArrows(SortBy.name)}
+            <span className="is-flex is-flex-wrap-nowrap">
+              Name {renderSortArrows(SortBy.name)}
+            </span>
           </th>
           <th
             onClick={() => handleSortChange(SortBy.sex)}
             style={{ cursor: 'pointer' }}
           >
-            Sex {renderSortArrows(SortBy.sex)}
+            <span className="is-flex is-flex-wrap-nowrap">
+              Sex {renderSortArrows(SortBy.sex)}
+            </span>
           </th>
           <th
             onClick={() => handleSortChange(SortBy.born)}
             style={{ cursor: 'pointer' }}
           >
-            Born {renderSortArrows(SortBy.born)}
+            <span className="is-flex is-flex-wrap-nowrap">
+              Born {renderSortArrows(SortBy.born)}
+            </span>
           </th>
           <th
             onClick={() => handleSortChange(SortBy.died)}
             style={{ cursor: 'pointer' }}
           >
-            Died {renderSortArrows(SortBy.died)}
+            <span className="is-flex is-flex-wrap-nowrap">
+              Died {renderSortArrows(SortBy.died)}
+            </span>
           </th>
         </tr>
       </thead>
