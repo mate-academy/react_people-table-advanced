@@ -1,3 +1,5 @@
+type PersonAdditionalInfo = string | number | null;
+
 export interface Person {
   name: string;
   sex: string;
@@ -6,7 +8,5 @@ export interface Person {
   fatherName: string | null;
   motherName: string | null;
   slug: string;
-  mother?: Person;
-  father?: Person;
-  [key: string]: any;
+  [key: string]: PersonAdditionalInfo; // Use the defined type here
 }

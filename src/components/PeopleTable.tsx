@@ -1,3 +1,5 @@
+// components/PeopleTable.tsx
+
 import React from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { Person } from '../types';
@@ -22,7 +24,7 @@ export const PeopleTable: FC<Props> = ({ persons }) => {
   const centuries = searchParams.getAll('centuries');
   const query = searchParams.get('query');
   const sex = searchParams.get('sex');
-  const sortField = searchParams.get('sort');
+  const sortField = searchParams.get('sort') as keyof Person;
   const sortOrder = searchParams.get('order') || 'asc';
   const filteredPeople = filterPeopleBy(persons, centuries, query, sex);
 
@@ -30,18 +32,28 @@ export const PeopleTable: FC<Props> = ({ persons }) => {
 
   if (sortField) {
     sortedPeople = sortedPeople.sort((a, b) => {
-      const aValue = a[sortField] as string | number;
-      const bValue = b[sortField] as string | number;
+      const aValue = a[sortField];
+      const bValue = b[sortField];
 
-      if (aValue < bValue) {
-        return sortOrder === 'asc' ? -1 : 1;
+      if (typeof aValue === 'string' && typeof bValue === 'string') {
+        if (aValue < bValue) {
+          return sortOrder === 'asc' ? -1 : 1;
+        }
+
+        if (aValue > bValue) {
+          return sortOrder === 'asc' ? 1 : -1;
+        }
+      } else if (typeof aValue === 'number' && typeof bValue === 'number') {
+        if (aValue < bValue) {
+          return sortOrder === 'asc' ? -1 : 1;
+        }
+
+        if (aValue > bValue) {
+          return sortOrder === 'asc' ? 1 : -1;
+        }
       }
 
-      if (aValue > bValue) {
-        return sortOrder === 'asc' ? 1 : -1;
-      } else {
-        return 0;
-      }
+      return 0;
     });
   }
 
@@ -84,7 +96,6 @@ export const PeopleTable: FC<Props> = ({ persons }) => {
               </SearchLink>
             </span>
           </th>
-
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Sex
@@ -95,7 +106,6 @@ export const PeopleTable: FC<Props> = ({ persons }) => {
               </SearchLink>
             </span>
           </th>
-
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Born
@@ -106,7 +116,6 @@ export const PeopleTable: FC<Props> = ({ persons }) => {
               </SearchLink>
             </span>
           </th>
-
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Died
@@ -117,12 +126,10 @@ export const PeopleTable: FC<Props> = ({ persons }) => {
               </SearchLink>
             </span>
           </th>
-
           <th>Mother</th>
           <th>Father</th>
         </tr>
       </thead>
-
       <tbody>
         {sortedPeople.map(person => (
           <tr
@@ -135,11 +142,9 @@ export const PeopleTable: FC<Props> = ({ persons }) => {
             <td>
               <PersonLink person={person} />
             </td>
-
             <td>{person.sex}</td>
             <td>{person.born}</td>
             <td>{person.died}</td>
-
             <td>
               {person.motherName ? (
                 persons.find(p => p.name === person.motherName) ? (

@@ -1,1 +1,8 @@
-export type SortField = 'name' | 'sex' | 'born' | 'died';
+export type SortField =
+  | 'name'
+  | 'sex'
+  | 'born'
+  | 'died'
+  | 'fatherName'
+  | 'motherName'
+  | 'slug';
