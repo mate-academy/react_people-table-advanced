@@ -1,9 +1,9 @@
 import { v4 as uuidv4 } from 'uuid';
 import React from 'react';
-
 import { useSearchParams } from 'react-router-dom';
 import { SearchLink } from './SearchLink';
 import classNames from 'classnames';
+import { SexEnum } from './SexEnum';
 
 const centuriesList = ['16', '17', '18', '19', '20'];
 
@@ -51,14 +51,14 @@ export const PeopleFilters = () => {
           All
         </SearchLink>
         <SearchLink
-          className={classNames({ 'is-active': currentSex === 'm' })}
-          params={{ sex: 'm' }}
+          className={classNames({ 'is-active': currentSex === SexEnum.Male })}
+          params={{ sex: SexEnum.Male }}
         >
           Male
         </SearchLink>
         <SearchLink
-          className={classNames({ 'is-active': currentSex === 'f' })}
-          params={{ sex: 'f' }}
+          className={classNames({ 'is-active': currentSex === SexEnum.Female })}
+          params={{ sex: SexEnum.Female }}
         >
           Female
         </SearchLink>
@@ -84,16 +84,16 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            {centuriesList.map(c => (
+            {centuriesList.map(century => (
               <SearchLink
                 key={uuidv4()}
                 data-cy="century"
                 className={classNames('button mr-1', {
-                  'is-info': existingCenturies.includes(c),
+                  'is-info': existingCenturies.includes(century),
                 })}
-                params={{ centuries: toggleCentury(c) }}
+                params={{ centuries: toggleCentury(century) }}
               >
-                {c}
+                {century}
               </SearchLink>
             ))}
           </div>

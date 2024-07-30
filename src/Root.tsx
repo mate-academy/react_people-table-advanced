@@ -5,6 +5,7 @@ import { PeoplePage } from './components/PeoplePage';
 import { PeoplesProvider } from './store/PeopleProvider';
 import { NotFoundPage } from './components/NotFoundPage';
 import React from 'react';
+
 export const Root = () => (
   <HashRouter>
     <PeoplesProvider>

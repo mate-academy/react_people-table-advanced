@@ -5,7 +5,7 @@ import React, { useContext } from 'react';
 import { PeoplesContext } from '../store/PeopleProvider';
 
 export const PeoplePage = () => {
-  const { persons, loading, errorMessage } = useContext(PeoplesContext);
+  const { people, loading, errorMessage } = useContext(PeoplesContext);
 
   return (
     <>
@@ -28,13 +28,13 @@ export const PeoplePage = () => {
                 </p>
               )}
 
-              {!persons.length && !errorMessage && !loading && (
+              {!people.length && !errorMessage && !loading && (
                 <p data-cy="noPeopleMessage">
                   There are no people on the server
                 </p>
               )}
 
-              {!loading && <PeopleTable persons={persons} />}
+              {!loading && <PeopleTable persons={people} />}
             </div>
           </div>
         </div>
