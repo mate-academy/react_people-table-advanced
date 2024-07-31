@@ -1,10 +1,11 @@
 import { Person } from '../types';
+import { SexEnum } from '../components/SexEnum';
 
 export const filterPeopleBy = (
   people: Person[],
   centuries: string[],
   query: string | null,
-  sex: string | null,
+  sex: SexEnum | null,
 ): Person[] => {
   let filteredPeople = [...people];
 
@@ -32,12 +33,12 @@ export const filterPeopleBy = (
     );
   }
 
-  if (sex === 'm') {
-    filteredPeople = filteredPeople.filter(p => p.sex === 'm');
+  if (sex === SexEnum.Male) {
+    filteredPeople = filteredPeople.filter(p => p.sex === SexEnum.Male);
   }
 
-  if (sex === 'f') {
-    filteredPeople = filteredPeople.filter(p => p.sex === 'f');
+  if (sex === SexEnum.Female) {
+    filteredPeople = filteredPeople.filter(p => p.sex === SexEnum.Female);
   }
 
   return filteredPeople;

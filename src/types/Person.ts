@@ -8,5 +8,5 @@ export interface Person {
   fatherName: string | null;
   motherName: string | null;
   slug: string;
-  [key: string]: PersonAdditionalInfo; // Use the defined type here
+  [key: string]: PersonAdditionalInfo;
 }

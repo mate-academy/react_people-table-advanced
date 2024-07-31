@@ -1,5 +1,3 @@
-// components/PeopleTable.tsx
-
 import React from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { Person } from '../types';
@@ -11,10 +9,22 @@ import { SearchLink } from './SearchLink';
 import { SearchParams } from '../utils/searchHelper';
 import { filterPeopleBy } from '../utils/FilterPeopleBy';
 import { SortField } from '../types/SortField';
+import { SexEnum } from '../components/SexEnum';
 
 /* eslint-disable jsx-a11y/control-has-associated-label */
 type Props = {
   persons: Person[];
+};
+
+const mapSexToEnum = (sex: string | null): SexEnum | null => {
+  switch (sex) {
+    case SexEnum.Male:
+      return SexEnum.Male;
+    case SexEnum.Female:
+      return SexEnum.Female;
+    default:
+      return null;
+  }
 };
 
 export const PeopleTable: FC<Props> = ({ persons }) => {
@@ -23,7 +33,7 @@ export const PeopleTable: FC<Props> = ({ persons }) => {
 
   const centuries = searchParams.getAll('centuries');
   const query = searchParams.get('query');
-  const sex = searchParams.get('sex');
+  const sex = mapSexToEnum(searchParams.get('sex'));
   const sortField = searchParams.get('sort') as keyof Person;
   const sortOrder = searchParams.get('order') || 'asc';
   const filteredPeople = filterPeopleBy(persons, centuries, query, sex);
