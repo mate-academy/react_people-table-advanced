@@ -3,15 +3,10 @@ import { useSearchParams } from 'react-router-dom';
 import { SearchLink } from '../../SearchLink';
 
 type Props = {
-  table:
-    | {
-        value: string;
-        param: string;
-      }
-    | {
-        value: string;
-        param?: undefined;
-      };
+  table: {
+    value: string;
+    param?: string;
+  };
 };
 
 const PeopleFields = ({ table }: Props) => {
