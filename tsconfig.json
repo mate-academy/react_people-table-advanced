@@ -2,7 +2,7 @@
   "extends": "@mate-academy/students-ts-config",
   "include": [
     "src"
-  ],
+, "src/utils/useFilteredPeople.ts"  ],
   "compilerOptions": {
     "sourceMap": false,
     "types": ["node", "cypress"]
