@@ -1,8 +1,33 @@
+import React, { useEffect, useState } from 'react';
 import { PeopleFilters } from './PeopleFilters';
 import { Loader } from './Loader';
 import { PeopleTable } from './PeopleTable';
+import { Person } from '../types';
+import { getPeople } from '../api';
+import { useFilteredPeople } from '../utils/useFilteredPeople';
 
-export const PeoplePage = () => {
+export const PeoplePage: React.FC = () => {
+  const [people, setPeople] = useState<Person[]>([]);
+  const [errorMessage, setErrorMessage] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    setErrorMessage('');
+    setIsLoading(true);
+    getPeople()
+      .then(response => setPeople(response))
+      .catch(() => setErrorMessage('Something went wrong'))
+      .finally(() => setIsLoading(false));
+  }, []);
+
+  const peopleWithParents = people.map(person => ({
+    ...person,
+    father: people.find(p => p.name === person.fatherName),
+    mother: people.find(p => p.name === person.motherName),
+  }));
+
+  const filteredPeople = useFilteredPeople(peopleWithParents);
+
   return (
     <>
       <h1 className="title">People Page</h1>
@@ -15,15 +40,25 @@ export const PeoplePage = () => {
 
           <div className="column">
             <div className="box table-container">
-              <Loader />
+              {isLoading && <Loader />}
 
-              <p data-cy="peopleLoadingError">Something went wrong</p>
+              {errorMessage && (
+                <p data-cy="peopleLoadingError">{errorMessage}</p>
+              )}
 
-              <p data-cy="noPeopleMessage">There are no people on the server</p>
+              {!people.length && !isLoading && (
+                <p data-cy="noPeopleMessage">
+                  There are no people on the server
+                </p>
+              )}
 
-              <p>There are no people matching the current search criteria</p>
+              {!filteredPeople.length && !isLoading && !errorMessage && (
+                <p>There are no people matching the current search criteria</p>
+              )}
 
-              <PeopleTable />
+              {!isLoading && !!filteredPeople.length && (
+                <PeopleTable people={filteredPeople} />
+              )}
             </div>
           </div>
         </div>
