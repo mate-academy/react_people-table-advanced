@@ -1,4 +1,4 @@
-import { Link, useParams } from 'react-router-dom';
+import { Link, useLocation, useParams } from 'react-router-dom';
 import { Person } from '../../types';
 import classNames from 'classnames';
 
@@ -9,6 +9,7 @@ type Props = {
 
 const PeopleInfo = ({ person, people }: Props) => {
   const { name, sex, born, died, motherName, fatherName, slug } = person;
+  const { search } = useLocation();
   const { slug: identity } = useParams();
 
   const motherInlist = people.find(el => el.name === person.motherName);
@@ -23,8 +24,8 @@ const PeopleInfo = ({ person, people }: Props) => {
     >
       <td>
         <Link
-          className={`${sex === 'f' && 'has-text-danger'}`}
-          to={`/people/${slug}`}
+          to={`${slug}` + `${search}`}
+          className={person.sex === 'f' ? 'has-text-danger' : ''}
         >
           {name}
         </Link>
