@@ -31,7 +31,7 @@ export const PeopleFilters = () => {
       <p className="panel-tabs" data-cy="SexFilter">
         <SearchLink
           className={classNames({ 'is-active': sex === Sex.empty })}
-          params={{ sex: null }}
+          params={{ sex: Sex.empty }}
         >
           All
         </SearchLink>
