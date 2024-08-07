@@ -16,6 +16,7 @@ export const PeopleTable = ({ peopleFromApi, selectedSlug }: Props) => {
   const sortOrder = searchParams.get('order') || null;
   const sexFilter = searchParams.get('sex') || null;
   const query = searchParams.get('query') || null;
+  const centuries = searchParams.getAll('centuries') || [];
   const findParents = (parent: string | '') => {
     return peopleFromApi.find(person => person.name === parent);
   };
@@ -44,6 +45,14 @@ export const PeopleTable = ({ peopleFromApi, selectedSlug }: Props) => {
         const text = `${searchedText.name}${searchedText.motherName}${searchedText.fatherName}`;
 
         return text.trim().toLowerCase().includes(query.trim().toLowerCase());
+      });
+    }
+
+    if (centuries.length) {
+      sortedTable = sortedTable.filter(person => {
+        const bornInCentury = Math.ceil(person.born / 100).toString();
+
+        return centuries.includes(bornInCentury);
       });
     }
 
@@ -114,68 +123,75 @@ export const PeopleTable = ({ peopleFromApi, selectedSlug }: Props) => {
   };
 
   return (
-    <table
-      data-cy="peopleTable"
-      className="table is-striped is-hoverable is-narrow is-fullwidth"
-    >
-      {filteringPeople.length > 0 && (
-        <thead>
-          <tr>
-            {sortingFields.map(field => (
-              <th key={field.param}>
-                <span className="is-flex is-flex-wrap-nowrap">
-                  {field.value}
-                  <SearchLink params={handleSortingParams(field.param)}>
-                    <span className="icon">
-                      <i className={handleChangingClasses(field.param)} />
+    <>
+      {' '}
+      {!filteringPeople.length ? (
+        <p>There are no people matching the current search criteria</p>
+      ) : (
+        <table
+          data-cy="peopleTable"
+          className="table is-striped is-hoverable is-narrow is-fullwidth"
+        >
+          {filteringPeople.length > 0 && (
+            <thead>
+              <tr>
+                {sortingFields.map(field => (
+                  <th key={field.param}>
+                    <span className="is-flex is-flex-wrap-nowrap">
+                      {field.value}
+                      <SearchLink params={handleSortingParams(field.param)}>
+                        <span className="icon">
+                          <i className={handleChangingClasses(field.param)} />
+                        </span>
+                      </SearchLink>
                     </span>
-                  </SearchLink>
-                </span>
-              </th>
-            ))}
-            <th>Mother</th>
-            <th>Father</th>
-          </tr>
-        </thead>
+                  </th>
+                ))}
+                <th>Mother</th>
+                <th>Father</th>
+              </tr>
+            </thead>
+          )}
+
+          <tbody>
+            {filteringPeople.map(person => {
+              const hasMother = findParents(person.motherName || '');
+              const hasFather = findParents(person.fatherName || '');
+
+              return (
+                <tr
+                  data-cy="person"
+                  key={person.slug}
+                  className={
+                    person.slug === selectedSlug ? 'has-background-warning' : ''
+                  }
+                >
+                  <td>
+                    <PersonLink person={person} />
+                  </td>
+                  <td>{person.sex}</td>
+                  <td>{person.born}</td>
+                  <td>{person.died}</td>
+                  <td>
+                    {hasMother ? (
+                      <PersonLink person={hasMother} />
+                    ) : (
+                      person.motherName || '-'
+                    )}
+                  </td>
+                  <td>
+                    {hasFather ? (
+                      <PersonLink person={hasFather} />
+                    ) : (
+                      person.fatherName || '-'
+                    )}
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
       )}
-
-      <tbody>
-        {filteringPeople.map(person => {
-          const hasMother = findParents(person.motherName || '');
-          const hasFather = findParents(person.fatherName || '');
-
-          return (
-            <tr
-              data-cy="person"
-              key={person.slug}
-              className={
-                person.slug === selectedSlug ? 'has-background-warning' : ''
-              }
-            >
-              <td>
-                <PersonLink person={person} />
-              </td>
-              <td>{person.sex}</td>
-              <td>{person.born}</td>
-              <td>{person.died}</td>
-              <td>
-                {hasMother ? (
-                  <PersonLink person={hasMother} />
-                ) : (
-                  person.motherName || '-'
-                )}
-              </td>
-              <td>
-                {hasFather ? (
-                  <PersonLink person={hasFather} />
-                ) : (
-                  person.fatherName || '-'
-                )}
-              </td>
-            </tr>
-          );
-        })}
-      </tbody>
-    </table>
+    </>
   );
 };
