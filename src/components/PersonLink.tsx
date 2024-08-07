@@ -44,7 +44,7 @@ export const PersonLink: React.FC<Props> = ({ person, findParent }) => {
       </td>
       <td>
         {!father ? (
-          fatherName || Sex.empty
+          fatherName || Sex.dash
         ) : (
           <Link to={`/people/${father.slug}`}>{fatherName}</Link>
         )}
