@@ -1,18 +1,102 @@
+import classNames from 'classnames';
+import React from 'react';
+import { Link, useSearchParams } from 'react-router-dom';
+
 export const PeopleFilters = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const sexFilter = searchParams.get('sex') || '';
+  const centuries = searchParams.getAll('centuries') || [];
+  const query = searchParams.get('query') || '';
+
+  function handleSexChange(
+    event: React.MouseEvent<HTMLAnchorElement, MouseEvent>,
+    sex: string,
+  ) {
+    event.preventDefault();
+
+    const params = new URLSearchParams(searchParams);
+
+    if (!sex) {
+      params.delete('sex');
+    } else {
+      params.set('sex', sex);
+    }
+
+    setSearchParams(params);
+  }
+
+  function handleCenturyChange(
+    event: React.MouseEvent<HTMLAnchorElement, MouseEvent>,
+    n = '',
+  ) {
+    event.preventDefault();
+
+    const params = new URLSearchParams(searchParams);
+    const newCenturies = centuries.includes(n)
+      ? centuries.filter(i => i !== n)
+      : [...centuries, n];
+
+    params.delete('centuries');
+    newCenturies.forEach(cen => params.append('centuries', cen));
+    setSearchParams(params);
+  }
+
+  function handleQueryChange(event: React.ChangeEvent<HTMLInputElement>) {
+    const params = new URLSearchParams(searchParams);
+
+    if (!event.target.value) {
+      params.delete('query');
+    } else {
+      params.set('query', event.target.value.toLowerCase());
+    }
+
+    setSearchParams(params);
+  }
+
+  function handleToggleAll(
+    event: React.MouseEvent<HTMLAnchorElement, MouseEvent>,
+  ) {
+    event.preventDefault();
+
+    const params = new URLSearchParams(searchParams);
+
+    params.delete('centuries');
+    setSearchParams(params);
+  }
+
+  function handleReset(event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) {
+    event.preventDefault();
+    const params = new URLSearchParams(searchParams);
+
+    ['sex', 'centuries', 'query'].forEach(item => params.delete(item));
+
+    setSearchParams(params);
+  }
+
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        <a className="is-active" href="#/people">
-          All
-        </a>
-        <a className="" href="#/people?sex=m">
-          Male
-        </a>
-        <a className="" href="#/people?sex=f">
-          Female
-        </a>
+        {[
+          { sex: 'All', link: '' },
+          { sex: 'Male', link: 'm' },
+          { sex: 'Female', link: 'f' },
+        ].map(item => (
+          <Link
+            key={item.sex}
+            className={classNames({
+              'is-active': sexFilter === item.link,
+            })}
+            onClick={event => handleSexChange(event, item.link)}
+            to={{
+              search: searchParams.toString(),
+            }}
+          >
+            {item.sex}
+          </Link>
+        ))}
       </p>
 
       <div className="panel-block">
@@ -22,6 +106,8 @@ export const PeopleFilters = () => {
             type="search"
             className="input"
             placeholder="Search"
+            value={query}
+            onChange={event => handleQueryChange(event)}
           />
 
           <span className="icon is-left">
@@ -33,63 +119,52 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            <a
-              data-cy="century"
-              className="button mr-1"
-              href="#/people?centuries=16"
-            >
-              16
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=17"
-            >
-              17
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=18"
-            >
-              18
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=19"
-            >
-              19
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1"
-              href="#/people?centuries=20"
-            >
-              20
-            </a>
+            {[16, 17, 18, 19, 20].map(n => (
+              <Link
+                key={n}
+                data-cy="century"
+                onClick={event => handleCenturyChange(event, `${n}`)}
+                className={classNames('button mr-1', {
+                  'is-info': centuries.includes(`${n}`),
+                })}
+                to={{
+                  search: searchParams.toString(),
+                }}
+              >
+                {n}
+              </Link>
+            ))}
           </div>
 
           <div className="level-right ml-4">
-            <a
+            <Link
               data-cy="centuryALL"
-              className="button is-success is-outlined"
-              href="#/people"
+              className={classNames('button is-success', {
+                'is-outlined': centuries.length !== 0,
+              })}
+              onClick={event => handleToggleAll(event)}
+              to={{
+                search: searchParams.toString(),
+              }}
             >
               All
-            </a>
+            </Link>
           </div>
         </div>
       </div>
 
       <div className="panel-block">
-        <a className="button is-link is-outlined is-fullwidth" href="#/people">
+        <Link
+          onClick={event => handleReset(event)}
+          className={classNames('button is-link is-fullwidth', {
+            'is-outlined': searchParams.toString() !== '',
+          })}
+          to={{
+            search: searchParams.toString(),
+          }}
+        >
           Reset all filters
-        </a>
+        </Link>
       </div>
     </nav>
   );
