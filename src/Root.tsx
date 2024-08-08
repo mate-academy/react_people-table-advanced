@@ -1,4 +1,9 @@
-import { HashRouter as Router, Routes, Route } from 'react-router-dom';
+import {
+  HashRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from 'react-router-dom';
 import { App } from './App';
 import { ErrorPage } from './components/ErrorPage';
 import { Home } from './components/Home';
@@ -8,10 +13,11 @@ export const Root = () => (
   <Router>
     <Routes>
       <Route path="/" element={<App />}>
-        <Route path="/" element={<Home />} />
+        <Route index element={<Home />} />
         <Route path="/people/:selected?" element={<PeoplePage />} />
         <Route path="*" element={<ErrorPage />} />
       </Route>
+      <Route path="/home" element={<Navigate to="/" replace />} />
     </Routes>
   </Router>
 );

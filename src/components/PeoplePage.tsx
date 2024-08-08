@@ -10,8 +10,6 @@ export const PeoplePage = () => {
   const [error, setErrror] = useState(false);
   const [people, setPeople] = useState<Person[]>([]);
 
-  const peopleNoExist = !isLoading && people.length === 0;
-
   const getPeopleData = async () => {
     setIsLoading(true);
     try {
@@ -59,17 +57,19 @@ export const PeoplePage = () => {
                 <p data-cy="peopleLoadingError">Something went wrong</p>
               )}
 
-              {peopleNoExist && (
+              {!isLoading && people.length === 0 && (
                 <p data-cy="noPeopleMessage">
                   There are no people on the server
                 </p>
               )}
 
-              {false && (
+              {/* {!isLoading && !people && (
                 <p>There are no people matching the current search criteria</p>
-              )}
+              )} */}
 
-              <PeopleTable people={people} />
+              {!isLoading && people.length > 0 && (
+                <PeopleTable people={people} />
+              )}
             </div>
           </div>
         </div>
