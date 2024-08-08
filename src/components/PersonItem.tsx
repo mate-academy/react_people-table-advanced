@@ -2,66 +2,79 @@ import React from 'react';
 import { Link, useParams, useSearchParams } from 'react-router-dom';
 import classNames from 'classnames';
 import { Person } from '../types';
+import { SexValues } from '../types/types';
 
 export const PersonItem = ({ person }: { person: Person }) => {
   const [searchParams] = useSearchParams();
-  const { slug } = useParams();
+  const { slugParam } = useParams();
+
+  const {
+    name,
+    slug,
+    sex,
+    born,
+    died,
+    mother,
+    father,
+    fatherName,
+    motherName,
+  } = person;
 
   return (
     <tr
       data-cy="person"
       className={classNames({
-        'has-background-warning': slug === person.slug,
+        'has-background-warning': slugParam === slug,
       })}
     >
       <td>
         <Link
           to={{
-            pathname: `/people/${person.slug}`,
+            pathname: `/people/${slug}`,
             search: searchParams.toString(),
           }}
           className={classNames({
-            'has-text-danger': person.sex === 'f',
+            'has-text-danger': sex === SexValues.female,
           })}
         >
-          {person.name}
+          {name}
         </Link>
       </td>
 
-      <td>{person.sex}</td>
-      <td>{person.born}</td>
-      <td>{person.died}</td>
+      <td>{sex}</td>
+      <td>{born}</td>
+      <td>{died}</td>
 
       <td>
-        {person.mother ? (
+        {mother ? (
           <Link
             className="has-text-danger"
             to={{
-              pathname: `/people/${person.mother.slug}`,
+              pathname: `/people/${mother.slug}`,
               search: searchParams.toString(),
             }}
           >
-            {person.mother.name}
+            {mother.name}
           </Link>
-        ) : person.motherName ? (
-          person.motherName
+        ) : motherName ? (
+          motherName
         ) : (
           '-'
         )}
       </td>
 
       <td>
-        {person.father ? (
+        {father ? (
           <Link
             to={{
-              pathname: `/people/${person.father.slug}`,
+              pathname: `/people/${father.slug}`,
               search: searchParams.toString(),
             }}
           >
-            {person.father.name}
+            {father.name}
           </Link>
-        ) : person.fatherName ? (
-          person.fatherName
+        ) : fatherName ? (
+          fatherName
         ) : (
           '-'
         )}

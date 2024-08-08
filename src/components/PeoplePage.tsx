@@ -105,7 +105,7 @@ export const PeoplePage = () => {
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
           <div className="column is-7-tablet is-narrow-desktop">
-            {people.length > 0 && !isLoading && <PeopleFilters />}
+            {!!people.length && !isLoading && <PeopleFilters />}
           </div>
 
           <div className="column">
@@ -116,17 +116,17 @@ export const PeoplePage = () => {
                 <p data-cy="peopleLoadingError">Something went wrong</p>
               )}
 
-              {people.length === 0 && !isLoading && (
+              {!people.length && !isLoading && (
                 <p data-cy="noPeopleMessage">
                   There are no people on the server
                 </p>
               )}
 
-              {filteredPeople.length === 0 && !isLoading && (
+              {!filteredPeople.length && !isLoading && (
                 <p>There are no people matching the current search criteria</p>
               )}
 
-              {filteredPeople.length > 0 && (
+              {!!filteredPeople.length && (
                 <PeopleTable people={filteredPeople} />
               )}
             </div>

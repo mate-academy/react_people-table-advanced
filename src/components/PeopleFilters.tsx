@@ -1,13 +1,21 @@
 import classNames from 'classnames';
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 
 export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
+  const [isOutlined, setIsOutlined] = useState(true);
 
   const sexFilter = searchParams.get('sex') || '';
   const centuries = searchParams.getAll('centuries') || [];
   const query = searchParams.get('query') || '';
+
+  const centuryButtons = [16, 17, 18, 19, 20];
+  const sexLinks = [
+    { sex: 'All', link: '' },
+    { sex: 'Male', link: 'm' },
+    { sex: 'Female', link: 'f' },
+  ];
 
   function handleSexChange(
     event: React.MouseEvent<HTMLAnchorElement, MouseEvent>,
@@ -67,6 +75,7 @@ export const PeopleFilters = () => {
 
   function handleReset(event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) {
     event.preventDefault();
+    setIsOutlined(false);
     const params = new URLSearchParams(searchParams);
 
     ['sex', 'centuries', 'query'].forEach(item => params.delete(item));
@@ -79,11 +88,7 @@ export const PeopleFilters = () => {
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        {[
-          { sex: 'All', link: '' },
-          { sex: 'Male', link: 'm' },
-          { sex: 'Female', link: 'f' },
-        ].map(item => (
+        {sexLinks.map(item => (
           <Link
             key={item.sex}
             className={classNames({
@@ -119,7 +124,7 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            {[16, 17, 18, 19, 20].map(n => (
+            {centuryButtons.map(n => (
               <Link
                 key={n}
                 data-cy="century"
@@ -156,8 +161,9 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <Link
           onClick={event => handleReset(event)}
+          onBlur={() => setIsOutlined(true)}
           className={classNames('button is-link is-fullwidth', {
-            'is-outlined': searchParams.toString() !== '',
+            'is-outlined': isOutlined,
           })}
           to={{
             search: searchParams.toString(),
