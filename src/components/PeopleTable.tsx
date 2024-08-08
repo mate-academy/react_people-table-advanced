@@ -47,17 +47,12 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
 
     const order = orderParam === 'desc' ? -1 : 1;
 
-    if (a[sortParam] === undefined || b[sortParam] === undefined) {
-      return 0;
-    }
+    const aValue = a[sortParam] ?? '';
+    const bValue = b[sortParam] ?? '';
 
-    if (a[sortParam] === null || b[sortParam] === null) {
-      return 0;
-    }
-
-    if (a[sortParam] > b[sortParam]) {
+    if (aValue > bValue) {
       return order;
-    } else if (a[sortParam] < b[sortParam]) {
+    } else if (aValue < bValue) {
       return -order;
     } else {
       return 0;
