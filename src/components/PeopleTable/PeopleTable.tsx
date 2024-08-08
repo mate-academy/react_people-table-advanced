@@ -43,7 +43,7 @@ export const PeopleTable = () => {
 
   return (
     <>
-      <div className="block">
+      <div className="column">
         <div className="box table-container">
           {loading && <Loader />}
 

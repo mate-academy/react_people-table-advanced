@@ -34,16 +34,29 @@
 
 import { Outlet } from 'react-router-dom';
 import { PeopleTable } from '../components/PeopleTable';
+import { PeopleFilters } from '../components/PeopleFilters';
 
 export const PeoplePage = () => {
   return (
     <>
-      <div className="container">
-        <h1 className="title">People Page</h1>
-      </div>
+      {/* <div className="container"> */}
+      <h1 className="title">People Page</h1>
+      {/* </div> */}
 
-      <PeopleTable />
-      <Outlet />
+      <div className="block">
+        <div className="columns is-desktop is-flex-direction-row-reverse">
+          <div className="column is-7-tablet is-narrow-desktop">
+            <PeopleFilters />
+          </div>
+
+          {/* <div className="column">
+            <div className="box table-container"> */}
+          <PeopleTable />
+          <Outlet />
+          {/* </div>
+          </div> */}
+        </div>
+      </div>
     </>
   );
 };
