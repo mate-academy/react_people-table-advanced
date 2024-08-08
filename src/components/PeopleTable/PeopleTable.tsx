@@ -4,7 +4,11 @@ import { getPeople } from '../../api';
 import { Loader } from '../Loader';
 import { PersonLink } from '../PersonLink';
 
-export const PeopleTable = () => {
+type Props = {
+  setShowFilters: (arg: boolean) => void;
+};
+
+export const PeopleTable: React.FC<Props> = ({ setShowFilters }) => {
   const [people, setPeople] = useState<Person[]>([]);
   const [errorMessage, setErrorMessage] = useState('');
   const [loading, setLoading] = useState(true);
@@ -31,6 +35,7 @@ export const PeopleTable = () => {
         }));
 
         setPeople(peopleWithParents);
+        setShowFilters(true);
       } catch {
         handleError('Something went wrong');
       } finally {
