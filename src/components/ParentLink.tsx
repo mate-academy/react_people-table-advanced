@@ -11,13 +11,7 @@ export const ParentLink: React.FC<Props> = ({ parentName, people }) => {
 
   return (
     <td>
-      {parentName === null ? (
-        '-'
-      ) : parent ? (
-        <PersonLink person={parent} />
-      ) : (
-        parentName
-      )}
+      {!parentName ? '-' : parent ? <PersonLink person={parent} /> : parentName}
     </td>
   );
 };

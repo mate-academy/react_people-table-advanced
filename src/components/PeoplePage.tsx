@@ -60,6 +60,13 @@ export const PeoplePage = () => {
     }
   }
 
+  const showNoPeopleMessage = !loading && !error && people.length === 0;
+
+  const showNoMatchingPeopleMessage =
+    !loading && !error && people.length > 0 && !visiblePeople.length;
+
+  const showTable = !loading && !error && visiblePeople.length > 0;
+
   return (
     <>
       <h1 className="title">People Page</h1>
@@ -78,15 +85,17 @@ export const PeoplePage = () => {
                 <p data-cy="peopleLoadingError">Something went wrong</p>
               )}
 
-              {!loading && !error && people.length === 0 && (
+              {showNoPeopleMessage && (
                 <p data-cy="noPeopleMessage">
                   There are no people on the server
                 </p>
               )}
 
-              {!loading && !error && people.length > 0 && (
-                <PeopleTable people={visiblePeople} />
+              {showNoMatchingPeopleMessage && (
+                <p>There are no people matching the current search criteria</p>
               )}
+
+              {showTable && <PeopleTable people={visiblePeople} />}
             </div>
           </div>
         </div>
