@@ -21,6 +21,7 @@ export const Navbar = () => {
           >
             Home
           </NavLink>
+
           <NavLink
             to="/people"
             className={({ isActive }) =>

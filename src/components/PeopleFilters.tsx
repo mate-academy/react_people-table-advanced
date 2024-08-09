@@ -1,14 +1,22 @@
-/* eslint-disable react/jsx-key */
 import { Link, useSearchParams } from 'react-router-dom';
 import { ChangeEvent, useState } from 'react';
 import classNames from 'classnames';
 import { getSearchWith } from '../utils/searchHelper';
+import { Sex } from '../types/Sex';
+import { FilterKeys } from '../types/FilterKeys';
 
 export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [selectedCenturies, setSelectedCenturies] = useState<string[]>([]);
   const [query, setQuery] = useState('');
   const centuries = ['16', '17', '18', '19', '20'];
+
+  const updateSearchParams = (
+    existingSearchParams: URLSearchParams, 
+    updatedParams: Record<string, string | string[] | null>,
+  ) => {
+    return getSearchWith(existingSearchParams, updatedParams);
+  };
 
   const handleQuery = (event: ChangeEvent<HTMLInputElement>) => {
     setQuery(event.target.value);
@@ -17,7 +25,10 @@ export const PeopleFilters = () => {
       query: event.target.value,
     };
 
-    const newSearchString = getSearchWith(searchParams, updatedSearchParams);
+    const newSearchString = updateSearchParams(
+      searchParams,
+      updatedSearchParams,
+    );
 
     setSearchParams(newSearchString);
   };
@@ -29,7 +40,7 @@ export const PeopleFilters = () => {
     e.preventDefault();
 
     const updatedCenturies = selectedCenturies.includes(century)
-      ? selectedCenturies.filter(c => c !== century)
+      ? selectedCenturies.filter(selectedCentury => selectedCentury !== century)
       : [...selectedCenturies, century];
 
     const updatedSearchParams = {
@@ -38,9 +49,12 @@ export const PeopleFilters = () => {
 
     setSelectedCenturies(updatedCenturies);
 
-    const newSearchString = getSearchWith(searchParams, updatedSearchParams);
+    const newSearchString = updateSearchParams(
+      searchParams,
+      updatedSearchParams,
+    );
 
-    setSearchParams(new URLSearchParams(newSearchString));
+    setSearchParams(newSearchString);
   };
 
   const handleSexFilter = (
@@ -50,10 +64,13 @@ export const PeopleFilters = () => {
     e.preventDefault();
 
     const updatedSearchParams = {
-      sex: sex === 'all' ? null : sex,
+      sex: sex === Sex.ALL ? null : sex,
     };
 
-    const newSearchString = getSearchWith(searchParams, updatedSearchParams);
+    const newSearchString = updateSearchParams(
+      searchParams,
+      updatedSearchParams,
+    );
 
     setSearchParams(newSearchString);
   };
@@ -63,7 +80,7 @@ export const PeopleFilters = () => {
   ) => {
     e.preventDefault();
     setSelectedCenturies([]);
-    searchParams.delete('centuries');
+    searchParams.delete(FilterKeys.CENTURIES);
     setSearchParams(searchParams);
   };
 
@@ -72,9 +89,8 @@ export const PeopleFilters = () => {
   ) => {
     e.preventDefault();
     setSelectedCenturies([]);
-    searchParams.delete('centuries');
-    searchParams.delete('sex');
-
+    searchParams.delete(FilterKeys.CENTURIES);
+    searchParams.delete(FilterKeys.SEX);
     setSearchParams(searchParams);
   };
 
@@ -84,27 +100,29 @@ export const PeopleFilters = () => {
 
       <p className="panel-tabs" data-cy="SexFilter">
         <Link
-          className={classNames({ 'is-active': !searchParams.get('sex') })}
+          className={classNames({
+            'is-active': !searchParams.get(FilterKeys.SEX),
+          })}
           to={`#${searchParams.toString()}`}
-          onClick={e => handleSexFilter('all', e)}
+          onClick={e => handleSexFilter(Sex.ALL, e)}
         >
           All
         </Link>
         <Link
           className={classNames({
-            'is-active': searchParams.get('sex') === 'm',
+            'is-active': searchParams.get(FilterKeys.SEX) === Sex.MALE,
           })}
           to={`#${searchParams.toString()}`}
-          onClick={e => handleSexFilter('m', e)}
+          onClick={e => handleSexFilter(Sex.MALE, e)}
         >
           Male
         </Link>
         <Link
           className={classNames({
-            'is-active': searchParams.get('sex') === 'f',
+            'is-active': searchParams.get(FilterKeys.SEX) === Sex.FEMALE,
           })}
           to={`#${searchParams.toString()}`}
-          onClick={e => handleSexFilter('f', e)}
+          onClick={e => handleSexFilter(Sex.FEMALE, e)}
         >
           Female
         </Link>
@@ -132,8 +150,11 @@ export const PeopleFilters = () => {
           <div className="level-left">
             {centuries.map(century => (
               <Link
+                key={century}
                 data-cy="century"
-                className={`button mr-1 ${selectedCenturies.includes(century) ? 'is-info' : ''}`}
+                className={classNames('button', 'mr-1', {
+                  'is-info': selectedCenturies.includes(century),
+                })}
                 to={`?${searchParams.toString()}`}
                 onClick={e => updateCenturies(century, e)}
               >
@@ -146,7 +167,7 @@ export const PeopleFilters = () => {
             <Link
               data-cy="centuryALL"
               className={classNames('button', {
-                'is-success': selectedCenturies.length === 0,
+                'is-success': !selectedCenturies.length,
               })}
               onClick={handleAllClick}
               to={`?${searchParams.toString()}`}

@@ -1,12 +1,15 @@
-/* eslint-disable react/jsx-key */
 import { Link, useParams, useSearchParams } from 'react-router-dom';
-import classNames from 'classnames';
 import { useMemo, useState } from 'react';
 import { Person } from '../types';
-
 import { getSearchWith } from '../utils/searchHelper';
 import { Errors } from '../types/Errors';
 import { PersonLink } from './PersonLink';
+import { SortField } from '../types/SortField';
+import { SortOrder } from '../types/SortOrder';
+import { SearchParamKey } from '../types/SearchParamKey';
+import { sortPeople } from '../services/sortPeople';
+import { getSortIconClassName } from '../services/getIconClassName';
+import classNames from 'classnames';
 
 type Props = {
   people: Person[];
@@ -15,38 +18,44 @@ type Props = {
 export const PeopleTable = ({ people }: Props) => {
   const { slug } = useParams();
   const [searchParams, setSearchParams] = useSearchParams();
-  const [sortField, setSortField] = useState<string | null>(null);
-  const [order, setOrder] = useState<string | null>(null);
-  const sex = searchParams.get('sex');
+  const [sortField, setSortField] = useState<SortField | null>(null);
+  const [order, setOrder] = useState<SortOrder | null>(null);
 
-  const query = searchParams.get('query');
-  const centuries = searchParams.getAll('centuries');
-  const filters = ['Name', 'Sex', 'Born', 'Died'];
+  const sex = searchParams.get(SearchParamKey.SEX);
+  const query = searchParams.get(SearchParamKey.QUERY);
+  const centuries = searchParams.getAll(SearchParamKey.CENTURIES);
+  const filters = [
+    SortField.NAME,
+    SortField.SEX,
+    SortField.BORN,
+    SortField.DIED,
+  ];
 
   const handleSort = (
-    field: string,
+    field: SortField,
     e: React.MouseEvent<HTMLAnchorElement, MouseEvent>,
   ) => {
     e.preventDefault();
 
-    let newSortOrder: 'asc' | 'desc' | null;
+    let newSortOrder: SortOrder | null;
 
     if (sortField === field) {
-      newSortOrder = order === 'asc' ? 'desc' : null;
+      newSortOrder = order === SortOrder.ASC ? SortOrder.DESC : null;
     } else {
-      newSortOrder = 'asc';
+      newSortOrder = SortOrder.ASC;
     }
 
     setSortField(field);
     setOrder(newSortOrder);
 
-    if (newSortOrder === null) {
+    if (!newSortOrder) {
       setSortField(null);
     }
 
     const updatedSearchParams = getSearchWith(searchParams, {
-      sort: newSortOrder ? field.toLowerCase() : null,
-      order: newSortOrder === 'desc' ? 'desc' : null,
+      [SearchParamKey.SORT]: newSortOrder ? field.toLowerCase() : null,
+      [SearchParamKey.ORDER]:
+        newSortOrder === SortOrder.DESC ? SortOrder.DESC : null,
     });
 
     setSearchParams(updatedSearchParams);
@@ -70,11 +79,7 @@ export const PeopleTable = ({ people }: Props) => {
       filteredPeople = filteredPeople.filter(person => {
         const centuryBorn = Math.ceil(person.born / 100);
 
-        if (centuries.includes(centuryBorn.toString())) {
-          return true;
-        }
-
-        return false;
+        return centuries.includes(centuryBorn.toString());
       });
     }
 
@@ -86,44 +91,13 @@ export const PeopleTable = ({ people }: Props) => {
   }, [query, people, centuries, sex]);
 
   const sortedPeople = useMemo(() => {
-    const sorted = [...filterPeople];
-
-    if (sortField) {
-      sorted.sort((a, b) => {
-        let aValue = a;
-        let bValue = b;
-
-        if (order === 'desc') {
-          [aValue, bValue] = [b, a];
-        }
-
-        if (sortField === 'Name') {
-          return aValue.name.localeCompare(bValue.name);
-        }
-
-        if (sortField === 'Sex') {
-          return aValue.sex.localeCompare(bValue.sex);
-        }
-
-        if (sortField === 'Born') {
-          return aValue.born - bValue.born;
-        }
-
-        if (sortField === 'Died') {
-          return aValue.died - bValue.died;
-        }
-
-        return 0;
-      });
-    }
-
-    return sorted;
+    return sortPeople(filterPeople, sortField, order);
   }, [sortField, order, filterPeople]);
 
-  if (sortedPeople.length === 0) {
+  if (!sortedPeople.length) {
     return (
       <p data-cy="peopleLoadingError" className="has-text-danger">
-        {Errors.notFound}
+        {Errors.NotFound}
       </p>
     );
   }
@@ -136,7 +110,7 @@ export const PeopleTable = ({ people }: Props) => {
       <thead>
         <tr>
           {filters.map(filter => (
-            <th>
+            <th key={filter}>
               <span className="is-flex is-flex-wrap-nowrap">
                 {filter}
                 <Link
@@ -145,18 +119,14 @@ export const PeopleTable = ({ people }: Props) => {
                 >
                   <span className="icon">
                     <i
-                      className={classNames('fas', {
-                        'fa-sort-up': sortField === filter && order === 'asc',
-                        'fa-sort-down':
-                          sortField === filter && order === 'desc',
-                        'fa-sort': sortField !== filter,
-                      })}
+                      className={getSortIconClassName(filter, sortField, order)} // Use the utility function here
                     />
                   </span>
                 </Link>
               </span>
             </th>
           ))}
+
           <th>Mother</th>
           <th>Father</th>
         </tr>

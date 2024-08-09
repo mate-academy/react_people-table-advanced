@@ -20,7 +20,7 @@ export const PeoplePage = () => {
 
         setPeople(fetchedPeople);
       } catch (errorMessage) {
-        setError(Errors.load);
+        setError(Errors.Load);
       } finally {
         setIsLoading(false);
       }
@@ -29,22 +29,16 @@ export const PeoplePage = () => {
     loadPeople();
   }, []);
 
-  const addParentsToPeople = (ppl: Person[]) => {
-    const updatedPeople = ppl.map(person => {
-      const mother = ppl.find(prs => prs.name === person.motherName);
-      const father = ppl.find(prs => prs.name === person.fatherName);
+  const addParentsToPeople = (peopleList: Person[]) => {
+    const updatedPeople = peopleList.map(person => {
+      const mother = peopleList.find(({ name }) => name === person.motherName);
+      const father = peopleList.find(({ name }) => name === person.fatherName);
 
-      const updatedPerson = { ...person };
-
-      if (mother) {
-        updatedPerson.mother = mother;
-      }
-
-      if (father) {
-        updatedPerson.father = father;
-      }
-
-      return updatedPerson;
+      return {
+        ...person,
+        ...(mother ? { mother } : {}),
+        ...(father ? { father } : {}),
+      };
     });
 
     return updatedPeople;
@@ -64,15 +58,18 @@ export const PeoplePage = () => {
 
           <div className="column">
             <div className="box table-container">
-              {error === Errors.load && (
+              {error === Errors.Load && (
                 <p data-cy="peopleLoadingError" className="has-text-danger">
-                  {Errors.load}
+                  {Errors.Load}
                 </p>
               )}
-              {updatedPeople.length === 0 && !isLoading && (
-                <p data-cy="noPeopleMessage">{Errors.noPeople}</p>
+
+              {!updatedPeople.length && !isLoading && (
+                <p data-cy="noPeopleMessage">{Errors.NoPeople}</p>
               )}
+
               {isLoading && <Loader />}
+
               {!isLoading && updatedPeople.length > 0 && (
                 <PeopleTable people={updatedPeople} />
               )}
