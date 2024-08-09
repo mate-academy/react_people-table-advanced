@@ -3,11 +3,7 @@ import { SearchLink } from './SearchLink';
 import classNames from 'classnames';
 import React from 'react';
 import { getSearchWith } from '../utils/searchHelper';
-
-enum Sex {
-  male = 'm',
-  female = 'f',
-}
+import { Sex } from '../types/Sex';
 
 export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
