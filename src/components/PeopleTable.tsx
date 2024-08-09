@@ -46,7 +46,6 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
               Name
               <SearchLink params={getSortParams(sort, order, Sort.name)}>
                 <span className="icon">
-                  <i className="fas fa-sort" />
                   <i className={getSortIcon(Sort.name)} />
                 </span>
               </SearchLink>
@@ -58,7 +57,6 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
               Sex
               <SearchLink params={getSortParams(sort, order, Sort.sex)}>
                 <span className="icon">
-                  <i className="fas fa-sort" />
                   <i className={getSortIcon(Sort.sex)} />
                 </span>
               </SearchLink>
@@ -70,7 +68,6 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
               Born
               <SearchLink params={getSortParams(sort, order, Sort.born)}>
                 <span className="icon">
-                  <i className="fas fa-sort-up" />
                   <i className={getSortIcon(Sort.born)} />
                 </span>
               </SearchLink>
@@ -82,7 +79,6 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
               Died
               <SearchLink params={getSortParams(sort, order, Sort.died)}>
                 <span className="icon">
-                  <i className="fas fa-sort" />
                   <i className={getSortIcon(Sort.died)} />
                 </span>
               </SearchLink>
