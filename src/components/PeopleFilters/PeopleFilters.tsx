@@ -10,21 +10,27 @@ export const PeopleFilters = () => {
   const sex = searchParams.get('sex') || '';
   const centuries = searchParams.getAll('centuries') || [];
 
-  function hendleQueryChange(event: React.ChangeEvent<HTMLInputElement>) {
+  function handleQueryChange(event: React.ChangeEvent<HTMLInputElement>) {
     const trimmedQuery = event.target.value;
-    const newSeach = getSearchWith(searchParams, {
+    const newSearch = getSearchWith(searchParams, {
       query: trimmedQuery || null,
     });
 
-    setSearchParams(newSeach);
+    setSearchParams(newSearch);
   }
 
-  function hendleReset() {
+  function handleReset() {
     searchParams.delete('sex');
     searchParams.delete('query');
     searchParams.delete('centuries');
 
     return searchParams.toString();
+  }
+
+  function updateCenturies(century: string) {
+    return centuries.includes(century)
+      ? centuries.filter(cen => cen !== century)
+      : [...centuries, century];
   }
 
   return (
@@ -57,7 +63,7 @@ export const PeopleFilters = () => {
             type="search"
             className="input"
             placeholder="Search"
-            onChange={hendleQueryChange}
+            onChange={handleQueryChange}
           />
 
           <span className="icon is-left">
@@ -65,6 +71,7 @@ export const PeopleFilters = () => {
           </span>
         </p>
       </div>
+
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
@@ -78,9 +85,7 @@ export const PeopleFilters = () => {
                 to={{
                   pathname: '/people',
                   search: getSearchWith(searchParams, {
-                    centuries: centuries.includes(century)
-                      ? centuries.filter(cen => cen !== century)
-                      : [...centuries, century],
+                    centuries: updateCenturies(century),
                   }),
                 }}
               >
@@ -107,7 +112,7 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <Link
           className="button is-link is-outlined is-fullwidth"
-          to={hendleReset()}
+          to={handleReset()}
         >
           Reset all filters
         </Link>

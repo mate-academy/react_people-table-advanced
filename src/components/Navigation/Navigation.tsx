@@ -1,10 +1,5 @@
-import classNames from 'classnames';
 import { NavLink } from 'react-router-dom';
-
-const getLinkClass = ({ isActive }: { isActive: boolean }) =>
-  classNames('navbar-item', {
-    'has-background-grey-lighter': isActive,
-  });
+import { getLinkClass } from '../../utils/getLinkClass';
 
 export const Navigation = () => {
   return (

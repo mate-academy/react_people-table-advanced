@@ -4,6 +4,7 @@ import { PersonLink } from '../PersonLink';
 import { Sort } from '../../types/Sort';
 import { getSearchWith } from '../../utils/searchHelper';
 import cn from 'classnames';
+import { SortOrder } from '../../types/SortOrder';
 
 type Props = {
   people: Person[];
@@ -21,7 +22,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
 
   function handleSortField(value: string): string {
     if (sortField === value && !ordered) {
-      return getSearchWith(searchParams, { order: 'desc' });
+      return getSearchWith(searchParams, { order: SortOrder.Descending });
     }
 
     if (sortField === value && ordered) {
@@ -34,12 +35,21 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
     return getSearchWith(searchParams, { sort: value });
   }
 
-  const getParent = (parentName: string | undefined) => {
+  
+  function getSortIconClasses(value: string): string {
+    return cn('fas', {
+      'fa-sort': sortField !== value,
+      'fa-sort-up': sortField === value && !ordered,
+      'fa-sort-down': sortField === value && ordered,
+    });
+  }
+
+  const getParent = (parentName?: string) => {
     if (!parentName) {
       return NO_PARENT_PLACEHOLDER;
     }
 
-    const parent = people.find(person => person.name === parentName);
+    const parent = people.find(({ name }) => name === parentName);
 
     return parent ? <PersonLink person={parent} /> : parentName;
   };
@@ -62,13 +72,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
                   }}
                 >
                   <span className="icon">
-                    <i
-                      className={cn('fas', {
-                        'fa-sort': sortField !== value,
-                        'fa-sort-up': sortField === value && !ordered,
-                        'fa-sort-down': sortField === value && ordered,
-                      })}
-                    />
+                    <i className={getSortIconClasses(value)} />
                   </span>
                 </Link>
               </span>
@@ -87,9 +91,9 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
             <tr
               key={person.slug}
               data-cy="person"
-              className={
-                selectedSlug === person.slug ? 'has-background-warning' : ''
-              }
+              className={cn({
+                'has-background-warning': selectedSlug === person.slug,
+              })}
             >
               <td>
                 <PersonLink person={person} />

@@ -6,6 +6,7 @@ import { Person } from '../../types/Person';
 import { getPeople } from '../../api';
 import { useSearchParams } from 'react-router-dom';
 import { getFilteredPeople } from '../../utils/filteredPeople';
+import { ErrorMessages } from '../../utils/errorMessages';
 
 export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);
@@ -18,7 +19,7 @@ export const PeoplePage = () => {
     setIsLoading(true);
     getPeople()
       .then(setPeople)
-      .catch(() => setErrorMessage('Something went wrong'))
+      .catch(() => setErrorMessage(ErrorMessages.FetchError))
       .finally(() => setIsLoading(false));
   }, []);
 
@@ -59,9 +60,7 @@ export const PeoplePage = () => {
               )}
 
               {!people.length && !isLoading && (
-                <p data-cy="noPeopleMessage">
-                  There are no people on the server
-                </p>
+                <p data-cy="noPeopleMessage">{ErrorMessages.NoPeopleFound} </p>
               )}
               {people.length > 0 && <PeopleTable people={filteredPeople} />}
             </div>
