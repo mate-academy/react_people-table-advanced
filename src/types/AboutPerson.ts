@@ -1,7 +1,6 @@
-export enum Constants {
+export enum AboutPerson {
   MALE = 'm',
   FEMALE = 'f',
-  HYPHEN = '-',
   NAME = 'name',
   SEX = 'sex',
   BORN = 'born',

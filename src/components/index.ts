@@ -5,3 +5,4 @@ export * from './PeopleFilter';
 export * from './PeopleTable';
 export * from './PersonLink';
 export * from './SearchLink';
+export * from './PersonRow';

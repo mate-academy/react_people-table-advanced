@@ -1,19 +1,23 @@
 /* eslint-disable jsx-a11y/control-has-associated-label */
 
-import classNames from 'classnames';
 import React, { useMemo } from 'react';
-import { useParams, useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 
-import { Person, Constants } from '../../types';
+import {
+  sortPeople,
+  handleDirectionChange,
+  getSortIconClass,
+} from '../../utils';
 
-import { SearchLink, PersonLink, NoResultsMessage } from '../../components';
+import { Person, SortOptions } from '../../types';
+
+import { SearchLink, NoResultsMessage, PersonRow } from '../../components';
 
 type Props = {
   people: Person[];
 };
 
 export const PeopleTable: React.FC<Props> = ({ people }) => {
-  const { slug } = useParams();
   const [searchParams] = useSearchParams();
 
   const query = searchParams.get('query');
@@ -22,7 +26,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
   const sort = searchParams.get('sort');
   const direction = searchParams.get('direction');
 
-  const sortBy = ['Name', 'Sex', 'Born', 'Died'];
+  const sortBy = Object.values(SortOptions);
 
   const filteredPeople = useMemo(() => {
     let filteringPeople = [...people];
@@ -45,7 +49,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
     if (centuries.length) {
       filteringPeople = filteringPeople.filter(person =>
         centuries.includes(
-          (+person.born.toString().slice(0, 2) + 1).toString(),
+          (Number(person.born.toString().slice(0, 2)) + 1).toString(),
         ),
       );
     }
@@ -53,48 +57,10 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
     return filteringPeople;
   }, [query, gender, centuries, people]);
 
-  const sortedPeople = useMemo(() => {
-    const sortingPeople = [...filteredPeople].sort(
-      (firstPerson: Person, secondPerson: Person) => {
-        switch (sort) {
-          case Constants.NAME:
-          case Constants.SEX:
-            return firstPerson[sort].localeCompare(secondPerson[sort]);
-          case Constants.BORN:
-          case Constants.DIED:
-            return firstPerson[sort] - secondPerson[sort];
-          default:
-            return 0;
-        }
-      },
-    );
-
-    if (direction === 'desc') {
-      sortingPeople.reverse();
-    }
-
-    return sortingPeople;
-  }, [direction, filteredPeople, sort]);
-
-  const handleDirectionChange = (sortName: string) => {
-    if (!sort) {
-      return { sort: sortName, direction: null };
-    }
-
-    if (sortName && !direction) {
-      return { sort: sortName, direction: 'desc' };
-    }
-
-    if (sortName && direction) {
-      return { sort: null, direction: null };
-    }
-
-    if (!sortName && !direction) {
-      return { sort: null, direction: null };
-    }
-
-    return { sort: sortName, direction: null };
-  };
+  const sortedPeople = useMemo(
+    () => sortPeople(filteredPeople, sort, direction),
+    [direction, filteredPeople, sort],
+  );
 
   return !sortedPeople.length ? (
     <NoResultsMessage />
@@ -112,15 +78,20 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
               <th key={option}>
                 <span className="is-flex is-flex-wrap-nowrap">
                   {option}
-                  <SearchLink params={handleDirectionChange(normalizedOption)}>
+                  <SearchLink
+                    params={handleDirectionChange(
+                      normalizedOption,
+                      sort,
+                      direction,
+                    )}
+                  >
                     <span className="icon">
                       <i
-                        className={classNames('fas', {
-                          'fa-sort': sort !== normalizedOption,
-                          'fa-sort-up': sort === normalizedOption && !direction,
-                          'fa-sort-down':
-                            sort === normalizedOption && direction === 'desc',
-                        })}
+                        className={getSortIconClass(
+                          sort,
+                          direction,
+                          normalizedOption,
+                        )}
                       />
                     </span>
                   </SearchLink>
@@ -135,61 +106,9 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
       </thead>
 
       <tbody>
-        {sortedPeople.map(person => {
-          const {
-            name,
-            sex,
-            born,
-            died,
-            fatherName,
-            motherName,
-            father,
-            mother,
-          } = person;
-
-          return (
-            <tr
-              key={person.slug}
-              data-cy="person"
-              className={classNames({
-                'has-background-warning': slug === person.slug,
-              })}
-            >
-              <td>
-                <PersonLink
-                  person={person}
-                  className={classNames({
-                    'has-text-danger': sex === Constants.FEMALE,
-                  })}
-                >
-                  {name}
-                </PersonLink>
-              </td>
-
-              <td>{sex}</td>
-              <td>{born}</td>
-              <td>{died}</td>
-
-              <td>
-                {mother ? (
-                  <PersonLink className="has-text-danger" person={mother}>
-                    {motherName}
-                  </PersonLink>
-                ) : (
-                  motherName || Constants.HYPHEN
-                )}
-              </td>
-
-              <td>
-                {father ? (
-                  <PersonLink person={father}>{fatherName}</PersonLink>
-                ) : (
-                  fatherName || Constants.HYPHEN
-                )}
-              </td>
-            </tr>
-          );
-        })}
+        {sortedPeople.map(person => (
+          <PersonRow key={person.slug} person={person} />
+        ))}
       </tbody>
     </table>
   );

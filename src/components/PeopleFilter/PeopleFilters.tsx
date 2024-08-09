@@ -2,7 +2,7 @@ import React from 'react';
 import classNames from 'classnames';
 import { useSearchParams } from 'react-router-dom';
 
-import { Constants } from '../../types';
+import { AboutPerson } from '../../types';
 
 import { getSearchWith } from '../../utils';
 
@@ -27,7 +27,7 @@ export const PeopleFilters = () => {
 
   const toggleCenturies = (century: string) => {
     const newCenturies = centuries.includes(century)
-      ? centuries.filter(cent => cent !== century)
+      ? centuries.filter(currentCentury => currentCentury !== century)
       : [...centuries, century];
 
     return { centuries: newCenturies };
@@ -45,14 +45,14 @@ export const PeopleFilters = () => {
           All
         </SearchLink>
         <SearchLink
-          className={classNames({ 'is-active': sex === Constants.MALE })}
-          params={{ sex: Constants.MALE }}
+          className={classNames({ 'is-active': sex === AboutPerson.MALE })}
+          params={{ sex: AboutPerson.MALE }}
         >
           Male
         </SearchLink>
         <SearchLink
-          className={classNames({ 'is-active': sex === Constants.FEMALE })}
-          params={{ sex: Constants.FEMALE }}
+          className={classNames({ 'is-active': sex === AboutPerson.FEMALE })}
+          params={{ sex: AboutPerson.FEMALE }}
         >
           Female
         </SearchLink>
@@ -96,7 +96,7 @@ export const PeopleFilters = () => {
             <SearchLink
               data-cy="centuryALL"
               className={classNames('button is-success', {
-                'is-outlined': centuries.length > 0,
+                'is-outlined': centuries.length,
               })}
               params={{ centuries: null }}
             >

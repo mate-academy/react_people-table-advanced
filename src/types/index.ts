@@ -1,2 +1,4 @@
 export * from './Person';
-export * from './Constants';
+export * from './AboutPerson';
+export * from './SortOptions';
+export * from './Constans';
