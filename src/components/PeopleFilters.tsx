@@ -1,18 +1,66 @@
+import { Link, useSearchParams } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import cn from 'classnames';
+
 export const PeopleFilters = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const sex = searchParams.get('sex');
+  const [nameFilter, setNameFilter] = useState(searchParams.get('name') || '');
+  const centuries = ['16', '17', '18', '19', '20'];
+
+  const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setNameFilter(event?.target.value);
+
+    if (event.target.value) {
+      searchParams.set('name', event.target.value);
+    } else {
+      searchParams.delete('name');
+    }
+
+    setSearchParams(searchParams);
+  };
+
+  const toggleCenturyFilter = (century: string) => {
+    const tempCenturies = searchParams.getAll('centuries');
+
+    if (tempCenturies.includes(century)) {
+      searchParams.delete('centuries');
+      tempCenturies
+        .filter(c => c !== century)
+        .forEach(c => searchParams.append('centuries', c));
+    } else {
+      searchParams.append('centuries', century);
+    }
+
+    setSearchParams(searchParams);
+  };
+
+  const toggleAllCenturies = () => {
+    ['16', '17', '18', '19', '20'].forEach(century => {
+      searchParams.append('centuries', century);
+    });
+
+    setSearchParams(searchParams);
+  };
+
+  useEffect(() => {
+    setNameFilter(searchParams.get('name') || '');
+  }, [searchParams]);
+
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        <a className="is-active" href="#/people">
+        <Link className={cn({ 'is-active': !sex })} to="/people">
           All
-        </a>
-        <a className="" href="#/people?sex=m">
+        </Link>
+        <Link className={cn({ 'is-active': sex === 'm' })} to="/people?sex=m">
           Male
-        </a>
-        <a className="" href="#/people?sex=f">
+        </Link>
+        <Link className={cn({ 'is-active': sex === 'f' })} to="/people?sex=f">
           Female
-        </a>
+        </Link>
       </p>
 
       <div className="panel-block">
@@ -22,6 +70,8 @@ export const PeopleFilters = () => {
             type="search"
             className="input"
             placeholder="Search"
+            value={nameFilter}
+            onChange={handleNameChange}
           />
 
           <span className="icon is-left">
@@ -33,45 +83,18 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            <a
-              data-cy="century"
-              className="button mr-1"
-              href="#/people?centuries=16"
-            >
-              16
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=17"
-            >
-              17
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=18"
-            >
-              18
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=19"
-            >
-              19
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1"
-              href="#/people?centuries=20"
-            >
-              20
-            </a>
+            {centuries.map(century => (
+              <button
+                key={century}
+                data-cy="century"
+                className={cn('button mr-1', {
+                  'is-info': searchParams.getAll('centuries').includes(century),
+                })}
+                onClick={() => toggleCenturyFilter(century)}
+              >
+                {century}
+              </button>
+            ))}
           </div>
 
           <div className="level-right ml-4">
@@ -79,6 +102,7 @@ export const PeopleFilters = () => {
               data-cy="centuryALL"
               className="button is-success is-outlined"
               href="#/people"
+              onClick={toggleAllCenturies}
             >
               All
             </a>
