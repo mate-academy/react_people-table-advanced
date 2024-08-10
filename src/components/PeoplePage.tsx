@@ -3,9 +3,10 @@ import { Loader } from './Loader';
 import { PeopleTable } from './PeopleTable';
 import { getPeople } from '../api';
 import { useEffect, useState } from 'react';
-import { Person } from '../types';
+import { Errors, Person } from '../types';
 import { useSearchParams } from 'react-router-dom';
 import { getFilteredPeople } from '../utils/getFilteredPeople';
+import { getSortedPeople } from '../utils/getSortedPeople';
 
 export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);
@@ -24,18 +25,12 @@ export const PeoplePage = () => {
 
     getPeople()
       .then(setPeople)
-      .catch(() => setPeopleLoadError('Something went wrong'))
+      .catch(() => setPeopleLoadError(Errors.PeopleLoad))
       .finally(() => setIsLoading(false));
   }, []);
 
-  const filteredPeople = getFilteredPeople(
-    people,
-    sex,
-    query,
-    centuries,
-    sort,
-    order,
-  );
+  const filteredPeople = getFilteredPeople(people, sex, query, centuries);
+  const sortedPeople = getSortedPeople(filteredPeople, sort, order);
 
   return (
     <>
@@ -61,12 +56,12 @@ export const PeoplePage = () => {
                 </p>
               )}
 
-              {!filteredPeople.length && !isLoading && (
+              {!sortedPeople.length && !isLoading && (
                 <p>There are no people matching the current search criteria</p>
               )}
 
-              {filteredPeople.length > 0 && !isLoading && (
-                <PeopleTable people={filteredPeople} />
+              {sortedPeople.length > 0 && !isLoading && (
+                <PeopleTable people={sortedPeople} />
               )}
             </div>
           </div>

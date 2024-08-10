@@ -3,13 +3,13 @@ export const getIconClass = (
   sortField: string,
   isReversed: string,
 ) => {
-  if (sortField === field) {
-    if (isReversed) {
-      return 'fa-sort-down';
-    }
-
-    return 'fa-sort-up';
+  if (sortField !== field) {
+    return 'fa-sort';
   }
 
-  return 'fa-sort';
+  if (isReversed) {
+    return 'fa-sort-down';
+  }
+
+  return 'fa-sort-up';
 };

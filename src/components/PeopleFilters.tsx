@@ -3,6 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 import cn from 'classnames';
 import { Link, useLocation, useSearchParams } from 'react-router-dom';
 import { getSearchWith, SearchParams } from '../utils/searchHelper';
+import { Sex } from '../types';
 
 const ALL_CENTURIES = [16, 17, 18, 19, 20];
 
@@ -35,7 +36,7 @@ export const PeopleFilters = () => {
     event.preventDefault();
 
     const newCentury = centuries.includes(century)
-      ? centuries.filter(centuryCurr => centuryCurr !== century)
+      ? centuries.filter(currentCentury => currentCentury !== century)
       : [...centuries, century];
 
     setSearchWith({ centuries: newCentury });
@@ -62,16 +63,16 @@ export const PeopleFilters = () => {
           All
         </a>
         <a
-          className={cn({ 'is-active': sex === 'm' })}
+          className={cn({ 'is-active': sex === Sex.Male })}
           href="/people?sex=m"
-          onClick={event => changeLink({ sex: 'm' }, event)}
+          onClick={event => changeLink({ sex: Sex.Male }, event)}
         >
           Male
         </a>
         <a
-          className={cn({ 'is-active': sex === 'f' })}
+          className={cn({ 'is-active': sex === Sex.Female })}
           href="/people?sex=f"
-          onClick={event => changeLink({ sex: 'f' }, event)}
+          onClick={event => changeLink({ sex: Sex.Female }, event)}
         >
           Female
         </a>
