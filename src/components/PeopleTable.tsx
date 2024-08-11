@@ -10,7 +10,7 @@ type Props = {
 export const PeopleTable: React.FC<Props> = ({ visiblePeople }) => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [sortedPeople, setSortedPeople] = useState<Person[]>([]);
-  const { slug } = useParams<{ slug: string }>();
+  const { slug } = useParams();
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const getSortParam = (): {

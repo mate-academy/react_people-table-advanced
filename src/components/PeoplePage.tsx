@@ -56,7 +56,7 @@ export const PeoplePage = () => {
         element.classList.add('highlight');
       }
     }
-  }, [location]);
+  }, [location, filteredPeople]);
 
   useEffect(() => {
     if (people.length === 0) {

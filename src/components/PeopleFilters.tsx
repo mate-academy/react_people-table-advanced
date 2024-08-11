@@ -1,6 +1,7 @@
-import { Link, useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import cn from 'classnames';
+import { SearchLink } from './SearchLink';
 
 export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -9,38 +10,47 @@ export const PeopleFilters = () => {
   const centuries = ['16', '17', '18', '19', '20'];
 
   const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setNameFilter(event?.target.value);
+    const newName = event.target.value;
+    const newParams = new URLSearchParams(searchParams);
 
-    if (event.target.value) {
-      searchParams.set('name', event.target.value);
+    if (newName) {
+      newParams.set('name', newName);
     } else {
-      searchParams.delete('name');
+      newParams.delete('name');
     }
 
-    setSearchParams(searchParams);
+    setSearchParams(newParams);
   };
 
   const toggleCenturyFilter = (century: string) => {
-    const tempCenturies = searchParams.getAll('centuries');
+    const newParams = new URLSearchParams(searchParams);
+    const tempCenturies = newParams.getAll('centuries');
 
     if (tempCenturies.includes(century)) {
-      searchParams.delete('centuries');
+      newParams.delete('centuries');
       tempCenturies
         .filter(c => c !== century)
-        .forEach(c => searchParams.append('centuries', c));
+        .forEach(c => newParams.append('centuries', c));
     } else {
-      searchParams.append('centuries', century);
+      newParams.append('centuries', century);
     }
 
-    setSearchParams(searchParams);
+    setSearchParams(newParams);
   };
 
-  const toggleAllCenturies = () => {
-    ['16', '17', '18', '19', '20'].forEach(century => {
-      searchParams.append('centuries', century);
-    });
+  const getCenturyParams = (centuriesToInclude: string[]) => {
+    const newParams = new URLSearchParams(searchParams);
 
-    setSearchParams(searchParams);
+    newParams.delete('centuries');
+    centuriesToInclude.forEach(c => newParams.append('centuries', c));
+
+    return newParams;
+  };
+
+  const handleAllCenturiesClick = () => {
+    const allCenturies = ['16', '17', '18', '19', '20'];
+
+    setSearchParams(getCenturyParams(allCenturies));
   };
 
   useEffect(() => {
@@ -52,15 +62,24 @@ export const PeopleFilters = () => {
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        <Link className={cn({ 'is-active': !sex })} to="/people">
+        <SearchLink
+          className={cn({ 'is-active': !sex })}
+          params={{ sex: null }}
+        >
           All
-        </Link>
-        <Link className={cn({ 'is-active': sex === 'm' })} to="/people?sex=m">
+        </SearchLink>
+        <SearchLink
+          className={cn({ 'is-active': sex === 'm' })}
+          params={{ sex: 'm' }}
+        >
           Male
-        </Link>
-        <Link className={cn({ 'is-active': sex === 'f' })} to="/people?sex=f">
+        </SearchLink>
+        <SearchLink
+          className={cn({ 'is-active': sex === 'f' })}
+          params={{ sex: 'f' }}
+        >
           Female
-        </Link>
+        </SearchLink>
       </p>
 
       <div className="panel-block">
@@ -98,14 +117,13 @@ export const PeopleFilters = () => {
           </div>
 
           <div className="level-right ml-4">
-            <a
-              data-cy="centuryALL"
+            <SearchLink
+              params={{ centuries: [] }}
               className="button is-success is-outlined"
-              href="#/people"
-              onClick={toggleAllCenturies}
+              onClick={handleAllCenturiesClick}
             >
               All
-            </a>
+            </SearchLink>
           </div>
         </div>
       </div>
