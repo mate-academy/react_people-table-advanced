@@ -1,6 +1,6 @@
 import { PeopleFilters } from '../components/PeopleFilters';
 import { Loader } from '../components/Loader';
-import { PeopleTable1 } from '../components/PeopleTable1';
+import { PeopleTable1 } from '../components/PeopleTable';
 import { getPeople } from '../api';
 import { useEffect, useState } from 'react';
 import { Person } from '../types';
@@ -56,8 +56,9 @@ export const PeoplePage = () => {
                 </p>
               )}
 
-              {/* <p>There are no people matching the current search criteria</p> */}
-              {!!people.length && !loading && (
+              {!peopleFilter.length && !loading ? (
+                <p>There are no people matching the current search criteria</p>
+              ) : (
                 <PeopleTable1
                   people={peopleFilter}
                   loading={loading}

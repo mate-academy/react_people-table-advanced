@@ -1,4 +1,4 @@
-import { FC, useEffect } from 'react';
+import { FC, useEffect, useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Person } from '../types';
 import { SearchLink } from './SearchLink';
@@ -14,7 +14,10 @@ interface Props {
 export const PeopleFilters: FC<Props> = ({ setPeopleFilter, people }) => {
   const [searchParams, setSearchParams] = useSearchParams();
   const query = searchParams.get('query') || '';
-  const centuries = searchParams.getAll('centuries') || [];
+  const centuries = useMemo(
+    () => searchParams.getAll('centuries') || [],
+    [searchParams],
+  );
   const sex = searchParams.get('sex') || '';
 
   function handleQueryChange(event: React.ChangeEvent<HTMLInputElement>) {
@@ -38,17 +41,17 @@ export const PeopleFilters: FC<Props> = ({ setPeopleFilter, people }) => {
     let filteredPeople = people;
 
     if (sex) {
-      filteredPeople = people.filter(person => person.sex === sex);
+      filteredPeople = filteredPeople.filter(person => person.sex === sex);
     }
 
     if (query) {
-      filteredPeople = people.filter(person =>
+      filteredPeople = filteredPeople.filter(person =>
         person.name.toLowerCase().includes(query.toLowerCase()),
       );
     }
 
     if (centuries.length) {
-      filteredPeople = people.filter(person =>
+      filteredPeople = filteredPeople.filter(person =>
         centuries.includes(Math.ceil(person.born / 100).toString()),
       );
     }
