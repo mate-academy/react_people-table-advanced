@@ -1,4 +1,4 @@
-import { useSearchParams } from 'react-router-dom';
+import { Link, useParams, useSearchParams } from 'react-router-dom';
 import { Person } from '../types';
 import { useEffect, useState } from 'react';
 
@@ -10,7 +10,7 @@ type Props = {
 export const PeopleTable: React.FC<Props> = ({ visiblePeople }) => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [sortedPeople, setSortedPeople] = useState<Person[]>([]);
-  const [filteredPeople, setFilteredPeople] = useState<Person[]>([]);
+  const { slug } = useParams<{ slug: string }>();
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const getSortParam = (): {
@@ -22,13 +22,6 @@ export const PeopleTable: React.FC<Props> = ({ visiblePeople }) => {
       (searchParams.get('order') as 'asc' | 'desc' | 'none') || 'none';
 
     return { key, order };
-  };
-
-  const updateSortParam = (
-    key: keyof Person,
-    order: 'asc' | 'desc' | 'none',
-  ) => {
-    setSearchParams({ sort: key, order });
   };
 
   useEffect(() => {
@@ -79,15 +72,28 @@ export const PeopleTable: React.FC<Props> = ({ visiblePeople }) => {
 
   const handleSortClick = (column: keyof Person) => {
     const { key, order } = getSortParam();
+    const newOrder =
+      key === column
+        ? order === 'asc'
+          ? 'desc'
+          : order === 'desc'
+            ? 'none'
+            : 'asc'
+        : 'asc';
 
-    if (key === column) {
-      const newOrder =
-        order === 'asc' ? 'desc' : order === 'desc' ? 'none' : 'asc';
+    setSearchParams(prevParams => {
+      const newParams = new URLSearchParams(prevParams);
 
-      updateSortParam(column, newOrder);
-    } else {
-      updateSortParam(column, 'asc');
-    }
+      if (newOrder === 'none') {
+        newParams.delete('sort');
+        newParams.delete('order');
+      } else {
+        newParams.set('sort', column);
+        newParams.set('order', newOrder);
+      }
+
+      return newParams;
+    });
   };
 
   const getHighlightedName = (name: string | null) => {
@@ -106,37 +112,6 @@ export const PeopleTable: React.FC<Props> = ({ visiblePeople }) => {
       </a>
     );
   };
-
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const filterPeople = () => {
-    const sexFilter = searchParams.get('sex');
-    const nameFilter = searchParams.get('name')?.toLowerCase() || '';
-    const centuriesFilter = searchParams.getAll('centuries');
-
-    return visiblePeople.filter(person => {
-      if (sexFilter && person.sex !== sexFilter) {
-        return false;
-      }
-
-      if (nameFilter && !person.name.toLowerCase().includes(nameFilter)) {
-        return false;
-      }
-
-      if (centuriesFilter.length > 0) {
-        const personCentury = Math.ceil(person.born / 100);
-
-        if (!centuriesFilter.includes(personCentury.toString())) {
-          return false;
-        }
-      }
-
-      return true;
-    });
-  };
-
-  useEffect(() => {
-    setFilteredPeople(filterPeople());
-  }, [visiblePeople, searchParams, filterPeople]);
 
   return (
     <table
@@ -219,15 +194,20 @@ export const PeopleTable: React.FC<Props> = ({ visiblePeople }) => {
       </thead>
 
       <tbody>
-        {filteredPeople.map((person: Person) => (
-          <tr key={person.slug} data-cy="person">
+        {sortedPeople.map((person: Person) => (
+          <tr
+            className={slug === person.slug ? 'has-background-warning' : ''}
+            id={person.slug}
+            key={person.slug}
+            data-cy="person"
+          >
             <td>
-              <a
+              <Link
                 className={`has-text-${person.sex === 'f' ? 'danger' : 'info'}`}
-                href={`#/people/${person.slug}`}
+                to={`/people/${person.slug}`}
               >
                 {person.name}
-              </a>
+              </Link>
             </td>
             <td>{person.sex}</td>
             <td>{person.born}</td>
