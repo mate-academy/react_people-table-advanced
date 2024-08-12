@@ -1,4 +1,8 @@
-export const Navbar = () => {
+import React from 'react';
+import { NavLink } from 'react-router-dom';
+import { getNavbarClassName } from '../utils/functions';
+
+export const Navbar: React.FC = () => {
   return (
     <nav
       data-cy="nav"
@@ -8,17 +12,19 @@ export const Navbar = () => {
     >
       <div className="container">
         <div className="navbar-brand">
-          <a className="navbar-item" href="#/">
+          <NavLink
+            to="/"
+            className={({ isActive }) => getNavbarClassName(isActive)}
+          >
             Home
-          </a>
+          </NavLink>
 
-          <a
-            aria-current="page"
-            className="navbar-item has-background-grey-lighter"
-            href="#/people"
+          <NavLink
+            to="/people"
+            className={({ isActive }) => getNavbarClassName(isActive)}
           >
             People
-          </a>
+          </NavLink>
         </div>
       </div>
     </nav>
