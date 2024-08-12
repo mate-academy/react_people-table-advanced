@@ -1,18 +1,132 @@
+import { Link, useSearchParams } from 'react-router-dom';
+import { ChangeEvent, useState } from 'react';
+import classNames from 'classnames';
+import { getSearchWith } from '../utils/searchHelper';
+import { Sex } from '../types/Sex';
+import { FilterKeys } from '../types/FilterKeys';
+
+const CENTURIES = ['16', '17', '18', '19', '20'];
+
 export const PeopleFilters = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [selectedCenturies, setSelectedCenturies] = useState<string[]>([]);
+  const [query, setQuery] = useState('');
+
+  const updateSearchParams = (
+    existingSearchParams: URLSearchParams,
+    updatedParams: Record<string, string | string[] | null>,
+  ) => {
+    return getSearchWith(existingSearchParams, updatedParams);
+  };
+
+  const handleQuery = (event: ChangeEvent<HTMLInputElement>) => {
+    setQuery(event.target.value);
+
+    const updatedSearchParams = {
+      query: event.target.value,
+    };
+
+    const newSearchString = updateSearchParams(
+      searchParams,
+      updatedSearchParams,
+    );
+
+    setSearchParams(newSearchString);
+  };
+
+  const updateCenturies = (
+    century: string,
+    e: React.MouseEvent<HTMLAnchorElement, MouseEvent>,
+  ) => {
+    e.preventDefault();
+
+    const updatedCenturies = selectedCenturies.includes(century)
+      ? selectedCenturies.filter(selectedCentury => selectedCentury !== century)
+      : [...selectedCenturies, century];
+
+    const updatedSearchParams = {
+      centuries: updatedCenturies.length > 0 ? updatedCenturies : null,
+    };
+
+    setSelectedCenturies(updatedCenturies);
+
+    const newSearchString = updateSearchParams(
+      searchParams,
+      updatedSearchParams,
+    );
+
+    setSearchParams(newSearchString);
+  };
+
+  const handleSexFilter = (
+    sex: string,
+    e: React.MouseEvent<HTMLAnchorElement, MouseEvent>,
+  ) => {
+    e.preventDefault();
+
+    const updatedSearchParams = {
+      sex: sex === Sex.All ? null : sex,
+    };
+
+    const newSearchString = updateSearchParams(
+      searchParams,
+      updatedSearchParams,
+    );
+
+    setSearchParams(newSearchString);
+  };
+
+  const handleAllClick = (
+    e: React.MouseEvent<HTMLAnchorElement, MouseEvent>,
+  ) => {
+    e.preventDefault();
+    setSelectedCenturies([]);
+    searchParams.delete(FilterKeys.Centuries);
+    setSearchParams(searchParams);
+  };
+
+  const handleResetAllClick = (
+    e: React.MouseEvent<HTMLAnchorElement, MouseEvent>,
+  ) => {
+    e.preventDefault();
+    setSelectedCenturies([]);
+    searchParams.delete(FilterKeys.Centuries);
+    searchParams.delete(FilterKeys.Sex);
+    setSearchParams(searchParams);
+  };
+
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        <a className="is-active" href="#/people">
+        <Link
+          className={classNames({
+            'is-active': !searchParams.get(FilterKeys.Sex),
+          })}
+          to={`#${searchParams.toString()}`}
+          onClick={e => handleSexFilter(Sex.All, e)}
+        >
           All
-        </a>
-        <a className="" href="#/people?sex=m">
+        </Link>
+        <Link
+          className={classNames({
+            'is-active': searchParams.get(FilterKeys.Sex) === Sex.Male,
+          })}
+          to={`#${searchParams.toString()}`}
+          onClick={e => handleSexFilter(Sex.Male, e)}
+        >
           Male
-        </a>
-        <a className="" href="#/people?sex=f">
+        </Link>
+        <Link
+          className={classNames({
+            'is-active': searchParams.get(FilterKeys.Sex) === Sex.Female,
+          })}
+          to={`#${searchParams.toString()}`}
+          onClick={e => handleSexFilter(Sex.Female, e)}
+        >
           Female
-        </a>
+        </Link>
       </p>
 
       <div className="panel-block">
@@ -20,6 +134,8 @@ export const PeopleFilters = () => {
           <input
             data-cy="NameFilter"
             type="search"
+            value={query}
+            onChange={handleQuery}
             className="input"
             placeholder="Search"
           />
@@ -33,63 +149,44 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            <a
-              data-cy="century"
-              className="button mr-1"
-              href="#/people?centuries=16"
-            >
-              16
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=17"
-            >
-              17
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=18"
-            >
-              18
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=19"
-            >
-              19
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1"
-              href="#/people?centuries=20"
-            >
-              20
-            </a>
+            {CENTURIES.map(century => (
+              <Link
+                key={century}
+                data-cy="century"
+                className={classNames('button', 'mr-1', {
+                  'is-info': selectedCenturies.includes(century),
+                })}
+                to={`?${searchParams.toString()}`}
+                onClick={e => updateCenturies(century, e)}
+              >
+                {century}
+              </Link>
+            ))}
           </div>
 
           <div className="level-right ml-4">
-            <a
+            <Link
               data-cy="centuryALL"
-              className="button is-success is-outlined"
-              href="#/people"
+              className={classNames('button', {
+                'is-success': !selectedCenturies.length,
+              })}
+              onClick={handleAllClick}
+              to={`?${searchParams.toString()}`}
             >
               All
-            </a>
+            </Link>
           </div>
         </div>
       </div>
 
       <div className="panel-block">
-        <a className="button is-link is-outlined is-fullwidth" href="#/people">
+        <Link
+          className="button is-link is-outlined is-fullwidth"
+          onClick={handleResetAllClick}
+          to={`?${searchParams.toString()}`}
+        >
           Reset all filters
-        </a>
+        </Link>
       </div>
     </nav>
   );
