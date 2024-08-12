@@ -2,16 +2,16 @@ import React from 'react';
 import classNames from 'classnames';
 import { useSearchParams } from 'react-router-dom';
 
-import { AboutPerson } from '../../types';
+import { Sex } from '../../types';
 
 import { getSearchWith } from '../../utils';
 
 import { SearchLink } from '../SearchLink';
 
+const CENTURIES_OF_PEOPLE = ['16', '17', '18', '19', '20'];
+
 export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-
-  const centuriesOfPeople = ['16', '17', '18', '19', '20'];
 
   const centuries = searchParams.getAll('centuries') || [];
   const sex = searchParams.get('sex') || '';
@@ -45,14 +45,14 @@ export const PeopleFilters = () => {
           All
         </SearchLink>
         <SearchLink
-          className={classNames({ 'is-active': sex === AboutPerson.MALE })}
-          params={{ sex: AboutPerson.MALE }}
+          className={classNames({ 'is-active': sex === Sex.Male })}
+          params={{ sex: Sex.Male }}
         >
           Male
         </SearchLink>
         <SearchLink
-          className={classNames({ 'is-active': sex === AboutPerson.FEMALE })}
-          params={{ sex: AboutPerson.FEMALE }}
+          className={classNames({ 'is-active': sex === Sex.Female })}
+          params={{ sex: Sex.Female }}
         >
           Female
         </SearchLink>
@@ -78,7 +78,7 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            {centuriesOfPeople.map(century => (
+            {CENTURIES_OF_PEOPLE.map(century => (
               <SearchLink
                 key={century}
                 data-cy="century"

@@ -1,4 +1,4 @@
 export * from './Person';
-export * from './AboutPerson';
+export * from './Sex';
 export * from './SortOptions';
 export * from './Constans';

@@ -11,9 +11,9 @@ import { PeopleTable, Loader, PeopleFilters } from '../components';
 export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(false);
+  const [isError, setIsError] = useState(false);
 
-  const emptyPeopleTable = !people.length && !isLoading && !error;
+  const emptyPeopleTable = !people.length && !isLoading && !isError;
 
   useEffect(() => {
     setIsLoading(true);
@@ -24,7 +24,7 @@ export const PeoplePage = () => {
 
         setPeople(updatedPeople);
       })
-      .catch(() => setError(true))
+      .catch(() => setIsError(true))
       .finally(() => {
         setIsLoading(false);
       });
@@ -44,7 +44,7 @@ export const PeoplePage = () => {
             <div className="box table-container">
               {isLoading && <Loader />}
 
-              {error && (
+              {isError && (
                 <p data-cy="peopleLoadingError">Something went wrong</p>
               )}
 
@@ -54,9 +54,7 @@ export const PeoplePage = () => {
                 </p>
               )}
 
-              {!error && people.length > 0 && (
-                <PeopleTable people={updatePeopleWithParents(people)} />
-              )}
+              {!isError && people.length > 0 && <PeopleTable people={people} />}
             </div>
           </div>
         </div>

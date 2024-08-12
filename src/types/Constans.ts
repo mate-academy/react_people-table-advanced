@@ -1,4 +1,4 @@
-export enum Constans {
-  HYPHEN = '-',
-  DESC = 'desc',
-}
+export const Constans = {
+  HYPHEN: '-',
+  DESC: 'desc',
+};

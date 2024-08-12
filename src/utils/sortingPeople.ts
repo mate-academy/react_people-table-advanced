@@ -1,4 +1,4 @@
-import { Person, AboutPerson, Constans } from '../types';
+import { Person, SortOptions, Constans } from '../types';
 
 export const sortPeople = (
   people: Person[],
@@ -7,12 +7,19 @@ export const sortPeople = (
 ): Person[] => {
   const sortedPeople = [...people].sort((firstPerson, secondPerson) => {
     switch (sort) {
-      case AboutPerson.NAME:
-      case AboutPerson.SEX:
-        return firstPerson[sort].localeCompare(secondPerson[sort]);
-      case AboutPerson.BORN:
-      case AboutPerson.DIED:
-        return firstPerson[sort] - secondPerson[sort];
+      case SortOptions.Name:
+      case SortOptions.Sex:
+        return (
+          firstPerson[sort.toLowerCase() as keyof Person] as string
+        ).localeCompare(
+          secondPerson[sort.toLowerCase() as keyof Person] as string,
+        );
+      case SortOptions.Born:
+      case SortOptions.Died:
+        return (
+          (firstPerson[sort.toLowerCase() as keyof Person] as number) -
+          (secondPerson[sort.toLowerCase() as keyof Person] as number)
+        );
       default:
         return 0;
     }
