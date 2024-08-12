@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { Person } from '../types';
 import classNames from 'classnames';
 
@@ -8,10 +8,14 @@ type Props = {
 
 export const PersonLink = ({ person }: Props) => {
   const { sex, slug, name } = person;
+  const location = useLocation();
 
   return (
     <Link
-      to={`/people/${slug}`}
+      to={{
+        pathname: `/people/${slug}`,
+        search: location.search,
+      }}
       className={classNames({ 'has-text-danger': sex === 'f' })}
     >
       {name}
