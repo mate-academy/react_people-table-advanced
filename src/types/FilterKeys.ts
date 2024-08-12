@@ -1,4 +1,4 @@
 export enum FilterKeys {
-  CENTURIES = 'centuries',
-  SEX = 'sex',
+  Centuries = 'centuries',
+  Sex = 'sex'
 }

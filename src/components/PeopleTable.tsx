@@ -21,14 +21,14 @@ export const PeopleTable = ({ people }: Props) => {
   const [sortField, setSortField] = useState<SortField | null>(null);
   const [order, setOrder] = useState<SortOrder | null>(null);
 
-  const sex = searchParams.get(SearchParamKey.SEX);
-  const query = searchParams.get(SearchParamKey.QUERY);
-  const centuries = searchParams.getAll(SearchParamKey.CENTURIES);
+  const sex = searchParams.get(SearchParamKey.Sex);
+  const query = searchParams.get(SearchParamKey.Query);
+  const centuries = searchParams.getAll(SearchParamKey.Centuries);
   const filters = [
-    SortField.NAME,
-    SortField.SEX,
-    SortField.BORN,
-    SortField.DIED,
+    SortField.Name,
+    SortField.Sex,
+    SortField.Born,
+    SortField.Died
   ];
 
   const handleSort = (
@@ -53,8 +53,8 @@ export const PeopleTable = ({ people }: Props) => {
     }
 
     const updatedSearchParams = getSearchWith(searchParams, {
-      [SearchParamKey.SORT]: newSortOrder ? field.toLowerCase() : null,
-      [SearchParamKey.ORDER]:
+      [SearchParamKey.Sort]: newSortOrder ? field.toLowerCase() : null,
+      [SearchParamKey.Order]:
         newSortOrder === SortOrder.DESC ? SortOrder.DESC : null,
     });
 
