@@ -11,6 +11,8 @@ export const PeoplePage: React.FC = () => {
   const [error, setError] = useState<boolean>(false);
   const [searchParams] = useSearchParams();
 
+  const order = searchParams.get('order');
+
   useEffect(() => {
     setLoading(true);
     fetch('https://mate-academy.github.io/react_people-table/api/people.json')
@@ -37,13 +39,28 @@ export const PeoplePage: React.FC = () => {
       person.fatherName?.toLowerCase().includes(query);
 
     return centuryMatch && nameMatch;
-  });
+  })
 
-  // if (error) {
-  //   return (
 
-  //   );
-  // }
+  const sortedPeople =
+    filteredPeople.sort((a, b) => {
+      const sort = searchParams.get('sort');
+
+      switch (sort) {
+        case 'sex' || 'name':
+          return a.sex.localeCompare(b.sex);
+
+        case 'born' || 'died':
+          return a.born - b.born;
+
+        default:
+          return 0;
+      }
+    })
+
+    if (order) {
+      sortedPeople.reverse();
+      }
 
   return (
     <>
@@ -61,8 +78,9 @@ export const PeoplePage: React.FC = () => {
 
               {error && (
                 <div data-cy="peopleLoadingError" className="has-text-danger">
-                Something went wrong
-              </div>)}
+                  Something went wrong
+                </div>
+              )}
 
               {!people.length && !loading && (
                 <p data-cy="noPeopleMessage">
@@ -75,7 +93,7 @@ export const PeoplePage: React.FC = () => {
               )}
 
               {filteredPeople.length > 0 && !loading && (
-                <PeopleTable people={filteredPeople} />
+                <PeopleTable people={sortedPeople} />
               )}
             </div>
           </div>
