@@ -39,13 +39,11 @@ export const PeoplePage: React.FC = () => {
     return centuryMatch && nameMatch;
   });
 
-  if (error) {
-    return (
-      <div data-cy="peopleLoadingError" className="has-text-danger">
-        Something went wrong
-      </div>
-    );
-  }
+  // if (error) {
+  //   return (
+
+  //   );
+  // }
 
   return (
     <>
@@ -60,6 +58,11 @@ export const PeoplePage: React.FC = () => {
           <div className="column">
             <div className="box table-container">
               {loading && <Loader />}
+
+              {error && (
+                <div data-cy="peopleLoadingError" className="has-text-danger">
+                Something went wrong
+              </div>)}
 
               {!people.length && !loading && (
                 <p data-cy="noPeopleMessage">
