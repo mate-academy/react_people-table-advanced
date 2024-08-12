@@ -1,4 +1,3 @@
-import React from 'react';
 import { Link, LinkProps, useSearchParams } from 'react-router-dom';
 import { getSearchWith, SearchParams } from '../utils/searchHelper';
 
