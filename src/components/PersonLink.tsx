@@ -10,7 +10,7 @@ export const PersonLink = ({ person }: Props) => {
   const { sex, slug, name } = person;
   const location = useLocation();
 
-  enum Sex {
+  enum GenderFilter {
     Male = 'm',
     Female = 'f',
   }
@@ -21,7 +21,7 @@ export const PersonLink = ({ person }: Props) => {
         pathname: `/people/${slug}`,
         search: location.search,
       }}
-      className={classNames({ 'has-text-danger': sex === Sex.Female })}
+      className={classNames({ 'has-text-danger': sex === GenderFilter.Female })}
     >
       {name}
     </Link>

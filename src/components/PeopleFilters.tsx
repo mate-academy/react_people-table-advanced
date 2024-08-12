@@ -14,8 +14,8 @@ export const PeopleFilters = () => {
   const arrayOfCenturies = ['16', '17', '18', '19', '20'];
 
   const centuries = searchParams.getAll('centuries') || [];
-  const sex = searchParams.getAll('sex') || '';
-  const query = searchParams.getAll('query') || '';
+  const sex = searchParams.get('sex') || '';
+  const query = searchParams.get('query') || '';
 
   const handleQueryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const search = getSearchWith(searchParams, {
@@ -46,7 +46,7 @@ export const PeopleFilters = () => {
         </SearchLink>
         <SearchLink
           className={classNames({
-            'is-active': sex.includes(GenderFilter.Male),
+            'is-active': sex === GenderFilter.Male,
           })}
           params={{ sex: GenderFilter.Male }}
         >
@@ -54,7 +54,7 @@ export const PeopleFilters = () => {
         </SearchLink>
         <SearchLink
           className={classNames({
-            'is-active': sex.includes(GenderFilter.Female),
+            'is-active': sex === GenderFilter.Female,
           })}
           params={{ sex: GenderFilter.Female }}
         >
