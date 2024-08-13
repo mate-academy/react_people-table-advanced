@@ -1,4 +1,5 @@
 export const PeopleFilters = () => {
+  const centuryFilters = [16, 17, 18, 19, 20];
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
@@ -34,6 +35,17 @@ export const PeopleFilters = () => {
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
             <a
+            {centuryFilters.map(centuryFilter => (
+              <Link
+                data-cy="century"
+                className="button mr-1"
+                to={`/people?centuries=${centuryFilter}`}
+                key={centuryFilter}
+              >
+                {centuryFilter}
+              </Link>
+            ))}
+            {/* <Link
               data-cy="century"
               className="button mr-1"
               href="#/people?centuries=16"
