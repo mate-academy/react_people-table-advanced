@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Loader } from '../Loader';
 import { getPeople } from '../../api';
 import { Person as PersonType } from '../../types';
@@ -15,55 +15,57 @@ export const People: React.FC = () => {
   const sortParam = searchParams.get('sort');
   const orderParam = searchParams.get('order');
 
-  const sortPeople = useCallback(
-    (list: PersonType[], sort: string | null, order: string | null) => {
-      if (!sort) {
-        return list;
-      }
+  const sortPeople = (
+    list: PersonType[],
+    sort: string | null,
+    order: string | null,
+  ) => {
+    if (!sort) {
+      return list;
+    }
 
-      const sortedList = [...list];
+    const sortedList = [...list];
 
-      if (sort === 'died' || sort === 'born') {
-        sortedList.sort((a, b) => Number(a[sort]) - Number(b[sort]));
-      } else {
-        sortedList.sort((a, b) => a[sort].localeCompare(b[sort]));
-      }
+    if (sort === 'died' || sort === 'born') {
+      sortedList.sort((a, b) => Number(a[sort]) - Number(b[sort]));
+    } else {
+      sortedList.sort((a, b) => a[sort].localeCompare(b[sort]));
+    }
 
-      if (order === 'desc') {
-        sortedList.reverse();
-      }
+    if (order === 'desc') {
+      sortedList.reverse();
+    }
 
-      return sortedList;
-    },
-    [],
-  );
+    return sortedList;
+  };
+
+  const fetchPeople = async () => {
+    try {
+      const list = await getPeople();
+
+      setOriginPeopleList(list);
+      setPeople(sortPeople(list, sortParam, orderParam));
+    } catch {
+      setError('Something went wrong');
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchPeople = async () => {
-      try {
-        const list = await getPeople();
-
-        setOriginPeopleList(list);
-        setPeople(sortPeople(list, sortParam, orderParam));
-      } catch {
-        setError('Щось пішло не так');
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
     fetchPeople();
-  }, [sortPeople, sortParam, orderParam]);
+  }, []);
 
-  useEffect(() => {
-    setPeople(sortPeople(originPeopleList, sortParam, orderParam));
-  }, [sortParam, orderParam, originPeopleList, sortPeople]);
-
-  const sortTableBy = (param: string) => {
+  const setParams = (param: string) => {
     const newParams = new URLSearchParams(searchParams);
 
     if (newParams.get('sort') === param) {
-      newParams.set('order', newParams.get('order') === 'desc' ? '' : 'desc');
+      if (newParams.get('order') === 'desc') {
+        newParams.delete('sort');
+        newParams.delete('order');
+      } else {
+        newParams.set('order', 'desc');
+      }
     } else {
       newParams.set('sort', param);
       newParams.delete('order');
@@ -90,7 +92,7 @@ export const People: React.FC = () => {
       <h1 className="title">People Page</h1>
       {error && (
         <p data-cy="peopleLoadingError" className="has-text-danger">
-          Щось пішло не так
+          Something went wrong
         </p>
       )}
 
@@ -103,6 +105,7 @@ export const People: React.FC = () => {
               <PeopleFilters
                 originPeopleList={originPeopleList}
                 setPeople={setPeople}
+                sortPeople={sortPeople}
               />
             </div>
             <div className="column">
@@ -123,7 +126,7 @@ export const People: React.FC = () => {
                                 href="#"
                                 onClick={event => {
                                   event.preventDefault();
-                                  sortTableBy(header);
+                                  setParams(header);
                                 }}
                                 aria-label={`Sort by ${header}`}
                               >

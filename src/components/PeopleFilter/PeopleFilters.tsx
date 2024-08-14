@@ -1,6 +1,7 @@
 import { useSearchParams } from 'react-router-dom';
 import { Filter, Person } from '../../types';
 import { SearchLink } from '../SearchLink';
+import { Person as PersonType } from '../../types';
 import classNames from 'classnames';
 import React, { useEffect } from 'react';
 
@@ -9,16 +10,24 @@ const centuriesList = [16, 17, 18, 19, 20];
 interface Props {
   originPeopleList: Person[];
   setPeople: (list: Person[]) => void;
+  sortPeople: (
+    list: Person[],
+    sort: string | null,
+    order: string | null,
+  ) => PersonType[];
 }
 
 export const PeopleFilters: React.FC<Props> = ({
   originPeopleList,
   setPeople,
+  sortPeople,
 }) => {
   const [searchParams, setSearchParams] = useSearchParams();
   const centuries = searchParams.getAll('centuries') || [];
   const query = searchParams.get('query') || '';
   const sex = searchParams.get('sex') || '';
+  const sortParam = searchParams.get('sort');
+  const orderParam = searchParams.get('order');
 
   useEffect(() => {
     let filteredPeople = originPeopleList;
@@ -53,7 +62,7 @@ export const PeopleFilters: React.FC<Props> = ({
       filteredPeople = filteredPeople.filter(person => person.sex === sex);
     }
 
-    setPeople(filteredPeople);
+    setPeople(sortPeople(filteredPeople, sortParam, orderParam));
   }, [query, centuries, sex, originPeopleList, setPeople]);
 
   const handleQueryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
