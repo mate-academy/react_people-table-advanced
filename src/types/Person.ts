@@ -1,4 +1,6 @@
 export interface Person {
+  [x: string]: any;
+  includes(lowerQuery: string): unknown;
   name: string;
   sex: string;
   born: number;
@@ -8,4 +10,10 @@ export interface Person {
   slug: string;
   mother?: Person;
   father?: Person;
+}
+
+export enum Filter {
+  All = 'All',
+  Male = 'Male',
+  Female = 'Female',
 }
