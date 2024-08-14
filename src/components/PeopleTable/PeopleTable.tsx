@@ -3,6 +3,7 @@ import { Person } from '../../types';
 import { getPeople } from '../../api';
 import { Loader } from '../Loader';
 import { PersonLink } from '../PersonLink';
+import { SearchLink } from '../SearchLink';
 
 type Props = {
   setShowFilters: (arg: boolean) => void;
@@ -72,44 +73,56 @@ export const PeopleTable: React.FC<Props> = ({ setShowFilters }) => {
                   <th>
                     <span className="is-flex is-flex-wrap-nowrap">
                       Name
-                      <a href="#/people?sort=name">
+                      <SearchLink
+                        // href="#/people?sort=name"
+                        params={{ sort: 'name' }}
+                      >
                         <span className="icon">
                           <i className="fas fa-sort" />
                         </span>
-                      </a>
+                      </SearchLink>
                     </span>
                   </th>
 
                   <th>
                     <span className="is-flex is-flex-wrap-nowrap">
                       Sex
-                      <a href="#/people?sort=sex">
+                      <SearchLink
+                        // href="#/people?sort=sex"
+                        params={{ sort: 'sex' }}
+                      >
                         <span className="icon">
                           <i className="fas fa-sort" />
                         </span>
-                      </a>
+                      </SearchLink>
                     </span>
                   </th>
 
                   <th>
                     <span className="is-flex is-flex-wrap-nowrap">
                       Born
-                      <a href="#/people?sort=born&amp;order=desc">
+                      <SearchLink
+                        // href="#/people?sort=born&amp;order=desc"
+                        params={{ sort: 'born', order: 'desc' }}
+                      >
                         <span className="icon">
                           <i className="fas fa-sort-up" />
                         </span>
-                      </a>
+                      </SearchLink>
                     </span>
                   </th>
 
                   <th>
                     <span className="is-flex is-flex-wrap-nowrap">
                       Died
-                      <a href="#/people?sort=died">
+                      <SearchLink
+                        // href="#/people?sort=died"
+                        params={{ sort: 'died' }}
+                      >
                         <span className="icon">
                           <i className="fas fa-sort" />
                         </span>
-                      </a>
+                      </SearchLink>
                     </span>
                   </th>
 
