@@ -4,6 +4,7 @@ import { getPeople } from '../../api';
 import { Loader } from '../Loader';
 import { PersonLink } from '../PersonLink';
 import { SearchLink } from '../SearchLink';
+import { useSearchParams } from 'react-router-dom';
 
 type Props = {
   setShowFilters: (arg: boolean) => void;
@@ -13,6 +14,16 @@ export const PeopleTable: React.FC<Props> = ({ setShowFilters }) => {
   const [people, setPeople] = useState<Person[]>([]);
   const [errorMessage, setErrorMessage] = useState('');
   const [loading, setLoading] = useState(true);
+  const [searchParams] = useSearchParams();
+  const sort = searchParams.get('sort');
+  const order = searchParams.get('order');
+
+  const getSortParams = (value: string) => ({
+    sort: sort === value && order === 'desc' ? null : value,
+    order: sort === value && order === null ? 'desc' : null,
+  });
+
+  const sortFilters = ['Name', 'Sex', 'Born', 'Died'];
 
   const handleError = (message: string) => {
     setErrorMessage(message);
@@ -70,61 +81,18 @@ export const PeopleTable: React.FC<Props> = ({ setShowFilters }) => {
             >
               <thead>
                 <tr>
-                  <th>
-                    <span className="is-flex is-flex-wrap-nowrap">
-                      Name
-                      <SearchLink
-                        // href="#/people?sort=name"
-                        params={{ sort: 'name' }}
-                      >
-                        <span className="icon">
-                          <i className="fas fa-sort" />
-                        </span>
-                      </SearchLink>
-                    </span>
-                  </th>
-
-                  <th>
-                    <span className="is-flex is-flex-wrap-nowrap">
-                      Sex
-                      <SearchLink
-                        // href="#/people?sort=sex"
-                        params={{ sort: 'sex' }}
-                      >
-                        <span className="icon">
-                          <i className="fas fa-sort" />
-                        </span>
-                      </SearchLink>
-                    </span>
-                  </th>
-
-                  <th>
-                    <span className="is-flex is-flex-wrap-nowrap">
-                      Born
-                      <SearchLink
-                        // href="#/people?sort=born&amp;order=desc"
-                        params={{ sort: 'born', order: 'desc' }}
-                      >
-                        <span className="icon">
-                          <i className="fas fa-sort-up" />
-                        </span>
-                      </SearchLink>
-                    </span>
-                  </th>
-
-                  <th>
-                    <span className="is-flex is-flex-wrap-nowrap">
-                      Died
-                      <SearchLink
-                        // href="#/people?sort=died"
-                        params={{ sort: 'died' }}
-                      >
-                        <span className="icon">
-                          <i className="fas fa-sort" />
-                        </span>
-                      </SearchLink>
-                    </span>
-                  </th>
+                  {sortFilters.map((filter, index) => (
+                    <th key={index}>
+                      <span className="is-flex is-flex-wrap-nowrap">
+                        {filter}
+                        <SearchLink params={getSortParams(filter)}>
+                          <span className="icon">
+                            <i className="fas fa-sort" />
+                          </span>
+                        </SearchLink>
+                      </span>
+                    </th>
+                  ))}
 
                   <th>Mother</th>
                   <th>Father</th>
