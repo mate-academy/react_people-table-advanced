@@ -58,6 +58,29 @@ export const PeopleTable: React.FC<Props> = ({ setShowFilters }) => {
     getPeopleFromServer();
   }, []);
 
+  function sortPeople(peopleToSort: Person[]): Person[] {
+    const peopleSorted = [...peopleToSort];
+
+    const sorting = (a: Person, b: Person): number => {
+      switch (sort) {
+        case 'name':
+        case 'sex':
+          return a[sort].localeCompare(b[sort]);
+
+        case 'born':
+        case 'died':
+          return +a[sort] - +b[sort];
+
+        default:
+          return 0;
+      }
+    };
+
+    return order === 'desc'
+      ? peopleSorted.sort((a, b) => sorting(b, a))
+      : peopleSorted.sort((a, b) => sorting(a, b));
+  }
+
   return (
     <>
       <div className="column">
@@ -85,9 +108,20 @@ export const PeopleTable: React.FC<Props> = ({ setShowFilters }) => {
                     <th key={index}>
                       <span className="is-flex is-flex-wrap-nowrap">
                         {filter}
-                        <SearchLink params={getSortParams(filter)}>
+                        <SearchLink
+                          params={getSortParams(filter.toLowerCase())}
+                        >
                           <span className="icon">
-                            <i className="fas fa-sort" />
+                            <i
+                              className={
+                                'fas ' +
+                                (sort === filter.toLowerCase()
+                                  ? order === 'desc'
+                                    ? 'fa-sort-down'
+                                    : 'fa-sort-up'
+                                  : 'fa-sort')
+                              }
+                            />
                           </span>
                         </SearchLink>
                       </span>
@@ -100,7 +134,7 @@ export const PeopleTable: React.FC<Props> = ({ setShowFilters }) => {
               </thead>
 
               <tbody>
-                {people.map((person: Person) => (
+                {sortPeople(people).map((person: Person) => (
                   <PersonLink key={person.slug} person={person} />
                 ))}
               </tbody>
