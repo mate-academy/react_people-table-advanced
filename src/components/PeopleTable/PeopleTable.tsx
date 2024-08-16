@@ -18,6 +18,7 @@ export const PeopleTable: React.FC<Props> = ({ setShowFilters }) => {
   const sort = searchParams.get('sort');
   const order = searchParams.get('order');
   const query = searchParams.get('query') || '';
+  const centuries = searchParams.getAll('century');
 
   const getSortParams = (value: string) => ({
     sort: sort === value && order === 'desc' ? null : value,
@@ -83,6 +84,10 @@ export const PeopleTable: React.FC<Props> = ({ setShowFilters }) => {
   }
 
   function filterByQuery(person: Person) {
+    if (!query) {
+      return true;
+    }
+
     const normalizedQuery = query.toLowerCase();
 
     return (
@@ -91,6 +96,23 @@ export const PeopleTable: React.FC<Props> = ({ setShowFilters }) => {
       person.motherName?.toLowerCase().includes(normalizedQuery)
     );
   }
+
+  function filterByCentury(person: Person) {
+    if (centuries.length === 0) {
+      return true;
+    }
+
+    return centuries.includes(Math.ceil(person.born / 100).toString());
+  }
+
+  const getPreparedPeople = () => {
+    const peopleByQuery = people.filter(filterByQuery);
+    const peopleByCentury = peopleByQuery.filter(filterByCentury);
+
+    const sortedPeople = sortPeople(peopleByCentury);
+
+    return sortedPeople;
+  };
 
   return (
     <>
@@ -145,11 +167,9 @@ export const PeopleTable: React.FC<Props> = ({ setShowFilters }) => {
               </thead>
 
               <tbody>
-                {sortPeople(people.filter(filterByQuery)).map(
-                  (person: Person) => (
-                    <PersonLink key={person.slug} person={person} />
-                  ),
-                )}
+                {getPreparedPeople().map((person: Person) => (
+                  <PersonLink key={person.slug} person={person} />
+                ))}
               </tbody>
             </table>
           )}
