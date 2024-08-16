@@ -17,6 +17,7 @@ export const PeopleTable: React.FC<Props> = ({ setShowFilters }) => {
   const [searchParams] = useSearchParams();
   const sort = searchParams.get('sort');
   const order = searchParams.get('order');
+  const query = searchParams.get('query') || '';
 
   const getSortParams = (value: string) => ({
     sort: sort === value && order === 'desc' ? null : value,
@@ -81,6 +82,16 @@ export const PeopleTable: React.FC<Props> = ({ setShowFilters }) => {
       : peopleSorted.sort((a, b) => sorting(a, b));
   }
 
+  function filterByQuery(person: Person) {
+    const normalizedQuery = query.toLowerCase();
+
+    return (
+      person.name.toLowerCase().includes(normalizedQuery) ||
+      person.fatherName?.toLowerCase().includes(normalizedQuery) ||
+      person.motherName?.toLowerCase().includes(normalizedQuery)
+    );
+  }
+
   return (
     <>
       <div className="column">
@@ -134,9 +145,11 @@ export const PeopleTable: React.FC<Props> = ({ setShowFilters }) => {
               </thead>
 
               <tbody>
-                {sortPeople(people).map((person: Person) => (
-                  <PersonLink key={person.slug} person={person} />
-                ))}
+                {sortPeople(people.filter(filterByQuery)).map(
+                  (person: Person) => (
+                    <PersonLink key={person.slug} person={person} />
+                  ),
+                )}
               </tbody>
             </table>
           )}
