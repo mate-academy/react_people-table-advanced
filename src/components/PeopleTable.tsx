@@ -66,10 +66,6 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
     preparedPeople = preparedPeople.filter(person => person.sex === sexParam);
   }
 
-  if (orderParam) {
-    preparedPeople.reverse();
-  }
-
   if (query) {
     preparedPeople = preparedPeople.filter(person => {
       const { name, fatherName, motherName } = person;
@@ -103,6 +99,10 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
 
       return false;
     });
+  }
+
+  if (orderParam) {
+    preparedPeople.reverse();
   }
 
   return (

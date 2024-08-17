@@ -19,6 +19,14 @@ export const PeopleFilters = () => {
 
   const centuriesArray = [16, 17, 18, 19, 20];
 
+  const handleQueryParam = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = event.target;
+
+    navigate({
+      search: getSearchWith(searchParams, { query: value || null }),
+    });
+  };
+
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
@@ -47,13 +55,7 @@ export const PeopleFilters = () => {
             className="input"
             placeholder="Search"
             value={query}
-            onChange={event => {
-              const { value } = event.target;
-
-              navigate({
-                search: getSearchWith(searchParams, { query: value || null }),
-              });
-            }}
+            onChange={handleQueryParam}
           />
 
           <span className="icon is-left">
@@ -66,18 +68,18 @@ export const PeopleFilters = () => {
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
             {centuriesArray.map(century => {
-              const normalizedCentury = `${century}`;
+              const centuryToString = `${century}`;
 
               return (
                 <SearchLink
                   key={century}
                   className={cn('button mr-1', {
-                    'is-info': centuries.includes(normalizedCentury),
+                    'is-info': centuries.includes(centuryToString),
                   })}
                   params={{
-                    centuries: centuries.includes(normalizedCentury)
-                      ? centuries.filter(param => param !== normalizedCentury)
-                      : [...centuries, normalizedCentury],
+                    centuries: centuries.includes(centuryToString)
+                      ? centuries.filter(param => param !== centuryToString)
+                      : [...centuries, centuryToString],
                   }}
                 >
                   {century}

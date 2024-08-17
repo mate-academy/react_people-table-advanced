@@ -10,8 +10,6 @@ export const App = () => {
     <div data-cy="app">
       <Navbar />
 
-      {/* {console.log('render')} */}
-
       <div className="section">
         <div className="container">
           <Routes>
