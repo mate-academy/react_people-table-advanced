@@ -31,7 +31,6 @@ export const Navbar = () => {
           </NavLink>
         </div>
       </div>
-      {/* <Outlet /> */}
     </nav>
   );
 };
