@@ -18,6 +18,7 @@ export const PeopleTable: React.FC<Props> = ({ setShowFilters }) => {
   const sort = searchParams.get('sort');
   const order = searchParams.get('order');
   const query = searchParams.get('query') || '';
+  const sex = searchParams.get('sex') || '';
   const centuries = searchParams.getAll('century');
 
   const getSortParams = (value: string) => ({
@@ -105,11 +106,20 @@ export const PeopleTable: React.FC<Props> = ({ setShowFilters }) => {
     return centuries.includes(Math.ceil(person.born / 100).toString());
   }
 
+  function filterBySex(person: Person) {
+    if (!sex) {
+      return true;
+    }
+
+    return person.sex === sex;
+  }
+
   const getPreparedPeople = () => {
     const peopleByQuery = people.filter(filterByQuery);
     const peopleByCentury = peopleByQuery.filter(filterByCentury);
+    const peopleBySex = peopleByCentury.filter(filterBySex);
 
-    const sortedPeople = sortPeople(peopleByCentury);
+    const sortedPeople = sortPeople(peopleBySex);
 
     return sortedPeople;
   };
