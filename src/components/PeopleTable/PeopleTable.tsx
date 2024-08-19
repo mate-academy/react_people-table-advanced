@@ -124,6 +124,8 @@ export const PeopleTable: React.FC<Props> = ({ setShowFilters }) => {
     return sortedPeople;
   };
 
+  const preparedPeople = getPreparedPeople();
+
   return (
     <>
       <div className="column">
@@ -140,7 +142,11 @@ export const PeopleTable: React.FC<Props> = ({ setShowFilters }) => {
             <p data-cy="noPeopleMessage">There are no people on the server</p>
           )}
 
-          {people.length > 0 && (
+          {!preparedPeople.length && !loading && (
+            <p>There are no people matching the current search criteria</p>
+          )}
+
+          {preparedPeople.length > 0 && (
             <table
               data-cy="peopleTable"
               className="table is-striped is-hoverable is-narrow is-fullwidth"
@@ -177,7 +183,7 @@ export const PeopleTable: React.FC<Props> = ({ setShowFilters }) => {
               </thead>
 
               <tbody>
-                {getPreparedPeople().map((person: Person) => (
+                {preparedPeople.map((person: Person) => (
                   <PersonLink key={person.slug} person={person} />
                 ))}
               </tbody>
