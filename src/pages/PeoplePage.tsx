@@ -15,7 +15,7 @@ import { PeopleFilters } from '../components/PeopleFilters';
 
 export const PeoplePage: React.FC = () => {
   const [peopleFromServer, setPeopleFromServer] = useState<Person[]>([]);
-  const [isError, setIsError] = useState('');
+  const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [searchParams] = useSearchParams();
 
@@ -23,7 +23,7 @@ export const PeoplePage: React.FC = () => {
     setIsLoading(true);
     getPeople()
       .then(setPeopleFromServer)
-      .catch(() => setIsError('Something went wrong'))
+      .catch(() => setError('Something went wrong'))
       .finally(() => setIsLoading(false));
   }, []);
 
@@ -69,8 +69,7 @@ export const PeoplePage: React.FC = () => {
     return currentPeople;
   }, [sortBy, order, sex, centuries, query, peopleWithParents]);
 
-  const showNoPeopleMessage =
-    !peopleFromServer.length && !isError && !isLoading;
+  const showNoPeopleMessage = !peopleFromServer.length && !error && !isLoading;
 
   const showNoSearchPeopleMessage = !people.length && !isLoading;
 
@@ -90,7 +89,7 @@ export const PeoplePage: React.FC = () => {
             <div className="box table-container">
               {isLoading && <Loader />}
 
-              {isError && (
+              {error && (
                 <p data-cy="peopleLoadingError" className="has-text-danger">
                   Something went wrong
                 </p>

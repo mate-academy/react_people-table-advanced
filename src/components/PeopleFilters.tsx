@@ -21,7 +21,13 @@ export const PeopleFilters = () => {
   };
 
   const filterBySexOptions = Object.entries(FilterBySex);
-  const filterByCentyruOptions = Object.values(FilterByCentury);
+  const filterByCenturyOptions: FilterByCentury[] = [
+    '16',
+    '17',
+    '18',
+    '19',
+    '20',
+  ];
 
   return (
     <nav className="panel">
@@ -59,7 +65,7 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            {filterByCentyruOptions.map(century => (
+            {filterByCenturyOptions.map(century => (
               <SearchLink
                 params={{ centuries: toggleCentury(century, centuries) }}
                 data-cy="century"

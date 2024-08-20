@@ -1,7 +1,1 @@
-export enum FilterByCentury {
-  Sixteenth = '16',
-  Seventeenth = '17',
-  Eighteenth = '18',
-  Nineteenth = '19',
-  Twentieth = '20',
-}
+export type FilterByCentury = '16' | '17' | '18' | '19' | '20';
