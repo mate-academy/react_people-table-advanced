@@ -72,50 +72,55 @@ export const PeopleTable: FC<Props> = ({ people }) => {
             motherName,
             fatherName,
             slug: personSlug,
-          }) => (
-            <tr
-              data-cy="person"
-              key={personSlug}
-              className={classNames({
-                'has-background-warning': slug === personSlug,
-              })}
-            >
-              <td>
-                <Link
-                  to={`/people/${personSlug}`}
-                  className={classNames({
-                    'has-text-danger': sex === Sex.Female,
-                  })}
-                >
-                  {name}
-                </Link>
-              </td>
-              <td>{sex}</td>
-              <td>{born}</td>
-              <td>{died}</td>
-              <td>
-                {motherName && findPersonByName(motherName)?.slug ? (
+          }) => {
+            const mother = motherName ? findPersonByName(motherName) : null;
+            const father = fatherName ? findPersonByName(fatherName) : null;
+
+            return (
+              <tr
+                data-cy="person"
+                key={personSlug}
+                className={classNames({
+                  'has-background-warning': slug === personSlug,
+                })}
+              >
+                <td>
                   <Link
-                    to={`/people/${findPersonByName(motherName)?.slug}`}
-                    className="has-text-danger"
+                    to={`/people/${personSlug}`}
+                    className={classNames({
+                      'has-text-danger': sex === Sex.Female,
+                    })}
                   >
-                    {motherName}
+                    {name}
                   </Link>
-                ) : (
-                  <span>{motherName || '-'}</span>
-                )}
-              </td>
-              <td>
-                {fatherName && findPersonByName(fatherName)?.slug ? (
-                  <Link to={`/people/${findPersonByName(fatherName)?.slug}`}>
-                    {fatherName}
-                  </Link>
-                ) : (
-                  <span>{fatherName || '-'}</span>
-                )}
-              </td>
-            </tr>
-          ),
+                </td>
+                <td>{sex}</td>
+                <td>{born}</td>
+                <td>{died}</td>
+                <td>
+                  {mother?.slug ? (
+                    <Link
+                      to={`/people/${mother.slug}`}
+                      className="has-text-danger"
+                    >
+                      {motherName}
+                    </Link>
+                  ) : (
+                    <span>{motherName || '-'}</span>
+                  )}
+                </td>
+                <td>
+                  {father?.slug ? (
+                    <Link to={`/people/${father.slug}`}>
+                      {fatherName}
+                    </Link>
+                  ) : (
+                    <span>{fatherName || '-'}</span>
+                  )}
+                </td>
+              </tr>
+            );
+          }
         )}
       </tbody>
     </table>

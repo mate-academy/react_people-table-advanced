@@ -11,10 +11,21 @@ export const SortLink: React.FC<Props> = ({ field }) => {
   const sortField = searchParams.get('sort') || '';
   const isReversed = searchParams.get('order') === 'desc';
 
-  const params = {
-    sort: field === sortField && isReversed ? null : field,
-    order: field === sortField && !isReversed ? 'desc' : null,
+  let params: Record<string, string | null> = {
+    sort: field,
+    order: 'asc',
   };
+
+  if (field === sortField) {
+    if (isReversed) {
+      params = {
+        sort: null,
+        order: null,
+      };
+    } else {
+      params.order = 'desc';
+    }
+  }
 
   return (
     <SearchLink params={params}>
