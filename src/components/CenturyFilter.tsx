@@ -16,21 +16,28 @@ export const CenturyFilter = () => {
       if (isChecked) {
         newParams.append('century', value);
       } else {
+        const values = newParams.getAll('century').filter(val => val !== value);
+
         newParams.delete('century');
+        values.forEach(val => newParams.append('century', val));
       }
 
       return newParams;
     });
   };
 
-  const handleAllChange = () => {
+  const handleAllChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const isChecked = event.target.checked;
+
     setSearchParams(prevParams => {
       const newParams = new URLSearchParams(prevParams.toString());
 
-      if (selectedCenturies.length === 0) {
+      if (isChecked) {
         newParams.delete('century');
       } else {
-        newParams.delete('century');
+        if (selectedCenturies.length === 0) {
+          newParams.delete('century');
+        }
       }
 
       return newParams;
@@ -39,6 +46,7 @@ export const CenturyFilter = () => {
 
   return (
     <div className="filter">
+      {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
       <label>Filter by Century:</label>
       <div>
         {centuries.map(century => (
