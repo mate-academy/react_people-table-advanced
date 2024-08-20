@@ -1,14 +1,22 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Person } from '../../types';
 import { getPeople } from '../../api';
 import { Loader } from '../Loader';
-import { PersonLink } from '../PersonLink';
+import { PersonItem } from '../PersonItem';
 import { SearchLink } from '../SearchLink';
 import { useSearchParams } from 'react-router-dom';
+import {
+  filterByCentury,
+  filterByQuery,
+  filterBySex,
+  sortPeople,
+} from '../../utils/filterFunctions';
 
 type Props = {
   setShowFilters: (arg: boolean) => void;
 };
+
+const sortFilters = ['Name', 'Sex', 'Born', 'Died'];
 
 export const PeopleTable: React.FC<Props> = ({ setShowFilters }) => {
   const [people, setPeople] = useState<Person[]>([]);
@@ -25,8 +33,6 @@ export const PeopleTable: React.FC<Props> = ({ setShowFilters }) => {
     sort: sort === value && order === 'desc' ? null : value,
     order: sort === value && order === null ? 'desc' : null,
   });
-
-  const sortFilters = ['Name', 'Sex', 'Born', 'Died'];
 
   const handleError = (message: string) => {
     setErrorMessage(message);
@@ -61,136 +67,81 @@ export const PeopleTable: React.FC<Props> = ({ setShowFilters }) => {
     getPeopleFromServer();
   }, []);
 
-  function sortPeople(peopleToSort: Person[]): Person[] {
-    const peopleSorted = [...peopleToSort];
-
-    const sorting = (a: Person, b: Person): number => {
-      switch (sort) {
-        case 'name':
-        case 'sex':
-          return a[sort].localeCompare(b[sort]);
-
-        case 'born':
-        case 'died':
-          return +a[sort] - +b[sort];
-
-        default:
-          return 0;
-      }
-    };
-
-    return order === 'desc'
-      ? peopleSorted.sort((a, b) => sorting(b, a))
-      : peopleSorted.sort((a, b) => sorting(a, b));
-  }
-
-  function filterByQuery(person: Person) {
-    if (!query) {
-      return true;
-    }
-
-    const normalizedQuery = query.toLowerCase();
-
-    return (
-      person.name.toLowerCase().includes(normalizedQuery) ||
-      person.fatherName?.toLowerCase().includes(normalizedQuery) ||
-      person.motherName?.toLowerCase().includes(normalizedQuery)
+  const preparedPeople = useMemo(() => {
+    const peopleByQuery = people.filter(person => filterByQuery(person, query));
+    const peopleByCentury = peopleByQuery.filter(person =>
+      filterByCentury(person, centuries),
     );
-  }
+    const peopleBySex = peopleByCentury.filter(person =>
+      filterBySex(person, sex),
+    );
 
-  function filterByCentury(person: Person) {
-    if (centuries.length === 0) {
-      return true;
-    }
-
-    return centuries.includes(Math.ceil(person.born / 100).toString());
-  }
-
-  function filterBySex(person: Person) {
-    if (!sex) {
-      return true;
-    }
-
-    return person.sex === sex;
-  }
-
-  const getPreparedPeople = () => {
-    const peopleByQuery = people.filter(filterByQuery);
-    const peopleByCentury = peopleByQuery.filter(filterByCentury);
-    const peopleBySex = peopleByCentury.filter(filterBySex);
-
-    const sortedPeople = sortPeople(peopleBySex);
+    const sortedPeople = sortPeople(peopleBySex, sort, order);
 
     return sortedPeople;
-  };
-
-  const preparedPeople = getPreparedPeople();
+  }, [query, sex, centuries, sort, order, people]);
 
   return (
-    <>
-      <div className="column">
-        <div className="box table-container">
-          {loading && <Loader />}
+    <div className="column">
+      <div className="box table-container">
+        {loading && <Loader />}
 
-          {errorMessage && (
-            <p data-cy="peopleLoadingError" className="has-text-danger">
-              {errorMessage}
-            </p>
-          )}
+        {errorMessage && (
+          <p data-cy="peopleLoadingError" className="has-text-danger">
+            {errorMessage}
+          </p>
+        )}
 
-          {!people.length && !loading && (
-            <p data-cy="noPeopleMessage">There are no people on the server</p>
-          )}
+        {!people.length && !loading && (
+          <p data-cy="noPeopleMessage">There are no people on the server</p>
+        )}
 
-          {!preparedPeople.length && !loading && (
-            <p>There are no people matching the current search criteria</p>
-          )}
+        {!preparedPeople.length && !loading && (
+          <p>There are no people matching the current search criteria</p>
+        )}
 
-          {preparedPeople.length > 0 && (
-            <table
-              data-cy="peopleTable"
-              className="table is-striped is-hoverable is-narrow is-fullwidth"
-            >
-              <thead>
-                <tr>
-                  {sortFilters.map((filter, index) => (
-                    <th key={index}>
-                      <span className="is-flex is-flex-wrap-nowrap">
-                        {filter}
-                        <SearchLink
-                          params={getSortParams(filter.toLowerCase())}
-                        >
-                          <span className="icon">
-                            <i
-                              className={
-                                'fas ' +
-                                (sort === filter.toLowerCase()
-                                  ? order === 'desc'
-                                    ? 'fa-sort-down'
-                                    : 'fa-sort-up'
-                                  : 'fa-sort')
-                              }
-                            />
-                          </span>
-                        </SearchLink>
-                      </span>
-                    </th>
-                  ))}
-
-                  <th>Mother</th>
-                  <th>Father</th>
-                </tr>
-              </thead>
-
-              <tbody>
-                {preparedPeople.map((person: Person) => (
-                  <PersonLink key={person.slug} person={person} />
+        {preparedPeople.length > 0 && (
+          <table
+            data-cy="peopleTable"
+            className="table is-striped is-hoverable is-narrow is-fullwidth"
+          >
+            <thead>
+              <tr>
+                {sortFilters.map((filter, index) => (
+                  <th key={index}>
+                    <span className="is-flex is-flex-wrap-nowrap">
+                      {filter}
+                      <SearchLink params={getSortParams(filter.toLowerCase())}>
+                        <span className="icon">
+                          <i
+                            className={
+                              'fas ' +
+                              (sort === filter.toLowerCase()
+                                ? order === 'desc'
+                                  ? 'fa-sort-down'
+                                  : 'fa-sort-up'
+                                : 'fa-sort')
+                            }
+                          />
+                        </span>
+                      </SearchLink>
+                    </span>
+                  </th>
                 ))}
-              </tbody>
-            </table>
-          )}
-        </div>
+
+                <th>Mother</th>
+                <th>Father</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              {preparedPeople.map((person: Person) => (
+                <PersonItem key={person.slug} person={person} />
+              ))}
+            </tbody>
+          </table>
+        )}
       </div>
-    </>
+    </div>
   );
 };

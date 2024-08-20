@@ -6,7 +6,7 @@ type Props = {
   person: Person;
 };
 
-export const PersonLink: React.FC<Props> = ({ person }) => {
+export const PersonItem: React.FC<Props> = ({ person }) => {
   const { slug: currentSlug } = useParams();
   const [searchParams] = useSearchParams();
   const {
