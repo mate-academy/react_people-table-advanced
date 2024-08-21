@@ -15,13 +15,13 @@ import { PeoplePage } from './pages/PeoplePage';
 createRoot(document.getElementById('root') as HTMLDivElement).render(
   <Router>
     <Routes>
-      <Route path="/" element={<App />}>
+    <Route path="/" element={<App />}>
         <Route path="/home" element={<Navigate to="/" replace />} />
         <Route index element={<h1 className="title">Home Page</h1>} />
         <Route path="/people" element={<PeoplePage />}>
           <Route path=":personSlug" element={<PeoplePage />} />
         </Route>
-        <Route path="*" element={<h1 className="title">Page Not Found</h1>} />
+        <Route path="*" element={<h1 className="title">Page not found</h1>} />
       </Route>
     </Routes>
   </Router>,
