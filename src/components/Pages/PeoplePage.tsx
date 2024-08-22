@@ -7,11 +7,24 @@ import { useValues } from '../store/PeopleContext';
 import { ErrorMessages } from '../../types/ErrorMessages';
 
 export const PeoplePage = () => {
-  const { people, isLoading, isError, fetchPeople } = useValues();
+  const { people, filteredPeople, isLoading, isError, fetchPeople } =
+    useValues();
 
   useEffect(() => {
     fetchPeople();
   }, [fetchPeople]);
+
+  if (isLoading) {
+    return <Loader />;
+  } else if (isError) {
+    return (
+      <p data-cy="peopleLoadingError" className="has-text-danger">
+        {ErrorMessages.PeopleLoadError}
+      </p>
+    );
+  } else if (people.length === 0) {
+    return <p>{ErrorMessages.NoPeopleMessage}</p>;
+  }
 
   return (
     <>
@@ -19,7 +32,7 @@ export const PeoplePage = () => {
 
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
-          {!isLoading && (
+          {people.length > 0 && (
             <div className="column is-7-tablet is-narrow-desktop">
               <PeopleFilters />
             </div>
@@ -27,18 +40,10 @@ export const PeoplePage = () => {
 
           <div className="column">
             <div className="box table-container">
-              {isLoading && <Loader />}
-
-              {!isLoading && !people.length && (
-                <p data-cy="noPeopleMessage">{ErrorMessages.NoPeopleMessage}</p>
-              )}
-
-              {!isLoading && <PeopleTable />}
-
-              {isError && (
-                <p data-cy="peopleLoadingError" className="has-text=danger">
-                  {ErrorMessages.PeopleLoadError}
-                </p>
+              {filteredPeople.length === 0 ? (
+                <p>{ErrorMessages.NoUsersFound}</p>
+              ) : (
+                <PeopleTable />
               )}
             </div>
           </div>

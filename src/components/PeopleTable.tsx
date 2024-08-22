@@ -7,7 +7,7 @@ import { useValues } from './store/PeopleContext';
 const THEAD = ['Name', 'Sex', 'Born', 'Died'];
 
 export const PeopleTable: React.FC = () => {
-  const { people } = useValues();
+  const { filteredPeople } = useValues();
   const [searchParams] = useSearchParams();
   const sort = searchParams.get('sort') || '';
   const order = searchParams.get('order') || '';
@@ -51,7 +51,7 @@ export const PeopleTable: React.FC = () => {
       </thead>
 
       <tbody>
-        {people.map(person => (
+        {filteredPeople.map(person => (
           <PersonInfo person={person} key={person.slug} />
         ))}
       </tbody>

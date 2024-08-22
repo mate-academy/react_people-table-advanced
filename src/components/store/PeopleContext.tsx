@@ -107,12 +107,13 @@ export const PeopleProvider: React.FC<Props> = ({ children }) => {
 
   const peopleValue = useMemo(
     () => ({
-      people: filteredPeople,
+      people,
+      filteredPeople,
       isLoading,
       isError,
       fetchPeople,
     }),
-    [filteredPeople, isLoading, isError, fetchPeople],
+    [people, filteredPeople, isLoading, isError, fetchPeople],
   );
 
   return (
