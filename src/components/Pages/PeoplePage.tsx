@@ -23,7 +23,7 @@ export const PeoplePage = () => {
       </p>
     );
   } else if (people.length === 0) {
-    return <p>{ErrorMessages.NoPeopleMessage}</p>;
+    return <p data-cy="noPeopleMessage">{ErrorMessages.NoPeopleMessage}</p>;
   }
 
   return (
