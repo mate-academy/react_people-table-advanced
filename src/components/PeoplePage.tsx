@@ -102,7 +102,10 @@ export const PeoplePage = () => {
               )}
 
               {!isLoading && errorMessage === '' && (
-                <PeopleTable people={visiblePeople} />
+                <PeopleTable
+                  people={visiblePeople}
+                  peopleFromServer={[...people]}
+                />
               )}
             </div>
           </div>

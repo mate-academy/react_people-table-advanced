@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useSearchParams, useParams } from 'react-router-dom';
 import { Person } from '../types';
 import { FC } from 'react';
 import { SortLink } from './SortLink';
@@ -11,17 +11,20 @@ enum Sex {
 
 type Props = {
   people: Person[];
+  peopleFromServer: Person[];
 };
 
-export const PeopleTable: FC<Props> = ({ people }) => {
+export const PeopleTable: FC<Props> = ({ people, peopleFromServer }) => {
   const { slug } = useParams();
+  const [searchParams] = useSearchParams();
+  const searchParamsString = searchParams.toString();
 
   if (people.length === 0) {
     return <p>There are no people matching the current search criteria</p>;
   }
 
   const findPersonByName = (name: string | undefined) =>
-    people.find(person => person.name === name);
+    peopleFromServer.find(person => person.name === name);
 
   return (
     <table
@@ -86,7 +89,7 @@ export const PeopleTable: FC<Props> = ({ people }) => {
               >
                 <td>
                   <Link
-                    to={`/people/${personSlug}`}
+                    to={`/people/${personSlug}?${searchParamsString}`}
                     className={classNames({
                       'has-text-danger': sex === Sex.Female,
                     })}
@@ -100,7 +103,7 @@ export const PeopleTable: FC<Props> = ({ people }) => {
                 <td>
                   {mother?.slug ? (
                     <Link
-                      to={`/people/${mother.slug}`}
+                      to={`/people/${mother.slug}?${searchParamsString}`}
                       className="has-text-danger"
                     >
                       {motherName}
@@ -111,7 +114,7 @@ export const PeopleTable: FC<Props> = ({ people }) => {
                 </td>
                 <td>
                   {father?.slug ? (
-                    <Link to={`/people/${father.slug}`}>
+                    <Link to={`/people/${father.slug}?${searchParamsString}`}>
                       {fatherName}
                     </Link>
                   ) : (
@@ -120,7 +123,7 @@ export const PeopleTable: FC<Props> = ({ people }) => {
                 </td>
               </tr>
             );
-          }
+          },
         )}
       </tbody>
     </table>
