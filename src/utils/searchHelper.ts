@@ -29,11 +29,23 @@ export function getSearchWith(
       newParams.delete(key);
     } else if (Array.isArray(value)) {
       // we delete the key to remove old values
-      newParams.delete(key);
+      const currentValues = newParams.getAll(key);
+      // newParams.delete(key);
 
       value.forEach(part => {
-        newParams.append(key, part);
+        if (currentValues.includes(part)) {
+          const index = currentValues.indexOf(part);
+
+          if (index > -1) {
+            currentValues.splice(index, 1);
+          }
+        } else {
+          currentValues.push(part);
+        }
       });
+
+      newParams.delete(key);
+      currentValues.forEach(val => newParams.append(key, val));
     } else {
       newParams.set(key, value);
     }
