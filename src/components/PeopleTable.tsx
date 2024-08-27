@@ -9,39 +9,41 @@ type Props = {
 
 export const PeopleTable: React.FC<Props> = ({ peopleFromServer }) => {
   const [searchParams] = useSearchParams();
-  const sortBy = searchParams.get('sort') || '';
+  const sortQ = searchParams.get('sort') || '';
   const currentOrder = searchParams.get('order') || '';
 
-  // Определите следующее состояние для сортировки
-  const getNextOrder = (sortColumn: string) => {
-    if (sortBy !== sortColumn) {
-      return 'asc'; // Если сортировка по новому столбцу, начнем с 'asc'
+  const getSortingParams = (sortBy: string) => {
+    const preparedSort = sortBy.toLowerCase();
+
+    if (sortQ !== preparedSort) {
+      // Если сортировка по новому столбцу, начнем с 'asc'
+      return { sort: preparedSort, order: null };
     }
 
-    if (currentOrder === 'asc') {
-      return 'desc'; // Если текущий порядок 'asc', следующий будет 'desc'
+    if (!currentOrder) {
+      // Если сортировка по текущему столбцу, но порядок не установлен, вернем 'desc'
+      return { sort: preparedSort, order: 'desc' };
     }
 
-    if (currentOrder === 'desc') {
-      return ''; // Если текущий порядок 'desc', сбросим сортировку
-    }
-
-    return 'asc'; // Если сортировка отсутствует, начнем с 'asc'
+    // Если порядок уже установлен, сбрасываем сортировку
+    return { sort: null, order: null };
   };
 
-  // Функция для создания ссылки сортировки
   const createSortLink = (sortColumn: string) => {
-    const newOrder = getNextOrder(sortColumn);
     const params = new URLSearchParams(searchParams);
+    const { sort, order } = getSortingParams(sortColumn);
 
-    console.log(newOrder + ' order');
-
-    if (newOrder === '') {
-      params.delete('sort');
-      params.delete('order');
+    // Устанавливаем или удаляем параметры 'sort' и 'order' в зависимости от возвращаемых значений
+    if (sort) {
+      params.set('sort', sort);
     } else {
-      params.set('sort', sortColumn);
-      params.set('order', newOrder);
+      params.delete('sort');
+    }
+
+    if (order) {
+      params.set('order', order);
+    } else {
+      params.delete('order');
     }
 
     return `/people?${params.toString()}`;
@@ -60,7 +62,7 @@ export const PeopleTable: React.FC<Props> = ({ peopleFromServer }) => {
               <Link to={createSortLink('name')}>
                 <span className="icon">
                   <i
-                    className={`fas fa-sort${currentOrder === 'asc' && sortBy === 'name' ? '-up' : currentOrder === 'desc' && sortBy === 'name' ? '-down' : ''}`}
+                    className={`fas fa-sort${currentOrder === '' && sortQ === 'name' ? '-up' : currentOrder === 'desc' && sortQ === 'name' ? '-down' : ''}`}
                   />
                 </span>
               </Link>
@@ -73,7 +75,7 @@ export const PeopleTable: React.FC<Props> = ({ peopleFromServer }) => {
               <Link to={createSortLink('sex')}>
                 <span className="icon">
                   <i
-                    className={`fas fa-sort${currentOrder === 'asc' && sortBy === 'sex' ? '-up' : currentOrder === 'desc' && sortBy === 'sex' ? '-down' : ''}`}
+                    className={`fas fa-sort${currentOrder === '' && sortQ === 'sex' ? '-up' : currentOrder === 'desc' && sortQ === 'sex' ? '-down' : ''}`}
                   />
                 </span>
               </Link>
@@ -86,7 +88,7 @@ export const PeopleTable: React.FC<Props> = ({ peopleFromServer }) => {
               <Link to={createSortLink('born')}>
                 <span className="icon">
                   <i
-                    className={`fas fa-sort${currentOrder === 'asc' && sortBy === 'born' ? '-up' : currentOrder === 'desc' && sortBy === 'born' ? '-down' : ''}`}
+                    className={`fas fa-sort${currentOrder === '' && sortQ === 'born' ? '-up' : currentOrder === 'desc' && sortQ === 'born' ? '-down' : ''}`}
                   />
                 </span>
               </Link>
@@ -99,7 +101,7 @@ export const PeopleTable: React.FC<Props> = ({ peopleFromServer }) => {
               <Link to={createSortLink('died')}>
                 <span className="icon">
                   <i
-                    className={`fas fa-sort${currentOrder === 'asc' && sortBy === 'died' ? '-up' : currentOrder === 'desc' && sortBy === 'died' ? '-down' : ''}`}
+                    className={`fas fa-sort${currentOrder === 'asc' && sortQ === 'died' ? '-up' : currentOrder === 'desc' && sortQ === 'died' ? '-down' : ''}`}
                   />
                 </span>
               </Link>

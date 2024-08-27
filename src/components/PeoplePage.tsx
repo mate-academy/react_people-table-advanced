@@ -3,6 +3,7 @@ import { Loader } from './Loader';
 import { PeopleTable } from './PeopleTable';
 import { useEffect, useState } from 'react';
 import { Person } from '../types';
+import { useSearchParams } from 'react-router-dom';
 
 export const PeoplePage = () => {
   const [peopleFromServer, setPeopleFromServer] = useState<Person[]>([]);
@@ -11,8 +12,10 @@ export const PeoplePage = () => {
   const [filterSex, setFilterSex] = useState('');
   const [query, setQuery] = useState('');
   const [centuries, setCenturies] = useState<string[]>([]);
+  const [searchParams] = useSearchParams();
 
-  console.log(centuries);
+  const sortBy = searchParams.get('sort') || '';
+  const order = searchParams.get('order') || '';
 
   useEffect(() => {
     fetch('/api/people.json')
@@ -36,26 +39,33 @@ export const PeoplePage = () => {
   const hasPeople = peopleFromServer.length > 0;
 
   // Фильтрация по полу
-  const filteredBySex = filterSex
-    ? peopleFromServer.filter(person => person.sex === filterSex)
-    : peopleFromServer;
-
-  const filteredByQuery = query
-    ? filteredBySex.filter(person =>
-      person.name.toLowerCase().includes(query.toLowerCase()),
-    )
-    : filteredBySex;
-
-  const filteredByCenturies =
-    centuries.length > 0
-      ? filteredByQuery.filter(person =>
+  const filteredPeople = peopleFromServer.filter(
+    person =>
+      (!filterSex || person.sex === filterSex) &&
+      (!query || person.name.toLowerCase().includes(query.toLowerCase())) &&
+      (centuries.length === 0 ||
         centuries.some(
           century =>
             person.born >= (+century - 1) * 100 + 1 &&
-              person.born <= +century * 100,
-        ),
-      )
-      : filteredByQuery;
+            person.born <= +century * 100,
+        )),
+  );
+  const sortedData = [...filteredPeople].sort((a, b) => {
+    if (sortBy) {
+      const aValue = a[sortBy as keyof Person] as string;
+      const bValue = b[sortBy as keyof Person] as string;
+
+      if (aValue < bValue) {
+        return order === 'asc' ? 1 : -1;
+      }
+
+      if (aValue > bValue) {
+        return order === 'asc' ? -1 : 1;
+      }
+    }
+
+    return 0;
+  });
 
   return (
     <>
@@ -64,11 +74,13 @@ export const PeoplePage = () => {
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
           <div className="column is-7-tablet is-narrow-desktop">
-            <PeopleFilters
-              setCenturies={setCenturies}
-              setQuery={setQuery}
-              setFilterSex={setFilterSex}
-            />
+            {!loading && (
+              <PeopleFilters
+                setCenturies={setCenturies}
+                setQuery={setQuery}
+                setFilterSex={setFilterSex}
+              />
+            )}
           </div>
 
           <div className="column">
@@ -85,12 +97,12 @@ export const PeoplePage = () => {
                 </p>
               )}
 
-              {!loading && hasPeople && filteredByCenturies.length === 0 && (
+              {!loading && hasPeople && sortedData.length === 0 && (
                 <p>There are no people matching the current search criteria</p>
               )}
 
-              {!loading && filteredByCenturies.length > 0 && (
-                <PeopleTable peopleFromServer={filteredByCenturies} />
+              {!loading && sortedData.length > 0 && (
+                <PeopleTable peopleFromServer={sortedData} />
               )}
             </div>
           </div>
