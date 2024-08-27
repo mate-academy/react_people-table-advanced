@@ -6,9 +6,11 @@ import { FilterByCentury } from '../types/FilterByCentury';
 import { toggleCentury } from '../utils/functions';
 import { getSearchWith } from '../utils/searchHelper';
 
+const ALL_VARIANT = 'ALL';
+
 export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const sex = searchParams.get('sex') || 'ALL';
+  const sex = searchParams.get('sex') || ALL_VARIANT;
   const query = searchParams.get('query') || '';
   const centuries = searchParams.getAll('centuries') || [];
 
@@ -22,6 +24,9 @@ export const PeopleFilters = () => {
 
   const filterBySexOptions = Object.entries(FilterBySex);
   const filterByCenturyOptions = Object.values(FilterByCentury);
+
+  const hasCenturiesSelected = !!centuries.length;
+  const noCenturiesSelected = centuries.length === 0;
 
   return (
     <nav className="panel">
@@ -78,8 +83,8 @@ export const PeopleFilters = () => {
               data-cy="centuryAll"
               className={classNames(
                 'button',
-                { 'is-outlined': !!centuries.length },
-                { 'is-success': centuries.length === 0 },
+                { 'is-outlined': hasCenturiesSelected },
+                { 'is-success': noCenturiesSelected },
               )}
               params={{ centuries: null }}
             >
