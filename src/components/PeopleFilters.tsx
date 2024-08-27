@@ -8,7 +8,7 @@ type Props = {
   setCenturies: React.Dispatch<React.SetStateAction<string[]>>;
 };
 
-export const PeopleFilters: React.FC<Props> = React.memo(
+const PeopleFilters: React.FC<Props> = React.memo(
   ({ setFilterSex, setQuery, setCenturies }) => {
     const [searchParams, setSearchParams] = useSearchParams();
     const query = searchParams.get('query') || '';
@@ -167,3 +167,8 @@ export const PeopleFilters: React.FC<Props> = React.memo(
     );
   },
 );
+
+// Додаємо displayName для компонента
+PeopleFilters.displayName = 'PeopleFilters';
+
+export default PeopleFilters;
