@@ -12,38 +12,35 @@ export const PeopleTable: React.FC<Props> = ({ peopleFromServer }) => {
   const sortBy = searchParams.get('sort') || '';
   const currentOrder = searchParams.get('order') || '';
 
-  // Определите новое состояние для сортировки
-  const getNextOrder = (sortBy: string) => {
-    if (sortBy === '') {
-      return ''; // Без сортировки, если ничего не выбрано
-    }
-
-    if (currentOrder === '' && sortBy !== '') {
-      return 'asc'; // Первоначальная сортировка по возрастанию
+  // Определите следующее состояние для сортировки
+  const getNextOrder = (sortColumn: string) => {
+    if (sortBy !== sortColumn) {
+      return 'asc'; // Если сортировка по новому столбцу, начнем с 'asc'
     }
 
     if (currentOrder === 'asc') {
-      return 'desc'; // Сортировка по убыванию
+      return 'desc'; // Если текущий порядок 'asc', следующий будет 'desc'
     }
 
     if (currentOrder === 'desc') {
-      return ''; // Без сортировки
+      return ''; // Если текущий порядок 'desc', сбросим сортировку
     }
 
-    return 'asc'; // Начальное значение для сортировки
+    return 'asc'; // Если сортировка отсутствует, начнем с 'asc'
   };
 
   // Функция для создания ссылки сортировки
-  const createSortLink = (sortBy: string) => {
-    const newOrder = getNextOrder(sortBy);
+  const createSortLink = (sortColumn: string) => {
+    const newOrder = getNextOrder(sortColumn);
     const params = new URLSearchParams(searchParams);
 
+    console.log(newOrder + ' order');
+
     if (newOrder === '') {
-      // Удаление параметров 'sort' и 'order', если сбрасывается сортировка
       params.delete('sort');
       params.delete('order');
     } else {
-      params.set('sort', sortBy);
+      params.set('sort', sortColumn);
       params.set('order', newOrder);
     }
 

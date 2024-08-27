@@ -9,6 +9,10 @@ export const PeoplePage = () => {
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(true);
   const [filterSex, setFilterSex] = useState('');
+  const [query, setQuery] = useState('');
+  const [centuries, setCenturies] = useState<string[]>([]);
+
+  console.log(centuries);
 
   useEffect(() => {
     fetch('/api/people.json')
@@ -31,10 +35,27 @@ export const PeoplePage = () => {
 
   const hasPeople = peopleFromServer.length > 0;
 
-  // Фильтрация людей на основе пола
-  const filteredPeople = filterSex
+  // Фильтрация по полу
+  const filteredBySex = filterSex
     ? peopleFromServer.filter(person => person.sex === filterSex)
     : peopleFromServer;
+
+  const filteredByQuery = query
+    ? filteredBySex.filter(person =>
+      person.name.toLowerCase().includes(query.toLowerCase()),
+    )
+    : filteredBySex;
+
+  const filteredByCenturies =
+    centuries.length > 0
+      ? filteredByQuery.filter(person =>
+        centuries.some(
+          century =>
+            person.born >= (+century - 1) * 100 + 1 &&
+              person.born <= +century * 100,
+        ),
+      )
+      : filteredByQuery;
 
   return (
     <>
@@ -43,7 +64,11 @@ export const PeoplePage = () => {
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
           <div className="column is-7-tablet is-narrow-desktop">
-            <PeopleFilters setFilterSex={setFilterSex} />
+            <PeopleFilters
+              setCenturies={setCenturies}
+              setQuery={setQuery}
+              setFilterSex={setFilterSex}
+            />
           </div>
 
           <div className="column">
@@ -60,12 +85,12 @@ export const PeoplePage = () => {
                 </p>
               )}
 
-              {!loading && hasPeople && filteredPeople.length === 0 && (
+              {!loading && hasPeople && filteredByCenturies.length === 0 && (
                 <p>There are no people matching the current search criteria</p>
               )}
 
-              {!loading && filteredPeople.length > 0 && (
-                <PeopleTable peopleFromServer={filteredPeople} />
+              {!loading && filteredByCenturies.length > 0 && (
+                <PeopleTable peopleFromServer={filteredByCenturies} />
               )}
             </div>
           </div>
