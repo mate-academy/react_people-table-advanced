@@ -60,7 +60,7 @@ export const PeoplePage = () => {
       }
 
       if (aValue > bValue) {
-        return order === 'asc' ? -1 : 1;
+        return order === 'desc' ? -1 : 1;
       }
     }
 
