@@ -4,6 +4,7 @@ import { PeopleTable } from './PeopleTable';
 import { useEffect, useState } from 'react';
 import { Person } from '../types';
 import { useSearchParams } from 'react-router-dom';
+import { getPeople } from '../api';
 
 export const PeoplePage = () => {
   const [peopleFromServer, setPeopleFromServer] = useState<Person[]>([]);
@@ -19,14 +20,7 @@ export const PeoplePage = () => {
 
   useEffect(() => {
     setLoading(true);
-    fetch('/react_people_table_advanced/api/people.json')
-      .then(response => {
-        if (!response.ok) {
-          throw new Error(`${response.status} ${response.statusText}`);
-        }
-
-        return response.json();
-      })
+    getPeople()
       .then(data => {
         setPeopleFromServer(data);
         setLoading(false);
