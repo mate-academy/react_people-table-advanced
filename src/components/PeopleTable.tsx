@@ -1,7 +1,7 @@
 import React from 'react';
 import { Person } from '../types';
 import { PersonLink } from './PersonLink';
-import { Link, useSearchParams } from 'react-router-dom';
+import { Link, useLocation, useSearchParams } from 'react-router-dom';
 
 type Props = {
   peopleFromServer: Person[];
@@ -11,21 +11,21 @@ export const PeopleTable: React.FC<Props> = ({ peopleFromServer }) => {
   const [searchParams] = useSearchParams();
   const sortQ = searchParams.get('sort') || '';
   const currentOrder = searchParams.get('order') || '';
+  const location = useLocation();
+
+  const currentPath = location.pathname;
 
   const getSortingParams = (sortBy: string) => {
     const preparedSort = sortBy.toLowerCase();
 
     if (sortQ !== preparedSort) {
-      // Если сортировка по новому столбцу, начнем с 'asc'
       return { sort: preparedSort, order: null };
     }
 
     if (!currentOrder) {
-      // Если сортировка по текущему столбцу, но порядок не установлен, вернем 'desc'
       return { sort: preparedSort, order: 'desc' };
     }
 
-    // Если порядок уже установлен, сбрасываем сортировку
     return { sort: null, order: null };
   };
 
@@ -33,7 +33,6 @@ export const PeopleTable: React.FC<Props> = ({ peopleFromServer }) => {
     const params = new URLSearchParams(searchParams);
     const { sort, order } = getSortingParams(sortColumn);
 
-    // Устанавливаем или удаляем параметры 'sort' и 'order' в зависимости от возвращаемых значений
     if (sort) {
       params.set('sort', sort);
     } else {
@@ -46,7 +45,7 @@ export const PeopleTable: React.FC<Props> = ({ peopleFromServer }) => {
       params.delete('order');
     }
 
-    return `/people?${params.toString()}`;
+    return `${currentPath}?${params.toString()}`;
   };
 
   return (

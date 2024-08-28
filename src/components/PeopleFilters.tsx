@@ -1,6 +1,6 @@
 import classNames from 'classnames';
 import React, { useCallback, useEffect } from 'react';
-import { Link, useSearchParams } from 'react-router-dom';
+import { Link, useLocation, useSearchParams } from 'react-router-dom';
 
 type Props = {
   setFilterSex: React.Dispatch<React.SetStateAction<string>>;
@@ -11,9 +11,11 @@ type Props = {
 const PeopleFilters: React.FC<Props> = React.memo(
   ({ setFilterSex, setQuery, setCenturies }) => {
     const [searchParams, setSearchParams] = useSearchParams();
+    const location = useLocation();
     const query = searchParams.get('query') || '';
     const sexFilter = searchParams.get('sex') || '';
     const centuries = searchParams.getAll('centuries') || [];
+    const currentPath = location.pathname; // Получаем текущий путь
 
     useEffect(() => {
       if (sexFilter !== '') {
@@ -34,9 +36,9 @@ const PeopleFilters: React.FC<Props> = React.memo(
           params.delete('sex');
         }
 
-        return `/people?${params.toString()}`;
+        return `${currentPath}?${params.toString()}`; // Используем текущий путь
       },
-      [searchParams],
+      [searchParams, currentPath],
     );
 
     const createFilterQuery = (newValue: string) => {
@@ -66,17 +68,17 @@ const PeopleFilters: React.FC<Props> = React.memo(
           params.append('centuries', century);
         }
       } else {
-        // Если нет переданного века, удаляем все фильтры по векам
         params.delete('centuries');
       }
 
-      return `/people?${params.toString()}`;
+      return `${currentPath}?${params.toString()}`; // Используем текущий путь
     };
 
     const resetFilters = () => {
       setFilterSex('');
       setQuery('');
-      setSearchParams(new URLSearchParams());
+      setCenturies([]);
+      setSearchParams(new URLSearchParams()); // Сбрасываем параметры поиска
     };
 
     return (
@@ -145,8 +147,8 @@ const PeopleFilters: React.FC<Props> = React.memo(
               <Link
                 data-cy="centuryALL"
                 className="button is-success is-outlined"
-                to={createFilterCenturiesLink()} // передаем undefined, чтобы удалить все фильтры по векам
-                onClick={() => setCenturies([])} // обновляем состояния веков
+                to={createFilterCenturiesLink()} // Удаляем все фильтры по векам
+                onClick={() => setCenturies([])}
               >
                 All
               </Link>
@@ -157,7 +159,7 @@ const PeopleFilters: React.FC<Props> = React.memo(
         <div className="panel-block">
           <Link
             className="button is-link is-outlined is-fullwidth"
-            to="/people"
+            to={currentPath} // Сбрасываем все фильтры, сохраняя текущий путь
             onClick={resetFilters}
           >
             Reset all filters
@@ -168,7 +170,6 @@ const PeopleFilters: React.FC<Props> = React.memo(
   },
 );
 
-// Додаємо displayName для компонента
 PeopleFilters.displayName = 'PeopleFilters';
 
 export default PeopleFilters;
