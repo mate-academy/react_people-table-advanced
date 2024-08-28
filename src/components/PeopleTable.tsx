@@ -101,7 +101,7 @@ export const PeopleTable: React.FC<Props> = ({ peopleFromServer }) => {
               <Link to={createSortLink('died')}>
                 <span className="icon">
                   <i
-                    className={`fas fa-sort${currentOrder === 'asc' && sortQ === 'died' ? '-up' : currentOrder === 'desc' && sortQ === 'died' ? '-down' : ''}`}
+                    className={`fas fa-sort${currentOrder === '' && sortQ === 'died' ? '-up' : currentOrder === 'desc' && sortQ === 'died' ? '-down' : ''}`}
                   />
                 </span>
               </Link>
