@@ -37,7 +37,10 @@ export const PersonLink: React.FC<Props> = ({ people, allPeople }) => {
 
       <td>
         {mother ? (
-          <Link className="has-text-danger" to={`${mother.slug}${location.search}`}>
+          <Link
+            className="has-text-danger"
+            to={`${mother.slug}${location.search}`}
+          >
             {mother.name}
           </Link>
         ) : (
