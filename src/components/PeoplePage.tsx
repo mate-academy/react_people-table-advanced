@@ -18,6 +18,7 @@ export const PeoplePage = () => {
   const order = searchParams.get('order') || '';
 
   useEffect(() => {
+    setLoading(true);
     fetch('/api/people.json')
       .then(response => {
         if (!response.ok) {
@@ -29,6 +30,7 @@ export const PeoplePage = () => {
       .then(data => {
         setPeopleFromServer(data);
         setLoading(false);
+        setError(false);
       })
       .catch(() => {
         setError(true);
