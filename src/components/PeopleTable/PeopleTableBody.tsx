@@ -61,7 +61,7 @@ export const PeopleTableBody = ({ selectedPersonSlug }: Props) => {
       case null:
         break;
       case SortField.Name:
-        result = [...people.value].sort((a, b) => {
+        result = [...result].sort((a, b) => {
           const nameA = a.name.toLowerCase();
           const nameB = b.name.toLowerCase();
 
@@ -69,17 +69,17 @@ export const PeopleTableBody = ({ selectedPersonSlug }: Props) => {
         });
         break;
       case SortField.Sex:
-        result = [...people.value].sort((a, b) => {
+        result = [...result].sort((a, b) => {
           return a.sex.localeCompare(b.sex);
         });
         break;
       case SortField.Born:
-        result = [...people.value].sort((a, b) => {
+        result = [...result].sort((a, b) => {
           return a.born - b.born;
         });
         break;
       case SortField.Died:
-        result = [...people.value].sort((a, b) => {
+        result = [...result].sort((a, b) => {
           return a.died - b.died;
         });
         break;
