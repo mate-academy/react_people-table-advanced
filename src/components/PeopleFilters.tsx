@@ -206,7 +206,9 @@ export const PeopleFilters: React.FC<Props> = ({
         <Link
           className="button is-link is-outlined is-fullwidth"
           to={
-            slug || hasSortParams ? `/people/${slug}?${sortParams}` : `/people`
+            slug
+              ? `/people/${slug}${hasSortParams ? `?${sortParams}` : ''}`
+              : `/people${hasSortParams ? `?${sortParams}` : ''}`
           }
           onClick={() => setSearchQuery('')}
         >
