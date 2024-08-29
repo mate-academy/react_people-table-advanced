@@ -49,9 +49,9 @@ export const PeopleTableBody = ({ selectedPersonSlug }: Props) => {
     if (nameQuery) {
       result = result.filter(({ name, motherName, fatherName }) => {
         return (
-          name.includes(nameQuery) ||
-          motherName?.includes(nameQuery) ||
-          fatherName?.includes(nameQuery)
+          name.toLocaleLowerCase().includes(nameQuery) ||
+          motherName?.toLocaleLowerCase().includes(nameQuery) ||
+          fatherName?.toLocaleLowerCase().includes(nameQuery)
         );
       });
     }

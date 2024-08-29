@@ -7,14 +7,15 @@ import { ORDER_QUERY, SORT_QUERY } from '../../utils/searchParamConstants';
 
 export const PeopleTableHead = () => {
   const [searchParams] = useSearchParams();
-  const sortOrder = searchParams.get(ORDER_QUERY) as SortOrder | null;
   const sortField = searchParams.get(SORT_QUERY) as SortField | null;
+  const sortOrder = (searchParams.get(ORDER_QUERY) ??
+    (sortField ? SortOrder.Ascending : null)) as SortOrder | null;
 
   function getSearchParams(newSortField: SortField) {
     if (sortField !== newSortField) {
       return {
         [SORT_QUERY]: newSortField as string,
-        [ORDER_QUERY]: SortOrder.Ascending as string,
+        [ORDER_QUERY]: null, // ascending sort order is infered
       };
     }
 
