@@ -24,6 +24,24 @@ export const PeopleFilters: React.FC<Props> = ({
 
   const isAllButtonActive = !searchParams.has('centuries');
 
+  function getSortParams() {
+    const params = new URLSearchParams(searchParams);
+    const sortParams = new URLSearchParams();
+
+    ['sort', 'order'].forEach(param => {
+      const value = params.get(param);
+
+      if (value !== null) {
+        sortParams.set(param, value);
+      }
+    });
+
+    return sortParams.toString();
+  }
+
+  const sortParams = getSortParams();
+  const hasSortParams = Boolean(sortParams.length);
+
   useEffect(() => {
     if (searchParams.get('sex')) {
       setSexSelected(searchParams.get('sex'));
@@ -187,8 +205,9 @@ export const PeopleFilters: React.FC<Props> = ({
       <div className="panel-block">
         <Link
           className="button is-link is-outlined is-fullwidth"
-          to={slug ? `/people/${slug}` : `/people`}
-          onClick={() => setSearchQuery('')}
+          to={
+            slug || hasSortParams ? `/people/${slug}?${sortParams}` : `/people`
+          }
         >
           Reset all filters
         </Link>
