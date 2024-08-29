@@ -208,6 +208,7 @@ export const PeopleFilters: React.FC<Props> = ({
           to={
             slug || hasSortParams ? `/people/${slug}?${sortParams}` : `/people`
           }
+          onClick={() => setSearchQuery('')}
         >
           Reset all filters
         </Link>
