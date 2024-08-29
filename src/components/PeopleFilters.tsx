@@ -22,6 +22,8 @@ export const PeopleFilters: React.FC<Props> = ({
 }) => {
   const [searchParams, setSearchParams] = useSearchParams();
 
+  const isAllButtonActive = !searchParams.has('centuries');
+
   useEffect(() => {
     if (searchParams.get('sex')) {
       setSexSelected(searchParams.get('sex'));
@@ -170,7 +172,9 @@ export const PeopleFilters: React.FC<Props> = ({
           <div className="level-right ml-4">
             <Link
               data-cy="centuryALL"
-              className="button is-success is-outlined"
+              className={classNames('button is-success', {
+                'is-outlined': !isAllButtonActive,
+              })}
               to={saveCurrentLink()}
               onClick={handleClickAllButton}
             >
