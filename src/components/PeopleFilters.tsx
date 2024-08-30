@@ -2,6 +2,8 @@ import { Link, useSearchParams } from 'react-router-dom';
 import { SearchLink } from './SearchLink';
 import classNames from 'classnames';
 import { useEffect } from 'react';
+import { FilterParams } from '../helper/FilterParams';
+import { SortParams } from '../helper/SortParams';
 
 type Props = {
   setSexSelected: (sex: string | null) => void;
@@ -22,13 +24,13 @@ export const PeopleFilters: React.FC<Props> = ({
 }) => {
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const isAllButtonActive = !searchParams.has('centuries');
+  const isAllButtonActive = !searchParams.has(FilterParams.CENTURIES);
 
   function getSortParams() {
     const params = new URLSearchParams(searchParams);
     const sortParams = new URLSearchParams();
 
-    ['sort', 'order'].forEach(param => {
+    [SortParams.SORT, SortParams.ORDER].forEach(param => {
       const value = params.get(param);
 
       if (value !== null) {
@@ -43,8 +45,8 @@ export const PeopleFilters: React.FC<Props> = ({
   const hasSortParams = Boolean(sortParams.length);
 
   useEffect(() => {
-    if (searchParams.get('sex')) {
-      setSexSelected(searchParams.get('sex'));
+    if (searchParams.get(FilterParams.SEX)) {
+      setSexSelected(searchParams.get(FilterParams.SEX));
     } else {
       setSexSelected(null);
     }
@@ -58,9 +60,9 @@ export const PeopleFilters: React.FC<Props> = ({
     const params = new URLSearchParams(searchParams);
 
     if (newQuery) {
-      params.set('query', newQuery);
+      params.set(FilterParams.QUERY, newQuery);
     } else {
-      params.delete('query');
+      params.delete(FilterParams.QUERY);
     }
 
     setSearchParams(params);
@@ -69,14 +71,14 @@ export const PeopleFilters: React.FC<Props> = ({
   const handleClickAllButton = () => {
     const params = new URLSearchParams(searchParams);
 
-    params.delete('centuries');
+    params.delete(FilterParams.CENTURIES);
     setSearchParams(params);
   };
 
   function saveCurrentLink() {
     const params = new URLSearchParams(searchParams);
 
-    params.delete('centuries');
+    params.delete(FilterParams.CENTURIES);
 
     return {
       search: params.toString(),
@@ -86,8 +88,11 @@ export const PeopleFilters: React.FC<Props> = ({
   useEffect(() => {
     const params = new URLSearchParams(searchParams);
 
-    setSelectedCenturies(params.getAll('centuries'));
+    setSelectedCenturies(params.getAll(FilterParams.CENTURIES));
   }, [searchParams, setSelectedCenturies]);
+
+  const RESET_ALL_LINK_WITH_SLUG = `/people/${slug}${hasSortParams ? `?${sortParams}` : ''}`;
+  const RESET_ALL_LINK_WITHOUT_SLUG = `/people${hasSortParams ? `?${sortParams}` : ''}`;
 
   return (
     <nav className="panel">
@@ -97,23 +102,25 @@ export const PeopleFilters: React.FC<Props> = ({
         <SearchLink
           params={{ sex: null }}
           className={classNames({
-            'is-active': searchParams.get('sex') === null,
+            'is-active': searchParams.get(FilterParams.SEX) === null,
           })}
         >
           All
         </SearchLink>
         <SearchLink
-          params={{ sex: 'm' }}
+          params={{ sex: FilterParams.SEX_MALE }}
           className={classNames({
-            'is-active': searchParams.get('sex') === 'm',
+            'is-active':
+              searchParams.get(FilterParams.SEX) === FilterParams.SEX_MALE,
           })}
         >
           Male
         </SearchLink>
         <SearchLink
-          params={{ sex: 'f' }}
+          params={{ sex: FilterParams.SEX_FEMALE }}
           className={classNames({
-            'is-active': searchParams.get('sex') === 'f',
+            'is-active':
+              searchParams.get(FilterParams.SEX) === FilterParams.SEX_FEMALE,
           })}
         >
           Female
@@ -141,45 +148,55 @@ export const PeopleFilters: React.FC<Props> = ({
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
             <SearchLink
-              params={{ centuries: ['16'] }}
+              params={{ centuries: [FilterParams.CENTURIES_16] }}
               className={classNames('button mr-1', {
-                'is-info': searchParams.getAll('centuries').includes('16'),
+                'is-info': searchParams
+                  .getAll(FilterParams.CENTURIES)
+                  .includes(FilterParams.CENTURIES_16),
               })}
               data-cy="century"
             >
               16
             </SearchLink>
             <SearchLink
-              params={{ centuries: ['17'] }}
+              params={{ centuries: [FilterParams.CENTURIES_17] }}
               className={classNames('button mr-1', {
-                'is-info': searchParams.getAll('centuries').includes('17'),
+                'is-info': searchParams
+                  .getAll(FilterParams.CENTURIES)
+                  .includes(FilterParams.CENTURIES_17),
               })}
               data-cy="century"
             >
               17
             </SearchLink>
             <SearchLink
-              params={{ centuries: ['18'] }}
+              params={{ centuries: [FilterParams.CENTURIES_18] }}
               className={classNames('button mr-1', {
-                'is-info': searchParams.getAll('centuries').includes('18'),
+                'is-info': searchParams
+                  .getAll(FilterParams.CENTURIES)
+                  .includes(FilterParams.CENTURIES_18),
               })}
               data-cy="century"
             >
               18
             </SearchLink>
             <SearchLink
-              params={{ centuries: ['19'] }}
+              params={{ centuries: [FilterParams.CENTURIES_19] }}
               className={classNames('button mr-1', {
-                'is-info': searchParams.getAll('centuries').includes('19'),
+                'is-info': searchParams
+                  .getAll(FilterParams.CENTURIES)
+                  .includes(FilterParams.CENTURIES_19),
               })}
               data-cy="century"
             >
               19
             </SearchLink>
             <SearchLink
-              params={{ centuries: ['20'] }}
+              params={{ centuries: [FilterParams.CENTURIES_20] }}
               className={classNames('button mr-1', {
-                'is-info': searchParams.getAll('centuries').includes('20'),
+                'is-info': searchParams
+                  .getAll(FilterParams.CENTURIES)
+                  .includes(FilterParams.CENTURIES_20),
               })}
               data-cy="century"
             >
@@ -205,11 +222,7 @@ export const PeopleFilters: React.FC<Props> = ({
       <div className="panel-block">
         <Link
           className="button is-link is-outlined is-fullwidth"
-          to={
-            slug
-              ? `/people/${slug}${hasSortParams ? `?${sortParams}` : ''}`
-              : `/people${hasSortParams ? `?${sortParams}` : ''}`
-          }
+          to={slug ? RESET_ALL_LINK_WITH_SLUG : RESET_ALL_LINK_WITHOUT_SLUG}
           onClick={() => setSearchQuery('')}
         >
           Reset all filters

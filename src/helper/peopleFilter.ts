@@ -1,4 +1,6 @@
 import { Person } from '../types';
+import { FilterParams } from './FilterParams';
+import { SortParams } from './SortParams';
 
 export function peopleFilter(
   people: Person[],
@@ -12,12 +14,16 @@ export function peopleFilter(
 ) {
   let newPeople = people;
 
-  if (sex === 'm') {
-    newPeople = newPeople.filter((person: Person) => person.sex === 'm');
+  if (sex === FilterParams.SEX_MALE) {
+    newPeople = newPeople.filter(
+      (person: Person) => person.sex === FilterParams.SEX_MALE,
+    );
   }
 
-  if (sex === 'f') {
-    newPeople = newPeople.filter((person: Person) => person.sex === 'f');
+  if (sex === FilterParams.SEX_FEMALE) {
+    newPeople = newPeople.filter(
+      (person: Person) => person.sex === FilterParams.SEX_FEMALE,
+    );
   }
 
   if (query) {
@@ -42,23 +48,25 @@ export function peopleFilter(
   if (sorting.field && sorting.order) {
     const { field, order } = sorting;
 
-    if (field === 'name' || field === 'sex') {
+    if (field === SortParams.SORT_NAME || field === SortParams.SORT_SEX) {
       newPeople = newPeople.sort((a, b) => {
         const aValue = a[field]?.toLocaleLowerCase() || '';
         const bValue = b[field]?.toLocaleLowerCase() || '';
 
-        return order === 'asc'
+        return order === SortParams.ORDER_ASC
           ? aValue.localeCompare(bValue)
           : bValue.localeCompare(aValue);
       });
     }
 
-    if (field === 'born' || field === 'died') {
+    if (field === SortParams.SORT_BORN || field === SortParams.SORT_DIED) {
       newPeople = newPeople.sort((a, b) => {
         const aValue = (a[field] as number) || 0;
         const bValue = (b[field] as number) || 0;
 
-        return order === 'asc' ? aValue - bValue : bValue - aValue;
+        return order === SortParams.ORDER_ASC
+          ? aValue - bValue
+          : bValue - aValue;
       });
     }
   }
