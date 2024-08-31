@@ -3,6 +3,7 @@ import { Loader } from '../../components/Loader';
 import { PeopleTable } from '../../components/PeopleTable';
 import { PeopleContext } from '../../contexts/PeopleContext';
 import { useParams } from 'react-router-dom';
+import { Future } from '../../components/Future';
 
 export const PeoplePage = () => {
   const { slug: selectedPersonSlug } = useParams();
@@ -20,15 +21,18 @@ export const PeoplePage = () => {
 
           <div className="column">
             <div className="box table-container">
-              {people.isReady ? (
-                <>
-                  {people.isError ? (
-                    <p data-cy="peopleLoadingError" className="has-text-danger">
-                      Something went wrong
-                    </p>
-                  ) : (
+              <Future
+                future={people}
+                whilePending={() => <Loader />}
+                whileError={() => (
+                  <p data-cy="peopleLoadingError" className="has-text-danger">
+                    Something went wrong
+                  </p>
+                )}
+                whileReady={value => {
+                  return (
                     <>
-                      {people.value.length === 0 ? (
+                      {value.length === 0 ? (
                         <p data-cy="noPeopleMessage">
                           There are no people on the server
                         </p>
@@ -36,11 +40,9 @@ export const PeoplePage = () => {
                         <PeopleTable selectedPersonSlug={selectedPersonSlug} />
                       )}
                     </>
-                  )}
-                </>
-              ) : (
-                <Loader />
-              )}
+                  );
+                }}
+              />
             </div>
           </div>
         </div>

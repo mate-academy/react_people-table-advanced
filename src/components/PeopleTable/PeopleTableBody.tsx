@@ -31,12 +31,10 @@ export const PeopleTableBody = ({ selectedPersonSlug }: Props) => {
   const peopleToDisplay = useMemo(() => {
     let result = people.value;
 
-    // sex filter
     if (sexFilter) {
       result = result.filter(({ sex }) => (sex as Sex) === sexFilter);
     }
 
-    // century filter
     if (centuriesFilter.length !== 0) {
       result = result.filter(({ born }) => {
         const bornCentury = Math.floor(born / 100) + 1;
@@ -45,7 +43,6 @@ export const PeopleTableBody = ({ selectedPersonSlug }: Props) => {
       });
     }
 
-    // name search
     if (nameQuery) {
       result = result.filter(({ name, motherName, fatherName }) => {
         return (
@@ -56,7 +53,6 @@ export const PeopleTableBody = ({ selectedPersonSlug }: Props) => {
       });
     }
 
-    // ordering
     switch (sortField) {
       case null:
         break;

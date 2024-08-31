@@ -1,16 +1,16 @@
 import { createContext, PropsWithChildren, useContext } from 'react';
 import { Person } from '../../types';
-import { Loader, useLoader } from '../../hooks/useLoader';
 import { getPeople } from '../../api';
+import { FutureValue, useFuture } from '../../components/Future';
 
 type State = {
-  people: Loader<Person[]>;
+  people: FutureValue<Person[]>;
 };
 
 const StateContext = createContext<State | null>(null);
 
 const Provider = ({ children }: PropsWithChildren) => {
-  const people = useLoader(getPeople(), [], []);
+  const people = useFuture(getPeople, []);
 
   const state: State = {
     people,
