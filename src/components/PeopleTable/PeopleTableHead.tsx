@@ -15,7 +15,7 @@ export const PeopleTableHead = () => {
     if (sortField !== newSortField) {
       return {
         [SORT_QUERY]: newSortField as string,
-        [ORDER_QUERY]: null, // ascending sort order is infered
+        [ORDER_QUERY]: null,
       };
     }
 
