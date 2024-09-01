@@ -12,7 +12,7 @@ implement the ability to filter and sort people in the table.
 1. The sidebar with the filters should appear only when people are loaded.
 1. `NameFilter` should update the `query` search param with the text from the input.
     - show only people with the `name`, `motherName` or `fatherName` that match the query case insensitive;
-    - if the input is empty there should not be `query` in the search params.
+    - if the input is empty there should not be `query` in the search params.+
 1. `CenturyFilter` should allow to choose several centuries or all of them.
     - add `centuries` search params using `append` method  `getAll` method;
 1. Implement sorting by `name`, `sex`, `born` and `died` by clicking on arrows in a `th`;
@@ -28,4 +28,4 @@ implement the ability to filter and sort people in the table.
 - Implement a solution following the [React task guideline](https://github.com/mate-academy/react_task-guideline#react-tasks-guideline).
 - Use the [React TypeScript cheat sheet](https://mate-academy.github.io/fe-program/js/extra/react-typescript).
 - Open one more terminal and run tests with `npm test` to ensure your solution is correct.
-- Replace `<your_account>` with your Github username in the [DEMO LINK](https://<your_account>.github.io/react_people-table-advanced/) and add it to the PR description.
+- Replace `<your_account>` with your Github username in the [DEMO LINK](https://reznik-denis.github.io/react_people-table-advanced/) and add it to the PR description.
