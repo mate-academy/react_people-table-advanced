@@ -43,7 +43,6 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
 
     if (sortKey === key) {
       if (params.get('order') === 'desc') {
-        // Очищаємо обидва параметри, якщо 'order' вже 'desc'
         params.delete('sort');
         params.delete('order');
       } else {
