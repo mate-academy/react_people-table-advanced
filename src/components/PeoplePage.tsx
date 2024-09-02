@@ -18,10 +18,13 @@ export const PeoplePage: React.FC<Props> = ({ people, setPeople }) => {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<Filter>(Filter.all);
-  const query = searchParams.get('query') || '';
+  const [query, setQuery] = useState(searchParams.get('query') || '');
 
   const handleQChange: React.ChangeEventHandler<HTMLInputElement> = event => {
     const queryValue = event.target.value.trim();
+
+    setQuery(queryValue);
+
     const params = new URLSearchParams(searchParams);
 
     if (queryValue) {
@@ -33,7 +36,7 @@ export const PeoplePage: React.FC<Props> = ({ people, setPeople }) => {
     setSearchParams(params);
   };
 
-  const searchPerson = [...people].filter(person =>
+  const searchPerson = people.filter(person =>
     person.name.toLowerCase().includes(query.toLowerCase()),
   );
 
@@ -95,7 +98,15 @@ export const PeoplePage: React.FC<Props> = ({ people, setPeople }) => {
                     </p>
                   )}
 
-                  {!error && <PeopleTable people={filteredPeople} />}
+                  {!error && filteredPeople.length === 0 && query && (
+                    <p data-cy="noMatchingPeopleMessage">
+                      There are no people matching the current search criteria
+                    </p>
+                  )}
+
+                  {!error && filteredPeople.length > 0 && (
+                    <PeopleTable people={filteredPeople} />
+                  )}
                 </div>
               </div>
             </div>

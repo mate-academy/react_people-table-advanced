@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/control-has-associated-label */
-import { Link, useParams } from 'react-router-dom';
+import { Link, useLocation, useParams } from 'react-router-dom';
 import { Person } from '../types';
 import cn from 'classnames';
 import { Gender } from '../utils/sex';
@@ -12,6 +12,7 @@ type Props = {
 
 export const PeopleTable: React.FC<Props> = ({ people }) => {
   const { slug } = useParams<{ slug?: string }>();
+  const location = useLocation();
   const [sortKey, setSortKey] = useState<keyof Person | ''>('');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc' | ''>('');
 
@@ -25,14 +26,35 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
 
   const handleSort = (key: keyof Person) => {
     if (sortKey === key) {
-      setSortOrder(prevOrder => (prevOrder === 'asc' ? 'desc' : ''));
-      if (sortOrder === 'desc') {
+      const newOrder = sortOrder === 'asc' ? 'desc' : '';
+
+      setSortOrder(newOrder);
+      if (newOrder === '') {
         setSortKey('');
       }
     } else {
       setSortKey(key);
       setSortOrder('asc');
     }
+  };
+
+  const getSortLink = (key: keyof Person) => {
+    const params = new URLSearchParams(location.search);
+
+    if (sortKey === key) {
+      if (params.get('order') === 'desc') {
+        // Очищаємо обидва параметри, якщо 'order' вже 'desc'
+        params.delete('sort');
+        params.delete('order');
+      } else {
+        params.set('order', 'desc');
+      }
+    } else {
+      params.set('sort', key);
+      params.delete('order');
+    }
+
+    return `${location.pathname}?${params.toString()}`;
   };
 
   return (
@@ -45,7 +67,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Name
-              <Link to="/people?sort=name" onClick={() => handleSort('name')}>
+              <Link to={getSortLink('name')} onClick={() => handleSort('name')}>
                 <span className="icon">
                   <i className={getSortIconClass('name', sortKey, sortOrder)} />
                 </span>
@@ -56,7 +78,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Sex
-              <Link to="/people?sort=sex" onClick={() => handleSort('sex')}>
+              <Link to={getSortLink('sex')} onClick={() => handleSort('sex')}>
                 <span className="icon">
                   <i className={getSortIconClass('sex', sortKey, sortOrder)} />
                 </span>
@@ -67,7 +89,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Born
-              <Link to="/people?sort=born" onClick={() => handleSort('born')}>
+              <Link to={getSortLink('born')} onClick={() => handleSort('born')}>
                 <span className="icon">
                   <i className={getSortIconClass('born', sortKey, sortOrder)} />
                 </span>
@@ -78,7 +100,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Died
-              <Link to="/people?sort=died" onClick={() => handleSort('died')}>
+              <Link to={getSortLink('died')} onClick={() => handleSort('died')}>
                 <span className="icon">
                   <i className={getSortIconClass('died', sortKey, sortOrder)} />
                 </span>
@@ -106,7 +128,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
             >
               <td>
                 <Link
-                  to={`/people/${person.slug}`}
+                  to={`/people/${person.slug}?${location.search}`}
                   className={cn({
                     'has-text-danger': person.sex === Gender.Female,
                   })}
@@ -122,7 +144,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
                   motherSlug ? (
                     <Link
                       className="has-text-danger"
-                      to={`/people/${motherSlug}`}
+                      to={`/people/${motherSlug}?${location.search}`}
                     >
                       {person.motherName}
                     </Link>
@@ -136,7 +158,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
               <td>
                 {person.fatherName ? (
                   fatherSlug ? (
-                    <Link to={`/people/${fatherSlug}`}>
+                    <Link to={`/people/${fatherSlug}?${location.search}`}>
                       {person.fatherName}
                     </Link>
                   ) : (
