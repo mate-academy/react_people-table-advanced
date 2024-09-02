@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Loader } from '../../components/Loader';
 import { getPeople } from '../../api';
 import { Person } from '../../types';
@@ -8,6 +8,9 @@ import { useSearchParams } from 'react-router-dom';
 import { getSearchWith } from '../../utils/searchHelper';
 import { getFilteredPeople } from '../../utils/getFilteredPeople';
 import { PeopleTable } from '../../components/PeopleTable/PeopleTable';
+import { SearchParams } from '../../types/SearchParams';
+import { FieldToSortSearchQuery } from '../../types/SortFields';
+import { SortOrder } from '../../types/SortTypes';
 
 export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);
@@ -38,6 +41,9 @@ export const PeoplePage = () => {
   const query = searchParams.get('query') || '';
   const centuries = searchParams.getAll('centuries') || null;
   const sex = searchParams.get('sex') || '';
+  const sort =
+    (searchParams.get(SearchParams.sort) as FieldToSortSearchQuery) || null;
+  const order = (searchParams.get(SearchParams.order) as SortOrder) || 'asc';
 
   const handleQueryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const appliedQuery = e.target.value.trim() ? e.target.value : null;
@@ -47,19 +53,28 @@ export const PeoplePage = () => {
   };
 
   const handleCenturyClick = (century: string) => {
-    const params = new URLSearchParams(searchParams);
-
     const newCentury = centuries.includes(century)
       ? centuries.filter(item => item !== century)
       : [...centuries, century];
 
-    params.delete('centuries');
-    newCentury.forEach(item => params.append('centuries', item));
+    searchParams.delete('centuries');
+    newCentury.forEach(item => searchParams.append('centuries', item));
 
-    setSearchParams(params);
+    setSearchParams(searchParams, { replace: true });
   };
 
-  const filteredPeople = getFilteredPeople({ people, query, sex, centuries });
+  const filteredPeople = useMemo(
+    () =>
+      getFilteredPeople({
+        people,
+        query,
+        sex,
+        centuries,
+        sort,
+        order,
+      }),
+    [order, centuries, query, sex, sort, people],
+  );
 
   return (
     <>
