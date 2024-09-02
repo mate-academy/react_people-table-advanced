@@ -31,7 +31,7 @@ export const PeopleTable: React.FC<Props> = ({ filteredPeople, people }) => {
     }
 
     setSearchParams(params, { replace: true });
-  }, [sortField, sortOrder, setSearchParams]);
+  }, [sortField, sortOrder]);
 
   const handleSort = (field: SortField) => {
     if (sortField === field) {
