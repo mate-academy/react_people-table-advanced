@@ -23,8 +23,13 @@ export const getFilteredPeople = ({
   let visiblePeople = [...people];
 
   if (query) {
-    visiblePeople = visiblePeople.filter(person =>
-      person.name.toLowerCase().includes(query.toLowerCase()),
+    visiblePeople = visiblePeople.filter(
+      person =>
+        person.name.toLowerCase().includes(query.toLowerCase()) ||
+        (person.motherName &&
+          person.motherName.toLowerCase().includes(query.toLowerCase())) ||
+        (person.fatherName &&
+          person.fatherName.toLowerCase().includes(query.toLowerCase())),
     );
   }
 
