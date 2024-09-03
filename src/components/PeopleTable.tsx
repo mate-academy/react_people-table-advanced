@@ -17,10 +17,7 @@ export const PeopleTable = ({ people, onSort }: Props) => {
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Name
-              <a
-                // href="#/people?sort=name"
-                onClick={() => onSort('name')}
-              >
+              <a onClick={() => onSort('name')}>
                 <span className="icon">
                   <i className="fas fa-sort" />
                 </span>
@@ -31,10 +28,7 @@ export const PeopleTable = ({ people, onSort }: Props) => {
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Sex
-              <a
-                //  href="#/people?sort=sex"
-                onClick={() => onSort('sex')}
-              >
+              <a onClick={() => onSort('sex')}>
                 <span className="icon">
                   <i className="fas fa-sort" />
                 </span>
@@ -45,10 +39,7 @@ export const PeopleTable = ({ people, onSort }: Props) => {
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Born
-              <a
-                // href="#/people?sort=born&amp;order=desc"
-                onClick={() => onSort('born')}
-              >
+              <a onClick={() => onSort('born')}>
                 <span className="icon">
                   <i className="fas fa-sort-up" />
                 </span>
@@ -59,10 +50,7 @@ export const PeopleTable = ({ people, onSort }: Props) => {
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Died
-              <a
-                // href="#/people?sort=died"
-                onClick={() => onSort('died')}
-              >
+              <a onClick={() => onSort('died')}>
                 <span className="icon">
                   <i className="fas fa-sort" />
                 </span>

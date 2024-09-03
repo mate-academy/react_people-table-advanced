@@ -6,6 +6,42 @@ import { Person } from '../types';
 import { getPeople } from '../api';
 import { useSearchParams } from 'react-router-dom';
 
+function filterPeople(
+  people: Person[],
+  query: string,
+  centuriesSelected: string[],
+  sexSelected: string | null,
+) {
+  return people
+    .filter(person => {
+      if (!sexSelected || sexSelected === 'all') {
+        return true;
+      }
+
+      return person.sex === sexSelected;
+    })
+    .filter(person => {
+      if (centuriesSelected.length === 0) {
+        return true;
+      }
+
+      const personCentury = Math.floor(person.born / 100) + 1;
+
+      return centuriesSelected.includes(String(personCentury));
+    })
+    .filter(person => {
+      if (!query) {
+        return true;
+      }
+
+      return (
+        person.name.toLowerCase().includes(query.toLowerCase().trim()) ||
+        person.motherName?.toLowerCase().includes(query.toLowerCase().trim()) ||
+        person.fatherName?.toLowerCase().includes(query.toLowerCase().trim())
+      );
+    });
+}
+
 export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);
   const [loading, setLoading] = useState(true);
@@ -15,6 +51,10 @@ export const PeoplePage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const sortField = searchParams.get('sort') || '';
   const sortOrder = searchParams.get('order') || '';
+
+  const query = searchParams.get('query') || '';
+  const centuries = searchParams.getAll('centuries');
+  const sex = searchParams.get('sex') || null;
 
   useEffect(() => {
     getPeople()
@@ -28,9 +68,9 @@ export const PeoplePage = () => {
   }, []);
 
   useEffect(() => {
-    // console.log(`Sorting by: ${sortField}, Order: ${sortOrder}`);
+    const filteredArr = filterPeople([...people], query, centuries, sex);
 
-    const sortedPeople = [...people];
+    const sortedPeople = [...filteredArr];
 
     if (sortField) {
       sortedPeople.sort((a, b) => {
@@ -51,24 +91,29 @@ export const PeoplePage = () => {
       });
     }
 
-    setPeopleUsed(sortedPeople);
-  }, [sortField, sortOrder]);
-
-  console.log(peopleUsed);
+    if (JSON.stringify(sortedPeople) !== JSON.stringify(peopleUsed)) {
+      setPeopleUsed(sortedPeople);
+    }
+  }, [sortField, sortOrder, sex, query, centuries]);
 
   const handleSort = (field: string) => {
     const currentSortField = searchParams.get('sort');
     const currentSortOrder = searchParams.get('order');
+    const params = new URLSearchParams(searchParams);
 
     if (currentSortField === field) {
       if (currentSortOrder === 'asc') {
-        setSearchParams({ sort: field, order: 'desc' });
+        params.set('order', 'desc');
       } else if (currentSortOrder === 'desc') {
-        setSearchParams({});
+        params.delete('sort');
+        params.delete('order');
       }
     } else {
-      setSearchParams({ sort: field, order: 'asc' });
+      params.set('sort', field);
+      params.set('order', 'asc');
     }
+
+    setSearchParams(params);
   };
 
   return (
@@ -80,9 +125,10 @@ export const PeoplePage = () => {
           {!loading && !error && people.length >= 0 && (
             <div className="column is-7-tablet is-narrow-desktop">
               <PeopleFilters
-                people={people}
-                setPeopleUsed={setPeopleUsed}
-                peopleUsed={peopleUsed}
+                searchParams={searchParams}
+                setSearchParams={setSearchParams}
+                sex={sex}
+                centuries={centuries}
               />
             </div>
           )}
@@ -101,9 +147,10 @@ export const PeoplePage = () => {
                   There are no people on the server
                 </p>
               )}
-
-              {/* <p>There are no people matching the current search criteria</p> */}
-              {!loading && (
+              {peopleUsed.length === 0 && (
+                <p>There are no people matching the current search criteria</p>
+              )}
+              {!loading && !error && peopleUsed.length > 0 && (
                 <PeopleTable people={peopleUsed} onSort={handleSort} />
               )}
             </div>

@@ -1,67 +1,21 @@
-import { useSearchParams } from 'react-router-dom';
 import { FilterSexType } from '../types/Sex';
-import { Person } from '../types';
-import { useEffect } from 'react';
 import classNames from 'classnames';
+import { SetURLSearchParams } from 'react-router-dom';
 
 type Props = {
-  people: Person[];
-  setPeopleUsed: (person: Person[]) => void;
-  peopleUsed: Person[];
+  setSearchParams: SetURLSearchParams;
+  searchParams: URLSearchParams;
+  sex: string | null;
+  centuries: string[];
 };
 
-function filterPeople(
-  people: Person[],
-  query: string,
-  centuriesSelected: string[],
-  sexSelected: string | null,
-) {
-  return people
-    .filter(person => {
-      if (!sexSelected || sexSelected === 'all') {
-        return true;
-      }
-
-      return person.sex === sexSelected;
-    })
-    .filter(person => {
-      if (centuriesSelected.length === 0) {
-        return true;
-      }
-
-      const personCentury = Math.floor(person.born / 100) + 1;
-
-      return centuriesSelected.includes(String(personCentury));
-    })
-    .filter(person => {
-      if (!query) {
-        return true;
-      }
-
-      return (
-        person.name.toLowerCase().includes(query.toLowerCase().trim()) ||
-        person.motherName?.toLowerCase().includes(query.toLowerCase().trim()) ||
-        person.fatherName?.toLowerCase().includes(query.toLowerCase().trim())
-      );
-    });
-}
-
-export const PeopleFilters = ({ people, setPeopleUsed, peopleUsed }: Props) => {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const query = searchParams.get('query') || '';
-  const centuries = searchParams.getAll('centuries');
-  const sex = searchParams.get('sex') || null;
-
-  useEffect(() => {
-    const filteredPeople = filterPeople(people, query, centuries, sex);
-
-    if (JSON.stringify(filteredPeople) !== JSON.stringify(peopleUsed)) {
-      setPeopleUsed(filteredPeople);
-    }
-  }, [sex, query, centuries]);
-
+export const PeopleFilters = ({
+  setSearchParams,
+  searchParams,
+  sex,
+  centuries,
+}: Props) => {
   function handleQueryChange(event: React.ChangeEvent<HTMLInputElement>) {
-    // setQuery(event.target.value);
     const params = new URLSearchParams(searchParams);
 
     if (event.target.value) {
@@ -112,7 +66,6 @@ export const PeopleFilters = ({ people, setPeopleUsed, peopleUsed }: Props) => {
           className={classNames({
             'is-active': !sex,
           })}
-          // className="is-active"
           onClick={() => handleSexChange(FilterSexType.All)}
         >
           All
