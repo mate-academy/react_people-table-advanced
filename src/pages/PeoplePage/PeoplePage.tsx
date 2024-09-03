@@ -9,8 +9,7 @@ import { getSearchWith } from '../../utils/searchHelper';
 import { getFilteredPeople } from '../../utils/getFilteredPeople';
 import { PeopleTable } from '../../components/PeopleTable/PeopleTable';
 import { SearchParams } from '../../types/SearchParams';
-import { FieldToSortSearchQuery } from '../../types/SortFields';
-import { SortOrder } from '../../types/SortTypes';
+import { SortField, SortOrder } from '../../types/SortTypes';
 
 export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);
@@ -41,9 +40,9 @@ export const PeoplePage = () => {
   const query = searchParams.get('query') || '';
   const centuries = searchParams.getAll('centuries') || null;
   const sex = searchParams.get('sex') || '';
-  const sort =
-    (searchParams.get(SearchParams.sort) as FieldToSortSearchQuery) || null;
-  const order = (searchParams.get(SearchParams.order) as SortOrder) || 'asc';
+  const sort = (searchParams.get(SearchParams.sort) as SortField) || null;
+  const order =
+    (searchParams.get(SearchParams.order) as SortOrder) || SortOrder.Asc;
 
   const handleQueryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const appliedQuery = e.target.value.trim() ? e.target.value : null;

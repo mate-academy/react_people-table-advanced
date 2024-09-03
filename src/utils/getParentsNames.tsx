@@ -1,5 +1,6 @@
 import { NavLink } from 'react-router-dom';
 import { Person } from '../types';
+import classNames from 'classnames';
 
 export const findParentByName = (
   people: Person[],
@@ -11,7 +12,7 @@ export const findParentByName = (
     return (
       <NavLink
         to={`/people/${parent.slug}`}
-        className={parent.sex === 'f' ? 'has-text-danger' : ''}
+        className={classNames({ 'has-text-danger': parent.sex === 'f' })}
         replace
       >
         {parent.name}

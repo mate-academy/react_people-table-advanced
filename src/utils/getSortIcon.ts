@@ -6,7 +6,7 @@ export const getSortIconClass = (
   order: SortOrder,
 ) => {
   if (currentField === field) {
-    return order === 'asc' ? 'fa-sort-up' : 'fa-sort-down';
+    return order === SortOrder.Asc ? 'fa-sort-up' : 'fa-sort-down';
   }
 
   return 'fa-sort';

@@ -1,16 +1,9 @@
 import { Person } from '../types';
-
-type SortField = 'name' | 'sex' | 'born' | 'died';
-type Order = 'asc' | 'desc';
-
-type FuncParams = {
-  people: Person[];
-  query: string;
-  sex: string;
-  centuries: string[];
-  sort: SortField | null;
-  order: Order | null;
-};
+import { SortField, SortOrder } from '../types/SortTypes';
+import { filterByCenturies } from './filters/filterByCenturies';
+import { filterByQuery } from './filters/filterByQuery';
+import { filterBySex } from './filters/filterBySex';
+import { sortPeople } from './sortPeople';
 
 export const getFilteredPeople = ({
   people,
@@ -19,48 +12,22 @@ export const getFilteredPeople = ({
   centuries,
   sort,
   order,
-}: FuncParams): Person[] => {
+}: {
+  people: Person[];
+  query: string;
+  sex: string;
+  centuries: string[];
+  sort: SortField;
+  order: SortOrder;
+}): Person[] => {
   let visiblePeople = [...people];
 
-  if (query) {
-    visiblePeople = visiblePeople.filter(
-      person =>
-        person.name.toLowerCase().includes(query.toLowerCase()) ||
-        (person.motherName &&
-          person.motherName.toLowerCase().includes(query.toLowerCase())) ||
-        (person.fatherName &&
-          person.fatherName.toLowerCase().includes(query.toLowerCase())),
-    );
-  }
-
-  if (sex) {
-    visiblePeople = visiblePeople.filter(person => person.sex === sex);
-  }
-
-  if (centuries.length) {
-    visiblePeople = visiblePeople.filter(person =>
-      centuries.includes(Math.ceil(person.born / 100).toString()),
-    );
-  }
+  visiblePeople = filterByQuery(visiblePeople, query);
+  visiblePeople = filterBySex(visiblePeople, sex);
+  visiblePeople = filterByCenturies(visiblePeople, centuries);
 
   if (sort) {
-    visiblePeople.sort((a, b) => {
-      let result = 0;
-
-      const firstVal = a[sort];
-      const secondVal = b[sort];
-
-      if (typeof firstVal === 'string' && typeof secondVal === 'string') {
-        result = firstVal.localeCompare(secondVal);
-      } else if (
-        typeof firstVal === 'number' &&
-        typeof secondVal === 'number'
-      ) {
-        result = firstVal - secondVal;
-      }
-
-      return order === 'desc' ? result * -1 : result;
-    });
+    visiblePeople = sortPeople(visiblePeople, sort, order);
   }
 
   return visiblePeople;

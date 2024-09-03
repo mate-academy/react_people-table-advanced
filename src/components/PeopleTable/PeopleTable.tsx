@@ -4,11 +4,15 @@ import { Person } from '../../types';
 import { PersonLink } from '../PersonLink/PersonLink';
 import { getSearchWith } from '../../utils/searchHelper';
 import { getSortIconClass } from '../../utils/getSortIcon';
+import { SortField, SortOrder } from '../../types/SortTypes';
+import classNames from 'classnames';
 
-const FieldsToSort = ['name', 'sex', 'born', 'died'] as const;
-
-type SortField = (typeof FieldsToSort)[number];
-type SortOrder = 'asc' | 'desc';
+const FieldsToSort: SortField[] = [
+  SortField.Name,
+  SortField.Sex,
+  SortField.Born,
+  SortField.Died,
+];
 
 type Props = {
   filteredPeople: Person[];
@@ -17,20 +21,19 @@ type Props = {
 
 export const PeopleTable: React.FC<Props> = ({ filteredPeople, people }) => {
   const [searchParams, setSearchParams] = useSearchParams();
-
   const currentSortFieldParams = searchParams.get('sort') as SortField | null;
   const currentSortOrderParams = searchParams.get('order') as SortOrder | null;
 
   const handleSort = (field: SortField) => {
-    let newOrder: SortOrder | null = 'asc';
+    let newOrder: SortOrder | null = SortOrder.Asc;
 
     if (currentSortFieldParams === field) {
       newOrder =
-        currentSortOrderParams === 'asc'
-          ? 'desc'
-          : currentSortOrderParams === 'desc'
+        currentSortOrderParams === SortOrder.Asc
+          ? SortOrder.Desc
+          : currentSortOrderParams === SortOrder.Desc
             ? null
-            : 'asc';
+            : SortOrder.Asc;
     }
 
     const newSearchParams = new URLSearchParams(searchParams);
@@ -47,15 +50,15 @@ export const PeopleTable: React.FC<Props> = ({ filteredPeople, people }) => {
   };
 
   const getLinkParams = (field: SortField) => {
-    let newOrder: SortOrder | null = 'asc';
+    let newOrder: SortOrder | null = SortOrder.Asc;
 
     if (currentSortFieldParams === field) {
       newOrder =
-        currentSortOrderParams === 'asc'
-          ? 'desc'
-          : currentSortOrderParams === 'desc'
+        currentSortOrderParams === SortOrder.Asc
+          ? SortOrder.Desc
+          : currentSortOrderParams === SortOrder.Desc
             ? null
-            : 'asc';
+            : SortOrder.Asc;
     }
 
     return {
@@ -81,7 +84,14 @@ export const PeopleTable: React.FC<Props> = ({ filteredPeople, people }) => {
                 >
                   <span className="icon">
                     <i
-                      className={`fas ${getSortIconClass(currentSortFieldParams, field, currentSortOrderParams)}`}
+                      className={classNames('fas', {
+                        'fa-sort': currentSortFieldParams === null,
+                        [getSortIconClass(
+                          currentSortFieldParams as SortField,
+                          field,
+                          currentSortOrderParams!,
+                        )]: currentSortFieldParams !== null,
+                      })}
                     />
                   </span>
                 </Link>

@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import { SexFilters } from '../../types/SexFilters';
 import { useSearchParams } from 'react-router-dom';
 
-const centuriesCollection = ['17', '18', '19', '20'];
+const centuriesCollection = ['16', '17', '18', '19', '20'];
 
 type Props = {
   handleQueryChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -31,8 +31,7 @@ export const PeopleFilters: React.FC<Props> = ({
             key={name}
             className={classNames({
               'is-active':
-                selectedSexFilter === sex ||
-                (selectedSexFilter === null && sex === null),
+                selectedSexFilter === sex || (!selectedSexFilter && !sex),
             })}
             params={{ sex }}
           >
@@ -68,8 +67,8 @@ export const PeopleFilters: React.FC<Props> = ({
                   'is-info': centuriesQuery.includes(century),
                 })}
                 params={{ centuries: [century] }}
-                onClick={e => {
-                  e.preventDefault();
+                onClick={event => {
+                  event.preventDefault();
                   toggleCentury(century);
                 }}
               >

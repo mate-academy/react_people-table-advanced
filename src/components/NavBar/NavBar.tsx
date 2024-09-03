@@ -1,9 +1,5 @@
 import { NavLink } from 'react-router-dom';
-const styledActive = ({ isActive }: { isActive: boolean }) => {
-  return ['navbar-item', isActive ? 'has-background-grey-lighter' : ''].join(
-    ' ',
-  );
-};
+import { styledActive } from '../../utils/styledActiveLink';
 
 export const NavBar = () => {
   return (

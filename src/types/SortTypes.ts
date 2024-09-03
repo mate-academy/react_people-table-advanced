@@ -1,2 +1,10 @@
-export type SortOrder = 'asc' | 'desc' | null;
-export type SortField = 'name' | 'sex' | 'born' | 'died' | null;
+export enum SortOrder {
+  Asc = 'asc',
+  Desc = 'desc',
+}
+export enum SortField {
+  Name = 'name',
+  Sex = 'sex',
+  Born = 'born',
+  Died = 'died',
+}
