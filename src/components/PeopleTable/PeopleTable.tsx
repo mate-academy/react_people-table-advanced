@@ -26,7 +26,7 @@ export const PeopleTable: React.FC<Props> = ({ filteredPeople, people }) => {
 
     if (currentSortFieldParams === field) {
       newOrder =
-      currentSortOrderParams === 'asc'
+        currentSortOrderParams === 'asc'
           ? 'desc'
           : currentSortOrderParams === 'desc'
             ? null
@@ -51,7 +51,7 @@ export const PeopleTable: React.FC<Props> = ({ filteredPeople, people }) => {
 
     if (currentSortFieldParams === field) {
       newOrder =
-      currentSortOrderParams === 'asc'
+        currentSortOrderParams === 'asc'
           ? 'desc'
           : currentSortOrderParams === 'desc'
             ? null

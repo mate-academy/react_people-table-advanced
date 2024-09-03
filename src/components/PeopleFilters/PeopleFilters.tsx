@@ -1,7 +1,7 @@
 import { SearchLink } from '../SearchLink';
 import classNames from 'classnames';
-import { useState } from 'react';
 import { SexFilters } from '../../types/SexFilters';
+import { useSearchParams } from 'react-router-dom';
 
 const centuriesCollection = ['17', '18', '19', '20'];
 
@@ -18,26 +18,29 @@ export const PeopleFilters: React.FC<Props> = ({
   query,
   centuriesQuery,
 }) => {
-  const [selectedFilter, setSelectedFilter] = useState('All');
+  const [searchParams] = useSearchParams();
+  const selectedSexFilter = searchParams.get('sex');
 
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
 
-      <p className="panel-tabs" data-cy="SexFilter">
-        {SexFilters.map(filterType => (
+      <div className="panel-tabs" data-cy="SexFilter">
+        {SexFilters.map(({ name, sex }) => (
           <SearchLink
+            key={name}
             className={classNames({
-              'is-active': selectedFilter === filterType.name,
+              'is-active':
+                selectedSexFilter === sex ||
+                (selectedSexFilter === null && sex === null),
             })}
-            key={filterType.name}
-            params={{ sex: filterType.sex }}
-            onClick={() => setSelectedFilter(filterType.name)}
+            params={{ sex }}
           >
-            {filterType.name}
+            {name}
           </SearchLink>
         ))}
-      </p>
+      </div>
+
       <div className="panel-block">
         <p className="control has-icons-left">
           <input
@@ -48,7 +51,6 @@ export const PeopleFilters: React.FC<Props> = ({
             value={query}
             onChange={handleQueryChange}
           />
-
           <span className="icon is-left">
             <i className="fas fa-search" aria-hidden="true" />
           </span>
@@ -58,29 +60,28 @@ export const PeopleFilters: React.FC<Props> = ({
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            {centuriesCollection.map(centuryItem => (
+            {centuriesCollection.map(century => (
               <SearchLink
-                key={centuryItem}
+                key={century}
                 data-cy="century"
                 className={classNames('button mr-1', {
-                  'is-info': centuriesQuery.includes(centuryItem),
+                  'is-info': centuriesQuery.includes(century),
                 })}
-                params={{ centuries: [centuryItem.toString()] }}
+                params={{ centuries: [century] }}
                 onClick={e => {
                   e.preventDefault();
-                  toggleCentury(centuryItem);
+                  toggleCentury(century);
                 }}
               >
-                {centuryItem}
+                {century}
               </SearchLink>
             ))}
           </div>
-
           <div className="level-right ml-4">
             <SearchLink
               data-cy="centuryALL"
               className={classNames('button mr-1 is-success', {
-                'is-outlined': centuriesQuery.length,
+                'is-outlined': centuriesQuery.length > 0,
               })}
               params={{ centuries: [] }}
             >
@@ -93,11 +94,7 @@ export const PeopleFilters: React.FC<Props> = ({
       <div className="panel-block">
         <SearchLink
           className="button is-link is-outlined is-fullwidth"
-          params={{
-            query: null,
-            sex: null,
-            centuries: [],
-          }}
+          params={{ query: null, sex: null, centuries: [] }}
         >
           Reset all filters
         </SearchLink>
