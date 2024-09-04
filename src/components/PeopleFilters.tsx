@@ -1,6 +1,7 @@
 import { FilterSexType } from '../types/Sex';
 import classNames from 'classnames';
 import { SetURLSearchParams } from 'react-router-dom';
+import { QueryParam } from '../types/Order';
 
 type Props = {
   setSearchParams: SetURLSearchParams;
@@ -19,9 +20,9 @@ export const PeopleFilters = ({
     const params = new URLSearchParams(searchParams);
 
     if (event.target.value) {
-      params.set('query', event.target.value);
+      params.set(QueryParam.SEARCH, event.target.value);
     } else {
-      params.delete('query');
+      params.delete(QueryParam.SEARCH);
     }
 
     setSearchParams(params);
@@ -45,9 +46,9 @@ export const PeopleFilters = ({
 
     if (currentCenturies.includes(century)) {
       params.delete('centuries');
-      currentCenturies.forEach(c => {
-        if (c !== century) {
-          params.append('centuries', c);
+      currentCenturies.forEach(currentCentury => {
+        if (currentCentury !== century) {
+          params.append('centuries', currentCentury);
         }
       });
     } else {
@@ -56,6 +57,8 @@ export const PeopleFilters = ({
 
     setSearchParams(params);
   }
+
+  const availableCenturies = ['16', '17', '18', '19', '20'];
 
   return (
     <nav className="panel">
@@ -72,7 +75,7 @@ export const PeopleFilters = ({
         </a>
         <a
           className={classNames({
-            'is-active': sex === 'm',
+            'is-active': sex === FilterSexType.Male,
           })}
           onClick={() => handleSexChange(FilterSexType.Male)}
         >
@@ -80,7 +83,7 @@ export const PeopleFilters = ({
         </a>
         <a
           className={classNames({
-            'is-active': sex === 'f',
+            'is-active': sex === FilterSexType.Female,
           })}
           onClick={() => handleSexChange(FilterSexType.Female)}
         >
@@ -107,55 +110,18 @@ export const PeopleFilters = ({
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            <a
-              data-cy="century"
-              className={classNames('button mr-1', {
-                'is-info': centuries.includes('16'),
-              })}
-              onClick={() => handleCenturiesChange('16')}
-            >
-              16
-            </a>
-
-            <a
-              data-cy="century"
-              className={classNames('button mr-1', {
-                'is-info': centuries.includes('17'),
-              })}
-              onClick={() => handleCenturiesChange('17')}
-            >
-              17
-            </a>
-
-            <a
-              data-cy="century"
-              className={classNames('button mr-1', {
-                'is-info': centuries.includes('18'),
-              })}
-              onClick={() => handleCenturiesChange('18')}
-            >
-              18
-            </a>
-
-            <a
-              data-cy="century"
-              className={classNames('button mr-1', {
-                'is-info': centuries.includes('19'),
-              })}
-              onClick={() => handleCenturiesChange('19')}
-            >
-              19
-            </a>
-
-            <a
-              data-cy="century"
-              className={classNames('button mr-1', {
-                'is-info': centuries.includes('20'),
-              })}
-              onClick={() => handleCenturiesChange('20')}
-            >
-              20
-            </a>
+            {availableCenturies.map(century => (
+              <a
+                key={century}
+                data-cy={`century-${century}`}
+                className={classNames('button mr-1', {
+                  'is-info': centuries.includes(century),
+                })}
+                onClick={() => handleCenturiesChange(century)}
+              >
+                {century}
+              </a>
+            ))}
           </div>
 
           <div className="level-right ml-4">

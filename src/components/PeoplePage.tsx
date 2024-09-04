@@ -5,42 +5,8 @@ import { useEffect, useState } from 'react';
 import { Person } from '../types';
 import { getPeople } from '../api';
 import { useSearchParams } from 'react-router-dom';
-
-function filterPeople(
-  people: Person[],
-  query: string,
-  centuriesSelected: string[],
-  sexSelected: string | null,
-) {
-  return people
-    .filter(person => {
-      if (!sexSelected || sexSelected === 'all') {
-        return true;
-      }
-
-      return person.sex === sexSelected;
-    })
-    .filter(person => {
-      if (centuriesSelected.length === 0) {
-        return true;
-      }
-
-      const personCentury = Math.floor(person.born / 100) + 1;
-
-      return centuriesSelected.includes(String(personCentury));
-    })
-    .filter(person => {
-      if (!query) {
-        return true;
-      }
-
-      return (
-        person.name.toLowerCase().includes(query.toLowerCase().trim()) ||
-        person.motherName?.toLowerCase().includes(query.toLowerCase().trim()) ||
-        person.fatherName?.toLowerCase().includes(query.toLowerCase().trim())
-      );
-    });
-}
+import { OrderEnum, SortEnum } from '../types/Order';
+import { filterPeople } from '../function/filterFunction';
 
 export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);
@@ -49,8 +15,8 @@ export const PeoplePage = () => {
   const [peopleUsed, setPeopleUsed] = useState<Person[]>([]);
 
   const [searchParams, setSearchParams] = useSearchParams();
-  const sortField = searchParams.get('sort') || '';
-  const sortOrder = searchParams.get('order') || '';
+  const sortField = (searchParams.get('sort') as SortEnum) || '';
+  const sortOrder = (searchParams.get('order') as OrderEnum) || '';
 
   const query = searchParams.get('query') || '';
   const centuries = searchParams.getAll('centuries');
@@ -79,11 +45,11 @@ export const PeoplePage = () => {
 
         if (fieldA && fieldB) {
           if (fieldA < fieldB) {
-            return sortOrder === 'desc' ? 1 : -1;
+            return sortOrder === OrderEnum.desc ? 1 : -1;
           }
 
           if (fieldA > fieldB) {
-            return sortOrder === 'desc' ? -1 : 1;
+            return sortOrder === OrderEnum.desc ? -1 : 1;
           }
         }
 
@@ -102,15 +68,15 @@ export const PeoplePage = () => {
     const params = new URLSearchParams(searchParams);
 
     if (currentSortField === field) {
-      if (currentSortOrder === 'asc') {
-        params.set('order', 'desc');
-      } else if (currentSortOrder === 'desc') {
+      if (currentSortOrder === OrderEnum.asc) {
+        params.set('order', OrderEnum.desc);
+      } else if (currentSortOrder === OrderEnum.desc) {
         params.delete('sort');
         params.delete('order');
       }
     } else {
       params.set('sort', field);
-      params.set('order', 'asc');
+      params.set('order', OrderEnum.asc);
     }
 
     setSearchParams(params);
@@ -147,7 +113,7 @@ export const PeoplePage = () => {
                   There are no people on the server
                 </p>
               )}
-              {peopleUsed.length === 0 && (
+              {!peopleUsed.length && (
                 <p>There are no people matching the current search criteria</p>
               )}
               {!loading && !error && peopleUsed.length > 0 && (

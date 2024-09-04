@@ -5,6 +5,7 @@ import './App.scss';
 import { Navigate, Route, Routes } from 'react-router-dom';
 import { HomePage } from './components/HomePage';
 import { NotFound } from './components/NotFound';
+import { RoutesEnum } from './types/Router';
 
 export const App = () => {
   return (
@@ -14,11 +15,14 @@ export const App = () => {
       <div className="section">
         <div className="container">
           <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/home" element={<Navigate to="/" replace />} />
-            <Route path="/people/:peopleId" element={<PeoplePage />} />
-            <Route path="/people" element={<PeoplePage />} />
-            <Route path="*" element={<NotFound />} />
+            <Route path={RoutesEnum.Home} element={<HomePage />} />
+            <Route
+              path={RoutesEnum.RedirectHome}
+              element={<Navigate to={RoutesEnum.Home} replace />}
+            />
+            <Route path={RoutesEnum.PeopleDetail} element={<PeoplePage />} />
+            <Route path={RoutesEnum.People} element={<PeoplePage />} />
+            <Route path={RoutesEnum.NotFound} element={<NotFound />} />
           </Routes>
         </div>
       </div>
