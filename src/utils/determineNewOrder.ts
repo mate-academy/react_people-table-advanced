@@ -12,5 +12,6 @@ export const determineNewOrder = (
         ? null
         : SortOrder.Asc;
   }
+
   return SortOrder.Asc;
 };

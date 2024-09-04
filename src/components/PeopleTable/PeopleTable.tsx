@@ -22,14 +22,22 @@ type Props = {
 
 export const PeopleTable: React.FC<Props> = ({ people }) => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const currentSortFieldParams = searchParams.get(SearchParams.Sort) as SortField | null;
-  const currentSortOrderParams = searchParams.get(SearchParams.Order) as SortOrder | null;
+  const currentSortFieldParams = searchParams.get(
+    SearchParams.Sort,
+  ) as SortField | null;
+  const currentSortOrderParams = searchParams.get(
+    SearchParams.Order,
+  ) as SortOrder | null;
 
   const handleSort = (field: SortField) => {
-    const newOrder = determineNewOrder(field, currentSortFieldParams, currentSortOrderParams);
-    
+    const newOrder = determineNewOrder(
+      field,
+      currentSortFieldParams,
+      currentSortOrderParams,
+    );
+
     const newSearchParams = new URLSearchParams(searchParams);
-  
+
     if (!newOrder) {
       newSearchParams.delete(SearchParams.Sort);
       newSearchParams.delete(SearchParams.Order);
@@ -37,13 +45,17 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
       newSearchParams.set(SearchParams.Sort, field);
       newSearchParams.set(SearchParams.Order, newOrder);
     }
-  
+
     setSearchParams(newSearchParams, { replace: true });
   };
 
   const getLinkParams = (field: SortField) => {
-    const newOrder = determineNewOrder(field, currentSortFieldParams, currentSortOrderParams);
-  
+    const newOrder = determineNewOrder(
+      field,
+      currentSortFieldParams,
+      currentSortOrderParams,
+    );
+
     return {
       sort: newOrder ? field : null,
       order: newOrder,

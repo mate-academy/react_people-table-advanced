@@ -55,7 +55,9 @@ export const PeoplePage = () => {
       : [...centuries, century];
 
     searchParams.delete(SearchParams.Centuries);
-    newCentury.forEach(item => searchParams.append(SearchParams.Centuries, item));
+    newCentury.forEach(item =>
+      searchParams.append(SearchParams.Centuries, item),
+    );
 
     setSearchParams(searchParams, { replace: true });
   };

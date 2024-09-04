@@ -20,15 +20,13 @@ export const getFilteredPeople = ({
   sort: SortField;
   order: SortOrder;
 }): Person[] => {
-  let visiblePeople = [...people];
-
-  visiblePeople = filterByQuery(visiblePeople, query);
-  visiblePeople = filterBySex(visiblePeople, sex);
-  visiblePeople = filterByCenturies(visiblePeople, centuries);
+  const filteredByQuery = filterByQuery(people, query);
+  const filteredBySex = filterBySex(filteredByQuery, sex);
+  const filteredByCenturies = filterByCenturies(filteredBySex, centuries);
 
   if (sort) {
-    visiblePeople = sortPeople(visiblePeople, sort, order);
+    return sortPeople(filteredByCenturies, sort, order);
   }
 
-  return visiblePeople;
+  return filteredByCenturies;
 };

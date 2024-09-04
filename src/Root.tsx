@@ -11,7 +11,10 @@ export const Root = () => {
       <Routes>
         <Route path={RoutesLink.MainPage} element={<App />}>
           <Route index element={<HomePage />} />
-          <Route path={RoutesLink.HomePage} element={<Navigate to={RoutesLink.MainPage} replace={true} />} />
+          <Route
+            path={RoutesLink.HomePage}
+            element={<Navigate to={RoutesLink.MainPage} replace={true} />}
+          />
           <Route path={RoutesLink.PeoplePage}>
             <Route index element={<PeoplePage />} />
             <Route path={RoutesLink.PersonSlug} element={<PeoplePage />} />
