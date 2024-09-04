@@ -2,6 +2,7 @@ import { SearchLink } from '../SearchLink';
 import classNames from 'classnames';
 import { SexFilters } from '../../types/SexFilters';
 import { useSearchParams } from 'react-router-dom';
+import { SortField } from '../../types/SortTypes';
 
 const centuriesCollection = ['16', '17', '18', '19', '20'];
 
@@ -19,7 +20,7 @@ export const PeopleFilters: React.FC<Props> = ({
   centuriesQuery,
 }) => {
   const [searchParams] = useSearchParams();
-  const selectedSexFilter = searchParams.get('sex');
+  const selectedSexFilter = searchParams.get(SortField.Sex);
 
   return (
     <nav className="panel">

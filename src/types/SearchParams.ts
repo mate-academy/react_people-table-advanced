@@ -1,7 +1,7 @@
 export enum SearchParams {
-  sex = 'sex',
-  centuries = 'centuries',
-  query = 'query',
-  sort = 'sort',
-  order = 'order',
+  Sex = 'sex',
+  Centuries = 'centuries',
+  Query = 'query',
+  Sort = 'sort',
+  Order = 'order',
 }

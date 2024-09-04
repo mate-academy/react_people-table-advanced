@@ -33,19 +33,17 @@ export const PeoplePage = () => {
     fetchPeople();
   }, []);
 
-  // SEARCH PARAMS
-
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const query = searchParams.get('query') || '';
-  const centuries = searchParams.getAll('centuries') || null;
-  const sex = searchParams.get('sex') || '';
-  const sort = (searchParams.get(SearchParams.sort) as SortField) || null;
+  const query = searchParams.get(SearchParams.Query) || '';
+  const centuries = searchParams.getAll(SearchParams.Centuries) || null;
+  const sex = searchParams.get(SearchParams.Sex) || '';
+  const sort = (searchParams.get(SearchParams.Sort) as SortField) || null;
   const order =
-    (searchParams.get(SearchParams.order) as SortOrder) || SortOrder.Asc;
+    (searchParams.get(SearchParams.Order) as SortOrder) || SortOrder.Asc;
 
-  const handleQueryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const appliedQuery = e.target.value.trim() ? e.target.value : null;
+  const handleQueryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const appliedQuery = event.target.value.trim() || null;
     const appliedSearch = getSearchWith(searchParams, { query: appliedQuery });
 
     setSearchParams(appliedSearch, { replace: true });
@@ -56,8 +54,8 @@ export const PeoplePage = () => {
       ? centuries.filter(item => item !== century)
       : [...centuries, century];
 
-    searchParams.delete('centuries');
-    newCentury.forEach(item => searchParams.append('centuries', item));
+    searchParams.delete(SearchParams.Centuries);
+    newCentury.forEach(item => searchParams.append(SearchParams.Centuries, item));
 
     setSearchParams(searchParams, { replace: true });
   };
@@ -106,10 +104,7 @@ export const PeoplePage = () => {
                       There are no people matching the current search criteria
                     </p>
                   ) : (
-                    <PeopleTable
-                      filteredPeople={filteredPeople}
-                      people={people}
-                    />
+                    <PeopleTable people={filteredPeople} />
                   )}
                 </>
               )}

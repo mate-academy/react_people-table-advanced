@@ -1,6 +1,7 @@
 import { NavLink, useParams } from 'react-router-dom';
 import { Person } from '../../types';
 import { findParentByName } from '../../utils/getParentsNames';
+import classNames from 'classnames';
 
 type Props = {
   name: string;
@@ -28,12 +29,12 @@ export const PersonLink: React.FC<Props> = ({
   return (
     <tr
       data-cy="person"
-      className={slug === personSlug ? 'has-background-warning' : ''}
+      className={classNames({ 'has-background-warning': slug === personSlug })}
     >
       <td>
         <NavLink
           to={`/people/${slug}`}
-          className={sex === 'f' ? 'has-text-danger' : ''}
+          className={classNames({ 'has-text-danger': sex === 'f' })}
           replace
         >
           {name}

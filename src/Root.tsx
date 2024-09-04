@@ -3,19 +3,20 @@ import { HomePage } from './pages/HomePage/HomePage';
 import { PeoplePage } from './pages/PeoplePage/PeoplePage';
 import { NotFound } from './pages/NotFound/NotFound';
 import { App } from './App';
+import { RoutesLink } from './types/Routes';
 
 export const Root = () => {
   return (
     <HashRouter>
       <Routes>
-        <Route path="/" element={<App />}>
+        <Route path={RoutesLink.MainPage} element={<App />}>
           <Route index element={<HomePage />} />
-          <Route path="/home" element={<Navigate to="/" replace={true} />} />
-          <Route path="/people">
+          <Route path={RoutesLink.HomePage} element={<Navigate to={RoutesLink.MainPage} replace={true} />} />
+          <Route path={RoutesLink.PeoplePage}>
             <Route index element={<PeoplePage />} />
-            <Route path=":personSlug" element={<PeoplePage />} />
+            <Route path={RoutesLink.PersonSlug} element={<PeoplePage />} />
           </Route>
-          <Route path="*" element={<NotFound />} />
+          <Route path={RoutesLink.NotFound} element={<NotFound />} />
         </Route>
       </Routes>
     </HashRouter>

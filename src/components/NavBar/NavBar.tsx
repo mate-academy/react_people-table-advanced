@@ -1,5 +1,6 @@
 import { NavLink } from 'react-router-dom';
 import { styledActive } from '../../utils/styledActiveLink';
+import { RoutesLink } from '../../types/Routes';
 
 export const NavBar = () => {
   return (
@@ -11,11 +12,11 @@ export const NavBar = () => {
     >
       <div className="container">
         <div className="navbar-brand">
-          <NavLink className={styledActive} to="/">
+          <NavLink className={styledActive} to={RoutesLink.MainPage}>
             Home
           </NavLink>
 
-          <NavLink className={styledActive} to="/people">
+          <NavLink className={styledActive} to={RoutesLink.PeoplePage}>
             People
           </NavLink>
         </div>
