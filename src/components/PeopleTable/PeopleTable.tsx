@@ -1,14 +1,59 @@
+/* eslint-disable no-console */
 /* eslint-disable jsx-a11y/control-has-associated-label */
-import { useParams } from 'react-router-dom';
+import { useParams, useSearchParams } from 'react-router-dom';
 import { Person } from '../../types';
 import { PeopleRow } from '../PersonRow';
+import { useMemo } from 'react';
 
 type Props = {
   people: Person[];
 };
 
+type SearchParams = {
+  queryParam: string;
+  centuriesParam: string[];
+  peopleSexParam: string;
+};
+
+function filterPeopleBySearchParams(
+  peopleList: Person[],
+  { queryParam, centuriesParam, peopleSexParam }: SearchParams,
+) {
+  const queryInLowerCase = queryParam.toLowerCase();
+
+  return peopleList.filter(person => {
+    const personCentury = (+person.born.toString().slice(0, 2) + 1).toString();
+
+    return (
+      person.name.toLowerCase().includes(queryInLowerCase) &&
+      person.sex.includes(peopleSexParam) &&
+      (centuriesParam.length > 0
+        ? centuriesParam.includes(personCentury)
+        : true)
+    );
+  });
+}
+
 export const PeopleTable: React.FC<Props> = ({ people }) => {
   const { slug } = useParams();
+  const [searchParams] = useSearchParams();
+  const peopleSex = useMemo(() => {
+    return searchParams.get('sex') || '';
+  }, [searchParams]);
+  const centuries = useMemo(() => {
+    return searchParams.getAll('centuries') || [];
+  }, [searchParams]);
+  const query = useMemo(() => {
+    return searchParams.get('query') || '';
+  }, [searchParams]);
+
+  const filteredPeople = useMemo(() => {
+    return filterPeopleBySearchParams(people, {
+      queryParam: query,
+      centuriesParam: centuries,
+      peopleSexParam: peopleSex,
+    });
+  }, [centuries, people, peopleSex, query]);
 
   return (
     <table
@@ -67,7 +112,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
       </thead>
 
       <tbody>
-        {people.map(person => (
+        {filteredPeople.map(person => (
           <PeopleRow
             personToRender={person}
             people={people}
