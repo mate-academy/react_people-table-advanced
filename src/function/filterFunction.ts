@@ -1,4 +1,5 @@
 import { Person } from '../types';
+import { FilterSexType } from '../types/Sex';
 
 export function filterPeople(
   people: Person[],
@@ -8,14 +9,14 @@ export function filterPeople(
 ) {
   return people
     .filter(person => {
-      if (!sexSelected || sexSelected === 'all') {
+      if (!sexSelected || sexSelected === FilterSexType.All) {
         return true;
       }
 
       return person.sex === sexSelected;
     })
     .filter(person => {
-      if (centuriesSelected.length === 0) {
+      if (!centuriesSelected.length) {
         return true;
       }
 

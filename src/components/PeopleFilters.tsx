@@ -1,7 +1,7 @@
 import { FilterSexType } from '../types/Sex';
 import classNames from 'classnames';
 import { SetURLSearchParams } from 'react-router-dom';
-import { QueryParam } from '../types/Order';
+import { FilterEnum, QueryParam } from '../types/Order';
 
 type Props = {
   setSearchParams: SetURLSearchParams;
@@ -31,10 +31,10 @@ export const PeopleFilters = ({
   function handleSexChange(sexType: FilterSexType) {
     const params = new URLSearchParams(searchParams);
 
-    if (sexType !== 'all') {
-      params.set('sex', sexType);
+    if (sexType !== FilterSexType.All) {
+      params.set(FilterEnum.Sex, sexType);
     } else {
-      params.delete('sex');
+      params.delete(FilterEnum.Sex);
     }
 
     setSearchParams(params);
@@ -42,17 +42,17 @@ export const PeopleFilters = ({
 
   function handleCenturiesChange(century: string) {
     const params = new URLSearchParams(searchParams);
-    const currentCenturies = searchParams.getAll('centuries');
+    const currentCenturies = searchParams.getAll(FilterEnum.Centuries);
 
     if (currentCenturies.includes(century)) {
-      params.delete('centuries');
+      params.delete(FilterEnum.Centuries);
       currentCenturies.forEach(currentCentury => {
         if (currentCentury !== century) {
-          params.append('centuries', currentCentury);
+          params.append(FilterEnum.Centuries, currentCentury);
         }
       });
     } else {
-      params.append('centuries', century);
+      params.append(FilterEnum.Centuries, century);
     }
 
     setSearchParams(params);
@@ -98,7 +98,7 @@ export const PeopleFilters = ({
             type="search"
             className="input"
             placeholder="Search"
-            onChange={event => handleQueryChange(event)}
+            onChange={handleQueryChange}
           />
 
           <span className="icon is-left">

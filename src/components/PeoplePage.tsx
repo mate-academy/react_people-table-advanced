@@ -5,7 +5,13 @@ import { useEffect, useState } from 'react';
 import { Person } from '../types';
 import { getPeople } from '../api';
 import { useSearchParams } from 'react-router-dom';
-import { OrderEnum, SortEnum } from '../types/Order';
+import {
+  FilterEnum,
+  OrderEnum,
+  QueryParam,
+  SortEnum,
+  SortOrderEnum,
+} from '../types/Order';
 import { filterPeople } from '../function/filterFunction';
 
 export const PeoplePage = () => {
@@ -15,12 +21,12 @@ export const PeoplePage = () => {
   const [peopleUsed, setPeopleUsed] = useState<Person[]>([]);
 
   const [searchParams, setSearchParams] = useSearchParams();
-  const sortField = (searchParams.get('sort') as SortEnum) || '';
-  const sortOrder = (searchParams.get('order') as OrderEnum) || '';
+  const sortField = (searchParams.get(SortOrderEnum.Sort) as SortEnum) || '';
+  const sortOrder = (searchParams.get(SortOrderEnum.Order) as OrderEnum) || '';
 
-  const query = searchParams.get('query') || '';
-  const centuries = searchParams.getAll('centuries');
-  const sex = searchParams.get('sex') || null;
+  const query = searchParams.get(QueryParam.SEARCH) || '';
+  const centuries = searchParams.getAll(FilterEnum.Centuries);
+  const sex = searchParams.get(FilterEnum.Sex) || null;
 
   useEffect(() => {
     getPeople()
@@ -63,20 +69,20 @@ export const PeoplePage = () => {
   }, [sortField, sortOrder, sex, query, centuries]);
 
   const handleSort = (field: string) => {
-    const currentSortField = searchParams.get('sort');
-    const currentSortOrder = searchParams.get('order');
+    const currentSortField = searchParams.get(SortOrderEnum.Sort);
+    const currentSortOrder = searchParams.get(SortOrderEnum.Order);
     const params = new URLSearchParams(searchParams);
 
     if (currentSortField === field) {
       if (currentSortOrder === OrderEnum.asc) {
-        params.set('order', OrderEnum.desc);
+        params.set(SortOrderEnum.Order, OrderEnum.desc);
       } else if (currentSortOrder === OrderEnum.desc) {
-        params.delete('sort');
-        params.delete('order');
+        params.delete(SortOrderEnum.Sort);
+        params.delete(SortOrderEnum.Order);
       }
     } else {
-      params.set('sort', field);
-      params.set('order', OrderEnum.asc);
+      params.set(SortOrderEnum.Sort, field);
+      params.set(SortOrderEnum.Order, OrderEnum.asc);
     }
 
     setSearchParams(params);
