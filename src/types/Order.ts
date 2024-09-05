@@ -1,14 +1,14 @@
-export enum OrderEnum {
+export enum Order {
   asc = 'asc',
   desc = 'desc',
 }
 
-export enum SortOrderEnum {
-  Sort = 'sort',
-  Order = 'order',
+export enum SortingOptions {
+  SortOptions = 'sort',
+  OrderOptions = 'order',
 }
 
-export enum FilterEnum {
+export enum FilterBy {
   Sex = 'sex',
   Centuries = 'centuries',
 }
@@ -17,7 +17,7 @@ export enum QueryParam {
   SEARCH = 'query',
 }
 
-export enum SortEnum {
+export enum SortBy {
   NAME = 'name',
   DATE = 'date',
   RELEVANCE = 'relevance',

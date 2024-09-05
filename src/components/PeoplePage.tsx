@@ -6,83 +6,63 @@ import { Person } from '../types';
 import { getPeople } from '../api';
 import { useSearchParams } from 'react-router-dom';
 import {
-  FilterEnum,
-  OrderEnum,
+  FilterBy,
+  Order,
   QueryParam,
-  SortEnum,
-  SortOrderEnum,
+  SortBy,
+  SortingOptions,
 } from '../types/Order';
-import { filterPeople } from '../function/filterFunction';
+import { filterAndSortPeople } from '../function/filterAndSortPeople';
 
 export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
-  const [peopleUsed, setPeopleUsed] = useState<Person[]>([]);
 
   const [searchParams, setSearchParams] = useSearchParams();
-  const sortField = (searchParams.get(SortOrderEnum.Sort) as SortEnum) || '';
-  const sortOrder = (searchParams.get(SortOrderEnum.Order) as OrderEnum) || '';
+  const sortField =
+    (searchParams.get(SortingOptions.SortOptions) as SortBy) || '';
+  const sortOrder =
+    (searchParams.get(SortingOptions.OrderOptions) as Order) || '';
 
   const query = searchParams.get(QueryParam.SEARCH) || '';
-  const centuries = searchParams.getAll(FilterEnum.Centuries);
-  const sex = searchParams.get(FilterEnum.Sex) || null;
+  const centuries = searchParams.getAll(FilterBy.Centuries);
+  const sex = searchParams.get(FilterBy.Sex) || null;
 
   useEffect(() => {
     getPeople()
       .then(data => {
         setPeople(data);
-        setPeopleUsed(data);
         setError(false);
       })
       .catch(() => setError(true))
       .finally(() => setLoading(false));
   }, []);
 
-  useEffect(() => {
-    const filteredArr = filterPeople([...people], query, centuries, sex);
-
-    const sortedPeople = [...filteredArr];
-
-    if (sortField) {
-      sortedPeople.sort((a, b) => {
-        const fieldA = a[sortField as keyof Person];
-        const fieldB = b[sortField as keyof Person];
-
-        if (fieldA && fieldB) {
-          if (fieldA < fieldB) {
-            return sortOrder === OrderEnum.desc ? 1 : -1;
-          }
-
-          if (fieldA > fieldB) {
-            return sortOrder === OrderEnum.desc ? -1 : 1;
-          }
-        }
-
-        return 0;
-      });
-    }
-
-    if (JSON.stringify(sortedPeople) !== JSON.stringify(peopleUsed)) {
-      setPeopleUsed(sortedPeople);
-    }
-  }, [sortField, sortOrder, sex, query, centuries]);
+  const peopleUsed = filterAndSortPeople(
+    people,
+    query,
+    centuries,
+    sex,
+    sortField,
+    sortOrder,
+  );
 
   const handleSort = (field: string) => {
-    const currentSortField = searchParams.get(SortOrderEnum.Sort);
-    const currentSortOrder = searchParams.get(SortOrderEnum.Order);
+    const currentSortField = searchParams.get(SortingOptions.SortOptions);
+    const currentSortOrder = searchParams.get(SortingOptions.OrderOptions);
     const params = new URLSearchParams(searchParams);
 
     if (currentSortField === field) {
-      if (currentSortOrder === OrderEnum.asc) {
-        params.set(SortOrderEnum.Order, OrderEnum.desc);
-      } else if (currentSortOrder === OrderEnum.desc) {
-        params.delete(SortOrderEnum.Sort);
-        params.delete(SortOrderEnum.Order);
+      if (currentSortOrder === Order.asc) {
+        params.set(SortingOptions.OrderOptions, Order.desc);
+      } else if (currentSortOrder === Order.desc) {
+        params.delete(SortingOptions.SortOptions);
+        params.delete(SortingOptions.OrderOptions);
       }
     } else {
-      params.set(SortOrderEnum.Sort, field);
-      params.set(SortOrderEnum.Order, OrderEnum.asc);
+      params.set(SortingOptions.SortOptions, field);
+      params.set(SortingOptions.OrderOptions, Order.asc);
     }
 
     setSearchParams(params);

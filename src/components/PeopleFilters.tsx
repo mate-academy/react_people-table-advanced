@@ -1,7 +1,8 @@
 import { FilterSexType } from '../types/Sex';
 import classNames from 'classnames';
 import { SetURLSearchParams } from 'react-router-dom';
-import { FilterEnum, QueryParam } from '../types/Order';
+import { FilterBy, QueryParam } from '../types/Order';
+import { SearchLink } from './SearchLink';
 
 type Props = {
   setSearchParams: SetURLSearchParams;
@@ -32,9 +33,9 @@ export const PeopleFilters = ({
     const params = new URLSearchParams(searchParams);
 
     if (sexType !== FilterSexType.All) {
-      params.set(FilterEnum.Sex, sexType);
+      params.set(FilterBy.Sex, sexType);
     } else {
-      params.delete(FilterEnum.Sex);
+      params.delete(FilterBy.Sex);
     }
 
     setSearchParams(params);
@@ -42,17 +43,17 @@ export const PeopleFilters = ({
 
   function handleCenturiesChange(century: string) {
     const params = new URLSearchParams(searchParams);
-    const currentCenturies = searchParams.getAll(FilterEnum.Centuries);
+    const currentCenturies = searchParams.getAll(FilterBy.Centuries);
 
     if (currentCenturies.includes(century)) {
-      params.delete(FilterEnum.Centuries);
+      params.delete(FilterBy.Centuries);
       currentCenturies.forEach(currentCentury => {
         if (currentCentury !== century) {
-          params.append(FilterEnum.Centuries, currentCentury);
+          params.append(FilterBy.Centuries, currentCentury);
         }
       });
     } else {
-      params.append(FilterEnum.Centuries, century);
+      params.append(FilterBy.Centuries, century);
     }
 
     setSearchParams(params);
@@ -125,24 +126,24 @@ export const PeopleFilters = ({
           </div>
 
           <div className="level-right ml-4">
-            <a
+            <SearchLink
               data-cy="centuryALL"
               className="button is-success is-outlined"
-              onClick={() => setSearchParams(new URLSearchParams())}
+              params={{ centuries: [] }}
             >
               All
-            </a>
+            </SearchLink>
           </div>
         </div>
       </div>
 
       <div className="panel-block">
-        <a
+        <SearchLink
           className="button is-link is-outlined is-fullwidth"
-          onClick={() => setSearchParams(new URLSearchParams())}
+          params={{ query: null, sex: null, centuries: [] }}
         >
           Reset all filters
-        </a>
+        </SearchLink>
       </div>
     </nav>
   );

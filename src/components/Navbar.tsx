@@ -1,5 +1,6 @@
 import classNames from 'classnames';
 import { NavLink } from 'react-router-dom';
+import { RoutesItems } from '../types/Router';
 
 export const Navbar = () => {
   return (
@@ -29,7 +30,7 @@ export const Navbar = () => {
                 'has-background-grey-lighter': isActive,
               })
             }
-            to="/people"
+            to={RoutesItems.People}
           >
             People
           </NavLink>
