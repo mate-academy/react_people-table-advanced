@@ -73,8 +73,8 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
     }
 
     const sorted = [...filteredPeople].sort((a, b) => {
-      const aValue = a[sort as keyof Person];
-      const bValue = b[sort as keyof Person];
+      const aValue = a[sort as keyof Person] ?? '';
+      const bValue = b[sort as keyof Person] ?? '';
 
       if (aValue < bValue) {
         return order === 'asc' ? -1 : 1;
