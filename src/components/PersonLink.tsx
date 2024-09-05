@@ -1,6 +1,6 @@
 import React from 'react';
 import classNames from 'classnames';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams, useSearchParams } from 'react-router-dom';
 import { Person } from '../types';
 
 type Props = {
@@ -10,6 +10,7 @@ type Props = {
 const representParent = (
   parentName: string | null,
   parent: Person | undefined,
+  searchParams: URLSearchParams,
 ) => {
   if (!parentName) {
     return '-';
@@ -22,7 +23,10 @@ const representParent = (
   return (
     <Link
       className={classNames({ 'has-text-danger': parent.sex === 'f' })}
-      to={`../${parent.slug}`}
+      to={{
+        pathname: `../${parent.slug}`,
+        search: searchParams.toString(),
+      }}
     >
       {parentName}
     </Link>
@@ -31,6 +35,7 @@ const representParent = (
 
 export const PersonLink: React.FC<Props> = ({ person }) => {
   const { personSlug } = useParams();
+  const [searchParams] = useSearchParams();
 
   const {
     name,
@@ -53,7 +58,10 @@ export const PersonLink: React.FC<Props> = ({ person }) => {
     >
       <td>
         <Link
-          to={`../${slug}`}
+          to={{
+            pathname: `../${slug}`,
+            search: searchParams.toString(),
+          }}
           className={classNames({ 'has-text-danger': sex === 'f' })}
         >
           {name}
@@ -63,8 +71,8 @@ export const PersonLink: React.FC<Props> = ({ person }) => {
       <td>{sex}</td>
       <td>{born}</td>
       <td>{died}</td>
-      <td>{representParent(motherName, mother)}</td>
-      <td>{representParent(fatherName, father)}</td>
+      <td>{representParent(motherName, mother, searchParams)}</td>
+      <td>{representParent(fatherName, father, searchParams)}</td>
     </tr>
   );
 };
