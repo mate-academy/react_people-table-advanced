@@ -54,6 +54,21 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
     return `${location.pathname}?${params.toString()}`;
   };
 
+  function getSortArrows(target: keyof Person) {
+    if (sortBy !== target) {
+      return 'fas fa-sort';
+    }
+
+    switch (sortOrder) {
+      case '':
+        return 'fas fa-sort';
+      case 'asc':
+        return 'fas fa-sort-up';
+      case 'desc':
+        return 'fas fa-sort-down';
+    }
+  }
+
   return (
     <table
       data-cy="peopleTable"
@@ -69,7 +84,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
                 onClick={() => handlSortBy('name')}
               >
                 <span className="icon">
-                  <i className="fas fa-sort" />
+                  <i className={getSortArrows('name')} />
                 </span>
               </Link>
             </span>
@@ -80,7 +95,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
               Sex
               <Link to={getSortLink('sex')} onClick={() => handlSortBy('sex')}>
                 <span className="icon">
-                  <i className="fas fa-sort" />
+                  <i className={getSortArrows('sex')} />
                 </span>
               </Link>
             </span>
@@ -94,7 +109,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
                 onClick={() => handlSortBy('born')}
               >
                 <span className="icon">
-                  <i className="fas fa-sort-up" />
+                  <i className={getSortArrows('born')} />
                 </span>
               </Link>
             </span>
@@ -108,7 +123,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
                 onClick={() => handlSortBy('died')}
               >
                 <span className="icon">
-                  <i className="fas fa-sort" />
+                  <i className={getSortArrows('died')} />
                 </span>
               </Link>
             </span>

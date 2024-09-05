@@ -10,14 +10,14 @@ export const PeopleFilters: React.FC = () => {
   const centuries = searchParams.getAll('centuries');
   const sex = searchParams.get('sex') || null;
 
-  function setSearchWith(params: any) {
-    const search = getSearchWith(searchParams, params);
-
-    setSearchParams(search);
-  }
-
   const handleQChange: React.ChangeEventHandler<HTMLInputElement> = event => {
-    setSearchWith({ query: event.target.value.trim() || null });
+    const trimmedValue = event.target.value.trim() || null;
+
+    const search = getSearchWith(searchParams, { query: trimmedValue });
+
+    if (search) {
+      setSearchParams(search);
+    }
   };
 
   return (
