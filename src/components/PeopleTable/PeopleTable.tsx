@@ -1,10 +1,38 @@
+import { useSearchParams } from 'react-router-dom';
 import { Person } from '../../types';
 import { TablePerson } from '../TablePerson';
+import { SearchLink } from '../SearchLink/SearchLink';
+import classNames from 'classnames';
 
 type Props = {
   people: Person[];
 };
 export const PeopleTable: React.FC<Props> = ({ people }) => {
+  const [searchParams] = useSearchParams();
+
+  const currentSort = searchParams.get('sort');
+  const order = searchParams.get('order');
+
+  const getSortOption = (newSort: string) => {
+    if (newSort !== currentSort) {
+      return { sort: newSort, order: null };
+    }
+
+    if (newSort === currentSort && !order) {
+      return { sort: newSort, order: 'desc' };
+    }
+
+    return { sort: null, order: null };
+  };
+
+  const getSortClass = (sort: string) => {
+    return classNames('fas', {
+      'fa-sort': sort !== currentSort,
+      'fa-sort-up': sort === currentSort && !order,
+      'fa-sort-down': sort === currentSort && !!order,
+    });
+  };
+
   return (
     <table
       data-cy="peopleTable"
@@ -15,33 +43,33 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Name
-              <a href="#/people?sort=name">
+              <SearchLink params={{ ...getSortOption('name') }}>
                 <span className="icon">
-                  <i className="fas fa-sort" />
+                  <i className={getSortClass('name')} />
                 </span>
-              </a>
+              </SearchLink>
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Sex
-              <a href="#/people?sort=sex">
+              <SearchLink params={{ ...getSortOption('sex') }}>
                 <span className="icon">
-                  <i className="fas fa-sort" />
+                  <i className={getSortClass('sex')} />
                 </span>
-              </a>
+              </SearchLink>
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Born
-              <a href="#/people?sort=born&amp;order=desc">
+              <SearchLink params={{ ...getSortOption('born') }}>
                 <span className="icon">
-                  <i className="fas fa-sort-up" />
+                  <i className={getSortClass('died')} />
                 </span>
-              </a>
+              </SearchLink>
             </span>
           </th>
 

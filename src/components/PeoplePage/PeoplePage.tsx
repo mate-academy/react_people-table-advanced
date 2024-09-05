@@ -5,11 +5,14 @@ import { PeopleTable } from '../PeopleTable';
 import { Person } from '../../types';
 import { getPreparedPerson } from '../../utils/getPreparedPeople';
 import { PeopleFilters } from '../PeopleFilters/PeopleFilters';
+import { filter } from '../../utils/filter';
+import { useSearchParams } from 'react-router-dom';
 
 export const PeoplePage = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isError, setIsError] = useState<boolean>(false);
   const [peopleList, setPeopleList] = useState<Person[]>([]);
+  const [selectedFilter, setSelectedFilter] = useSearchParams();
 
   useEffect(() => {
     setIsLoading(true);
@@ -27,6 +30,7 @@ export const PeoplePage = () => {
   }, []);
 
   const preparedPeople = getPreparedPerson(peopleList);
+  const filteredPeople = filter(selectedFilter, preparedPeople);
 
   return (
     <div data-cy="app">
@@ -36,7 +40,7 @@ export const PeoplePage = () => {
           <div className="block">
             <div className="columns is-desktop is-flex-direction-row-reverse">
               <div className="column is-7-tablet is-narrow-desktop">
-                <PeopleFilters />
+                <PeopleFilters setSelectedFilter={setSelectedFilter} />
               </div>
               <div className="column">
                 <div className="box table-container">
@@ -52,7 +56,7 @@ export const PeoplePage = () => {
                     </p>
                   )}
                   {peopleList.length > 0 && (
-                    <PeopleTable people={preparedPeople} />
+                    <PeopleTable people={filteredPeople} />
                   )}
                   {/* <p>There are no people matching the current search criteria</p> */}
                 </div>
