@@ -4,6 +4,61 @@ import { PeopleTable } from './PeopleTable';
 import { Person } from '../types';
 import { useEffect, useState } from 'react';
 import { getPeople } from '../api';
+import { useSearchParams } from 'react-router-dom';
+
+const sortPeople = (people: Person[], searchParams: URLSearchParams) => {
+  const shouldSort = searchParams.has('sort');
+  const sortingField = searchParams.get('sort') as keyof Person;
+  const orderCorrection = searchParams.has('order') ? -1 : 1;
+
+  if (!shouldSort) {
+    return people;
+  }
+
+  return people.sort((prev, next) => {
+    let cmprResult = 0;
+
+    if (sortingField === 'born' || sortingField === 'died') {
+      cmprResult = prev[sortingField] - next[sortingField];
+    }
+
+    if (sortingField === 'name' || sortingField === 'sex') {
+      cmprResult = prev[sortingField].localeCompare(next[sortingField]);
+    }
+
+    return cmprResult * orderCorrection;
+  });
+};
+
+const calculateCenture = (centure: number) => {
+  return Math.ceil(centure / 100);
+};
+
+const filterPeople = (people: Person[], searchParams: URLSearchParams) => {
+  return people.filter(person => {
+    if (searchParams.has('sex')) {
+      if (searchParams.get('sex') !== person.sex) {
+        return false;
+      }
+    }
+
+    if (searchParams.has('centuries')) {
+      if (
+        !searchParams
+          .getAll('centuries')
+          .includes(calculateCenture(person.born) + '')
+      ) {
+        return false;
+      }
+    }
+
+    return true;
+  });
+};
+
+const selectPeople = (people: Person[], searchParams: URLSearchParams) => {
+  return sortPeople(filterPeople(people, searchParams), searchParams);
+};
 
 const preparePeople = (people: Person[]): Person[] => {
   return people.map(child => {
@@ -28,6 +83,9 @@ export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+  const [searchParams] = useSearchParams();
+
+  // console.log(searchParams.getAll('centuries'));
 
   useEffect(() => {
     setLoading(true);
@@ -52,7 +110,8 @@ export const PeoplePage = () => {
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
           <div className="column is-7-tablet is-narrow-desktop">
-            <PeopleFilters />
+            {/* <PeopleFilters /> */}
+            {!loading && <PeopleFilters />}
           </div>
 
           <div className="column">
@@ -71,7 +130,9 @@ export const PeoplePage = () => {
                 </p>
               )}
 
-              {!!people.length && !loading && <PeopleTable people={people} />}
+              {!!people.length && !loading && (
+                <PeopleTable people={selectPeople(people, searchParams)} />
+              )}
             </div>
           </div>
         </div>
