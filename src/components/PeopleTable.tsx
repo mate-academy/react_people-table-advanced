@@ -19,6 +19,12 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
   const order = searchParams.get(
     SearchParamKeys.ORDER,
   ) as SearchParamKeys.DESC | null;
+  const preparedPeople = getPreparedPeople(people, searchParams);
+  const query = searchParams.get(SearchParamKeys.QUERY) || '';
+
+  if (!preparedPeople.length && !!query) {
+    return <p>There are no people matching the current search criteria</p>;
+  }
 
   return (
     <table
@@ -58,7 +64,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
       </thead>
 
       <tbody>
-        {getPreparedPeople(people, searchParams).map((person: Person) => (
+        {preparedPeople.map((person: Person) => (
           <PersonLink person={person} key={person.slug} />
         ))}
       </tbody>
