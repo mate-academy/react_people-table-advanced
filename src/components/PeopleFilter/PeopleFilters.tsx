@@ -19,7 +19,6 @@ export const PeopleFilters = () => {
     } else {
       params.delete('sex');
     }
-    // setSearchParams(params);
 
     return params.toString();
   };

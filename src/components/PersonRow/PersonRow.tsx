@@ -2,7 +2,6 @@ import { useCallback, useMemo } from 'react';
 import { PersonLink } from './PersonLink';
 import classNames from 'classnames';
 import { Person } from '../../types';
-import React from 'react';
 
 type Props = {
   personToRender: Person;
@@ -10,49 +9,47 @@ type Props = {
   people: Person[];
 };
 
-export const PeopleRow: React.FC<Props> = React.memo(
-  ({ personToRender, slug, people }) => {
-    const findParentInTable = useCallback(
-      (parentName: string | null) => {
-        return people.find(person => person.name === parentName);
-      },
-      [people],
-    );
+export const PeopleRow: React.FC<Props> = ({
+  personToRender,
+  slug,
+  people,
+}) => {
+  const findParentInTable = useCallback(
+    (parentName: string | null) => {
+      return people.find(person => person.name === parentName);
+    },
+    [people],
+  );
+  const mother = useMemo(() => {
+    return findParentInTable(personToRender.motherName);
+  }, [findParentInTable, personToRender.motherName]);
+  const father = useMemo(() => {
+    return findParentInTable(personToRender.fatherName);
+  }, [findParentInTable, personToRender.fatherName]);
 
-    const mother = useMemo(() => {
-      return findParentInTable(personToRender.motherName);
-    }, [findParentInTable, personToRender.motherName]);
+  return (
+    <tr
+      data-cy="person"
+      className={classNames({
+        'has-background-warning': slug === personToRender.slug,
+      })}
+    >
+      <PersonLink person={personToRender} />
 
-    const father = useMemo(() => {
-      return findParentInTable(personToRender.fatherName);
-    }, [findParentInTable, personToRender.fatherName]);
+      <td>{personToRender.sex}</td>
+      <td>{personToRender.born}</td>
+      <td>{personToRender.died}</td>
+      {mother ? (
+        <PersonLink person={mother} />
+      ) : (
+        <td>{personToRender.motherName || '-'}</td>
+      )}
 
-    return (
-      <tr
-        data-cy="person"
-        className={classNames({
-          'has-background-warning': slug === personToRender.slug,
-        })}
-      >
-        <PersonLink person={personToRender} />
-
-        <td>{personToRender.sex}</td>
-        <td>{personToRender.born}</td>
-        <td>{personToRender.died}</td>
-        {mother ? (
-          <PersonLink person={mother} />
-        ) : (
-          <td>{personToRender.motherName || '-'}</td>
-        )}
-
-        {father ? (
-          <PersonLink person={father} />
-        ) : (
-          <td>{personToRender.fatherName || '-'}</td>
-        )}
-      </tr>
-    );
-  },
-);
-
-PeopleRow.displayName = 'PeopleRow';
+      {father ? (
+        <PersonLink person={father} />
+      ) : (
+        <td>{personToRender.fatherName || '-'}</td>
+      )}
+    </tr>
+  );
+};
