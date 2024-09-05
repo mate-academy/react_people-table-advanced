@@ -13,7 +13,7 @@ export const PeopleFilters = () => {
 
   const handleQueryChange = (event: ChangeEvent<HTMLInputElement>) => {
     const searchedValue = getSearchWith(searchParams, {
-      query: event.target.value || null,
+      query: event.target.value || '',
     });
 
     setSearchParams(searchedValue);
