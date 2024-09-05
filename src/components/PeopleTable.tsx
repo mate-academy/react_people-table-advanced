@@ -1,7 +1,3 @@
-/* eslint-disable jsx-a11y/control-has-associated-label */
-/* eslint-disable @typescript-eslint/indent */
-/* eslint-disable prettier/prettier */
-
 import { useSearchParams } from 'react-router-dom';
 import cn from 'classnames';
 import { Person } from '../types/Person';
@@ -35,29 +31,10 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
   useMemo(() => {
     const sortValue = searchParams.get('sort') as keyof Person | null;
     const orderVal = searchParams.get('order');
-    const theSex = searchParams.get('sex');
-    const query = searchParams.get('query')?.toLowerCase();
-    const theCenturies = searchParams.getAll('centuries');
     const clonedPeople = [...people];
 
-    const genderFilter = theSex
-      ? clonedPeople.filter(p => p.sex === theSex)
-      : clonedPeople;
-
-    const queryFilter = query
-      ? genderFilter.filter(p => p.name.toLowerCase().includes(query))
-      : genderFilter;
-
-    const centuriesFilter = theCenturies.length
-      ? queryFilter.filter(p => {
-        const centuryBorn = (Math.floor(p.born / 100) + 1).toString();
-
-          theCenturies.includes(centuryBorn);
-        })
-      : queryFilter;
-
     if (sortValue) {
-      centuriesFilter.sort((a, b) => {
+      clonedPeople.sort((a, b) => {
         let valA = a[sortValue];
         let valB = b[sortValue];
 
@@ -89,7 +66,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
       });
     }
 
-    setSortedPeople(centuriesFilter);
+    setSortedPeople(clonedPeople);
   }, [people, searchParams]);
 
   const linkParents = sortedPeople.map(person => ({
@@ -114,56 +91,58 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
       data-cy="peopleTable"
       className="table is-striped is-hoverable is-narrow is-fullwidth"
     >
-      <thead>
-        <tr>
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Name
-              <SearchLink params={getChosenColoumn('name')}>
-                <span className="icon">
-                  <i className={cn('fas', getArrowDirection('name'))} />
-                </span>
-              </SearchLink>
-            </span>
-          </th>
+      {!!sortedPeople.length && (
+        <thead>
+          <tr>
+            <th>
+              <span className="is-flex is-flex-wrap-nowrap">
+                Name
+                <SearchLink params={getChosenColoumn('name')}>
+                  <span className="icon">
+                    <i className={cn('fas', getArrowDirection('name'))} />
+                  </span>
+                </SearchLink>
+              </span>
+            </th>
 
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Sex
-              <SearchLink params={getChosenColoumn('sex')}>
-                <span className="icon">
-                  <i className={cn('fas', getArrowDirection('sex'))} />
-                </span>
-              </SearchLink>
-            </span>
-          </th>
+            <th>
+              <span className="is-flex is-flex-wrap-nowrap">
+                Sex
+                <SearchLink params={getChosenColoumn('sex')}>
+                  <span className="icon">
+                    <i className={cn('fas', getArrowDirection('sex'))} />
+                  </span>
+                </SearchLink>
+              </span>
+            </th>
 
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Born
-              <SearchLink params={getChosenColoumn('born')}>
-                <span className="icon">
-                  <i className={cn('fas', getArrowDirection('born'))} />
-                </span>
-              </SearchLink>
-            </span>
-          </th>
+            <th>
+              <span className="is-flex is-flex-wrap-nowrap">
+                Born
+                <SearchLink params={getChosenColoumn('born')}>
+                  <span className="icon">
+                    <i className={cn('fas', getArrowDirection('born'))} />
+                  </span>
+                </SearchLink>
+              </span>
+            </th>
 
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Died
-              <SearchLink params={getChosenColoumn('died')}>
-                <span className="icon">
-                  <i className={cn('fas', getArrowDirection('died'))} />
-                </span>
-              </SearchLink>
-            </span>
-          </th>
+            <th>
+              <span className="is-flex is-flex-wrap-nowrap">
+                Died
+                <SearchLink params={getChosenColoumn('died')}>
+                  <span className="icon">
+                    <i className={cn('fas', getArrowDirection('died'))} />
+                  </span>
+                </SearchLink>
+              </span>
+            </th>
 
-          <th>Mother</th>
-          <th>Father</th>
-        </tr>
-      </thead>
+            <th>Mother</th>
+            <th>Father</th>
+          </tr>
+        </thead>
+      )}
 
       <tbody>
         {linkParents.map(person => (
