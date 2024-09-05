@@ -18,7 +18,9 @@ function filterPeopleBySearchParams(
   const queryInLowerCase = queryParam.toLowerCase();
 
   return peopleList.filter(person => {
-    const personCentury = (+person.born.toString().slice(0, 2) + 1).toString();
+    const personCentury = Math.ceil(person.born / 100)
+      .toString()
+      .toString();
 
     return (
       person.name.toLowerCase().includes(queryInLowerCase) &&

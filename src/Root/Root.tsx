@@ -8,18 +8,25 @@ import { App } from '../App';
 import { HomePage } from '../pages/HomePage';
 import { PeoplePage } from '../pages/PeoplePage';
 import { NotFoundPage } from '../pages/NotFoundPage';
+import { RootPathes } from '../types/RootPathes';
 
 export const Root = () => {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<App />}>
+        <Route path={RootPathes.HomePath} element={<App />}>
           <Route index element={<HomePage />} />
-          <Route path="home" element={<Navigate to="/" replace />} />
-          <Route path="/people" element={<PeoplePage />}>
-            <Route path=":slug?" element={<PeoplePage />} />
+          <Route
+            path={RootPathes.PseudoHomePath}
+            element={<Navigate to={RootPathes.HomePath} replace />}
+          />
+          <Route path={RootPathes.PeoplePath} element={<PeoplePage />}>
+            <Route path={RootPathes.PersonSlugPath} element={<PeoplePage />} />
           </Route>
-          <Route path="*" element={<NotFoundPage />} />
+          <Route
+            path={RootPathes.NotFoundPagePath}
+            element={<NotFoundPage />}
+          />
         </Route>
       </Routes>
     </Router>

@@ -6,7 +6,6 @@ import { AVAILABLE_CENTURIES } from '../../constants/availableCenturies';
 
 export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const peopleSex = searchParams.get('sex') || SexFilter.All;
   const centuries = searchParams.getAll('centuries') || [];
   const query = searchParams.get('query') || '';
@@ -44,7 +43,7 @@ export const PeopleFilters = () => {
     return params.toString();
   };
 
-  const handleFitlterQuery = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFilterQuery = (event: React.ChangeEvent<HTMLInputElement>) => {
     const params = new URLSearchParams(searchParams);
 
     if (event.target.value.length) {
@@ -71,36 +70,19 @@ export const PeopleFilters = () => {
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        <Link
-          className={classNames({
-            'is-active': peopleSex === SexFilter.All,
-          })}
-          to={{
-            search: handleFilterSex(SexFilter.All),
-          }}
-        >
-          All
-        </Link>
-        <Link
-          className={classNames({
-            'is-active': peopleSex === SexFilter.Male,
-          })}
-          to={{
-            search: handleFilterSex(SexFilter.Male),
-          }}
-        >
-          Male
-        </Link>
-        <Link
-          className={classNames({
-            'is-active': peopleSex === SexFilter.Female,
-          })}
-          to={{
-            search: handleFilterSex(SexFilter.Female),
-          }}
-        >
-          Female
-        </Link>
+        {Object.entries(SexFilter).map(([key, value]) => (
+          <Link
+            key={key}
+            className={classNames({
+              'is-active': peopleSex === value,
+            })}
+            to={{
+              search: handleFilterSex(value),
+            }}
+          >
+            {key}
+          </Link>
+        ))}
       </p>
 
       <div className="panel-block">
@@ -111,7 +93,7 @@ export const PeopleFilters = () => {
             value={query}
             className="input"
             placeholder="Search"
-            onChange={handleFitlterQuery}
+            onChange={handleFilterQuery}
           />
 
           <span className="icon is-left">
