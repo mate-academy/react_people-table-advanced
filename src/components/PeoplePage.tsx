@@ -2,7 +2,63 @@ import { PeopleFilters } from './PeopleFilters';
 import { Loader } from './Loader';
 import { PeopleTable } from './PeopleTable';
 
+import { useSearchParams } from 'react-router-dom';
+import { useFetchPeople } from '../utils/useFetchPeople';
+
 export const PeoplePage = () => {
+  const { people, isLoading, errorMessage } = useFetchPeople();
+  const [searchParams] = useSearchParams();
+
+  const sex = searchParams.get('sex');
+  const query = searchParams.get('query');
+  const years = searchParams.getAll('years');
+  const sortField = searchParams.get('sort');
+  const isReversed = searchParams.get('order') === 'desc';
+
+  let visiblePeople = [...people];
+
+  if (sex) {
+    visiblePeople = visiblePeople.filter(person => person.sex === sex);
+  }
+
+  if (query) {
+    const normalQuery = query.toLocaleLowerCase();
+
+    visiblePeople = visiblePeople.filter(person => {
+      return [person.name, person.motherName || '', person.fatherName || '']
+        .join('\n')
+        .toLocaleLowerCase()
+        .includes(normalQuery);
+    });
+  }
+
+  if (years.length > 0) {
+    visiblePeople = visiblePeople.filter(person =>
+      years.includes(Math.ceil(person.born / 100).toString()),
+    );
+  }
+
+  if (sortField) {
+    visiblePeople.sort((a, b) => {
+      switch (sortField) {
+        case 'name':
+        case 'sex':
+          return a[sortField].localeCompare(b[sortField]);
+
+        case 'born':
+        case 'died':
+          return a[sortField] - b[sortField];
+
+        default:
+          return 0;
+      }
+    });
+
+    if (isReversed) {
+      visiblePeople.reverse();
+    }
+  }
+
   return (
     <>
       <h1 className="title">People Page</h1>
@@ -15,15 +71,28 @@ export const PeoplePage = () => {
 
           <div className="column">
             <div className="box table-container">
-              <Loader />
+              {isLoading && <Loader />}
 
-              <p data-cy="peopleLoadingError">Something went wrong</p>
+              {errorMessage && (
+                <p data-cy="peopleLoadingError" className="has-text-danger">
+                  Something went wrong
+                </p>
+              )}
 
-              <p data-cy="noPeopleMessage">There are no people on the server</p>
+              {!people.length && !isLoading ? (
+                <p data-cy="noPeopleMessage">
+                  There are no people on the server
+                </p>
+              ) : (
+                ''
+              )}
 
-              <p>There are no people matching the current search criteria</p>
-
-              <PeopleTable />
+              {!isLoading && errorMessage === '' && (
+                <PeopleTable
+                  people={visiblePeople}
+                  peopleFromServer={[...people]}
+                />
+              )}
             </div>
           </div>
         </div>
