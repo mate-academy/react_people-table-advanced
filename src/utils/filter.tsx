@@ -1,7 +1,7 @@
 import { Person } from '../types';
 
 export enum FilterTypes {
-  All = 'All',
+  All = '',
   Male = 'm',
   Female = 'f',
 }
@@ -29,7 +29,6 @@ export const filter = (
     });
   }
 
-  // Фільтрація за запитом
   if (queryFilter) {
     const lowerCaseQuery = queryFilter.toLowerCase();
 

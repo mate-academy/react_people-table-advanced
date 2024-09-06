@@ -11,7 +11,7 @@ export const PeopleFilters: React.FC<Props> = () => {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const query = searchParams.get('query') || '';
-  const sexParam = searchParams.get('sex') || '';
+  const sexParam = searchParams.get('sex') || FilterTypes.All;
   const centuries = searchParams.getAll('centuries') || [];
 
   function setSeachWith(params: SearchParams) {
@@ -21,11 +21,11 @@ export const PeopleFilters: React.FC<Props> = () => {
   }
 
   function handleSexChange(sex: string) {
-    setSeachWith({ sex });
+    setSeachWith({ sex: sex || null });
   }
 
   function handleQueryChange(event: React.ChangeEvent<HTMLInputElement>) {
-    setSeachWith({ query: event.target.value });
+    setSeachWith({ query: event.target.value || null });
   }
 
   function toggleCenturies(century: string) {

@@ -13,16 +13,21 @@ export const PeoplePage = () => {
   const [isError, setIsError] = useState<boolean>(false);
   const [peopleList, setPeopleList] = useState<Person[]>([]);
   const [selectedFilter, setSelectedFilter] = useSearchParams();
+  const [hasSideBarVisible, setHasSideBarVisible] = useState<boolean>(false);
 
   useEffect(() => {
     setIsLoading(true);
+    setHasSideBarVisible(false);
 
     getPeople()
       .then(result => {
         setPeopleList(result);
       })
       .catch(() => setIsError(true))
-      .finally(() => setIsLoading(false));
+      .finally(() => {
+        setHasSideBarVisible(true);
+        setIsLoading(false);
+      });
 
     return () => {
       setPeopleList([]);
@@ -40,7 +45,9 @@ export const PeoplePage = () => {
           <div className="block">
             <div className="columns is-desktop is-flex-direction-row-reverse">
               <div className="column is-7-tablet is-narrow-desktop">
-                <PeopleFilters setSelectedFilter={setSelectedFilter} />
+                {hasSideBarVisible && !isError && !isLoading && (
+                  <PeopleFilters setSelectedFilter={setSelectedFilter} />
+                )}
               </div>
               <div className="column">
                 <div className="box table-container">
