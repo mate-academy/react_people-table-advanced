@@ -4,17 +4,17 @@ import { getSearchWith, SearchParams } from '../utils/searchHelper';
 
 export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const quere = searchParams.get('quere') || '';
+  const query = searchParams.get('query') || '';
   const centuries = searchParams.getAll('centuries') || [];
 
   const setSearchWith = (params: SearchParams) => {
     return getSearchWith(searchParams, params);
   };
 
-  const handleQuereChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const paramsWithQuere = setSearchWith({ quere: e.target.value || null });
+  const handleQueryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const paramsWithQuery = setSearchWith({ query: e.target.value || null });
 
-    setSearchParams(paramsWithQuere);
+    setSearchParams(paramsWithQuery);
   };
 
   const toggleCenturies = (c: string) => {
@@ -59,8 +59,8 @@ export const PeopleFilters = () => {
             type="search"
             className="input"
             placeholder="Search"
-            value={quere}
-            onChange={handleQuereChange}
+            value={query}
+            onChange={handleQueryChange}
           />
 
           <span className="icon is-left">

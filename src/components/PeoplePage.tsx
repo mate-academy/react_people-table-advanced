@@ -32,6 +32,20 @@ const sortPeople = (people: Person[], searchParams: URLSearchParams) => {
 
 const filterPeople = (people: Person[], searchParams: URLSearchParams) => {
   return people.filter(person => {
+    if (searchParams.has('query')) {
+      const query = searchParams.get('query') || '';
+      const { name, motherName, fatherName } = person;
+
+      const includesQuery = [name, motherName, fatherName]
+        .join('')
+        .toLowerCase()
+        .includes(query);
+
+      if (!includesQuery) {
+        return false;
+      }
+    }
+
     if (searchParams.has('sex')) {
       if (searchParams.get('sex') !== person.sex) {
         return false;
