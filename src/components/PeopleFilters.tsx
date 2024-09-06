@@ -4,16 +4,18 @@ import { useSearchParams } from 'react-router-dom';
 import classNames from 'classnames';
 import { SearchLink } from './SearchLink';
 import { getSearchWith } from '../utils/searchHelper';
+import { SearchParamsValues } from '../enums/SearchParams';
 
 export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const activeFilter = searchParams.get('sex') || FilterTypes.All;
-  const searchQuery = searchParams.get('searchQuery') || '';
-  const centuries = searchParams.getAll('centuries') || [];
+  const activeFilter =
+    searchParams.get(SearchParamsValues.SEX) || FilterTypes.All;
+  const searchQuery = searchParams.get(SearchParamsValues.SEARCH_QUERY) || '';
+  const centuries = searchParams.getAll(SearchParamsValues.CENTURIES) || [];
 
   const updateCenturiesList = century => {
     return centuries.includes(century)
-      ? centuries.filter(c => c !== century)
+      ? centuries.filter(centuryValue => centuryValue !== century)
       : [...centuries, century];
   };
 

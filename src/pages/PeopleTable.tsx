@@ -8,6 +8,7 @@ import { PersonRelationItem } from '../components/PersonRelationItem/PersonRelat
 import { SortTypes } from '../enums/SortTypes';
 import { SearchLink } from '../components/SearchLink';
 import classNames from 'classnames';
+import { SearchParamsValues } from '../enums/SearchParams';
 
 interface Props {
   peopleList: Person[];
@@ -16,8 +17,8 @@ interface Props {
 export const PeopleTable: FC<Props> = ({ peopleList }) => {
   const { slug } = useParams();
   const [searchParams] = useSearchParams();
-  const sortField = searchParams.get('sort');
-  const sortOrder = searchParams.get('order') || '';
+  const sortField = searchParams.get(SearchParamsValues.SORT);
+  const sortOrder = searchParams.get(SearchParamsValues.ORDER) || '';
 
   const getIconClass = (sortParam: string) =>
     classNames('fas', {

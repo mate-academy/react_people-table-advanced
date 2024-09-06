@@ -7,6 +7,7 @@ import { useSearchParams } from 'react-router-dom';
 import { FilterTypes } from '../enums/FilterTypes';
 import { getFilteredList } from '../helpers/getFilteredList';
 import { sortList } from '../helpers/sortList';
+import { SearchParamsValues } from '../enums/SearchParams';
 
 const API_BASE = 'https://mate-academy.github.io/react_people-table/api/';
 
@@ -18,11 +19,12 @@ export const PeoplePage = () => {
   } = useFetchData<Person[]>(`${API_BASE}/people.json`);
 
   const [searchParams] = useSearchParams();
-  const activeFilter = searchParams.get('sex') || FilterTypes.All;
-  const searchQuery = searchParams.get('searchQuery') || '';
-  const centuries = searchParams.getAll('centuries') || [];
-  const sortField = searchParams.get('sort');
-  const sortOrder = searchParams.get('order') || '';
+  const activeFilter =
+    searchParams.get(SearchParamsValues.SEX) || FilterTypes.All;
+  const searchQuery = searchParams.get(SearchParamsValues.SEARCH_QUERY) || '';
+  const centuries = searchParams.getAll(SearchParamsValues.CENTURIES) || [];
+  const sortField = searchParams.get(SearchParamsValues.SORT);
+  const sortOrder = searchParams.get(SearchParamsValues.ORDER) || '';
 
   const filteredPeopleList = getFilteredList({
     peopleList: peopleList || [],

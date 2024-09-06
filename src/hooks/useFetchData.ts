@@ -5,10 +5,10 @@ export const useFetchData = <T>(url: string) => {
   const [isLoading, setIsLoading] = useState(true);
   const [isError, setIsError] = useState(false);
 
-  const fetchData = async (url2: string) => {
+  const fetchData = async (urlParam: string) => {
     try {
       setIsError(false);
-      const response = await fetch(url2);
+      const response = await fetch(urlParam);
 
       const res = await response.json();
 
