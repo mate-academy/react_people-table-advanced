@@ -9,29 +9,25 @@ import { useSearchParams } from 'react-router-dom';
 const sortPeople = (people: Person[], searchParams: URLSearchParams) => {
   const shouldSort = searchParams.has('sort');
   const sortingField = searchParams.get('sort') as keyof Person;
-  const orderCorrection = searchParams.has('order') ? -1 : 1;
+  const orderDirection = searchParams.has('order') ? -1 : 1;
 
   if (!shouldSort) {
     return people;
   }
 
   return people.sort((prev, next) => {
-    let cmprResult = 0;
+    let compareResult = 0;
 
     if (sortingField === 'born' || sortingField === 'died') {
-      cmprResult = prev[sortingField] - next[sortingField];
+      compareResult = prev[sortingField] - next[sortingField];
     }
 
     if (sortingField === 'name' || sortingField === 'sex') {
-      cmprResult = prev[sortingField].localeCompare(next[sortingField]);
+      compareResult = prev[sortingField].localeCompare(next[sortingField]);
     }
 
-    return cmprResult * orderCorrection;
+    return compareResult * orderDirection;
   });
-};
-
-const calculateCenture = (centure: number) => {
-  return Math.ceil(centure / 100);
 };
 
 const filterPeople = (people: Person[], searchParams: URLSearchParams) => {
@@ -46,7 +42,7 @@ const filterPeople = (people: Person[], searchParams: URLSearchParams) => {
       if (
         !searchParams
           .getAll('centuries')
-          .includes(calculateCenture(person.born) + '')
+          .includes(Math.ceil(person.born / 100) + '')
       ) {
         return false;
       }
@@ -56,8 +52,13 @@ const filterPeople = (people: Person[], searchParams: URLSearchParams) => {
   });
 };
 
-const selectPeople = (people: Person[], searchParams: URLSearchParams) => {
-  return sortPeople(filterPeople(people, searchParams), searchParams);
+const filterAndSortPeople = (
+  people: Person[],
+  searchParams: URLSearchParams,
+) => {
+  const filteredPeople = filterPeople(people, searchParams);
+
+  return sortPeople(filteredPeople, searchParams);
 };
 
 const preparePeople = (people: Person[]): Person[] => {
@@ -85,8 +86,6 @@ export const PeoplePage = () => {
   const [errorMessage, setErrorMessage] = useState('');
   const [searchParams] = useSearchParams();
 
-  // console.log(searchParams.getAll('centuries'));
-
   useEffect(() => {
     setLoading(true);
     getPeople()
@@ -110,7 +109,6 @@ export const PeoplePage = () => {
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
           <div className="column is-7-tablet is-narrow-desktop">
-            {/* <PeopleFilters /> */}
             {!loading && <PeopleFilters />}
           </div>
 
@@ -131,7 +129,9 @@ export const PeoplePage = () => {
               )}
 
               {!!people.length && !loading && (
-                <PeopleTable people={selectPeople(people, searchParams)} />
+                <PeopleTable
+                  people={filterAndSortPeople(people, searchParams)}
+                />
               )}
             </div>
           </div>

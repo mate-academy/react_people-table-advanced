@@ -1,36 +1,14 @@
 import classNames from 'classnames';
 import { Link, useSearchParams } from 'react-router-dom';
-
-type Param = string | number;
-
-type Params = {
-  [key: string]: Param | Param[] | null;
-};
-
-const getSearchWith = (params: Params, search?: string | URLSearchParams) => {
-  const newParams = new URLSearchParams(search);
-
-  for (const [key, value] of Object.entries(params)) {
-    if (value === null) {
-      newParams.delete(key);
-    } else if (Array.isArray(value)) {
-      newParams.delete(key);
-      value.forEach(item => newParams.append(key, item.toString()));
-    } else {
-      newParams.set(key, value.toString());
-    }
-  }
-
-  return newParams.toString();
-};
+import { getSearchWith, SearchParams } from '../utils/searchHelper';
 
 export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const quere = searchParams.get('quere') || '';
   const centuries = searchParams.getAll('centuries') || [];
 
-  const setSearchWith = (params: Params) => {
-    return getSearchWith(params, searchParams);
+  const setSearchWith = (params: SearchParams) => {
+    return getSearchWith(searchParams, params);
   };
 
   const handleQuereChange = (e: React.ChangeEvent<HTMLInputElement>) => {
