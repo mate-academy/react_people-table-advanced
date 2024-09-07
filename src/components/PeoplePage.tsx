@@ -1,4 +1,4 @@
-import { PeopleFilters } from './PeopleFilters';
+import { FiltersPanel } from './FiltersPanel';
 import { Loader } from './Loader';
 import { PeopleTable } from './PeopleTable';
 import { Person } from '../types';
@@ -123,7 +123,7 @@ export const PeoplePage = () => {
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
           <div className="column is-7-tablet is-narrow-desktop">
-            {!loading && <PeopleFilters />}
+            {!loading && <FiltersPanel />}
           </div>
 
           <div className="column">
