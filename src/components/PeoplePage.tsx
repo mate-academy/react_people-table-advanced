@@ -2,19 +2,15 @@ import { PeopleFilters } from './PeopleFilters';
 import { Loader } from './Loader';
 import { PeopleTable } from './PeopleTable';
 import { useEffect, useRef, useState } from 'react';
-import { getPeople } from '../api';
 import { Person } from '../types/Person';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import { Message } from '../types/Message';
-
-const REDIRECT_TIME = 3000;
+import { getSortComparator } from '../utils/getSortComparator';
+import usePeople from '../hooks/usePeople';
 
 export const PeoplePage = () => {
-  const [people, setPeople] = useState<Person[]>([]);
+  const { people, loading, dataLoaded, error, setError } = usePeople();
   const [filteredPeople, setFilteredPeople] = useState<Person[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<Message | null>(null);
-  const [dataLoaded, setDataLoaded] = useState(false);
   const [sortClass, setSortClass] = useState({
     name: 'fa-sort',
     sex: 'fa-sort',
@@ -22,7 +18,6 @@ export const PeoplePage = () => {
     died: 'fa-sort',
   });
 
-  const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
 
   const query = searchParams.get('search') || '';
@@ -38,37 +33,8 @@ export const PeoplePage = () => {
   const prevOrder = useRef(order);
 
   useEffect(() => {
-    setLoading(true);
-    getPeople()
-      .then(res => {
-        setPeople(res);
-        setFilteredPeople(res);
-        setDataLoaded(true);
-      })
-      .catch(() => {
-        setError(Message.peopleLoadingError);
-        setTimeout(() => navigate('/'), REDIRECT_TIME);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  }, [navigate]);
-
-  const getSortComparator = (type: keyof Person) => {
-    return (arr: Person[]) => {
-      return [...arr].sort((a, b) => {
-        if (typeof a[type] === 'string') {
-          return order === 'desc'
-            ? (b[type] as string).localeCompare(a[type] as string)
-            : (a[type] as string).localeCompare(b[type] as string);
-        } else {
-          return order === 'desc'
-            ? (b[type] as number) - (a[type] as number)
-            : (a[type] as number) - (b[type] as number);
-        }
-      });
-    };
-  };
+    setFilteredPeople(people);
+  }, [people]);
 
   useEffect(() => {
     if (dataLoaded && people.length === 0) {
@@ -98,7 +64,7 @@ export const PeoplePage = () => {
     }
 
     if (sort) {
-      const comparator = getSortComparator(sort as keyof Person);
+      const comparator = getSortComparator(sort as keyof Person, order);
 
       updatedPeople = comparator(updatedPeople);
     }
