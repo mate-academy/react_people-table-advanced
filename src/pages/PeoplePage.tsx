@@ -21,8 +21,6 @@ export const PeoplePage = () => {
   const activeCenturies = searchParams.getAll(SearchParams.Centuries);
 
   const loadPeople = () => {
-    setIsLoading(true);
-    setHasError(false);
     getPeople()
       .then(peopleFromServer => {
         const preparedPeople = getPeopleWithParents(peopleFromServer);
@@ -43,6 +41,8 @@ export const PeoplePage = () => {
   );
 
   useEffect(() => {
+    setIsLoading(true);
+    setHasError(false);
     loadPeople();
   }, []);
 
