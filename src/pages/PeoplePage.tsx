@@ -29,7 +29,7 @@ export const PeoplePage = () => {
     isDesc,
   );
 
-  useEffect(() => {
+  const loadPeople = () => {
     setIsLoading(true);
     setHasError(false);
     getPeople()
@@ -40,6 +40,10 @@ export const PeoplePage = () => {
       })
       .catch(() => setHasError(true))
       .finally(() => setIsLoading(false));
+  };
+
+  useEffect(() => {
+    loadPeople();
   }, []);
 
   return (
