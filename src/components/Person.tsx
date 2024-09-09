@@ -9,7 +9,15 @@ type Props = {
 
 export const Person: React.FC<Props> = ({ person, people }) => {
   const { slugParam } = useParams();
-  const { name, sex, born, died, slug, motherName, fatherName } = person;
+  const {
+    name,
+    sex,
+    born,
+    died,
+    slug,
+    motherName,
+    fatherName
+  } = person;
 
   const findParent = (parentName: string | null) => {
     if (!parentName) {
@@ -21,7 +29,7 @@ export const Person: React.FC<Props> = ({ person, people }) => {
     return parent ? (
       <Link
         to={`/people/${parent.slug}`}
-        className={cn('', {
+        className={cn({
           'has-text-danger': parent.sex === 'f',
         })}
       >
@@ -38,11 +46,13 @@ export const Person: React.FC<Props> = ({ person, people }) => {
   return (
     <tr
       data-cy="person"
-      className={person.slug === slugParam ? 'has-background-warning' : ''}
+      className={cn({
+        'has-background-warning': person.slug === slugParam,
+      })}
     >
       <td>
         <Link
-          className={cn('', {
+          className={cn({
             'has-text-danger': sex === 'f',
           })}
           to={`../${slug}`}

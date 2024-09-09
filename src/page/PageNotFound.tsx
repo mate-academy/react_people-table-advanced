@@ -1,1 +1,3 @@
-export const PageNotFound = () => <h1 className="title">Page not found</h1>;
+import { PageTitle } from './PageTitle';
+
+export const PageNotFound = () => <PageTitle title="Page not found" />;

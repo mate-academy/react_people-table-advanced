@@ -2,7 +2,6 @@ import { useState } from 'react';
 import cn from 'classnames';
 
 import { Person as PersonType } from '../types';
-// eslint-disable-next-line import/extensions
 import { Person } from './Person';
 type Props = {
   people: PersonType[];

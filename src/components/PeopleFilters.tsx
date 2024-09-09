@@ -1,9 +1,8 @@
 import cn from 'classnames';
-
 import { SearchLink } from './SearchLink';
-// eslint-disable-next-line import/extensions
 import { FilterBy } from '../types/FilterBy';
 import { useEffect, useState } from 'react';
+import { centuryList } from '../utils/centuryList';
 
 type PeopleFilterProps = {
   searchParams: URLSearchParams;
@@ -23,7 +22,6 @@ export const PeopleFilters = ({
   activeCenturies,
 }: PeopleFilterProps) => {
   const [activeFilter, setActiveFilter] = useState('');
-  const centuryList = [16, 17, 18, 19, 20];
 
   useEffect(() => {
     setActiveFilter(searchParams.get('sex') || '');
@@ -48,6 +46,27 @@ export const PeopleFilters = ({
     setSearchParams(new URLSearchParams());
   };
 
+  const handleResetSexFilter = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    const newSearchParams = new URLSearchParams(searchParams);
+    newSearchParams.delete('sex');
+    setSearchParams(newSearchParams);
+  };
+
+  const handleSetMaleFilter = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    const newSearchParams = new URLSearchParams(searchParams);
+    newSearchParams.set('sex', 'm');
+    setSearchParams(newSearchParams);
+  };
+
+  const handleSetFemaleFilter = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    const newSearchParams = new URLSearchParams(searchParams);
+    newSearchParams.set('sex', 'f');
+    setSearchParams(newSearchParams);
+  };
+
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
@@ -56,36 +75,21 @@ export const PeopleFilters = ({
         <a
           className={cn({ 'is-active': activeFilter === '' })}
           href="#"
-          onClick={e => {
-            e.preventDefault();
-            const newSearchParams = new URLSearchParams(searchParams);
-            newSearchParams.delete('sex');
-            setSearchParams(newSearchParams);
-          }}
+          onClick={handleResetSexFilter}
         >
           {FilterBy.All}
         </a>
         <a
           className={cn({ 'is-active': activeFilter === 'm' })}
           href="#"
-          onClick={e => {
-            e.preventDefault();
-            const newSearchParams = new URLSearchParams(searchParams);
-            newSearchParams.set('sex', 'm');
-            setSearchParams(newSearchParams);
-          }}
+          onClick={handleSetMaleFilter}
         >
           {FilterBy.Male}
         </a>
         <a
           className={cn({ 'is-active': activeFilter === 'f' })}
           href="#"
-          onClick={e => {
-            e.preventDefault();
-            const newSearchParams = new URLSearchParams(searchParams);
-            newSearchParams.set('sex', 'f');
-            setSearchParams(newSearchParams);
-          }}
+          onClick={handleSetFemaleFilter}
         >
           {FilterBy.Female}
         </a>

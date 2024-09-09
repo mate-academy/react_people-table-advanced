@@ -6,7 +6,6 @@ import {
 } from 'react-router-dom';
 
 import { App } from './App';
-// eslint-disable-next-line import/extensions
 import { PageNotFound } from './page/PageNotFound';
 import { HomePageTitle } from './page/HomePageTitle';
 import { PeoplePage } from './components/PeoplePage';

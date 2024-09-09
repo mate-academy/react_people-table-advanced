@@ -1,1 +1,4 @@
-export const PeoplePageTitle = () => <h1 className="title">People Page</h1>;
+import { PageTitle } from './PageTitle';
+
+export const PeoplePageTitle = () => <PageTitle title="People Page" />;
+
