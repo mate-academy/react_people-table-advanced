@@ -1,4 +1,5 @@
 import { Person } from '../types';
+import { FilterSex, SortParams } from '../types/Enums';
 
 function checkCenturyOfLive(centuries: string[], person: Person) {
   return centuries.some(century => {
@@ -26,12 +27,17 @@ export const getPreparedPeople = (
 
   if (sex) {
     switch (sex) {
-      case 'f':
-        preparedPeople = preparedPeople.filter(person => person.sex === 'f');
+      case FilterSex.Female:
+        preparedPeople = preparedPeople.filter(
+          person => person.sex === FilterSex.Female,
+        );
         break;
-      case 'm':
-        preparedPeople = preparedPeople.filter(person => person.sex === 'm');
+      case FilterSex.Male:
+        preparedPeople = preparedPeople.filter(
+          person => person.sex === FilterSex.Male,
+        );
         break;
+      default:
     }
   }
 
@@ -53,11 +59,11 @@ export const getPreparedPeople = (
   if (activeSort) {
     preparedPeople.sort((prevPerson, nextPerson) => {
       switch (activeSort) {
-        case 'name':
-        case 'sex':
+        case SortParams.Name:
+        case SortParams.Sex:
           return prevPerson[activeSort].localeCompare(nextPerson[activeSort]);
-        case 'born':
-        case 'died':
+        case SortParams.Born:
+        case SortParams.Died:
           return +prevPerson[activeSort] - +nextPerson[activeSort];
         default:
           return 0;

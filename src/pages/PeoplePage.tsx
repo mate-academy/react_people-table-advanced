@@ -7,17 +7,18 @@ import { PeopleFilters } from '../components/PeopleFilters';
 import { useSearchParams } from 'react-router-dom';
 import { getPeopleWithParents } from '../utils/getPeopleWithParents';
 import { getPreparedPeople } from '../utils/getPreparedPeople';
+import { SearchParams } from '../types/Enums';
 
 export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
   const [searchParams] = useSearchParams();
-  const activeSex = searchParams.get('sex');
-  const filterQuery = searchParams.get('query');
-  const activeSort = searchParams.get('sort');
-  const isDesc = searchParams.get('order');
-  const activeCenturies = searchParams.getAll('centuries');
+  const activeSex = searchParams.get(SearchParams.Sex);
+  const filterQuery = searchParams.get(SearchParams.Query);
+  const activeSort = searchParams.get(SearchParams.Sort);
+  const isDesc = searchParams.get(SearchParams.Order);
+  const activeCenturies = searchParams.getAll(SearchParams.Centuries);
 
   const filteredPeople = getPreparedPeople(
     people,
