@@ -8,6 +8,8 @@ import { PeoplePageTitle } from '../page/PeoplePageTitle';
 import { Person } from '../types';
 import { getPeople } from '../api';
 import { useSearchParams } from 'react-router-dom';
+import { QueryParams } from '../enum/queryParams.enum';
+import { Sex } from '../enum/sex.enum';
 
 export const PeoplePage = () => {
   // #region states
@@ -20,9 +22,9 @@ export const PeoplePage = () => {
 
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const activeCenturies = searchParams.getAll('centuries') || '';
-  const activeSex = searchParams.get('sex') || '';
-  const activeQuery = searchParams.get('query') || '';
+  const activeCenturies = searchParams.getAll(QueryParams.Centuries) || [];
+  const activeSex = searchParams.get(QueryParams.Sex) as Sex || '';
+  const activeQuery = searchParams.get(QueryParams.Query) || '';
 
   const toggleCenturies = (currentCentury: number) => {
     const tempCenturies = !activeCenturies.includes(String(currentCentury))
@@ -47,36 +49,36 @@ export const PeoplePage = () => {
     }
   };
 
-  const handleFilterBySex = (sex: string, peopleList: Person[]) => {
-    switch (sex) {
-      case 'm':
-        return peopleList.filter(person => person.sex === activeSex);
-      case 'f':
-        return peopleList.filter(person => person.sex === activeSex);
+  const handleFilterBySex = (peopleList: Person[], activeSex: Sex) => {
+    switch (activeSex) {
+      case Sex.Male:
+        return peopleList.filter(person => person.sex === Sex.Male);
+      case Sex.Female:
+        return peopleList.filter(person => person.sex === Sex.Female);
       default:
         return peopleList;
     }
   };
 
   const filteredByCentury = filterByCentury();
-  const visiblePeople = handleFilterBySex(activeSex, filteredByCentury);
+  const visiblePeople = handleFilterBySex(filteredByCentury, activeSex as Sex);
+
+  // Define the fetchPeople function outside of useEffect
+  const fetchPeople = async () => {
+    setFetchPeopleError(false);
+
+    try {
+      const response = await getPeople();
+      setPeople(response);
+      setShowFilters(true);
+    } catch (error) {
+      setFetchPeopleError(true);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchPeople = async () => {
-      setFetchPeopleError(false);
-
-      try {
-        const response = await getPeople();
-
-        setPeople(response);
-        setShowFilters(true);
-      } catch (error) {
-        setFetchPeopleError(true);
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchPeople();
   }, []);
 

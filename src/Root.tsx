@@ -10,21 +10,22 @@ import { App } from './App';
 import { PageNotFound } from './page/PageNotFound';
 import { HomePageTitle } from './page/HomePageTitle';
 import { PeoplePage } from './components/PeoplePage';
+import { Routes as AppRoutes } from './enum/routes.enum';
 
 export const Root = () => {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<App />}>
-          <Route path="*" element={<PageNotFound />} />
+        <Route path={AppRoutes.Home} element={<App />}>
+          <Route path={AppRoutes.PageNotFound} element={<PageNotFound />} />
 
           <Route index element={<HomePageTitle />} />
 
-          <Route path="people">
-            <Route path=":slugParam?" element={<PeoplePage />} />
+          <Route path={AppRoutes.People}>
+            <Route path={AppRoutes.PeopleWithSlug} element={<PeoplePage />} />
           </Route>
 
-          <Route path="home" element={<Navigate to="/" replace />} />
+          <Route path={AppRoutes.HomeRedirect} element={<Navigate to={AppRoutes.Home} replace />} />
         </Route>
       </Routes>
     </Router>
