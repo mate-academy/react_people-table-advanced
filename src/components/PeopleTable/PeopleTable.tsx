@@ -6,6 +6,9 @@ import { PeopleRow } from '../PersonRow';
 import { useMemo } from 'react';
 import { SearchParamsForFilter } from '../../types/SearchParamsForFilter';
 import { SortParams } from '../../types/SortParams';
+import { Order } from '../../types/Order';
+import classNames from 'classnames';
+import { Param } from '../../types/Param';
 
 type Props = {
   people: Person[];
@@ -35,11 +38,11 @@ function filterPeopleBySearchParams(
 export const PeopleTable: React.FC<Props> = ({ people }) => {
   const { slug } = useParams();
   const [searchParams] = useSearchParams();
-  const peopleSex = searchParams.get('sex') || '';
-  const centuries = searchParams.getAll('centuries') || [];
-  const query = searchParams.get('query') || '';
-  const sort = searchParams.get('sort') || '';
-  const order = searchParams.get('order') || 'asc';
+  const peopleSex = searchParams.get(Param.Sex) || '';
+  const centuries = searchParams.getAll(Param.Centuries) || [];
+  const query = searchParams.get(Param.Query) || '';
+  const sort = searchParams.get(Param.Sort) || '';
+  const order = searchParams.get(Param.Order) || Order.Ascending;
 
   const filteredPeople = useMemo(() => {
     return filterPeopleBySearchParams(people, {
@@ -51,19 +54,19 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
 
   const handleSorting = (sortParam: SortParams) => {
     const params = new URLSearchParams(searchParams);
-    const currentSort = params.get('sort');
-    const currentOrder = params.get('order');
+    const currentSort = params.get(Param.Sort);
+    const currentOrder = params.get(Param.Order);
 
     if (currentSort === sortParam) {
-      if (currentOrder === 'asc') {
-        params.set('order', 'desc');
-      } else if (currentOrder === 'desc') {
-        params.delete('sort');
-        params.delete('order');
+      if (currentOrder === Order.Ascending) {
+        params.set(Param.Order, Order.Descending);
+      } else if (currentOrder === Order.Descending) {
+        params.delete(Param.Sort);
+        params.delete(Param.Order);
       }
     } else {
-      params.set('sort', sortParam);
-      params.set('order', 'asc');
+      params.set(Param.Sort, sortParam);
+      params.set(Param.Order, Order.Ascending);
     }
 
     return params.toString();
@@ -79,11 +82,15 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
       const bValue = b[sort as keyof Person] ?? '';
 
       if (aValue < bValue) {
-        return order === 'asc' ? -1 : 1;
+        return order === Order.Ascending
+          ? Order.DescendingNum
+          : Order.AscendingNum;
       }
 
       if (aValue > bValue) {
-        return order === 'asc' ? 1 : -1;
+        return order === Order.Ascending
+          ? Order.AscendingNum
+          : Order.DescendingNum;
       }
 
       return 0;
@@ -105,7 +112,13 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
               <Link to={{ search: handleSorting(SortParams.ByName) }}>
                 <span className="icon">
                   <i
-                    className={`fas fa-sort${sort === 'name' ? (order === 'asc' ? '-up' : '-down') : ''}`}
+                    className={classNames('fas', {
+                      'fa-sort-up':
+                        sort === SortParams.ByDied && order === Order.Ascending,
+                      'fa-sort-down':
+                        sort === SortParams.ByDied &&
+                        order === Order.Descending,
+                    })}
                   />
                 </span>
               </Link>
@@ -118,7 +131,12 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
               <Link to={{ search: handleSorting(SortParams.BySex) }}>
                 <span className="icon">
                   <i
-                    className={`fas fa-sort${sort === SortParams.BySex ? (order === 'asc' ? '-up' : '-down') : ''}`}
+                    className={classNames('fas', {
+                      'fa-sort-up':
+                        sort === SortParams.BySex && order === Order.Ascending,
+                      'fa-sort-down':
+                        sort === SortParams.BySex && order === Order.Descending,
+                    })}
                   />
                 </span>
               </Link>
@@ -132,7 +150,13 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
                 <span className="icon">
                   <i
                     id="born"
-                    className={`fas fa-sort${sort === SortParams.ByBorn ? (order === 'asc' ? '-up' : '-down') : ''}`}
+                    className={classNames('fas', {
+                      'fa-sort-up':
+                        sort === SortParams.ByBorn && order === Order.Ascending,
+                      'fa-sort-down':
+                        sort === SortParams.ByBorn &&
+                        order === Order.Descending,
+                    })}
                   />
                 </span>
               </Link>
@@ -145,7 +169,13 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
               <Link to={{ search: handleSorting(SortParams.ByDied) }}>
                 <span className="icon">
                   <i
-                    className={`fas fa-sort${sort === SortParams.ByDied ? (order === 'asc' ? '-up' : '-down') : ''}`}
+                    className={classNames('fas', {
+                      'fa-sort-up':
+                        sort === SortParams.ByDied && order === Order.Ascending,
+                      'fa-sort-down':
+                        sort === SortParams.ByDied &&
+                        order === Order.Descending,
+                    })}
                   />
                 </span>
               </Link>

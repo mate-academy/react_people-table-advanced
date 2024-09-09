@@ -45,16 +45,18 @@ export const PeoplePage = () => {
 
           <div className="column">
             <div className="box table-container">
-              {arePeopleLoading ? (
-                <Loader />
-              ) : isLoadingSuccessful ? (
-                people.length > 0 ? (
-                  <PeopleTable people={people} />
-                ) : (
-                  emptyPeopleMessage
-                )
-              ) : (
-                errorMessage
+              {arePeopleLoading && <Loader />}
+
+              {!arePeopleLoading &&
+                isLoadingSuccessful &&
+                people.length > 0 && <PeopleTable people={people} />}
+
+              {!arePeopleLoading &&
+                isLoadingSuccessful &&
+                people.length === 0 && <div>{emptyPeopleMessage}</div>}
+
+              {!arePeopleLoading && !isLoadingSuccessful && (
+                <div>{errorMessage}</div>
               )}
             </div>
           </div>
