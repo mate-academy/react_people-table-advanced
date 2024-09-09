@@ -20,15 +20,6 @@ export const PeoplePage = () => {
   const isDesc = searchParams.get(SearchParams.Order);
   const activeCenturies = searchParams.getAll(SearchParams.Centuries);
 
-  const filteredPeople = getPreparedPeople(
-    people,
-    activeSex,
-    filterQuery,
-    activeCenturies,
-    activeSort,
-    isDesc,
-  );
-
   const loadPeople = () => {
     setIsLoading(true);
     setHasError(false);
@@ -41,6 +32,15 @@ export const PeoplePage = () => {
       .catch(() => setHasError(true))
       .finally(() => setIsLoading(false));
   };
+
+  const filteredPeople = getPreparedPeople(
+    people,
+    activeSex,
+    filterQuery,
+    activeCenturies,
+    activeSort,
+    isDesc,
+  );
 
   useEffect(() => {
     loadPeople();

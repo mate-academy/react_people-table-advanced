@@ -86,6 +86,7 @@ export const PeopleTable = ({ people, activeSort, isDesc }: Props) => {
           </th>
 
           <th>Mother</th>
+
           <th>Father</th>
         </tr>
       </thead>

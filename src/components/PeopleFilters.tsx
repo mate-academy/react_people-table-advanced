@@ -4,6 +4,7 @@ import { getSearchWith } from '../utils/searchHelper';
 import { useSearchParams } from 'react-router-dom';
 import { useState } from 'react';
 import { FilterSex } from '../types/Enums';
+import { centuries } from '../utils/consts';
 
 type Props = {
   activeSex: string | null;
@@ -16,15 +17,13 @@ export const PeopleFilters = ({
   filterQuery,
   activeCenturies,
 }: Props) => {
-  const [filterInputValue, setFilterInputValue] = useState(filterQuery || '');
+  const [searchValue, setSearchValue] = useState(filterQuery || '');
   const [searchParams, setSearchParams] = useSearchParams();
-
-  const centuries = ['16', '17', '18', '19', '20'];
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = event.target.value || null;
 
-    setFilterInputValue(event.target.value);
+    setSearchValue(event.target.value);
     setSearchParams(getSearchWith(searchParams, { query: newValue }));
   };
 
@@ -42,17 +41,19 @@ export const PeopleFilters = ({
 
       <p className="panel-tabs" data-cy="SexFilter">
         <SearchLink
-          className={classNames({ 'is-active': activeSex === null })}
+          className={classNames({ 'is-active': !activeSex })}
           params={{ sex: null }}
         >
           All
         </SearchLink>
+
         <SearchLink
           className={classNames({ 'is-active': activeSex === FilterSex.Male })}
           params={{ sex: FilterSex.Male }}
         >
           Male
         </SearchLink>
+
         <SearchLink
           className={classNames({
             'is-active': activeSex === FilterSex.Female,
@@ -70,7 +71,7 @@ export const PeopleFilters = ({
             type="search"
             className="input"
             placeholder="Search"
-            value={filterInputValue}
+            value={searchValue}
             onChange={handleInputChange}
           />
 
@@ -114,7 +115,7 @@ export const PeopleFilters = ({
       <div className="panel-block">
         <SearchLink
           className="button is-link is-outlined is-fullwidth"
-          onClick={() => setFilterInputValue('')}
+          onClick={() => setSearchValue('')}
           params={{ sex: null, query: null, centuries: [] }}
         >
           Reset all filters

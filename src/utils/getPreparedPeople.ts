@@ -6,11 +6,7 @@ function checkCenturyOfLive(centuries: string[], person: Person) {
     const centuryEnd = +(century + '00');
     const centuryStart = centuryEnd - 100;
 
-    if (centuryStart <= +person.born && +person.born < centuryEnd) {
-      return true;
-    }
-
-    return false;
+    return centuryStart <= +person.born && +person.born < centuryEnd;
   });
 }
 
@@ -30,12 +26,13 @@ export const getPreparedPeople = (
   }
 
   if (preparedQuery) {
-    preparedPeople = preparedPeople.filter(
-      person =>
-        person.name.toLowerCase().includes(preparedQuery) ||
-        person.fatherName?.toLowerCase().includes(preparedQuery) ||
-        person.motherName?.toLowerCase().includes(preparedQuery),
-    );
+    preparedPeople = preparedPeople.filter(person => {
+      const { name, fatherName = '', motherName = '' } = person;
+
+      return [name, fatherName, motherName].some(field =>
+        field?.toLowerCase().includes(preparedQuery),
+      );
+    });
   }
 
   if (centuries.length) {

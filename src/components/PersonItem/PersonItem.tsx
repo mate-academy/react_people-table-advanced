@@ -20,8 +20,11 @@ export const PersonItem = ({ person, selectedPersonSlug }: Props) => {
       </td>
 
       <td>{person.sex}</td>
+
       <td>{person.born}</td>
+
       <td>{person.died}</td>
+
       <td>
         {person.mother ? (
           <PersonLink person={person.mother} />
@@ -29,6 +32,7 @@ export const PersonItem = ({ person, selectedPersonSlug }: Props) => {
           (person.motherName ?? '-')
         )}
       </td>
+
       <td>
         {person.father ? (
           <PersonLink person={person.father} />
