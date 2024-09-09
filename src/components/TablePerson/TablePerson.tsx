@@ -14,7 +14,7 @@ export const TablePerson: React.FC<Props> = ({ person }) => {
   return (
     <tr
       data-cy="person"
-      className={classNames('', {
+      className={classNames({
         'has-background-warning': person.slug === slug,
       })}
     >

@@ -91,6 +91,7 @@ export const PeopleFilters: React.FC<Props> = () => {
               </SearchLink>
             ))}
           </div>
+
           <div className="level-right ml-4">
             <a
               data-cy="centuryALL"

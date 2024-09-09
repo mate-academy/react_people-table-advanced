@@ -27,14 +27,13 @@ export const filter = (
   if (queryFilter) {
     const lowerCaseQuery = queryFilter.toLowerCase();
 
-    preparedPeople = preparedPeople.filter(
-      person =>
-        person.name.toLowerCase().includes(lowerCaseQuery) ||
-        (person.fatherName &&
-          person.fatherName.toLowerCase().includes(lowerCaseQuery)) ||
-        (person.motherName &&
-          person.motherName.toLowerCase().includes(lowerCaseQuery)),
-    );
+    preparedPeople = preparedPeople.filter(person => {
+      return [
+        person.name,
+        person.fatherName ?? '',
+        person.motherName ?? '',
+      ].some(field => field.toLowerCase().includes(lowerCaseQuery));
+    });
   }
 
   if (sort) {
