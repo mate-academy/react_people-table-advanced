@@ -1,6 +1,6 @@
 import classNames from 'classnames';
 import { useSearchParams } from 'react-router-dom';
-import { FilterTypes } from '../../utils/filter';
+import { AvailableFilters, FilterTypes } from '../../utils/enums';
 import { CENTURIES } from '../../utils/const';
 import { getSearchWith, SearchParams } from '../../utils/searchHelper';
 import { SearchLink } from '../SearchLink/SearchLink';
@@ -10,9 +10,9 @@ type Props = {
 export const PeopleFilters: React.FC<Props> = () => {
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const query = searchParams.get('query') || '';
-  const sexParam = searchParams.get('sex') || FilterTypes.All;
-  const centuries = searchParams.getAll('centuries') || [];
+  const query = searchParams.get(AvailableFilters.Query) || '';
+  const sexParam = searchParams.get(AvailableFilters.Sex) || FilterTypes.All;
+  const centuries = searchParams.getAll(AvailableFilters.Centuries) || [];
 
   function setSeachWith(params: SearchParams) {
     const search = getSearchWith(searchParams, params);
@@ -91,23 +91,6 @@ export const PeopleFilters: React.FC<Props> = () => {
               </SearchLink>
             ))}
           </div>
-          {/* <div className="panel-block">
-        <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
-          <div className="level-left">
-            {CENTURIES.map(century => (
-              <a
-                key={century}
-                data-cy="century"
-                className={classNames('button mr-1', {
-                  'is-info': centuries.includes(century.toString()),
-                })}
-                onClick={() => toggleCenturies(century)}
-              >
-                {century}
-              </a>
-            ))}
-          </div> */}
-
           <div className="level-right ml-4">
             <a
               data-cy="centuryALL"
@@ -132,50 +115,3 @@ export const PeopleFilters: React.FC<Props> = () => {
     </nav>
   );
 };
-
-{
-  /* <div className="panel-block">
-        <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
-          <div className="level-left">
-            <a
-              data-cy="century"
-              className="button mr-1"
-              href="#/people?centuries=16"
-              onClick={handleCenturiesChange}
-            >
-              16
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=17"
-            >
-              17
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=18"
-            >
-              18
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=19"
-            >
-              19
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1"
-              href="#/people?centuries=20"
-            >
-              20
-            </a>
-          </div> */
-}

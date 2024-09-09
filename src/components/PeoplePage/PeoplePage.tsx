@@ -22,10 +22,10 @@ export const PeoplePage = () => {
     getPeople()
       .then(result => {
         setPeopleList(result);
+        setHasSideBarVisible(true);
       })
       .catch(() => setIsError(true))
       .finally(() => {
-        setHasSideBarVisible(true);
         setIsLoading(false);
       });
 
@@ -57,15 +57,18 @@ export const PeoplePage = () => {
                       Something went wrong
                     </p>
                   )}
-                  {peopleList.length === 0 && !isLoading && !isError && (
+                  {!peopleList.length && !isLoading && !isError && (
                     <p data-cy="noPeopleMessage">
                       There are no people on the server
                     </p>
                   )}
-                  {peopleList.length > 0 && (
+                  {!!filteredPeople.length ? (
                     <PeopleTable people={filteredPeople} />
+                  ) : (
+                    <p>
+                      There are no people matching the current search criteria
+                    </p>
                   )}
-                  {/* <p>There are no people matching the current search criteria</p> */}
                 </div>
               </div>
             </div>

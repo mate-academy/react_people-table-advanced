@@ -1,21 +1,16 @@
 import { Person } from '../types';
-
-export enum FilterTypes {
-  All = '',
-  Male = 'm',
-  Female = 'f',
-}
+import { AvailableFilters, FilterTypes, OrderType, SortOptions } from './enums';
 
 export const filter = (
   selectedFilter: URLSearchParams,
   peopleList: Person[],
 ): Person[] => {
   let preparedPeople = peopleList;
-  const sexTypes = selectedFilter.get('sex');
-  const queryFilter = selectedFilter.get('query');
-  const centuryFilter = selectedFilter.getAll('centuries');
-  const sort = selectedFilter.get('sort');
-  const order = selectedFilter.get('order');
+  const sexTypes = selectedFilter.get(AvailableFilters.Sex);
+  const queryFilter = selectedFilter.get(AvailableFilters.Query);
+  const centuryFilter = selectedFilter.getAll(AvailableFilters.Centuries);
+  const sort = selectedFilter.get(AvailableFilters.Sort);
+  const order = selectedFilter.get(AvailableFilters.Order);
 
   if (sexTypes && sexTypes !== FilterTypes.All) {
     preparedPeople = preparedPeople.filter(person => person.sex === sexTypes);
@@ -45,13 +40,13 @@ export const filter = (
   if (sort) {
     preparedPeople.sort((a, b) => {
       switch (sort) {
-        case 'name':
-        case 'sex':
+        case SortOptions.Name:
+        case SortOptions.Sex:
           return (a[sort as keyof Person] as string).localeCompare(
             b[sort as keyof Person] as string,
           );
-        case 'born':
-        case 'died':
+        case SortOptions.Born:
+        case SortOptions.Died:
           return (
             (a[sort as keyof Person] as number) -
             (b[sort as keyof Person] as number)
@@ -62,7 +57,7 @@ export const filter = (
     });
   }
 
-  if (order === 'desc') {
+  if (order === OrderType.desc) {
     preparedPeople.reverse();
   }
 
