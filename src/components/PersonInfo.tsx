@@ -13,37 +13,51 @@ export const PersonInfo: React.FC<PeopleInfoProps> = ({ people }) => {
 
   return (
     <tbody>
-      {people.map(person => (
-        <tr
-          data-cy="person"
-          key={person.slug}
-          className={classNames({
-            'has-background-warning': person.slug === slug,
-          })}
-        >
-          <td>
-            <PersonLink person={person} />
-          </td>
+      {people.map(
+        ({
+          name,
+          sex,
+          born,
+          died,
+          fatherName,
+          motherName,
+          slug: personSlug,
+          mother,
+          father,
+        }) => (
+          <tr
+            data-cy="person"
+            key={personSlug}
+            className={classNames({
+              'has-background-warning': personSlug === slug,
+            })}
+          >
+            <td>
+              <PersonLink
+                person={{
+                  name,
+                  sex,
+                  born,
+                  died,
+                  fatherName,
+                  motherName,
+                  slug: personSlug,
+                }}
+              />
+            </td>
 
-          <td>{person.sex}</td>
-          <td>{person.born}</td>
-          <td>{person.died}</td>
-          <td>
-            {person.mother ? (
-              <PersonLink person={person.mother} />
-            ) : (
-              person.motherName || '-'
-            )}
-          </td>
-          <td>
-            {person.father ? (
-              <PersonLink person={person.father} />
-            ) : (
-              person.fatherName || '-'
-            )}
-          </td>
-        </tr>
-      ))}
+            <td>{sex}</td>
+            <td>{born}</td>
+            <td>{died}</td>
+            <td>
+              {mother ? <PersonLink person={mother} /> : motherName || '-'}
+            </td>
+            <td>
+              {father ? <PersonLink person={father} /> : fatherName || '-'}
+            </td>
+          </tr>
+        ),
+      )}
     </tbody>
   );
 };

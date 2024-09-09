@@ -9,18 +9,22 @@ import { App } from './App';
 import { HomePage } from './pages/HomePage';
 import { PeoplePage } from './pages/PeoplePage';
 import { NotFoundPage } from './pages/NotFoundPage';
+import { Routes as AppRoutes } from './types/Routes';
 
 export const Root = () => {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<App />}>
+        <Route path={AppRoutes.HOME} element={<App />}>
           <Route index element={<HomePage />} />
-          <Route path="/home" element={<Navigate to="/" replace />} />
-          <Route path="people">
+          <Route
+            path={AppRoutes.HOME}
+            element={<Navigate to={AppRoutes.HOME} replace />}
+          />
+          <Route path={AppRoutes.PEOPLE}>
             <Route path=":slug?" element={<PeoplePage />} />
           </Route>
-          <Route path="*" element={<NotFoundPage />} />
+          <Route path={AppRoutes.NOT_FOUND} element={<NotFoundPage />} />
         </Route>
       </Routes>
     </Router>

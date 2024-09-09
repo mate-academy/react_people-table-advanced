@@ -6,6 +6,8 @@ import { Person } from '../types';
 import { transformPeople } from '../utils/peopleSorting';
 import { PeopleTable } from '../components/PeopleTable';
 import { useSearchParams } from 'react-router-dom';
+import { SearchParams } from '../types/SearchParams';
+import { ErrorMessages } from '../types/ErrorMessages';
 import {
   filterByQuery,
   filterBySex,
@@ -17,20 +19,22 @@ export const PeoplePage = () => {
 
   const [people, setPeople] = useState<Person[]>([]);
   const [error, setError] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     setIsLoading(true);
 
     getPeople()
       .then(setPeople)
-      .catch(() => setError('Something went wrong'))
+      .catch(() => setError(ErrorMessages.FetchError))
       .finally(() => setIsLoading(false));
   }, []);
 
-  const query = searchParams.get('query') || '';
-  const selectedSex = searchParams.get('sex') || '';
-  const selectedCenturies = searchParams.getAll('centuries').map(Number);
+  const query = searchParams.get(SearchParams.Query) || '';
+  const selectedSex = searchParams.get(SearchParams.Sex) || '';
+  const selectedCenturies = searchParams
+    .getAll(SearchParams.Centuries)
+    .map(Number);
   const peopleWithParents = transformPeople(people);
 
   const filteredByQuery = filterByQuery(peopleWithParents, query);

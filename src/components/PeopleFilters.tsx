@@ -1,8 +1,10 @@
+/* eslint-disable prettier/prettier */
 import React from 'react';
 import classNames from 'classnames';
 import { useSearchParams } from 'react-router-dom';
 import { Centuries } from '../types/Century';
 import { PersonSex } from '../types/PersonSex';
+import { SearchParams } from '../types/SearchParams';
 import {
   updateUrlParams,
   updateMultiValueParams,
@@ -12,9 +14,11 @@ import {
 export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const query = searchParams.get('query') || '';
-  const selectedSex = searchParams.get('sex') || '';
-  const selectedCenturies = searchParams.getAll('centuries').map(Number);
+  const query = searchParams.get(SearchParams.Query) || '';
+  const selectedSex = searchParams.get(SearchParams.Sex) || '';
+  const selectedCenturies = searchParams
+    .getAll(SearchParams.Centuries)
+    .map(Number);
   const centuries = Object.values(Centuries).filter(
     value => typeof value === 'number',
   );
@@ -23,14 +27,14 @@ export const PeopleFilters = () => {
     const queryValue = event.target.value;
 
     const params = queryValue
-      ? updateUrlParams(searchParams, 'query', queryValue)
-      : resetParams(searchParams, ['query']);
+      ? updateUrlParams(searchParams, SearchParams.Query, queryValue)
+      : resetParams(searchParams, [SearchParams.Query]);
 
     setSearchParams(params);
   }
 
   function handleSexChange(sex: string) {
-    const params = updateUrlParams(searchParams, 'sex', sex);
+    const params = updateUrlParams(searchParams, SearchParams.Sex, sex);
 
     setSearchParams(params);
   }
@@ -45,22 +49,33 @@ export const PeopleFilters = () => {
     }
 
     const params = updatedCenturies.size
-      ? updateMultiValueParams(searchParams, 'centuries', updatedCenturies)
-      : resetParams(searchParams, ['centuries']);
+      ? updateMultiValueParams(
+        // eslint-disable-next-line @typescript-eslint/indent
+          searchParams,
+        // eslint-disable-next-line @typescript-eslint/indent
+          SearchParams.Centuries,
+        // eslint-disable-next-line @typescript-eslint/indent
+          updatedCenturies,
+      )
+      : resetParams(searchParams, [SearchParams.Centuries]);
 
     setSearchParams(params);
   }
 
   const handleResetCenturies = (event: React.MouseEvent<HTMLAnchorElement>) => {
     event.preventDefault();
-    const params = resetParams(searchParams, ['centuries']);
+    const params = resetParams(searchParams, [SearchParams.Centuries]);
 
     setSearchParams(params);
   };
 
   function handleResetFilters(event: React.MouseEvent<HTMLAnchorElement>) {
     event.preventDefault();
-    const params = resetParams(searchParams, ['query', 'sex', 'centuries']);
+    const params = resetParams(searchParams, [
+      SearchParams.Query,
+      SearchParams.Sex,
+      SearchParams.Centuries,
+    ]);
 
     setSearchParams(params);
   }
@@ -84,7 +99,7 @@ export const PeopleFilters = () => {
           className={classNames({
             'is-active': selectedSex === PersonSex.Male,
           })}
-          href="#/people?sex=m"
+          href={`#/people?${SearchParams.Sex}=m`}
           onClick={event => {
             event.preventDefault();
             handleSexChange(PersonSex.Male);
@@ -96,7 +111,7 @@ export const PeopleFilters = () => {
           className={classNames({
             'is-active': selectedSex === PersonSex.Female,
           })}
-          href="#/people?sex=f"
+          href={`#/people?${SearchParams.Sex}=f`}
           onClick={event => {
             event.preventDefault();
             handleSexChange(PersonSex.Female);
@@ -133,7 +148,7 @@ export const PeopleFilters = () => {
                 className={classNames('button mr-1', {
                   'is-info': selectedCenturies.includes(century),
                 })}
-                href={`#/people?centuries=${century}`}
+                href={`#/people?${SearchParams.Centuries}=${century}`}
                 onClick={event => {
                   event.preventDefault();
                   handleCenturyClick(century);

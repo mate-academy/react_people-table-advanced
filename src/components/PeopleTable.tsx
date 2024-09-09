@@ -6,6 +6,7 @@ import { SortOrder } from '../types/Order';
 import { getSortIconClass } from '../utils/GetSortIconClass';
 import { sortPeople } from '../utils/SortPeopleUtils';
 import { SortField } from '../types/SortField';
+import { SearchParams } from '../types/SearchParams';
 
 type PeopleTableProps = {
   people: Person[];
@@ -14,9 +15,9 @@ type PeopleTableProps = {
 export const PeopleTable: React.FC<PeopleTableProps> = ({ people }) => {
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const sortField = searchParams.get('sort') || SortField.Name;
+  const sortField = searchParams.get(SearchParams.Sort) || SortField.Name;
   const sortOrder =
-    (searchParams.get('order') as SortOrder) || SortOrder.Ascending;
+    (searchParams.get(SearchParams.Order) as SortOrder) || SortOrder.Ascending;
 
   const sortedPeople = React.useMemo(
     () => sortPeople(people, sortField, sortOrder),
