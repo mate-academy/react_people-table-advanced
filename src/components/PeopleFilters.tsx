@@ -3,6 +3,8 @@ import { SearchLink } from './SearchLink';
 import { FilterBy } from '../types/FilterBy';
 import { useEffect, useState } from 'react';
 import { centuryList } from '../utils/centuryList';
+import { QueryParams } from '../enum/queryParams.enum';
+import { Sex } from '../enum/sex.enum';
 
 type PeopleFilterProps = {
   searchParams: URLSearchParams;
@@ -24,17 +26,17 @@ export const PeopleFilters = ({
   const [activeFilter, setActiveFilter] = useState('');
 
   useEffect(() => {
-    setActiveFilter(searchParams.get('sex') || '');
-    setQuery(searchParams.get('query') || '');
+    setActiveFilter(searchParams.get(QueryParams.Sex) || '');
+    setQuery(searchParams.get(QueryParams.Query) || '');
   }, [searchParams, setQuery]);
 
   const handleQueryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newSearchParams = new URLSearchParams(searchParams);
 
     if (!event.target.value) {
-      newSearchParams.delete('query');
+      newSearchParams.delete(QueryParams.Query);
     } else {
-      newSearchParams.set('query', event.target.value);
+      newSearchParams.set(QueryParams.Query, event.target.value);
     }
 
     setSearchParams(newSearchParams);
@@ -49,21 +51,22 @@ export const PeopleFilters = ({
   const handleResetSexFilter = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
     const newSearchParams = new URLSearchParams(searchParams);
-    newSearchParams.delete('sex');
+    newSearchParams.delete(QueryParams.Sex);
     setSearchParams(newSearchParams);
   };
 
   const handleSetMaleFilter = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
     const newSearchParams = new URLSearchParams(searchParams);
-    newSearchParams.set('sex', 'm');
+    newSearchParams.set(QueryParams.Sex, Sex.Male);
     setSearchParams(newSearchParams);
   };
+
 
   const handleSetFemaleFilter = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
     const newSearchParams = new URLSearchParams(searchParams);
-    newSearchParams.set('sex', 'f');
+    newSearchParams.set(QueryParams.Sex, Sex.Female);
     setSearchParams(newSearchParams);
   };
 
@@ -80,14 +83,14 @@ export const PeopleFilters = ({
           {FilterBy.All}
         </a>
         <a
-          className={cn({ 'is-active': activeFilter === 'm' })}
+          className={cn({ 'is-active': activeFilter === Sex.Male })}
           href="#"
           onClick={handleSetMaleFilter}
         >
           {FilterBy.Male}
         </a>
         <a
-          className={cn({ 'is-active': activeFilter === 'f' })}
+          className={cn({ 'is-active': activeFilter === Sex.Female })}
           href="#"
           onClick={handleSetFemaleFilter}
         >
@@ -154,4 +157,4 @@ export const PeopleFilters = ({
       </div>
     </nav>
   );
-};
+}
