@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { SearchParams, getSearchWith } from '../utils/searchHelper';
 import { SearchLink } from './SearchLink';
 import classNames from 'classnames';
@@ -11,7 +11,9 @@ export enum Status {
 }
 
 export const PeopleFilters = () => {
-  const centuriesArray = ['16', '17', '18', '19', '20'];
+  const centuriesArray = useMemo(() => ['16', '17', '18', '19', '20'], []);
+
+  const [, setSelectedPeople] = useState<string[]>([]);
 
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -38,6 +40,11 @@ export const PeopleFilters = () => {
       : [...centuries, newCentury];
 
     return newCenturies;
+  };
+
+  const resetAllFilters = () => {
+    setSearchWith({ sex: null, query: '', centuries: [] });
+    setSelectedPeople([]);
   };
 
   return (
@@ -115,18 +122,14 @@ export const PeopleFilters = () => {
       </div>
 
       <div className="panel-block">
-        <SearchLink
-          params={{
-            sex: [],
-            query: [],
-            centuries: [],
-          }}
+        <button
           className={classNames('button is-link is-fullwidth', {
             'is-outlined': !centuries.length,
           })}
+          onClick={resetAllFilters}
         >
           Reset all filters
-        </SearchLink>
+        </button>
       </div>
     </nav>
   );

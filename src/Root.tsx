@@ -4,7 +4,7 @@ import {
   HashRouter as Router,
   Routes,
 } from 'react-router-dom';
-import { WAYS } from './utils/ways';
+import { eRoutes } from './utils/eRoutes';
 import { App } from './App';
 import HomePage from './components/HomePage';
 import { PeoplePage } from './components/PeoplePage';
@@ -14,10 +14,10 @@ export default function Root() {
   return (
     <Router>
       <Routes>
-        <Route path={WAYS.HOME} element={<App />}>
+        <Route path={eRoutes.HOME} element={<App />}>
           <Route index element={<HomePage />} />
-          <Route path={`${WAYS.PEOPLE}/:slugs?`} element={<PeoplePage />} />
-          <Route path="home" element={<Navigate to={WAYS.HOME} replace />} />
+          <Route path={`${eRoutes.PEOPLE}/:slugs?`} element={<PeoplePage />} />
+          <Route path="home" element={<Navigate to={eRoutes.HOME} replace />} />
           <Route path="*" element={<NotFoundPage />} />
         </Route>
       </Routes>

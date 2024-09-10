@@ -1,4 +1,4 @@
-export enum WAYS {
+export enum eRoutes {
   HOME = '/',
   PEOPLE = 'people',
 }

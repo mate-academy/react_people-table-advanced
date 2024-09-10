@@ -1,6 +1,6 @@
 import classNames from 'classnames';
 import { NavLink } from 'react-router-dom';
-import { WAYS } from '../utils/ways';
+import { eRoutes } from '../utils/eRoutes';
 
 export const Navbar = () => {
   const getLinkClass = ({ isActive }: { isActive: boolean }) =>
@@ -17,14 +17,14 @@ export const Navbar = () => {
     >
       <div className="container">
         <div className="navbar-brand">
-          <NavLink className={getLinkClass} to={WAYS.HOME}>
+          <NavLink className={getLinkClass} to={eRoutes.HOME}>
             Home
           </NavLink>
 
           <NavLink
             aria-current="page"
             className={getLinkClass}
-            to={WAYS.PEOPLE}
+            to={eRoutes.PEOPLE}
           >
             People
           </NavLink>
