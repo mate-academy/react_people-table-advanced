@@ -32,9 +32,9 @@ export const PeoplePage = () => {
     setSearchParams(getSearchWith(searchParams, { query: query || null }));
   };
 
-  const handleCenturyFilterChange = (century: string, isSelected: boolean) => {
+  const toggleCentury = (century: string) => {
     const currentCenturies = searchParams.getAll('centuries');
-    const updatedCenturies = isSelected
+    const updatedCenturies = currentCenturies.includes(century)
       ? currentCenturies.filter(c => c !== century)
       : [...currentCenturies, century];
 
@@ -43,6 +43,10 @@ export const PeoplePage = () => {
         centuries: updatedCenturies.length ? updatedCenturies : null,
       }),
     );
+  };
+
+  const handleCenturyFilterChange = (century: string) => {
+    toggleCentury(century);
   };
 
   const handleSexFilterChange = (sex: string | null) => {
