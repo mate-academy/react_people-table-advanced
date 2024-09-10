@@ -121,7 +121,9 @@ export const PeopleFilters = () => {
             query: [],
             centuries: [],
           }}
-          className={classNames('button is-link is-outlined is-fullwidth')}
+          className={classNames('button is-link is-fullwidth', {
+            'is-outlined': !centuries.length,
+          })}
         >
           Reset all filters
         </SearchLink>
