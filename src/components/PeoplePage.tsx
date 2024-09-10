@@ -1,5 +1,5 @@
 import { useSearchParams } from 'react-router-dom';
-import React, { useEffect, useState } from 'react';
+import React, { useMemo, useEffect, useState } from 'react';
 import { PeopleFilters } from './PeopleFilters';
 import { Loader } from './Loader';
 import { PeopleTable } from './PeopleTable';
@@ -73,40 +73,45 @@ export const PeoplePage = () => {
     );
   };
 
-  const filteredPeople = people.filter(person => {
+  const filteredPeople = useMemo(() => {
     const query = searchParams.get('query')?.toLowerCase() || '';
     const centuries = searchParams.getAll('centuries').map(Number);
     const sexFilter = searchParams.get('sex');
-    const matchesQuery = person.name.toLowerCase().includes(query);
-    const matchesCentury =
-      centuries.length === 0 ||
-      centuries.includes(Math.ceil(person.born / 100));
-    const matchesSex = !sexFilter || person.sex === sexFilter;
 
-    return matchesQuery && matchesCentury && matchesSex;
-  });
+    return people.filter(person => {
+      const matchesQuery = person.name.toLowerCase().includes(query);
+      const matchesCentury =
+        centuries.length === 0 ||
+        centuries.includes(Math.ceil(person.born / 100));
+      const matchesSex = !sexFilter || person.sex === sexFilter;
 
-  const sortedPeople = [...filteredPeople].sort((a, b) => {
+      return matchesQuery && matchesCentury && matchesSex;
+    });
+  }, [people, searchParams]);
+
+  const sortedPeople = useMemo(() => {
     const sortField = searchParams.get('sort');
     const sortOrder = searchParams.get('order') === 'desc' ? -1 : 1;
 
     if (!sortField) {
+      return filteredPeople;
+    }
+
+    return [...filteredPeople].sort((a, b) => {
+      const valueA = a[sortField as keyof Person];
+      const valueB = b[sortField as keyof Person];
+
+      if (typeof valueA === 'string' && typeof valueB === 'string') {
+        return valueA.localeCompare(valueB) * sortOrder;
+      }
+
+      if (typeof valueA === 'number' && typeof valueB === 'number') {
+        return (valueA - valueB) * sortOrder;
+      }
+
       return 0;
-    }
-
-    const valueA = a[sortField as keyof Person];
-    const valueB = b[sortField as keyof Person];
-
-    if (typeof valueA === 'string' && typeof valueB === 'string') {
-      return valueA.localeCompare(valueB) * sortOrder;
-    }
-
-    if (typeof valueA === 'number' && typeof valueB === 'number') {
-      return (valueA - valueB) * sortOrder;
-    }
-
-    return 0;
-  });
+    });
+  }, [filteredPeople, searchParams]);
 
   if (loading) {
     return (

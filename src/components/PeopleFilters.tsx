@@ -14,9 +14,6 @@ export const PeopleFilters: React.FC<PeopleFiltersProps> = ({
   onCenturyFilterChange,
 }) => {
   const [selectedSex, setSelectedSex] = useState<string | null>(null);
-  const handleSexFilterChange = (sex: string | null) => {
-    setSelectedSex(sex);
-  };
 
   return (
     <nav className="panel">
@@ -26,21 +23,21 @@ export const PeopleFilters: React.FC<PeopleFiltersProps> = ({
         <SearchLink
           className={cn({ 'is-active': selectedSex === null })}
           params={{ sex: null }}
-          onClick={() => handleSexFilterChange(null)}
+          onClick={() => setSelectedSex(null)}
         >
           All
         </SearchLink>
         <SearchLink
           className={cn({ 'is-active': selectedSex === 'm' })}
           params={{ sex: 'm' }}
-          onClick={() => handleSexFilterChange('m')}
+          onClick={() => setSelectedSex('m')}
         >
           Male
         </SearchLink>
         <SearchLink
           className={cn({ 'is-active': selectedSex === 'f' })}
           params={{ sex: 'f' }}
-          onClick={() => handleSexFilterChange('f')}
+          onClick={() => setSelectedSex('f')}
         >
           Female
         </SearchLink>
