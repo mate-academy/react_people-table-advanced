@@ -3,20 +3,21 @@ import { Link, useSearchParams } from 'react-router-dom';
 import { SexFilter } from '../../types/SexFilter';
 import { CenturiesFilter } from '../../types/CenturiesFilter';
 import { AVAILABLE_CENTURIES } from '../../constants/availableCenturies';
+import { Param } from '../../types/Param';
 
 export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const peopleSex = searchParams.get('sex') || SexFilter.All;
-  const centuries = searchParams.getAll('centuries') || [];
-  const query = searchParams.get('query') || '';
+  const peopleSex = searchParams.get(Param.Sex) || SexFilter.All;
+  const centuries = searchParams.getAll(Param.Centuries) || [];
+  const query = searchParams.get(Param.Query) || '';
 
   const handleFilterSex = (sex: SexFilter) => {
     const params = new URLSearchParams(searchParams);
 
     if (sex) {
-      params.set('sex', sex);
+      params.set(Param.Sex, sex);
     } else {
-      params.delete('sex');
+      params.delete(Param.Sex);
     }
 
     return params.toString();
@@ -26,7 +27,7 @@ export const PeopleFilters = () => {
     const params = new URLSearchParams(searchParams);
 
     if (century === CenturiesFilter.All) {
-      params.delete('centuries');
+      params.delete(Param.Centuries);
 
       return params.toString();
     }
@@ -35,9 +36,9 @@ export const PeopleFilters = () => {
       ? centuries.filter(currCentury => +currCentury !== century)
       : [...centuries, century];
 
-    params.delete('centuries');
+    params.delete(Param.Centuries);
     newCenturies.forEach(centuryToAppend =>
-      params.append('centuries', centuryToAppend.toString()),
+      params.append(Param.Centuries, centuryToAppend.toString()),
     );
 
     return params.toString();
@@ -47,9 +48,9 @@ export const PeopleFilters = () => {
     const params = new URLSearchParams(searchParams);
 
     if (event.target.value.length) {
-      params.set('query', event.target.value);
+      params.set(Param.Query, event.target.value);
     } else {
-      params.delete('query');
+      params.delete(Param.Query);
     }
 
     setSearchParams(params);
@@ -58,9 +59,9 @@ export const PeopleFilters = () => {
   const handleResetFilters = () => {
     const params = new URLSearchParams(searchParams);
 
-    params.delete('sex');
-    params.delete('centuries');
-    params.delete('query');
+    params.delete(Param.Sex);
+    params.delete(Param.Centuries);
+    params.delete(Param.Query);
 
     return params.toString();
   };
