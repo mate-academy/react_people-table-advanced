@@ -9,3 +9,7 @@ export interface Person {
   mother?: Person;
   father?: Person;
 }
+
+export interface ActiveLink {
+  isActive: { isActive: boolean };
+}
