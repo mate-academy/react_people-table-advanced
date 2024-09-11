@@ -4,16 +4,17 @@ import { PeopleTable } from './PeopleTable';
 
 import { useSearchParams } from 'react-router-dom';
 import { useFetchPeople } from '../utils/useFetchPeople';
+import { SearchParams, Order, SortField } from '../utils/constants';
 
 export const PeoplePage = () => {
   const { people, isLoading, errorMessage } = useFetchPeople();
   const [searchParams] = useSearchParams();
 
-  const sex = searchParams.get('sex');
-  const query = searchParams.get('query');
-  const years = searchParams.getAll('years');
-  const sortField = searchParams.get('sort');
-  const isReversed = searchParams.get('order') === 'desc';
+  const sex = searchParams.get(SearchParams.SEX);
+  const query = searchParams.get(SearchParams.QUERY);
+  const years = searchParams.getAll(SearchParams.YEARS);
+  const sortField = searchParams.get(SearchParams.SORT);
+  const isReversed = searchParams.get(SearchParams.ORDER) === Order.DESC;
 
   let visiblePeople = [...people];
 
@@ -41,12 +42,12 @@ export const PeoplePage = () => {
   if (sortField) {
     visiblePeople.sort((a, b) => {
       switch (sortField) {
-        case 'name':
-        case 'sex':
+        case SortField.NAME:
+        case SortField.SEX:
           return a[sortField].localeCompare(b[sortField]);
 
-        case 'born':
-        case 'died':
+        case SortField.BORN:
+        case SortField.DIED:
           return a[sortField] - b[sortField];
 
         default:

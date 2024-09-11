@@ -1,34 +1,38 @@
 import { useSearchParams } from 'react-router-dom';
 import { SearchLink } from './SearchLink';
 import classNames from 'classnames';
+import { SearchParams } from '../utils/constants';
 
-const YEARS = ['16', '17', '18', '19', '20'];
+const CENTURIES = ['16', '17', '18', '19', '20'];
 
-const getUpdatedYears = (currentYears: string[], year: string) => {
-  return currentYears.includes(year)
-    ? currentYears.filter(c => c !== year)
-    : [...currentYears, year];
+const getUpdatedCenturies = (currentCenturies: string[], century: string) => {
+  return currentCenturies.includes(century)
+    ? currentCenturies.filter(currentCentury => currentCentury !== century)
+    : [...currentCenturies, century];
 };
 
 export const YearsFilter = () => {
   const [searchParams] = useSearchParams();
-  const years = searchParams.getAll('years');
+  const selectedCenturies = searchParams.getAll(SearchParams.YEARS);
 
   return (
     <div className="panel-block">
       <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
-        {YEARS.map(year => (
-          <div className="level-left" key={year}>
+        {CENTURIES.map(century => (
+          <div className="level-left" key={century}>
             <SearchLink
               data-cy="century"
               className={classNames('button mr-1', {
-                'is-info': years.includes(year),
+                'is-info': selectedCenturies.includes(century),
               })}
               params={{
-                years: getUpdatedYears(years, year),
+                [SearchParams.YEARS]: getUpdatedCenturies(
+                  selectedCenturies,
+                  century,
+                ),
               }}
             >
-              {year}
+              {century}
             </SearchLink>
           </div>
         ))}

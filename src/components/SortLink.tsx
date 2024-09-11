@@ -1,6 +1,7 @@
 import classNames from 'classnames';
 import { SearchLink } from './SearchLink';
 import { useSearchParams } from 'react-router-dom';
+import { SearchParams, Order } from '../utils/constants';
 
 type Props = {
   field: string;
@@ -8,12 +9,12 @@ type Props = {
 
 export const SortLink: React.FC<Props> = ({ field }) => {
   const [searchParams] = useSearchParams();
-  const sortField = searchParams.get('sort') || '';
-  const isReversed = searchParams.get('order') === 'desc';
+  const sortField = searchParams.get(SearchParams.SORT) || '';
+  const isReversed = searchParams.get(SearchParams.ORDER) === Order.DESC;
 
   let params: Record<string, string | null> = {
     sort: field,
-    order: 'asc',
+    order: Order.ASC,
   };
 
   if (field === sortField) {
@@ -23,7 +24,7 @@ export const SortLink: React.FC<Props> = ({ field }) => {
         order: null,
       };
     } else {
-      params.order = 'desc';
+      params.order = Order.DESC;
     }
   }
 

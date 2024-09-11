@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { getPeople } from '../api';
 import { Person } from '../types';
+import { ErrorMessage } from './constants';
 
 export const useFetchPeople = () => {
   const [people, setPeople] = useState<Person[]>([]);
@@ -13,7 +14,7 @@ export const useFetchPeople = () => {
     getPeople()
       .then(setPeople)
       .catch(() => {
-        setErrorMessage('Something went wrong');
+        setErrorMessage(ErrorMessage.FETCH_ERROR);
       })
       .finally(() => setIsLoading(false));
   }, []);
