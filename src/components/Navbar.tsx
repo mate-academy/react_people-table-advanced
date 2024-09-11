@@ -1,4 +1,13 @@
+import classNames from 'classnames';
+import { NavLink } from 'react-router-dom';
+import { eRoutes } from '../utils/eRoutes';
+
 export const Navbar = () => {
+  const getLinkClass = ({ isActive }: { isActive: boolean }) =>
+    classNames('navbar-item', {
+      'has-background-grey-lighter': isActive,
+    });
+
   return (
     <nav
       data-cy="nav"
@@ -8,17 +17,17 @@ export const Navbar = () => {
     >
       <div className="container">
         <div className="navbar-brand">
-          <a className="navbar-item" href="#/">
+          <NavLink className={getLinkClass} to={eRoutes.HOME}>
             Home
-          </a>
+          </NavLink>
 
-          <a
+          <NavLink
             aria-current="page"
-            className="navbar-item has-background-grey-lighter"
-            href="#/people"
+            className={getLinkClass}
+            to={eRoutes.PEOPLE}
           >
             People
-          </a>
+          </NavLink>
         </div>
       </div>
     </nav>
