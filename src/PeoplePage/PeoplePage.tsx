@@ -12,6 +12,8 @@ export const PeoplePage: React.FC = () => {
   const [error, setError] = useState(false);
   const { slug } = useParams<{ slug: string }>();
   const [searchParams] = useSearchParams();
+  const [sortField, setSortField] = useState<string | null>(null);
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc' | null>(null);
 
   useEffect(() => {
     getPeople()
@@ -41,7 +43,7 @@ export const PeoplePage: React.FC = () => {
   const sex = searchParams.get('sex') || '';
   const centuries = searchParams.getAll('centuries') || [];
 
-  const filteredPeople = people.filter(person => {
+  let filteredPeople = people.filter(person => {
     const matchesName = (name: string) =>
       name.toLowerCase().includes(query.toLowerCase());
     const century = Math.floor((person.born + 99) / 100);
@@ -56,6 +58,41 @@ export const PeoplePage: React.FC = () => {
     );
   });
 
+  if (sortField) {
+    filteredPeople = [...filteredPeople].sort((a, b) => {
+      const aValue = a[sortField as keyof Person];
+      const bValue = b[sortField as keyof Person];
+
+      if (typeof aValue === 'string' && typeof bValue === 'string') {
+        return sortOrder === 'asc'
+          ? aValue.localeCompare(bValue)
+          : bValue.localeCompare(aValue);
+      }
+
+      if (typeof aValue === 'number' && typeof bValue === 'number') {
+        return sortOrder === 'asc' ? aValue - bValue : bValue - aValue;
+      }
+
+      return 0;
+    });
+  }
+
+  const handleSort = (field: keyof Person) => {
+    if (sortField === field) {
+      if (sortOrder === 'asc') {
+        setSortOrder('desc');
+      } else if (sortOrder === 'desc') {
+        setSortOrder(null);
+        setSortField(null);
+      } else {
+        setSortOrder('asc');
+      }
+    } else {
+      setSortField(field);
+      setSortOrder('asc');
+    }
+  };
+
   return (
     <div className="section">
       <h1 className="title">People Page</h1>
@@ -63,7 +100,13 @@ export const PeoplePage: React.FC = () => {
       {people.length === 0 ? (
         <p data-cy="noPeopleMessage">There are no people on the server</p>
       ) : (
-        <PeopleTable people={filteredPeople} selectedSlug={slug} />
+        <PeopleTable
+          people={filteredPeople}
+          selectedSlug={slug}
+          onSort={handleSort}
+          sortField={sortField}
+          sortOrder={sortOrder}
+        />
       )}
     </div>
   );

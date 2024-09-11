@@ -21,32 +21,46 @@ export const PeopleFilters = () => {
   }
 
   function handleSexFilter(sex: string) {
+    const params = new URLSearchParams(searchParams);
+
     if (sex) {
-      searchParams.set('sex', sex);
+      params.set('sex', sex);
     } else {
-      searchParams.delete('sex');
+      params.delete('sex');
     }
 
-    setSearchParams(searchParams);
+    centuries.forEach(century => params.append('centuries', century));
+
+    setSearchParams(params);
   }
 
   function handleCenturyFilter(ch: string) {
     const params = new URLSearchParams(searchParams);
 
-    const newCenturies = centuries.includes(ch)
-      ? centuries.filter(centurie => centurie !== ch)
-      : [...centuries, ch];
+    const sex = params.get('sex');
 
-    params.delete('centuries');
-    newCenturies.forEach(centurie => params.append('centuries', centurie));
+    if (sex) {
+      params.set('sex', sex);
+    }
+
+    if (ch) {
+      const newCenturies = centuries.includes(ch)
+        ? centuries.filter(centurie => centurie !== ch)
+        : [...centuries, ch];
+
+      params.delete('centuries');
+      newCenturies.forEach(centurie => params.append('centuries', centurie));
+    } else {
+      params.delete('centuries');
+    }
+
     setSearchParams(params);
   }
 
   function clearFilter() {
-    searchParams.delete('query');
-    searchParams.delete('sex');
-    searchParams.delete('centuries');
-    setSearchParams(searchParams);
+    const params = new URLSearchParams();
+
+    setSearchParams(params);
   }
 
   return (
@@ -114,7 +128,7 @@ export const PeopleFilters = () => {
               data-cy="centuryALL"
               className="button is-success is-outlined"
               href="#/people"
-              onClick={() => handleCenturyFilter()}
+              onClick={() => handleCenturyFilter('')}
             >
               All
             </a>

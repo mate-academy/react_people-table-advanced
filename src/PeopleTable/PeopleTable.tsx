@@ -4,11 +4,17 @@ import { Person } from '../types/Person';
 interface PeopleTableProps {
   people: Person[];
   selectedSlug?: string;
+  onSort: (field: keyof Person) => void;
+  sortOrder: string | null;
+  sortField: 'asc' | 'desc' | null;
 }
 
 export const PeopleTable: React.FC<PeopleTableProps> = ({
   people,
   selectedSlug,
+  onSort,
+  sortOrder,
+  sortField,
 }) => {
   const findPersonSlug = (
     name: string | null | undefined,
@@ -26,10 +32,70 @@ export const PeopleTable: React.FC<PeopleTableProps> = ({
     >
       <thead>
         <tr>
-          <th>Name</th>
-          <th>Sex</th>
-          <th>Born</th>
-          <th>Died</th>
+          <th onClick={() => onSort('name')}>
+            Name
+            {sortField === 'name' ? (
+              <>
+                {sortOrder === 'asc' ? (
+                  <i className="fas fa-sort-up" />
+                ) : (
+                  <i className="fas fa-sort-down" />
+                )}
+              </>
+            ) : (
+              <>
+                <i className="fas fa-sort" />
+              </>
+            )}
+          </th>
+          <th onClick={() => onSort('sex')}>
+            Sex
+            {sortField === 'sex' ? (
+              <>
+                {sortOrder === 'asc' ? (
+                  <i className="fas fa-sort-up" />
+                ) : (
+                  <i className="fas fa-sort-down" />
+                )}
+              </>
+            ) : (
+              <>
+                <i className="fas fa-sort" />
+              </>
+            )}
+          </th>
+          <th onClick={() => onSort('born')}>
+            Born
+            {sortField === 'born' ? (
+              <>
+                {sortOrder === 'asc' ? (
+                  <i className="fas fa-sort-up" />
+                ) : (
+                  <i className="fas fa-sort-down" />
+                )}
+              </>
+            ) : (
+              <>
+                <i className="fas fa-sort" />
+              </>
+            )}
+          </th>
+          <th onClick={() => onSort('died')}>
+            Died
+            {sortField === 'died' ? (
+              <>
+                {sortOrder === 'asc' ? (
+                  <i className="fas fa-sort-up" />
+                ) : (
+                  <i className="fas fa-sort-down" />
+                )}
+              </>
+            ) : (
+              <>
+                <i className="fas fa-sort" />
+              </>
+            )}
+          </th>
           <th>Mother</th>
           <th>Father</th>
         </tr>
