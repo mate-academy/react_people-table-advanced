@@ -7,6 +7,8 @@ import { getSearchWith, SearchParams } from '../utils/searchHelper';
  */
 type Props = Omit<LinkProps, 'to'> & {
   params: SearchParams;
+  key?: string | undefined;
+  'data-cy'?: string | undefined;
 };
 
 /**
