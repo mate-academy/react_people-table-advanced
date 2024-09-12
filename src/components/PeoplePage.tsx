@@ -9,7 +9,7 @@ export const PeoplePage = () => {
 
   useEffect(() => {
     getAllPeople();
-  }, []);
+  }, [getAllPeople]);
 
   return (
     <>
