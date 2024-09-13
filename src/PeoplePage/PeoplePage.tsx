@@ -27,10 +27,6 @@ export const PeoplePage: React.FC = () => {
       });
   }, []);
 
-  if (loading) {
-    return <Loader />;
-  }
-
   if (error) {
     return (
       <p data-cy="peopleLoadingError" className="has-text-danger">
@@ -41,7 +37,7 @@ export const PeoplePage: React.FC = () => {
 
   const query = searchParams.get('query') || '';
   const sex = searchParams.get('sex') || '';
-  const centuries = searchParams.getAll('centuries') || [];
+  const centuries = searchParams.getAll('century') || [];
 
   let filteredPeople = people.filter(person => {
     const matchesName = (name: string) =>
@@ -94,20 +90,48 @@ export const PeoplePage: React.FC = () => {
   };
 
   return (
-    <div className="section">
+    <>
       <h1 className="title">People Page</h1>
-      <PeopleFilters />
-      {people.length === 0 ? (
-        <p data-cy="noPeopleMessage">There are no people on the server</p>
-      ) : (
-        <PeopleTable
-          people={filteredPeople}
-          selectedSlug={slug}
-          onSort={handleSort}
-          sortField={sortField}
-          sortOrder={sortOrder}
-        />
-      )}
-    </div>
+
+      <div className="block">
+        <div className="columns is-desktop is-flex-direction-row-reverse">
+          <div className="column is-7-tablet is-narrow-desktop">
+            <PeopleFilters />
+          </div>
+
+          <div className="column">
+            <div className="box table-container">
+              {loading && <Loader />}
+              {!loading && (
+                <>
+                  {people.length === 0 ? (
+                    <p data-cy="noPeopleMessage">
+                      There are no people on the server
+                    </p>
+                  ) : (
+                    <>
+                      {filteredPeople.length === 0 ? (
+                        <p>
+                          There are no people matching the current search
+                          criteria
+                        </p>
+                      ) : (
+                        <PeopleTable
+                          people={filteredPeople}
+                          selectedSlug={slug}
+                          onSort={handleSort}
+                          sortField={sortField}
+                          sortOrder={sortOrder}
+                        />
+                      )}
+                    </>
+                  )}
+                </>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
   );
 };

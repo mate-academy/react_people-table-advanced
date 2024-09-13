@@ -87,7 +87,7 @@ export const PeopleFilters = () => {
             <SearchLink
               data-cy="centuryALL"
               className="button is-success is-outlined"
-              params={{ centuries: null }}
+              params={{ century: null }}
             >
               All
             </SearchLink>
@@ -98,7 +98,7 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <SearchLink
           className="button is-link is-outlined is-fullwidth"
-          params={{ query: null, sex: null, centuries: null }}
+          params={{ query: null, sex: null, century: null }}
         >
           Reset all filters
         </SearchLink>
