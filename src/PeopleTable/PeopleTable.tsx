@@ -25,6 +25,18 @@ export const PeopleTable: React.FC<PeopleTableProps> = ({
     return foundPerson ? foundPerson.slug : undefined;
   };
 
+  const getSortIcon = (field: keyof Person) => {
+    if (sortField === field) {
+      return sortOrder === 'asc' ? (
+        <i className="fas fa-sort-up" />
+      ) : (
+        <i className="fas fa-sort-down" />
+      );
+    }
+
+    return <i className="fas fa-sort" />;
+  };
+
   return (
     <table
       data-cy="peopleTable"
@@ -32,70 +44,10 @@ export const PeopleTable: React.FC<PeopleTableProps> = ({
     >
       <thead>
         <tr>
-          <th onClick={() => onSort('name')}>
-            Name
-            {sortField === 'name' ? (
-              <>
-                {sortOrder === 'asc' ? (
-                  <i className="fas fa-sort-up" />
-                ) : (
-                  <i className="fas fa-sort-down" />
-                )}
-              </>
-            ) : (
-              <>
-                <i className="fas fa-sort" />
-              </>
-            )}
-          </th>
-          <th onClick={() => onSort('sex')}>
-            Sex
-            {sortField === 'sex' ? (
-              <>
-                {sortOrder === 'asc' ? (
-                  <i className="fas fa-sort-up" />
-                ) : (
-                  <i className="fas fa-sort-down" />
-                )}
-              </>
-            ) : (
-              <>
-                <i className="fas fa-sort" />
-              </>
-            )}
-          </th>
-          <th onClick={() => onSort('born')}>
-            Born
-            {sortField === 'born' ? (
-              <>
-                {sortOrder === 'asc' ? (
-                  <i className="fas fa-sort-up" />
-                ) : (
-                  <i className="fas fa-sort-down" />
-                )}
-              </>
-            ) : (
-              <>
-                <i className="fas fa-sort" />
-              </>
-            )}
-          </th>
-          <th onClick={() => onSort('died')}>
-            Died
-            {sortField === 'died' ? (
-              <>
-                {sortOrder === 'asc' ? (
-                  <i className="fas fa-sort-up" />
-                ) : (
-                  <i className="fas fa-sort-down" />
-                )}
-              </>
-            ) : (
-              <>
-                <i className="fas fa-sort" />
-              </>
-            )}
-          </th>
+          <th onClick={() => onSort('name')}>Name {getSortIcon('name')}</th>
+          <th onClick={() => onSort('sex')}>Sex {getSortIcon('sex')}</th>
+          <th onClick={() => onSort('born')}>Born{getSortIcon('born')}</th>
+          <th onClick={() => onSort('died')}>Died {getSortIcon('died')}</th>
           <th>Mother</th>
           <th>Father</th>
         </tr>
