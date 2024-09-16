@@ -5,8 +5,8 @@ interface PeopleTableProps {
   people: Person[];
   selectedSlug?: string;
   onSort: (field: keyof Person) => void;
-  sortOrder: string | null;
-  sortField: 'asc' | 'desc' | null;
+  sortOrder: 'asc' | 'desc' | null;
+  sortField: keyof Person | null;
 }
 
 export const PeopleTable: React.FC<PeopleTableProps> = ({
@@ -20,9 +20,7 @@ export const PeopleTable: React.FC<PeopleTableProps> = ({
     name: string | null | undefined,
     persons: Person[],
   ): string | undefined => {
-    const foundPerson = persons.find(person => person.name === name);
-
-    return foundPerson ? foundPerson.slug : undefined;
+    return persons.find(person => person.name === name)?.slug;
   };
 
   const getSortIcon = (field: keyof Person) => {
@@ -46,7 +44,7 @@ export const PeopleTable: React.FC<PeopleTableProps> = ({
         <tr>
           <th onClick={() => onSort('name')}>Name {getSortIcon('name')}</th>
           <th onClick={() => onSort('sex')}>Sex {getSortIcon('sex')}</th>
-          <th onClick={() => onSort('born')}>Born{getSortIcon('born')}</th>
+          <th onClick={() => onSort('born')}>Born {getSortIcon('born')}</th>
           <th onClick={() => onSort('died')}>Died {getSortIcon('died')}</th>
           <th>Mother</th>
           <th>Father</th>
@@ -79,31 +77,23 @@ export const PeopleTable: React.FC<PeopleTableProps> = ({
               <td>{person.died}</td>
 
               <td>
-                {person.motherName ? (
-                  motherSlug ? (
-                    <a
-                      href={`#/people/${motherSlug}`}
-                      className="has-text-danger"
-                    >
-                      {person.motherName}
-                    </a>
-                  ) : (
-                    <span>{person.motherName}</span>
-                  )
+                {motherSlug ? (
+                  <a
+                    href={`#/people/${motherSlug}`}
+                    className="has-text-danger"
+                  >
+                    {person.motherName}
+                  </a>
                 ) : (
-                  '-'
+                  <span>{person.motherName || '-'}</span>
                 )}
               </td>
 
               <td>
-                {person.fatherName ? (
-                  fatherSlug ? (
-                    <a href={`#/people/${fatherSlug}`}>{person.fatherName}</a>
-                  ) : (
-                    <span>{person.fatherName}</span>
-                  )
+                {fatherSlug ? (
+                  <a href={`#/people/${fatherSlug}`}>{person.fatherName}</a>
                 ) : (
-                  '-'
+                  <span>{person.fatherName || '-'}</span>
                 )}
               </td>
             </tr>

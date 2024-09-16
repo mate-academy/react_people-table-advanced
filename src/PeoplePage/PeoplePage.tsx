@@ -11,9 +11,21 @@ export const PeoplePage: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const { slug } = useParams<{ slug: string }>();
-  const [searchParams] = useSearchParams();
-  const [sortField, setSortField] = useState<string | null>(null);
-  const [sortOrder, setSortOrder] = useState<'asc' | 'desc' | null>(null);
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  // Получаем параметры сортировки из URL
+  const initialSortField = searchParams.get('sortField') as keyof Person | null;
+  const initialSortOrder = searchParams.get('sortOrder') as
+    | 'asc'
+    | 'desc'
+    | null;
+
+  const [sortField, setSortField] = useState<keyof Person | null>(
+    initialSortField,
+  );
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc' | null>(
+    initialSortOrder,
+  );
 
   useEffect(() => {
     getPeople()
@@ -74,19 +86,17 @@ export const PeoplePage: React.FC = () => {
   }
 
   const handleSort = (field: keyof Person) => {
-    if (sortField === field) {
-      if (sortOrder === 'asc') {
-        setSortOrder('desc');
-      } else if (sortOrder === 'desc') {
-        setSortOrder(null);
-        setSortField(null);
-      } else {
-        setSortOrder('asc');
-      }
-    } else {
-      setSortField(field);
-      setSortOrder('asc');
-    }
+    const newSortOrder =
+      sortField === field && sortOrder === 'asc' ? 'desc' : 'asc';
+
+    setSortField(field);
+    setSortOrder(newSortOrder);
+
+    setSearchParams({
+      ...Object.fromEntries(searchParams.entries()),
+      sortField: field,
+      sortOrder: newSortOrder,
+    });
   };
 
   return (
@@ -101,8 +111,9 @@ export const PeoplePage: React.FC = () => {
 
           <div className="column">
             <div className="box table-container">
-              {loading && <Loader />}
-              {!loading && (
+              {loading ? (
+                <Loader />
+              ) : (
                 <>
                   {people.length === 0 ? (
                     <p data-cy="noPeopleMessage">
