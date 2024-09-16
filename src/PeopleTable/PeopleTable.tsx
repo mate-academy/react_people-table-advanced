@@ -1,5 +1,6 @@
 import React from 'react';
 import { Person } from '../types/Person';
+import { useSearchParams } from 'react-router-dom';
 
 interface PeopleTableProps {
   people: Person[];
@@ -16,6 +17,8 @@ export const PeopleTable: React.FC<PeopleTableProps> = ({
   sortOrder,
   sortField,
 }) => {
+  const [searchParams] = useSearchParams();
+
   const findPersonSlug = (
     name: string | null | undefined,
     persons: Person[],
@@ -34,6 +37,8 @@ export const PeopleTable: React.FC<PeopleTableProps> = ({
 
     return <i className="fas fa-sort" />;
   };
+
+  const searchParamsString = searchParams.toString(); // Get the current search params as a string
 
   return (
     <table
@@ -67,7 +72,7 @@ export const PeopleTable: React.FC<PeopleTableProps> = ({
               <td>
                 <a
                   className={person.sex === 'f' ? 'has-text-danger' : ''}
-                  href={`#/people/${person.slug}`}
+                  href={`#/people/${person.slug}?${searchParamsString}`}
                 >
                   {person.name}
                 </a>
@@ -79,7 +84,7 @@ export const PeopleTable: React.FC<PeopleTableProps> = ({
               <td>
                 {motherSlug ? (
                   <a
-                    href={`#/people/${motherSlug}`}
+                    href={`#/people/${motherSlug}?${searchParamsString}`}
                     className="has-text-danger"
                   >
                     {person.motherName}
@@ -91,7 +96,9 @@ export const PeopleTable: React.FC<PeopleTableProps> = ({
 
               <td>
                 {fatherSlug ? (
-                  <a href={`#/people/${fatherSlug}`}>{person.fatherName}</a>
+                  <a href={`#/people/${fatherSlug}?${searchParamsString}`}>
+                    {person.fatherName}
+                  </a>
                 ) : (
                   <span>{person.fatherName || '-'}</span>
                 )}
