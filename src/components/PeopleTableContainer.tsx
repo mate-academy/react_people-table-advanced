@@ -51,11 +51,17 @@ export const PeopleTableContainer: React.FC<Props> = ({
   return (
     <>
       {!!people.length ? (
-        <PeopleTable>
-          {filteredPeopleList.map(person => (
-            <PersonItem key={person.slug} person={person} />
-          ))}
-        </PeopleTable>
+        filteredPeopleList.length > 0 ? (
+          <PeopleTable>
+            {filteredPeopleList.map(person => (
+              <PersonItem key={person.slug} person={person} />
+            ))}
+          </PeopleTable>
+        ) : (
+          <p data-cy="noMatchingPeopleMessage">
+            There are no people matching the current search criteria
+          </p>
+        )
       ) : (
         <p data-cy="noPeopleMessage">There are no people on the server</p>
       )}
