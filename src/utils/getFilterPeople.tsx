@@ -48,7 +48,7 @@ export const filter = (
   }
 
   if (order) {
-    filteredPeople.reverse();
+    filteredPeople = filteredPeople.reverse();
   }
 
   return filteredPeople;

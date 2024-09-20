@@ -6,8 +6,8 @@ import classNames from 'classnames';
 export const TableTitle = () => {
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const order = searchParams.get('order') || 'asc';
-  const sort = searchParams.get('sort');
+  const order = searchParams.get('order') || null;
+  const sort = searchParams.get('sort') || null;
 
   const titleTable: string[] = ['Name', 'Sex', 'Born', 'Died'];
 
