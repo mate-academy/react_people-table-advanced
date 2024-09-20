@@ -36,13 +36,11 @@ export const filter = (
     filteredPeople = filteredPeople.sort((a, b) => {
       switch (sort) {
         case 'name':
-          return a.name.localeCompare(b.name);
         case 'sex':
-          return a.sex.localeCompare(b.sex);
+          return a[sort].localeCompare(b[sort]);
         case 'born':
-          return a.born - b.born;
         case 'died':
-          return a.died - b.died;
+          return a[sort] - b[sort];
         default:
           return 0;
       }

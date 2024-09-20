@@ -52,7 +52,7 @@ export const PeoplePage = () => {
                   )}
                 </>
               )}
-              {!isLoading && !getFilteredPeople && (
+              {!isLoading && !getFilteredPeople.length && (
                 <p>There are no people matching the current search criteria</p>
               )}
               {!isLoading && !isError && !!getFilteredPeople.length && (

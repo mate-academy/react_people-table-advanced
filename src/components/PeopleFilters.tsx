@@ -11,7 +11,8 @@ export const PeopleFilters = () => {
 
   const getCentury = ['16', '17', '18', '19', '20'];
 
-  const getActiveClass = (filt: string) => (sex === filt ? 'is-active' : '');
+  const getActiveClass = (filt: string | null) =>
+    sex === filt ? 'is-active' : '';
 
   const setSearchWith = (params: {
     query?: string | null;
@@ -39,7 +40,7 @@ export const PeopleFilters = () => {
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        <SearchLink params={{ sex: null }} className={getActiveClass('')}>
+        <SearchLink className={getActiveClass(null)} params={{ sex: null }}>
           All
         </SearchLink>
         <SearchLink className={getActiveClass('m')} params={{ sex: 'm' }}>
