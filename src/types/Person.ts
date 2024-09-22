@@ -1,6 +1,6 @@
 export interface Person {
   name: string;
-  sex: string;
+  sex: 'm' | 'f';
   born: number;
   died: number;
   fatherName: string | null;
