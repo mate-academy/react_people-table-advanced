@@ -53,15 +53,18 @@ export const PeoplePage: React.FC = () => {
       centuryFilter.length > 0
         ? filteredByQuery.filter(person => {
             const personCentury = calculateCentury(person.born);
+
             return centuryFilter.includes(personCentury.toString());
           })
         : filteredByQuery;
 
     const sortedPeople = [...filteredByCentury].sort((a, b) => {
-      if (!sortField) return 0;
+      if (!sortField) {
+        return 0;
+      }
 
-      let fieldA = a[sortField as keyof Person];
-      let fieldB = b[sortField as keyof Person];
+      const fieldA = a[sortField as keyof Person];
+      const fieldB = b[sortField as keyof Person];
 
       if (typeof fieldA === 'number' && typeof fieldB === 'number') {
         return sortOrder === 'desc' ? fieldB - fieldA : fieldA - fieldB;
@@ -86,7 +89,7 @@ export const PeoplePage: React.FC = () => {
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
           <div className="column is-7-tablet is-narrow-desktop">
-            <PeopleFilters />
+            {!loading && people.length > 0 && <PeopleFilters />}
           </div>
 
           <div className="column">

@@ -6,6 +6,7 @@ export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const query = searchParams.get('query') || '';
   const centuries = searchParams.getAll('century') || [];
+  const allCenturies = [16, 17, 18, 19, 20];
 
   function handleSexFiltering(
     event: React.MouseEvent<HTMLAnchorElement>,
@@ -20,11 +21,13 @@ export const PeopleFilters = () => {
     } else {
       params.delete('sex');
     }
+
     setSearchParams(params);
   }
 
   function handleQueryChange(event: React.ChangeEvent<HTMLInputElement>) {
     const params = new URLSearchParams(searchParams);
+
     params.set('query', event.target.value);
     setSearchParams(params);
   }
@@ -63,14 +66,13 @@ export const PeopleFilters = () => {
     event.preventDefault();
 
     const params = new URLSearchParams(searchParams);
+
     params.delete('sex');
     params.delete('query');
     params.delete('century');
 
     setSearchParams(params);
   };
-
-  const allCenturies = [16, 17, 18, 19, 20];
 
   return (
     <nav className="panel">

@@ -16,6 +16,9 @@ export const PersonDetails: React.FC<Props> = ({
 }) => {
   const { slug, sex, born, died, motherName, fatherName } = person;
 
+  const mother = motherName ? findPersonByName(motherName) : undefined;
+  const father = fatherName ? findPersonByName(fatherName) : undefined;
+
   return (
     <tr
       key={slug}
@@ -32,8 +35,8 @@ export const PersonDetails: React.FC<Props> = ({
       <td>{died}</td>
       <td>
         {motherName ? (
-          findPersonByName(motherName) ? (
-            <PersonLink person={findPersonByName(motherName)} />
+          mother ? (
+            <PersonLink person={mother} />
           ) : (
             motherName
           )
@@ -43,8 +46,8 @@ export const PersonDetails: React.FC<Props> = ({
       </td>
       <td>
         {fatherName ? (
-          findPersonByName(fatherName) ? (
-            <PersonLink person={findPersonByName(fatherName)} />
+          father ? (
+            <PersonLink person={father} />
           ) : (
             fatherName
           )
