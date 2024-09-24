@@ -19,10 +19,10 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
     return people.find(person => person.name === name);
   };
 
-  function handleSortClick(
+  const handleSortClick = (
     field: keyof Person,
     event: React.MouseEvent<HTMLAnchorElement>,
-  ) {
+  ) => {
     event.preventDefault();
     const currentField = searchParams.get('sort');
     const currentOrder = searchParams.get('order');
@@ -38,7 +38,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
     }
 
     setSearchParams(searchParams);
-  }
+  };
 
   return (
     <table

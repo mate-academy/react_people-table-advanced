@@ -26,9 +26,9 @@ export const PeoplePage: React.FC = () => {
       });
   }, []);
 
-  function calculateCentury(bornYear: number): number {
+  const calculateCentury = (bornYear: number): number => {
     return Math.floor((bornYear - 1) / 100) + 1;
-  }
+  };
 
   useEffect(() => {
     const sexFilter = searchParams.get('sex');
@@ -41,22 +41,28 @@ export const PeoplePage: React.FC = () => {
       ? people.filter(person => person.sex === sexFilter)
       : people;
 
+    const searchInNames = (person: Person) => {
+      const lowerCaseQuery = query.toLowerCase();
+      const namesToSearch = [person.name, person.motherName, person.fatherName];
+
+      return namesToSearch.some(
+        name => name && name.toLowerCase().includes(lowerCaseQuery),
+      );
+    };
+
     const filteredByQuery = query
-      ? filteredBySex.filter(person =>
-          [person.name, person.motherName, person.fatherName].some(name =>
-            name?.toLowerCase().includes(query),
-          ),
-        )
+      ? filteredBySex.filter(person => searchInNames(person))
       : filteredBySex;
 
-    const filteredByCentury =
-      centuryFilter.length > 0
-        ? filteredByQuery.filter(person => {
-            const personCentury = calculateCentury(person.born);
+    let filteredByCentury = filteredByQuery;
 
-            return centuryFilter.includes(personCentury.toString());
-          })
-        : filteredByQuery;
+    if (centuryFilter.length > 0) {
+      filteredByCentury = filteredByQuery.filter(person => {
+        const personCentury = calculateCentury(person.born);
+
+        return centuryFilter.includes(personCentury.toString());
+      });
+    }
 
     const sortedPeople = [...filteredByCentury].sort((a, b) => {
       if (!sortField) {
@@ -112,7 +118,7 @@ export const PeoplePage: React.FC = () => {
                 <PeopleTable people={filteredPeople} />
               )}
 
-              {!loading && !error && filteredPeople.length === 0 && (
+              {!loading && !error && !filteredPeople.length && (
                 <p data-cy="noMatchingPeopleMessage">
                   There are no people matching the current search criteria
                 </p>

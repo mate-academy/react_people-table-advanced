@@ -25,17 +25,17 @@ export const PeopleFilters = () => {
     setSearchParams(params);
   }
 
-  function handleQueryChange(event: React.ChangeEvent<HTMLInputElement>) {
+  const handleQueryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const params = new URLSearchParams(searchParams);
 
     params.set('query', event.target.value);
     setSearchParams(params);
-  }
+  };
 
-  function handleCenturyFiltering(
+  const handleCenturyFiltering = (
     event: React.MouseEvent<HTMLAnchorElement>,
     c: string,
-  ) {
+  ) => {
     event.preventDefault();
 
     const params = new URLSearchParams(searchParams);
@@ -47,9 +47,11 @@ export const PeopleFilters = () => {
     newCentury.forEach(century => params.append('century', century));
 
     setSearchParams(params);
-  }
+  };
 
-  function handleSelectAllCentury(event: React.MouseEvent<HTMLAnchorElement>) {
+  const handleSelectAllCentury = (
+    event: React.MouseEvent<HTMLAnchorElement>,
+  ) => {
     event.preventDefault();
 
     const params = new URLSearchParams(searchParams);
@@ -60,7 +62,7 @@ export const PeopleFilters = () => {
     );
 
     setSearchParams(params);
-  }
+  };
 
   const resetAll = (event: React.MouseEvent<HTMLAnchorElement>) => {
     event.preventDefault();
