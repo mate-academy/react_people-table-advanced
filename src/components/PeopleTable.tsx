@@ -63,6 +63,7 @@ export const PeopleTable = () => {
   const order = searchParams.get('order') !== 'desc';
   const sex = searchParams.get('sex') || '';
   const centuries = searchParams.getAll('centuries') || [];
+  const query = searchParams.get('query') || '';
   const [prevCent, setPrevCent] = useState<string[]>([]);
 
   const findPersonByName = (name: string) => {
@@ -108,6 +109,26 @@ export const PeopleTable = () => {
       setPrevCent([...centuries]);
     }
   };
+
+  const handleQueryFilterChange = () => {
+    const filteredPeople = [...people];
+
+    setVisiblePeople(
+      filteredPeople.filter(person => {
+        return (
+          person.name.toLowerCase().includes(query.toLowerCase().trim()) ||
+          person.fatherName
+            ?.toLowerCase()
+            .includes(query.toLowerCase().trim()) ||
+          person.motherName?.toLowerCase().includes(query.toLowerCase().trim())
+        );
+      }),
+    );
+  };
+
+  useEffect(() => {
+    handleQueryFilterChange();
+  }, [query]);
 
   useEffect(() => {
     handleCenturyFilterChange();
