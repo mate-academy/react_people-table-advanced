@@ -25,6 +25,7 @@ export const SearchLink: React.FC<Props> = ({
       // to={{ search: getSearchWith(searchParams, { query: 'sdf' }) }}
       // to={{ search: getSearchWith(searchParams, { query: null }) }}
       // to={{ search: getSearchWith(searchParams, { centuries: ['16', '18'] }) }}
+
       to={{
         search: getSearchWith(searchParams, params),
       }}
