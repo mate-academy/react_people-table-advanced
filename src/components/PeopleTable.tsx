@@ -97,11 +97,13 @@ export const PeopleTable = () => {
       const filteredPeople = [...people];
 
       setVisiblePeople(
-        filteredPeople.filter(
-          person =>
-            centuries.includes(Math.floor(person.born / 100).toString()) ||
-            centuries.includes(Math.floor(person.died / 100).toString()),
-        ),
+        centuries.length
+          ? filteredPeople.filter(
+              person =>
+                centuries.includes(Math.floor(person.born / 100).toString()) ||
+                centuries.includes(Math.floor(person.died / 100).toString()),
+            )
+          : filteredPeople,
       );
       setPrevCent([...centuries]);
     }
