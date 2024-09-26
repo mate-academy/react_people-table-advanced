@@ -158,11 +158,8 @@ export const PeopleTable = () => {
         <tr>
           {Object.values(COLUMNS).map(column => (
             <th key={column.title}>
-              <span
-                className="is-flex is-flex-wrap-nowrap"
-                style={{ textTransform: 'capitalize' }}
-              >
-                {column.title}
+              <span className="is-flex is-flex-wrap-nowrap">
+                {column.title.charAt(0).toUpperCase() + column.title.slice(1)}
                 {column.isSorted && (
                   <SearchLink params={getSearchLinkParams(column.title)}>
                     <span className="icon">
