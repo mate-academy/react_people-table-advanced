@@ -109,7 +109,7 @@ export const PeopleTable = () => {
 
   useEffect(() => {
     handleCenturyFilterChange();
-  }, []);
+  }, [centuries]);
 
   useEffect(() => {
     handleSortChange();
