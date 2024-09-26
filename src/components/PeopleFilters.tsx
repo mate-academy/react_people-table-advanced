@@ -6,7 +6,7 @@ export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const query = searchParams.get('query') || '';
   const centuries = searchParams.getAll('centuries') || [];
-  const gender = searchParams.get('sex') || '';
+  const sex = searchParams.get('sex') || '';
 
   function setSearchWith(params: SearchParams) {
     const search = getSearchWith(searchParams, params);
@@ -35,19 +35,19 @@ export const PeopleFilters = () => {
       <p className="panel-tabs" data-cy="SexFilter">
         <Link
           to={{ search: getSearchWith(searchParams, { sex: null }) }}
-          className={classnames({ 'is-active': gender === '' })}
+          className={classnames({ 'is-active': sex === '' })}
         >
           All
         </Link>
         <Link
           to={{ search: getSearchWith(searchParams, { sex: 'm' }) }}
-          className={classnames({ 'is-active': gender === 'm' })}
+          className={classnames({ 'is-active': sex === 'm' })}
         >
           Male
         </Link>
         <Link
           to={{ search: getSearchWith(searchParams, { sex: 'f' }) }}
-          className={classnames({ 'is-active': gender === 'f' })}
+          className={classnames({ 'is-active': sex === 'f' })}
         >
           Female
         </Link>
