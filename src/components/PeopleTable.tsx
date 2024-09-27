@@ -81,7 +81,7 @@ export const PeopleTable = () => {
     };
 
     return setVisiblePeople(sortedPeople.sort(finalSorting));
-  }, [sort, order]);
+  }, [sort, order, people]);
 
   const handleSexFilterChange = useCallback(() => {
     const filteredPeople = [...people];
@@ -108,7 +108,7 @@ export const PeopleTable = () => {
       );
       setPrevCent([...centuries]);
     }
-  }, [centuries, people]);
+  }, [centuries, people, prevCent]);
 
   const handleQueryFilterChange = useCallback(() => {
     const filteredPeople = [...people];
