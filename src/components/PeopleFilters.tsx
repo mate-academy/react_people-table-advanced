@@ -73,7 +73,7 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            {getCenturies(16, 20).map((c, i) => (
+            {getCenturies(15, 20).map((c, i) => (
               <Link
                 to={{
                   search: getSearchWith(searchParams, {

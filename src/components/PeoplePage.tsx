@@ -27,7 +27,7 @@ export const PeoplePage = () => {
         }),
       )
       .finally(() => dispatch({ type: 'isReady', payload: true }));
-  }, []);
+  }, [dispatch]);
 
   return (
     <>

@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/indent */
-import { useContext, useEffect, useState } from 'react';
+import { useCallback, useContext, useEffect, useState } from 'react';
 import { PersonLink } from './PersonLink';
 import { StatesContext } from '../store/Store';
 import { useSearchParams } from 'react-router-dom';
@@ -83,7 +83,7 @@ export const PeopleTable = () => {
     return setVisiblePeople(sortedPeople.sort(finalSorting));
   };
 
-  const handleSexFilterChange = () => {
+  const handleSexFilterChange = useCallback(() => {
     const filteredPeople = [...people];
 
     setVisiblePeople(
@@ -91,9 +91,9 @@ export const PeopleTable = () => {
         ? filteredPeople.filter(person => person.sex === sex)
         : filteredPeople,
     );
-  };
+  }, [people, sex]);
 
-  const handleCenturyFilterChange = () => {
+  const handleCenturyFilterChange = useCallback(() => {
     if (JSON.stringify(centuries) !== JSON.stringify(prevCent)) {
       const filteredPeople = [...people];
 
@@ -108,9 +108,9 @@ export const PeopleTable = () => {
       );
       setPrevCent([...centuries]);
     }
-  };
+  }, [centuries, people]);
 
-  const handleQueryFilterChange = () => {
+  const handleQueryFilterChange = useCallback(() => {
     const filteredPeople = [...people];
 
     setVisiblePeople(
@@ -124,7 +124,7 @@ export const PeopleTable = () => {
         );
       }),
     );
-  };
+  }, [query, people]);
 
   useEffect(() => {
     handleQueryFilterChange();
