@@ -70,7 +70,7 @@ export const PeopleTable = () => {
     return people.find(person => person.name === name);
   };
 
-  const handleSortChange = () => {
+  const handleSortChange = useCallback(() => {
     const sortedPeople = [...people];
 
     const sortingFn = (sort && COLUMNS[sort].sortingFn) ?? (() => 0);
@@ -81,7 +81,7 @@ export const PeopleTable = () => {
     };
 
     return setVisiblePeople(sortedPeople.sort(finalSorting));
-  };
+  }, [sort, order]);
 
   const handleSexFilterChange = useCallback(() => {
     const filteredPeople = [...people];
@@ -128,19 +128,19 @@ export const PeopleTable = () => {
 
   useEffect(() => {
     handleQueryFilterChange();
-  }, [query]);
+  }, [handleQueryFilterChange]);
 
   useEffect(() => {
     handleCenturyFilterChange();
-  }, [centuries]);
+  }, [handleCenturyFilterChange]);
 
   useEffect(() => {
     handleSortChange();
-  }, [sort, order]);
+  }, [handleSortChange]);
 
   useEffect(() => {
     handleSexFilterChange();
-  }, [sex]);
+  }, [handleSexFilterChange]);
 
   function getSearchLinkParams(sortField: string) {
     return {
