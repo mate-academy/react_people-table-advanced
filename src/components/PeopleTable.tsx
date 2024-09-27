@@ -62,7 +62,7 @@ export const PeopleTable = () => {
   const sort: Columns | null = (searchParams.get('sort') as Columns) || null;
   const order = searchParams.get('order') !== 'desc';
   const sex = searchParams.get('sex') || '';
-  const centuries = searchParams.getAll('centuries') || [];
+  const centuries = searchParams.getAll('centuries');
   const query = searchParams.get('query') || '';
   const [prevCent, setPrevCent] = useState<string[]>([]);
 
