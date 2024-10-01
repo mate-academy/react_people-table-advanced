@@ -3,12 +3,12 @@ import { useSearchParams } from 'react-router-dom';
 import { FilterByCentury, FilterBySex } from '../types';
 import { SearchLink } from './SearchLink';
 import classNames from 'classnames';
+import { SearchParams } from '../utils/searchHelper';
 
 export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const sex: FilterBySex =
-    (searchParams.get('sex') as FilterBySex) || FilterBySex.All;
+  const sex = (searchParams.get('sex') as FilterBySex) || FilterBySex.All;
   const query = searchParams.get('query') || '';
   const centuries = useMemo(
     () => searchParams.getAll('centuries') || [],
@@ -30,10 +30,16 @@ export const PeopleFilters = () => {
 
   const updateCentury = (century: string) => {
     const updatedCenturies = centuries.includes(century)
-      ? centuries.filter(c => c !== century)
+      ? centuries.filter(existingCentury => existingCentury !== century)
       : [...centuries, century];
 
     return { centuries: updatedCenturies.length ? updatedCenturies : null };
+  };
+
+  const resetFiltersParams: SearchParams = {
+    query: null,
+    sex: null,
+    centuries: null,
   };
 
   return (
@@ -112,7 +118,7 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <SearchLink
           className="button is-link is-outlined is-fullwidth"
-          params={{ query: null, sex: null, centuries: null }}
+          params={resetFiltersParams}
         >
           Reset all filters
         </SearchLink>

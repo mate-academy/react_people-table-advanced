@@ -1,18 +1,26 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
 import { PeoplePage } from '../components/PeoplePage';
+import { HomePage } from '../components/HomePage';
 import { App } from '../App';
+import { Routes as AppRoutes } from '../types/Routes';
 
 export const AppRouter = () => {
   return (
     <Routes>
-      <Route path="/" element={<App />}>
-        <Route index element={<h1 className="title">Home Page</h1>} />
-        <Route path="home" element={<Navigate to="/" replace={true} />} />
-        <Route path="people">
+      <Route path={AppRoutes.Home} element={<App />}>
+        <Route index element={<HomePage />} />
+        <Route
+          path="home"
+          element={<Navigate to={AppRoutes.Home} replace={true} />}
+        />
+        <Route path={AppRoutes.People}>
           <Route index element={<PeoplePage />} />
           <Route path=":slug" element={<PeoplePage />} />
         </Route>
-        <Route path="*" element={<h1 className="title">Page not found</h1>} />
+        <Route
+          path={AppRoutes.NotFound}
+          element={<h1 className="title">Page not found</h1>}
+        />
       </Route>
     </Routes>
   );

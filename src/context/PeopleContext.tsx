@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, useCallback } from 'react';
 import { Person, SortBy } from '../types';
 import { getPeople } from '../api';
 
@@ -35,7 +35,7 @@ export const PeopleProvider: React.FC<{ children: React.ReactNode }> = ({
     });
   };
 
-  const getAllPeople = async () => {
+  const getAllPeople = useCallback(async () => {
     try {
       setError(false);
       setLoading(true);
@@ -47,7 +47,7 @@ export const PeopleProvider: React.FC<{ children: React.ReactNode }> = ({
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   const filteredPeople = (
     peopleToUpdate: Person[],
