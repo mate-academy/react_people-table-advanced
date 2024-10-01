@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/indent */
 import { Loader } from './Loader/Loader';
 import { useEffect, useState } from 'react';
 import { Person } from '../types';

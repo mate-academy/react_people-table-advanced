@@ -1,6 +1,10 @@
-// import { useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { SearchLink } from './SearchLink';
+
+enum Sex {
+  Male = 'm',
+  Female = 'f',
+}
 
 type Props = {
   onNameChange: (name: string) => void;
@@ -11,6 +15,12 @@ export const PeopleFilters: React.FC<Props> = ({ onNameChange }) => {
   const query = searchParams.get('query') || '';
   const selectedCenturies = searchParams.getAll('centuries') || [];
   const selectedSex = searchParams.get('sex') || '';
+
+  const sexFilters = [
+    { label: 'All', value: '' },
+    { label: 'Male', value: Sex.Male },
+    { label: 'Female', value: Sex.Female },
+  ];
 
   const toggleCentury = (century: string) => {
     const index = selectedCenturies.indexOf(century);
@@ -40,25 +50,18 @@ export const PeopleFilters: React.FC<Props> = ({ onNameChange }) => {
     <nav className="panel">
       <p className="panel-heading">Filters</p>
 
+
       <p className="panel-tabs" data-cy="SexFilter">
-        <SearchLink
-          className={!selectedSex ? 'is-active' : ''}
-          params={{ sex: '' }}
-        >
-          All
-        </SearchLink>
-        <SearchLink
-          className={selectedSex === 'm' ? 'is-active' : ''}
-          params={{ sex: 'm' }}
-        >
-          Male
-        </SearchLink>
-        <SearchLink
-          className={selectedSex === 'f' ? 'is-active' : ''}
-          params={{ sex: 'f' }}
-        >
-          Female
-        </SearchLink>
+        {sexFilters.map((filter) => (
+          <SearchLink
+            key={filter.value}
+            className={selectedSex === filter.value ? 'is-active' : ''}
+            params={{ sex: filter.value }}
+          >
+            {filter.label}
+          </SearchLink>
+        ))}
+
       </p>
 
       <div className="panel-block">
