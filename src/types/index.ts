@@ -1,3 +1,3 @@
 export * from './Person';
-export * from './Filter';
+export * from './FilterSex';
 export * from './SearchOptions';

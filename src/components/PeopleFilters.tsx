@@ -1,7 +1,7 @@
 import { Link, useSearchParams } from 'react-router-dom';
 import classnames from 'classnames';
 import { getSearchWith, SearchParams } from '../utils/searchHelper';
-import { Filter } from '../types';
+import { FilterSex } from '../types';
 import { SearchLink } from './SearchLink';
 
 export const PeopleFilters = () => {
@@ -30,11 +30,11 @@ export const PeopleFilters = () => {
     setSearchWith({ query: e.target.value || null });
   }
 
-  const getLinkStyle = (item: Filter) => {
+  const getLinkStyle = (item: FilterSex) => {
     if (
-      (item === Filter.All && !sexSearch) ||
-      (item === Filter.Male && sexSearch === 'm') ||
-      (item === Filter.Female && sexSearch === 'f')
+      (item === FilterSex.All && !sexSearch) ||
+      (item === FilterSex.Male && sexSearch === 'm') ||
+      (item === FilterSex.Female && sexSearch === 'f')
     ) {
       return 'is-active';
     }
@@ -42,7 +42,7 @@ export const PeopleFilters = () => {
     return '';
   };
 
-  const getSexFilter = (sexFilter: Filter) => {
+  const getSexFilter = (sexFilter: FilterSex) => {
     switch (sexFilter) {
       case 'Female':
         return 'f';
@@ -58,7 +58,7 @@ export const PeopleFilters = () => {
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        {Object.values(Filter).map(item => (
+        {Object.values(FilterSex).map(item => (
           <SearchLink
             key={item}
             params={{ sex: getSexFilter(item) }}
