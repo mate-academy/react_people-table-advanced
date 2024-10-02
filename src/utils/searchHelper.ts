@@ -28,11 +28,24 @@ export function getSearchWith(
     if (value === null) {
       newParams.delete(key);
     } else if (Array.isArray(value)) {
-      // we delete the key to remove old values
+      const existingValues = newParams.getAll(key);
+
       newParams.delete(key);
 
       value.forEach(part => {
-        newParams.append(key, part);
+        if (existingValues.includes(part)) {
+          const index = existingValues.indexOf(part);
+
+          if (index > -1) {
+            existingValues.splice(index, 1);
+          }
+        } else {
+          existingValues.push(part);
+        }
+      });
+
+      existingValues.forEach(val => {
+        newParams.append(key, val);
       });
     } else {
       newParams.set(key, value);
