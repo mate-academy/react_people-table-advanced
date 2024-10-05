@@ -118,43 +118,47 @@ export const PeoplePage = () => {
     <>
       <h1 className="title">People Page</h1>
       <div className="block">
-        {isLoading ? (
-          <Loader />
-        ) : (
-          <>
-            <div className="column is-7-tablet is-narrow-desktop">
-              <PeopleFilters
-                query={query}
-                onQueryChange={handleQueryChange}
-                sex={sex}
-                onSexChange={handleSexChange}
-                centuries={centuries}
-                onCenturyChange={handleCenturyChange}
-              />
-            </div>
-            <div className="column">
-              <div className="box table-container">
-                {isError && (
-                  <p data-cy="peopleLoadingError" className="has-text-danger">
-                    Something went wrong
-                  </p>
-                )}
-
-                {filteredPeople.length === 0 && !isLoading && (
-                  <p data-cy="noPeopleMessage">
-                    There are no people on the server
-                  </p>
-                )}
-
-                <PeopleTable
-                  people={filteredPeople}
-                  onSortChange={handleSortChange}
-                  sortConfig={sortConfig}
+        <div className="columns is-desktop is-flex-direction-row-reverse">
+          {isLoading ? (
+            <Loader />
+          ) : (
+            <>
+              <div className="column is-7-tablet is-narrow-desktop">
+                <PeopleFilters
+                  query={query}
+                  onQueryChange={handleQueryChange}
+                  sex={sex}
+                  onSexChange={handleSexChange}
+                  centuries={centuries}
+                  onCenturyChange={handleCenturyChange}
                 />
               </div>
-            </div>
-          </>
-        )}
+              <div className="column">
+                <div className="box table-container">
+                  {isError && (
+                    <p data-cy="peopleLoadingError" className="has-text-danger">
+                      Something went wrong
+                    </p>
+                  )}
+
+                  {filteredPeople.length > 0 ? (
+                    <PeopleTable
+                      people={filteredPeople}
+                      onSortChange={handleSortChange}
+                      sortConfig={sortConfig}
+                    />
+                  ) : (
+                    !isLoading && (
+                      <p data-cy="noPeopleMessage">
+                        There are no people matching the current search criteria
+                      </p>
+                    )
+                  )}
+                </div>
+              </div>
+            </>
+          )}
+        </div>
       </div>
     </>
   );

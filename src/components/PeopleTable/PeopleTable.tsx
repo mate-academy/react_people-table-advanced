@@ -42,10 +42,33 @@ export const PeopleTable: React.FC<Props> = ({
   };
 
   const handleSortClick = (field: string) => {
-    const newSortParams = getSortLink(field);
+    if (sortConfig.field === field) {
+      const newSortOrder =
+        sortConfig.order === 'asc'
+          ? 'desc'
+          : sortConfig.order === 'desc'
+            ? ''
+            : 'asc';
 
-    navigate({ search: newSortParams });
-    handleSort(field);
+      const newParams = new URLSearchParams(location.search);
+
+      if (newSortOrder === '') {
+        newParams.delete('sort');
+        newParams.delete('order');
+        handleSort('');
+      } else {
+        newParams.set('sort', field);
+        newParams.set('order', newSortOrder);
+        handleSort(field);
+      }
+
+      navigate({ search: newParams.toString() });
+    } else {
+      const newParams = getSortLink(field);
+
+      navigate({ search: newParams });
+      handleSort(field);
+    }
   };
 
   const getSortIconClass = (field: string) => {
@@ -53,7 +76,15 @@ export const PeopleTable: React.FC<Props> = ({
       return 'fas fa-sort';
     }
 
-    return sortConfig.order === 'asc' ? 'fas fa-sort-up' : 'fas fa-sort-down';
+    if (sortConfig.order === 'asc') {
+      return 'fas fa-sort-up';
+    }
+
+    if (sortConfig.order === 'desc') {
+      return 'fas fa-sort-down';
+    }
+
+    return 'fas fa-sort';
   };
 
   return (
