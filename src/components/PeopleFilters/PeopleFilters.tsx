@@ -2,6 +2,8 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { getSearchWith } from '../../utils/getSearchWith';
 import classNames from 'classnames';
+import { Sex } from '../../types/Sex';
+import { SexSearchValue } from '../../types/SexSearchValue';
 
 type Props = {
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
@@ -18,32 +20,34 @@ export const PeopleFilters: React.FC<Props> = ({
   sex,
   centuries,
 }) => {
-  function getSexValue(buttonName: string) {
+  const getSexValue = (buttonName: string) => {
     const firstLetter = buttonName[0].toLowerCase();
 
     return firstLetter === 'a' ? null : firstLetter;
-  }
+  };
 
-  function getSexFullWord() {
+  const getSexFullWord = () => {
     if (!sex) {
-      return 'All';
+      return Sex.all;
     }
 
-    return sex === 'm' ? 'Male' : 'Female';
-  }
+    return sex === SexSearchValue.male ? Sex.male : Sex.female;
+  };
 
-  function getNewCenturies(century: string) {
+  const allCenturies = ['16', '17', '18', '19', '20'];
+
+  const getNewCenturies = (century: string) => {
     return centuries.includes(century)
       ? centuries.filter(item => item !== century)
       : [...centuries, century];
-  }
+  };
 
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        {['All', 'Male', 'Female'].map(item => (
+        {Object.values(Sex).map(item => (
           <Link
             key={item}
             className={classNames({
@@ -78,7 +82,7 @@ export const PeopleFilters: React.FC<Props> = ({
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            {['16', '17', '18', '19', '20'].map(item => (
+            {allCenturies.map(item => (
               <Link
                 key={item}
                 data-cy="century"

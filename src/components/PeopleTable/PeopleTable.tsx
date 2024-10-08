@@ -16,18 +16,20 @@ export const PeopleTable: React.FC<Props> = ({ people, searchParams }) => {
   const sort = searchParams.get('sort') || null;
   const order = searchParams.get('order') || null;
 
-  function getContent(
+  const getContent = (
     person: Person | null | undefined,
     personName: string | null,
-  ) {
+  ) => {
     if (person) {
       return <PersonLink person={person} />;
     }
 
     return personName ? personName : '-';
-  }
+  };
 
-  function getSearch(columnName: string) {
+  const columnNames = ['Name', 'Sex', 'Born', 'Died'];
+
+  const getSearch = (columnName: string) => {
     if (columnName !== sort) {
       return getSearchWith(
         {
@@ -49,7 +51,7 @@ export const PeopleTable: React.FC<Props> = ({ people, searchParams }) => {
       },
       searchParams,
     );
-  }
+  };
 
   const sortedPeople = useMemo(() => {
     if (!sort) {
@@ -84,7 +86,7 @@ export const PeopleTable: React.FC<Props> = ({ people, searchParams }) => {
     >
       <thead>
         <tr>
-          {['Name', 'Sex', 'Born', 'Died'].map(item => {
+          {columnNames.map(item => {
             const normalizedItem = item.toLowerCase();
 
             return (

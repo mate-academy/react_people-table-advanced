@@ -7,6 +7,7 @@ import { PeopleFilters } from '../PeopleFilters';
 import { useSearchParams } from 'react-router-dom';
 import { Params } from '../../types/Params';
 import { getSearchWith } from '../../utils/getSearchWith';
+import { SexSearchValue } from '../../types/SexSearchValue';
 
 export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);
@@ -27,15 +28,15 @@ export const PeoplePage = () => {
     return searchParams.getAll('centuries') || [];
   }, [searchParams]);
 
-  function setSearchWith(paramsToUpdate: Params) {
+  const setSearchWith = (paramsToUpdate: Params) => {
     const search = getSearchWith(paramsToUpdate, searchParams);
 
     setSearchParams(search);
-  }
+  };
 
-  function handleQueryChange(event: React.ChangeEvent<HTMLInputElement>) {
+  const handleQueryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchWith({ query: event.target.value || null });
-  }
+  };
 
   useEffect(() => {
     getPeople()
@@ -45,13 +46,13 @@ export const PeoplePage = () => {
   }, []);
 
   const peopleWithParents = useMemo(() => {
-    function getFather(fatherName: string | null) {
+    const getFather = (fatherName: string | null) => {
       return people.find(person => fatherName === person.name) || null;
-    }
+    };
 
-    function getMother(motherName: string | null) {
+    const getMother = (motherName: string | null) => {
       return people.find(person => motherName === person.name) || null;
-    }
+    };
 
     return people.map(person => ({
       ...person,
@@ -66,11 +67,11 @@ export const PeoplePage = () => {
     if (sex) {
       internalPeople = peopleWithParents.filter(person => {
         switch (sex) {
-          case 'm':
-            return person.sex === 'm';
+          case SexSearchValue.male:
+            return person.sex === SexSearchValue.male;
 
-          case 'f':
-            return person.sex === 'f';
+          case SexSearchValue.female:
+            return person.sex === SexSearchValue.female;
 
           default:
             return true;
@@ -101,6 +102,18 @@ export const PeoplePage = () => {
     return internalPeople;
   }, [peopleWithParents, sex, query, centuries]);
 
+  const getContent = () => {
+    if (!people.length) {
+      return <p data-cy="noPeopleMessage">There are no people on the server</p>;
+    }
+
+    return filteredPeople.length ? (
+      <PeopleTable people={filteredPeople} searchParams={searchParams} />
+    ) : (
+      <p>There are no people matching the current search criteria</p>
+    );
+  };
+
   return (
     <>
       <h1 className="title">People Page</h1>
@@ -129,18 +142,7 @@ export const PeoplePage = () => {
                 </p>
               )}
 
-              {!isLoading &&
-                !errorMessage &&
-                (!people.length ? (
-                  <p data-cy="noPeopleMessage">
-                    There are no people on the server
-                  </p>
-                ) : (
-                  <PeopleTable
-                    people={filteredPeople}
-                    searchParams={searchParams}
-                  />
-                ))}
+              {!isLoading && !errorMessage && getContent()}
             </div>
           </div>
         </div>
