@@ -1,15 +1,78 @@
-/* eslint-disable jsx-a11y/control-has-associated-label */
+import { useSearchParams } from 'react-router-dom';
+import cn from 'classnames';
 import { Person } from '../types';
 import PersonLink from './PersonLink';
+import { SearchLink } from './SearchLink';
 
 type Props = {
   people: Person[];
 };
 
 export const PeopleTable: React.FC<Props> = ({ people }) => {
-  const showPeople = people.map(person => {
+  const [searchParams] = useSearchParams();
+
+  const query = searchParams.get('query')?.toLowerCase() || '';
+  const sex = searchParams.get('sex') || '';
+  const centuries = searchParams.getAll('century') || [];
+  const sort = searchParams.get('sort') || '';
+  const order = searchParams.get('order') || '';
+
+  const sortPeople = [...people].sort((p1, p2) => {
+    switch (sort) {
+      case 'name':
+        return order
+          ? p1.name.localeCompare(p2.name)
+          : p2.name.localeCompare(p1.name);
+      case 'sex':
+        return order
+          ? p1.sex.localeCompare(p2.sex)
+          : p2.sex.localeCompare(p1.sex);
+      case 'born':
+        return order ? p1.born - p2.born : p2.born - p1.born;
+      case 'died':
+        return order ? p1.died - p2.died : p2.died - p1.died;
+      default:
+        return 0;
+    }
+  });
+
+  const filteredPeople = sortPeople.filter(person => {
+    const matchesName =
+      person.name.toLowerCase().includes(query) ||
+      person.motherName?.toLowerCase().includes(query) ||
+      person.fatherName?.toLowerCase().includes(query);
+
+    const matchesSex = !sex || person.sex === sex;
+
+    const century = person.born ? Math.ceil(person.born / 100) : null;
+    const matchesCentury =
+      centuries.length === 0 || centuries.includes(String(century));
+
+    return matchesName && matchesSex && matchesCentury;
+  });
+
+  const showPeople = filteredPeople.map(person => {
     return <PersonLink person={person} people={people} key={person.slug} />;
   });
+
+  const getIconClassName = (sortKey: string) =>
+    cn('fas', {
+      'fa-sort-up': sort === sortKey && order === 'desc',
+      'fa-sort-down': sort === sortKey && order !== 'desc',
+      'fa-sort': sort !== sortKey,
+    });
+
+  const setParams = (sortKey: string) => {
+    if (sort !== sortKey) {
+      return { sort: sortKey, order: '' };
+    }
+
+    if (order === '') {
+      return { sort: sortKey, order: 'desc' };
+    }
+
+    return { sort: null, order: null };
+  };
 
   return (
     <table
@@ -21,44 +84,44 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Name
-              <a href="#/people?sort=name">
+              <SearchLink params={setParams('name')}>
                 <span className="icon">
-                  <i className="fas fa-sort" />
+                  <i className={getIconClassName('name')} />
                 </span>
-              </a>
+              </SearchLink>
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Sex
-              <a href="#/people?sort=sex">
+              <SearchLink params={setParams('sex')}>
                 <span className="icon">
-                  <i className="fas fa-sort" />
+                  <i className={getIconClassName('sex')} />
                 </span>
-              </a>
+              </SearchLink>
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Born
-              <a href="#/people?sort=born&amp;order=desc">
+              <SearchLink params={setParams('born')}>
                 <span className="icon">
-                  <i className="fas fa-sort-up" />
+                  <i className={getIconClassName('born')} />
                 </span>
-              </a>
+              </SearchLink>
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Died
-              <a href="#/people?sort=died">
+              <SearchLink params={setParams('died')}>
                 <span className="icon">
-                  <i className="fas fa-sort" />
+                  <i className={getIconClassName('died')} />
                 </span>
-              </a>
+              </SearchLink>
             </span>
           </th>
 
