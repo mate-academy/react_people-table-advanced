@@ -10,7 +10,7 @@ import { filterPeople } from '../../utils/filterPeople';
 
 export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);
-  const [filteredPeople, setFilteredPeople] = useState<Person[]>(people);
+  const [filteredPeople, setFilteredPeople] = useState<Person[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
 

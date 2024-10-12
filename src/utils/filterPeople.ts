@@ -7,16 +7,18 @@ export function filterPeople(
   let filtered = [...people];
 
   if (params.has(SearchQueries.sex)) {
-    if (params.get(SearchQueries.sex) !== GenderFilters.All) {
-      filtered = filtered.filter(
-        person => person.sex === params.get(SearchQueries.sex),
-      );
+    const curParamSex = params.get(SearchQueries.sex);
+
+    if (curParamSex !== GenderFilters.All) {
+      filtered = filtered.filter(person => person.sex === curParamSex);
     }
   }
 
   if (params.has(SearchQueries.centuries)) {
+    const paramCenturies = params.getAll(SearchQueries.centuries);
+
     filtered = filtered.filter(person => {
-      return params.getAll(SearchQueries.centuries).some(centr => {
+      return paramCenturies.some(centr => {
         const personCentr = Math.floor(+person.born / 100 + 1);
 
         return personCentr === +centr;
@@ -25,13 +27,20 @@ export function filterPeople(
   }
 
   if (params.has(SearchQueries.query)) {
+    const query = params.get(SearchQueries.query);
+
     filtered = filtered.filter(person => {
       const { name, fatherName, motherName } = person;
-      const query = params.get(SearchQueries.query) || '';
 
-      return [name, fatherName, motherName].some(searchNames =>
-        searchNames?.toLocaleLowerCase().includes(query?.toLocaleLowerCase()),
-      );
+      return [name, fatherName, motherName].some(searchNames => {
+        if (searchNames && query) {
+          return searchNames
+            .toLocaleLowerCase()
+            .includes(query.toLocaleLowerCase());
+        }
+
+        return;
+      });
     });
   }
 

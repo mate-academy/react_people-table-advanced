@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, useMemo } from 'react';
 import { PersonItem } from '../PersonItem';
 import { FilteredPeopleContext } from '../../peopleContext';
 import { useNavigate, useSearchParams } from 'react-router-dom';
@@ -14,9 +14,10 @@ export const PeopleTable: React.FC = () => {
   const sortByField = searchParams.get(SortQueries.sort);
   const sortOrder = searchParams.get(SortQueries.order) || SortOrder.off;
 
-  if (!filteredPeople.length) {
-    return;
-  }
+  const sortedPeople = useMemo(
+    () => sortPeople(filteredPeople, sortByField as keyof Person, sortOrder),
+    [filteredPeople, sortByField, sortOrder],
+  );
 
   const sortHandler = (sortField: SortBy) => {
     let tempSortOrder = SortOrder.off;
@@ -59,6 +60,10 @@ export const PeopleTable: React.FC = () => {
 
     return 'fas ' + arrowPos;
   };
+
+  if (!filteredPeople.length) {
+    return <></>;
+  }
 
   return (
     <table
@@ -117,11 +122,9 @@ export const PeopleTable: React.FC = () => {
       </thead>
 
       <tbody>
-        {sortPeople(filteredPeople, sortByField as keyof Person, sortOrder).map(
-          person => (
-            <PersonItem key={person.slug} person={person} />
-          ),
-        )}
+        {sortedPeople.map(person => (
+          <PersonItem key={person.slug} person={person} />
+        ))}
       </tbody>
     </table>
   );

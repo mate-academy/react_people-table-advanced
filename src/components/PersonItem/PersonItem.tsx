@@ -1,7 +1,6 @@
 import { useParams } from 'react-router-dom';
 import { Person } from '../../types';
 import { PersonLink } from '../PersonLink';
-import classNames from 'classnames';
 import { useContext } from 'react';
 import { PeopleContext } from '../../peopleContext';
 import { getPersonByName } from '../../utils/getPeopleByName';
@@ -22,9 +21,7 @@ export const PersonItem: React.FC<Props> = ({ person }) => {
   return (
     <tr
       data-cy="person"
-      className={classNames({
-        'has-background-warning': userId === selectedUserId,
-      })}
+      className={userId === selectedUserId ? 'has-background-warning' : ''}
     >
       <td>
         <PersonLink person={person} />

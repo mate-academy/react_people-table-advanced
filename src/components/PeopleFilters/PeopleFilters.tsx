@@ -3,6 +3,8 @@ import { getSearchWith } from '../../utils/searchHelper';
 import classNames from 'classnames';
 import { GenderFilters, SearchQueries } from '../../types';
 
+const centutriesToFilter = ['16', '17', '18', '19', '20'];
+
 export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -69,13 +71,15 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            {['16', '17', '18', '19', '20'].map(centr => {
+            {centutriesToFilter.map(centr => {
               return (
                 <Link
                   key={centr}
                   data-cy="century"
                   className={classNames('button mr-1', {
-                    'is-info': searchParams.getAll('centuries').includes(centr),
+                    'is-info': searchParams
+                      .getAll(SearchQueries.centuries)
+                      .includes(centr),
                   })}
                   to={{
                     pathname: '/people',
@@ -92,7 +96,7 @@ export const PeopleFilters = () => {
             <Link
               data-cy="centuryALL"
               className={classNames('button is-success', {
-                'is-outlined': searchParams.get('centuries'),
+                'is-outlined': searchParams.get(SearchQueries.centuries),
               })}
               to={{
                 pathname: '/people',
