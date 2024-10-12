@@ -1,5 +1,5 @@
 import { Link, useSearchParams } from 'react-router-dom';
-import { ChangeEventHandler, useCallback } from 'react';
+import { ChangeEventHandler } from 'react';
 import { getSearchWith, SearchParams } from '../utils/searchHelper';
 import { CenturiesFilter } from '../types/CenturiesFilter';
 import classNames from 'classnames';
@@ -18,9 +18,9 @@ export const PeopleFilters = () => {
 
   const query = searchParams.get('query') || '';
   const centuries = searchParams.getAll('centuries');
-  const queryHandler: ChangeEventHandler<HTMLInputElement> = useCallback(e => {
+  const queryHandler: ChangeEventHandler<HTMLInputElement> = e => {
     setSearchWith({ query: e.target.value || null });
-  }, []);
+  };
 
   return (
     <div className="column is-7-tablet is-narrow-desktop">
