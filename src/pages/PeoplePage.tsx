@@ -6,8 +6,8 @@ import { getPeople } from '../services/api';
 import { Person } from '../types';
 import { PeopleFilters } from '../components/PeopleFilters';
 import { useSearchParams } from 'react-router-dom';
-import { SortFilter } from '../types/SortFilter';
 import { Order } from '../types/OrderFilter';
+import { peopleSort } from '../utils/sortHelper';
 
 export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);
@@ -22,8 +22,9 @@ export const PeoplePage = () => {
   const order = searchParams.get('order');
 
   useEffect(() => {
-    getPeople()
-      .then(data => {
+    async function peoples() {
+      try {
+        const data = await getPeople();
         const peopleByName: { [key: string]: Person } = {};
 
         data.forEach(person => (peopleByName[person.name] = person));
@@ -36,9 +37,14 @@ export const PeoplePage = () => {
         });
 
         setPeople(dataUpdated);
-      })
-      .catch(() => setIsError(true))
-      .finally(() => setIsLoading(false));
+      } catch {
+        setIsError(true);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
+    peoples();
   }, []);
 
   const filteredPeople = useMemo(() => {
@@ -68,29 +74,7 @@ export const PeoplePage = () => {
     if (sort) {
       const direction = order === Order.desc ? -1 : 1;
 
-      peopleFiltered = peopleFiltered.sort(
-        (
-          { name: nameA, sex: sexA, born: bornA, died: diedA },
-          { name: nameB, sex: sexB, born: bornB, died: diedB },
-        ) => {
-          switch (sort) {
-            case SortFilter.Name:
-              return direction * nameA.localeCompare(nameB);
-
-            case SortFilter.Sex:
-              return direction * sexA.localeCompare(sexB);
-
-            case SortFilter.Born:
-              return direction * (bornA - bornB);
-
-            case SortFilter.Died:
-              return direction * (diedA - diedB);
-
-            default:
-              return 0;
-          }
-        },
-      );
+      peopleFiltered = peopleSort(peopleFiltered, direction, sort);
     }
 
     return peopleFiltered;

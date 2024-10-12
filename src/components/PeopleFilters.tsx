@@ -1,9 +1,11 @@
 import { Link, useSearchParams } from 'react-router-dom';
-import { ChangeEventHandler } from 'react';
+import { ChangeEventHandler, useCallback } from 'react';
 import { getSearchWith, SearchParams } from '../utils/searchHelper';
 import { CenturiesFilter } from '../types/CenturiesFilter';
 import classNames from 'classnames';
 import { SexFilter } from '../types/SexFilter';
+import { SexFilterLink } from './SexFilterLink';
+import { CenturyFilterLink } from './CenturyFilterLink';
 
 export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -14,13 +16,11 @@ export const PeopleFilters = () => {
     setSearchParams(search);
   };
 
-  const sex = searchParams.get('sex');
   const query = searchParams.get('query') || '';
   const centuries = searchParams.getAll('centuries');
-
-  const queryHandler: ChangeEventHandler<HTMLInputElement> = e => {
+  const queryHandler: ChangeEventHandler<HTMLInputElement> = useCallback(e => {
     setSearchWith({ query: e.target.value || null });
-  };
+  }, []);
 
   return (
     <div className="column is-7-tablet is-narrow-desktop">
@@ -29,19 +29,11 @@ export const PeopleFilters = () => {
 
         <p className="panel-tabs" data-cy="SexFilter">
           {Object.entries(SexFilter).map(([key, value]) => (
-            <Link
+            <SexFilterLink
               key={value}
-              className={classNames({
-                'is-active': sex === value || (!sex && value === 'all'),
-              })}
-              to={{
-                search: getSearchWith(searchParams, {
-                  sex: value !== 'all' ? value : null,
-                }),
-              }}
-            >
-              {key}
-            </Link>
+              field={key as keyof typeof SexFilter}
+              value={value}
+            />
           ))}
         </p>
 
@@ -69,22 +61,7 @@ export const PeopleFilters = () => {
           >
             <div className="level-left">
               {Object.values(CenturiesFilter).map(century => (
-                <Link
-                  key={century}
-                  data-cy="century"
-                  className={classNames('button mr-1', {
-                    'is-info': centuries.includes(century),
-                  })}
-                  to={{
-                    search: getSearchWith(searchParams, {
-                      centuries: centuries.includes(century)
-                        ? centuries.filter(c => c !== century)
-                        : [...centuries, century],
-                    }),
-                  }}
-                >
-                  {century}
-                </Link>
+                <CenturyFilterLink key={century} century={century} />
               ))}
             </div>
 
