@@ -34,7 +34,7 @@ export const PeopleTable: React.FC = () => {
       tempSortOrder = SortOrder.asc;
     }
 
-    const newParams = new URLSearchParams(location.search);
+    const newParams = new URLSearchParams(searchParams);
 
     newParams.set(SortQueries.sort, sortField);
     newParams.set(SortQueries.order, tempSortOrder);
