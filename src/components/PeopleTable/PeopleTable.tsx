@@ -1,6 +1,6 @@
 import { useContext } from 'react';
 import { PersonItem } from '../PersonItem';
-import { PeopleContext } from '../../peopleContext';
+import { FilteredPeopleContext } from '../../peopleContext';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { SortBy, SortOrder, SortQueries } from '../../types/Sort';
 import { Person } from '../../types';
@@ -8,7 +8,7 @@ import { sortPeople } from '../../utils/sortPeople';
 
 export const PeopleTable: React.FC = () => {
   const [searchParams] = useSearchParams();
-  const filteredPeople = useContext(PeopleContext);
+  const filteredPeople = useContext(FilteredPeopleContext);
   const navigate = useNavigate();
 
   const sortByField = searchParams.get(SortQueries.sort);

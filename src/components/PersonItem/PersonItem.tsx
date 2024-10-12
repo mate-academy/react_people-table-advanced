@@ -15,6 +15,7 @@ export const PersonItem: React.FC<Props> = ({ person }) => {
   const { slug: selectedUserId } = useParams();
 
   const people = useContext(PeopleContext);
+
   const mother = getPersonByName(motherName, people);
   const father = getPersonByName(fatherName, people);
 

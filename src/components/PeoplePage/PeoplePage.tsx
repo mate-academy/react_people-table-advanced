@@ -3,7 +3,7 @@ import { Loader } from '../Loader';
 import { Person } from '../../types';
 import { getPeople } from '../../api';
 import { PeopleTable } from '../PeopleTable';
-import { PeopleContext } from '../../peopleContext';
+import { PeopleContext, FilteredPeopleContext } from '../../peopleContext';
 import { PeopleFilters } from '../PeopleFilters';
 import { useSearchParams } from 'react-router-dom';
 import { filterPeople } from '../../utils/filterPeople';
@@ -58,8 +58,10 @@ export const PeoplePage = () => {
                   There are no people on the server
                 </p>
               )}
-              <PeopleContext.Provider value={filteredPeople}>
-                {<PeopleTable />}
+              <PeopleContext.Provider value={people}>
+                <FilteredPeopleContext.Provider value={filteredPeople}>
+                  {<PeopleTable />}
+                </FilteredPeopleContext.Provider>
               </PeopleContext.Provider>
             </div>
           </div>
