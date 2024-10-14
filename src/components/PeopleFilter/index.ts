@@ -1,0 +1,1 @@
+export { PeopleFilters } from './PeopleFilters';
