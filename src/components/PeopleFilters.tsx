@@ -3,6 +3,10 @@ import { SearchLink } from './SearchLink';
 import classNames from 'classnames';
 import { getSearchWith } from '../utils/searchHelper';
 
+type Params = {
+  [key: string]: string | null;
+};
+
 export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const sex = searchParams.get('sex') || '';
@@ -10,7 +14,7 @@ export const PeopleFilters = () => {
   const centuries = searchParams.getAll('centuries') || [];
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  function setSearchWidth(params: any) {
+  function setSearchWidth(params: Params) {
     const search = getSearchWith(searchParams, params);
 
     setSearchParams(search);
