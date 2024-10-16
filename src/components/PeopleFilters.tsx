@@ -386,7 +386,6 @@ export const PeopleFilters: React.FC<PeopleFiltersProps> = ({
   //   onClick(null);
   // };
 
-
   const handleResetFilters = () => {
     setSelectedCentury([]);
 
@@ -397,7 +396,6 @@ export const PeopleFilters: React.FC<PeopleFiltersProps> = ({
     newSearchParams.set('search', '');
     newSearchParams.set('century', 'default');
     setSearchParams(newSearchParams);
-
   };
   // const handleFilterGender = (genderFilter: 'male' | 'female' | 'all') => {
   //   setFilter(genderFilter);

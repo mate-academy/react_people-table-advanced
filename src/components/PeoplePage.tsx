@@ -475,6 +475,7 @@ import { PeopleTable } from './PeopleTable';
 import { Loader } from '../components/Loader';
 import { useSearchParams } from 'react-router-dom';
 import { useMemo } from 'react';
+import { useCallback } from 'react';
 
 export const PeoplePage: React.FC = () => {
   const [loader, setLoader] = useState(false);
@@ -610,6 +611,9 @@ export const PeoplePage: React.FC = () => {
   // };
 
 
+
+
+
   const handleSelectedCentury = (century: number | 'all' | null) => {
     if (century === 'all' || century === null) {
       setSelectedCentury([]);
@@ -648,25 +652,25 @@ export const PeoplePage: React.FC = () => {
     setSearchParams(newSearchParams);
   };
 
-  const handleSort = (field: 'name' | 'sex' | 'born' | 'died') => {
-    const newParams = new URLSearchParams(searchParams);
-    const newOrder =
-      sortField === field && sortOrder === 'asc'
-        ? 'desc'
-        : sortField === field && sortOrder === 'desc'
-          ? null
-          : 'asc';
+  // const handleSort = (field: 'name' | 'sex' | 'born' | 'died') => {
+  //   const newParams = new URLSearchParams(searchParams);
+  //   const newOrder =
+  //     sortField === field && sortOrder === 'asc'
+  //       ? 'desc'
+  //       : sortField === field && sortOrder === 'desc'
+  //         ? null
+  //         : 'asc';
 
-    newParams.set('sort', field);
+  //   newParams.set('sort', field);
 
-    if (newOrder === null) {
-      newParams.delete('order');
-    } else {
-      newParams.set('order', newOrder);
-    }
+  //   if (newOrder === null) {
+  //     newParams.delete('order');
+  //   } else {
+  //     newParams.set('order', newOrder);
+  //   }
 
-    setSearchParams(newParams);
-  };
+  //   setSearchParams(newParams);
+  // };
 
 
   return (
@@ -675,10 +679,8 @@ export const PeoplePage: React.FC = () => {
       <div className="block">
         <PeopleTable
           persons={filteredAndSortedPeople}
-          handleSortName={() => handleSort('name')}
-          handleSortSex={() => handleSort('sex')}
-          handleSortBorn={() => handleSort('born')}
-          handleSortDied={() => handleSort('died')}
+          sortField={sortField}
+          sortOrder={sortOrder}
         />
       </div>
       <div className="block">
