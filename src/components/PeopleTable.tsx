@@ -40,16 +40,12 @@ function getVisiblePeople(
   if (sort) {
     switch (sort) {
       case 'name':
-        copyPeople.sort((el1, el2) => el1.name.localeCompare(el2.name));
-        break;
       case 'sex':
-        copyPeople.sort((el1, el2) => el1.sex.localeCompare(el2.sex));
+        copyPeople.sort((el1, el2) => el1[sort].localeCompare(el2[sort]));
         break;
       case 'born':
-        copyPeople.sort((el1, el2) => el1.born - el2.born);
-        break;
       case 'died':
-        copyPeople.sort((el1, el2) => el1.died - el2.died);
+        copyPeople.sort((el1, el2) => el1[sort] - el2[sort]);
         break;
     }
   }
