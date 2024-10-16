@@ -93,7 +93,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
     }
 
     if (sort && !order) {
-      return { sort: sortField, order: 'desk' };
+      return { sort: sortField, order: 'desc' };
     }
 
     return { sort: null, order: null };
@@ -124,7 +124,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
                     className={classNames('fas', {
                       'fa-sort': sort !== 'name',
                       'fa-sort-up': sort === 'name' && !order,
-                      'fa-sort-down': sort === 'name' && order === 'desk',
+                      'fa-sort-down': sort === 'name' && order === 'desc',
                     })}
                   />
                 </span>
@@ -141,24 +141,13 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
                     className={classNames('fas', {
                       'fa-sort': sort !== 'sex',
                       'fa-sort-up': sort === 'sex' && !order,
-                      'fa-sort-down': sort === 'sex' && order === 'desk',
+                      'fa-sort-down': sort === 'sex' && order === 'desc',
                     })}
                   />
                 </span>
               </SearchLink>
             </span>
           </th>
-
-          {/* <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Born
-              <a href="#/people?sort=born&amp;order=desc">
-                <span className="icon">
-                  <i className="fas fa-sort-down" />
-                </span>
-              </a>
-            </span>
-          </th> */}
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Born
@@ -168,7 +157,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
                     className={classNames('fas', {
                       'fa-sort': sort !== 'born',
                       'fa-sort-up': sort === 'born' && !order,
-                      'fa-sort-down': sort === 'born' && order === 'desk',
+                      'fa-sort-down': sort === 'born' && order === 'desc',
                     })}
                   />
                 </span>
@@ -185,7 +174,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
                     className={classNames('fas', {
                       'fa-sort': sort !== 'died',
                       'fa-sort-up': sort === 'died' && !order,
-                      'fa-sort-down': sort === 'died' && order === 'desk',
+                      'fa-sort-down': sort === 'died' && order === 'desc',
                     })}
                   />
                 </span>
