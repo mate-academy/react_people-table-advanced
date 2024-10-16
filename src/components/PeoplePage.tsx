@@ -261,6 +261,212 @@
 /* eslint-disable */
 
 
+// import React, { useEffect, useState } from 'react';
+// import { getPeople } from '../api';
+// import { Person } from '../types/Person';
+// import { PeopleFilters } from './PeopleFilters';
+// import { PeopleTable } from './PeopleTable';
+// import { Loader } from '../components/Loader';
+// import { useSearchParams } from 'react-router-dom';
+// import { useMemo } from 'react';
+
+// export const PeoplePage: React.FC = () => {
+//   const [loader, setLoader] = useState(false);
+//   const [error, setError] = useState<string | null>(null);
+//   const [people, setPeople] = useState<Person[]>([]);
+//   const [searchParams, setSearchParams] = useSearchParams();
+//   const [filter, setFilter] = useState<'all' | 'male' | 'female'>('all');
+//   const [selectedCentury, setSelectedCentury] = useState<number | 'all' | null>(
+//     null,
+//   );
+//   const [searchQuery, setSearchQuery] = useState<string>('');
+//   const [sortField, setSortField] = useState<string | null>(null);
+//   const [sortOrder, setSortOrder] = useState<'asc' | 'desc' | null>(null);
+
+//   useEffect(() => {
+//     const fetchPeople = async () => {
+//       setLoader(true);
+//       try {
+//         const data = await getPeople();
+
+//         setPeople(data);
+//         console.log('data', data);
+//       } catch (er) {
+//         setError('Failed to fetch data');
+//       } finally {
+//         setLoader(false);
+//       }
+//     };
+
+//     fetchPeople();
+//   }, []);
+
+//   useEffect(() => {
+//     const filterParam = searchParams.get('filter');
+//     const searchParam = searchParams.get('search');
+//     const sortParam = searchParams.get('sort');
+//     const orderParam = searchParams.get('order');
+
+//     if (filterParam) {
+//       setFilter(filterParam as 'all' | 'male' | 'female');
+//     }
+
+//     if (searchParam) {
+//       setSearchQuery(searchParam);
+//     }
+
+//     if (sortParam) {
+//       setSortField(sortParam as 'male' | 'female' | 'born' | 'died');
+//     }
+
+//     if (orderParam) {
+//       setSortOrder(orderParam as 'asc' | 'desc' | null);
+//     }
+//   }, [searchParams]);
+
+//   const filteredAndSortedPeople = useMemo(() => {
+//     let updatedPeople = [...people];
+//     const getCentury = (year: number) => Math.floor((year - 1) / 100) + 1;
+
+
+//     if (selectedCentury !== null) {
+//       updatedPeople = updatedPeople.filter(
+//         person => getCentury(person.born) === selectedCentury,
+//       );
+//     }
+
+
+//     if (filter === 'male') {
+//       updatedPeople = updatedPeople.filter(person => person.sex === 'm');
+//     } else if (filter === 'female') {
+//       updatedPeople = updatedPeople.filter(person => person.sex === 'f');
+//     }
+
+
+//     if (searchQuery) {
+//       updatedPeople = updatedPeople.filter(
+//         person =>
+//           person.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+//           person.motherName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+//           person.fatherName?.toLowerCase().includes(searchQuery.toLowerCase()),
+//       );
+//     }
+
+
+//     if (sortField) {
+//       updatedPeople.sort((a, b) => {
+//         let comparison = 0;
+
+//         if (sortField === 'name') {
+//           comparison = a.name.localeCompare(b.name);
+//         } else if (sortField === 'sex') {
+//           comparison = a.sex.localeCompare(b.sex);
+//         } else if (sortField === 'born') {
+//           comparison = a.born - b.born;
+//         } else if (sortField === 'died') {
+//           comparison = a.died - b.died;
+//         }
+
+//         return sortOrder === 'asc' ? comparison : -comparison;
+//       });
+//     }
+
+//     return updatedPeople;
+//   }, [people, filter, selectedCentury, searchQuery, sortField, sortOrder]);
+
+//   const handleFilterGender = (filterGender: 'all' | 'male' | 'female') => {
+//     setFilter(prevFilter => {
+//       const newFilter = prevFilter === filterGender ? 'all' : filterGender;
+//       const newSearchParams = new URLSearchParams(searchParams);
+
+//       if (newFilter !== 'all') {
+//         newSearchParams.set('filter', newFilter);
+//       }
+
+//       if (newFilter === 'all') {
+//         newSearchParams.delete('filter');
+//       }
+
+//       setSearchParams(newSearchParams);
+
+//       return newFilter;
+//     });
+//   };
+
+//   const handleSearchQuery = (event: React.ChangeEvent<HTMLInputElement>) => {
+//     const query = event.target.value;
+
+//     setSearchQuery(query);
+
+//     const params = new URLSearchParams(searchParams.toString());
+
+//     if (query) {
+//       params.set('search', query);
+//     } else {
+//       params.delete('search');
+//     }
+
+//     setSearchParams(params);
+//   };
+
+//   const handleSort = (field: 'name' | 'sex' | 'born' | 'died') => {
+//     setSortField(prevField => {
+//       const newOrder =
+//         prevField === field && sortOrder === 'asc'
+//           ? 'desc'
+//           : prevField === field && sortOrder === 'desc'
+//             ? null
+//             : 'asc';
+
+//       setSortOrder(newOrder);
+
+//       setSearchParams(prev => {
+//         const newParams = new URLSearchParams(prev.toString());
+
+//         if (newOrder) {
+//           newParams.set('sort', field);
+//           newParams.set('order', newOrder);
+//         } else {
+//           newParams.delete('sort');
+//           newParams.delete('order');
+//         }
+
+//         return newParams;
+//       });
+
+//       return newOrder === null ? null : field;
+//     });
+//   };
+
+//   return (
+//     <>
+//       <h1 className="title">People Page</h1>
+//       <div className="block">
+//         <PeopleTable
+//           persons={filteredAndSortedPeople}
+//           handleSortName={() => handleSort('name')}
+//           handleSortSex={() => handleSort('sex')}
+//           handleSortBorn={() => handleSort('born')}
+//           handleSortDied={() => handleSort('died')}
+//         />
+//       </div>
+//       <div className="block">
+//         {loader && !error ? (
+//           <Loader />
+//         ) : (
+//           <PeopleFilters
+//             persons={people}
+//             onFilterChange={handleFilterGender}
+//             onChange={handleSearchQuery}
+//             onClick={setSelectedCentury}
+//           />
+//         )}
+//       </div>
+//     </>
+//   );
+// };
+
+
 import React, { useEffect, useState } from 'react';
 import { getPeople } from '../api';
 import { Person } from '../types/Person';
@@ -268,24 +474,28 @@ import { PeopleFilters } from './PeopleFilters';
 import { PeopleTable } from './PeopleTable';
 import { Loader } from '../components/Loader';
 import { useSearchParams } from 'react-router-dom';
-// import { getSearchWith } from '../utils/searchHelper';
+import { useMemo } from 'react';
 
 export const PeoplePage: React.FC = () => {
   const [loader, setLoader] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [people, setPeople] = useState<Person[]>([]);
-  // const [filteredAndSortedPeople, setFilteredAndSortedPeople] = useState<
-  // Person[]
-  // >([]);
-
   const [searchParams, setSearchParams] = useSearchParams();
-  const [filter, setFilter] = useState<'all' | 'male' | 'female'>('all');
-  const [selectedCentury, setSelectedCentury] = useState<number | 'all' | null>(
-    null,
-  );
-  const [searchQuery, setSearchQuery] = useState<string>('');
-  const [sortField, setSortField] = useState<string | null>(null);
-  const [sortOrder, setSortOrder] = useState<'asc' | 'desc' | null>(null);
+
+  // const [filter, setFilter] = useState<'all' | 'male' | 'female'>('all');
+  // const [selectedCentury, setSelectedCentury] = useState<number | 'all' | null>(
+  //   null,
+  // );
+  // const [searchQuery, setSearchQuery] = useState<string>('');
+  // const [sortField, setSortField] = useState<string | null>(null);
+  // const [sortOrder, setSortOrder] = useState<'asc' | 'desc' | null>(null);
+
+  const filter = searchParams.get('filter') as 'all' | 'male' | 'female' || 'all';
+  // const selectedCentury = searchParams.get('century') as number | 'all' | 'null';
+  const [selectedCentury, setSelectedCentury] = useState<number[]>([]);
+  const searchQuery = searchParams.get('search') || '';
+  const sortField = searchParams.get('sort') as 'name' | 'sex' | 'born' | 'died';
+  const sortOrder = searchParams.get('order') as 'asc' | 'desc' | null ;
 
   useEffect(() => {
     const fetchPeople = async () => {
@@ -305,158 +515,166 @@ export const PeoplePage: React.FC = () => {
     fetchPeople();
   }, []);
 
-  useEffect(() => {
-    const filterParam = searchParams.get('filter');
-    const searchParam = searchParams.get('search');
-    const sortParam = searchParams.get('sort');
-    const orderParam = searchParams.get('order');
+  // useEffect(() => {
+  //   const filterParam = searchParams.get('filter');
+  //   const searchParam = searchParams.get('search');
+  //   const sortParam = searchParams.get('sort');
+  //   const orderParam = searchParams.get('order');
 
-    if (filterParam) {
-      setFilter(filterParam as 'all' | 'male' | 'female');
+  //   if (filterParam) {
+  //     setFilter(filterParam as 'all' | 'male' | 'female');
+  //   }
+
+  //   if (searchParam) {
+  //     setSearchQuery(searchParam);
+  //   }
+
+  //   if (sortParam) {
+  //     setSortField(sortParam as 'male' | 'female' | 'born' | 'died');
+  //   }
+
+  //   if (orderParam) {
+  //     setSortOrder(orderParam as 'asc' | 'desc' | null);
+  //   }
+  // }, [searchParams]);
+
+  const filteredAndSortedPeople = useMemo(() => {
+    let updatedPeople = [...people];
+
+    const getCentury = (year: number) => Math.floor((year - 1) / 100) + 1;
+    if (selectedCentury.length > 0) {
+      updatedPeople = updatedPeople.filter(
+        person => selectedCentury.includes(getCentury(person.born)),
+      );
     }
 
-    if (searchParam) {
-      setSearchQuery(searchParam);
+
+    if (filter === 'male') {
+      updatedPeople = updatedPeople.filter(person => person.sex === 'm');
+    } else if (filter === 'female') {
+      updatedPeople = updatedPeople.filter(person => person.sex === 'f');
     }
 
-    if (sortParam) {
-      setSortField(sortParam as 'male' | 'female' | 'born' | 'died');
+
+    if (searchQuery) {
+      updatedPeople = updatedPeople.filter(
+        person =>
+          person.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          person.motherName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          person.fatherName?.toLowerCase().includes(searchQuery.toLowerCase()),
+      );
     }
 
-    if (orderParam) {
-      setSortOrder(orderParam as 'asc' | 'desc' | null);
+    if (sortField) {
+      updatedPeople.sort((a, b) => {
+        let comparison = 0;
+
+        if (sortField === 'name') {
+          comparison = a.name.localeCompare(b.name);
+        } else if (sortField === 'sex') {
+          comparison = a.sex.localeCompare(b.sex);
+        } else if (sortField === 'born') {
+          comparison = a.born - b.born;
+        } else if (sortField === 'died') {
+          comparison = a.died - b.died;
+        }
+
+        return sortOrder === 'asc' ? comparison : -comparison;
+      });
     }
-  }, [searchParams]);
 
-  useEffect(() => {
-    const updateFilteredAndSortedPeople = () => {
-      let updatedPeople = [...people];
-
-      const getCentury = (year: number) => Math.floor((year - 1) / 100) + 1;
-
-      if (selectedCentury !== null) {
-        updatedPeople = updatedPeople.filter(
-          person => getCentury(person.born) === selectedCentury,
-        );
-      }
-
-      if (filter === 'male') {
-        updatedPeople = updatedPeople.filter(person => person.sex === 'm');
-      } else if (filter === 'female') {
-        updatedPeople = updatedPeople.filter(person => person.sex === 'f');
-      } else {
-        setFilter('all');
-      }
-
-      if (searchQuery) {
-        updatedPeople = updatedPeople.filter(
-          person =>
-            person.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            person.motherName
-              ?.toLowerCase()
-              .includes(searchQuery.toLowerCase()) ||
-            person.fatherName
-              ?.toLowerCase()
-              .includes(searchQuery.toLowerCase()),
-        );
-      }
-
-      if (sortField) {
-        updatedPeople.sort((a, b) => {
-          let comparison = 0;
-
-          if (sortField === 'name') {
-            comparison = a.name.localeCompare(b.name);
-          } else if (sortField === 'sex') {
-            comparison = a.sex.localeCompare(b.sex);
-          }
-
-          if (sortField === 'born') {
-            comparison = a.born - b.born;
-          } else if (sortField === 'died') {
-            comparison = a.died - b.died;
-          }
-
-          return sortOrder === 'asc' ? comparison : -comparison;
-        });
-      }
-
-      setPeople(updatedPeople);
-    };
-
-    updateFilteredAndSortedPeople();
+    return updatedPeople;
   }, [people, filter, selectedCentury, searchQuery, sortField, sortOrder]);
 
   const handleFilterGender = (filterGender: 'all' | 'male' | 'female') => {
-    setFilter(prevFilter => {
-      const newFilter = prevFilter === filterGender ? 'all' : filterGender;
       const newSearchParams = new URLSearchParams(searchParams);
-
-      if (newFilter !== 'all') {
-        newSearchParams.set('filter', newFilter);
-      }
-
-      if (newFilter === 'all') {
-        newSearchParams.delete('filter');
-      }
-
+      newSearchParams.set('filter', filterGender !== 'all' ? filterGender : '');
       setSearchParams(newSearchParams);
-
-      return newFilter;
-    });
   };
 
-  const handleSearchQuery = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const query = event.target.value;
+  // const handleSelectedCentury = (century: number | 'all' | null) => {
+  //   const isSelected = selectedCentury.includes(century);
 
-    setSearchQuery(query);
+  //   const updatedCenturies = isSelected
+  //     ? selectedCentury.filter(item => item !== century)
+  //     : [...selectedCentury, century];
 
-    const params = new URLSearchParams(searchParams.toString());
+  //   setSelectedCentury(updatedCenturies);
 
-    if (query) {
-      params.set('search', query);
-    } else {
-      params.delete('search');
+  //   const params = new URLSearchParams(searchParams);
+
+  //   params.delete('century');
+  //   updatedCenturies.forEach(cent => params.append('century', cent.toString()));
+
+  //   setSearchParams(params);
+  // };
+
+
+  const handleSelectedCentury = (century: number | 'all' | null) => {
+    if (century === 'all' || century === null) {
+      setSelectedCentury([]);
+      const params = new URLSearchParams(searchParams);
+      params.delete('century');
+      setSearchParams(params);
+      return;
     }
+
+    const isSelected = selectedCentury.includes(century);
+    const updatedCenturies = isSelected
+      ? selectedCentury.filter(item => item !== century)
+      : [...selectedCentury, century];
+
+    setSelectedCentury(updatedCenturies);
+
+    const params = new URLSearchParams(searchParams);
+
+    params.delete('century');
+    updatedCenturies.forEach(cent => params.append('century', cent.toString()));
 
     setSearchParams(params);
   };
 
-  const handleSort = (field: 'name' | 'sex' | 'born' | 'died') => {
-    setSortField(prevField => {
-      const newOrder =
-        prevField === field && sortOrder === 'asc'
-          ? 'desc'
-          : prevField === field && sortOrder === 'desc'
-            ? null
-            : 'asc';
 
-      setSortOrder(newOrder);
+  const handleSearchQuery = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const query = event.target.value;
+    const newSearchParams = new URLSearchParams(searchParams.toString());
 
-      setSearchParams(prev => {
-        const newParams = new URLSearchParams(prev.toString());
+    if (query) {
+      newSearchParams.set('search', query);
+    } else {
+      newSearchParams.delete('search');
+    }
 
-        if (newOrder) {
-          newParams.set('sort', field);
-          newParams.set('order', newOrder);
-        } else {
-          newParams.delete('sort');
-          newParams.delete('order');
-        }
-
-        return newParams;
-      });
-
-      return newOrder === null ? null : field;
-    });
+    setSearchParams(newSearchParams);
   };
+
+  const handleSort = (field: 'name' | 'sex' | 'born' | 'died') => {
+    const newParams = new URLSearchParams(searchParams);
+    const newOrder =
+      sortField === field && sortOrder === 'asc'
+        ? 'desc'
+        : sortField === field && sortOrder === 'desc'
+          ? null
+          : 'asc';
+
+    newParams.set('sort', field);
+
+    if (newOrder === null) {
+      newParams.delete('order');
+    } else {
+      newParams.set('order', newOrder);
+    }
+
+    setSearchParams(newParams);
+  };
+
 
   return (
     <>
       <h1 className="title">People Page</h1>
       <div className="block">
         <PeopleTable
-          persons={people}
+          persons={filteredAndSortedPeople}
           handleSortName={() => handleSort('name')}
           handleSortSex={() => handleSort('sex')}
           handleSortBorn={() => handleSort('born')}
@@ -471,7 +689,7 @@ export const PeoplePage: React.FC = () => {
             persons={people}
             onFilterChange={handleFilterGender}
             onChange={handleSearchQuery}
-            onClick={setSelectedCentury}
+            onClick={handleSelectedCentury}
           />
         )}
       </div>

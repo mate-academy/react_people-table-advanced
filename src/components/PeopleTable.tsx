@@ -667,7 +667,7 @@ export const PeopleTable: React.FC<PeopleTableProps> = ({
     return persons.find(p => p.name === name);
   };
 
-  const [selectedPerson, setSelectedPerson] = useState<Person | ''>('');
+  const [selectedPerson, setSelectedPerson] = useState<Person | null>(null);
   const handlePersonClick = (person: Person) => {
     setSelectedPerson(person);
   };

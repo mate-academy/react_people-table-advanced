@@ -296,7 +296,6 @@ export const PeopleFilters: React.FC<PeopleFiltersProps> = ({
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [searchParams, setSearchParams] = useSearchParams();
 
-
   useEffect(() => {
     const currentFilter = searchParams.get('filter') as
       | 'all'
@@ -345,28 +344,26 @@ export const PeopleFilters: React.FC<PeopleFiltersProps> = ({
   //   setSearchParams(newSearchParams);
   // }, [filter, searchQuery, selectedCentury]);
 
-  const handleSelectedCentury = (century: number) => {
-    const isSelected = selectedCentury.includes(century);
+  // const handleSelectedCentury = (century: number) => {
+  //   const isSelected = selectedCentury.includes(century);
 
-    const updatedCenturies = isSelected
-      ? selectedCentury.filter(item => item !== century)
-      : [...selectedCentury, century];
+  //   const updatedCenturies = isSelected
+  //     ? selectedCentury.filter(item => item !== century)
+  //     : [...selectedCentury, century];
 
-    setSelectedCentury(updatedCenturies);
+  //   setSelectedCentury(updatedCenturies);
 
-    const params = new URLSearchParams(searchParams);
+  //   const params = new URLSearchParams(searchParams);
 
-    params.delete('century');
-    updatedCenturies.forEach(cent => params.append('century', cent.toString()));
+  //   params.delete('century');
+  //   updatedCenturies.forEach(cent => params.append('century', cent.toString()));
 
-    setSearchParams(params);
-    onClick(century);
-  };
+  //   setSearchParams(params);
+  //   onClick(century);
+  // };
 
   const handleAllClick = () => {
     setSelectedCentury([]);
-    setFilter('all');
-
     const newSearchParams = new URLSearchParams(searchParams);
 
     newSearchParams.delete('century');
@@ -377,50 +374,62 @@ export const PeopleFilters: React.FC<PeopleFiltersProps> = ({
     onClick(null);
   };
 
+  // const handleResetFilters = () => {
+  //   setSelectedCentury([]);
+  //   setFilter('all');
+  //   setSearchQuery('');
+
+  //   const newSearchParams = new URLSearchParams();
+
+  //   newSearchParams.set('filter', 'all');
+  //   setSearchParams(newSearchParams);
+  //   onClick(null);
+  // };
+
+
   const handleResetFilters = () => {
     setSelectedCentury([]);
-    setFilter('all');
-    setSearchQuery('');
-
 
     const newSearchParams = new URLSearchParams();
 
     newSearchParams.set('filter', 'all');
+    newSearchParams.set('sort', 'default');
+    newSearchParams.set('search', '');
+    newSearchParams.set('century', 'default');
     setSearchParams(newSearchParams);
-    onClick(null);
+
   };
+  // const handleFilterGender = (genderFilter: 'male' | 'female' | 'all') => {
+  //   setFilter(genderFilter);
+  //   onFilterChange(genderFilter);
 
-  const handleFilterGender = (genderFilter: 'male' | 'female' | 'all') => {
-    setFilter(genderFilter);
-    onFilterChange(genderFilter);
+  //   const newSearchParams = new URLSearchParams(searchParams);
 
-    const newSearchParams = new URLSearchParams(searchParams);
+  //   if (genderFilter) {
+  //     newSearchParams.set('sex', genderFilter);
+  //   } else {
+  //     newSearchParams.delete('sex');
+  //   }
 
-    if (genderFilter) {
-      newSearchParams.set('sex', genderFilter);
-    } else {
-      newSearchParams.delete('sex');
-    }
+  //   setSearchParams(newSearchParams);
+  // };
 
-    setSearchParams(newSearchParams);
-  };
+  // const handleFindPerson = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   const value = e.target.value;
 
-  const handleFindPerson = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
+  //   setSearchQuery(value);
+  //   onChange(e);
 
-    setSearchQuery(value);
-    onChange(e);
+  //   const newSearchParams = new URLSearchParams(searchParams);
 
-    const newSearchParams = new URLSearchParams(searchParams);
+  //   if (value) {
+  //     newSearchParams.set('search', value);
+  //   } else {
+  //     newSearchParams.delete('search');
+  //   }
 
-    if (value) {
-      newSearchParams.set('search', value);
-    } else {
-      newSearchParams.delete('search');
-    }
-
-    setSearchParams(newSearchParams);
-  };
+  //   setSearchParams(newSearchParams);
+  // };
 
   return (
     <nav className="panel">
@@ -432,7 +441,7 @@ export const PeopleFilters: React.FC<PeopleFiltersProps> = ({
           to="#"
           onClick={e => {
             e.preventDefault();
-            handleFilterGender('all');
+            onFilterChange('all');
           }}
         >
           All
@@ -442,7 +451,7 @@ export const PeopleFilters: React.FC<PeopleFiltersProps> = ({
           to="#"
           onClick={e => {
             e.preventDefault();
-            handleFilterGender('male');
+            onFilterChange('male');
           }}
         >
           Male
@@ -452,7 +461,7 @@ export const PeopleFilters: React.FC<PeopleFiltersProps> = ({
           to="#"
           onClick={e => {
             e.preventDefault();
-            handleFilterGender('female');
+            onFilterChange('female');
           }}
         >
           Female
@@ -467,7 +476,7 @@ export const PeopleFilters: React.FC<PeopleFiltersProps> = ({
             className="input"
             placeholder="Search"
             value={searchQuery}
-            onChange={handleFindPerson}
+            onChange={onChange}
           />
           <span className="icon is-left">
             <i className="fas fa-search" aria-hidden="true" />
@@ -486,7 +495,7 @@ export const PeopleFilters: React.FC<PeopleFiltersProps> = ({
                 href={`/people?century=${century}`}
                 onClick={e => {
                   e.preventDefault();
-                  handleSelectedCentury(century);
+                  onClick(century);
                 }}
               >
                 {century}
