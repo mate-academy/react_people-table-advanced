@@ -54,7 +54,7 @@ function getVisiblePeople(
     }
   }
 
-  if (order) {
+  if (order === 'desc') {
     return copyPeople.reverse();
   }
 
