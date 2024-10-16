@@ -310,8 +310,39 @@ export const PeopleFilters: React.FC<PeopleFiltersProps> = ({
     }
 
     setSearchQuery(currentSearch);
-    setFilter(currentFilter);
   }, [searchParams]);
+
+  // useEffect(() => {
+  //   const currentFilter = searchParams.get('filter');
+  //   const currentSearch = searchParams.get('search');
+  //   const currentCentury = searchParams.getAll('century').map(Number);
+
+  //   if (currentFilter === 'all' || currentFilter === 'male' || currentFilter === 'female') {
+  //     setFilter(currentFilter);
+  //   }
+
+  //   if (currentSearch) {
+  //     setSearchQuery(currentSearch);
+  //   }
+
+  //   if (currentCentury.length) {
+  //     setSelectedCentury(currentCentury);
+  //   }
+  // }, []);
+
+  // useEffect(() => {
+  //   const newSearchParams = new URLSearchParams();
+  //   if (filter !== 'all') {
+  //     newSearchParams.set('filter', filter);
+  //   }
+  //   if (searchQuery) {
+  //     newSearchParams.set('search', searchQuery);
+  //   }
+  //   if (selectedCentury.length) {
+  //     selectedCentury.forEach(century => newSearchParams.append('century', century.toString()));
+  //   }
+  //   setSearchParams(newSearchParams);
+  // }, [filter, searchQuery, selectedCentury]);
 
   const handleSelectedCentury = (century: number) => {
     const isSelected = selectedCentury.includes(century);
