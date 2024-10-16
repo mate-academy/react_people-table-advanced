@@ -274,9 +274,9 @@ export const PeoplePage: React.FC = () => {
   const [loader, setLoader] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [people, setPeople] = useState<Person[]>([]);
-  const [filteredAndSortedPeople, setFilteredAndSortedPeople] = useState<
-  Person[]
-  >([]);
+  // const [filteredAndSortedPeople, setFilteredAndSortedPeople] = useState<
+  // Person[]
+  // >([]);
 
   const [searchParams, setSearchParams] = useSearchParams();
   const [filter, setFilter] = useState<'all' | 'male' | 'female'>('all');
@@ -294,7 +294,7 @@ export const PeoplePage: React.FC = () => {
         const data = await getPeople();
 
         setPeople(data);
-        setFilteredAndSortedPeople(data);
+        console.log('data', data);
       } catch (er) {
         setError('Failed to fetch data');
       } finally {
@@ -381,7 +381,7 @@ export const PeoplePage: React.FC = () => {
         });
       }
 
-      setFilteredAndSortedPeople(updatedPeople);
+      setPeople(updatedPeople);
     };
 
     updateFilteredAndSortedPeople();
@@ -456,7 +456,7 @@ export const PeoplePage: React.FC = () => {
       <h1 className="title">People Page</h1>
       <div className="block">
         <PeopleTable
-          persons={filteredAndSortedPeople}
+          persons={people}
           handleSortName={() => handleSort('name')}
           handleSortSex={() => handleSort('sex')}
           handleSortBorn={() => handleSort('born')}

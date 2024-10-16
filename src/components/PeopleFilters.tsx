@@ -296,6 +296,7 @@ export const PeopleFilters: React.FC<PeopleFiltersProps> = ({
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [searchParams, setSearchParams] = useSearchParams();
 
+
   useEffect(() => {
     const currentFilter = searchParams.get('filter') as
       | 'all'
@@ -380,6 +381,7 @@ export const PeopleFilters: React.FC<PeopleFiltersProps> = ({
     setSelectedCentury([]);
     setFilter('all');
     setSearchQuery('');
+
 
     const newSearchParams = new URLSearchParams();
 
