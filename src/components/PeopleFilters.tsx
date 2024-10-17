@@ -122,45 +122,45 @@ export const PeopleFilters: React.FC<PeopleFiltersProps> = ({
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
             {['16', '17', '18', '19', '20'].map(century => (
-              <a
+              <Link
                 key={century}
                 data-cy="century"
                 className={`button mr-1 ${centuryQuery.includes(century) ? 'is-info' : ''}`}
-                href={`/people?century=${century}`}
+                to={`/people?century=${century}`}
                 onClick={e => {
                   e.preventDefault();
                   onClick(century);
                 }}
               >
                 {century}
-              </a>
+              </Link>
             ))}
           </div>
 
           <div className="level-right ml-4">
-            <a
+            <Link
               data-cy="centuryALL"
               className="button is-success is-outlined"
-              href="#/people"
+              to="#/people"
               onClick={handleAllClick}
             >
               All
-            </a>
+            </Link>
           </div>
         </div>
       </div>
 
       <div className="panel-block">
-        <a
+        <Link
           className="button is-link is-outlined is-fullwidth"
-          href="#/people"
+          to="#/people"
           onClick={e => {
             e.preventDefault();
             handleResetFilters();
           }}
         >
           Reset all filters
-        </a>
+        </Link>
       </div>
     </nav>
   );

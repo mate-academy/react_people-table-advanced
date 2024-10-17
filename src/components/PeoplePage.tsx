@@ -13,11 +13,16 @@ export const PeoplePage: React.FC = () => {
   const [people, setPeople] = useState<Person[]>([]);
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const filter = searchParams.get('filter') as 'all' | 'male' | 'female' || 'all';
+  const filter =
+    (searchParams.get('filter') as 'all' | 'male' | 'female') || 'all';
   const centuryQuery: string[] = searchParams.getAll('century') || [];
   const searchQuery = searchParams.get('search') || '';
-  const sortField = searchParams.get('sort') as 'name' | 'sex' | 'born' | 'died';
-  const sortOrder = searchParams.get('order') as 'asc' | 'desc' | null ;
+  const sortField = searchParams.get('sort') as
+    | 'name'
+    | 'sex'
+    | 'born'
+    | 'died';
+  const sortOrder = searchParams.get('order') as 'asc' | 'desc' | null;
 
   useEffect(() => {
     const fetchPeople = async () => {
@@ -27,7 +32,7 @@ export const PeoplePage: React.FC = () => {
 
         setPeople(data);
       } catch (er) {
-        setError('Something went wrong')
+        setError('Something went wrong');
       } finally {
         setLoader(false);
       }
@@ -40,11 +45,13 @@ export const PeoplePage: React.FC = () => {
     let updatedPeople = [...people];
 
     const getCentury = (year: number) => Math.floor((year - 1) / 100) + 1;
+
     if (centuryQuery.length > 0) {
-      updatedPeople = updatedPeople.filter(
-        person => centuryQuery.includes(getCentury(person.born).toString()),
+      updatedPeople = updatedPeople.filter(person =>
+        centuryQuery.includes(getCentury(person.born).toString()),
       );
     }
+
     if (filter === 'male') {
       updatedPeople = updatedPeople.filter(person => person.sex === 'm');
     } else if (filter === 'female') {
@@ -55,7 +62,9 @@ export const PeoplePage: React.FC = () => {
       updatedPeople = updatedPeople.filter(
         person =>
           person.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          person.motherName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          person.motherName
+            ?.toLowerCase()
+            .includes(searchQuery.toLowerCase()) ||
           person.fatherName?.toLowerCase().includes(searchQuery.toLowerCase()),
       );
     }
@@ -82,16 +91,23 @@ export const PeoplePage: React.FC = () => {
   }, [people, filter, centuryQuery, searchQuery, sortField, sortOrder]);
 
   const handleFilterGender = (filterGender: 'all' | 'male' | 'female') => {
-      const newSearchParams = new URLSearchParams(searchParams);
-      newSearchParams.set('filter', filterGender !== 'all' ? filterGender : '');
-      setSearchParams(newSearchParams);
+    const newSearchParams = new URLSearchParams(searchParams);
+
+    if (filterGender === 'all') {
+      newSearchParams.delete('filter');
+    } else {
+      newSearchParams.set('filter', filterGender);
+    }
+    setSearchParams(newSearchParams);
   };
 
   const handleSelectedCentury = (century: string | 'all' | null) => {
     if (century === 'all' || century === null) {
       const params = new URLSearchParams(searchParams);
+
       params.delete('century');
       setSearchParams(params);
+
       return;
     }
 
@@ -99,7 +115,6 @@ export const PeoplePage: React.FC = () => {
     const updatedCenturies = isSelected
       ? centuryQuery.filter(item => item !== century)
       : [...centuryQuery, century];
-
 
     const params = new URLSearchParams(searchParams);
 
@@ -128,19 +143,19 @@ export const PeoplePage: React.FC = () => {
       <div className="block">
         {people.length > 0 ? (
           <PeopleTable
-          persons={filteredAndSortedPeople}
-          sortField={sortField}
-          sortOrder={sortOrder}
-        />
-        ) : <p>There are no people matching the current search criteria</p>}
+            persons={filteredAndSortedPeople}
+            sortField={sortField}
+            sortOrder={sortOrder}
+          />
+        ) : (
+          <p>There are no people matching the current search criteria</p>
+        )}
       </div>
       <div className="block">
         {loader && !error ? (
           <Loader />
         ) : error ? (
           <p data-cy="peopleLoadingError">Something went wrong</p>
-
-
         ) : people.length > 0 ? (
           <PeopleFilters
             persons={people}

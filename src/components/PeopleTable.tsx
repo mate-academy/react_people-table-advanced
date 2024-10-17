@@ -37,6 +37,7 @@ export const PeopleTable: React.FC<PeopleTableProps> = ({
 
     if (slug) {
       const selectedPersonSlug = persons.find(person => person.slug === slug);
+
       setSelectedPerson(selectedPersonSlug || null);
     }
   }, [persons, searchParams, slug]);
@@ -73,9 +74,9 @@ export const PeopleTable: React.FC<PeopleTableProps> = ({
                   <i
                     className={cn(
                       'fas',
-                      { 'fa-sort': 'name' !== sortField },
-                      { 'fa-sort-up': 'name' === sortField && !sortOrder },
-                      { 'fa-sort-down': 'name' === sortField && sortOrder },
+                      { 'fa-sort': sortField !== 'name' },
+                      { 'fa-sort-up': sortField === 'name' && sortOrder === 'asc' },
+                      { 'fa-sort-down': sortField === 'name' && sortOrder === 'desc' },
                     )}
                   />
                 </span>
@@ -91,9 +92,9 @@ export const PeopleTable: React.FC<PeopleTableProps> = ({
                   <i
                     className={cn(
                       'fas',
-                      { 'fa-sort': 'sex' !== sortField },
-                      { 'fa-sort-up': 'sex' === sortField && !sortOrder },
-                      { 'fa-sort-down': 'sex' === sortField && sortOrder },
+                      { 'fa-sort': sortField !== 'sex' },
+                      { 'fa-sort-up': sortField === 'sex' && sortOrder === 'asc' },
+                      { 'fa-sort-down': sortField === 'sex' && sortOrder === 'desc'},
                     )}
                   />
                 </span>
@@ -152,9 +153,7 @@ export const PeopleTable: React.FC<PeopleTableProps> = ({
                   ? 'has-background-warning'
                   : ''
               }
-
               key={person.slug}
-
             >
               <td>
                 <Link
@@ -181,11 +180,7 @@ export const PeopleTable: React.FC<PeopleTableProps> = ({
               </td>
               <td>
                 {father ? (
-                  <Link
-                    to={`/people/${father.slug}`}
-                  >
-                    {person.fatherName}
-                  </Link>
+                  <Link to={`/people/${father.slug}`}>{person.fatherName}</Link>
                 ) : (
                   <p>{person.fatherName || '-'}</p>
                 )}
