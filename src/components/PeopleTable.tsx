@@ -75,8 +75,14 @@ export const PeopleTable: React.FC<PeopleTableProps> = ({
                     className={cn(
                       'fas',
                       { 'fa-sort': sortField !== 'name' },
-                      { 'fa-sort-up': sortField === 'name' && sortOrder === 'asc' },
-                      { 'fa-sort-down': sortField === 'name' && sortOrder === 'desc' },
+                      {
+                        'fa-sort-up':
+                          sortField === 'name' && sortOrder === 'asc',
+                      },
+                      {
+                        'fa-sort-down':
+                          sortField === 'name' && sortOrder === 'desc',
+                      },
                     )}
                   />
                 </span>
@@ -93,8 +99,14 @@ export const PeopleTable: React.FC<PeopleTableProps> = ({
                     className={cn(
                       'fas',
                       { 'fa-sort': sortField !== 'sex' },
-                      { 'fa-sort-up': sortField === 'sex' && sortOrder === 'asc' },
-                      { 'fa-sort-down': sortField === 'sex' && sortOrder === 'desc'},
+                      {
+                        'fa-sort-up':
+                          sortField === 'sex' && sortOrder === 'asc',
+                      },
+                      {
+                        'fa-sort-down':
+                          sortField === 'sex' && sortOrder === 'desc',
+                      },
                     )}
                   />
                 </span>

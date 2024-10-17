@@ -58,10 +58,10 @@ export const PeopleFilters: React.FC<PeopleFiltersProps> = ({
     searchParams.delete('century');
     const newSearchParams = new URLSearchParams();
 
-    newSearchParams.set('filter', 'all');
-    newSearchParams.set('sort', 'default');
-    newSearchParams.set('search', '');
-    newSearchParams.set('century', 'default');
+    newSearchParams.delete('filter');
+    newSearchParams.delete('sort');
+    newSearchParams.delete('search');
+    newSearchParams.delete('century');
     setSearchParams(newSearchParams);
   };
 

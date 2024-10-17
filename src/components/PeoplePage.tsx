@@ -98,6 +98,7 @@ export const PeoplePage: React.FC = () => {
     } else {
       newSearchParams.set('filter', filterGender);
     }
+
     setSearchParams(newSearchParams);
   };
 
