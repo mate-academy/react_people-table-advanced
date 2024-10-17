@@ -645,7 +645,7 @@
 // };
 
 import { Person } from '../types/Person';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { SearchLink } from '../components/SearchLink';
 import cn from 'classnames';
@@ -668,23 +668,26 @@ export const PeopleTable: React.FC<PeopleTableProps> = ({
   };
 
   const [selectedPerson, setSelectedPerson] = useState<Person | null>(null);
-
-  const handlePersonClick = (person: Person) => {
-    setSelectedPerson(person);
-    localStorage.setItem('selectedPersonId', person.slug);
-  };
+  const [searchParams, setSearchParams] = useSearchParams();
 
   useEffect(() => {
-    const storedPersonId = localStorage.getItem('selectedPersonId');
+    const storedSlug = searchParams.get('selectedPerson');
 
-    if (storedPersonId) {
-      const selectPerson = persons.find(
-        person => person.slug === storedPersonId,
-      );
+    if (storedSlug) {
+      const selectPerson = persons.find(person => person.slug === storedSlug);
 
-      setSelectedPerson(selectPerson);
+      setSelectedPerson(selectPerson || null);
     }
-  }, [persons]);
+  }, [persons, searchParams]);
+
+  const handlePersonClick = (person: Person) => {
+    const newSearchParams = new URLSearchParams(searchParams.toString());
+
+    newSearchParams.set('selectedPerson', person.slug);
+    setSearchParams(newSearchParams);
+
+    setSelectedPerson(person);
+  };
 
   const getSortParams = useCallback(
     (sortBy: string) => {
@@ -826,7 +829,6 @@ export const PeopleTable: React.FC<PeopleTableProps> = ({
               <td>
                 {father ? (
                   <Link
-                    className={'has-text-danger'}
                     to={`/people/${father.name.replace(/\s+/g, '-').toLowerCase()}-${father.born}`}
                   >
                     {person.fatherName}

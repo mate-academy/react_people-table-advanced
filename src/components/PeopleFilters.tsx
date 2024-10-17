@@ -303,10 +303,21 @@ export const PeopleFilters: React.FC<PeopleFiltersProps> = ({
       | 'female';
     const currentSearch = searchParams.get('search') || '';
 
+    const currentCentury = searchParams
+      .getAll('century')
+      .map(Number)
+      .filter(Boolean);
+
     if (currentFilter) {
       setFilter(currentFilter);
     } else {
       setFilter('all');
+    }
+
+    if (currentCentury.length > 0) {
+      setSelectedCentury(currentCentury);
+    } else {
+      setSelectedCentury([]);
     }
 
     setSearchQuery(currentSearch);

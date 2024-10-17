@@ -484,7 +484,6 @@ export const PeoplePage: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const filter = searchParams.get('filter') as 'all' | 'male' | 'female' || 'all';
-  // const selectedCentury = searchParams.get('century') as number | 'all' | 'null';
   const [selectedCentury, setSelectedCentury] = useState<number[]>([]);
   const searchQuery = searchParams.get('search') || '';
   const sortField = searchParams.get('sort') as 'name' | 'sex' | 'born' | 'died';
