@@ -484,7 +484,7 @@ export const PeoplePage: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const filter = searchParams.get('filter') as 'all' | 'male' | 'female' || 'all';
-  const [selectedCentury, setSelectedCentury] = useState<number[]>([]);
+  const centuryQuery = searchParams.getAll('century') || [];
   const searchQuery = searchParams.get('search') || '';
   const sortField = searchParams.get('sort') as 'name' | 'sex' | 'born' | 'died';
   const sortOrder = searchParams.get('order') as 'asc' | 'desc' | null ;
@@ -511,9 +511,9 @@ export const PeoplePage: React.FC = () => {
     let updatedPeople = [...people];
 
     const getCentury = (year: number) => Math.floor((year - 1) / 100) + 1;
-    if (selectedCentury.length > 0) {
+    if (centuryQuery.length > 0) {
       updatedPeople = updatedPeople.filter(
-        person => selectedCentury.includes(getCentury(person.born)),
+        person => centuryQuery.includes(getCentury(person.born).toString()),
       );
     }
     if (filter === 'male') {
@@ -550,7 +550,7 @@ export const PeoplePage: React.FC = () => {
     }
 
     return updatedPeople;
-  }, [people, filter, selectedCentury, searchQuery, sortField, sortOrder]);
+  }, [people, filter, centuryQuery, searchQuery, sortField, sortOrder]);
 
   const handleFilterGender = (filterGender: 'all' | 'male' | 'female') => {
       const newSearchParams = new URLSearchParams(searchParams);
@@ -558,21 +558,19 @@ export const PeoplePage: React.FC = () => {
       setSearchParams(newSearchParams);
   };
 
-  const handleSelectedCentury = (century: number | 'all' | null) => {
+  const handleSelectedCentury = (century: string | 'all' | null) => {
     if (century === 'all' || century === null) {
-      setSelectedCentury([]);
       const params = new URLSearchParams(searchParams);
       params.delete('century');
       setSearchParams(params);
       return;
     }
 
-    const isSelected = selectedCentury.includes(century);
+    const isSelected = centuryQuery.includes(century);
     const updatedCenturies = isSelected
-      ? selectedCentury.filter(item => item !== century)
-      : [...selectedCentury, century];
+      ? centuryQuery.filter(item => item !== century)
+      : [...centuryQuery, century];
 
-    setSelectedCentury(updatedCenturies);
 
     const params = new URLSearchParams(searchParams);
 
@@ -581,6 +579,37 @@ export const PeoplePage: React.FC = () => {
 
     setSearchParams(params);
   };
+
+  // useEffect(() => {
+  //   if (selectedCentury.length > 0) {
+  //     const newSearchParams = new URLSearchParams(searchParams);
+  //     newSearchParams.delete('century');
+  //     selectedCentury.forEach(cent => newSearchParams.append('century', cent.toString()));
+
+  //     setSearchParams(newSearchParams);
+  //   } else {
+  //     const newSearchParams = new URLSearchParams(searchParams);
+  //     newSearchParams.delete('century');
+  //     setSearchParams(newSearchParams);
+  //   }
+  // }, [selectedCentury]);
+
+
+  // const handleSelectedCentury = (century: number | 'all' | null) => {
+  //   if (century === 'all' || century === null) {
+  //     setSelectedCentury([]);
+  //     return;
+  //   }
+
+  //   const isSelected = selectedCentury.includes(century);
+  //   const updatedCenturies = isSelected
+  //     ? selectedCentury.filter(item => item !== century)
+  //     : [...selectedCentury, century];
+
+  //   setSelectedCentury(updatedCenturies);
+
+  // };
+
 
 
   const handleSearchQuery = (event: React.ChangeEvent<HTMLInputElement>) => {

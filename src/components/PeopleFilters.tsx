@@ -278,11 +278,12 @@ import { Link, useSearchParams } from 'react-router-dom';
 import { Person } from '../types/Person';
 import React, { useState, useEffect } from 'react';
 
+
 interface PeopleFiltersProps {
   persons: Person[];
   onFilterChange: (filter: 'all' | 'male' | 'female') => void;
 
-  onClick: (century: number | 'all' | null) => void;
+  onClick: (century: string | 'all' | null) => void;
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
@@ -292,9 +293,11 @@ export const PeopleFilters: React.FC<PeopleFiltersProps> = ({
   onChange,
 }) => {
   const [filter, setFilter] = useState<'all' | 'male' | 'female'>('all');
-  const [selectedCentury, setSelectedCentury] = useState<number[]>([]);
+
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [searchParams, setSearchParams] = useSearchParams();
+  const centuryQuery = searchParams.get('century') || [];
+
 
   useEffect(() => {
     const currentFilter = searchParams.get('filter') as
@@ -303,10 +306,7 @@ export const PeopleFilters: React.FC<PeopleFiltersProps> = ({
       | 'female';
     const currentSearch = searchParams.get('search') || '';
 
-    const currentCentury = searchParams
-      .getAll('century')
-      .map(Number)
-      .filter(Boolean);
+
 
     if (currentFilter) {
       setFilter(currentFilter);
@@ -314,17 +314,19 @@ export const PeopleFilters: React.FC<PeopleFiltersProps> = ({
       setFilter('all');
     }
 
-    if (currentCentury.length > 0) {
-      setSelectedCentury(currentCentury);
+
+    if (centuryQuery.length > 0) {
+      searchParams.set('century', centuryQuery.join(','));
+
     } else {
-      setSelectedCentury([]);
+      searchParams.delete('century');
     }
 
     setSearchQuery(currentSearch);
   }, [searchParams]);
 
   const handleAllClick = () => {
-    setSelectedCentury([]);
+    searchParams.delete('century');
     const newSearchParams = new URLSearchParams(searchParams);
 
     newSearchParams.delete('century');
@@ -336,7 +338,7 @@ export const PeopleFilters: React.FC<PeopleFiltersProps> = ({
   };
 
   const handleResetFilters = () => {
-    setSelectedCentury([]);
+    searchParams.delete('century');
     const newSearchParams = new URLSearchParams();
 
     newSearchParams.set('filter', 'all');
@@ -402,11 +404,11 @@ export const PeopleFilters: React.FC<PeopleFiltersProps> = ({
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            {[16, 17, 18, 19, 20].map(century => (
+            {['16', '17', '18', '19', '20'].map(century => (
               <a
                 key={century}
                 data-cy="century"
-                className={`button mr-1 ${selectedCentury.includes(century) ? 'is-info' : ''}`}
+                className={`button mr-1 ${centuryQuery.includes(century) ? 'is-info' : ''}`}
                 href={`/people?century=${century}`}
                 onClick={e => {
                   e.preventDefault();
