@@ -26,20 +26,6 @@ import './App.scss';
 import { Route } from 'react-router-dom';
 
 export const App = () => {
-  // const location = useLocation();
-  // const navigate = useNavigate();
-
-  // useEffect(() => {
-  //   localStorage.setItem('lastPath', location.pathname + location.search);
-  // }, [location]);
-
-  // useEffect(() => {
-  //   const lastPath = localStorage.getItem('lastPath');
-
-  //   if (lastPath && lastPath !== location.pathname + location.search) {
-  //     navigate(lastPath);
-  //   }
-  // }, [navigate]);
   return (
     <div data-cy="app">
       <Navbar />
