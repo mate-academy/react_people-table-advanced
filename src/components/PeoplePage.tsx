@@ -483,14 +483,6 @@ export const PeoplePage: React.FC = () => {
   const [people, setPeople] = useState<Person[]>([]);
   const [searchParams, setSearchParams] = useSearchParams();
 
-  // const [filter, setFilter] = useState<'all' | 'male' | 'female'>('all');
-  // const [selectedCentury, setSelectedCentury] = useState<number | 'all' | null>(
-  //   null,
-  // );
-  // const [searchQuery, setSearchQuery] = useState<string>('');
-  // const [sortField, setSortField] = useState<string | null>(null);
-  // const [sortOrder, setSortOrder] = useState<'asc' | 'desc' | null>(null);
-
   const filter = searchParams.get('filter') as 'all' | 'male' | 'female' || 'all';
   // const selectedCentury = searchParams.get('century') as number | 'all' | 'null';
   const [selectedCentury, setSelectedCentury] = useState<number[]>([]);
@@ -507,7 +499,7 @@ export const PeoplePage: React.FC = () => {
         setPeople(data);
         console.log('data', data);
       } catch (er) {
-        setError('Failed to fetch data');
+        setError('Something went wrong')
       } finally {
         setLoader(false);
       }
@@ -515,29 +507,6 @@ export const PeoplePage: React.FC = () => {
 
     fetchPeople();
   }, []);
-
-  // useEffect(() => {
-  //   const filterParam = searchParams.get('filter');
-  //   const searchParam = searchParams.get('search');
-  //   const sortParam = searchParams.get('sort');
-  //   const orderParam = searchParams.get('order');
-
-  //   if (filterParam) {
-  //     setFilter(filterParam as 'all' | 'male' | 'female');
-  //   }
-
-  //   if (searchParam) {
-  //     setSearchQuery(searchParam);
-  //   }
-
-  //   if (sortParam) {
-  //     setSortField(sortParam as 'male' | 'female' | 'born' | 'died');
-  //   }
-
-  //   if (orderParam) {
-  //     setSortOrder(orderParam as 'asc' | 'desc' | null);
-  //   }
-  // }, [searchParams]);
 
   const filteredAndSortedPeople = useMemo(() => {
     let updatedPeople = [...people];
@@ -548,14 +517,11 @@ export const PeoplePage: React.FC = () => {
         person => selectedCentury.includes(getCentury(person.born)),
       );
     }
-
-
     if (filter === 'male') {
       updatedPeople = updatedPeople.filter(person => person.sex === 'm');
     } else if (filter === 'female') {
       updatedPeople = updatedPeople.filter(person => person.sex === 'f');
     }
-
 
     if (searchQuery) {
       updatedPeople = updatedPeople.filter(
@@ -580,7 +546,7 @@ export const PeoplePage: React.FC = () => {
           comparison = a.died - b.died;
         }
 
-        return sortOrder === 'asc' ? comparison : -comparison;
+        return sortOrder === 'desc' ? -comparison : comparison;
       });
     }
 
@@ -592,27 +558,6 @@ export const PeoplePage: React.FC = () => {
       newSearchParams.set('filter', filterGender !== 'all' ? filterGender : '');
       setSearchParams(newSearchParams);
   };
-
-  // const handleSelectedCentury = (century: number | 'all' | null) => {
-  //   const isSelected = selectedCentury.includes(century);
-
-  //   const updatedCenturies = isSelected
-  //     ? selectedCentury.filter(item => item !== century)
-  //     : [...selectedCentury, century];
-
-  //   setSelectedCentury(updatedCenturies);
-
-  //   const params = new URLSearchParams(searchParams);
-
-  //   params.delete('century');
-  //   updatedCenturies.forEach(cent => params.append('century', cent.toString()));
-
-  //   setSearchParams(params);
-  // };
-
-
-
-
 
   const handleSelectedCentury = (century: number | 'all' | null) => {
     if (century === 'all' || century === null) {
@@ -652,47 +597,34 @@ export const PeoplePage: React.FC = () => {
     setSearchParams(newSearchParams);
   };
 
-  // const handleSort = (field: 'name' | 'sex' | 'born' | 'died') => {
-  //   const newParams = new URLSearchParams(searchParams);
-  //   const newOrder =
-  //     sortField === field && sortOrder === 'asc'
-  //       ? 'desc'
-  //       : sortField === field && sortOrder === 'desc'
-  //         ? null
-  //         : 'asc';
-
-  //   newParams.set('sort', field);
-
-  //   if (newOrder === null) {
-  //     newParams.delete('order');
-  //   } else {
-  //     newParams.set('order', newOrder);
-  //   }
-
-  //   setSearchParams(newParams);
-  // };
-
-
   return (
     <>
       <h1 className="title">People Page</h1>
       <div className="block">
-        <PeopleTable
+        {people.length > 0 ? (
+          <PeopleTable
           persons={filteredAndSortedPeople}
           sortField={sortField}
           sortOrder={sortOrder}
         />
+        ) : <p>There are no people matching the current search criteria</p>}
       </div>
       <div className="block">
         {loader && !error ? (
           <Loader />
-        ) : (
+        ) : error ? (
+          <p data-cy="peopleLoadingError">Something went wrong</p>
+
+
+        ) : people.length > 0 ? (
           <PeopleFilters
             persons={people}
             onFilterChange={handleFilterGender}
             onChange={handleSearchQuery}
             onClick={handleSelectedCentury}
           />
+        ) : (
+          <p data-cy="noPeopleMessage">There are no people on the server</p>
         )}
       </div>
     </>
