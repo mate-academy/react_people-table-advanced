@@ -1,7 +1,6 @@
 import classNames from 'classnames';
 import { useParams, useSearchParams } from 'react-router-dom';
 import { Person } from '../types';
-//import { SearchLink } from './SearchLink';
 import { PersonLink } from './PersonLink';
 import { SearchLink } from './SearchLink';
 

@@ -3,16 +3,16 @@ import { App } from './App';
 import { PeoplePage } from './components/PeoplePage';
 import { HomePage } from './components/HomePage';
 import { NotFoundPage } from './components/NotFoundPage';
-import { WAYS } from './utils/ways';
+import { ROUTES } from './utils/ways';
 
 export const Root = () => {
   return (
     <HashRouter>
       <Routes>
-        <Route path={WAYS.HOME} element={<App />}>
+        <Route path={ROUTES.HOME} element={<App />}>
           <Route index element={<HomePage />} />
-          <Route path={`${WAYS.PEOPLE}/:slugs?`} element={<PeoplePage />} />
-          <Route path="home" element={<Navigate to={WAYS.HOME} replace />} />
+          <Route path={`${ROUTES.PEOPLE}/:slugs?`} element={<PeoplePage />} />
+          <Route path="home" element={<Navigate to={ROUTES.HOME} replace />} />
           <Route path="*" element={<NotFoundPage />} />
         </Route>
       </Routes>

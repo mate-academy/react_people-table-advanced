@@ -4,10 +4,16 @@ import { SearchLink } from './SearchLink';
 import classNames from 'classnames';
 import { useSearchParams } from 'react-router-dom';
 
-export enum Status {
+enum PersonSex {
   All = '',
   Male = 'm',
   Female = 'f',
+}
+
+enum FilteringOptions {
+  query = 'query',
+  sex = 'sex',
+  centuries = 'centuries',
 }
 
 export const PeopleFilters = () => {
@@ -15,9 +21,9 @@ export const PeopleFilters = () => {
 
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const query = searchParams.get('query') || '';
-  const sex = searchParams.get('sex') || null;
-  const centuries = searchParams.getAll('centuries') || [];
+  const query = searchParams.get(FilteringOptions.query) || '';
+  const sex = searchParams.get(FilteringOptions.sex) || null;
+  const centuries = searchParams.getAll(FilteringOptions.centuries) || [];
 
   const setSearchWith = useCallback(
     (params: SearchParams) => {
@@ -53,15 +59,17 @@ export const PeopleFilters = () => {
         </SearchLink>
 
         <SearchLink
-          params={{ sex: Status.Male }}
-          className={classNames({ 'is-active': sex === Status.Male })}
+          params={{ sex: PersonSex.Male }}
+          className={classNames({
+            'is-active': sex === PersonSex.Male,
+          })}
         >
           Male
         </SearchLink>
 
         <SearchLink
-          params={{ sex: Status.Female }}
-          className={classNames({ 'is-active': sex === Status.Female })}
+          params={{ sex: PersonSex.Female }}
+          className={classNames({ 'is-active': sex === PersonSex.Female })}
         >
           Female
         </SearchLink>

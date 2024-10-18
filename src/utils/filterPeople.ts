@@ -1,5 +1,19 @@
 import { Person } from '../types';
-import { Options } from '../types/Option';
+
+enum SortOptions {
+  name = 'name',
+  sex = 'sex',
+  born = 'born',
+  died = 'died',
+}
+
+type Options = {
+  sex: string | null;
+  query: string | null;
+  centuries: string[];
+  sort: string | null;
+  order: string | null;
+};
 
 const isNameMatch = (query: string, person: Person) => {
   const personNameMatch = person.name
@@ -41,16 +55,16 @@ export const getPreparedPeople = (people: Person[], options: Options) => {
   if (sort) {
     preparedPeople.sort((a, b) => {
       switch (sort) {
-        case 'name':
+        case SortOptions.name:
           return a[sort].localeCompare(b[sort]);
 
-        case 'sex':
+        case SortOptions.sex:
           return a[sort].localeCompare(b[sort]);
 
-        case 'born':
+        case SortOptions.born:
           return a[sort] - b[sort];
 
-        case 'died':
+        case SortOptions.died:
           return a[sort] - b[sort];
 
         default:

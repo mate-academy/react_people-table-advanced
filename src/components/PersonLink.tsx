@@ -7,11 +7,15 @@ interface PersonLinkProps {
   sex: string;
 }
 
+enum Sex {
+  female = 'f',
+}
+
 export const PersonLink: React.FC<PersonLinkProps> = ({ name, slug, sex }) => {
   return (
     <Link
       className={classNames({
-        'has-text-danger': sex === 'f',
+        'has-text-danger': sex === Sex.female,
       })}
       to={`/people/${slug}`}
     >

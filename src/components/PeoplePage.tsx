@@ -7,6 +7,14 @@ import { getPeople } from '../api';
 import { useSearchParams } from 'react-router-dom';
 import { getPreparedPeople } from '../utils/filterPeople';
 
+enum FilterOptions {
+  sex = 'sex',
+  query = 'query',
+  centuries = 'centuries',
+  sort = 'sort',
+  order = 'order',
+}
+
 const getParent = (peopleList: Person[], name: string | null) => {
   return peopleList.find(person => person.name === name);
 };
@@ -20,11 +28,11 @@ export const PeoplePage = () => {
 
   const visiblePeople = useMemo(() => {
     const options = {
-      sex: searchParams.get('sex'),
-      query: searchParams.get('query'),
-      centuries: searchParams.getAll('centuries'),
-      sort: searchParams.get('sort'),
-      order: searchParams.get('order'),
+      sex: searchParams.get(FilterOptions.sex),
+      query: searchParams.get(FilterOptions.query),
+      centuries: searchParams.getAll(FilterOptions.centuries),
+      sort: searchParams.get(FilterOptions.sort),
+      order: searchParams.get(FilterOptions.order),
     };
 
     return getPreparedPeople(peopleList, options);
