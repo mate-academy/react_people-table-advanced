@@ -31,21 +31,20 @@ export const PeopleFilters: React.FC<PeopleFiltersProps> = ({
     }
 
     setSearchQuery(currentSearch);
-  }, [searchParams]);
+  }, [searchParams, centuryQuery]); // Updated to include centuryQuery
 
   const handleAllClick = () => {
     const newSearchParams = new URLSearchParams(searchParams);
 
     newSearchParams.delete('century');
     newSearchParams.set('filter', 'all');
-    setSearchParams(newSearchParams); // Update URL search params
+    setSearchParams(newSearchParams); // Correct use of setSearchParams
     onCenturyChange(null); // Reset century filter
     onFilterChange('all'); // Update parent filter state
   };
 
   const handleResetFilters = () => {
     const newSearchParams = new URLSearchParams();
-
     setSearchParams(newSearchParams); // Clear all search params
     onCenturyChange(null); // Reset century filter in parent
     onFilterChange('all'); // Reset filter state in parent
