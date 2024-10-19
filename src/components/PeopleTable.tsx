@@ -28,11 +28,13 @@ export const PeopleTable: React.FC<PeopleTableProps> = ({
 
     if (storedSlug) {
       const selectPerson = persons.find(person => person.slug === storedSlug);
+
       setSelectedPerson(selectPerson || null);
     }
 
     if (slug) {
       const selectedPersonSlug = persons.find(person => person.slug === slug);
+
       setSelectedPerson(selectedPersonSlug || null);
     }
   }, [persons, searchParams, slug]);
