@@ -28,14 +28,6 @@ export const PeopleFilters: React.FC<PeopleFiltersProps> = ({
 
     if (currentFilter) {
       setFilter(currentFilter);
-    } else {
-      setFilter('all');
-    }
-
-    if (centuryQuery.length > 0) {
-      searchParams.set('century', centuryQuery.join(','));
-    } else {
-      searchParams.delete('century');
     }
 
     setSearchQuery(currentSearch);
@@ -46,18 +38,17 @@ export const PeopleFilters: React.FC<PeopleFiltersProps> = ({
 
     newSearchParams.delete('century');
     newSearchParams.set('filter', 'all');
-    setSearchParams(newSearchParams); // Correct use of setSearchParams
-    onCenturyChange(null);
+    setSearchParams(newSearchParams); // Update URL search params
+    onCenturyChange(null); // Reset century filter
+    onFilterChange('all'); // Update parent filter state
   };
 
   const handleResetFilters = () => {
     const newSearchParams = new URLSearchParams();
-
-    newSearchParams.delete('filter');
-    newSearchParams.delete('sort');
-    newSearchParams.delete('search');
-    newSearchParams.delete('century');
-    setSearchParams(newSearchParams); // Correct use of setSearchParams
+    setSearchParams(newSearchParams); // Clear all search params
+    onCenturyChange(null); // Reset century filter in parent
+    onFilterChange('all'); // Reset filter state in parent
+    setSearchQuery(''); // Clear search input
   };
 
   return (
