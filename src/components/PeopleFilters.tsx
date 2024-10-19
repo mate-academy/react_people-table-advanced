@@ -6,13 +6,13 @@ interface PeopleFiltersProps {
   persons: Person[];
   onFilterChange: (filter: 'all' | 'male' | 'female') => void;
 
-  onClick: (century: string | 'all' | null) => void;
+  onCenturyChange: (century: string | 'all' | null) => void;
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 export const PeopleFilters: React.FC<PeopleFiltersProps> = ({
   onFilterChange,
-  onClick,
+  onCenturyChange,
   onChange,
 }) => {
   const [filter, setFilter] = useState<'all' | 'male' | 'female'>('all');
@@ -51,7 +51,7 @@ export const PeopleFilters: React.FC<PeopleFiltersProps> = ({
     newSearchParams.set('filter', 'all');
 
     setSearchParams(newSearchParams);
-    onClick(null);
+    onCenturyChange(null);
   };
 
   const handleResetFilters = () => {
@@ -129,7 +129,7 @@ export const PeopleFilters: React.FC<PeopleFiltersProps> = ({
                 to={`/people?century=${century}`}
                 onClick={e => {
                   e.preventDefault();
-                  onClick(century);
+                  onCenturyChange(century);
                 }}
               >
                 {century}
