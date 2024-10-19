@@ -5,7 +5,6 @@ import React, { useState, useEffect } from 'react';
 interface PeopleFiltersProps {
   persons: Person[];
   onFilterChange: (filter: 'all' | 'male' | 'female') => void;
-
   onCenturyChange: (century: string | 'all' | null) => void;
   onSearchChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
@@ -43,26 +42,22 @@ export const PeopleFilters: React.FC<PeopleFiltersProps> = ({
   }, [searchParams]);
 
   const handleAllClick = () => {
-    searchParams.delete('century');
     const newSearchParams = new URLSearchParams(searchParams);
 
     newSearchParams.delete('century');
-    newSearchParams.delete('filter');
     newSearchParams.set('filter', 'all');
-
-    setSearchParams(newSearchParams);
+    setSearchParams(newSearchParams); // Correct use of setSearchParams
     onCenturyChange(null);
   };
 
   const handleResetFilters = () => {
-    searchParams.delete('century');
     const newSearchParams = new URLSearchParams();
 
     newSearchParams.delete('filter');
     newSearchParams.delete('sort');
     newSearchParams.delete('search');
     newSearchParams.delete('century');
-    setSearchParams(newSearchParams);
+    setSearchParams(newSearchParams); // Correct use of setSearchParams
   };
 
   return (
