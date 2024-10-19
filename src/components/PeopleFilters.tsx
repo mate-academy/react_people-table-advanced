@@ -7,13 +7,13 @@ interface PeopleFiltersProps {
   onFilterChange: (filter: 'all' | 'male' | 'female') => void;
 
   onCenturyChange: (century: string | 'all' | null) => void;
-  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  onSearchChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 export const PeopleFilters: React.FC<PeopleFiltersProps> = ({
   onFilterChange,
   onCenturyChange,
-  onChange,
+  onSearchChange,
 }) => {
   const [filter, setFilter] = useState<'all' | 'male' | 'female'>('all');
   const [searchQuery, setSearchQuery] = useState<string>('');
@@ -110,7 +110,7 @@ export const PeopleFilters: React.FC<PeopleFiltersProps> = ({
             className="input"
             placeholder="Search"
             value={searchQuery}
-            onChange={onChange}
+            onChange={onSearchChange}
           />
           <span className="icon is-left">
             <i className="fas fa-search" aria-hidden="true" />
