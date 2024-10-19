@@ -28,13 +28,11 @@ export const PeopleTable: React.FC<PeopleTableProps> = ({
 
     if (storedSlug) {
       const selectPerson = persons.find(person => person.slug === storedSlug);
-
       setSelectedPerson(selectPerson || null);
     }
 
     if (slug) {
       const selectedPersonSlug = persons.find(person => person.slug === slug);
-
       setSelectedPerson(selectedPersonSlug || null);
     }
   }, [persons, searchParams, slug]);
@@ -53,7 +51,7 @@ export const PeopleTable: React.FC<PeopleTableProps> = ({
         return { sort: sortBy, order: 'asc' };
       }
 
-      // Fix: Set the order to 'asc' when selecting a new field
+      // Set the order to 'asc' when selecting a new field
       return { sort: sortBy, order: 'asc' };
     },
     [sortField, sortOrder],
@@ -152,6 +150,7 @@ export const PeopleTable: React.FC<PeopleTableProps> = ({
       </thead>
 
       <tbody>
+        {/* Ensure person.slug is unique for each row */}
         {persons?.map(person => {
           const mother = findPersonByName(person.motherName);
           const father = findPersonByName(person.fatherName);
@@ -164,7 +163,7 @@ export const PeopleTable: React.FC<PeopleTableProps> = ({
                   ? 'has-background-warning'
                   : ''
               }
-              key={person.slug}
+              key={person.slug} // Ensure slug is unique, otherwise consider using another unique identifier
             >
               <td>
                 <Link
