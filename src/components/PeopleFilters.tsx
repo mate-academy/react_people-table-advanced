@@ -35,6 +35,7 @@ export const PeopleFilters: React.FC<PeopleFiltersProps> = ({
 
   const handleAllClick = () => {
     const newSearchParams = new URLSearchParams(searchParams);
+
     newSearchParams.delete('century');
     newSearchParams.set('filter', 'all');
     setSearchParams(newSearchParams);
@@ -44,6 +45,7 @@ export const PeopleFilters: React.FC<PeopleFiltersProps> = ({
 
   const handleResetFilters = () => {
     const newSearchParams = new URLSearchParams();
+
     setSearchParams(newSearchParams);
     onCenturyChange(null);
     onFilterChange('all');
