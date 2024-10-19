@@ -1,14 +1,11 @@
-// /* eslint-disable jsx-a11y/control-has-associated-label */
 import { Person } from '../types/Person';
 import { Link, useParams, useSearchParams } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { SearchLink } from '../components/SearchLink';
 import cn from 'classnames';
-import { useCallback } from 'react';
 
 interface PeopleTableProps {
   persons: Person[];
-
   sortField: string | null;
   sortOrder: 'asc' | 'desc' | null;
 }
@@ -31,13 +28,11 @@ export const PeopleTable: React.FC<PeopleTableProps> = ({
 
     if (storedSlug) {
       const selectPerson = persons.find(person => person.slug === storedSlug);
-
       setSelectedPerson(selectPerson || null);
     }
 
     if (slug) {
       const selectedPersonSlug = persons.find(person => person.slug === slug);
-
       setSelectedPerson(selectedPersonSlug || null);
     }
   }, [persons, searchParams, slug]);
@@ -52,9 +47,12 @@ export const PeopleTable: React.FC<PeopleTableProps> = ({
         if (sortOrder === 'desc') {
           return { sort: null, order: null };
         }
+
+        return { sort: sortBy, order: 'asc' };
       }
 
-      return { sort: sortBy, order: null };
+      // Fix: Set the order to 'asc' when selecting a new field
+      return { sort: sortBy, order: 'asc' };
     },
     [sortField, sortOrder],
   );
@@ -89,7 +87,6 @@ export const PeopleTable: React.FC<PeopleTableProps> = ({
               </SearchLink>
             </span>
           </th>
-
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Sex
