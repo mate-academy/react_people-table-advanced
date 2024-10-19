@@ -45,6 +45,7 @@ export const PeopleFilters: React.FC<PeopleFiltersProps> = ({
 
   const handleResetFilters = () => {
     const newSearchParams = new URLSearchParams();
+
     setSearchParams(newSearchParams); // Clear all search params
     onCenturyChange(null); // Reset century filter in parent
     onFilterChange('all'); // Reset filter state in parent
