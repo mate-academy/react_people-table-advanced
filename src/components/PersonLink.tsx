@@ -1,6 +1,6 @@
 import classNames from 'classnames';
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 type Props = {
   sex: string;
@@ -9,12 +9,14 @@ type Props = {
 };
 
 export const PersonLink: React.FC<Props> = ({ sex, slug, name }) => {
+  const { search } = useLocation();
+
   return (
     <Link
       className={classNames({
         'has-text-danger': sex === 'f',
       })}
-      to={`/people/${slug}`}
+      to={`/people/${slug}${search}`}
     >
       {name}
     </Link>
