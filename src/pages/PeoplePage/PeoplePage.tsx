@@ -77,13 +77,13 @@ export const PeoplePage: React.FC = () => {
 
     switch (sort) {
       case SortTypes.Name:
-        return sortByAlphabet(filtered, SortTypes.Name, order);
       case SortTypes.Sex:
-        return sortByAlphabet(filtered, SortTypes.Sex, order);
+        return sortByAlphabet(filtered, sort, order);
+
       case SortTypes.Born:
-        return sortByNumber(filtered, SortTypes.Born, order);
       case SortTypes.Died:
-        return sortByNumber(filtered, SortTypes.Died, order);
+        return sortByNumber(filtered, sort, order);
+
       default:
         return filtered;
     }
