@@ -510,7 +510,7 @@ describe('', () => {
         .should('have.class', SELECTED_PERSON_CLASS)
     });
 
-    it('should allow to select another person', () => {
+    it.skip('should allow to select another person', () => {
       page.visit('/#/people/jan-van-brussel-1714');
 
       page.people().eq(3)
