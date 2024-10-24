@@ -9,7 +9,7 @@ export const CenturyFilter = () => {
   const [searchParams] = useSearchParams();
   const centuries = searchParams.getAll('centuries') || [];
 
-  const handleToggleCentury = (selectedCentury: string) =>
+  const getCenturiesParams = (selectedCentury: string) =>
     centuries.includes(selectedCentury)
       ? centuries.filter(century => century !== selectedCentury)
       : [...centuries, selectedCentury];
@@ -22,7 +22,7 @@ export const CenturyFilter = () => {
             key={century}
             data-cy="century"
             params={{
-              centuries: handleToggleCentury(century),
+              centuries: getCenturiesParams(century),
             }}
             className={cn('button mr-1', {
               'is-info': centuries.includes(century),
@@ -36,7 +36,7 @@ export const CenturyFilter = () => {
       <div className="level-right ml-4">
         <SearchLink
           data-cy="centuryALL"
-          params={{ centuries: null }}
+          params={{ centuries: [] }}
           className={cn('button is-success', {
             'is-outlined': !!centuries.length,
           })}

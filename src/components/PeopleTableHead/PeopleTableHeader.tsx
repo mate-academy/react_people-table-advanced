@@ -3,14 +3,7 @@ import cn from 'classnames';
 
 import { SearchLink } from '../SearchLink';
 
-enum PeopleTableHeaders {
-  NAME = 'Name',
-  SEX = 'Sex',
-  BORN = 'Born',
-  DIED = 'Died',
-  MOTHER = 'Mother',
-  FATHER = 'Father',
-}
+const TABLE_SORTING_HEADERS = ['Name', 'Sex', 'Born', 'Died'];
 
 export const PeopleTableHead = () => {
   const [searchParams] = useSearchParams();
@@ -20,12 +13,8 @@ export const PeopleTableHead = () => {
   return (
     <thead>
       <tr>
-        {Object.values(PeopleTableHeaders).map(header => {
+        {TABLE_SORTING_HEADERS.map(header => {
           const lowerHeader = header.toLocaleLowerCase();
-
-          const isVisibleSortIcon =
-            header !== PeopleTableHeaders.FATHER &&
-            header !== PeopleTableHeaders.MOTHER;
 
           const sortParams = {
             sort: lowerHeader === sort && isReversed ? null : sort,
@@ -37,23 +26,24 @@ export const PeopleTableHead = () => {
               <span className="is-flex is-flex-wrap-nowrap">
                 {header}
 
-                {isVisibleSortIcon && (
-                  <SearchLink params={sortParams}>
-                    <span className="icon">
-                      <i
-                        className={cn('fas', {
-                          'fa-sort': sort === lowerHeader,
-                          'fa-sort-up': sort === lowerHeader && !isReversed,
-                          'fa-sort-down': sort === lowerHeader && isReversed,
-                        })}
-                      />
-                    </span>
-                  </SearchLink>
-                )}
+                <SearchLink params={sortParams}>
+                  <span className="icon">
+                    <i
+                      className={cn('fas', {
+                        'fa-sort': sort === lowerHeader,
+                        'fa-sort-up': sort === lowerHeader && !isReversed,
+                        'fa-sort-down': sort === lowerHeader && isReversed,
+                      })}
+                    />
+                  </span>
+                </SearchLink>
               </span>
             </th>
           );
         })}
+
+        <th>Mother</th>
+        <th>Father</th>
       </tr>
     </thead>
   );

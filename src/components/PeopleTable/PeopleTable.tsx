@@ -42,9 +42,11 @@ export const PeopleTable: FC<Props> = ({ people }) => {
               <td>{sex}</td>
               <td>{born}</td>
               <td>{died}</td>
+
               <td>
                 {mother ? <PersonLink person={mother} /> : motherName || '-'}
               </td>
+
               <td>
                 {father ? <PersonLink person={father} /> : fatherName || '-'}
               </td>
