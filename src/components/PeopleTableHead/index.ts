@@ -1,1 +1,1 @@
-export * from './PeopleTableHeader';
+export * from './PeopleTableHead';

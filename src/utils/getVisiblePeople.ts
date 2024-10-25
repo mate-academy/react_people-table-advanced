@@ -8,7 +8,7 @@ export function getVisiblePeople(
 
   const sex = searchParams.get('sex');
   const query = searchParams.get('query')?.trim().toLocaleLowerCase();
-  const centuries = searchParams.get('centuries');
+  const centuries = searchParams.getAll('centuries');
   const sort = searchParams.get('sort');
   const isReversed = !!searchParams.get('order');
 
@@ -30,7 +30,7 @@ export function getVisiblePeople(
     });
   }
 
-  if (!!centuries?.length) {
+  if (!!centuries.length) {
     visiblePeople = visiblePeople.filter(({ born }) => {
       const century = Math.ceil(born / 100).toString();
 

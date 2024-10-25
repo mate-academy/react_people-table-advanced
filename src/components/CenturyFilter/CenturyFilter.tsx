@@ -7,7 +7,7 @@ const CENTURIES = ['16', '17', '18', '19', '20'];
 
 export const CenturyFilter = () => {
   const [searchParams] = useSearchParams();
-  const centuries = searchParams.getAll('centuries') || [];
+  const centuries = searchParams.getAll('centuries');
 
   const getCenturiesParams = (selectedCentury: string) =>
     centuries.includes(selectedCentury)

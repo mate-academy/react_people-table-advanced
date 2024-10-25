@@ -15,10 +15,12 @@ export const PeopleTableHead = () => {
       <tr>
         {TABLE_SORTING_HEADERS.map(header => {
           const lowerHeader = header.toLocaleLowerCase();
+          const isSortedAsc = lowerHeader === sort && !isReversed;
+          const isSortedDesc = lowerHeader === sort && isReversed;
 
           const sortParams = {
-            sort: lowerHeader === sort && isReversed ? null : sort,
-            order: lowerHeader === sort && !isReversed ? 'desc' : null,
+            sort: isSortedDesc ? null : lowerHeader,
+            order: isSortedAsc ? 'desc' : null,
           };
 
           return (
@@ -30,9 +32,9 @@ export const PeopleTableHead = () => {
                   <span className="icon">
                     <i
                       className={cn('fas', {
-                        'fa-sort': sort === lowerHeader,
-                        'fa-sort-up': sort === lowerHeader && !isReversed,
-                        'fa-sort-down': sort === lowerHeader && isReversed,
+                        'fa-sort': sort !== lowerHeader,
+                        'fa-sort-up': isSortedAsc,
+                        'fa-sort-down': isSortedDesc,
                       })}
                     />
                   </span>

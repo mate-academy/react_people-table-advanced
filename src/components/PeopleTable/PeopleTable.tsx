@@ -6,6 +6,7 @@ import cn from 'classnames';
 import { Person } from '../../types';
 import { PersonLink } from '../PersonLink';
 import { PeopleTableHead } from '../PeopleTableHead';
+import { getPerson } from '../../utils/getPerson';
 
 interface Props {
   people: Person[];
@@ -24,8 +25,8 @@ export const PeopleTable: FC<Props> = ({ people }) => {
       <tbody>
         {people.map(person => {
           const { slug, sex, born, died, motherName, fatherName } = person;
-          const mother = people.find(({ name }) => name === motherName);
-          const father = people.find(({ name }) => name === fatherName);
+          const mother = getPerson(people, motherName);
+          const father = getPerson(people, fatherName);
 
           return (
             <tr
