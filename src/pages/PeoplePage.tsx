@@ -100,10 +100,10 @@ export const PeoplePage = () => {
                 sex={sex}
                 query={query}
                 centuries={centuries}
-                onQueryChange={handleQueryChange}
-                toggleCenturies={toggleCenturies}
                 onSexChange={handleSexChange}
                 onResetParam={handleResetParam}
+                toggleCenturies={toggleCenturies}
+                onQueryChange={handleQueryChange}
               />
             )}
           </div>
