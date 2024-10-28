@@ -1,5 +1,5 @@
 import { URLSearchParams } from 'url';
-import { Person, sortOptions } from '../types';
+import { Person, SortOptions } from '../types';
 
 export const getPreparedPeople = (
   people: Person[],
@@ -37,13 +37,13 @@ export const getPreparedPeople = (
   if (sort) {
     preparedPeople.sort((a, b) => {
       switch (sort) {
-        case sortOptions.NAME:
+        case SortOptions.NAME:
           return a.name.localeCompare(b.name) * order;
-        case sortOptions.SEX:
+        case SortOptions.SEX:
           return a.sex.localeCompare(b.sex) * order;
-        case sortOptions.BORN:
+        case SortOptions.BORN:
           return (a.born - b.born) * order;
-        case sortOptions.DIED:
+        case SortOptions.DIED:
           return (a.died - b.died) * order;
         default:
           return 0;

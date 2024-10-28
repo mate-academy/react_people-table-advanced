@@ -1,7 +1,6 @@
 /* eslint-disable jsx-a11y/control-has-associated-label */
 import React from 'react';
-import { Person } from '../types';
-import { sortOptions } from '../types';
+import { Person, SortOptions } from '../types';
 import { PersonLink } from './PersonLink';
 import classNames from 'classnames';
 import { useParams, useSearchParams } from 'react-router-dom';
@@ -24,7 +23,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
     >
       <thead>
         <tr>
-          {Object.values(sortOptions).map(option => {
+          {Object.values(SortOptions).map(option => {
             const isSortedAsc =
               currentSort === option && currentOrder === 'asc';
             const isSortedDesc =
