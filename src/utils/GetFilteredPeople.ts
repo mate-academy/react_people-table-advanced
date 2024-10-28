@@ -11,15 +11,21 @@ export function getFilteredPeople(
   filterOptions: FilterOptions,
 ) {
   const { query, sex, centuries } = filterOptions;
-  const normalisedQuery = query?.trim().toLowerCase();
+  const normalizedQuery = query?.trim().toLowerCase();
 
   let filteredPeople = [...people];
 
-  if (normalisedQuery) {
+  if (normalizedQuery) {
     filteredPeople = filteredPeople.filter(person => {
-      const normalisedName = person.name.trim().toLowerCase();
+      const normalizedName = person.name.trim().toLowerCase();
+      const normalizedFatherName = person.father?.name.trim().toLowerCase();
+      const normalizedMotherName = person.mother?.name.trim().toLowerCase();
 
-      return normalisedName.includes(normalisedQuery);
+      return (
+        normalizedName.includes(normalizedQuery) ||
+        normalizedFatherName?.includes(normalizedQuery) ||
+        normalizedMotherName?.includes(normalizedQuery)
+      );
     });
   }
 
