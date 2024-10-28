@@ -3,9 +3,8 @@ import { PersonBody } from './PersonBody';
 import { Person } from '../types';
 import React from 'react';
 import { filterableColumns } from '../constants/filterableColumns';
-import { Link } from 'react-router-dom';
-import { getSearchWith } from '../utils/searchHelper';
 import cn from 'classnames';
+import { SearchLink } from './SearchLink';
 
 interface Props {
   people: Person[];
@@ -42,13 +41,8 @@ export const PeopleTable: React.FC<Props> = ({
               <th key={column}>
                 <span className="is-flex is-flex-wrap-nowrap">
                   {column}
-                  <Link
-                    to={{
-                      search: getSearchWith(
-                        searchParams,
-                        getSortAndDirection(column.toLowerCase()),
-                      ),
-                    }}
+                  <SearchLink
+                    params={getSortAndDirection(column.toLowerCase())}
                   >
                     <span className="icon">
                       <i
@@ -61,7 +55,7 @@ export const PeopleTable: React.FC<Props> = ({
                         })}
                       />
                     </span>
-                  </Link>
+                  </SearchLink>
                 </span>
               </th>
             );
