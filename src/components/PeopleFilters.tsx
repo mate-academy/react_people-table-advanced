@@ -8,12 +8,12 @@ export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const sex = searchParams.get('sex') || '';
   const query = searchParams.get('query') || '';
-  const centuryParam = searchParams.getAll('century') || [];
+  const centuries = searchParams.getAll('centuries') || [];
 
-  const centuries = ['16', '17', '18', '19', '20'];
+  const CENTURIES = ['16', '17', '18', '19', '20'];
 
   function handleInputChange(event: ChangeEvent<HTMLInputElement>) {
-    const query = event.target.value.trimStart();
+    const query = event.target.value.trimStart() || null;
     setSearchParams(getSearchWith(searchParams, { query }));
   }
 
@@ -28,22 +28,22 @@ export const PeopleFilters = () => {
 
       <p className="panel-tabs" data-cy="SexFilter">
         <SearchLink
-          params={{ sex: null }}
           className={cn({ 'is-active': !sex })}
+          params={{ sex: null }}
         >
           All
         </SearchLink>
 
         <SearchLink
-          params={{ sex: 'm' }}
           className={cn({ 'is-active': sex === 'm' })}
+          params={{ sex: 'm' }}
         >
           Male
         </SearchLink>
 
         <SearchLink
-          params={{ sex: 'f' }}
           className={cn({ 'is-active': sex === 'f' })}
+          params={{ sex: 'f' }}
         >
           Female
         </SearchLink>
@@ -69,7 +69,7 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            {centuries.map(century => (
+            {CENTURIES.map(century => (
               <SearchLink
                 key={century}
                 data-cy="century"
@@ -89,7 +89,7 @@ export const PeopleFilters = () => {
             <SearchLink
               data-cy="centuryALL"
               className={cn('button is-success', {
-                'is-outlined': centuryParam.length > 0,
+                'is-outlined': centuries.length > 0,
               })}
               params={{ centuries: [] }}
             >

@@ -4,7 +4,8 @@ import { Person } from '../types';
 import { sortOptions } from '../types';
 import { PersonLink } from './PersonLink';
 import classNames from 'classnames';
-import { useParams } from 'react-router-dom';
+import { useParams, useSearchParams } from 'react-router-dom';
+import { SearchLink } from './SearchLink';
 
 type Props = {
   people: Person[];
@@ -12,6 +13,9 @@ type Props = {
 
 export const PeopleTable: React.FC<Props> = ({ people }) => {
   const { slug } = useParams();
+  const [searchParams] = useSearchParams();
+  const currentSort = searchParams.get('sort') || '';
+  const currentOrder = searchParams.get('order') === 'desc' ? 'asc' : 'desc';
 
   return (
     <table
@@ -20,18 +24,30 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
     >
       <thead>
         <tr>
-          {Object.values(sortOptions).map(option => (
-            <th key={option}>
-              <span className="is-flex is-flex-wrap-nowrap">
-                {option}
-                <a href={`#/people?sort=${option.toLocaleLowerCase()}`}>
-                  <span className="icon">
-                    <i className="fas fa-sort" />
+          {Object.values(sortOptions).map(option => {
+            const isSortedAsc =
+              currentSort === option && currentOrder === 'asc';
+            const isSortedDesc =
+              currentSort === option && currentOrder === 'desc';
+            return (
+              <th key={option}>
+                <SearchLink params={{ sort: option, order: currentOrder }}>
+                  <span className="is-flex is-flex-wrap-nowrap">
+                    {option.charAt(0).toUpperCase() + option.slice(1)}
+                    <span className="icon">
+                      <i
+                        className={classNames('fas', {
+                          'fa-sort': currentSort !== option,
+                          'fa-sort-up': isSortedAsc,
+                          'fa-sort-down': isSortedDesc,
+                        })}
+                      />
+                    </span>
                   </span>
-                </a>
-              </span>
-            </th>
-          ))}
+                </SearchLink>
+              </th>
+            );
+          })}
           <th>Mother</th>
           <th>Father</th>
         </tr>
@@ -46,19 +62,14 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
             motherName,
             fatherName,
             slug: personsSlug,
+            mother,
+            father,
           } = person;
-
-          const personsMother = people.find(
-            mother => mother.name === motherName,
-          );
-          const personsFather = people.find(
-            father => father.name === fatherName,
-          );
 
           return (
             <tr
               data-cy="person"
-              key={person.slug}
+              key={personsSlug}
               className={classNames({
                 'has-background-warning': personsSlug === slug,
               })}
@@ -72,15 +83,15 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
               <td>{died}</td>
 
               <td>
-                {personsMother ? (
-                  <PersonLink person={personsMother} />
+                {mother ? (
+                  <PersonLink person={mother} />
                 ) : (
                   <p>{motherName || '-'}</p>
                 )}
               </td>
               <td>
-                {personsFather ? (
-                  <PersonLink person={personsFather} />
+                {father ? (
+                  <PersonLink person={father} />
                 ) : (
                   <p>{fatherName || '-'}</p>
                 )}

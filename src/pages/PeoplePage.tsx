@@ -13,7 +13,7 @@ export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);
   const [searchParams] = useSearchParams();
 
-  const preparedPeople = getPreparedPeople(people, searchParams)
+  const preparedPeople = getPreparedPeople(people, searchParams);
 
   useEffect(() => {
     setHasError(false);
@@ -59,9 +59,13 @@ export const PeoplePage = () => {
                 </p>
               )}
 
-              <p>There are no people matching the current search criteria</p>
+              {!isLoading && preparedPeople.length === 0 && (
+                <p>There are no people matching the current search criteria</p>
+              )}
 
-              {!hasError && preparedPeople.length > 0 && <PeopleTable people={preparedPeople} />}
+              {!isLoading && !hasError && preparedPeople.length > 0 && (
+                <PeopleTable people={preparedPeople} />
+              )}
             </div>
           </div>
         </div>

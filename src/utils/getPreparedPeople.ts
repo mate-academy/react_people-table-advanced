@@ -1,12 +1,55 @@
 import { URLSearchParams } from 'url';
-import { Person } from '../types';
+import { Person, sortOptions } from '../types';
 
 export const getPreparedPeople = (
   people: Person[],
-  searchParams: URLSearchParams,
+  queryParams: URLSearchParams,
 ): Person[] => {
-  const preparedPeople = [...people];
+  let preparedPeople = [...people];
+  const query = queryParams.get('query')?.trim().toLowerCase();
 
+  const sex = queryParams.get('sex');
+  const centuries = queryParams.getAll('centuries');
 
-  return preparedPeople
+  const sort = queryParams.get('sort');
+  const order = queryParams.get('order') === 'desc' ? -1 : 1;
+
+  if (query) {
+    preparedPeople = preparedPeople.filter(
+      person =>
+        person.name.toLowerCase().includes(query) ||
+        (person.motherName &&
+          person.motherName.toLowerCase().includes(query)) ||
+        (person.fatherName && person.fatherName.toLowerCase().includes(query)),
+    );
+  }
+
+  if (sex) {
+    preparedPeople = preparedPeople.filter(person => person.sex === sex);
+  }
+
+  if (centuries.length > 0) {
+    preparedPeople = preparedPeople.filter(person =>
+      centuries.includes(Math.ceil(person.born / 100).toString()),
+    );
+  }
+
+  if (sort) {
+    preparedPeople.sort((a, b) => {
+      switch (sort) {
+        case sortOptions.NAME:
+          return a.name.localeCompare(b.name) * order;
+        case sortOptions.SEX:
+          return a.sex.localeCompare(b.sex) * order;
+        case sortOptions.BORN:
+          return (a.born - b.born) * order;
+        case sortOptions.DIED:
+          return (a.died - b.died) * order;
+        default:
+          return 0;
+      }
+    });
+  }
+
+  return preparedPeople;
 };
