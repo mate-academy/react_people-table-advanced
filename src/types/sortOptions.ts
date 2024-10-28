@@ -1,4 +1,4 @@
-export enum sortOptions {
+export enum SortOptions {
   NAME = 'name',
   SEX = 'sex',
   BORN = 'born',
