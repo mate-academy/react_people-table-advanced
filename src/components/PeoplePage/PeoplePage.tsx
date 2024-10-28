@@ -14,10 +14,11 @@ export const PeoplePage = () => {
     try {
       const todosFromApi = await getPeople();
 
-      setIsLoading(false);
       setPeople(todosFromApi);
     } catch {
       setError(true);
+    } finally {
+      setIsLoading(false);
     }
   }, []);
 
@@ -30,32 +31,34 @@ export const PeoplePage = () => {
       <h1 className="title">People Page</h1>
 
       <div className="block">
-        <div className="columns is-desktop is-flex-direction-row-reverse">
-          <div className="column is-7-tablet is-narrow-desktop">
-            <PeopleFilters />
-          </div>
+        {isLoading ? (
+          <Loader />
+        ) : (
+          <div className="columns is-desktop is-flex-direction-row-reverse">
+            <div className="column is-7-tablet is-narrow-desktop">
+              <PeopleFilters />
+            </div>
 
-          <div className="column">
-            <div className="box table-container">
-              {isLoading && <Loader />}
-
-              {error && (
-                <p data-cy="peopleLoadingError" className="has-text-danger">
-                  Something went wrong
-                </p>
-              )}
-
-              {!isLoading &&
-                (!people.length ? (
-                  <p data-cy="noPeopleMessage">
-                    There are no people on the server
+            <div className="column">
+              <div className="box table-container">
+                {error && (
+                  <p data-cy="peopleLoadingError" className="has-text-danger">
+                    Something went wrong
                   </p>
-                ) : (
-                  <PeopleTable people={people} />
-                ))}
+                )}
+
+                {!error &&
+                  (people.length ? (
+                    <PeopleTable people={people} />
+                  ) : (
+                    <p data-cy="noPeopleMessage">
+                      There are no people on the server
+                    </p>
+                  ))}
+              </div>
             </div>
           </div>
-        </div>
+        )}
       </div>
     </>
   );

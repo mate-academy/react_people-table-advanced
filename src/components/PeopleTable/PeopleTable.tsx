@@ -2,12 +2,36 @@
 import React from 'react';
 import { Person } from '../../types';
 import { PersonInfo } from '../PersonInfo/PersonInfo';
+import { useSearchParams } from 'react-router-dom';
+import { ColumnFilter } from '../ColumnFilter/ColumnFilter';
+import { clearPeopleList } from '../../utils/clearPeopleList';
 
 type Props = {
   people: Person[];
 };
 
 export const PeopleTable: React.FC<Props> = ({ people }) => {
+  const [searchParams] = useSearchParams();
+
+  const centuries = searchParams.getAll('centuries');
+  const sex = searchParams.get('sex');
+  const query = searchParams.get('query');
+  const sort = searchParams.get('sort');
+  const order = searchParams.get('order');
+
+  const visiblePeople = clearPeopleList(
+    people,
+    centuries,
+    sex,
+    query,
+    sort,
+    order,
+  );
+
+  if (!visiblePeople.length) {
+    return <p>There are no people matching the current search criteria</p>;
+  }
+
   return (
     <table
       data-cy="peopleTable"
@@ -15,17 +39,25 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
     >
       <thead>
         <tr>
-          <th>Name</th>
-          <th>Sex</th>
-          <th>Born</th>
-          <th>Died</th>
+          <th>
+            <ColumnFilter columnName="Name" />
+          </th>
+          <th>
+            <ColumnFilter columnName="Sex" />
+          </th>
+          <th>
+            <ColumnFilter columnName="Born" />
+          </th>
+          <th>
+            <ColumnFilter columnName="Died" />
+          </th>
           <th>Mother</th>
           <th>Father</th>
         </tr>
       </thead>
 
       <tbody>
-        {people.map(person => {
+        {visiblePeople.map(person => {
           const father = people.find(
             personItem => personItem.name === person.fatherName,
           );
