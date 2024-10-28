@@ -1,6 +1,5 @@
 export enum FILTER {
-    ALL = '',
-    MALE = 'm',
-    FEMALE = 'f',
-  }
-
+  ALL = '',
+  MALE = 'm',
+  FEMALE = 'f',
+}

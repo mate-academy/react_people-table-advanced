@@ -20,7 +20,7 @@ export const PersonLink: React.FC<Props> = ({ person, sortedPeople }) => {
     (name: string | null) => {
       return sortedPeople.find(p => p.name === name);
     },
-    [sortedPeople]
+    [sortedPeople],
   );
 
   const mother = getPersonByName(person.motherName);
@@ -50,11 +50,13 @@ export const PersonLink: React.FC<Props> = ({ person, sortedPeople }) => {
       <td>{person.died}</td>
       <td>
         {mother ? (
-          <Link className="has-text-danger" 
+          <Link
+            className="has-text-danger"
             to={{
               pathname: `/people/${mother.slug}`,
               search: searchParams.toString(),
-            }}>
+            }}
+          >
             {person.motherName === null ? '-' : person.motherName}
           </Link>
         ) : (
@@ -63,10 +65,12 @@ export const PersonLink: React.FC<Props> = ({ person, sortedPeople }) => {
       </td>
       <td>
         {father ? (
-          <Link to={{
-            pathname: `/people/${father.slug}`,
-            search: searchParams.toString(),
-          }}>
+          <Link
+            to={{
+              pathname: `/people/${father.slug}`,
+              search: searchParams.toString(),
+            }}
+          >
             {person.fatherName === null ? '-' : person.fatherName}
           </Link>
         ) : (

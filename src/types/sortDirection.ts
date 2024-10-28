@@ -1,5 +1,5 @@
-export enum SORT_DIRECTION {
-    ASC = 'asc',
-    DESC = 'desc',
-    NONE = '',
-  }
+export enum DIRECTION {
+  ASC = 'asc',
+  DESC = 'desc',
+  NONE = '',
+}

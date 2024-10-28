@@ -13,9 +13,9 @@ export const People = () => {
 
   const [people, setPeople] = useState<Person[]>([]);
   const [loading, setLoading] = useState(true);
-  const [errorMessage, setErrorMessage] = useState<boolean>(false);
+  const [hasError, setHasError] = useState<boolean>(false);
 
-  const filterSex = searchParams.get('sex') as FILTER || FILTER.ALL;
+  const filterSex = (searchParams.get('sex') as FILTER) || FILTER.ALL;
   const query = searchParams.get('query') || '';
   const centuries = searchParams.getAll('centuries') || [];
 
@@ -25,14 +25,14 @@ export const People = () => {
     getPeople()
       .then(setPeople)
       .catch(() => {
-        setErrorMessage(true);
+        setHasError(true);
       })
       .finally(() => setLoading(false));
   }, []);
 
   const handleSexFilterChange = (sex?: string) => {
     const params = new URLSearchParams(searchParams);
-    
+
     if (sex) {
       params.set('sex', sex);
     } else {
@@ -40,13 +40,13 @@ export const People = () => {
     }
 
     setSearchParams(params);
-  }
+  };
 
   const handleQueryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const params = new URLSearchParams(searchParams);
-    
+
     const trimmedQuery = event.target.value.trim();
-    
+
     if (trimmedQuery) {
       params.set('query', trimmedQuery);
     } else {
@@ -54,7 +54,7 @@ export const People = () => {
     }
 
     setSearchParams(params);
-  }
+  };
 
   const handleCenturiesFilter = (ch: string) => {
     const params = new URLSearchParams(searchParams);
@@ -65,13 +65,14 @@ export const People = () => {
     params.delete('centuries');
     newCenturies.forEach(century => params.append('centuries', century));
     setSearchParams(params);
-  }
+  };
 
   const handleSelectAllCenturies = () => {
     const params = new URLSearchParams(searchParams);
+
     params.delete('centuries');
     setSearchParams(params);
-  }
+  };
 
   return (
     <>
@@ -81,8 +82,8 @@ export const People = () => {
         <div className="columns is-desktop is-flex-direction-row-reverse">
           <div className="column is-7-tablet is-narrow-desktop">
             {!loading && (
-              <PeopleFilters 
-                filterSex={filterSex} 
+              <PeopleFilters
+                filterSex={filterSex}
                 handleSexFilterChange={handleSexFilterChange}
                 query={query}
                 handleQueryChange={handleQueryChange}
@@ -95,7 +96,7 @@ export const People = () => {
 
           <div className="column">
             <div className="box table-container">
-              {errorMessage && (
+              {hasError && (
                 <p data-cy="peopleLoadingError" className="has-text-danger">
                   Something went wrong
                 </p>
@@ -105,10 +106,8 @@ export const People = () => {
                 <Loader />
               ) : (
                 <>
-                  {!!filteredPeople.length ? ( 
-                    <PeopleTable 
-                      filteredPeople={filteredPeople}
-                    /> 
+                  {!!filteredPeople.length ? (
+                    <PeopleTable filteredPeople={filteredPeople} />
                   ) : (
                     <p data-cy="noPeopleMessage">
                       There are no people on the server

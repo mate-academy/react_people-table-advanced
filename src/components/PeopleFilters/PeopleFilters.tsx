@@ -1,19 +1,19 @@
-import classNames from "classnames";
-import { FILTER } from "../../types/filters";
-import { Link } from "react-router-dom"; 
+import classNames from 'classnames';
+import { FILTER } from '../../types/filters';
+import { Link } from 'react-router-dom';
 
 type Props = {
-  filterSex: FILTER,
-  handleSexFilterChange: (sex?: FILTER) => void,
-  query: string,
-  handleQueryChange: React.ChangeEventHandler<HTMLInputElement>,
-  centuries: string[],
-  handleCenturiesFilter: (ch: string) => void,
-  handleSelectAllCenturies: () => void,
-}
+  filterSex: FILTER;
+  handleSexFilterChange: (sex?: FILTER) => void;
+  query: string;
+  handleQueryChange: React.ChangeEventHandler<HTMLInputElement>;
+  centuries: string[];
+  handleCenturiesFilter: (ch: string) => void;
+  handleSelectAllCenturies: () => void;
+};
 
-export const PeopleFilters: React.FC<Props> = ({ 
-  filterSex, 
+export const PeopleFilters: React.FC<Props> = ({
+  filterSex,
   handleSexFilterChange,
   query,
   handleQueryChange,
@@ -28,24 +28,30 @@ export const PeopleFilters: React.FC<Props> = ({
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        <Link className={classNames({'is-active': filterSex === FILTER.ALL})} to="/people" 
-          onClick={(e) => {
+        <Link
+          className={classNames({ 'is-active': filterSex === FILTER.ALL })}
+          to="/people"
+          onClick={e => {
             e.preventDefault();
             handleSexFilterChange();
           }}
         >
           All
         </Link>
-        <Link className={classNames({'is-active': filterSex === FILTER.MALE})} to="/people?sex=m" 
-          onClick={(e) => {
+        <Link
+          className={classNames({ 'is-active': filterSex === FILTER.MALE })}
+          to="/people?sex=m"
+          onClick={e => {
             e.preventDefault();
             handleSexFilterChange(FILTER.MALE);
           }}
         >
           Male
         </Link>
-        <Link className={classNames({'is-active': filterSex === FILTER.FEMALE})} to="/people?sex=f" 
-          onClick={(e) => {
+        <Link
+          className={classNames({ 'is-active': filterSex === FILTER.FEMALE })}
+          to="/people?sex=f"
+          onClick={e => {
             e.preventDefault();
             handleSexFilterChange(FILTER.FEMALE);
           }}
@@ -82,7 +88,7 @@ export const PeopleFilters: React.FC<Props> = ({
                 })}
                 to={`/people?centuries=${century}`}
                 key={century}
-                onClick={(e) => {
+                onClick={e => {
                   e.preventDefault();
                   handleCenturiesFilter(century.toString());
                 }}
@@ -99,9 +105,9 @@ export const PeopleFilters: React.FC<Props> = ({
                 'is-outlined': centuries.length !== 0,
               })}
               to="/people"
-              onClick={(e) => {
+              onClick={e => {
                 e.preventDefault();
-                handleSelectAllCenturies(); 
+                handleSelectAllCenturies();
               }}
             >
               All
@@ -111,10 +117,7 @@ export const PeopleFilters: React.FC<Props> = ({
       </div>
 
       <div className="panel-block">
-        <Link 
-          className="button is-link is-outlined is-fullwidth"
-          to="/people"
-        >
+        <Link className="button is-link is-outlined is-fullwidth" to="/people">
           Reset all filters
         </Link>
       </div>

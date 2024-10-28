@@ -1,21 +1,22 @@
-import { useSearchParams } from "react-router-dom";
-import { sort } from "../../function/sort";
-import { Person } from "../../types";
-import { SORT } from "../../types/sort";
-import { SORT_DIRECTION } from "../../types/sortDirection";
-import { PersonLink } from "../PersonLink/PersonLink";
-import classNames from "classnames";
-import { Link } from "react-router-dom"; 
+import { useSearchParams } from 'react-router-dom';
+import { sort } from '../../function/sort';
+import { Person } from '../../types';
+import { SORT } from '../../types/sort';
+import { DIRECTION } from '../../types/sortDirection';
+import { PersonLink } from '../PersonLink/PersonLink';
+import classNames from 'classnames';
+import { Link } from 'react-router-dom';
 
 type Props = {
   filteredPeople: Person[];
-}
+};
 
 export const PeopleTable: React.FC<Props> = ({ filteredPeople }) => {
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const sortField = searchParams.get('sort') as SORT || SORT.DEFAULT;
-  const sortDirection = searchParams.get('order') as SORT_DIRECTION || SORT_DIRECTION.ASC;
+  const sortField = (searchParams.get('sort') as SORT) || SORT.DEFAULT;
+  const sortDirection =
+    (searchParams.get('order') as DIRECTION) || DIRECTION.ASC;
 
   const sortedPeople = sort(filteredPeople, sortField, sortDirection);
 
@@ -23,13 +24,14 @@ export const PeopleTable: React.FC<Props> = ({ filteredPeople }) => {
     if (sortField !== field) {
       searchParams.set('sort', field);
     } else {
-      if (sortDirection === SORT_DIRECTION.ASC) {
-        searchParams.set('order', SORT_DIRECTION.DESC);
+      if (sortDirection === DIRECTION.ASC) {
+        searchParams.set('order', DIRECTION.DESC);
       } else {
         searchParams.delete('sort');
         searchParams.delete('order');
       }
     }
+
     setSearchParams(searchParams);
   };
 
@@ -51,16 +53,25 @@ export const PeopleTable: React.FC<Props> = ({ filteredPeople }) => {
             <th key={field}>
               <span className="is-flex is-flex-wrap-nowrap">
                 {title}
-                <Link to="#" onClick={(e) => {
-                  e.preventDefault();
-                  toggleSort(field);
-                }}>
+                <Link
+                  to="#"
+                  onClick={e => {
+                    e.preventDefault();
+                    toggleSort(field);
+                  }}
+                >
                   <span className="icon">
-                    <i className={classNames('fas', {
-                      'fa-sort': sortField !== field,
-                      'fa-sort-up': sortField === field && sortDirection === SORT_DIRECTION.ASC,
-                      'fa-sort-down': sortField === field && sortDirection === SORT_DIRECTION.DESC,
-                    })} />
+                    <i
+                      className={classNames('fas', {
+                        'fa-sort': sortField !== field,
+                        'fa-sort-up':
+                          sortField === field &&
+                          sortDirection === DIRECTION.ASC,
+                        'fa-sort-down':
+                          sortField === field &&
+                          sortDirection === DIRECTION.DESC,
+                      })}
+                    />
                   </span>
                 </Link>
               </span>
