@@ -1,5 +1,5 @@
 import { ChangeEvent } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import cn from 'classnames';
 
 import { getSearchWith } from '../../utils/searchHelper';
@@ -107,12 +107,14 @@ export const PeopleFilters = () => {
       </div>
 
       <div className="panel-block">
-        <SearchLink
+        <Link
           className="button is-link is-outlined is-fullwidth"
-          params={{ query: null, centuries: null, sex: null }}
+          to={{
+            search: '',
+          }}
         >
           Reset all filters
-        </SearchLink>
+        </Link>
       </div>
     </nav>
   );
