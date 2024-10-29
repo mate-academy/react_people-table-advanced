@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import { useParams, useSearchParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { PersonLink } from './PersonLink';
 import { FC } from 'react';
 import { Person } from '../types';
@@ -11,14 +11,12 @@ interface PeoopleTableProps {
   error: boolean;
   people: Person[];
   isLoading: boolean;
-  updateSort: (sortField: string) => void;
 }
 
 export const PeopleTable: FC<PeoopleTableProps> = ({
   error,
   people,
   isLoading,
-  updateSort,
 }) => {
   const { slug } = useParams();
   const selectedPerson = slug;
@@ -26,23 +24,17 @@ export const PeopleTable: FC<PeoopleTableProps> = ({
   const { sortedPeople, order, typeSort } = useFilteredSortedPeople(people);
 
   const getSearchParams = (sortParam: string) => {
-    if (sortParam === typeSort && !order) {
-      return { sort: sortParam, order: 'desc' };
+    if (sortParam === typeSort) {
+      if (order === 'asc') {
+        return { sort: sortParam, order: 'desc' };
+      } else if (order === 'desc') {
+        return { sort: null, order: null };
+      } else {
+        return { sort: sortParam, order: 'asc' };
+      }
     }
 
-    if (sortParam === typeSort && order) {
-      return { sort: null, order: null };
-    }
-
-    if (sortParam === typeSort && order) {
-      return { sort: null, order: null };
-    }
-
-    if (sortParam === typeSort && order === 'desc') {
-      return { sort: sortParam, order: 'asc' };
-    }
-
-    return { sort: sortParam, order: null };
+    return { sort: sortParam, order: 'asc' };
   };
 
   return (
@@ -74,10 +66,7 @@ export const PeopleTable: FC<PeoopleTableProps> = ({
                         <span className="is-flex is-flex-wrap-nowrap">
                           {name}
                           <SearchLink params={getSearchParams(column)}>
-                            <span
-                              className="icon"
-                              onClick={() => updateSort(`${column}`)}
-                            >
+                            <span className="icon">
                               <i
                                 className={classNames('fas', {
                                   'fa-sort': typeSort !== column,

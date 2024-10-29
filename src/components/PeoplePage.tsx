@@ -4,14 +4,14 @@ import { useEffect, useState } from 'react';
 import { getPeople } from '../api';
 import { Person } from '../types';
 import { Loader } from './Loader';
-import { useUpdateSortAndQuery } from '../utils/useUpdateSortAndQuery';
+import { useUpdateQuery } from '../utils/useUpdateQuery';
 
 export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(false);
 
-  const { updateQuery, updateSort } = useUpdateSortAndQuery();
+  const { updateQuery } = useUpdateQuery();
 
   useEffect(() => {
     setIsLoading(true);
@@ -39,7 +39,6 @@ export const PeoplePage = () => {
                 error={error}
                 people={people}
                 isLoading={isLoading}
-                updateSort={updateSort}
               />
             </div>
           </div>
