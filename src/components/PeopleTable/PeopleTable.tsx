@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { useParams, useSearchParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import cn from 'classnames';
 
 import { PersonTableColumns } from '../../types/PersonTableColumns';
@@ -7,6 +7,7 @@ import { Person } from '../../types';
 
 import { PersonLink } from '../PersonLink';
 import { SearchLink } from '../SearchLink';
+import { useFilter } from '../../hooks/useFilter';
 
 /* eslint-disable jsx-a11y/control-has-associated-label */
 
@@ -15,10 +16,7 @@ interface Props {
 }
 
 export const PeopleTable: FC<Props> = ({ people }) => {
-  const [searchParams] = useSearchParams();
-
-  const sort = searchParams.get('sort') || null;
-  const order = searchParams.get('order') || null;
+  const { sort, order } = useFilter();
 
   const tableColumns = Object.values(PersonTableColumns);
   const { slug } = useParams();

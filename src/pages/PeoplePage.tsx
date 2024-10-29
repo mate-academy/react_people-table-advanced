@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
 
 import { Person } from '../types';
 
@@ -9,19 +8,14 @@ import { PeopleTable } from '../components/PeopleTable';
 
 import { getPeople } from '../api';
 import { getVisiblePeople } from '../utils/getVisiblePeople';
+import { useFilter } from '../hooks/useFilter';
 
 export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
 
-  const [searchParams] = useSearchParams();
-
-  const nameQuery = searchParams.get('query') || '';
-  const sex = searchParams.get('sex') || null;
-  const centuries = searchParams.getAll('centuries') || [];
-  const sort = searchParams.get('sort') || null;
-  const order = searchParams.get('order') || null;
+  const { nameQuery, sex, centuries, sort, order } = useFilter();
 
   const visiblePeople = getVisiblePeople(people, {
     nameQuery,

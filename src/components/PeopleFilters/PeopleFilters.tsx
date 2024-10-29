@@ -1,27 +1,19 @@
 import { ChangeEvent } from 'react';
-import { Link, useSearchParams } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import cn from 'classnames';
 
-import { getSearchWith } from '../../utils/searchHelper';
 import { SexFilter } from '../../types/SexFilter';
 import { SearchLink } from '../SearchLink';
 import { centuriesFilters } from '../../constants/centuriesFilters';
+import { useFilter } from '../../hooks/useFilter';
 
 export const PeopleFilters = () => {
-  const [searchParams, setSearchParams] = useSearchParams();
-
-  const nameQuery = searchParams.get('query') || '';
-  const sex = searchParams.get('sex') || null;
-  const centuries = searchParams.getAll('centuries') || [];
+  const { centuries, sex, nameQuery, updateFilters } = useFilter();
 
   const sexFilters = Object.values(SexFilter);
 
   const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setSearchParams(
-      getSearchWith(searchParams, {
-        query: event.target.value.trimStart() || null,
-      }),
-    );
+    updateFilters({ query: event.target.value.trimStart() || null });
   };
 
   const handleToggleCenturies = (selectedCentury: string) =>
