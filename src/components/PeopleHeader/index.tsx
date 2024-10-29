@@ -1,0 +1,1 @@
+export { PeopleHeader } from './PeopleHeader';
