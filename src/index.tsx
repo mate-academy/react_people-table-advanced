@@ -19,7 +19,9 @@ createRoot(document.getElementById('root') as HTMLDivElement).render(
         <Route path="*" element={<h1 className="title">Page not found</h1>} />
         <Route index element={<h1 className="title">Home Page</h1>} />
         <Route path="/home" element={<Navigate to="/" />} />
-        <Route path="/people/:peopleId?" element={<PeoplePage />} />
+        <Route path="/people">
+          <Route path=":peopleId?" element={<PeoplePage />} />
+        </Route>
       </Route>
     </Routes>
   </Router>,

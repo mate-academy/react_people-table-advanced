@@ -52,7 +52,7 @@ export const PersonRender: React.FC<Props> = ({ people }) => {
           })}
         >
           <td>
-            <Link to={`/people/${person.slug}`}>{person.name}</Link>
+            <Link to={`../${person.slug}`}>{person.name}</Link>
           </td>
           <td>{person.sex}</td>
           <td>{person.born}</td>
