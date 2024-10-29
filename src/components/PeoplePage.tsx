@@ -8,13 +8,12 @@ import { Person } from '../types';
 import { getPeople } from '../api';
 import { getFilteredPeople } from '../utils/GetFilteredPeople';
 import { getPeopleWithParents } from '../utils/GetPreparedPeople';
-import { getSortedPeople } from '../utils/GetSortedPeople';
 
 export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(false);
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [loadingError, setLoadingError] = useState(false);
+  const [searchParams] = useSearchParams();
 
   const query = searchParams.get('query');
   const centuries = searchParams.getAll('century');
@@ -22,23 +21,25 @@ export const PeoplePage = () => {
   const sort = searchParams.get('sort');
   const order = searchParams.get('order');
 
-  const filteredPeople = getFilteredPeople(people, {
-    centuries: centuries,
-    sex: sex,
-    query: query,
-  });
-
-  const sortedPeople = getSortedPeople(filteredPeople, sort, order);
+  const visiblePeople = getFilteredPeople(
+    people,
+    {
+      centuries: centuries,
+      sex: sex,
+      query: query,
+    },
+    { sort, order },
+  );
 
   useEffect(() => {
     setLoading(true);
-    setError(false);
+    setLoadingError(false);
 
     getPeople()
       .then(humans => {
         setPeople(getPeopleWithParents(humans));
       })
-      .catch(() => setError(true))
+      .catch(() => setLoadingError(true))
       .finally(() => setLoading(false));
   }, []);
 
@@ -49,36 +50,28 @@ export const PeoplePage = () => {
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
           <div className="column is-7-tablet is-narrow-desktop">
-            <PeopleFilters
-              searchParams={searchParams}
-              setSearchParams={setSearchParams}
-            />
+            <PeopleFilters />
           </div>
 
           <div className="column">
             <div className="box table-container">
               {loading && <Loader />}
 
-              {error && (
+              {loadingError && (
                 <p data-cy="peopleLoadingError">Something went wrong</p>
               )}
 
-              {!people.length && !error && !loading && (
+              {!people.length && !loadingError && !loading && (
                 <p data-cy="noPeopleMessage">
                   There are no people on the server
                 </p>
               )}
 
-              {!!people.length && !!filteredPeople.length && (
+              {!!people.length && !visiblePeople.length && (
                 <p>There are no people matching the current search criteria</p>
               )}
 
-              {!!filteredPeople.length && (
-                <PeopleTable
-                  people={sortedPeople}
-                  searchParams={searchParams}
-                />
-              )}
+              {!!visiblePeople.length && <PeopleTable people={visiblePeople} />}
             </div>
           </div>
         </div>

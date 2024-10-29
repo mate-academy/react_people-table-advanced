@@ -1,37 +1,31 @@
-import { Link } from 'react-router-dom';
-import { ChangeEvent, FC } from 'react';
-import { getSearchWith } from '../utils/searchHelper';
+import { Link, useSearchParams } from 'react-router-dom';
+import { ChangeEvent } from 'react';
 import cn from 'classnames';
 
-interface Props {
-  searchParams: URLSearchParams;
-  setSearchParams: (params: URLSearchParams) => void;
-}
+import { centuries } from '../constants/centuries';
+import { getSearchWith } from '../utils/searchHelper';
+import { SearchLink } from './SearchLink';
 
-export const PeopleFilters: FC<Props> = ({ searchParams, setSearchParams }) => {
+export const PeopleFilters = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const sexFronParams = searchParams.get('sex');
+  const centuriesFromParams = searchParams.getAll('century');
+  const queryFromParams = searchParams.get('query') || '';
+
   function handleChangeQuery(event: ChangeEvent<HTMLInputElement>) {
     setSearchParams(
-      new URLSearchParams(
-        getSearchWith(searchParams, { query: event.target.value || null }),
-      ),
+      getSearchWith(searchParams, { query: event.target.value || null }),
     );
   }
 
   function handleChangeCenturies(century: string) {
-    let centuries = Array.from(new Set(searchParams.getAll('century')));
+    const currentCenturies = centuriesFromParams;
 
-    if (centuries.includes(century)) {
-      centuries = centuries.filter(currCentury => currCentury !== century);
-    } else {
-      centuries.push(century);
-    }
-
-    return centuries;
+    return currentCenturies.includes(century)
+      ? currentCenturies.filter(currCentury => currCentury !== century)
+      : [...currentCenturies, century];
   }
-
-  const sex = searchParams.get('sex');
-  const centuries = searchParams.getAll('century');
-  // const query = searchParams.get('query');
 
   return (
     <nav className="panel">
@@ -39,23 +33,19 @@ export const PeopleFilters: FC<Props> = ({ searchParams, setSearchParams }) => {
 
       <p className="panel-tabs" data-cy="SexFilter">
         <Link
-          className={!sex ? 'is-active' : ''}
-          to={{
-            search: getSearchWith(searchParams, {
-              sex: null,
-            }),
-          }}
+          className={!sexFronParams ? 'is-active' : ''}
+          to={{ search: getSearchWith(searchParams, { sex: null }) }}
         >
           All
         </Link>
         <Link
-          className={sex === 'm' ? 'is-active' : ''}
+          className={sexFronParams === 'm' ? 'is-active' : ''}
           to={{ search: getSearchWith(searchParams, { sex: 'm' }) }}
         >
           Male
         </Link>
         <Link
-          className={sex === 'f' ? 'is-active' : ''}
+          className={sexFronParams === 'f' ? 'is-active' : ''}
           to={{ search: getSearchWith(searchParams, { sex: 'f' }) }}
         >
           Female
@@ -69,6 +59,7 @@ export const PeopleFilters: FC<Props> = ({ searchParams, setSearchParams }) => {
             type="search"
             className="input"
             placeholder="Search"
+            value={queryFromParams}
             onChange={handleChangeQuery}
           />
 
@@ -81,92 +72,29 @@ export const PeopleFilters: FC<Props> = ({ searchParams, setSearchParams }) => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            <Link
-              data-cy="century"
-              className={cn('button mr-1', {
-                'is-info': centuries?.includes('16'),
-              })}
-              to={{
-                search: getSearchWith(searchParams, {
-                  century: handleChangeCenturies('16'),
-                }),
-              }}
-            >
-              16
-            </Link>
-
-            <Link
-              data-cy="century"
-              className={cn('button mr-1', {
-                'is-info': centuries?.includes('17'),
-              })}
-              to={{
-                search: getSearchWith(searchParams, {
-                  century: handleChangeCenturies('17'),
-                }),
-              }}
-            >
-              17
-            </Link>
-
-            <Link
-              data-cy="century"
-              className={cn('button mr-1', {
-                'is-info': centuries?.includes('18'),
-              })}
-              to={{
-                search: getSearchWith(searchParams, {
-                  century: handleChangeCenturies('18'),
-                }),
-              }}
-            >
-              18
-            </Link>
-
-            <Link
-              data-cy="century"
-              className={cn('button mr-1', {
-                'is-info': centuries?.includes('19'),
-              })}
-              to={{
-                search: getSearchWith(searchParams, {
-                  century: handleChangeCenturies('19'),
-                }),
-              }}
-            >
-              19
-            </Link>
-
-            <Link
-              data-cy="century"
-              className={cn('button mr-1', {
-                'is-info': centuries?.includes('20'),
-              })}
-              to={{
-                search: getSearchWith(searchParams, {
-                  century: handleChangeCenturies('20'),
-                }),
-              }}
-            >
-              20
-            </Link>
+            {centuries.map(century => (
+              <SearchLink
+                key={century}
+                params={{ century: handleChangeCenturies(century) }}
+                className={cn('button mr-1', {
+                  'is-info': centuriesFromParams?.includes(century),
+                })}
+              >
+                {century}
+              </SearchLink>
+            ))}
           </div>
 
           <div className="level-right ml-4">
-            <Link
+            <SearchLink
               data-cy="centuryALL"
               className={cn('button is-success', {
-                'is-outlined': centuries.length,
+                'is-outlined': centuriesFromParams.length,
               })}
-              // className="button is-success is-outlined"
-              to={{
-                search: getSearchWith(searchParams, {
-                  century: null,
-                }),
-              }}
+              params={{ century: null }}
             >
               All
-            </Link>
+            </SearchLink>
           </div>
         </div>
       </div>

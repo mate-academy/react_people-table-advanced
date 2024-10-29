@@ -6,40 +6,59 @@ interface FilterOptions {
   centuries: string[] | null;
 }
 
+interface SortOptions {
+  sort: string | null;
+  order: string | null;
+}
+
+function getSortedPeople(people: Person[], sortOptions: SortOptions) {
+  const { sort, order } = sortOptions;
+
+  const sorted = [...people].sort((p1, p2) => {
+    switch (sort) {
+      case 'name':
+        return p1.name.localeCompare(p2.name);
+      case 'sex':
+        return p1.sex.localeCompare(p2.sex);
+      case 'born':
+        return p1.born - p2.born;
+      case 'died':
+        return p1.died - p2.died;
+      default:
+        return 0;
+    }
+  });
+
+  if (order) {
+    sorted.reverse();
+  }
+
+  return sorted;
+}
+
 export function getFilteredPeople(
   people: Person[],
   filterOptions: FilterOptions,
+  sortOptions: SortOptions,
 ) {
   const { query, sex, centuries } = filterOptions;
-  const normalizedQuery = query?.trim().toLowerCase();
+  const preparedQuery = query?.trim().toLowerCase() || '';
 
-  let filteredPeople = [...people];
+  const filteredPeople = people.filter(person => {
+    const { name, father, mother, century } = person;
 
-  if (normalizedQuery) {
-    filteredPeople = filteredPeople.filter(person => {
-      const normalizedName = person.name.trim().toLowerCase();
-      const normalizedFatherName = person.father?.name.trim().toLowerCase();
-      const normalizedMotherName = person.mother?.name.trim().toLowerCase();
+    const isName = name.trim().toLowerCase().includes(preparedQuery);
+    const isFather = father?.name.trim().toLowerCase().includes(preparedQuery);
+    const isMother = mother?.name.trim().toLowerCase().includes(preparedQuery);
 
-      return (
-        normalizedName.includes(normalizedQuery) ||
-        normalizedFatherName?.includes(normalizedQuery) ||
-        normalizedMotherName?.includes(normalizedQuery)
-      );
-    });
-  }
+    const isNameIncludesQuery = isName || isFather || isMother;
 
-  if (centuries?.length) {
-    filteredPeople = filteredPeople.filter(person => {
-      return centuries.includes(String(person.century));
-    });
-  }
+    const isCenturies = centuries?.length ? centuries.includes(century!) : true;
 
-  if (sex) {
-    filteredPeople = filteredPeople.filter(person => {
-      return person.sex === sex;
-    });
-  }
+    const isSex = sex ? sex === person.sex : true;
 
-  return filteredPeople;
+    return isNameIncludesQuery && isCenturies && isSex;
+  });
+
+  return getSortedPeople(filteredPeople, sortOptions);
 }
