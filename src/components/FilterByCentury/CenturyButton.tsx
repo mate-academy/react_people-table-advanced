@@ -9,15 +9,12 @@ type Props = {
 
 export const CenturyButton: React.FC<Props> = ({ century }) => {
   const [searchParams] = useSearchParams();
-  let paramsCenturies = [...searchParams.getAll('centuries')];
-  const centuries = searchParams.getAll('centuries');
+  let centuries = searchParams.getAll('centuries');
 
   if (centuries.includes(century)) {
-    paramsCenturies = paramsCenturies.filter(
-      currentCentury => currentCentury !== century,
-    );
+    centuries = centuries.filter(currentCentury => currentCentury !== century);
   } else {
-    paramsCenturies.push(century);
+    centuries.push(century);
   }
 
   return (
@@ -25,10 +22,10 @@ export const CenturyButton: React.FC<Props> = ({ century }) => {
       key={century}
       data-cy="century"
       className={classNames('button', 'mr-1', {
-        'is-info': centuries.includes(century),
+        'is-info': !centuries.includes(century),
       })}
       params={{
-        centuries: paramsCenturies,
+        centuries: centuries,
       }}
     >
       {century}

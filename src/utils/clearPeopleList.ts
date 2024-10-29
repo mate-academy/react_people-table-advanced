@@ -19,7 +19,9 @@ export function clearPeopleList(
         centuries.includes(Math.ceil(person.born / 100).toString())),
   );
 
-  const sortedPeople = sortPeople(sort, order, visiblePeople);
+  const sortedPeople = sort
+    ? sortPeople(sort, order, visiblePeople)
+    : visiblePeople;
 
   return sortedPeople;
 }
