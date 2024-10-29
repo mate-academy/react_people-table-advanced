@@ -1,5 +1,5 @@
 import { useSearchParams } from 'react-router-dom';
-import { getSearchWith, SearchParams } from './SearchHelper';
+import { getSearchWith, SearchParams } from './searchHelper';
 
 export function useFilter() {
   const [searchParams, setSearchParams] = useSearchParams();

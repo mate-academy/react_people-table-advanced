@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import { SortTypes } from '../types/SortTypes';
 import cn from 'classnames';
 import { useFilter } from '../utils/useFilter';
-import { getSearchWith } from '../utils/SearchHelper';
+import { getSearchWith } from '../utils/searchHelper';
 
 const CENTURIE_VALUES = ['16', '17', '18', '19', '20'];
 
