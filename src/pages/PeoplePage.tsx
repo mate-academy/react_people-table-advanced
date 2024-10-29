@@ -31,7 +31,7 @@ export const PeoplePage = () => {
     order,
   });
 
-  const isDataLoaded = !isLoading && !isError && visiblePeople.length > 0;
+  const isDataLoaded = !isLoading && !isError && !!visiblePeople.length;
 
   useEffect(() => {
     setIsError(false);
@@ -50,7 +50,7 @@ export const PeoplePage = () => {
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
           <div className="column is-7-tablet is-narrow-desktop">
-            {!isLoading && !isError && people.length > 0 && <PeopleFilters />}
+            {!isLoading && !isError && !!people.length && <PeopleFilters />}
           </div>
 
           <div className="column">
@@ -61,7 +61,7 @@ export const PeoplePage = () => {
                 <p data-cy="peopleLoadingError">Something went wrong</p>
               )}
 
-              {!isLoading && !isError && people.length === 0 && (
+              {!isLoading && !isError && !people.length && (
                 <p data-cy="noPeopleMessage">
                   There are no people on the server
                 </p>
@@ -69,7 +69,7 @@ export const PeoplePage = () => {
 
               {isDataLoaded && <PeopleTable people={visiblePeople} />}
 
-              {visiblePeople.length === 0 && !isLoading && (
+              {!visiblePeople.length && !isLoading && (
                 <p>There are no people matching the current search criteria</p>
               )}
             </div>
