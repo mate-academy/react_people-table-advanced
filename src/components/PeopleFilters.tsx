@@ -1,5 +1,6 @@
 import cn from 'classnames';
 import { Link } from 'react-router-dom';
+
 import { getSearchWith } from '../utils/searchHelper';
 import { useFilters } from '../hooks/useFilters';
 

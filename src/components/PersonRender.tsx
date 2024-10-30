@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import cn from 'classnames';
+
 import { Person } from '../types';
 
 const findPersonInArray = (peopleArray: Person[], personName: string) => {

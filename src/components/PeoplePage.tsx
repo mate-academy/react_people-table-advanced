@@ -1,9 +1,11 @@
+import React, { useEffect, useState } from 'react';
+
 import { PeopleFilters } from './PeopleFilters';
 import { PeopleTable } from './PeopleTable';
-import React, { useEffect, useState } from 'react';
 import { getPeople } from '../api';
-import { Person } from '../types';
 import { useFilters } from '../hooks/useFilters';
+
+import { Person } from '../types';
 
 const filteringPeople = (
   peopleArray: Person[],

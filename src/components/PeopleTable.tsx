@@ -1,7 +1,9 @@
 import React from 'react';
-import { Person } from '../types';
+
 import { Loader } from './Loader';
 import { PeopleRender } from './PeopleRender';
+
+import { Person } from '../types';
 
 interface Props {
   people: Person[];

@@ -1,7 +1,9 @@
 import React from 'react';
-import { Person } from '../types';
+
 import { PersonRender } from './PersonRender';
 import { EmptyTableMessage } from './EmptyTableMessage';
+
+import { Person } from '../types';
 
 interface Props {
   people: Person[];
