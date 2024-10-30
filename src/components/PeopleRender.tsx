@@ -1,4 +1,5 @@
 import React from 'react';
+import cn from 'classnames';
 
 import { PersonRender } from './PersonRender';
 import { EmptyTableMessage } from './EmptyTableMessage';
@@ -14,7 +15,7 @@ interface Props {
 const SORT_ORDERS = ['Name', 'Sex', 'Born', 'Died'];
 
 export const PeopleRender: React.FC<Props> = ({ people }) => {
-  const { handleSorting } = useFilters();
+  const { handleSorting, sort, order } = useFilters();
 
   return (
     <>
@@ -35,7 +36,15 @@ export const PeopleRender: React.FC<Props> = ({ people }) => {
                       }}
                     >
                       <span className="icon">
-                        <i className="fas fa-sort" />
+                        <i
+                          className={cn('fas', {
+                            'fa-sort': sort_order.toLowerCase() !== sort,
+                            'fa-sort-up':
+                              sort_order.toLowerCase() === sort && !order,
+                            'fa-sort-down':
+                              sort_order.toLowerCase() === sort && order,
+                          })}
+                        />
                       </span>
                     </Link>
                   </span>

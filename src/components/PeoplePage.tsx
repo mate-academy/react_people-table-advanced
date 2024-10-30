@@ -9,9 +9,16 @@ import { Person } from '../types';
 
 const filteringPeople = (
   peopleArray: Person[],
-  filters: { sexInSearch: string | null; query: string; cents: string[] },
+  filters: {
+    sexInSearch: string | null;
+    query: string;
+    cents: string[];
+    sort: string | null;
+    order: string | null;
+  },
 ) => {
   let peopleArrayCopy = [...peopleArray];
+  const order = filters.order ? -1 : 1;
 
   switch (filters.sexInSearch) {
     case 'm':
@@ -21,6 +28,29 @@ const filteringPeople = (
       peopleArrayCopy = peopleArrayCopy.filter(person => person.sex === 'f');
       break;
     default:
+      break;
+  }
+
+  switch (filters.sort) {
+    case 'name':
+      peopleArrayCopy = peopleArrayCopy.sort(
+        (person1, person2) => person1.name.localeCompare(person2.name) * order,
+      );
+      break;
+    case 'sex':
+      peopleArrayCopy = peopleArrayCopy.sort(
+        (person1, person2) => person1.sex.localeCompare(person2.sex) * order,
+      );
+      break;
+    case 'born':
+      peopleArrayCopy = peopleArrayCopy.sort(
+        (person1, person2) => (person1.born - person2.born) * order,
+      );
+      break;
+    case 'died':
+      peopleArrayCopy = peopleArrayCopy.sort(
+        (person1, person2) => (person1.died - person2.died) * order,
+      );
       break;
   }
 
@@ -45,7 +75,7 @@ export const PeoplePage: React.FC = () => {
   const [people, setPeople] = useState<Person[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [fetchingError, setFetchingError] = useState(false);
-  const { sexInSearch, query, cents } = useFilters();
+  const { sexInSearch, query, cents, sort, order } = useFilters();
 
   useEffect(() => {
     setIsLoading(true);
@@ -57,7 +87,13 @@ export const PeoplePage: React.FC = () => {
       .finally(() => setIsLoading(false));
   }, []);
 
-  const filteredPeople = filteringPeople(people, { sexInSearch, query, cents });
+  const filteredPeople = filteringPeople(people, {
+    sexInSearch,
+    query,
+    cents,
+    sort,
+    order,
+  });
 
   return (
     <>
