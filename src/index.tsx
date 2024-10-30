@@ -1,3 +1,5 @@
+// add useMemo and useCallback in project
+
 import { createRoot } from 'react-dom/client';
 import {
   Navigate,

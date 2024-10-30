@@ -4,12 +4,38 @@ import { PersonRender } from './PersonRender';
 import { EmptyTableMessage } from './EmptyTableMessage';
 
 import { Person } from '../types';
+import { Link } from 'react-router-dom';
+import { useFilters } from '../hooks/useFilters';
+import { getSearchWith } from '../utils/searchHelper';
 
 interface Props {
   people: Person[];
 }
 
+const SORT_ORDERS = ['Name', 'Sex', 'Born', 'Died'];
+
 export const PeopleRender: React.FC<Props> = ({ people }) => {
+  const { searchParams, order, sort } = useFilters();
+
+  const handleSorting = (sortBy: string | null) => {
+    const isSortSameAsArgument = (sort === sortBy) !== null;
+    const lowerSortBy = sortBy ? sortBy.toLowerCase() : '';
+
+    if (!sort) {
+      return getSearchWith(searchParams, { sort: lowerSortBy });
+    }
+
+    if (sort && !order && isSortSameAsArgument) {
+      return getSearchWith(searchParams, { sort: lowerSortBy, order: 'desc' });
+    }
+
+    if (sort && order && isSortSameAsArgument) {
+      return getSearchWith(searchParams, { sort: null, order: null });
+    }
+
+    return '';
+  };
+
   return (
     <>
       {people.length > 0 ? (
@@ -19,50 +45,22 @@ export const PeopleRender: React.FC<Props> = ({ people }) => {
         >
           <thead>
             <tr>
-              <th>
-                <span className="is-flex is-flex-wrap-nowrap">
-                  Name
-                  <a href="#/people?sort=name">
-                    <span className="icon">
-                      <i className="fas fa-sort" />
-                    </span>
-                  </a>
-                </span>
-              </th>
-
-              <th>
-                <span className="is-flex is-flex-wrap-nowrap">
-                  Sex
-                  <a href="#/people?sort=sex">
-                    <span className="icon">
-                      <i className="fas fa-sort" />
-                    </span>
-                  </a>
-                </span>
-              </th>
-
-              <th>
-                <span className="is-flex is-flex-wrap-nowrap">
-                  Born
-                  <a href="#/people?sort=born&amp;order=desc">
-                    <span className="icon">
-                      <i className="fas fa-sort-up" />
-                    </span>
-                  </a>
-                </span>
-              </th>
-
-              <th>
-                <span className="is-flex is-flex-wrap-nowrap">
-                  Died
-                  <a href="#/people?sort=died">
-                    <span className="icon">
-                      <i className="fas fa-sort" />
-                    </span>
-                  </a>
-                </span>
-              </th>
-
+              {SORT_ORDERS.map(sort_order => (
+                <th key={sort_order}>
+                  <span className="is-flex is-flex-wrap-nowrap">
+                    {sort_order}
+                    <Link
+                      to={{
+                        search: handleSorting(sort_order),
+                      }}
+                    >
+                      <span className="icon">
+                        <i className="fas fa-sort" />
+                      </span>
+                    </Link>
+                  </span>
+                </th>
+              ))}
               <th>Mother</th>
               <th>Father</th>
             </tr>
