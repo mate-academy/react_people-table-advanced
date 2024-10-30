@@ -52,7 +52,14 @@ export const PersonRender: React.FC<Props> = ({ people }) => {
           })}
         >
           <td>
-            <Link to={`../${person.slug}`}>{person.name}</Link>
+            <Link
+              className={cn({
+                'has-text-danger': person.sex === 'f',
+              })}
+              to={`../${person.slug}`}
+            >
+              {person.name}
+            </Link>
           </td>
           <td>{person.sex}</td>
           <td>{person.born}</td>
