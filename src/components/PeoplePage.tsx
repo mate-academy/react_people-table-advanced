@@ -1,13 +1,47 @@
 import { PeopleFilters } from './PeopleFilters';
 import { PeopleTable } from './PeopleTable';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { getPeople } from '../api';
 import { Person } from '../types';
+import { useFilters } from '../hooks/useFilters';
 
-export const PeoplePage = () => {
+const filteringPeople = (
+  peopleArray: Person[],
+  filters: { sexInSearch: string | null; query: string; cents: string[] },
+) => {
+  let peopleArrayCopy = [...peopleArray];
+
+  switch (filters.sexInSearch) {
+    case 'm':
+      peopleArrayCopy = peopleArrayCopy.filter(person => person.sex === 'm');
+      break;
+    case 'f':
+      peopleArrayCopy = peopleArrayCopy.filter(person => person.sex === 'f');
+      break;
+    default:
+      break;
+  }
+
+  if (filters.query) {
+    peopleArrayCopy = peopleArrayCopy.filter(person =>
+      person.name.toLowerCase().includes(filters.query.toLowerCase().trim()),
+    );
+  }
+
+  if (filters.cents.length !== 0) {
+    peopleArrayCopy = peopleArrayCopy.filter(person =>
+      filters.cents.includes(`${Math.floor(person.born / 100) + 1}`),
+    );
+  }
+
+  return peopleArrayCopy;
+};
+
+export const PeoplePage: React.FC = () => {
   const [people, setPeople] = useState<Person[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [fetchingError, setFetchingError] = useState(false);
+  const { sexInSearch, query, cents } = useFilters();
 
   useEffect(() => {
     setIsLoading(true);
@@ -18,6 +52,8 @@ export const PeoplePage = () => {
       .catch(() => setFetchingError(true))
       .finally(() => setIsLoading(false));
   }, []);
+
+  const filteredPeople = filteringPeople(people, { sexInSearch, query, cents });
 
   return (
     <>
@@ -34,7 +70,7 @@ export const PeoplePage = () => {
               {fetchingError ? (
                 <p data-cy="peopleLoadingError">Something went wrong</p>
               ) : (
-                <PeopleTable people={people} isLoading={isLoading} />
+                <PeopleTable people={filteredPeople} isLoading={isLoading} />
               )}
 
               {/* <p>There are no people matching the current search criteria</p> */}
