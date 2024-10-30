@@ -72,8 +72,6 @@ export const PeoplePage: React.FC = () => {
               ) : (
                 <PeopleTable people={filteredPeople} isLoading={isLoading} />
               )}
-
-              {/* <p>There are no people matching the current search criteria</p> */}
             </div>
           </div>
         </div>

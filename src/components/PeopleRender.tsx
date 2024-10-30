@@ -1,6 +1,7 @@
 import React from 'react';
 import { Person } from '../types';
 import { PersonRender } from './PersonRender';
+import { EmptyTableMessage } from './EmptyTableMessage';
 
 interface Props {
   people: Person[];
@@ -70,7 +71,7 @@ export const PeopleRender: React.FC<Props> = ({ people }) => {
           </tbody>
         </table>
       ) : (
-        <p data-cy="noPeopleMessage">There are no people on the server</p>
+        <EmptyTableMessage />
       )}
     </>
   );
