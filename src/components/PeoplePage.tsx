@@ -26,7 +26,9 @@ const filteringPeople = (
 
   if (filters.query) {
     peopleArrayCopy = peopleArrayCopy.filter(person =>
-      person.name.toLowerCase().includes(filters.query.toLowerCase().trim()),
+      person.name
+        .toLowerCase()
+        .includes(filters.query.toLowerCase().trimStart()),
     );
   }
 
