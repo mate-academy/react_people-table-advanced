@@ -1,7 +1,7 @@
 import { Person as IPerson } from '../../types';
 import React from 'react';
 import cn from 'classnames';
-import { NavLink, useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 
 interface Props {
   person: IPerson;
@@ -16,12 +16,12 @@ export const Person: React.FC<Props> = ({ person }) => {
       className={cn({ 'has-background-warning': personSlug === person.slug })}
     >
       <td>
-        <NavLink
+        <Link
           to={`/people/${person.slug}`}
           className={cn({ 'has-text-danger': person.sex === 'f' })}
         >
           {person.name}
-        </NavLink>
+        </Link>
       </td>
 
       <td>{person.sex}</td>
@@ -30,12 +30,12 @@ export const Person: React.FC<Props> = ({ person }) => {
 
       {person.mother ? (
         <td>
-          <NavLink
+          <Link
             to={`/people/${person.mother.slug}`}
             className="has-text-danger"
           >
             {person.mother.name}
-          </NavLink>
+          </Link>
         </td>
       ) : (
         <td>{person.motherName || '-'}</td>
@@ -43,9 +43,7 @@ export const Person: React.FC<Props> = ({ person }) => {
 
       {person.father ? (
         <td>
-          <NavLink to={`/people/${person.father.slug}`}>
-            {person.father.name}
-          </NavLink>
+          <Link to={`/people/${person.father.slug}`}>{person.father.name}</Link>
         </td>
       ) : (
         <td>{person.fatherName || '-'}</td>

@@ -1,10 +1,8 @@
 import { Link } from 'react-router-dom';
-import { SortTypes } from '../types/SortTypes';
 import cn from 'classnames';
 import { useFilter } from '../utils/useFilter';
 import { getSearchWith } from '../utils/searchHelper';
-
-const CENTURIE_VALUES = ['16', '17', '18', '19', '20'];
+import { CENTURIE_VALUES, SEX_OPTIONS } from '../utils/Constants';
 
 export const PeopleFilters = () => {
   const { query, sex, activeCenturies, searchParams, handleSearch } =
@@ -15,30 +13,22 @@ export const PeopleFilters = () => {
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        <Link
-          className={cn({ 'is-active': !sex })}
-          to={{
-            search: getSearchWith(searchParams, { sex: null }),
-          }}
-        >
-          {SortTypes.ALL}
-        </Link>
-        <Link
-          className={cn({ 'is-active': sex === 'm' })}
-          to={{
-            search: getSearchWith(searchParams, { sex: 'm' }),
-          }}
-        >
-          {SortTypes.MALE}
-        </Link>
-        <Link
-          className={cn({ 'is-active': sex === 'f' })}
-          to={{
-            search: getSearchWith(searchParams, { sex: 'f' }),
-          }}
-        >
-          {SortTypes.FEMALE}
-        </Link>
+        {SEX_OPTIONS.map(option => (
+          <Link
+            key={option.name}
+            className={cn({
+              'is-active':
+                option.value === sex || (option.value === '' && sex === null),
+            })}
+            to={{
+              search: getSearchWith(searchParams, {
+                sex: option.value === 'All' ? null : option.value,
+              }),
+            }}
+          >
+            {option.name}
+          </Link>
+        ))}
       </p>
 
       <div className="panel-block">
@@ -98,7 +88,12 @@ export const PeopleFilters = () => {
       </div>
 
       <div className="panel-block">
-        <Link className="button is-link is-outlined is-fullwidth" to="/people">
+        <Link
+          className={cn('button is-link is-fullwidth', {
+            'is-outlined': sex === null && !activeCenturies.length && !query,
+          })}
+          to={{ search: '' }}
+        >
           Reset all filters
         </Link>
       </div>

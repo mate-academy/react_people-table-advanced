@@ -5,15 +5,9 @@ import { FieldTypes } from '../types/FieldTypes';
 import { useLocalStorage } from '../utils/useLocalStorage';
 import { useFilter } from '../utils/useFilter';
 import { SearchLink } from './SearchLink';
+import { SORT_TITLE } from '../utils/Constants';
 
-const fieldsWithSortOption = Object.values(FieldTypes).slice(
-  0,
-  Object.values(FieldTypes).length - 2,
-);
-
-interface Props {}
-
-export const PeopleTable: React.FC<Props> = () => {
+export const PeopleTable: React.FC = () => {
   const { dataFromServer } = useLocalStorage();
   const { sort, order, getSortParams } = useFilter();
 
@@ -25,17 +19,18 @@ export const PeopleTable: React.FC<Props> = () => {
     >
       <thead>
         <tr>
-          {fieldsWithSortOption.map(field => (
-            <th key={field}>
+          {SORT_TITLE.map(field => (
+            <th key={field.value}>
               <span className="is-flex is-flex-wrap-nowrap">
-                {field}
-                <SearchLink params={getSortParams(field.toLowerCase())}>
+                {field.name}
+                <SearchLink params={getSortParams(field.value)}>
                   <span className="icon">
                     <i
-                      className={cn('fas fa-sort', {
-                        'fas fa-down': order === 'desc',
-                        'fa-sort-up': sort === field.toLowerCase(),
-                        'fas fa-sort': !sort,
+                      className={cn('fas', {
+                        'fa-sort-down':
+                          order === 'desc' && sort === field.value,
+                        'fa-sort-up': !order && sort === field.value,
+                        'fa-sort': !sort || sort !== field.value,
                       })}
                     />
                   </span>
