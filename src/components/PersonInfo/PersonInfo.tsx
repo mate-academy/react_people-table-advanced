@@ -14,7 +14,6 @@ export const PersonInfo: React.FC<Props> = ({ person, father, mother }) => {
 
   return (
     <tr
-      key={person.slug}
       data-cy="person"
       className={classNames({ 'has-background-warning': person.slug === slug })}
     >

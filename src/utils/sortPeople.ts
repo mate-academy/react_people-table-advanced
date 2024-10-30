@@ -27,7 +27,7 @@ export function sortPeople(
   }
 
   if (order === 'desc') {
-    sortedPeople.sort(() => -1);
+    sortedPeople.reverse();
   }
 
   return sortedPeople;

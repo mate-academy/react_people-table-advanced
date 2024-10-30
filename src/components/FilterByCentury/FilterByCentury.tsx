@@ -1,5 +1,5 @@
 import { CenturyButton } from './CenturyButton';
-import { CenturyAllButon } from './CenturyAllButon';
+import { CenturyAllButton } from './CenturyAllButton';
 import { CenturyFilterValues } from '../../utils/CenturyFilterValues';
 
 export const FilterByCentury = () => {
@@ -12,7 +12,7 @@ export const FilterByCentury = () => {
           ))}
         </div>
 
-        <CenturyAllButon />
+        <CenturyAllButton />
       </div>
     </div>
   );
