@@ -1,6 +1,8 @@
 import { Person } from '../types';
 
-const ZERO_YEARS = 1500 | 1600 | 1700 | 1800 | 1900 | 2000;
+function getCentury(year: number) {
+  return Math.ceil(year / 100).toString();
+}
 
 export const getFilteredPeople = (
   query: string,
@@ -46,13 +48,9 @@ export const getFilteredPeople = (
 
   if (centuries.length) {
     filteredPeople = filteredPeople.filter(person => {
-      const bornCenturyNumber =
-        person.born === ZERO_YEARS ? person.born : person.born + 100;
-      const bornString = bornCenturyNumber.toString();
+      const bornString = getCentury(person.born);
 
-      const bornCentury = bornString.slice(0, 2);
-
-      if (centuries.includes(bornCentury)) {
+      if (centuries.includes(bornString)) {
         return person;
       }
 

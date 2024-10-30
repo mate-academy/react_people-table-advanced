@@ -47,8 +47,16 @@ export const PeoplePage = () => {
   const toggleCenturies = (century: string) => {
     const params = new URLSearchParams(searchParams);
 
+    let newCenturies = centuries;
+
     if (centuries.includes(century)) {
-      params.delete('centuries', century);
+      newCenturies = centuries.filter(newCentury => newCentury !== century);
+
+      params.delete('centuries');
+
+      newCenturies.forEach(newCentury =>
+        params.append('centuries', newCentury),
+      );
     } else {
       params.append('centuries', century);
     }
