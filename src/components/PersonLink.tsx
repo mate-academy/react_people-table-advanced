@@ -1,5 +1,6 @@
 import { FC } from 'react';
 import { Person } from '../types';
+import classNames from 'classnames';
 
 interface PersonLinkProps {
   person: Person;
@@ -11,7 +12,7 @@ export const PersonLink: FC<PersonLinkProps> = ({ person, isMother }) => (
     {person.name ? (
       <a
         href={`#/people/${person.slug}`}
-        className={isMother ? 'has-text-danger' : ''}
+        className={classNames({ 'has-text-danger': isMother })}
       >
         {person.name}
       </a>

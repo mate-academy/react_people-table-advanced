@@ -1,8 +1,10 @@
+/* eslint-disable @typescript-eslint/indent */
 import { FC } from 'react';
 import { CENTURIES_FILTER } from '../constants/centuries';
 import { SearchLink } from './SearchLink';
 import { useSearchParams } from 'react-router-dom';
 import classNames from 'classnames';
+import { SEX_FILTERS } from '../constants/sexFilter';
 
 interface PeopleFiltersProps {
   updateQuery: (query: string) => void;
@@ -12,30 +14,26 @@ export const PeopleFilters: FC<PeopleFiltersProps> = ({ updateQuery }) => {
   const [searchParams] = useSearchParams();
   const existingCenturies = searchParams.getAll('centuries') || [];
   const activeSex = searchParams.getAll('sex') || '';
+  const query = searchParams.get('query')?.toString();
 
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        <SearchLink
-          params={{ sex: null }}
-          className={!activeSex.length ? 'is-active' : ''}
-        >
-          All
-        </SearchLink>
-        <SearchLink
-          params={{ sex: 'm' }}
-          className={activeSex[0] === 'm' ? 'is-active' : ''}
-        >
-          Male
-        </SearchLink>
-        <SearchLink
-          params={{ sex: 'f' }}
-          className={activeSex[0] === 'f' ? 'is-active' : ''}
-        >
-          Female
-        </SearchLink>
+        {Object.entries(SEX_FILTERS).map(([name, value]) => (
+          <SearchLink
+            key={name}
+            params={{ sex: value }}
+            className={classNames({
+              'is-active':
+                activeSex.includes(value || '') ||
+                (name === 'All' && activeSex.length === 0),
+            })}
+          >
+            {name}
+          </SearchLink>
+        ))}
       </p>
 
       <div className="panel-block">
@@ -45,7 +43,7 @@ export const PeopleFilters: FC<PeopleFiltersProps> = ({ updateQuery }) => {
             type="text"
             className="input"
             placeholder="Search"
-            value={searchParams.get('query')?.toString()}
+            value={query}
             onChange={event => updateQuery(event.target.value)}
           />
 
@@ -60,7 +58,9 @@ export const PeopleFilters: FC<PeopleFiltersProps> = ({ updateQuery }) => {
           <div className="level-left">
             {CENTURIES_FILTER.map(century => {
               const updatedCenturies = existingCenturies.includes(century)
-                ? existingCenturies.filter(c => c !== century)
+                ? existingCenturies.filter(
+                    filteredCentury => filteredCentury !== century,
+                  )
                 : [...existingCenturies, century];
 
               return (
@@ -68,7 +68,9 @@ export const PeopleFilters: FC<PeopleFiltersProps> = ({ updateQuery }) => {
                   key={century}
                   params={{ centuries: updatedCenturies }}
                   data-cy="century"
-                  className={`button mr-1 ${existingCenturies.includes(century) ? 'is-info' : ''}`}
+                  className={classNames('button mr-1', {
+                    'is-info': existingCenturies.includes(century),
+                  })}
                 >
                   {century}
                 </SearchLink>

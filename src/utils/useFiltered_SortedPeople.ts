@@ -9,7 +9,9 @@ export const useFilteredSortedPeople = (
   typeSort: string | null;
 } => {
   const [searchParams] = useSearchParams();
-  const selectedCenturies = searchParams.getAll('centuries').map(item => +item);
+  const selectedCenturies = searchParams
+    .getAll('centuries')
+    .map(item => Number(item));
   const selectedSex = searchParams.get('sex');
   const order = searchParams.get('order');
   const typeSort = searchParams.get('sort');
@@ -25,24 +27,19 @@ export const useFilteredSortedPeople = (
     return year >= minYear && year < maxYear;
   };
 
-  const filteredPeople = people
-    .filter(person => {
-      const query = searchParams.get('query')?.toLowerCase() || '';
+  const filteredPeople = people.filter(person => {
+    const query = searchParams.get('query')?.toLowerCase() || '';
 
-      return (
-        person.name.toLowerCase().includes(query) ||
-        person.motherName?.toLowerCase().includes(query) ||
-        person.fatherName?.toLowerCase().includes(query)
-      );
-    })
-    .filter(person => matchYear(person.born))
-    .filter(person => {
-      if (selectedSex === null) {
-        return true;
-      } else {
-        return person.sex === selectedSex;
-      }
-    });
+    const matchesQuery =
+      person.name.toLowerCase().includes(query) ||
+      person.motherName?.toLowerCase().includes(query) ||
+      person.fatherName?.toLowerCase().includes(query);
+
+    const matchesYear = matchYear(person.born);
+    const matchSex = selectedSex === null || person.sex === selectedSex;
+
+    return matchesQuery && matchSex && matchesYear;
+  });
 
   const sortedPeople = [...filteredPeople].sort((a, b) => {
     const sortField = typeSort as keyof Person;
