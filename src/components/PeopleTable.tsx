@@ -1,122 +1,109 @@
-import { Link, useLocation } from 'react-router-dom';
+import classNames from 'classnames';
 import { Person } from '../types';
+import { SearchLink } from './SearchLink';
+import { useSearchParams } from 'react-router-dom';
+import { SearchParams } from '../utils/searchHelper';
+import { PersonLink } from './personLink';
 
-/* eslint-disable jsx-a11y/control-has-associated-label */
-type Props = {
+interface Props {
   people: Person[];
-};
+}
 
 export const PeopleTable: React.FC<Props> = ({ people }) => {
-  const peopleNames = people.map(person => person.name);
-  const location = useLocation();
+  const [searchParams] = useSearchParams();
+
+  const currentSort = searchParams.get('sort') || '';
+  const currentOrder = searchParams.get('order') || '';
+
+  const handleToggleSort = (sortBy: string): SearchParams => {
+    if (!currentSort || currentSort !== sortBy) {
+      return { sort: sortBy, order: 'desc' };
+    }
+
+    if (currentSort === sortBy && currentOrder === 'desc') {
+      return { sort: sortBy, order: null };
+    }
+
+    return { sort: sortBy, order: 'desc' };
+  };
+
+  const getSortIconClass = (sortBy: string): string => {
+    if (currentSort !== sortBy) {
+      return 'fa-sort';
+    }
+
+    return currentOrder === 'desc' ? 'fa-sort-down' : 'fa-sort-up';
+  };
 
   return (
-    <table
-      data-cy="peopleTable"
-      className="table is-striped is-hoverable is-narrow is-fullwidth"
-    >
-      <thead>
-        <tr>
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Name
-              <a href="#/people?sort=name">
-                <span className="icon">
-                  <i className="fas fa-sort" />
-                </span>
-              </a>
-            </span>
-          </th>
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Sex
-              <a href="#/people?sort=name">
-                <span className="icon">
-                  <i className="fas fa-sort-up" />
-                </span>
-              </a>
-            </span>
-          </th>
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Born
-              <a href="#/people?sort=name">
-                <span className="icon">
-                  <i className="fas fa-sort-down" />
-                </span>
-              </a>
-            </span>
-          </th>
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Died
-              <a href="#/people?sort=name">
-                <span className="icon">
-                  <i className="fas fa-sort" />
-                </span>
-              </a>
-            </span>
-          </th>
-          <th>Mother</th>
-          <th>Father</th>
-        </tr>
-      </thead>
+    <>
+      <table
+        data-cy="peopleTable"
+        className="table is-striped is-hoverable is-narrow is-fullwidth"
+      >
+        <thead>
+          <tr>
+            <th>
+              <span className="is-flex is-flex-wrap-nowrap">
+                Name
+                <SearchLink params={handleToggleSort('name')}>
+                  <span className="icon">
+                    <i
+                      className={classNames('fas', getSortIconClass('name'))}
+                    />
+                  </span>
+                </SearchLink>
+              </span>
+            </th>
 
-      <tbody>
-        {people.map(person => {
-          const isShe = person.sex === 'f';
+            <th>
+              <span className="is-flex is-flex-wrap-nowrap">
+                Sex
+                <SearchLink params={handleToggleSort('sex')}>
+                  <span className="icon">
+                    <i className={classNames('fas', getSortIconClass('sex'))} />
+                  </span>
+                </SearchLink>
+              </span>
+            </th>
 
-          return (
-            <tr
-              data-cy="person"
-              key={person.name}
-              className={
-                location.pathname ===
-                `/people/${person.name.toLowerCase().replaceAll(' ', '-')}-${person.born}`
-                  ? 'has-background-warning'
-                  : ''
-              }
-            >
-              <td>
-                <Link
-                  to={`/people/${person.name.toLowerCase().replaceAll(' ', '-')}-${person.born}`}
-                  className={isShe ? 'has-text-danger' : ''}
-                >
-                  {person.name}
-                </Link>
-              </td>
+            <th>
+              <span className="is-flex is-flex-wrap-nowrap">
+                Born
+                <SearchLink params={handleToggleSort('born')}>
+                  <span className="icon">
+                    <i
+                      className={classNames('fas', getSortIconClass('born'))}
+                    />
+                  </span>
+                </SearchLink>
+              </span>
+            </th>
 
-              <td>{person.sex}</td>
-              <td>{person.born}</td>
-              <td>{person.died}</td>
-              {person.motherName && peopleNames.includes(person.motherName) ? (
-                <td>
-                  <Link
-                    to={`/people/${person.motherName.toLowerCase().replaceAll(' ', '-')}-${people.find(body => body.name === person.motherName)?.born}`}
-                    className="has-text-danger"
-                  >
-                    {person.motherName ? person.motherName : '-'}
-                  </Link>
-                </td>
-              ) : (
-                <td>{person.motherName ? person.motherName : '-'}</td>
-              )}
+            <th>
+              <span className="is-flex is-flex-wrap-nowrap">
+                Died
+                <SearchLink params={handleToggleSort('died')}>
+                  <span className="icon">
+                    <i
+                      className={classNames('fas', getSortIconClass('died'))}
+                    />
+                  </span>
+                </SearchLink>
+              </span>
+            </th>
 
-              {person.fatherName && peopleNames.includes(person.fatherName) ? (
-                <td>
-                  <Link
-                    to={`/people/${person.fatherName.toLowerCase().replaceAll(' ', '-')}-${people.find(body => body.name === person.fatherName)?.born}`}
-                  >
-                    {person.fatherName ? person.fatherName : '-'}
-                  </Link>
-                </td>
-              ) : (
-                <td>{person.fatherName ? person.fatherName : '-'}</td>
-              )}
-            </tr>
-          );
-        })}
-      </tbody>
-    </table>
+            <th>Mother</th>
+            <th>Father</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          {people.map(person => (
+            <PersonLink key={person.slug} person={person} people={people} />
+          ))}
+        </tbody>
+      </table>
+    </>
   );
 };
