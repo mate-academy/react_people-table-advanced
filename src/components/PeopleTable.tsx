@@ -1,5 +1,12 @@
+import React from 'react';
+import { Person } from '../types';
+
+interface Props {
+  peopleList: Person[];
+}
+
 /* eslint-disable jsx-a11y/control-has-associated-label */
-export const PeopleTable = () => {
+export const PeopleTable: React.FC<Props> = ({ peopleList }) => {
   return (
     <table
       data-cy="peopleTable"
@@ -57,6 +64,23 @@ export const PeopleTable = () => {
       </thead>
 
       <tbody>
+        {peopleList.map(person => (
+          <tr data-cy="person" key={person.slug}>
+            <td>
+              <a href="#/people/pieter-haverbeke-1602">{person.name}</a>
+            </td>
+            <td>{person.sex}</td>
+            <td>{person.born}</td>
+            <td>{person.died}</td>
+            <td>{person.motherName}</td>
+            <td>
+              <a href="#/people/lieven-van-haverbeke-1570">
+                {person.fatherName}
+              </a>
+            </td>
+          </tr>
+        ))}
+
         <tr data-cy="person">
           <td>
             <a href="#/people/pieter-haverbeke-1602">Pieter Haverbeke</a>
