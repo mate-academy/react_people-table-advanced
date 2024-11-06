@@ -62,18 +62,6 @@ export const PeoplePage = () => {
                 </>
               )}
             </div>
-
-            {/* <div className="box table-container"> */}
-            {/* {false && <Loader />} */}
-
-            {/* {false && <p data-cy="peopleLoadingError">Something went wrong</p>} */}
-
-            {/* {false && <p data-cy="noPeopleMessage">There are no people on the server</p>}
-
-              {false && <p>There are no people matching the current search criteria</p>}
-
-              {people && <PeopleTable peopleList={people} />} */}
-            {/* </div> */}
           </div>
         </div>
       </div>

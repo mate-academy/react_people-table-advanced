@@ -1,12 +1,23 @@
 import React from 'react';
 import { Person } from '../types';
+import { PersonLink } from './PersonLink';
 
 interface Props {
   peopleList: Person[];
 }
 
-/* eslint-disable jsx-a11y/control-has-associated-label */
 export const PeopleTable: React.FC<Props> = ({ peopleList }) => {
+  const findAvailableParentsSlug = (parent: Person) => {
+    return {
+      mother:
+        peopleList.find(person => person.name === parent.motherName)?.slug ||
+        '',
+      father:
+        peopleList.find(person => person.name === parent.fatherName)?.slug ||
+        '',
+    };
+  };
+
   return (
     <table
       data-cy="peopleTable"
@@ -64,24 +75,19 @@ export const PeopleTable: React.FC<Props> = ({ peopleList }) => {
       </thead>
 
       <tbody>
-        {peopleList.map(person => (
-          <tr data-cy="person" key={person.slug}>
-            <td>
-              <a href="#/people/pieter-haverbeke-1602">{person.name}</a>
-            </td>
-            <td>{person.sex}</td>
-            <td>{person.born}</td>
-            <td>{person.died}</td>
-            <td>{person.motherName}</td>
-            <td>
-              <a href="#/people/lieven-van-haverbeke-1570">
-                {person.fatherName}
-              </a>
-            </td>
-          </tr>
-        ))}
+        {peopleList.map(person => {
+          const parentsSlugs = findAvailableParentsSlug(person);
 
-        <tr data-cy="person">
+          return (
+            <PersonLink
+              key={person.slug}
+              person={person}
+              parentsSlugs={parentsSlugs}
+            />
+          );
+        })}
+
+        {/* <tr data-cy="person">
           <td>
             <a href="#/people/pieter-haverbeke-1602">Pieter Haverbeke</a>
           </td>
@@ -662,7 +668,7 @@ export const PeopleTable: React.FC<Props> = ({ peopleList }) => {
           <td>
             <a href="#/people/carolus-haverbeke-1832">Carolus Haverbeke</a>
           </td>
-        </tr>
+        </tr> */}
       </tbody>
     </table>
   );

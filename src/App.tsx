@@ -8,7 +8,7 @@ export const App = () => {
     <div data-cy="app">
       <Navbar />
 
-      <div className="section">
+      <div className="section" style={{ marginTop: '48px' }}>
         <div className="container">
           <Outlet />
         </div>
