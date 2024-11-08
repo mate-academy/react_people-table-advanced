@@ -17,10 +17,24 @@ export const PeopleFilters = ({
     (key === 'sex' && sex === value) || centuries.includes(value);
 
   const toggleCenturies = (centuryParam: string) => {
-    const newCenturies = centuries.includes(centuryParam)
+    // Check if centuryParam is already in centuries
+    const isCenturySelected = centuries.includes(centuryParam);
+  
+    // If no change in centuries, return the current array to avoid re-render
+    if (isCenturySelected && centuries.length === 1) {
+      return { centuries };
+    }
+  
+    // Only create a new array when necessary
+    const newCenturies = isCenturySelected
       ? centuries.filter(century => century !== centuryParam)
       : [...centuries, centuryParam];
-
+  
+    // Return the new state only if it differs from the previous state
+    if (newCenturies.length === centuries.length && isCenturySelected) {
+      return { centuries };
+    }
+  
     return { centuries: newCenturies };
   };
 

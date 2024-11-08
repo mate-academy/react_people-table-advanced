@@ -63,7 +63,6 @@ export const PeopleTable = ({
               <th key={column}>
                 <span
                   className="is-flex is-flex-wrap-nowrap"
-                  onClick={sortable ? () => onArrowClick(key) : undefined}
                   style={{ cursor: sortable ? 'pointer' : 'default' }}
                 >
                   {column}

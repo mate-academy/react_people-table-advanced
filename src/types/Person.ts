@@ -9,5 +9,4 @@ export interface Person {
   mother?: Person;
   father?: Person;
   century?: number;
-  [key: string]: string | number | Person | undefined;
 }

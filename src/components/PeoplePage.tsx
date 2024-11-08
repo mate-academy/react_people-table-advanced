@@ -108,7 +108,7 @@ you’re left with only the people who pass all the chosen filters.
       if (sortDirection) {
         return valueA > valueB ? -1 : valueA < valueB ? 1 : 0;
       } else {
-        return valueA < valueB ? -1 : valueA < valueB ? 1 : 0;
+        return valueA < valueB ? -1 : valueA > valueB ? 1 : 0;
       }
     };
 
@@ -138,15 +138,28 @@ you’re left with only the people who pass all the chosen filters.
   );
 
   const toggleArrow = (column: string) => {
-    const [order, sort] =
-      column === sortColumn
-        ? sortDirection
-          ? [null, null]
-          : ['desc', column]
-        : [null, column];
-
+    let order: string | null;
+    let sort: string | null;
+  
+    if (column === sortColumn) {
+      // If currently sorted in ascending, switch to descending
+      if (!sortDirection) {
+        order = 'desc';
+        sort = column;
+      } 
+      // If currently sorted in descending, remove sorting
+      else {
+        order = null;
+        sort = null;
+      }
+    } else {
+      // If not currently sorted, start with ascending
+      order = 'asc';
+      sort = column;
+    }
+  
     return { sex, query, centuries, sort, order };
-  };
+    };
 
   return (
     <>
