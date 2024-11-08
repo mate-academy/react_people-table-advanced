@@ -35,7 +35,7 @@ export const PeoplePage = () => {
         );
       })
       .catch(() => {
-        setError('Something wrong');
+        setError('Couldnt work though centuries correctly');
       })
       .finally(() => {
         setIsLoading(false);
@@ -140,15 +140,14 @@ you’re left with only the people who pass all the chosen filters.
   const toggleArrow = (column: string) => {
     let order: string | null;
     let sort: string | null;
-  
+
     if (column === sortColumn) {
       // If currently sorted in ascending, switch to descending
       if (!sortDirection) {
         order = 'desc';
         sort = column;
-      } 
-      // If currently sorted in descending, remove sorting
-      else {
+      } else {
+        // If currently sorted in descending, remove sorting
         order = null;
         sort = null;
       }
@@ -157,9 +156,9 @@ you’re left with only the people who pass all the chosen filters.
       order = 'asc';
       sort = column;
     }
-  
+
     return { sex, query, centuries, sort, order };
-    };
+  };
 
   return (
     <>

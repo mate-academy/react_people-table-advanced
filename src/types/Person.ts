@@ -3,8 +3,8 @@ export interface Person {
   sex: string;
   born: number;
   died: number;
-  fatherName?: string;
-  motherName?: string;
+  getMother?: () => Person | undefined;
+  getFather?: () => Person | undefined;
   slug: string;
   mother?: Person;
   father?: Person;
