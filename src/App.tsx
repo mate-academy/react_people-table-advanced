@@ -1,6 +1,6 @@
 import { PeoplePage } from './components/PeoplePage';
 import { Navbar } from './components/Navbar';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes, Navigate } from 'react-router-dom';
 
 import './App.scss';
 import { HomePage } from './components/HomePage';
@@ -13,6 +13,7 @@ export const App = () => {
       <div className="section">
         <div className="container">
           <Routes>
+            <Route path="/home" element={<Navigate to="/" replace />} />
             <Route path="/" element={<HomePage />} />
             <Route
               path="*"

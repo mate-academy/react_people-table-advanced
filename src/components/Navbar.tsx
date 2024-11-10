@@ -25,7 +25,7 @@ export const Navbar = () => {
           <Link
             aria-current="page"
             className={classNames('navbar-item ', {
-              'has-background-grey-lighter': pathname === '/people',
+              'has-background-grey-lighter': pathname.startsWith('/people'),
             })}
             to="people"
           >

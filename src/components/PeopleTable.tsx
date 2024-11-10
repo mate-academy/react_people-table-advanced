@@ -125,159 +125,168 @@ export const PeopleTable = () => {
 
   return (
     <>
-      {isLoading && <Loader />}
-      <p data-cy="peopleLoadingError">{errorText}</p>
+      {isLoading ? (
+        <Loader />
+      ) : (
+        <>
+          {errorText && <p data-cy="peopleLoadingError">{errorText}</p>}
 
-      {!people && (
-        <p data-cy="noPeopleMessage">There are no people on the server</p>
+          {people.length === 0 && errorText === '' && (
+            <p data-cy="noPeopleMessage">There are no people on the server</p>
+          )}
+
+          {filteredPeople.length === 0 &&
+            people.length > 0 &&
+            errorText === '' && (
+              <p>There are no people matching the current search criteria</p>
+            )}
+        </>
       )}
 
-      {filteredPeople.length === 0 && people && (
-        <p>There are no people matching the current search criteria</p>
-      )}
+      {!isLoading && people.length > 0 && (
+        <table
+          data-cy="peopleTable"
+          className="table is-striped is-hoverable is-narrow is-fullwidth"
+        >
+          <thead>
+            <tr>
+              <th>
+                <span className="is-flex is-flex-wrap-nowrap">
+                  Name
+                  <Link to={getLink('name')}>
+                    <span className="icon">
+                      <i
+                        className={classNames('fas', {
+                          'fa-sort': currentSortParam !== 'name',
+                          'fa-sort-up':
+                            currentSortParam === 'name' && !currentIsReverse,
+                          'fa-sort-down':
+                            currentSortParam === 'name' && currentIsReverse,
+                        })}
+                      />
+                    </span>
+                  </Link>
+                </span>
+              </th>
 
-      <table
-        data-cy="peopleTable"
-        className="table is-striped is-hoverable is-narrow is-fullwidth"
-      >
-        <thead>
-          <tr>
-            <th>
-              <span className="is-flex is-flex-wrap-nowrap">
-                Name
-                <Link to={getLink('name')}>
-                  <span className="icon">
-                    <i
-                      className={classNames('fas', {
-                        'fa-sort': currentSortParam !== 'name',
-                        'fa-sort-up':
-                          currentSortParam === 'name' && !currentIsReverse,
-                        'fa-sort-down':
-                          currentSortParam === 'name' && currentIsReverse,
-                      })}
-                    />
-                  </span>
-                </Link>
-              </span>
-            </th>
+              <th>
+                <span className="is-flex is-flex-wrap-nowrap">
+                  Sex
+                  <Link to={getLink('sex')}>
+                    <span className="icon">
+                      <i
+                        className={classNames('fas', {
+                          'fa-sort': currentSortParam !== 'sex',
+                          'fa-sort-up':
+                            currentSortParam === 'sex' && !currentIsReverse,
+                          'fa-sort-down':
+                            currentSortParam === 'sex' && currentIsReverse,
+                        })}
+                      />
+                    </span>
+                  </Link>
+                </span>
+              </th>
 
-            <th>
-              <span className="is-flex is-flex-wrap-nowrap">
-                Sex
-                <Link to={getLink('sex')}>
-                  <span className="icon">
-                    <i
-                      className={classNames('fas', {
-                        'fa-sort': currentSortParam !== 'sex',
-                        'fa-sort-up':
-                          currentSortParam === 'sex' && !currentIsReverse,
-                        'fa-sort-down':
-                          currentSortParam === 'sex' && currentIsReverse,
-                      })}
-                    />
-                  </span>
-                </Link>
-              </span>
-            </th>
+              <th>
+                <span className="is-flex is-flex-wrap-nowrap">
+                  Born
+                  <Link to={getLink('born')}>
+                    <span className="icon">
+                      <i
+                        className={classNames('fas', {
+                          'fa-sort': currentSortParam !== 'born',
+                          'fa-sort-up':
+                            currentSortParam === 'born' && !currentIsReverse,
+                          'fa-sort-down':
+                            currentSortParam === 'born' && currentIsReverse,
+                        })}
+                      />
+                    </span>
+                  </Link>
+                </span>
+              </th>
 
-            <th>
-              <span className="is-flex is-flex-wrap-nowrap">
-                Born
-                <Link to={getLink('born')}>
-                  <span className="icon">
-                    <i
-                      className={classNames('fas', {
-                        'fa-sort': currentSortParam !== 'born',
-                        'fa-sort-up':
-                          currentSortParam === 'born' && !currentIsReverse,
-                        'fa-sort-down':
-                          currentSortParam === 'born' && currentIsReverse,
-                      })}
-                    />
-                  </span>
-                </Link>
-              </span>
-            </th>
+              <th>
+                <span className="is-flex is-flex-wrap-nowrap">
+                  Died
+                  <Link to={getLink('died')}>
+                    <span className="icon">
+                      <i
+                        className={classNames('fas', {
+                          'fa-sort': currentSortParam !== 'died',
+                          'fa-sort-up':
+                            currentSortParam === 'died' && !currentIsReverse,
+                          'fa-sort-down':
+                            currentSortParam === 'died' && currentIsReverse,
+                        })}
+                      />
+                    </span>
+                  </Link>
+                </span>
+              </th>
 
-            <th>
-              <span className="is-flex is-flex-wrap-nowrap">
-                Died
-                <Link to={getLink('died')}>
-                  <span className="icon">
-                    <i
-                      className={classNames('fas', {
-                        'fa-sort': currentSortParam !== 'died',
-                        'fa-sort-up':
-                          currentSortParam === 'died' && !currentIsReverse,
-                        'fa-sort-down':
-                          currentSortParam === 'died' && currentIsReverse,
-                      })}
-                    />
-                  </span>
-                </Link>
-              </span>
-            </th>
-
-            <th>Mother</th>
-            <th>Father</th>
-          </tr>
-        </thead>
-
-        <tbody>
-          {filteredPeople.map(person => (
-            <tr
-              data-cy="person"
-              key={person.slug}
-              className={classNames({
-                'has-background-warning': pathname.endsWith(person.slug),
-              })}
-            >
-              <td>
-                <Link
-                  className={classNames({
-                    'has-text-danger': person.sex === 'f',
-                  })}
-                  to={person.slug}
-                >
-                  {person.name}
-                </Link>
-              </td>
-              <td>{person.sex}</td>
-              <td>{person.born}</td>
-              <td>{person.died}</td>
-              <td>
-                {person.motherName ? (
-                  getHref(person.motherName) ? (
-                    <Link
-                      className="has-text-danger"
-                      to={getHref(person.motherName)}
-                    >
-                      {person.motherName}
-                    </Link>
-                  ) : (
-                    person.motherName
-                  )
-                ) : (
-                  `-`
-                )}
-              </td>
-              <td>
-                {person.fatherName ? (
-                  getHref(person.fatherName) ? (
-                    <Link to={getHref(person.fatherName)}>
-                      {person.fatherName}
-                    </Link>
-                  ) : (
-                    person.fatherName
-                  )
-                ) : (
-                  `-`
-                )}
-              </td>
+              <th>Mother</th>
+              <th>Father</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+
+          <tbody>
+            {filteredPeople.map(person => (
+              <tr
+                data-cy="person"
+                key={person.slug}
+                className={classNames({
+                  'has-background-warning': pathname.endsWith(person.slug),
+                })}
+              >
+                <td>
+                  <Link
+                    className={classNames({
+                      'has-text-danger': person.sex === 'f',
+                    })}
+                    to={person.slug}
+                  >
+                    {person.name}
+                  </Link>
+                </td>
+                <td>{person.sex}</td>
+                <td>{person.born}</td>
+                <td>{person.died}</td>
+                <td>
+                  {person.motherName ? (
+                    getHref(person.motherName) ? (
+                      <Link
+                        className="has-text-danger"
+                        to={getHref(person.motherName)}
+                      >
+                        {person.motherName}
+                      </Link>
+                    ) : (
+                      person.motherName
+                    )
+                  ) : (
+                    `-`
+                  )}
+                </td>
+                <td>
+                  {person.fatherName ? (
+                    getHref(person.fatherName) ? (
+                      <Link to={getHref(person.fatherName)}>
+                        {person.fatherName}
+                      </Link>
+                    ) : (
+                      person.fatherName
+                    )
+                  ) : (
+                    `-`
+                  )}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
     </>
   );
 };
