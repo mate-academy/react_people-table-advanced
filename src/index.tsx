@@ -6,6 +6,7 @@ import '@fortawesome/fontawesome-free/css/all.css';
 
 import { App } from './App';
 
+document.documentElement.classList.add('has-navbar-fixed-top');
 createRoot(document.getElementById('root') as HTMLDivElement).render(
   <Router>
     <App />

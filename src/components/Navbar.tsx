@@ -1,5 +1,11 @@
-export const Navbar = () => {
-  return (
+import classNames from 'classnames';
+import { NavLink } from 'react-router-dom';
+
+const getIsActive = ({ isActive }: { isActive: boolean }) =>
+  classNames('navbar-item', { 'has-background-grey-lighter': isActive });
+
+export const Navbar = () => (
+  <>
     <nav
       data-cy="nav"
       className="navbar is-fixed-top has-shadow"
@@ -8,19 +14,15 @@ export const Navbar = () => {
     >
       <div className="container">
         <div className="navbar-brand">
-          <a className="navbar-item" href="#/">
+          <NavLink to="/" className={getIsActive}>
             Home
-          </a>
+          </NavLink>
 
-          <a
-            aria-current="page"
-            className="navbar-item has-background-grey-lighter"
-            href="#/people"
-          >
+          <NavLink to="people" className={getIsActive}>
             People
-          </a>
+          </NavLink>
         </div>
       </div>
     </nav>
-  );
-};
+  </>
+);
