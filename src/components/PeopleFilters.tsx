@@ -1,6 +1,6 @@
-import classNames from "classnames";
-import React from "react";
-import { useSearchParams } from "react-router-dom";
+import classNames from 'classnames';
+import React from 'react';
+import { useSearchParams } from 'react-router-dom';
 
 type Props = {
   sex: string;
@@ -43,7 +43,10 @@ export const PeopleFilters: React.FC<Props> = ({ sex, centuries }) => {
 
     params.set('name', event.target.value.trim().toLowerCase());
 
-    if (!event.target.value.trim().length) params.delete('name');
+    if (!event.target.value.trim().length) {
+      params.delete('name');
+    }
+
     setSearchParam(params);
   };
 
@@ -61,6 +64,7 @@ export const PeopleFilters: React.FC<Props> = ({ sex, centuries }) => {
 
   const clearCenturies = () => {
     const params = new URLSearchParams(searchParam);
+
     params.delete('centuries');
 
     setSearchParam(params);
@@ -68,25 +72,35 @@ export const PeopleFilters: React.FC<Props> = ({ sex, centuries }) => {
 
   const reset = () => {
     const params = new URLSearchParams(searchParam);
+
     params.delete('centuries');
     params.delete('name');
     params.delete('sex');
 
     setSearchParam(params);
-  }
+  };
 
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        <a onClick={() => handleSexInput('')} className={sexActive({ isActive: sex, type: '' })}>
+        <a
+          onClick={() => handleSexInput('')}
+          className={sexActive({ isActive: sex, type: '' })}
+        >
           All
         </a>
-        <a onClick={() => handleSexInput('m')} className={sexActive({ isActive: sex, type: 'm' })}>
+        <a
+          onClick={() => handleSexInput('m')}
+          className={sexActive({ isActive: sex, type: 'm' })}
+        >
           Male
         </a>
-        <a onClick={() => handleSexInput('f')} className={sexActive({ isActive: sex, type: 'f' })}>
+        <a
+          onClick={() => handleSexInput('f')}
+          className={sexActive({ isActive: sex, type: 'f' })}
+        >
           Female
         </a>
       </p>
@@ -111,7 +125,7 @@ export const PeopleFilters: React.FC<Props> = ({ sex, centuries }) => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            {['16', '17', '18', '19', '20'].map((century) => (
+            {['16', '17', '18', '19', '20'].map(century => (
               <a
                 key={century}
                 onClick={() => addCenturies(century)}

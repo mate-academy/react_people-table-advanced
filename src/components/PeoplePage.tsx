@@ -4,14 +4,15 @@ import { PeopleTable } from './PeopleTable';
 import { useEffect, useState } from 'react';
 import { Person } from '../types';
 import { getPeople } from '../api';
-import { useLocation, useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 
 export const PeoplePage = () => {
-  const [searchParam, setSearchParam] = useSearchParams();
+  const [searchParam] = useSearchParams();
   const sex = searchParam.get('sex') || '';
   const nameSearch = searchParam.get('name') || '';
   const centuries = searchParam.getAll('centuries') || [];
   const sort = searchParam.get('sort') || '';
+  const direction = searchParam.get('direction') || '';
 
   const [peopleData, setPeopleData] = useState<Person[] | null>(null);
   const [loader, setLoader] = useState(false);
@@ -47,15 +48,21 @@ export const PeoplePage = () => {
             <div className="box table-container">
               {loader && <Loader />}
 
-              {showError && <p data-cy="peopleLoadingError">Something went wrong</p>}
+              {showError && (
+                <p data-cy="peopleLoadingError">Something went wrong</p>
+              )}
 
               {/* Show message if there are no people */}
               {!loader && peopleData && peopleData.length === 0 && (
-                <p data-cy="noPeopleMessage">There are no people on the server</p>
+                <p data-cy="noPeopleMessage">
+                  There are no people on the server
+                </p>
               )}
 
               {!loader && peopleData && peopleData.length > 0 && (
                 <PeopleTable
+                  sort={sort}
+                  direction={direction}
                   centuries={centuries}
                   peopleData={peopleData}
                   sex={sex}

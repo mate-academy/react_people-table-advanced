@@ -1,4 +1,3 @@
-import { PeoplePage } from './components/PeoplePage';
 import { Navbar } from './components/Navbar';
 
 import './App.scss';
@@ -11,7 +10,7 @@ export const App = () => {
 
       <div className="section">
         <div className="container">
-          <Outlet/>
+          <Outlet />
         </div>
       </div>
     </div>

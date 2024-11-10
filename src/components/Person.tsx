@@ -28,8 +28,10 @@ export const Person: React.FC<Props> = ({ data, param }) => {
   const currentSearch = searchParams.toString(); // Convert params to string
 
   // Construct URL with current search parameters preserved
-  const buildPath = (slug: string) => {
-    return currentSearch ? `/people/${slug}?${currentSearch}` : `/people/${slug}`;
+  const buildPath = (value: string) => {
+    return currentSearch
+      ? `/people/${value}?${currentSearch}`
+      : `/people/${value}`;
   };
 
   return (
