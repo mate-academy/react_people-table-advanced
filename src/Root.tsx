@@ -6,8 +6,8 @@ import {
 } from 'react-router-dom';
 import { App } from './App';
 import { HomePage } from './page/HomePage';
-import { PeoplePages } from './page/PeoplePages';
-import { ErorrPage } from './page/ErrorPage';
+import { PeoplePage } from './page/PeoplePage';
+import { ErrorPage } from './page/ErrorPage';
 
 export const Root = () => {
   return (
@@ -18,10 +18,10 @@ export const Root = () => {
           <Route path="/home" element={<Navigate to="/" />} />
 
           <Route path="people">
-            <Route path=":slug?" element={<PeoplePages />} />
+            <Route path=":slug?" element={<PeoplePage />} />
           </Route>
 
-          <Route path="*" element={<ErorrPage />} />
+          <Route path="*" element={<ErrorPage />} />
         </Route>
       </Routes>
     </Router>

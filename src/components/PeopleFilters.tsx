@@ -3,7 +3,7 @@ import cn from 'classnames';
 import { SearchLink } from './SearchLink';
 import { getSearchWith, SearchParams } from '../utils/searchHelper';
 
-const CENTR_LIST = ['16', '17', '18', '19', '20', '21'];
+const CENTURIES_LIST = ['16', '17', '18', '19', '20'];
 
 export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -63,10 +63,11 @@ export const PeopleFilters = () => {
           </span>
         </p>
       </div>
+
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            {CENTR_LIST.map(century => {
+            {CENTURIES_LIST.map(century => {
               const isSelected = centuries.includes(century);
 
               return (

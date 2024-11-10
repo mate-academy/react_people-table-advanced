@@ -1,1 +1,1 @@
-export const ErorrPage = () => <h1 className="title">Page not found</h1>;
+export const ErrorPage = () => <h1 className="title">Page not found</h1>;

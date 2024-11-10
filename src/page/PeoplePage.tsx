@@ -1,13 +1,13 @@
 import { PeopleFilters } from '../components/PeopleFilters';
+import { Loader } from '../components/Loader';
 import { PeopleTable } from '../components/PeopleTable';
-import { useSearchParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { getPeople } from '../api';
 import { Person } from '../types';
 import { getPreparedPeople } from '../utils/getPreradedPeople';
-import { Loader } from '../components/Loader';
+import { useSearchParams } from 'react-router-dom';
 
-export const PeoplePages = () => {
+export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [hasError, setHasError] = useState(false);
