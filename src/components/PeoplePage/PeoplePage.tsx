@@ -30,9 +30,9 @@ export const PeoplePage = () => {
 
   const visiblePeopleList: Person[] = prepearePeopleList(people, search);
   const hasError = !isLoading && errorMessage.length > 0;
-  const isNotPeopleForShow =
+  const isNoPeopleForShow =
     !isLoading && people.length > 0 && visiblePeopleList.length === 0;
-  const isPeopleTableShow = !isLoading && visiblePeopleList.length > 0;
+  const isPeopleForShow = !isLoading && visiblePeopleList.length > 0;
 
   return (
     <>
@@ -60,11 +60,11 @@ export const PeoplePage = () => {
                 </p>
               )}
 
-              {isNotPeopleForShow && (
+              {isNoPeopleForShow && (
                 <p>There are no people matching the current search criteria</p>
               )}
 
-              {isPeopleTableShow && (
+              {isPeopleForShow && (
                 <PeopleTable peopleList={visiblePeopleList} />
               )}
             </div>
