@@ -20,9 +20,7 @@ export const PeoplePage = () => {
     setIsLoading(true);
 
     getPeople()
-      .then(persons => {
-        setPeople(persons);
-      })
+      .then(setPeople)
       .catch(() => setHasError(true))
       .finally(() => {
         setIsLoading(false);
@@ -55,11 +53,11 @@ export const PeoplePage = () => {
                 </p>
               )}
 
-              {!isLoading && preparedPeople.length === 0 && (
+              {!isLoading && !preparedPeople.length && (
                 <p>There are no people matching the current search criteria</p>
               )}
 
-              {!isLoading && !hasError && preparedPeople.length > 0 && (
+              {!isLoading && !hasError && !!preparedPeople.length && (
                 <PeopleTable people={preparedPeople} />
               )}
             </div>
