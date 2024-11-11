@@ -19,6 +19,17 @@ export const PeopleFilters = () => {
     setSearchParams(search);
   };
 
+  const checkIfAllreadyChoose = (
+    selectedFilters: string[],
+    newSelected: string,
+  ): string[] => {
+    const newFilters = selectedFilters.includes(newSelected)
+      ? selectedFilters.filter(selectedFilter => selectedFilter !== newSelected)
+      : [...selectedFilters, newSelected];
+
+    return newFilters;
+  };
+
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
@@ -74,11 +85,7 @@ export const PeopleFilters = () => {
                   'is-info': selectedCenturies.includes(century),
                 })}
                 params={{
-                  centuries: selectedCenturies.includes(century)
-                    ? selectedCenturies.filter(
-                        selectedCentury => selectedCentury !== century,
-                      )
-                    : [...selectedCenturies, century],
+                  centuries: checkIfAllreadyChoose(selectedCenturies, century),
                 }}
               >
                 {century}
