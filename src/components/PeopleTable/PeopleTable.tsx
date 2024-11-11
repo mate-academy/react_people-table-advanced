@@ -1,57 +1,104 @@
+import React from 'react';
 import { Person } from '../../types';
 import { PersonLink } from '../PersonLink';
+import { SearchLink } from '../SearchLink';
+import { useLocation, useSearchParams } from 'react-router-dom';
 
 interface Props {
   peopleList: Person[];
 }
 
 export const PeopleTable: React.FC<Props> = ({ peopleList }) => {
-  const findAvailableParentsSlug = (parent: Person) => {
-    return {
-      mother:
-        peopleList.find(person => person.name === parent.motherName)?.slug ||
-        '',
-      father:
-        peopleList.find(person => person.name === parent.fatherName)?.slug ||
-        '',
-    };
+  const { search } = useLocation();
+  const [searchParams] = useSearchParams(search);
+  const order = searchParams.get('order') || '';
+  const sort = searchParams.get('sort') || '';
+
+  const handleSortType = (sortType: string) => {
+    if (sortType !== sort && !order) {
+      return { sort: sortType, order: null };
+    }
+
+    if (sortType === sort && !order) {
+      return { sort: sortType, order: 'desc' };
+    }
+
+    return { sort: null, order: null };
+  };
+
+  const handleSortStyle = (sortType: string) => {
+    if (sortType === sort && order) {
+      return 'fas fa-sort-down';
+    }
+
+    if (sortType === sort && !order) {
+      return 'fas fa-sort-up';
+    }
+
+    return 'fas fa-sort';
   };
 
   return (
-    <>
-      {peopleList.length === 0 ? (
-        <p data-cy="noPeopleMessage">There are no people on the server</p>
-      ) : (
-        <table
-          data-cy="peopleTable"
-          className="table is-striped is-hoverable is-narrow is-fullwidth"
-        >
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Sex</th>
-              <th>Born</th>
-              <th>Died</th>
-              <th>Mother</th>
-              <th>Father</th>
-            </tr>
-          </thead>
+    <table
+      data-cy="peopleTable"
+      className="table is-striped is-hoverable is-narrow is-fullwidth"
+    >
+      <thead>
+        <tr>
+          <th>
+            <span className="is-flex is-flex-wrap-nowrap">
+              Name
+              <SearchLink params={handleSortType('name')}>
+                <span className="icon">
+                  <i className={handleSortStyle('name')} />
+                </span>
+              </SearchLink>
+            </span>
+          </th>
 
-          <tbody>
-            {peopleList.map(person => {
-              const parentsSlugs = findAvailableParentsSlug(person);
+          <th>
+            <span className="is-flex is-flex-wrap-nowrap">
+              Sex
+              <SearchLink params={handleSortType('sex')}>
+                <span className="icon">
+                  <i className={handleSortStyle('sex')} />
+                </span>
+              </SearchLink>
+            </span>
+          </th>
 
-              return (
-                <PersonLink
-                  key={person.slug}
-                  person={person}
-                  parentsSlugs={parentsSlugs}
-                />
-              );
-            })}
-          </tbody>
-        </table>
-      )}
-    </>
+          <th>
+            <span className="is-flex is-flex-wrap-nowrap">
+              Born
+              <SearchLink params={handleSortType('born')}>
+                <span className="icon">
+                  <i className={handleSortStyle('born')} />
+                </span>
+              </SearchLink>
+            </span>
+          </th>
+
+          <th>
+            <span className="is-flex is-flex-wrap-nowrap">
+              Died
+              <SearchLink params={handleSortType('died')}>
+                <span className="icon">
+                  <i className={handleSortStyle('died')} />
+                </span>
+              </SearchLink>
+            </span>
+          </th>
+
+          <th>Mother</th>
+          <th>Father</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        {peopleList.map(person => (
+          <PersonLink key={person.slug} person={person} />
+        ))}
+      </tbody>
+    </table>
   );
 };

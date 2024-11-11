@@ -1,14 +1,10 @@
-import { useParams } from 'react-router-dom';
+import { Link, useLocation, useParams } from 'react-router-dom';
 
 import classNames from 'classnames';
 import { Person } from '../../types';
 
 interface Props {
   person: Person;
-  parentsSlugs: {
-    mother: string;
-    father: string;
-  };
 }
 
 const addSexClass = (sex: string) =>
@@ -16,8 +12,9 @@ const addSexClass = (sex: string) =>
     'has-text-danger': sex === 'f',
   });
 
-export const PersonLink: React.FC<Props> = ({ person, parentsSlugs }) => {
+export const PersonLink: React.FC<Props> = ({ person }) => {
   const { selectedName } = useParams();
+  const { search } = useLocation();
 
   return (
     <tr
@@ -28,9 +25,12 @@ export const PersonLink: React.FC<Props> = ({ person, parentsSlugs }) => {
       })}
     >
       <td>
-        <a className={addSexClass(person.sex)} href={`#/people/${person.slug}`}>
+        <Link
+          className={addSexClass(person.sex)}
+          to={`/people/${person.slug}${search}`}
+        >
           {person.name}
-        </a>
+        </Link>
       </td>
 
       <td>{person.sex}</td>
@@ -39,24 +39,26 @@ export const PersonLink: React.FC<Props> = ({ person, parentsSlugs }) => {
       <td>
         {!person.motherName && '-'}
 
-        {person.motherName && !parentsSlugs.mother && `${person.motherName}`}
+        {person.motherName && !person.motherSlug && `${person.motherName}`}
 
-        {person.motherName && parentsSlugs.mother && (
-          <a
+        {person.motherName && person.motherSlug && (
+          <Link
             className="has-text-danger"
-            href={`#/people/${parentsSlugs.mother}`}
+            to={`/people/${person.motherSlug}${search}`}
           >
             {person.motherName}
-          </a>
+          </Link>
         )}
       </td>
       <td>
         {!person.fatherName && '-'}
 
-        {person.fatherName && !parentsSlugs.father && `${person.fatherName}`}
+        {person.fatherName && !person.fatherSlug && `${person.fatherName}`}
 
-        {person.fatherName && parentsSlugs.father && (
-          <a href={`#/people/${parentsSlugs.father}`}>{person.fatherName}</a>
+        {person.fatherName && person.fatherSlug && (
+          <Link to={`/people/${person.fatherSlug}${search}`}>
+            {person.fatherName}
+          </Link>
         )}
       </td>
     </tr>
