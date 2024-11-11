@@ -22,7 +22,11 @@ export const Navbar = () => {
             Home
           </NavLink>
 
-          <NavLink aria-current="page" className={addNavLinkClass} to={`/people${search}`}>
+          <NavLink
+            aria-current="page"
+            className={addNavLinkClass}
+            to={`/people${search}`}
+          >
             People
           </NavLink>
         </div>
