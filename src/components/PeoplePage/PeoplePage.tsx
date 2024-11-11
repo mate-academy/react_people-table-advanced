@@ -122,7 +122,7 @@ export const PeoplePage = () => {
 
               {isLoading && <Loader />}
 
-              {visiblePeopleList.length === 0 ? (
+              {!isLoading && visiblePeopleList.length === 0 ? (
                 <p>There are no people matching the current search criteria</p>
               ) : (
                 <>
