@@ -28,7 +28,7 @@ export const PeoplePage = () => {
       });
   }, []);
 
-  const visiblePeopleList = () => {
+  const prepearePeopleList = () => {
     let filteredPeople = people.map(person => {
       return {
         ...person,
@@ -100,6 +100,8 @@ export const PeoplePage = () => {
     return filteredPeople;
   };
 
+  const visiblePeopleList = prepearePeopleList();
+
   return (
     <>
       <h1 className="title">People Page</h1>
@@ -118,12 +120,10 @@ export const PeoplePage = () => {
                 </p>
               )}
 
-              {false && (
-                <p>There are no people matching the current search criteria</p>
-              )}
+              {isLoading && <Loader />}
 
-              {isLoading ? (
-                <Loader />
+              {visiblePeopleList.length === 0 ? (
+                <p>There are no people matching the current search criteria</p>
               ) : (
                 <>
                   {errorMessage.length > 0 ? (
@@ -131,7 +131,7 @@ export const PeoplePage = () => {
                       {errorMessage}
                     </p>
                   ) : (
-                    <PeopleTable peopleList={visiblePeopleList()} />
+                    <PeopleTable peopleList={visiblePeopleList} />
                   )}
                 </>
               )}
