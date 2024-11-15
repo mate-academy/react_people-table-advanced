@@ -1,18 +1,43 @@
+import { Link, useLocation, useSearchParams } from 'react-router-dom';
+import { getSearchWith } from '../utils/searchHelper';
+
 export const PeopleFilters = () => {
+  const [searchParams] = useSearchParams();
+  const location = useLocation();
+
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        <a className="is-active" href="#/people">
+        <Link
+          className="is-active"
+          to={{
+            pathname: location.pathname,
+            search: getSearchWith(searchParams, { sex: null }),
+          }}
+        >
           All
-        </a>
-        <a className="" href="#/people?sex=m">
+        </Link>
+
+        <Link
+          className=""
+          to={{
+            pathname: location.pathname,
+            search: getSearchWith(searchParams, { sex: 'm' }),
+          }}
+        >
           Male
-        </a>
-        <a className="" href="#/people?sex=f">
+        </Link>
+        <Link
+          className=""
+          to={{
+            pathname: location.pathname,
+            search: getSearchWith(searchParams, { sex: 'f' }),
+          }}
+        >
           Female
-        </a>
+        </Link>
       </p>
 
       <div className="panel-block">
@@ -33,55 +58,68 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            <a
+            <Link
               data-cy="century"
               className="button mr-1"
-              href="#/people?centuries=16"
+              to={{
+                pathname: location.pathname,
+                search: getSearchWith(searchParams, { centuries: ['16'] }),
+              }}
             >
               16
-            </a>
+            </Link>
 
-            <a
-              data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=17"
-            >
+            <Link data-cy="century" className="button mr-1 is-info" to={{}}>
               17
-            </a>
+            </Link>
 
-            <a
+            <Link
               data-cy="century"
               className="button mr-1 is-info"
-              href="#/people?centuries=18"
+              to={{
+                pathname: location.pathname,
+                search: getSearchWith(searchParams, { centuries: ['18'] }),
+              }}
             >
               18
-            </a>
+            </Link>
 
-            <a
+            <Link
               data-cy="century"
               className="button mr-1 is-info"
-              href="#/people?centuries=19"
+              to={{
+                pathname: location.pathname,
+                search: getSearchWith(searchParams, { centuries: ['19'] }),
+              }}
             >
               19
-            </a>
+            </Link>
 
-            <a
+            <Link
               data-cy="century"
               className="button mr-1"
-              href="#/people?centuries=20"
+              to={{
+                pathname: location.pathname,
+                search: getSearchWith(searchParams, {
+                  centuries: ['16', '17', '18', '19'],
+                }),
+              }}
             >
               20
-            </a>
+            </Link>
           </div>
 
           <div className="level-right ml-4">
-            <a
+            <Link
               data-cy="centuryALL"
               className="button is-success is-outlined"
-              href="#/people"
+              to={{
+                pathname: location.pathname,
+                search: getSearchWith(searchParams, { centuries: '16' }),
+              }}
             >
               All
-            </a>
+            </Link>
           </div>
         </div>
       </div>
