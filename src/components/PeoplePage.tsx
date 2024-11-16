@@ -37,7 +37,11 @@ export const PeoplePage = () => {
 
   return (
     <>
-      <h1 className="title">People Page</h1>
+      <div className="section">
+        <div className="container">
+          <h1 className="title">People Page</h1>
+        </div>
+      </div>
 
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
@@ -47,7 +51,8 @@ export const PeoplePage = () => {
 
           <div className="column">
             <div className="box table-container">
-              <Loader />
+              {isLoading && <Loader />}
+
               <PeopleTable people={people} />
             </div>
           </div>
