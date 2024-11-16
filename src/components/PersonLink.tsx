@@ -1,6 +1,6 @@
 import classNames from 'classnames';
 import { Person } from '../types';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 type PeopleLinkProps = {
   person: Person | null;
@@ -12,6 +12,7 @@ export const PersonLink: React.FC<PeopleLinkProps> = ({
   searchParams,
 }) => {
   const navigate = useNavigate();
+  const location = useLocation();
 
   if (!person) {
     return <>{'-'}</>;

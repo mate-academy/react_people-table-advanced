@@ -23,7 +23,7 @@ export const SexFilter = () => {
   return (
     <p className="panel-tabs" data-cy="SexFilter">
       <a
-        className={classNames('is-active', {
+        className={classNames({
           'is-active': filterBySex === 'all',
         })}
         href="#/people"
@@ -32,7 +32,7 @@ export const SexFilter = () => {
         All
       </a>
       <a
-        className={classNames('is-active', {
+        className={classNames({
           'is-active': filterBySex === 'm',
         })}
         href="#/people?sex=m"
@@ -41,7 +41,7 @@ export const SexFilter = () => {
         Male
       </a>
       <a
-        className={classNames('is-active', {
+        className={classNames({
           'is-active': filterBySex === 'f',
         })}
         href="#/people?sex=f"

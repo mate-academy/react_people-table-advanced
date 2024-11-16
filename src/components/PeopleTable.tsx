@@ -210,53 +210,55 @@ export const PeopleTable: React.FC<PeopleTableProps> = ({ people }) => {
       </thead>
 
       <tbody>
-        {filteredPeople.map(person => (
-          <tr
-            key={person.slug}
-            data-cy="person"
-            className={classNames({
-              'has-background-warning': person.slug === selectPerson,
-            })}
-          >
-            <td>
-              <PersonLink person={person} searchParams={location.search} />
-            </td>
+        <>
+          {filteredPeople.map(person => (
+            <tr
+              key={person.slug}
+              data-cy="person"
+              className={classNames({
+                'has-background-warning': person.slug === selectPerson,
+              })}
+            >
+              <td>
+                <PersonLink person={person} searchParams={location.search} />
+              </td>
 
-            <td>{person.sex}</td>
-            <td>{person.born}</td>
-            <td>{person.died}</td>
-            <>
-              <td>
-                {person.motherName ? (
-                  findPersonByName(person.motherName) ? (
-                    <PersonLink
-                      person={findPersonByName(person.motherName)}
-                      searchParams={location.search}
-                    />
+              <td>{person.sex}</td>
+              <td>{person.born}</td>
+              <td>{person.died}</td>
+              <>
+                <td>
+                  {person.motherName ? (
+                    findPersonByName(person.motherName) ? (
+                      <PersonLink
+                        person={findPersonByName(person.motherName)}
+                        searchParams={location.search}
+                      />
+                    ) : (
+                      person.motherName
+                    )
                   ) : (
-                    person.motherName
-                  )
-                ) : (
-                  '-'
-                )}
-              </td>
-              <td>
-                {person.fatherName ? (
-                  findPersonByName(person.fatherName) ? (
-                    <PersonLink
-                      person={findPersonByName(person.fatherName)}
-                      searchParams={location.search}
-                    />
+                    '-'
+                  )}
+                </td>
+                <td>
+                  {person.fatherName ? (
+                    findPersonByName(person.fatherName) ? (
+                      <PersonLink
+                        person={findPersonByName(person.fatherName)}
+                        searchParams={location.search}
+                      />
+                    ) : (
+                      person.fatherName
+                    )
                   ) : (
-                    person.fatherName
-                  )
-                ) : (
-                  '-'
-                )}
-              </td>
-            </>
-          </tr>
-        ))}
+                    '-'
+                  )}
+                </td>
+              </>
+            </tr>
+          ))}
+        </>
       </tbody>
     </table>
   );

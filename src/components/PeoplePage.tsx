@@ -51,8 +51,6 @@ export const PeoplePage = () => {
 
           <div className="column">
             <div className="box table-container">
-              {isLoading && <Loader />}
-
               <PeopleTable people={people} />
             </div>
           </div>

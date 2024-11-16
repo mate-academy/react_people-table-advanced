@@ -1,13 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 export const CenturyFilter = () => {
   const [selectCenturies, setSelectCenturies] = useState(new Set());
-
-  useEffect(() => {
-    if (selectCenturies) {
-      setSelectCenturies(selectCenturies);
-    }
-  }, [selectCenturies]);
 
   const append = (century: number) => {
     setSelectCenturies(prevSelected => {
