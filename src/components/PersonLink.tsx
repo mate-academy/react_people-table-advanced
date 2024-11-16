@@ -1,27 +1,36 @@
 import classNames from 'classnames';
 import { CompletePerson } from '../types';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useLocation, useParams } from 'react-router-dom';
 
 type Props = {
   person: CompletePerson;
 };
 
+enum Female {
+  female = 'f',
+}
+
 export const PersonLink: React.FC<Props> = ({ person }) => {
+  const location = useLocation();
   const { slug } = useParams();
+
+  const toFunc = (selectedPersonSlug: string) => ({
+    pathname: `/people/${selectedPersonSlug}`,
+    search: location.search,
+  });
 
   return (
     <tr
       data-cy="person"
-      key={person.name}
       className={classNames({
         'has-background-warning': person.slug === slug,
       })}
     >
       <td>
         <Link
-          to={`/people/${person.slug}`}
+          to={toFunc(person.slug)}
           className={classNames({
-            'has-text-danger': person.sex === 'f',
+            'has-text-danger': person.sex === Female.female,
           })}
         >
           {person.name}
@@ -34,9 +43,9 @@ export const PersonLink: React.FC<Props> = ({ person }) => {
       <td>
         {person.mother ? (
           <Link
-            to={`/people/${person.mother.slug}`}
+            to={toFunc(person.mother?.slug)}
             className={classNames({
-              'has-text-danger': person.mother.sex === 'f',
+              'has-text-danger': person.mother.sex === Female.female,
             })}
           >
             {person.mother.name}
@@ -49,14 +58,7 @@ export const PersonLink: React.FC<Props> = ({ person }) => {
       </td>
       <td>
         {person.father ? (
-          <Link
-            to={`/people/${person.father.slug}`}
-            className={classNames({
-              'has-text-danger': person.father.sex === 'f',
-            })}
-          >
-            {person.father.name}
-          </Link>
+          <Link to={toFunc(person.father?.slug)}>{person.father.name}</Link>
         ) : person.fatherName ? (
           person.fatherName
         ) : (

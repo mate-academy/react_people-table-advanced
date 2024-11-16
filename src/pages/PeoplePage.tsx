@@ -1,15 +1,21 @@
+/* eslint-disable @typescript-eslint/indent */
 import { PeopleFilters } from '../components/PeopleFilters';
 import { Loader } from '../components/Loader';
 import { PeopleTable } from '../components/PeopleTable';
 import { useEffect, useState } from 'react';
 import { getPeople } from '../api';
-import { Person } from '../types';
+import { CompletePerson, Person } from '../types';
 import { useSearchParams } from 'react-router-dom';
 import { getSearchWith, SearchParams } from '../utils/searchHelper';
 
 export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);
-  const [currentPeopleList, setCurrentPeopleList] = useState<Person[]>(people);
+  const [completePersonList, setCompletePersonList] = useState<
+    CompletePerson[]
+  >([]);
+  const [currentPeopleList, setCurrentPeopleList] = useState<CompletePerson[]>(
+    [],
+  );
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
 
@@ -24,15 +30,27 @@ export const PeoplePage = () => {
       .finally(() => setLoading(false));
   }, []);
 
-  useEffect(() => {
-    setCurrentPeopleList(people);
-  }, [people]);
-
   const setSearchWith = (params: SearchParams) => {
     const search = getSearchWith(searchParams, params);
 
     setSearchParams(search);
   };
+
+  const findParent = (parentName: string | null) => {
+    return parentName
+      ? people.find(person => person.name === parentName) || null
+      : null;
+  };
+
+  const newPeopleList = people.map(person => ({
+    ...person,
+    mother: findParent(person.motherName),
+    father: findParent(person.fatherName),
+  }));
+
+  useEffect(() => {
+    setCompletePersonList(newPeopleList);
+  }, [people]);
 
   return (
     <>
@@ -43,7 +61,7 @@ export const PeoplePage = () => {
           <div className="column is-7-tablet is-narrow-desktop">
             {!loading && (
               <PeopleFilters
-                people={people}
+                people={completePersonList}
                 setCurrentPeopleList={setCurrentPeopleList}
                 searchParams={searchParams}
                 setSearchWith={setSearchWith}
@@ -59,18 +77,25 @@ export const PeoplePage = () => {
                 <p data-cy="peopleLoadingError">Something went wrong</p>
               )}
 
-              {!loading && people.length === 0 && (
+              {!loading && !people.length && (
                 <p data-cy="noPeopleMessage">
                   There are no people on the server
                 </p>
               )}
 
-              {!loading && !error && people.length > 0 && (
-                <PeopleTable
-                  peopleList={currentPeopleList}
-                  searchParams={searchParams}
-                />
+              {!loading && !error && !currentPeopleList.length && (
+                <p>There are no people matching the current search criteria</p>
               )}
+
+              {!loading &&
+                !error &&
+                !!currentPeopleList.length &&
+                !!people.length && (
+                  <PeopleTable
+                    peopleList={currentPeopleList}
+                    searchParams={searchParams}
+                  />
+                )}
             </div>
           </div>
         </div>

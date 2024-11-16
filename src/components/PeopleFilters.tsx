@@ -1,13 +1,12 @@
-/* eslint-disable prettier/prettier */
-import { Person } from '../types';
+import { CompletePerson } from '../types';
 import classNames from 'classnames';
 import { SearchParams } from '../utils/searchHelper';
 import { SearchLink } from './SearchLink';
 import { useEffect } from 'react';
 
 type Props = {
-  people: Person[];
-  setCurrentPeopleList: (filteredPeople: Person[]) => void;
+  people: CompletePerson[];
+  setCurrentPeopleList: (filteredPeople: CompletePerson[]) => void;
   searchParams: URLSearchParams;
   setSearchWith: (params: SearchParams) => void;
 };
@@ -38,16 +37,16 @@ export const PeopleFilters: React.FC<Props> = ({
 }) => {
   const query = searchParams.get('query') || '';
   const sex = searchParams.get('sex') || '';
-  const centuries = searchParams.getAll('centuries') || [];
+  const centuries = searchParams.getAll('centuries');
 
-  let newPeopleList: Person[] = people;
+  let newPeopleList: CompletePerson[] = people;
 
   const sexKeys = Object.keys(Sex);
   const sexValues = Object.values(Sex);
 
   const createNewCenturieList = (newCenturie: string) => {
     return centuries.includes(newCenturie)
-      ? centuries.filter(currentcenturie => currentcenturie !== newCenturie)
+      ? centuries.filter(currentCenturie => currentCenturie !== newCenturie)
       : [...centuries, newCenturie];
   };
 
@@ -84,7 +83,7 @@ export const PeopleFilters: React.FC<Props> = ({
     const firstPossibleYear = (centurie: number) => (centurie - 1) * 100 + 1;
     const lastPossibleYear = (centurie: number) => centurie * 100 - 1;
 
-    const bornFilteredList: Person[] = [];
+    const bornFilteredList: CompletePerson[] = [];
 
     if (centuries.length > 0) {
       for (const centurie of centuriesList) {

@@ -1,12 +1,12 @@
 /* eslint-disable jsx-a11y/control-has-associated-label */
 import React, { useEffect, useState } from 'react';
-import { CompletePerson, Person } from '../types';
+import { CompletePerson } from '../types';
 import { PersonLink } from './PersonLink';
 import { SearchParams } from '../utils/searchHelper';
 import { SearchLink } from './SearchLink';
 
 type Props = {
-  peopleList: Person[];
+  peopleList: CompletePerson[];
   searchParams: URLSearchParams;
 };
 
@@ -26,20 +26,8 @@ export const PeopleTable: React.FC<Props> = ({ peopleList, searchParams }) => {
 
   const sortableKeys = Object.keys(SortableKeys);
 
-  const findParent = (parentName: string | null) => {
-    return parentName
-      ? peopleList.find(person => person.name === parentName) || null
-      : null;
-  };
-
-  const newPeopleList = peopleList.map(person => ({
-    ...person,
-    mother: findParent(person.motherName),
-    father: findParent(person.fatherName),
-  }));
-
   useEffect(() => {
-    setNewList(newPeopleList);
+    setNewList(peopleList);
   }, [peopleList]);
 
   const paramsFunction = (key: string) => {
@@ -99,7 +87,7 @@ export const PeopleTable: React.FC<Props> = ({ peopleList, searchParams }) => {
 
     if (sort === '' && order === '') {
       setClassName('fas fa-sort');
-      setNewList(newPeopleList);
+      setNewList(peopleList);
     }
   };
 
