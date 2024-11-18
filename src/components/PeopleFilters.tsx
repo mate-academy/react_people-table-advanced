@@ -13,7 +13,9 @@ export const PeopleFilters = () => {
 
     if (currentCenturies.includes(century)) {
       newCenturies = currentCenturies.filter(cent => cent !== century);
-    } else newCenturies = [...currentCenturies, century];
+    } else {
+      newCenturies = [...currentCenturies, century];
+    }
 
     return getSearchWith(searchParams, { centuries: newCenturies });
   }
@@ -28,6 +30,7 @@ export const PeopleFilters = () => {
     const newParams = new URLSearchParams(searchParams);
 
     const queryValue = event.target.value;
+
     if (queryValue) {
       newParams.set('query', queryValue);
     } else {

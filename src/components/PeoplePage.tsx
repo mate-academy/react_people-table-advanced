@@ -15,7 +15,13 @@ export const PeoplePage = () => {
   useEffect(() => {
     setIsLoading(true);
     getPeople()
-      .then(setPeopleFromServer)
+      .then(response => {
+        if (!response.length) {
+          setErrorMessage(Errors.noPeople);
+        } else {
+          setPeopleFromServer(response);
+        }
+      })
       .catch(() => setErrorMessage(Errors.wentWrong))
       .finally(() => setIsLoading(false));
   }, []);
@@ -35,10 +41,7 @@ export const PeoplePage = () => {
               {isLoading ? (
                 <Loader />
               ) : (
-                <PeopleTable
-                  peopleFromServer={peopleFromServer}
-                  setPeopleFromServer={setPeopleFromServer}
-                />
+                <PeopleTable peopleFromServer={peopleFromServer} />
               )}
 
               {errorMessage === Errors.wentWrong && (

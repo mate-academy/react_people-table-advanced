@@ -49,8 +49,14 @@ export const PeopleTable: React.FC<Props> = ({ peopleFromServer }) => {
         break;
       case 'sex':
         sorted.sort((a, b) => {
-          if (a.sex === 'm' && b.sex === 'f') return -1;
-          if (a.sex === 'f' && b.sex === 'm') return 1;
+          if (a.sex === 'm' && b.sex === 'f') {
+            return -1;
+          }
+
+          if (a.sex === 'f' && b.sex === 'm') {
+            return 1;
+          }
+
           return 0;
         });
         break;
@@ -69,7 +75,7 @@ export const PeopleTable: React.FC<Props> = ({ peopleFromServer }) => {
     }
 
     setSortedList(sorted);
-  }, [peopleFromServer, searchParams]);
+  }, [peopleFromServer, searchParams, orderParam, sortParam]);
 
   useEffect(() => {
     const sexParam = searchParams.get('sex');
