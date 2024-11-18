@@ -13,6 +13,8 @@ export function getSearchWith(
   // copy currentParams by creating new object from a string
   const newParams = new URLSearchParams(currentParams.toString());
 
+  // console.log({ currentParams, paramsToUpdate });
+
   // Here is the example of paramsToUpdate
   // {
   //   sex: 'm',                ['sex', 'm']
