@@ -1,3 +1,3 @@
 export function getCentury(year: number) {
-  return Math.ceil(year / 100);
+  return Math.floor((year - 1) / 100) + 1;
 }

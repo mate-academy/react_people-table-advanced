@@ -6,14 +6,11 @@ import { useEffect, useState } from 'react';
 import { Errors } from '../types/Errors';
 import { getPeople } from '../api';
 import { Person } from '../types';
-import { useSearchParams } from 'react-router-dom';
-import { getCentury as getPersonCentury } from '../utils/getCentury';
 
 export const PeoplePage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [peopleFromServer, setPeopleFromServer] = useState<Person[]>([]);
-  const [searchParams] = useSearchParams();
 
   useEffect(() => {
     setIsLoading(true);
@@ -22,35 +19,6 @@ export const PeoplePage = () => {
       .catch(() => setErrorMessage(Errors.wentWrong))
       .finally(() => setIsLoading(false));
   }, []);
-
-  function getPreparedList() {
-    const sexFilter = searchParams.get('sex');
-    const queryFilter = searchParams.get('query');
-    const centuryFilter = searchParams.getAll('centuries').map(cent => +cent);
-
-    if (!sexFilter && !queryFilter && !centuryFilter.length) {
-      return peopleFromServer;
-    }
-
-    let newPeopleList = [...peopleFromServer];
-
-    if (sexFilter) {
-      newPeopleList = newPeopleList.filter(person => person.sex === sexFilter);
-    } else if (queryFilter) {
-      newPeopleList.filter(
-        person =>
-          person.name.toLowerCase().includes(queryFilter) ||
-          person.fatherName?.toLowerCase().includes(queryFilter) ||
-          person.motherName?.toLowerCase().includes(queryFilter),
-      );
-    } else if (centuryFilter) {
-      newPeopleList = newPeopleList.filter(person =>
-        centuryFilter.includes(getPersonCentury(person.born)),
-      );
-    }
-
-    return newPeopleList;
-  }
 
   return (
     <>
@@ -67,7 +35,10 @@ export const PeoplePage = () => {
               {isLoading ? (
                 <Loader />
               ) : (
-                <PeopleTable peopleFromServer={getPreparedList()} />
+                <PeopleTable
+                  peopleFromServer={peopleFromServer}
+                  setPeopleFromServer={setPeopleFromServer}
+                />
               )}
 
               {errorMessage === Errors.wentWrong && (

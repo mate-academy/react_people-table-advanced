@@ -1,5 +1,9 @@
+import { Link, useLocation, useSearchParams } from 'react-router-dom';
 import { Person } from '../types';
 import { PersonLink } from './PersonLink';
+import { useEffect, useState } from 'react';
+import { useSortIcons } from '../utils/hooks/useSortIcons';
+import { getCentury } from '../utils/getCentury';
 
 /* eslint-disable jsx-a11y/control-has-associated-label */
 
@@ -8,6 +12,96 @@ interface Props {
 }
 
 export const PeopleTable: React.FC<Props> = ({ peopleFromServer }) => {
+  const [sortedList, setSortedList] = useState<Person[]>(peopleFromServer);
+  const [searchParams] = useSearchParams();
+  const location = useLocation();
+
+  const sortParam = searchParams.get('sort');
+  const orderParam = searchParams.get('order');
+
+  const sortClasses = useSortIcons({
+    sortParam,
+    orderParam,
+  });
+
+  function addSortParams(sortBy: string) {
+    const search = new URLSearchParams(searchParams);
+
+    if (search.get('sort') !== sortBy) {
+      search.set('sort', sortBy);
+      search.delete('order');
+    } else if (!search.has('order')) {
+      search.set('order', 'desc');
+    } else {
+      search.delete('sort');
+      search.delete('order');
+    }
+
+    return search.toString();
+  }
+
+  useEffect(() => {
+    let sorted = [...peopleFromServer];
+
+    switch (sortParam) {
+      case 'name':
+        sorted.sort((a, b) => a.name.localeCompare(b.name));
+        break;
+      case 'sex':
+        sorted.sort((a, b) => {
+          if (a.sex === 'm' && b.sex === 'f') return -1;
+          if (a.sex === 'f' && b.sex === 'm') return 1;
+          return 0;
+        });
+        break;
+      case 'born':
+        sorted.sort((a, b) => a.born - b.born);
+        break;
+      case 'died':
+        sorted.sort((a, b) => a.died - b.died);
+        break;
+      default:
+        sorted = [...peopleFromServer];
+    }
+
+    if (orderParam === 'desc') {
+      sorted.reverse();
+    }
+
+    setSortedList(sorted);
+  }, [peopleFromServer, searchParams]);
+
+  useEffect(() => {
+    const sexParam = searchParams.get('sex');
+    const queryParam = searchParams.get('query');
+    const centuryParams = searchParams.getAll('centuries').map(d => +d);
+
+    if (sexParam) {
+      setSortedList(curr => curr.filter(person => person.sex === sexParam));
+    }
+
+    if (queryParam) {
+      setSortedList(curr =>
+        curr.filter(
+          person =>
+            person.name.includes(queryParam) ||
+            person.motherName?.includes(queryParam) ||
+            person.fatherName?.includes(queryParam),
+        ),
+      );
+    }
+
+    if (centuryParams.length > 0) {
+      setSortedList(curr =>
+        curr.filter(pers => {
+          const persCentury = getCentury(pers.born);
+
+          return centuryParams.includes(persCentury);
+        }),
+      );
+    }
+  }, [searchParams]);
+
   return (
     <table
       data-cy="peopleTable"
@@ -18,44 +112,64 @@ export const PeopleTable: React.FC<Props> = ({ peopleFromServer }) => {
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Name
-              <a href="#/people?sort=name">
+              <Link
+                to={{
+                  pathname: location.pathname,
+                  search: addSortParams('name'),
+                }}
+              >
                 <span className="icon">
-                  <i className="fas fa-sort" />
+                  <i className={sortClasses.name} />
                 </span>
-              </a>
+              </Link>
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Sex
-              <a href="#/people?sort=sex">
+              <Link
+                to={{
+                  pathname: location.pathname,
+                  search: addSortParams('sex'),
+                }}
+              >
                 <span className="icon">
-                  <i className="fas fa-sort" />
+                  <i className={sortClasses.sex} />
                 </span>
-              </a>
+              </Link>
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Born
-              <a href="#/people?sort=born&amp;order=desc">
+              <Link
+                to={{
+                  pathname: location.pathname,
+                  search: addSortParams('born'),
+                }}
+              >
                 <span className="icon">
-                  <i className="fas fa-sort-up" />
+                  <i className={sortClasses.born} />
                 </span>
-              </a>
+              </Link>
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Died
-              <a href="#/people?sort=died">
+              <Link
+                to={{
+                  pathname: location.pathname,
+                  search: addSortParams('died'),
+                }}
+              >
                 <span className="icon">
-                  <i className="fas fa-sort" />
+                  <i className={sortClasses.died} />
                 </span>
-              </a>
+              </Link>
             </span>
           </th>
 
@@ -65,7 +179,7 @@ export const PeopleTable: React.FC<Props> = ({ peopleFromServer }) => {
       </thead>
 
       <tbody>
-        {peopleFromServer.map(person => {
+        {sortedList.map(person => {
           return (
             <PersonLink
               people={peopleFromServer}
