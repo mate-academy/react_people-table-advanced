@@ -3,41 +3,46 @@ import { ErrorNotification } from '../../shared/ErrorNotification';
 import { PeopleTable } from '../PeopleTable/PeopleTable';
 import { useContext } from 'react';
 import { PeopleContext } from '../../context/PeopleContext';
+import { usePeopleFilter } from '../../hooks/usePeopleFilter';
 
-export const People = () => {
-  const { filtredPeople, isLoading, error } = useContext(PeopleContext);
+const generatePeopleView = () => {
+  const { filtredPeople, isLoading, error, people } = useContext(PeopleContext);
+  const { centuries, name, sex } = usePeopleFilter();
 
-  const isPeopleEmpthy = !filtredPeople.length && !isLoading;
+  const isPeopleEmpthy = !people.length && !isLoading;
 
-  const getPeopleView = () => {
-    if (error) {
+  const isFilterParamsExist = !!(centuries.length || name || sex);
+
+  switch (true) {
+    case !!error:
       return (
         <ErrorNotification dataCy="peopleLoadingError" errorMessage={error} />
       );
-    }
 
-    if (isPeopleEmpthy) {
+    case isPeopleEmpthy:
       return <p data-cy="noPeopleMessage">There are no people on the server</p>;
-    }
 
-    if (!!filtredPeople.length) {
+    case !filtredPeople.length && isFilterParamsExist:
+      return <p>There are no people matching the current search criteria</p>;
+
+    case !!filtredPeople.length:
       return <PeopleTable people={filtredPeople} />;
-    }
 
-    return null;
-  };
+    default:
+      return null;
+  }
+};
+
+export const People = () => {
+  const { isLoading } = useContext(PeopleContext);
 
   return (
     <div className="column">
       <div className="box table-container">
         {isLoading && <Loader />}
 
-        {getPeopleView()}
+        {generatePeopleView()}
       </div>
     </div>
   );
 };
-
-{
-  /* <p>There are no people matching the current search criteria</p> */
-}

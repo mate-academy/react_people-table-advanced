@@ -8,7 +8,7 @@ interface Props {
 export const SortIcon: FC<Props> = ({ sortType }) => {
   const { sort, order } = usePeopleSort();
 
-  const getIconView = () => {
+  const generateIconView = () => {
     if (sort === sortType && order) {
       return <i className="fas fa-sort-down" />;
     }
@@ -20,5 +20,5 @@ export const SortIcon: FC<Props> = ({ sortType }) => {
     return <i className="fas fa-sort" />;
   };
 
-  return <span className="icon">{getIconView()}</span>;
+  return <span className="icon">{generateIconView()}</span>;
 };

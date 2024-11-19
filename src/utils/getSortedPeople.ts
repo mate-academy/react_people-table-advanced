@@ -25,13 +25,13 @@ const sortPeopleByNumber = (type: string, order: null | string) =>
     ? sortPeopleByBorn(order)
     : sortPeopleByDied(order);
 
-type TgetSortedPeople = (
+type GetSortedPeople = (
   people: Person[],
   sort: string | null,
   order: string | null,
 ) => Person[];
 
-export const getSortedPeople: TgetSortedPeople = (people, sort, order) => {
+export const getSortedPeople: GetSortedPeople = (people, sort, order) => {
   const sortedPeople = structuredClone(people);
 
   if (sort === SORTER_TYPES.DIED || sort === SORTER_TYPES.BORN) {

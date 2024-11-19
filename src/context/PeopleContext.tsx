@@ -8,6 +8,7 @@ import { usePeopleSort } from '../hooks/usePeopleSort';
 import { getSortedPeople } from '../utils/getSortedPeople';
 
 interface IPeopleContext {
+  people: Person[];
   filtredPeople: Person[];
   isLoading: boolean;
   error: string;
@@ -16,6 +17,7 @@ interface IPeopleContext {
 }
 
 export const PeopleContext = createContext<IPeopleContext>({
+  people: [],
   filtredPeople: [],
   isLoading: true,
   error: '',
@@ -44,14 +46,8 @@ export const PeopleProvider = ({
   );
 
   const store = useMemo(
-    () => ({
-      filtredPeople,
-      isLoading,
-      error,
-      personId,
-      searchParams,
-    }),
-    [filtredPeople, isLoading, error, personId, searchParams],
+    () => ({ people, filtredPeople, isLoading, error, personId, searchParams }),
+    [people, filtredPeople, isLoading, error, personId, searchParams],
   );
 
   return (
