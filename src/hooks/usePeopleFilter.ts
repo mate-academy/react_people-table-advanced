@@ -13,11 +13,11 @@ export const usePeopleFilter = () => {
       ? centuries.filter(value => value !== century)
       : [...centuries, century];
 
-  const handleChangeName = (name: string) => {
-    if (!name) {
+  const handleChangeName = (newName: string) => {
+    if (!newName) {
       setSearchParams(getSearchWith(searchParams, { name: null }));
     } else {
-      setSearchParams(getSearchWith(searchParams, { name }));
+      setSearchParams(getSearchWith(searchParams, { name: newName }));
     }
   };
 

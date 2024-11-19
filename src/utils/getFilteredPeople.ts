@@ -9,12 +9,12 @@ const filterByCentury = (centuries: string[]) => (person: Person) => {
 const filterBySex = (sex: string) => (person: Person) =>
   sex ? person.sex === sex : true;
 
-const filterByName =
-  (queryName: string) =>
-  ({ name, motherName, fatherName }: Person) =>
+const filterByName = (queryName: string) => {
+  return ({ name, motherName, fatherName }: Person) =>
     name.includes(queryName) ||
     fatherName?.includes(queryName) ||
     motherName?.includes(queryName);
+};
 
 const combinedFilter =
   (sex: string, centuries: string[], name: string) => (person: Person) =>
