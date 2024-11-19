@@ -3,6 +3,9 @@ import { usePeople } from '../hooks/usePeople';
 import { Person } from '../types';
 import { usePeopleRouting } from '../hooks/usePeopleRouting';
 import { getFilteredPeople } from '../utils/getFilteredPeople';
+import { usePeopleFilter } from '../hooks/usePeopleFilter';
+import { usePeopleSort } from '../hooks/usePeopleSort';
+import { getSortedPeople } from '../utils/getSortedPeople';
 
 interface IPeopleContext {
   filtredPeople: Person[];
@@ -25,13 +28,20 @@ export const PeopleProvider = ({
 }: {
   children: ReactNode;
 }): ReactNode => {
-  const { personId, sex, centuries, name, searchParams } = usePeopleRouting();
-
+  const { personId } = usePeopleRouting();
+  const { sex, centuries, name, searchParams } = usePeopleFilter();
+  const { sort, order } = usePeopleSort();
   const { people, isLoading, error } = usePeople();
 
-  const filtredPeople = useMemo(() => {
-    return getFilteredPeople(people, sex, name, centuries);
-  }, [people, sex, name, centuries]);
+  const sortedPeople = useMemo(
+    () => getSortedPeople(people, sort, order),
+    [people, sort, order],
+  );
+
+  const filtredPeople = useMemo(
+    () => getFilteredPeople(sortedPeople, sex, name, centuries),
+    [sortedPeople, sex, name, centuries],
+  );
 
   const store = useMemo(
     () => ({

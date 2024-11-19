@@ -3,13 +3,13 @@ import cn from 'classnames';
 import {
   centuryLinksParams,
   sexLinksParams,
-} from '../../constants/personFilterLinks';
+} from '../../constants/personLinks';
 import { SearchLink } from '../../shared/SearchLink';
-import { usePeopleRouting } from '../../hooks/usePeopleRouting';
+import { usePeopleFilter } from '../../hooks/usePeopleFilter';
 
 export const PeopleFilters = () => {
   const { name, centuries, sex, handleChangeName, toogleCenturies } =
-    usePeopleRouting();
+    usePeopleFilter();
 
   return (
     <div className="column is-7-tablet is-narrow-desktop">
