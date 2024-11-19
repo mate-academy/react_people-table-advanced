@@ -1,20 +1,18 @@
 import { Person } from '../types';
 
-export const getPeopleWithParents = (people: Person[]) => {
-  const newPeople = <Person[]>JSON.parse(JSON.stringify(people));
+type GetParent = (parentName: string | null) => (person: Person) => boolean;
 
-  newPeople.forEach((person, i) => {
-    const mother = newPeople.find(el => el.name === person.motherName);
-    const father = newPeople.find(el => el.name === person.fatherName);
+const getParent: GetParent = parentName => person =>
+  parentName !== null && person.name === parentName;
 
-    if (mother) {
-      newPeople[i].mother = mother;
-    }
+const getParentName = (parentName: string | null) =>
+  parentName ? parentName : '-';
 
-    if (father) {
-      newPeople[i].father = father;
-    }
-  });
-
-  return newPeople;
-};
+export const getPeopleWithParents = (people: Person[]) =>
+  people.map(person => ({
+    ...person,
+    motherName: getParentName(person.motherName),
+    fatherName: getParentName(person.fatherName),
+    mother: people.find(getParent(person.motherName)),
+    father: people.find(getParent(person.fatherName)),
+  }));

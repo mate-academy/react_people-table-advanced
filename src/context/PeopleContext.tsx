@@ -12,7 +12,6 @@ interface IPeopleContext {
   filtredPeople: Person[];
   isLoading: boolean;
   error: string;
-  personId: string | undefined;
   searchParams: URLSearchParams;
 }
 
@@ -21,7 +20,6 @@ export const PeopleContext = createContext<IPeopleContext>({
   filtredPeople: [],
   isLoading: true,
   error: '',
-  personId: undefined,
   searchParams: new URLSearchParams(),
 });
 
@@ -30,7 +28,6 @@ export const PeopleProvider = ({
 }: {
   children: ReactNode;
 }): ReactNode => {
-  const { personId } = usePeopleRouting();
   const { sex, centuries, name, searchParams } = usePeopleFilter();
   const { sort, order } = usePeopleSort();
   const { people, isLoading, error } = usePeople();
@@ -46,8 +43,8 @@ export const PeopleProvider = ({
   );
 
   const store = useMemo(
-    () => ({ people, filtredPeople, isLoading, error, personId, searchParams }),
-    [people, filtredPeople, isLoading, error, personId, searchParams],
+    () => ({ people, filtredPeople, isLoading, error, searchParams }),
+    [people, filtredPeople, isLoading, error, searchParams],
   );
 
   return (

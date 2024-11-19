@@ -14,14 +14,11 @@ export const usePeople = () => {
         if (Array.isArray(data)) {
           setPeople(getPeopleWithParents(data));
         } else {
-          setError('Something went wrong');
+          setError('Fetch people with an error');
         }
       })
       .catch((e: Error) => {
-        // eslint-disable-next-line
-        console.log(e.message);
-
-        setError('Something went wrong');
+        setError(e.message);
       })
       .finally(() => setIsLoading(false));
   }, []);
