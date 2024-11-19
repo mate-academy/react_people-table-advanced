@@ -1,7 +1,6 @@
 import { createContext, ReactNode, useMemo } from 'react';
 import { usePeople } from '../hooks/usePeople';
 import { Person } from '../types';
-import { usePeopleRouting } from '../hooks/usePeopleRouting';
 import { getFilteredPeople } from '../utils/getFilteredPeople';
 import { usePeopleFilter } from '../hooks/usePeopleFilter';
 import { usePeopleSort } from '../hooks/usePeopleSort';
