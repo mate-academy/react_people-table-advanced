@@ -1,3 +1,5 @@
+import React from 'react';
+
 export const PeopleFilters = () => {
   return (
     <nav className="panel">
