@@ -1,12 +1,11 @@
 import { Loader } from '../Loader';
 import { ErrorNotification } from '../../shared/ErrorNotification';
 import { PeopleTable } from '../PeopleTable/PeopleTable';
-import { useContext } from 'react';
-import { PeopleContext } from '../../context/PeopleContext';
 import { usePeopleFilter } from '../../hooks/usePeopleFilter';
+import { usePeople } from '../../hooks/usePeople';
 
 export const People = () => {
-  const { filtredPeople, isLoading, error, people } = useContext(PeopleContext);
+  const { filtredPeople, isLoading, error, people } = usePeople();
   const { centuries, name, sex } = usePeopleFilter();
 
   const isPeopleEmpthy = !people.length && !isLoading;
