@@ -1,4 +1,4 @@
-import { SORTER_TYPES } from './sortedTypes';
+import { sorterTypes } from './sortedTypes';
 
 export const sexLinksParams = [
   { title: 'All', params: { sex: null } },
@@ -15,8 +15,8 @@ export const centuryLinksParams = [
 ];
 
 export const sortLinksParams = [
-  { title: 'Name', sortType: SORTER_TYPES.NAME },
-  { title: 'Sex', sortType: SORTER_TYPES.SEX },
-  { title: 'Born', sortType: SORTER_TYPES.BORN },
-  { title: 'Died', sortType: SORTER_TYPES.DIED },
+  { title: 'Name', sortType: sorterTypes.NAME },
+  { title: 'Sex', sortType: sorterTypes.SEX },
+  { title: 'Born', sortType: sorterTypes.BORN },
+  { title: 'Died', sortType: sorterTypes.DIED },
 ];

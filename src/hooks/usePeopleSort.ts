@@ -1,4 +1,5 @@
 import { useSearchParams } from 'react-router-dom';
+import { sorterOrder } from '../constants/sortedTypes';
 
 type GetSortParams = (sortType: string) => {
   sort: string | null;
@@ -16,8 +17,8 @@ export const usePeopleSort = () => {
       return { sort: sortType, order: null };
     }
 
-    if (sort === sortType && order !== 'desc') {
-      return { sort: sortType, order: 'desc' };
+    if (sort === sortType && order !== sorterOrder.DESC) {
+      return { sort: sortType, order: sorterOrder.DESC };
     }
 
     return { sort: null, order: null };
