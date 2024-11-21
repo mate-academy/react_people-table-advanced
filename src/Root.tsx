@@ -4,7 +4,6 @@ import { HomePage } from './pages/HomePage';
 import { PeoplePage } from './pages/PeoplePage';
 import { NotFound } from './pages/NotFound';
 
-
 export const Root = () => {
   return (
     <HashRouter>

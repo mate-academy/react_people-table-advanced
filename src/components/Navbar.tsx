@@ -9,22 +9,22 @@ const getLinkClass = ({ isActive }: { isActive: boolean }) =>
 export const Navbar = () => {
   return (
     <nav
-    data-cy="nav"
-    className="navbar is-fixed-top has-shadow"
-    role="navigation"
-    aria-label="main navigation"
-  >
-    <div className="container">
-      <div className="navbar-brand">
-        <NavLink to="/" className={getLinkClass}>
-          Home
-        </NavLink>
+      data-cy="nav"
+      className="navbar is-fixed-top has-shadow"
+      role="navigation"
+      aria-label="main navigation"
+    >
+      <div className="container">
+        <div className="navbar-brand">
+          <NavLink to="/" className={getLinkClass}>
+            Home
+          </NavLink>
 
-        <NavLink to="/people" className={getLinkClass}>
-          People
-        </NavLink>
+          <NavLink to="/people" className={getLinkClass}>
+            People
+          </NavLink>
+        </div>
       </div>
-    </div>
-  </nav>
+    </nav>
   );
 };

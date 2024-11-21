@@ -13,9 +13,6 @@ export const PeoplePage: React.FC = () => {
   const [error, setError] = useState(false);
   const [searchParams] = useSearchParams();
 
-  const hasError = !isLoading && error;
-  const noPeople = !isLoading && people.length === 0;
-  const showContent = !isLoading && people.length > 0;
   const sort = searchParams.get('sort') || '';
   const order = searchParams.get('order') || '';
   const query = searchParams.get('query') || '';
@@ -69,15 +66,15 @@ export const PeoplePage: React.FC = () => {
 
       <div className="block">
         {isLoading && <Loader />}
-        {hasError && (
+        {!isLoading && error && (
           <p data-cy="peopleLoadingError" className="has-text-danger">
             Something went wrong
           </p>
         )}
-        {noPeople && (
+        {!isLoading && people.length === 0 && (
           <p data-cy="noPeopleMessage">There are no people on the server</p>
         )}
-        {showContent && (
+        {!isLoading && people.length > 0 && (
           <div className="columns is-desktop is-flex-direction-row-reverse">
             <div className="column is-7-tablet is-narrow-desktop">
               <PeopleFilters />

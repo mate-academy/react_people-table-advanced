@@ -37,28 +37,28 @@ export const getFilteredPeople = (
   if (centuries.length !== 0) {
     filteredPeople = filteredPeople.filter(person =>
       centuries.includes(String(Math.ceil(person.born / 100))),
-      );
-    }
+    );
+  }
 
-    if (sort) {
-      filteredPeople.sort((currentPerson, nextPerson) => {
-        const currentValue = currentPerson[sort as keyof Person];
-        const nextValue = nextPerson[sort as keyof Person];
+  if (sort) {
+    filteredPeople.sort((currentPerson, nextPerson) => {
+      const currentValue = currentPerson[sort as keyof Person];
+      const nextValue = nextPerson[sort as keyof Person];
 
-        let comparison = 0;
+      let comparison = 0;
 
-        if (typeof currentValue === 'string' && typeof nextValue === 'string') {
-          comparison = currentValue.localeCompare(nextValue);
-        } else if (
-          typeof currentValue === 'number' &&
-          typeof nextValue === 'number'
-        ) {
-          comparison = currentValue - nextValue;
-        }
+      if (typeof currentValue === 'string' && typeof nextValue === 'string') {
+        comparison = currentValue.localeCompare(nextValue);
+      } else if (
+        typeof currentValue === 'number' &&
+        typeof nextValue === 'number'
+      ) {
+        comparison = currentValue - nextValue;
+      }
 
-        return order === 'desc' ? comparison * -1 : comparison;
-      });
-    }
+      return order === 'desc' ? -comparison : comparison;
+    });
+  }
 
-    return filteredPeople;
-  };
+  return filteredPeople;
+};
