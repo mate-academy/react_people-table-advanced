@@ -59,14 +59,14 @@ export const PeopleTable = ({ people }: PeopleTableProps) => {
       </thead>
 
       <tbody>
-        {people.map(person => {
+        {people.map((person, i) => {
           const mother = people.find(p => p.name === person.motherName);
 
           const father = people.find(p => p.name === person.fatherName);
 
           return (
             <tr
-              key={person.slug}
+              key={`person-${i}-${person.name}-${person.slug}`}
               className={`${person.slug === slug ? 'has-background-warning' : ''}`}
               data-cy="person"
             >
@@ -98,38 +98,3 @@ export const PeopleTable = ({ people }: PeopleTableProps) => {
     </table>
   );
 };
-
-/*
-import { useParams } from 'react-router-dom';
-import { Person } from '../types';
-
-
-
-
-export function PeopleTable({ people }: TableComponentProps) {
-
-  return (
-    <>
-      <table
-        data-cy="peopleTable"
-        className="table is-striped is-hoverable is-narrow is-fullwidth"
-      >
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Sex</th>
-            <th>Born</th>
-            <th>Died</th>
-            <th>Mother</th>
-            <th>Father</th>
-          </tr>
-        </thead>
-
-
-      </table>
-    </>
-  );
-}
-
-
-*/

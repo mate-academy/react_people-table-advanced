@@ -17,6 +17,7 @@ export enum ErrorMessages {
 
 export const PeoplePage = () => {
   const [searchParams] = useSearchParams();
+  const [people, setPeople] = React.useState<Person[]>([]);
   const [isLoading, setIsLoading] = React.useState(true);
   const [error, setError] = React.useState<ErrorMessages>(ErrorMessages.BLANK);
   const [filteredPeople, setFilteredPeople] = React.useState<Person[]>([]);
@@ -29,6 +30,7 @@ export const PeoplePage = () => {
           setError(ErrorMessages.NO_PEOPLE);
         }
 
+        setPeople(response);
         setFilteredPeople(prev => [...prev, ...response]);
         setIsLoading(false);
       })
@@ -41,7 +43,7 @@ export const PeoplePage = () => {
       });
   }, []);
 
-  useEffect(() => {
+  function handleFilterPeopleByHeaders() {
     const sort = searchParams.get('sort');
     const order = searchParams.get('order');
 
@@ -73,8 +75,63 @@ export const PeoplePage = () => {
           return aValue > bValue ? 1 : -1;
         });
       });
+    } else {
+      setFilteredPeople(people);
     }
-  }, [searchParams]);
+  }
+
+  function handleFilterPeopleBySearch() {
+    const query = searchParams.get('query');
+
+    if (query) {
+      setFilteredPeople(prev => {
+        return prev.filter(
+          person =>
+            person.name.toLowerCase().includes(query.toLowerCase()) ||
+            (person.mother &&
+              person.mother.name.toLowerCase().includes(query.toLowerCase())) ||
+            (person.father &&
+              person.father.name.toLowerCase().includes(query.toLowerCase())),
+        );
+      });
+    }
+  }
+
+  function handleFilterPersonBySex() {
+    const sex = searchParams.get('sex');
+
+    if (sex) {
+      setFilteredPeople(prev => {
+        return prev.filter(person => person.sex === sex);
+      });
+    }
+  }
+
+  function handleFilterPeopleByCenturies() {
+    const centuries = searchParams.getAll('centuries');
+
+    if (centuries.length > 0) {
+      setFilteredPeople(prev => {
+        return prev.filter(person => {
+          return centuries.includes(person.born.toString());
+        });
+      });
+    }
+  }
+
+  useEffect(() => {
+    setFilteredPeople(people);
+    handleFilterPeopleByHeaders();
+    handleFilterPeopleBySearch();
+    handleFilterPersonBySex();
+    handleFilterPeopleByCenturies();
+
+    if (filteredPeople.length === 0) {
+      setError(ErrorMessages.NO_PEOPLE_MATCHING_CRITERIA);
+    } else {
+      setError(ErrorMessages.BLANK);
+    }
+  }, [searchParams, filteredPeople]);
 
   return (
     <>
