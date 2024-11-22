@@ -1,6 +1,6 @@
-/* eslint-disable no-console */
 import React from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
+import { getSearchWith } from '../utils/searchHelper';
 
 export enum Headers {
   name = 'Name',
@@ -35,11 +35,17 @@ export function PeopleTableHeaders({
   function handleSortOrder() {
     switch (true) {
       case sort && sort === label.toLowerCase() && !order:
-        return `sort=${label.toLocaleLowerCase()}&order=desc`;
+        return getSearchWith(searchParams, {
+          sort: label.toLowerCase(),
+          order: Order.desc,
+        });
       case sort && sort === label.toLowerCase() && order === Order.desc:
-        return ``;
+        return getSearchWith(searchParams, {
+          sort: null,
+          order: null,
+        });
       default:
-        return `sort=${label.toLocaleLowerCase()}`;
+        return getSearchWith(searchParams, { sort: label.toLowerCase() });
     }
   }
 
@@ -62,7 +68,6 @@ export function PeopleTableHeaders({
                 pathname: '/people',
                 search: handleSortOrder(),
               }}
-              onClick={handleSortOrder}
             >
               <span className="icon">
                 <i className={`fas ${handleIcon()}`} />

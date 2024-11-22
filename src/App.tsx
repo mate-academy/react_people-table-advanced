@@ -11,11 +11,10 @@ export const App = () => {
   return (
     <Layout>
       <Routes>
-        <Route path="/" element={<HomePageComponent />}>
-          <Route path="/home" element={<Navigate to={'/'} />} />
-        </Route>
+        <Route path="/" element={<HomePageComponent />} />
+        <Route path="/home" element={<Navigate to={'/'} />} />
         <Route path="/people" element={<PeoplePage />}>
-          <Route path="/people/:id" element={<PeoplePage />} />
+          <Route path="/people/:slug" element={<PeoplePage />} />
         </Route>
         <Route path="*" element={<NotFoundPage />} />
       </Routes>

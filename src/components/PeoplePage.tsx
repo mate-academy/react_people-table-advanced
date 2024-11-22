@@ -49,7 +49,7 @@ export const PeoplePage = () => {
 
     if (sort) {
       setFilteredPeople(prev => {
-        return prev.sort((a, b) => {
+        return [...prev].sort((a, b) => {
           const aValue = a[sort.toLowerCase() as keyof Person];
           const bValue = b[sort.toLowerCase() as keyof Person];
 
@@ -62,10 +62,10 @@ export const PeoplePage = () => {
 
           if (isAString && isBString) {
             if (order === 'desc') {
-              return aValue.localeCompare(bValue);
+              return bValue.localeCompare(aValue);
             }
 
-            return bValue.localeCompare(aValue);
+            return aValue.localeCompare(bValue);
           }
 
           if (order === 'desc') {
@@ -85,7 +85,7 @@ export const PeoplePage = () => {
 
     if (query) {
       setFilteredPeople(prev => {
-        return prev.filter(
+        return [...prev].filter(
           person =>
             person.name.toLowerCase().includes(query.toLowerCase()) ||
             (person.mother &&
@@ -102,7 +102,7 @@ export const PeoplePage = () => {
 
     if (sex) {
       setFilteredPeople(prev => {
-        return prev.filter(person => person.sex === sex);
+        return [...prev].filter(person => person.sex === sex);
       });
     }
   }
@@ -112,8 +112,10 @@ export const PeoplePage = () => {
 
     if (centuries.length > 0) {
       setFilteredPeople(prev => {
-        return prev.filter(person => {
-          return centuries.includes(person.born.toString());
+        return [...prev].filter(person => {
+          const birthCentury = Math.ceil(person.born / 100);
+
+          return centuries.includes(birthCentury.toString());
         });
       });
     }
@@ -131,18 +133,18 @@ export const PeoplePage = () => {
     } else {
       setError(ErrorMessages.BLANK);
     }
-  }, [searchParams, filteredPeople]);
+  }, [searchParams, people]);
 
   return (
     <>
       <h1 className="title">People Page</h1>
-
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
-          <div className="column is-7-tablet is-narrow-desktop">
-            <PeopleFilters />
-          </div>
-
+          {!isLoading && (
+            <div className="column is-7-tablet is-narrow-desktop">
+              <PeopleFilters />
+            </div>
+          )}
           <div className="column">
             <div className="box table-container">
               {isLoading ? (

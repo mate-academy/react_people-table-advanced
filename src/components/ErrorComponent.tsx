@@ -16,7 +16,9 @@ export function ErrorComponent({ message }: ErrrorComponentProps) {
         <p data-cy="noPeopleMessage">{ErrorMessages.NO_PEOPLE}</p>
       )}
       {message === ErrorMessages.NO_PEOPLE_MATCHING_CRITERIA && (
-        <p>{ErrorMessages.NO_PEOPLE_MATCHING_CRITERIA}</p>
+        <p data-cy="noPeopleMessage">
+          {ErrorMessages.NO_PEOPLE_MATCHING_CRITERIA}
+        </p>
       )}
     </>
   );
