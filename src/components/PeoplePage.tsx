@@ -31,12 +31,10 @@ export const PeoplePage = () => {
         }
 
         setPeople(response);
-        setFilteredPeople(prev => [...prev, ...response]);
-        setIsLoading(false);
+        setFilteredPeople(response);
       })
       .catch(() => {
         setError(ErrorMessages.SOMETHING_WENT_WRONG);
-        setIsLoading(false);
       })
       .finally(() => {
         setIsLoading(false);
@@ -128,10 +126,12 @@ export const PeoplePage = () => {
     handleFilterPersonBySex();
     handleFilterPeopleByCenturies();
 
-    if (filteredPeople.length === 0) {
-      setError(ErrorMessages.NO_PEOPLE_MATCHING_CRITERIA);
-    } else {
-      setError(ErrorMessages.BLANK);
+    switch (true) {
+      case filteredPeople.length === 0:
+        setError(ErrorMessages.NO_PEOPLE_MATCHING_CRITERIA);
+        break;
+      default:
+        setError(ErrorMessages.BLANK);
     }
   }, [searchParams, people]);
 

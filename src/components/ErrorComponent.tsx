@@ -2,11 +2,11 @@
 import React from 'react';
 import { ErrorMessages } from './PeoplePage';
 
-interface ErrrorComponentProps {
+interface ErrorComponentProps {
   message: ErrorMessages;
 }
 
-export function ErrorComponent({ message }: ErrrorComponentProps) {
+export function ErrorComponent({ message }: ErrorComponentProps) {
   return (
     <>
       {message === ErrorMessages.SOMETHING_WENT_WRONG && (
