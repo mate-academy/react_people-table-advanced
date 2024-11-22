@@ -1,25 +1,18 @@
 import { SorterTypes, SorterOrder } from './enums/sortedEnums';
 import { Person } from '../types';
+import { sortByAlpabethalyAndOrder, sortByNumberAndOrder } from './sorter';
 
-const sortPeopleByName =
-  (order: null | SorterOrder) => (a: Person, b: Person) =>
-    order === SorterOrder.DESC
-      ? b.name.toLowerCase().localeCompare(a.name.toLowerCase())
-      : a.name.toLowerCase().localeCompare(b.name.toLowerCase());
+const sortPeopleByName = (order: null | SorterOrder) =>
+  sortByAlpabethalyAndOrder<Person, 'name'>('name', order);
 
-const sortPeopleBySex =
-  (order: null | SorterOrder) => (a: Person, b: Person) =>
-    order === SorterOrder.DESC
-      ? b.sex.toLowerCase().localeCompare(a.sex.toLowerCase())
-      : a.sex.toLowerCase().localeCompare(b.sex.toLowerCase());
+const sortPeopleBySex = (order: null | SorterOrder) =>
+  sortByAlpabethalyAndOrder<Person, 'sex'>('sex', order);
 
-const sortPeopleByBorn =
-  (order: null | SorterOrder) => (a: Person, b: Person) =>
-    order === SorterOrder.DESC ? b.born - a.born : a.born - b.born;
+const sortPeopleByBorn = (order: null | SorterOrder) =>
+  sortByNumberAndOrder<Person, 'born'>('born', order);
 
-const sortPeopleByDied =
-  (order: null | SorterOrder) => (a: Person, b: Person) =>
-    order === SorterOrder.DESC ? b.died - a.died : a.died - b.died;
+const sortPeopleByDied = (order: null | SorterOrder) =>
+  sortByNumberAndOrder<Person, 'died'>('died', order);
 
 const sortPeopleByChar = (type: SorterTypes, order: SorterOrder | null) =>
   type === SorterTypes.NAME ? sortPeopleByName(order) : sortPeopleBySex(order);

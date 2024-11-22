@@ -8,7 +8,7 @@ export const People = () => {
   const { filtredPeople, isLoading, error, people } = usePeople();
   const { centuries, name, sex } = usePeopleFilter();
 
-  const isPeopleEmpthy = !people.length && !isLoading;
+  const isPeopleEmpty = !people.length && !isLoading;
 
   const isFilterParamsExist = !!(centuries.length || name || sex);
 
@@ -19,7 +19,7 @@ export const People = () => {
           <ErrorNotification dataCy="peopleLoadingError" errorMessage={error} />
         );
 
-      case isPeopleEmpthy:
+      case isPeopleEmpty:
         return (
           <p data-cy="noPeopleMessage">There are no people on the server</p>
         );
