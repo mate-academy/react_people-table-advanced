@@ -4,4 +4,8 @@ interface Props {
   text: string;
 }
 
-export const Title: FC<Props> = ({ text }) => <h1 className="title">{text}</h1>;
+export const Title: FC<Props> = ({ text }) => (
+  <h1 className="title" style={{ paddingTop: '1rem' }}>
+    {text}
+  </h1>
+);

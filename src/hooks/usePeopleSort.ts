@@ -1,5 +1,5 @@
 import { useSearchParams } from 'react-router-dom';
-import { SorterOrder } from '../utils/enums/sortedEnums';
+import { SorterOrder, SorterTypes } from '../utils/enums/sortedEnums';
 
 type GetSortParams = (sortType: string) => {
   sort: string | null;
@@ -9,8 +9,8 @@ type GetSortParams = (sortType: string) => {
 export const usePeopleSort = () => {
   const [searchParams] = useSearchParams();
 
-  const sort = searchParams.get('sort') || '';
-  const order = searchParams.get('order') || '';
+  const sort = <SorterTypes>searchParams.get('sort') || null;
+  const order = <SorterOrder>searchParams.get('order') || null;
 
   const getSortParams: GetSortParams = sortType => {
     if (!sort || (sort && sort !== sortType)) {

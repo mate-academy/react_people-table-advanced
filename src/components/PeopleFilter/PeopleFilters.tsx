@@ -6,6 +6,7 @@ import {
 } from '../../constants/personLinks';
 import { SearchLink } from '../../shared/SearchLink';
 import { usePeopleFilter } from '../../hooks/usePeopleFilter';
+import { Link } from 'react-router-dom';
 
 export const PeopleFilters = () => {
   const { name, centuries, sex, handleChangeName, toogleCenturies } =
@@ -82,13 +83,13 @@ export const PeopleFilters = () => {
         </div>
 
         <div className="panel-block">
-          <SearchLink
+          <Link
             data-cy="centuryALL"
             className="button is-link is-outlined is-fullwidth"
-            params={{ centuries: null, sex: null, name: null }}
+            to="/people"
           >
             Reset all filters
-          </SearchLink>
+          </Link>
         </div>
       </nav>
     </div>
