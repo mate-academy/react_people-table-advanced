@@ -1,4 +1,4 @@
-import { sorterTypes } from './sortedTypes';
+import { SorterTypes } from '../utils/enums/sortedEnums';
 
 export const sexLinksParams = [
   { title: 'All', params: { sex: null } },
@@ -15,8 +15,8 @@ export const centuryLinksParams = [
 ];
 
 export const sortLinksParams = [
-  { title: 'Name', sortType: sorterTypes.NAME },
-  { title: 'Sex', sortType: sorterTypes.SEX },
-  { title: 'Born', sortType: sorterTypes.BORN },
-  { title: 'Died', sortType: sorterTypes.DIED },
+  { title: 'Name', sortType: SorterTypes.NAME },
+  { title: 'Sex', sortType: SorterTypes.SEX },
+  { title: 'Born', sortType: SorterTypes.BORN },
+  { title: 'Died', sortType: SorterTypes.DIED },
 ];

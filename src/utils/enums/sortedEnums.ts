@@ -1,10 +1,10 @@
-export enum sorterTypes {
+export enum SorterTypes {
   SEX = 'sex',
   NAME = 'name',
   BORN = 'born',
   DIED = 'died',
 }
-export enum sorterOrder {
+export enum SorterOrder {
   DESC = 'desc',
   ASC = 'asc',
 }
