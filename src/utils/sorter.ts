@@ -7,16 +7,16 @@ type SortByKeyAndOrder = <T, K extends keyof T>(
 
 export const sortByNumberAndOrder: SortByKeyAndOrder =
   (key, order) => (a, b) => {
-    const first = a[key] as number;
-    const second = b[key] as number;
+    const first = <number>a[key];
+    const second = <number>b[key];
 
     return order === SorterOrder.DESC ? second - first : first - second;
   };
 
 export const sortByAlpabethalyAndOrder: SortByKeyAndOrder =
   (key, order) => (a, b) => {
-    const first = a[key] as string;
-    const second = b[key] as string;
+    const first = <string>a[key];
+    const second = <string>b[key];
 
     return order === SorterOrder.DESC
       ? second.toLowerCase().localeCompare(first.toLowerCase())

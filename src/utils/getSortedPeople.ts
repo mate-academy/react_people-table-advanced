@@ -2,23 +2,19 @@ import { SorterTypes, SorterOrder } from './enums/sortedEnums';
 import { Person } from '../types';
 import { sortByAlpabethalyAndOrder, sortByNumberAndOrder } from './sorter';
 
-const sortPeopleByName = (order: null | SorterOrder) =>
+type Sort = (order: null | SorterOrder) => (a: Person, b: Person) => number;
+
+const sortPeopleByName: Sort = order =>
   sortByAlpabethalyAndOrder<Person, 'name'>('name', order);
 
-const sortPeopleBySex = (order: null | SorterOrder) =>
+const sortPeopleBySex: Sort = order =>
   sortByAlpabethalyAndOrder<Person, 'sex'>('sex', order);
 
-const sortPeopleByBorn = (order: null | SorterOrder) =>
+const sortPeopleByBorn: Sort = order =>
   sortByNumberAndOrder<Person, 'born'>('born', order);
 
-const sortPeopleByDied = (order: null | SorterOrder) =>
+const sortPeopleByDied: Sort = order =>
   sortByNumberAndOrder<Person, 'died'>('died', order);
-
-const sortPeopleByChar = (type: SorterTypes, order: SorterOrder | null) =>
-  type === SorterTypes.NAME ? sortPeopleByName(order) : sortPeopleBySex(order);
-
-const sortPeopleByNumber = (type: SorterTypes, order: SorterOrder | null) =>
-  type === SorterTypes.BORN ? sortPeopleByBorn(order) : sortPeopleByDied(order);
 
 type GetSortedPeople = (
   people: Person[],
@@ -29,13 +25,20 @@ type GetSortedPeople = (
 export const getSortedPeople: GetSortedPeople = (people, sort, order) => {
   const sortedPeople = structuredClone(people);
 
-  if (sort === SorterTypes.DIED || sort === SorterTypes.BORN) {
-    return sortedPeople.sort(sortPeopleByNumber(sort, order));
-  }
+  switch (sort) {
+    case SorterTypes.DIED:
+      return people.sort(sortPeopleByBorn(order));
 
-  if (sort === SorterTypes.NAME || sort === SorterTypes.SEX) {
-    return sortedPeople.sort(sortPeopleByChar(sort, order));
-  }
+    case SorterTypes.BORN:
+      return people.sort(sortPeopleByDied(order));
 
-  return sortedPeople;
+    case SorterTypes.NAME:
+      return people.sort(sortPeopleByName(order));
+
+    case SorterTypes.SEX:
+      return people.sort(sortPeopleBySex(order));
+
+    default:
+      return sortedPeople;
+  }
 };
