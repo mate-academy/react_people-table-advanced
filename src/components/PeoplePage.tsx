@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/indent */
 /* eslint-disable max-len */
 import { PeopleFilters } from './PeopleFilters';
 import { Loader } from './Loader';
@@ -8,33 +9,40 @@ import { ErrorComponent } from './ErrorComponent';
 import { PeopleTable } from './PeopleTable';
 import { useSearchParams } from 'react-router-dom';
 
-export enum ErrorMessages {
-  BLANK = '',
-  NO_PEOPLE = 'There are no people on the server',
-  SOMETHING_WENT_WRONG = 'Something went wrong',
-  NO_PEOPLE_MATCHING_CRITERIA = 'There are no people matching the current search criteria',
-}
+export type ErrorMessages =
+  | { empty: '' }
+  | {
+      noPeopleMessage:
+        | 'There are no people on the server'
+        | 'There are no people matching the current search criteria';
+    }
+  | { peopleLoadingError: 'Something went wrong' };
 
 export const PeoplePage = () => {
   const [searchParams] = useSearchParams();
   const [people, setPeople] = React.useState<Person[]>([]);
   const [isLoading, setIsLoading] = React.useState(true);
-  const [error, setError] = React.useState<ErrorMessages>(ErrorMessages.BLANK);
+  const [error, setError] = React.useState<ErrorMessages>({ empty: '' });
   const [filteredPeople, setFilteredPeople] = React.useState<Person[]>([]);
+  const hasError = Object.keys(error)[0] !== 'empty';
 
   useEffect(() => {
     setIsLoading(true);
     getPeople()
       .then(response => {
         if (response.length === 0) {
-          setError(ErrorMessages.NO_PEOPLE);
+          setError({
+            noPeopleMessage: 'There are no people on the server',
+          });
         }
 
         setPeople(response);
         setFilteredPeople(response);
       })
       .catch(() => {
-        setError(ErrorMessages.SOMETHING_WENT_WRONG);
+        setError({
+          peopleLoadingError: 'Something went wrong',
+        });
       })
       .finally(() => {
         setIsLoading(false);
@@ -128,10 +136,15 @@ export const PeoplePage = () => {
 
     switch (true) {
       case filteredPeople.length === 0:
-        setError(ErrorMessages.NO_PEOPLE_MATCHING_CRITERIA);
+        setError({
+          noPeopleMessage:
+            'There are no people matching the current search criteria',
+        });
         break;
       default:
-        setError(ErrorMessages.BLANK);
+        setError({
+          empty: '',
+        });
     }
   }, [searchParams, people]);
 
@@ -149,7 +162,7 @@ export const PeoplePage = () => {
             <div className="box table-container">
               {isLoading ? (
                 <Loader />
-              ) : error ? (
+              ) : hasError ? (
                 <ErrorComponent message={error} />
               ) : (
                 <PeopleTable people={filteredPeople} />

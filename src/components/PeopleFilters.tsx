@@ -1,10 +1,9 @@
 import React from 'react';
 import { Link, useLocation, useSearchParams } from 'react-router-dom';
 import { getSearchWith, SearchParams } from '../utils/searchHelper';
+import { availableCenturies } from '../utils/constants';
 
 export const PeopleFilters = () => {
-  const availableCenturies = [16, 17, 18, 19, 20];
-
   const pathName = useLocation().pathname;
   const [searchParams, setSearchParams] = useSearchParams();
   const sex = searchParams.get('sex');

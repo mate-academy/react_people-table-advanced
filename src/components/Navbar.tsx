@@ -3,6 +3,8 @@ import { useLocation } from 'react-router-dom';
 
 export const Navbar = () => {
   const path = useLocation().pathname;
+  const isHomePage = path.includes('home') || path === '/';
+  const isPeoplePage = path.includes('people');
 
   return (
     <nav
@@ -14,7 +16,7 @@ export const Navbar = () => {
       <div className="container">
         <div className="navbar-brand">
           <a
-            className={`navbar-item ${path.includes('home') || path === '/' ? 'has-background-grey-lighter' : ''}`}
+            className={`navbar-item ${isHomePage ? 'has-background-grey-lighter' : ''}`}
             href="#/"
           >
             Home
@@ -22,7 +24,7 @@ export const Navbar = () => {
 
           <a
             aria-current="page"
-            className={`navbar-item ${path.includes('people') ? 'has-background-grey-lighter' : ''}`}
+            className={`navbar-item ${isPeoplePage ? 'has-background-grey-lighter' : ''}`}
             href="#/people"
           >
             People
