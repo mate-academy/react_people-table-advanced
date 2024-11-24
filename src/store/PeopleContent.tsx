@@ -16,11 +16,11 @@ type PeopleContextProps = {
 
 export const PeopleContext = React.createContext<PeopleContextProps>({
   people: [],
-  setPeople: () => {},
+  setPeople: () => [],
   peopleLoader: false,
-  setPeopleLoader: () => {},
+  setPeopleLoader: () => false,
   selectedPersonDates: '',
-  setSelectedPersonDates: () => {},
+  setSelectedPersonDates: () => '',
   peopleToShow: [],
 });
 
@@ -35,11 +35,11 @@ export const PeopleProvider: React.FC<Props> = ({ children }) => {
 
   const [searchParams] = useSearchParams();
 
-  const allCenturies = searchParams?.getAll('centuries') || [];
-  const gender = searchParams?.get('sex');
-  const query = searchParams?.get('query')?.toLowerCase() || null;
-  const sortParam = searchParams?.get('sort');
-  const orderParam = searchParams?.get('order');
+  const allCenturies = searchParams.getAll('centuries') || [];
+  const gender = searchParams.get('sex');
+  const query = searchParams.get('query')?.toLowerCase() || null;
+  const sortParam = searchParams.get('sort');
+  const orderParam = searchParams.get('order');
 
   const filteredPeople = filterPeople(gender, allCenturies, query, people);
   const peopleToShow = sortingPeople(sortParam, orderParam, filteredPeople);

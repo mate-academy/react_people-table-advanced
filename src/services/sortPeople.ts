@@ -9,60 +9,58 @@ export const sortingPeople = (
 
   if (!sortType) {
     pervPeople = filteredPeople;
-  } else if (sortType) {
-    switch (sortType) {
-      case 'name':
-        if (!orderType) {
-          pervPeople = [...filteredPeople].sort((personA, personB) =>
-            personA.name.localeCompare(personB.name),
-          );
-        } else {
-          pervPeople = [...filteredPeople].sort((personA, personB) =>
-            personB.name.localeCompare(personA.name),
-          );
-        }
+  }
 
-        break;
+  switch (sortType) {
+    case 'name':
+      if (!orderType) {
+        pervPeople = [...filteredPeople].sort((personA, personB) =>
+          personA.name.localeCompare(personB.name),
+        );
+      } else {
+        pervPeople = [...filteredPeople].sort((personA, personB) =>
+          personB.name.localeCompare(personA.name),
+        );
+      }
 
-      case 'sex':
-        if (!orderType) {
-          pervPeople = [...filteredPeople].sort((personA, personB) =>
-            personA.sex.localeCompare(personB.sex),
-          );
-        } else {
-          pervPeople = [...filteredPeople]
-            .sort((personA, personB) => personA.sex.localeCompare(personB.sex))
-            .reverse();
-        }
+      break;
 
-        break;
-      case 'born':
-        if (!orderType) {
-          pervPeople = [...filteredPeople].sort(
-            (personA, personB) => personA.born - personB.born,
-          );
-        } else {
-          pervPeople = [...filteredPeople].sort(
-            (personA, personB) => personB.born - personA.born,
-          );
-        }
+    case 'sex':
+      if (!orderType) {
+        pervPeople = [...filteredPeople].sort((personA, personB) =>
+          personA.sex.localeCompare(personB.sex),
+        );
+      } else {
+        pervPeople = [...filteredPeople]
+          .sort((personA, personB) => personA.sex.localeCompare(personB.sex))
+          .reverse();
+      }
 
-        break;
-      case 'died':
-        if (!orderType) {
-          pervPeople = [...filteredPeople].sort(
-            (personA, personB) => personA.died - personB.died,
-          );
-        } else {
-          pervPeople = [...filteredPeople].sort(
-            (personA, personB) => personB.died - personA.died,
-          );
-        }
+      break;
+    case 'born':
+      if (!orderType) {
+        pervPeople = [...filteredPeople].sort(
+          (personA, personB) => personA.born - personB.born,
+        );
+      } else {
+        pervPeople = [...filteredPeople].sort(
+          (personA, personB) => personB.born - personA.born,
+        );
+      }
 
-        break;
-    }
-  } else if (sortType && orderType) {
-    return pervPeople;
+      break;
+    case 'died':
+      if (!orderType) {
+        pervPeople = [...filteredPeople].sort(
+          (personA, personB) => personA.died - personB.died,
+        );
+      } else {
+        pervPeople = [...filteredPeople].sort(
+          (personA, personB) => personB.died - personA.died,
+        );
+      }
+
+      break;
   }
 
   return pervPeople;

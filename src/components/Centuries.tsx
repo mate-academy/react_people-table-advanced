@@ -11,11 +11,11 @@ export const Centuries: React.FC<Props> = ({ century }) => {
 
   const normalizedCentury = century.toString();
 
-  const allCenturies = searchParams.getAll('centuries') || [];
+  const allCenturies = searchParams.getAll('centuries');
 
   function toggleLetter(centuryParam: string) {
-    const newCenturies = allCenturies.includes(centuryParam)
-      ? allCenturies.filter(centItem => centItem != centuryParam)
+    const newCenturies = [...allCenturies].includes(centuryParam)
+      ? [...allCenturies].filter(centItem => centItem != centuryParam)
       : [...allCenturies, centuryParam];
 
     return newCenturies;

@@ -9,8 +9,8 @@ export const PeopleTable: React.FC = () => {
   const { peopleToShow } = useContext(PeopleContext);
   const [searchParams] = useSearchParams();
 
-  const sortParam = searchParams?.get('sort');
-  const orderParam = searchParams?.get('order');
+  const sortParam = searchParams.get('sort');
+  const orderParam = searchParams.get('order');
 
   const sortOption = (sortOptionParam: string) => {
     if (!sortParam || (sortParam && !orderParam)) {

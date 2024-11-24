@@ -7,7 +7,7 @@ export function getSearchWith(
   paramsToUpdate: SearchParams,
 ): string {
   // copy currentParams by creating new object from a string
-  const newParams = new URLSearchParams(currentParams.toString());
+  const newParams = new URLSearchParams(currentParams);
 
   Object.entries(paramsToUpdate).forEach(([key, value]) => {
     if (value === null) {

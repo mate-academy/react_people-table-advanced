@@ -6,7 +6,7 @@ import classNames from 'classnames';
 
 export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const allCenturies = searchParams?.getAll('centuries') || [];
+  const allCenturies = searchParams.getAll('centuries');
 
   const [queryParam, setQueryParam] = useState('');
 

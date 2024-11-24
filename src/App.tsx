@@ -10,7 +10,7 @@ const getLinkClass = ({ isActive }: { isActive: boolean }) => {
 };
 
 const getLinkStyle = ({ isActive }: { isActive: boolean }) => {
-  return { color: isActive ? 'blue' : '' };
+  return { color: isActive ? 'blue' : 'inherit' };
 };
 
 export const App = () => {
