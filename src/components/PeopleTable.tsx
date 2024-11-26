@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import cn from 'classnames';
 import { Person } from '../types';
-import { PeopleFilteredContext } from '../contsxts/PeopleFilteredContext';
+import { PeopleFilteredContext } from '../contexts/PeopleFilteredContext';
 import { useSearchParams } from 'react-router-dom';
 import { SortBy } from '../types/SortType';
 

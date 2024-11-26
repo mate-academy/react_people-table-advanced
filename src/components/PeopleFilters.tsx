@@ -1,9 +1,9 @@
 import { useContext, useEffect } from 'react';
 import { SearchLink } from './SearchLink';
-import { PeopleContext } from '../contsxts/PeopleContext';
+import { PeopleContext } from '../contexts/PeopleContext';
 import { Person } from '../types';
 import cn from 'classnames';
-import { PeopleFilteredContext } from '../contsxts/PeopleFilteredContext';
+import { PeopleFilteredContext } from '../contexts/PeopleFilteredContext';
 import { useSearchParams } from 'react-router-dom';
 
 enum Sex {

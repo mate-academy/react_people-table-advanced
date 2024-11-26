@@ -12,15 +12,13 @@ import '@fortawesome/fontawesome-free/css/all.css';
 import { App } from './App';
 import { HomePage } from './pages/HomePage/HomePage';
 import { PeoplePage } from './components/PeoplePage';
-import { PeopleProvider } from './contsxts/PeopleContext';
-import { ErrorProvider } from './contsxts/ErrorContext';
-import { LoaderProvider } from './contsxts/LoaderContext';
-import { PeopleFilteredProvider } from './contsxts/PeopleFilteredContext';
-// import { SelectSortProvider } from './contsxts/SelectSortContext';
+import { PeopleProvider } from './contexts/PeopleContext';
+import { ErrorProvider } from './contexts/ErrorContext';
+import { LoaderProvider } from './contexts/LoaderContext';
+import { PeopleFilteredProvider } from './contexts/PeopleFilteredContext';
 
 createRoot(document.getElementById('root') as HTMLDivElement).render(
   <PeopleProvider>
-    {/* <SelectSortProvider> */}
     <PeopleFilteredProvider>
       <ErrorProvider>
         <LoaderProvider>
@@ -40,10 +38,8 @@ createRoot(document.getElementById('root') as HTMLDivElement).render(
               </Route>
             </Routes>
           </Router>
-          ,
         </LoaderProvider>
       </ErrorProvider>
     </PeopleFilteredProvider>
-    {/* </SelectSortProvider> */}
   </PeopleProvider>,
 );

@@ -5,9 +5,9 @@ import { Outlet } from 'react-router-dom';
 import { useContext, useEffect } from 'react';
 import { Person } from './types';
 import { getPeople } from './api';
-import { PeopleContext } from './contsxts/PeopleContext';
-import { ErrorContext } from './contsxts/ErrorContext';
-import { LoaderContext } from './contsxts/LoaderContext';
+import { PeopleContext } from './contexts/PeopleContext';
+import { ErrorContext } from './contexts/ErrorContext';
+import { LoaderContext } from './contexts/LoaderContext';
 
 export const App = () => {
   const { setPeoples } = useContext(PeopleContext);

@@ -2,10 +2,10 @@ import { PeopleFilters } from './PeopleFilters';
 import { Loader } from './Loader';
 import { PeopleTable } from './PeopleTable';
 import { useContext } from 'react';
-import { ErrorContext } from '../contsxts/ErrorContext';
-import { LoaderContext } from '../contsxts/LoaderContext';
-import { PeopleContext } from '../contsxts/PeopleContext';
-import { PeopleFilteredContext } from '../contsxts/PeopleFilteredContext';
+import { ErrorContext } from '../contexts/ErrorContext';
+import { LoaderContext } from '../contexts/LoaderContext';
+import { PeopleContext } from '../contexts/PeopleContext';
+import { PeopleFilteredContext } from '../contexts/PeopleFilteredContext';
 
 export const PeoplePage = () => {
   const { peoplesFiltered } = useContext(PeopleFilteredContext);
