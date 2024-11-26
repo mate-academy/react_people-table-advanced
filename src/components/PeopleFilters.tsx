@@ -1,18 +1,44 @@
-export const PeopleFilters = () => {
+import { Link } from 'react-router-dom';
+import classNames from 'classnames';
+import { getSearchWith } from '../utils/searchHelper';
+import { SearchLink } from './SearchLink';
+
+type Props = {
+  searchParams: URLSearchParams;
+  setSearchParams: (params: URLSearchParams) => void;
+  sex: string;
+}
+
+export const PeopleFilters: React.FC<Props> = ({ searchParams, sex }) => {
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        <a className="is-active" href="#/people">
+        <Link
+          className={classNames({ 'is-active': !sex })}
+          to={{
+            pathname: '/people',
+            search: getSearchWith(searchParams, { sex: null })
+          }}
+        >
           All
-        </a>
-        <a className="" href="#/people?sex=m">
+        </Link>
+        <SearchLink 
+          className={classNames({ 'is-active': sex === 'm' })}
+          params={{ sex: 'm' }}
+        >
           Male
-        </a>
-        <a className="" href="#/people?sex=f">
+        </SearchLink>
+        <Link
+          className={classNames({ 'is-active': sex === 'f' })}
+          to={{
+            pathname: '/people',
+            search: getSearchWith(searchParams, { sex: 'f' })
+          }}
+        >
           Female
-        </a>
+        </Link>
       </p>
 
       <div className="panel-block">
