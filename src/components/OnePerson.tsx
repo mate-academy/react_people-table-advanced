@@ -5,10 +5,14 @@ import classNames from 'classnames';
 type Props = {
   person: Person;
   people: Person[];
-  searchParams: URLSearchParams
+  searchParams: URLSearchParams;
 };
 
-export const OnePerson: React.FC<Props> = ({ person, people, searchParams }) => {
+export const OnePerson: React.FC<Props> = ({
+  person,
+  people,
+  searchParams,
+}) => {
   const { personSlug } = useParams();
   const selectedPerson = personSlug ? personSlug : '';
 
@@ -21,14 +25,21 @@ export const OnePerson: React.FC<Props> = ({ person, people, searchParams }) => 
 
     if (parent && parent.sex === 'f') {
       return (
-        <Link to={`../${parent.slug}?${searchParams.toString()}`} className="has-text-danger">
+        <Link
+          to={`../${parent.slug}?${searchParams.toString()}`}
+          className="has-text-danger"
+        >
           {parent.name}
         </Link>
       );
     }
 
     if (parent && parent.sex === 'm') {
-      return <Link to={`../${parent.slug}?${searchParams.toString()}`}>{parent.name}</Link>;
+      return (
+        <Link to={`../${parent.slug}?${searchParams.toString()}`}>
+          {parent.name}
+        </Link>
+      );
     }
 
     return name;

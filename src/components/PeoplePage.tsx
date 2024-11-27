@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
 import { PeopleFilters } from './PeopleFilters';
@@ -17,8 +17,8 @@ export const PeoplePage = () => {
   const sort = (searchParams.get('sort') as PersonSortableFields) || '';
   const order = searchParams.get('order') || '';
   const sex = searchParams.get('sex') || '';
-  console.log(sex);
   const query = searchParams.get('query') || '';
+  const centuries = searchParams.getAll('centuries') || [];
 
   useEffect(() => {
     setLoading(true);
@@ -35,22 +35,26 @@ export const PeoplePage = () => {
       if (sortBy === sort && !order) {
         return { sort: sortBy, order: 'desc' };
       }
+
       if (sortBy !== sort && !order) {
         return { sort: sortBy, order: null };
       }
+
       return { sort: null, order: null };
     },
     [sort, order],
   );
 
   function getSortedPeople(
-    people: Person[],
+    folk: Person[],
     sortField: PersonSortableFields,
     orderName: string,
   ) {
-    if (!sortField) return [...people];
+    if (!sortField) {
+      return [...folk];
+    }
 
-    return [...people].sort((a, b) => {
+    return [...folk].sort((a, b) => {
       const valueA = a[sortField];
       const valueB = b[sortField];
 
@@ -69,18 +73,43 @@ export const PeoplePage = () => {
   }
 
   const sortedPeople = getSortedPeople(people, sort, order);
+  if (people.length > 0) {
+    console.log(people[0].born.toString().slice(0, 2));
+  }
 
-  function getVisiblePeople(people: Person[], sex: string, query?: string) {
-    const visible = [...people];
+  function getVisiblePeople(
+    folk: Person[],
+    gender: string,
+    inputQuery: string,
+    centuryParams: string[],
+  ) {
+    let visible = [...folk];
+    console.log('visible:', visible);
 
-    if (sex) {
-      visible.filter(person => person.sex === sex);
+    if (gender) {
+      visible = visible.filter(person => person.sex === sex);
+    }
+
+    if (inputQuery) {
+      visible = visible.filter(
+        person =>
+          person.name.toLowerCase().includes(inputQuery.toLowerCase()) ||
+          person.fatherName?.toLowerCase().includes(inputQuery.toLowerCase()) ||
+          person.motherName?.toLowerCase().includes(inputQuery.toLowerCase()),
+      );
+    }
+
+    if (centuryParams.length > 0) {
+      visible = visible.filter(person => {
+        const century = Math.ceil(person.born / 100).toString();
+        return centuryParams.includes(century);
+      });
     }
 
     return visible;
   }
 
-  const visiblePeople = getVisiblePeople(sortedPeople, sex);
+  const visiblePeople = getVisiblePeople(sortedPeople, sex, query, centuries);
 
   return (
     <>
@@ -96,6 +125,8 @@ export const PeoplePage = () => {
                 searchParams={searchParams}
                 setSearchParams={setSearchParams}
                 sex={sex}
+                query={query}
+                centuries={centuries}
               />
             </div>
           )}
@@ -114,9 +145,11 @@ export const PeoplePage = () => {
                 </p>
               )}
 
-              <p>There are no people matching the current search criteria</p>
+              {visiblePeople.length === 0 && (
+                <p>There are no people matching the current search criteria</p>
+              )}
 
-              {people.length > 0 && !loading && (
+              {visiblePeople.length > 0 && !loading && (
                 <PeopleTable
                   sort={sort}
                   order={order}

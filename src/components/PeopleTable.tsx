@@ -112,7 +112,6 @@ export const PeopleTable: React.FC<Props> = ({
             searchParams={searchParams}
           />
         ))}
-        se
       </tbody>
     </table>
   );
