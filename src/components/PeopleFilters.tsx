@@ -1,6 +1,4 @@
-import { Link } from 'react-router-dom';
 import classNames from 'classnames';
-import { getSearchWith } from '../utils/searchHelper';
 import { SearchLink } from './SearchLink';
 
 type Props = {
@@ -20,6 +18,7 @@ export const PeopleFilters: React.FC<Props> = ({
 }) => {
   const handleQueryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const params = new URLSearchParams(searchParams);
+
     params.set('query', event.target.value);
     setSearchParams(params);
   };
@@ -71,6 +70,7 @@ export const PeopleFilters: React.FC<Props> = ({
           <div className="level-left">
             {['16', '17', '18', '19', '20'].map(num => (
               <SearchLink
+                key={num}
                 data-cy="century"
                 className={classNames('button mr-1', {
                   'is-info': centuries.includes(num),

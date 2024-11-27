@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback, useMemo } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
 import { PeopleFilters } from './PeopleFilters';
@@ -13,7 +13,6 @@ export const PeoplePage = () => {
   const [errorMessage, setErrorMessage] = useState('');
   const [searchParams, setSearchParams] = useSearchParams();
 
-  // const searchParams = new URLSearchParams(useLocation().search);
   const sort = (searchParams.get('sort') as PersonSortableFields) || '';
   const order = searchParams.get('order') || '';
   const sex = searchParams.get('sex') || '';
@@ -73,9 +72,6 @@ export const PeoplePage = () => {
   }
 
   const sortedPeople = getSortedPeople(people, sort, order);
-  if (people.length > 0) {
-    console.log(people[0].born.toString().slice(0, 2));
-  }
 
   function getVisiblePeople(
     folk: Person[],
@@ -84,7 +80,6 @@ export const PeoplePage = () => {
     centuryParams: string[],
   ) {
     let visible = [...folk];
-    console.log('visible:', visible);
 
     if (gender) {
       visible = visible.filter(person => person.sex === sex);
@@ -102,6 +97,7 @@ export const PeoplePage = () => {
     if (centuryParams.length > 0) {
       visible = visible.filter(person => {
         const century = Math.ceil(person.born / 100).toString();
+
         return centuryParams.includes(century);
       });
     }
