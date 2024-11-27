@@ -1,6 +1,6 @@
-import { Loader } from '../Loader';
-import { PeopleFilters } from '../PeopleFilters';
-import { PeopleTable } from '../PeopleTable';
+import { Loader } from '../../components/Loader';
+import { PeopleFilters } from '../../components/PeopleFilters';
+import { PeopleTable } from '../../components/PeopleTable';
 
 import { usePeople } from '../../hooks/usePeople';
 

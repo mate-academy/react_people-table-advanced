@@ -17,7 +17,7 @@ export const usePeople = () => {
 
   const filteredPeople = getFilteredPeople(people, filter, sortSettings);
 
-  useEffect(() => {
+  const handlePeopleLoad = () => {
     setLoading(true);
     setError(false);
 
@@ -30,6 +30,10 @@ export const usePeople = () => {
       .finally(() => {
         setLoading(false);
       });
+  };
+
+  useEffect(() => {
+    handlePeopleLoad();
   }, []);
 
   return {

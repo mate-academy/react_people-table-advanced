@@ -2,6 +2,7 @@ import cn from 'classnames';
 import { SearchLink } from '../SearchLink';
 import { useFilters } from '../../hooks/useFilters';
 import { CENTURIES } from '../../constants/CENTURIES';
+import { Sex } from '../../types/Sex';
 
 export const PeopleFilters = () => {
   const { sex, query, centuries, handleSetQuery, getCenturiesParams } =
@@ -18,15 +19,17 @@ export const PeopleFilters = () => {
         >
           All
         </SearchLink>
+
         <SearchLink
-          className={cn({ 'is-active': sex === 'm' })}
-          params={{ sex: 'm' }}
+          className={cn({ 'is-active': sex === Sex.MALE })}
+          params={{ sex: Sex.MALE }}
         >
           Male
         </SearchLink>
+
         <SearchLink
-          className={cn({ 'is-active': sex === 'f' })}
-          params={{ sex: 'f' }}
+          className={cn({ 'is-active': sex === Sex.FEMALE })}
+          params={{ sex: Sex.FEMALE }}
         >
           Female
         </SearchLink>

@@ -52,9 +52,9 @@ export const PeopleTable: FC<Props> = ({ visiblePeople }) => {
             return (
               <tr
                 key={person.slug}
-                className={
-                  personSlug === person.slug ? 'has-background-warning' : ''
-                }
+                className={cn({
+                  'has-background-warning': personSlug === person.slug,
+                })}
                 data-cy="person"
               >
                 <td>
