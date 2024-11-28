@@ -44,11 +44,11 @@ export const PeoplePage = () => {
     [sort, order],
   );
 
-  function getSortedPeople(
+  const getSortedPeople = (
     folk: Person[],
     sortField: PersonSortableFields,
     orderName: string,
-  ) {
+  ) => {
     if (!sortField) {
       return [...folk];
     }
@@ -69,16 +69,16 @@ export const PeoplePage = () => {
 
       return 0;
     });
-  }
+  };
 
   const sortedPeople = getSortedPeople(people, sort, order);
 
-  function getVisiblePeople(
+  const getVisiblePeople = (
     folk: Person[],
     gender: string,
     inputQuery: string,
     centuryParams: string[],
-  ) {
+  ) => {
     let visible = [...folk];
 
     if (gender) {
@@ -103,7 +103,7 @@ export const PeoplePage = () => {
     }
 
     return visible;
-  }
+  };
 
   const visiblePeople = getVisiblePeople(sortedPeople, sex, query, centuries);
 
@@ -141,7 +141,7 @@ export const PeoplePage = () => {
                 </p>
               )}
 
-              {visiblePeople.length === 0 && (
+              {visiblePeople.length === 0 && !loading && !errorMessage && (
                 <p>There are no people matching the current search criteria</p>
               )}
 

@@ -9,19 +9,19 @@ type Props = {
 };
 
 export const OnePerson: React.FC<Props> = ({
-  person,
+  person: { name, sex, born, died, fatherName, motherName, slug },
   people,
   searchParams,
 }) => {
   const { personSlug } = useParams();
   const selectedPerson = personSlug ? personSlug : '';
 
-  function findParentLink(name: string | null) {
-    if (name === null) {
+  const findParentLink = (parentName: string | null) => {
+    if (parentName === null) {
       return '-';
     }
 
-    const parent = people.find(p => p.name === name);
+    const parent = people.find(p => p.name === parentName);
 
     if (parent && parent.sex === 'f') {
       return (
@@ -43,29 +43,29 @@ export const OnePerson: React.FC<Props> = ({
     }
 
     return name;
-  }
+  };
 
   return (
     <tr
       data-cy="person"
       className={classNames({
-        'has-background-warning': selectedPerson === person.slug,
+        'has-background-warning': selectedPerson === slug,
       })}
     >
       <td>
         <Link
-          to={`../${person.slug}?${searchParams.toString()}`}
-          className={classNames({ 'has-text-danger': person.sex === 'f' })}
+          to={`../${slug}?${searchParams.toString()}`}
+          className={classNames({ 'has-text-danger': sex === 'f' })}
         >
-          {person.name}
+          {name}
         </Link>
       </td>
 
-      <td>{person.sex}</td>
-      <td>{person.born}</td>
-      <td>{person.died}</td>
-      <td>{findParentLink(person.motherName)}</td>
-      <td>{findParentLink(person.fatherName)}</td>
+      <td>{sex}</td>
+      <td>{born}</td>
+      <td>{died}</td>
+      <td>{findParentLink(motherName)}</td>
+      <td>{findParentLink(fatherName)}</td>
     </tr>
   );
 };

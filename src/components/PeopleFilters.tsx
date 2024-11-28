@@ -1,5 +1,6 @@
 import classNames from 'classnames';
 import { SearchLink } from './SearchLink';
+import { Gender } from '../types/gender';
 
 type Props = {
   searchParams: URLSearchParams;
@@ -23,6 +24,8 @@ export const PeopleFilters: React.FC<Props> = ({
     setSearchParams(params);
   };
 
+  const activeCenturies = ['16', '17', '18', '19', '20'];
+
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
@@ -35,14 +38,14 @@ export const PeopleFilters: React.FC<Props> = ({
           All
         </SearchLink>
         <SearchLink
-          className={classNames({ 'is-active': sex === 'm' })}
-          params={{ sex: 'm' }}
+          className={classNames({ 'is-active': sex === Gender.male })}
+          params={{ sex: Gender.male }}
         >
           Male
         </SearchLink>
         <SearchLink
-          className={classNames({ 'is-active': sex === 'f' })}
-          params={{ sex: 'f' }}
+          className={classNames({ 'is-active': sex === Gender.female })}
+          params={{ sex: Gender.female }}
         >
           Female
         </SearchLink>
@@ -68,7 +71,7 @@ export const PeopleFilters: React.FC<Props> = ({
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            {['16', '17', '18', '19', '20'].map(num => (
+            {activeCenturies.map(num => (
               <SearchLink
                 key={num}
                 data-cy="century"
