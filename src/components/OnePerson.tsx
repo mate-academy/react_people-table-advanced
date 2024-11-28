@@ -1,6 +1,7 @@
 import { Link, useParams } from 'react-router-dom';
 import { Person } from '../types';
 import classNames from 'classnames';
+import { Gender } from '../types/gender';
 
 type Props = {
   person: Person;
@@ -23,7 +24,7 @@ export const OnePerson: React.FC<Props> = ({
 
     const parent = people.find(p => p.name === parentName);
 
-    if (parent && parent.sex === 'f') {
+    if (parent && parent.sex === Gender.female) {
       return (
         <Link
           to={`../${parent.slug}?${searchParams.toString()}`}
@@ -34,7 +35,7 @@ export const OnePerson: React.FC<Props> = ({
       );
     }
 
-    if (parent && parent.sex === 'm') {
+    if (parent && parent.sex === Gender.male) {
       return (
         <Link to={`../${parent.slug}?${searchParams.toString()}`}>
           {parent.name}
