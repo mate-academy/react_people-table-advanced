@@ -14,7 +14,7 @@ export const OnePerson: React.FC<Props> = ({
   searchParams,
 }) => {
   const { personSlug } = useParams();
-  const selectedPerson = personSlug ? personSlug : '';
+  const selectedPerson = personSlug || '';
 
   const findParentLink = (parentName: string | null) => {
     if (parentName === null) {
@@ -42,7 +42,7 @@ export const OnePerson: React.FC<Props> = ({
       );
     }
 
-    return name;
+    return parentName;
   };
 
   return (
