@@ -1,5 +1,12 @@
-/* eslint-disable jsx-a11y/control-has-associated-label */
-export const PeopleTable = () => {
+import React from 'react';
+import { Person } from '../types';
+
+type PeopleTableProps = {
+  people: Person[];
+  selectedSlug: string;
+};
+
+export const PeopleTable: React.FC<PeopleTableProps> = () => {
   return (
     <table
       data-cy="peopleTable"
