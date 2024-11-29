@@ -5,8 +5,8 @@ import { useEffect, useState } from 'react';
 import { Person } from '../types';
 import { getPeople } from '../api';
 import { useSearchParams } from 'react-router-dom';
-import { addParentsToPeople } from '../utils/PeopleWithParents';
 import { SortBy } from '../types/SortBy';
+import { peopleWithPerents } from '../utils/PeopleWithParents';
 
 type SortMethods = {
   [key in SortBy]?: (a: Person, b: Person) => number;
@@ -24,22 +24,24 @@ export const PeoplePage = () => {
   const [loading, setLoading] = useState(false);
   const [hasError, setHasError] = useState(false);
   const [searchParams] = useSearchParams();
+
   const query = searchParams.get('query')?.toLowerCase() || '';
   const sex = searchParams.get('sex') || '';
   const centuries = searchParams.getAll('centuries') || [];
   const sortBy = searchParams.get('sort') as SortBy | null;
   const sortOrder = searchParams.get('order');
+  const selectedSlug = searchParams.get('selectedSlug') || '';
 
   useEffect(() => {
     setLoading(true);
 
     getPeople()
-      .then(data => setPeople(addParentsToPeople(data)))
+      .then(data => setPeople(peopleWithPerents(data)))
       .catch(() => setHasError(true))
       .finally(() => setLoading(false));
   }, []);
 
-  const filterAndSortPeople = (filteredArr: Person[]) => {
+  const preparePeople = (filteredArr: Person[]) => {
     let filteredPeople = [...filteredArr];
 
     if (query) {
@@ -72,7 +74,7 @@ export const PeoplePage = () => {
     return filteredPeople;
   };
 
-  const preparedPeople = filterAndSortPeople(people);
+  const preparedPeople = preparePeople(people);
 
   return (
     <>
@@ -104,7 +106,10 @@ export const PeoplePage = () => {
               )}
 
               {preparedPeople.length > 0 && !loading && (
-                <PeopleTable people={preparedPeople} selectedSlug={''} />
+                <PeopleTable
+                  people={preparedPeople}
+                  selectedSlug={selectedSlug}
+                />
               )}
             </div>
           </div>

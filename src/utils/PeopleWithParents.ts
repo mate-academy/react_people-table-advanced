@@ -9,11 +9,3 @@ export const peopleWithPerents = (peopleFromServer: Person[]) => {
       peopleFromServer.find(({ name }) => name === person.fatherName) || null,
   }));
 };
-
-export const addParentsToPeople = (people: Person[]): Person[] => {
-  return people.map(person => ({
-    ...person,
-    motherName: person.motherName || 'Unknown',
-    fatherName: person.fatherName || 'Unknown',
-  }));
-};

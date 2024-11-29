@@ -1,12 +1,16 @@
 import React from 'react';
 import { Person } from '../types';
+import { SearchLink } from './SearchLink';
 
 type PeopleTableProps = {
   people: Person[];
   selectedSlug: string;
 };
 
-export const PeopleTable: React.FC<PeopleTableProps> = () => {
+export const PeopleTable: React.FC<PeopleTableProps> = ({
+  people,
+  selectedSlug,
+}) => {
   return (
     <table
       data-cy="peopleTable"
@@ -17,44 +21,44 @@ export const PeopleTable: React.FC<PeopleTableProps> = () => {
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Name
-              <a href="#/people?sort=name">
+              <SearchLink params={{ sort: 'name', order: 'asc' }}>
                 <span className="icon">
                   <i className="fas fa-sort" />
                 </span>
-              </a>
+              </SearchLink>
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Sex
-              <a href="#/people?sort=sex">
+              <SearchLink params={{ sort: 'name', order: 'asc' }}>
                 <span className="icon">
                   <i className="fas fa-sort" />
                 </span>
-              </a>
+              </SearchLink>
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Born
-              <a href="#/people?sort=born&amp;order=desc">
+              <SearchLink params={{ sort: 'name', order: 'asc' }}>
                 <span className="icon">
                   <i className="fas fa-sort-up" />
                 </span>
-              </a>
+              </SearchLink>
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Died
-              <a href="#/people?sort=died">
+              <SearchLink params={{ sort: 'name', order: 'asc' }}>
                 <span className="icon">
                   <i className="fas fa-sort" />
                 </span>
-              </a>
+              </SearchLink>
             </span>
           </th>
 
@@ -646,6 +650,40 @@ export const PeopleTable: React.FC<PeopleTableProps> = () => {
             <a href="#/people/carolus-haverbeke-1832">Carolus Haverbeke</a>
           </td>
         </tr>
+      </tbody>
+      <tbody>
+        {people.map(person => (
+          <tr
+            key={person.slug}
+            className={person.slug === selectedSlug ? 'is-selected' : ''}
+          >
+            <td>{person.name}</td>
+            <td>{person.sex}</td>
+            <td>{person.born}</td>
+            <td>{person.died}</td>
+            <td>
+              {person.mother ? (
+                <a
+                  className="has-text-danger"
+                  href={`#/people/${person.mother.slug}`}
+                >
+                  {person.mother.name}
+                </a>
+              ) : (
+                'Unknown'
+              )}
+            </td>
+            <td>
+              {person.father ? (
+                <a href={`#/people/${person.father.slug}`}>
+                  {person.father.name}
+                </a>
+              ) : (
+                'Unknown'
+              )}
+            </td>
+          </tr>
+        ))}
       </tbody>
     </table>
   );
