@@ -1,6 +1,7 @@
 import { useSearchParams } from 'react-router-dom';
 import { SearchLink } from './SearchLink';
 import classNames from 'classnames';
+import { Gender } from '../types/Gender';
 
 const centuriesValue: string[] = ['16', '17', '18', '19', '20'];
 
@@ -45,14 +46,14 @@ export const PeopleFilters = () => {
           All
         </SearchLink>
         <SearchLink
-          className={classNames({ 'is-active': isActiveSex('m') })}
-          params={{ sex: 'm' }}
+          className={classNames({ 'is-active': isActiveSex(Gender.Male) })}
+          params={{ sex: Gender.Male }}
         >
           Male
         </SearchLink>
         <SearchLink
-          className={classNames({ 'is-active': isActiveSex('f') })}
-          params={{ sex: 'f' }}
+          className={classNames({ 'is-active': isActiveSex(Gender.Female) })}
+          params={{ sex: Gender.Female }}
         >
           Female
         </SearchLink>
