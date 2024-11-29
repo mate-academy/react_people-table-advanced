@@ -655,22 +655,27 @@ export const PeopleTable: React.FC<PeopleTableProps> = ({
         {people.map(person => (
           <tr
             key={person.slug}
-            className={person.slug === selectedSlug ? 'is-selected' : ''}
+            data-cy="person"
+            className={selectedSlug === person.slug ? 'is-selected' : ''}
           >
-            <td>{person.name}</td>
+            <td>
+              <a
+                href={`#/people/${person.slug}`}
+                className={person.sex === 'f' ? 'has-text-danger' : ''}
+              >
+                {person.name}
+              </a>
+            </td>
             <td>{person.sex}</td>
             <td>{person.born}</td>
             <td>{person.died}</td>
             <td>
               {person.mother ? (
-                <a
-                  className="has-text-danger"
-                  href={`#/people/${person.mother.slug}`}
-                >
+                <a href={`#/people/${person.mother.slug}`}>
                   {person.mother.name}
                 </a>
               ) : (
-                'Unknown'
+                '-'
               )}
             </td>
             <td>
@@ -679,7 +684,7 @@ export const PeopleTable: React.FC<PeopleTableProps> = ({
                   {person.father.name}
                 </a>
               ) : (
-                'Unknown'
+                '-'
               )}
             </td>
           </tr>
