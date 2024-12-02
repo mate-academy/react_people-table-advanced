@@ -6,7 +6,7 @@ import { Person } from '../types';
 import { getPeople } from '../api';
 import { useSearchParams, useParams } from 'react-router-dom';
 import { SortBy } from '../types/SortBy';
-import { peopleWithPerents } from '../utils/PeopleWithParents';
+import { peopleWithParents } from '../utils/PeopleWithParents';
 
 type SortMethods = {
   [key in SortBy]?: (a: Person, b: Person) => number;
@@ -35,7 +35,7 @@ export const PeoplePage = () => {
   useEffect(() => {
     setLoading(true);
     getPeople()
-      .then(data => setPeople(peopleWithPerents(data)))
+      .then(data => setPeople(peopleWithParents(data)))
       .catch(() => setHasError(true))
       .finally(() => setLoading(false));
   }, []);
@@ -66,7 +66,7 @@ export const PeoplePage = () => {
       filteredPeople.sort(sortMethods[sortBy]);
     }
 
-    if (sortOrder) {
+    if (sortOrder === 'desc') {
       filteredPeople.reverse();
     }
 

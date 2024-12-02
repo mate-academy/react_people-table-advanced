@@ -78,18 +78,22 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            {centuriesList.map(century => (
-              <SearchLink
-                key={century}
-                data-cy="century"
-                className={classNames('button mr-1', {
-                  'is-info': centuries.includes(century),
-                })}
-                params={{ centuries: toggleCenturyFilter(century) }}
-              >
-                {century}
-              </SearchLink>
-            ))}
+            {centuriesList.map(century => {
+              const updatedCenturies = toggleCenturyFilter(century);
+
+              return (
+                <SearchLink
+                  key={century}
+                  data-cy="century"
+                  className={classNames('button mr-1', {
+                    'is-info': updatedCenturies.includes(century),
+                  })}
+                  params={{ centuries: updatedCenturies }}
+                >
+                  {century}
+                </SearchLink>
+              );
+            })}
           </div>
 
           <div className="level-right ml-4">

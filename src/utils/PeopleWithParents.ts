@@ -1,6 +1,6 @@
 import { Person } from '../types';
 
-export const peopleWithPerents = (peopleFromServer: Person[]): Person[] => {
+export const peopleWithParents = (peopleFromServer: Person[]): Person[] => {
   const parentsMap: {
     mothers: { [key: string]: Person };
     fathers: { [key: string]: Person };

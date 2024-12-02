@@ -61,13 +61,12 @@ export const PeopleTable: React.FC<PeopleTableProps> = ({
       const aValue = a[sortField as keyof Person];
       const bValue = b[sortField as keyof Person];
 
-      if (
-        aValue === null ||
-        aValue === undefined ||
-        bValue === null ||
-        bValue === undefined
-      ) {
-        return 0;
+      if (aValue === null || aValue === undefined) {
+        return sortOrder === 'asc' ? 1 : -1;
+      }
+
+      if (bValue === null || bValue === undefined) {
+        return sortOrder === 'asc' ? -1 : 1;
       }
 
       if (aValue < bValue) {
@@ -117,7 +116,13 @@ export const PeopleTable: React.FC<PeopleTableProps> = ({
               >
                 <span className="icon">
                   <i
-                    className={`fas fa-sort-${sortOrder === 'asc' ? 'up' : 'down'}`}
+                    className={classNames({
+                      'fas fa-sort-up':
+                        sortField === 'name' && sortOrder === 'asc',
+                      'fas fa-sort-down':
+                        sortField === 'name' && sortOrder === 'desc',
+                      'fas fa-sort': !sortField || sortField !== 'name',
+                    })}
                   />
                 </span>
               </SearchLink>
@@ -135,7 +140,13 @@ export const PeopleTable: React.FC<PeopleTableProps> = ({
               >
                 <span className="icon">
                   <i
-                    className={`fas fa-sort-${sortOrder === 'asc' ? 'up' : 'down'}`}
+                    className={classNames({
+                      'fas fa-sort-up':
+                        sortField === 'sex' && sortOrder === 'asc',
+                      'fas fa-sort-down':
+                        sortField === 'sex' && sortOrder === 'desc',
+                      'fas fa-sort': !sortField || sortField !== 'sex',
+                    })}
                   />
                 </span>
               </SearchLink>
@@ -153,7 +164,13 @@ export const PeopleTable: React.FC<PeopleTableProps> = ({
               >
                 <span className="icon">
                   <i
-                    className={`fas fa-sort-${sortOrder === 'asc' ? 'up' : 'down'}`}
+                    className={classNames({
+                      'fas fa-sort-up':
+                        sortField === 'born' && sortOrder === 'asc',
+                      'fas fa-sort-down':
+                        sortField === 'born' && sortOrder === 'desc',
+                      'fas fa-sort': !sortField || sortField !== 'born',
+                    })}
                   />
                 </span>
               </SearchLink>
@@ -171,7 +188,13 @@ export const PeopleTable: React.FC<PeopleTableProps> = ({
               >
                 <span className="icon">
                   <i
-                    className={`fas fa-sort-${sortOrder === 'asc' ? 'up' : 'down'}`}
+                    className={classNames({
+                      'fas fa-sort-up':
+                        sortField === 'died' && sortOrder === 'asc',
+                      'fas fa-sort-down':
+                        sortField === 'died' && sortOrder === 'desc',
+                      'fas fa-sort': !sortField || sortField !== 'died',
+                    })}
                   />
                 </span>
               </SearchLink>
