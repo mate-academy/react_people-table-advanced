@@ -29,7 +29,7 @@ export const PeopleTable: FC<Props> = ({ people }) => {
     if (sort === 'name' || sort === 'sex') {
       const comparison = a[sort].localeCompare(b[sort]);
 
-      return order === 'desc' ? comparison : -comparison;
+      return order === 'desc' ? -comparison : comparison ;
     }
 
     return 0;
