@@ -12,7 +12,7 @@ const PeoplePage = () => {
   const [isError, setIsError] = useState(false);
   const [searchParams] = useSearchParams();
   const query = searchParams.get('query') || null;
-  const centuries = searchParams.getAll('centuries') || [];
+  const centuries = searchParams.getAll('centuries') || null;
   const sex = searchParams.get('sex') || null;
 
   useEffect(() => {
@@ -51,13 +51,17 @@ const PeoplePage = () => {
   const filteredPeople = people.filter(person => {
     const sexMatch = !sex || person.sex === sex;
     const queryMatch =
-      !query || person.name.toLowerCase().includes(query.toLowerCase());
+      !query ||
+      person.name.toLowerCase().includes(query.toLowerCase()) ||
+      person.motherName?.toLowerCase().includes(query.toLowerCase()) ||
+      person.fatherName?.toLowerCase().includes(query.toLowerCase());
     const personCentury = Math.ceil(person.born / 100);
     const centuriesMatch =
       !centuries ||
+      centuries.length === 0 ||
       centuries.some(century => century === personCentury.toString());
 
-    return sexMatch && queryMatch && centuriesMatch;
+    return queryMatch && sexMatch && centuriesMatch;
   });
 
   const isNoFilter = !query && (!centuries || centuries.length === 0) && !sex;
@@ -70,7 +74,7 @@ const PeoplePage = () => {
         <div className="block">
           <div className="columns is-desktop is-flex-direction-row-reverse">
             <div className="column is-7-tablet is-narrow-desktop">
-              <PeopleFilters />
+              {!isLoading && !isError && <PeopleFilters />}
             </div>
 
             <div className="column">

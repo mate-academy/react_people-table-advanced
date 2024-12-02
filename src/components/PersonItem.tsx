@@ -1,12 +1,13 @@
 import React from 'react';
 import { Person } from '../types';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams, useSearchParams } from 'react-router-dom';
 
 type Props = {
   person: Person;
 };
 const PersonItem: React.FC<Props> = ({ person }) => {
   const { slug } = useParams();
+  const [searchParams] = useSearchParams();
 
   return (
     <tr
@@ -15,7 +16,10 @@ const PersonItem: React.FC<Props> = ({ person }) => {
     >
       <td>
         <Link
-          to={`${person.slug}`}
+          to={{
+            pathname: `${person.slug}`,
+            search: searchParams.toString(),
+          }}
           className={person.sex === 'f' ? 'has-text-danger' : ''}
         >
           {person.name}

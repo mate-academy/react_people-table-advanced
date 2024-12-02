@@ -13,7 +13,9 @@ export const PeopleFilters = () => {
   const sex = searchParams.get('sex') || null;
 
   const handleQueryChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const serch = getSearchWith(searchParams, { query: e.target.value });
+    const serch = getSearchWith(searchParams, {
+      query: e.target.value || null,
+    });
 
     setSearchParams(serch);
     setQuery(e.target.value);
@@ -23,12 +25,6 @@ export const PeopleFilters = () => {
     return ages.includes(age)
       ? ages.filter(currAge => currAge !== age)
       : [...ages, age];
-  };
-
-  const toggleAges = (age: string) => {
-    const newAges = addAge(age);
-
-    setSearchParams({ centuries: newAges });
   };
 
   return (
@@ -81,7 +77,6 @@ export const PeopleFilters = () => {
                   'is-info': ages.includes(age),
                 })}
                 params={{ centuries: addAge(age) }}
-                onClick={() => toggleAges(age)}
               >
                 {age}
               </SearchLink>
