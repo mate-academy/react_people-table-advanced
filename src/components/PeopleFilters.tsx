@@ -9,17 +9,17 @@ export const PeopleFilters = () => {
   const sex = searchParams.get('sex') || '';
   const centuries = searchParams.getAll('centuries') || [];
 
-  const updateSearchParams = (params: SearchParams) => {
+  const updateQueryParams = (params: SearchParams) => {
     const search = getSearchWith(searchParams, params);
 
     setSearchParams(search);
   };
 
   const handleQueryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    updateSearchParams({ query: event.target.value || null });
+    updateQueryParams({ query: event.target.value || null });
   };
 
-  const toggleCenturySelection = (century: string) => {
+  const toggleCenturyFilter = (century: string) => {
     return centuries.includes(century)
       ? centuries.filter(cent => cent !== century)
       : [...centuries, century];
@@ -29,30 +29,30 @@ export const PeopleFilters = () => {
     setSearchParams({});
   };
 
+  const getSexClass = (selectedSex: string) => ({
+    'is-active': sex === selectedSex,
+  });
+
+  const centuriesList = ['16', '17', '18', '19', '20'];
+
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
       <p className="panel-tabs" data-cy="SexFilter">
         <SearchLink
-          className={classNames('navbar-item', {
-            'is-active': !sex,
-          })}
+          className={classNames('navbar-item', getSexClass(''))}
           params={{ sex: null }}
         >
           All
         </SearchLink>
         <SearchLink
-          className={classNames('navbar-item', {
-            'is-active': sex === 'm',
-          })}
+          className={classNames('navbar-item', getSexClass('m'))}
           params={{ sex: 'm' }}
         >
           Male
         </SearchLink>
         <SearchLink
-          className={classNames('navbar-item', {
-            'is-active': sex === 'f',
-          })}
+          className={classNames('navbar-item', getSexClass('f'))}
           params={{ sex: 'f' }}
         >
           Female
@@ -69,7 +69,6 @@ export const PeopleFilters = () => {
             value={query}
             onChange={handleQueryChange}
           />
-
           <span className="icon is-left">
             <i className="fas fa-search" aria-hidden="true" />
           </span>
@@ -79,14 +78,14 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            {'16,17,18,19,20'.split(',').map(century => (
+            {centuriesList.map(century => (
               <SearchLink
                 key={century}
                 data-cy="century"
                 className={classNames('button mr-1', {
                   'is-info': centuries.includes(century),
                 })}
-                params={{ centuries: toggleCenturySelection(century) }}
+                params={{ centuries: toggleCenturyFilter(century) }}
               >
                 {century}
               </SearchLink>

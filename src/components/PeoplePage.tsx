@@ -4,7 +4,7 @@ import { PeopleTable } from './PeopleTable';
 import { useEffect, useState } from 'react';
 import { Person } from '../types';
 import { getPeople } from '../api';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, useParams } from 'react-router-dom';
 import { SortBy } from '../types/SortBy';
 import { peopleWithPerents } from '../utils/PeopleWithParents';
 
@@ -24,24 +24,23 @@ export const PeoplePage = () => {
   const [loading, setLoading] = useState(false);
   const [hasError, setHasError] = useState(false);
   const [searchParams] = useSearchParams();
+  const { slugId } = useParams();
 
   const query = searchParams.get('query')?.toLowerCase() || '';
   const sex = searchParams.get('sex') || '';
   const centuries = searchParams.getAll('centuries') || [];
   const sortBy = searchParams.get('sort') as SortBy | null;
   const sortOrder = searchParams.get('order');
-  const selectedSlug = searchParams.get('selectedSlug') || '';
 
   useEffect(() => {
     setLoading(true);
-
     getPeople()
       .then(data => setPeople(peopleWithPerents(data)))
       .catch(() => setHasError(true))
       .finally(() => setLoading(false));
-  }, []);
+  }, []); // If you want to refetch people on searchParams change, add [searchParams] here
 
-  const preparePeople = (filteredArr: Person[]) => {
+  const filterAndSortPeople = (filteredArr: Person[]) => {
     let filteredPeople = [...filteredArr];
 
     if (query) {
@@ -74,7 +73,7 @@ export const PeoplePage = () => {
     return filteredPeople;
   };
 
-  const preparedPeople = preparePeople(people);
+  const preparedPeople = filterAndSortPeople(people);
 
   return (
     <>
@@ -95,20 +94,20 @@ export const PeoplePage = () => {
                 </p>
               )}
 
-              {people.length === 0 && !hasError && !loading && (
+              {!loading && people.length === 0 && !hasError && (
                 <p data-cy="noPeopleMessage">
                   There are no people on the server
                 </p>
               )}
 
-              {preparedPeople.length === 0 && !loading && (
+              {preparedPeople.length === 0 && !loading && !hasError && (
                 <p>There are no people matching the current search criteria</p>
               )}
 
-              {preparedPeople.length > 0 && !loading && (
+              {preparedPeople.length > 0 && !loading && !hasError && (
                 <PeopleTable
                   people={preparedPeople}
-                  selectedSlug={selectedSlug}
+                  selectedSlug={slugId || ''}
                 />
               )}
             </div>

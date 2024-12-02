@@ -10,17 +10,17 @@ export const PersonLink: React.FC<Props> = ({ person }) => {
   const { slug, sex, name } = person;
   const [searchParams] = useSearchParams();
 
-  const searchQuery = searchParams.toString();
+  const linkClass = classNames({
+    'has-text-danger': sex === 'f',
+  });
 
   return (
     <Link
       to={{
-        pathname: `/people/${slug}`,
-        search: searchQuery,
+        pathname: `/${slug}`,
+        search: searchParams.toString(),
       }}
-      className={classNames('person-link', {
-        'has-text-danger': sex === 'f',
-      })}
+      className={linkClass}
     >
       {name}
     </Link>
