@@ -14,17 +14,15 @@ export const PeopleTable: React.FC<PeopleTableProps> = ({
   selectedSlug,
 }) => {
   const location = useLocation();
-  const navigate = useNavigate(); // Use useNavigate instead of useHistory
+  const navigate = useNavigate();
 
   const [sortField, setSortField] = useState<string | null>(null);
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc' | null>(null);
 
-  // Extract query params from the URL
   const queryParams = new URLSearchParams(location.search);
   const initialSortField = queryParams.get('sort');
   const initialSortOrder = queryParams.get('order') as 'asc' | 'desc' | null;
 
-  // Sync the state with the URL params on initial load
   React.useEffect(() => {
     if (initialSortField) {
       setSortField(initialSortField);
@@ -32,19 +30,15 @@ export const PeopleTable: React.FC<PeopleTableProps> = ({
     }
   }, [initialSortField, initialSortOrder]);
 
-  // Handle sort field change
   const handleSort = (field: string) => {
     if (field === sortField) {
-      // If already sorting by the same field, toggle the order
       setSortOrder(prevOrder => (prevOrder === 'asc' ? 'desc' : 'asc'));
     } else {
-      // If sorting by a new field, set to ascending order
       setSortField(field);
       setSortOrder('asc');
     }
   };
 
-  // Handle URL updates for sorting
   React.useEffect(() => {
     if (sortField) {
       const searchParams = new URLSearchParams();
@@ -54,14 +48,12 @@ export const PeopleTable: React.FC<PeopleTableProps> = ({
         searchParams.set('order', sortOrder);
       }
 
-      navigate({ search: searchParams.toString() }); // Use navigate instead of history.push
+      navigate({ search: searchParams.toString() });
     } else {
-      // Remove sorting params if sorting is disabled
       navigate({ search: '' });
     }
   }, [sortField, sortOrder, navigate]);
 
-  // Sort people based on selected field and order
   const sortedPeople = [...people];
 
   if (sortField && sortOrder) {
@@ -69,14 +61,13 @@ export const PeopleTable: React.FC<PeopleTableProps> = ({
       const aValue = a[sortField as keyof Person];
       const bValue = b[sortField as keyof Person];
 
-      // Null checks before comparing values
       if (
         aValue === null ||
         aValue === undefined ||
         bValue === null ||
         bValue === undefined
       ) {
-        return 0; // Or handle null/undefined values based on your logic
+        return 0;
       }
 
       if (aValue < bValue) {

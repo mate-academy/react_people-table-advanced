@@ -38,7 +38,7 @@ export const PeoplePage = () => {
       .then(data => setPeople(peopleWithPerents(data)))
       .catch(() => setHasError(true))
       .finally(() => setLoading(false));
-  }, []); // If you want to refetch people on searchParams change, add [searchParams] here
+  }, []);
 
   const filterAndSortPeople = (filteredArr: Person[]) => {
     let filteredPeople = [...filteredArr];
