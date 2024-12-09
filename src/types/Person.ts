@@ -13,6 +13,9 @@ export interface Person {
 export interface SortParams {
   sortBy: 'Born' | 'Died' | 'Name' | 'Sex' | null;
   sortOrder: 'asc' | 'desc' | null;
+  query: string;
+  sex: 'all' | 'm' | 'f';
+  centuries: string[];
 }
 
 export enum SortColumns {

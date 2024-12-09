@@ -6,9 +6,12 @@ import { filterPeople } from '../utils/sortHelper';
 
 type Props = {
   people: Person[];
+  query: string;
+  sex: 'all' | 'm' | 'f';
+  centuries: string[];
 };
 
-const PeopleTable: FC<Props> = ({ people }) => {
+const PeopleTable: FC<Props> = ({ people, query, sex, centuries }) => {
   const [sortBy, setSortBy] = useState<SortColumns | null>(null);
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc' | null>('asc');
 
@@ -35,6 +38,9 @@ const PeopleTable: FC<Props> = ({ people }) => {
   const preparedPeople = filterPeople(people, {
     sortBy,
     sortOrder,
+    query,
+    sex,
+    centuries,
   });
 
   return (
@@ -49,7 +55,7 @@ const PeopleTable: FC<Props> = ({ people }) => {
               <span className="is-flex is-flex-wrap-nowrap">
                 {column}
                 <a
-                  href="#/people?sort=name"
+                  href={`#/people?sort=${column}`}
                   onClick={() => handleClickSort(column)}
                 >
                   <span className="icon">
