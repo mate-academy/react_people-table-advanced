@@ -10,11 +10,14 @@ export interface Person {
   father?: Person;
 }
 
-export enum PersonFields {
+export interface SortParams {
+  sortBy: 'Born' | 'Died' | 'Name' | 'Sex' | null;
+  sortOrder: 'asc' | 'desc' | null;
+}
+
+export enum SortColumns {
   Name = 'Name',
   Sex = 'Sex',
   Born = 'Born',
   Died = 'Died',
-  MotherName = 'Mother',
-  FatherName = 'Father',
 }
