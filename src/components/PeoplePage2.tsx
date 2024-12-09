@@ -2,7 +2,7 @@ import { PeopleFilters } from './PeopleFilters';
 import { Loader } from './Loader';
 import { PeopleTable } from './PeopleTable';
 
-export const PeoplePage = () => {
+export const PeoplePage2 = () => {
   return (
     <>
       <h1 className="title">People Page</h1>

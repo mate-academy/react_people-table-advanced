@@ -9,3 +9,12 @@ export interface Person {
   mother?: Person;
   father?: Person;
 }
+
+export enum PersonFields {
+  Name = 'Name',
+  Sex = 'Sex',
+  Born = 'Born',
+  Died = 'Died',
+  MotherName = 'Mother',
+  FatherName = 'Father',
+}
