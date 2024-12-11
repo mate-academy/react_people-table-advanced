@@ -3,22 +3,18 @@ import { Loader } from '../components/Loader';
 import { usePeople } from '../hooks/usePeople';
 import PeopleTable from '../components/PeopleTable';
 import { PeopleFilters } from '../components/PeopleFilters';
-import { useState } from 'react';
-import { getCenturiesList } from '../utils/services';
-// import { useLocation } from 'react-router-dom';
+import { getCenturiesFromUrl, getCenturiesList } from '../utils/services';
+import { useSearchParams } from 'react-router-dom';
 
 const PeoplePage = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
   const { people, isPeopleLoading, isPeopleError } = usePeople();
-  const [query, setQuery] = useState('');
-  const [sex, setSex] = useState<'all' | 'm' | 'f'>('all');
-  const [centuries, setCenturies] = useState<string[]>([]);
+  const query = searchParams.get('query') || '';
+  const sex = searchParams.get('sex') || '';
+
+  const centuries = getCenturiesFromUrl(searchParams);
 
   const centuriesList = getCenturiesList(people);
-
-  // const { pathname, search } = useLocation();
-
-  // console.log('pathName:', pathname);
-  // console.log('search:', search);
 
   let status = 'loading';
 
@@ -30,30 +26,64 @@ const PeoplePage = () => {
     status = 'empty';
   }
 
-  const hanldeCenturiesChange = (century: string) => {
-    setCenturies(currentCenturies =>
-      currentCenturies.includes(century)
-        ? currentCenturies.filter(c => c !== century)
-        : [...currentCenturies, century],
-    );
-  };
+  const hanldeCenturiesChange = (century: number): void => {
+    const params = new URLSearchParams(searchParams);
 
-  const handleCenturiesReset = () => {
-    setCenturies([]);
+    const newCent = centuries.includes(century)
+      ? centuries.filter(c => c !== century)
+      : [...centuries, century];
+
+    if (newCent.length === 0) {
+      params.delete('centuries'); // Clear the parameter entirely if empty
+    } else {
+      params.set('centuries', newCent.toSorted().join('-'));
+    }
+
+    params.sort();
+
+    setSearchParams(params);
   };
 
   const handleQueryChange = (queryValue: string) => {
-    setQuery(queryValue);
+    const params = new URLSearchParams(searchParams);
+
+    params.set('query', queryValue);
+
+    if (!queryValue) {
+      params.delete('query');
+    }
+
+    params.sort();
+
+    setSearchParams(params);
   };
 
-  const handleSexChange = (sexValue: 'all' | 'm' | 'f') => {
-    setSex(sexValue);
+  const handleSexChange = (sexValue: '' | 'm' | 'f') => {
+    const params = new URLSearchParams(searchParams);
+
+    params.set('sex', sexValue);
+
+    if (sexValue === '') {
+      params.delete('sex');
+    }
+
+    params.sort();
+
+    setSearchParams(params);
   };
 
   const resetFilters = () => {
-    setQuery('');
-    setSex('all');
-    setCenturies([]);
+    setSearchParams({ query: '' });
+    setSearchParams({ sex: '' });
+    setSearchParams({ centuries: [] });
+  };
+
+  const handleCenturiesReset = () => {
+    const params = new URLSearchParams(searchParams);
+
+    params.delete('centuries');
+
+    setSearchParams(params);
   };
 
   return (

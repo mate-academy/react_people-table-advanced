@@ -4,10 +4,10 @@ type Props = {
   query: string;
   handleQueryChange: (query: string) => void;
   sex: string;
-  handleSexChange: (sex: 'all' | 'm' | 'f') => void;
-  centuriesList: string[];
-  centuries: string[];
-  hanldeCenturiesChange: (centuries: string) => void;
+  handleSexChange: (sex: '' | 'm' | 'f') => void;
+  centuriesList: number[];
+  centuries: number[] | null;
+  hanldeCenturiesChange: (centuries: number) => void;
   handleCenturiesReset: () => void;
   resetFilters: () => void;
 };
@@ -29,22 +29,22 @@ export const PeopleFilters: FC<Props> = ({
 
       <p className="panel-tabs" data-cy="SexFilter">
         <a
-          className={sex === 'all' ? 'is-active' : ''}
-          href="#/people"
-          onClick={() => handleSexChange('all')}
+          className={sex === '' ? 'is-active' : ''}
+          // href="#/people"
+          onClick={() => handleSexChange('')}
         >
           All
         </a>
         <a
           className={sex === 'm' ? 'is-active' : ''}
-          href="#/people?sex=m"
+          // href="#/people?sex=m"
           onClick={() => handleSexChange('m')}
         >
           Male
         </a>
         <a
           className={sex === 'f' ? 'is-active' : ''}
-          href="#/people?sex=f"
+          // href="#/people?sex=f"
           onClick={() => handleSexChange('f')}
         >
           Female
@@ -76,9 +76,8 @@ export const PeopleFilters: FC<Props> = ({
                 key={century}
                 data-cy="century"
                 className={`button mr-1 ${
-                  centuries.includes(century) ? 'is-info' : ''
+                  centuries?.includes(century) ? 'is-info' : ''
                 }`}
-                href={`#/people?centuries=${century}`}
                 onClick={() => hanldeCenturiesChange(century)}
               >
                 {century}
@@ -90,7 +89,6 @@ export const PeopleFilters: FC<Props> = ({
             <a
               data-cy="centuryALL"
               className="button is-success is-outlined"
-              href="#/people"
               onClick={handleCenturiesReset}
             >
               All
@@ -102,7 +100,6 @@ export const PeopleFilters: FC<Props> = ({
       <div className="panel-block">
         <a
           className="button is-link is-outlined is-fullwidth"
-          href="#/people"
           onClick={resetFilters}
         >
           Reset all filters

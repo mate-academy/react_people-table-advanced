@@ -7,8 +7,8 @@ import { filterPeople } from '../utils/sortHelper';
 type Props = {
   people: Person[];
   query: string;
-  sex: 'all' | 'm' | 'f';
-  centuries: string[];
+  sex: string;
+  centuries: number[];
 };
 
 const PeopleTable: FC<Props> = ({ people, query, sex, centuries }) => {

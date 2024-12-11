@@ -6,14 +6,14 @@ export const filterPeople = (
 ): Person[] => {
   const { sortBy, sortOrder, query, sex, centuries } = params;
 
-  const getPersonCentury = (person: Person): string => {
-    return String(Math.ceil(person.born / 100));
+  const getPersonCentury = (person: Person): number => {
+    return Math.ceil(person.born / 100);
   };
 
   const filteredPeople = people
     .filter(person => person.name.toLowerCase().includes(query.toLowerCase()))
     .filter(person => {
-      if (sex === 'all') {
+      if (sex === '') {
         return true;
       }
 

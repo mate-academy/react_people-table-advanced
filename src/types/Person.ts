@@ -14,8 +14,8 @@ export interface SortParams {
   sortBy: 'Born' | 'Died' | 'Name' | 'Sex' | null;
   sortOrder: 'asc' | 'desc' | null;
   query: string;
-  sex: 'all' | 'm' | 'f';
-  centuries: string[];
+  sex: string;
+  centuries: number[];
 }
 
 export enum SortColumns {
