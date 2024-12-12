@@ -1,40 +1,28 @@
-import { FC, useState } from 'react';
-import { Person, SortColumns } from '../types';
-import PersonLink from './PersonLink';
+import { FC } from 'react';
+import { Person } from '../types/Person';
+import { SortColumns } from '../types/Filter';
 import classNames from 'classnames';
 import { filterPeople } from '../utils/sortHelper';
+import { SearchLink } from './SearchLink';
+import PersonRow from './PersonRow';
 
 type Props = {
   people: Person[];
   query: string;
   sex: string;
   centuries: number[];
+  sortBy: string | null;
+  sortOrder: string | null;
 };
 
-const PeopleTable: FC<Props> = ({ people, query, sex, centuries }) => {
-  const [sortBy, setSortBy] = useState<SortColumns | null>(null);
-  const [sortOrder, setSortOrder] = useState<'asc' | 'desc' | null>('asc');
-
-  const handleClickSort = (param: SortColumns) => {
-    setSortBy(param);
-
-    if (param === sortBy) {
-      setSortOrder(prevOrder => {
-        if (prevOrder === null) {
-          return 'asc';
-        }
-
-        if (prevOrder === 'asc') {
-          return 'desc';
-        }
-
-        return null;
-      });
-    } else {
-      setSortOrder('asc');
-    }
-  };
-
+const PeopleTable: FC<Props> = ({
+  people,
+  query,
+  sex,
+  centuries,
+  sortBy,
+  sortOrder,
+}) => {
   const preparedPeople = filterPeople(people, {
     sortBy,
     sortOrder,
@@ -54,9 +42,12 @@ const PeopleTable: FC<Props> = ({ people, query, sex, centuries }) => {
             <th key={column}>
               <span className="is-flex is-flex-wrap-nowrap">
                 {column}
-                <a
-                  href={`#/people?sort=${column}`}
-                  onClick={() => handleClickSort(column)}
+                <SearchLink
+                  params={
+                    sortBy === column && sortOrder === 'asc'
+                      ? { sortBy: column, sortOrder: 'desc' }
+                      : { sortBy: column, sortOrder: 'asc' }
+                  }
                 >
                   <span className="icon">
                     <i
@@ -69,7 +60,7 @@ const PeopleTable: FC<Props> = ({ people, query, sex, centuries }) => {
                       })}
                     />
                   </span>
-                </a>
+                </SearchLink>
               </span>
             </th>
           ))}
@@ -80,7 +71,7 @@ const PeopleTable: FC<Props> = ({ people, query, sex, centuries }) => {
 
       <tbody>
         {preparedPeople.map(person => (
-          <PersonLink key={person.slug} person={person} />
+          <PersonRow key={person.slug} person={person} />
         ))}
       </tbody>
     </table>

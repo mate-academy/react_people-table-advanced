@@ -5,16 +5,28 @@ import PeopleTable from '../components/PeopleTable';
 import { PeopleFilters } from '../components/PeopleFilters';
 import { getCenturiesFromUrl, getCenturiesList } from '../utils/services';
 import { useSearchParams } from 'react-router-dom';
+import { getSearchWith, SearchParams } from '../utils/searchHelper';
 
 const PeoplePage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const { people, isPeopleLoading, isPeopleError } = usePeople();
+  const sortBy = searchParams.get('sortBy') || null;
+  const sortOrder = searchParams.get('sortOrder') || null;
   const query = searchParams.get('query') || '';
   const sex = searchParams.get('sex') || '';
 
   const centuries = getCenturiesFromUrl(searchParams);
-
   const centuriesList = getCenturiesList(people);
+
+  const setSearchWith = (params: SearchParams) => {
+    const search = getSearchWith(searchParams, params);
+
+    setSearchParams(search);
+  };
+
+  const handleQueryChange = (queryValue: string) => {
+    setSearchWith({ query: queryValue || null });
+  };
 
   let status = 'loading';
 
@@ -25,66 +37,6 @@ const PeoplePage = () => {
   } else if (!isPeopleLoading && people.length === 0) {
     status = 'empty';
   }
-
-  const hanldeCenturiesChange = (century: number): void => {
-    const params = new URLSearchParams(searchParams);
-
-    const newCent = centuries.includes(century)
-      ? centuries.filter(c => c !== century)
-      : [...centuries, century];
-
-    if (newCent.length === 0) {
-      params.delete('centuries'); // Clear the parameter entirely if empty
-    } else {
-      params.set('centuries', newCent.toSorted().join('-'));
-    }
-
-    params.sort();
-
-    setSearchParams(params);
-  };
-
-  const handleQueryChange = (queryValue: string) => {
-    const params = new URLSearchParams(searchParams);
-
-    params.set('query', queryValue);
-
-    if (!queryValue) {
-      params.delete('query');
-    }
-
-    params.sort();
-
-    setSearchParams(params);
-  };
-
-  const handleSexChange = (sexValue: '' | 'm' | 'f') => {
-    const params = new URLSearchParams(searchParams);
-
-    params.set('sex', sexValue);
-
-    if (sexValue === '') {
-      params.delete('sex');
-    }
-
-    params.sort();
-
-    setSearchParams(params);
-  };
-
-  const resetFilters = () => {
-    setSearchParams({ query: '' });
-    setSearchParams({ sex: '' });
-    setSearchParams({ centuries: [] });
-  };
-
-  const handleCenturiesReset = () => {
-    const params = new URLSearchParams(searchParams);
-
-    params.delete('centuries');
-
-    setSearchParams(params);
-  };
 
   return (
     <div className="container">
@@ -98,12 +50,8 @@ const PeoplePage = () => {
                 query={query}
                 handleQueryChange={handleQueryChange}
                 sex={sex}
-                handleSexChange={handleSexChange}
                 centuriesList={centuriesList}
                 centuries={centuries}
-                hanldeCenturiesChange={hanldeCenturiesChange}
-                handleCenturiesReset={handleCenturiesReset}
-                resetFilters={resetFilters}
               />
             )}
           </div>
@@ -123,7 +71,9 @@ const PeoplePage = () => {
                   people={people}
                   query={query}
                   sex={sex}
-                  centuries={centuries}
+                  centuries={centuries.map(Number)}
+                  sortBy={sortBy}
+                  sortOrder={sortOrder}
                 />
               )}
 

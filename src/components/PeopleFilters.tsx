@@ -1,54 +1,45 @@
 import { FC } from 'react';
+import { SearchLink } from './SearchLink';
 
 type Props = {
   query: string;
   handleQueryChange: (query: string) => void;
   sex: string;
-  handleSexChange: (sex: '' | 'm' | 'f') => void;
-  centuriesList: number[];
-  centuries: number[] | null;
-  hanldeCenturiesChange: (centuries: number) => void;
-  handleCenturiesReset: () => void;
-  resetFilters: () => void;
+  centuriesList: string[];
+  centuries: string[] | null;
+};
+
+const sexValues = {
+  all: 'All',
+  m: 'Male',
+  f: 'Female',
 };
 
 export const PeopleFilters: FC<Props> = ({
   query,
   handleQueryChange,
   sex,
-  handleSexChange,
   centuriesList,
   centuries,
-  hanldeCenturiesChange,
-  handleCenturiesReset,
-  resetFilters,
 }) => {
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        <a
-          className={sex === '' ? 'is-active' : ''}
-          // href="#/people"
-          onClick={() => handleSexChange('')}
-        >
-          All
-        </a>
-        <a
-          className={sex === 'm' ? 'is-active' : ''}
-          // href="#/people?sex=m"
-          onClick={() => handleSexChange('m')}
-        >
-          Male
-        </a>
-        <a
-          className={sex === 'f' ? 'is-active' : ''}
-          // href="#/people?sex=f"
-          onClick={() => handleSexChange('f')}
-        >
-          Female
-        </a>
+        {Object.entries(sexValues).map(([key, value]) => (
+          <SearchLink
+            params={{
+              sex: key === 'all' ? null : key,
+            }}
+            key={key}
+            className={
+              sex === key || (key === 'all' && sex === '') ? 'is-active' : ''
+            }
+          >
+            {value}
+          </SearchLink>
+        ))}
       </p>
 
       <div className="panel-block">
@@ -72,38 +63,48 @@ export const PeopleFilters: FC<Props> = ({
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
             {centuriesList.map(century => (
-              <a
+              <SearchLink
+                params={{
+                  centuries: centuries?.includes(century)
+                    ? centuries.filter(c => c !== century)
+                    : [...(centuries || []), century],
+                }}
                 key={century}
                 data-cy="century"
                 className={`button mr-1 ${
                   centuries?.includes(century) ? 'is-info' : ''
                 }`}
-                onClick={() => hanldeCenturiesChange(century)}
               >
                 {century}
-              </a>
+              </SearchLink>
             ))}
           </div>
 
           <div className="level-right ml-4">
-            <a
+            <SearchLink
+              params={{
+                centuries: null,
+              }}
               data-cy="centuryALL"
               className="button is-success is-outlined"
-              onClick={handleCenturiesReset}
             >
               All
-            </a>
+            </SearchLink>
           </div>
         </div>
       </div>
 
       <div className="panel-block">
-        <a
+        <SearchLink
+          params={{
+            centuries: null,
+            query: null,
+            sex: null,
+          }}
           className="button is-link is-outlined is-fullwidth"
-          onClick={resetFilters}
         >
           Reset all filters
-        </a>
+        </SearchLink>
       </div>
     </nav>
   );

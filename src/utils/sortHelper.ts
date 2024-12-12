@@ -1,9 +1,7 @@
-import { Person, SortParams } from '../types';
+import { Person } from '../types/Person';
+import { Params, SortColumns } from '../types/Filter';
 
-export const filterPeople = (
-  people: Person[],
-  params: SortParams,
-): Person[] => {
+export const filterPeople = (people: Person[], params: Params): Person[] => {
   const { sortBy, sortOrder, query, sex, centuries } = params;
 
   const getPersonCentury = (person: Person): number => {
@@ -13,14 +11,14 @@ export const filterPeople = (
   const filteredPeople = people
     .filter(person => person.name.toLowerCase().includes(query.toLowerCase()))
     .filter(person => {
-      if (sex === '') {
+      if (!sex) {
         return true;
       }
 
       return person.sex === sex;
     })
     .filter(person => {
-      if (centuries.length === 0) {
+      if (!centuries.length) {
         return true;
       }
 
@@ -28,7 +26,7 @@ export const filterPeople = (
     })
     .toSorted((person1, person2) => {
       switch (sortBy) {
-        case 'Born': {
+        case SortColumns.Born: {
           if (sortOrder === 'asc') {
             return person1.born - person2.born;
           }
@@ -40,7 +38,7 @@ export const filterPeople = (
           break;
         }
 
-        case 'Died': {
+        case SortColumns.Died: {
           if (sortOrder === 'asc') {
             return person1.died - person2.died;
           }
@@ -52,7 +50,7 @@ export const filterPeople = (
           break;
         }
 
-        case 'Name': {
+        case SortColumns.Name: {
           if (sortOrder === 'asc') {
             return person1.name.localeCompare(person2.name);
           }
@@ -64,7 +62,7 @@ export const filterPeople = (
           break;
         }
 
-        case 'Sex': {
+        case SortColumns.Sex: {
           if (sortOrder === 'asc') {
             return person1.sex.localeCompare(person2.sex);
           }

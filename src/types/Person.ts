@@ -9,18 +9,3 @@ export interface Person {
   mother?: Person;
   father?: Person;
 }
-
-export interface SortParams {
-  sortBy: 'Born' | 'Died' | 'Name' | 'Sex' | null;
-  sortOrder: 'asc' | 'desc' | null;
-  query: string;
-  sex: string;
-  centuries: number[];
-}
-
-export enum SortColumns {
-  Name = 'Name',
-  Sex = 'Sex',
-  Born = 'Born',
-  Died = 'Died',
-}
