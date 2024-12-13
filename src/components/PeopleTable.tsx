@@ -1,6 +1,5 @@
 import { FC } from 'react';
-import { Person } from '../types/Person';
-import { SortColumns } from '../types/Filter';
+import { Person, SortColumns } from '../types';
 import classNames from 'classnames';
 import { filterPeople } from '../utils/sortHelper';
 import { SearchLink } from './SearchLink';

@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { Person } from '../types/Person';
+import { Person } from '../types';
 import classNames from 'classnames';
 import { Link, useParams, useSearchParams } from 'react-router-dom';
 import ParentLink from './ParentLink';
