@@ -15,6 +15,7 @@
 - React Router
 - Fetch
 - API ([Mate](https://mate-academy.github.io/react_people-table/api/people.json))
+- searchParams
 
 ### Tools
 
