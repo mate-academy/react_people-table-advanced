@@ -1,10 +1,12 @@
 import './App.scss';
-import { Outlet, useLocation } from 'react-router-dom';
+import { Outlet } from 'react-router-dom';
 import { HomePage } from './components/HomePage';
 import { Navbar } from './components/Navbar';
+import { useContext } from 'react';
+import { PeopleContext } from './Context';
 
 export const App = () => {
-  const { pathname } = useLocation();
+  const { pathname } = useContext(PeopleContext);
 
   return (
     <div data-cy="app">

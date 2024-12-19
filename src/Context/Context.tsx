@@ -1,13 +1,15 @@
-import React, { createContext, useMemo, useState } from 'react';
+import React, { createContext, useEffect, useMemo, useState } from 'react';
 import { Person } from '../types/Person/Person';
 import { Filter } from '../enums/Filter';
-import { useSearchParams } from 'react-router-dom';
+import { useLocation, useSearchParams } from 'react-router-dom';
 import { SortValues } from '../enums/SortValues';
+import { getPeople } from '../api';
 
 // #region context
 
 interface PeopleContextType {
   searchParams: URLSearchParams;
+  pathname: string;
   people: Person[];
   filteredPeople: Person[];
   activeCenturies: string[];
@@ -18,10 +20,7 @@ interface PeopleContextType {
   sortParam: SortValues | null;
   orderParam: 'desc' | null;
   query: string;
-  setLoader: (value: boolean) => void;
-  setLoadingError: (value: boolean) => void;
   setFilter: (filter: Filter) => void;
-  setPeople: (people: Person[]) => void;
   queryHandler: (event: React.ChangeEvent<HTMLInputElement>) => void;
   centuriesHandler: (value: string) => void;
   resetHandler: () => void;
@@ -30,19 +29,17 @@ interface PeopleContextType {
 
 export const PeopleContext = createContext<PeopleContextType>({
   searchParams: new URLSearchParams(),
+  pathname: '',
   people: [],
   filteredPeople: [],
   activeCenturies: [],
   loader: false,
   filter: Filter.all,
   loadingError: false,
-  sexParam: '',
-  sortParam: SortValues.name,
-  orderParam: 'desc',
+  sexParam: null,
+  sortParam: null,
+  orderParam: null,
   query: '',
-  setLoader: () => {},
-  setLoadingError: () => {},
-  setPeople: () => {},
   setFilter: () => {},
   queryHandler: () => {},
   centuriesHandler: () => {},
@@ -75,6 +72,9 @@ export const PeopleProvider = ({ children }: { children: React.ReactNode }) => {
 
   // #endregion
   // #region variables
+
+  const { pathname } = useLocation();
+  const isStartWithPeop = pathname.startsWith('/people');
 
   const peopleByQuery = useMemo(() => {
     return people.filter(person => {
@@ -216,10 +216,25 @@ export const PeopleProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   // #endregion
+  // #region useEffects
+
+  useEffect(() => {
+    setLoader(true);
+
+    if (isStartWithPeop) {
+      getPeople()
+        .then(result => setPeople(result))
+        .catch(() => setLoadingError(true))
+        .finally(() => setLoader(false));
+    }
+  }, [isStartWithPeop]);
+
+  // #endregion
   // #region contextValue
 
   const contextValue = {
     searchParams,
+    pathname,
     people,
     filteredPeople,
     activeCenturies,
@@ -230,9 +245,6 @@ export const PeopleProvider = ({ children }: { children: React.ReactNode }) => {
     sortParam,
     orderParam,
     query,
-    setLoader,
-    setLoadingError,
-    setPeople,
     setFilter,
     queryHandler,
     centuriesHandler,

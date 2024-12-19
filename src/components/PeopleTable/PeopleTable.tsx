@@ -1,19 +1,19 @@
 import React, { useContext } from 'react';
 import { PeopleContext } from '../../Context';
 import classNames from 'classnames';
-import { Link, useLocation } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { SortValues } from '../../enums/SortValues';
 
 export const PeopleTable: React.FC = () => {
   const {
     searchParams,
+    pathname,
     people,
     filteredPeople,
     sortParam,
     orderParam,
     sortHandler,
   } = useContext(PeopleContext);
-  const { pathname } = useLocation();
 
   // #region functions
 
