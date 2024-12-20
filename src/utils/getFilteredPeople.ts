@@ -1,4 +1,5 @@
 import { Person } from '../types';
+import { combineFilter, filterByString } from './filtres';
 
 const filterByCentury = (centuries: string[]) => (person: Person) => {
   const century = Math.ceil(person.died / 100);
@@ -9,18 +10,17 @@ const filterByCentury = (centuries: string[]) => (person: Person) => {
 const filterBySex = (sex: string) => (person: Person) =>
   sex ? person.sex === sex : true;
 
-const filterByName = (queryName: string) => {
-  return ({ name, motherName, fatherName }: Person) =>
-    name.includes(queryName) ||
-    fatherName?.includes(queryName) ||
-    motherName?.includes(queryName);
-};
+const filterByName = (queryName: string) =>
+  filterByString<Person>(queryName, ['name', 'motherName', 'fatherName']);
 
 const combinedFilter =
-  (sex: string, centuries: string[], name: string) => (person: Person) =>
-    [filterBySex(sex), filterByCentury(centuries), filterByName(name)].every(
-      filterFn => filterFn(person),
-    );
+  (sex: string, centuries: string[], name: string) =>
+  (...args: [Person, number, Person[]]) =>
+    combineFilter(
+      filterBySex(sex),
+      filterByCentury(centuries),
+      filterByName(name),
+    )(...args);
 
 export const getFilteredPeople = (
   people: Person[],
