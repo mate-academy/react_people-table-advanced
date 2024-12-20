@@ -15,7 +15,7 @@ const Root = () => {
             <Route path=":slug" element={<PeoplePage />} />
           </Route>
           <Route path="*" element={<h1 className="title">Page not found</h1>} />
-          <Route path="home" element={<Navigate to="/" replace={true} />} />
+          <Route path="home" element={<Navigate to="/" replace />} />
         </Route>
       </Routes>
     </Router>

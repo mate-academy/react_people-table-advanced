@@ -6,6 +6,7 @@ import { PeopleFilters } from '../components/PeopleFilters';
 import { getCenturiesFromUrl, getCenturiesList } from '../utils/services';
 import { useSearchParams } from 'react-router-dom';
 import { getSearchWith, SearchParams } from '../utils/searchHelper';
+import { Status } from '../types';
 
 const PeoplePage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -28,14 +29,14 @@ const PeoplePage = () => {
     setSearchWith({ query: queryValue || null });
   };
 
-  let status = 'loading';
+  let status = Status.Loading;
 
   if (isPeopleError) {
-    status = 'error';
+    status = Status.Error;
   } else if (!isPeopleLoading && people.length > 0) {
-    status = 'loaded';
+    status = Status.Loaded;
   } else if (!isPeopleLoading && people.length === 0) {
-    status = 'empty';
+    status = Status.Empty;
   }
 
   return (
@@ -58,15 +59,15 @@ const PeoplePage = () => {
 
           <div className="column">
             <div className="box table-container">
-              {status === 'loading' && <Loader />}
+              {status === Status.Loading && <Loader />}
 
-              {status === 'error' && (
+              {status === Status.Error && (
                 <p data-cy="peopleLoadingError" className="has-text-danger">
                   Something went wrong
                 </p>
               )}
 
-              {status === 'loaded' && (
+              {status === Status.Loaded && (
                 <PeopleTable
                   people={people}
                   query={query}
@@ -77,7 +78,7 @@ const PeoplePage = () => {
                 />
               )}
 
-              {status === 'empty' && (
+              {status === Status.Empty && (
                 <p data-cy="noPeopleMessage">
                   There are no people on the server
                 </p>

@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { Person } from '../types';
+import { Parents, Person, PersonSex } from '../types';
 import classNames from 'classnames';
 import { Link, useParams, useSearchParams } from 'react-router-dom';
 import ParentLink from './ParentLink';
@@ -27,7 +27,7 @@ const PersonRow: FC<Props> = ({ person }) => {
             search: searchParams.toString(),
           }}
           className={classNames({
-            'has-text-danger': person.sex === 'f',
+            'has-text-danger': person.sex === PersonSex.Female,
           })}
         >
           {person.name}
@@ -38,10 +38,10 @@ const PersonRow: FC<Props> = ({ person }) => {
       <td>{person.born}</td>
       <td>{person.died}</td>
       <td>
-        <ParentLink person={person} parent={'mother'} />
+        <ParentLink person={person} parent={Parents.Mother} />
       </td>
       <td>
-        <ParentLink person={person} parent={'father'} />
+        <ParentLink person={person} parent={Parents.Father} />
       </td>
     </tr>
   );

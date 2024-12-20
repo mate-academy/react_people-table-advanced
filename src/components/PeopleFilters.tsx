@@ -1,5 +1,6 @@
 import { FC } from 'react';
 import { SearchLink } from './SearchLink';
+import { SexFilterValues } from '../types';
 
 type Props = {
   query: string;
@@ -7,12 +8,6 @@ type Props = {
   sex: string;
   centuriesList: string[];
   centuries: string[] | null;
-};
-
-const sexValues = {
-  all: 'All',
-  m: 'Male',
-  f: 'Female',
 };
 
 export const PeopleFilters: FC<Props> = ({
@@ -27,14 +22,16 @@ export const PeopleFilters: FC<Props> = ({
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        {Object.entries(sexValues).map(([key, value]) => (
+        {Object.entries(SexFilterValues).map(([key, value]) => (
           <SearchLink
             params={{
-              sex: key === 'all' ? null : key,
+              sex: value === 'All' ? null : key.toLowerCase(),
             }}
             key={key}
             className={
-              sex === key || (key === 'all' && sex === '') ? 'is-active' : ''
+              sex === key.toLowerCase() || (key === 'All' && sex === '')
+                ? 'is-active'
+                : ''
             }
           >
             {value}

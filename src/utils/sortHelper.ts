@@ -8,12 +8,16 @@ export const filterPeople = (people: Person[], params: Params): Person[] => {
   };
 
   const filteredPeople = people
-    .filter(person => person.name.toLowerCase().includes(query.toLowerCase()))
-    .filter(person => !sex || person.sex === sex)
-    .filter(
-      person =>
-        !centuries.length || centuries.includes(getPersonCentury(person)),
-    )
+    .filter(person => {
+      const filterByQuery = person.name
+        .toLowerCase()
+        .includes(query.toLowerCase());
+      const filterBySex = !sex || person.sex === sex;
+      const filterByCentury =
+        !centuries.length || centuries.includes(getPersonCentury(person));
+
+      return filterByQuery && filterBySex && filterByCentury;
+    })
     .toSorted((person1, person2) => {
       switch (sortBy) {
         case SortColumns.Born: {
