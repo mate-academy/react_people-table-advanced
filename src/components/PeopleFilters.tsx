@@ -1,18 +1,42 @@
-export const PeopleFilters = () => {
+import { FC } from 'react';
+import { SearchLink } from './SearchLink';
+import { SexFilterValues } from '../types';
+
+type Props = {
+  query: string;
+  handleQueryChange: (query: string) => void;
+  sex: string;
+  centuriesList: string[];
+  centuries: string[] | null;
+};
+
+export const PeopleFilters: FC<Props> = ({
+  query,
+  handleQueryChange,
+  sex,
+  centuriesList,
+  centuries,
+}) => {
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        <a className="is-active" href="#/people">
-          All
-        </a>
-        <a className="" href="#/people?sex=m">
-          Male
-        </a>
-        <a className="" href="#/people?sex=f">
-          Female
-        </a>
+        {Object.entries(SexFilterValues).map(([key, value]) => (
+          <SearchLink
+            params={{
+              sex: value === 'All' ? null : key.toLowerCase(),
+            }}
+            key={key}
+            className={
+              sex === key.toLowerCase() || (key === 'All' && sex === '')
+                ? 'is-active'
+                : ''
+            }
+          >
+            {value}
+          </SearchLink>
+        ))}
       </p>
 
       <div className="panel-block">
@@ -22,6 +46,8 @@ export const PeopleFilters = () => {
             type="search"
             className="input"
             placeholder="Search"
+            value={query}
+            onChange={event => handleQueryChange(event.target.value)}
           />
 
           <span className="icon is-left">
@@ -33,63 +59,49 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            <a
-              data-cy="century"
-              className="button mr-1"
-              href="#/people?centuries=16"
-            >
-              16
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=17"
-            >
-              17
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=18"
-            >
-              18
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=19"
-            >
-              19
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1"
-              href="#/people?centuries=20"
-            >
-              20
-            </a>
+            {centuriesList.map(century => (
+              <SearchLink
+                params={{
+                  centuries: centuries?.includes(century)
+                    ? centuries.filter(c => c !== century)
+                    : [...(centuries || []), century],
+                }}
+                key={century}
+                data-cy="century"
+                className={`button mr-1 ${
+                  centuries?.includes(century) ? 'is-info' : ''
+                }`}
+              >
+                {century}
+              </SearchLink>
+            ))}
           </div>
 
           <div className="level-right ml-4">
-            <a
+            <SearchLink
+              params={{
+                centuries: null,
+              }}
               data-cy="centuryALL"
               className="button is-success is-outlined"
-              href="#/people"
             >
               All
-            </a>
+            </SearchLink>
           </div>
         </div>
       </div>
 
       <div className="panel-block">
-        <a className="button is-link is-outlined is-fullwidth" href="#/people">
+        <SearchLink
+          params={{
+            centuries: null,
+            query: null,
+            sex: null,
+          }}
+          className="button is-link is-outlined is-fullwidth"
+        >
           Reset all filters
-        </a>
+        </SearchLink>
       </div>
     </nav>
   );
