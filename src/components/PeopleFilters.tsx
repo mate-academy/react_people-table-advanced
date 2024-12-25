@@ -1,4 +1,10 @@
-export const PeopleFilters = () => {
+import { Person } from '../types';
+
+type Props = {
+  people: Person[];
+};
+
+export const PeopleFilters: React.FC<Props> = () => {
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
