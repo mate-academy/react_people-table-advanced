@@ -1,71 +1,53 @@
-import { NavLink } from 'react-router-dom';
-import { Person, Sex } from '../types';
+import { v4 as uuid } from 'uuid';
 import cn from 'classnames';
+
 import { NO_PARENT } from '../constans/personConstants';
 
-type PersonProps = {
+import { PersonLink } from './PersonLink';
+import { Person } from '../types';
+
+type Props = {
   person: Person;
-  currentSlug: string;
+  people: Person[];
+  selected: boolean;
 };
 
-export const PersonTableRow: React.FC<PersonProps> = ({
+export const PeopleTableRow: React.FC<Props> = ({
   person,
-  currentSlug,
+  people,
+  selected,
 }) => {
-  const {
-    slug,
-    name,
-    sex,
-    born,
-    died,
-    mother,
-    father,
-    motherName,
-    fatherName,
-  } = person;
+  const { sex, born, died, motherName, fatherName } = person;
+
+  const mother = people.find(mom => mom.name === motherName);
+  const father = people.find(dad => dad.name === fatherName);
 
   return (
-    <>
-      <tr
-        data-cy="person"
-        key={slug}
-        className={cn({ 'has-background-warning': slug === currentSlug })}
-      >
-        <td>
-          <NavLink
-            to={`/people/${slug}`}
-            className={cn({
-              'has-text-danger': sex === Sex.Female,
-            })}
-          >
-            {name}
-          </NavLink>
-        </td>
-
-        <td>{sex}</td>
-
-        <td>{born}</td>
-
-        <td>{died}</td>
-
-        <td>
-          {mother ? (
-            <NavLink to={`/people/${mother.slug}`} className="has-text-danger">
-              {mother.name}
-            </NavLink>
-          ) : (
-            motherName || NO_PARENT
-          )}
-        </td>
-
-        <td>
-          {father ? (
-            <NavLink to={`/people/${father.slug}`}>{father.name}</NavLink>
-          ) : (
-            fatherName || NO_PARENT
-          )}
-        </td>
-      </tr>
-    </>
+    <tr
+      data-cy="person"
+      key={uuid()}
+      className={cn({ 'has-background-warning': selected })}
+    >
+      <td>
+        <PersonLink person={person} />
+      </td>
+      <td>{sex}</td>
+      <td>{born}</td>
+      <td>{died}</td>
+      <td>
+        {mother ? (
+          <PersonLink person={mother} />
+        ) : (
+          <p>{motherName || NO_PARENT}</p>
+        )}
+      </td>
+      <td>
+        {father ? (
+          <PersonLink person={father} />
+        ) : (
+          <p>{fatherName || NO_PARENT}</p>
+        )}
+      </td>
+    </tr>
   );
 };

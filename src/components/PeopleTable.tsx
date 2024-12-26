@@ -1,29 +1,47 @@
-/* eslint-disable jsx-a11y/control-has-associated-label */
-import { useParams } from 'react-router-dom';
+import {
+  NavLink,
+  useLocation,
+  useParams,
+  useSearchParams,
+} from 'react-router-dom';
 import { Person } from '../types';
-import { COLUMNS } from '../constans/personConstants';
-import { PersonTableRow } from '../components/PersonTableRow';
+import { iconClass } from '../utils/iconClass';
+import { getSearchWith, SearchParams } from '../utils/searchHelper';
+import { PeopleTableRow } from './PersonTableRow';
 
 type Props = {
   people: Person[];
 };
 
-export const PeopleTable: React.FC<Props> = props => {
-  const { people } = props;
+export const PeopleTable: React.FC<Props> = ({ people }) => {
+  const { personSlug } = useParams();
+  const { pathname } = useLocation();
+  const [searchParams, setSearchParams] = useSearchParams();
 
-  const { slug: currentSlug } = useParams();
+  const sort = searchParams.get('sort') || '';
+  const order = searchParams.get('order') || '';
 
-  const findParent = (parentName: string | null): Person | null => {
-    return people.find(person => person.name === parentName) || null;
+  const setSearchWith = (newParam: SearchParams): void | string => {
+    const newSearch = getSearchWith(searchParams, newParam);
+
+    setSearchParams(newSearch);
   };
 
-  const preparedPeople = people.map(person => {
-    return {
-      ...person,
-      mother: findParent(person.motherName),
-      father: findParent(person.fatherName),
-    };
-  });
+  const handleSort = (sortField: string) => {
+    if (sort === sortField) {
+      if (order) {
+        setSearchWith({ sort: null, order: null });
+
+        return;
+      }
+
+      setSearchWith({ order: 'desc' });
+
+      return;
+    }
+
+    setSearchWith({ sort: sortField });
+  };
 
   return (
     <table
@@ -32,31 +50,83 @@ export const PeopleTable: React.FC<Props> = props => {
     >
       <thead>
         <tr>
-          {COLUMNS.map((column, index) => (
-            <th key={index}>
-              <span className="is-flex is-flex-wrap-nowrap">
-                {column}
-                <a href="#/people?sort=name">
-                  <span className="icon">
-                    <i className="fas fa-sort" />
-                  </span>
-                </a>
-              </span>
-            </th>
-          ))}
+          <th>
+            <span className="is-flex is-flex-wrap-nowrap">
+              Name
+              <NavLink
+                to={`${pathname}?${searchParams.toString()}`}
+                onClick={event => {
+                  event.preventDefault();
+                  handleSort('name');
+                }}
+              >
+                <span className="icon">
+                  <i className={`fas ${iconClass('name', sort, order)}`} />
+                </span>
+              </NavLink>
+            </span>
+          </th>
+          <th>
+            <span className="is-flex is-flex-wrap-nowrap">
+              Sex
+              <NavLink
+                to={`#${pathname}?${searchParams.toString()}`}
+                onClick={event => {
+                  event.preventDefault();
+                  handleSort('sex');
+                }}
+              >
+                <span className="icon">
+                  <i className={`fas ${iconClass('sex', sort, order)}`} />
+                </span>
+              </NavLink>
+            </span>
+          </th>
+          <th>
+            <span className="is-flex is-flex-wrap-nowrap">
+              Born
+              <NavLink
+                to={`#${pathname}?${searchParams.toString()}`}
+                onClick={event => {
+                  event.preventDefault();
+                  handleSort('born');
+                }}
+              >
+                <span className="icon">
+                  <i className={`fas ${iconClass('born', sort, order)}`} />
+                </span>
+              </NavLink>
+            </span>
+          </th>
+          <th>
+            <span className="is-flex is-flex-wrap-nowrap">
+              Died
+              <NavLink
+                to={`#${pathname}?${searchParams.toString()}`}
+                onClick={event => {
+                  event.preventDefault();
+                  handleSort('died');
+                }}
+              >
+                <span className="icon">
+                  <i className={`fas ${iconClass('died', sort, order)}`} />
+                </span>
+              </NavLink>
+            </span>
+          </th>
+          <th>Mother</th>
+          <th>Father</th>
         </tr>
       </thead>
-
       <tbody>
-        {preparedPeople.map(person => {
-          return (
-            <PersonTableRow
-              key={person.slug}
-              person={person}
-              currentSlug={currentSlug || ''}
-            />
-          );
-        })}
+        {people.map(person => (
+          <PeopleTableRow
+            key={person.slug}
+            person={person}
+            people={people}
+            selected={person.slug === personSlug}
+          />
+        ))}
       </tbody>
     </table>
   );

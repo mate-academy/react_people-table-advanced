@@ -1,29 +1,41 @@
-import { useState, useEffect } from 'react';
-import { getPeople } from '../api';
-import { Person } from '../types';
-
 import { PeopleFilters } from '../components/PeopleFilters';
-import { PeopleTable } from '../components/PeopleTable';
 import { Loader } from '../components/Loader/Loader';
+import { PeopleTable } from '../components/PeopleTable';
+import { getPeople } from '../api';
+import { useEffect, useState } from 'react';
+import { Person } from '../types';
+import { useSearchParams } from 'react-router-dom';
+import { filterPeople } from '../utils/filterPeople';
 
-export const PeoplePage: React.FC = () => {
+export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);
-  const [isError, setIsError] = useState<boolean>(false);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [peopleLoadError, setPeopleLoadError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
-  const isTableVisable = !isError && !isLoading && !!people.length;
-  const isErrorVisable = isError && !isLoading;
-  const isEmptyMassageVisable = !people.length && !isLoading;
-  const isNoMatchPeople = !!people.length && !isLoading && !isError; //маю дописати і винести функціонал в utils
+  const [searchParams] = useSearchParams();
+  const sex = searchParams.get('sex') || '';
+  const query = searchParams.get('query') || '';
+  const centuries = searchParams.getAll('centuries') || [];
+  const sort = searchParams.get('sort') || '';
+  const order = searchParams.get('order') || '';
 
   useEffect(() => {
+    setIsLoading(true);
+
     getPeople()
       .then(setPeople)
-      .catch(() => setIsError(true))
-      .finally(() => {
-        setIsLoading(false);
-      });
+      .catch(() => setPeopleLoadError('Something went wrong'))
+      .finally(() => setIsLoading(false));
   }, []);
+
+  const filteredPeople = filterPeople(
+    people,
+    sex,
+    query,
+    centuries,
+    sort,
+    order,
+  );
 
   return (
     <>
@@ -32,28 +44,30 @@ export const PeoplePage: React.FC = () => {
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
           <div className="column is-7-tablet is-narrow-desktop">
-            <PeopleFilters people={people} />
+            {people.length > 0 && !isLoading && <PeopleFilters />}
           </div>
 
           <div className="column">
             <div className="box table-container">
               {isLoading && <Loader />}
 
-              {isErrorVisable && (
-                <p data-cy="peopleLoadingError">Something went wrong</p>
+              {peopleLoadError && !isLoading && (
+                <p data-cy="peopleLoadingError">{peopleLoadError}</p>
               )}
 
-              {isEmptyMassageVisable && (
+              {!people.length && !isLoading && (
                 <p data-cy="noPeopleMessage">
                   There are no people on the server
                 </p>
               )}
 
-              {isNoMatchPeople && (
+              {!filteredPeople.length && !isLoading && (
                 <p>There are no people matching the current search criteria</p>
               )}
 
-              {isTableVisable && <PeopleTable people={people} />}
+              {!!filteredPeople.length && !isLoading && (
+                <PeopleTable people={filteredPeople} />
+              )}
             </div>
           </div>
         </div>
