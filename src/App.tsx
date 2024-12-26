@@ -2,12 +2,12 @@
 import { Outlet } from 'react-router-dom';
 
 import './App.scss';
-import { Navbar } from './components/NavBar';
+import { NavBar } from './components/NavBar';
 
 export const App = () => {
   return (
     <div data-cy="app">
-      <Navbar />
+      <NavBar />
 
       <div className="section">
         <div className="container">
