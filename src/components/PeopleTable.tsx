@@ -1,4 +1,4 @@
-import { NavLink, useParams, useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import { Person } from '../types';
 import cn from 'classnames';
 import { Sex } from '../types';
@@ -24,10 +24,20 @@ export const PeopleTable: React.FC<Props> = props => {
     return people.some(person => person.name === name);
   };
 
-  const { slug } = useParams();
-
-  // fa-sort-up fa-sort-down
   const [searchParams, setSearchParams] = useSearchParams();
+  const slug = searchParams.get('slug');
+
+  const handleSlug = (
+    param: string,
+    event: React.MouseEvent<HTMLAnchorElement, MouseEvent>,
+  ) => {
+    event.preventDefault();
+    const params = new URLSearchParams(searchParams);
+
+    params.set('slug', param);
+
+    setSearchParams(params);
+  };
 
   const handleSortByCategory = (
     category: SortCategory,
@@ -144,35 +154,44 @@ export const PeopleTable: React.FC<Props> = props => {
             className={cn({ 'has-background-warning': person.slug === slug })}
           >
             <td>
-              <NavLink
+              <a
                 className={cn({
                   'has-text-danger': person.sex === Sex.Female,
                 })}
-                to={`${person.slug}`}
+                href={`${person.slug}`}
+                onClick={event => handleSlug(person.slug || '', event)}
               >
                 {person.name}
-              </NavLink>
+              </a>
             </td>
             <td>{person.sex}</td>
             <td>{person.born}</td>
             <td>{person.died}</td>
             <td>
               {isInTheList(person.motherName) ? (
-                <NavLink
-                  to={`${person.mother?.slug}`}
+                <a
+                  href={`${person.mother?.slug}`}
                   className={'has-text-danger'}
+                  onClick={event => {
+                    handleSlug(person.mother?.slug || '', event);
+                  }}
                 >
                   {person.motherName}
-                </NavLink>
+                </a>
               ) : (
                 person.motherName || '-'
               )}
             </td>
             <td>
               {isInTheList(person.fatherName) ? (
-                <NavLink to={`${person.father?.slug}`}>
+                <a
+                  href={`${person.father?.slug}`}
+                  onClick={event =>
+                    handleSlug(person.father?.slug || '', event)
+                  }
+                >
                   {person.fatherName}
-                </NavLink>
+                </a>
               ) : (
                 person.fatherName || '-'
               )}

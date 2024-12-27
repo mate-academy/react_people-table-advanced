@@ -10,7 +10,12 @@ export const PeopleFilters = () => {
   const handleQuery = (event: React.ChangeEvent<HTMLInputElement>) => {
     const params = new URLSearchParams(searchParams);
 
-    params.set('query', event.target.value);
+    if (event.target.value.length === 0) {
+      params.delete('query');
+    } else {
+      params.set('query', event.target.value);
+    }
+
     setSearchParams(params);
   };
 
@@ -21,7 +26,12 @@ export const PeopleFilters = () => {
     event.preventDefault();
     const params = new URLSearchParams(searchParams);
 
-    params.set('sex', gender);
+    if (gender === Sex.All) {
+      params.delete('sex');
+    } else {
+      params.set('sex', gender);
+    }
+
     setSearchParams(params);
   };
 
