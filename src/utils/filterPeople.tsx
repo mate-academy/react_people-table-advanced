@@ -11,7 +11,7 @@ export const filterPeople = (
   let filteredPeople = [...people];
 
   if (query && query.trim()) {
-    const queryToLower = query.toLocaleLowerCase();
+    const queryToLower = query.toLowerCase();
 
     filteredPeople = filteredPeople.filter(
       person =>
@@ -39,9 +39,7 @@ export const filterPeople = (
     switch (sort) {
       case 'name':
         filteredPeople.sort((person1, person2) =>
-          person1.name
-            .toLowerCase()
-            .localeCompare(person2.name.toLocaleLowerCase()),
+          person1.name.toLowerCase().localeCompare(person2.name.toLowerCase()),
         );
         break;
 
