@@ -70,11 +70,17 @@ export const PeopleFilters = () => {
     return centuries.includes(century) ? 'is-info' : '';
   };
 
-  const hadleReset = (
+  const handleReset = (
     event: React.MouseEvent<HTMLAnchorElement, MouseEvent>,
   ) => {
     event.preventDefault();
-    setSearchParams({});
+    const params = new URLSearchParams(searchParams);
+
+    params.delete('query');
+    params.delete('sex');
+    params.delete('centuries');
+
+    setSearchParams(params);
   };
 
   const genderSelection = [
@@ -165,7 +171,7 @@ export const PeopleFilters = () => {
         <a
           className="button is-link is-outlined is-fullwidth"
           href="#/people"
-          onClick={event => hadleReset(event)}
+          onClick={event => handleReset(event)}
         >
           Reset all filters
         </a>

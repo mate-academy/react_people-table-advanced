@@ -31,6 +31,8 @@ export const PeoplePage = () => {
   const sex = searchParams.get('sex');
   const query = searchParams.get('query');
   const centuries = searchParams.getAll('centuries');
+  const sort = searchParams.get('sort');
+  const order = searchParams.get('order');
 
   const filteredPeople = people
     .filter(person => {
@@ -60,6 +62,45 @@ export const PeoplePage = () => {
 
       return true;
     });
+
+  if (sort) {
+    switch (sort) {
+      case 'name':
+        const result = filteredPeople.sort((person1, person2) => {
+          return person1.name
+            .toLowerCase()
+            .localeCompare(person2.name.toLowerCase());
+        });
+
+        if (order === 'desc') {
+          result.reverse();
+        }
+
+        break;
+      case 'sex':
+        const result2 = filteredPeople.sort((person1, person2) => {
+          return person1.sex
+            .toLowerCase()
+            .localeCompare(person2.sex.toLowerCase());
+        });
+
+        if (order === 'desc') {
+          result2.reverse();
+        }
+
+        break;
+
+      case 'born':
+      case 'died':
+        const result3 = filteredPeople.sort((person1, person2) => {
+          return person1.born - person2.born;
+        });
+
+        if (order === 'desc') {
+          result3.reverse();
+        }
+    }
+  }
 
   const shouldShowLengthError = people.length === 0 && !error;
   const shouldRenderPeople = !isLoading && !error && people.length > 0;
