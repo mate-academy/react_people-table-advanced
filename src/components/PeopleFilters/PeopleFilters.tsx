@@ -1,4 +1,4 @@
-import debounce from 'lodash.debounce';
+import { debounce } from 'lodash';
 import { useSearchParams } from 'react-router-dom';
 import { useCallback, useEffect } from 'react';
 import classNames from 'classnames';
