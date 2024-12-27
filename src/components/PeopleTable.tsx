@@ -70,7 +70,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
             <span className="is-flex is-flex-wrap-nowrap">
               Sex
               <NavLink
-                to={`#${pathname}?${searchParams.toString()}`}
+                to={`${pathname}?${searchParams.toString()}`}
                 onClick={event => {
                   event.preventDefault();
                   handleSort('sex');
@@ -86,7 +86,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
             <span className="is-flex is-flex-wrap-nowrap">
               Born
               <NavLink
-                to={`#${pathname}?${searchParams.toString()}`}
+                to={`${pathname}?${searchParams.toString()}`}
                 onClick={event => {
                   event.preventDefault();
                   handleSort('born');
@@ -102,7 +102,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
             <span className="is-flex is-flex-wrap-nowrap">
               Died
               <NavLink
-                to={`#${pathname}?${searchParams.toString()}`}
+                to={`${pathname}?${searchParams.toString()}`}
                 onClick={event => {
                   event.preventDefault();
                   handleSort('died');
