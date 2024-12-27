@@ -1,17 +1,18 @@
-import { useParams } from 'react-router-dom';
+import { useParams, useSearchParams } from 'react-router-dom';
 import classNames from 'classnames';
 
 import { Person } from '../../types';
 import { PersonLink } from '../PersonLink';
 
 type Props = {
-  peopleData: Person[];
+  filteredPeople: Person[];
 };
 
 /* eslint-disable jsx-a11y/control-has-associated-label */
-export const PeopleTable: React.FC<Props> = ({ peopleData }) => {
+export const PeopleTable: React.FC<Props> = ({ filteredPeople }) => {
   const { slug } = useParams();
-  const isSelect = peopleData.find(person => person.slug === slug);
+  const [searchParams] = useSearchParams();
+  const isSelect = filteredPeople.find(person => person.slug === slug);
 
   return (
     <table
@@ -70,11 +71,22 @@ export const PeopleTable: React.FC<Props> = ({ peopleData }) => {
       </thead>
 
       <tbody>
-        {peopleData.map(person => {
+        {filteredPeople.map(person => {
           const { sex, born, died, fatherName, motherName, slug } = person;
 
-          const mother = peopleData.find(p => p.name === motherName);
-          const father = peopleData.find(p => p.name === fatherName);
+          const getParent = (parentName: string | null) => {
+            if (!parentName) return '-';
+
+            const parent = filteredPeople.find(
+              ({ name }) => name === parentName,
+            );
+
+            return parent ? (
+              <PersonLink person={parent} search={searchParams.toString()} />
+            ) : (
+              parentName
+            );
+          };
 
           return (
             <tr
@@ -90,8 +102,8 @@ export const PeopleTable: React.FC<Props> = ({ peopleData }) => {
               <td>{sex}</td>
               <td>{born}</td>
               <td>{died}</td>
-              <td>{mother ? <PersonLink person={mother} /> : '-'}</td>
-              <td>{father ? <PersonLink person={father} /> : '-'}</td>
+              <td>{getParent(motherName)}</td>
+              <td>{getParent(fatherName)}</td>
             </tr>
           );
         })}

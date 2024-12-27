@@ -1,5 +1,5 @@
 import { debounce } from 'lodash';
-import { useSearchParams } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { useCallback, useEffect } from 'react';
 import classNames from 'classnames';
 import { SearchLink } from '../SearchLink';
@@ -76,7 +76,6 @@ export const PeopleFilters = () => {
             type="search"
             className="input"
             placeholder="Search"
-            value={query}
             onChange={handleQueryChange}
           />
 
@@ -120,9 +119,12 @@ export const PeopleFilters = () => {
       </div>
 
       <div className="panel-block">
-        <a className="button is-link is-outlined is-fullwidth" href="#/people">
+        <Link
+          className="button is-link is-outlined is-fullwidth"
+          to={{ search: '' }}
+        >
           Reset all filters
-        </a>
+        </Link>
       </div>
     </nav>
   );

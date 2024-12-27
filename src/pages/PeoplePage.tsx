@@ -1,14 +1,16 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 import { Loader } from '../components/Loader';
 import { PeopleFilters } from '../components/PeopleFilters';
 import { PeopleTable } from '../components/PeopleTable';
 import { Person } from '../types';
+import { useSearchParams } from 'react-router-dom';
 
 export const PeoplePage = () => {
   const [peopleData, setPeopleData] = useState<Person[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
+  const [searchParams] = useSearchParams();
 
   const fetchPeopleData = async () => {
     try {
@@ -30,6 +32,23 @@ export const PeoplePage = () => {
     fetchPeopleData();
   }, []);
 
+  console.log(peopleData);
+
+  const filteredPeople = useMemo(() => {
+    const query = searchParams.get('query')?.toLowerCase() || '';
+    const sex = searchParams.get('sex');
+    const centuries = searchParams.getAll('centuries').map(Number);
+
+    return peopleData.filter(person => {
+      const matchesQuery = !query || person.name.toLowerCase().includes(query);
+      const matchesSex = !sex || person.sex === sex;
+      const matchesCentury =
+        !centuries.length || centuries.includes(Math.ceil(person.died / 100));
+
+      return matchesQuery && matchesSex && matchesCentury;
+    });
+  }, [peopleData, searchParams]);
+
   return (
     <>
       <h1 className="title">People Page</h1>
@@ -50,15 +69,23 @@ export const PeoplePage = () => {
                 </p>
               )}
 
-              {peopleData.length === 0 && !isLoading && !error && (
+              {!isLoading && !error && peopleData.length === 0 && (
                 <p data-cy="noPeopleMessage">
                   There are no people on the server
                 </p>
               )}
 
-              <p>There are no people matching the current search criteria</p>
-              {peopleData.length > 0 && !isLoading && !error && (
-                <PeopleTable peopleData={peopleData} />
+              {!isLoading &&
+                !error &&
+                peopleData.length > 0 &&
+                filteredPeople.length === 0 && (
+                  <p>
+                    There are no people matching the current search criteria
+                  </p>
+                )}
+
+              {!isLoading && !error && filteredPeople.length > 0 && (
+                <PeopleTable filteredPeople={filteredPeople} />
               )}
             </div>
           </div>
