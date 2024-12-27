@@ -7,7 +7,7 @@ const getLinkClass = ({ isActive }: { isActive: boolean }) =>
   classNames('navbar-item', { 'has-background-grey-lighter': isActive });
 
 export const App = () => (
-  <div data-cy="app">
+  <div data-cy="app" className="app">
     <nav
       data-cy="nav"
       className="navbar is-fixed-top has-shadow"
