@@ -8,7 +8,7 @@ import { App } from './App';
 import { PeopleProvider } from './store/PeopleContext';
 import { HomePage } from './pages/HomePage';
 import { PeoplePage } from './pages/PeoplePage';
-import { NotFoundPage } from './pages/NotFoundPage ';
+import { NotFoundPage } from './pages/NotFoundPage';
 
 export const Root = () => {
   return (
