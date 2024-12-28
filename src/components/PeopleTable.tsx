@@ -8,6 +8,7 @@ import { Person } from '../types';
 import { iconClass } from '../utils/iconClass';
 import { getSearchWith, SearchParams } from '../utils/searchHelper';
 import { PeopleTableRow } from './PersonTableRow';
+import { COLUMNS } from '../constans/personConstants';
 
 type Props = {
   people: Person[];
@@ -50,72 +51,28 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
     >
       <thead>
         <tr>
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Name
-              <NavLink
-                to={`${pathname}?${searchParams.toString()}`}
-                onClick={event => {
-                  event.preventDefault();
-                  handleSort('name');
-                }}
-              >
-                <span className="icon">
-                  <i className={`fas ${iconClass('name', sort, order)}`} />
-                </span>
-              </NavLink>
-            </span>
-          </th>
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Sex
-              <NavLink
-                to={`${pathname}?${searchParams.toString()}`}
-                onClick={event => {
-                  event.preventDefault();
-                  handleSort('sex');
-                }}
-              >
-                <span className="icon">
-                  <i className={`fas ${iconClass('sex', sort, order)}`} />
-                </span>
-              </NavLink>
-            </span>
-          </th>
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Born
-              <NavLink
-                to={`${pathname}?${searchParams.toString()}`}
-                onClick={event => {
-                  event.preventDefault();
-                  handleSort('born');
-                }}
-              >
-                <span className="icon">
-                  <i className={`fas ${iconClass('born', sort, order)}`} />
-                </span>
-              </NavLink>
-            </span>
-          </th>
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Died
-              <NavLink
-                to={`${pathname}?${searchParams.toString()}`}
-                onClick={event => {
-                  event.preventDefault();
-                  handleSort('died');
-                }}
-              >
-                <span className="icon">
-                  <i className={`fas ${iconClass('died', sort, order)}`} />
-                </span>
-              </NavLink>
-            </span>
-          </th>
-          <th>Mother</th>
-          <th>Father</th>
+          {COLUMNS.map(column => (
+            <th key={column}>
+              <span className="is-flex is-flex-wrap-nowrap">
+                {column}
+                {['Name', 'Sex', 'Born', 'Died'].includes(column) && (
+                  <NavLink
+                    to={`${pathname}?${searchParams.toString()}`}
+                    onClick={event => {
+                      event.preventDefault();
+                      handleSort(column.toLowerCase());
+                    }}
+                  >
+                    <span className="icon">
+                      <i
+                        className={`fas ${iconClass(column.toLowerCase(), sort, order)}`}
+                      />
+                    </span>
+                  </NavLink>
+                )}
+              </span>
+            </th>
+          ))}
         </tr>
       </thead>
       <tbody>
