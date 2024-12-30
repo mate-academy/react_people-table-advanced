@@ -37,6 +37,12 @@ export const PeoplePage = () => {
     order,
   );
 
+  const showFilters = !!people.length && !isLoading;
+  const isEmptyMessageVisible = !people.length && !isLoading;
+  const isPeopleLoad = peopleLoadError && !isLoading;
+  const isEmpty = !filteredPeople.length && !isLoading;
+  const hasPeople = !!filteredPeople.length && !isLoading;
+
   return (
     <>
       <h1 className="title">People Page</h1>
@@ -44,30 +50,28 @@ export const PeoplePage = () => {
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
           <div className="column is-7-tablet is-narrow-desktop">
-            {!!people.length && !isLoading && <PeopleFilters />}
+            {showFilters && <PeopleFilters />}
           </div>
 
           <div className="column">
             <div className="box table-container">
               {isLoading && <Loader />}
 
-              {peopleLoadError && !isLoading && (
+              {isPeopleLoad && (
                 <p data-cy="peopleLoadingError">{peopleLoadError}</p>
               )}
 
-              {!people.length && !isLoading && (
+              {isEmptyMessageVisible && (
                 <p data-cy="noPeopleMessage">
                   There are no people on the server
                 </p>
               )}
 
-              {!filteredPeople.length && !isLoading && (
+              {isEmpty && (
                 <p>There are no people matching the current search criteria</p>
               )}
 
-              {!!filteredPeople.length && !isLoading && (
-                <PeopleTable people={filteredPeople} />
-              )}
+              {hasPeople && <PeopleTable people={filteredPeople} />}
             </div>
           </div>
         </div>
