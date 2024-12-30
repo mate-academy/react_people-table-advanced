@@ -14,8 +14,8 @@ type Props = Omit<LinkProps, 'to'> & {
  * and the other existing search params (see `getSearchWith`)
  */
 export const SearchLink: React.FC<Props> = ({
-  children, // this is the content between the open and closing tags
-  params, // the params to be updated in the `search`
+  children,
+  params,
   ...props // all usual Link props like `className`, `style` and `id`
 }) => {
   const [searchParams] = useSearchParams();
