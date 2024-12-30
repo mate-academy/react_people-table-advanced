@@ -1,4 +1,5 @@
 import { Person } from '../types';
+import { SortFilters } from './filterHelpers';
 
 type FilterParams = {
   preparedPeople: Person[];
@@ -44,23 +45,18 @@ export function filterPeople({
       return true;
     })
     .sort((person1, person2) => {
-      if (sort === 'name') {
-        return person1.name.localeCompare(person2.name);
+      switch (sort) {
+        case SortFilters.Name:
+          return person1.name.localeCompare(person2.name);
+        case SortFilters.Sex:
+          return person1.sex.localeCompare(person2.sex);
+        case SortFilters.Born:
+          return person1.born - person2.born;
+        case SortFilters.Died:
+          return person1.died - person2.died;
+        default:
+          return 0;
       }
-
-      if (sort === 'sex') {
-        return person1.sex.localeCompare(person2.sex);
-      }
-
-      if (sort === 'born') {
-        return person1.born - person2.born;
-      }
-
-      if (sort === 'died') {
-        return person1.died - person2.died;
-      }
-
-      return 0;
     });
 
   if (order === 'desc') {

@@ -3,7 +3,7 @@ import cn from 'classnames';
 import { Person } from '../types';
 import { PersonLink } from './PeopleLink';
 import { useParams, useSearchParams } from 'react-router-dom';
-import { SORT_FILTERS } from '../utils/filterHelpers';
+import { SortFilters } from '../utils/filterHelpers';
 import { SearchLink } from './SearchLink';
 
 type Props = {
@@ -27,48 +27,51 @@ export const PeopleTable: React.FC<Props> = props => {
         >
           <thead>
             <tr>
-              {Object.keys(SORT_FILTERS).map(sortFilter => (
-                <th key={sortFilter}>
-                  <span className="is-flex is-flex-wrap-nowrap">
-                    {sortFilter}
-                    <SearchLink
-                      params={{
-                        sort:
-                          sort === SORT_FILTERS[sortFilter] && order === 'desc'
-                            ? null
-                            : SORT_FILTERS[sortFilter],
-                        order:
-                          sort === SORT_FILTERS[sortFilter]
-                            ? order === 'desc'
+              {Object.values(SortFilters).map(sortFilter => {
+                const filterTitle =
+                  sortFilter.charAt(0).toUpperCase() + sortFilter.slice(1);
+
+                return (
+                  <th key={sortFilter}>
+                    <span className="is-flex is-flex-wrap-nowrap">
+                      {filterTitle}
+                      <SearchLink
+                        params={{
+                          sort:
+                            sort === sortFilter && order === 'desc'
                               ? null
-                              : 'desc'
-                            : null,
-                      }}
-                    >
-                      <span className="icon">
-                        <i
-                          className={cn(
-                            'fas',
-                            {
-                              'fa-sort': sort !== SORT_FILTERS[sortFilter],
-                            },
-                            {
-                              'fa-sort-up':
-                                sort === SORT_FILTERS[sortFilter] &&
-                                order !== 'desc',
-                            },
-                            {
-                              'fa-sort-down':
-                                sort === SORT_FILTERS[sortFilter] &&
-                                order === 'desc',
-                            },
-                          )}
-                        />
-                      </span>
-                    </SearchLink>
-                  </span>
-                </th>
-              ))}
+                              : sortFilter,
+                          order:
+                            sort === sortFilter
+                              ? order === 'desc'
+                                ? null
+                                : 'desc'
+                              : null,
+                        }}
+                      >
+                        <span className="icon">
+                          <i
+                            className={cn(
+                              'fas',
+                              {
+                                'fa-sort': sort !== sortFilter,
+                              },
+                              {
+                                'fa-sort-up':
+                                  sort === sortFilter && order !== 'desc',
+                              },
+                              {
+                                'fa-sort-down':
+                                  sort === sortFilter && order === 'desc',
+                              },
+                            )}
+                          />
+                        </span>
+                      </SearchLink>
+                    </span>
+                  </th>
+                );
+              })}
 
               <th>Mother</th>
               <th>Father</th>

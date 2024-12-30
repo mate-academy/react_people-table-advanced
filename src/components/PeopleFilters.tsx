@@ -2,7 +2,7 @@ import cn from 'classnames';
 import { useSearchParams } from 'react-router-dom';
 import { getSearchWith, SearchParams } from '../utils/searchHelper';
 import { SearchLink } from './SearchLink';
-import { SEX_FILTERS, FILTER_CENTURIES } from '../utils/filterHelpers';
+import { SexFilters, FILTER_CENTURIES } from '../utils/filterHelpers';
 
 export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -21,15 +21,23 @@ export const PeopleFilters = () => {
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        {Object.keys(SEX_FILTERS).map(sexFilter => (
-          <SearchLink
-            params={{ sex: SEX_FILTERS[sexFilter] }}
-            key={sexFilter}
-            className={cn({ 'is-active': sex === SEX_FILTERS[sexFilter] })}
-          >
-            {sexFilter}
-          </SearchLink>
-        ))}
+        {Object.values(SexFilters).map(sexFilter => {
+          const sexValue = sexFilter.charAt(0);
+          const filterTitle = sexValue.toUpperCase() + sexFilter.slice(1);
+
+          return (
+            <SearchLink
+              params={{ sex: sexFilter === 'all' ? null : sexValue }}
+              key={sexFilter}
+              className={cn({
+                'is-active':
+                  sex === sexValue || (sex === null && sexFilter === 'all'),
+              })}
+            >
+              {filterTitle}
+            </SearchLink>
+          );
+        })}
       </p>
 
       <div className="panel-block">
@@ -54,22 +62,26 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            {FILTER_CENTURIES.map(century => (
-              <SearchLink
-                params={{
-                  centuries: centuries.includes(century)
-                    ? centuries.filter(current => century !== current)
-                    : [...centuries, century],
-                }}
-                key={century}
-                data-cy="century"
-                className={cn('button mr-1', {
-                  'is-info': centuries.includes(century),
-                })}
-              >
-                {century}
-              </SearchLink>
-            ))}
+            {FILTER_CENTURIES.map(century => {
+              const currentCenturies = centuries.includes(century)
+                ? centuries.filter(current => century !== current)
+                : [...centuries, century];
+
+              return (
+                <SearchLink
+                  params={{
+                    centuries: currentCenturies,
+                  }}
+                  key={century}
+                  data-cy="century"
+                  className={cn('button mr-1', {
+                    'is-info': centuries.includes(century),
+                  })}
+                >
+                  {century}
+                </SearchLink>
+              );
+            })}
           </div>
 
           <div className="level-right ml-4">

@@ -19,6 +19,8 @@ export const PeoplePage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [hasLoadingError, setHasLoadingError] = useState(false);
 
+  const isErrorShowing = !people.length && !isLoading && !hasLoadingError;
+
   useEffect(() => {
     setIsLoading(true);
     setHasLoadingError(false);
@@ -65,7 +67,7 @@ export const PeoplePage = () => {
 
               {!!people.length && <PeopleTable people={filteredPeople} />}
 
-              {!people.length && !isLoading && !hasLoadingError && (
+              {isErrorShowing && (
                 <p data-cy="noPeopleMessage">
                   There are no people on the server
                 </p>
