@@ -20,6 +20,17 @@ export const genderButtons = ['Male', 'Female'];
 
 export const centuryButtons = ['16', '17', '18', '19', '20'];
 
+const getIncludesQuery = (
+  personName: string | null,
+  normalizeQuery: string,
+) => {
+  if (!personName) {
+    return;
+  }
+
+  return personName.toLowerCase().includes(normalizeQuery);
+};
+
 export const getPreparedPeople = (people: Person[], fields: Filter) => {
   const { sex, query, centuries, sort, order } = fields;
   let peopleList = [...people];
@@ -33,9 +44,9 @@ export const getPreparedPeople = (people: Person[], fields: Filter) => {
   if (normalizeQuery) {
     peopleList = peopleList.filter(person => {
       return (
-        person.name.toLowerCase().includes(normalizeQuery) ||
-        person.motherName?.toLowerCase().includes(normalizeQuery) ||
-        person.fatherName?.toLowerCase().includes(normalizeQuery)
+        getIncludesQuery(person.name, normalizeQuery) ||
+        getIncludesQuery(person.motherName, normalizeQuery) ||
+        getIncludesQuery(person.fatherName, normalizeQuery)
       );
     });
   }

@@ -1,6 +1,5 @@
 export enum Sex {
+  All = 'All',
   F = 'f',
   M = 'm',
 }
-
-export type Gender = Sex | 'All';

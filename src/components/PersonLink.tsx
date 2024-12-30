@@ -2,6 +2,7 @@ import { Link, useLocation } from 'react-router-dom';
 import cn from 'classnames';
 
 import { Person } from '../types';
+import { Sex } from '../types/Sex';
 
 interface Props {
   person: Person;
@@ -14,7 +15,7 @@ export const PersonLink: React.FC<Props> = ({ person }) => {
   return (
     <Link
       to={{ pathname: `/people/${slug}`, search }}
-      className={cn({ 'has-text-danger': sex === 'f' })}
+      className={cn({ 'has-text-danger': sex === Sex.F })}
     >
       {name}
     </Link>

@@ -165,7 +165,7 @@ describe('', () => {
         .should('not.have.class', ACTIVE_NAV_LINK_CLASS);
     });
 
-    it.skip('should have only correct title', () => {
+    it('should have only correct title', () => {
       page.mockPeople();
       page.visit('/#/some/not/existing/page');
       page.assetTitle('Page not found');
