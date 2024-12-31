@@ -1,4 +1,3 @@
-import { v4 as uuid } from 'uuid';
 import cn from 'classnames';
 
 import { NO_PARENT_INFO } from '../../constants/constants';

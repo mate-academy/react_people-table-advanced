@@ -1,5 +1,4 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
-import { v4 as uuid } from 'uuid';
 import cn from 'classnames';
 
 import { Link, useLocation, useSearchParams } from 'react-router-dom';

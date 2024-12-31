@@ -1,4 +1,3 @@
-// import { react } from '@vitejs/plugin-react';
 import { Outlet } from 'react-router-dom';
 
 import './App.scss';
