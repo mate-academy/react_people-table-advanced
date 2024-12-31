@@ -20,7 +20,7 @@ export const PersonItem: React.FC<Props> = ({ person, people, selected }) => {
   return (
     <tr
       data-cy="person"
-      key={uuid()}
+      key={person.slug}
       className={cn({ 'has-background-warning': selected })}
     >
       <td>

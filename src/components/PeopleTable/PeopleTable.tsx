@@ -57,18 +57,18 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
                 {column}
                 {['Name', 'Sex', 'Born', 'Died'].includes(column) && (
                   <NavLink
-                    to={`${pathname}?${searchParams.toString()}`}
+                    to={`${pathname}?${getSearchWith(searchParams, { sort: column.toLowerCase() })}`}
                     onClick={event => {
                       event.preventDefault();
-                      handleSort(column.toLowerCase());
-                    }}
-                  >
-                    <span className="icon">
-                      <i
-                        className={`fas ${getSortIconClass(column.toLowerCase(), sort, order)}`}
-                      />
-                    </span>
-                  </NavLink>
+                    handleSort(column.toLowerCase());
+                  }}
+                >
+                  <span className="icon">
+                    <i
+                      className={`fas ${getSortIconClass(column.toLowerCase(), sort, order)}`}
+                    />
+                  </span>
+                </NavLink>
                 )}
               </span>
             </th>

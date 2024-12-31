@@ -106,7 +106,7 @@ export const PeopleFilters = () => {
           <div className="level-left">
             {CENTURIES.map(century => (
               <a
-                key={uuid()}
+                key={century}
                 data-cy="century"
                 className={cn('button mr-1', {
                   'is-info': centuries.includes(century.toString()),
