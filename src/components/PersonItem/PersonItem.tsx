@@ -11,11 +11,7 @@ type Props = {
   selected: boolean;
 };
 
-export const PersonItem: React.FC<Props> = ({
-  person,
-  people,
-  selected,
-}) => {
+export const PersonItem: React.FC<Props> = ({ person, people, selected }) => {
   const { sex, born, died, motherName, fatherName } = person;
 
   const mother = people.find(mom => mom.name === motherName);

@@ -5,6 +5,7 @@ const getLinkClass = ({ isActive }: { isActive: boolean }) =>
   clsx('navbar-item', {
     'is-active has-background-grey-lighter': isActive,
   });
+
 export const Navbar = () => {
   return (
     <nav
