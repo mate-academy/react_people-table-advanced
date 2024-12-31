@@ -2,36 +2,37 @@ import cn from 'classnames';
 import { Person } from '../types';
 import { PersonLink } from './PersonLink';
 import { NavLink, useLocation, useSearchParams } from 'react-router-dom';
-import { SORTING_COLUMNS, SORTING_COLUMNS_WITH_ICONS } from '../constants/SORTING_COLUMNS';
+import {
+  SORTING_COLUMNS,
+  SORTING_COLUMNS_WITH_ICONS,
+} from '../constants/SORTING_COLUMNS';
 
 /* eslint-disable jsx-a11y/control-has-associated-label */
 type Props = {
   people: Person[];
   sort: string;
   order: string;
-  handleSort: (sortField: string) => void;
+  handleSortClick: (sortField: string) => void;
 };
 
 const getIconClass = (sortField: string, sort: string, order: string) => {
   if (sortField === sort) {
     if (order) {
-      return 'fa-sort-down'
+      return 'fa-sort-down';
     }
 
-    return 'fa-sort-up'
+    return 'fa-sort-up';
   }
 
-  return 'fa-sort'
-}
+  return 'fa-sort';
+};
 
 export const PeopleTable: React.FC<Props> = props => {
-  const { sort, order, people, handleSort } = props;
+  const { sort, order, people, handleSortClick } = props;
   const location = useLocation();
 
   const { pathname } = useLocation();
   const [searchParams] = useSearchParams();
-
-  console.log(searchParams.toString());
 
   return (
     <table
@@ -49,7 +50,7 @@ export const PeopleTable: React.FC<Props> = props => {
                     to={`${pathname}?${searchParams.toString()}`}
                     onClick={event => {
                       event.preventDefault();
-                      handleSort(column.toLowerCase());
+                      handleSortClick(column.toLowerCase());
                     }}
                   >
                     <span className="icon">

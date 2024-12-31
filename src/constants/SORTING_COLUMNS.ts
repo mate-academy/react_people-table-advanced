@@ -4,7 +4,7 @@ export const SORTING_COLUMNS = [
   'Born',
   'Died',
   'Mother',
-  'Father'
+  'Father',
 ];
 
-export const SORTING_COLUMNS_WITH_ICONS = ['Name', 'Sex', 'Born', 'Died']
+export const SORTING_COLUMNS_WITH_ICONS = ['Name', 'Sex', 'Born', 'Died'];

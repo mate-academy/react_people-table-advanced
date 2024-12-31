@@ -103,21 +103,20 @@ export const PeoplePage = () => {
     filteredPeople.reverse();
   }
 
-  const handleSort = (sortField: string) => {
+  const handleSortClick = (sortField: string) => {
     if (sort === sortField) {
       if (order) {
-        const updatedParams = getSearchWith(searchParams, { sort: null, order: null });
+        const updatedParams = getSearchWith(searchParams, {
+          sort: null,
+          order: null,
+        });
         setSearchParams(updatedParams);
-
         return;
       }
-
       const updatedParams = getSearchWith(searchParams, { order: 'desc' });
       setSearchParams(updatedParams);
-
       return;
     }
-
     const updatedParams = getSearchWith(searchParams, { sort: sortField });
     setSearchParams(updatedParams);
   };
@@ -164,7 +163,7 @@ export const PeoplePage = () => {
                       sort={sort}
                       order={order}
                       people={filteredPeople}
-                      handleSort={handleSort}
+                      handleSortClick={handleSortClick}
                     />
                   )}
                 </>
