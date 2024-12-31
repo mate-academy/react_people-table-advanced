@@ -13,6 +13,7 @@ type Props = {
 
 export const PeopleFilters: React.FC<Props> = props => {
   const { query, sex, centuries, handleQueryChange } = props;
+
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
@@ -91,7 +92,9 @@ export const PeopleFilters: React.FC<Props> = props => {
           <div className="level-right ml-4">
             <a
               data-cy="centuryALL"
-              className={cn("button is-success", {'is-outlined': centuries.length !== 0})}
+              className={cn('button is-success', {
+                'is-outlined': centuries.length !== 0,
+              })}
               href="#/people"
             >
               All

@@ -7,8 +7,6 @@ import { getPeople } from '../api';
 import { useSearchParams } from 'react-router-dom';
 import { getSearchWith } from '../utils/searchHelper';
 import { SexType } from '../types/SexType';
-import { SortType } from '../types/SortType';
-import { OrderType } from '../types/OrderType';
 
 export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);
@@ -39,16 +37,19 @@ export const PeoplePage = () => {
   const sex = (searchParams.get('sex') as SexType) || SexType.All;
   const query = searchParams.get('query') || '';
   const centuries = searchParams.getAll('centuries') || [];
-  const sort = (searchParams.get('sort') as SortType) || '';
-  const order = (searchParams.get('order') as OrderType) || '';
+  const sort = searchParams.get('sort') || '';
+  const order = searchParams.get('order') || '';
 
   const handleQueryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newQuery = event.target.value;
+
     if (newQuery.trim().length === 0) {
       const updatedParams = getSearchWith(searchParams, { query: null });
+
       setSearchParams(updatedParams);
     } else {
       const updatedParams = getSearchWith(searchParams, { query: newQuery });
+
       setSearchParams(updatedParams);
     }
   };
@@ -68,12 +69,19 @@ export const PeoplePage = () => {
       );
     })
     .filter(person => {
-      if (sex === SexType.All) return true;
+      if (sex === SexType.All) {
+        return true;
+      }
+
       return person.sex === sex;
     })
     .filter(person => {
       const personCentury = getCentury(person.born);
-      if (centuries.length === 0) return true;
+
+      if (centuries.length === 0) {
+        return true;
+      }
+
       return centuries.includes(String(personCentury));
     })
     .sort((person1, person2) => {
@@ -95,23 +103,23 @@ export const PeoplePage = () => {
     filteredPeople.reverse();
   }
 
-  const onSortClick = (sortKey: string) => () => {
-    if (sortKey !== sort) {
-      const updatedParams = getSearchWith(searchParams, {
-        sort: sortKey,
-        order: 'asc',
-      });
-      setSearchParams(updatedParams);
-    } else if (order === 'asc') {
+  const handleSort = (sortField: string) => {
+    if (sort === sortField) {
+      if (order) {
+        const updatedParams = getSearchWith(searchParams, { sort: null, order: null });
+        setSearchParams(updatedParams);
+
+        return;
+      }
+
       const updatedParams = getSearchWith(searchParams, { order: 'desc' });
       setSearchParams(updatedParams);
-    } else if (order === 'desc') {
-      const updatedParams = getSearchWith(searchParams, {
-        sort: null,
-        order: 'asc',
-      });
-      setSearchParams(updatedParams);
+
+      return;
     }
+
+    const updatedParams = getSearchWith(searchParams, { sort: sortField });
+    setSearchParams(updatedParams);
   };
 
   return (
@@ -156,7 +164,7 @@ export const PeoplePage = () => {
                       sort={sort}
                       order={order}
                       people={filteredPeople}
-                      onSortClick={onSortClick}
+                      handleSort={handleSort}
                     />
                   )}
                 </>

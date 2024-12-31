@@ -1,5 +1,5 @@
-import cn from "classnames";
-import { NavLink } from "react-router-dom";
+import cn from 'classnames';
+import { NavLink } from 'react-router-dom';
 
 export const Navbar = () => {
   const getLinkClass = ({ isActive }: { isActive: boolean }) =>
@@ -18,11 +18,7 @@ export const Navbar = () => {
             Home
           </NavLink>
 
-          <NavLink
-            aria-current="page"
-            className={getLinkClass}
-            to="/people"
-          >
+          <NavLink aria-current="page" className={getLinkClass} to="/people">
             People
           </NavLink>
         </div>

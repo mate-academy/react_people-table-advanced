@@ -1,21 +1,38 @@
 import cn from 'classnames';
 import { Person } from '../types';
 import { PersonLink } from './PersonLink';
-import { useLocation } from 'react-router-dom';
-import { SortType } from '../types/SortType';
-import { OrderType } from '../types/OrderType';
+import { NavLink, useLocation, useSearchParams } from 'react-router-dom';
+import { SORTING_COLUMNS, SORTING_COLUMNS_WITH_ICONS } from '../constants/SORTING_COLUMNS';
 
 /* eslint-disable jsx-a11y/control-has-associated-label */
 type Props = {
   people: Person[];
-  sort: SortType;
-  order: OrderType;
-  onSortClick: (sortKey: string) => void;
+  sort: string;
+  order: string;
+  handleSort: (sortField: string) => void;
 };
 
+const getIconClass = (sortField: string, sort: string, order: string) => {
+  if (sortField === sort) {
+    if (order) {
+      return 'fa-sort-down'
+    }
+
+    return 'fa-sort-up'
+  }
+
+  return 'fa-sort'
+}
+
 export const PeopleTable: React.FC<Props> = props => {
-  const { sort, order, people, onSortClick } = props;
+  const { sort, order, people, handleSort } = props;
   const location = useLocation();
+
+  const { pathname } = useLocation();
+  const [searchParams] = useSearchParams();
+
+  console.log(searchParams.toString());
+
   return (
     <table
       data-cy="peopleTable"
@@ -23,63 +40,28 @@ export const PeopleTable: React.FC<Props> = props => {
     >
       <thead>
         <tr>
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Name
-              <a
-                href="#/people?sort=name"
-                onClick={() => {
-                  onSortClick('name');
-                }}
-              >
-                <span className="icon">
-                  <i
-                    className={cn("fas",
-                      { "fa-sort": sort !== "name" },
-                      { "fa-sort-down": sort === "name" && order === "asc" },
-                      { "fa-sort-up": sort === "name" && order === "desc" },
-                    )}
-                  />
-                </span>
-              </a>
-            </span>
-          </th>
-
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Sex
-              <a href="#/people?sort=sex">
-                <span className="icon">
-                  <i className="fas fa-sort" />
-                </span>
-              </a>
-            </span>
-          </th>
-
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Born
-              <a href="#/people?sort=born&amp;order=desc">
-                <span className="icon">
-                  <i className="fas fa-sort-up" />
-                </span>
-              </a>
-            </span>
-          </th>
-
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Died
-              <a href="#/people?sort=died">
-                <span className="icon">
-                  <i className="fas fa-sort" />
-                </span>
-              </a>
-            </span>
-          </th>
-
-          <th>Mother</th>
-          <th>Father</th>
+          {SORTING_COLUMNS.map(column => (
+            <th key={column}>
+              <span className="is-flex is-flex-wrap-nowrap">
+                {column}
+                {SORTING_COLUMNS_WITH_ICONS.includes(column) && (
+                  <NavLink
+                    to={`${pathname}?${searchParams.toString()}`}
+                    onClick={event => {
+                      event.preventDefault();
+                      handleSort(column.toLowerCase());
+                    }}
+                  >
+                    <span className="icon">
+                      <i
+                        className={`fas ${getIconClass(column.toLowerCase(), sort, order)}`}
+                      />
+                    </span>
+                  </NavLink>
+                )}
+              </span>
+            </th>
+          ))}
         </tr>
       </thead>
 
