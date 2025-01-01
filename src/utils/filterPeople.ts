@@ -1,5 +1,5 @@
+import { SORT_FILTERS } from '../constants/constants';
 import { Person } from '../types';
-import { SortFilters } from './filterHelpers';
 
 type FilterParams = {
   preparedPeople: Person[];
@@ -46,13 +46,13 @@ export function filterPeople({
     })
     .sort((person1, person2) => {
       switch (sort) {
-        case SortFilters.Name:
+        case SORT_FILTERS.NAME:
           return person1.name.localeCompare(person2.name);
-        case SortFilters.Sex:
+        case SORT_FILTERS.SEX:
           return person1.sex.localeCompare(person2.sex);
-        case SortFilters.Born:
+        case SORT_FILTERS.BORN:
           return person1.born - person2.born;
-        case SortFilters.Died:
+        case SORT_FILTERS.DIED:
           return person1.died - person2.died;
         default:
           return 0;

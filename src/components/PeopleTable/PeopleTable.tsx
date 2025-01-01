@@ -1,10 +1,10 @@
-import React from 'react';
 import cn from 'classnames';
+import { useParams, useSearchParams } from 'react-router-dom';
+import { FILTER_KEYS, SORT_FILTERS } from '../../constants/constants';
 import { Person } from '../../types';
 import { PersonLink } from '../PersonLink';
-import { useParams, useSearchParams } from 'react-router-dom';
-import { SortFilters } from '../../utils/filterHelpers';
 import { SearchLink } from '../SearchLink';
+import { ErrorMessages } from '../../constants/errors';
 
 type Props = {
   people: Person[];
@@ -12,10 +12,16 @@ type Props = {
 
 export const PeopleTable: React.FC<Props> = ({ people }) => {
   const { slug } = useParams();
-
   const [searchParams] = useSearchParams();
-  const sort = searchParams.get('sort');
-  const order = searchParams.get('order');
+  const sort = searchParams.get(FILTER_KEYS.SORT);
+  const order = searchParams.get(FILTER_KEYS.ORDER);
+
+  const getSortIcon = (filter: string) =>
+    cn('fas', {
+      'fa-sort': sort !== filter,
+      'fa-sort-up': sort === filter && order !== 'desc',
+      'fa-sort-down': sort === filter && order === 'desc',
+    });
 
   return (
     <>
@@ -26,61 +32,35 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
         >
           <thead>
             <tr>
-              {Object.values(SortFilters).map(sortFilter => {
-                const filterTitle =
-                  sortFilter.charAt(0).toUpperCase() + sortFilter.slice(1);
-
-                return (
-                  <th key={sortFilter}>
-                    <span className="is-flex is-flex-wrap-nowrap">
-                      {filterTitle}
-                      <SearchLink
-                        params={{
-                          sort:
-                            sort === sortFilter && order === 'desc'
-                              ? null
-                              : sortFilter,
-                          order:
-                            sort === sortFilter
-                              ? order === 'desc'
-                                ? null
-                                : 'desc'
-                              : null,
-                        }}
-                      >
-                        <span className="icon">
-                          <i
-                            className={cn(
-                              'fas',
-                              {
-                                'fa-sort': sort !== sortFilter,
-                              },
-                              {
-                                'fa-sort-up':
-                                  sort === sortFilter && order !== 'desc',
-                              },
-                              {
-                                'fa-sort-down':
-                                  sort === sortFilter && order === 'desc',
-                              },
-                            )}
-                          />
-                        </span>
-                      </SearchLink>
-                    </span>
-                  </th>
-                );
-              })}
-
+              {Object.values(SORT_FILTERS).map(filter => (
+                <th key={filter}>
+                  <span className="is-flex is-flex-wrap-nowrap">
+                    {filter.charAt(0).toUpperCase() + filter.slice(1)}
+                    <SearchLink
+                      params={{
+                        [FILTER_KEYS.SORT]:
+                          sort === filter && order === 'desc' ? null : filter,
+                        [FILTER_KEYS.ORDER]:
+                          sort === filter && order !== 'desc' ? 'desc' : null,
+                      }}
+                    >
+                      <span className="icon">
+                        <i className={getSortIcon(filter)} />
+                      </span>
+                    </SearchLink>
+                  </span>
+                </th>
+              ))}
               <th>Mother</th>
               <th>Father</th>
             </tr>
           </thead>
+
           <tbody>
             {people.map(person => (
               <tr
-                data-cy="person"
                 key={person.slug}
+                data-cy="person"
                 className={cn({
                   'has-background-warning': slug === person.slug,
                 })}
@@ -88,11 +68,9 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
                 <td>
                   <PersonLink person={person} />
                 </td>
-
                 <td>{person.sex}</td>
                 <td>{person.born}</td>
                 <td>{person.died}</td>
-
                 <td>
                   {person.mother ? (
                     <PersonLink person={person.mother} />
@@ -100,7 +78,6 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
                     person.motherName || '-'
                   )}
                 </td>
-
                 <td>
                   {person.father ? (
                     <PersonLink person={person.father} />
@@ -113,7 +90,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
           </tbody>
         </table>
       ) : (
-        <p>There are no people matching the current search criteria</p>
+        <p>{ErrorMessages.NOT_MATCHING}</p>
       )}
     </>
   );

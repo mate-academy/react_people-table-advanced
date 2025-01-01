@@ -19,6 +19,7 @@ export const Navbar = () => {
           <NavLink className={getLinkClass} to="/">
             Home
           </NavLink>
+
           <NavLink
             className={getLinkClass}
             to={{

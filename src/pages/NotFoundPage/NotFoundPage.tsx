@@ -1,1 +1,5 @@
-export const NotFoundPage = () => <h1 className="title">Page not found</h1>;
+import { ErrorMessages } from '../../constants/errors';
+
+export const NotFoundPage = () => (
+  <h1 className="title">{ErrorMessages.PAGE_NOT_FOUND}</h1>
+);
