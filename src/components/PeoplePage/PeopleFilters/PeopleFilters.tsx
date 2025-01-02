@@ -3,6 +3,8 @@ import cn from 'classnames';
 import { Gender } from '../../../types/Genger';
 import { SearchLink } from '../../SearchLink';
 
+const CENTURIES = [16, 17, 18, 19, 20];
+
 export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -55,7 +57,7 @@ export const PeopleFilters = () => {
           />
 
           <SearchLink className="icon is-left" params={{ query: null }}>
-            <i className="fas fa-search" aria-hidden="true" />
+            <i className="fas fa-search" aria-hidden />
           </SearchLink>
         </p>
       </div>
@@ -63,7 +65,7 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            {[16, 17, 18, 19, 20].map(century => (
+            {CENTURIES.map(century => (
               <SearchLink
                 key={century}
                 params={{

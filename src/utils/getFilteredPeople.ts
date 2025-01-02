@@ -1,4 +1,5 @@
 import { Person } from '../types';
+import { Gender } from '../types/Genger';
 
 interface Params {
   sex: string;
@@ -11,7 +12,19 @@ interface Params {
 export const getFilteredPeople = (people: Person[], params: Params) => {
   const { sex, centeries, query, sort, order } = params;
 
+  const normalizeQuery = query.toLowerCase();
+  const containsQuery = (name: string | null) => {
+    return name && name.toLowerCase().includes(normalizeQuery);
+  };
+
   const filteredPeople = people
+    .filter(person => {
+      return (
+        containsQuery(person.name) ||
+        containsQuery(person.fatherName) ||
+        containsQuery(person.motherName)
+      );
+    })
     .filter(person => {
       const personBornCent = Math.ceil(person.born / 100);
 
@@ -22,20 +35,11 @@ export const getFilteredPeople = (people: Person[], params: Params) => {
       return true;
     })
     .filter(person => {
-      const normalizeQuery = query.toLowerCase();
-
-      return (
-        person.name.toLowerCase().includes(normalizeQuery) ||
-        person.fatherName?.toLowerCase().includes(normalizeQuery) ||
-        person.motherName?.toLowerCase().includes(normalizeQuery)
-      );
-    })
-    .filter(person => {
       switch (sex) {
-        case 'm':
-          return person.sex === 'm';
-        case 'f':
-          return person.sex === 'f';
+        case Gender.Male:
+          return person.sex === Gender.Male;
+        case Gender.Female:
+          return person.sex === Gender.Female;
         default:
           return true;
       }

@@ -9,13 +9,13 @@ import { PeopleTable } from './PeopleTable/PeopleTable';
 
 export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [isError, setIsError] = useState(false);
   const [searchParams] = useSearchParams();
 
   const peopleWithParents = people.map(person => {
-    const mother = people.find(m => person.motherName === m.name);
-    const father = people.find(f => person.fatherName === f.name);
+    const mother = people.find(mom => person.motherName === mom.name);
+    const father = people.find(dad => person.fatherName === dad.name);
 
     return {
       ...person,
@@ -33,8 +33,6 @@ export const PeoplePage = () => {
   });
 
   useEffect(() => {
-    setIsLoading(true);
-
     getPeople()
       .then(data => {
         setPeople(data);
