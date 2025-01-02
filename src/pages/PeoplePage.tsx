@@ -19,11 +19,14 @@ const isSelectedPeople = (
   if (query && query.trim()) {
     const newQuery = query.toLowerCase();
 
+    const isQuery = (field: string | null | undefined): boolean =>
+      field?.toLowerCase().includes(newQuery) ?? false;
+
     selectedPeople = selectedPeople.filter(
       person =>
-        person.name.toLowerCase().includes(newQuery) ||
-        person.motherName?.toLowerCase().includes(newQuery) ||
-        person.fatherName?.toLowerCase().includes(newQuery),
+        isQuery(person.name) ||
+        isQuery(person.motherName) ||
+        isQuery(person.fatherName),
     );
   }
 
