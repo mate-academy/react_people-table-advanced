@@ -27,11 +27,11 @@ export const PeopleFilters = () => {
 
           return (
             <SearchLink
-              params={{ sex: sexFilter === 'all' ? null : sexValue }}
+              params={{ sex: sexFilter === SexFilters.All ? null : sexValue }}
               key={sexFilter}
               className={cn({
                 'is-active':
-                  sex === sexValue || (sex === null && sexFilter === 'all'),
+                  sex === sexValue || (sex === null && sexFilter === SexFilters.All),
               })}
             >
               {filterTitle}
