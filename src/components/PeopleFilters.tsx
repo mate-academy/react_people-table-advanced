@@ -1,5 +1,7 @@
-// eslint-disable-next-line import/no-extraneous-dependencies
 import cn from 'classnames';
+
+import { CENTURIES } from '../constants/constants';
+import { Sex } from '../types/sex';
 
 import { Link, useLocation, useSearchParams } from 'react-router-dom';
 import { getSearchWith, SearchParams } from '../utils/searchHelper';
@@ -19,11 +21,11 @@ export const PeopleFilters = () => {
   };
 
   const updateSearchParams = (
-    newParam: SearchParams,
+    selectParam: SearchParams,
     event: React.MouseEvent<HTMLAnchorElement, MouseEvent>,
   ) => {
     event.preventDefault();
-    searchNewParam(newParam);
+    searchNewParam(selectParam);
   };
 
   function switchCentury(
@@ -53,32 +55,27 @@ export const PeopleFilters = () => {
     searchNewParam({ query: value || null });
   };
 
+  const sexTypes = [
+    { sexType: 'All', sex: null, href: '/people' },
+    { sexType: 'Male', sex: Sex.Male, href: '/people?sex=m' },
+    { sexType: 'Female', sex: Sex.Female, href: '/people?sex=f' },
+  ];
+
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        <a
-          className={cn({ 'is-active': !sex })}
-          href="/people"
-          onClick={event => updateSearchParams({ sex: null }, event)}
-        >
-          All
-        </a>
-        <a
-          className={cn({ 'is-active': sex === 'm' })}
-          href="/people?sex=m"
-          onClick={event => updateSearchParams({ sex: 'm' }, event)}
-        >
-          Male
-        </a>
-        <a
-          className={cn({ 'is-active': sex === 'f' })}
-          href="/people?sex=f"
-          onClick={event => updateSearchParams({ sex: 'f' }, event)}
-        >
-          Female
-        </a>
+        {sexTypes.map(({ sexType, sex: typeOfSex, href }) => (
+          <a
+            key={sexType}
+            className={cn({ 'is-active': sex === typeOfSex })}
+            href={href}
+            onClick={event => updateSearchParams({ sex: typeOfSex }, event)}
+          >
+            {sexType}
+          </a>
+        ))}
       </p>
 
       <div className="panel-block">
@@ -101,7 +98,7 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            {[16, 17, 18, 19, 20].map(century => (
+            {CENTURIES.map(century => (
               <a
                 key={century}
                 data-cy="century"
