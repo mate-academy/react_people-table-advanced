@@ -1,5 +1,6 @@
 import { Person } from '../types';
 import { Gender } from '../types/Genger';
+import { TableHead } from '../types/TableHead';
 
 interface Params {
   sex: string;
@@ -11,6 +12,9 @@ interface Params {
 
 export const getFilteredPeople = (people: Person[], params: Params) => {
   const { sex, centeries, query, sort, order } = params;
+
+  const { Name, Sex, Born, Died } = TableHead;
+  const { Male, Female } = Gender;
 
   const normalizeQuery = query.toLowerCase();
   const containsQuery = (name: string | null) => {
@@ -36,23 +40,23 @@ export const getFilteredPeople = (people: Person[], params: Params) => {
     })
     .filter(person => {
       switch (sex) {
-        case Gender.Male:
-          return person.sex === Gender.Male;
-        case Gender.Female:
-          return person.sex === Gender.Female;
+        case Male:
+          return person.sex === Male;
+        case Female:
+          return person.sex === Female;
         default:
           return true;
       }
     })
     .toSorted((person1, person2) => {
       switch (sort) {
-        case 'name':
+        case Name:
           return person1.name.localeCompare(person2.name);
-        case 'sex':
+        case Sex:
           return person1.sex.localeCompare(person2.sex);
-        case 'born':
+        case Born:
           return person1.born - person2.born;
-        case 'died':
+        case Died:
           return person1.died - person2.died;
         default:
           return 0;

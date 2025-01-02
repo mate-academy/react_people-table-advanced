@@ -8,12 +8,14 @@ type Props = {
   person: Person;
 };
 
-export const TableRow: React.FC<Props> = props => {
-  const { slug } = useParams();
+const NO_PARENT = '-';
 
+export const TableRow: React.FC<Props> = props => {
   const { person } = props;
   const { name, sex, born, died, fatherName, motherName, mother, father } =
     person;
+
+  const { slug } = useParams();
 
   return (
     <tr
@@ -32,7 +34,7 @@ export const TableRow: React.FC<Props> = props => {
         {mother ? (
           <PersonLink name={mother.name} sex={mother.sex} slug={mother.slug} />
         ) : (
-          motherName || '-'
+          motherName || NO_PARENT
         )}
       </td>
 
@@ -40,7 +42,7 @@ export const TableRow: React.FC<Props> = props => {
         {father ? (
           <PersonLink name={father.name} sex={father.sex} slug={father.slug} />
         ) : (
-          fatherName || '-'
+          fatherName || NO_PARENT
         )}
       </td>
     </tr>

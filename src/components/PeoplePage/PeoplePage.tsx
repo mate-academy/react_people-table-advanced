@@ -32,11 +32,11 @@ export const PeoplePage = () => {
     order: searchParams.get('order') || null,
   });
 
+  const isEmptyPeopleList = filteredPeople.length === 0;
+
   useEffect(() => {
     getPeople()
-      .then(data => {
-        setPeople(data);
-      })
+      .then(setPeople)
       .catch(() => setIsError(true))
       .finally(() => setIsLoading(false));
   }, []);
@@ -62,13 +62,13 @@ export const PeoplePage = () => {
                   </p>
                 )}
 
-                {!isLoading && people.length === 0 && (
+                {!isLoading && isEmptyPeopleList && (
                   <p data-cy="noPeopleMessage">
                     There are no people on the server
                   </p>
                 )}
 
-                {!isLoading && !isError && (
+                {!isLoading && !isError && !isEmptyPeopleList && (
                   <PeopleTable people={filteredPeople} />
                 )}
               </div>

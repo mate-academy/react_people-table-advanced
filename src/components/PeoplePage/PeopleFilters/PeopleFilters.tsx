@@ -8,7 +8,7 @@ const CENTURIES = [16, 17, 18, 19, 20];
 export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const sex = searchParams.get('sex') || 'all';
+  const sex = searchParams.get('sex') || Gender.All;
   const centuries = searchParams.getAll('centuries') || [];
   const query = searchParams.get('query') || '';
 
@@ -37,7 +37,7 @@ export const PeopleFilters = () => {
         {Object.entries(Gender).map(([key, value]) => (
           <SearchLink
             key={value}
-            params={{ sex: value === 'all' ? null : value }}
+            params={{ sex: value === Gender.All ? null : value }}
             className={cn({ 'is-active': sex === value })}
           >
             {key}
