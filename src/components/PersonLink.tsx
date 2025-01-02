@@ -1,6 +1,7 @@
 import cn from 'classnames';
 import { PersonLinkItem } from './PersonLinkItem';
 import { Person } from '../types';
+import { HAS_NO_PARENT } from '../constants/constants';
 
 type Props = {
   person: Person;
@@ -30,14 +31,14 @@ export const PersonLink: React.FC<Props> = ({ person, people, isSelected }) => {
         {isMother ? (
           <PersonLinkItem person={isMother} />
         ) : (
-          <p>{motherName || '-'}</p>
+          <p>{motherName || HAS_NO_PARENT}</p>
         )}
       </td>
       <td>
         {isFather ? (
           <PersonLinkItem person={isFather} />
         ) : (
-          <p>{fatherName || '-'}</p>
+          <p>{fatherName || HAS_NO_PARENT}</p>
         )}
       </td>
     </tr>

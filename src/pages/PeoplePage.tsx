@@ -105,8 +105,8 @@ export const PeoplePage = () => {
 
   const filterPeople = isSelectedPeople(
     tablePeople,
-    sex,
     query,
+    sex,
     centuries,
     sort,
     order,
