@@ -13,7 +13,7 @@ type Params = {
 
 export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[] | null>(null);
-  const [errorMessage, setErrorMessage] = useState<ErrorMessage | null>(null);
+  const [errorMessage, setErrorMessage] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
   const { personSlug } = useParams<Params>();
@@ -21,15 +21,8 @@ export const PeoplePage = () => {
   useEffect(() => {
     setIsLoading(true);
     getPeople()
-      .then(fetchedPeople => {
-        if (fetchedPeople.length === 0) {
-          setErrorMessage(ErrorMessage.NoDataOnServer);
-        } else {
-          setPeople(fetchedPeople);
-          setErrorMessage(null);
-        }
-      })
-      .catch(() => setErrorMessage(ErrorMessage.LoadingIssue))
+      .then(setPeople)
+      .catch(() => setErrorMessage(true))
       .finally(() => setIsLoading(false));
   }, []);
 
@@ -45,9 +38,9 @@ export const PeoplePage = () => {
 
           <div className="column">
             <div className="box table-container">
-              {errorMessage === ErrorMessage.LoadingIssue && (
+              {errorMessage && (
                 <p data-cy="peopleLoadingError" className="has-text-danger">
-                  {errorMessage}
+                  {ErrorMessage.LoadingIssue}
                 </p>
               )}
 
