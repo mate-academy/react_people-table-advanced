@@ -1,5 +1,5 @@
 import { Person } from '../types';
-import { SortFilters } from './filters'
+import { SortFilters } from './filters';
 
 type FilterParams = {
   preparedPeople: Person[];
@@ -8,7 +8,7 @@ type FilterParams = {
   centuries: string[];
   sort: string | null;
   order: string | null;
-}
+};
 
 export function filterPeople({
   preparedPeople,
@@ -32,6 +32,7 @@ export function filterPeople({
       if (sex) {
         return person.sex === sex;
       }
+
       return true;
     })
     .filter(person => {

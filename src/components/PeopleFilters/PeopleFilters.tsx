@@ -12,6 +12,7 @@ export const PeopleFilters = () => {
 
   function setSearchWith(params: SearchParams) {
     const search = getSearchWith(searchParams, params);
+
     setSearchParams(search);
   }
 
@@ -66,6 +67,7 @@ export const PeopleFilters = () => {
               const currentCenturies = centuries.includes(century)
                 ? centuries.filter(current => century !== current)
                 : [...centuries, century];
+
               return (
                 <SearchLink
                   params={{ centuries: currentCenturies }}
