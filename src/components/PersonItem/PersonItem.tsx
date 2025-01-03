@@ -3,15 +3,14 @@ import cn from 'classnames';
 
 import { PersonLink } from '../PersonLink';
 import { Person } from '../../types';
+import { NO_PARENTS } from '../../constans/Constans';
 
 type Props = {
   person: Person;
   selected: Person | undefined;
 };
 
-const NO_PARENTS = '-';
-
-export const ItemOfTable: React.FC<Props> = props => {
+export const PersonItem: React.FC<Props> = props => {
   const { person, selected } = props;
   const { sex, born, died, fatherName, motherName, slug, mother, father } =
     person;

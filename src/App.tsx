@@ -9,9 +9,7 @@ export const App = () => {
 
       <main className="section">
         <div className="container">
-          <div className="block">
-            <Outlet />
-          </div>
+          <Outlet />
         </div>
       </main>
     </div>
