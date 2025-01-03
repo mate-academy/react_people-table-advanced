@@ -5,6 +5,7 @@ import { useSearchParams } from 'react-router-dom';
 import { SexFilter } from '../types/SexFilter';
 import { ErrorMessage } from '../types/ErrorMessage';
 import { TableHead } from './TableHead';
+import { SortFields } from '../types/SortFields';
 
 /* eslint-disable jsx-a11y/control-has-associated-label */
 type Props = {
@@ -49,11 +50,36 @@ const filterByCenturies = (people: Person[], centuries: string[]) => {
   });
 };
 
+const handleSorting = (
+  people: Person[],
+  sortField: SortFields,
+  sortOrder: string | null,
+): Person[] => {
+  const ascSorted = [...people].sort((person1, person2) => {
+    switch (sortField) {
+      case 'name':
+        return person1.name.localeCompare(person2.name);
+      case 'sex':
+        return person1.sex.localeCompare(person2.sex);
+      case 'born':
+        return person1.born - person2.born;
+      case 'died':
+        return person1.died - person2.died;
+      default:
+        return 0;
+    }
+  });
+
+  return !sortOrder ? ascSorted : ascSorted.reverse();
+};
+
 export const PeopleTable: React.FC<Props> = ({ people, selectedPerson }) => {
   const [searchParams] = useSearchParams();
   const query = searchParams.get('query') || '';
   const sexFilter = searchParams.get('sex') || SexFilter.ALL;
   const centuries = searchParams.getAll('centuries') || [];
+  const sortField = searchParams.get('sort') || null;
+  const sortOrder = searchParams.get('order') || null;
 
   const peopleWithParents = people?.map(person => {
     const mother = people.find(parent => parent.name === person.motherName);
@@ -66,6 +92,11 @@ export const PeopleTable: React.FC<Props> = ({ people, selectedPerson }) => {
 
   visiblePeople = filterByQuery(visiblePeople, query);
   visiblePeople = filterByCenturies(visiblePeople, centuries);
+  visiblePeople = handleSorting(
+    visiblePeople,
+    sortField as SortFields,
+    sortOrder,
+  );
 
   if (!visiblePeople.length) {
     return <p>{ErrorMessage.NoDataForQuery}</p>;

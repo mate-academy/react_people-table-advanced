@@ -58,7 +58,7 @@ export const PeoplePage = () => {
                 (people && people.length > 0 ? (
                   <PeopleTable people={people} selectedPerson={personSlug} />
                 ) : (
-                  <p data-cy="noPeopleMessage">{errorMessage}</p>
+                  <p data-cy="noPeopleMessage">{ErrorMessage.NoDataOnServer}</p>
                 ))}
             </div>
           </div>
