@@ -1,16 +1,16 @@
 /* eslint-disable @typescript-eslint/indent */
-/* eslint-disable prettier/prettier */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import React, { createContext, useMemo, useState } from 'react';
+import React, { createContext, useEffect, useMemo, useState } from 'react';
 import { Person, Sex } from '../types';
+import { useSearchParams } from 'react-router-dom';
 
 export const FiltersContext = createContext({
   sexFilter: Sex.All,
   nameFilter: '',
-  centuryFilter: 0,
+  centuryFilter: [] as string[],
   setSexFilter: (_value: Sex) => {},
   setNameFilter: (_value: string) => {},
-  setCenturyFilter: (_value: number) => {},
+  setCenturyFilter: (_value: string[]) => {},
   filterBySex: (people: Person[]) => people,
   filterByName: (people: Person[]) => people,
   filterByCentury: (people: Person[]) => people,
@@ -19,9 +19,17 @@ export const FiltersContext = createContext({
 export const FiltersProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
+  const [searchParams] = useSearchParams();
+
   const [sexFilter, setSexFilter] = useState<Sex>(Sex.All);
   const [nameFilter, setNameFilter] = useState<string>('');
-  const [centuryFilter, setCenturyFilter] = useState<number>(0);
+  const [centuryFilter, setCenturyFilter] = useState<string[]>([]);
+
+  useEffect(() => {
+    setSexFilter((searchParams.get('sex') as Sex) || Sex.All);
+    setNameFilter(searchParams.get('name') || '');
+    setCenturyFilter(searchParams.getAll('centuries') || []);
+  }, [searchParams]);
 
   const filterBySex = useMemo(() => {
     return (people: Person[]) => {
@@ -42,11 +50,11 @@ export const FiltersProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const filterByCentury = useMemo(
     () => (people: Person[]) => {
-      return !(centuryFilter === 0)
+      return !(centuryFilter.length === 0)
         ? people.filter(pers => {
             const century = Math.ceil(pers.born / 100);
 
-            return century === centuryFilter;
+            return centuryFilter.includes(century.toString());
           })
         : people;
     },
