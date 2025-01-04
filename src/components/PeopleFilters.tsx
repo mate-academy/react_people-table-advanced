@@ -1,18 +1,47 @@
+import { useContext, useEffect } from 'react';
+import { FiltersContext } from '../store/filtersContext';
+import { Sex } from '../types';
+import { SearchLink } from './SearchLink';
+import { useSearchParams } from 'react-router-dom';
+
 export const PeopleFilters = () => {
+  const [searchParams] = useSearchParams();
+
+  const {
+    sexFilter,
+    nameFilter,
+    centuryFilter,
+    setSexFilter,
+    setCenturyFilter,
+    setNameFilter,
+  } = useContext(FiltersContext);
+
+  useEffect(() => {
+    setSexFilter((searchParams.get('sex') as Sex) || Sex.All);
+    setNameFilter(searchParams.get('name') || '');
+    setCenturyFilter(parseInt(searchParams.get('century') || '0', 10);
+  }, [searchParams, setCenturyFilter, setNameFilter, setSexFilter]);
+
+  const params = {
+    sex: sexFilter.toString(),
+    name: nameFilter.toString(),
+    century: centuryFilter,
+  };
+
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        <a className="is-active" href="#/people">
-          All
-        </a>
-        <a className="" href="#/people?sex=m">
-          Male
-        </a>
-        <a className="" href="#/people?sex=f">
-          Female
-        </a>
+        {Object.keys(Sex).map((item, index) => (
+          <SearchLink
+            key={index}
+            className="is-active"
+            params={{ ...params, sex: item.toString() }}
+          >
+            {item}
+          </SearchLink>
+        ))}
       </p>
 
       <div className="panel-block">
