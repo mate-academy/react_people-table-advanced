@@ -45,6 +45,13 @@ export const PeopleFilters: React.FC = () => {
     updateSearchParams({ centuries: [] });
   };
 
+  const handleReset = (
+    event: React.MouseEvent<HTMLAnchorElement, MouseEvent>,
+  ) => {
+    event.preventDefault();
+    updateSearchParams({ sex: '', query: '', centuries: [] });
+  };
+
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
@@ -127,7 +134,11 @@ export const PeopleFilters: React.FC = () => {
       </div>
 
       <div className="panel-block">
-        <Link className="button is-link is-outlined is-fullwidth" to="/people">
+        <Link
+          className="button is-link is-outlined is-fullwidth"
+          to="#/people"
+          onClick={event => handleReset(event)}
+        >
           Reset all filters
         </Link>
       </div>
