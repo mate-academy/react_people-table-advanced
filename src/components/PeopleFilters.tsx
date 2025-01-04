@@ -1,18 +1,55 @@
-export const PeopleFilters = () => {
+import React from 'react';
+
+import { SearchLink } from './SearchLink';
+import cn from 'classnames';
+import { useSearchParams } from 'react-router-dom';
+import { SexFilter } from '../types/SexFilter';
+
+const sexList = [
+  { key: 'all', value: 'All' },
+  { key: 'm', value: 'Male' },
+  { key: 'f', value: 'Female' },
+];
+
+export enum FilterNames {
+  Sex = 'sex',
+  Query = 'query',
+}
+
+export const PeopleFilters: React.FC = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const sex = searchParams.get(FilterNames.Sex) || SexFilter.All;
+  const query = searchParams.get(FilterNames.Query) || '';
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const params = new URLSearchParams(searchParams);
+
+    params.set(FilterNames.Query, event.target.value);
+
+    if (params.has(FilterNames.Query) && !event.target.value) {
+      params.delete(FilterNames.Query);
+    }
+
+    setSearchParams(params);
+  };
+
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        <a className="is-active" href="#/people">
-          All
-        </a>
-        <a className="" href="#/people?sex=m">
-          Male
-        </a>
-        <a className="" href="#/people?sex=f">
-          Female
-        </a>
+        {sexList.map(({ key, value }) => {
+          return (
+            <SearchLink
+              key={key}
+              params={{ sex: key === SexFilter.All ? null : key }}
+              className={cn({ 'is-active': sex === key })}
+            >
+              {value}
+            </SearchLink>
+          );
+        })}
       </p>
 
       <div className="panel-block">
@@ -22,6 +59,8 @@ export const PeopleFilters = () => {
             type="search"
             className="input"
             placeholder="Search"
+            value={query}
+            onChange={handleChange}
           />
 
           <span className="icon is-left">
