@@ -4,9 +4,9 @@ import { Person } from '../../types';
 import { ErrorNotification } from '../../types/ErrorNotification';
 import { Loader } from '../Loader';
 import { getPeople } from '../../api';
-import { FilterNames, PeopleFilters } from '../PeopleFilters';
+import { PeopleFilters } from '../PeopleFilters';
 import { useSearchParams } from 'react-router-dom';
-import { SexFilter } from '../../types/SexFilter';
+import { FilterNames, SexFilter, SortFilters } from '../../types/Filter';
 
 export const PeoplePage = () => {
   const [searchParams] = useSearchParams();
@@ -18,6 +18,8 @@ export const PeoplePage = () => {
   const sex = searchParams.get(FilterNames.Sex) || SexFilter.All;
   const query = searchParams.get(FilterNames.Query) || '';
   const centuries = searchParams.getAll(FilterNames.Centuries) || [];
+  const sort = searchParams.get(FilterNames.Sort) || '';
+  const sortOrder = searchParams.get(FilterNames.Order) || '';
 
   useEffect(() => {
     getPeople()
@@ -54,6 +56,39 @@ export const PeoplePage = () => {
 
       return person;
     });
+
+  switch (sort) {
+    case SortFilters.Name:
+      filteredPeopleList.sort((person1, person2) =>
+        sortOrder === 'desc'
+          ? person2.name.localeCompare(person1.name)
+          : person1.name.localeCompare(person2.name),
+      );
+      break;
+    case SortFilters.Sex:
+      filteredPeopleList.sort((person1, person2) =>
+        sortOrder === 'desc'
+          ? person2.sex.localeCompare(person1.sex)
+          : person1.sex.localeCompare(person2.sex),
+      );
+      break;
+    case SortFilters.Born:
+      filteredPeopleList.sort((person1, person2) =>
+        sortOrder === 'desc'
+          ? person2.born - person1.born
+          : person1.born - person2.born,
+      );
+      break;
+    case SortFilters.Died:
+      filteredPeopleList.sort((person1, person2) =>
+        sortOrder === 'desc'
+          ? person2.died - person1.died
+          : person1.died - person2.died,
+      );
+      break;
+    default:
+      break;
+  }
 
   return (
     <>

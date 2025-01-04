@@ -3,19 +3,13 @@ import React from 'react';
 import { SearchLink } from './SearchLink';
 import cn from 'classnames';
 import { useSearchParams } from 'react-router-dom';
-import { SexFilter } from '../types/SexFilter';
+import { FilterNames, SexFilter } from '../types/Filter';
 
 const sexList = [
   { key: 'all', value: 'All' },
   { key: 'm', value: 'Male' },
   { key: 'f', value: 'Female' },
 ];
-
-export enum FilterNames {
-  Sex = 'sex',
-  Query = 'query',
-  Centuries = 'centuries',
-}
 
 const centuriesArray = ['16', '17', '18', '19', '20'];
 
