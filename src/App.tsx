@@ -15,10 +15,8 @@ export const App = () => {
           <Routes>
             <Route path="/" element={<h1 className="title">Home Page</h1>} />
             <Route path="/home" element={<Navigate to="/" replace />} />
-            <Route path="/people">
-              <Route index element={<PeoplePage />} />
-              <Route path=":selectedUserSlug" element={<PeoplePage />} />
-            </Route>
+            <Route path="/people" element={<PeoplePage />} />
+            <Route path="/people/:selectedUserSlug" element={<PeoplePage />} />
             <Route
               path="*"
               element={<h1 className="title">Page not found</h1>}

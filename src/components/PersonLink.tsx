@@ -8,12 +8,12 @@ interface Props {
 
 export const PersonLink: React.FC<Props> = ({ person }) => {
   const { name, sex, slug } = person;
-  const curruntSearch = useLocation().search;
+  const currentSearch = useLocation().search;
 
   return (
     <Link
       className={cN({ 'has-text-danger': sex === 'f' })}
-      to={{ pathname: `/people/${slug}`, search: curruntSearch }}
+      to={{ pathname: `/people/${slug}`, search: currentSearch }}
     >
       {name}
     </Link>
