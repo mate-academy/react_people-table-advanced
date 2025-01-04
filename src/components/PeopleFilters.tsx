@@ -14,13 +14,17 @@ const sexList = [
 export enum FilterNames {
   Sex = 'sex',
   Query = 'query',
+  Centuries = 'centuries',
 }
+
+const centuriesArray = ['16', '17', '18', '19', '20'];
 
 export const PeopleFilters: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const sex = searchParams.get(FilterNames.Sex) || SexFilter.All;
   const query = searchParams.get(FilterNames.Query) || '';
+  const centuries = searchParams.getAll(FilterNames.Centuries) || [];
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const params = new URLSearchParams(searchParams);
@@ -32,6 +36,14 @@ export const PeopleFilters: React.FC = () => {
     }
 
     setSearchParams(params);
+  };
+
+  const getSelectedCenturies = (value: string) => {
+    if (centuries.includes(value)) {
+      return centuries.filter(century => century !== value);
+    } else {
+      return [...centuries, value];
+    }
   };
 
   return (
@@ -72,63 +84,41 @@ export const PeopleFilters: React.FC = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            <a
-              data-cy="century"
-              className="button mr-1"
-              href="#/people?centuries=16"
-            >
-              16
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=17"
-            >
-              17
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=18"
-            >
-              18
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=19"
-            >
-              19
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1"
-              href="#/people?centuries=20"
-            >
-              20
-            </a>
+            {centuriesArray.map(century => (
+              <SearchLink
+                key={century}
+                params={{
+                  centuries: getSelectedCenturies(century),
+                }}
+                data-cy="century"
+                className={cn('button mr-1 ', {
+                  'is-info': centuries.includes(`${century}`),
+                })}
+              >
+                {century}
+              </SearchLink>
+            ))}
           </div>
 
           <div className="level-right ml-4">
-            <a
+            <SearchLink
+              params={{ centuries: [] }}
               data-cy="centuryALL"
               className="button is-success is-outlined"
-              href="#/people"
             >
               All
-            </a>
+            </SearchLink>
           </div>
         </div>
       </div>
 
       <div className="panel-block">
-        <a className="button is-link is-outlined is-fullwidth" href="#/people">
+        <SearchLink
+          className="button is-link is-outlined is-fullwidth"
+          params={{ centuries: [], sex: null, query: null }}
+        >
           Reset all filters
-        </a>
+        </SearchLink>
       </div>
     </nav>
   );

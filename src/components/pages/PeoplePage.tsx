@@ -17,6 +17,7 @@ export const PeoplePage = () => {
 
   const sex = searchParams.get(FilterNames.Sex) || SexFilter.All;
   const query = searchParams.get(FilterNames.Query) || '';
+  const centuries = searchParams.getAll(FilterNames.Centuries) || [];
 
   useEffect(() => {
     getPeople()
@@ -43,6 +44,15 @@ export const PeoplePage = () => {
         fatherName?.toLowerCase()?.includes(query?.toLowerCase()) ||
         motherName?.toLowerCase()?.includes(query?.toLowerCase())
       );
+    })
+    .filter(person => {
+      const bornCentury = Math.floor(person.born / 100) + 1;
+
+      if (centuries.length) {
+        return centuries.some(century => Number(century) === bornCentury);
+      }
+
+      return person;
     });
 
   return (
