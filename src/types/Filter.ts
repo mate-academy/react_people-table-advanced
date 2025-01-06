@@ -6,7 +6,7 @@ export interface Params {
   centuries: number[];
 }
 
-export enum SortColumns {
+export enum SortTable {
   Name = 'Name',
   Sex = 'Sex',
   Born = 'Born',

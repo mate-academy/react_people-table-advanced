@@ -1,50 +1,44 @@
 import 'bulma/css/bulma.css';
-import { getPeople } from '../api';
-import { useState, useEffect, useCallback } from 'react';
-import { Person } from '../types';
+import { usePeople } from '../hooks/usePeople';
 import { Loader } from '../components/Loader';
 import { PeopleTable } from '../components/PeopleTable';
 import { PeopleFilters } from '../components/PeopleFilters';
+import { Status } from '../types/Filter';
+import { getSearchWith, SearchParams } from '../utils/searchHelper';
+import { useSearchParams } from 'react-router-dom';
+import { getCenturiesFromUrl, getCenturiesArr } from '../utils/getCenturies';
 
 export const PeoplePage: React.FC = () => {
-  const [people, setPeople] = useState<Person[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(false);
+  const { people, error, isLoading } = usePeople();
 
-  const loadPeople = useCallback(async () => {
-    setIsLoading(true);
-    setError(false);
+  const [searchParams, setSearchParams] = useSearchParams();
 
-    try {
-      const peopleFromServer = await getPeople();
-      const peopleMap = new Map(peopleFromServer.map(p => [p.name, p]));
-      const peopleWithParents = peopleFromServer.map(person => ({
-        ...person,
-        mother: person.motherName ? peopleMap.get(person.motherName) : null,
-        father: person.fatherName ? peopleMap.get(person.fatherName) : null,
-      }));
+  const sortBy = searchParams.get('sortBy') || null;
+  const sortOrder = searchParams.get('sortOrder') || null;
+  const sex = searchParams.get('sex') || '';
+  const query = searchParams.get('query') || '';
 
-      setPeople(peopleWithParents);
-    } catch (err) {
-      setError(true);
-      throw err;
-    } finally {
-      setIsLoading(false);
-    }
-  }, []);
+  const centuriesArr = getCenturiesArr(people);
+  const centuries = getCenturiesFromUrl(searchParams);
 
-  useEffect(() => {
-    loadPeople();
-  }, [loadPeople]);
+  const setSearchWith = (params: SearchParams) => {
+    const search = getSearchWith(searchParams, params);
 
-  let status = 'loading';
+    setSearchParams(search);
+  };
+
+  const handleQueryChange = (queryValue: string) => {
+    setSearchWith({ query: queryValue || null });
+  };
+
+  let status = Status.Loading;
 
   if (error) {
-    status = 'error';
+    status = Status.Error;
   } else if (!isLoading && people.length > 0) {
-    status = 'loaded';
+    status = Status.Loaded;
   } else if (!isLoading && people.length === 0) {
-    status = 'empty';
+    status = Status.Empty;
   }
 
   return (
@@ -52,28 +46,46 @@ export const PeoplePage: React.FC = () => {
       <h1 className="title">People Page</h1>
 
       <div className="block">
-        <div className="box table-container">
-          <div className="columns is-desktop is-flex-direction-row-reverse">
-            {status === 'error' && (
-              <p data-cy="peopleLoadingError" className="has-text-danger">
-                Something went wrong
-              </p>
-            )}
-
-            {status === 'loading' && <Loader />}
-
+        <div className="columns is-desktop is-flex-direction-row-reverse">
+          <div className="column is-7-tablet is-narrow-desktop">
             {status === 'loaded' && (
-              <>
-                <div className="column is-7-tablet is-narrow-desktop">
-                  <PeopleFilters />
-                </div>
-                <PeopleTable people={people} />
-              </>
+              <PeopleFilters
+                query={query}
+                handleQueryChange={handleQueryChange}
+                sex={sex}
+                centuriesArr={centuriesArr}
+                centuries={centuries}
+              />
             )}
+          </div>
 
-            {status === 'empty' && (
-              <p data-cy="noPeopleMessage">There are no people on the server</p>
-            )}
+          <div className="column">
+            <div className="box table-container">
+              {status === Status.Loading && <Loader />}
+
+              {status === Status.Error && (
+                <p data-cy="peopleLoadingError" className="has-text-danger">
+                  Something went wrong
+                </p>
+              )}
+
+              {status === Status.Loaded && (
+                <PeopleTable
+                  people={people}
+                  query={query}
+                  sex={sex}
+                  centuries={centuries.map(Number)}
+                  sortBy={sortBy}
+                  sortOrder={sortOrder}
+                />
+              )}
+
+              {status === Status.Empty && (
+                <p data-cy="noPeopleMessage">
+                  There are no people on the server
+                </p>
+              )}
+            </div>
           </div>
         </div>
       </div>
