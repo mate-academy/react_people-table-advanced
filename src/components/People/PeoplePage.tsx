@@ -2,7 +2,7 @@ import { PeopleFilters } from './PeopleFilters';
 import { Loader } from '../Loader';
 import { PeopleTable } from '../index';
 import { getPeople } from '../../api';
-import { Person, SortField } from '../../types';
+import { Person, SexFilter, SortField, SortOrder } from '../../types';
 import { useParams, useSearchParams } from 'react-router-dom';
 import React, { useEffect } from 'react';
 
@@ -15,14 +15,19 @@ const PeoplePage = () => {
 
   const [searchParams] = useSearchParams();
   const sortColumn = searchParams.get('sort') as SortField;
-  const sortOrder = searchParams.get('order') || 'asc';
+  const sortOrder = searchParams.get('order') || SortOrder.Asc;
+  const sexFilter = searchParams.get('sex') as SexFilter;
 
-  const sortedPeople = React.useMemo(() => {
-    if (!sortColumn) {
+  const processedPeople = React.useMemo(() => {
+    if (!sortColumn || !sexFilter) {
       return people;
     }
 
-    return [...(people || [])].sort((a, b) => {
+    const peopleFiltered = people?.filter(person => {
+      return !sexFilter || person.sex === sexFilter;
+    });
+
+    return [...(peopleFiltered || [])].sort((a, b) => {
       if (sortColumn === SortField.Name || sortColumn === SortField.Sex) {
         return sortOrder === 'asc'
           ? a[sortColumn].localeCompare(b[sortColumn])
@@ -84,11 +89,13 @@ const PeoplePage = () => {
                 </p>
               )}
 
-              <p>There are no people matching the current search criteria</p>
+              {processedPeople && processedPeople.length === 0 && (
+                <p>There are no people matching the current search criteria</p>
+              )}
 
               {!error && !loading && (
                 <PeopleTable
-                  people={sortedPeople}
+                  people={processedPeople}
                   slug={slug}
                   searchPeopleByName={searchPeopleByName}
                   sortColumn={sortColumn}
