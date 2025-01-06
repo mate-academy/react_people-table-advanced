@@ -5,7 +5,7 @@ import { Person } from '../types';
 import { filterPeople } from '../utils';
 import {
   Loader,
-  NoPeopleMessage,
+  NoPeople,
   PeopleLoadingError,
   PeoplePageContent,
 } from '../components';
@@ -37,28 +37,30 @@ export const PeoplePage: FC = () => {
     })();
   }, []);
 
-  const listOfPeople = filterPeople(people, sex, query, centuries, sort, order);
+  const listOfPeople = filterPeople(people, sex, query, centuries, sort);
 
   const componentForRender = () => {
     switch (true) {
       case isError:
         return <PeopleLoadingError />;
       case !people.length:
-        return <NoPeopleMessage />;
+        return <NoPeople />;
       default:
-        return <PeoplePageContent people={listOfPeople} />;
+        return (
+          <PeoplePageContent
+            people={!order ? listOfPeople : listOfPeople.reverse()}
+          />
+        );
     }
   };
 
   return (
-    <div className="section">
-      <div className="container">
-        <h1 className="title">People Page</h1>
+    <>
+      <h1 className="title">People Page</h1>
 
-        <div className="block">
-          {isLoading ? <Loader /> : componentForRender()}
-        </div>
+      <div className="block">
+        {isLoading ? <Loader /> : componentForRender()}
       </div>
-    </div>
+    </>
   );
 };

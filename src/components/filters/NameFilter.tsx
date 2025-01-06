@@ -1,10 +1,11 @@
+import { ChangeEvent } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
 export const NameFilter = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const query = searchParams.get('query') || '';
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     const params = new URLSearchParams(searchParams);
 
     if (event.target.value === '') {

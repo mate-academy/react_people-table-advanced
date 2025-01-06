@@ -1,7 +1,7 @@
 import { useSearchParams } from 'react-router-dom';
 import classNames from 'classnames';
-import { CENTURIES } from '../constants';
-import { SearchLink } from '../components';
+import { CENTURIES } from '../../constants';
+import { SearchLink } from '..';
 
 export const CenturyFilter = () => {
   const [searchParams] = useSearchParams();

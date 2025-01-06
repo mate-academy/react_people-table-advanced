@@ -13,7 +13,11 @@ export const App: FC = () => {
   return (
     <div data-cy="app">
       <Navbar />
-      <Outlet />
+      <main className="section">
+        <div className="container">
+          <Outlet />
+        </div>
+      </main>
     </div>
   );
 };

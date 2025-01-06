@@ -1,6 +1,6 @@
 import { FC } from 'react';
 import { Person } from '../types';
-import { PeopleFilters, PeopleTable } from '../components';
+import { EmptyList, PeopleFilters, PeopleTable } from '../components';
 
 type Props = {
   people: Person[];
@@ -16,11 +16,7 @@ export const PeoplePageContent: FC<Props> = props => {
       </div>
       <div className="column">
         <div className="box table-container">
-          {!!people.length ? (
-            <PeopleTable people={people} />
-          ) : (
-            <p>There are no people matching the current search criteria</p>
-          )}
+          {!!people.length ? <PeopleTable people={people} /> : <EmptyList />}
         </div>
       </div>
     </div>
