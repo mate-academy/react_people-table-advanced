@@ -1,11 +1,13 @@
 import { Link, useParams, useSearchParams } from 'react-router-dom';
-import { EnrichPerson } from '../types';
+import { EnrichPerson, Person } from '../types';
 import classNames from 'classnames';
-import { SearchLink } from './SearchLink';
+import { TableColumn } from './TableColumn';
 
 type Props = {
   people: EnrichPerson[];
 };
+
+const COLUMNS = ['Name', 'Sex', 'Born', 'Died'];
 
 export const PeopleTable: React.FC<Props> = props => {
   const { people } = props;
@@ -39,8 +41,14 @@ export const PeopleTable: React.FC<Props> = props => {
     }
 
     const sortedPeople = [...allPeople].sort((a, b) => {
-      const valueA = a[sortField as keyof EnrichPerson] ?? '';
-      const valueB = b[sortField as keyof EnrichPerson] ?? '';
+      const valueA = a[sortField as keyof Person] ?? '';
+      const valueB = b[sortField as keyof Person] ?? '';
+
+      if (typeof valueA === 'string' && typeof valueB === 'string') {
+        return sortOrder === 'asc'
+          ? valueA.localeCompare(valueB)
+          : valueB.localeCompare(valueA);
+      }
 
       if (valueA < valueB) {
         return sortOrder === 'asc' ? -1 : 1;
@@ -55,25 +63,6 @@ export const PeopleTable: React.FC<Props> = props => {
 
     return sortedPeople;
   }
-
-  const getNextSortParams = (currentField: string) => {
-    const currentSortField = searchParams.get('sort');
-    const currentOrder = searchParams.get('order');
-
-    if (currentSortField !== currentField) {
-      return { sort: currentField, order: null };
-    }
-
-    if (currentOrder === null) {
-      return { sort: currentField, order: 'desc' };
-    }
-
-    if (currentOrder === 'desc') {
-      return { sort: null, order: null };
-    }
-
-    return { sort: currentField, order: 'asc' };
-  };
 
   const isPersoninList = (slug: string | undefined) => {
     const result = people.some(person => person.slug === slug);
@@ -90,49 +79,9 @@ export const PeopleTable: React.FC<Props> = props => {
     >
       <thead>
         <tr>
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Name
-              <SearchLink params={getNextSortParams('name')}>
-                <span className="icon">
-                  <i className="fas fa-sort" />
-                </span>
-              </SearchLink>
-            </span>
-          </th>
-
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Sex
-              <SearchLink params={getNextSortParams('sex')}>
-                <span className="icon">
-                  <i className="fas fa-sort" />
-                </span>
-              </SearchLink>
-            </span>
-          </th>
-
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Born
-              <SearchLink params={getNextSortParams('born')}>
-                <span className="icon">
-                  <i className="fas fa-sort-up" />
-                </span>
-              </SearchLink>
-            </span>
-          </th>
-
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Died
-              <SearchLink params={getNextSortParams('died')}>
-                <span className="icon">
-                  <i className="fas fa-sort" />
-                </span>
-              </SearchLink>
-            </span>
-          </th>
+          {COLUMNS.map(column => (
+            <TableColumn columnName={column} key={column} />
+          ))}
 
           <th>Mother</th>
           <th>Father</th>
