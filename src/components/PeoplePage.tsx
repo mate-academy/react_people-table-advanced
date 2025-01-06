@@ -9,10 +9,14 @@ import { getSortedPeople } from '../utils/sortHelper';
 
 export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);
-  const [searchParams] = useSearchParams();
   const [preparedPeople, setPreparedPeople] = useState<Person[]>([]);
   const [errorMessage, setErrorMessage] = useState('');
   const [timer, setTimer] = useState(false);
+
+  const [searchParams] = useSearchParams();
+
+  const getPersonLink = ({ name, born }: Person) =>
+    `${name.toLowerCase().split(' ').join('-')}-${born}`;
 
   useEffect(() => {
     setTimer(true);
@@ -20,6 +24,7 @@ export const PeoplePage = () => {
     const fetchPeople = async () => {
       try {
         const peopleFromServe = await getPeople();
+
         setPeople(peopleFromServe);
       } catch {
         setErrorMessage('Something went wrong');
@@ -41,15 +46,13 @@ export const PeoplePage = () => {
         father: fath,
         mother: mom,
         slug: getPersonLink(person),
-      }
+      };
     });
 
     const sortedPeople = getSortedPeople(peopleWithParents, searchParams);
 
     setPreparedPeople(sortedPeople);
   }, [people, searchParams]);
-
-  const getPersonLink = ({ name, born }: Person) => `${name.toLowerCase().split(' ').join('-')}-${born}`;
 
   return (
     <>
@@ -65,16 +68,24 @@ export const PeoplePage = () => {
             <div className="box table-container">
               {timer && <Loader />}
 
-              {!timer && errorMessage && <p data-cy="peopleLoadingError">Something went wrong</p>}
+              {!timer && errorMessage && (
+                <p data-cy="peopleLoadingError">Something went wrong</p>
+              )}
 
-              {!timer && !errorMessage && people.length === 0 && <p data-cy="noPeopleMessage">There are no people on the server</p>}
+              {!timer && errorMessage?.trim() === '' && people.length === 0 && (
+                <p data-cy="noPeopleMessage">
+                  There are no people on the server
+                </p>
+              )}
 
-              {preparedPeople.length !== 0
-                ? (
-                  <PeopleTable sortedPeople={preparedPeople} getPersonLink={getPersonLink} />
-                ) : (
-                  <p>There are no people matching the current search criteria</p>
-                )}
+              {preparedPeople.length !== 0 ? (
+                <PeopleTable
+                  sortedPeople={preparedPeople}
+                  getPersonLink={getPersonLink}
+                />
+              ) : (
+                <p>There are no people matching the current search criteria</p>
+              )}
             </div>
           </div>
         </div>

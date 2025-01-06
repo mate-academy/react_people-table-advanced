@@ -1,39 +1,28 @@
-import React from "react";
-import { Person } from "../types";
-import { Link, useParams, useSearchParams } from "react-router-dom";
-import classNames from "classnames";
-import { useSetSearchWith } from "./hooks/useSetSearchWith";
+import React from 'react';
+import { Person } from '../types';
+import { Link, useParams, useSearchParams } from 'react-router-dom';
+import classNames from 'classnames';
+import { SearchLink } from './SearchLink';
 
 type Props = {
-  sortedPeople: Person[],
+  sortedPeople: Person[];
   getPersonLink: (Person: Person) => string;
 };
 
-export const PeopleTable: React.FC<Props> = ({ sortedPeople, getPersonLink }) => {
+export const PeopleTable: React.FC<Props> = ({
+  sortedPeople,
+  getPersonLink,
+}) => {
   const [searchParams] = useSearchParams();
-  const setSearchWith = useSetSearchWith();
   const sortName = searchParams.get('sort') || '';
   const { personName } = useParams();
   const normalizePersonName = personName || '';
 
+  const getPersonClass = ({ sex }: Person) =>
+    classNames('', { 'has-text-danger': sex === 'f' });
 
-  function setSortWith(sortName: string) {
-    console.log(sortName);
-    const newParams = new URLSearchParams(searchParams.toString());
-
-    if (newParams.get('sort') === sortName && newParams.has('order')) {
-      setSearchWith({ sort: null, order: null });
-    } else if (newParams.get('sort') === sortName && !newParams.has('order')) {
-      setSearchWith({ order: 'desc' });
-    } else {
-      setSearchWith({ sort: sortName, order: null });
-    }
-  }
-
-  const getPersonClass = ({ sex }: Person) => classNames('', { 'has-text-danger': sex === 'f' });
-
-  const getNormalizeTableHeaderCell = (cell: string) => (
-    cell.split('')[0].toUpperCase() + cell.split('').splice(1).join(''));
+  const getNormalizeTableHeaderCell = (cell: string) =>
+    cell.split('')[0].toUpperCase() + cell.split('').splice(1).join('');
 
   return (
     <table
@@ -41,27 +30,30 @@ export const PeopleTable: React.FC<Props> = ({ sortedPeople, getPersonLink }) =>
       className="table is-striped is-hoverable is-narrow is-fullwidth"
     >
       <thead>
-
         <tr>
           {['name', 'sex', 'born', 'died'].map(th => (
-            <th onClick={() => setSortWith(th)}>
+            <th key={th}>
               <span className="is-flex is-flex-wrap-nowrap">
                 {getNormalizeTableHeaderCell(th)}
-                <Link to={`..${searchParams}`}>
-                  <span className="icon">
-                    <i className={
-                      classNames('fas',
-                        {
-                          'fa-sort': !searchParams.has('sort')
-                            && !searchParams.has('order')
-                            || sortName !== th,
-                          'fa-sort-up': searchParams.has('sort')
-                            && !searchParams.has('order')
-                            && sortName === th,
-                          'fa-sort-down': searchParams.has('order') && sortName === th,
-                        })} />
-                  </span>
-                </Link>
+                <SearchLink
+                  params={{
+                    sort: th,
+                    order: searchParams.get('order') === 'desc' ? null : 'desc',
+                  }}
+                  className="icon"
+                >
+                  <i
+                    className={classNames('fas', {
+                      'fa-sort': !searchParams.has('sort') || sortName !== th,
+                      'fa-sort-up':
+                        searchParams.has('sort') &&
+                        !searchParams.has('order') &&
+                        sortName === th,
+                      'fa-sort-down':
+                        searchParams.has('order') && sortName === th,
+                    })}
+                  />
+                </SearchLink>
               </span>
             </th>
           ))}
@@ -73,16 +65,27 @@ export const PeopleTable: React.FC<Props> = ({ sortedPeople, getPersonLink }) =>
 
       <tbody>
         {sortedPeople.map((person: Person) => (
-          <tr data-cy="person" className={classNames('', { 'has-background-warning': normalizePersonName === person.slug })}>
+          <tr
+            key={person.slug}
+            data-cy="person"
+            className={classNames('', {
+              'has-background-warning': normalizePersonName === person.slug,
+            })}
+          >
             <td>
-              <Link to={`../${person.slug}`} className={getPersonClass(person)}>{person.name}</Link>
+              <Link to={`../${person.slug}`} className={getPersonClass(person)}>
+                {person.name}
+              </Link>
             </td>
             <td>{person.sex}</td>
             <td>{person.born}</td>
             <td>{person.died}</td>
             {person.mother ? (
               <td>
-                <Link to={`../${getPersonLink(person.mother)}`} className="has-text-danger">
+                <Link
+                  to={`../${getPersonLink(person.mother)}`}
+                  className="has-text-danger"
+                >
                   {person.mother.name}
                 </Link>
               </td>
@@ -98,7 +101,8 @@ export const PeopleTable: React.FC<Props> = ({ sortedPeople, getPersonLink }) =>
             ) : (
               <td>{person.fatherName || '-'}</td>
             )}
-          </tr>))}
+          </tr>
+        ))}
       </tbody>
     </table>
   );

@@ -1,7 +1,11 @@
-import { HashRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import {
+  HashRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from 'react-router-dom';
 import { App } from './App';
 import { PeoplePage } from './components/PeoplePage';
-
 
 export const Root = () => {
   return (

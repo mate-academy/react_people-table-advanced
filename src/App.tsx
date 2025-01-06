@@ -17,8 +17,8 @@ export const App = () => {
     <div data-cy="app">
       <Navbar />
 
-      <div className='section'>
-        <div className='container'>
+      <div className="section">
+        <div className="container">
           <Outlet />
         </div>
       </div>

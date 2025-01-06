@@ -1,8 +1,11 @@
-import { Person } from "../types";
+import { Person } from '../types';
 
 type Sort = 'name' | 'sex' | 'born' | 'died';
 
-export function getSortedPeople(people: Person[], searchParams: URLSearchParams) {
+export function getSortedPeople(
+  people: Person[],
+  searchParams: URLSearchParams,
+) {
   const sortBy = searchParams.get('sort') as Sort;
   const order = searchParams.get('order');
   const centuries = searchParams.getAll('centuries');
@@ -30,7 +33,7 @@ export function getSortedPeople(people: Person[], searchParams: URLSearchParams)
       const birthCentury = Math.ceil(person.born / 100);
 
       return centuries.includes(`${birthCentury}`);
-    })
+    });
   }
 
   if (sex) {
@@ -41,7 +44,8 @@ export function getSortedPeople(people: Person[], searchParams: URLSearchParams)
     sortedPeople = sortedPeople.filter(person =>
       (person.name + person.motherName + person.fatherName)
         .toLowerCase()
-        .includes(query.toLowerCase()));
+        .includes(query.toLowerCase()),
+    );
   }
 
   return order === 'desc' ? sortedPeople.reverse() : sortedPeople;
