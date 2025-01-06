@@ -9,7 +9,7 @@ export const CenturyFilter = () => {
 
   function handleSelectCentury(selectedCentury: string) {
     return centuries.includes(selectedCentury)
-      ? centuries.filter(cemtury => cemtury !== selectedCentury)
+      ? centuries.filter(century => century !== selectedCentury)
       : [...centuries, selectedCentury];
   }
 

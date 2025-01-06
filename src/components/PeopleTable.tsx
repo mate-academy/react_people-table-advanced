@@ -55,7 +55,12 @@ export const PeopleTable: FC<Props> = props => {
                   {value}
                   <SearchLink params={setSorting(value.toLowerCase())}>
                     <span className="icon">
-                      <i className={classNames('fas', setSortIcon(value))} />
+                      <i
+                        className={classNames(
+                          'fas',
+                          setSortIcon(value.toLowerCase()),
+                        )}
+                      />
                     </span>
                   </SearchLink>
                 </span>

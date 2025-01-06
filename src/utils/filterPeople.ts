@@ -38,7 +38,7 @@ export const filterPeople = (
           (person1, person2) => person1[sort] - person2[sort],
         );
       default:
-        return people;
+        return filteredList;
     }
   }
 
