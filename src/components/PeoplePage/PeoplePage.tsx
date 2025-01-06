@@ -68,6 +68,8 @@ export const PeoplePage: React.FC = () => {
       .finally(() => setIsLoading(false));
   }, []);
 
+  const noMatchesMessage = `There are no people matching the current search criteria`;
+
   return (
     <>
       <h1 className="title">People Page</h1>
@@ -82,20 +84,27 @@ export const PeoplePage: React.FC = () => {
 
           <div className="column">
             <div className="box table-container">
-              {isLoading ? (
-                <Loader />
-              ) : errorMessage ? (
+              {isLoading && <Loader />}
+
+              {!isLoading && errorMessage && (
                 <p data-cy="peopleLoadingError" className="has-text-danger">
                   {errorMessage}
                 </p>
-              ) : people.length > 0 ? (
-                <PeopleTable people={showingList} />
-              ) : !isLoading && !!people.length && !showingList.length ? (
-                <p>There are no people matching the current search criteria</p>
-              ) : (
+              )}
+
+              {!isLoading && !errorMessage && people.length === 0 && (
                 <p data-cy="noPeopleMessage">
                   There are no people on the server
                 </p>
+              )}
+
+              {!isLoading &&
+                !errorMessage &&
+                people.length > 0 &&
+                showingList.length === 0 && <p>{noMatchesMessage}</p>}
+
+              {!isLoading && !errorMessage && showingList.length > 0 && (
+                <PeopleTable people={showingList} />
               )}
             </div>
           </div>
