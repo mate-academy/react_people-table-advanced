@@ -10,10 +10,10 @@ export const TableHead: React.FC = () => {
 
   const setSortParams = (key: SortFields): Record<string, string | null> => {
     if (sortField === key && !sortOrder) {
-      return { order: 'desk' };
+      return { order: 'desc' };
     }
 
-    if (sortField === key && sortOrder === 'desk') {
+    if (sortField === key && sortOrder === 'desc') {
       return { sort: null, order: null };
     }
 
@@ -33,9 +33,9 @@ export const TableHead: React.FC = () => {
                     <i
                       className={classNames('fas', {
                         'fa-sort': sortField !== value,
-                        'fa-sort-up': sortField === value,
                         'fa-sort-down':
-                          sortField === value && sortOrder === 'desk',
+                          sortField === value && sortOrder === 'desc',
+                        'fa-sort-up': sortField === value && !sortOrder,
                       })}
                     />
                   </span>
