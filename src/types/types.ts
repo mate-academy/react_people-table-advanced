@@ -11,6 +11,7 @@ export enum SortOrder {
 }
 
 export enum SexFilter {
+  None = 'none',
   Female = 'f',
   Male = 'm',
 }

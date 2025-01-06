@@ -16,10 +16,10 @@ const PeoplePage = () => {
   const [searchParams] = useSearchParams();
   const sortColumn = searchParams.get('sort') as SortField;
   const sortOrder = searchParams.get('order') || SortOrder.Asc;
-  const sexFilter = searchParams.get('sex') as SexFilter;
+  const sexFilter = (searchParams.get('sex') as SexFilter) || SexFilter.None;
 
   const processedPeople = React.useMemo(() => {
-    if (!sortColumn || !sexFilter) {
+    if (!sortColumn && sexFilter === SexFilter.None) {
       return people;
     }
 
@@ -42,7 +42,7 @@ const PeoplePage = () => {
 
       return 0;
     });
-  }, [sortColumn, sortOrder, people]);
+  }, [sortColumn, sortOrder, people, sexFilter]);
 
   const searchPeopleByName = (name: string | null) => {
     return people?.find(
@@ -70,7 +70,7 @@ const PeoplePage = () => {
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
           <div className="column is-7-tablet is-narrow-desktop">
-            {!loading && <PeopleFilters />}
+            {!loading && <PeopleFilters sexFilter={sexFilter} />}
           </div>
 
           <div className="column">

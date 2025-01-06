@@ -1,18 +1,54 @@
-export const PeopleFilters = () => {
+import { SearchLink } from '../SearchLink';
+import { SexFilter } from '../../types';
+import React from 'react';
+import classNames from 'classnames';
+
+type Props = {
+  sexFilter: SexFilter;
+};
+
+export const PeopleFilters: React.FC<Props> = ({ sexFilter }) => {
+  const getSexFilterState = (currentSex: SexFilter) => {
+    if (sexFilter === currentSex && sexFilter === SexFilter.None) {
+      return { sex: null };
+    }
+
+    if (sexFilter !== currentSex) {
+      return { sex: currentSex };
+    }
+
+    return { sex: null };
+  };
+
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        <a className="is-active" href="#/people">
+        <SearchLink
+          className={classNames('', {
+            'is-active': !sexFilter && sexFilter === SexFilter.None,
+          })}
+          params={getSexFilterState(SexFilter.None)}
+        >
           All
-        </a>
-        <a className="" href="#/people?sex=m">
+        </SearchLink>
+        <SearchLink
+          className={classNames('', {
+            'is-active': sexFilter === SexFilter.Male,
+          })}
+          params={getSexFilterState(SexFilter.Male)}
+        >
           Male
-        </a>
-        <a className="" href="#/people?sex=f">
+        </SearchLink>
+        <SearchLink
+          className={classNames('', {
+            'is-active': sexFilter === SexFilter.Female,
+          })}
+          params={getSexFilterState(SexFilter.Female)}
+        >
           Female
-        </a>
+        </SearchLink>
       </p>
 
       <div className="panel-block">
