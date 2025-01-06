@@ -20,7 +20,7 @@ export const getFilteredPeople = (
     if (name) {
       const personName = person.name.toLowerCase();
       const motherName = person.motherName?.toLowerCase();
-      const fatherName = person.fatherName?.toLocaleLowerCase();
+      const fatherName = person.fatherName?.toLowerCase();
 
       if (
         !personName.includes(name) &&

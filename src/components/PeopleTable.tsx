@@ -44,9 +44,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
 
   const handleSort = (field: string) => {
     if (field === sortField) {
-      setSortOrder(prevOrder =>
-        prevOrder === 'asc' ? 'desc' : prevOrder === 'desc' ? '' : 'asc',
-      );
+      setSortOrder(prevOrder => (prevOrder === 'asc' ? 'desc' : 'asc'));
     } else {
       setSortField(field);
       setSortOrder('asc');
@@ -97,7 +95,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
             <span className="is-flex is-flex-wrap-nowrap">
               Died
               <a href="#/people?sort=died">
-                <SortLink field="died" onSort={() => handleSort('born')} />
+                <SortLink field="died" onSort={() => handleSort('died')} />
               </a>
             </span>
           </th>

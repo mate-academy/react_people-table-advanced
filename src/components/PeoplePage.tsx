@@ -50,20 +50,32 @@ export const PeoplePage = () => {
               {loading && <Loader />}
 
               {error && (
-                <p data-cy="peopleLoadingError">Something went wrong</p>
-              )}
-
-              {!loading && !error && people.length === 0 && (
-                <p data-cy="noPeopleMessage">
-                  There are no people on the server
+                <p data-cy="peopleLoadingError">
+                  Something went wrong.
+                  <button
+                    onClick={() => window.location.reload()}
+                    className="button is-link ml-2"
+                  >
+                    Retry
+                  </button>
                 </p>
               )}
 
-              {!people.length && !loading && !error && (
-                <p>There are no people matching the current search criteria</p>
+              {!loading && !error && (
+                <>
+                  {people.length === 0 ? (
+                    <p data-cy="noPeopleMessage">
+                      There are no people on the server
+                    </p>
+                  ) : filteredPeople.length === 0 ? (
+                    <p>
+                      There are no people matching the current search criteria
+                    </p>
+                  ) : (
+                    <PeopleTable people={filteredPeople} />
+                  )}
+                </>
               )}
-
-              {!loading && !error && <PeopleTable people={filteredPeople} />}
             </div>
           </div>
         </div>

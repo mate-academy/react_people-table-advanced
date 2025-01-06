@@ -16,10 +16,16 @@ export const PeopleFilters: React.FC = () => {
     setSearchParams(params);
   };
 
-  const toggleCenturies = (century: string) => {
-    return selectedCenturies.includes(century)
+  const handleToggleCentury = (century: string) => {
+    const updatedCenturies = selectedCenturies.includes(century)
       ? selectedCenturies.filter(centuryYear => centuryYear !== century)
       : [...selectedCenturies, century];
+
+    const params = new URLSearchParams(searchParams);
+
+    params.delete('centuries');
+    updatedCenturies.forEach(cent => params.append('centuries', cent));
+    setSearchParams(params);
   };
 
   return (
@@ -71,30 +77,28 @@ export const PeopleFilters: React.FC = () => {
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
             {centuries.map(century => (
-              <SearchLink
+              <button
                 key={century}
                 data-cy="century"
                 className={classNames('button mr-1', {
                   'is-info': selectedCenturies.includes(`${century}`),
                 })}
-                onClick={() => toggleCenturies(`${century}`)}
-                params={{ centuries: toggleCenturies(`${century}`) }}
+                onClick={() => handleToggleCentury(`${century}`)}
               >
                 {century}
-              </SearchLink>
+              </button>
             ))}
           </div>
-
           <div className="level-right ml-4">
-            <SearchLink
+            <button
               data-cy="centuryALL"
               className={classNames('button is-success', {
                 'is-outlined': selectedCenturies.length !== 0,
               })}
-              params={{ centuries: null }}
+              onClick={() => setSearchParams(new URLSearchParams(searchParams))}
             >
               All
-            </SearchLink>
+            </button>
           </div>
         </div>
       </div>
