@@ -1,6 +1,6 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import { Person } from "../types";
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { Person } from '../types';
 
 type PeopleTableProps = {
   people: Person[];
@@ -66,15 +66,19 @@ export const PeopleTable: React.FC<PeopleTableProps> = ({ people }) => {
       </thead>
 
       <tbody>
-        {people.map((person) => {
-          const motherRow = people.find((p) => p.name === person.motherName);
-          const fatherRow = people.find((p) => p.name === person.fatherName);
+        {people.map(person => {
+          const motherRow = people.find(p => p.name === person.motherName);
+          const fatherRow = people.find(p => p.name === person.fatherName);
 
           const shouldHighlight = (p: Person) => {
-            if (clickedSlug === p.slug) return true;
+            if (clickedSlug === p.slug) {
+              return true;
+            }
+
             if (motherRow?.slug === p.slug || fatherRow?.slug === p.slug) {
               return true;
             }
+
             return false;
           };
 
@@ -82,13 +86,15 @@ export const PeopleTable: React.FC<PeopleTableProps> = ({ people }) => {
             <tr
               key={person.slug}
               data-cy="person"
-              className={shouldHighlight(person) ? "has-background-warning" : ""}
+              className={
+                shouldHighlight(person) ? 'has-background-warning' : ''
+              }
             >
               {/* Name */}
               <td>
                 <Link
                   to={`../${person.slug}`}
-                  className={person.sex === "f" ? "has-text-danger" : ""}
+                  className={person.sex === 'f' ? 'has-text-danger' : ''}
                   onClick={() => handleLinkClick(person.slug)}
                 >
                   {person.name}

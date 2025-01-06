@@ -16,6 +16,7 @@ export const PeoplePage = () => {
     const fetchPeople = async () => {
       try {
         const peopleData = await getPeople();
+
         setPeople(peopleData);
       } catch {
         setErr('Failed to fetch data :(');
@@ -35,7 +36,7 @@ export const PeoplePage = () => {
     return Math.ceil(year / 100);
   };
 
-  const filteredPeople = people.filter((person) => {
+  const filteredPeople = people.filter(person => {
     let match = true;
 
     if (sex && person.sex !== sex) {
@@ -44,6 +45,7 @@ export const PeoplePage = () => {
 
     if (centuries.length > 0) {
       const personCentury = getCentury(person.born);
+
       if (!centuries.includes(String(personCentury))) {
         match = false;
       }
@@ -77,10 +79,14 @@ export const PeoplePage = () => {
               {loading && <Loader />}
 
               {!loading && people.length === 0 && (
-                <p data-cy="noPeopleMessage">There are no people on the server</p>
+                <p data-cy="noPeopleMessage">
+                  There are no people on the server
+                </p>
               )}
 
-              {!loading && people.length > 0 && <PeopleTable people={filteredPeople} />}
+              {!loading && people.length > 0 && (
+                <PeopleTable people={filteredPeople} />
+              )}
             </div>
           </div>
         </div>

@@ -1,4 +1,4 @@
-import { NavLink } from "react-router-dom";
+import { NavLink } from 'react-router-dom';
 
 export const Navbar = () => {
   return (
@@ -12,7 +12,7 @@ export const Navbar = () => {
         <div className="navbar-brand">
           <NavLink
             className={({ isActive }) =>
-              `navbar-item ${isActive ? "has-background-grey-lighter" : ""}`
+              `navbar-item ${isActive ? 'has-background-grey-lighter' : ''}`
             }
             to="/"
           >
@@ -21,7 +21,7 @@ export const Navbar = () => {
 
           <NavLink
             className={({ isActive }) =>
-              `navbar-item ${isActive ? "has-background-grey-lighter" : ""}`
+              `navbar-item ${isActive ? 'has-background-grey-lighter' : ''}`
             }
             to="/people"
           >

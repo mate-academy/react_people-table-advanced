@@ -5,6 +5,7 @@ export const PeopleFilters = () => {
 
   const getActiveClass = (key: string, value: string | null) => {
     const paramValue = searchParams.get(key);
+
     return paramValue === value || (!paramValue && value === null)
       ? 'is-active'
       : '';
@@ -12,16 +13,19 @@ export const PeopleFilters = () => {
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const searchValue = e.target.value;
+
     if (searchValue) {
       searchParams.set('query', searchValue);
     } else {
       searchParams.delete('query');
     }
+
     setSearchParams(searchParams);
   };
 
   const handleCenturyChange = (century: string) => {
     const currentCenturies = searchParams.getAll('centuries');
+
     if (currentCenturies.includes(century)) {
       searchParams.delete('centuries');
       currentCenturies
@@ -30,6 +34,7 @@ export const PeopleFilters = () => {
     } else {
       searchParams.append('centuries', century);
     }
+
     setSearchParams(searchParams);
   };
 
