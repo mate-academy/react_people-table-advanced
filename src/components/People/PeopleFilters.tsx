@@ -1,15 +1,20 @@
 import { SearchLink } from '../SearchLink';
 import { SexFilter } from '../../types';
-import React from 'react';
 import classNames from 'classnames';
 
 type Props = {
   sexFilter: SexFilter;
+  handleQueryChange: (query: React.ChangeEvent<HTMLInputElement>) => void;
+  query: string | null;
 };
 
-export const PeopleFilters: React.FC<Props> = ({ sexFilter }) => {
+export const PeopleFilters: React.FC<Props> = ({
+  sexFilter,
+  handleQueryChange,
+  query,
+}) => {
   const getSexFilterState = (currentSex: SexFilter) => {
-    if (sexFilter === currentSex && sexFilter === SexFilter.None) {
+    if (currentSex === SexFilter.None) {
       return { sex: null };
     }
 
@@ -27,7 +32,7 @@ export const PeopleFilters: React.FC<Props> = ({ sexFilter }) => {
       <p className="panel-tabs" data-cy="SexFilter">
         <SearchLink
           className={classNames('', {
-            'is-active': !sexFilter && sexFilter === SexFilter.None,
+            'is-active': sexFilter === SexFilter.None,
           })}
           params={getSexFilterState(SexFilter.None)}
         >
@@ -58,8 +63,9 @@ export const PeopleFilters: React.FC<Props> = ({ sexFilter }) => {
             type="search"
             className="input"
             placeholder="Search"
+            onChange={handleQueryChange}
+            value={query || ''}
           />
-
           <span className="icon is-left">
             <i className="fas fa-search" aria-hidden="true" />
           </span>
