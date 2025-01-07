@@ -6,13 +6,29 @@ type Props = {
   sexFilter: SexFilter;
   handleQueryChange: (query: React.ChangeEvent<HTMLInputElement>) => void;
   query: string | null;
+  centuriesFromURl: string[] | string | null;
 };
 
 export const PeopleFilters: React.FC<Props> = ({
   sexFilter,
   handleQueryChange,
   query,
+  centuriesFromURl,
 }) => {
+  const getCenturyFilterState = (century: string) => {
+    if (centuriesFromURl && Array.isArray(centuriesFromURl)) {
+      const updatedCenturies = centuriesFromURl.includes(century)
+        ? centuriesFromURl.filter(c => c !== century)
+        : [...centuriesFromURl, century];
+
+      return updatedCenturies.length === 0
+        ? { centuries: null }
+        : { centuries: updatedCenturies };
+    }
+
+    return { centuries: [century] };
+  };
+
   const getSexFilterState = (currentSex: SexFilter) => {
     if (currentSex === SexFilter.None) {
       return { sex: null };
@@ -75,55 +91,67 @@ export const PeopleFilters: React.FC<Props> = ({
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            <a
+            <SearchLink
+              params={getCenturyFilterState('16')}
               data-cy="century"
-              className="button mr-1"
-              href="#/people?centuries=16"
+              className={classNames('button mr-1', {
+                'is-info': centuriesFromURl?.includes('16'),
+              })}
             >
               16
-            </a>
+            </SearchLink>
 
-            <a
+            <SearchLink
               data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=17"
+              className={classNames('button mr-1', {
+                'is-info': centuriesFromURl?.includes('17'),
+              })}
+              params={getCenturyFilterState('17')}
             >
               17
-            </a>
+            </SearchLink>
 
-            <a
+            <SearchLink
               data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=18"
+              className={classNames('button mr-1', {
+                'is-info': centuriesFromURl?.includes('18'),
+              })}
+              params={getCenturyFilterState('18')}
             >
               18
-            </a>
+            </SearchLink>
 
-            <a
+            <SearchLink
               data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=19"
+              className={classNames('button mr-1', {
+                'is-info': centuriesFromURl?.includes('19'),
+              })}
+              params={getCenturyFilterState('19')}
             >
               19
-            </a>
+            </SearchLink>
 
-            <a
+            <SearchLink
               data-cy="century"
-              className="button mr-1"
-              href="#/people?centuries=20"
+              className={classNames('button mr-1', {
+                'is-info': centuriesFromURl?.includes('20'),
+              })}
+              params={getCenturyFilterState('20')}
             >
               20
-            </a>
+            </SearchLink>
           </div>
 
           <div className="level-right ml-4">
-            <a
+            <SearchLink
               data-cy="centuryALL"
-              className="button is-success is-outlined"
-              href="#/people"
+              className={classNames('button is-success', {
+                'is-outlined': centuriesFromURl && centuriesFromURl?.length > 0,
+              })}
+              params={{ centuries: null }}
             >
               All
-            </a>
+            </SearchLink>
           </div>
         </div>
       </div>

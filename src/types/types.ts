@@ -15,3 +15,11 @@ export enum SexFilter {
   Female = 'f',
   Male = 'm',
 }
+
+export enum CenturiesFilter {
+  Sixteen = 16,
+  Seventeen = 17,
+  Eighteen = 18,
+  Nineteen = 19,
+  Twenty = 20,
+}

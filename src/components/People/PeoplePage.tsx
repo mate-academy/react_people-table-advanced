@@ -20,6 +20,7 @@ const PeoplePage = () => {
   const sortOrder = searchParams.get('order') || SortOrder.Asc;
   const sexFilter = (searchParams.get('sex') as SexFilter) || SexFilter.None;
   const query = searchParams.get('query');
+  const centuries = searchParams.getAll('centuries') ;
 
   function setSearchWith(params: SearchParams) {
     const search = getSearchWith(searchParams, params);
@@ -30,6 +31,21 @@ const PeoplePage = () => {
   function handleQueryChange(event: React.ChangeEvent<HTMLInputElement>) {
     setSearchWith({ query: event.target.value || null });
   }
+
+  const filterByCenturies = React.useCallback(
+    (people: Person[], centuries: string[] | null) => {
+      if (!centuries || centuries.length === 0) {
+        return people;
+      }
+
+      return people.filter(person => {
+        const century = Math.floor(person.born / 100) + 1;
+        return centuries.includes(century.toString());
+      });
+    },
+    [],
+  );
+
 
   const filterByName = React.useCallback(
     (people: Person[], query: string | null) => {
@@ -93,6 +109,8 @@ const PeoplePage = () => {
     let result = people;
 
     if (result) {
+      result = filterByCenturies(result, centuries);
+
       result = filterByName(result, query);
       result = filterBySex(result, sexFilter);
       result = sortPeople(result, sortColumn, sortOrder);
@@ -108,6 +126,8 @@ const PeoplePage = () => {
     filterByName,
     filterBySex,
     sortPeople,
+    centuries,
+    filterByCenturies,
   ]);
 
   // const processedPeople = React.useMemo(() => {
@@ -183,6 +203,7 @@ const PeoplePage = () => {
                 sexFilter={sexFilter}
                 handleQueryChange={handleQueryChange}
                 query={query}
+                centuriesFromURl={centuries}
               />
             )}
           </div>
