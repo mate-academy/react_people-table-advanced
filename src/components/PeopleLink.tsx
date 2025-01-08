@@ -8,14 +8,17 @@ type Props = {
   person: Person;
 };
 
+const NO_PARENT = '-';
+
 const PeopleLink: FC<Props> = ({ person }) => {
+  const { sex, born, died } = person;
   const [searchParams] = useSearchParams();
   const { slug } = useParams();
   const isActivePerson = slug === person.slug;
 
   const renderParentLink = (parent: 'mother' | 'father') => {
     if (!person[parent] && !person[`${parent}Name`]) {
-      return '-';
+      return NO_PARENT;
     }
 
     return person[parent] ? (
@@ -56,9 +59,9 @@ const PeopleLink: FC<Props> = ({ person }) => {
         </Link>
       </td>
 
-      <td>{person.sex}</td>
-      <td>{person.born}</td>
-      <td>{person.died}</td>
+      <td>{sex}</td>
+      <td>{born}</td>
+      <td>{died}</td>
       <td>{renderParentLink(Parents.Mother)}</td>
       <td>{renderParentLink(Parents.Father)}</td>
     </tr>

@@ -1,6 +1,7 @@
 import { FC } from 'react';
 import { SearchLink } from './SearchLink';
 import { SexFilterValues } from '../types/Filter';
+import cn from 'classnames';
 
 type Props = {
   query: string;
@@ -24,11 +25,10 @@ export const PeopleFilters: FC<Props> = props => {
               sex: value === 'All' ? null : key.toLowerCase(),
             }}
             key={key}
-            className={
-              sex === key.toLowerCase() || (key === 'All' && sex === '')
-                ? 'is-active'
-                : ''
-            }
+            className={cn({
+              'is-active':
+                sex === key.toLowerCase() || (key === 'All' && sex === ''),
+            })}
           >
             {value}
           </SearchLink>
@@ -58,7 +58,7 @@ export const PeopleFilters: FC<Props> = props => {
             {centuriesArr.map(century => {
               const isSelected = centuries?.includes(century);
               const updatedCenturies = isSelected
-                ? centuries.filter(c => c !== century)
+                ? centuries.filter(centuryRemove => centuryRemove !== century)
                 : [...(centuries || []), century];
 
               return (
@@ -82,7 +82,7 @@ export const PeopleFilters: FC<Props> = props => {
               data-cy="centuryALL"
               className="button is-success is-outlined"
             >
-              All
+              {SexFilterValues.All}
             </SearchLink>
           </div>
         </div>

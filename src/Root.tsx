@@ -8,6 +8,7 @@ import {
 } from 'react-router-dom';
 import { HomePage } from './pages/HomePage';
 import { PeoplePage } from './pages/PeoplePage';
+import { NotFoundPage } from './pages/NotFoundPage';
 
 export const Root = () => (
   <Router>
@@ -18,8 +19,8 @@ export const Root = () => (
           <Route index element={<PeoplePage />} />
           <Route path=":slug" element={<PeoplePage />} />
         </Route>
-        <Route path="*" element={<h1 className="title">Page not found</h1>} />
-        <Route path="home" element={<Navigate to="/" replace={true} />} />
+        <Route path="*" element={<NotFoundPage />} />
+        <Route path="home" element={<Navigate to="/" replace />} />
       </Route>
     </Routes>
   </Router>

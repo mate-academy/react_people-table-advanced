@@ -13,7 +13,9 @@ export const usePeople = () => {
 
     try {
       const peopleFromServer = await getPeople();
-      const peopleMap = new Map(peopleFromServer.map(p => [p.name, p]));
+      const peopleMap = new Map(
+        peopleFromServer.map(person => [person.name, person]),
+      );
       const peopleWithParents = peopleFromServer.map(person => ({
         ...person,
         mother: person.motherName ? peopleMap.get(person.motherName) : null,

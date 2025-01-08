@@ -16,7 +16,7 @@ type Props = {
 };
 
 export const PeopleTable: React.FC<Props> = props => {
-  const { people, query, sex, centuries, sortBy, sortOrder, } = props;
+  const { people, query, sex, centuries, sortBy, sortOrder } = props;
 
   const filteredPeople = filterPeople(people, {
     sortBy,
