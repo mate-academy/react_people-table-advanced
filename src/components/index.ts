@@ -1,0 +1,9 @@
+export { default as NotFoundPage } from './NotFoundPage';
+export { default as HomePage } from './HomePage';
+export { default as NavBar } from './NavBar';
+export { default as PeoplePage } from './People/PeoplePage';
+export { default as PeopleTable } from './People/PeopleTable';
+export { default as PersonLink } from './PersonLink';
+// export { default as  } from './';
+// export { default as  } from './';
+// export { default as  } from './';
