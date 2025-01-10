@@ -20,7 +20,7 @@ export const sortPeople = (
 
     case 'born':
     case 'died':
-      sortedPeople.sort((a, b) => (a[sort] | 0) - (b[sort] || 0));
+      sortedPeople.sort((a, b) => (a[sort] || 0) - (b[sort] || 0));
       break;
 
     case 'sex':

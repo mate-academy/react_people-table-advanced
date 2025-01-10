@@ -64,7 +64,7 @@ export const PeoplePage = () => {
                 </p>
               )}
 
-              {!isLoading && !isError && people.length === 0 && (
+              {!isLoading && !isError && dataPeople.length === 0 && (
                 <p>There are no people matching the current search criteria</p>
               )}
 
