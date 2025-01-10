@@ -1,16 +1,16 @@
 import { Person } from '../types';
 
 export const filterByQuery = (people: Person[], query: string | null) => {
-  const formatedQuery = query?.trim().toLowerCase();
+  const formattedQuery = query?.trim().toLowerCase();
 
-  if (!formatedQuery) {
+  if (!formattedQuery) {
     return people;
   }
 
   return people.filter(
     person =>
-      person.name.toLowerCase().includes(formatedQuery) ||
-      person.motherName?.toLowerCase().includes(formatedQuery) ||
-      person.fatherName?.toLowerCase().includes(formatedQuery),
+      person.name.toLowerCase().includes(formattedQuery) ||
+      person.motherName?.toLowerCase().includes(formattedQuery) ||
+      person.fatherName?.toLowerCase().includes(formattedQuery),
   );
 };

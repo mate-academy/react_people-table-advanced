@@ -1,5 +1,5 @@
 import { Person } from '../types';
-import { filtrerByCenturies } from './filterByCenturies';
+import { filterByCenturies } from './filterByCenturies';
 import { filterByQuery } from './filterByQuery';
 import { filterBySex } from './filterBySex';
 import { sortPeople } from './sortPeople';
@@ -18,7 +18,7 @@ export const getFilteredPeople = (people: Person[], params: Filter) => {
   let peopleToFilter = [...people];
 
   peopleToFilter = filterBySex(peopleToFilter, sex);
-  peopleToFilter = filtrerByCenturies(peopleToFilter, centuries);
+  peopleToFilter = filterByCenturies(peopleToFilter, centuries);
   peopleToFilter = filterByQuery(peopleToFilter, query);
   peopleToFilter = sortPeople(peopleToFilter, sort, order);
 

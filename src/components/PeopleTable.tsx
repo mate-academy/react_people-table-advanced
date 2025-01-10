@@ -1,8 +1,8 @@
 import { useParams, useSearchParams } from 'react-router-dom';
 import { Person } from '../types';
 import { getFilteredPeople } from '../filters/filteringPeople';
-import { PersonLink } from './PersonLinl';
-import { TableTitle } from '../models/TableTatle';
+import { PersonLink } from './PersonLink';
+import { TableTitle } from '../models/TableTitle';
 import classNames from 'classnames';
 
 /* eslint-disable jsx-a11y/control-has-associated-label */

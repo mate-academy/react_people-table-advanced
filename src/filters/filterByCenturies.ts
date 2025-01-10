@@ -1,6 +1,6 @@
 import { Person } from '../types';
 
-export const filtrerByCenturies = (
+export const filterByCenturies = (
   people: Person[],
   centuries: string[] | null,
 ) => {
