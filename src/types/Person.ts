@@ -9,3 +9,9 @@ export interface Person {
   mother?: Person;
   father?: Person;
 }
+
+export enum OrderType {
+  asc = 'asc',
+  desc = 'desc',
+  default = '',
+}
