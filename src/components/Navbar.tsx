@@ -1,4 +1,11 @@
-export const Navbar = () => {
+// components/Navbar.tsx
+import React from 'react';
+
+type NavbarProps = {
+  currentPath: string;
+};
+
+export const Navbar: React.FC<NavbarProps> = ({ currentPath }) => {
   return (
     <nav
       data-cy="nav"
@@ -8,13 +15,25 @@ export const Navbar = () => {
     >
       <div className="container">
         <div className="navbar-brand">
-          <a className="navbar-item" href="#/">
+          {/* Home Link */}
+          <a
+            className={`navbar-item ${
+              currentPath === '' || currentPath === '#' || currentPath === '#/'
+                ? 'has-background-grey-lighter'
+                : ''
+            }`}
+            href="#/"
+          >
             Home
           </a>
 
+          {/* People Link */}
           <a
-            aria-current="page"
-            className="navbar-item has-background-grey-lighter"
+            className={`navbar-item ${
+              currentPath.startsWith('#/people')
+                ? 'has-background-grey-lighter'
+                : ''
+            }`}
             href="#/people"
           >
             People
