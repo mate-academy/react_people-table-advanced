@@ -1,18 +1,51 @@
+import classNames from 'classnames';
+import { SearchLink } from './SearchLink';
+import { useSearchParams } from 'react-router-dom';
+
 export const PeopleFilters = () => {
+  const [searchParams] = useSearchParams();
+  const isResetActive = Object.values(searchParams).every(
+    value => value === null,
+  );
+  const searchParamsKeysToNull = Object.keys(searchParams).reduce<
+  Record<string, null>
+  >(
+    (acc, key) => ({
+      ...acc,
+      [key]: null,
+    }),
+    {},
+  );
+
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        <a className="is-active" href="#/people">
+        <SearchLink
+          className={classNames({
+            'is-active': searchParams.get('sex') === null,
+          })}
+          params={{ sex: null }}
+        >
           All
-        </a>
-        <a className="" href="#/people?sex=m">
+        </SearchLink>
+        <SearchLink
+          className={classNames({
+            'is-active': searchParams.get('sex') === 'male',
+          })}
+          params={{ sex: 'male' }}
+        >
           Male
-        </a>
-        <a className="" href="#/people?sex=f">
+        </SearchLink>
+        <SearchLink
+          className={classNames({
+            'is-active': searchParams.get('sex') === 'female',
+          })}
+          params={{ sex: 'female' }}
+        >
           Female
-        </a>
+        </SearchLink>
       </p>
 
       <div className="panel-block">
@@ -33,63 +66,79 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            <a
+            <SearchLink
               data-cy="century"
-              className="button mr-1"
-              href="#/people?centuries=16"
+              className={classNames('button', 'is-outlined', {
+                'is-success': searchParams.get('centure') === '16',
+              })}
+              params={{ centure: '16' }}
             >
               16
-            </a>
+            </SearchLink>
 
-            <a
-              data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=17"
+            <SearchLink
+              className={classNames('button', 'is-outlined', {
+                'is-success': searchParams.get('centure') === '17',
+              })}
+              params={{ centure: '17' }}
             >
               17
-            </a>
+            </SearchLink>
 
-            <a
+            <SearchLink
               data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=18"
+              className={classNames('button', 'is-outlined', {
+                'is-success': searchParams.get('centure') === '18',
+              })}
+              params={{ centure: '18' }}
             >
               18
-            </a>
+            </SearchLink>
 
-            <a
+            <SearchLink
               data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=19"
+              className={classNames('button', 'is-outlined', {
+                'is-success': searchParams.get('centure') === '19',
+              })}
+              params={{ centure: '19' }}
             >
               19
-            </a>
+            </SearchLink>
 
-            <a
+            <SearchLink
               data-cy="century"
-              className="button mr-1"
-              href="#/people?centuries=20"
+              className={classNames('button', 'is-outlined', {
+                'is-success': searchParams.get('centure') === '20',
+              })}
+              params={{ centure: '20' }}
             >
               20
-            </a>
+            </SearchLink>
           </div>
 
           <div className="level-right ml-4">
-            <a
+            <SearchLink
               data-cy="centuryALL"
-              className="button is-success is-outlined"
-              href="#/people"
+              className={classNames('button', 'is-outlined', {
+                'is-success': searchParams.get('centure') === null,
+              })}
+              params={{ centure: null }}
             >
               All
-            </a>
+            </SearchLink>
           </div>
         </div>
       </div>
 
       <div className="panel-block">
-        <a className="button is-link is-outlined is-fullwidth" href="#/people">
+        <SearchLink
+          className={classNames('button', 'is-outlined', 'is-fullwidth', {
+            'is-success': isResetActive,
+          })}
+          params={searchParamsKeysToNull}
+        >
           Reset all filters
-        </a>
+        </SearchLink>
       </div>
     </nav>
   );
