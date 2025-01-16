@@ -1,7 +1,15 @@
-import { useSearchParams } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import React, { ChangeEvent } from 'react';
 import { getSearchWith, SearchParams } from '../utils/searchHelper';
 import classNames from 'classnames';
+
+const SEX_FILTERS = [
+  { label: 'All', value: null },
+  { label: 'Male', value: 'm' },
+  { label: 'Female', value: 'f' },
+];
+
+const CENTURIES = ['16', '17', '18', '19', '20'];
 
 export const PeopleFilters: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -23,38 +31,32 @@ export const PeopleFilters: React.FC = () => {
   };
 
   const query = searchParams.get('query') || '';
-
-  const sexFilters = [
-    { label: 'All', value: null },
-    { label: 'Male', value: 'm' },
-    { label: 'Female', value: 'f' },
-  ];
+  const sex = searchParams.get('sex') || null;
 
   const handleQueryChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const newQuery = e.target.value.length ? e.target.value : null;
+    const newQuery = e.target.value || null;
 
     handleSetParams({ query: newQuery });
   };
-
-  const centuries = ['16', '17', '18', '19', '20'];
 
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        {sexFilters.map(filter => (
-          <a
+        {SEX_FILTERS.map(filter => (
+          <Link
+            to={{
+              search: getSearchWith(searchParams, { sex: filter.value }),
+            }}
             key={filter.value}
             className={classNames({
-              'is-active':
-                (!searchParams.get('sex') && filter.value === null) ||
-                searchParams.get('sex') === filter.value,
+              'is-active': sex === filter.value,
             })}
             onClick={() => handleSetParams({ sex: filter.value })}
           >
             {filter.label}
-          </a>
+          </Link>
         ))}
       </p>
 
@@ -84,7 +86,7 @@ export const PeopleFilters: React.FC = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            {centuries.map(century => (
+            {CENTURIES.map(century => (
               <a
                 key={century}
                 data-cy="century"
@@ -99,7 +101,10 @@ export const PeopleFilters: React.FC = () => {
           </div>
 
           <div className="level-right ml-4">
-            <a
+            <Link
+              to={{
+                search: getSearchWith(searchParams, { century: null }),
+              }}
               data-cy="centuryALL"
               className={classNames('button is-success', {
                 'is-outlined': !!searchParams.getAll('century')?.length,
@@ -109,7 +114,7 @@ export const PeopleFilters: React.FC = () => {
               }
             >
               All
-            </a>
+            </Link>
           </div>
         </div>
       </div>

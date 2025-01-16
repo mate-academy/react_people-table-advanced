@@ -4,6 +4,7 @@ import { Person } from '../types';
 import { useSearchParams } from 'react-router-dom';
 import { getSearchWith, SearchParams } from '../utils/searchHelper';
 import classNames from 'classnames';
+import { PersonLink } from './PersonLink';
 
 type Props = {
   people: Person[];
@@ -30,6 +31,20 @@ export const PeopleTable: React.FC<Props> = (props: Props) => {
     } else {
       handleSetParams({ sort: null, order: null });
     }
+  };
+
+  const renderPersonLink = (name: string | null): React.ReactNode => {
+    if (!name) {
+      return '-';
+    }
+
+    const neededPerson = people.find(person => person.name === name);
+
+    if (neededPerson) {
+      return <PersonLink person={neededPerson} />;
+    }
+
+    return name;
   };
 
   return (
@@ -121,9 +136,9 @@ export const PeopleTable: React.FC<Props> = (props: Props) => {
             {people.map(person => {
               return (
                 <PersonComponent
+                  renderPersonLink={renderPersonLink}
                   person={person}
                   key={person.slug}
-                  people={people}
                 />
               );
             })}

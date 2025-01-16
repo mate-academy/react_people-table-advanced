@@ -6,6 +6,8 @@ import { Person } from '../types';
 import { getPeople } from '../api';
 import { useSearchParams } from 'react-router-dom';
 
+import { filterPeople } from '../utils/filterHelper';
+
 export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -13,57 +15,7 @@ export const PeoplePage = () => {
 
   const [searchParams] = useSearchParams();
 
-  const currentSort = searchParams.get('sort');
-  const currentOrder = searchParams.get('order');
-
-  const filterPeople = () => {
-    let visiblePeople = people;
-
-    const filterSex = searchParams.get('sex');
-    const filterQuery = searchParams.get('query')?.toLowerCase() || '';
-    const filterCentury = searchParams.getAll('century') || [];
-
-    if (filterSex) {
-      visiblePeople = visiblePeople.filter(person => person.sex === filterSex);
-    }
-
-    if (filterQuery) {
-      visiblePeople = visiblePeople.filter(
-        person =>
-          person.name.toLowerCase().includes(filterQuery) ||
-          person.fatherName?.toLowerCase().includes(filterQuery) ||
-          person.motherName?.toLowerCase().includes(filterQuery),
-      );
-    }
-
-    if (filterCentury && filterCentury.length > 0) {
-      visiblePeople = visiblePeople.filter(person =>
-        filterCentury.includes(Math.ceil(person.born / 100).toString()),
-      );
-    }
-
-    if (currentSort) {
-      const sortOrder = currentOrder ? -1 : 1;
-
-      if (currentSort === 'name' || currentSort === 'sex') {
-        visiblePeople = visiblePeople.sort(
-          (a: Person, b: Person) =>
-            sortOrder * a[currentSort].localeCompare(b[currentSort]),
-        );
-      }
-
-      if (currentSort === 'born' || currentSort === 'died') {
-        visiblePeople = visiblePeople.sort(
-          (a: Person, b: Person) =>
-            sortOrder * (a[currentSort] - b[currentSort]),
-        );
-      }
-    }
-
-    return visiblePeople;
-  };
-
-  const filteredPeople = filterPeople();
+  const filteredPeople = filterPeople(people, searchParams);
 
   useEffect(() => {
     getPeople()
@@ -87,7 +39,9 @@ export const PeoplePage = () => {
   return (
     <>
       <h1 className="title">People Page</h1>
-      {(isLoading && <Loader />) || (
+      {isLoading ? (
+        <Loader />
+      ) : (
         <div className="block">
           <div className="columns is-desktop is-flex-direction-row-reverse">
             <div className="column is-7-tablet is-narrow-desktop">
