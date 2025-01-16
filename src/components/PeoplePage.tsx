@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
 import { PeopleFilters } from './PeopleFilters';
 import { Loader } from './Loader';
@@ -18,16 +18,16 @@ export const PeoplePage = () => {
   const findParent = (parentName: string | null) =>
     people.find(person => person.name === parentName);
 
-  useCallback(() => {
-    filter(people, searchParams);
-  }, [searchParams]);
-
   useEffect(() => {
     getPeople()
       .then(setPeopleList)
       .catch(() => setError(true))
       .finally(() => setIsLoading(false));
   }, []);
+
+  useEffect(() => {
+    filter(people, searchParams);
+  }, [people, searchParams]);
 
   return (
     <>
