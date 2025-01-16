@@ -4,7 +4,7 @@ import { useState } from 'react';
 export function useFilter(
   people: Person[],
 ): [Person[], (params: URLSearchParams) => void] {
-  const [filteredPeople, setFilteredPeople] = useState<Person[]>(people);
+  const [filteredPeople, setFilteredPeople] = useState<Person[]>([]);
 
   const filter = (params: URLSearchParams) => {
     const paramsExist = params.toString() !== '';
@@ -14,15 +14,15 @@ export function useFilter(
     } else {
       const filtered = filteredPeople.filter((person: Person) => {
         const personCentury = Math.ceil(person.born / 100).toString();
-        const paramsQuery = params.get('query');
+        const paramsQuery = params.get('query') || '';
 
-        if (
-          params.getAll('century').includes(personCentury) ||
-          person.sex === params.get('sex') ||
-          (paramsQuery && person.name.includes(paramsQuery))
-        ) {
-          return person;
-        }
+        const hasMatchingCentury = params
+          .getAll('century')
+          .includes(personCentury);
+        const hasMatchingSex = person.sex === params.get('sex');
+        const hasMatchingName = person.name.includes(paramsQuery);
+
+        return hasMatchingCentury || hasMatchingSex || hasMatchingName;
       });
 
       setFilteredPeople(filtered);
