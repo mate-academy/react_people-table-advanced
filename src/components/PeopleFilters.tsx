@@ -16,12 +16,10 @@ export const PeopleFilters = () => {
 
   const handleQueryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setQuery(event.target.value);
-    setSearchWith({ query: event.target.value || null });
+    setSearchWith({ query: event.target.value.trim().toLowerCase() || null });
   };
 
-  const isResetActive = Object.values(searchParams).every(
-    value => value === null,
-  );
+  const isResetActive = searchParams.values().every(value => value === null);
 
   return (
     <nav className="panel">
@@ -40,7 +38,7 @@ export const PeopleFilters = () => {
           className={classNames({
             'is-active': searchParams.get('sex') === 'male',
           })}
-          params={{ sex: 'male' }}
+          params={{ sex: 'm' }}
         >
           Male
         </SearchLink>
@@ -48,7 +46,7 @@ export const PeopleFilters = () => {
           className={classNames({
             'is-active': searchParams.get('sex') === 'female',
           })}
-          params={{ sex: 'female' }}
+          params={{ sex: 'f' }}
         >
           Female
         </SearchLink>
@@ -77,18 +75,18 @@ export const PeopleFilters = () => {
             <SearchLink
               data-cy="century"
               className={classNames('button', 'is-outlined', {
-                'is-success': searchParams.get('centure') === '16',
+                'is-success': searchParams.get('century') === '16',
               })}
-              params={{ centure: '16' }}
+              params={{ century: '16' }}
             >
               16
             </SearchLink>
 
             <SearchLink
               className={classNames('button', 'is-outlined', {
-                'is-success': searchParams.get('centure') === '17',
+                'is-success': searchParams.get('century') === '17',
               })}
-              params={{ centure: '17' }}
+              params={{ century: '17' }}
             >
               17
             </SearchLink>
@@ -96,9 +94,9 @@ export const PeopleFilters = () => {
             <SearchLink
               data-cy="century"
               className={classNames('button', 'is-outlined', {
-                'is-success': searchParams.get('centure') === '18',
+                'is-success': searchParams.get('century') === '18',
               })}
-              params={{ centure: '18' }}
+              params={{ century: '18' }}
             >
               18
             </SearchLink>
@@ -106,9 +104,9 @@ export const PeopleFilters = () => {
             <SearchLink
               data-cy="century"
               className={classNames('button', 'is-outlined', {
-                'is-success': searchParams.get('centure') === '19',
+                'is-success': searchParams.get('century') === '19',
               })}
-              params={{ centure: '19' }}
+              params={{ century: '19' }}
             >
               19
             </SearchLink>
@@ -116,9 +114,9 @@ export const PeopleFilters = () => {
             <SearchLink
               data-cy="century"
               className={classNames('button', 'is-outlined', {
-                'is-success': searchParams.get('centure') === '20',
+                'is-success': searchParams.get('century') === '20',
               })}
-              params={{ centure: '20' }}
+              params={{ century: '20' }}
             >
               20
             </SearchLink>
@@ -128,9 +126,9 @@ export const PeopleFilters = () => {
             <SearchLink
               data-cy="centuryALL"
               className={classNames('button', 'is-outlined', {
-                'is-success': searchParams.get('centure') === null,
+                'is-success': searchParams.get('century') === null,
               })}
-              params={{ centure: null }}
+              params={{ century: null }}
             >
               All
             </SearchLink>
@@ -146,7 +144,7 @@ export const PeopleFilters = () => {
           params={{
             name: null,
             sex: null,
-            centuries: null,
+            century: null,
             sort: null,
             order: null,
           }}

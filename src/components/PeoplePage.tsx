@@ -1,9 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
 import { PeopleFilters } from './PeopleFilters';
 import { Loader } from './Loader';
 import { PeopleTable } from './PeopleTable';
-import { filter } from '../utils/filter';
+import { useFilter } from '../utils/useFilter';
 
 import { getPeople } from '../api';
 import { Person } from '../types';
@@ -14,9 +14,13 @@ export const PeoplePage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isError, setError] = useState(false);
   const { slug } = useParams();
-  const filteredPeople = filter(people, searchParams);
+  const [filteredPeople, filter] = useFilter();
   const findParent = (parentName: string | null) =>
     people.find(person => person.name === parentName);
+
+  useCallback(() => {
+    filter(people, searchParams);
+  }, [searchParams]);
 
   useEffect(() => {
     getPeople()
@@ -116,7 +120,7 @@ export const PeoplePage = () => {
                   </thead>
 
                   <tbody>
-                    {filteredPeople.map(person => (
+                    {filteredPeople.map((person: Person) => (
                       <PeopleTable
                         key={person.slug}
                         person={person}
