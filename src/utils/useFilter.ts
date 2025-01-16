@@ -1,13 +1,12 @@
 import { Person } from '../types';
 import { useState } from 'react';
 
-export function useFilter(): [
-  Person[],
-  (people: Person[], params: URLSearchParams) => void,
-] {
-  const [filteredPeople, setFilteredPeople] = useState<Person[]>([]);
+export function useFilter(
+  people: Person[],
+): [Person[], (params: URLSearchParams) => void] {
+  const [filteredPeople, setFilteredPeople] = useState<Person[]>(people);
 
-  const filter = (people: Person[], params: URLSearchParams) => {
+  const filter = (params: URLSearchParams) => {
     const paramsExist = params.toString() !== '';
 
     if (!paramsExist) {

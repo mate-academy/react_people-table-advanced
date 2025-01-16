@@ -14,7 +14,7 @@ export const PeoplePage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isError, setError] = useState(false);
   const { slug } = useParams();
-  const [filteredPeople, filter] = useFilter();
+  const [filteredPeople, filter] = useFilter(people);
   const findParent = (parentName: string | null) =>
     people.find(person => person.name === parentName);
 
@@ -26,8 +26,8 @@ export const PeoplePage = () => {
   }, []);
 
   useEffect(() => {
-    filter(people, searchParams);
-  }, [people, searchParams]);
+    filter(searchParams);
+  }, [filteredPeople, searchParams, filter]);
 
   return (
     <>
