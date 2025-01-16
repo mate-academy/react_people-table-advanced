@@ -1,20 +1,26 @@
 import classNames from 'classnames';
-import { SearchLink } from './SearchLink';
 import { useSearchParams } from 'react-router-dom';
+import { getSearchWith, SearchParams } from '../utils/searchHelper';
+import { SearchLink } from './SearchLink';
+import { useState } from 'react';
 
 export const PeopleFilters = () => {
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [query, setQuery] = useState('');
+
+  const setSearchWith = (params: SearchParams) => {
+    const search = getSearchWith(searchParams, params);
+
+    setSearchParams(search);
+  };
+
+  const handleQueryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setQuery(event.target.value);
+    setSearchWith({ query: event.target.value || null });
+  };
+
   const isResetActive = Object.values(searchParams).every(
     value => value === null,
-  );
-  const searchParamsKeysToNull = Object.keys(searchParams).reduce<
-  Record<string, null>
-  >(
-    (acc, key) => ({
-      ...acc,
-      [key]: null,
-    }),
-    {},
   );
 
   return (
@@ -55,6 +61,8 @@ export const PeopleFilters = () => {
             type="search"
             className="input"
             placeholder="Search"
+            value={query}
+            onChange={handleQueryChange}
           />
 
           <span className="icon is-left">
@@ -135,7 +143,13 @@ export const PeopleFilters = () => {
           className={classNames('button', 'is-outlined', 'is-fullwidth', {
             'is-success': isResetActive,
           })}
-          params={searchParamsKeysToNull}
+          params={{
+            name: null,
+            sex: null,
+            centuries: null,
+            sort: null,
+            order: null,
+          }}
         >
           Reset all filters
         </SearchLink>

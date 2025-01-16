@@ -1,17 +1,20 @@
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useSearchParams } from 'react-router-dom';
 import { PeopleFilters } from './PeopleFilters';
 import { Loader } from './Loader';
 import { PeopleTable } from './PeopleTable';
+import { filter } from '../utils/filter';
 
 import { getPeople } from '../api';
 import { Person } from '../types';
 
 export const PeoplePage = () => {
+  const [searchParams] = useSearchParams();
+  const [people, setPeopleList] = useState<Person[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isError, setError] = useState(false);
-  const [people, setPeopleList] = useState<Person[]>([]);
   const { slug } = useParams();
+  const filteredPeople = filter(people, searchParams);
   const findParent = (parentName: string | null) =>
     people.find(person => person.name === parentName);
 
@@ -113,7 +116,7 @@ export const PeoplePage = () => {
                   </thead>
 
                   <tbody>
-                    {people.map(person => (
+                    {filteredPeople.map(person => (
                       <PeopleTable
                         key={person.slug}
                         person={person}
@@ -133,6 +136,3 @@ export const PeoplePage = () => {
     </>
   );
 };
-
-
-якщо я правильно розумію, то те, що попадає до to це Loction який складається з двох ключів в об"єкті path і search і якраз ми прописуємо таким чином що буде в search, вірно?
