@@ -14,6 +14,21 @@ export const PeopleFilters = () => {
     setSearchParams(search);
   };
 
+  const setSearchByCentury = (century: string) => {
+    const centuries = searchParams.getAll('century');
+    const newParams: SearchParams = {
+      century: [],
+    };
+
+    if (centuries.includes(century)) {
+      newParams.century = [...centuries].filter(c => c !== century);
+    } else {
+      newParams.century = [...centuries, century];
+    }
+
+    return newParams;
+  };
+
   const handleQueryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setQuery(event.target.value);
     setSearchWith({ query: event.target.value.trim().toLowerCase() || null });
@@ -75,18 +90,18 @@ export const PeopleFilters = () => {
             <SearchLink
               data-cy="century"
               className={classNames('button', 'is-outlined', {
-                'is-success': searchParams.get('century') === '16',
+                'is-success': searchParams.getAll('century').includes('16'),
               })}
-              params={{ century: '16' }}
+              params={setSearchByCentury('16')}
             >
               16
             </SearchLink>
 
             <SearchLink
               className={classNames('button', 'is-outlined', {
-                'is-success': searchParams.get('century') === '17',
+                'is-success': searchParams.getAll('century').includes('17'),
               })}
-              params={{ century: '17' }}
+              params={setSearchByCentury('17')}
             >
               17
             </SearchLink>
@@ -94,9 +109,9 @@ export const PeopleFilters = () => {
             <SearchLink
               data-cy="century"
               className={classNames('button', 'is-outlined', {
-                'is-success': searchParams.get('century') === '18',
+                'is-success': searchParams.getAll('century').includes('18'),
               })}
-              params={{ century: '18' }}
+              params={setSearchByCentury('18')}
             >
               18
             </SearchLink>
@@ -104,9 +119,9 @@ export const PeopleFilters = () => {
             <SearchLink
               data-cy="century"
               className={classNames('button', 'is-outlined', {
-                'is-success': searchParams.get('century') === '19',
+                'is-success': searchParams.getAll('century').includes('19'),
               })}
-              params={{ century: '19' }}
+              params={setSearchByCentury('19')}
             >
               19
             </SearchLink>
@@ -114,9 +129,9 @@ export const PeopleFilters = () => {
             <SearchLink
               data-cy="century"
               className={classNames('button', 'is-outlined', {
-                'is-success': searchParams.get('century') === '20',
+                'is-success': searchParams.getAll('century').includes('20'),
               })}
-              params={{ century: '20' }}
+              params={setSearchByCentury('20')}
             >
               20
             </SearchLink>

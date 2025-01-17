@@ -27,7 +27,7 @@ export const PeoplePage = () => {
 
   useEffect(() => {
     filter(searchParams);
-  }, [searchParams]);
+  }, [people, searchParams]);
 
   return (
     <>
