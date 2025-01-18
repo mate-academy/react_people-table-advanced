@@ -14,6 +14,11 @@ export const PeopleFilters = () => {
     setSearchParams(search);
   };
 
+  const handleQueryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setQuery(event.target.value);
+    setSearchWith({ query: event.target.value.trim().toLowerCase() || null });
+  };
+
   const setSearchByCentury = (century: string) => {
     const centuries = searchParams.getAll('century');
     const newParams: SearchParams = {
@@ -27,11 +32,6 @@ export const PeopleFilters = () => {
     }
 
     return newParams;
-  };
-
-  const handleQueryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setQuery(event.target.value);
-    setSearchWith({ query: event.target.value.trim().toLowerCase() || null });
   };
 
   const isResetActive = searchParams.values().every(value => value === null);
@@ -51,7 +51,7 @@ export const PeopleFilters = () => {
         </SearchLink>
         <SearchLink
           className={classNames({
-            'is-active': searchParams.get('sex') === 'male',
+            'is-active': searchParams.get('sex') === 'm',
           })}
           params={{ sex: 'm' }}
         >
@@ -59,7 +59,7 @@ export const PeopleFilters = () => {
         </SearchLink>
         <SearchLink
           className={classNames({
-            'is-active': searchParams.get('sex') === 'female',
+            'is-active': searchParams.get('sex') === 'f',
           })}
           params={{ sex: 'f' }}
         >
@@ -89,8 +89,8 @@ export const PeopleFilters = () => {
           <div className="level-left">
             <SearchLink
               data-cy="century"
-              className={classNames('button', 'is-outlined', {
-                'is-success': searchParams.getAll('century').includes('16'),
+              className={classNames('button', 'mr-1', {
+                'is-info': searchParams.getAll('century').includes('16'),
               })}
               params={setSearchByCentury('16')}
             >
@@ -98,8 +98,8 @@ export const PeopleFilters = () => {
             </SearchLink>
 
             <SearchLink
-              className={classNames('button', 'is-outlined', {
-                'is-success': searchParams.getAll('century').includes('17'),
+              className={classNames('button', 'mr-1', {
+                'is-info': searchParams.getAll('century').includes('17'),
               })}
               params={setSearchByCentury('17')}
             >
@@ -108,8 +108,8 @@ export const PeopleFilters = () => {
 
             <SearchLink
               data-cy="century"
-              className={classNames('button', 'is-outlined', {
-                'is-success': searchParams.getAll('century').includes('18'),
+              className={classNames('button', 'mr-1', {
+                'is-info': searchParams.getAll('century').includes('18'),
               })}
               params={setSearchByCentury('18')}
             >
@@ -118,8 +118,8 @@ export const PeopleFilters = () => {
 
             <SearchLink
               data-cy="century"
-              className={classNames('button', 'is-outlined', {
-                'is-success': searchParams.getAll('century').includes('19'),
+              className={classNames('button', 'mr-1', {
+                'is-info': searchParams.getAll('century').includes('19'),
               })}
               params={setSearchByCentury('19')}
             >
@@ -128,8 +128,8 @@ export const PeopleFilters = () => {
 
             <SearchLink
               data-cy="century"
-              className={classNames('button', 'is-outlined', {
-                'is-success': searchParams.getAll('century').includes('20'),
+              className={classNames('button', 'mr-1', {
+                'is-info': searchParams.getAll('century').includes('20'),
               })}
               params={setSearchByCentury('20')}
             >
@@ -153,15 +153,19 @@ export const PeopleFilters = () => {
 
       <div className="panel-block">
         <SearchLink
-          className={classNames('button', 'is-outlined', 'is-fullwidth', {
-            'is-success': isResetActive,
-          })}
+          className={classNames(
+            'button',
+            'is-link',
+            'is-outlined',
+            'is-fullwidth',
+            {
+              'is-success': isResetActive,
+            },
+          )}
           params={{
             name: null,
             sex: null,
             century: null,
-            sort: null,
-            order: null,
           }}
         >
           Reset all filters

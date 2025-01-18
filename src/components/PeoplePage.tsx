@@ -1,12 +1,15 @@
 import { useEffect, useState } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
+
 import { PeopleFilters } from './PeopleFilters';
 import { Loader } from './Loader';
 import { PeopleTable } from './PeopleTable';
-import { useFilter } from '../utils/useFilter';
 
 import { getPeople } from '../api';
+import { Filter } from '../utils/Filter';
+import { SearchLink } from './SearchLink';
 import { Person } from '../types';
+import classNames from 'classnames';
 
 export const PeoplePage = () => {
   const [searchParams] = useSearchParams();
@@ -14,9 +17,21 @@ export const PeoplePage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isError, setError] = useState(false);
   const { slug } = useParams();
-  const [filteredPeople, filter] = useFilter(people);
+  const filteredPeople = Filter(people, searchParams);
   const findParent = (parentName: string | null) =>
     people.find(person => person.name === parentName);
+  const setSort = (sortBy: string) => {
+    const currentSort = searchParams.get('sort');
+    const hasOrder = searchParams.has('order');
+
+    if (currentSort === sortBy) {
+      return hasOrder
+        ? { sort: null, order: null }
+        : { sort: sortBy, order: 'desc' };
+    }
+
+    return { sort: sortBy, order: null };
+  };
 
   useEffect(() => {
     getPeople()
@@ -24,10 +39,6 @@ export const PeoplePage = () => {
       .catch(() => setError(true))
       .finally(() => setIsLoading(false));
   }, []);
-
-  useEffect(() => {
-    filter(searchParams);
-  }, [people, searchParams]);
 
   return (
     <>
@@ -57,7 +68,7 @@ export const PeoplePage = () => {
                 </p>
               )}
 
-              {!isLoading && people.length !== 0 && (
+              {!isLoading && filteredPeople.length !== 0 ? (
                 <table
                   data-cy="peopleTable"
                   className="
@@ -73,44 +84,87 @@ export const PeoplePage = () => {
                       <th>
                         <span className="is-flex is-flex-wrap-nowrap">
                           Name
-                          <a href="#/people?sort=name">
+                          <SearchLink params={setSort('name')}>
                             <span className="icon">
-                              <i className="fas fa-sort" />
+                              <i
+                                className={classNames('fas', {
+                                  'fa-sort':
+                                    searchParams.get('sort') !== 'name',
+                                  'fa-sort-up':
+                                    searchParams.get('sort') === 'name' &&
+                                    !searchParams.get('order'),
+                                  'fa-sort-down':
+                                    searchParams.get('sort') === 'name' &&
+                                    searchParams.get('order') === 'desc',
+                                })}
+                              />
                             </span>
-                          </a>
+                          </SearchLink>
                         </span>
                       </th>
 
                       <th>
                         <span className="is-flex is-flex-wrap-nowrap">
                           Sex
-                          <a href="#/people?sort=sex">
+                          <SearchLink params={setSort('sex')}>
                             <span className="icon">
-                              <i className="fas fa-sort" />
+                              <i
+                                className={classNames('fas', {
+                                  'fa-sort': searchParams.get('sort') !== 'sex',
+                                  'fa-sort-up':
+                                    searchParams.get('sort') === 'sex' &&
+                                    !searchParams.get('order'),
+                                  'fa-sort-down':
+                                    searchParams.get('sort') === 'sex' &&
+                                    searchParams.get('order') === 'desc',
+                                })}
+                              />
                             </span>
-                          </a>
+                          </SearchLink>
                         </span>
                       </th>
 
                       <th>
                         <span className="is-flex is-flex-wrap-nowrap">
                           Born
-                          <a href="#/people?sort=born&amp;order=desc">
+                          <SearchLink params={setSort('born')}>
                             <span className="icon">
-                              <i className="fas fa-sort-up" />
+                              <i
+                                className={classNames('fas', {
+                                  'fa-sort':
+                                    searchParams.get('sort') !== 'born',
+                                  'fa-sort-up':
+                                    searchParams.get('sort') === 'born' &&
+                                    !searchParams.get('order'),
+                                  'fa-sort-down':
+                                    searchParams.get('sort') === 'born' &&
+                                    searchParams.get('order') === 'desc',
+                                })}
+                              />
                             </span>
-                          </a>
+                          </SearchLink>
                         </span>
                       </th>
 
                       <th>
                         <span className="is-flex is-flex-wrap-nowrap">
                           Died
-                          <a href="#/people?sort=died">
+                          <SearchLink params={setSort('died')}>
                             <span className="icon">
-                              <i className="fas fa-sort" />
+                              <i
+                                className={classNames('fas', {
+                                  'fa-sort':
+                                    searchParams.get('sort') !== 'died',
+                                  'fa-sort-up':
+                                    searchParams.get('sort') === 'died' &&
+                                    !searchParams.get('order'),
+                                  'fa-sort-down':
+                                    searchParams.get('sort') === 'died' &&
+                                    searchParams.get('order') === 'desc',
+                                })}
+                              />
                             </span>
-                          </a>
+                          </SearchLink>
                         </span>
                       </th>
 
@@ -130,9 +184,9 @@ export const PeoplePage = () => {
                     ))}
                   </tbody>
                 </table>
+              ) : (
+                <p>There are no people matching the current search criteria</p>
               )}
-
-              <p>There are no people matching the current search criteria</p>
             </div>
           </div>
         </div>
