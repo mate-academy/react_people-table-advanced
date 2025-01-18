@@ -34,7 +34,7 @@ export const PeopleFilters = () => {
     return newParams;
   };
 
-  const isResetActive = searchParams.values().every(value => value === null);
+  const isResetActive = !searchParams.keys();
 
   return (
     <nav className="panel">

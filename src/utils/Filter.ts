@@ -17,7 +17,7 @@ export function Filter(people: Person[], params: URLSearchParams): Person[] {
             const personCentury = Math.ceil(person.born / 100).toString();
 
             if (pickedCenturies.includes(personCentury)) {
-              return person;
+              return true;
             }
           });
           break;

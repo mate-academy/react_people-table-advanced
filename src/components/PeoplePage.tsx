@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
 
 import { PeopleFilters } from './PeopleFilters';
@@ -17,7 +17,10 @@ export const PeoplePage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isError, setError] = useState(false);
   const { slug } = useParams();
-  const filteredPeople = Filter(people, searchParams);
+  const filteredPeople = useMemo(
+    () => Filter(people, searchParams),
+    [people, searchParams],
+  );
   const findParent = (parentName: string | null) =>
     people.find(person => person.name === parentName);
   const setSort = (sortBy: string) => {
