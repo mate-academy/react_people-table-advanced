@@ -1,5 +1,6 @@
 /* eslint-disable jsx-a11y/control-has-associated-label */
 
+import { useSearchParams } from 'react-router-dom';
 import { Person } from '../types';
 import { PersonLink } from './PersonLink';
 import { SearchLink } from './SearchLink';
@@ -9,6 +10,29 @@ type Props = {
 };
 
 export const PeopleTable: React.FC<Props> = ({ people }) => {
+  const [searchParams] = useSearchParams();
+  const query = searchParams.get('query') || '';
+  const filteredPeople = people.filter(person => {
+    const normalizedQuery = query.toLowerCase();
+    const isMatchesName = person.name.toLowerCase().includes(normalizedQuery);
+    let isMatchesMotherName;
+    let isMatchesFatherName;
+
+    if (person.motherName) {
+      isMatchesMotherName = person.motherName
+        .toLowerCase()
+        .includes(normalizedQuery);
+    }
+
+    if (person.fatherName) {
+      isMatchesFatherName = person.fatherName
+        .toLowerCase()
+        .includes(normalizedQuery);
+    }
+
+    return isMatchesName || isMatchesMotherName || isMatchesFatherName;
+  });
+
   return (
     <table
       data-cy="peopleTable"
@@ -66,7 +90,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
       </thead>
 
       <tbody>
-        {people.map(person => (
+        {filteredPeople.map(person => (
           <PersonLink person={person} key={person.slug} />
         ))}
       </tbody>

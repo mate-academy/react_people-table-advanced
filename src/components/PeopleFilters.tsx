@@ -1,10 +1,20 @@
 import { useSearchParams } from 'react-router-dom';
 import { SearchLink } from './SearchLink';
 import classNames from 'classnames';
+import { getSearchWith } from '../utils/searchHelper';
 
 export const PeopleFilters = () => {
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const sex = searchParams.get('sex') || '';
+  const query = searchParams.get('query') || '';
+
+  const handleQueryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const search = getSearchWith(searchParams, {
+      query: event.target.value || null,
+    });
+
+    setSearchParams(search);
+  };
 
   return (
     <nav className="panel">
@@ -38,6 +48,8 @@ export const PeopleFilters = () => {
             type="search"
             className="input"
             placeholder="Search"
+            value={query}
+            onChange={handleQueryChange}
           />
 
           <span className="icon is-left">
