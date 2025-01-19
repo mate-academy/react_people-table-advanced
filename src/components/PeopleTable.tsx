@@ -2,6 +2,7 @@
 
 import { Person } from '../types';
 import { PersonLink } from './PersonLink';
+import { SearchLink } from './SearchLink';
 
 type Props = {
   people: Person[];
@@ -18,44 +19,44 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Name
-              <a href="#/people?sort=name">
+              <SearchLink params={{ sort: 'name' }}>
                 <span className="icon">
                   <i className="fas fa-sort" />
                 </span>
-              </a>
+              </SearchLink>
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Sex
-              <a href="#/people?sort=sex">
+              <SearchLink params={{ sort: 'sex' }}>
                 <span className="icon">
                   <i className="fas fa-sort" />
                 </span>
-              </a>
+              </SearchLink>
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Born
-              <a href="#/people?sort=born&amp;order=desc">
+              <SearchLink params={{ sort: 'born' }}>
                 <span className="icon">
                   <i className="fas fa-sort-up" />
                 </span>
-              </a>
+              </SearchLink>
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Died
-              <a href="#/people?sort=died">
+              <SearchLink params={{ sort: 'died' }}>
                 <span className="icon">
                   <i className="fas fa-sort" />
                 </span>
-              </a>
+              </SearchLink>
             </span>
           </th>
 
