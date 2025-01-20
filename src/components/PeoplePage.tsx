@@ -2,7 +2,7 @@
 
 import { PeopleFilters } from './PeopleFilters';
 import { Loader } from './Loader';
-import { PeopleTable } from './PeopleTable';
+import { PeopleTable, SortKeys } from './PeopleTable';
 import { useEffect, useState } from 'react';
 import { getPeople } from '../api';
 import { Person } from '../types';
@@ -50,9 +50,38 @@ function filterPeople(
   return filteredByCenturies;
 }
 
+function sortPeople(people: Person[], sort: string, order: string) {
+  const sortedPeople = [...people];
+
+  switch (sort) {
+    case SortKeys.name:
+      sortedPeople.sort((a, b) => a.name.localeCompare(b.name));
+      break;
+
+    case SortKeys.sex:
+      sortedPeople.sort((a, b) => a.sex.localeCompare(b.sex));
+      break;
+
+    case SortKeys.born:
+      sortedPeople.sort((a, b) => a.born - b.born);
+      break;
+
+    case SortKeys.died:
+      sortedPeople.sort((a, b) => a.died - b.died);
+      break;
+  }
+
+  if (order) {
+    sortedPeople.reverse();
+  }
+
+  return sortedPeople;
+}
+
 export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);
   const [filteredPeople, setFilteredPeople] = useState<Person[]>([]);
+  const [sortedPeople, setSortedPeople] = useState<Person[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
   const [searchParams] = useSearchParams();
@@ -104,6 +133,15 @@ export const PeoplePage = () => {
     setFilteredPeople(filteredPeopleData);
   }, [people, searchParams]);
 
+  useEffect(() => {
+    const sort = searchParams.get('sort') || '';
+    const order = searchParams.get('order') || '';
+
+    const sortedPeopleData = sortPeople(filteredPeople, sort, order);
+
+    setSortedPeople(sortedPeopleData);
+  }, [filteredPeople, searchParams]);
+
   return (
     <>
       <h1 className="title">People Page</h1>
@@ -134,7 +172,7 @@ export const PeoplePage = () => {
                 <p>There are no people matching the current search criteria</p>
               )}
 
-              {!isLoading && <PeopleTable people={filteredPeople} />}
+              {!isLoading && <PeopleTable people={sortedPeople} />}
             </div>
           </div>
         </div>
