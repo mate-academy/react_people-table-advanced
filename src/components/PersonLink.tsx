@@ -6,15 +6,16 @@ import { Person } from '../types/Person';
 
 type Props = {
   person: Person;
+  searchParams: URLSearchParams;
 };
 
-export const PersonLink: React.FC<Props> = ({ person }) => {
+export const PersonLink: React.FC<Props> = ({ person, searchParams }) => {
   return (
     <Link
       className={classNames({
         'has-text-danger': person.sex === 'f',
       })}
-      to={`./${person.slug}`}
+      to={{ pathname: `./${person.slug}`, search: searchParams.toString() }}
     >
       {person.name}
     </Link>
