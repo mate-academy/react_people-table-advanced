@@ -12,8 +12,10 @@ export const PeoplePage = () => {
     const [isError, setIsError] = useState(false);
     const [people, setPeople] = useState<Person[]>([]);
     const [query, setQuery] = useState('');
-    const [genderFilter, setGenderFilter] = useState<'all' | 'male' | 'female'>('all');
-    const [centuryFilter, setCenturyFilter] = useState<'16' | '17' | '18' | '19' | '20' | undefined>(undefined);
+    const [genderFilter, setGenderFilter] = useState<'all' | 'm' | 'f'>('all');
+    const [centuryFilter, setCenturyFilter] = useState<string[]>([]);
+    const [sortField, setSortField] = useState<'name' | 'born' | 'died' | undefined>(undefined);
+    const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
 
     useEffect(() => {
       setIsLoading(true);
@@ -27,19 +29,40 @@ export const PeoplePage = () => {
   const person = slug ? people.find(p => p.slug === slug) : null;
 
   const filteredPeople = useMemo(() => {
-    return people.filter((p) => {
+    const filtered = people.filter((p) => {
       const matchesQuery =
         p.name.toLowerCase().includes(query.toLowerCase()) ||
         (p.motherName?.toLowerCase() || '').includes(query.toLowerCase());
 
       const matchesGender = genderFilter === 'all' || p.sex.toLowerCase() === genderFilter;
 
-      const matchesCentury = !centuryFilter || p.born.toString().startsWith(centuryFilter);
+      const matchesCentury =
+        !centuryFilter.length || centuryFilter.some(century => p.born.toString().startsWith(century));
 
       return matchesQuery && matchesGender && matchesCentury;
     });
-  }, [query, genderFilter, centuryFilter, people]);
 
+    // Сортування
+    if (!sortField) {
+      return filtered;
+    }
+
+    return [...filtered].sort((a, b) => {
+      const fieldA = a[sortField];
+      const fieldB = b[sortField];
+
+      if (typeof fieldA === 'string' && typeof fieldB === 'string') {
+        return sortOrder === 'asc' ? fieldA.localeCompare(fieldB) : fieldB.localeCompare(fieldA);
+      }
+
+      if (typeof fieldA == 'number' && typeof fieldB === 'number') {
+        return sortOrder === 'asc' ? fieldA - fieldB : fieldB - fieldA;
+      }
+
+      return 0;
+    });
+
+  }, [query, genderFilter, centuryFilter, sortField, sortOrder, people]);
   return ( //
     <>
       <h1 className="title">People Page</h1>
@@ -70,7 +93,7 @@ export const PeoplePage = () => {
                 ) : people.length === 0 ? (
                       <p data-cy="noPeopleMessage">There are no people on the server</p>
                 ) : (
-                  <PeopleTable people={filteredPeople} slug={slug}/>
+                  <PeopleTable people={filteredPeople} slug={slug} setSortField={setSortField} setSortOrder={setSortOrder}/>
                   )}
             </div>
           </div>

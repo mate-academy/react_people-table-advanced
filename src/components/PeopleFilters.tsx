@@ -4,14 +4,14 @@ interface PeopleFilterProps {
   people: Person[];
   query: string;
   setQuery: React.Dispatch<React.SetStateAction<string>>;
-  setGenderFilter: React.Dispatch<React.SetStateAction<'all' | 'm' | 'f'>>;
-  genderFilter: 'all' | 'male' | 'female';
-  centuryFilter: '16' | '17' | '18' | '19' | '20';
-  setCenturyFilter: React.Dispatch<React.SetStateAction<'16' | '17' | '18' | '19' | '20'>>;
+  setGenderFilter: React.Dispatch<React.SetStateAction<'all' | 'm' | 'f' >>;
+  genderFilter: 'all' | 'm' | 'f';
+  centuryFilter: string[];
+  setCenturyFilter: React.Dispatch<React.SetStateAction<string[]>>;
 }
 
 
-export const PeopleFilters: React.FC<PeopleFilterProps> = ({ query, setQuery, people, setGenderFilter, genderFilter, centuryFilter, setCenturyFilter }) => {
+export const PeopleFilters: React.FC<PeopleFilterProps> = ({ query, setQuery, setGenderFilter, genderFilter, centuryFilter, setCenturyFilter }) => {
 
   return (
     <nav className="panel">
@@ -21,10 +21,10 @@ export const PeopleFilters: React.FC<PeopleFilterProps> = ({ query, setQuery, pe
         <a className={genderFilter === 'all' ? 'is-active' : ''} href="#/people" onClick={() => setGenderFilter('all')}>
           All
         </a>
-        <a className={genderFilter === 'male' ? 'is-active' : ''} href="#/people?sex=m" onClick={() => setGenderFilter('m')}>
+        <a className={genderFilter === 'm' ? 'is-active' : ''} href="#/people?sex=m" onClick={() => setGenderFilter('m')}>
           Male
         </a>
-        <a className={genderFilter === 'female' ? 'is-active' : ''} href="#/people?sex=f" onClick={() => setGenderFilter('f')}>
+        <a className={genderFilter === 'f' ? 'is-active' : ''} href="#/people?sex=f" onClick={() => setGenderFilter('f')}>
           Female
         </a>
       </p>
@@ -50,59 +50,33 @@ export const PeopleFilters: React.FC<PeopleFilterProps> = ({ query, setQuery, pe
 
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
-          <div className="level-left">
-            <a
-              data-cy="century"
-              className={`button mr-1 ${centuryFilter === '16' ? 'is-info' : ''}`}
-              href="#/people?centuries=16"
-              onClick={() => setCenturyFilter('16')}
-            >
-              16
-            </a>
+        <div className="level-left">
+        {['16', '17', '18', '19', '20'].map((century) => (
+          <a
+            key={century}
+            className={`button mr-1 ${centuryFilter.includes(century) ? 'is-info' : ''}`}
+            href="#/people"
+            onClick={() => {
+            setCenturyFilter(prev =>
+              prev.includes(century)
+                ? prev.filter(item => item !== century)
+                : [...prev, century]
+            );
+        }}
+          >
+      {century}
+    </a>
+  ))}
+</div>
 
-            <a
-              data-cy="century"
-              className={`button mr-1 ${centuryFilter === '17' ? 'is-info' : ''}`}
-              href="#/people?centuries=17"
-              onClick={() => setCenturyFilter('17')}
-            >
-              17
-            </a>
 
-            <a
-              data-cy="century"
-              className={`button mr-1 ${centuryFilter === '18' ? 'is-info' : ''}`}
-              href="#/people?centuries=18"
-              onClick={() => setCenturyFilter('18')}
-            >
-              18
-            </a>
-
-            <a
-              data-cy="century"
-              className={`button mr-1 ${centuryFilter === '19' ? 'is-info' : ''}`}
-              href="#/people?centuries=19"
-              onClick={() => setCenturyFilter('19')}
-            >
-              19
-            </a>
-
-            <a
-              data-cy="century"
-              className={`button mr-1 ${centuryFilter === '20' ? 'is-info' : ''}`}
-              href="#/people?centuries=20"
-              onClick={() => setCenturyFilter('20')}
-            >
-              20
-            </a>
-          </div>
-
-          <div className="level-right ml-4">
-            <a
-              data-cy="centuryALL"
-              className="button is-success is-outlined"
-              href="#/people"
-            >
+<div className="level-right ml-4">
+  <a
+    data-cy="centuryALL"
+    className="button is-success is-outlined"
+    href="#/people"
+    onClick={() => setCenturyFilter(['16', '17', '18', '19', '20'])}
+  >
               All
             </a>
           </div>
@@ -110,7 +84,11 @@ export const PeopleFilters: React.FC<PeopleFilterProps> = ({ query, setQuery, pe
       </div>
 
       <div className="panel-block">
-        <a className="button is-link is-outlined is-fullwidth" href="#/people" onClick={() => setQuery('')}>
+        <a className="button is-link is-outlined is-fullwidth" href="#/people" onClick={() => {
+          setQuery('');
+          setGenderFilter('all');
+          setCenturyFilter([]);
+        }}>
           Reset all filters
         </a>
       </div>
