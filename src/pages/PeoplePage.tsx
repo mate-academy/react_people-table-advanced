@@ -5,17 +5,28 @@ import { Person } from '../types/Person';
 import { PeopleFilters } from '../components/PeopleFilters';
 import { Loader } from '../components/Loader';
 import { PeopleTable } from '../components/PeopleTable';
+import { useSearchParams } from 'react-router-dom';
 
 export const PeoplePage = () => {
     const { slug } = useParams();
     const [isLoading, setIsLoading] = useState(false);
     const [isError, setIsError] = useState(false);
     const [people, setPeople] = useState<Person[]>([]);
-    const [query, setQuery] = useState('');
-    const [genderFilter, setGenderFilter] = useState<'all' | 'm' | 'f'>('all');
-    const [centuryFilter, setCenturyFilter] = useState<string[]>([]);
-    const [sortField, setSortField] = useState<'name' | 'born' | 'died' | undefined>(undefined);
-    const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
+    const [searchParams, setSearchParams] = useSearchParams();
+    const [query, setQuery] = useState(searchParams.get('query') || '');
+    const [genderFilter, setGenderFilter] = useState<'all' | 'm' | 'f'>(
+      searchParams.get('gender') as 'all' | 'm' | 'f' || 'all'
+    );
+    const [centuryFilter, setCenturyFilter] = useState<string[]>(
+      searchParams.getAll('century') || []
+    );
+    const [sortField, setSortField] = useState<'name' | 'born' | 'died' | 'sex' | undefined>(
+      searchParams.get('sortField') as 'name' | 'born' | 'died' | 'sex' || undefined
+    );
+    const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>(
+      searchParams.get('sortOrder') as 'asc' | 'desc' || 'asc'
+    );
+
 
     useEffect(() => {
       setIsLoading(true);
@@ -25,6 +36,20 @@ export const PeoplePage = () => {
       .catch(() => setIsError(true))
       .finally(() => setIsLoading(false));
     }, []);
+
+    useEffect(() => {
+      const params = new URLSearchParams();
+
+      if (query) params.set('query', query);
+      if (genderFilter !== 'all') params.set('gender', genderFilter);
+      if (centuryFilter.length > 0) {
+        centuryFilter.forEach(century => params.append('century', century));
+      }
+      if (sortField) params.set('sortField', sortField);
+      params.set('sortOrder', sortOrder);
+
+      setSearchParams(params);
+    }, [query, genderFilter, centuryFilter, sortField, sortOrder, setSearchParams]);
 
   const person = slug ? people.find(p => p.slug === slug) : null;
 

@@ -5,7 +5,7 @@ import { PersonLink } from '../components/PersonLink';
 interface PeopleTableProps {
   people: Person[];
   slug?: string;
-  setSortField: React.Dispatch<React.SetStateAction<'name' | 'born' | 'died' | undefined>>
+  setSortField: React.Dispatch<React.SetStateAction<'name' | 'sex' | 'born' | 'died' | undefined>>
   setSortOrder: React.Dispatch<React.SetStateAction<'asc' | 'desc'>>;
 }
 
@@ -34,7 +34,15 @@ export const PeopleTable: React.FC<PeopleTableProps> = ({ people, slug, setSortF
           >
             Name
           </th>
-          <th>Sex</th>
+          <th
+            style={{cursor: 'pointer'}}
+            onClick={() => {
+              setSortField('sex');
+              setSortOrder(prevOrder => (prevOrder === 'asc' ? 'desc' : 'asc'));
+            }}
+          >
+            Sex
+          </th>
           <th
             style={{cursor: 'pointer'}}
             onClick={() => {
