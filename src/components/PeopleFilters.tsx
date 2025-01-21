@@ -1,16 +1,91 @@
-export const PeopleFilters = () => {
+import classNames from 'classnames';
+
+type Props = {
+  searchParams: {};
+  setSearchParams: (a: {}) => void;
+  query: string;
+  sex: string;
+  centryParams: string[];
+};
+
+export const PeopleFilters: React.FC<Props> = ({
+  searchParams,
+  setSearchParams,
+  query,
+  sex,
+  centryParams,
+}) => {
+  const centries = ['16', '17', '18', '19', '20'];
+
+  const handleQuery = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const params = new URLSearchParams(searchParams);
+
+    params.set('query', event.target.value);
+    setSearchParams(params);
+  };
+
+  const handleSexChange = (sexParam: string) => {
+    const params = new URLSearchParams(searchParams);
+
+    params.delete('sex');
+    if (sexParam !== 'all') {
+      params.set('sex', sexParam);
+    }
+
+    setSearchParams(params);
+  };
+
+  const toggleCentry = (centry: string) => {
+    const params = new URLSearchParams(searchParams);
+
+    const newCentries = centryParams.includes(centry)
+      ? centryParams.filter(cr => cr !== centry)
+      : [...centryParams, centry];
+
+    params.delete('centry');
+    newCentries.forEach(cr => params.append('centry', cr));
+
+    setSearchParams(params);
+  };
+
+  const clearCentryParams = () => {
+    const params = new URLSearchParams(searchParams);
+
+    params.delete('centry');
+    setSearchParams(params);
+  };
+
+  const resetALLFilters = () => {
+    const params = new URLSearchParams(searchParams);
+
+    params.delete('query');
+    params.delete('sex');
+    params.delete('centry');
+
+    setSearchParams(params);
+  };
+
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        <a className="is-active" href="#/people">
+        <a
+          className={classNames({ 'is-active': !sex })}
+          onClick={() => handleSexChange('all')}
+        >
           All
         </a>
-        <a className="" href="#/people?sex=m">
+        <a
+          className={classNames({ 'is-active': sex === 'm' })}
+          onClick={() => handleSexChange('m')}
+        >
           Male
         </a>
-        <a className="" href="#/people?sex=f">
+        <a
+          className={classNames({ 'is-active': sex === 'f' })}
+          onClick={() => handleSexChange('f')}
+        >
           Female
         </a>
       </p>
@@ -22,6 +97,8 @@ export const PeopleFilters = () => {
             type="search"
             className="input"
             placeholder="Search"
+            value={query}
+            onChange={handleQuery}
           />
 
           <span className="icon is-left">
@@ -33,52 +110,27 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            <a
-              data-cy="century"
-              className="button mr-1"
-              href="#/people?centuries=16"
-            >
-              16
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=17"
-            >
-              17
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=18"
-            >
-              18
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=19"
-            >
-              19
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1"
-              href="#/people?centuries=20"
-            >
-              20
-            </a>
+            {centries.map(centry => (
+              <a
+                key={centry}
+                data-cy="century"
+                className={classNames('button mr-1', {
+                  'is-info': centryParams.includes(centry),
+                })}
+                onClick={() => toggleCentry(centry)}
+              >
+                {centry}
+              </a>
+            ))}
           </div>
 
           <div className="level-right ml-4">
             <a
               data-cy="centuryALL"
-              className="button is-success is-outlined"
-              href="#/people"
+              className={classNames('button is-success', {
+                'is-outlined': centryParams.length !== 0,
+              })}
+              onClick={clearCentryParams}
             >
               All
             </a>
@@ -87,7 +139,10 @@ export const PeopleFilters = () => {
       </div>
 
       <div className="panel-block">
-        <a className="button is-link is-outlined is-fullwidth" href="#/people">
+        <a
+          className="button is-link is-outlined is-fullwidth"
+          onClick={resetALLFilters}
+        >
           Reset all filters
         </a>
       </div>
