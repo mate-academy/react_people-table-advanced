@@ -30,10 +30,6 @@ export const PeopleTable: FC<Props> = ({ peoples }) => {
   const currentSort = searchParams.get('sort') as SortFieldEnum | null;
   const currentOrder = searchParams.get('order') as OrderTypeEnum | null;
 
-  if (peoples.length === 0) {
-    return <p data-cy="noPeopleMessage">There are no people on the server</p>;
-  }
-
   const getSortParams = (sortField: SortFieldEnum) => {
     if (currentSort !== sortField) {
       return { sort: sortField, order: null };
