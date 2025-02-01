@@ -2,10 +2,9 @@
 import classNames from 'classnames';
 import { Person } from '../types';
 import { Link, useParams, useSearchParams } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { useMemo } from 'react';
 import { SearchLink } from './SearchLink';
 import { SortType } from '../enums/SortType';
-import { Gender } from '../enums/Gender';
 
 type Props = {
   people: Person[];
@@ -19,70 +18,53 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
   const sex = searchParams.get('sex') || '';
   const query = searchParams.get('query') || '';
   const centuries = searchParams.getAll('centuries') || [];
-  const [newPeople, setNewPeople] = useState<Person[]>(people);
 
-  useEffect(() => {
-    const sorted = [...people].sort((a, b) => {
-      if (sort === SortType.name) {
-        return order === 'desc'
-          ? b.name.localeCompare(a.name)
-          : a.name.localeCompare(b.name);
-      }
+  const filteredPeople = useMemo(() => {
+    let result = [...people];
 
-      if (sort === SortType.sex) {
-        return order === 'desc'
-          ? b.sex.localeCompare(a.sex)
-          : a.sex.localeCompare(b.sex);
-      }
-
-      if (sort === SortType.born) {
-        return order === 'desc' ? b.born - a.born : a.born - b.born;
-      }
-
-      if (sort === SortType.died) {
-        return order === 'desc' ? b.died - a.died : a.died - b.died;
-      }
-
-      return 0;
-    });
-
-    const genderFiltered = [...sorted].filter(person => {
-      if (sex) {
-        if (sex === Gender.male) {
-          return person.sex === Gender.male;
-        } else if (Gender.female) {
-          return person.sex === Gender.female;
+    if (sort) {
+      result.sort((a, b) => {
+        if (sort === SortType.name) {
+          return order === 'desc'
+            ? b.name.localeCompare(a.name)
+            : a.name.localeCompare(b.name);
         }
 
-        return true;
-      }
+        if (sort === SortType.sex) {
+          return order === 'desc'
+            ? b.sex.localeCompare(a.sex)
+            : a.sex.localeCompare(b.sex);
+        }
 
-      if (query) {
-        return person.name.includes(query);
-      }
+        if (sort === SortType.born) {
+          return order === 'desc' ? b.born - a.born : a.born - b.born;
+        }
 
-      return true;
-    });
+        if (sort === SortType.died) {
+          return order === 'desc' ? b.died - a.died : a.died - b.died;
+        }
 
-    const queryFiltered = [...genderFiltered].filter(person => {
-      if (query) {
-        return person.name.includes(query);
-      }
+        return 0;
+      });
+    }
 
-      return true;
-    });
+    if (sex) {
+      result = result.filter(person => person.sex === sex);
+    }
 
-    const centurieFiltered = [...queryFiltered].filter(person => {
-      if (centuries.length) {
-        return centuries.find(
-          centurie => +centurie === Math.ceil(person.born / 100),
-        );
-      }
+    if (query) {
+      result = result.filter(person =>
+        person.name.toLowerCase().includes(query.toLowerCase()),
+      );
+    }
 
-      return true;
-    });
+    if (centuries.length > 0) {
+      result = result.filter(person =>
+        centuries.includes(Math.ceil(person.born / 100).toString()),
+      );
+    }
 
-    setNewPeople(centurieFiltered);
+    return result;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sort, order, sex, query, centuries]);
 
@@ -91,7 +73,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
       data-cy="peopleTable"
       className="table is-striped is-hoverable is-narrow is-fullwidth"
     >
-      {newPeople.length === 0 ? (
+      {filteredPeople.length === 0 ? (
         <p>There are no people matching the current search criteria</p>
       ) : (
         <>
@@ -129,7 +111,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
           </thead>
 
           <tbody>
-            {newPeople.map(person => (
+            {filteredPeople.map(person => (
               <tr
                 data-cy="person"
                 key={person.slug}
