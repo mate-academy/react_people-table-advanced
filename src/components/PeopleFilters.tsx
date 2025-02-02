@@ -1,10 +1,14 @@
 import { ChangeEvent } from 'react';
+import classNames from 'classnames';
 import { useSearchParams } from 'react-router-dom';
 import { getSearchWith, SearchParams } from '../utils/searchHelper';
+import { SexTypeEnum } from '../types';
+import { SearchLink } from './SearchLink';
 
 export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const query = searchParams.get('query') || '';
+  const sex = searchParams.get('sex') as SexTypeEnum | null;
 
   const setSearchWith = (params: SearchParams) => {
     const search = getSearchWith(searchParams, params);
@@ -23,15 +27,28 @@ export const PeopleFilters = () => {
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        <a className="is-active" href="#/people">
+        <SearchLink
+          params={{ sex: null }}
+          className={classNames('', { 'is-active': sex === null })}
+        >
           All
-        </a>
-        <a className="" href="#/people?sex=m">
+        </SearchLink>
+
+        <SearchLink
+          params={{ sex: SexTypeEnum.MALE }}
+          className={classNames('', { 'is-active': sex === SexTypeEnum.MALE })}
+        >
           Male
-        </a>
-        <a className="" href="#/people?sex=f">
+        </SearchLink>
+
+        <SearchLink
+          params={{ sex: SexTypeEnum.FEMALE }}
+          className={classNames('', {
+            'is-active': sex === SexTypeEnum.FEMALE,
+          })}
+        >
           Female
-        </a>
+        </SearchLink>
       </p>
 
       <div className="panel-block">

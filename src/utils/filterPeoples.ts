@@ -1,16 +1,21 @@
-import { OrderTypeEnum, Person, SortFieldEnum } from '../types';
+import { OrderTypeEnum, Person, SexTypeEnum, SortFieldEnum } from '../types';
 
 export const filterPeoples = (
   peoplesToFilter: Person[],
   sortBy: SortFieldEnum | null,
   order: OrderTypeEnum | null,
   query: string,
+  sex: SexTypeEnum | null,
 ) => {
-  const filteredPeoples = peoplesToFilter.filter(person =>
+  let filteredPeoples = peoplesToFilter.filter(person =>
     [person.name, person.motherName, person.fatherName].some(field =>
       field?.toLowerCase().includes(query.toLowerCase()),
     ),
   );
+
+  if (sex) {
+    filteredPeoples = filteredPeoples.filter(person => person.sex === sex);
+  }
 
   filteredPeoples.sort((a, b) => {
     if (!sortBy) {

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
-import { Person, OrderTypeEnum, SortFieldEnum } from '../types';
 import { useSearchParams } from 'react-router-dom';
 import { getPeople } from '../api';
+import { Person, OrderTypeEnum, SortFieldEnum, SexTypeEnum } from '../types';
 import { filterPeoples } from '../utils/filterPeoples';
 import { PeopleFilters } from '../components/PeopleFilters';
 import { Loader } from '../components/Loader';
@@ -11,6 +11,7 @@ export const PeoplePage = () => {
   const [searchParams] = useSearchParams();
   const sortBy = searchParams.get('sort') as SortFieldEnum | null;
   const order = searchParams.get('order') as OrderTypeEnum | null;
+  const sex = searchParams.get('sex') as SexTypeEnum | null;
   const query = searchParams.get('query') || '';
 
   const [peoples, setPeoples] = useState<Person[]>([]);
@@ -33,7 +34,7 @@ export const PeoplePage = () => {
     loadPeoples();
   }, []);
 
-  const filteredPeoples = filterPeoples(peoples, sortBy, order, query);
+  const filteredPeoples = filterPeoples(peoples, sortBy, order, query, sex);
 
   const renderContent = () => {
     if (isLoading) {
