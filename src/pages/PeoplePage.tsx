@@ -13,6 +13,7 @@ export const PeoplePage = () => {
   const order = searchParams.get('order') as OrderTypeEnum | null;
   const sex = searchParams.get('sex') as SexTypeEnum | null;
   const query = searchParams.get('query') || '';
+  const centuries = searchParams.getAll('centuries');
 
   const [peoples, setPeoples] = useState<Person[]>([]);
   const [error, setError] = useState('');
@@ -34,7 +35,14 @@ export const PeoplePage = () => {
     loadPeoples();
   }, []);
 
-  const filteredPeoples = filterPeoples(peoples, sortBy, order, query, sex);
+  const filteredPeoples = filterPeoples(
+    peoples,
+    sortBy,
+    order,
+    query,
+    sex,
+    centuries,
+  );
 
   const renderContent = () => {
     if (isLoading) {

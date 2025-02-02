@@ -6,6 +6,7 @@ export const filterPeoples = (
   order: OrderTypeEnum | null,
   query: string,
   sex: SexTypeEnum | null,
+  centuries: string[],
 ) => {
   let filteredPeoples = peoplesToFilter.filter(person =>
     [person.name, person.motherName, person.fatherName].some(field =>
@@ -15,6 +16,15 @@ export const filterPeoples = (
 
   if (sex) {
     filteredPeoples = filteredPeoples.filter(person => person.sex === sex);
+  }
+
+  if (centuries.length > 0) {
+    filteredPeoples = filteredPeoples.filter(person => {
+      const centuryBorn = Math.ceil(person.born / 100).toString();
+      const centuryDied = Math.ceil(person.died / 100).toString();
+
+      return centuries.includes(centuryBorn) || centuries.includes(centuryDied);
+    });
   }
 
   filteredPeoples.sort((a, b) => {
