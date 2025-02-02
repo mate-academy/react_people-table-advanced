@@ -13,7 +13,9 @@ export const PeopleFilters = () => {
   };
 
   const handleQueryChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setSearchWith({ query: event.target.value });
+    const newValue = event.target.value.trim();
+
+    setSearchWith({ query: newValue !== '' ? newValue : null });
   };
 
   return (
