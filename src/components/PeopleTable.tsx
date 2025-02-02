@@ -3,6 +3,7 @@ import { FC } from 'react';
 import classNames from 'classnames';
 import { useParams, useSearchParams } from 'react-router-dom';
 import { Person, OrderTypeEnum, SortFieldEnum } from '../types';
+import { getSortParams } from '../utils/getSortParams';
 import { PersonLink } from './PersonLink';
 import { SearchLink } from './SearchLink';
 
@@ -12,14 +13,13 @@ interface Props {
 
 const sortIconClasses = (
   sortField: SortFieldEnum,
-  currentSort: SortFieldEnum | null,
-  currentOrder: OrderTypeEnum | null,
+  sortBy: SortFieldEnum | null,
+  order: OrderTypeEnum | null,
 ) => {
   return classNames('fas', {
-    'fa-sort': currentSort !== sortField,
-    'fa-sort-up': currentSort === sortField && !currentOrder,
-    'fa-sort-down':
-      currentSort === sortField && currentOrder === OrderTypeEnum.Desc,
+    'fa-sort': sortBy !== sortField,
+    'fa-sort-up': sortBy === sortField && !order,
+    'fa-sort-down': sortBy === sortField && order === OrderTypeEnum.Desc,
   });
 };
 
@@ -27,20 +27,8 @@ export const PeopleTable: FC<Props> = ({ peoples }) => {
   const { slug } = useParams<{ slug?: string }>();
   const [searchParams] = useSearchParams();
 
-  const currentSort = searchParams.get('sort') as SortFieldEnum | null;
-  const currentOrder = searchParams.get('order') as OrderTypeEnum | null;
-
-  const getSortParams = (sortField: SortFieldEnum) => {
-    if (currentSort !== sortField) {
-      return { sort: sortField, order: null };
-    }
-
-    if (!currentOrder) {
-      return { sort: sortField, order: OrderTypeEnum.Desc };
-    }
-
-    return { sort: null, order: null };
-  };
+  const sortBy = searchParams.get('sort') as SortFieldEnum | null;
+  const order = searchParams.get('order') as OrderTypeEnum | null;
 
   return (
     <table
@@ -56,15 +44,9 @@ export const PeopleTable: FC<Props> = ({ peoples }) => {
               <th key={field}>
                 <span className="is-flex is-flex-wrap-nowrap">
                   {fieldName}
-                  <SearchLink params={getSortParams(field)}>
+                  <SearchLink params={getSortParams(field, sortBy, order)}>
                     <span className="icon">
-                      <i
-                        className={sortIconClasses(
-                          field,
-                          currentSort,
-                          currentOrder,
-                        )}
-                      />
+                      <i className={sortIconClasses(field, sortBy, order)} />
                     </span>
                   </SearchLink>
                 </span>

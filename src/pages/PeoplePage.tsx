@@ -1,15 +1,17 @@
 import { useEffect, useState } from 'react';
 import { Person, OrderTypeEnum, SortFieldEnum } from '../types';
-import { getPeople } from '../api';
 import { useSearchParams } from 'react-router-dom';
+import { getPeople } from '../api';
+import { filterPeoples } from '../utils/filterPeoples';
 import { PeopleFilters } from '../components/PeopleFilters';
 import { Loader } from '../components/Loader';
 import { PeopleTable } from '../components/PeopleTable';
 
 export const PeoplePage = () => {
   const [searchParams] = useSearchParams();
-  const currentSort = searchParams.get('sort') as SortFieldEnum | null;
-  const currentOrder = searchParams.get('order') as OrderTypeEnum | null;
+  const sortBy = searchParams.get('sort') as SortFieldEnum | null;
+  const order = searchParams.get('order') as OrderTypeEnum | null;
+  const query = searchParams.get('query') || '';
 
   const [peoples, setPeoples] = useState<Person[]>([]);
   const [error, setError] = useState('');
@@ -31,40 +33,31 @@ export const PeoplePage = () => {
     loadPeoples();
   }, []);
 
-  const filteredPeoples = peoples
-    .filter(person => {
-      const nameFilter = searchParams.get(SortFieldEnum.Name)?.toLowerCase();
+  const filteredPeoples = filterPeoples(peoples, sortBy, order, query);
 
-      return nameFilter ? person.name.toLowerCase().includes(nameFilter) : true;
-    })
-    .sort((a, b) => {
-      if (!currentSort) {
-        return 0;
-      }
+  const renderContent = () => {
+    if (isLoading) {
+      return <Loader />;
+    }
 
-      if (currentSort === SortFieldEnum.Name) {
-        return currentOrder === OrderTypeEnum.Desc
-          ? b.name.localeCompare(a.name, 'uk')
-          : a.name.localeCompare(b.name, 'uk');
-      }
+    if (error) {
+      return (
+        <p data-cy="peopleLoadingError" className="has-text-danger">
+          {error}
+        </p>
+      );
+    }
 
-      if (
-        currentSort === SortFieldEnum.Born ||
-        currentSort === SortFieldEnum.Died
-      ) {
-        return currentOrder === OrderTypeEnum.Desc
-          ? b[currentSort] - a[currentSort]
-          : a[currentSort] - b[currentSort];
-      }
+    if (peoples.length === 0) {
+      return <p data-cy="noPeopleMessage">There are no people on the server</p>;
+    }
 
-      if (currentSort === SortFieldEnum.Sex) {
-        return currentOrder === OrderTypeEnum.Desc
-          ? b.sex.localeCompare(a.sex, 'en')
-          : a.sex.localeCompare(b.sex, 'en');
-      }
+    if (filteredPeoples.length === 0) {
+      return <p>There are no people matching the current search criteria</p>;
+    }
 
-      return 0;
-    });
+    return <PeopleTable peoples={filteredPeoples} />;
+  };
 
   return (
     <>
@@ -73,27 +66,11 @@ export const PeoplePage = () => {
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
           <div className="column is-7-tablet is-narrow-desktop">
-            <PeopleFilters />
+            {!isLoading && !error && <PeopleFilters />}
           </div>
 
           <div className="column">
-            <div className="box table-container">
-              {/*/!*<p>There are no people matching the current search criteria</p>*!/*/}
-
-              {isLoading ? (
-                <Loader />
-              ) : error ? (
-                <p data-cy="peopleLoadingError" className="has-text-danger">
-                  {error}
-                </p>
-              ) : peoples.length === 0 ? (
-                <p data-cy="noPeopleMessage">
-                  There are no people on the server
-                </p>
-              ) : (
-                <PeopleTable peoples={filteredPeoples} />
-              )}
-            </div>
+            <div className="box table-container">{renderContent()}</div>
           </div>
         </div>
       </div>

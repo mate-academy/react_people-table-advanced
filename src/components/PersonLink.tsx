@@ -1,6 +1,6 @@
 import { FC } from 'react';
 import classNames from 'classnames';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useSearchParams } from 'react-router-dom';
 import { Person } from '../types';
 
 interface Props {
@@ -9,13 +9,18 @@ interface Props {
 }
 
 export const PersonLink: FC<Props> = ({ person, parentName }) => {
+  const [searchParams] = useSearchParams();
+
   if (!person) {
     return <span>{parentName || '-'}</span>;
   }
 
   return (
     <NavLink
-      to={`/people/${person.slug}`}
+      to={{
+        pathname: `/people/${person.slug}`,
+        search: searchParams.toString(),
+      }}
       className={classNames('', {
         'has-text-danger': person.sex === 'f',
       })}
