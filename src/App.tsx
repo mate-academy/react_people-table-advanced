@@ -10,7 +10,6 @@ export const App = () => {
       <div className="section">
         <div className="container">
           <Outlet />
-          {/*<PeoplePage />*/}
         </div>
       </div>
     </div>
