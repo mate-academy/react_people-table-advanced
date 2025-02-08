@@ -2,11 +2,13 @@ import classNames from 'classnames';
 import { SearchLink } from './SearchLink';
 import { useSearchParams } from 'react-router-dom';
 
+const centuryFilterValues: string[] = ['16', '17', '18', '19', '20'];
+
 export const PeopleFilters = () => {
-  const centuryFilterValues: string[] = ['16', '17', '18', '19', '20'];
   const [searchParams, setSearchParams] = useSearchParams();
   const centuries = searchParams.getAll('centuries');
   const query = searchParams.get('query') || '';
+  const sex = searchParams.get('sex');
 
   function toggleCenturyFilter(value: string) {
     const newCenturies = centuries.includes(value)
@@ -23,18 +25,31 @@ export const PeopleFilters = () => {
     setSearchParams(params);
   };
 
+  const isActiveSex = (value: string | null) => {
+    return (!sex && value === null) || value === sex;
+  };
+
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        <SearchLink className="is-active" params={{ sex: null }}>
+        <SearchLink
+          className={classNames({ 'is-active': isActiveSex(null) })}
+          params={{ sex: null }}
+        >
           All
         </SearchLink>
-        <SearchLink className="" params={{ sex: 'm' }}>
+        <SearchLink
+          className={classNames({ 'is-active': isActiveSex('m') })}
+          params={{ sex: 'm' }}
+        >
           Male
         </SearchLink>
-        <SearchLink className="" params={{ sex: 'f' }}>
+        <SearchLink
+          className={classNames({ 'is-active': isActiveSex('f') })}
+          params={{ sex: 'f' }}
+        >
           Female
         </SearchLink>
       </p>

@@ -4,7 +4,7 @@ import { PeopleTable } from '../components/PeopleTable';
 import React, { useEffect, useState } from 'react';
 import { getPeople } from '../api';
 import { Person } from '../types';
-import { useSearchParams } from 'react-router-dom';
+import { useLocation, useSearchParams } from 'react-router-dom';
 import { getPeopleWithParents } from '../utils/getPeopleWithParents';
 import { getFilteredPeople } from '../utils/getFilteredPeople';
 
@@ -13,7 +13,9 @@ export const PeoplePage: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isError, setIsError] = useState(false);
 
+  const location = useLocation();
   const [searchParams] = useSearchParams(location.search);
+
   const sex = searchParams.get('sex') as 'm' | 'f' | null;
   const centuries = searchParams.getAll('centuries');
   const query = searchParams.get('query') || '';
