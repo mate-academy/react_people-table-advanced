@@ -1,3 +1,6 @@
+import { NavLink } from "react-router-dom";
+import { getLinkActiveClass } from '../utils/getLinkActiveClass';
+
 export const Navbar = () => {
   return (
     <nav
@@ -8,17 +11,17 @@ export const Navbar = () => {
     >
       <div className="container">
         <div className="navbar-brand">
-          <a className="navbar-item" href="#/">
+          <NavLink className={getLinkActiveClass} to="/">
             Home
-          </a>
+          </NavLink>
 
-          <a
+          <NavLink
             aria-current="page"
-            className="navbar-item has-background-grey-lighter"
-            href="#/people"
+            className={getLinkActiveClass}
+            to="/people"
           >
             People
-          </a>
+          </NavLink>
         </div>
       </div>
     </nav>
