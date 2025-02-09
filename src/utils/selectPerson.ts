@@ -1,5 +1,5 @@
 import { SetStateAction } from 'react';
-import { Person } from '../types';
+import { Person } from '../types/Person';
 
 export function selectPerson(
   people: Person[],

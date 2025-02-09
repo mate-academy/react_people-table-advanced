@@ -1,70 +1,41 @@
 import classNames from 'classnames';
 import { useSearchParams } from 'react-router-dom';
 import { CENTURIES } from '../config';
+import { getSearchWith, SearchParams } from '../utils/searchHelper';
 
 export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const query = searchParams.get('query');
   const centuries = searchParams.getAll('century') || [];
 
-  function handleQueryChange(e: React.ChangeEvent<HTMLInputElement>) {
+  const setSearchWith = (paramsToUpdate: SearchParams) => {
+    const search = getSearchWith(searchParams, paramsToUpdate);
+
+    setSearchParams(search);
+  };
+
+  const handleQueryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
-    const params = new URLSearchParams(searchParams);
 
-    if (!value.length) {
-      params.delete('query');
-    } else {
-      params.set('query', value);
-    }
+    setSearchWith({ query: !value.length ? null : value });
+  };
 
-    setSearchParams(params);
-  }
-
-  function handleSettingCentury(century: string) {
-    const params = new URLSearchParams(searchParams);
-
+  const handleSettingCentury = (century: string) => {
     const newCenturies = centuries.includes(century)
       ? centuries.filter(param => param !== century)
       : [...centuries, century];
 
-    params.delete('century');
-    newCenturies.forEach(newCentury => params.append('century', newCentury));
-
-    setSearchParams(params);
-  }
-
-  function deleteCenturies() {
-    const params = new URLSearchParams(searchParams);
-
-    params.delete('century');
-    setSearchParams(params);
-  }
-
-  function handleResettingAllFilters() {
-    const params = new URLSearchParams(searchParams);
-
-    params.delete('century');
-    params.delete('sex');
-    params.delete('query');
-
-    setSearchParams(params);
-  }
-
-  function handleAddingSex(value: 'm' | 'f') {
-    const params = new URLSearchParams();
-
-    params.append('sex', value);
-
-    setSearchParams(params);
-  }
-
-  const deleteSex = () => {
-    const params = new URLSearchParams();
-
-    params.delete('sex');
-
-    setSearchParams(params);
+    setSearchWith({ century: newCenturies });
   };
+
+  const deleteCenturies = () => setSearchWith({ century: null });
+
+  const resetAllFilters = () =>
+    setSearchWith({ century: null, sex: null, query: null });
+
+  const addSex = (value: 'm' | 'f') => setSearchWith({ sex: value });
+
+  const deleteSex = () => setSearchWith({ sex: null });
 
   return (
     <nav className="panel">
@@ -80,7 +51,7 @@ export const PeopleFilters = () => {
           className={classNames({
             'is-active': searchParams.get('sex') === 'm',
           })}
-          onClick={() => handleAddingSex('m')}
+          onClick={() => addSex('m')}
         >
           Male
         </a>
@@ -88,7 +59,7 @@ export const PeopleFilters = () => {
           className={classNames({
             'is-active': searchParams.get('sex') === 'f',
           })}
-          onClick={() => handleAddingSex('f')}
+          onClick={() => addSex('f')}
         >
           Female
         </a>
@@ -142,7 +113,7 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <button
           className="button is-link is-outlined is-fullwidth"
-          onClick={() => handleResettingAllFilters()}
+          onClick={() => resetAllFilters()}
         >
           Reset all filters
         </button>

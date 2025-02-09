@@ -1,7 +1,8 @@
 import classNames from 'classnames';
 import { useCallback, useEffect, useState } from 'react';
 import { Link, useParams, useSearchParams } from 'react-router-dom';
-import { Person } from '../types';
+import { Person } from '../types/Person';
+import { getSearchWith, SearchParams } from '../utils/searchHelper';
 import { selectPerson } from '../utils/selectPerson';
 
 type Props = {
@@ -13,14 +14,28 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
   const { slug } = useParams();
   const [filteredPeople, setFilteredPeople] = useState<Person[]>(people);
   const [searchParams, setSearchParams] = useSearchParams();
-  const query = searchParams.get('query')?.toLowerCase();
-  const sort = searchParams.get('sort');
-  const orderParam = searchParams.get('order');
-  const centuries = searchParams.getAll('century');
+
+  const getSearchParams = (param: string, isArrayGiven?: boolean) => {
+    return isArrayGiven ? searchParams.getAll(param) : searchParams.get(param);
+  };
+
+  const query = String(getSearchParams('query')).toLowerCase();
+  const sort = getSearchParams('sort');
+  const orderParam = getSearchParams('order');
+  const centuries = getSearchParams('century', true);
+  const sex = getSearchParams('sex');
+
+  const setSearchWith = (paramsToUpdate: SearchParams) => {
+    const search = getSearchWith(searchParams, paramsToUpdate);
+
+    setSearchParams(search);
+  };
 
   const sortOrder = useCallback(() => {
+    const peopleCopy = people.slice();
+
     setFilteredPeople(
-      people.sort((a, b) => {
+      peopleCopy.sort((a, b) => {
         const normalizedA = String(a[sort as keyof Person]);
         const normalizedB = String(b[sort as keyof Person]);
 
@@ -32,8 +47,6 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
   }, [people, sort, orderParam]);
 
   useEffect(() => {
-    // const sex = searchParams.get('sex');
-
     if (query) {
       setFilteredPeople(
         people.filter(person => {
@@ -49,8 +62,10 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
         }),
       );
     }
+  }, [people, query]);
 
-    if (centuries.length) {
+  useEffect(() => {
+    if (centuries?.length) {
       setFilteredPeople(
         people.filter(person => {
           const normalizedBorn = String(Math.ceil(person.born / 100));
@@ -59,15 +74,19 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
         }),
       );
     }
+  }, [centuries, people]);
 
-    if (sort && !orderParam) {
-      sortOrder();
+  useEffect(() => {
+    if (sex) {
+      setFilteredPeople(people.filter(person => person.sex === sex));
+    } else {
+      setFilteredPeople(people);
     }
+  }, [sex, people]);
 
-    if (orderParam === 'desc') {
-      sortOrder();
-    }
-  }, [searchParams, people, query, centuries, sort, orderParam, sortOrder]);
+  useEffect(() => {
+    sortOrder();
+  }, [orderParam, sort, sortOrder]);
 
   useEffect(() => {
     if (slug) {
@@ -76,18 +95,14 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
   }, [slug, people]);
 
   const sortBy = (by: 'name' | 'sex' | 'born' | 'died') => {
-    const params = new URLSearchParams(searchParams);
-
     if (searchParams.get('order')) {
-      params.delete('order');
-      params.delete('sort');
+      setSearchWith({ order: null });
+      setSearchWith({ sort: null });
     } else if (searchParams.get('sort') === by) {
-      params.set('order', 'desc');
+      setSearchWith({ order: 'desc' });
     } else {
-      params.set('sort', by);
+      setSearchWith({ sort: by });
     }
-
-    setSearchParams(params);
   };
 
   return (
@@ -148,7 +163,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
 
       <tbody>
         {filteredPeople.map(person => {
-          const { motherName, fatherName, sex, born, died } = person;
+          const { motherName, fatherName, born, died } = person;
           const currentMother = people.find(p => p.name === motherName);
           const currentFather = people.find(p => p.name === fatherName);
 
@@ -165,13 +180,13 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
                   onClick={() => setSelectedPerson(person)}
                   to={`${person.slug}`}
                   className={classNames({
-                    'has-text-danger': sex === 'f',
+                    'has-text-danger': person.sex === 'f',
                   })}
                 >
                   {person.name}
                 </Link>
               </td>
-              <td>{sex}</td>
+              <td>{person.sex}</td>
               <td>{born}</td>
               <td>{died}</td>
 
