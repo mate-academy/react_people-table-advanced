@@ -1,3 +1,16 @@
 iframe {
   display: none;
 }
+
+.title {
+  margin-top: 24px;
+}
+
+.table-container {
+  display: flex;
+  gap: 40px;
+}
+
+.panel {
+  height: min-content;
+}
