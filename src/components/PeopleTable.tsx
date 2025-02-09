@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Link, useParams, useSearchParams } from 'react-router-dom';
 import { Person } from '../types';
 import { selectPerson } from '../utils/selectPerson';
@@ -12,12 +12,27 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
   const [selectedPerson, setSelectedPerson] = useState<Person | null>(null);
   const { slug } = useParams();
   const [filteredPeople, setFilteredPeople] = useState<Person[]>(people);
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const query = searchParams.get('query')?.toLowerCase();
+  const sort = searchParams.get('sort');
+  const orderParam = searchParams.get('order');
+  const centuries = searchParams.getAll('century');
+
+  const sortOrder = useCallback(() => {
+    setFilteredPeople(
+      people.sort((a, b) => {
+        const normalizedA = String(a[sort as keyof Person]);
+        const normalizedB = String(b[sort as keyof Person]);
+
+        return orderParam === 'asc'
+          ? normalizedA?.localeCompare(normalizedB)
+          : normalizedB.localeCompare(normalizedA);
+      }),
+    );
+  }, [people, sort, orderParam]);
 
   useEffect(() => {
     // const sex = searchParams.get('sex');
-    const centuries = searchParams.getAll('century');
 
     if (query) {
       setFilteredPeople(
@@ -44,13 +59,36 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
         }),
       );
     }
-  }, [searchParams, people, query]);
+
+    if (sort && !orderParam) {
+      sortOrder();
+    }
+
+    if (orderParam === 'desc') {
+      sortOrder();
+    }
+  }, [searchParams, people, query, centuries, sort, orderParam, sortOrder]);
 
   useEffect(() => {
     if (slug) {
       setSelectedPerson(prev => people.find(p => p.slug === slug) || prev);
     }
   }, [slug, people]);
+
+  const sortBy = (by: 'name' | 'sex' | 'born' | 'died') => {
+    const params = new URLSearchParams(searchParams);
+
+    if (searchParams.get('order')) {
+      params.delete('order');
+      params.delete('sort');
+    } else if (searchParams.get('sort') === by) {
+      params.set('order', 'desc');
+    } else {
+      params.set('sort', by);
+    }
+
+    setSearchParams(params);
+  };
 
   return (
     <table
@@ -59,10 +97,50 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
     >
       <thead>
         <tr>
-          <th>Name</th>
-          <th>Sex</th>
-          <th>Born</th>
-          <th>Died</th>
+          <th>
+            <span className="is-flex is-flex-wrap-nowrap">
+              Name
+              <a onClick={() => sortBy('name')}>
+                <span className="icon">
+                  <i className="fas fa-sort" />
+                </span>
+              </a>
+            </span>
+          </th>
+
+          <th>
+            <span className="is-flex is-flex-wrap-nowrap">
+              Sex
+              <a onClick={() => sortBy('sex')}>
+                <span className="icon">
+                  <i className="fas fa-sort" />
+                </span>
+              </a>
+            </span>
+          </th>
+
+          <th>
+            <span className="is-flex is-flex-wrap-nowrap">
+              Born
+              <a onClick={() => sortBy('born')}>
+                <span className="icon">
+                  <i className="fas fa-sort-up" />
+                </span>
+              </a>
+            </span>
+          </th>
+
+          <th>
+            <span className="is-flex is-flex-wrap-nowrap">
+              Died
+              <a onClick={() => sortBy('died')}>
+                <span className="icon">
+                  <i className="fas fa-sort" />
+                </span>
+              </a>
+            </span>
+          </th>
+
           <th>Mother</th>
           <th>Father</th>
         </tr>
@@ -70,8 +148,9 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
 
       <tbody>
         {filteredPeople.map(person => {
-          const currentMother = people.find(p => p.name === person.motherName);
-          const currentFather = people.find(p => p.name === person.fatherName);
+          const { motherName, fatherName, sex, born, died } = person;
+          const currentMother = people.find(p => p.name === motherName);
+          const currentFather = people.find(p => p.name === fatherName);
 
           return (
             <tr
@@ -86,15 +165,15 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
                   onClick={() => setSelectedPerson(person)}
                   to={`${person.slug}`}
                   className={classNames({
-                    'has-text-danger': person.sex === 'f',
+                    'has-text-danger': sex === 'f',
                   })}
                 >
                   {person.name}
                 </Link>
               </td>
-              <td>{person.sex}</td>
-              <td>{person.born}</td>
-              <td>{person.died}</td>
+              <td>{sex}</td>
+              <td>{born}</td>
+              <td>{died}</td>
 
               {currentMother ? (
                 <td>
@@ -107,11 +186,11 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
                       selectPerson(people, setSelectedPerson, currentMother)
                     }
                   >
-                    {person.motherName}
+                    {motherName}
                   </Link>
                 </td>
               ) : (
-                <td>{person.motherName || '-'}</td>
+                <td>{motherName || '-'}</td>
               )}
 
               {currentFather ? (
@@ -122,11 +201,11 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
                       selectPerson(people, setSelectedPerson, currentFather)
                     }
                   >
-                    {person.fatherName}
+                    {fatherName}
                   </Link>
                 </td>
               ) : (
-                <td>{person.fatherName || '-'}</td>
+                <td>{fatherName || '-'}</td>
               )}
             </tr>
           );
