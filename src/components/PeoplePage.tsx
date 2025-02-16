@@ -6,13 +6,13 @@ import { useEffect, useState } from 'react';
 import { getPeople } from '../api';
 
 export const PeoplePage = () => {
-  const [peoples, setPeoples] = useState<Person[]>([]);
+  const [people, setPeople] = useState<Person[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
 
   const getPeoples = () => {
     return getPeople()
-      .then(peopleFromServer => setPeoples(peopleFromServer))
+      .then(peopleFromServer => setPeople(peopleFromServer))
       .catch(() => setError('Something went wrong'))
       .finally(() => setIsLoading(false));
   };
@@ -41,13 +41,13 @@ export const PeoplePage = () => {
                 </p>
               )}
 
-              {!isLoading && peoples.length === 0 && (
+              {!isLoading && people.length === 0 && (
                 <p data-cy="noPeopleMessage">
                   There are no people on the server
                 </p>
               )}
 
-              {!isLoading && <PeopleTable peoples={peoples} />}
+              {!isLoading && <PeopleTable people={people} />}
             </div>
           </div>
         </div>

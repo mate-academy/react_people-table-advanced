@@ -23,11 +23,11 @@ export const PeopleFilters = () => {
     setSearchParams(params);
   }
 
-  const hadnlQueryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleQueryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchWith({ query: event.target.value });
   };
 
-  const toogleCentury = (char: string) => {
+  const toggleCentury = (char: string) => {
     let newCentury;
 
     if (centuries.includes(char)) {
@@ -81,7 +81,7 @@ export const PeopleFilters = () => {
             className="input"
             placeholder="Search"
             value={query}
-            onChange={hadnlQueryChange}
+            onChange={handleQueryChange}
           />
 
           <span className="icon is-left">
@@ -93,21 +93,21 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            {['16', '17', '18', '19', '20'].map(centrury => (
+            {['16', '17', '18', '19', '20'].map(century => (
               <SearchLink
-                key={centrury}
+                key={century}
                 params={{
-                  centuries: centuries.includes(centrury)
-                    ? centuries.filter(ch => centrury !== ch)
-                    : [...centuries, centrury],
+                  centuries: centuries.includes(century)
+                    ? centuries.filter(ch => century !== ch)
+                    : [...centuries, century],
                 }}
                 data-cy="century"
-                onClick={() => toogleCentury(centrury)}
+                onClick={() => toggleCentury(century)}
                 className={classNames('button mr-1', {
-                  'is-info': centuries.includes(centrury),
+                  'is-info': centuries.includes(century),
                 })}
               >
-                {centrury}
+                {century}
               </SearchLink>
             ))}
           </div>

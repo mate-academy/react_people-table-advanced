@@ -10,20 +10,20 @@ import { useEffect, useState } from 'react';
 import { SearchLink } from './SearchLink';
 
 type PeopleProps = {
-  peoples: Person[];
+  people: Person[];
 };
 
-type Obj = {
-  sort?: string | null;
-  order?: string | null;
-};
+// type Obj = {
+//   sort?: string | null;
+//   order?: string | null;
+// };
 
-export const PeopleTable: React.FC<PeopleProps> = ({ peoples }) => {
+export const PeopleTable: React.FC<PeopleProps> = ({ people }) => {
   const { personSlug } = useParams();
-  const selectedPersone = personSlug;
+  const selectedPerson = personSlug;
 
   const [params] = useSearchParams();
-  const [filteredPeople, setFilteredPeople] = useState<Person[]>(peoples);
+  const [filteredPeople, setFilteredPeople] = useState<Person[]>(people);
   const [sortedPeople, setSortedPeople] = useState<Person[]>([
     ...filteredPeople,
   ]);
@@ -70,13 +70,13 @@ export const PeopleTable: React.FC<PeopleProps> = ({ peoples }) => {
   };
 
   const handleFilterChange = () => {
-    let newPeoples = [...peoples];
+    let newPeople = [...people];
     const query = params.get('query');
     const centuries = params.getAll('centuries');
     const sex = params.get('sex');
 
     if (query) {
-      newPeoples = newPeoples.filter(item => {
+      newPeople = newPeople.filter(item => {
         const lowerQuery = query.toLowerCase();
         const lowerName = item.name.toLowerCase();
         const lowerFatherName = item.fatherName?.toLowerCase();
@@ -91,7 +91,7 @@ export const PeopleTable: React.FC<PeopleProps> = ({ peoples }) => {
     }
 
     if (centuries.length) {
-      newPeoples = newPeoples.filter(person => {
+      newPeople = newPeople.filter(person => {
         const centuryBorn = Math.ceil(person.born / 100);
 
         return centuries.includes(centuryBorn.toString());
@@ -99,38 +99,40 @@ export const PeopleTable: React.FC<PeopleProps> = ({ peoples }) => {
     }
 
     if (sex) {
-      newPeoples = newPeoples.filter(person => person.sex === sex);
+      newPeople = newPeople.filter(person => person.sex === sex);
     }
 
-    setFilteredPeople(newPeoples);
-    setSortedPeople(newPeoples);
+    setFilteredPeople(newPeople);
+    setSortedPeople(newPeople);
     sortTables();
   };
 
-  const handleSort = (title: string, sorts: string) => {
-    let obj: Obj = { sort: sorts, order: null };
-    let classArrow = 'fa-sort';
+  const [sortConfig, setSortConfig] = useState<{
+    sort: string | null;
+    order: string | null;
+  }>({
+    sort: null,
+    order: null,
+  });
 
-    if (params.get('sort') === sorts && params.get('order')) {
-      obj = { sort: sorts, order: 'desc' };
-      classArrow = 'fa-sort-up';
+  const handleSort = (sorts: string) => {
+    setSortConfig(prev => {
+      if (prev.sort === sorts) {
+        return prev.order === 'asc'
+          ? { sort: sorts, order: 'desc' }
+          : { sort: null, order: 'asc' };
+      }
+
+      return { sort: sorts, order: 'asc' };
+    });
+  };
+
+  const getIconClass = (sortsType: string) => {
+    if (sortConfig.sort === sortsType) {
+      return sortConfig.order === 'asc' ? 'fa-sort-up' : 'fa-sort-down';
     }
 
-    if (params.get('sort') === sorts && params.get('order')) {
-      obj = { sort: null, order: null };
-      classArrow = 'fa-sort-down';
-    }
-
-    return (
-      <span className="is-flex is-flex-wrap-nowrap">
-        {title}
-        <SearchLink params={obj}>
-          <span className="icon">
-            <i className={`fas ${classArrow}`} />
-          </span>
-        </SearchLink>
-      </span>
-    );
+    return 'fa-sort';
   };
 
   useEffect(() => {
@@ -142,7 +144,7 @@ export const PeopleTable: React.FC<PeopleProps> = ({ peoples }) => {
   }, [sortParams, order]);
 
   const getPersone = (name: string | null, arr: Person[]) => {
-    return arr.find(persone => persone.name === name);
+    return arr.find(person => person.name === name);
   };
 
   return (
@@ -153,10 +155,46 @@ export const PeopleTable: React.FC<PeopleProps> = ({ peoples }) => {
       >
         <thead>
           <tr>
-            <th>{handleSort('Name', 'name')}</th>
-            <th>{handleSort('Sex', 'sex')}</th>
-            <th>{handleSort('Born', 'born')}</th>
-            <th>{handleSort('Died', 'died')}</th>
+            <th onClick={() => handleSort('name')}>
+              <span className="is-flex is-flex-wrap-nowrap">
+                Name
+                <SearchLink params={sortConfig}>
+                  <span className="icon">
+                    <i className={`fas ${getIconClass('name')}`} />
+                  </span>
+                </SearchLink>
+              </span>
+            </th>
+            <th onClick={() => handleSort('sex')}>
+              <span className="is-flex is-flex-wrap-nowrap">
+                Sex
+                <SearchLink params={sortConfig}>
+                  <span className="icon">
+                    <i className={`fas ${getIconClass('sex')}`} />
+                  </span>
+                </SearchLink>
+              </span>
+            </th>
+            <th onClick={() => handleSort('born')}>
+              <span className="is-flex is-flex-wrap-nowrap">
+                Born
+                <SearchLink params={sortConfig}>
+                  <span className="icon">
+                    <i className={`fas ${getIconClass('born')}`} />
+                  </span>
+                </SearchLink>
+              </span>
+            </th>
+            <th onClick={() => handleSort('died')}>
+              <span className="is-flex is-flex-wrap-nowrap">
+                Died
+                <SearchLink params={sortConfig}>
+                  <span className="icon">
+                    <i className={`fas ${getIconClass('died')}`} />
+                  </span>
+                </SearchLink>
+              </span>
+            </th>
             <th>Mother</th>
             <th>Father</th>
           </tr>
@@ -164,15 +202,15 @@ export const PeopleTable: React.FC<PeopleProps> = ({ peoples }) => {
 
         <tbody>
           {sortedPeople.map(person => {
-            const getFather = getPersone(person.fatherName, peoples);
-            const getMother = getPersone(person.motherName, peoples);
+            const getFather = getPersone(person.fatherName, people);
+            const getMother = getPersone(person.motherName, people);
 
             return (
               <tr
                 data-cy="person"
                 key={person.slug}
                 className={classNames({
-                  'has-background-warning': selectedPersone === person.slug,
+                  'has-background-warning': selectedPerson === person.slug,
                 })}
               >
                 <td>
