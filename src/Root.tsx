@@ -22,6 +22,5 @@ export const Root = () => (
         <Route path={ROUTES.NOT_FOUND} element={<NotFoundPage />} />
       </Route>
     </Routes>
-    <App />
   </Router>
 );
