@@ -1,11 +1,11 @@
-// export const Class = (sortBy: string | null, direction: string | null) => {
-//   if (!sortBy) {
-//     return '';
-//   }
+export const Class = (sortBy: string | null, direction: string | null) => {
+  if (!sortBy) {
+    return '';
+  }
 
-//   if (direction === 'desc') {
-//     return 'fas fa-sort-down';
-//   }
+  if (direction === 'desc') {
+    return 'fas fa-sort-down';
+  }
 
-//   return 'fas fa-sort-up';
-// };
+  return 'fas fa-sort-up';
+};

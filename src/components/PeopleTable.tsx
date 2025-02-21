@@ -6,7 +6,7 @@ import { SearchLink } from './SearchLink';
 import { useSort } from './Hooks/useSort';
 import { Category } from '../types/categoty';
 import { useFilteredPeople } from './Hooks/useFilteredPeople';
-// import { Class } from './Hooks/Class';
+import { Class } from './Hooks/Class';
 // import { arowUpDown } from './Hooks/'
 
 /* eslint-disable jsx-a11y/control-has-associated-label */
