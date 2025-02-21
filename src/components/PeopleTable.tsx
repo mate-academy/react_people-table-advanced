@@ -6,6 +6,8 @@ import { SearchLink } from './SearchLink';
 import { useSort } from './Hooks/useSort';
 import { Category } from '../types/categoty';
 import { useFilteredPeople } from './Hooks/useFilteredPeople';
+// import { Class } from './Hooks/Class';
+// import { arowUpDown } from './Hooks/'
 
 /* eslint-disable jsx-a11y/control-has-associated-label */
 interface PeopleTableProps {
@@ -29,7 +31,7 @@ export const PeopleTable: React.FC<PeopleTableProps> = ({ people }) => {
               Name
               <SearchLink params={useSort(Category.name, searchParams)}>
                 <span className="icon">
-                  <i className="fas fa-sort" />
+                  <i className={Class(Category.name, searchParams)} />
                 </span>
               </SearchLink>
             </span>
@@ -38,33 +40,33 @@ export const PeopleTable: React.FC<PeopleTableProps> = ({ people }) => {
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Sex
-              <a href="#/people?sort=sex">
+              <SearchLink params={useSort(Category.sex, searchParams)}>
                 <span className="icon">
                   <i className="fas fa-sort" />
                 </span>
-              </a>
+              </SearchLink>
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Born
-              <a href="#/people?sort=born&amp;order=desc">
+              <SearchLink params={useSort(Category.born, searchParams)}>
                 <span className="icon">
                   <i className="fas fa-sort-up" />
                 </span>
-              </a>
+              </SearchLink>
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Died
-              <a href="#/people?sort=died">
+              <SearchLink params={useSort(Category.died, searchParams)}>
                 <span className="icon">
                   <i className="fas fa-sort" />
                 </span>
-              </a>
+              </SearchLink>
             </span>
           </th>
 
