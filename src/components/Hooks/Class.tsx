@@ -1,11 +1,15 @@
-export const Class = (sortBy: string | null, direction: string | null) => {
-  if (!sortBy) {
-    return '';
-  }
+import classNames from 'classnames';
+import { Category } from '../../types/categoty';
+import { Order } from '../../types/order';
 
-  if (direction === 'desc') {
-    return 'fas fa-sort-down';
-  }
+export const Class = (field: Category, searchParams: URLSearchParams) => {
+  const sortField = searchParams.get('sort');
+  const isFieldSorted = sortField === field;
+  const isDescending = searchParams.get('order') === Order.DESC;
 
-  return 'fas fa-sort-up';
+  return classNames('fas', {
+    'fa- sort': !isFieldSorted,
+    'fa-sort-up': isFieldSorted && !isDescending,
+    'fa-sort-down': isFieldSorted && isDescending,
+  });
 };
