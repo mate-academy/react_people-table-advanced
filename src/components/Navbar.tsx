@@ -1,4 +1,8 @@
-export const Navbar = () => {
+import { NavLink } from 'react-router-dom';
+import { memo } from 'react';
+import { getLinkClass, useOptionForLink } from '../services/people';
+
+export const Navbar = memo(function NavbarComponent() {
   return (
     <nav
       data-cy="nav"
@@ -8,19 +12,19 @@ export const Navbar = () => {
     >
       <div className="container">
         <div className="navbar-brand">
-          <a className="navbar-item" href="#/">
+          <NavLink to="/" className={getLinkClass}>
             Home
-          </a>
+          </NavLink>
 
-          <a
+          <NavLink
             aria-current="page"
-            className="navbar-item has-background-grey-lighter"
-            href="#/people"
+            className={getLinkClass}
+            to={useOptionForLink(`/people`)}
           >
             People
-          </a>
+          </NavLink>
         </div>
       </div>
     </nav>
   );
-};
+});

@@ -9,3 +9,25 @@ export interface Person {
   mother?: Person;
   father?: Person;
 }
+
+export type Active = {
+  isActive: boolean;
+};
+
+export enum Sex {
+  MAN = 'f',
+  WOMAN = 'm',
+}
+
+export enum OptionsPanel {
+  QUERY = 'query',
+  SEX = 'sex',
+  CENTURIES = 'centuries',
+}
+
+export enum OptionsTable {
+  SORT = 'sort',
+  ORDER = 'order',
+}
+
+export type PersonKey = keyof Person;
