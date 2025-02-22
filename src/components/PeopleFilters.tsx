@@ -1,18 +1,84 @@
-export const PeopleFilters = () => {
+import React from 'react';
+import { useSearchParams } from 'react-router-dom';
+import { Person } from '../types';
+import { Status } from '../types/status';
+import classNames from 'classnames';
+import { SearchLink } from './SearchLink';
+
+type Param = string | number;
+type Params = {
+  [key: string]: Param[] | Param | null;
+};
+
+type Props = {
+  handleFilter: () => Person[];
+};
+
+const getSearchWith = (params: Params, search?: string | URLSearchParams) => {
+  const newParams = new URLSearchParams(search);
+
+  for (const [key, value] of Object.entries(params)) {
+    if (value === null) {
+      newParams.delete(key);
+    } else if (value !== Status.All) {
+      newParams.delete(key);
+      newParams.set(key, value.toString());
+    } else if (Array.isArray(value)) {
+      newParams.delete(key);
+      value.forEach(item => {
+        return newParams.append(key, item.toString());
+      });
+    } else {
+      newParams.set(key, value.toString());
+    }
+  }
+
+  return newParams.toString();
+};
+
+export const PeopleFilters: React.FC<Props> = ({ handleFilter }) => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const query = searchParams.get('query') || '';
+  const sex = searchParams.get('sex') || '';
+  const centuries = searchParams.getAll('centuries') || [];
+  const ages = ['16', '17', '18', '19', '20'];
+
+  const setSearchWith = (params: Params) => {
+    const search = getSearchWith(params, searchParams);
+
+    setSearchParams(search);
+    handleFilter();
+  };
+
+  const handleSexStatusChange = (value: Status) => {
+    setSearchWith({ sex: value || null });
+  };
+
+  const handleQuerySearch = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchWith({ query: event.target.value || null });
+  };
+
+  const updateCenturies = (age: string) => {
+    return centuries.includes(age)
+      ? centuries.filter(century => century !== age)
+      : [...centuries, age];
+  };
+
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        <a className="is-active" href="#/people">
-          All
-        </a>
-        <a className="" href="#/people?sex=m">
-          Male
-        </a>
-        <a className="" href="#/people?sex=f">
-          Female
-        </a>
+        {Object.entries(Status).map(([key, value]) => (
+          <SearchLink
+            key={key}
+            className={classNames({ 'is-active': sex === value })}
+            params={{ sex: value || null }}
+            onClick={() => handleSexStatusChange(value)}
+          >
+            {key}
+          </SearchLink>
+        ))}
       </p>
 
       <div className="panel-block">
@@ -22,6 +88,8 @@ export const PeopleFilters = () => {
             type="search"
             className="input"
             placeholder="Search"
+            value={query}
+            onChange={handleQuerySearch}
           />
 
           <span className="icon is-left">
@@ -33,63 +101,43 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            <a
-              data-cy="century"
-              className="button mr-1"
-              href="#/people?centuries=16"
-            >
-              16
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=17"
-            >
-              17
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=18"
-            >
-              18
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=19"
-            >
-              19
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1"
-              href="#/people?centuries=20"
-            >
-              20
-            </a>
+            {ages.map(age => (
+              <SearchLink
+                data-cy="century"
+                key={age}
+                params={{
+                  centuries: updateCenturies(age),
+                }}
+                className={classNames('button mr-1', {
+                  'is-info': centuries.includes(age),
+                })}
+              >
+                {age}
+              </SearchLink>
+            ))}
           </div>
 
           <div className="level-right ml-4">
-            <a
+            <SearchLink
               data-cy="centuryALL"
-              className="button is-success is-outlined"
-              href="#/people"
+              className={classNames('button is-success', {
+                'is-outlined': centuries.length,
+              })}
+              params={{ centuries: null }}
             >
               All
-            </a>
+            </SearchLink>
           </div>
         </div>
       </div>
 
       <div className="panel-block">
-        <a className="button is-link is-outlined is-fullwidth" href="#/people">
+        <SearchLink
+          className="button is-link is-outlined is-fullwidth"
+          params={{ centuries: null, sex: null, query: null }}
+        >
           Reset all filters
-        </a>
+        </SearchLink>
       </div>
     </nav>
   );
