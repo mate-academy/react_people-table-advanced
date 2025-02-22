@@ -39,6 +39,5 @@ export function getSearchWith(
     }
   });
 
-  // we return a string to use it inside links
   return newParams.toString();
 }
