@@ -29,6 +29,7 @@ export function getSearchWith(
       newParams.delete(key);
     } else if (Array.isArray(value)) {
       // we delete the key to remove old values
+
       newParams.delete(key);
 
       value.forEach(part => {
