@@ -1,16 +1,122 @@
+/* eslint-disable prettier/prettier */
+import React from 'react';
+import classNames from 'classnames';
+import { useSearchParams } from 'react-router-dom';
+import { Centuries } from '../types/Century';
+import { PersonSex } from '../types/PersonSex';
+import { SearchParams } from '../types/SearchParams';
+import {
+  updateUrlParams,
+  updateMultiValueParams,
+  resetParams,
+} from '../utils/UpdateURL';
+
 export const PeopleFilters = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const query = searchParams.get(SearchParams.Query) || '';
+  const selectedSex = searchParams.get(SearchParams.Sex) || '';
+  const selectedCenturies = searchParams
+    .getAll(SearchParams.Centuries)
+    .map(Number);
+  const centuries = Object.values(Centuries).filter(
+    value => typeof value === 'number',
+  );
+
+  function handleQueryChange(event: React.ChangeEvent<HTMLInputElement>) {
+    const queryValue = event.target.value;
+
+    const params = queryValue
+      ? updateUrlParams(searchParams, SearchParams.Query, queryValue)
+      : resetParams(searchParams, [SearchParams.Query]);
+
+    setSearchParams(params);
+  }
+
+  function handleSexChange(sex: string) {
+    const params = updateUrlParams(searchParams, SearchParams.Sex, sex);
+
+    setSearchParams(params);
+  }
+
+  function handleCenturyClick(century: number) {
+    const updatedCenturies = new Set(selectedCenturies);
+
+    if (updatedCenturies.has(century)) {
+      updatedCenturies.delete(century);
+    } else {
+      updatedCenturies.add(century);
+    }
+
+    const params = updatedCenturies.size
+      ? updateMultiValueParams(
+        // eslint-disable-next-line @typescript-eslint/indent
+          searchParams,
+        // eslint-disable-next-line @typescript-eslint/indent
+          SearchParams.Centuries,
+        // eslint-disable-next-line @typescript-eslint/indent
+          updatedCenturies,
+      )
+      : resetParams(searchParams, [SearchParams.Centuries]);
+
+    setSearchParams(params);
+  }
+
+  const handleResetCenturies = (event: React.MouseEvent<HTMLAnchorElement>) => {
+    event.preventDefault();
+    const params = resetParams(searchParams, [SearchParams.Centuries]);
+
+    setSearchParams(params);
+  };
+
+  function handleResetFilters(event: React.MouseEvent<HTMLAnchorElement>) {
+    event.preventDefault();
+    const params = resetParams(searchParams, [
+      SearchParams.Query,
+      SearchParams.Sex,
+      SearchParams.Centuries,
+    ]);
+
+    setSearchParams(params);
+  }
+
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        <a className="is-active" href="#/people">
+        <a
+          className={classNames({ 'is-active': !selectedSex })}
+          href="#/people"
+          onClick={event => {
+            event.preventDefault();
+            handleSexChange('');
+          }}
+        >
           All
         </a>
-        <a className="" href="#/people?sex=m">
+        <a
+          className={classNames({
+            'is-active': selectedSex === PersonSex.Male,
+          })}
+          href={`#/people?${SearchParams.Sex}=m`}
+          onClick={event => {
+            event.preventDefault();
+            handleSexChange(PersonSex.Male);
+          }}
+        >
           Male
         </a>
-        <a className="" href="#/people?sex=f">
+        <a
+          className={classNames({
+            'is-active': selectedSex === PersonSex.Female,
+          })}
+          href={`#/people?${SearchParams.Sex}=f`}
+          onClick={event => {
+            event.preventDefault();
+            handleSexChange(PersonSex.Female);
+          }}
+        >
           Female
         </a>
       </p>
@@ -22,6 +128,8 @@ export const PeopleFilters = () => {
             type="search"
             className="input"
             placeholder="Search"
+            value={query}
+            onChange={handleQueryChange}
           />
 
           <span className="icon is-left">
@@ -33,45 +141,22 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            <a
-              data-cy="century"
-              className="button mr-1"
-              href="#/people?centuries=16"
-            >
-              16
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=17"
-            >
-              17
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=18"
-            >
-              18
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=19"
-            >
-              19
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1"
-              href="#/people?centuries=20"
-            >
-              20
-            </a>
+            {centuries.map(century => (
+              <a
+                key={century}
+                data-cy="century"
+                className={classNames('button mr-1', {
+                  'is-info': selectedCenturies.includes(century),
+                })}
+                href={`#/people?${SearchParams.Centuries}=${century}`}
+                onClick={event => {
+                  event.preventDefault();
+                  handleCenturyClick(century);
+                }}
+              >
+                {century}
+              </a>
+            ))}
           </div>
 
           <div className="level-right ml-4">
@@ -79,6 +164,7 @@ export const PeopleFilters = () => {
               data-cy="centuryALL"
               className="button is-success is-outlined"
               href="#/people"
+              onClick={handleResetCenturies}
             >
               All
             </a>
@@ -87,7 +173,11 @@ export const PeopleFilters = () => {
       </div>
 
       <div className="panel-block">
-        <a className="button is-link is-outlined is-fullwidth" href="#/people">
+        <a
+          className="button is-link is-outlined is-fullwidth"
+          href="#/people"
+          onClick={handleResetFilters}
+        >
           Reset all filters
         </a>
       </div>
