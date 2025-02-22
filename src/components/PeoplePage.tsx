@@ -1,29 +1,135 @@
+import { useEffect, useState } from 'react';
+
 import { PeopleFilters } from './PeopleFilters';
 import { Loader } from './Loader';
 import { PeopleTable } from './PeopleTable';
+import { PeoplePageTitle } from '../pages/PeoplePageTitle';
+import { Person } from '../types';
+import { getPeople } from '../api';
+import { useSearchParams } from 'react-router-dom';
 
 export const PeoplePage = () => {
+  // #region states
+  const [loading, setLoading] = useState(true);
+  const [fetchPeopleError, setFetchPeopleError] = useState(false);
+  const [people, setPeople] = useState<Person[]>([]);
+  const [query, setQuery] = useState('');
+  const [showFilters, setShowFilters] = useState(false);
+  // #endregion
+
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const activeCenturies = searchParams.getAll('centuries') || '';
+  const activeSex = searchParams.get('sex') || '';
+  const activeQuery = searchParams.get('query') || '';
+
+  const toggleCenturies = (currentCentury: number) => {
+    const tempCenturies = !activeCenturies.includes(String(currentCentury))
+      ? [...activeCenturies, `${currentCentury}`]
+      : activeCenturies.filter(century => century !== String(currentCentury));
+
+    return tempCenturies;
+  };
+
+  const normalizedQuery = query.trim().toLowerCase();
+  const filteredPeople = people.filter(person =>
+    person.name.toLowerCase().includes(normalizedQuery),
+  );
+
+  const filterByCentury = () => {
+    if (activeCenturies.length) {
+      return filteredPeople.filter(person =>
+        activeCenturies.includes(String(Math.floor(person.born / 100) + 1)),
+      );
+    } else {
+      return filteredPeople;
+    }
+  };
+
+  const handleFilterBySex = (sex: string, peopleList: Person[]) => {
+    switch (sex) {
+      case 'm':
+        return peopleList.filter(person => person.sex === activeSex);
+      case 'f':
+        return peopleList.filter(person => person.sex === activeSex);
+      default:
+        return peopleList;
+    }
+  };
+
+  const filteredByCentury = filterByCentury();
+  const visiblePeople = handleFilterBySex(activeSex, filteredByCentury);
+
+  useEffect(() => {
+    const fetchPeople = async () => {
+      setFetchPeopleError(false);
+
+      try {
+        const response = await getPeople();
+
+        setPeople(response);
+        setShowFilters(true);
+      } catch (error) {
+        setFetchPeopleError(true);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPeople();
+  }, []);
+
+  // #region conditions
+  const fetchingErrorNotification = !loading && fetchPeopleError;
+  const noPeopleNotification = !loading && !fetchPeopleError && !people.length;
+  const showPeopleTable = !loading && !fetchPeopleError && !!people.length;
+  const noVisiblePeopleByCriteria = !visiblePeople.length;
+  // #endregion
+
   return (
     <>
-      <h1 className="title">People Page</h1>
+      <PeoplePageTitle />
 
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
-          <div className="column is-7-tablet is-narrow-desktop">
-            <PeopleFilters />
-          </div>
+          {showFilters && (
+            <div className="column is-7-tablet is-narrow-desktop">
+              <PeopleFilters
+                toggleCenturies={toggleCenturies}
+                searchParams={searchParams}
+                setQuery={setQuery}
+                activeQuery={activeQuery}
+                setSearchParams={setSearchParams}
+                activeCenturies={activeCenturies}
+              />
+            </div>
+          )}
 
           <div className="column">
             <div className="box table-container">
-              <Loader />
+              {loading && <Loader />}
 
-              <p data-cy="peopleLoadingError">Something went wrong</p>
+              {fetchingErrorNotification && (
+                <p data-cy="peopleLoadingError">Something went wrong</p>
+              )}
 
-              <p data-cy="noPeopleMessage">There are no people on the server</p>
+              {noPeopleNotification && (
+                <p data-cy="noPeopleMessage">
+                  There are no people on the server
+                </p>
+              )}
 
-              <p>There are no people matching the current search criteria</p>
+              {noVisiblePeopleByCriteria && (
+                <p>There are no people matching the current search criteria</p>
+              )}
 
-              <PeopleTable />
+              {showPeopleTable && (
+                <PeopleTable
+                  people={visiblePeople}
+                  searchParams={searchParams}
+                  setSearchParams={setSearchParams}
+                />
+              )}
             </div>
           </div>
         </div>
