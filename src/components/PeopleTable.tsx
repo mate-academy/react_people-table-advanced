@@ -7,6 +7,7 @@ import { useSort } from './Hooks/useSort';
 import { Category } from '../types/categoty';
 import { useFilteredPeople } from './Hooks/useFilteredPeople';
 import { Class } from './Hooks/Class';
+import { PeopleMassage } from './PeopleMessage';
 // import { arowUpDown } from './Hooks/'
 
 /* eslint-disable jsx-a11y/control-has-associated-label */
@@ -76,52 +77,56 @@ export const PeopleTable: React.FC<PeopleTableProps> = ({ people }) => {
       </thead>
 
       <tbody>
-        {filteredPeople.map(person => (
-          <tr
-            data-cy="person"
-            key={person.slug}
-            className={classNames({
-              'has-background-warning': slug === person.slug,
-            })}
-          >
-            <td>
-              <Link
-                to={`/people/${person.slug}`}
-                state={{ search: searchParams.toString() }}
-                className={classNames({
-                  'has-text-danger': person.sex === Sex.FEMALE,
-                })}
-              >
-                {person.name}
-              </Link>
-            </td>
-
-            <td>{person.sex}</td>
-            <td>{person.born}</td>
-            <td>{person.died}</td>
-            <td>
-              {person.mother ? (
+        {!people.length || !filteredPeople.length ? (
+          <PeopleMassage />
+        ) : (
+          filteredPeople.map(person => (
+            <tr
+              data-cy="person"
+              key={person.slug}
+              className={classNames({
+                'has-background-warning': slug === person.slug,
+              })}
+            >
+              <td>
                 <Link
-                  to={`/people/${person.mother.slug}`}
-                  className="has-text-danger"
+                  to={`/people/${person.slug}`}
+                  state={{ search: searchParams.toString() }}
+                  className={classNames({
+                    'has-text-danger': person.sex === Sex.FEMALE,
+                  })}
                 >
-                  {person.mother.name}
+                  {person.name}
                 </Link>
-              ) : (
-                person.motherName || '-'
-              )}
-            </td>
-            <td>
-              {person.father ? (
-                <Link to={`/people/${person.father.slug}`}>
-                  {person.father.name}
-                </Link>
-              ) : (
-                person.fatherName || '-'
-              )}
-            </td>
-          </tr>
-        ))}
+              </td>
+
+              <td>{person.sex}</td>
+              <td>{person.born}</td>
+              <td>{person.died}</td>
+              <td>
+                {person.mother ? (
+                  <Link
+                    to={`/people/${person.mother.slug}`}
+                    className="has-text-danger"
+                  >
+                    {person.mother.name}
+                  </Link>
+                ) : (
+                  person.motherName || '-'
+                )}
+              </td>
+              <td>
+                {person.father ? (
+                  <Link to={`/people/${person.father.slug}`}>
+                    {person.father.name}
+                  </Link>
+                ) : (
+                  person.fatherName || '-'
+                )}
+              </td>
+            </tr>
+          ))
+        )}
       </tbody>
     </table>
   );

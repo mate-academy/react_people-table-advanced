@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import { SearchLink } from './SearchLink';
 import { Sex } from '../types/sex';
 import classNames from 'classnames';
@@ -9,13 +9,12 @@ const CENTER_ARRAY = [16, 17, 18, 19, 20];
 export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const query = searchParams.get('query') || '';
-  const newSearchParams = new URLSearchParams(searchParams);
-  const cents = newSearchParams.getAll('centuries') || '';
+  const cents = searchParams.getAll('centuries') || [];
 
   const handleChangeQuery = (even: React.ChangeEvent<HTMLInputElement>) => {
     const params = new URLSearchParams(searchParams);
 
-    if (even.target.value === '') {
+    if (!even.target.value.length) {
       params.delete('query');
     } else {
       params.set('query', even.target.value);
@@ -89,17 +88,17 @@ export const PeopleFilters = () => {
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
             {CENTER_ARRAY.map(centuty => (
-              <Link
+              <a
                 key={centuty}
                 data-cy="century"
                 className={classNames('button mr-1', {
                   'is-info': isFilter(centuty),
                 })}
-                to={`#/people?centuries=${centuty}`}
+                href={`#/people?centuries=${centuty}`}
                 onClick={() => clickCentury(String(centuty))}
               >
                 {centuty}
-              </Link>
+              </a>
             ))}
           </div>
 
