@@ -1,4 +1,4 @@
-import { Category } from '../../types/categoty';
+import { Category } from '../../types/category';
 
 export const useSort = (field: Category, searchParams: URLSearchParams) => {
   const params = new URLSearchParams(searchParams);

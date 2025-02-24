@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import { Category } from '../../types/categoty';
+import { Category } from '../../types/category';
 import { Order } from '../../types/order';
 
 export const Class = (field: Category, searchParams: URLSearchParams) => {

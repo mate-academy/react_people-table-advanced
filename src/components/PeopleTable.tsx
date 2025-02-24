@@ -4,10 +4,10 @@ import classNames from 'classnames';
 import { Sex } from '../types/sex';
 import { SearchLink } from './SearchLink';
 import { useSort } from './Hooks/useSort';
-import { Category } from '../types/categoty';
+import { Category } from '../types/category';
 import { useFilteredPeople } from './Hooks/useFilteredPeople';
 import { Class } from './Hooks/Class';
-import { PeopleMassage } from './PeopleMessage';
+import { PeopleMessage } from './PeopleMessage';
 // import { arowUpDown } from './Hooks/'
 
 /* eslint-disable jsx-a11y/control-has-associated-label */
@@ -78,7 +78,7 @@ export const PeopleTable: React.FC<PeopleTableProps> = ({ people }) => {
 
       <tbody>
         {!people.length || !filteredPeople.length ? (
-          <PeopleMassage />
+          <PeopleMessage />
         ) : (
           filteredPeople.map(person => (
             <tr

@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Person } from '../../types';
 import { useSearchParams } from 'react-router-dom';
 import { Sex } from '../../types/sex';
-import { Category } from '../../types/categoty';
+import { Category } from '../../types/category';
 
 export const useFilteredPeople = (people: Person[]) => {
   const [searchParams] = useSearchParams();
