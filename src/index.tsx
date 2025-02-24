@@ -29,19 +29,3 @@ createRoot(document.getElementById('root') as HTMLDivElement).render(
     </Routes>
   </Router>,
 );
-
-// const nameFilter = searchParams.get('name') || '';
-// const sexFilter = searchParams.get('sex') || '';
-// const bornFilter = searchParams.get('born') || '';
-// const diedFilter = searchParams.get('died') || '';
-
-// const filteredPeople = people.filter(person => {
-//   const matchesName = person.name
-//     .toLowerCase()
-//     .includes(nameFilter.toLowerCase());
-//   const matchesSex = sexFilter ? person.sex === sexFilter : true;
-//   const matchesBorn = bornFilter ? person.born === bornFilter : true;
-//   const matchesDied = diedFilter ? person.died === diedFilter : true;
-
-//   return matchesName && matchesSex && matchesBorn && matchesDied;
-// });

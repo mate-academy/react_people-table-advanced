@@ -4,10 +4,6 @@ import { useSearchParams } from 'react-router-dom';
 import { Sex } from '../../types/sex';
 import { Category } from '../../types/categoty';
 
-// interface PeopleTableProps {
-//   people: Person[];
-// }
-
 export const useFilteredPeople = (people: Person[]) => {
   const [searchParams] = useSearchParams();
   const [filteredPeople, setFilteredPeople] = useState<Person[]>(people);

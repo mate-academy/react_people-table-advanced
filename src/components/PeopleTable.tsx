@@ -42,7 +42,7 @@ export const PeopleTable: React.FC<PeopleTableProps> = ({ people }) => {
               Sex
               <SearchLink params={useSort(Category.sex, searchParams)}>
                 <span className="icon">
-                  <i className="fas fa-sort" />
+                  <i className={Class(Category.sex, searchParams)} />
                 </span>
               </SearchLink>
             </span>
@@ -53,7 +53,7 @@ export const PeopleTable: React.FC<PeopleTableProps> = ({ people }) => {
               Born
               <SearchLink params={useSort(Category.born, searchParams)}>
                 <span className="icon">
-                  <i className="fas fa-sort-up" />
+                  <i className={Class(Category.born, searchParams)} />
                 </span>
               </SearchLink>
             </span>
@@ -64,7 +64,7 @@ export const PeopleTable: React.FC<PeopleTableProps> = ({ people }) => {
               Died
               <SearchLink params={useSort(Category.died, searchParams)}>
                 <span className="icon">
-                  <i className="fas fa-sort" />
+                  <i className={Class(Category.died, searchParams)} />
                 </span>
               </SearchLink>
             </span>

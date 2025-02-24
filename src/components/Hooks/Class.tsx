@@ -8,7 +8,7 @@ export const Class = (field: Category, searchParams: URLSearchParams) => {
   const isDescending = searchParams.get('order') === Order.DESC;
 
   return classNames('fas', {
-    'fa- sort': !isFieldSorted,
+    'fa-sort': !isFieldSorted,
     'fa-sort-up': isFieldSorted && !isDescending,
     'fa-sort-down': isFieldSorted && isDescending,
   });
