@@ -1,5 +1,5 @@
-import { FC, useMemo } from 'react';
-import { useParams } from 'react-router-dom';
+import { FC, useCallback, useMemo } from 'react';
+import { Link, useParams, useSearchParams } from 'react-router-dom';
 import { Person } from '../types';
 import classNames from 'classnames';
 import { PersonLink } from './PersonLink';
@@ -8,11 +8,31 @@ type Props = {
   people: Person[];
 };
 export const PeopleTable: FC<Props> = ({ people }) => {
+  const [searchParams] = useSearchParams();
   const { peopleId } = useParams();
 
   const womanNames = useMemo(
     () => people.filter(({ sex }) => sex === 'f').map(({ name }) => name),
     [people],
+  );
+
+  const handlePath = useCallback(
+    (params: string) => {
+      const newParams = new URLSearchParams(searchParams.toString());
+
+      if (searchParams.has('sort', params)) {
+        if (searchParams.has('order', 'desc')) {
+          ['sort', 'order'].forEach(i => newParams.delete(i));
+        } else {
+          newParams.append('order', 'desc');
+        }
+      } else {
+        newParams.set('sort', params);
+      }
+
+      return { search: newParams.toString() };
+    },
+    [searchParams],
   );
 
   return (
@@ -25,44 +45,44 @@ export const PeopleTable: FC<Props> = ({ people }) => {
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Name
-              <a href="#/people?sort=name">
+              <Link to={handlePath('name')}>
                 <span className="icon">
                   <i className="fas fa-sort" />
                 </span>
-              </a>
+              </Link>
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Sex
-              <a href="#/people?sort=sex">
+              <Link to={handlePath('sex')}>
                 <span className="icon">
                   <i className="fas fa-sort" />
                 </span>
-              </a>
+              </Link>
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Born
-              <a href="#/people?sort=born&amp;order=desc">
+              <Link to={handlePath('born')}>
                 <span className="icon">
                   <i className="fas fa-sort-up" />
                 </span>
-              </a>
+              </Link>
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Died
-              <a href="#/people?sort=died">
+              <Link to={handlePath('died')}>
                 <span className="icon">
                   <i className="fas fa-sort" />
                 </span>
-              </a>
+              </Link>
             </span>
           </th>
 

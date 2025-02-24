@@ -1,11 +1,14 @@
 import { PeopleFilters } from './PeopleFilters';
 import { Loader } from './Loader';
 import { PeopleTable } from './PeopleTable';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Person } from '../types';
 import { getPeople } from '../api';
+import { useSearchParams } from 'react-router-dom';
 
 export const PeoplePage = () => {
+  const [searchParams] = useSearchParams();
+
   const [people, setPeople] = useState<Person[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [fetchError, setFetchError] = useState('');
@@ -25,6 +28,50 @@ export const PeoplePage = () => {
       .catch(setFetchError)
       .finally(() => setIsLoading(false));
   }, []);
+
+  const peopleFiltered = useMemo(() => {
+    const sex = searchParams.get('sex');
+    const centuries = searchParams.getAll('centuries');
+    const search = searchParams.get('search');
+
+    return people.filter(p => {
+      const matchesSex = !sex || p.sex === sex;
+
+      const matchesCentury =
+        !centuries.length ||
+        centuries.includes(String(Math.floor(p.born / 100) + 1));
+
+      const matchesSearch =
+        !search ||
+        p.name.toLocaleLowerCase().includes(search.toLocaleLowerCase());
+
+      return matchesSex && matchesCentury && matchesSearch;
+    });
+  }, [people, searchParams]);
+
+  const peopleSorted = useMemo(() => {
+    const sortBy = searchParams.get('sort');
+    const sortDirection = searchParams.get('order');
+
+    const sorted = [...peopleFiltered];
+
+    switch (sortBy) {
+      case 'name':
+      case 'sex':
+        return sorted.sort((a, b) =>
+          sortDirection
+            ? b[sortBy].localeCompare(a[sortBy])
+            : a[sortBy].localeCompare(b[sortBy]),
+        );
+      case 'born':
+      case 'died':
+        return sorted.sort((a, b) =>
+          sortDirection ? b[sortBy] - a[sortBy] : a[sortBy] - b[sortBy],
+        );
+      default:
+        return sorted;
+    }
+  }, [peopleFiltered, searchParams]);
 
   return (
     <>
@@ -54,7 +101,7 @@ export const PeoplePage = () => {
                 <p>There are no people matching the current search criteria</p>
               ) : null}
 
-              {isLoading ? <Loader /> : <PeopleTable people={people} />}
+              {isLoading ? <Loader /> : <PeopleTable people={peopleSorted} />}
             </div>
           </div>
         </div>
