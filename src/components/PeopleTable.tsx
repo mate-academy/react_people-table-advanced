@@ -21,11 +21,15 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
 
   const setSorting = (sortBy: string) => {
     if (sort === sortBy) {
-      return order === 'desc' ? { sort: null, order: null } : { order: 'desc' };
+      return order === 'desc'
+        ? { sort: null, order: null }
+        : { sort: sortBy, order: 'desc' };
     }
 
-    return { sort: sortBy };
+    return { sort: sortBy, order: null };
   };
+
+  const headTable = ['Name', 'Sex', 'Born', 'Died'];
 
   return (
     <table
@@ -34,49 +38,18 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
     >
       <thead>
         <tr>
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Name
-              <SearchLink params={setSorting('name')}>
-                <span className="icon">
-                  <i className="fas fa-sort" />
-                </span>
-              </SearchLink>
-            </span>
-          </th>
-
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Sex
-              <a href="#/people?sort=sex">
-                <span className="icon">
-                  <i className="fas fa-sort" />
-                </span>
-              </a>
-            </span>
-          </th>
-
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Born
-              <a href="#/people?sort=born&amp;order=desc">
-                <span className="icon">
-                  <i className="fas fa-sort-up" />
-                </span>
-              </a>
-            </span>
-          </th>
-
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Died
-              <a href="#/people?sort=died">
-                <span className="icon">
-                  <i className="fas fa-sort" />
-                </span>
-              </a>
-            </span>
-          </th>
+          {headTable.map(item => (
+            <th key={item}>
+              <span className="is-flex is-flex-wrap-nowrap">
+                {item}
+                <SearchLink params={setSorting(`${item.toLowerCase()}`)}>
+                  <span className="icon">
+                    <i className="fas fa-sort" />
+                  </span>
+                </SearchLink>
+              </span>
+            </th>
+          ))}
 
           <th>Mother</th>
           <th>Father</th>

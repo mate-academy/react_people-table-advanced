@@ -14,6 +14,8 @@ export const PeoplePage = () => {
   const sex = searchParams.get('sex');
   const query = searchParams.get('query');
   const centuries = searchParams.getAll('centuries');
+  const sort = searchParams.get('sort');
+  const order = searchParams.get('order');
 
   useEffect(() => {
     setIsLoading(true);
@@ -59,6 +61,51 @@ export const PeoplePage = () => {
 
   const filteredPeople = handleFilter();
 
+  const handleSorting = () => {
+    if (!sort) {
+      return filteredPeople;
+    }
+
+    let result = filteredPeople.slice();
+
+    switch (sort) {
+      case 'name':
+        result =
+          order === 'desc'
+            ? result.sort((a, b) => b.name.localeCompare(a.name))
+            : result.sort((a, b) => a.name.localeCompare(b.name));
+        break;
+
+      case 'sex':
+        result =
+          order === 'desc'
+            ? result.sort((a, b) => b.sex.localeCompare(a.sex))
+            : result.sort((a, b) => a.sex.localeCompare(b.sex));
+        break;
+
+      case 'born':
+        result =
+          order === 'desc'
+            ? result.sort((a, b) => b.born - a.born)
+            : result.sort((a, b) => a.born - b.born);
+        break;
+
+      case 'died':
+        result =
+          order === 'desc'
+            ? result.sort((a, b) => b.died - a.died)
+            : result.sort((a, b) => a.died - b.died);
+        break;
+
+      default:
+        break;
+    }
+
+    return result;
+  };
+
+  const sortedPeople = handleSorting();
+
   return (
     <>
       <h1 className="title">People Page</h1>
@@ -90,7 +137,7 @@ export const PeoplePage = () => {
               )}
 
               {filteredPeople.length > 0 && (
-                <PeopleTable people={filteredPeople} />
+                <PeopleTable people={sortedPeople} />
               )}
             </div>
           </div>
