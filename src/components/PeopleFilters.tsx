@@ -2,10 +2,13 @@ import classNames from 'classnames';
 import { getSearchWith } from '../utils/searchHelper';
 import { SearchLink } from './SearchLink';
 import { useSearchParams } from 'react-router-dom';
+import { Sex } from '../types/Sex';
 
 export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const centuries = searchParams.getAll('centuries');
+
+  const allCenturies = ['16', '17', '18', '19', '20'];
 
   const handleNewCenturies = (century: string) => {
     return centuries.includes(century)
@@ -19,19 +22,25 @@ export const PeopleFilters = () => {
 
       <p className="panel-tabs" data-cy="SexFilter">
         <SearchLink
-          className={searchParams.get('sex') === null ? 'is-active' : ''}
+          className={classNames({
+            'is-active': searchParams.get('sex') === null,
+          })}
           params={{ sex: null }}
         >
           All
         </SearchLink>
         <SearchLink
-          className={searchParams.get('sex') === 'm' ? 'is-active' : ''}
+          className={classNames({
+            'is-active': searchParams.get('sex') === Sex.Male,
+          })}
           params={{ sex: 'm' }}
         >
           Male
         </SearchLink>
         <SearchLink
-          className={searchParams.get('sex') === 'f' ? 'is-active' : ''}
+          className={classNames({
+            'is-active': searchParams.get('sex') === Sex.Female,
+          })}
           params={{ sex: 'f' }}
         >
           Female
@@ -63,7 +72,7 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            {['16', '17', '18', '19', '20'].map(number => (
+            {allCenturies.map(number => (
               <SearchLink
                 data-cy="century"
                 className={classNames('button mr-1', {

@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import { Person } from '../types';
 import { getPeople } from '../api';
 import { useSearchParams } from 'react-router-dom';
+import { Sex } from '../types/Sex';
 
 export const PeoplePage = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -29,12 +30,12 @@ export const PeoplePage = () => {
     let result = people;
 
     switch (sex) {
-      case 'm':
-        result = result.filter(person => person.sex === 'm');
+      case Sex.Male:
+        result = result.filter(person => person.sex === Sex.Male);
         break;
 
-      case 'f':
-        result = result.filter(person => person.sex === 'f');
+      case Sex.Female:
+        result = result.filter(person => person.sex === Sex.Female);
         break;
 
       default:
@@ -126,19 +127,17 @@ export const PeoplePage = () => {
                 <p data-cy="peopleLoadingError">Something went wrong</p>
               )}
 
-              {people.length === 0 && !isLoading && (
+              {!people.length && !isLoading && (
                 <p data-cy="noPeopleMessage">
                   There are no people on the server
                 </p>
               )}
 
-              {filteredPeople.length === 0 && !isLoading && (
+              {!filteredPeople.length && !isLoading && (
                 <p>There are no people matching the current search criteria</p>
               )}
 
-              {filteredPeople.length > 0 && (
-                <PeopleTable people={sortedPeople} />
-              )}
+              {!!filteredPeople.length && <PeopleTable people={sortedPeople} />}
             </div>
           </div>
         </div>

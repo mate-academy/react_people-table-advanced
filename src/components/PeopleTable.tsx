@@ -3,6 +3,7 @@ import { Person } from '../types';
 import { Link, useParams, useSearchParams } from 'react-router-dom';
 import classNames from 'classnames';
 import { SearchLink } from './SearchLink';
+import { Sex } from '../types/Sex';
 
 /* eslint-disable jsx-a11y/control-has-associated-label */
 type Props = {
@@ -69,7 +70,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
               <Link
                 to={`${person.slug}`}
                 className={classNames({
-                  'has-text-danger': person.sex === 'f',
+                  'has-text-danger': person.sex === Sex.Female,
                 })}
               >
                 {person.name}
