@@ -5,6 +5,9 @@ import classNames from 'classnames';
 export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [, setActiveCentury] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState(
+    searchParams.get('query') || '',
+  );
 
   const centuries = searchParams.getAll('centuries');
   const allCenturies = ['16', '17', '18', '19', '20'];
@@ -57,9 +60,26 @@ export const PeopleFilters = () => {
     handleNewCenturies(century);
   };
 
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+
+    setSearchQuery(value);
+
+    const newParams = new URLSearchParams(searchParams);
+
+    if (value) {
+      newParams.set('query', value);
+    } else {
+      newParams.delete('query');
+    }
+
+    setSearchParams(newParams);
+  };
+
   const handleResetFilters = () => {
     setSearchParams(new URLSearchParams());
     setActiveCentury(null);
+    setSearchQuery('');
   };
 
   return (
@@ -89,6 +109,8 @@ export const PeopleFilters = () => {
             type="search"
             className="input"
             placeholder="Search"
+            value={searchQuery}
+            onChange={handleSearch}
           />
           <span className="icon is-left">
             <i className="fas fa-search" aria-hidden="true" />
