@@ -94,11 +94,11 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
     };
   }
 
-  const sortActiveClassNames = () =>
+  const sortActiveClassNames = (sortValue: string) =>
     classNames('fas', {
-      'fa-sort': !sort && !sortOrder,
-      'fa-sort-up': sort && !sortOrder,
-      'fa-sort-down': sort && sortOrder,
+      'fa-sort': sort !== sortValue,
+      'fa-sort-up': sort === sortValue && !sortOrder,
+      'fa-sort-down': sort === sortValue && sortOrder,
     });
 
   return (
@@ -113,7 +113,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
               Name
               <Link to={linkForSort('name')}>
                 <span className="icon">
-                  <i className={sortActiveClassNames()} />
+                  <i className={sortActiveClassNames('name')} />
                 </span>
               </Link>
             </span>
@@ -124,7 +124,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
               Sex
               <Link to={linkForSort('sex')}>
                 <span className="icon">
-                  <i className={sortActiveClassNames()} />
+                  <i className={sortActiveClassNames('sex')} />
                 </span>
               </Link>
             </span>
@@ -135,7 +135,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
               Born
               <Link to={linkForSort('born')}>
                 <span className="icon">
-                  <i className={sortActiveClassNames()} />
+                  <i className={sortActiveClassNames('born')} />
                 </span>
               </Link>
             </span>
@@ -146,7 +146,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
               Died
               <Link to={linkForSort('died')}>
                 <span className="icon">
-                  <i className={sortActiveClassNames()} />
+                  <i className={sortActiveClassNames('died')} />
                 </span>
               </Link>
             </span>
