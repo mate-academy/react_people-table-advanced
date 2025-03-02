@@ -1,15 +1,11 @@
-import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import classNames from 'classnames';
 
 export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const [, setActiveCentury] = useState<string | null>(null);
-  const [searchQuery, setSearchQuery] = useState(
-    searchParams.get('query') || '',
-  );
 
   const centuries = searchParams.getAll('centuries');
+  const searchQuery = searchParams.get('query') || '';
   const allCenturies = ['16', '17', '18', '19', '20'];
 
   enum SexFilter {
@@ -38,33 +34,21 @@ export const PeopleFilters = () => {
     setSearchParams(newParams);
   };
 
-  useEffect(() => {
-    const activeCenturyFromUrl = searchParams.get('centuries');
-
-    setActiveCentury(activeCenturyFromUrl);
-  }, [searchParams]);
-
   const handleNewCenturies = (century: string) => {
     const newCenturies = centuries.includes(century)
       ? centuries.filter(num => num !== century)
       : [...centuries, century];
+
     const newParams = new URLSearchParams(searchParams);
 
     newParams.delete('centuries');
     newCenturies.forEach(num => newParams.append('centuries', num));
-    setSearchParams(newParams);
-  };
 
-  const handleClick = (century: string) => {
-    setActiveCentury(century);
-    handleNewCenturies(century);
+    setSearchParams(newParams);
   };
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-
-    setSearchQuery(value);
-
     const newParams = new URLSearchParams(searchParams);
 
     if (value) {
@@ -78,8 +62,14 @@ export const PeopleFilters = () => {
 
   const handleResetFilters = () => {
     setSearchParams(new URLSearchParams());
-    setActiveCentury(null);
-    setSearchQuery('');
+  };
+
+  const handleResetCenturies = () => {
+    const newParams = new URLSearchParams(searchParams);
+
+    newParams.delete('centuries');
+
+    setSearchParams(newParams);
   };
 
   return (
@@ -131,7 +121,7 @@ export const PeopleFilters = () => {
                 href="#/people"
                 onClick={e => {
                   e.preventDefault();
-                  handleClick(century);
+                  handleNewCenturies(century);
                 }}
               >
                 {century}
@@ -146,7 +136,10 @@ export const PeopleFilters = () => {
                 'is-outlined': centuries.length > 0,
               })}
               href="#/people"
-              onClick={() => setActiveCentury(null)}
+              onClick={e => {
+                e.preventDefault();
+                handleResetCenturies();
+              }}
             >
               All
             </a>
