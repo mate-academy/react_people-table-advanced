@@ -3,6 +3,17 @@ import { Person } from '../types';
 import classNames from 'classnames';
 import { SearchLink } from './SearchLink';
 
+enum SortOrder {
+  DESC = 'desc',
+}
+
+enum SortCategory {
+  name = 'name',
+  sex = 'sex',
+  born = 'born',
+  died = 'died',
+}
+
 interface PeopleTableProps {
   people: Person[];
 }
@@ -16,24 +27,28 @@ export const PeopleTable = ({ people }: PeopleTableProps) => {
   const sortParam = searchParams.get('sort');
   const orderParam = searchParams.get('order');
 
-  const handleSort = (field: string) => {
-    if (sortParam === field) {
-      if (orderParam === 'desc') {
-        searchParams.delete('sort');
-        searchParams.delete('order');
-      } else {
-        searchParams.set('order', 'desc');
-      }
+  const handleSort = (field: SortCategory) => {
+    const params = new URLSearchParams(searchParams);
+    const sortField = params.get('sort');
+    const sortOrder = params.get('order');
+
+    if (!sortField || sortField !== field) {
+      params.set('sort', field);
+      params.delete('order');
     } else {
-      searchParams.set('sort', field);
-      searchParams.delete('order');
+      if (!sortOrder) {
+        params.set('order', SortOrder.DESC);
+      } else {
+        params.delete('sort');
+        params.delete('order');
+      }
     }
 
-    setSearchParams(searchParams);
+    setSearchParams(params);
   };
 
   const getSortIcon = (field: string) => {
-    if (sortParam !== field) {
+    if (!sortParam || sortParam !== field) {
       return 'fas fa-sort';
     }
 
@@ -55,14 +70,22 @@ export const PeopleTable = ({ people }: PeopleTableProps) => {
   }
 
   const sortedPeople = [...filteredPeople].sort((a, b) => {
-    const aValue = sortParam ? (a[sortParam as keyof Person] ?? 0) : 0;
-    const bValue = sortParam ? (b[sortParam as keyof Person] ?? 0) : 0;
-
-    if (orderParam === 'desc') {
-      return aValue < bValue ? 1 : -1;
+    if (!sortParam) {
+      return 0;
     }
 
-    return aValue > bValue ? 1 : -1;
+    const aValue = a[sortParam as keyof Person];
+    const bValue = b[sortParam as keyof Person];
+
+    if (typeof aValue === 'string' && typeof bValue === 'string') {
+      return orderParam === 'desc'
+        ? bValue.localeCompare(aValue)
+        : aValue.localeCompare(bValue);
+    }
+
+    return orderParam === 'desc'
+      ? (bValue as number) - (aValue as number)
+      : (aValue as number) - (bValue as number);
   });
 
   return (
@@ -77,7 +100,7 @@ export const PeopleTable = ({ people }: PeopleTableProps) => {
               Name
               <SearchLink
                 params={{ sort: 'name' }}
-                onClick={() => handleSort('name')}
+                onClick={() => handleSort(SortCategory.name)}
               >
                 <span className="icon">
                   <i className={getSortIcon('name')}></i>
@@ -90,7 +113,7 @@ export const PeopleTable = ({ people }: PeopleTableProps) => {
               Sex
               <SearchLink
                 params={{ sort: 'sex' }}
-                onClick={() => handleSort('sex')}
+                onClick={() => handleSort(SortCategory.sex)}
               >
                 <span className="icon">
                   <i className={getSortIcon('sex')}></i>
@@ -103,7 +126,7 @@ export const PeopleTable = ({ people }: PeopleTableProps) => {
               Born
               <SearchLink
                 params={{ sort: 'born' }}
-                onClick={() => handleSort('born')}
+                onClick={() => handleSort(SortCategory.born)}
               >
                 <span className="icon">
                   <i className={getSortIcon('born')}></i>
@@ -116,7 +139,7 @@ export const PeopleTable = ({ people }: PeopleTableProps) => {
               Died
               <SearchLink
                 params={{ sort: 'died' }}
-                onClick={() => handleSort('died')}
+                onClick={() => handleSort(SortCategory.died)}
               >
                 <span className="icon">
                   <i className={getSortIcon('died')}></i>
@@ -158,7 +181,11 @@ export const PeopleTable = ({ people }: PeopleTableProps) => {
                 <td>
                   <SearchLink
                     className="has-text-danger"
-                    params={{ selected: person.slug }}
+                    params={{
+                      selected:
+                        people.find(p => p.name === person.motherName)?.slug ||
+                        '',
+                    }}
                   >
                     {person.motherName}
                   </SearchLink>
@@ -173,7 +200,13 @@ export const PeopleTable = ({ people }: PeopleTableProps) => {
             {person.fatherName ? (
               people.some(p => p.name === person.fatherName) ? (
                 <td>
-                  <SearchLink params={{ selected: person.slug }}>
+                  <SearchLink
+                    params={{
+                      selected:
+                        people.find(p => p.name === person.fatherName)?.slug ||
+                        '',
+                    }}
+                  >
                     {person.fatherName}
                   </SearchLink>
                 </td>
