@@ -92,7 +92,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Died
-              <SearchLink params={sortParams('name')}>
+              <SearchLink params={sortParams('died')}>
                 <span className="icon">
                   <i className={cn('fas', getSortIconClass('died'))} />
                 </span>
