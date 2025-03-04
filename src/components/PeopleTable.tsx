@@ -11,7 +11,7 @@ interface Props {
 
 export const PeopleTable: React.FC<Props> = ({ people = [] }) => {
   const { slug } = useParams<{ slug: string }>();
-  const [searchParams, setSearchParms] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const filter = searchParams.get('filter')?.toLowerCase() || '';
   const sortBy = searchParams.get('sortBy') || '';
@@ -57,7 +57,7 @@ export const PeopleTable: React.FC<Props> = ({ people = [] }) => {
   const handleSort = (column: keyof Person) => {
     const newOrder = sortBy === column && order === 'asc' ? 'desc' : 'asc';
 
-    setSearchParms(prev => {
+    setSearchParams(prev => {
       prev.set('sortBy', column);
       prev.set('order', newOrder);
 
@@ -97,28 +97,28 @@ export const PeopleTable: React.FC<Props> = ({ people = [] }) => {
                 style={{ cursor: 'pointer' }}
                 className="sortable"
               >
-                Name {getSortIcon('name')}
+                Name{getSortIcon('name')}
               </th>
               <th
                 onClick={() => handleSort('sex')}
                 style={{ cursor: 'pointer' }}
                 className="sortable"
               >
-                Sex {getSortIcon('sex')}
+                Sex{getSortIcon('sex')}
               </th>
               <th
                 onClick={() => handleSort('born')}
                 style={{ cursor: 'pointer' }}
                 className="sortable"
               >
-                Born {getSortIcon('born')}
+                Born{getSortIcon('born')}
               </th>
               <th
                 onClick={() => handleSort('died')}
                 style={{ cursor: 'pointer' }}
                 className="sortable"
               >
-                Died {getSortIcon('died')}
+                Died{getSortIcon('died')}
               </th>
               <th>Mother</th>
               <th>Father</th>
