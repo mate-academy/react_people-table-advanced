@@ -1,7 +1,5 @@
 import { useSearchParams } from 'react-router-dom';
 import { SearchLink } from './SearchLink';
-import { filter } from 'cypress/types/bluebird';
-import { sortBy } from 'cypress/types/lodash';
 
 export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
