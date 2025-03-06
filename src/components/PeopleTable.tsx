@@ -85,7 +85,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
               Died
               <SearchLink params={sortParams('died')}>
                 <span className="icon">
-                  <i className={classNames('fas', getSortIconClass('born'))} />
+                  <i className={classNames('fas', getSortIconClass('died'))} />
                 </span>
               </SearchLink>
             </span>
