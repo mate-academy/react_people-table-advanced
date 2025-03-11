@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 export type SearchParams = {
   [key: string]: string | string[] | null;
 };
