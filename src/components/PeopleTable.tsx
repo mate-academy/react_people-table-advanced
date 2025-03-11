@@ -110,7 +110,6 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
                 className={
                   person.sex === 'f' ? 'has-text-danger' : 'has-text-info'
                 }
-                onClick={e => e.preventDefault()} // Prevent navigation for this example
               >
                 {person.name}
               </a>
