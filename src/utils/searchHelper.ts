@@ -4,15 +4,9 @@ export type SearchParams = {
 
 export function getSearchWith(
   currentParams: URLSearchParams,
-  paramsToUpdate: SearchParams
+  paramsToUpdate: SearchParams,
 ): string {
-  // copy currentParams by creating new object from a string
-
-  console.log('paramsToUpdate', paramsToUpdate); // ['20']
-
   const newParams = new URLSearchParams(currentParams.toString());
-
-  console.log('newParams', newParams.toString()); // 
 
   Object.entries(paramsToUpdate).forEach(([key, value]) => {
     if (value === null) {

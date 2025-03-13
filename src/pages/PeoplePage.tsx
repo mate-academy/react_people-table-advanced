@@ -4,29 +4,26 @@ import { PeopleTable } from '../components/PeopleTable';
 import { useCallback, useEffect, useState, useMemo } from 'react';
 import { Person } from '../types';
 import { getPeople } from '../api';
-import { useLocation, useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 
 export const PeoplePage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
-  const [isErrorInMatchingQuery, setIsErrorInMatchingQuery] = useState(false);
   const [people, setPeople] = useState<Person[]>([]);
   const [filteredPeople, setFilteredPeople] = useState<Person[]>([]);
-
-  const { search } = useLocation();
 
   const [searchParams] = useSearchParams();
 
   const sex = searchParams.get('sex') || '';
   const query = searchParams.get('query') || '';
+  const sort = searchParams.get('sort') || '';
+  const order = searchParams.get('order') || '';
   const centuries = useMemo(
     () => searchParams.getAll('century') || [],
     [searchParams],
   );
 
-  const filterPeople = useCallback(() => {
-    setIsErrorInMatchingQuery(false);
-
+  const filterAndSortPeople = useCallback(() => {
     let result = [...people];
 
     // filtering by sex
@@ -54,14 +51,32 @@ export const PeoplePage = () => {
       });
     }
 
-    result.length === 0 && setIsErrorInMatchingQuery(true);
+    // sorting
+    if (sort) {
+      result = result.sort((a, b) => {
+        const valueA = a[sort as keyof Person];
+        const valueB = b[sort as keyof Person];
+
+        if (typeof valueA === 'string' && typeof valueB === 'string') {
+          return order === 'desc'
+            ? valueB.localeCompare(valueA)
+            : valueA.localeCompare(valueB);
+        }
+
+        if (typeof valueA === 'number' && typeof valueB === 'number') {
+          return order === 'desc' ? valueB - valueA : valueA - valueB;
+        }
+
+        return 0;
+      });
+    }
 
     setFilteredPeople(result);
-  }, [people, sex, centuries, query]);
+  }, [people, sex, centuries, query, order, sort]);
 
   useEffect(() => {
-    filterPeople();
-  }, [people, sex, centuries, query]);
+    filterAndSortPeople();
+  }, [people, sex, centuries, query, order, sort]);
 
   useEffect(() => {
     setIsLoading(true);
@@ -78,7 +93,7 @@ export const PeoplePage = () => {
   return (
     <>
       <h1 className="title">People Page</h1>
-      <p className="title is-6">{search && search.replaceAll('&', ' &')}</p>
+      {/* <p className="title is-6">{search && search.replaceAll('&', ' &')}</p> */}
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
           <div className="column is-7-tablet is-narrow-desktop">
@@ -97,11 +112,12 @@ export const PeoplePage = () => {
                   There are no people on the server
                 </p>
               )}
-              {isErrorInMatchingQuery ? (
+
+              {people.length > 0 && filteredPeople.length === 0 && (
                 <p>There are no people matching the current search criteria</p>
-              ) : (
-                <PeopleTable people={filteredPeople} />
               )}
+
+              {people.length > 0 && <PeopleTable people={filteredPeople} />}
             </div>
           </div>
         </div>
