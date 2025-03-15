@@ -12,9 +12,7 @@ interface PeopleInterface {
 export const PeopleFilters: React.FC<PeopleInterface> = ({ setPeopleApi }) => {
   const [originalPeople, setOriginalPeople] = useState<Person[]>([]);
   const [selectedCenturies, setSelectedCenturies] = useState<string[]>([]);
-  const [letterFromInput, setLetterFromInput] = useState(() => {
-    return localStorage.getItem('searchQuery') || '';
-  });
+  const [letterFromInput, setLetterFromInput] = useState('');
 
   const [searchParams, setSearchParams] = useSearchParams();
 

@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { PersonLink } from './PersonLink';
 import classNames from 'classnames';
 import { Person } from '../types';
-import { useSearchParams } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import * as peopleFromApi from '../api';
 interface PeopleInterface {
   peopleApi: Person[];
@@ -90,15 +90,20 @@ export const PeopleTable: React.FC<PeopleInterface> = ({
   function sortTable() {
     let sortedPeople = [...peopleApi];
 
+    // Оновлюємо параметр order
+    const newSearchParams = new URLSearchParams(searchParams);
+
     switch (sortingParams) {
       case 'name':
         if (clickCounterState === 1) {
           sortedPeople.sort((a, b) => a.name.localeCompare(b.name));
         } else if (clickCounterState === 2) {
           sortedPeople.sort((a, b) => b.name.localeCompare(a.name));
-        } else if (clickCounterState === 3) {
+        } else {
           sortedPeople = [...peopleApi];
         }
+
+        break;
 
         break;
       case 'sex':
@@ -135,19 +140,36 @@ export const PeopleTable: React.FC<PeopleInterface> = ({
         return;
     }
 
+    setSearchParams(newSearchParams);
+
     setPeopleApi(sortedPeople);
   }
 
   const handleSort = (column: string) => {
-    if (lastSortedColumn !== column) {
-      setLastSortedColumn(column);
-      setCleckCounterState(0);
-    } else {
+    let newSortOrder = 'asc'; // Default to ascending order
+
+    if (lastSortedColumn === column) {
+      // Toggle between asc and desc for the same column
+      newSortOrder = clickCounterState === 1 ? 'asc' : 'desc';
       setCleckCounterState(prev => (prev >= 3 ? 0 : prev + 1));
+    } else {
+      // Reset to ascending order if sorting on a new column
+      newSortOrder = 'asc';
+      setCleckCounterState(0);
     }
 
+    setLastSortedColumn(column);
     setSortingParams(column);
-    sortTable();
+
+    // Update the search params with the new sorting state
+    const newSearchParams = new URLSearchParams(searchParams);
+
+    newSearchParams.set('sort', column);
+    newSearchParams.set('order', newSortOrder);
+
+    setSearchParams(newSearchParams); // Update URL
+
+    sortTable(); // Apply sorting logic
   };
 
   useEffect(() => {
@@ -170,7 +192,7 @@ export const PeopleTable: React.FC<PeopleInterface> = ({
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Name
-              <a href="#/people?sort=name">
+              <Link to="#/people?sort=name">
                 <span className="icon">
                   <i
                     className="fas fa-sort"
@@ -179,14 +201,14 @@ export const PeopleTable: React.FC<PeopleInterface> = ({
                     }}
                   />
                 </span>
-              </a>
+              </Link>
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Sex
-              <a href="#/people?sort=sex">
+              <Link to="#/people?sort=sex">
                 <span className="icon">
                   <i
                     className="fas fa-sort"
@@ -195,14 +217,14 @@ export const PeopleTable: React.FC<PeopleInterface> = ({
                     }}
                   />
                 </span>
-              </a>
+              </Link>
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Born
-              <a href="#/people?sort=born&amp;order=desc">
+              <Link to="#/people?sort=born&amp;order=desc">
                 <span className="icon">
                   <i
                     className="fas fa-sort-up"
@@ -211,14 +233,14 @@ export const PeopleTable: React.FC<PeopleInterface> = ({
                     }}
                   />
                 </span>
-              </a>
+              </Link>
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Died
-              <a href="#/people?sort=died">
+              <Link to="#/people?sort=died">
                 <span className="icon">
                   <i
                     className="fas fa-sort"
@@ -227,7 +249,7 @@ export const PeopleTable: React.FC<PeopleInterface> = ({
                     }}
                   />
                 </span>
-              </a>
+              </Link>
             </span>
           </th>
 
