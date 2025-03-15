@@ -1,87 +1,93 @@
-export const PeopleFilters = () => {
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import { useSearchParams } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import * as peopleFromApi from '../api';
+import { Person } from '../types/Person';
+import classNames from 'classnames';
+
+interface PeopleInterface {
+  setPeopleApi: React.Dispatch<React.SetStateAction<Person[]>>;
+}
+
+export const PeopleFilters: React.FC<PeopleInterface> = ({ setPeopleApi }) => {
+  const [originalPeople, setOriginalPeople] = useState<Person[]>([]);
+  const [selectedCenturies, setSelectedCenturies] = useState<string[]>([]);
+  const [letterFromInput, setLetterFromInput] = useState(() => {
+    return localStorage.getItem('searchQuery') || '';
+  });
+
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  useEffect(() => {
+    peopleFromApi.getPeople().then(item => {
+      setPeopleApi(item);
+      setOriginalPeople(item);
+    });
+  }, []);
+
+  function getCentury(year: number): number {
+    return Math.ceil(year / 100);
+  }
+
+  function updateSearchParams(centuries: string[]) {
+    const newParams = new URLSearchParams(searchParams);
+
+    if (centuries.length === 0) {
+      newParams.delete('centuries');
+    } else {
+      newParams.set('centuries', centuries.join(','));
+    }
+
+    setSearchParams(newParams);
+  }
+
+  function filterByCenturies(centuries: string[]) {
+    if (centuries.length === 0) {
+      setPeopleApi(originalPeople);
+
+      return;
+    }
+
+    const filteredPeople = originalPeople.filter(person =>
+      centuries.includes(getCentury(person.born).toString()),
+    );
+
+    setPeopleApi(filteredPeople);
+  }
+
+  function handleCenturyToggle(century: string) {
+    setSelectedCenturies(prevCenturies => {
+      const isSelected = prevCenturies.includes(century);
+      const newCenturies = isSelected
+        ? prevCenturies.filter(c => c !== century) // Видаляємо, якщо вже вибране
+        : [...prevCenturies, century]; // Додаємо, якщо не вибране
+
+      updateSearchParams(newCenturies);
+      filterByCenturies(newCenturies);
+
+      return newCenturies;
+    });
+  }
+
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
 
-      <p className="panel-tabs" data-cy="SexFilter">
-        <a className="is-active" href="#/people">
-          All
-        </a>
-        <a className="" href="#/people?sex=m">
-          Male
-        </a>
-        <a className="" href="#/people?sex=f">
-          Female
-        </a>
-      </p>
-
-      <div className="panel-block">
-        <p className="control has-icons-left">
-          <input
-            data-cy="NameFilter"
-            type="search"
-            className="input"
-            placeholder="Search"
-          />
-
-          <span className="icon is-left">
-            <i className="fas fa-search" aria-hidden="true" />
-          </span>
-        </p>
-      </div>
-
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            <a
-              data-cy="century"
-              className="button mr-1"
-              href="#/people?centuries=16"
-            >
-              16
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=17"
-            >
-              17
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=18"
-            >
-              18
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=19"
-            >
-              19
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1"
-              href="#/people?centuries=20"
-            >
-              20
-            </a>
-          </div>
-
-          <div className="level-right ml-4">
-            <a
-              data-cy="centuryALL"
-              className="button is-success is-outlined"
-              href="#/people"
-            >
-              All
-            </a>
+            {['16', '17', '18', '19', '20'].map(century => (
+              <button
+                key={century}
+                data-cy="century"
+                className={`button  ${
+                  selectedCenturies.includes(century) ? 'mr-1 is-info' : ''
+                }`}
+                onClick={() => handleCenturyToggle(century)}
+              >
+                {century}
+              </button>
+            ))}
           </div>
         </div>
       </div>
