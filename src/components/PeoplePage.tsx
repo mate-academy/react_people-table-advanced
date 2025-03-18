@@ -1,51 +1,109 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { PeopleFilters } from './PeopleFilters';
 import { Loader } from './Loader';
 import { PeopleTable } from './PeopleTable';
-import { useGetPeople } from '../hook/useGetPeople';
+import { useEffect, useRef, useState } from 'react';
+import { getPeople } from '../api';
+import { Person } from '../types';
 import { useSearchParams } from 'react-router-dom';
-import { useMemo } from 'react';
-
 export const PeoplePage = () => {
-  const { people, isLoading, isError, peopleLen } = useGetPeople();
+  const [people, setPeople] = useState<Person[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(false);
   const [searchParams] = useSearchParams();
+  const initialPeople = useRef<Person[]>([]);
 
-  const query: string | null = searchParams.get('query');
-  const centuries: string[] | null = searchParams.getAll('centuries');
-  const sex: string | null = searchParams.get('sex');
-
-  const filteredPeople = useMemo(() => {
-    if (!people) {
-      return [];
-    }
-
-    let result = [...people];
+  const filterPeople = () => {
+    const query = searchParams.get('query');
+    const centuries = searchParams.getAll('centuries');
+    const sex = searchParams.get('sex');
+    let filteredPeople = [...initialPeople.current];
 
     if (query) {
-      result = result.filter(person => {
-        return (
-          person.name.toLowerCase().includes(query.toLowerCase()) ||
-          person.motherName?.toLowerCase().includes(query.toLowerCase()) ||
-          person.fatherName?.toLowerCase().includes(query.toLowerCase())
-        );
-      });
+      filteredPeople = filteredPeople.filter(person =>
+        person.name.toLowerCase().includes(query.toLowerCase()),
+      );
     }
 
-    if (centuries.length !== 0) {
-      result = result.filter(person => {
-        const century = Math.ceil(person.born / 100).toString();
-
-        return centuries.includes(century);
-      });
+    if (centuries.length) {
+      filteredPeople = filteredPeople.filter(person =>
+        centuries.includes(`${Math.ceil(person.born / 100)}`),
+      );
     }
 
     if (sex) {
-      result = result.filter(person => {
-        return sex === 'all' ? true : sex === person.sex;
+      filteredPeople = filteredPeople.filter(person => person.sex === sex);
+    }
+
+    setPeople(filteredPeople);
+  };
+
+  const sortPeople = () => {
+    const sort = searchParams.getAll('sort');
+    const order = searchParams.get('order');
+
+    if (!order && !sort.length) {
+      return;
+    }
+
+    const sortedPeople = [...people];
+
+    if (sort.length) {
+      sort.forEach(field => {
+        switch (field) {
+          case 'name':
+            sortedPeople.sort((a, b) => a.name.localeCompare(b.name));
+            break;
+          case 'sex':
+            sortedPeople.sort((a, b) => a.sex.localeCompare(b.sex));
+            break;
+          case 'born':
+            sortedPeople.sort((a, b) => a.born - b.born);
+            break;
+          case 'died':
+            sortedPeople.sort((a, b) => a.died - b.died);
+            break;
+        }
       });
     }
 
-    return result;
-  }, [people, query, centuries, sex]);
+    if (order === 'desc') {
+      sortedPeople.reverse();
+    }
+
+    setPeople(sortedPeople);
+  };
+
+  const isPeopleOnServer =
+    !initialPeople.current.length &&
+    !loading &&
+    !error &&
+    !searchParams.toString();
+
+  const isPeopleWithCriteria =
+    !people.length && !loading && !error && searchParams.toString();
+
+  const isAnyError = !loading && !error && people.length > 0;
+
+  useEffect(() => {
+    setLoading(true);
+    getPeople()
+      .then(data => {
+        setPeople(data);
+        initialPeople.current = data;
+        if (searchParams) {
+          filterPeople();
+          sortPeople();
+        }
+      })
+      .catch(() => setError(true))
+      .finally(() => setLoading(false));
+  }, []);
+
+  useEffect(() => {
+    filterPeople();
+    sortPeople();
+  }, [searchParams]);
 
   return (
     <>
@@ -54,28 +112,24 @@ export const PeoplePage = () => {
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
           <div className="column is-7-tablet is-narrow-desktop">
-            {peopleLen !== 0 && !isError && !isLoading && <PeopleFilters />}
+            {initialPeople.current.length > 0 && <PeopleFilters />}
           </div>
 
           <div className="column">
             <div className="box table-container">
-              {isLoading && <Loader />}
-
-              {isError && (
+              {loading && <Loader />}
+              {error && (
                 <p data-cy="peopleLoadingError">Something went wrong</p>
               )}
-
-              {peopleLen === 0 && !isError && !isLoading && (
+              {isPeopleOnServer && (
                 <p data-cy="noPeopleMessage">
                   There are no people on the server
                 </p>
               )}
-
-              {/*<p>There are no people matching the current search criteria</p>*/}
-
-              {peopleLen !== 0 && !isError && !isLoading && (
-                <PeopleTable people={filteredPeople} />
+              {isPeopleWithCriteria && (
+                <p>There are no people matching the current search criteria</p>
               )}
+              {isAnyError && <PeopleTable {...{ people }} />}
             </div>
           </div>
         </div>

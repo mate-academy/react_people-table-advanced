@@ -1,13 +1,75 @@
-/* eslint-disable jsx-a11y/control-has-associated-label */
-
+import React from 'react';
 import { Person } from '../types';
-import { PersonLink } from './PersonLink';
+import { Link, useParams, useSearchParams } from 'react-router-dom';
+import cl from 'classnames';
+import { SearchLink } from './SearchLink';
+/* eslint-disable jsx-a11y/control-has-associated-label */
+type Props = {
+  people: Person[];
+};
 
-interface PeopleTableProps {
-  people: Person[] | undefined;
-}
+export const PeopleTable: React.FC<Props> = ({ people }) => {
+  const { slug } = useParams();
+  const [search] = useSearchParams();
 
-export function PeopleTable({ people }: PeopleTableProps) {
+  const findPerson = (name: string) =>
+    people.find(person => person.name === name);
+
+  const getRelative = (name: string | null) => {
+    if (!name) {
+      return '-';
+    }
+
+    const person = findPerson(name);
+
+    if (!person) {
+      return name;
+    }
+
+    return (
+      <Link
+        to={person.slug}
+        className={cl({ 'has-text-danger': person.sex === 'f' })}
+      >
+        {person.name}
+      </Link>
+    );
+  };
+
+  const sortBy = (sort: string) => {
+    const sortParam = search.get('sort');
+    const orderParam = search.get('order');
+
+    if (sortParam === sort && orderParam) {
+      return {
+        sort: null,
+        order: null,
+      };
+    }
+
+    if (sortParam === sort) {
+      return { sort, order: 'desc' };
+    }
+
+    return { sort, order: null };
+  };
+
+  const getSortIconClass = (column: string) => {
+    const sortParam = search.get('sort');
+    const orderParam = search.get('order');
+
+    return cl(
+      'fas',
+      { 'fa-sort': sortParam !== column },
+      {
+        'fa-sort-up': sortParam === column && orderParam === null,
+      },
+      {
+        'fa-sort-down': sortParam === column && orderParam === 'desc',
+      },
+    );
+  };
+
   return (
     <table
       data-cy="peopleTable"
@@ -18,44 +80,44 @@ export function PeopleTable({ people }: PeopleTableProps) {
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Name
-              <a href="#/people?sort=name">
+              <SearchLink params={sortBy('name')}>
                 <span className="icon">
-                  <i className="fas fa-sort" />
+                  <i className={getSortIconClass('name')} />
                 </span>
-              </a>
+              </SearchLink>
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Sex
-              <a href="#/people?sort=sex">
+              <SearchLink params={sortBy('sex')}>
                 <span className="icon">
-                  <i className="fas fa-sort" />
+                  <i className={getSortIconClass('sex')} />
                 </span>
-              </a>
+              </SearchLink>
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Born
-              <a href="#/people?sort=born&amp;order=desc">
+              <SearchLink params={sortBy('born')}>
                 <span className="icon">
-                  <i className="fas fa-sort-up" />
+                  <i className={getSortIconClass('born')} />
                 </span>
-              </a>
+              </SearchLink>
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Died
-              <a href="#/people?sort=died">
+              <SearchLink params={sortBy('died')}>
                 <span className="icon">
-                  <i className="fas fa-sort" />
+                  <i className={getSortIconClass('died')} />
                 </span>
-              </a>
+              </SearchLink>
             </span>
           </th>
 
@@ -65,10 +127,31 @@ export function PeopleTable({ people }: PeopleTableProps) {
       </thead>
 
       <tbody>
-        {people?.map(person => {
-          return <PersonLink key={person.slug} person={person} />;
-        })}
+        {people.map(person => (
+          <tr
+            data-cy="person"
+            key={person.slug}
+            className={cl({ 'has-background-warning': person.slug === slug })}
+          >
+            <td>
+              <Link
+                to={{
+                  pathname: person.slug,
+                  search: search.toString(),
+                }}
+                className={cl({ 'has-text-danger': person.sex === 'f' })}
+              >
+                {person.name}
+              </Link>
+            </td>
+            <td>{person.sex}</td>
+            <td>{person.born}</td>
+            <td>{person.died}</td>
+            <td>{getRelative(person.motherName)}</td>
+            <td>{getRelative(person.fatherName)}</td>
+          </tr>
+        ))}
       </tbody>
     </table>
   );
-}
+};
