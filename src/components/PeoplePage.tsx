@@ -15,15 +15,25 @@ export const PeoplePage = () => {
 
           <div className="column">
             <div className="box table-container">
-              <Loader />
+              {isLoading && <Loader />}
 
-              <p data-cy="peopleLoadingError">Something went wrong</p>
+              {peopleLoadingError && (
+                <p data-cy="peopleLoadingError" className="has-text-danger">
+                  Something went wrong
+                </p>
+              )}
 
-              <p data-cy="noPeopleMessage">There are no people on the server</p>
+              {people?.length === 0 && (
+                <p data-cy="noPeopleMessage">There are no people on the server</p>
+              )}
 
-              <p>There are no people matching the current search criteria</p>
-
-              <PeopleTable />
+              {people && (
+                <PeopleTable
+                  people={people}
+                  selectedPersonSlug={selectedPersonSlug}
+                  onSelectPerson={handleSelectPerson}
+                />
+              )}
             </div>
           </div>
         </div>
