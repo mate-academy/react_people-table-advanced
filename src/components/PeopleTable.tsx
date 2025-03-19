@@ -52,12 +52,19 @@ export const PeopleTable = ({ people }: { people: Person[] }) => {
       setSortColumn(column);
       setSortOrder('asc');
     } else {
-      setSortOrder(prev =>
-        prev === 'asc' ? 'desc' : prev === 'desc' ? 'none' : 'asc',
-      );
-      if (sortOrder === 'none') {
-        setSortColumn(null);
-      }
+      setSortOrder(prev => {
+        if (prev === 'asc') {
+          setSortColumn(null);
+
+          return 'desc';
+        } else if (prev === 'desc') {
+          setSortColumn(null);
+
+          return 'none';
+        } else {
+          return 'asc';
+        }
+      });
     }
   };
 
@@ -114,10 +121,19 @@ export const PeopleTable = ({ people }: { people: Person[] }) => {
     }
 
     if (sortOrder === 'desc') {
-      return `/people`;
+      const newParams = new URLSearchParams();
+
+      newParams.delete('sort');
+      newParams.delete('order');
+
+      return `/people?${newParams.toString()}`;
     }
 
-    return `/people?sort=${column}`;
+    const newParams = new URLSearchParams(window.location.search);
+
+    newParams.set('sort', column);
+
+    return `/people?${newParams.toString()}`;
   };
 
   return (

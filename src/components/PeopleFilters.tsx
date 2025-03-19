@@ -1,6 +1,8 @@
 import { useSearchParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 
+const centuries = ['16', '17', '18', '19', '20'];
+
 export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [searchQuery, setSearchQuery] = useState(
@@ -26,22 +28,47 @@ export const PeopleFilters = () => {
       searchParams.set(key, value);
     }
 
-    setSearchParams(searchParams);
+    setSearchParams(
+      new URLSearchParams({
+        ...Object.fromEntries(searchParams),
+        [key]: value,
+      }),
+    );
   };
 
   const handleCenturyClick = (century: string) => {
-    const centuries = searchParams.getAll('centuries');
+    const newSearchParams = new URLSearchParams(searchParams);
 
     if (centuries.includes(century)) {
-      searchParams.delete('centuries');
-      centuries
-        .filter(c => c !== century)
-        .forEach(c => searchParams.append('centuries', c));
+      const filteredCenturies = centuries.filter(c => c !== century);
+
+      newSearchParams.delete('centuries');
+      filteredCenturies.forEach(c => newSearchParams.append('centuries', c));
+
+      if (filteredCenturies.length === 0) {
+        newSearchParams.delete('centuries');
+      }
     } else {
-      searchParams.append('centuries', century);
+      newSearchParams.append('centuries', century);
     }
 
-    setSearchParams(searchParams);
+    setSearchParams(newSearchParams);
+  };
+
+  const handleResetFilters = () => {
+    setSearchQuery('');
+
+    const newSearchParams = new URLSearchParams();
+
+    if (searchParams.get('sort')) {
+      newSearchParams.set('sort', searchParams.get('sort')!);
+    }
+
+    if (searchParams.get('order')) {
+      newSearchParams.set('order', searchParams.get('order')!);
+    }
+
+    setSearchParams(newSearchParams);
   };
 
   return (
@@ -111,8 +138,7 @@ export const PeopleFilters = () => {
         <a
           className="button is-link is-outlined is-fullwidth"
           onClick={() => {
-            setSearchParams({});
-            setSearchQuery('');
+            handleResetFilters();
           }}
         >
           Reset all filters
