@@ -2,6 +2,8 @@ import React from 'react';
 import { Person } from '../types';
 import { PersonLink } from './PersonLink';
 import classNames from 'classnames';
+import { SearchLink } from './SearchLink';
+import { useSearchParams } from 'react-router-dom';
 
 type Props = {
   people: Person[];
@@ -14,11 +16,35 @@ export const PeopleTable: React.FC<Props> = ({
   selectedPersonSlug,
   onSelectPerson,
 }) => {
+  const [searchParams] = useSearchParams();
+  const currentSort = searchParams.get('sort');
+  const currentOrder = searchParams.get('order');
+
   const enhancedPeople: Person[] = people.map(person => ({
     ...person,
     mother: people.find(p => p.name === person.motherName) || undefined,
     father: people.find(p => p.name === person.fatherName) || undefined,
   }));
+
+  const getSortIcons = (field: string) => {
+    if (currentSort !== field) {
+      return 'fa-sort';
+    }
+
+    return currentOrder === 'desc' ? 'fa-sort-down' : 'fa-sort-up';
+  };
+
+  const getSortParams = (field: string) => {
+    if (currentSort !== field) {
+      return { sort: field, order: null };
+    }
+
+    if (!currentOrder) {
+      return { sort: field, order: 'desc' };
+    }
+
+    return { sort: null, order: null };
+  };
 
   return (
     <table
@@ -27,10 +53,49 @@ export const PeopleTable: React.FC<Props> = ({
     >
       <thead>
         <tr>
-          <th>Name</th>
-          <th>Sex</th>
-          <th>Born</th>
-          <th>Died</th>
+          <th>
+            <span className="is-flex is-flex-wrap-nowrap">
+              Name
+              <SearchLink params={getSortParams('name')}>
+                <span className="icon">
+                  <i className={`fas ${getSortIcons('name')}`}></i>
+                </span>
+              </SearchLink>
+            </span>
+          </th>
+
+          <th>
+            <span className="is-flex is-flex-wrap-nowrap">
+              Sex
+              <SearchLink params={getSortParams('sex')}>
+                <span className="icon">
+                  <i className={`fas ${getSortIcons('sex')}`}></i>
+                </span>
+              </SearchLink>
+            </span>
+          </th>
+
+          <th>
+            <span className="is-flex is-flex-wrap-nowrap">
+              Born
+              <SearchLink params={getSortParams('born')}>
+                <span className="icon">
+                  <i className={`fas ${getSortIcons('born')}`}></i>
+                </span>
+              </SearchLink>
+            </span>
+          </th>
+
+          <th>
+            <span className="is-flex is-flex-wrap-nowrap">
+              Died
+              <SearchLink params={getSortParams('died')}>
+                <span className="icon">
+                  <i className={`fas ${getSortIcons('died')}`}></i>
+                </span>
+              </SearchLink>
+            </span>
+          </th>
           <th>Mother</th>
           <th>Father</th>
         </tr>
