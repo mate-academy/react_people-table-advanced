@@ -1,265 +1,190 @@
-import classNames from 'classnames';
+import { useParams, useSearchParams } from 'react-router-dom';
 import { Person } from '../types';
-import {
-  NavLink,
-  useLocation,
-  useParams,
-  useSearchParams,
-} from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import classNames from 'classnames';
+import { PersonLink } from './PersonLink';
 import { SearchLink } from './SearchLink';
+import { useMemo } from 'react';
 
-type PeopleProps = {
+/* eslint-disable jsx-a11y/control-has-associated-label */
+type Props = {
   people: Person[];
 };
 
-// type Obj = {
-//   sort?: string | null;
-//   order?: string | null;
-// };
+export const PeopleTable: React.FC<Props> = ({ people }) => {
+  const { slug } = useParams();
 
-export const PeopleTable: React.FC<PeopleProps> = ({ people }) => {
-  const { personSlug } = useParams();
-  const selectedPerson = personSlug;
+  const [searchParams] = useSearchParams();
+  const query = searchParams.get('query');
+  const gender = searchParams.get('sex');
+  const centuries = searchParams.getAll('centuries');
+  const sort = searchParams.get('sort');
+  const order = searchParams.get('order');
 
-  const [params] = useSearchParams();
-  const [filteredPeople, setFilteredPeople] = useState<Person[]>(people);
-  const [sortedPeople, setSortedPeople] = useState<Person[]>([
-    ...filteredPeople,
-  ]);
-  const sortParams = params.get('sort');
-  const order = params.get('order');
-  const { search } = useLocation();
+  const sortedOptions = ['Name', 'Sex', 'Born', 'Died'];
 
-  const sortTables = () => {
-    if (!sortParams) {
-      setSortedPeople(filteredPeople);
-    }
-
-    if (sortParams === 'name' || sortParams === 'sex') {
-      if (order === 'desc') {
-        setSortedPeople(prev => {
-          return [...prev].sort((n1, n2) => {
-            return n2[sortParams].localeCompare(n1[sortParams]);
-          });
-        });
-      } else {
-        setSortedPeople(prev => {
-          return [...prev].sort((n1, n2) => {
-            return n1[sortParams].localeCompare(n2[sortParams]);
-          });
-        });
-      }
-    }
-
-    if (sortParams === 'born' || sortParams === 'died') {
-      if (order === 'desc') {
-        setSortedPeople(prev => {
-          return [...prev].sort((a, b) => {
-            return b[sortParams] - a[sortParams];
-          });
-        });
-      } else {
-        setSortedPeople(prev => {
-          return [...prev].sort((a, b) => {
-            return a[sortParams] - b[sortParams];
-          });
-        });
-      }
-    }
-  };
-
-  const handleFilterChange = () => {
-    let newPeople = [...people];
-    const query = params.get('query');
-    const centuries = params.getAll('centuries');
-    const sex = params.get('sex');
+  const filteredPeople = useMemo(() => {
+    let filtered = [...people];
 
     if (query) {
-      newPeople = newPeople.filter(item => {
-        const lowerQuery = query.toLowerCase();
-        const lowerName = item.name.toLowerCase();
-        const lowerFatherName = item.fatherName?.toLowerCase();
-        const lowerMatherName = item.motherName?.toLowerCase();
+      const normalizedQuery = query.toLocaleLowerCase();
 
-        return (
-          lowerName.includes(lowerQuery) ||
-          lowerFatherName?.includes(lowerQuery) ||
-          lowerMatherName?.includes(lowerQuery)
-        );
-      });
+      filtered = filtered.filter(
+        ({ name, motherName, fatherName }) =>
+          name.toLocaleLowerCase().includes(normalizedQuery) ||
+          motherName?.toLocaleLowerCase().includes(normalizedQuery) ||
+          fatherName?.toLocaleLowerCase().includes(normalizedQuery),
+      );
+    }
+
+    if (gender) {
+      filtered = filtered.filter(person => person.sex === gender);
     }
 
     if (centuries.length) {
-      newPeople = newPeople.filter(person => {
-        const centuryBorn = Math.ceil(person.born / 100);
-
-        return centuries.includes(centuryBorn.toString());
-      });
+      filtered = filtered.filter(person =>
+        centuries.includes(
+          (+person.born.toString().slice(0, 2) + 1).toString(),
+        ),
+      );
     }
 
-    if (sex) {
-      newPeople = newPeople.filter(person => person.sex === sex);
+    return filtered;
+  }, [query, gender, centuries, people]);
+
+  const sortedPeople = useMemo(() => {
+    const sorted = [...filteredPeople].sort(
+      (personA: Person, personB: Person) => {
+        switch (sort) {
+          case 'name':
+          case 'sex':
+            return personA[sort].localeCompare(personB[sort]);
+          case 'born':
+          case 'died':
+            return personA[sort] - personB[sort];
+          default:
+            return 0;
+        }
+      },
+    );
+
+    if (order === 'desc') {
+      sorted.reverse();
     }
 
-    setFilteredPeople(newPeople);
-    setSortedPeople(newPeople);
-    sortTables();
-  };
+    return sorted;
+  }, [filteredPeople, sort, order]);
 
-  const [sortConfig, setSortConfig] = useState<{
-    sort: string | null;
-    order: string | null;
-  }>({
-    sort: null,
-    order: null,
-  });
-
-  const handleSort = (sorts: string) => {
-    setSortConfig(prev => {
-      if (prev.sort === sorts) {
-        return prev.order === 'asc'
-          ? { sort: sorts, order: 'desc' }
-          : { sort: null, order: 'asc' };
-      }
-
-      return { sort: sorts, order: 'asc' };
-    });
-  };
-
-  const getIconClass = (sortsType: string) => {
-    if (sortConfig.sort === sortsType) {
-      return sortConfig.order === 'asc' ? 'fa-sort-up' : 'fa-sort-down';
+  const toggleOrder = (sortName: string) => {
+    if (!sort) {
+      return { sort: sortName, order: null };
     }
 
-    return 'fa-sort';
+    if (sortName && !order) {
+      return { sort: sortName, order: 'desc' };
+    }
+
+    if (sortName && order) {
+      return { sort: null, order: null };
+    }
+
+    if (!sortName && !order) {
+      return { sort: null, order: null };
+    }
+
+    return { sort: sortName, order: null };
   };
 
-  useEffect(() => {
-    handleFilterChange();
-  }, [params]);
-
-  useEffect(() => {
-    sortTables();
-  }, [sortParams, order]);
-
-  const getPersone = (name: string | null, arr: Person[]) => {
-    return arr.find(person => person.name === name);
-  };
-
-  return (
-    <>
-      <table
-        data-cy="peopleTable"
-        className="table is-striped is-hoverable is-narrow is-fullwidth"
-      >
-        <thead>
-          <tr>
-            <th onClick={() => handleSort('name')}>
+  return !sortedPeople.length ? (
+    <p>There are no people matching the current search criteria</p>
+  ) : (
+    <table
+      data-cy="peopleTable"
+      className="table is-striped is-hoverable is-narrow is-fullwidth"
+    >
+      <thead>
+        <tr>
+          {sortedOptions.map(option => (
+            <th key={option}>
               <span className="is-flex is-flex-wrap-nowrap">
-                Name
-                <SearchLink params={sortConfig}>
+                {option}
+                <SearchLink params={toggleOrder(option.toLowerCase())}>
                   <span className="icon">
-                    <i className={`fas ${getIconClass('name')}`} />
+                    <i
+                      className={classNames('fas', {
+                        'fa-sort': sort !== option.toLowerCase(),
+                        'fa-sort-up': sort === option.toLowerCase() && !order,
+                        'fa-sort-down':
+                          sort === option.toLowerCase() && order === 'desc',
+                      })}
+                    />
                   </span>
                 </SearchLink>
               </span>
             </th>
-            <th onClick={() => handleSort('sex')}>
-              <span className="is-flex is-flex-wrap-nowrap">
-                Sex
-                <SearchLink params={sortConfig}>
-                  <span className="icon">
-                    <i className={`fas ${getIconClass('sex')}`} />
-                  </span>
-                </SearchLink>
-              </span>
-            </th>
-            <th onClick={() => handleSort('born')}>
-              <span className="is-flex is-flex-wrap-nowrap">
-                Born
-                <SearchLink params={sortConfig}>
-                  <span className="icon">
-                    <i className={`fas ${getIconClass('born')}`} />
-                  </span>
-                </SearchLink>
-              </span>
-            </th>
-            <th onClick={() => handleSort('died')}>
-              <span className="is-flex is-flex-wrap-nowrap">
-                Died
-                <SearchLink params={sortConfig}>
-                  <span className="icon">
-                    <i className={`fas ${getIconClass('died')}`} />
-                  </span>
-                </SearchLink>
-              </span>
-            </th>
-            <th>Mother</th>
-            <th>Father</th>
-          </tr>
-        </thead>
+          ))}
 
-        <tbody>
-          {sortedPeople.map(person => {
-            const getFather = getPersone(person.fatherName, people);
-            const getMother = getPersone(person.motherName, people);
+          <th>Mother</th>
+          <th>Father</th>
+        </tr>
+      </thead>
 
-            return (
-              <tr
-                data-cy="person"
-                key={person.slug}
-                className={classNames({
-                  'has-background-warning': selectedPerson === person.slug,
-                })}
-              >
-                <td>
-                  <NavLink
-                    to={`${person.slug}${search}`}
-                    className={classNames({
-                      'has-text-danger': person.sex === 'f',
-                    })}
-                  >
-                    {person.name}
-                  </NavLink>
-                </td>
-                <td>{person.sex}</td>
-                <td>{person.born}</td>
-                <td>{person.died}</td>
-                {person.motherName ? (
-                  <td>
-                    {getMother ? (
-                      <NavLink
-                        className="has-text-danger"
-                        to={`${getMother.slug}${search}`}
-                      >
-                        {person.motherName}
-                      </NavLink>
-                    ) : (
-                      person.motherName
-                    )}
-                  </td>
+      <tbody>
+        {sortedPeople.map(person => {
+          const {
+            name,
+            sex,
+            born,
+            died,
+            motherName,
+            mother,
+            fatherName,
+            father,
+          } = person;
+
+          return (
+            <tr
+              data-cy="person"
+              key={person.slug}
+              className={classNames({
+                'has-background-warning': slug === person.slug,
+              })}
+            >
+              <td>
+                <PersonLink
+                  person={person}
+                  className={classNames({
+                    'has-text-danger': sex === 'f',
+                  })}
+                >
+                  {name}
+                </PersonLink>
+              </td>
+
+              <td>{sex}</td>
+              <td>{born}</td>
+              <td>{died}</td>
+
+              <td>
+                {mother ? (
+                  <PersonLink className="has-text-danger" person={mother}>
+                    {motherName}
+                  </PersonLink>
                 ) : (
-                  <td>-</td>
+                  motherName || '-'
                 )}
-                {person.fatherName ? (
-                  <td>
-                    {getFather ? (
-                      <NavLink to={`${getFather?.slug}${search}`}>
-                        {person.fatherName}
-                      </NavLink>
-                    ) : (
-                      person.fatherName
-                    )}
-                  </td>
+              </td>
+
+              <td>
+                {father ? (
+                  <PersonLink person={father}>{fatherName}</PersonLink>
                 ) : (
-                  <td>-</td>
+                  fatherName || '-'
                 )}
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
-    </>
+              </td>
+            </tr>
+          );
+        })}
+      </tbody>
+    </table>
   );
 };
