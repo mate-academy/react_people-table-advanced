@@ -1,5 +1,5 @@
 import { Person } from '../types';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { getPeople } from '../api';
 
 export const PeopleContext = React.createContext({

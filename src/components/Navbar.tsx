@@ -1,12 +1,12 @@
-import classNames from "classnames";
-import { NavLink } from "react-router-dom";
+import classNames from 'classnames';
+import { NavLink } from 'react-router-dom';
 
 export const Navbar = () => {
   const getLinkClass = ({ isActive }: { isActive: boolean }) =>
     classNames('navbar-item', {
       'has-background-grey-lighter': isActive,
     });
-  
+
   return (
     <nav
       data-cy="nav"
@@ -20,11 +20,7 @@ export const Navbar = () => {
             Home
           </NavLink>
 
-          <NavLink
-            aria-current="page"
-            className={getLinkClass}
-            to="/people"
-          >
+          <NavLink aria-current="page" className={getLinkClass} to="/people">
             People
           </NavLink>
         </div>

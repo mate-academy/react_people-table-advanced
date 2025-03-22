@@ -1,5 +1,5 @@
 import { Person } from '../types';
-import { Link, useLocation, useParams, useSearchParams } from 'react-router-dom';
+import { Link, useParams, useSearchParams } from 'react-router-dom';
 
 type Props = {
   people: Person[];
@@ -7,7 +7,6 @@ type Props = {
 
 export const PeopleTable: React.FC<Props> = ({ people }) => {
   const { slug } = useParams();
-  const location = useLocation();
   const [searchParams, setSearchParams] = useSearchParams();
   const sortBy = searchParams.get('sort') || '';
   const sortOrder = searchParams.get('order') || '';
@@ -15,45 +14,40 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
   const validActivePerson = slug ? slug : '';
   const sortingColumnHeaders = ['Name', 'Sex', 'Born', 'Died'];
 
-  const getSortPeople = () => {
-    const sortedPeople = [...people].sort((a, b) => {
-      if (!sortBy) {
-        return 0;
-      }
-
-      const valueA = a[sortBy as keyof Person];
-      const valueB = b[sortBy as keyof Person];
-
-      if (typeof valueA === 'string' && typeof valueB === 'string') {
-        return sortOrder === 'asc'
-          ? valueA.localeCompare(valueB)
-          : sortOrder === 'desc'
-            ? valueB.localeCompare(valueA)
-            : 0
-      }
-
-      if (typeof valueA === 'number' && typeof valueB === 'number') {
-        return sortOrder === 'asc'
-          ? valueA - valueB
-          : sortOrder === 'desc'
-            ? valueB - valueA
-            : 0
-      }
-
+  const sortedPeople = [...people].sort((a, b) => {
+    if (!sortBy) {
       return 0;
-    });
+    }
 
-    people = sortedPeople
-  }
+    const valueA = a[sortBy as keyof Person];
+    const valueB = b[sortBy as keyof Person];
+
+    if (typeof valueA === 'string' && typeof valueB === 'string') {
+      return sortOrder === 'asc'
+        ? valueA.localeCompare(valueB)
+        : sortOrder === 'desc'
+          ? valueB.localeCompare(valueA)
+          : 0;
+    }
+
+    if (typeof valueA === 'number' && typeof valueB === 'number') {
+      return sortOrder === 'asc'
+        ? valueA - valueB
+        : sortOrder === 'desc'
+          ? valueB - valueA
+          : 0;
+    }
+
+    return 0;
+  });
 
   const handleSortPeople = (header: string) => {
-    getSortPeople();
-
-    const updatedOrder = sortBy === header && sortOrder === 'asc'
-      ? 'desc'
-      : sortOrder === 'desc'
-        ? ''
-        : 'asc'
+    const updatedOrder =
+      sortBy === header && sortOrder === 'asc'
+        ? 'desc'
+        : sortOrder === 'desc'
+          ? ''
+          : 'asc';
 
     setSearchParams(prev => {
       prev.set('sort', header);
@@ -64,8 +58,6 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
   };
 
   const getSortIcon = (header: string) => {
-    getSortPeople();
-
     const baseClass = 'fa ml-1';
     const isActive = sortBy === header && sortOrder;
     const iconClass = isActive
@@ -73,8 +65,10 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
         ? 'fa-sort-up'
         : 'fa-sort-down'
       : 'fa-sort';
-    
-    return <i className={`${baseClass} ${iconClass} sort-icon `} />;
+
+    return <i className={`${baseClass} ${iconClass} sort-icon `} style={{
+      'cursor': 'pointer'
+    }} />;
   };
 
   return (
@@ -104,7 +98,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
         </thead>
 
         <tbody>
-          {people.map(person => {
+          {sortedPeople.map(person => {
             const {
               name,
               sex,
@@ -129,7 +123,11 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
                 <td>
                   <Link
                     className={sex === 'f' ? 'has-text-danger' : ''}
-                    to={validActivePerson ? `../${person.slug}` : `./${person.slug}`}
+                    to={
+                      validActivePerson
+                        ? `../${person.slug}`
+                        : `./${person.slug}`
+                    }
                   >
                     {name}
                   </Link>
@@ -144,7 +142,11 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
                     {motherName !== null ? (
                       <Link
                         className="has-text-danger"
-                        to={validActivePerson ? `../${mother.slug}` : `./${mother.slug}`}
+                        to={
+                          validActivePerson
+                            ? `../${mother.slug}`
+                            : `./${mother.slug}`
+                        }
                       >
                         {motherName}
                       </Link>
@@ -160,7 +162,11 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
                   <td>
                     {fatherName !== null ? (
                       <Link
-                        to={validActivePerson? `../${father.slug}`: `./${father.slug}`}
+                        to={
+                          validActivePerson
+                            ? `../${father.slug}`
+                            : `./${father.slug}`
+                        }
                       >
                         {fatherName}
                       </Link>

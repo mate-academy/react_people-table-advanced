@@ -3,22 +3,19 @@ import { PeopleTable } from '../components/PeopleTable';
 import { useCallback, useContext, useEffect, useState } from 'react';
 import { PeopleContext } from '../store/PeopleContext';
 import { Loader } from '../components/Loader';
-import { useLocation, useSearchParams } from 'react-router-dom';
-import { GenderFilter } from '../types/GenderFilter';
+import { useSearchParams } from 'react-router-dom';
 import { Person } from '../types';
 
 export const PeoplePage = () => {
   const { people, loadPeople } = useContext(PeopleContext);
   const { loading, isDataLoaded } = useContext(PeopleContext);
 
-  const location = useLocation();
   const [searchParams, setSearchParams] = useSearchParams();
   const query = searchParams.get('query') || '';
+  const centuries = searchParams.getAll('centuries') || [];
+  const gender = searchParams.get('sex') || null;
 
-  const [filteredPeople, setFilteredPeople] = useState<Person[]>([])
-  const [genderFilter, setGenderFilter] = useState<GenderFilter>(GenderFilter.All);
-  const [appliedQuery, setAppliedQuery] = useState('');
-  const [appliedCentury, setAppliedCentury] = useState<string[]>([]);
+  const [filteredPeople, setFilteredPeople] = useState<Person[]>([]);
 
   useEffect(() => {
     loadPeople();
@@ -27,74 +24,47 @@ export const PeoplePage = () => {
   const filtersPeople = useCallback(() => {
     let filtered = people;
 
-    if (genderFilter !== GenderFilter.All) {
-      filtered = filtered.filter(person => 
-        genderFilter === GenderFilter.Male
+    if (gender !== null) {
+      filtered = filtered.filter(person =>
+        gender === 'm'
           ? person.sex === 'm'
-          : person.sex === 'f'
+          : person.sex === 'f',
       );
     }
 
-    if (appliedCentury.length > 0) {
+    if (centuries.length > 0) {
       filtered = filtered.filter(person =>
-        appliedCentury.includes(Math.ceil(person.born / 100).toString()),
+        centuries.includes(Math.ceil(person.born / 100).toString()),
       );
     }
 
-    if (appliedQuery) {
-      filtered = filtered.filter(person =>
-        person.name.toLowerCase().includes(appliedQuery)
-        || (person.motherName && person.motherName.toLowerCase().includes(appliedQuery))
-        || (person.fatherName && person.fatherName.toLowerCase().includes(appliedQuery))
+    if (query) {
+      filtered = filtered.filter(
+        person =>
+          person.name.toLowerCase().includes(query) ||
+          (person.motherName &&
+            person.motherName.toLowerCase().includes(query)) ||
+          (person.fatherName &&
+            person.fatherName.toLowerCase().includes(query)),
       );
     }
 
     setFilteredPeople(filtered);
-
-  }, [people, genderFilter, appliedCentury, appliedQuery]);
+  }, [people, gender, centuries, query]);
 
   useEffect(() => {
     filtersPeople();
   }, [filtersPeople]);
 
-  const handleGenderFilterChange = (filter: GenderFilter) => {
-    setGenderFilter(filter);
-  }
-
-  const handleCenturyChange = (century: string) => {
-    setAppliedCentury(prev => {
-      let newCenturies: string[];
-
-      if (century === 'all') {
-        newCenturies = [];
-      } else {
-        newCenturies = prev.includes(century)
-          ? prev.filter(c => c !== century)
-          : [...prev, century];
-      }
-
-      const params = new URLSearchParams(searchParams.toString());
-
-      params.delete('centuries');
-      newCenturies.forEach(c => params.append('centuries', c));
-      setSearchParams(params);
-
-      return newCenturies;
-    });
-  };
-  
   const handleQueryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value.toLowerCase();
-    const paramsToUpdate = value ? { query: value } : { query: '' };
+    const params = new URLSearchParams(searchParams);
+    params.set('query', value)
 
-    setSearchParams(paramsToUpdate);
-    setAppliedQuery(value);
+    setSearchParams(params);
   };
 
   const resetFilters = () => {
-    setGenderFilter(GenderFilter.All);
-    setAppliedCentury([]);
-    setAppliedQuery('');
     setSearchParams({});
   };
 
@@ -108,10 +78,8 @@ export const PeoplePage = () => {
             <PeopleFilters
               query={query}
               searchParams={searchParams}
-              genderFilter={genderFilter}
-              appliedCentury={appliedCentury}
-              onGenderChange={handleGenderFilterChange}
-              onCenturyChange={handleCenturyChange}
+              genderFilter={gender}
+              centuries={centuries}
               onQueryChange={handleQueryChange}
               resetFilters={resetFilters}
             />
