@@ -25,7 +25,7 @@ export const PeoplePage = () => {
   const filteredPeople = people.filter(person => {
     const searchQuery = searchParams.get('query')?.toLowerCase() || '';
     const sexFilter = searchParams.get('sex');
-    const centuries = searchParams.getAll('centuries').map(Number);
+    const centuries = searchParams.getAll('centuries'); // The 'centuries' are strings, no need to map to numbers
 
     return (
       (!searchQuery ||
@@ -34,7 +34,7 @@ export const PeoplePage = () => {
         person.fatherName?.toLowerCase().includes(searchQuery)) &&
       (!sexFilter || person.sex === sexFilter) &&
       (centuries.length === 0 ||
-        centuries.includes(Math.ceil(person.born / 100)))
+        centuries.includes(String(Math.ceil(person.born / 100)))) // Convert century to string
     );
   });
 

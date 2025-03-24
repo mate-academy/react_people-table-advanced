@@ -22,30 +22,28 @@ export const PeopleFilters = () => {
   }, [searchQuery, searchParams, setSearchParams]);
 
   const handleFilterClick = (key: string, value: string) => {
-    if (searchParams.get(key) === value) {
-      searchParams.delete(key);
+    const newSearchParams = new URLSearchParams(searchParams);
+
+    if (newSearchParams.get(key) === value) {
+      newSearchParams.delete(key);
     } else {
-      searchParams.set(key, value);
+      newSearchParams.set(key, value);
     }
 
-    setSearchParams(
-      new URLSearchParams({
-        ...Object.fromEntries(searchParams),
-        [key]: value,
-      }),
-    );
+    setSearchParams(newSearchParams);
   };
 
   const handleCenturyClick = (century: string) => {
     const newSearchParams = new URLSearchParams(searchParams);
+    const currentCenturies = newSearchParams.getAll('centuries');
 
-    if (centuries.includes(century)) {
-      const filteredCenturies = centuries.filter(c => c !== century);
+    if (currentCenturies.includes(century)) {
+      const filteredCenturies = currentCenturies.filter(c => c !== century);
 
-      newSearchParams.delete('centuries');
-      filteredCenturies.forEach(c => newSearchParams.append('centuries', c));
-
-      if (filteredCenturies.length === 0) {
+      if (filteredCenturies.length > 0) {
+        newSearchParams.delete('centuries');
+        filteredCenturies.forEach(c => newSearchParams.append('centuries', c));
+      } else {
         newSearchParams.delete('centuries');
       }
     } else {
@@ -113,7 +111,7 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            {['16', '17', '18', '19', '20'].map(century => (
+            {centuries.map(century => (
               <a
                 key={century}
                 data-cy="century"
@@ -129,7 +127,19 @@ export const PeopleFilters = () => {
             <a
               data-cy="centuryALL"
               className="button is-success is-outlined"
-              onClick={() => setSearchParams({})}
+              onClick={() => {
+                const newSearchParams = new URLSearchParams();
+
+                if (searchParams.get('sort')) {
+                  newSearchParams.set('sort', searchParams.get('sort')!);
+                }
+
+                if (searchParams.get('order')) {
+                  newSearchParams.set('order', searchParams.get('order')!);
+                }
+
+                setSearchParams(newSearchParams);
+              }}
             >
               All
             </a>
