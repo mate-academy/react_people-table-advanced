@@ -98,7 +98,8 @@ export const PeopleTable = ({
             <td>{person.died}</td>
             <td>
               {person.mother ? (
-                <span
+                <Link
+                  to={`/people/${person.mother.slug}`}
                   className={`${
                     person.mother.sex === 'm'
                       ? 'has-text-link'
@@ -108,14 +109,17 @@ export const PeopleTable = ({
                   }`}
                 >
                   {person.mother.name}
-                </span>
+                </Link>
+              ) : person.motherName ? (
+                <span>{person.motherName}</span>
               ) : (
                 '-'
               )}
             </td>
             <td>
               {person.father ? (
-                <span
+                <Link
+                  to={`/people/${person.father.slug}`}
                   className={`${
                     person.father.sex === 'm'
                       ? 'has-text-link'
@@ -125,7 +129,9 @@ export const PeopleTable = ({
                   }`}
                 >
                   {person.father.name}
-                </span>
+                </Link>
+              ) : person.fatherName ? (
+                <span>{person.fatherName}</span>
               ) : (
                 '-'
               )}
