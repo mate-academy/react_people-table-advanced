@@ -1,6 +1,10 @@
 import React from 'react';
 import { PersonLink } from '../PersonLink';
 import { Person } from '../../types';
+import { SearchLink } from '../SearchLink';
+import { useSearchParams } from 'react-router-dom';
+import { handleSort } from '../../utils/handleSort';
+import { getLinkClass } from '../../utils/getLinkClass';
 
 type Props = {
   people: Person[];
@@ -8,6 +12,8 @@ type Props = {
 
 /* eslint-disable jsx-a11y/control-has-associated-label */
 export const PeopleTable: React.FC<Props> = ({ people }) => {
+  const [searchParams] = useSearchParams();
+
   const getPeopleSlug = (parentName: string): Person | undefined => {
     return people.find(person => person.name === parentName);
   };
@@ -22,44 +28,44 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Name
-              <a href="#/people?sort=name">
+              <SearchLink params={handleSort('name', searchParams)}>
                 <span className="icon">
-                  <i className="fas fa-sort" />
+                  <i className={getLinkClass('name', searchParams)} />
                 </span>
-              </a>
+              </SearchLink>
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Sex
-              <a href="#/people?sort=sex">
+              <SearchLink params={handleSort('sex', searchParams)}>
                 <span className="icon">
-                  <i className="fas fa-sort" />
+                  <i className={getLinkClass('sex', searchParams)} />
                 </span>
-              </a>
+              </SearchLink>
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Born
-              <a href="#/people?sort=born&amp;order=desc">
+              <SearchLink params={handleSort('born', searchParams)}>
                 <span className="icon">
-                  <i className="fas fa-sort-up" />
+                  <i className={getLinkClass('born', searchParams)} />
                 </span>
-              </a>
+              </SearchLink>
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Died
-              <a href="#/people?sort=died">
+              <SearchLink params={handleSort('died', searchParams)}>
                 <span className="icon">
-                  <i className="fas fa-sort" />
+                  <i className={getLinkClass('died', searchParams)} />
                 </span>
-              </a>
+              </SearchLink>
             </span>
           </th>
 
