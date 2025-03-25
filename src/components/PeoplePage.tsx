@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/indent */
 import { useEffect, useState } from 'react';
 import { getPeople } from '../api';
 import { Person } from '../types';
@@ -212,20 +213,27 @@ export const PeoplePage = () => {
 
           <div className="column">
             <div className="box table-container">
-              {isLoading && <p>Loading...</p>}
+              {isLoading && <div data-cy="loader">Loading...</div>}
+
               {loadingError && (
                 <p data-cy="peopleLoadingError">Something went wrong</p>
               )}
-              {peopleList.length === 0 && (
+
+              {!isLoading && !loadingError && peopleList.length === 0 && (
                 <p data-cy="noPeopleMessage">
                   There are no people on the server
                 </p>
               )}
-              {filteredPeople.length === 0 && peopleList.length > 0 && (
-                <p data-cy="noMatchingPeopleMessage">
-                  There are no people matching the current search criteria
-                </p>
-              )}
+
+              {!isLoading &&
+                !loadingError &&
+                filteredPeople.length === 0 &&
+                peopleList.length > 0 && (
+                  <p data-cy="noMatchingPeopleMessage">
+                    There are no people matching the current search criteria
+                  </p>
+                )}
+
               <PeopleTable
                 handleRowClick={handleRowClick}
                 people={sortedPeople}
