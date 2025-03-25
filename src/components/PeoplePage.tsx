@@ -68,11 +68,7 @@ export const PeoplePage = () => {
           const father =
             data.find(p => p.name === person.fatherName) || undefined;
 
-          return {
-            ...person,
-            mother,
-            father,
-          };
+          return { ...person, mother, father };
         });
 
         setPeople(peopleWithParents);

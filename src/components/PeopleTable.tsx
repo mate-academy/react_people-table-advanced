@@ -32,9 +32,7 @@ export const PeopleTable = ({
   };
 
   return people.length === 0 ? (
-    <p data-cy="noPeopleMessage" className="has-text-centered">
-      No people found
-    </p>
+    <p className="has-text-centered">No people found</p>
   ) : (
     <table
       data-cy="peopleTable"
@@ -94,11 +92,7 @@ export const PeopleTable = ({
               </Link>
             </td>
             <td>
-              {person.sex === 'm'
-                ? 'Male'
-                : person.sex === 'f'
-                  ? 'Female'
-                  : 'Other'}
+              {person.sex === 'm' ? 'm' : person.sex === 'f' ? 'f' : 'Other'}
             </td>
             <td>{person.born}</td>
             <td>{person.died}</td>
