@@ -146,13 +146,19 @@ export const PeoplePage = () => {
   };
 
   const filteredPeople = peopleList.filter(person => {
-    const matchesSearchQuery = person.name
-      .toLowerCase()
-      .includes(searchQuery.toLowerCase());
+    const queryLower = searchQuery.toLowerCase();
+
+    const matchesSearchQuery =
+      person.name.toLowerCase().includes(queryLower) ||
+      (person.motherName &&
+        person.motherName.toLowerCase().includes(queryLower)) ||
+      (person.fatherName &&
+        person.fatherName.toLowerCase().includes(queryLower));
+
     const matchesSex = selectedSex ? person.sex === selectedSex : true;
 
     const matchesCentury = selectedCentury.length
-      ? selectedCentury.includes(getCentury(person.born))
+      ? selectedCentury.includes(getCentury(Number(person.born)))
       : true;
 
     return matchesSearchQuery && matchesSex && matchesCentury;
