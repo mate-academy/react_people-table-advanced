@@ -20,6 +20,6 @@ export type FiltersContextType = {
   sortedPeople: Person[];
   sex: string[];
   sort: SortField | null;
-  order: SortField | 'desc' | null;
+  order: string | null;
   toggleDirection: (newSort: SortField) => void;
 };

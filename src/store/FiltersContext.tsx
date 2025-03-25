@@ -18,7 +18,7 @@ export const FiltersProvider: React.FC<Props> = ({ children }) => {
   const { peoples } = useContext(PeopleContext);
 
   const sort = searchParams.get('sort') as SortField | null;
-  const order = searchParams.get('order') as SortField | 'desc' | null;
+  const order = searchParams.get('order') as string | null;
   const sex = useMemo(() => searchParams.getAll('sex') || [], [searchParams]);
   const query = useMemo(() => searchParams.get('query') || '', [searchParams]);
   const century = useMemo(
@@ -45,7 +45,7 @@ export const FiltersProvider: React.FC<Props> = ({ children }) => {
   };
 
   const toggleDirection = (newSort: SortField) => {
-    if (sort !== newSort) {
+    if (sort === null) {
       setSearchWith({ sort: newSort.toLowerCase() });
     } else if (!order) {
       setSearchWith({ sort: sort.toLowerCase(), order: 'desc' });
