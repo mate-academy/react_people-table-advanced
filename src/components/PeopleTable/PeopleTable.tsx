@@ -60,9 +60,16 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
     const normalizedQuery = query.toLowerCase().trim();
 
     if (query) {
-      filteredArray = filteredArray.filter(el =>
-        el.name.toLowerCase().includes(normalizedQuery),
-      );
+      filteredArray = filteredArray.filter(el => {
+        const motherName = el.motherName ? el.motherName.toLowerCase() : '';
+        const fatherName = el.fatherName ? el.fatherName.toLowerCase() : '';
+
+        return (
+          el.name.toLowerCase().includes(normalizedQuery) ||
+          motherName.includes(normalizedQuery) ||
+          fatherName.includes(normalizedQuery)
+        );
+      });
     }
 
     if (sex) {

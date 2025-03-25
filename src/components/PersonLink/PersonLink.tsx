@@ -44,7 +44,7 @@ export const PersonLink: React.FC<Props> = ({ person, getPeopleSlug }) => {
       ) : (
         <td>{person.motherName || '-'}</td>
       )}
-      {person.fatherName && getMotherSlug?.slug ? (
+      {person.fatherName && getFatherSlug?.slug ? (
         <td>
           <Link to={`/people/${getFatherSlug?.slug}`}>{person.fatherName}</Link>
         </td>
