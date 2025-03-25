@@ -5,6 +5,7 @@ import { SearchLink } from '../SearchLink';
 import { useSearchParams } from 'react-router-dom';
 import { handleSort } from '../../utils/handleSort';
 import { getLinkClass } from '../../utils/getLinkClass';
+import { SortType } from '../../types/SortType';
 
 type Props = {
   people: Person[];
@@ -17,6 +18,68 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
   const getPeopleSlug = (parentName: string): Person | undefined => {
     return people.find(person => person.name === parentName);
   };
+
+  const sortPeople = (array: Person[]) => {
+    const filterPeople = [...array];
+
+    const sort = searchParams.get('sort');
+    const order = searchParams.get('order') === 'desc';
+
+    switch (sort) {
+      case SortType.NAME:
+        return filterPeople.sort((a, b) => {
+          const comparison = a.name.localeCompare(b.name);
+
+          return order ? -comparison : comparison;
+        });
+      case SortType.SEX:
+        return filterPeople.sort((a, b) => {
+          const comparison = a.sex.localeCompare(b.sex);
+
+          return order ? -comparison : comparison;
+        });
+      case SortType.BORN:
+        return filterPeople.sort((a, b) => {
+          return order ? b.born - a.born : a.born - b.born;
+        });
+      case SortType.DIED:
+        return filterPeople.sort((a, b) => {
+          return order ? b.died - a.died : a.died - b.died;
+        });
+      default:
+        return filterPeople;
+    }
+  };
+
+  const filterPeople = (array: Person[]) => {
+    const query = searchParams.get('query') || '';
+    const sex = searchParams.get('sex') || '';
+    const centuries = searchParams.getAll('centuries') || [];
+
+    let filteredArray = array;
+    const normalizedQuery = query.toLowerCase().trim();
+
+    if (query) {
+      filteredArray = filteredArray.filter(el =>
+        el.name.toLowerCase().includes(normalizedQuery),
+      );
+    }
+
+    if (sex) {
+      filteredArray = filteredArray.filter(el => el.sex === sex);
+    }
+
+    if (centuries.length > 0) {
+      filteredArray = filteredArray.filter(el =>
+        centuries.includes(Math.ceil(el.born / 100).toString()),
+      );
+    }
+
+    return filteredArray;
+  };
+
+  const filteredPeople = filterPeople(people);
+  const sortedPeople = sortPeople(filteredPeople);
 
   return (
     <table
@@ -75,7 +138,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
       </thead>
 
       <tbody>
-        {people.map(person => (
+        {sortedPeople.map(person => (
           <PersonLink
             person={person}
             key={person.slug}
