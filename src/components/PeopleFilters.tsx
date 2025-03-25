@@ -1,16 +1,51 @@
-export const PeopleFilters = () => {
+interface PropsFilterPeople {
+  searchQuery: string;
+  selectedSex: string | null;
+  onSearchChange: (newQuery: string) => void;
+  onSexChange: (newSex: string) => void;
+  onResetFilters: () => void;
+  onCenturyChange: (centuries: string[]) => void;
+  selectedCentury: string[];
+}
+
+export const PeopleFilters: React.FC<PropsFilterPeople> = ({
+  selectedSex,
+  searchQuery,
+  onSearchChange,
+  onSexChange,
+  onResetFilters,
+  onCenturyChange,
+  selectedCentury,
+}) => {
+  const handleCenturyChange = (century: string) => {
+    const updatedCentury = selectedCentury.includes(century)
+      ? selectedCentury.filter(c => c !== century)
+      : [...selectedCentury, century];
+
+    onCenturyChange(updatedCentury);
+  };
+
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        <a className="is-active" href="#/people">
+        <a
+          className={selectedSex === '' ? 'is-active' : ''}
+          onClick={() => onSexChange('')}
+        >
           All
         </a>
-        <a className="" href="#/people?sex=m">
+        <a
+          className={selectedSex === 'm' ? 'is-active is-info' : 'is-info'}
+          onClick={() => onSexChange('m')}
+        >
           Male
         </a>
-        <a className="" href="#/people?sex=f">
+        <a
+          className={selectedSex === 'f' ? 'is-active is-danger' : 'is-danger'}
+          onClick={() => onSexChange('f')}
+        >
           Female
         </a>
       </p>
@@ -22,8 +57,9 @@ export const PeopleFilters = () => {
             type="search"
             className="input"
             placeholder="Search"
+            value={searchQuery}
+            onChange={event => onSearchChange(event.target.value)}
           />
-
           <span className="icon is-left">
             <i className="fas fa-search" aria-hidden="true" />
           </span>
@@ -33,63 +69,65 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            <a
+            <button
               data-cy="century"
-              className="button mr-1"
-              href="#/people?centuries=16"
+              className={`button mr-1 ${selectedCentury.includes('16') ? 'is-info' : ''}`}
+              onClick={() => handleCenturyChange('16')}
             >
               16
-            </a>
+            </button>
 
-            <a
+            <button
               data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=17"
+              className={`button mr-1 ${selectedCentury.includes('17') ? 'is-info' : ''}`}
+              onClick={() => handleCenturyChange('17')}
             >
               17
-            </a>
+            </button>
 
-            <a
+            <button
               data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=18"
+              className={`button mr-1 ${selectedCentury.includes('18') ? 'is-info' : ''}`}
+              onClick={() => handleCenturyChange('18')}
             >
               18
-            </a>
+            </button>
 
-            <a
-              data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=19"
+            <button
+              className={`button ${selectedCentury.includes('19') ? 'is-link' : ''}`}
+              onClick={() => handleCenturyChange('19')}
             >
               19
-            </a>
+            </button>
 
-            <a
+            <button
               data-cy="century"
-              className="button mr-1"
-              href="#/people?centuries=20"
+              className={`button mr-1 ${selectedCentury.includes('20') ? 'is-info' : ''}`}
+              onClick={() => handleCenturyChange('20')}
             >
               20
-            </a>
+            </button>
           </div>
 
           <div className="level-right ml-4">
-            <a
+            <button
               data-cy="centuryALL"
               className="button is-success is-outlined"
-              href="#/people"
+              onClick={() => onCenturyChange([])}
             >
               All
-            </a>
+            </button>
           </div>
         </div>
       </div>
 
       <div className="panel-block">
-        <a className="button is-link is-outlined is-fullwidth" href="#/people">
+        <button
+          className="button is-link is-outlined is-fullwidth"
+          onClick={onResetFilters}
+        >
           Reset all filters
-        </a>
+        </button>
       </div>
     </nav>
   );
