@@ -45,12 +45,16 @@ export const FiltersProvider: React.FC<Props> = ({ children }) => {
   };
 
   const toggleDirection = (newSort: SortField) => {
+    const newSortLower = newSort.toLowerCase();
+
     if (sort === null) {
-      setSearchWith({ sort: newSort.toLowerCase() });
-    } else if (!order) {
-      setSearchWith({ sort: sort.toLowerCase(), order: 'desc' });
+      setSearchWith({ sort: newSortLower });
+    } else if (sort === newSortLower && order === 'desc') {
+      setSearchWith({ sort: newSortLower, order: null });
+    } else if (sort === newSortLower) {
+      setSearchWith({ sort: newSortLower, order: 'desc' });
     } else {
-      setSearchWith({});
+      setSearchWith({ sort: newSortLower });
     }
   };
 
