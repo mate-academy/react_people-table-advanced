@@ -17,6 +17,7 @@ export const PeoplePage: React.FC = () => {
 
   const sortFunctions: Record<string, (a: Person, b: Person) => number> = {
     name: (a, b) => a.name.localeCompare(b.name),
+    sex: (a, b) => a.sex.localeCompare(b.sex),
     born: (a, b) => a.born - b.born,
     died: (a, b) => a.died - b.died,
   };
