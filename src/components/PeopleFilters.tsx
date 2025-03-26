@@ -1,18 +1,46 @@
-export const PeopleFilters = () => {
+import classNames from 'classnames';
+import { Link } from 'react-router-dom';
+
+type Props = {
+  setFilterSex: React.Dispatch<React.SetStateAction<'all' | 'm' | 'f'>>;
+  setFilterCentury:
+  React.Dispatch<React.SetStateAction<'16' | '17' | '18' | '19' | '20' | ''>
+  >;
+  filterSex: 'all' | 'm' | 'f';
+  filterCentury: '16' | '17' | '18' | '19' | '20' | '';
+};
+export const PeopleFilters = ({
+  setFilterSex,
+  setFilterCentury,
+  filterSex,
+  filterCentury,
+}: Props) => {
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        <a className="is-active" href="#/people">
+        <Link
+          to="#/people"
+          className="is-active"
+          onClick={() => setFilterSex('all')}
+        >
           All
-        </a>
-        <a className="" href="#/people?sex=m">
+        </Link>
+        <Link
+          to="#/people?sex=m"
+          className={filterSex === 'm' ? 'is-active' : ''}
+          onClick={() => setFilterSex('m')}
+        >
           Male
-        </a>
-        <a className="" href="#/people?sex=f">
+        </Link>
+        <Link
+          to="#/people?sex=f"
+          className={classNames({ 'is-active': filterSex === 'f' })}
+          onClick={() => setFilterSex('f')}
+        >
           Female
-        </a>
+        </Link>
       </p>
 
       <div className="panel-block">
@@ -33,18 +61,22 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            <a
+            <Link
+              to="#/people?centuries=16"
               data-cy="century"
-              className="button mr-1"
-              href="#/people?centuries=16"
+              className={classNames('button mr-1', {
+                'is-info': filterCentury === '16',
+              })}
+              onClick={() => setFilterCentury('16')}
             >
               16
-            </a>
+            </Link>
 
             <a
               data-cy="century"
               className="button mr-1 is-info"
               href="#/people?centuries=17"
+              onClick={() => setFilterCentury('17')}
             >
               17
             </a>
@@ -53,6 +85,7 @@ export const PeopleFilters = () => {
               data-cy="century"
               className="button mr-1 is-info"
               href="#/people?centuries=18"
+              onClick={() => setFilterCentury('18')}
             >
               18
             </a>
@@ -61,6 +94,7 @@ export const PeopleFilters = () => {
               data-cy="century"
               className="button mr-1 is-info"
               href="#/people?centuries=19"
+              onClick={() => setFilterCentury('19')}
             >
               19
             </a>
@@ -69,6 +103,7 @@ export const PeopleFilters = () => {
               data-cy="century"
               className="button mr-1"
               href="#/people?centuries=20"
+              onClick={() => setFilterCentury('20')}
             >
               20
             </a>
@@ -79,6 +114,7 @@ export const PeopleFilters = () => {
               data-cy="centuryALL"
               className="button is-success is-outlined"
               href="#/people"
+              onClick={() => setFilterCentury('')}
             >
               All
             </a>

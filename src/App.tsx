@@ -1,20 +1,18 @@
-import { PeoplePage } from './components/PeoplePage';
+//import { PeoplePage } from './components/PeoplePage';
 import { Navbar } from './components/Navbar';
 
 import './App.scss';
+import { Outlet } from 'react-router-dom';
+//import classNames from 'classnames';
+//const getLinkClass = ({ isActive }: { isActive: boolean }) =>
+//classNames('navbar-item', { 'has-background-grey-lighter': isActive });
 
-export const App = () => {
-  return (
-    <div data-cy="app">
-      <Navbar />
+export const App = () => (
+  <div data-cy="app">
+    <Navbar />
 
-      <div className="section">
-        <div className="container">
-          <h1 className="title">Home Page</h1>
-          <h1 className="title">Page not found</h1>
-          <PeoplePage />
-        </div>
-      </div>
-    </div>
-  );
-};
+    <main className="section">
+      <Outlet />
+    </main>
+  </div>
+);
