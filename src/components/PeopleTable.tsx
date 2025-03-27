@@ -31,6 +31,17 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
     }
   };
 
+  const getSortIconClass = (sortKey: string) => {
+    const isSorted = searchParams.get('sort') === sortKey;
+    const hasOrder = searchParams.has('order');
+
+    return classNames('fas', {
+      'fa-sort': !isSorted,
+      'fa-sort-up': isSorted && !hasOrder,
+      'fa-sort-down': isSorted && hasOrder,
+    });
+  };
+
   return (
     <>
       {people.length === 0 ? (
@@ -47,17 +58,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
                   Name
                   <SearchLink params={getSort('name')}>
                     <span className="icon">
-                      <i
-                        className={classNames('fas', {
-                          'fa-sort': searchParams.get('sort') !== 'name',
-                          'fa-sort-up':
-                            searchParams.get('sort') === 'name' &&
-                            !searchParams.has('order'),
-                          'fa-sort-down':
-                            searchParams.get('sort') === 'name' &&
-                            searchParams.has('order'),
-                        })}
-                      />
+                      <i className={getSortIconClass('name')} />
                     </span>
                   </SearchLink>
                 </span>
@@ -68,17 +69,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
                   Sex
                   <SearchLink params={getSort('sex')}>
                     <span className="icon">
-                      <i
-                        className={classNames('fas', {
-                          'fa-sort': searchParams.get('sort') !== 'sex',
-                          'fa-sort-up':
-                            searchParams.get('sort') === 'sex' &&
-                            !searchParams.has('order'),
-                          'fa-sort-down':
-                            searchParams.get('sort') === 'sex' &&
-                            searchParams.has('order'),
-                        })}
-                      />
+                      <i className={getSortIconClass('sex')} />
                     </span>
                   </SearchLink>
                 </span>
@@ -89,17 +80,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
                   Born
                   <SearchLink params={getSort('born')}>
                     <span className="icon">
-                      <i
-                        className={classNames('fas', {
-                          'fa-sort': searchParams.get('sort') !== 'born',
-                          'fa-sort-up':
-                            searchParams.get('sort') === 'born' &&
-                            !searchParams.has('order'),
-                          'fa-sort-down':
-                            searchParams.get('sort') === 'born' &&
-                            searchParams.has('order'),
-                        })}
-                      />
+                      <i className={getSortIconClass('born')} />
                     </span>
                   </SearchLink>
                 </span>
@@ -110,17 +91,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
                   Died
                   <SearchLink params={getSort('died')}>
                     <span className="icon">
-                      <i
-                        className={classNames('fas', {
-                          'fa-sort': searchParams.get('sort') !== 'died',
-                          'fa-sort-up':
-                            searchParams.get('sort') === 'died' &&
-                            !searchParams.has('order'),
-                          'fa-sort-down':
-                            searchParams.get('sort') === 'died' &&
-                            searchParams.has('order'),
-                        })}
-                      />
+                      <i className={getSortIconClass('died')} />
                     </span>
                   </SearchLink>
                 </span>
