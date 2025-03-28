@@ -1,5 +1,6 @@
 import { useParams } from 'react-router-dom';
 import { PersonLink } from '../PersonLink/PersonLink';
+// import { useSearchParams } from 'react-router-dom';
 
 import cn from 'classnames';
 import { Person } from '../../types';
@@ -9,6 +10,7 @@ interface Props {
 }
 
 export const PeopleTable = ({ people }: Props) => {
+  // const [searchParams, setSearchParams] = useSearchParams();
   const { slug } = useParams();
 
   return (

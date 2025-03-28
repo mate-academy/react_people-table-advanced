@@ -8,12 +8,12 @@ import { Person } from '../../types';
 
 export const PeoplePage = () => {
   const [people, setPeople] = useState<Array<Person> | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
   const { pathname } = useLocation();
 
   useEffect(() => {
-    if (!pathname.startsWith('/people')) {
+    if (!pathname.startsWith('/people') || people) {
       return;
     }
 
@@ -32,7 +32,7 @@ export const PeoplePage = () => {
     };
 
     fetchPeople();
-  }, [pathname]);
+  }, [pathname, people]);
 
   return (
     <>
@@ -40,9 +40,11 @@ export const PeoplePage = () => {
 
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
-          <div className="column is-7-tablet is-narrow-desktop">
-            <PeopleFilters />
-          </div>
+          {!isLoading && (
+            <div className="column is-7-tablet is-narrow-desktop">
+              <PeopleFilters />
+            </div>
+          )}
 
           <div className="column">
             <div className="box table-container">
