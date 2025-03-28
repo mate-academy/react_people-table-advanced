@@ -1,43 +1,55 @@
-import classNames from 'classnames';
 import { useSearchParams } from 'react-router-dom';
 import { SearchLink } from './SearchLink';
-import { getSearchWith, SearchParams } from '../utils/searchHelper';
+import classNames from 'classnames';
+import React from 'react';
+import { FilterType } from '../types/FilterType';
 
-const centuriesArr = ['16', '17', '18', '19', '20'];
+const CENTURIES = [16, 17, 18, 19, 20];
 
 export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const query = searchParams.get('query') || '';
-  const centuries = searchParams.getAll('centuries') || [];
   const sex = searchParams.get('sex') || '';
+  const centuries = searchParams.getAll('centuries') || [];
 
-  function setSearchWith(params: SearchParams) {
-    const search = getSearchWith(searchParams, params);
+  const toggleCentuires = (newCentury: string) => {
+    return centuries.includes(newCentury)
+      ? centuries.filter(century => century !== newCentury)
+      : [...centuries, newCentury];
+  };
 
-    setSearchParams(search);
-  }
+  const handleQuery = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const params = new URLSearchParams(searchParams);
 
-  function handleQueryChange(event: React.ChangeEvent<HTMLInputElement>) {
-    setSearchWith({ query: event.target.value || null });
-  }
+    if (!event.target.value) {
+      params.delete('query');
+    } else {
+      params.set('query', event.target.value);
+    }
+
+    setSearchParams(params);
+  };
 
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        <SearchLink params={{ sex: null }} className={!sex ? 'is-active' : ''}>
+        <SearchLink
+          className={classNames({ 'is-active': !sex })}
+          params={{ sex: null }}
+        >
           All
         </SearchLink>
         <SearchLink
-          className={sex === 'm' ? 'is-active' : ''}
-          params={{ sex: 'm' }}
+          className={classNames({ 'is-active': sex === FilterType.MALE })}
+          params={{ sex: FilterType.MALE }}
         >
           Male
         </SearchLink>
         <SearchLink
-          className={sex === 'f' ? 'is-active' : ''}
-          params={{ sex: 'f' }}
+          className={classNames({ 'is-active': sex === FilterType.FEMALE })}
+          params={{ sex: FilterType.FEMALE }}
         >
           Female
         </SearchLink>
@@ -51,7 +63,7 @@ export const PeopleFilters = () => {
             className="input"
             placeholder="Search"
             value={query}
-            onChange={handleQueryChange}
+            onChange={handleQuery}
           />
 
           <span className="icon is-left">
@@ -63,18 +75,14 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            {centuriesArr.map(century => (
+            {CENTURIES.map(century => (
               <SearchLink
                 key={century}
                 data-cy="century"
                 className={classNames('button mr-1', {
-                  'is-info': centuries.includes(century),
+                  'is-info': centuries.includes(century.toString()),
                 })}
-                params={{
-                  centuries: centuries.includes(century)
-                    ? centuries.filter(ct => ct !== century)
-                    : [...centuries, century],
-                }}
+                params={{ centuries: toggleCentuires(century.toString()) }}
               >
                 {century}
               </SearchLink>
@@ -98,7 +106,7 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <SearchLink
           className="button is-link is-outlined is-fullwidth"
-          params={{ query: null, centuries: null, sex: null }}
+          params={{ centuries: null, sex: null }}
         >
           Reset all filters
         </SearchLink>
