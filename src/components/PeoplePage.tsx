@@ -7,7 +7,7 @@ import { PeopleTable } from './PeopleTable';
 import { Person } from '../types';
 
 export const PeoplePage = () => {
-  const [people, setPeople] = useState<Person[] | null>(null);
+  const [people, setPeople] = useState<Person[]>([]); // Инициализация пустым массивом
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [peopleLoadingError, setPeopleLoadingError] = useState<boolean>(false);
   const [selectedPersonSlug, setSelectedPersonSlug] = useState<string | null>(null);
@@ -50,13 +50,13 @@ export const PeoplePage = () => {
                 </p>
               )}
 
-              {people?.length === 0 && (
+              {people.length === 0 && (
                 <p data-cy="noPeopleMessage">
                   There are no people on the server
                 </p>
               )}
 
-              {people && (
+              {people.length > 0 && (
                 <PeopleTable
                   people={people}
                   selectedPersonSlug={selectedPersonSlug}
