@@ -2,12 +2,19 @@ import { Link, useParams } from 'react-router-dom';
 import classNames from 'classnames';
 import { Person } from '../types';
 import { useState } from 'react';
+import getSearchWith from '../utils/searchHelper';
 
 type Props = {
   people: Person[];
+  searchParams: URLSearchParams;
+  setSearchParams: React.Dispatch<React.SetStateAction<URLSearchParams>>;
 };
 
-export const PeopleTable: React.FC<Props> = ({ people }) => {
+export const PeopleTable: React.FC<Props> = ({
+  people,
+  searchParams,
+  setSearchParams,
+}) => {
   const { slug: selectedUserSlug } = useParams();
 
   const findMother = (motherName: string) => {
@@ -45,6 +52,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
     '',
   );
 
+  // Handle click to update sorting state and trigger search param update
   const handleClick = (key: 'name' | 'sex' | 'born' | 'died') => {
     setSortKey(key);
     setClickCount(prev => ({
@@ -115,6 +123,28 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
     return sortedPeople;
   };
 
+  const setSearchWith = (params: Record<string, string | null>) => {
+    const searchString = getSearchWith(searchParams, params);
+
+    setSearchParams(new URLSearchParams(searchString));
+  };
+
+  const handleSortChange = (key: 'name' | 'sex' | 'born' | 'died') => {
+    handleClick(key);
+
+    let order: 'asc' | 'desc' | null = null;
+
+    if (clickCount[key] === 0) {
+      order = 'asc';
+    } else if (clickCount[key] === 1) {
+      order = 'desc';
+    }
+
+    const params = { sort: key, order };
+
+    setSearchWith(params);
+  };
+
   return (
     <table
       data-cy="peopleTable"
@@ -125,7 +155,13 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Name
-              <a href="#/people?sort=name" onClick={() => handleClick('name')}>
+              <a
+                href="#/people?sort=name"
+                onClick={e => {
+                  e.preventDefault();
+                  handleSortChange('name');
+                }}
+              >
                 <span className="icon">
                   <i className={`fas ${getSortIcon('name')}`} />
                 </span>
@@ -136,7 +172,13 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Sex
-              <a href="#/people?sort=sex" onClick={() => handleClick('sex')}>
+              <a
+                href="#/people?sort=sex"
+                onClick={e => {
+                  e.preventDefault();
+                  handleSortChange('sex');
+                }}
+              >
                 <span className="icon">
                   <i className={`fas ${getSortIcon('sex')}`} />
                 </span>
@@ -148,8 +190,11 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
             <span className="is-flex is-flex-wrap-nowrap">
               Born
               <a
-                href="#/people?sort=born&amp;order=desc"
-                onClick={() => handleClick('born')}
+                href="#/people?sort=born"
+                onClick={e => {
+                  e.preventDefault();
+                  handleSortChange('born');
+                }}
               >
                 <span className="icon">
                   <i className={`fas ${getSortIcon('born')}`} />
@@ -161,11 +206,17 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Died
-              <Link to="#/people?sort=died" onClick={() => handleClick('died')}>
+              <a
+                href="#/people?sort=died"
+                onClick={e => {
+                  e.preventDefault();
+                  handleSortChange('died');
+                }}
+              >
                 <span className="icon">
                   <i className={`fas ${getSortIcon('died')}`} />
                 </span>
-              </Link>
+              </a>
             </span>
           </th>
 
