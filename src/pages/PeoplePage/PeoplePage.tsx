@@ -1,38 +1,11 @@
 import { PeopleFilters } from '../../components/PeopleFilters';
 import { Loader } from '../../components/Loader';
 import { PeopleTable } from '../../components/PeopleTable/PeopleTable';
-import { getPeople } from '../../api';
-import { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
-import { Person } from '../../types';
+
+import { usePeople } from '../../hooks/usePeople';
 
 export const PeoplePage = () => {
-  const [people, setPeople] = useState<Array<Person> | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [hasError, setHasError] = useState(false);
-  const { pathname } = useLocation();
-
-  useEffect(() => {
-    if (!pathname.startsWith('/people') || people) {
-      return;
-    }
-
-    setIsLoading(true);
-
-    const fetchPeople = async () => {
-      try {
-        const data = await getPeople();
-
-        setPeople(data);
-      } catch {
-        setHasError(true);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchPeople();
-  }, [pathname, people]);
+  const { people, isLoading, hasError } = usePeople();
 
   return (
     <>
@@ -62,7 +35,7 @@ export const PeoplePage = () => {
                 </p>
               )}
 
-              <p>There are no people matching the current search criteria</p>
+              {/* <p>There are no people matching the current search criteria</p> */}
               {people && people?.length >= 1 && <PeopleTable people={people} />}
             </div>
           </div>
