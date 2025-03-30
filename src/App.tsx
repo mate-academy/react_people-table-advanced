@@ -3,7 +3,7 @@ import { Navigate, Route, Routes } from 'react-router-dom';
 import { Home } from './pages/Home/Home';
 import { NotFoundPage } from './pages/PageNotFound/NotFoundPage';
 import { MainLayout } from './layout/MainLayout';
-import { PeoplePage } from './pages/PeoplePage/PeoplePage';
+import { PeoplePage } from './features/people/PeoplePage';
 
 export const App = () => {
   return (
