@@ -14,11 +14,11 @@ export const PeopleFilters = () => {
     setQuery(searchParams.get('query') || '');
   }, [searchParams]);
 
-  const setCenturyParam = (century: number): string | string[] | null => {
+  const setCenturyParam = (century: number): string[] => {
     const newParams = searchParams.getAll('centuries');
 
     if (newParams.includes(century.toString())) {
-      return newParams.filter(param => param !== `${century}`) || null;
+      return newParams.filter(param => param !== `${century}`);
     } else {
       newParams.push(`${century}`);
 
