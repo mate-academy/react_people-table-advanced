@@ -1,5 +1,60 @@
 /* eslint-disable jsx-a11y/control-has-associated-label */
-export const PeopleTable = () => {
+
+import React, { useEffect, useState } from 'react';
+import { getPeople } from '../api';
+import { Person } from '../types';
+import { PeopleStateType } from './PeoplePage';
+import classNames from 'classnames';
+
+interface StateType {
+  initialList: Person[] | [];
+  listToShow: Person[] | [];
+}
+
+type Props = {
+  setPeopleState: React.Dispatch<React.SetStateAction<PeopleStateType>>;
+  peopleState: PeopleStateType;
+};
+
+const getPersonByName = (name: string, list: Person[]) =>
+  list.find(per => name === per.name);
+
+export const PeopleTable: React.FC<Props> = ({
+  setPeopleState,
+  peopleState,
+}) => {
+  const [state, setState] = useState<StateType>({
+    initialList: [],
+    listToShow: [],
+  });
+
+  const { initialList, listToShow } = state;
+
+  useEffect(() => {
+    getPeople()
+      .then(list => {
+        setState({
+          ...state,
+          initialList: list,
+          listToShow: list,
+        });
+
+        setPeopleState({
+          ...peopleState,
+          isLoading: false,
+          error: list.length ? null : 'empty',
+        });
+      })
+      .catch(() => {
+        setPeopleState({
+          ...peopleState,
+          isLoading: false,
+          error: 'unloaded',
+        });
+      });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <table
       data-cy="peopleTable"
@@ -57,6 +112,61 @@ export const PeopleTable = () => {
       </thead>
 
       <tbody>
+        {listToShow.map(person => {
+          const {
+            name,
+            sex,
+            born,
+            died,
+            fatherName,
+            motherName,
+            slug,
+            mother = motherName
+              ? getPersonByName(motherName, initialList)
+              : null,
+            father = fatherName
+              ? getPersonByName(fatherName, initialList)
+              : null,
+          } = person;
+
+          const updateMother = motherName ? motherName : '-';
+          const updateFather = fatherName ? fatherName : '-';
+
+          const motherElement = mother ? (
+            <a
+              href={`#/people/${mother.slug}`}
+              className={classNames({ 'has-text-danger': mother.sex === 'f' })}
+            >
+              {mother.name}
+            </a>
+          ) : (
+            updateMother
+          );
+
+          const fatherElement = father ? (
+            <a href={`#/people/${father.slug}`}>{father.name}</a>
+          ) : (
+            updateFather
+          );
+
+          return (
+            <tr key={name} data-cy="person">
+              <td>
+                <a
+                  className={classNames({ 'has-text-danger': sex === 'f' })}
+                  href={`#/people/${slug}`}
+                >
+                  {name}
+                </a>
+              </td>
+              <td>{sex}</td>
+              <td>{born}</td>
+              <td>{died}</td>
+              <td>{motherElement}</td>
+              <td>{fatherElement}</td>
+            </tr>
+          );
+        })}
         <tr data-cy="person">
           <td>
             <a href="#/people/pieter-haverbeke-1602">Pieter Haverbeke</a>

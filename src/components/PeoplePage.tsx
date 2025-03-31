@@ -1,8 +1,23 @@
 import { PeopleFilters } from './PeopleFilters';
 import { Loader } from './Loader';
 import { PeopleTable } from './PeopleTable';
+import { useState } from 'react';
+
+type ErrorType = 'empty' | 'unloaded' | 'wrongsearch' | null;
+
+export interface PeopleStateType {
+  error: ErrorType;
+  isLoading: boolean;
+}
 
 export const PeoplePage = () => {
+  const [peopleState, setPeopleState] = useState<PeopleStateType>({
+    error: null,
+    isLoading: true,
+  });
+
+  const { error, isLoading } = peopleState;
+
   return (
     <>
       <h1 className="title">People Page</h1>
@@ -15,15 +30,26 @@ export const PeoplePage = () => {
 
           <div className="column">
             <div className="box table-container">
-              <Loader />
+              {isLoading && <Loader />}
 
-              <p data-cy="peopleLoadingError">Something went wrong</p>
+              {error === 'unloaded' && (
+                <p data-cy="peopleLoadingError">Something went wrong</p>
+              )}
 
-              <p data-cy="noPeopleMessage">There are no people on the server</p>
+              {error === 'empty' && (
+                <p data-cy="noPeopleMessage">
+                  There are no people on the server
+                </p>
+              )}
 
-              <p>There are no people matching the current search criteria</p>
+              {error === 'wrongsearch' && (
+                <p>There are no people matching the current search criteria</p>
+              )}
 
-              <PeopleTable />
+              <PeopleTable
+                setPeopleState={setPeopleState}
+                peopleState={peopleState}
+              />
             </div>
           </div>
         </div>
