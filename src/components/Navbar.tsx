@@ -1,3 +1,16 @@
+import classNames from 'classnames';
+import { NavLink } from 'react-router-dom';
+
+enum EnumLinks {
+  Home,
+  People,
+}
+const Links = Object.values(EnumLinks).filter(link => typeof link === 'string');
+
+const getLinkClassName = ({ isActive }: { isActive: boolean }) => {
+  return classNames('navbar-item', { 'has-background-grey-lighter': isActive });
+};
+
 export const Navbar = () => {
   return (
     <nav
@@ -8,17 +21,20 @@ export const Navbar = () => {
     >
       <div className="container">
         <div className="navbar-brand">
-          <a className="navbar-item" href="#/">
-            Home
-          </a>
+          {Links.map(link => {
+            const path = link === 'Home' ? '' : link.toLowerCase();
 
-          <a
-            aria-current="page"
-            className="navbar-item has-background-grey-lighter"
-            href="#/people"
-          >
-            People
-          </a>
+            return (
+              <NavLink
+                key={link}
+                aria-current="page"
+                to={`/${path}`}
+                className={getLinkClassName}
+              >
+                {link}
+              </NavLink>
+            );
+          })}
         </div>
       </div>
     </nav>
