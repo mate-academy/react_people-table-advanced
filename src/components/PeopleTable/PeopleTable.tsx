@@ -13,7 +13,10 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
 
   const findPersonByName = useMemo(() => {
     return (name: string | null): Person | null => {
-      if (!name) return null;
+      if (!name) {
+        return null;
+      }
+
       return people.find(person => person.name === name) || null;
     };
   }, [people]);

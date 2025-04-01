@@ -12,8 +12,10 @@ export const useQueryParams = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const updateParams = (key: string, value: string | null) => {
     const newSearch = getSearchWith(searchParams, { [key]: value });
+
     setSearchParams(new URLSearchParams(newSearch));
   };
+
   return { searchParams, updateParams, setSearchParams };
 };
 
@@ -41,6 +43,7 @@ export const PeoplePage = () => {
         century => Math.ceil(person.born / 100) === +century,
       );
       const matchesSex = sex ? person.sex === sex : true;
+
       return matchesQuery && matchesCentury && matchesSex;
     });
   }, [people, searchParams]);
@@ -49,7 +52,9 @@ export const PeoplePage = () => {
     const sortKey = searchParams.get('sort');
     const sortOrder = searchParams.get('order');
 
-    if (!sortKey) return filteredPeople;
+    if (!sortKey) {
+      return filteredPeople;
+    }
 
     const key = sortKey as keyof Pick<Person, 'name' | 'sex' | 'born' | 'died'>;
 
@@ -62,8 +67,14 @@ export const PeoplePage = () => {
         bValue = bValue.toLowerCase();
       }
 
-      if (aValue > bValue) return sortOrder === 'desc' ? -1 : 1;
-      if (aValue < bValue) return sortOrder === 'desc' ? 1 : -1;
+      if (aValue > bValue) {
+        return sortOrder === 'desc' ? -1 : 1;
+      }
+
+      if (aValue < bValue) {
+        return sortOrder === 'desc' ? 1 : -1;
+      }
+
       return 0;
     });
   }, [filteredPeople, searchParams]);
@@ -72,8 +83,11 @@ export const PeoplePage = () => {
     setLoading(true);
     getPeople()
       .then(data => {
-        if (data.length === 0) setError(true);
-        else setPeople(data);
+        if (data.length === 0) {
+          setError(true);
+        } else {
+          setPeople(data);
+        }
       })
       .catch(() => setErrorLoading(true))
       .finally(() => setLoading(false));
@@ -82,7 +96,7 @@ export const PeoplePage = () => {
   const handleSort =
     (field: string) => (e: React.MouseEvent<HTMLAnchorElement>) => {
       e.preventDefault();
-      let newParams: { [key: string]: string | null } = {};
+      const newParams: { [key: string]: string | null } = {};
       const currentSort = searchParams.get('sort');
       const currentOrder = searchParams.get('order');
 
@@ -99,6 +113,7 @@ export const PeoplePage = () => {
       }
 
       const newSearch = getSearchWith(searchParams, newParams);
+
       setSearchParams(new URLSearchParams(newSearch));
     };
 
@@ -130,7 +145,8 @@ export const PeoplePage = () => {
                 ) : (
                   <table
                     data-cy="peopleTable"
-                    className="table is-striped is-hoverable is-narrow is-fullwidth"
+                    className="table is-striped is-hoverable
+                     is-narrow is-fullwidth"
                   >
                     <thead>
                       <tr>

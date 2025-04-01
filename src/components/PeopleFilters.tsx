@@ -10,11 +10,13 @@ export const PeopleFilters = () => {
     const newSearch = getSearchWith(searchParams, {
       query: ev.target.value || null,
     });
+
     setSearchParams(new URLSearchParams(newSearch));
   };
 
   const handleSexFilter = (sex: string | null) => {
     const newSearch = getSearchWith(searchParams, { sex });
+
     setSearchParams(new URLSearchParams(newSearch));
   };
 
@@ -26,11 +28,13 @@ export const PeopleFilters = () => {
     const newSearch = getSearchWith(searchParams, {
       centuries: updatedCenturies.length ? updatedCenturies : null,
     });
+
     setSearchParams(new URLSearchParams(newSearch));
   };
 
   const handleResetCenturies = () => {
     const newSearch = getSearchWith(searchParams, { centuries: null });
+
     setSearchParams(new URLSearchParams(newSearch));
   };
 
@@ -40,6 +44,7 @@ export const PeopleFilters = () => {
       query: null,
       centuries: null,
     });
+
     setSearchParams(new URLSearchParams(newSearch));
   };
 
