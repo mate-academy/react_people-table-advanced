@@ -1,9 +1,9 @@
 import { Link } from 'react-router-dom';
 import { sortableColumns } from './sortConfig';
-import usePeopleSortParams from '../hooks/usePeopleSortParams';
+import { usePeopleSortParams } from '../hooks/usePeopleSortParams';
 
 export const PeopleTableHead = () => {
-  const { handleSort, getSortIcon } = usePeopleSortParams();
+  const { setURLSortParams, getSortIconClass } = usePeopleSortParams();
 
   return (
     <thead>
@@ -16,11 +16,11 @@ export const PeopleTableHead = () => {
                 to="#"
                 onClick={e => {
                   e.preventDefault();
-                  handleSort(`${key}`);
+                  setURLSortParams(`${key}`);
                 }}
               >
                 <span className="icon">
-                  <i className={getSortIcon(`${key}`)} />
+                  <i className={getSortIconClass(`${key}`)} />
                 </span>
               </Link>
             </span>

@@ -6,7 +6,7 @@ export const usePeopleSortParams = () => {
   const currentSort = searchParams.get('sort');
   const currentOrder = searchParams.get('order');
 
-  const handleSort = (sortBy: string) => {
+  const setURLSortParams = (sortBy: string) => {
     const newParams = new URLSearchParams(searchParams);
 
     const isCurrentSort = currentSort === sortBy;
@@ -23,7 +23,7 @@ export const usePeopleSortParams = () => {
     setSearchParams(newParams);
   };
 
-  const getSortIcon = (columnTitle: string): string => {
+  const getSortIconClass = (columnTitle: string): string => {
     const params = Object.fromEntries(searchParams.entries());
     const isSorted = params.sort === columnTitle;
 
@@ -38,7 +38,5 @@ export const usePeopleSortParams = () => {
     return 'fas fa-sort-up';
   };
 
-  return { handleSort, getSortIcon };
+  return { setURLSortParams, getSortIconClass, currentSort, currentOrder };
 };
-
-export default usePeopleSortParams;

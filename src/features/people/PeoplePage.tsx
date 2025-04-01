@@ -1,11 +1,20 @@
 import { PeopleFilters } from '../../components/PeopleFilters';
 import { Loader } from '../../components/Loader';
-import { PeopleTable } from '../../components/PeopleTable/PeopleTable';
+import { PeopleTable } from './components/PeopleTable';
 
 import { usePeople } from '../../hooks/usePeople';
+import { usePeopleSortParams } from './hooks/usePeopleSortParams';
+import { sortPeople } from './utils/sortPeople';
+import { Person } from '../../types';
 
 export const PeoplePage = () => {
   const { people, isLoading, hasError } = usePeople();
+  const { currentSort, currentOrder } = usePeopleSortParams();
+
+  const sortKey = currentSort as keyof Person;
+  const order = currentOrder === 'desc' ? 'desc' : null;
+
+  const sortedPeople = people ? sortPeople({ people, sortKey, order }) : [];
 
   return (
     <>
@@ -36,7 +45,9 @@ export const PeoplePage = () => {
               )}
 
               {/* <p>There are no people matching the current search criteria</p> */}
-              {people && people?.length >= 1 && <PeopleTable people={people} />}
+              {people && people?.length >= 1 && (
+                <PeopleTable people={sortedPeople} />
+              )}
             </div>
           </div>
         </div>
