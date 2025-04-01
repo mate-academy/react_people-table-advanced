@@ -1,147 +1,128 @@
 import React from 'react';
-import { FilterType } from '../types/FilterType';
-import { useSearchParams } from 'react-router-dom';
-import cn from 'classnames';
+import classNames from 'classnames';
+import { useQueryParams } from '../pages/PeoplePage';
+import { getSearchWith } from '../utils/searchHelper';
 
-export const PeopleFilters: React.FC = () => {
-  const [searchParams, setSearchParams] = useSearchParams();
+export const PeopleFilters = () => {
+  const { searchParams, setSearchParams } = useQueryParams();
 
-  const sexFilter = searchParams.get('sex') || FilterType.ALL;
-  const nameFilter = searchParams.get('name') || '';
-  const centuryFilter =
-    searchParams.get('centuries')?.split(',').map(Number) || [];
-
-  const handleNameFilter = (name: string) => {
-    const newParams = new URLSearchParams(searchParams);
-
-    if (!name) {
-      newParams.delete('name');
-    } else {
-      newParams.set('name', name);
-    }
-
-    setSearchParams(newParams);
+  const handleNameFilterChange = (ev: React.ChangeEvent<HTMLInputElement>) => {
+    const newSearch = getSearchWith(searchParams, {
+      query: ev.target.value || null,
+    });
+    setSearchParams(new URLSearchParams(newSearch));
   };
 
-  const handleSexFilter = (sex: FilterType) => {
-    const newParams = new URLSearchParams(searchParams);
-
-    if (sex === FilterType.ALL) {
-      newParams.delete('sex');
-    } else {
-      newParams.set('sex', sex);
-    }
-
-    setSearchParams(newParams);
+  const handleSexFilter = (sex: string | null) => {
+    const newSearch = getSearchWith(searchParams, { sex });
+    setSearchParams(new URLSearchParams(newSearch));
   };
 
-  const handleCenturyFilter = (century: number) => {
-    const newParams = new URLSearchParams(searchParams);
-    const currentCenturies =
-      newParams.get('centuries')?.split(',').map(Number) || [];
-
-    let updatedCenturies: number[];
-
-    if (currentCenturies.includes(century)) {
-      updatedCenturies = currentCenturies.filter(c => c !== century);
-    } else {
-      updatedCenturies = [...currentCenturies, century];
-    }
-
-    if (updatedCenturies.length === 0) {
-      newParams.delete('centuries');
-    } else {
-      newParams.set('centuries', updatedCenturies.join(','));
-    }
-
-    setSearchParams(newParams);
+  const handleCenturyToggle = (century: number) => {
+    const currentCenturies = searchParams.getAll('centuries');
+    const updatedCenturies = currentCenturies.includes(String(century))
+      ? currentCenturies.filter(c => c !== String(century))
+      : [...currentCenturies, String(century)];
+    const newSearch = getSearchWith(searchParams, {
+      centuries: updatedCenturies.length ? updatedCenturies : null,
+    });
+    setSearchParams(new URLSearchParams(newSearch));
   };
 
-  const resetFilters = () => {
-    setSearchParams({});
+  const handleResetCenturies = () => {
+    const newSearch = getSearchWith(searchParams, { centuries: null });
+    setSearchParams(new URLSearchParams(newSearch));
   };
 
-  const centuries = [16, 17, 18, 19, 20];
+  const handleResetFilters = () => {
+    const newSearch = getSearchWith(searchParams, {
+      sex: null,
+      query: null,
+      centuries: null,
+    });
+    setSearchParams(new URLSearchParams(newSearch));
+  };
 
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
-
       <p className="panel-tabs" data-cy="SexFilter">
-        {Object.values(FilterType).map(value => (
-          <a
-            key={value}
-            href="#"
-            className={cn('', {
-              'is-active':
-                (value === FilterType.ALL && !searchParams.get('sex')) ||
-                value.toLowerCase() === sexFilter.toLowerCase(),
-            })}
-            onClick={e => {
-              e.preventDefault();
-              handleSexFilter(value);
-            }}
-          >
-            {value.charAt(0).toUpperCase() + value.slice(1)}
-          </a>
-        ))}
+        <a
+          className={!searchParams.get('sex') ? 'is-active' : ''}
+          onClick={() => handleSexFilter(null)}
+        >
+          All
+        </a>
+        <a
+          className={searchParams.get('sex') === 'm' ? 'is-active' : ''}
+          onClick={() => handleSexFilter('m')}
+        >
+          Male
+        </a>
+        <a
+          className={searchParams.get('sex') === 'f' ? 'is-active' : ''}
+          onClick={() => handleSexFilter('f')}
+        >
+          Female
+        </a>
       </p>
-
       <div className="panel-block">
         <p className="control has-icons-left">
           <input
+            value={searchParams.get('query') || ''}
             data-cy="NameFilter"
             type="search"
             className="input"
             placeholder="Search"
-            value={nameFilter}
-            onChange={e => handleNameFilter(e.target.value)}
+            onChange={handleNameFilterChange}
           />
-
           <span className="icon is-left">
             <i className="fas fa-search" aria-hidden="true" />
           </span>
         </p>
       </div>
-
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            {centuries.map(century => (
+            {[16, 17, 18, 19, 20].map(century => (
               <button
-                key={century}
                 data-cy="century"
-                className={cn('button mr-1', {
-                  'is-info': centuryFilter.includes(century),
+                key={century}
+                onClick={() => handleCenturyToggle(century)}
+                className={classNames('button', 'mr-1', {
+                  'is-info': searchParams
+                    .getAll('centuries')
+                    .includes(String(century)),
                 })}
-                onClick={() => handleCenturyFilter(century)}
               >
                 {century}
               </button>
             ))}
           </div>
-
           <div className="level-right ml-4">
             <button
               data-cy="centuryALL"
-              className={cn('button is-success', {
-                'is-outlined': centuryFilter.length > 0,
-              })}
-              onClick={resetFilters}
+              className={classNames(
+                'button',
+                {
+                  'is-outlined': searchParams.getAll('centuries').length !== 0,
+                },
+                'is-success',
+              )}
+              onClick={handleResetCenturies}
             >
               All
             </button>
           </div>
         </div>
       </div>
-
       <div className="panel-block">
-        <button
+        <a
           className="button is-link is-outlined is-fullwidth"
-          onClick={resetFilters}
+          onClick={handleResetFilters}
         >
           Reset all filters
-        </button>
+        </a>
       </div>
     </nav>
   );
