@@ -19,7 +19,9 @@ createRoot(document.getElementById('root') as HTMLDivElement).render(
     <Routes>
       <Route path="/" element={<App />}>
         <Route index element={<HomePage />} />
-        <Route path="people" element={<PeoplePage />} />
+        <Route path="people" element={<PeoplePage />}>
+          <Route path=":user" element={<PeoplePage />} />
+        </Route>
         <Route path="*" element={<Title text="Page not found" />} />
         <Route path="home" element={<Navigate to={'/'} replace />} />
       </Route>

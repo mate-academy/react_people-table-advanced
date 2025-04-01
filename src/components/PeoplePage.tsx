@@ -1,6 +1,6 @@
 import { PeopleFilters } from './PeopleFilters';
 import { Loader } from './Loader';
-import { PeopleTable } from './PeopleTable';
+import { PeopleTable } from './PeopleTable/PeopleTable';
 import { useState } from 'react';
 
 type ErrorType = 'empty' | 'unloaded' | 'wrongsearch' | null;
