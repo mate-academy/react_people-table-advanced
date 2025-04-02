@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { usePeopleFilterParams } from '../hooks/usePeopleFilterParams';
+import { centuries } from './centuries';
 
 export const PeopleFilters = () => {
   const { setSexFilter, toggleCenturiesFilter, currentCenturiesFilter } =
@@ -60,65 +61,22 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            <Link
-              data-cy="century"
-              className={`button mr-1 ${currentCenturiesFilter.includes('16') ? 'is-info' : ''}`}
-              to="#"
-              onClick={e => {
-                e.preventDefault();
-                toggleCenturiesFilter('16');
-              }}
-            >
-              16
-            </Link>
-
-            <Link
-              data-cy="century"
-              className={`button mr-1 ${currentCenturiesFilter.includes('17') ? 'is-info' : ''}`}
-              to="#"
-              onClick={e => {
-                e.preventDefault();
-                toggleCenturiesFilter('17');
-              }}
-            >
-              17
-            </Link>
-
-            <Link
-              data-cy="century"
-              className={`button mr-1 ${currentCenturiesFilter.includes('18') ? 'is-info' : ''}`}
-              to="#"
-              onClick={e => {
-                e.preventDefault();
-                toggleCenturiesFilter('18');
-              }}
-            >
-              18
-            </Link>
-
-            <Link
-              data-cy="century"
-              className={`button mr-1 ${currentCenturiesFilter.includes('19') ? 'is-info' : ''}`}
-              to="#"
-              onClick={e => {
-                e.preventDefault();
-                toggleCenturiesFilter('19');
-              }}
-            >
-              19
-            </Link>
-
-            <Link
-              data-cy="century"
-              className={`button mr-1 ${currentCenturiesFilter.includes('20') ? 'is-info' : ''}`}
-              to="#"
-              onClick={e => {
-                e.preventDefault();
-                toggleCenturiesFilter('20');
-              }}
-            >
-              20
-            </Link>
+            {centuries.map(century => {
+              return (
+                <Link
+                  key={`${century}-century`}
+                  data-cy="century"
+                  className={`button mr-1 ${currentCenturiesFilter.includes(century) ? 'is-info' : ''}`}
+                  to="#"
+                  onClick={e => {
+                    e.preventDefault();
+                    toggleCenturiesFilter(century);
+                  }}
+                >
+                  {century}
+                </Link>
+              );
+            })}
           </div>
 
           <div className="level-right ml-4">
