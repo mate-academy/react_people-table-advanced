@@ -3,7 +3,7 @@ import { sortableColumns } from './sortConfig';
 import { usePeopleSortParams } from '../hooks/usePeopleSortParams';
 
 export const PeopleTableHead = () => {
-  const { setURLSortParams, getSortIconClass } = usePeopleSortParams();
+  const { toggleSort, getSortIconClass } = usePeopleSortParams();
 
   return (
     <thead>
@@ -16,7 +16,7 @@ export const PeopleTableHead = () => {
                 to="#"
                 onClick={e => {
                   e.preventDefault();
-                  setURLSortParams(`${key}`);
+                  toggleSort(key);
                 }}
               >
                 <span className="icon">

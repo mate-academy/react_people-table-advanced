@@ -1,4 +1,5 @@
 import { useSearchParams } from 'react-router-dom';
+import { getSearchWith, SearchParams } from '../../../utils/searchHelper';
 
 export const usePeopleSortParams = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -6,21 +7,22 @@ export const usePeopleSortParams = () => {
   const currentSort = searchParams.get('sort');
   const currentOrder = searchParams.get('order');
 
-  const setURLSortParams = (sortBy: string) => {
-    const newParams = new URLSearchParams(searchParams);
+  const setNewSortParams = (paramsToUpdate: SearchParams) => {
+    const newParams = getSearchWith(searchParams, paramsToUpdate);
 
+    setSearchParams(newParams);
+  };
+
+  const toggleSort = (sortBy: string) => {
     const isCurrentSort = currentSort === sortBy;
 
     if (!isCurrentSort) {
-      newParams.set('sort', sortBy);
+      setNewSortParams({ sort: sortBy });
     } else if (isCurrentSort && !currentOrder) {
-      newParams.append('order', 'desc');
+      setNewSortParams({ order: 'desc' });
     } else {
-      newParams.delete('sort');
-      newParams.delete('order');
+      setNewSortParams({ sort: null, order: null });
     }
-
-    setSearchParams(newParams);
   };
 
   const getSortIconClass = (columnTitle: string): string => {
@@ -38,5 +40,11 @@ export const usePeopleSortParams = () => {
     return 'fas fa-sort-up';
   };
 
-  return { setURLSortParams, getSortIconClass, currentSort, currentOrder };
+  return {
+    toggleSort,
+    getSortIconClass,
+    currentSort,
+    currentOrder,
+    setNewSortParams,
+  };
 };

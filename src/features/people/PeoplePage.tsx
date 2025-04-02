@@ -1,4 +1,4 @@
-import { PeopleFilters } from '../../components/PeopleFilters';
+import { PeopleFilters } from './components/PeopleFilters';
 import { Loader } from '../../components/Loader';
 import { PeopleTable } from './components/PeopleTable';
 

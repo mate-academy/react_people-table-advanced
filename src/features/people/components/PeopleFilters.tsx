@@ -1,18 +1,44 @@
+import { Link } from 'react-router-dom';
+import { usePeopleFilterParams } from '../hooks/usePeopleFilterParams';
+
 export const PeopleFilters = () => {
+  const { setURLSexFilterParams } = usePeopleFilterParams();
+
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        <a className="is-active" href="#/people">
+        <Link
+          className="is-active"
+          to="#"
+          onClick={e => {
+            e.preventDefault();
+            setURLSexFilterParams('');
+          }}
+        >
           All
-        </a>
-        <a className="" href="#/people?sex=m">
+        </Link>
+        <Link
+          className=""
+          to="#"
+          onClick={e => {
+            e.preventDefault();
+            setURLSexFilterParams('m');
+          }}
+        >
           Male
-        </a>
-        <a className="" href="#/people?sex=f">
+        </Link>
+        <Link
+          className=""
+          to="#"
+          onClick={e => {
+            e.preventDefault();
+            setURLSexFilterParams('f');
+          }}
+        >
           Female
-        </a>
+        </Link>
       </p>
 
       <div className="panel-block">
