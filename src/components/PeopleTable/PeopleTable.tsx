@@ -1,36 +1,43 @@
 /* eslint-disable jsx-a11y/control-has-associated-label */
-
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { getPeople } from '../../api';
-import { PeopleStateType } from '../PeoplePage';
 import classNames from 'classnames';
 import { useParams, useSearchParams } from 'react-router-dom';
 import {
   columnsList,
   getPeopleListFromDB,
-  getPeopleListToShow,
+  getSortedList,
   getSortingClassName,
 } from './service';
 import { ParentLink } from './ParentLink';
 import { getSearchWith } from '../../utils/searchHelper';
-import { Person } from '../../types';
+import { Context } from '../../utils/context/MainContext';
+import { PeoplePageStateType } from '../PeoplePage';
 
 type Props = {
-  setPeopleState: React.Dispatch<React.SetStateAction<PeopleStateType>>;
-  peopleState: PeopleStateType;
+  setPeoplePageState: React.Dispatch<React.SetStateAction<PeoplePageStateType>>;
+  peoplePageState: PeoplePageStateType;
 };
 
 export const PeopleTable: React.FC<Props> = ({
-  setPeopleState,
-  peopleState,
+  setPeoplePageState,
+  peoplePageState,
 }) => {
-  const [peopleList, setPeopleList] = useState<Person[] | []>([]);
   const { user } = useParams();
   const [searchParams, setSearchParams] = useSearchParams();
   const params = new URLSearchParams(searchParams);
+  const contextData = useContext(Context);
+
+  const { context, setContextData } = contextData;
 
   useEffect(() => {
-    getPeopleListFromDB(getPeople, setPeopleList, peopleState, setPeopleState);
+    getPeopleListFromDB(
+      getPeople,
+      context,
+      setContextData,
+      peoplePageState,
+      setPeoplePageState,
+    );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -45,7 +52,13 @@ export const PeopleTable: React.FC<Props> = ({
           : { sort: newSortValue, order: 'desc' }
         : { sort: newSortValue, order: null };
 
-    setSearchParams(getSearchWith(params, updatedParams));
+    const newParams = new URLSearchParams(getSearchWith(params, updatedParams));
+
+    setSearchParams(newParams);
+    setContextData({
+      ...context,
+      listToShow: getSortedList(context.fullList, newParams),
+    });
   };
 
   return (
@@ -84,7 +97,7 @@ export const PeopleTable: React.FC<Props> = ({
       </thead>
 
       <tbody>
-        {getPeopleListToShow(peopleList, params).map(person => {
+        {context.listToShow.map(person => {
           const { name, sex, born, died, slug } = person;
 
           return (
@@ -107,18 +120,10 @@ export const PeopleTable: React.FC<Props> = ({
               <td>{born}</td>
               <td>{died}</td>
               <td>
-                <ParentLink
-                  person={person}
-                  parentSex="f"
-                  peopleList={peopleList}
-                />
+                <ParentLink person={person} parentSex="f" />
               </td>
               <td>
-                <ParentLink
-                  person={person}
-                  parentSex="m"
-                  peopleList={peopleList}
-                />
+                <ParentLink person={person} parentSex="m" />
               </td>
             </tr>
           );

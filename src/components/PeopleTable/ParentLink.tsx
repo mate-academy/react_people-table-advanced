@@ -1,11 +1,11 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Person } from '../../types';
 import { getPersonByName } from './service';
 import classNames from 'classnames';
+import { Context } from '../../utils/context/MainContext';
 
 type Props = {
   person: Person;
-  peopleList: Person[];
   parentSex: ParentSex;
 };
 
@@ -44,8 +44,11 @@ const getFinalElement = (
   );
 };
 
-export const ParentLink: React.FC<Props> = ({
-  person,
-  peopleList,
-  parentSex,
-}) => getFinalElement(parentSex, person, peopleList);
+export const ParentLink: React.FC<Props> = ({ person, parentSex }) => {
+  const mainContext = useContext(Context);
+  const {
+    context: { fullList: peopleList },
+  } = mainContext;
+
+  return getFinalElement(parentSex, person, peopleList);
+};

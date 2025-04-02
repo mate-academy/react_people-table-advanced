@@ -5,18 +5,18 @@ import { useState } from 'react';
 
 type ErrorType = 'empty' | 'unloaded' | 'wrongsearch' | null;
 
-export interface PeopleStateType {
+export interface PeoplePageStateType {
   error: ErrorType;
   isLoading: boolean;
 }
 
 export const PeoplePage = () => {
-  const [peopleState, setPeopleState] = useState<PeopleStateType>({
+  const [peoplePageState, setPeoplePageState] = useState<PeoplePageStateType>({
     error: null,
     isLoading: true,
   });
 
-  const { error, isLoading } = peopleState;
+  const { error, isLoading } = peoplePageState;
 
   return (
     <>
@@ -47,8 +47,8 @@ export const PeoplePage = () => {
               )}
 
               <PeopleTable
-                setPeopleState={setPeopleState}
-                peopleState={peopleState}
+                setPeoplePageState={setPeoplePageState}
+                peoplePageState={peoplePageState}
               />
             </div>
           </div>
