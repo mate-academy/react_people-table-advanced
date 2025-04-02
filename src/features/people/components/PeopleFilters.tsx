@@ -1,46 +1,35 @@
 import { Link } from 'react-router-dom';
 import { usePeopleFilterParams } from '../hooks/usePeopleFilterParams';
-import { centuries } from './centuries';
+import { centuries, sex } from './filterConfig';
 
 export const PeopleFilters = () => {
-  const { setSexFilter, toggleCenturiesFilter, currentCenturiesFilter } =
-    usePeopleFilterParams();
+  const {
+    setSexFilter,
+    toggleCenturiesFilter,
+    currentSexFilter,
+    currentCenturiesFilter,
+  } = usePeopleFilterParams();
 
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        <Link
-          className="is-active"
-          to="#"
-          onClick={e => {
-            e.preventDefault();
-            setSexFilter({ sex: null });
-          }}
-        >
-          All
-        </Link>
-        <Link
-          className=""
-          to="#"
-          onClick={e => {
-            e.preventDefault();
-            setSexFilter({ sex: 'm' });
-          }}
-        >
-          Male
-        </Link>
-        <Link
-          className=""
-          to="#"
-          onClick={e => {
-            e.preventDefault();
-            setSexFilter({ sex: 'f' });
-          }}
-        >
-          Female
-        </Link>
+        {sex.map(({ label, value }) => {
+          return (
+            <Link
+              key={`${label}+${value}`}
+              className={`${currentSexFilter === value ? 'is-active' : ''}`}
+              to="#"
+              onClick={e => {
+                e.preventDefault();
+                setSexFilter({ sex: value });
+              }}
+            >
+              {label}
+            </Link>
+          );
+        })}
       </p>
 
       <div className="panel-block">
