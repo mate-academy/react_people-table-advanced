@@ -4,10 +4,16 @@ import React, { useEffect, useState } from 'react';
 import { getPeople } from '../../api';
 import { PeopleStateType } from '../PeoplePage';
 import classNames from 'classnames';
-import { useParams } from 'react-router-dom';
-import { getPeopleListFromDB } from './service';
-import { TableStateType } from './types';
+import { useParams, useSearchParams } from 'react-router-dom';
+import {
+  columnsList,
+  getPeopleListFromDB,
+  getPeopleListToShow,
+  getSortingClassName,
+} from './service';
 import { ParentLink } from './ParentLink';
+import { getSearchWith } from '../../utils/searchHelper';
+import { Person } from '../../types';
 
 type Props = {
   setPeopleState: React.Dispatch<React.SetStateAction<PeopleStateType>>;
@@ -18,24 +24,29 @@ export const PeopleTable: React.FC<Props> = ({
   setPeopleState,
   peopleState,
 }) => {
+  const [peopleList, setPeopleList] = useState<Person[] | []>([]);
   const { user } = useParams();
-  const [tableState, setTableState] = useState<TableStateType>({
-    initialList: [],
-    listToShow: [],
-  });
-
-  const { initialList, listToShow } = tableState;
+  const [searchParams, setSearchParams] = useSearchParams();
+  const params = new URLSearchParams(searchParams);
 
   useEffect(() => {
-    getPeopleListFromDB(
-      getPeople,
-      peopleState,
-      setPeopleState,
-      tableState,
-      setTableState,
-    );
+    getPeopleListFromDB(getPeople, setPeopleList, peopleState, setPeopleState);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const handleSortClick = (e: React.MouseEvent) => {
+    const element = e.target as HTMLElement;
+    const newSortValue = element.closest('a')?.dataset.sorting || '';
+
+    const updatedParams =
+      newSortValue === params.get('sort')
+        ? params.get('order')
+          ? { sort: null, order: null }
+          : { sort: newSortValue, order: 'desc' }
+        : { sort: newSortValue, order: null };
+
+    setSearchParams(getSearchWith(params, updatedParams));
+  };
 
   return (
     <table
@@ -44,57 +55,36 @@ export const PeopleTable: React.FC<Props> = ({
     >
       <thead>
         <tr>
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Name
-              <a href="#/people?sort=name">
-                <span className="icon">
-                  <i className="fas fa-sort" />
-                </span>
-              </a>
-            </span>
-          </th>
+          {columnsList.map(column => {
+            const capitalizedColumnName =
+              column[0].toUpperCase() + column.slice(1);
+            const isParents = column === 'mother' || column === 'father';
 
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Sex
-              <a href="#/people?sort=sex">
-                <span className="icon">
-                  <i className="fas fa-sort" />
+            return !isParents ? (
+              <th key={column}>
+                <span className="is-flex is-flex-wrap-nowrap">
+                  {capitalizedColumnName}
+                  <a onClick={handleSortClick} data-sorting={column}>
+                    <span className="icon">
+                      <i
+                        className={classNames(
+                          'fas',
+                          getSortingClassName(params, column),
+                        )}
+                      />
+                    </span>
+                  </a>
                 </span>
-              </a>
-            </span>
-          </th>
-
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Born
-              <a href="#/people?sort=born&amp;order=desc">
-                <span className="icon">
-                  <i className="fas fa-sort-up" />
-                </span>
-              </a>
-            </span>
-          </th>
-
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Died
-              <a href="#/people?sort=died">
-                <span className="icon">
-                  <i className="fas fa-sort" />
-                </span>
-              </a>
-            </span>
-          </th>
-
-          <th>Mother</th>
-          <th>Father</th>
+              </th>
+            ) : (
+              <th key={column}>{capitalizedColumnName}</th>
+            );
+          })}
         </tr>
       </thead>
 
       <tbody>
-        {listToShow.map(person => {
+        {getPeopleListToShow(peopleList, params).map(person => {
           const { name, sex, born, died, slug } = person;
 
           return (
@@ -120,14 +110,14 @@ export const PeopleTable: React.FC<Props> = ({
                 <ParentLink
                   person={person}
                   parentSex="f"
-                  peopleList={initialList}
+                  peopleList={peopleList}
                 />
               </td>
               <td>
                 <ParentLink
                   person={person}
                   parentSex="m"
-                  peopleList={initialList}
+                  peopleList={peopleList}
                 />
               </td>
             </tr>

@@ -1,6 +1,13 @@
-import { Person } from '../../types';
-
-export interface TableStateType {
-  initialList: Person[] | [];
-  listToShow: Person[] | [];
+export enum Columns {
+  name,
+  sex,
+  born,
+  died,
+  mother,
+  father,
 }
+
+export type SearchParams = {
+  key: string;
+  value: string;
+}[];
