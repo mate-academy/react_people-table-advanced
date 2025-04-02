@@ -51,38 +51,46 @@ export const getSortingClassName = (
   return 'fa-sort';
 };
 
+const getSortedList = (
+  list: Person[],
+  sortBy: keyof Person | null,
+  isDESC?: boolean,
+) => {
+  const listCopy = [...list];
+
+  if (!sortBy) {
+    return listCopy;
+  }
+
+  return sortBy === 'born' || sortBy === 'died'
+    ? listCopy.sort((a, b) => {
+        const aValue = a[sortBy] as number | undefined;
+        const bValue = b[sortBy] as number | undefined;
+
+        return isDESC
+          ? (bValue ?? 0) - (aValue ?? 0)
+          : (aValue ?? 0) - (bValue ?? 0);
+      })
+    : listCopy.sort((a, b) => {
+        const aValue = a[sortBy] as string | undefined;
+        const bValue = b[sortBy] as string | undefined;
+
+        return isDESC
+          ? (bValue ?? '').localeCompare(aValue ?? '')
+          : (aValue ?? '').localeCompare(bValue ?? '');
+      });
+};
+
 export const getPeopleListToShow = (
   fullList: Person[],
-  // params: URLSearchParams,
+  params: URLSearchParams,
 ): Person[] => {
-  // const sorting = params.get('sort');
-  // const sortOrder = params.get('order');
+  const sortByParam = params.get('sort');
+  const sortBy: keyof Person | null =
+    sortByParam && sortByParam in fullList[0]
+      ? (sortByParam as keyof Person)
+      : null;
+  const isDesc: boolean = params.has('order');
 
-  // const sort = (
-  //   list: Person[],
-  //   data: keyof Person | null,
-  //   direction: 'esc' | 'desc',
-  // ) => {
-  //   const listCopy = [...list];
-
-  //   return typeof list[0]?.[data] === 'number'
-  //     ? listCopy.sort((a, b) => {
-  //         const aValue = a[data] as number | undefined;
-  //         const bValue = b[data] as number | undefined;
-
-  //         return direction === 'esc'
-  //           ? (aValue ?? 0) - (bValue ?? 0)
-  //           : (bValue ?? 0) - (aValue ?? 0);
-  //       })
-  //     : listCopy.sort((a, b) => {
-  //         const aValue = a[data] as string | undefined;
-  //         const bValue = b[data] as string | undefined;
-
-  //         return direction === 'esc'
-  //           ? (aValue ?? '').localeCompare(bValue ?? '')
-  //           : (bValue ?? '').localeCompare(aValue ?? '');
-  //       });
-  // };
-
-  return fullList;
+  return getSortedList(fullList, sortBy, isDesc);
 };
