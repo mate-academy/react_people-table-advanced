@@ -6,15 +6,28 @@ import { usePeople } from '../../hooks/usePeople';
 import { usePeopleSortParams } from './hooks/usePeopleSortParams';
 import { sortPeople } from './utils/sortPeople';
 import { Person } from '../../types';
+import { usePeopleFilterParams } from './hooks/usePeopleFilterParams';
+import { filterPeople } from './utils/filterPeople';
+import { SearchParams } from '../../utils/searchHelper';
 
 export const PeoplePage = () => {
   const { people, isLoading, hasError } = usePeople();
   const { currentSort, currentOrder } = usePeopleSortParams();
+  const { currentSexFilter, currentCenturiesFilter } = usePeopleFilterParams();
 
   const sortKey = currentSort as keyof Person;
   const order = currentOrder === 'desc' ? 'desc' : null;
 
+  const filter: SearchParams = {
+    sex: currentSexFilter,
+    centuries:
+      currentCenturiesFilter.length > 0 ? currentCenturiesFilter : null,
+  };
+
   const sortedPeople = people ? sortPeople({ people, sortKey, order }) : [];
+  const filteredPeople = sortedPeople.length
+    ? filterPeople({ sortedPeople, filter })
+    : [];
 
   return (
     <>
@@ -45,8 +58,8 @@ export const PeoplePage = () => {
               )}
 
               {/* <p>There are no people matching the current search criteria</p> */}
-              {people && people?.length >= 1 && (
-                <PeopleTable people={sortedPeople} />
+              {filteredPeople && filteredPeople?.length >= 1 && (
+                <PeopleTable people={filteredPeople} />
               )}
             </div>
           </div>

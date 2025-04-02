@@ -2,7 +2,8 @@ import { Link } from 'react-router-dom';
 import { usePeopleFilterParams } from '../hooks/usePeopleFilterParams';
 
 export const PeopleFilters = () => {
-  const { setURLSexFilterParams } = usePeopleFilterParams();
+  const { setSexFilter, toggleCenturiesFilter, currentCenturiesFilter } =
+    usePeopleFilterParams();
 
   return (
     <nav className="panel">
@@ -14,7 +15,7 @@ export const PeopleFilters = () => {
           to="#"
           onClick={e => {
             e.preventDefault();
-            setURLSexFilterParams('');
+            setSexFilter({ sex: null });
           }}
         >
           All
@@ -24,7 +25,7 @@ export const PeopleFilters = () => {
           to="#"
           onClick={e => {
             e.preventDefault();
-            setURLSexFilterParams('m');
+            setSexFilter({ sex: 'm' });
           }}
         >
           Male
@@ -34,7 +35,7 @@ export const PeopleFilters = () => {
           to="#"
           onClick={e => {
             e.preventDefault();
-            setURLSexFilterParams('f');
+            setSexFilter({ sex: 'f' });
           }}
         >
           Female
@@ -59,45 +60,65 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            <a
+            <Link
               data-cy="century"
-              className="button mr-1"
-              href="#/people?centuries=16"
+              className={`button mr-1 ${currentCenturiesFilter.includes('16') ? 'is-info' : ''}`}
+              to="#"
+              onClick={e => {
+                e.preventDefault();
+                toggleCenturiesFilter('16');
+              }}
             >
               16
-            </a>
+            </Link>
 
-            <a
+            <Link
               data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=17"
+              className={`button mr-1 ${currentCenturiesFilter.includes('17') ? 'is-info' : ''}`}
+              to="#"
+              onClick={e => {
+                e.preventDefault();
+                toggleCenturiesFilter('17');
+              }}
             >
               17
-            </a>
+            </Link>
 
-            <a
+            <Link
               data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=18"
+              className={`button mr-1 ${currentCenturiesFilter.includes('18') ? 'is-info' : ''}`}
+              to="#"
+              onClick={e => {
+                e.preventDefault();
+                toggleCenturiesFilter('18');
+              }}
             >
               18
-            </a>
+            </Link>
 
-            <a
+            <Link
               data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=19"
+              className={`button mr-1 ${currentCenturiesFilter.includes('19') ? 'is-info' : ''}`}
+              to="#"
+              onClick={e => {
+                e.preventDefault();
+                toggleCenturiesFilter('19');
+              }}
             >
               19
-            </a>
+            </Link>
 
-            <a
+            <Link
               data-cy="century"
-              className="button mr-1"
-              href="#/people?centuries=20"
+              className={`button mr-1 ${currentCenturiesFilter.includes('20') ? 'is-info' : ''}`}
+              to="#"
+              onClick={e => {
+                e.preventDefault();
+                toggleCenturiesFilter('20');
+              }}
             >
               20
-            </a>
+            </Link>
           </div>
 
           <div className="level-right ml-4">
