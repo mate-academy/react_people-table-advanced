@@ -53,38 +53,36 @@ export const getSortingClassName = (
 
 export const getPeopleListToShow = (
   fullList: Person[],
-  params: URLSearchParams,
+  // params: URLSearchParams,
 ): Person[] => {
-  const sorting = params.get('sort');
-  const sortOrder = params.get('order');
+  // const sorting = params.get('sort');
+  // const sortOrder = params.get('order');
 
-  console.log(sorting, sortOrder);
+  // const sort = (
+  //   list: Person[],
+  //   data: keyof Person | null,
+  //   direction: 'esc' | 'desc',
+  // ) => {
+  //   const listCopy = [...list];
 
-  const sort = (
-    list: Person[],
-    data: keyof Person | null,
-    direction: 'esc' | 'desc',
-  ) => {
-    const listCopy = [...list];
+  //   return typeof list[0]?.[data] === 'number'
+  //     ? listCopy.sort((a, b) => {
+  //         const aValue = a[data] as number | undefined;
+  //         const bValue = b[data] as number | undefined;
 
-    return typeof list[0]?.[data] === 'number'
-      ? listCopy.sort((a, b) => {
-          const aValue = a[data] as number | undefined;
-          const bValue = b[data] as number | undefined;
+  //         return direction === 'esc'
+  //           ? (aValue ?? 0) - (bValue ?? 0)
+  //           : (bValue ?? 0) - (aValue ?? 0);
+  //       })
+  //     : listCopy.sort((a, b) => {
+  //         const aValue = a[data] as string | undefined;
+  //         const bValue = b[data] as string | undefined;
 
-          return direction === 'esc'
-            ? (aValue ?? 0) - (bValue ?? 0)
-            : (bValue ?? 0) - (aValue ?? 0);
-        })
-      : listCopy.sort((a, b) => {
-          const aValue = a[data] as string | undefined;
-          const bValue = b[data] as string | undefined;
+  //         return direction === 'esc'
+  //           ? (aValue ?? '').localeCompare(bValue ?? '')
+  //           : (bValue ?? '').localeCompare(aValue ?? '');
+  //       });
+  // };
 
-          return direction === 'esc'
-            ? (aValue ?? '').localeCompare(bValue ?? '')
-            : (bValue ?? '').localeCompare(aValue ?? '');
-        });
-  };
-
-  return sort(fullList, sorting, sortOrder);
+  return fullList;
 };

@@ -84,7 +84,7 @@ export const PeopleTable: React.FC<Props> = ({
       </thead>
 
       <tbody>
-        {getPeopleListToShow(peopleList, params).map(person => {
+        {getPeopleListToShow(peopleList).map(person => {
           const { name, sex, born, died, slug } = person;
 
           return (
