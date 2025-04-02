@@ -26,18 +26,13 @@ export const usePeopleSortParams = () => {
   };
 
   const getSortIconClass = (columnTitle: string): string => {
-    const params = Object.fromEntries(searchParams.entries());
-    const isSorted = params.sort === columnTitle;
+    const isSorted = currentSort === columnTitle;
 
     if (!isSorted) {
       return 'fas fa-sort';
     }
 
-    if (params.order === 'desc') {
-      return 'fas fa-sort-down';
-    }
-
-    return 'fas fa-sort-up';
+    return currentOrder === 'desc' ? 'fas fa-sort-down' : 'fas fa-sort-up';
   };
 
   return {
