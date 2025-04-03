@@ -1,5 +1,4 @@
-/* eslint-disable jsx-a11y/control-has-associated-label */
-
+import { useSearchParams } from 'react-router-dom';
 import { Person } from '../types';
 import { PersonLink } from './PersonLink';
 
@@ -7,7 +6,33 @@ interface PeopleTableProps {
   people: Person[] | undefined;
 }
 
+const getNextSortOrder = (currentOrder: string | null): string | null => {
+  switch (currentOrder) {
+    case 'asc':
+      return 'desc';
+    case 'desc':
+      return null;
+    default:
+      return 'asc';
+  }
+};
+
 export function PeopleTable({ people }: PeopleTableProps) {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const currentSort = searchParams.get('sort');
+  const currentOrder = searchParams.get('order');
+
+  const handleSort = (field: string) => {
+    const nextOrder =
+      currentSort === field ? getNextSortOrder(currentOrder) : 'asc';
+
+    if (nextOrder) {
+      setSearchParams({ sort: field, order: nextOrder });
+    } else {
+      setSearchParams({});
+    }
+  };
+
   return (
     <table
       data-cy="peopleTable"
@@ -15,59 +40,31 @@ export function PeopleTable({ people }: PeopleTableProps) {
     >
       <thead>
         <tr>
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Name
-              <a href="#/people?sort=name">
+          {['name', 'sex', 'born', 'died'].map(field => (
+            <th
+              key={field}
+              onClick={() => handleSort(field)}
+              style={{ cursor: 'pointer' }}
+            >
+              <span className="is-flex is-flex-wrap-nowrap">
+                {field.charAt(0).toUpperCase() + field.slice(1)}
                 <span className="icon">
-                  <i className="fas fa-sort" />
+                  <i
+                    className={`fas fa-sort${currentSort === field ? (currentOrder === 'asc' ? '-up' : '-down') : ''}`}
+                  />
                 </span>
-              </a>
-            </span>
-          </th>
-
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Sex
-              <a href="#/people?sort=sex">
-                <span className="icon">
-                  <i className="fas fa-sort" />
-                </span>
-              </a>
-            </span>
-          </th>
-
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Born
-              <a href="#/people?sort=born&amp;order=desc">
-                <span className="icon">
-                  <i className="fas fa-sort-up" />
-                </span>
-              </a>
-            </span>
-          </th>
-
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Died
-              <a href="#/people?sort=died">
-                <span className="icon">
-                  <i className="fas fa-sort" />
-                </span>
-              </a>
-            </span>
-          </th>
-
+              </span>
+            </th>
+          ))}
           <th>Mother</th>
           <th>Father</th>
         </tr>
       </thead>
 
       <tbody>
-        {people?.map(person => {
-          return <PersonLink key={person.slug} person={person} />;
-        })}
+        {people?.map(person => (
+          <PersonLink key={person.slug} person={person} />
+        ))}
       </tbody>
     </table>
   );
