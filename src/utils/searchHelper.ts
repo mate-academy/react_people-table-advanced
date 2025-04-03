@@ -55,7 +55,7 @@ export function filterPeople(
   const sort = options.get('sort');
   const order = options.get('order');
 
-  const filtredArr = people
+  const filteredArr = people
     .filter(
       el =>
         el.name.toLowerCase().includes(query) ||
@@ -74,23 +74,31 @@ export function filterPeople(
     .filter(el => !sex || el.sex === sex);
 
   if (!sort) {
-    return filtredArr;
+    return filteredArr;
   }
 
-  filtredArr.sort((a, b) => {
+  filteredArr.sort((a, b) => {
     const normalizedA = a[sort as keyof Person] || '';
     const normalizedB = b[sort as keyof Person] || '';
 
+    if (sort === 'born' || sort === 'died') {
+      if (isNaN(+normalizedA) || isNaN(+normalizedB)) {
+        return 0; // If values are invalid, keep the original order
+      }
+
+      return +normalizedA - +normalizedB;
+    }
+
     if (isNaN(+normalizedA)) {
       return `${normalizedA}`.localeCompare(`${normalizedB}`);
-    } else {
-      return +normalizedA - Number(normalizedB);
     }
+
+    return +normalizedA - +normalizedB;
   });
 
   if (order === 'desc') {
-    return filtredArr.reverse();
+    return filteredArr.reverse();
   }
 
-  return filtredArr;
+  return filteredArr;
 }
