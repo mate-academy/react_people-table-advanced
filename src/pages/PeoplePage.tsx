@@ -1,23 +1,22 @@
-import React from 'react';
-import { useState, useEffect } from 'react';
-import { Person } from '../types';
+import React, { useEffect, useState } from 'react';
 import { Loader } from '../components/Loader';
 import { getPeople } from '../api';
+import { Person } from '../types';
 import { PeopleTable } from '../components/PeopleTable';
 import { PeopleFilters } from '../components/PeopleFilters';
 import { useSearchParams } from 'react-router-dom';
 import { filterPeople } from '../utils/searchHelper';
 
 export const PeoplePage: React.FC = () => {
-  const [isLoad, setIsLoad] = useState(false);
+  const [isLoad, setIsLoad] = useState(true);
   const [isError, setIsError] = useState(false);
   const [people, setPeople] = useState<Person[]>([]);
   const [searchParams] = useSearchParams();
 
-  const filteredPeople = filterPeople(people, searchParams);
+  const filtredPeople = filterPeople(people, searchParams);
+  // console.log(searchParams.toString());
 
   useEffect(() => {
-    setIsLoad(true);
     getPeople()
       .then(response => {
         const newPeople = response.map(person => {
@@ -56,7 +55,7 @@ export const PeoplePage: React.FC = () => {
                   There are no people on the server
                 </p>
               )}
-              {!isLoad && !isError && <PeopleTable people={filteredPeople} />}
+              {!isLoad && !isError && <PeopleTable people={filtredPeople} />}
             </div>
           </div>
         </div>
@@ -64,3 +63,5 @@ export const PeoplePage: React.FC = () => {
     </>
   );
 };
+
+export default PeoplePage;

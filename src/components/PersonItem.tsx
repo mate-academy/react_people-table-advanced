@@ -8,7 +8,7 @@ type Props = {
   person: Person;
 };
 
-export const PersonItem: React.FC<Props> = ({ person }) => {
+const PersonItem: React.FC<Props> = ({ person }) => {
   const {
     name,
     sex,
@@ -67,3 +67,5 @@ export const PersonItem: React.FC<Props> = ({ person }) => {
     </tr>
   );
 };
+
+export default PersonItem;
