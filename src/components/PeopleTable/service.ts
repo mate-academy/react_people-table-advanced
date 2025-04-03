@@ -1,23 +1,22 @@
 /* eslint-disable @typescript-eslint/indent */
+import { SetURLSearchParams } from 'react-router-dom';
 import { Person } from '../../types';
-import { Lists } from '../../utils/context/types';
-import { PeoplePageStateType } from '../PeoplePage';
-import { Columns } from './types';
+import { ContextDataType } from '../../utils/context/types';
+import { getSearchWith } from '../../utils/searchHelper';
+import { Columns, FetchDBParams } from './types';
+import { getPeople } from '../../api';
 
 export const columnsList: Array<keyof typeof Columns> = Object.values(
   Columns,
 ).filter(x => typeof x === 'string') as Array<keyof typeof Columns>;
 
-export const getPersonByName = (name: string, list: Person[]) =>
-  list.find(per => name === per.name);
+export const updatePeopleListFromDB = (params: FetchDBParams) => {
+  const {
+    contextData: { setContextData, context },
+    setPeoplePageState,
+    peoplePageState,
+  } = params;
 
-export const getPeopleListFromDB = (
-  getPeople: () => Promise<Person[]>,
-  context: Lists,
-  setContextData: React.Dispatch<React.SetStateAction<Lists>>,
-  peoplePageState: PeoplePageStateType,
-  setPeoplePageState: React.Dispatch<React.SetStateAction<PeoplePageStateType>>,
-) => {
   getPeople()
     .then(list => {
       setContextData({
@@ -41,6 +40,9 @@ export const getPeopleListFromDB = (
     });
 };
 
+export const getPersonByName = (name: string, list: Person[]) =>
+  list.find(per => name === per.name);
+
 export const getSortingClassName = (
   searchParams: URLSearchParams,
   link: keyof typeof Columns,
@@ -57,7 +59,7 @@ export const getSortingClassName = (
   return 'fa-sort';
 };
 
-export const getSortedList = (list: Person[], params: URLSearchParams) => {
+const getListToShow = (list: Person[], params: URLSearchParams) => {
   const listCopy = [...list];
   const sortBy = params.get('sort');
   const isDESC = params.has('order');
@@ -83,4 +85,36 @@ export const getSortedList = (list: Person[], params: URLSearchParams) => {
           ? (bValue ?? '').localeCompare(aValue ?? '')
           : (aValue ?? '').localeCompare(bValue ?? '');
       });
+};
+
+export const updateListToShow = (
+  contextDat: ContextDataType,
+  searchParams: URLSearchParams,
+): void => {
+  const { context, setContextData } = contextDat;
+
+  setContextData({
+    ...context,
+    listToShow: getListToShow(context.fullList, searchParams),
+  });
+};
+
+export const updateSortParams = (
+  event: React.MouseEvent,
+  params: URLSearchParams,
+  setSearchParams: SetURLSearchParams,
+): void => {
+  const element = event.target as HTMLElement;
+  const newSortValue = element.closest('a')?.dataset.sorting || '';
+
+  const updatedParams =
+    newSortValue === params.get('sort')
+      ? params.get('order')
+        ? { sort: null, order: null }
+        : { sort: newSortValue, order: 'desc' }
+      : { sort: newSortValue, order: null };
+
+  const newParams = new URLSearchParams(getSearchWith(params, updatedParams));
+
+  setSearchParams(newParams);
 };

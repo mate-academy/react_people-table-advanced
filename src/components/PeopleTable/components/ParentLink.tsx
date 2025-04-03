@@ -1,8 +1,8 @@
 import React, { useContext } from 'react';
-import { Person } from '../../types';
-import { getPersonByName } from './service';
+import { Person } from '../../../types';
+import { getPersonByName } from '../service';
 import classNames from 'classnames';
-import { Context } from '../../utils/context/MainContext';
+import { Context } from '../../../utils/context/MainContext';
 
 type Props = {
   person: Person;
