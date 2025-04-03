@@ -1,3 +1,5 @@
+import { Person } from '../types';
+
 export type SearchParams = {
   [key: string]: string | string[] | null;
 };
@@ -41,4 +43,62 @@ export function getSearchWith(
 
   // we return a string to use it inside links
   return newParams.toString();
+}
+
+export function filterPeople(
+  people: Person[],
+  options: URLSearchParams,
+): Person[] {
+  const query = (options.get('query') || '').toLowerCase();
+  const centuries = options.getAll('centuries');
+  const sex = options.get('sex');
+  const sort = options.get('sort');
+  const order = options.get('order');
+
+  const filteredArr = people
+    .filter(
+      el =>
+        el.name.toLowerCase().includes(query) ||
+        el.fatherName?.toLowerCase().includes(query) ||
+        el.motherName?.toLowerCase().includes(query),
+    )
+    .filter(el => {
+      let century = Math.floor(el.died / 100) + 1;
+
+      if (el.died % 100 === 0) {
+        century = Math.floor(el.died / 100);
+      }
+
+      return centuries.length === 0 || centuries.includes(`${century}`);
+    })
+    .filter(el => !sex || el.sex === sex);
+
+  if (!sort) {
+    return filteredArr;
+  }
+
+  filteredArr.sort((a, b) => {
+    const normalizedA = a[sort as keyof Person] || '';
+    const normalizedB = b[sort as keyof Person] || '';
+
+    if (sort === 'born' || sort === 'died') {
+      if (isNaN(+normalizedA) || isNaN(+normalizedB)) {
+        return 0; // If values are invalid, keep the original order
+      }
+
+      return +normalizedA - +normalizedB;
+    }
+
+    if (isNaN(+normalizedA)) {
+      return `${normalizedA}`.localeCompare(`${normalizedB}`);
+    }
+
+    return +normalizedA - +normalizedB;
+  });
+
+  if (order === 'desc') {
+    return filteredArr.reverse();
+  }
+
+  return filteredArr;
 }
