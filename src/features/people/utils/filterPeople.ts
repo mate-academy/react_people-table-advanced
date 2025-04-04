@@ -14,6 +14,9 @@ const getCenturiesRange = (centuries: string[]) => {
   return [startCenturies, endCenturies];
 };
 
+const matchesQuery = (fields: (string | undefined | null)[], query: string) =>
+  fields.some(f => f?.toLowerCase().includes(query.toLowerCase()));
+
 export const filterPeople = ({ sortedPeople, filter }: Props) => {
   if (!filter) {
     return sortedPeople;
@@ -36,6 +39,16 @@ export const filterPeople = ({ sortedPeople, filter }: Props) => {
       if (person.born < startCenturies || person.born > endCenturies) {
         return false;
       }
+    }
+
+    if (
+      typeof filter.query === 'string' &&
+      !matchesQuery(
+        [person.name, person.motherName, person.fatherName],
+        filter.query,
+      )
+    ) {
+      return false;
     }
 
     return true;

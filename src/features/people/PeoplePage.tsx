@@ -13,7 +13,8 @@ import { SearchParams } from '../../utils/searchHelper';
 export const PeoplePage = () => {
   const { people, isLoading, hasError } = usePeople();
   const { currentSort, currentOrder } = usePeopleSortParams();
-  const { currentSexFilter, currentCenturiesFilter } = usePeopleFilterParams();
+  const { currentSexFilter, currentCenturiesFilter, currentQueryFilter } =
+    usePeopleFilterParams();
 
   const sortKey = currentSort as keyof Person;
   const order = currentOrder === 'desc' ? 'desc' : null;
@@ -22,6 +23,7 @@ export const PeoplePage = () => {
     sex: currentSexFilter,
     centuries:
       currentCenturiesFilter.length > 0 ? currentCenturiesFilter : null,
+    query: currentQueryFilter,
   };
 
   const sortedPeople = people ? sortPeople({ people, sortKey, order }) : [];
