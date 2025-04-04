@@ -15,6 +15,8 @@ export const PeoplePage: React.FC = () => {
   const query = searchParams.get('query') || '';
   const sex = searchParams.get('sex') || 'all';
   const centuries = searchParams.getAll('century');
+  const sort = searchParams.getAll('sort');
+  const order = searchParams.getAll('order');
 
   useEffect(() => {
     setLoading(true);
@@ -76,6 +78,8 @@ export const PeoplePage: React.FC = () => {
                     people={filteredPeople}
                     searchParams={searchParams}
                     setSearchParams={setSearchParams}
+                    sort={sort}
+                    order={order}
                   />
                 )}
 

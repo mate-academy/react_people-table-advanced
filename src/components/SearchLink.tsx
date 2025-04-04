@@ -34,3 +34,5 @@ export const SearchLink: React.FC<Props> = ({
     </Link>
   );
 };
+
+export default SearchLink;

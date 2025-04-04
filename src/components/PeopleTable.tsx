@@ -2,16 +2,22 @@ import { Link, useParams } from 'react-router-dom';
 import classNames from 'classnames';
 import { Person } from '../types';
 import { useState } from 'react';
-import getSearchWith from '../utils/searchHelper';
+import { getSearchWith } from '../utils/searchHelper';
+import { SearchLink } from './SearchLink';
+import { SortParam } from '../types/SortParam';
 
 type Props = {
   people: Person[];
+  sort: SortParam;
+  order: string;
   searchParams: URLSearchParams;
   setSearchParams: React.Dispatch<React.SetStateAction<URLSearchParams>>;
 };
 
 export const PeopleTable: React.FC<Props> = ({
   people,
+  sort,
+  order,
   searchParams,
   setSearchParams,
 }) => {
@@ -48,12 +54,9 @@ export const PeopleTable: React.FC<Props> = ({
     died: 0,
   });
 
-  const [sortKey, setSortKey] = useState<'name' | 'sex' | 'born' | 'died' | ''>(
-    '',
-  );
+  const [sortKey, setSortKey] = useState<SortParam>('');
 
-  // Handle click to update sorting state and trigger search param update
-  const handleClick = (key: 'name' | 'sex' | 'born' | 'died') => {
+  const handleClick = (key: SortParam) => {
     setSortKey(key);
     setClickCount(prev => ({
       ...prev,
@@ -61,7 +64,7 @@ export const PeopleTable: React.FC<Props> = ({
     }));
   };
 
-  const getSortIcon = (key: 'name' | 'sex' | 'born' | 'died') => {
+  const getSortIcon = (key: SortParam) => {
     const count = clickCount[key];
 
     if (count === 0) {
@@ -79,7 +82,7 @@ export const PeopleTable: React.FC<Props> = ({
     const sortedPeople = [...people];
 
     switch (sortKey) {
-      case 'name':
+      case SortParam.Name:
         sortedPeople.sort((a, b) =>
           clickCount.name === 1
             ? a.name.localeCompare(b.name)
@@ -89,7 +92,7 @@ export const PeopleTable: React.FC<Props> = ({
         );
         break;
 
-      case 'sex':
+      case SortParam.Sex:
         sortedPeople.sort((a, b) =>
           clickCount.sex === 1
             ? a.sex.localeCompare(b.sex)
@@ -99,7 +102,7 @@ export const PeopleTable: React.FC<Props> = ({
         );
         break;
 
-      case 'born':
+      case SortParam.Born:
         sortedPeople.sort((a, b) =>
           clickCount.born === 1
             ? a.born - b.born
@@ -109,7 +112,7 @@ export const PeopleTable: React.FC<Props> = ({
         );
         break;
 
-      case 'died':
+      case SortParam.Died:
         sortedPeople.sort((a, b) =>
           clickCount.died === 1
             ? a.died - b.died
@@ -129,7 +132,7 @@ export const PeopleTable: React.FC<Props> = ({
     setSearchParams(new URLSearchParams(searchString));
   };
 
-  const handleSortChange = (key: 'name' | 'sex' | 'born' | 'died') => {
+  const handleSortChange = (key: SortParam) => {
     handleClick(key);
 
     let order: 'asc' | 'desc' | null = null;
@@ -153,70 +156,73 @@ export const PeopleTable: React.FC<Props> = ({
       <thead>
         <tr>
           <th>
-            <span className="is-flex is-flex-wrap-nowrap">
+            <span
+              className="is-flex is-flex-wrap-nowrap"
+              onClick={() => handleSortChange(SortParam.Name)}
+            >
               Name
-              <a
-                href="#/people?sort=name"
-                onClick={e => {
-                  e.preventDefault();
-                  handleSortChange('name');
+              <SearchLink
+                params={{
+                  sort: SortParam.Name,
+                  order,
                 }}
+                className="has-text-link"
               >
                 <span className="icon">
-                  <i className={`fas ${getSortIcon('name')}`} />
+                  <i className={`fas ${getSortIcon(SortParam.Name)}`} />
                 </span>
-              </a>
+              </SearchLink>
             </span>
           </th>
 
           <th>
-            <span className="is-flex is-flex-wrap-nowrap">
+            <span
+              className="is-flex is-flex-wrap-nowrap"
+              onClick={() => handleSortChange(SortParam.Sex)}
+            >
               Sex
-              <a
-                href="#/people?sort=sex"
-                onClick={e => {
-                  e.preventDefault();
-                  handleSortChange('sex');
-                }}
+              <SearchLink
+                params={{ sort: SortParam.Sex, order }}
+                className="has-text-link"
               >
                 <span className="icon">
-                  <i className={`fas ${getSortIcon('sex')}`} />
+                  <i className={`fas ${getSortIcon(SortParam.Sex)}`} />
                 </span>
-              </a>
+              </SearchLink>
             </span>
           </th>
 
           <th>
-            <span className="is-flex is-flex-wrap-nowrap">
+            <span
+              className="is-flex is-flex-wrap-nowrap"
+              onClick={() => handleSortChange(SortParam.Born)}
+            >
               Born
-              <a
-                href="#/people?sort=born"
-                onClick={e => {
-                  e.preventDefault();
-                  handleSortChange('born');
-                }}
+              <SearchLink
+                params={{ sort: SortParam.Born, order }}
+                className="has-text-link"
               >
                 <span className="icon">
-                  <i className={`fas ${getSortIcon('born')}`} />
+                  <i className={`fas ${getSortIcon(SortParam.Born)}`} />
                 </span>
-              </a>
+              </SearchLink>
             </span>
           </th>
 
           <th>
-            <span className="is-flex is-flex-wrap-nowrap">
+            <span
+              className="is-flex is-flex-wrap-nowrap"
+              onClick={() => handleSortChange(SortParam.Died)}
+            >
               Died
-              <a
-                href="#/people?sort=died"
-                onClick={e => {
-                  e.preventDefault();
-                  handleSortChange('died');
-                }}
+              <SearchLink
+                params={{ sort: SortParam.Died, order }}
+                className="has-text-link"
               >
                 <span className="icon">
-                  <i className={`fas ${getSortIcon('died')}`} />
+                  <i className={`fas ${getSortIcon(SortParam.Died)}`} />
                 </span>
-              </a>
+              </SearchLink>
             </span>
           </th>
 

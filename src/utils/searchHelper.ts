@@ -6,7 +6,7 @@ export type SearchParams = {
  * This function prepares a correct search string
  * from a given currentParams and paramsToUpdate.
  */
-export default function getSearchWith(
+export function getSearchWith(
   currentParams: URLSearchParams,
   paramsToUpdate: SearchParams, // it's our custom type
 ): string {

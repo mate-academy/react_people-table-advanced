@@ -1,6 +1,6 @@
 import classNames from 'classnames';
 import { Link } from 'react-router-dom';
-import getSearchWith from '../utils/searchHelper';
+import { getSearchWith } from '../utils/searchHelper';
 
 type Props = {
   query: string;
@@ -149,11 +149,10 @@ export const PeopleFilters = ({
         <Link
           to="#/people"
           className="button is-link is-outlined is-fullwidth"
-          onClick={() => {
-            const params = new URLSearchParams(searchParams);
+          onClick={(e: React.MouseEvent) => {
+            e.preventDefault();
+            const params = new URLSearchParams();
 
-            params.delete('sort');
-            params.delete('order');
             setSearchParams(params);
           }}
         >
