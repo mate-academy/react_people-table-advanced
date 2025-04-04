@@ -39,11 +39,13 @@ const PeoplePage = () => {
     }
 
     if (query) {
+      const lowerQuery = query.toLowerCase();
+
       result = result.filter(
         person =>
-          person.name.includes(query) ||
-          person.fatherName?.includes(query) ||
-          person.motherName?.includes(query),
+          person.name.toLowerCase().includes(lowerQuery) ||
+          person.fatherName?.toLowerCase().includes(lowerQuery) ||
+          person.motherName?.toLowerCase().includes(lowerQuery),
       );
     }
 
