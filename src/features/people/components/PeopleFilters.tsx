@@ -1,9 +1,15 @@
 import { usePeopleFilterParams } from '../hooks/usePeopleFilterParams';
 import { centuries, sex } from './filterConfig';
 import { SearchLink } from '../../../components/SearchLink';
+import cn from 'classnames';
 
 export const PeopleFilters = () => {
-  const { currentSexFilter, currentCenturiesFilter } = usePeopleFilterParams();
+  const {
+    currentSexFilter,
+    currentCenturiesFilter,
+    currentQueryFilter,
+    setQueryFilter,
+  } = usePeopleFilterParams();
 
   return (
     <nav className="panel">
@@ -30,6 +36,8 @@ export const PeopleFilters = () => {
             type="search"
             className="input"
             placeholder="Search"
+            defaultValue={currentQueryFilter || ''}
+            onChange={e => setQueryFilter(e.target.value)}
           />
 
           <span className="icon is-left">
@@ -62,7 +70,9 @@ export const PeopleFilters = () => {
           <div className="level-right ml-4">
             <SearchLink
               data-cy="centuryALL"
-              className="button is-success is-outlined"
+              className={cn('button is-success', {
+                'is-outlined': currentCenturiesFilter.length > 0,
+              })}
               params={{ centuries: null }}
             >
               All
