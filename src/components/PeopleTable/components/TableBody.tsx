@@ -1,8 +1,8 @@
 /* eslint-disable jsx-a11y/control-has-associated-label */
 import React, { useContext, useEffect } from 'react';
 import classNames from 'classnames';
-import { useParams } from 'react-router-dom';
-import { updatePeopleListFromDB } from '../service';
+import { useParams, useSearchParams } from 'react-router-dom';
+import { updatePeopleList, updatePeopleListFromDB } from '../utils/service';
 import { ParentLink } from './ParentLink';
 import { Context } from '../../../utils/context/MainContext';
 import { FetchDBParams } from '../types';
@@ -14,6 +14,7 @@ export const TableBody: React.FC<PeopleTableProps> = ({
 }) => {
   const { user } = useParams();
   const contextData = useContext(Context);
+  const [searchParams] = useSearchParams();
 
   const {
     context: { listToShow },
@@ -27,6 +28,12 @@ export const TableBody: React.FC<PeopleTableProps> = ({
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => updatePeopleListFromDB(fetchDBParams), []);
+  useEffect(() => {
+    if (contextData.context.fullList.length) {
+      updatePeopleList(contextData, searchParams);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParams]);
 
   return (
     <tbody>

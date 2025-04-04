@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useSearchParams } from 'react-router-dom';
 
 enum EnumLinks {
   Home,
@@ -12,6 +12,8 @@ const getLinkClassName = ({ isActive }: { isActive: boolean }) => {
 };
 
 export const Navbar = () => {
+  const [params] = useSearchParams();
+
   return (
     <nav
       data-cy="nav"
@@ -22,13 +24,15 @@ export const Navbar = () => {
       <div className="container">
         <div className="navbar-brand">
           {Links.map(link => {
-            const path = link === 'Home' ? '' : link.toLowerCase();
+            const pagePath = link.toLowerCase();
+            const urlParams = params.toString().length ? `?${params}` : '';
+            const pathWithParams = `/${pagePath}${urlParams}`;
 
             return (
               <NavLink
                 key={link}
                 aria-current="page"
-                to={`/${path}`}
+                to={pathWithParams}
                 className={getLinkClassName}
               >
                 {link}

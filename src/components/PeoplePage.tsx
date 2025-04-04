@@ -1,4 +1,4 @@
-import { PeopleFilters } from './PeopleFilters';
+import { PeopleFilters } from './PeopleFilters/PeopleFilters';
 import { Loader } from './Loader';
 import { PeopleTable } from './PeopleTable/PeopleTable';
 import { useState } from 'react';

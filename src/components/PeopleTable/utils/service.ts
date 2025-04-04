@@ -1,10 +1,8 @@
 /* eslint-disable @typescript-eslint/indent */
-import { SetURLSearchParams } from 'react-router-dom';
-import { Person } from '../../types';
-import { ContextDataType } from '../../utils/context/types';
-import { getSearchWith } from '../../utils/searchHelper';
-import { Columns, FetchDBParams } from './types';
-import { getPeople } from '../../api';
+import { Person } from '../../../types';
+import { ContextDataType } from '../../../utils/context/types';
+import { Columns, FetchDBParams } from '../types';
+import { getPeople } from '../../../api';
 
 export const columnsList: Array<keyof typeof Columns> = Object.values(
   Columns,
@@ -59,7 +57,7 @@ export const getSortingClassName = (
   return 'fa-sort';
 };
 
-const getListToShow = (list: Person[], params: URLSearchParams) => {
+const getSortedPeopleList = (list: Person[], params: URLSearchParams) => {
   const listCopy = [...list];
   const sortBy = params.get('sort');
   const isDESC = params.has('order');
@@ -87,34 +85,28 @@ const getListToShow = (list: Person[], params: URLSearchParams) => {
       });
 };
 
-export const updateListToShow = (
-  contextDat: ContextDataType,
+const getFiltredPeopleList = (list: Person[], params: URLSearchParams) => {
+  return list;
+};
+
+export const updatePeopleList = (
+  contextData: ContextDataType,
   searchParams: URLSearchParams,
 ): void => {
-  const { context, setContextData } = contextDat;
+  const { context, setContextData } = contextData;
+
+  const filtredPeopleList: Person[] = getFiltredPeopleList(
+    context.fullList,
+    searchParams,
+  );
+
+  const sortedPeopleList: Person[] = getSortedPeopleList(
+    filtredPeopleList,
+    searchParams,
+  );
 
   setContextData({
     ...context,
-    listToShow: getListToShow(context.fullList, searchParams),
+    listToShow: sortedPeopleList,
   });
-};
-
-export const updateSortParams = (
-  event: React.MouseEvent,
-  params: URLSearchParams,
-  setSearchParams: SetURLSearchParams,
-): void => {
-  const element = event.target as HTMLElement;
-  const newSortValue = element.closest('a')?.dataset.sorting || '';
-
-  const updatedParams =
-    newSortValue === params.get('sort')
-      ? params.get('order')
-        ? { sort: null, order: null }
-        : { sort: newSortValue, order: 'desc' }
-      : { sort: newSortValue, order: null };
-
-  const newParams = new URLSearchParams(getSearchWith(params, updatedParams));
-
-  setSearchParams(newParams);
 };

@@ -1,26 +1,20 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useCallback } from 'react';
 import classNames from 'classnames';
 import { useSearchParams } from 'react-router-dom';
-import {
-  columnsList,
-  getSortingClassName,
-  updateListToShow,
-  updateSortParams,
-} from '../service';
-import { Context } from '../../../utils/context/MainContext';
+import { columnsList, getSortingClassName } from '../utils/service';
+import { updateSearchParams } from '../utils/updateSearchParams';
 
 export const TableHeader: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const params = new URLSearchParams(searchParams);
-  const contextData = useContext(Context);
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(() => updateListToShow(contextData, searchParams), [searchParams]);
+  const handleSortClick = useCallback(
+    (event: React.MouseEvent) => {
+      const params = new URLSearchParams(searchParams);
 
-  const handleSortClick = (event: React.MouseEvent) => {
-    updateSortParams(event, params, setSearchParams);
-    updateListToShow(contextData, searchParams);
-  };
+      updateSearchParams(event, params, setSearchParams);
+    },
+    [searchParams, setSearchParams],
+  );
 
   return (
     <thead>
@@ -39,7 +33,7 @@ export const TableHeader: React.FC = () => {
                     <i
                       className={classNames(
                         'fas',
-                        getSortingClassName(params, column),
+                        getSortingClassName(searchParams, column),
                       )}
                     />
                   </span>

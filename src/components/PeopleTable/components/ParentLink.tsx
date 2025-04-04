@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { Person } from '../../../types';
-import { getPersonByName } from '../service';
+import { getPersonByName } from '../utils/service';
 import classNames from 'classnames';
 import { Context } from '../../../utils/context/MainContext';
 
