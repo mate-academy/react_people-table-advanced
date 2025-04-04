@@ -36,9 +36,9 @@ const PersonLink: React.FC<Props> = ({ person, people, markedPerson }) => {
 
       <td>
         {motherInList ? (
-          <a className="has-text-danger" href={`#/people/${motherInList.slug}`}>
+          <Link to={'/people/' + motherInList.slug} className="has-text-danger">
             {displayMother}
-          </a>
+          </Link>
         ) : (
           displayMother
         )}
@@ -46,7 +46,7 @@ const PersonLink: React.FC<Props> = ({ person, people, markedPerson }) => {
 
       <td>
         {fatherInList ? (
-          <a href={`#/people/${fatherInList.slug}`}>{displayFather}</a>
+          <Link to={'/people/' + fatherInList.slug}>{displayFather}</Link>
         ) : (
           displayFather
         )}
