@@ -33,7 +33,7 @@ export const filterPeople = ({ sortedPeople, filter }: Props) => {
         filter.centuries,
       );
 
-      if (person.born < startCenturies || person.died > endCenturies) {
+      if (person.born < startCenturies || person.born > endCenturies) {
         return false;
       }
     }
