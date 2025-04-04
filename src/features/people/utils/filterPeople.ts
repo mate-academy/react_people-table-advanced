@@ -8,7 +8,7 @@ interface Props {
 
 const getCenturiesRange = (centuries: string[]) => {
   const centuriesToNumber = centuries.map(Number);
-  const startCenturies = Math.min(...centuriesToNumber) - 1 * 100 + 1;
+  const startCenturies = (Math.min(...centuriesToNumber) - 1) * 100 + 1;
   const endCenturies = Math.max(...centuriesToNumber) * 100;
 
   return [startCenturies, endCenturies];
@@ -33,7 +33,7 @@ export const filterPeople = ({ sortedPeople, filter }: Props) => {
         filter.centuries,
       );
 
-      if (person.born < startCenturies || person.born > endCenturies) {
+      if (person.born < startCenturies || person.died > endCenturies) {
         return false;
       }
     }
