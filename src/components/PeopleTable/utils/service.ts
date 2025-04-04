@@ -1,19 +1,15 @@
 /* eslint-disable @typescript-eslint/indent */
 import { Person } from '../../../types';
-import { ContextDataType } from '../../../utils/context/types';
-import { Columns, FetchDBParams } from '../types';
+import { Columns } from '../types';
 import { getPeople } from '../../../api';
+import { ContextDataType } from '../../../context/types';
 
 export const columnsList: Array<keyof typeof Columns> = Object.values(
   Columns,
 ).filter(x => typeof x === 'string') as Array<keyof typeof Columns>;
 
-export const updatePeopleListFromDB = (params: FetchDBParams) => {
-  const {
-    contextData: { setContextData, context },
-    setPeoplePageState,
-    peoplePageState,
-  } = params;
+export const loadPeopleListFromDB = (contextData: ContextDataType) => {
+  const { setContextData, context } = contextData;
 
   getPeople()
     .then(list => {
@@ -21,17 +17,13 @@ export const updatePeopleListFromDB = (params: FetchDBParams) => {
         ...context,
         fullList: list,
         listToShow: list,
-      });
-
-      setPeoplePageState({
-        ...peoplePageState,
         isLoading: false,
         error: list.length ? null : 'empty',
       });
     })
     .catch(() => {
-      setPeoplePageState({
-        ...peoplePageState,
+      setContextData({
+        ...context,
         isLoading: false,
         error: 'unloaded',
       });
@@ -86,7 +78,43 @@ const getSortedPeopleList = (list: Person[], params: URLSearchParams) => {
 };
 
 const getFiltredPeopleList = (list: Person[], params: URLSearchParams) => {
-  return list;
+  let finalPeopleList = [...list];
+  const gender: string | null = params.get('sex');
+  const search: string | null = params.get('query');
+  const centuries: string[] = params.getAll('centuries');
+
+  const isFilterExist = !!gender || !!search || !!centuries.length;
+
+  if (!isFilterExist) {
+    return finalPeopleList;
+  }
+
+  if (!!gender) {
+    finalPeopleList = [...finalPeopleList].filter(per => per.sex === gender);
+  }
+
+  if (!!search) {
+    finalPeopleList = [...finalPeopleList].filter(per => {
+      const motherName = per.motherName
+        ? per.motherName.toLowerCase().includes(search)
+        : false;
+      const fatherName = per.fatherName
+        ? per.fatherName.toLowerCase().includes(search)
+        : false;
+
+      return (
+        per.name.toLowerCase().includes(search) || motherName || fatherName
+      );
+    });
+  }
+
+  if (!!centuries.length) {
+    finalPeopleList = [...finalPeopleList].filter(per =>
+      centuries.some(cen => +cen - 1 <= per.born / 100),
+    );
+  }
+
+  return finalPeopleList;
 };
 
 export const updatePeopleList = (

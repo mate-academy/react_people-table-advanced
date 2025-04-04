@@ -1,5 +1,5 @@
 import React, { ReactNode, useState } from 'react';
-import { ContextDataType, Lists } from './types';
+import { ContextDataType, ContextDataValues } from './types';
 
 interface ContextProps {
   children: ReactNode;
@@ -9,16 +9,20 @@ const contextDefaultValue: ContextDataType = {
   context: {
     fullList: [],
     listToShow: [],
+    error: null,
+    isLoading: true,
   },
   setContextData: () => {},
 };
 
 export const Context = React.createContext(contextDefaultValue);
 
-export const MainContext: React.FC<ContextProps> = ({ children }) => {
-  const [contextData, setContextData] = useState<Lists>({
+export const PeoplePageContext: React.FC<ContextProps> = ({ children }) => {
+  const [contextData, setContextData] = useState<ContextDataValues>({
     fullList: [],
     listToShow: [],
+    error: null,
+    isLoading: true,
   });
 
   return (

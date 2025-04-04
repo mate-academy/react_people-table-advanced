@@ -1,10 +1,14 @@
-import React, { useCallback, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import React, { useCallback } from 'react';
 import { getSearchWith } from '../../../utils/searchHelper';
+import { useSearchParams } from 'react-router-dom';
 
-export const SearchFilter = () => {
+interface Props {
+  query: string;
+  setQuery: React.Dispatch<React.SetStateAction<string>>;
+}
+
+export const SearchFilter: React.FC<Props> = ({ query, setQuery }) => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const [query, setQuery] = useState(searchParams.get('query') || '');
 
   const handleSearchChange = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -31,7 +35,7 @@ export const SearchFilter = () => {
         setSearchParams(getSearchWith(searchParams, searchFilter));
       }
     },
-    [searchParams, setSearchParams],
+    [searchParams, setSearchParams, setQuery],
   );
 
   return (

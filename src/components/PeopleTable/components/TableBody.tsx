@@ -2,16 +2,11 @@
 import React, { useContext, useEffect } from 'react';
 import classNames from 'classnames';
 import { useParams, useSearchParams } from 'react-router-dom';
-import { updatePeopleList, updatePeopleListFromDB } from '../utils/service';
+import { updatePeopleList, loadPeopleListFromDB } from '../utils/service';
 import { ParentLink } from './ParentLink';
-import { Context } from '../../../utils/context/MainContext';
-import { FetchDBParams } from '../types';
-import { PeopleTableProps } from '../PeopleTable';
+import { Context } from '../../../context/PeoplePageContext';
 
-export const TableBody: React.FC<PeopleTableProps> = ({
-  setPeoplePageState,
-  peoplePageState,
-}) => {
+export const TableBody: React.FC = () => {
   const { user } = useParams();
   const contextData = useContext(Context);
   const [searchParams] = useSearchParams();
@@ -20,14 +15,8 @@ export const TableBody: React.FC<PeopleTableProps> = ({
     context: { listToShow },
   } = contextData;
 
-  const fetchDBParams: FetchDBParams = {
-    contextData,
-    setPeoplePageState,
-    peoplePageState,
-  };
-
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(() => updatePeopleListFromDB(fetchDBParams), []);
+  useEffect(() => loadPeopleListFromDB(contextData), []);
   useEffect(() => {
     if (contextData.context.fullList.length) {
       updatePeopleList(contextData, searchParams);

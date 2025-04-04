@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import { Person } from '../../../types';
 import { getPersonByName } from '../utils/service';
 import classNames from 'classnames';
-import { Context } from '../../../utils/context/MainContext';
+import { Context } from '../../../context/PeoplePageContext';
 
 type Props = {
   person: Person;

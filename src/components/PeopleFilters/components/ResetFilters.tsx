@@ -1,8 +1,13 @@
 import { useSearchParams } from 'react-router-dom';
 import classNames from 'classnames';
 import { getSearchWith } from '../../../utils/searchHelper';
+import React, { useCallback } from 'react';
 
-export const ResetFilters = () => {
+interface Props {
+  setQuery: React.Dispatch<React.SetStateAction<string>>;
+}
+
+export const ResetFilters: React.FC<Props> = ({ setQuery }) => {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const isFiltersExist =
@@ -10,21 +15,24 @@ export const ResetFilters = () => {
     searchParams.has('centuries') ||
     searchParams.has('query');
 
+  const handleReset = useCallback(() => {
+    setSearchParams(
+      getSearchWith(searchParams, {
+        sex: null,
+        centuries: null,
+        query: null,
+      }),
+    );
+    setQuery('');
+  }, [setQuery, setSearchParams, searchParams]);
+
   return (
     <div className="panel-block">
       <a
         className={classNames('button is-link is-fullwidth', {
           'is-outlined': isFiltersExist,
         })}
-        onClick={() =>
-          setSearchParams(
-            getSearchWith(searchParams, {
-              sex: null,
-              centuries: null,
-              query: null,
-            }),
-          )
-        }
+        onClick={handleReset}
       >
         Reset all filters
       </a>
