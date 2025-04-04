@@ -1,19 +1,20 @@
-import { useSearchParamsUpdater } from './useSearchParamsUpdater';
+import { SearchParams } from '../../../utils/searchHelper';
+import { useSearchParams } from 'react-router-dom';
 
 export const usePeopleSortParams = () => {
-  const { searchParams, updateParams } = useSearchParamsUpdater();
+  const [searchParams] = useSearchParams();
   const currentSort = searchParams.get('sort');
   const currentOrder = searchParams.get('order');
 
-  const toggleSort = (sortBy: string) => {
+  const toggleSort = (sortBy: string): SearchParams => {
     const isCurrentSort = currentSort === sortBy;
 
     if (!isCurrentSort) {
-      updateParams({ sort: sortBy });
+      return { sort: sortBy, order: null };
     } else if (isCurrentSort && !currentOrder) {
-      updateParams({ order: 'desc' });
+      return { sort: sortBy, order: 'desc' };
     } else {
-      updateParams({ sort: null, order: null });
+      return { sort: null, order: null };
     }
   };
 
