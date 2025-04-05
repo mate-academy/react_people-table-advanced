@@ -136,7 +136,10 @@ export const PeopleFilters = ({
             <Link
               to="#/people"
               data-cy="centuryALL"
-              className="button is-outlined is-success"
+              className={classNames('button is-success', {
+                'is-outlined': centuries.length !== 0,
+              })}
+              //className="button is-outlined is-success"
               onClick={e => handleCenturyChange('all', e)}
             >
               All
@@ -151,7 +154,11 @@ export const PeopleFilters = ({
           className="button is-link is-outlined is-fullwidth"
           onClick={(e: React.MouseEvent) => {
             e.preventDefault();
-            const params = new URLSearchParams();
+            const params = new URLSearchParams(searchParams);
+
+            params.delete('query');
+            params.delete('sex');
+            params.delete('century');
 
             setSearchParams(params);
           }}
