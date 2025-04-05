@@ -16,7 +16,7 @@ type Props = {
 
 export const PeopleTable: React.FC<Props> = ({
   people,
-  sort,
+  // sort,
   order,
   searchParams,
   setSearchParams,
@@ -135,15 +135,15 @@ export const PeopleTable: React.FC<Props> = ({
   const handleSortChange = (key: SortParam) => {
     handleClick(key);
 
-    let order: 'asc' | 'desc' | null = null;
+    let sortOrder: 'asc' | 'desc' | null = null;
 
     if (clickCount[key] === 0) {
-      order = 'asc';
+      sortOrder = 'asc';
     } else if (clickCount[key] === 1) {
-      order = 'desc';
+      sortOrder = 'desc';
     }
 
-    const params = { sort: key, order };
+    const params = { sort: key, order: sortOrder };
 
     setSearchWith(params);
   };
