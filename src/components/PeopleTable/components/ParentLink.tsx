@@ -3,28 +3,29 @@ import { Person } from '../../../types';
 import { getPersonByName } from '../utils/service';
 import classNames from 'classnames';
 import { Context } from '../../../context/PeoplePageContext';
+import { useSearchParams } from 'react-router-dom';
 
 type Props = {
   person: Person;
-  parentSex: ParentSex;
+  parentSex: 'm' | 'f';
 };
 
-type ParentSex = 'm' | 'f';
+export const ParentLink: React.FC<Props> = ({ person, parentSex: sex }) => {
+  const [searchParams] = useSearchParams();
+  const {
+    context: { fullList },
+  } = useContext(Context);
 
-const getFinalElement = (
-  sex: ParentSex,
-  person: Person,
-  peopleList: Person[],
-) => {
   const {
     motherName,
     fatherName,
-    mother = motherName ? getPersonByName(motherName, peopleList) : null,
-    father = fatherName ? getPersonByName(fatherName, peopleList) : null,
+    mother = motherName ? getPersonByName(motherName, fullList) : null,
+    father = fatherName ? getPersonByName(fatherName, fullList) : null,
   } = person;
 
   const parentPerson = sex === 'f' ? mother : father;
   const parentName = sex === 'f' ? motherName : fatherName;
+  const params = !!searchParams.size ? `?${searchParams}` : '';
 
   if (parentPerson === null) {
     return '-';
@@ -32,7 +33,7 @@ const getFinalElement = (
 
   return parentPerson !== undefined ? (
     <a
-      href={`#/people/${parentPerson.slug ?? ''}`}
+      href={`#/people/${parentPerson.slug ?? ''}${params}`}
       className={classNames({
         'has-text-danger': sex === 'f',
       })}
@@ -42,13 +43,4 @@ const getFinalElement = (
   ) : (
     parentName
   );
-};
-
-export const ParentLink: React.FC<Props> = ({ person, parentSex }) => {
-  const mainContext = useContext(Context);
-  const {
-    context: { fullList: peopleList },
-  } = mainContext;
-
-  return getFinalElement(parentSex, person, peopleList);
 };

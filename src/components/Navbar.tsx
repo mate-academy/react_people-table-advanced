@@ -1,19 +1,15 @@
-import classNames from 'classnames';
-import { NavLink, useSearchParams } from 'react-router-dom';
+import { NavLinkItem } from './NavLinkItem';
 
-enum EnumLinks {
+export enum NavLinks {
   Home,
   People,
 }
-const Links = Object.values(EnumLinks).filter(link => typeof link === 'string');
 
-const getLinkClassName = ({ isActive }: { isActive: boolean }) => {
-  return classNames('navbar-item', { 'has-background-grey-lighter': isActive });
-};
+const Links = Object.keys(NavLinks).filter(key =>
+  isNaN(Number(key)),
+) as (keyof typeof NavLinks)[];
 
 export const Navbar = () => {
-  const [params] = useSearchParams();
-
   return (
     <nav
       data-cy="nav"
@@ -23,22 +19,9 @@ export const Navbar = () => {
     >
       <div className="container">
         <div className="navbar-brand">
-          {Links.map(link => {
-            const pagePath = link.toLowerCase();
-            const urlParams = params.toString().length ? `?${params}` : '';
-            const pathWithParams = `/${pagePath}${urlParams}`;
-
-            return (
-              <NavLink
-                key={link}
-                aria-current="page"
-                to={pathWithParams}
-                className={getLinkClassName}
-              >
-                {link}
-              </NavLink>
-            );
-          })}
+          {Links.map(link => (
+            <NavLinkItem key={link} link={link} />
+          ))}
         </div>
       </div>
     </nav>

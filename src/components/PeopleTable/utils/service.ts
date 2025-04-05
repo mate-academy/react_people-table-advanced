@@ -18,7 +18,7 @@ export const loadPeopleListFromDB = (contextData: ContextDataType) => {
         fullList: list,
         listToShow: list,
         isLoading: false,
-        error: list.length ? null : 'empty',
+        error: !!list.length ? null : 'empty',
       });
     })
     .catch(() => {
@@ -135,6 +135,7 @@ export const updatePeopleList = (
 
   setContextData({
     ...context,
+    error: !!sortedPeopleList.length ? null : 'wrongsearch',
     listToShow: sortedPeopleList,
   });
 };
