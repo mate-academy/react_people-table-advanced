@@ -1,26 +1,24 @@
 import React from 'react';
-import { PersonType } from '../types';
+import { NavLink } from 'react-router-dom';
 
-type Props = {
-  people: PersonType[] | undefined;
-  setPeopleFiltered: (filteredPeople: PersonType[]) => void;
-};
+export const PeopleFilters = () => {
+  const getSearchParams = (
+    parametName: string,
+    parametrs?: string | string[],
+  ) => {
+    if (!parametrs) {
+      return '';
+    }
+  };
 
-export const PeopleFilters: React.FC<Props> = () => {
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        <a className="is-active" href="#/people">
-          All
-        </a>
-        <a className="" href="#/people?sex=m">
-          Male
-        </a>
-        <a className="" href="#/people?sex=f">
-          Female
-        </a>
+        <NavLink to={`/people${getSearchParams('sex')}`}>All</NavLink>
+        <NavLink to="/people?sex=m">Male</NavLink>
+        <NavLink to="/people?sex=f">Female</NavLink>
       </p>
 
       <div className="panel-block">
@@ -41,55 +39,55 @@ export const PeopleFilters: React.FC<Props> = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            <a
+            <NavLink
               data-cy="century"
               className="button mr-1"
-              href="#/people?centuries=16"
+              to="/people?centuries=16"
             >
               16
-            </a>
+            </NavLink>
 
-            <a
+            <NavLink
               data-cy="century"
               className="button mr-1 is-info"
-              href="#/people?centuries=17"
+              to="/people?centuries=17"
             >
               17
-            </a>
+            </NavLink>
 
-            <a
+            <NavLink
               data-cy="century"
               className="button mr-1 is-info"
-              href="#/people?centuries=18"
+              to="/people?centuries=18"
             >
               18
-            </a>
+            </NavLink>
 
-            <a
+            <NavLink
               data-cy="century"
               className="button mr-1 is-info"
-              href="#/people?centuries=19"
+              to="/people?centuries=19"
             >
               19
-            </a>
+            </NavLink>
 
-            <a
+            <NavLink
               data-cy="century"
               className="button mr-1"
-              href="#/people?centuries=20"
+              to="/people?centuries=20"
             >
               20
-            </a>
+            </NavLink>
           </div>
 
           <div className="level-right ml-4">
-            <a
+            <NavLink
               data-cy="centuryALL"
               className="button is-success is-outlined"
-              href="#/people"
+              to="/people"
             >
               All
-            </a>
+            </NavLink>
           </div>
         </div>
       </div>

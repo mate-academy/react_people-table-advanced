@@ -1,4 +1,4 @@
-import { PersonType } from './types/Person';
+import { PersonType } from './types';
 
 // eslint-disable-next-line operator-linebreak
 const API_URL =
