@@ -5,7 +5,7 @@ export enum NavLinks {
   People,
 }
 
-const Links = Object.keys(NavLinks).filter(key =>
+const links = Object.keys(NavLinks).filter(key =>
   isNaN(Number(key)),
 ) as (keyof typeof NavLinks)[];
 
@@ -19,7 +19,7 @@ export const Navbar = () => {
     >
       <div className="container">
         <div className="navbar-brand">
-          {Links.map(link => (
+          {links.map(link => (
             <NavLinkItem key={link} link={link} />
           ))}
         </div>

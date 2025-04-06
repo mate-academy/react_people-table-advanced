@@ -13,9 +13,11 @@ export const PeopleFilters = () => {
     context: { isLoading },
   } = useContext(Context);
 
-  const isVisible = !isLoading;
+  if (isLoading) {
+    return null;
+  }
 
-  return isVisible ? (
+  return (
     <div className="column is-7-tablet is-narrow-desktop">
       <nav className="panel">
         <p className="panel-heading">Filters</p>
@@ -26,5 +28,5 @@ export const PeopleFilters = () => {
         <ResetFilters setQuery={setQuery} />
       </nav>
     </div>
-  ) : null;
+  );
 };

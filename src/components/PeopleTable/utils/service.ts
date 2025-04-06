@@ -89,11 +89,11 @@ const getFiltredPeopleList = (list: Person[], params: URLSearchParams) => {
     return finalPeopleList;
   }
 
-  if (!!gender) {
+  if (gender) {
     finalPeopleList = [...finalPeopleList].filter(per => per.sex === gender);
   }
 
-  if (!!search) {
+  if (search) {
     finalPeopleList = [...finalPeopleList].filter(per => {
       const motherName = per.motherName
         ? per.motherName.toLowerCase().includes(search)
@@ -108,9 +108,12 @@ const getFiltredPeopleList = (list: Person[], params: URLSearchParams) => {
     });
   }
 
-  if (!!centuries.length) {
+  if (centuries.length) {
     finalPeopleList = [...finalPeopleList].filter(per =>
-      centuries.some(cen => +cen - 1 <= per.born / 100),
+      centuries.some(
+        cen =>
+          per.born / 100 >= Number(cen) - 1 && per.born / 100 < Number(cen),
+      ),
     );
   }
 

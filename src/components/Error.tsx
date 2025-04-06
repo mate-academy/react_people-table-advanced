@@ -7,9 +7,11 @@ export const Error = () => {
     context: { isLoading, error },
   } = useContext(Context);
 
-  const isVisible = isLoading || error;
+  if (!isLoading && !error) {
+    return null;
+  }
 
-  return isVisible ? (
+  return (
     <div className="column">
       <div className="box table-container">
         {isLoading && <Loader />}
@@ -27,5 +29,5 @@ export const Error = () => {
         )}
       </div>
     </div>
-  ) : null;
+  );
 };

@@ -4,7 +4,7 @@ import React, { useCallback } from 'react';
 import { getSearchWith } from '../../../utils/searchHelper';
 import { updateSearchParams } from '../../PeopleTable/utils/updateSearchParams';
 
-const CenturyFilters = [16, 17, 18, 19, 20];
+const centuryFilters = [16, 17, 18, 19, 20];
 
 export const CenturyFilter = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -22,9 +22,9 @@ export const CenturyFilter = () => {
     <div className="panel-block">
       <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
         <div className="level-left">
-          {CenturyFilters.map(filter => {
-            const centuryFilters = searchParams.getAll('centuries');
-            const isHighlighted = centuryFilters.includes(filter.toString());
+          {centuryFilters.map(filter => {
+            const centurySearchURLs = searchParams.getAll('centuries');
+            const isHighlighted = centurySearchURLs.includes(filter.toString());
 
             return (
               <a
