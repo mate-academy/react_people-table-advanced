@@ -3,13 +3,19 @@ import { SearchFilter } from './components/SearchFilter';
 import { CenturyFilter } from './components/CenturyFilter';
 import { ResetFilters } from './components/ResetFilters';
 import { useSearchParams } from 'react-router-dom';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
+import { Context } from '../../context/PeoplePageContext';
 
 export const PeopleFilters = () => {
   const [searchParams] = useSearchParams();
   const [query, setQuery] = useState(searchParams.get('query') || '');
+  const {
+    context: { isLoading },
+  } = useContext(Context);
 
-  return (
+  const isVisible = !isLoading;
+
+  return isVisible ? (
     <div className="column is-7-tablet is-narrow-desktop">
       <nav className="panel">
         <p className="panel-heading">Filters</p>
@@ -20,5 +26,5 @@ export const PeopleFilters = () => {
         <ResetFilters setQuery={setQuery} />
       </nav>
     </div>
-  );
+  ) : null;
 };

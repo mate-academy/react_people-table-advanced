@@ -19,49 +19,41 @@ export const CenturyFilter = () => {
   );
 
   return (
-    <>
-      <div className="panel-block is-justify-content-center">
-        <p>by Century</p>
-      </div>
+    <div className="panel-block">
+      <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
+        <div className="level-left">
+          {CenturyFilters.map(filter => {
+            const centuryFilters = searchParams.getAll('centuries');
+            const isHighlighted = centuryFilters.includes(filter.toString());
 
-      <div className="panel-block">
-        <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
-          <div className="level-left">
-            {CenturyFilters.map(filter => {
-              const centuryFilters = searchParams.getAll('centuries');
-              const isHighlighted = centuryFilters.includes(filter.toString());
+            return (
+              <a
+                key={filter}
+                data-cy="century"
+                data-century={filter}
+                className={classNames('button', { 'is-info': isHighlighted })}
+                onClick={handleCenturyFilterClick}
+              >
+                {filter}
+              </a>
+            );
+          })}
+        </div>
 
-              return (
-                <a
-                  key={filter}
-                  data-cy="century"
-                  data-century={filter}
-                  className={classNames('button', { 'is-info': isHighlighted })}
-                  onClick={handleCenturyFilterClick}
-                >
-                  {filter}
-                </a>
-              );
+        <div className="level-right ml-4">
+          <a
+            data-cy="centuryALL"
+            className={classNames('button is-success', {
+              'is-outlined': searchParams.has('centuries'),
             })}
-          </div>
-
-          <div className="level-right ml-4">
-            <a
-              data-cy="centuryALL"
-              className={classNames('button is-success', {
-                'is-outlined': searchParams.has('centuries'),
-              })}
-              onClick={() =>
-                setSearchParams(
-                  getSearchWith(searchParams, { centuries: null }),
-                )
-              }
-            >
-              All
-            </a>
-          </div>
+            onClick={() =>
+              setSearchParams(getSearchWith(searchParams, { centuries: null }))
+            }
+          >
+            All
+          </a>
         </div>
       </div>
-    </>
+    </div>
   );
 };

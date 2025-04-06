@@ -14,26 +14,19 @@ export const SearchFilter: React.FC<Props> = ({ query, setQuery }) => {
     (event: React.ChangeEvent<HTMLInputElement>) => {
       const value = event.target.value;
 
-      if (value === '') {
-        setQuery('');
-        setSearchParams(getSearchWith(searchParams, { query: null }));
-      }
+      if (value.length) {
+        const searchFilter = value.length
+          ? { query: value.toLowerCase() }
+          : { query: null };
 
-      const regex = /[a-zA-Z]+/;
-
-      const valueToUse = value
-        .split('')
-        .filter(x => regex.test(x))
-        .join('');
-
-      const searchFilter = event.target.value.length
-        ? { query: valueToUse.toLowerCase() }
-        : { query: null };
-
-      setQuery(valueToUse);
-      if (valueToUse.length) {
+        setQuery(value);
         setSearchParams(getSearchWith(searchParams, searchFilter));
+
+        return;
       }
+
+      setQuery('');
+      setSearchParams(getSearchWith(searchParams, { query: null }));
     },
     [searchParams, setSearchParams, setQuery],
   );
