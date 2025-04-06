@@ -1,3 +1,14 @@
+import { NavLinkItem } from './NavLinkItem';
+
+export enum NavLinks {
+  Home,
+  People,
+}
+
+const links = Object.keys(NavLinks).filter(key =>
+  isNaN(Number(key)),
+) as (keyof typeof NavLinks)[];
+
 export const Navbar = () => {
   return (
     <nav
@@ -8,17 +19,9 @@ export const Navbar = () => {
     >
       <div className="container">
         <div className="navbar-brand">
-          <a className="navbar-item" href="#/">
-            Home
-          </a>
-
-          <a
-            aria-current="page"
-            className="navbar-item has-background-grey-lighter"
-            href="#/people"
-          >
-            People
-          </a>
+          {links.map(link => (
+            <NavLinkItem key={link} link={link} />
+          ))}
         </div>
       </div>
     </nav>
