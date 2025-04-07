@@ -1,6 +1,11 @@
 import classNames from 'classnames';
 import { useSearchParams } from 'react-router-dom';
 
+enum Sex {
+  Male = 'm',
+  Female = 'f',
+}
+
 export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const sex = searchParams.get('sex') || '';
@@ -11,11 +16,11 @@ export const PeopleFilters = () => {
 
   function activeSex(value: string) {
     if (value === 'Male') {
-      return classNames({ 'is-active': sex === 'm' });
+      return classNames({ 'is-active': sex === Sex.Male });
     }
 
     if (value === 'Female') {
-      return classNames({ 'is-active': sex === 'f' });
+      return classNames({ 'is-active': sex === Sex.Female });
     }
 
     return classNames({ 'is-active': sex === '' });
@@ -56,11 +61,11 @@ export const PeopleFilters = () => {
     const params = new URLSearchParams(searchParams);
 
     if (ch === 'Male') {
-      params.set('sex', 'm');
+      params.set('sex', Sex.Male);
     }
 
     if (ch === 'Female') {
-      params.set('sex', 'f');
+      params.set('sex', Sex.Female);
     }
 
     if (ch === 'All') {

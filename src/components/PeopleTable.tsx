@@ -3,6 +3,7 @@ import classNames from 'classnames';
 import { Person } from '../types';
 import { PersonComponent } from './PersonComponent';
 import { useSearchParams } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 
 type Props = {
   people: Person[];
@@ -10,6 +11,7 @@ type Props = {
 
 export const PeopleTable: React.FC<Props> = ({ people }) => {
   const [searchParams, setSearchParams] = useSearchParams();
+  const [filteredPeople, setFilteredPeople] = useState([...people]);
   const sex = searchParams.get('sex') || '';
   const query = searchParams.get('query') || '';
   const sort = searchParams.get('sort') || '';
@@ -18,47 +20,41 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
   const calculateCentury = (number: number) => Math.floor(number / 100 + 1);
   const sortingParams = ['Name', 'Sex', 'Born', 'Died'];
 
-  const filteredPeople = people.filter(person => {
-    const matchesSex = !sex || person.sex === sex;
-    const matchesQuery =
-      !query ||
-      [person.name, person.fatherName, person.motherName].some(name =>
-        name?.toLowerCase().includes(query.toLowerCase()),
-      );
-    const matchesCentury =
-      centuries.length === 0 ||
-      centuries.some(century => calculateCentury(person.born) === +century);
+  useEffect(() => {
+    const result = people.filter(person => {
+      const matchesSex = !sex || person.sex === sex;
+      const matchesQuery =
+        !query ||
+        [person.name, person.fatherName, person.motherName].some(name =>
+          name?.toLowerCase().includes(query.toLowerCase()),
+        );
+      const matchesCentury =
+        centuries.length === 0 ||
+        centuries.some(century => calculateCentury(person.born) === +century);
 
-    return matchesSex && matchesQuery && matchesCentury;
-  });
+      return matchesSex && matchesQuery && matchesCentury;
+    });
 
-  function sortPeople() {
-    const sortedPeople = [...filteredPeople];
+    setFilteredPeople(result);
+  }, [query, sex, centuries, people]);
 
+  const sortedPeople = [...filteredPeople].sort((person1, person2) => {
     switch (sort) {
       case 'Name':
-        sortedPeople.sort((person1, person2) =>
-          person1.name.localeCompare(person2.name),
-        );
-        break;
+        return person1.name.localeCompare(person2.name);
       case 'Sex':
-        sortedPeople.sort((person1, person2) =>
-          person1.sex.localeCompare(person2.sex),
-        );
-        break;
+        return person1.sex.localeCompare(person2.sex);
       case 'Born':
-        sortedPeople.sort((person1, person2) => person1.born - person2.born);
-        break;
+        return person1.born - person2.born;
       case 'Died':
-        sortedPeople.sort((person1, person2) => person1.died - person2.died);
-        break;
+        return person1.died - person2.died;
+      default:
+        return 0;
     }
+  });
 
-    if (order) {
-      return sortedPeople.reverse();
-    }
-
-    return sortedPeople;
+  if (order === 'desc') {
+    sortedPeople.reverse();
   }
 
   function setIconClass(value: string) {
@@ -89,7 +85,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
     setSearchParams(params);
   }
 
-  return (
+  return filteredPeople.length > 0 ? (
     <table
       data-cy="peopleTable"
       className="table is-striped is-hoverable is-narrow is-fullwidth"
@@ -115,10 +111,12 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
       </thead>
 
       <tbody>
-        {sortPeople().map(person => (
+        {sortedPeople.map(person => (
           <PersonComponent key={person.name} person={person} people={people} />
         ))}
       </tbody>
     </table>
+  ) : (
+    <p>There are no people matching the current search criteria</p>
   );
 };
