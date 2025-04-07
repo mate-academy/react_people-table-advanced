@@ -18,9 +18,11 @@ export const PeopleTable: React.FC<Props> = ({
   people,
   // sort,
   order,
+
   searchParams,
   setSearchParams,
 }) => {
+
   const { slug: selectedUserSlug } = useParams();
 
   const findMother = (motherName: string) => {
@@ -243,7 +245,10 @@ export const PeopleTable: React.FC<Props> = ({
             >
               <td>
                 <Link
-                  to={`/people/${slug}`}
+                  to={{
+                    pathname: `/people/${slug}`,
+                    search: searchParams.toString(), 
+                  }}
                   className={classNames({ 'has-text-danger': sex === 'f' })}
                 >
                   {name}
