@@ -10,12 +10,22 @@ export const PeoplePage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(false);
 
-  const [sortBy, setSortBy] = useState<keyof Person | null>(null);
-  const [sortOrder, setSortOrder] = useState<'asc' | 'desc' | 'default'>('default');
-
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const { slug } = useParams();
   const navigate = useNavigate();
+
+  // Сортування з URL
+  const sortByParam = searchParams.get('sortBy') as keyof Person | null;
+  const sortOrderParam = searchParams.get('sortOrder') as
+    | 'asc'
+    | 'desc'
+    | 'default'
+    | null;
+
+  const [sortBy, setSortBy] = useState<keyof Person | null>(sortByParam);
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc' | 'default'>(
+    sortOrderParam || 'default',
+  );
 
   useEffect(() => {
     const loadPeople = async () => {
@@ -55,6 +65,7 @@ export const PeoplePage = () => {
 
       if (centuryFilters.length > 0) {
         const century = Math.ceil(person.born / 100);
+
         if (!centuryFilters.includes(String(century))) {
           return false;
         }
@@ -98,6 +109,18 @@ export const PeoplePage = () => {
 
     setSortBy(newSortBy);
     setSortOrder(nextOrder);
+
+    const newParams = new URLSearchParams(searchParams);
+
+    if (newSortBy) {
+      newParams.set('sortBy', newSortBy);
+      newParams.set('sortOrder', nextOrder);
+    } else {
+      newParams.delete('sortBy');
+      newParams.delete('sortOrder');
+    }
+
+    setSearchParams(newParams);
   };
 
   const handleSlugChange = (newSlug: string | null) => {
@@ -127,7 +150,9 @@ export const PeoplePage = () => {
                 <p data-cy="peopleLoadingError">Something went wrong</p>
               )}
               {!isLoading && !error && people.length === 0 && (
-                <p data-cy="noPeopleMessage">There are no people on the server</p>
+                <p data-cy="noPeopleMessage">
+                  There are no people on the server
+                </p>
               )}
               {!isLoading && !error && sortedPeople.length === 0 && (
                 <p>There are no people matching the current search criteria</p>

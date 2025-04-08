@@ -1,6 +1,6 @@
+
 import React from 'react'
 import { Person } from '../types/Person'
-
 type Props = {
   people: Person[];
   sortBy: keyof Person | null;
@@ -9,7 +9,6 @@ type Props = {
   selectedSlug: string | null;
   onSlugChange: (slug: string | null) => void;
 };
-
 export const PeopleTable: React.FC<Props> = ({
   people,
   sortBy,
@@ -22,20 +21,16 @@ export const PeopleTable: React.FC<Props> = ({
     const newSlug = selectedSlug === personSlug ? null : personSlug;
     onSlugChange(newSlug);
   };
-
   const getSortIcon = (field: keyof Person) => {
     const icons = {
       asc: <i className="fas fa-sort-up" />,
       desc: <i className="fas fa-sort-down" />,
       default: <i className="fas fa-sort" />,
     };
-
     return sortBy === field ? icons[sortOrder] : icons.default;
   };
-
   const findPersonByName = (name: string | undefined): Person | undefined =>
     people.find(p => p.name === name);
-
   return (
     <table
       data-cy="peopleTable"
@@ -68,10 +63,8 @@ export const PeopleTable: React.FC<Props> = ({
       <tbody>
         {people.map(person => {
           const isSelected = selectedSlug === person.slug;
-
           const mother = findPersonByName(person.motherName || '');
           const father = findPersonByName(person.fatherName || '');
-
           return (
             <tr
               key={person.slug}
@@ -91,11 +84,9 @@ export const PeopleTable: React.FC<Props> = ({
                   {person.name}
                 </a>
               </td>
-
               <td>{person.sex}</td>
               <td>{person.born}</td>
               <td>{person.died || '-'}</td>
-
               <td>
                 {mother ? (
                   <a
@@ -112,7 +103,6 @@ export const PeopleTable: React.FC<Props> = ({
                   person.motherName || '-'
                 )}
               </td>
-
               <td>
                 {father ? (
                   <a
