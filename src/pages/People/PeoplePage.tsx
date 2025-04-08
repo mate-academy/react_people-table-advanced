@@ -1,16 +1,18 @@
 import { PeopleFilters } from '../../components/PeopleFilters';
 import { Loader } from '../../components/Loader';
 import { PeopleTable } from '../../components/PeopleTable';
-import { useEffect, useState } from 'react';
-import { Person } from '../../types';
+import { useCallback, useContext, useEffect, useState } from 'react';
 import { getPeople } from '../../api';
+import { PeopleContext } from '../../store/PeopleContext';
 
 export const PeoplePage = () => {
-  const [people, setPeople] = useState<Person[]>([]);
+  const { setPeople, filteredPeople, setFilteredPeople } =
+    useContext(PeopleContext);
+
   const [isLoading, setIsLoading] = useState(false);
   const [hasError, setError] = useState(false);
 
-  const handleGetData = async () => {
+  const handleGetPeople = useCallback(async () => {
     setIsLoading(true);
     setError(false);
 
@@ -19,17 +21,18 @@ export const PeoplePage = () => {
 
       if (data) {
         setPeople(data);
+        setFilteredPeople(data);
       }
     } catch (error) {
       setError(true);
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [setFilteredPeople, setPeople]);
 
   useEffect(() => {
-    handleGetData();
-  }, []);
+    handleGetPeople();
+  }, [handleGetPeople]);
 
   return (
     <>
@@ -54,14 +57,14 @@ export const PeoplePage = () => {
               {/* todo: IMPLEMENTAR LOGICA */}
               {/* <p>There are no people matching the current search criteria</p> */}
 
-              {!isLoading && !hasError && people.length === 0 && (
+              {!isLoading && !hasError && filteredPeople.length === 0 && (
                 <p data-cy="noPeopleMessage">
                   There are no people on the server
                 </p>
               )}
 
-              {!isLoading && !hasError && people.length > 0 && (
-                <PeopleTable people={people} />
+              {!isLoading && !hasError && filteredPeople.length > 0 && (
+                <PeopleTable people={filteredPeople} />
               )}
             </div>
           </div>
