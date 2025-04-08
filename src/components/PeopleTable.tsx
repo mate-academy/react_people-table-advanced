@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { PersonType } from '../types';
 import { PersonLink } from './Person';
+import { Link, useSearchParams } from 'react-router-dom';
+import { getSearchWith } from '../utils/searchHelper';
 
 type Props = {
   people: PersonType[];
@@ -8,6 +10,95 @@ type Props = {
 
 /* eslint-disable jsx-a11y/control-has-associated-label */
 export const PeopleTable: React.FC<Props> = ({ people }) => {
+  const [searchParams] = useSearchParams();
+  const sex = searchParams.get('sex');
+  const sort = searchParams.get('sort');
+  const order = searchParams.get('order');
+  const centuries = searchParams.getAll('centuries');
+  const query = searchParams.get('query') || '';
+
+  const usePeople = useMemo(() => {
+    let filteredPeople = [...people];
+
+    if (sex) {
+      filteredPeople = filteredPeople.filter(person => person.sex === sex);
+    }
+
+    if (centuries.length > 0) {
+      filteredPeople = filteredPeople.filter(person => {
+        const century = Math.floor(person.born / 100) + 1;
+
+        return centuries.includes(century.toString());
+      });
+    }
+
+    if (query) {
+      filteredPeople = filteredPeople.filter(person =>
+        person.name.toLowerCase().includes(query),
+      );
+    }
+
+    switch (sort) {
+      case 'name':
+        filteredPeople.sort((a, b) => a.name.localeCompare(b.name));
+        break;
+      case 'sex':
+        filteredPeople.sort((a, b) => a.sex.localeCompare(b.sex));
+        break;
+      case 'died':
+        filteredPeople.sort((a, b) => a.died - b.died);
+        break;
+      case 'born':
+      default:
+        filteredPeople.sort((a, b) => a.born - b.born);
+    }
+
+    return order === 'desc' ? filteredPeople.reverse() : filteredPeople;
+  }, [people, sex, centuries, query, sort, order]);
+
+  function getSort(sortType: string): string {
+    const currentSort = searchParams.get('sort');
+    const currentOrder = searchParams.get('order');
+
+    if (currentSort !== sortType) {
+      return getSearchWith(searchParams, {
+        sort: sortType,
+        order: 'desc',
+      });
+    }
+
+    if (currentOrder === 'desc') {
+      return getSearchWith(searchParams, {
+        sort: sortType,
+        order: 'asc',
+      });
+    }
+
+    return getSearchWith(searchParams, {
+      sort: null,
+      order: null,
+    });
+  }
+
+  function getArrows(sortType: string) {
+    const currentSort = searchParams.get('sort');
+    const currentOrder = searchParams.get('order');
+
+    if (currentSort !== sortType) {
+      return 'fa-sort';
+    }
+
+    if (currentOrder === 'desc') {
+      return 'fa-sort-down';
+    }
+
+    if (currentOrder === 'asc' || currentOrder === null) {
+      return 'fa-sort-up';
+    }
+
+    return 'fa-sort';
+  }
+
   return (
     <table
       data-cy="peopleTable"
@@ -18,44 +109,44 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Name
-              <a href="#/people?sort=name">
+              <Link to={`/people?${getSort('name')}`}>
                 <span className="icon">
-                  <i className="fas fa-sort" />
+                  <i className={`fas ${getArrows('name')}`} />
                 </span>
-              </a>
+              </Link>
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Sex
-              <a href="#/people?sort=sex">
+              <Link to={`/people?${getSort('sex')}`}>
                 <span className="icon">
-                  <i className="fas fa-sort" />
+                  <i className={`fas ${getArrows('sex')}`} />
                 </span>
-              </a>
+              </Link>
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Born
-              <a href="#/people?sort=born&amp;order=desc">
+              <Link to={`/people?${getSort('born')}`}>
                 <span className="icon">
-                  <i className="fas fa-sort-up" />
+                  <i className={`fas ${getArrows('born')}`} />
                 </span>
-              </a>
+              </Link>
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Died
-              <a href="#/people?sort=died">
+              <Link to={`/people?${getSort('died')}`}>
                 <span className="icon">
-                  <i className="fas fa-sort" />
+                  <i className={`fas ${getArrows('died')}`} />
                 </span>
-              </a>
+              </Link>
             </span>
           </th>
 
@@ -65,9 +156,9 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
       </thead>
 
       <tbody>
-        {people.map(person => {
+        {usePeople.map(person => {
           return (
-            <PersonLink key={person.slug} person={person} people={people} />
+            <PersonLink key={person.slug} person={person} people={usePeople} />
           );
         })}
       </tbody>
