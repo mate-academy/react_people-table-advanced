@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 import { Person } from '../types';
 import { PersonLink } from './PersonLink';
 import { Link, useParams, useSearchParams } from 'react-router-dom';
+import { SortFilterType } from '../types/SortFilterType';
 
 /* eslint-disable jsx-a11y/control-has-associated-label */
 type PeopleTablePros = {
@@ -39,14 +40,72 @@ export const PeopleTable = ({ people }: PeopleTablePros) => {
       });
     }
 
+    if (sortParam === 'sex') {
+      const sortedList = [...list].sort((a, b) => {
+        if (a.sex !== b.sex) {
+          return a.sex === 'f' ? -1 : 1;
+        }
+
+        return 0;
+      });
+
+      if (orderParam === 'desc') {
+        return sortedList.reverse();
+      }
+
+      return sortedList;
+    }
+
+    if (sortParam === 'born') {
+      list.sort((a, b) => {
+        if (a.born !== b.born) {
+          if (orderParam === 'desc') {
+            return b.born - a.born;
+          } else {
+            return a.born - b.born;
+          }
+        }
+
+        if (a.died !== b.died) {
+          return a.died - b.died;
+        }
+
+        const nameA = a.name.toLowerCase();
+        const nameB = b.name.toLowerCase();
+
+        return nameA.localeCompare(nameB);
+      });
+    }
+
+    if (sortParam === 'died') {
+      list.sort((a, b) => {
+        if (a.died !== b.died) {
+          if (orderParam === 'desc') {
+            return b.died - a.died;
+          } else {
+            return a.died - b.died;
+          }
+        }
+
+        if (a.born !== b.born) {
+          return a.born - b.born;
+        }
+
+        const nameA = a.name.toLowerCase();
+        const nameB = b.name.toLowerCase();
+
+        return nameA.localeCompare(nameB);
+      });
+    }
+
     return list;
   }, [listWithParentsSlug, sortParam, orderParam]);
 
-  const getNextSortParams = () => {
+  const getNextSortParams = (filter: SortFilterType) => {
     const newParams = new URLSearchParams(searchParams.toString());
 
-    if (sortParam !== 'name') {
-      newParams.set('sort', 'name');
+    if (sortParam !== filter) {
+      newParams.set('sort', filter);
       newParams.delete('order');
     } else if (orderParam !== 'desc') {
       newParams.set('order', 'desc');
@@ -62,12 +121,12 @@ export const PeopleTable = ({ people }: PeopleTablePros) => {
     return `/people?${newParams.toString()}`;
   };
 
-  const getSortIcon = () => {
-    if (sortParam === 'name' && orderParam === 'desc') {
+  const getSortIcon = (filterType: SortFilterType) => {
+    if (sortParam === filterType && orderParam === 'desc') {
       return 'fa-sort-down';
     }
 
-    if (sortParam === 'name') {
+    if (sortParam === filterType) {
       return 'fa-sort-up';
     }
 
@@ -84,9 +143,9 @@ export const PeopleTable = ({ people }: PeopleTablePros) => {
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Name
-              <Link to={getNextSortParams()}>
+              <Link to={getNextSortParams('name')}>
                 <span className="icon">
-                  <i className={`fas ${getSortIcon()}`} />
+                  <i className={`fas ${getSortIcon('name')}`} />
                 </span>
               </Link>
             </span>
@@ -95,33 +154,33 @@ export const PeopleTable = ({ people }: PeopleTablePros) => {
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Sex
-              <a href="#/people?sort=sex">
+              <Link to={getNextSortParams('sex')}>
                 <span className="icon">
-                  <i className="fas fa-sort" />
+                  <i className={`fas ${getSortIcon('sex')}`} />
                 </span>
-              </a>
+              </Link>
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Born
-              <a href="#/people?sort=born&amp;order=desc">
+              <Link to={getNextSortParams('born')}>
                 <span className="icon">
-                  <i className="fas fa-sort-up" />
+                  <i className={`fas ${getSortIcon('born')}`} />
                 </span>
-              </a>
+              </Link>
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Died
-              <a href="#/people?sort=died">
+              <Link to={getNextSortParams('died')}>
                 <span className="icon">
-                  <i className="fas fa-sort" />
+                  <i className={`fas ${getSortIcon('died')}`} />
                 </span>
-              </a>
+              </Link>
             </span>
           </th>
 

@@ -5,14 +5,12 @@ import {
   HashRouter as Router,
   Routes,
 } from 'react-router-dom';
-
 import 'bulma/css/bulma.css';
 import '@fortawesome/fontawesome-free/css/all.css';
-
 import { App } from './App';
-import { PeoplePage } from './components/PeoplePage';
 import { HomePage } from './pages/Home';
 import { NotFoundPage } from './pages/NotFound';
+import { PeoplePage } from './pages/People';
 
 createRoot(document.getElementById('root') as HTMLDivElement).render(
   <Router>
