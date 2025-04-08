@@ -15,30 +15,21 @@ export const PeopleTable: React.FC<Props> = ({
   onSort,
 }) => {
   const getSelectedSlug = (): string | null => {
-    const [, queryString] = window.location.hash.slice(1).split('?');
-    const params = new URLSearchParams(queryString || '');
-
-    return params.get('slug');
+    const hash = window.location.hash;
+    const match = hash.match(/^#\/people\/(.+)/);
+    return match ? match[1] : null;
   };
 
-  const selectedSlug = getSelectedSlug();
+  const [selectedSlug, setSelectedSlug] = useState<string | null>(getSelectedSlug());
 
   const updateSlugHash = (slug: string | null) => {
-    const [path, queryString] = window.location.hash.slice(1).split('?');
-    const params = new URLSearchParams(queryString || '');
-
-    if (slug === null) {
-      params.delete('slug');
-    } else {
-      params.set('slug', slug);
-    }
-
-    window.location.hash = `${path}?${params.toString()}`;
+    const newHash = slug ? `#/people/${slug}` : '#/people';
+    window.history.pushState(null, '', newHash);
   };
 
   const handleSlugClick = (personSlug: string) => {
     const newSlug = selectedSlug === personSlug ? null : personSlug;
-
+    setSelectedSlug(newSlug);
     updateSlugHash(newSlug);
   };
 
@@ -56,7 +47,8 @@ export const PeopleTable: React.FC<Props> = ({
 
   useEffect(() => {
     const handleHashChange = () => {
-      forceUpdate(n => n + 1);
+      setSelectedSlug(getSelectedSlug()); // Оновлюємо стан при зміні хешу
+      forceUpdate(n => n + 1); // Оновлюємо стан для перерендеру
     };
 
     window.addEventListener('hashchange', handleHashChange);
@@ -112,7 +104,7 @@ export const PeopleTable: React.FC<Props> = ({
             >
               <td>
                 <a
-                  href={`#/people?slug=${person.slug}`}
+                  href={`#/people/${person.slug}`}
                   className={person.sex === 'f' ? 'has-text-danger' : ''}
                   onClick={e => {
                     e.preventDefault();
@@ -130,7 +122,7 @@ export const PeopleTable: React.FC<Props> = ({
               <td>
                 {mother ? (
                   <a
-                    href="#/people"
+                    href={`#/people/${mother.slug}`}
                     className="has-text-danger"
                     onClick={e => {
                       e.preventDefault();
@@ -147,7 +139,7 @@ export const PeopleTable: React.FC<Props> = ({
               <td>
                 {father ? (
                   <a
-                    href="#/people"
+                    href={`#/people/${father.slug}`}
                     onClick={e => {
                       e.preventDefault();
                       handleSlugClick(father.slug);
