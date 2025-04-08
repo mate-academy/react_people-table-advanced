@@ -1,6 +1,5 @@
-
-import React from 'react'
-import { Person } from '../types/Person'
+import React from 'react';
+import { Person } from '../types/Person';
 type Props = {
   people: Person[];
   sortBy: keyof Person | null;
@@ -19,18 +18,23 @@ export const PeopleTable: React.FC<Props> = ({
 }) => {
   const handleSlugClick = (personSlug: string) => {
     const newSlug = selectedSlug === personSlug ? null : personSlug;
+
     onSlugChange(newSlug);
   };
+
   const getSortIcon = (field: keyof Person) => {
     const icons = {
       asc: <i className="fas fa-sort-up" />,
       desc: <i className="fas fa-sort-down" />,
       default: <i className="fas fa-sort" />,
     };
+
     return sortBy === field ? icons[sortOrder] : icons.default;
   };
+
   const findPersonByName = (name: string | undefined): Person | undefined =>
     people.find(p => p.name === name);
+
   return (
     <table
       data-cy="peopleTable"
@@ -65,6 +69,7 @@ export const PeopleTable: React.FC<Props> = ({
           const isSelected = selectedSlug === person.slug;
           const mother = findPersonByName(person.motherName || '');
           const father = findPersonByName(person.fatherName || '');
+
           return (
             <tr
               key={person.slug}
