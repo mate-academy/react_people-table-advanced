@@ -23,6 +23,8 @@ export const PeoplePage = () => {
         setIsLoading(true);
         setError(false);
 
+        await new Promise(res => setTimeout(res, 300));
+
         const response = await fetch('/api/people.json');
         const data = await response.json();
 
