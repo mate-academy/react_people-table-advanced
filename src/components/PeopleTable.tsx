@@ -1,10 +1,11 @@
+/* eslint-disable jsx-a11y/control-has-associated-label */
+
 import { useMemo } from 'react';
 import { Person } from '../types';
 import { PersonLink } from './PersonLink';
 import { Link, useParams, useSearchParams } from 'react-router-dom';
 import { SortFilterType } from '../types/SortFilterType';
 
-/* eslint-disable jsx-a11y/control-has-associated-label */
 type PeopleTablePros = {
   people: Person[];
 };
@@ -57,45 +58,35 @@ export const PeopleTable = ({ people }: PeopleTablePros) => {
     }
 
     if (sortParam === 'born') {
-      list.sort((a, b) => {
-        if (a.born !== b.born) {
-          if (orderParam === 'desc') {
-            return b.born - a.born;
-          } else {
-            return a.born - b.born;
-          }
-        }
-
-        if (a.died !== b.died) {
-          return a.died - b.died;
-        }
-
-        const nameA = a.name.toLowerCase();
-        const nameB = b.name.toLowerCase();
-
-        return nameA.localeCompare(nameB);
-      });
-    }
-
-    if (sortParam === 'died') {
-      list.sort((a, b) => {
-        if (a.died !== b.died) {
-          if (orderParam === 'desc') {
-            return b.died - a.died;
-          } else {
-            return a.died - b.died;
-          }
-        }
-
+      const sortedList = [...list].sort((a, b) => {
         if (a.born !== b.born) {
           return a.born - b.born;
         }
 
-        const nameA = a.name.toLowerCase();
-        const nameB = b.name.toLowerCase();
-
-        return nameA.localeCompare(nameB);
+        return 0;
       });
+
+      if (orderParam === 'desc') {
+        return sortedList.reverse();
+      }
+
+      return sortedList;
+    }
+
+    if (sortParam === 'died') {
+      const sortedList = [...list].sort((a, b) => {
+        if (a.died !== b.died) {
+          return a.died - b.died;
+        }
+
+        return 0;
+      });
+
+      if (orderParam === 'desc') {
+        return sortedList.reverse();
+      }
+
+      return sortedList;
     }
 
     return list;
