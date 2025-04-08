@@ -1,10 +1,9 @@
-import { useEffect, useMemo, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
-import peopleData from '../../public/api/people.json';
-import { Person } from '../types/Person';
-import { Loader } from './Loader';
-import { PeopleFilters } from './PeopleFilters';
-import { PeopleTable } from './PeopleTable';
+import { useEffect, useMemo, useState } from 'react'
+import { useSearchParams } from 'react-router-dom'
+import { Person } from '../types/Person'
+import { Loader } from './Loader'
+import { PeopleFilters } from './PeopleFilters'
+import { PeopleTable } from './PeopleTable'
 
 export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);
@@ -23,7 +22,11 @@ export const PeoplePage = () => {
       try {
         setIsLoading(true);
         setError(false);
-        setPeople(peopleData);
+
+        const response = await fetch('/api/people.json');
+        const data = await response.json();
+
+        setPeople(data);
       } catch {
         setError(true);
       } finally {
