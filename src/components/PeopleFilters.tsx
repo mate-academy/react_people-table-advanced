@@ -1,6 +1,11 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useSearchParams } from 'react-router-dom';
 import { SearchLink } from './SearchLink';
+
+type SearchParams = {
+  query?: string;
+  sex?: string;
+  centuries?: string[];
+};
 
 function getSearchWith(
   params: Record<string, string | string[] | null>,
@@ -28,12 +33,12 @@ export const PeopleFilters = () => {
   const sex = searchParams.get('sex');
   const centuries = searchParams.getAll('centuries');
 
-  const setSearchWith = (params: any) => {
+  const setSearchWith = (params: SearchParams) => {
     setSearchParams(getSearchWith(params, searchParams));
   };
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchWith({ query: event.target.value || null });
+    setSearchWith({ query: event.target.value || undefined });
   };
 
   return (
