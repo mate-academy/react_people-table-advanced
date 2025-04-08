@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { Person } from '../types/Person'
 
 type Props = {
@@ -6,6 +6,8 @@ type Props = {
   sortBy: keyof Person | null;
   sortOrder: 'asc' | 'desc' | 'default';
   onSort: (field: keyof Person) => void;
+  selectedSlug: string | null;
+  onSlugChange: (slug: string | null) => void;
 };
 
 export const PeopleTable: React.FC<Props> = ({
@@ -13,24 +15,12 @@ export const PeopleTable: React.FC<Props> = ({
   sortBy,
   sortOrder,
   onSort,
+  selectedSlug,
+  onSlugChange,
 }) => {
-  const getSelectedSlug = (): string | null => {
-    const hash = window.location.hash;
-    const match = hash.match(/^#\/people\/(.+)/);
-    return match ? match[1] : null;
-  };
-
-  const [selectedSlug, setSelectedSlug] = useState<string | null>(getSelectedSlug());
-
-  const updateSlugHash = (slug: string | null) => {
-    const newHash = slug ? `#/people/${slug}` : '#/people';
-    window.history.pushState(null, '', newHash);
-  };
-
   const handleSlugClick = (personSlug: string) => {
     const newSlug = selectedSlug === personSlug ? null : personSlug;
-    setSelectedSlug(newSlug);
-    updateSlugHash(newSlug);
+    onSlugChange(newSlug);
   };
 
   const getSortIcon = (field: keyof Person) => {
@@ -42,19 +32,6 @@ export const PeopleTable: React.FC<Props> = ({
 
     return sortBy === field ? icons[sortOrder] : icons.default;
   };
-
-  const [, forceUpdate] = useState(0);
-
-  useEffect(() => {
-    const handleHashChange = () => {
-      setSelectedSlug(getSelectedSlug()); // Оновлюємо стан при зміні хешу
-      forceUpdate(n => n + 1); // Оновлюємо стан для перерендеру
-    };
-
-    window.addEventListener('hashchange', handleHashChange);
-
-    return () => window.removeEventListener('hashchange', handleHashChange);
-  }, []);
 
   const findPersonByName = (name: string | undefined): Person | undefined =>
     people.find(p => p.name === name);
@@ -71,7 +48,7 @@ export const PeopleTable: React.FC<Props> = ({
               <span className="is-flex is-flex-wrap-nowrap">
                 {field.charAt(0).toUpperCase() + field.slice(1)}
                 <a
-                  href="#/people"
+                  href="#"
                   onClick={e => {
                     e.preventDefault();
                     onSort(field as keyof Person);
@@ -104,7 +81,7 @@ export const PeopleTable: React.FC<Props> = ({
             >
               <td>
                 <a
-                  href={`#/people/${person.slug}`}
+                  href="#"
                   className={person.sex === 'f' ? 'has-text-danger' : ''}
                   onClick={e => {
                     e.preventDefault();
@@ -122,7 +99,7 @@ export const PeopleTable: React.FC<Props> = ({
               <td>
                 {mother ? (
                   <a
-                    href={`#/people/${mother.slug}`}
+                    href="#"
                     className="has-text-danger"
                     onClick={e => {
                       e.preventDefault();
@@ -139,7 +116,7 @@ export const PeopleTable: React.FC<Props> = ({
               <td>
                 {father ? (
                   <a
-                    href={`#/people/${father.slug}`}
+                    href="#"
                     onClick={e => {
                       e.preventDefault();
                       handleSlugClick(father.slug);

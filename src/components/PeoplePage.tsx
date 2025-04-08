@@ -1,9 +1,9 @@
-import { useEffect, useMemo, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
-import { Person } from '../types/Person';
-import { Loader } from './Loader';
-import { PeopleFilters } from './PeopleFilters';
-import { PeopleTable } from './PeopleTable';
+import { useEffect, useMemo, useState } from 'react'
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
+import { Person } from '../types/Person'
+import { Loader } from './Loader'
+import { PeopleFilters } from './PeopleFilters'
+import { PeopleTable } from './PeopleTable'
 
 export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);
@@ -11,11 +11,11 @@ export const PeoplePage = () => {
   const [error, setError] = useState(false);
 
   const [sortBy, setSortBy] = useState<keyof Person | null>(null);
-  const [sortOrder, setSortOrder] = useState<'asc' | 'desc' | 'default'>(
-    'default',
-  );
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc' | 'default'>('default');
 
   const [searchParams] = useSearchParams();
+  const { slug } = useParams();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const loadPeople = async () => {
@@ -41,26 +41,20 @@ export const PeoplePage = () => {
 
   const filteredPeople = useMemo(() => {
     return people.filter(person => {
-      // Name filter
       const nameFilter = searchParams.get('name')?.toLowerCase() || '';
+      const sexFilter = searchParams.get('sex');
+      const centuryFilters = searchParams.getAll('centuries');
 
       if (nameFilter && !person.name.toLowerCase().includes(nameFilter)) {
         return false;
       }
 
-      // Sex filter
-      const sexFilter = searchParams.get('sex');
-
       if (sexFilter && person.sex !== sexFilter) {
         return false;
       }
 
-      // Century filter
-      const centuryFilters = searchParams.getAll('centuries');
-
       if (centuryFilters.length > 0) {
         const century = Math.ceil(person.born / 100);
-
         if (!centuryFilters.includes(String(century))) {
           return false;
         }
@@ -79,13 +73,8 @@ export const PeoplePage = () => {
       const aValue = a[sortBy];
       const bValue = b[sortBy];
 
-      if (aValue === null || aValue === undefined) {
-        return 1;
-      }
-
-      if (bValue === null || bValue === undefined) {
-        return -1;
-      }
+      if (aValue == null) return 1;
+      if (bValue == null) return -1;
 
       if (typeof aValue === 'number' && typeof bValue === 'number') {
         return sortOrder === 'asc' ? aValue - bValue : bValue - aValue;
@@ -96,21 +85,6 @@ export const PeoplePage = () => {
         : String(bValue).localeCompare(String(aValue));
     });
   }, [filteredPeople, sortBy, sortOrder]);
-
-  const updateHashParams = (newParams: Record<string, string | null>) => {
-    const [path, queryString] = window.location.hash.slice(1).split('?');
-    const params = new URLSearchParams(queryString || '');
-
-    Object.entries(newParams).forEach(([key, value]) => {
-      if (value === null) {
-        params.delete(key);
-      } else {
-        params.set(key, value);
-      }
-    });
-
-    window.location.hash = `${path}?${params.toString()}`;
-  };
 
   const handleSort = (field: keyof Person) => {
     let nextOrder: 'asc' | 'desc' | 'default' = 'asc';
@@ -124,10 +98,15 @@ export const PeoplePage = () => {
 
     setSortBy(newSortBy);
     setSortOrder(nextOrder);
+  };
 
-    updateHashParams({
-      sort: newSortBy,
-      order: nextOrder === 'default' ? null : nextOrder,
+  const handleSlugChange = (newSlug: string | null) => {
+    const base = '/people';
+    const newPath = newSlug ? `${base}/${newSlug}` : base;
+
+    navigate({
+      pathname: newPath,
+      search: `?${searchParams.toString()}`,
     });
   };
 
@@ -148,9 +127,7 @@ export const PeoplePage = () => {
                 <p data-cy="peopleLoadingError">Something went wrong</p>
               )}
               {!isLoading && !error && people.length === 0 && (
-                <p data-cy="noPeopleMessage">
-                  There are no people on the server
-                </p>
+                <p data-cy="noPeopleMessage">There are no people on the server</p>
               )}
               {!isLoading && !error && sortedPeople.length === 0 && (
                 <p>There are no people matching the current search criteria</p>
@@ -161,6 +138,8 @@ export const PeoplePage = () => {
                   sortBy={sortBy}
                   sortOrder={sortOrder}
                   onSort={handleSort}
+                  selectedSlug={slug || null}
+                  onSlugChange={handleSlugChange}
                 />
               )}
             </div>
