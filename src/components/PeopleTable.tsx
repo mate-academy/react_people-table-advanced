@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { Person } from '../types/Person';
+import React, { useEffect, useState } from 'react'
+import { Person } from '../types/Person'
 
 type Props = {
   people: Person[];
@@ -113,7 +113,8 @@ export const PeopleTable: React.FC<Props> = ({
               <td>
                 <a
                   href="#/people"
-                  onClick={e => {
+                  className={person.sex === 'f' ? 'has-text-danger' : ''}
+                  onClick={(e) => {
                     e.preventDefault();
                     handleSlugClick(person.slug);
                   }}
