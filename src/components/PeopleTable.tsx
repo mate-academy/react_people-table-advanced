@@ -137,7 +137,7 @@ export const PeopleTable: React.FC<Props> = ({ people, loading, error }) => {
                   >
                     <td>
                       <a
-                        href="#"
+                        href={`#/people/${person.slug}`}
                         className={person.sex === 'f' ? 'has-text-danger' : ''}
                         onClick={() => handleLinkClick(person.slug)}
                       >
@@ -151,7 +151,7 @@ export const PeopleTable: React.FC<Props> = ({ people, loading, error }) => {
                       {person.motherName &&
                       people.find(m => m.name === person.motherName) ? (
                         <Link
-                          to={`/people/${people.find(m => m.name === person.motherName)?.slug}`}
+                          to={`/people/${people.find(m => m.name === person.motherName)?.slug}?${searchParams.toString()}`}
                           className="has-text-danger"
                         >
                           {person.motherName}
@@ -164,7 +164,7 @@ export const PeopleTable: React.FC<Props> = ({ people, loading, error }) => {
                       {person.fatherName &&
                       people.find(f => f.name === person.fatherName) ? (
                         <Link
-                          to={`/people/${people.find(f => f.name === person.fatherName)?.slug}`}
+                          to={`/people/${people.find(f => f.name === person.fatherName)?.slug}?${searchParams.toString()}`}
                           className="has-text-link"
                         >
                           {person.fatherName}
