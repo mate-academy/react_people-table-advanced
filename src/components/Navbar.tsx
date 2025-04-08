@@ -1,8 +1,8 @@
-import { NavLink } from 'react-router-dom';
+import { NavLink } from 'react-router-dom'
 
 export const Navbar = () => {
   return (
-    <nav className="navbar has-shadow">
+    <nav data-cy="nav" className="navbar has-shadow">
       <div className="container">
         <div className="navbar-brand">
           <NavLink
