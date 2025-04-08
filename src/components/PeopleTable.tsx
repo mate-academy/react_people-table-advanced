@@ -112,9 +112,9 @@ export const PeopleTable: React.FC<Props> = ({
             >
               <td>
                 <a
-                  href="#/people"
+                  href={`#/people?slug=${person.slug}`}
                   className={person.sex === 'f' ? 'has-text-danger' : ''}
-                  onClick={(e) => {
+                  onClick={e => {
                     e.preventDefault();
                     handleSlugClick(person.slug);
                   }}
