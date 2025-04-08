@@ -1,0 +1,1 @@
+export { NameFilterType } from './NameFilterType';
