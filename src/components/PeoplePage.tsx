@@ -1,9 +1,10 @@
-import { useEffect, useMemo, useState } from 'react';
-import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
-import { Person } from '../types/Person';
-import { Loader } from './Loader';
-import { PeopleFilters } from './PeopleFilters';
-import { PeopleTable } from './PeopleTable';
+import { useEffect, useMemo, useState } from 'react'; //
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom'; //
+import { getPeople } from '../api'; //
+import { Person } from '../types/Person'; //
+import { Loader } from './Loader'; //
+import { PeopleFilters } from './PeopleFilters'; //
+import { PeopleTable } from './PeopleTable'; //
 
 export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);
@@ -33,10 +34,7 @@ export const PeoplePage = () => {
         setIsLoading(true);
         setError(false);
 
-        await new Promise(res => setTimeout(res, 300));
-
-        const response = await fetch('/api/people.json');
-        const data = await response.json();
+        const data = await getPeople();
 
         setPeople(data);
       } catch {
