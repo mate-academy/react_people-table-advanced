@@ -127,54 +127,63 @@ export const PeopleTable: React.FC<Props> = ({ people, loading, error }) => {
               </thead>
 
               <tbody>
-                {sortedPeople.map(person => (
-                  <tr
-                    key={person.slug}
-                    data-cy="person"
-                    className={
-                      slug === person.slug ? 'has-background-warning' : ''
-                    }
-                  >
-                    <td>
-                      <a
-                        href={`#/people/${person.slug}`}
-                        className={person.sex === 'f' ? 'has-text-danger' : ''}
-                        onClick={() => handleLinkClick(person.slug)}
-                      >
-                        {person.name}
-                      </a>
-                    </td>
-                    <td>{person.sex}</td>
-                    <td>{person.born}</td>
-                    <td>{person.died}</td>
-                    <td>
-                      {person.motherName &&
-                      people.find(m => m.name === person.motherName) ? (
-                        <Link
-                          to={`/people/${people.find(m => m.name === person.motherName)?.slug}?${searchParams.toString()}`}
-                          className="has-text-danger"
+                {sortedPeople.map(person => {
+                  const findNameMum = people.find(
+                    m => m.name === person.motherName,
+                  );
+                  const findNameFather = people.find(
+                    f => f.name === person.fatherName,
+                  );
+
+                  return (
+                    <tr
+                      key={person.slug}
+                      data-cy="person"
+                      className={
+                        slug === person.slug ? 'has-background-warning' : ''
+                      }
+                    >
+                      <td>
+                        <a
+                          href={`#/people/${person.slug}`}
+                          className={
+                            person.sex === 'f' ? 'has-text-danger' : ''
+                          }
+                          onClick={() => handleLinkClick(person.slug)}
                         >
-                          {person.motherName}
-                        </Link>
-                      ) : (
-                        person.motherName || '-'
-                      )}
-                    </td>
-                    <td>
-                      {person.fatherName &&
-                      people.find(f => f.name === person.fatherName) ? (
-                        <Link
-                          to={`/people/${people.find(f => f.name === person.fatherName)?.slug}?${searchParams.toString()}`}
-                          className="has-text-link"
-                        >
-                          {person.fatherName}
-                        </Link>
-                      ) : (
-                        person.fatherName || '-'
-                      )}
-                    </td>
-                  </tr>
-                ))}
+                          {person.name}
+                        </a>
+                      </td>
+                      <td>{person.sex}</td>
+                      <td>{person.born}</td>
+                      <td>{person.died}</td>
+                      <td>
+                        {person.motherName && findNameMum ? (
+                          <Link
+                            to={`/people/${people.find(m => m.name === person.motherName)?.slug}?${searchParams.toString()}`}
+                            className="has-text-danger"
+                          >
+                            {person.motherName}
+                          </Link>
+                        ) : (
+                          person.motherName || '-'
+                        )}
+                      </td>
+                      <td>
+                        {person.fatherName && findNameFather ? (
+                          <Link
+                            to={`/people/${people.find(f => f.name === person.fatherName)?.slug}?${searchParams.toString()}`}
+                            className="has-text-link"
+                          >
+                            {person.fatherName}
+                          </Link>
+                        ) : (
+                          person.fatherName || '-'
+                        )}
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           )}
