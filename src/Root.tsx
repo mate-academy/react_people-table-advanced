@@ -8,19 +8,23 @@ import { App } from './App';
 import { HomePage } from './components/HomePage';
 import { PageNotFound } from './components/PageNotFound';
 import { PeoplePage } from './PeoplePage/PeoplePage';
+import { AppRoutes } from './Routes';
 
 export const Root = () => {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<App />}>
-          <Route path="/home" element={<Navigate to="/" replace />} />
+        <Route path={AppRoutes.HOME} element={<App />}>
+          <Route
+            path={AppRoutes.HOME_REDIRECT}
+            element={<Navigate to={AppRoutes.HOME} replace />}
+          />
           <Route index element={<HomePage />} />
-          <Route path="people">
+          <Route path={AppRoutes.PEOPLE}>
             <Route index element={<PeoplePage />} />
             <Route path=":personSlug?" element={<PeoplePage />} />
           </Route>
-          <Route path="*" element={<PageNotFound />} />
+          <Route path={AppRoutes.NOT_FOUND} element={<PageNotFound />} />
         </Route>
       </Routes>
     </Router>

@@ -5,13 +5,13 @@ import { Person } from '../types';
 import { PersonRow } from './PersonRow';
 import { SearchLink } from '../components/SearchLink';
 import { SearchParams } from '../utils/searchHelper';
-import { SortOption } from "./types";
+import { SortOption } from './types';
 import { capitalize } from '../utils/helpers';
 import cn from 'classnames';
 
 interface Props {
   peopleWithParams: Person[];
-  sortParam: string | null;
+  sortParam: SortOption | null;
   sortOrderParam: string | null;
   getSortParam: (value: string) => SearchParams;
 }
@@ -32,6 +32,10 @@ export const PeopleTable: FC<Props> = ({
       <thead>
         <tr>
           {Object.values(SortOption).map(option => {
+            const isFaSort = sortParam !== option;
+            const isFaSortUp = sortParam === option && !sortOrderParam;
+            const isFaSortDown = sortParam === option && sortOrderParam;
+
             return (
               <th key={option}>
                 <span className="is-flex is-flex-wrap-nowrap">
@@ -40,10 +44,9 @@ export const PeopleTable: FC<Props> = ({
                     <span className="icon">
                       <i
                         className={cn('fas', {
-                          'fa-sort': sortParam !== option,
-                          'fa-sort-up': sortParam === option && !sortOrderParam,
-                          'fa-sort-down':
-                            sortParam === option && sortOrderParam,
+                          'fa-sort': isFaSort,
+                          'fa-sort-up': isFaSortUp,
+                          'fa-sort-down': isFaSortDown,
                         })}
                       />
                     </span>
@@ -74,47 +77,3 @@ export const PeopleTable: FC<Props> = ({
     </table>
   );
 };
-// </>
-//     )}
-//   </div>
-// </div>
-//   );
-// };
-//--------------------------------------------------------------------
-// const [people, setPeople] = useState<Person[]>([]);
-// const [isError, setIsError] = useState(false);
-// const [isLoading, setIsLoading] = useState(true);
-
-// const fetchPeople = async () => {
-//   try {
-//     setIsError(false);
-//     const peopleFromServer = await getPeople();
-//     const peopleWithParents = peopleFromServer.map(person => {
-//       return {
-//         ...person,
-//         mother: peopleFromServer.find(personToFind => {
-//           return person.motherName === personToFind.name;
-//         }),
-//         father: peopleFromServer.find(personToFind => {
-//           return person.fatherName === personToFind.name;
-//         }),
-//       };
-//     });
-
-//     setPeople(peopleWithParents);
-//   } catch (error) {
-//     setIsError(true);
-//   } finally {
-//     setIsLoading(false);
-//   }
-// };
-
-// const { personSlug } = useParams();
-
-// useEffect(() => {
-//   fetchPeople();
-// }, []);
-
-// if (isLoading) {
-//   return <Loader />;
-// }

@@ -5,14 +5,25 @@ import { getSearchWith, SearchParams } from '../utils/searchHelper';
 import { getPeople } from '../api';
 import { FilterBySex, SortOption } from './types';
 
-const getPreparedPeople = (
-  people: Person[],
-  filterBySex: FilterBySex,
-  filterByQuery: string,
-  filterByCenturies: string[],
-  sortParam: SortOption,
-  sortOrderParam: string | null,
-) => {
+interface Options {
+  people: Person[];
+  filterBySex: FilterBySex;
+  filterByQuery: string;
+  filterByCenturies: string[];
+  sortParam: SortOption;
+  sortOrderParam: string | null;
+}
+
+const getPreparedPeople = (options: Options) => {
+  const {
+    people,
+    filterBySex,
+    filterByQuery,
+    filterByCenturies,
+    sortParam,
+    sortOrderParam,
+  } = options;
+
   let preparingPeople = [...people];
 
   if (filterBySex) {
@@ -66,11 +77,11 @@ export const usePeoplePage = () => {
   const [isError, setIsError] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
-  const filterBySex = searchParams.get('sex') || null;
+  const filterBySex = (searchParams.get('sex') || null) as FilterBySex;
   const filterByQuery = searchParams.get('query') || '';
   const filterByCenturies = searchParams.getAll('centuries') || [];
 
-  const sortParam = searchParams.get('sort') || null;
+  const sortParam = (searchParams.get('sort') || null) as SortOption;
   const sortOrderParam = searchParams.get('order') || null;
 
   const setSearchWith = (params: SearchParams) => {
@@ -92,7 +103,7 @@ export const usePeoplePage = () => {
       return { sort: value, order: null };
     }
 
-    return { sort: null, order: null }; //?
+    return { sort: null, order: null };
   };
 
   const fetchPeople = async () => {
@@ -131,14 +142,14 @@ export const usePeoplePage = () => {
     return [...filterByCenturies, century];
   };
 
-  const peopleWithParams = getPreparedPeople(
+  const peopleWithParams = getPreparedPeople({
     people,
-    filterBySex as FilterBySex,
+    filterBySex,
     filterByQuery,
     filterByCenturies,
-    sortParam as SortOption,
+    sortParam,
     sortOrderParam,
-  );
+  });
 
   useEffect(() => {
     fetchPeople();
