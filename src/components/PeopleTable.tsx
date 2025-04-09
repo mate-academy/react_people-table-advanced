@@ -31,7 +31,10 @@ export const PeopleTable: React.FC<Props> = ({ people, loading, error }) => {
     return (
       (!sex || person.sex === sex) &&
       (centuries.length === 0 || centuries.includes(bornCentury.toString())) &&
-      (query === '' || person.name.toLowerCase().includes(query))
+      (query === '' ||
+        person.name.toLowerCase().includes(query) ||
+        person.motherName?.toLowerCase().includes(query) ||
+        person.fatherName?.toLowerCase().includes(query))
     );
   });
 
