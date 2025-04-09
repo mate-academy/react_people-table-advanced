@@ -24,7 +24,7 @@ export const PeopleFilters = () => {
 
   const handleQueryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     event.preventDefault();
-    setSearchWith({ query: event.target.value });
+    setSearchWith({ query: event.target.value.toLowerCase() });
   };
 
   const toggleCentury = (ch: string) => {
@@ -42,7 +42,7 @@ export const PeopleFilters = () => {
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        <NavLink to={`/people${getSex('')}`}>All</NavLink>
+        <NavLink to={`/people?${getSex('')}`}>All</NavLink>
         <NavLink to={`/people?${getSex('m')}`}>Male</NavLink>
         <NavLink to={`/people?${getSex('f')}`}>Female</NavLink>
       </p>

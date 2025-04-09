@@ -8,7 +8,6 @@ type Props = {
   people: PersonType[];
 };
 
-/* eslint-disable jsx-a11y/control-has-associated-label */
 export const PeopleTable: React.FC<Props> = ({ people }) => {
   const [searchParams] = useSearchParams();
   const sex = searchParams.get('sex');
@@ -38,22 +37,28 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
       );
     }
 
-    switch (sort) {
-      case 'name':
-        filteredPeople.sort((a, b) => a.name.localeCompare(b.name));
-        break;
-      case 'sex':
-        filteredPeople.sort((a, b) => a.sex.localeCompare(b.sex));
-        break;
-      case 'died':
-        filteredPeople.sort((a, b) => a.died - b.died);
-        break;
-      case 'born':
-      default:
-        filteredPeople.sort((a, b) => a.born - b.born);
+    if (sort && order) {
+      switch (sort) {
+        case 'name':
+          filteredPeople.sort((a, b) => a.name.localeCompare(b.name));
+          break;
+        case 'sex':
+          filteredPeople.sort((a, b) => a.sex.localeCompare(b.sex));
+          break;
+        case 'died':
+          filteredPeople.sort((a, b) => a.died - b.died);
+          break;
+        case 'born':
+        default:
+          filteredPeople.sort((a, b) => a.born - b.born);
+      }
+
+      if (order === 'desc') {
+        filteredPeople.reverse();
+      }
     }
 
-    return order === 'desc' ? filteredPeople.reverse() : filteredPeople;
+    return filteredPeople;
   }, [people, sex, centuries, query, sort, order]);
 
   function getSort(sortType: string): string {
