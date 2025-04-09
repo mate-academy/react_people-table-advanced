@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, NavLink, useSearchParams } from 'react-router-dom';
+import { NavLink, useSearchParams } from 'react-router-dom';
 import { getSearchWith, SearchParams } from '../utils/searchHelper';
 import classNames from 'classnames';
 
@@ -96,9 +96,12 @@ export const PeopleFilters = () => {
       </div>
 
       <div className="panel-block">
-        <Link className="button is-link is-outlined is-fullwidth" to="/people">
+        <NavLink
+          className="button is-link is-outlined is-fullwidth"
+          to="/people"
+        >
           Reset all filters
-        </Link>
+        </NavLink>
       </div>
     </nav>
   );
