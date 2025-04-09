@@ -18,7 +18,7 @@ export const PeopleFilters = () => {
     return getSearchWith(searchParams, { sex: value || null });
   }
 
-  const deleteFilter = () => {
+  const deleteCenturies = () => {
     setSearchWith({ centuries: null });
   };
 
@@ -87,7 +87,7 @@ export const PeopleFilters = () => {
               className={classNames('button is-success', {
                 'is-outlined': centuries.length !== 0,
               })}
-              onClick={deleteFilter}
+              onClick={deleteCenturies}
             >
               All
             </button>

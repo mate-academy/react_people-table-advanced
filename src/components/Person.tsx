@@ -13,22 +13,20 @@ export const PersonLink: React.FC<Props> = ({ person, people }) => {
   const { slug: slugParam } = useParams();
 
   const getLink = (mName: string) => {
-    let result = <span>{mName}</span>;
+    const foundPerson = people.find(e => e.name === mName);
 
-    people.find(e => {
-      if (e.name === mName) {
-        result = (
-          <NavLink
-            className={cn({ 'has-text-danger': e.sex === 'f' })}
-            to={`/people/${e.slug}`}
-          >
-            {mName}
-          </NavLink>
-        );
-      }
-    });
+    if (foundPerson) {
+      return (
+        <NavLink
+          className={cn({ 'has-text-danger': foundPerson.sex === 'f' })}
+          to={`/people/${foundPerson.slug}`}
+        >
+          {mName}
+        </NavLink>
+      );
+    }
 
-    return result;
+    return <span>{mName}</span>;
   };
 
   return (
