@@ -6,7 +6,10 @@ type FilterOptions = {
   sex: string | null;
 };
 
-export const getFilteredPeople = (people: Person[], options: FilterOptions): Person[] => {
+export const getFilteredPeople = (
+  people: Person[],
+  options: FilterOptions,
+): Person[] => {
   const { query, centuries, sex } = options;
 
   return people.filter(person => {
@@ -16,8 +19,7 @@ export const getFilteredPeople = (people: Person[], options: FilterOptions): Per
       centuries.length === 0 ||
       centuries.includes(Math.floor(person.born / 100) + 1);
 
-    const matchesSex =
-      !sex || sex === 'all' || person.sex === sex;
+    const matchesSex = !sex || sex === 'all' || person.sex === sex;
 
     return matchesQuery && matchesCentury && matchesSex;
   });

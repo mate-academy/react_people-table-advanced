@@ -48,8 +48,8 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
                           !isActive
                             ? 'fa-sort'
                             : isDesc
-                            ? 'fa-sort-down'
-                            : 'fa-sort-up'
+                              ? 'fa-sort-down'
+                              : 'fa-sort-up'
                         }`}
                       />
                     </span>

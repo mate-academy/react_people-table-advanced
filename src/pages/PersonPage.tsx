@@ -44,7 +44,11 @@ export const PersonPage = () => {
     };
   });
 
-  const filteredPeople = getFilteredPeople(peopleWithParents, { query, centuries, sex });
+  const filteredPeople = getFilteredPeople(peopleWithParents, {
+    query,
+    centuries,
+    sex,
+  });
 
   return (
     <main className="section">
@@ -66,7 +70,9 @@ export const PersonPage = () => {
                     {errorMessage}
                   </p>
                 ) : !people.length ? (
-                  <p data-cy="noPeopleMessage">There are no people on the server</p>
+                  <p data-cy="noPeopleMessage">
+                    There are no people on the server
+                  </p>
                 ) : (
                   <PeopleTable people={filteredPeople} />
                 )}

@@ -10,7 +10,7 @@ export const PeopleFilters = () => {
   const query = searchParams.get('query') || '';
   const centuries: number[] = searchParams.getAll('centuries').map(Number);
   const sex = searchParams.get('sex') || SexOptions.ALL;
-  
+
   const handleQueryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchParams(
       getSearchWith(searchParams, {
@@ -29,10 +29,8 @@ export const PeopleFilters = () => {
   };
 
   const isFiltersReset =
-    sex === SexOptions.ALL 
-    && !centuries.length 
-    && query === '';
-  
+    sex === SexOptions.ALL && !centuries.length && query === '';
+
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
@@ -80,7 +78,9 @@ export const PeopleFilters = () => {
                 <SearchLink
                   key={century}
                   data-cy="century"
-                  className={classNames('button mr-1', { 'is-info': isSelected })}
+                  className={classNames('button mr-1', {
+                    'is-info': isSelected,
+                  })}
                   params={{ centuries: handleCenturyClick(century) }}
                 >
                   {century}

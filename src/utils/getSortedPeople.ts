@@ -25,6 +25,7 @@ export function getSortedPeople(
     }
   });
 
-  return sortOrderParam === 'desc' ? preparingPeople.reverse() : preparingPeople;
+  return sortOrderParam === 'desc'
+    ? preparingPeople.reverse()
+    : preparingPeople;
 }
-

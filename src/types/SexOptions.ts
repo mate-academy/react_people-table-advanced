@@ -4,7 +4,7 @@ export const SexOptions = {
   FEMALE: 'Female',
 } as const;
 
-export type SexOption = typeof SexOptions[keyof typeof SexOptions];
+export type SexOption = (typeof SexOptions)[keyof typeof SexOptions];
 
 export const SexParamMap: Record<SexOption, string | null> = {
   [SexOptions.ALL]: null,
