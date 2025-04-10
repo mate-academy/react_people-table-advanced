@@ -19,6 +19,33 @@ export const PeoplePage = () => {
     toggleCenturies,
   } = usePeoplePage();
 
+  const renderContent = () => {
+    if (isLoading) {
+      return <Loader />;
+    }
+
+    if (isError) {
+      return <p data-cy="peopleLoadingError">Something went wrong</p>;
+    }
+
+    if (!people.length) {
+      return <p data-cy="noPeopleMessage">There are no people on the server</p>;
+    }
+
+    if (!peopleWithParams.length) {
+      return <p>There are no people matching the current search criteria</p>;
+    }
+
+    return (
+      <PeopleTable
+        peopleWithParams={peopleWithParams}
+        sortParam={sortParam}
+        sortOrderParam={sortOrderParam}
+        getSortParam={getSortParam}
+      />
+    );
+  };
+
   return (
     <>
       <h1 className="title">People Page</h1>
@@ -37,26 +64,7 @@ export const PeoplePage = () => {
           </div>
 
           <div className="column">
-            <div className="box table-container">
-              {isLoading ? (
-                <Loader />
-              ) : isError ? (
-                <p data-cy="peopleLoadingError">Something went wrong</p>
-              ) : !people.length ? (
-                <p data-cy="noPeopleMessage">
-                  There are no people on the server
-                </p>
-              ) : !peopleWithParams.length ? (
-                <p>There are no people matching the current search criteria</p>
-              ) : (
-                <PeopleTable
-                  peopleWithParams={peopleWithParams}
-                  sortParam={sortParam}
-                  sortOrderParam={sortOrderParam}
-                  getSortParam={getSortParam}
-                />
-              )}
-            </div>
+            <div className="box table-container">{renderContent()}</div>
           </div>
         </div>
       </div>

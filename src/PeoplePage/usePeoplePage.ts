@@ -10,7 +10,7 @@ interface Options {
   filterBySex: FilterBySex | null;
   filterByQuery: string;
   filterByCenturies: string[];
-  sortParam: SortOption;
+  sortParam: SortOption | null;
   sortOrderParam: string | null;
 }
 
@@ -47,26 +47,28 @@ const getPreparedPeople = (options: Options) => {
 
   if (!!filterByCenturies.length) {
     preparingPeople = preparingPeople.filter(person => {
-      const century = Math.floor(person.born / 100) + 1;
+      const century = Math.floor((person.born - 1) / 100) + 1;
 
       return filterByCenturies.includes(`${century}`);
     });
   }
 
-  preparingPeople = preparingPeople.sort((person1, person2) => {
-    switch (sortParam) {
-      case SortOption.NAME:
-        return person1.name.localeCompare(person2.name);
-      case SortOption.SEX:
-        return person1.sex.localeCompare(person2.sex);
-      case SortOption.BORN:
-        return person1.born - person2.born;
-      case SortOption.DIED:
-        return person1.died - person2.died;
-      default:
-        return 0;
-    }
-  });
+  if (sortParam) {
+    preparingPeople = preparingPeople.sort((person1, person2) => {
+      switch (sortParam) {
+        case SortOption.NAME:
+          return person1.name.localeCompare(person2.name);
+        case SortOption.SEX:
+          return person1.sex.localeCompare(person2.sex);
+        case SortOption.BORN:
+          return person1.born - person2.born;
+        case SortOption.DIED:
+          return person1.died - person2.died;
+        default:
+          return 0;
+      }
+    });
+  }
 
   return sortOrderParam ? preparingPeople.reverse() : preparingPeople;
 };
@@ -77,12 +79,12 @@ export const usePeoplePage = () => {
   const [isError, setIsError] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
-  const filterBySex = (searchParams.get('sex') || null) as FilterBySex | null;
+  const filterBySex = searchParams.get('sex') as FilterBySex | null;
   const filterByQuery = searchParams.get('query') || '';
   const filterByCenturies = searchParams.getAll('centuries') || [];
 
-  const sortParam = (searchParams.get('sort') || null) as SortOption;
-  const sortOrderParam = searchParams.get('order') || null;
+  const sortParam = searchParams.get('sort') as SortOption | null;
+  const sortOrderParam = searchParams.get('order');
 
   const setSearchWith = (params: SearchParams) => {
     const UrlSearch = getSearchWith(searchParams, params);
