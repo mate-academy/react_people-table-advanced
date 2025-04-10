@@ -39,6 +39,7 @@ export const PeopleProvider = ({ children }: Props) => {
 
   const fetchPeople = async () => {
     setLoading(true);
+
     try {
       const peopleFromServer = await getPeople();
 
