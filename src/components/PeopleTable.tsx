@@ -29,6 +29,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
       <thead>
         <tr>
           {Object.values(SortOptions).map(header => {
+            const capitalized = header[0].toUpperCase() + header.slice(1);
             const isActive = sort === header;
             const isDesc = isActive && order === SortOrder.DESC;
 
@@ -40,7 +41,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
             return (
               <th key={header}>
                 <span className="is-flex is-flex-wrap-nowrap">
-                  {header}
+                  {capitalized}
                   <SearchLink params={sortParams}>
                     <span className="icon">
                       <i
