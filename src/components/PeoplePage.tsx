@@ -1,57 +1,14 @@
 import { PeopleFilters } from './PeopleFilters';
 import { PeopleTable } from './PeopleTable';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Person } from '../types';
 import { getPeople } from '../api';
 
-function getVisiblePeople(
-  peopleWithParents: Person[],
-  filterSex: string,
-  query: string,
-  centuries: number[],
-) {
-  let peopleForWork = peopleWithParents.filter(person => {
-    switch (filterSex) {
-      case 'm':
-        return person.sex === 'm';
-      case 'f':
-        return person.sex === 'f';
-      case '':
-      default:
-        return true;
-    }
-  });
-
-  if (query) {
-    peopleForWork = peopleForWork.filter(person => {
-      const normalizedQuery = query.trim().toLowerCase();
-
-      return (
-        person.name.toLowerCase().includes(normalizedQuery) ||
-        person.motherName?.toLowerCase().includes(normalizedQuery) ||
-        person.fatherName?.toLowerCase().includes(normalizedQuery)
-      );
-    });
-  }
-
-  if (centuries.length) {
-    peopleForWork = peopleForWork.filter(person => {
-      const birthCentury = Math.ceil(person.born / 100);
-
-      return centuries.includes(birthCentury);
-    });
-  }
-
-  return peopleForWork;
-}
-
 export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);
+  const [visiblePeople, setVisiblePeople] = useState<Person[]>([]);
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
-  const [filterSex, setFilterSex] = useState('');
-  const [query, setQuery] = useState('');
-  const [centuries, setCenturies] = useState<number[]>([]);
 
   useEffect(() => {
     setLoading(true);
@@ -63,22 +20,22 @@ export const PeoplePage = () => {
       .finally(() => setLoading(false));
   }, []);
 
-  const getParent = (name: string | null) => {
-    return people.find(parent => parent.name === name);
-  };
+  const getParent = useCallback(
+    (name: string | null) => {
+      return people.find(parent => parent.name === name);
+    },
+    [people],
+  );
 
-  const peopleWithParents = people.map(person => {
-    const mother = getParent(person.motherName);
-    const father = getParent(person.fatherName);
+  const peopleWithParents = useMemo(
+    () =>
+      people.map(person => {
+        const mother = getParent(person.motherName);
+        const father = getParent(person.fatherName);
 
-    return { ...person, mother, father };
-  });
-
-  const visiblePeople = getVisiblePeople(
-    peopleWithParents,
-    filterSex,
-    query,
-    centuries,
+        return { ...person, mother, father };
+      }),
+    [getParent, people],
   );
 
   return (
@@ -89,11 +46,8 @@ export const PeoplePage = () => {
         <div className="columns is-desktop is-flex-direction-row-reverse">
           <div className="column is-7-tablet is-narrow-desktop">
             <PeopleFilters
-              setFilterSex={setFilterSex}
-              setQuery={setQuery}
-              setCenturies={setCenturies}
-              filterSex={filterSex}
-              centuries={centuries}
+              people={peopleWithParents}
+              setVisiblePeople={setVisiblePeople}
             />
           </div>
 

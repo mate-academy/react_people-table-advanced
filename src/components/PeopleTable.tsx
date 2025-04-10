@@ -1,10 +1,11 @@
 /* eslint-disable jsx-a11y/control-has-associated-label */
 import { Person } from '../types/Person';
-import { useParams } from 'react-router-dom';
+import { Link, useParams, useSearchParams } from 'react-router-dom';
 import { PersonRow } from './PersonRow';
 import { Loader } from './Loader';
 import { useState } from 'react';
 import cn from 'classnames';
+import { getSearchWith } from '../utils/searchHelper';
 
 interface Props {
   people: Person[];
@@ -13,6 +14,8 @@ interface Props {
 }
 
 export const PeopleTable = ({ people, loading, errorMessage }: Props) => {
+  const [searchParams, setSearchParams] = useSearchParams();
+
   const [sortField, setSortField] = useState('');
   const [sortDestination, setSortDestination] = useState('');
 
@@ -27,8 +30,13 @@ export const PeopleTable = ({ people, loading, errorMessage }: Props) => {
     } else {
       if (sortDestination === 'asc') {
         setSortDestination('desc');
+        setSearchParams(getSearchWith(searchParams, { order: 'desc' }));
       } else {
         setSortField('');
+        setSortDestination('');
+        setSearchParams(
+          getSearchWith(searchParams, { sort: null, order: null }),
+        );
       }
     }
   }
@@ -72,7 +80,7 @@ export const PeopleTable = ({ people, loading, errorMessage }: Props) => {
         <p data-cy="noPeopleMessage">There are no people on the server</p>
       )}
 
-      {!loading && (
+      {!loading && !!people.length && (
         <table
           data-cy="peopleTable"
           className="table is-striped is-hoverable is-narrow is-fullwidth"
@@ -85,11 +93,18 @@ export const PeopleTable = ({ people, loading, errorMessage }: Props) => {
                   onClick={() => handleSort('name')}
                 >
                   Name
-                  <a href="#/people?sort=name">
+                  <Link
+                    to={{
+                      pathname: '/people',
+                      search: getSearchWith(searchParams, {
+                        sort: 'name',
+                      }),
+                    }}
+                  >
                     <span className="icon">
                       <i className={getIcon('name')} />
                     </span>
-                  </a>
+                  </Link>
                 </span>
               </th>
 
@@ -99,11 +114,18 @@ export const PeopleTable = ({ people, loading, errorMessage }: Props) => {
                   onClick={() => handleSort('sex')}
                 >
                   Sex
-                  <a href="#/people?sort=sex">
+                  <Link
+                    to={{
+                      pathname: '/people',
+                      search: getSearchWith(searchParams, {
+                        sort: 'sex',
+                      }),
+                    }}
+                  >
                     <span className="icon">
                       <i className={getIcon('sex')} />
                     </span>
-                  </a>
+                  </Link>
                 </span>
               </th>
 
@@ -113,11 +135,18 @@ export const PeopleTable = ({ people, loading, errorMessage }: Props) => {
                   onClick={() => handleSort('born')}
                 >
                   Born
-                  <a href="#/people?sort=born&amp;order=desc">
+                  <Link
+                    to={{
+                      pathname: '/people',
+                      search: getSearchWith(searchParams, {
+                        sort: 'born',
+                      }),
+                    }}
+                  >
                     <span className="icon">
                       <i className={getIcon('born')} />
                     </span>
-                  </a>
+                  </Link>
                 </span>
               </th>
 
@@ -127,11 +156,18 @@ export const PeopleTable = ({ people, loading, errorMessage }: Props) => {
                   onClick={() => handleSort('died')}
                 >
                   Died
-                  <a href="#/people?sort=died">
+                  <Link
+                    to={{
+                      pathname: '/people',
+                      search: getSearchWith(searchParams, {
+                        sort: 'died',
+                      }),
+                    }}
+                  >
                     <span className="icon">
                       <i className={getIcon('died')} />
                     </span>
-                  </a>
+                  </Link>
                 </span>
               </th>
 
