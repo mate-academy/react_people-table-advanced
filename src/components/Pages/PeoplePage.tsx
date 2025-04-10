@@ -6,7 +6,7 @@ import { PeopleContext } from '../../contexts/PeopleContext';
 import { ErrorType } from '../../types/ErrorType';
 
 export const PeoplePage = () => {
-  const { isLoading, isError } = useContext(PeopleContext)
+  const { isLoading, isError } = useContext(PeopleContext);
 
   return (
     <>
@@ -16,31 +16,34 @@ export const PeoplePage = () => {
         <Loader />
       ) : (
         <div className="block">
-        <div className="columns is-desktop is-flex-direction-row-reverse">
-          <div className="column is-7-tablet is-narrow-desktop">
-            <PeopleFilters />
-          </div>
+          <div className="columns is-desktop is-flex-direction-row-reverse">
+            <div className="column is-7-tablet is-narrow-desktop">
+              <PeopleFilters />
+            </div>
 
-          <div className="column">
-            <div className="box table-container">
+            <div className="column">
+              <div className="box table-container">
+                {isError === ErrorType.LOADING_ERRROR && (
+                  <p data-cy="peopleLoadingError">Something went wrong</p>
+                )}
 
-              {isError === ErrorType.LOADING_ERRROR && (
-                <p data-cy="peopleLoadingError">Something went wrong</p>
-              )}
+                {isError === ErrorType.NO_PEOPLE_ERROR && (
+                  <p data-cy="noPeopleMessage">
+                    There are no people on the server
+                  </p>
+                )}
 
-              {isError === ErrorType.NO_PEOPLE_ERROR && (
-                <p data-cy="noPeopleMessage">There are no people on the server</p>
-              )}
+                {isError === ErrorType.NO_MATCHES && (
+                  <p>
+                    There are no people matching the current search criteria
+                  </p>
+                )}
 
-              {isError === ErrorType.NO_MATCHES && (
-                <p>There are no people matching the current search criteria</p>
-              )}
-
-              {!isError && <PeopleTable />}
+                {!isError && <PeopleTable />}
+              </div>
             </div>
           </div>
         </div>
-      </div>
       )}
     </>
   );

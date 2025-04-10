@@ -1,24 +1,26 @@
-import { useSearchParams } from "react-router-dom";
-import { SearchLink } from "./SearchLink";
+import { useSearchParams } from 'react-router-dom';
+import { SearchLink } from './SearchLink';
 import cn from 'classnames';
 
 export const PeopleFilters = () => {
-  const [searchParams, setSearchParams] = useSearchParams()
+  const [searchParams, setSearchParams] = useSearchParams();
   const centuriesArr = [16, 17, 18, 19, 20];
-  const centuriesInParams: number[] = searchParams.getAll('centuries').map(Number);
-  const sex = searchParams.get('sex')
+  const centuriesInParams: number[] = searchParams
+    .getAll('centuries')
+    .map(Number);
+  const sex = searchParams.get('sex');
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
 
     if (value) {
-      searchParams.set('query', value)
+      searchParams.set('query', value);
     } else {
-      searchParams.delete('query')
+      searchParams.delete('query');
     }
 
-    setSearchParams(searchParams)
-  }
+    setSearchParams(searchParams);
+  };
 
   const handleCenturyClick = (century: number) => {
     const isInParams = centuriesInParams.includes(century);
@@ -39,19 +41,22 @@ export const PeopleFilters = () => {
 
       <p className="panel-tabs" data-cy="SexFilter">
         <SearchLink
-        className={cn({'is-active': sex === null})}
-        params={{ sex: null }}>
+          className={cn({ 'is-active': sex === null })}
+          params={{ sex: null }}
+        >
           All
         </SearchLink>
         <SearchLink
-          className={cn({'is-active': sex === 'm'})}
-          params={{ sex: 'm' }}>
-            Male
+          className={cn({ 'is-active': sex === 'm' })}
+          params={{ sex: 'm' }}
+        >
+          Male
         </SearchLink>
         <SearchLink
-          className={cn({'is-active': sex === 'f'})}
-          params={{ sex: 'f' }}>
-            Female
+          className={cn({ 'is-active': sex === 'f' })}
+          params={{ sex: 'f' }}
+        >
+          Female
         </SearchLink>
       </p>
 
@@ -77,9 +82,9 @@ export const PeopleFilters = () => {
           <div className="level-left">
             {centuriesArr.map(century => (
               <SearchLink
-              key={century}
+                key={century}
                 data-cy="century"
-                className={cn("button mr-1", {
+                className={cn('button mr-1', {
                   'is-info': isCenturyActive(century.toString()),
                 })}
                 params={{ centuries: handleCenturyClick(century) }}
@@ -92,10 +97,10 @@ export const PeopleFilters = () => {
           <div className="level-right ml-4">
             <SearchLink
               data-cy="centuryALL"
-              className={cn("button is-success", {
-                'is-outlined': centuriesInParams.length > 0
+              className={cn('button is-success', {
+                'is-outlined': centuriesInParams.length > 0,
               })}
-              params={{centuries: null}}
+              params={{ centuries: null }}
             >
               All
             </SearchLink>
