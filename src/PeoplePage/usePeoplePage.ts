@@ -7,7 +7,7 @@ import { FilterBySex, SortOption } from './types';
 
 interface Options {
   people: Person[];
-  filterBySex: FilterBySex;
+  filterBySex: FilterBySex | null;
   filterByQuery: string;
   filterByCenturies: string[];
   sortParam: SortOption;
@@ -29,10 +29,10 @@ const getPreparedPeople = (options: Options) => {
   if (filterBySex) {
     preparingPeople = preparingPeople.filter(person => {
       switch (filterBySex) {
-        case 'f':
-          return person.sex === 'f';
-        case 'm':
-          return person.sex === 'm';
+        case FilterBySex.FEMALE:
+          return person.sex === FilterBySex.FEMALE;
+        case FilterBySex.MALE:
+          return person.sex === FilterBySex.MALE;
         default:
           return person;
       }
@@ -77,7 +77,7 @@ export const usePeoplePage = () => {
   const [isError, setIsError] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
-  const filterBySex = (searchParams.get('sex') || null) as FilterBySex;
+  const filterBySex = (searchParams.get('sex') || null) as FilterBySex | null;
   const filterByQuery = searchParams.get('query') || '';
   const filterByCenturies = searchParams.getAll('centuries') || [];
 

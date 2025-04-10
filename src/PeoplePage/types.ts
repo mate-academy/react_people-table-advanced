@@ -4,4 +4,7 @@ export enum SortOption {
   BORN = 'born',
   DIED = 'died',
 }
-export type FilterBySex = 'm' | 'f' | null;
+export enum FilterBySex {
+  MALE = 'm',
+  FEMALE = 'f',
+}
