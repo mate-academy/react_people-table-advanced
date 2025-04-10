@@ -26,9 +26,18 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
             Name
             <SortTableLink field="name" />
           </th>
-          <th>Sex</th>
-          <th>Born</th>
-          <th>Died</th>
+          <th>
+            Sex
+            <SortTableLink field="sex" />
+          </th>
+          <th>
+            Born
+            <SortTableLink field="born" />
+          </th>
+          <th>
+            Died
+            <SortTableLink field="died" />
+          </th>
           <th>Mother</th>
           <th>Father</th>
         </tr>
