@@ -4,7 +4,7 @@ import { centuryFilter, sexFilters } from './filters';
 import { SearchLink } from '../components/SearchLink';
 
 interface Props {
-  hidden: boolean;
+  isHidden: boolean;
   toggleCenturies: (val: string) => string[];
   inputOnChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   filterBySex: string | null;
@@ -13,7 +13,7 @@ interface Props {
 }
 
 export const PeopleFilters: FC<Props> = ({
-  hidden,
+  isHidden,
   toggleCenturies,
   inputOnChange,
   filterBySex,
@@ -32,7 +32,7 @@ export const PeopleFilters: FC<Props> = ({
   };
 
   return (
-    <nav className="panel" hidden={hidden}>
+    <nav className="panel" hidden={isHidden}>
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">

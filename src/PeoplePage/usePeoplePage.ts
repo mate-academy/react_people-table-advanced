@@ -41,7 +41,17 @@ const getPreparedPeople = (options: Options) => {
 
   if (filterByQuery) {
     preparingPeople = preparingPeople.filter(person => {
-      return person.name.toLowerCase().includes(filterByQuery.toLowerCase());
+      const hasInPersonName = person.name
+        .toLowerCase()
+        .includes(filterByQuery.toLowerCase());
+      const hasInMotherName = person.motherName
+        ? person.motherName.toLowerCase().includes(filterByQuery.toLowerCase())
+        : false;
+      const hasInFatherName = person.fatherName
+        ? person.fatherName.toLowerCase().includes(filterByQuery.toLowerCase())
+        : false;
+
+      return hasInPersonName || hasInMotherName || hasInFatherName;
     });
   }
 

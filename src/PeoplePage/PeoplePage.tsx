@@ -54,7 +54,7 @@ export const PeoplePage = () => {
         <div className="columns is-desktop is-flex-direction-row-reverse">
           <div className="column is-7-tablet is-narrow-desktop">
             <PeopleFilters
-              hidden={isLoading}
+              isHidden={isLoading}
               toggleCenturies={toggleCenturies}
               inputOnChange={inputOnChange}
               filterBySex={filterBySex}
