@@ -52,8 +52,6 @@ export const PeoplePage = () => {
           </div>
 
           <div className="column">
-            {/* <p>There are no people matching the current search criteria</p> */}
-
             <PeopleTable
               people={visiblePeople}
               loading={loading}

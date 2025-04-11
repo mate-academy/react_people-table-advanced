@@ -76,8 +76,12 @@ export const PeopleTable = ({ people, loading, errorMessage }: Props) => {
 
       {errorMessage && <p data-cy="peopleLoadingError">{errorMessage}</p>}
 
-      {!loading && !people.length && (
+      {!loading && !people.length && !searchParams && (
         <p data-cy="noPeopleMessage">There are no people on the server</p>
+      )}
+
+      {!loading && !people.length && searchParams && (
+        <p>There are no people matching the current search criteria</p>
       )}
 
       {!loading && !!people.length && (
