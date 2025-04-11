@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Link, useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
+import { SearchLink } from '../SearchLink';
 
 export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -16,30 +17,6 @@ export const PeopleFilters = () => {
     } else {
       newParams.delete('sex');
     }
-
-    setSearchParams(newParams);
-  };
-
-  const toggleCentury = (century: string) => {
-    const newParams = new URLSearchParams(searchParams);
-    const current = searchParams.getAll('centuries');
-
-    if (current.includes(century)) {
-      const update = current.filter(c => c !== century);
-
-      newParams.delete('centuries');
-      update.forEach(c => newParams.append('centuries', c));
-    } else {
-      newParams.append('centuries', century);
-    }
-
-    setSearchParams(newParams);
-  };
-
-  const resetCenturies = () => {
-    const newParams = new URLSearchParams(searchParams);
-
-    newParams.delete('centuries');
 
     setSearchParams(newParams);
   };
@@ -105,28 +82,37 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            {[16, 17, 18, 19, 20].map(century => (
-              <Link
-                key={century}
-                data-cy="century"
-                className={`button mr-1 ${selectedCenturies.includes(century.toString()) ? 'is-info' : ''}`}
-                onClick={() => toggleCentury(century.toString())}
-                to={`?centuries=${century}`}
-              >
-                {century}
-              </Link>
-            ))}
+            {[16, 17, 18, 19, 20].map(century => {
+              const centuryStr = century.toString();
+              const selected = selectedCenturies.includes(centuryStr);
+
+              const updateCentury = selected
+                ? selectedCenturies.filter(c => c !== centuryStr)
+                : [...selectedCenturies, centuryStr];
+
+              return (
+                <SearchLink
+                  params={{
+                    centuries: updateCentury.length > 0 ? updateCentury : null,
+                  }}
+                  key={century}
+                  data-cy="century"
+                  className={`button mr-1 ${selectedCenturies.includes(century.toString()) ? 'is-info' : ''}`}
+                >
+                  {century}
+                </SearchLink>
+              );
+            })}
           </div>
 
           <div className="level-right ml-4">
-            <Link
+            <SearchLink
+              params={{ centuries: null }}
               data-cy="centuryALL"
               className="button is-success is-outlined"
-              to="?centuries="
-              onClick={resetCenturies}
             >
               All
-            </Link>
+            </SearchLink>
           </div>
         </div>
       </div>

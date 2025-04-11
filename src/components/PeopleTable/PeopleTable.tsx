@@ -1,7 +1,8 @@
-import { Link, useParams, useSearchParams } from 'react-router-dom';
+import { useParams, useSearchParams } from 'react-router-dom';
 import { Person } from '../../types';
 import { PersonLink } from '../PersonLink';
 import React from 'react';
+import { SearchLink } from '../SearchLink';
 
 type PeopleProps = {
   people: Person[] | undefined;
@@ -9,24 +10,30 @@ type PeopleProps = {
 
 export const PeopleTable = ({ people }: PeopleProps) => {
   const { slug } = useParams();
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
 
   const getSortLink = (field: string) => {
     const currentSort = searchParams.get('sort');
     const currentOrder = searchParams.get('order');
-    const newParams = new URLSearchParams(searchParams);
 
     if (currentSort !== field) {
-      newParams.set('sort', field);
-      newParams.delete('order');
-    } else if (!currentOrder) {
-      newParams.set('order', 'desc');
-    } else {
-      newParams.delete('sort');
-      newParams.delete('order');
+      return {
+        sort: field,
+        order: null,
+      };
     }
 
-    setSearchParams(newParams);
+    if (!currentOrder) {
+      return {
+        sort: field,
+        order: 'desc',
+      };
+    }
+
+    return {
+      sort: null,
+      order: null,
+    };
   };
 
   const getSortIcon = (field: string) => {
@@ -58,44 +65,44 @@ export const PeopleTable = ({ people }: PeopleProps) => {
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Name
-              <Link to="#" onClick={() => getSortLink('name')}>
+              <SearchLink params={getSortLink('name')}>
                 <span className="icon">
                   <i className={getSortIcon('name')} />
                 </span>
-              </Link>
+              </SearchLink>
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Sex
-              <Link to="#" onClick={() => getSortLink('sex')}>
+              <SearchLink params={getSortLink('sex')}>
                 <span className="icon">
                   <i className={getSortIcon('sex')} />
                 </span>
-              </Link>
+              </SearchLink>
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Born
-              <Link to="#" onClick={() => getSortLink('born')}>
+              <SearchLink params={getSortLink('born')}>
                 <span className="icon">
                   <i className={getSortIcon('born')} />
                 </span>
-              </Link>
+              </SearchLink>
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Died
-              <Link to="#" onClick={() => getSortLink('died')}>
+              <SearchLink params={getSortLink('died')}>
                 <span className="icon">
                   <i className={getSortIcon('died')} />
                 </span>
-              </Link>
+              </SearchLink>
             </span>
           </th>
 
