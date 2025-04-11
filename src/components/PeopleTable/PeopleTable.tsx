@@ -9,7 +9,7 @@ type PeopleProps = {
 
 export const PeopleTable = ({ people }: PeopleProps) => {
   const { slug } = useParams();
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const getSortLink = (field: string) => {
     const currentSort = searchParams.get('sort');
@@ -26,7 +26,7 @@ export const PeopleTable = ({ people }: PeopleProps) => {
       newParams.delete('order');
     }
 
-    return `?${newParams.toString()}`;
+    setSearchParams(newParams);
   };
 
   const getSortIcon = (field: string) => {
@@ -58,7 +58,7 @@ export const PeopleTable = ({ people }: PeopleProps) => {
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Name
-              <Link to={getSortLink('name')}>
+              <Link to="#" onClick={() => getSortLink('name')}>
                 <span className="icon">
                   <i className={getSortIcon('name')} />
                 </span>
@@ -69,7 +69,7 @@ export const PeopleTable = ({ people }: PeopleProps) => {
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Sex
-              <Link to={getSortLink('sex')}>
+              <Link to="#" onClick={() => getSortLink('sex')}>
                 <span className="icon">
                   <i className={getSortIcon('sex')} />
                 </span>
@@ -80,7 +80,7 @@ export const PeopleTable = ({ people }: PeopleProps) => {
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Born
-              <Link to={getSortLink('born')}>
+              <Link to="#" onClick={() => getSortLink('born')}>
                 <span className="icon">
                   <i className={getSortIcon('born')} />
                 </span>
@@ -91,7 +91,7 @@ export const PeopleTable = ({ people }: PeopleProps) => {
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Died
-              <Link to={getSortLink('died')}>
+              <Link to="#" onClick={() => getSortLink('died')}>
                 <span className="icon">
                   <i className={getSortIcon('died')} />
                 </span>

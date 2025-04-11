@@ -33,7 +33,7 @@ export const PeopleFilters = () => {
       newParams.append('centuries', century);
     }
 
-    return `?${newParams.toString()}`;
+    setSearchParams(newParams);
   };
 
   const resetCenturies = () => {
@@ -41,7 +41,7 @@ export const PeopleFilters = () => {
 
     newParams.delete('centuries');
 
-    return `?${newParams.toString()}`;
+    setSearchParams(newParams);
   };
 
   const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -110,7 +110,8 @@ export const PeopleFilters = () => {
                 key={century}
                 data-cy="century"
                 className={`button mr-1 ${selectedCenturies.includes(century.toString()) ? 'is-info' : ''}`}
-                to={toggleCentury(century.toString())}
+                onClick={() => toggleCentury(century.toString())}
+                to={`?centuries=${century}`}
               >
                 {century}
               </Link>
@@ -121,7 +122,8 @@ export const PeopleFilters = () => {
             <Link
               data-cy="centuryALL"
               className="button is-success is-outlined"
-              to={resetCenturies()}
+              to="?centuries="
+              onClick={resetCenturies}
             >
               All
             </Link>
