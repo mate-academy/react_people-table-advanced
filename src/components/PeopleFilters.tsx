@@ -6,6 +6,7 @@ import { SearchLink } from './SearchLink';
 
 import { SearchParamsOptions } from '../types/enums';
 import cn from 'classnames';
+import { SearchParamsType } from '../types';
 
 export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -13,7 +14,7 @@ export const PeopleFilters = () => {
   const query = searchParams.get(SearchParamsOptions.query) || '';
   const centuries = searchParams.getAll(SearchParamsOptions.centuries) || [];
 
-  const setSearchWith = (params: SearchParamsOptions) => {
+  const setSearchWith = (params: SearchParamsType['query']) => {
     const newParams = getSearchWith(searchParams, {
       [SearchParamsOptions.query]: params || null,
     });
@@ -21,8 +22,10 @@ export const PeopleFilters = () => {
     setSearchParams(newParams);
   };
 
-  const handleQuewryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchWith(e.target.value as SearchParamsOptions);
+  const handleQuewryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchWith(
+      query.length < 1 ? event.target.value.trim() : event.target.value,
+    );
   };
 
   const toggleCentury = (century: number) => {

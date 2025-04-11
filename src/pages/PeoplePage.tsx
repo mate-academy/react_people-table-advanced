@@ -1,11 +1,20 @@
 import { useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 
 import { PeopleFilters } from '../components/PeopleFilters';
 import { Loader } from '../components/Loader';
 import { PeopleTable } from '../components/PeopleTable';
 
-import { Person } from '../types';
+import { Person, SearchParamsType } from '../types';
 import { getPeople } from '../api';
+import { SearchParamsOptions } from '../types/enums';
+
+import {
+  filteredBySex,
+  filteredByCenturies,
+  filterByQuery,
+  sortByParams,
+} from '../utils/filterHelper';
 
 export const PeoplePage = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -49,6 +58,47 @@ export const PeoplePage = () => {
     fetchPeoples();
   }, []);
 
+  const [searchParams] = useSearchParams();
+
+  const params = {
+    centuries: searchParams.getAll(SearchParamsOptions.centuries) || [],
+    sex: searchParams.get(SearchParamsOptions.sex) || '',
+    query: searchParams.get(SearchParamsOptions.query) || '',
+    order: searchParams.get(SearchParamsOptions.order) || '',
+    sort: searchParams.get(SearchParamsOptions.sort) || '',
+  };
+
+  const filteredPeople = (filteredParams: SearchParamsType) => {
+    let filteredList = peopleList;
+
+    if (filteredParams.centuries.length > 0) {
+      filteredList = filteredByCenturies(
+        filteredList,
+        filteredParams.centuries,
+      );
+    }
+
+    if (filteredParams.sex) {
+      filteredList = filteredBySex(filteredList, filteredParams.sex);
+    }
+
+    if (params.query) {
+      filteredList = filterByQuery(filteredList, params.query);
+    }
+
+    if (filteredParams.sort) {
+      filteredList = sortByParams(filteredList, filteredParams.sort);
+    }
+
+    if (params.order !== '') {
+      filteredList = filteredList.reverse();
+    }
+
+    return filteredList;
+  };
+
+  const visiblePeople = filteredPeople(params);
+
   return (
     <>
       <h1 className="title">People Page</h1>
@@ -66,13 +116,13 @@ export const PeoplePage = () => {
                   Something went wrong
                 </p>
               )}
-              {!isError && !isLoading && peopleList.length < 1 && (
+              {!isError && !isLoading && visiblePeople.length < 1 && (
                 <p data-cy="noPeopleMessage">
                   There are no people on the server
                 </p>
               )}
-              {!isError && !isLoading && peopleList.length > 0 && (
-                <PeopleTable peopleList={peopleList} />
+              {!isError && !isLoading && visiblePeople.length > 0 && (
+                <PeopleTable peopleList={visiblePeople} />
               )}
             </div>
           </div>
