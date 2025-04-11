@@ -27,6 +27,8 @@ export const PeopleTable = ({ people, loading, errorMessage }: Props) => {
     if (field !== sortField) {
       setSortField(field);
       setSortDestination('asc');
+      setSearchParams(getSearchWith(searchParams, { order: null }));
+
     } else {
       if (sortDestination === 'asc') {
         setSortDestination('desc');
