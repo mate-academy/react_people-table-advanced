@@ -23,9 +23,7 @@ export const PeopleFilters = () => {
   };
 
   const handleQuewryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchWith(
-      query.length < 1 ? event.target.value.trim() : event.target.value,
-    );
+    setSearchWith(event.target.value);
   };
 
   const toggleCentury = (century: number) => {
