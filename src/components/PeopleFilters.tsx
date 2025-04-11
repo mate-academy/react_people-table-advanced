@@ -64,20 +64,6 @@ export const PeopleFilters = ({ people, setVisiblePeople }: Props) => {
     setVisiblePeople(filtered);
   }, [people, searchParams.toString()]);
 
-  const handleCenturyClick = (century: number) => {
-    const param = new URLSearchParams(searchParams);
-
-    const centuryStr = century.toString();
-    const newCenturies = centuries.includes(centuryStr)
-      ? centuries.filter(cent => cent !== centuryStr)
-      : [...centuries, centuryStr];
-
-    param.delete('centuries');
-    newCenturies.forEach(cent => param.append('centuries', cent));
-
-    setSearchParams(param);
-  };
-
   const handleResetFilters = () => {
     setSearchParams({});
   };
@@ -136,10 +122,16 @@ export const PeopleFilters = ({ people, setVisiblePeople }: Props) => {
                 to={{
                   pathname: '/people',
                   search: getSearchWith(searchParams, {
-                    centuries: [...centuries, century.toString()],
+                    centuries: [century.toString()],
                   }),
                 }}
-                onClick={() => handleCenturyClick(century)}
+                onClick={() =>
+                  setSearchParams(
+                    getSearchWith(searchParams, {
+                      centuries: [century.toString()],
+                    }),
+                  )
+                }
               >
                 {century}
               </Link>
