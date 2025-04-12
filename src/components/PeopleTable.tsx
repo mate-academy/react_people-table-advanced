@@ -8,7 +8,10 @@ type Props = {
   currentPeople: Person[];
 };
 
-export const PeopleTable: React.FC<Props> = ({ visiblePeople, currentPeople }) => {
+export const PeopleTable: React.FC<Props> = ({
+  visiblePeople,
+  currentPeople,
+}) => {
   return (
     <table
       data-cy="peopleTable"
@@ -67,7 +70,11 @@ export const PeopleTable: React.FC<Props> = ({ visiblePeople, currentPeople }) =
 
       <tbody>
         {visiblePeople?.map(person => (
-          <PersonLink key={person.slug} person={person} people={currentPeople} />
+          <PersonLink
+            key={person.slug}
+            person={person}
+            people={currentPeople}
+          />
         ))}
       </tbody>
     </table>

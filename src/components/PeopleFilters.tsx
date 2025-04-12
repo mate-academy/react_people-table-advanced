@@ -1,53 +1,84 @@
-import cn from "classnames";
-import { CenturyFilter, SexFilter } from "../types/FiltersParam";
+import { useSearchParams } from 'react-router-dom';
+import cn from 'classnames';
+import { CenturyFilter, SexFilter } from '../types/FiltersParam';
 
-type Props = {
-  onSexFilterBy: (v: SexFilter) => void;
-  sexFilterBy: SexFilter;
-  onInput: (v: string) => void;
-  query: string;
-  onCenturyFilterBy: (v: CenturyFilter[]) => void;
-  centuryFilterBy: CenturyFilter[];
-}
+export const PeopleFilters = ({ }) => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const sexFilterBy = searchParams.get('sex') || SexFilter.All;
+  const query = searchParams.get('query') || '';
+  const centuryFilterBy = searchParams.get('centuries')?.split('-') || [];
 
-export const PeopleFilters: React.FC<Props> = ({
-  onSexFilterBy,
-  sexFilterBy,
-  onInput,
-  query,
-  onCenturyFilterBy,
-  centuryFilterBy,
-}) => {
-  // const filterHandler = () => {
+  function handleSexChanges(sex: SexFilter) {
+    const params = new URLSearchParams(searchParams);
 
-  // }
+    if (sex !== SexFilter.All) {
+      params.set('sex', sex.toLowerCase().slice(0, 1));
+      setSearchParams(params);
+
+      return;
+    }
+
+    params.delete('sex');
+    setSearchParams(params);
+  }
+
+  function handleQueryChanges(event: React.ChangeEvent<HTMLInputElement>) {
+    const params = new URLSearchParams(searchParams);
+
+    if (event.target.value) {
+      params.set('query', event.target.value);
+      setSearchParams(params);
+
+      return;
+    }
+
+    params.delete('query');
+    setSearchParams(params);
+  }
+
+  function toggleCentury(century: CenturyFilter) {
+    const params = new URLSearchParams(searchParams);
+    const newCenturies = centuryFilterBy.includes(century)
+      ? centuryFilterBy.filter(curCentury => curCentury !== century)
+      : [...centuryFilterBy, century];
+
+    params.delete('centuries');
+
+    if (newCenturies.length) {
+      params.set('centuries', newCenturies.join('-'));
+    }
+
+    setSearchParams(params);
+  }
+
+  function deleteCentury() {
+    const params = new URLSearchParams(searchParams);
+    params.delete('centuries');
+    setSearchParams(params);
+  }
 
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        <a
-          className={cn({ "is-active": sexFilterBy === SexFilter.All })}
-          href="#/people"
-          onClick={() => onSexFilterBy(SexFilter.All)}
-        >
-          {SexFilter.All}
-        </a>
-        <a
-          className={cn({ "is-active": sexFilterBy === SexFilter.Male })}
-          href="#/people?sex=m"
-          onClick={() => onSexFilterBy(SexFilter.Male)}
-        >
-          {SexFilter.Male}
-        </a>
-        <a
-          className={cn({ "is-active": sexFilterBy === SexFilter.Female })}
-          href="#/people?sex=f"
-          onClick={() => onSexFilterBy(SexFilter.Female)}
-        >
-          {SexFilter.Female}
-        </a>
+        {Object.values(SexFilter).map(sex => {
+          return (
+            <a
+              key={sex}
+              className={cn({
+                'is-active':
+                  sexFilterBy === sex.toLowerCase().slice(0, 1) ||
+                  sexFilterBy === sex,
+              })}
+              onClick={() => {
+                handleSexChanges(sex);
+              }}
+            >
+              {sex}
+            </a>
+          );
+        })}
       </p>
 
       <div className="panel-block">
@@ -58,7 +89,7 @@ export const PeopleFilters: React.FC<Props> = ({
             className="input"
             placeholder="Search"
             value={query}
-            onChange={(event) => onInput(event.target.value)}
+            onChange={handleQueryChanges}
           />
 
           <span className="icon is-left">
@@ -70,141 +101,35 @@ export const PeopleFilters: React.FC<Props> = ({
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            {/* {CenturyFilter.map(century => (
-              <a
-                data-cy="century"
-                className="button mr-1"
-                href={`#/people?centuries=${century}`}
-              >
-                {century}
-              </a>
-            ))} */}
-            <a
-              data-cy="century"
-              className={cn(
-                "button mr-1",
-                { 'is-info': centuryFilterBy.includes(CenturyFilter.Sixteen) }
-              )}
-              href="#/people?centuries=16"
-              onClick={() => {
-                if (centuryFilterBy.includes(CenturyFilter.Sixteen)) {
-                  onCenturyFilterBy([
-                    ...centuryFilterBy
-                      .filter(century => century !== CenturyFilter.Sixteen)
-                  ]);
+            {Object.values(CenturyFilter).map(century => {
+              if (century === CenturyFilter.All) {
+                return;
+              }
 
-                  return;
-                }
-
-                onCenturyFilterBy([...centuryFilterBy, CenturyFilter.Sixteen]);
-              }}
-            >
-              16
-            </a>
-
-            <a
-              data-cy="century"
-              className={cn(
-                "button mr-1",
-                { 'is-info': centuryFilterBy.includes(CenturyFilter.Seventeen) }
-              )}
-              href="#/people?centuries=17"
-              onClick={() => {
-                if (centuryFilterBy.includes(CenturyFilter.Seventeen)) {
-                  onCenturyFilterBy([
-                    ...centuryFilterBy
-                      .filter(century => century !== CenturyFilter.Seventeen)
-                  ]);
-
-                  return;
-                }
-
-                onCenturyFilterBy([...centuryFilterBy, CenturyFilter.Seventeen]);
-              }}
-            >
-              17
-            </a>
-
-            <a
-              data-cy="century"
-              className={cn(
-                "button mr-1",
-                { 'is-info': centuryFilterBy.includes(CenturyFilter.Eighteen) }
-              )}
-              href="#/people?centuries=18"
-              onClick={() => {
-                if (centuryFilterBy.includes(CenturyFilter.Eighteen)) {
-                  onCenturyFilterBy([
-                    ...centuryFilterBy
-                      .filter(century => century !== CenturyFilter.Eighteen)
-                  ]);
-
-                  return;
-                }
-
-                onCenturyFilterBy([...centuryFilterBy, CenturyFilter.Eighteen]);
-              }}
-            >
-              18
-            </a>
-
-            <a
-              data-cy="century"
-              className={cn(
-                "button mr-1",
-                { 'is-info': centuryFilterBy.includes(CenturyFilter.Nineteen) }
-              )}
-              href="#/people?centuries=19"
-              onClick={() => {
-                if (centuryFilterBy.includes(CenturyFilter.Nineteen)) {
-                  onCenturyFilterBy([
-                    ...centuryFilterBy
-                      .filter(century => century !== CenturyFilter.Nineteen)
-                  ]);
-
-                  return;
-                }
-
-                onCenturyFilterBy([...centuryFilterBy, CenturyFilter.Nineteen]);
-              }}
-            >
-              19
-            </a>
-
-            <a
-              data-cy="century"
-              className={cn(
-                "button mr-1",
-                { 'is-info': centuryFilterBy.includes(CenturyFilter.Twenty) }
-              )}
-              href="#/people?centuries=20"
-              onClick={() => {
-                if (centuryFilterBy.includes(CenturyFilter.Twenty)) {
-                  onCenturyFilterBy([
-                    ...centuryFilterBy
-                      .filter(century => century !== CenturyFilter.Twenty)
-                  ]);
-
-                  return;
-                }
-
-                onCenturyFilterBy([...centuryFilterBy, CenturyFilter.Twenty]);
-              }}
-            >
-              20
-            </a>
+              return (
+                <a
+                  key={century}
+                  data-cy="century"
+                  className={cn('button mr-1', {
+                    'is-info': centuryFilterBy.includes(century),
+                  })}
+                  onClick={() => {
+                    toggleCentury(century);
+                  }}
+                >
+                  {century}
+                </a>
+              );
+            })}
           </div>
 
           <div className="level-right ml-4">
             <a
               data-cy="centuryALL"
-              className={cn("button is-success", {
+              className={cn('button is-success', {
                 'is-outlined': centuryFilterBy.length,
               })}
-              href="#/people"
-              onClick={() => {
-                onCenturyFilterBy([]);
-              }}
+              onClick={deleteCentury}
             >
               All
             </a>
@@ -216,11 +141,6 @@ export const PeopleFilters: React.FC<Props> = ({
         <a
           className="button is-link is-outlined is-fullwidth"
           href="#/people"
-          onClick={() => {
-            onSexFilterBy(SexFilter.All);
-            onInput('');
-            onCenturyFilterBy([]);
-          }}
         >
           Reset all filters
         </a>

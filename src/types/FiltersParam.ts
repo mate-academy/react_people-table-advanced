@@ -5,10 +5,10 @@ export enum SexFilter {
 }
 
 export enum CenturyFilter {
-  'Sixteen' = 16,
-  'Seventeen' = 17,
-  'Eighteen' = 18,
-  'Nineteen' = 19,
-  'Twenty' = 20,
+  'Sixteen' = '16',
+  'Seventeen' = '17',
+  'Eighteen' = '18',
+  'Nineteen' = '19',
+  'Twenty' = '20',
   'All' = 'All',
 }
