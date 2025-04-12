@@ -8,8 +8,6 @@ export const PeopleFilters = () => {
   const sex = searchParams.get('sex');
   const query = searchParams.get('query');
 
-  
-
   function toggleCentury(data: string) {
     const params = new URLSearchParams(searchParams);
 
