@@ -3,7 +3,7 @@ import cn from 'classnames';
 import { CenturyFilter, SexFilter } from '../types/FiltersParam';
 import { SearchLink } from './SearchLink';
 
-export const PeopleFilters = ({ }) => {
+export const PeopleFilters = ({}) => {
   const [searchParams, setSearchParams] = useSearchParams();
   const sexFilterBy = searchParams.get('sex') || SexFilter.All;
   const query = searchParams.get('query') || '';
@@ -33,8 +33,8 @@ export const PeopleFilters = ({ }) => {
             <SearchLink
               key={sex}
               params={{
-                sex: sex === SexFilter.All ? null
-                  : sex.toLowerCase().slice(0, 1),
+                sex:
+                  sex === SexFilter.All ? null : sex.toLowerCase().slice(0, 1),
               }}
               className={cn({
                 'is-active':
@@ -80,8 +80,7 @@ export const PeopleFilters = ({ }) => {
                   params={{
                     centuries: centuryFilterBy.includes(century)
                       ? centuryFilterBy.filter(cen => cen !== century)
-                      : [...centuryFilterBy, century]
-
+                      : [...centuryFilterBy, century],
                   }}
                   className={cn('button mr-1', {
                     'is-info': centuryFilterBy.includes(century),
@@ -108,10 +107,7 @@ export const PeopleFilters = ({ }) => {
       </div>
 
       <div className="panel-block">
-        <Link
-          className="button is-link is-outlined is-fullwidth"
-          to="#/people"
-        >
+        <Link className="button is-link is-outlined is-fullwidth" to="#/people">
           Reset all filters
         </Link>
       </div>

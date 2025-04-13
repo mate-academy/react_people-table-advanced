@@ -4,6 +4,7 @@ import { Person } from '../types';
 import { PersonLink } from './PersonLink';
 import { useSearchParams } from 'react-router-dom';
 import cn from 'classnames';
+import { SearchLink } from './SearchLink';
 
 type Props = {
   visiblePeople: Person[];
@@ -14,29 +15,9 @@ export const PeopleTable: React.FC<Props> = ({
   visiblePeople,
   currentPeople,
 }) => {
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
   const sortBy = searchParams.get('sort') || '';
   const orderBy = searchParams.get('order') || '';
-
-  function handleSort(columnName: string) {
-    const params = new URLSearchParams(searchParams);
-
-    params.delete('order');
-    params.delete('sort');
-
-    if (sortBy === columnName && orderBy === 'desc') {
-      setSearchParams(params);
-
-      return;
-    }
-
-    if (sortBy === columnName) {
-      params.set('order', 'desc');
-    }
-
-    params.set('sort', columnName);
-    setSearchParams(params);
-  }
 
   return (
     <table
@@ -48,9 +29,10 @@ export const PeopleTable: React.FC<Props> = ({
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Name
-              <a
-                onClick={() => {
-                  handleSort('name');
+              <SearchLink
+                params={{
+                  sort: sortBy === 'name' && orderBy ? null : 'name',
+                  order: !orderBy && sortBy === 'name' ? 'desc' : null,
                 }}
               >
                 <span className="icon">
@@ -62,16 +44,17 @@ export const PeopleTable: React.FC<Props> = ({
                     })}
                   />
                 </span>
-              </a>
+              </SearchLink>
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Sex
-              <a
-                onClick={() => {
-                  handleSort('sex');
+              <SearchLink
+                params={{
+                  sort: sortBy === 'sex' && orderBy ? null : 'sex',
+                  order: !orderBy && sortBy === 'sex' ? 'desc' : null,
                 }}
               >
                 <span className="icon">
@@ -83,16 +66,17 @@ export const PeopleTable: React.FC<Props> = ({
                     })}
                   />
                 </span>
-              </a>
+              </SearchLink>
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Born
-              <a
-                onClick={() => {
-                  handleSort('born');
+              <SearchLink
+                params={{
+                  sort: sortBy === 'born' && orderBy ? null : 'born',
+                  order: !orderBy && sortBy === 'born' ? 'desc' : null,
                 }}
               >
                 <span className="icon">
@@ -104,16 +88,17 @@ export const PeopleTable: React.FC<Props> = ({
                     })}
                   />
                 </span>
-              </a>
+              </SearchLink>
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Died
-              <a
-                onClick={() => {
-                  handleSort('died');
+              <SearchLink
+                params={{
+                  sort: sortBy === 'died' && orderBy ? null : 'died',
+                  order: !orderBy && sortBy === 'died' ? 'desc' : null,
                 }}
               >
                 <span className="icon">
@@ -125,7 +110,7 @@ export const PeopleTable: React.FC<Props> = ({
                     })}
                   />
                 </span>
-              </a>
+              </SearchLink>
             </span>
           </th>
 

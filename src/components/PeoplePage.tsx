@@ -154,7 +154,7 @@ export const PeoplePage = () => {
                 </p>
               )}
 
-              {!visiblePeople.length && (
+              {!visiblePeople.length && !isLoading && (
                 <p>There are no people matching the current search criteria</p>
               )}
 
