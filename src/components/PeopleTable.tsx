@@ -64,6 +64,19 @@ export const PeopleTable: React.FC<PeopleProps> = ({ people }) => {
     }
   };
 
+  const getSortParams = (column: string) => {
+    const currentSort = params.get('sort');
+    const currentOrder = params.get('order') || 'asc';
+
+    const isSameField = currentSort === column;
+    const newOrder = isSameField && currentOrder === 'asc' ? 'desc' : 'asc';
+
+    return {
+      sort: column,
+      order: newOrder,
+    };
+  };
+
   const handleFilterChange = () => {
     let newPeople = [...people];
     const query = params.get('query');
@@ -156,9 +169,7 @@ export const PeopleTable: React.FC<PeopleProps> = ({ people }) => {
                 <SearchLink
                   params={{
                     ...Object.fromEntries(params.entries()),
-                    sort: 'name',
-                    order:
-                      sortParams === 'name' && order === 'asc' ? 'desc' : 'asc',
+                    ...getSortParams('name'),
                   }}
                 >
                   <span className="icon">
@@ -173,9 +184,7 @@ export const PeopleTable: React.FC<PeopleProps> = ({ people }) => {
                 <SearchLink
                   params={{
                     ...Object.fromEntries(params.entries()),
-                    sort: 'name',
-                    order:
-                      sortParams === 'name' && order === 'asc' ? 'desc' : 'asc',
+                    ...getSortParams('sex'),
                   }}
                 >
                   <span className="icon">
@@ -190,9 +199,7 @@ export const PeopleTable: React.FC<PeopleProps> = ({ people }) => {
                 <SearchLink
                   params={{
                     ...Object.fromEntries(params.entries()),
-                    sort: 'name',
-                    order:
-                      sortParams === 'name' && order === 'asc' ? 'desc' : 'asc',
+                    ...getSortParams('born'),
                   }}
                 >
                   <span className="icon">
@@ -207,9 +214,7 @@ export const PeopleTable: React.FC<PeopleProps> = ({ people }) => {
                 <SearchLink
                   params={{
                     ...Object.fromEntries(params.entries()),
-                    sort: 'name',
-                    order:
-                      sortParams === 'name' && order === 'asc' ? 'desc' : 'asc',
+                    ...getSortParams('died'),
                   }}
                 >
                   <span className="icon">

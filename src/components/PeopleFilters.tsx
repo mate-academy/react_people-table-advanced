@@ -25,9 +25,13 @@ export const PeopleFilters = () => {
   };
 
   const toggleCentury = (char: string) => {
-    const newCenturies = centuries.includes(char)
-      ? centuries.filter(c => c !== char)
-      : [...centuries, char];
+    let newCenturies: string[];
+
+    if (centuries.includes(char)) {
+      newCenturies = centuries.filter(c => c !== char);
+    } else {
+      newCenturies = [...centuries, char];
+    }
 
     setSearchWith({ centuries: newCenturies });
   };
