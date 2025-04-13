@@ -1,45 +1,44 @@
 import { useSearchParams } from 'react-router-dom';
+import { Person } from '../types';
 import './SortHeader.scss';
 
-interface Props {
-  field: string; // The field to sort by (e.g., "name", "born")
-  label: string; // The label to display in the header
-}
-
-const SortHeader: React.FC<Props> = ({ field, label }) => {
+const SortHeader: React.FC<{ field: keyof Person; label: string }> = ({
+  field,
+  label,
+}) => {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const handleSortClick = () => {
-    const currentSort = searchParams.get('sort');
-    const currentOrder = searchParams.get('order');
     const updatedParams = new URLSearchParams(searchParams);
+    const currentSort = updatedParams.get('sort');
+    const currentOrder = updatedParams.get('order');
 
-    if (currentSort === field && currentOrder === 'asc') {
-      // If already sorted ascending, reverse the order to descending
-      updatedParams.set('order', 'desc');
-    } else if (currentSort === field && currentOrder === 'desc') {
-      // If already sorted descending, disable sorting
-      updatedParams.delete('sort');
-      updatedParams.delete('order');
+    if (currentSort === field) {
+      if (currentOrder === 'desc') {
+        // Third click: disable sorting by removing sort and order.
+        updatedParams.delete('sort');
+        updatedParams.delete('order');
+      } else {
+        // Second click: update to descending order.
+        updatedParams.set('order', 'desc');
+      }
     } else {
-      // Otherwise, sort ascending by the given field
-      updatedParams.set('sort', field);
-      updatedParams.set('order', 'asc');
+      // First click: set new sort field; leave order undefined for ascending sort.
+      updatedParams.set('sort', field as string);
+      updatedParams.delete('order');
     }
 
-    // eslint-disable-next-line no-console
-    console.log('Updated params:', updatedParams.toString());
     setSearchParams(updatedParams);
   };
 
+  // Determine the displayed arrow:
   const currentSort = searchParams.get('sort');
   const currentOrder = searchParams.get('order');
 
   return (
     <th onClick={handleSortClick} className="sortable-header clickable">
-      {label}
-      {currentSort === field && currentOrder === 'asc' && ' 🔼'}
-      {currentSort === field && currentOrder === 'desc' && ' 🔽'}
+      {label} {currentSort === field && !currentOrder && '↑'}
+      {currentSort === field && currentOrder === 'desc' && '↓'}
     </th>
   );
 };
