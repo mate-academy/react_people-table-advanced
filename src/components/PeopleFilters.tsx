@@ -125,13 +125,6 @@ export const PeopleFilters = ({ people, setVisiblePeople }: Props) => {
                     centuries: [century.toString()],
                   }),
                 }}
-                onClick={() =>
-                  setSearchParams(
-                    getSearchWith(searchParams, {
-                      centuries: [century.toString()],
-                    }),
-                  )
-                }
               >
                 {century}
               </Link>
