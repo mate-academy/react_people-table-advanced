@@ -28,12 +28,18 @@ export function getSearchWith(
     if (value === null) {
       newParams.delete(key);
     } else if (Array.isArray(value)) {
-      // we delete the key to remove old values
+      const existingValues = newParams.getAll(key);
+      const toggledValues = value.reduce((acc: string[], part) => {
+        if (existingValues.includes(part)) {
+          return acc.filter(val => val !== part);
+        } else {
+          return [...acc, part];
+        }
+      }, existingValues);
+
       newParams.delete(key);
 
-      value.forEach(part => {
-        newParams.append(key, part);
-      });
+      toggledValues.forEach(val => newParams.append(key, val));
     } else {
       newParams.set(key, value);
     }
