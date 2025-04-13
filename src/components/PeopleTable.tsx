@@ -13,11 +13,6 @@ type PeopleProps = {
   people: Person[];
 };
 
-// type Obj = {
-//   sort?: string | null;
-//   order?: string | null;
-// };
-
 export const PeopleTable: React.FC<PeopleProps> = ({ people }) => {
   const { personSlug } = useParams();
   const selectedPerson = personSlug;
