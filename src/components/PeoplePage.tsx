@@ -66,11 +66,47 @@ function getFilteredPeople(
   return filteredPeople;
 }
 
+function getSortedPeople(
+  people: Person[],
+  column?: string,
+  order: string = 'asc',
+) {
+  const sortedPeople = [...people];
+
+  if (!column) {
+    return sortedPeople;
+  }
+
+  switch (column) {
+    case 'name':
+    case 'sex':
+      sortedPeople.sort((prevPerson, nextPerson) =>
+        prevPerson[column].localeCompare(nextPerson[column]),
+      );
+      break;
+
+    case 'born':
+    case 'died':
+      sortedPeople.sort(
+        (prevPerson, nextPerson) => prevPerson[column] - nextPerson[column],
+      );
+      break;
+  }
+
+  if (order === 'desc') {
+    sortedPeople.reverse();
+  }
+
+  return sortedPeople;
+}
+
 export const PeoplePage = () => {
   const [searchParams] = useSearchParams();
   const sexFilterBy = searchParams.get('sex') || SexFilter.All;
   const query = searchParams.get('query') || '';
   const centuryFilterBy = searchParams.get('centuries')?.split('-') || [];
+  const sortBy = searchParams.get('sort') || '';
+  const orderBy = searchParams.get('order') || '';
   const [people, setPeople] = useState<Person[]>([]);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -83,12 +119,14 @@ export const PeoplePage = () => {
       .finally(() => setIsLoading(false));
   }, []);
 
-  const visiblePeople = getFilteredPeople(
+  const filteredPeople = getFilteredPeople(
     people,
     sexFilterBy as SexFilter,
     query,
     centuryFilterBy as CenturyFilter[],
   );
+
+  const visiblePeople = getSortedPeople(filteredPeople, sortBy, orderBy);
 
   return (
     <>

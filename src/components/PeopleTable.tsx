@@ -2,6 +2,8 @@
 import React from 'react';
 import { Person } from '../types';
 import { PersonLink } from './PersonLink';
+import { useSearchParams } from 'react-router-dom';
+import cn from 'classnames';
 
 type Props = {
   visiblePeople: Person[];
@@ -12,6 +14,30 @@ export const PeopleTable: React.FC<Props> = ({
   visiblePeople,
   currentPeople,
 }) => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const sortBy = searchParams.get('sort') || '';
+  const orderBy = searchParams.get('order') || '';
+
+  function handleSort(columnName: string) {
+    const params = new URLSearchParams(searchParams);
+
+    params.delete('order');
+    params.delete('sort');
+
+    if (sortBy === columnName && orderBy === 'desc') {
+      setSearchParams(params);
+
+      return;
+    }
+
+    if (sortBy === columnName) {
+      params.set('order', 'desc');
+    }
+
+    params.set('sort', columnName);
+    setSearchParams(params);
+  }
+
   return (
     <table
       data-cy="peopleTable"
@@ -22,9 +48,19 @@ export const PeopleTable: React.FC<Props> = ({
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Name
-              <a href="#/people?sort=name">
+              <a
+                onClick={() => {
+                  handleSort('name');
+                }}
+              >
                 <span className="icon">
-                  <i className="fas fa-sort" />
+                  <i
+                    className={cn('fas', {
+                      'fa-sort': sortBy !== 'name',
+                      'fa-sort-up': sortBy === 'name' && !orderBy,
+                      'fa-sort-down': sortBy === 'name' && orderBy,
+                    })}
+                  />
                 </span>
               </a>
             </span>
@@ -33,9 +69,19 @@ export const PeopleTable: React.FC<Props> = ({
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Sex
-              <a href="#/people?sort=sex">
+              <a
+                onClick={() => {
+                  handleSort('sex');
+                }}
+              >
                 <span className="icon">
-                  <i className="fas fa-sort" />
+                  <i
+                    className={cn('fas', {
+                      'fa-sort': sortBy !== 'sex',
+                      'fa-sort-up': sortBy === 'sex' && !orderBy,
+                      'fa-sort-down': sortBy === 'sex' && orderBy,
+                    })}
+                  />
                 </span>
               </a>
             </span>
@@ -44,9 +90,19 @@ export const PeopleTable: React.FC<Props> = ({
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Born
-              <a href="#/people?sort=born&amp;order=desc">
+              <a
+                onClick={() => {
+                  handleSort('born');
+                }}
+              >
                 <span className="icon">
-                  <i className="fas fa-sort-up" />
+                  <i
+                    className={cn('fas', {
+                      'fa-sort': sortBy !== 'born',
+                      'fa-sort-up': sortBy === 'born' && !orderBy,
+                      'fa-sort-down': sortBy === 'born' && orderBy,
+                    })}
+                  />
                 </span>
               </a>
             </span>
@@ -55,9 +111,19 @@ export const PeopleTable: React.FC<Props> = ({
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Died
-              <a href="#/people?sort=died">
+              <a
+                onClick={() => {
+                  handleSort('died');
+                }}
+              >
                 <span className="icon">
-                  <i className="fas fa-sort" />
+                  <i
+                    className={cn('fas', {
+                      'fa-sort': sortBy !== 'died',
+                      'fa-sort-up': sortBy === 'died' && !orderBy,
+                      'fa-sort-down': sortBy === 'died' && orderBy,
+                    })}
+                  />
                 </span>
               </a>
             </span>

@@ -53,6 +53,7 @@ export const PeopleFilters = ({ }) => {
 
   function deleteCentury() {
     const params = new URLSearchParams(searchParams);
+
     params.delete('centuries');
     setSearchParams(params);
   }
@@ -138,10 +139,7 @@ export const PeopleFilters = ({ }) => {
       </div>
 
       <div className="panel-block">
-        <a
-          className="button is-link is-outlined is-fullwidth"
-          href="#/people"
-        >
+        <a className="button is-link is-outlined is-fullwidth" href="#/people">
           Reset all filters
         </a>
       </div>
