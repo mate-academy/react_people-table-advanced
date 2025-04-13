@@ -17,10 +17,7 @@ export const PeopleFilters = () => {
   }
 
   function handleSexChange(newSex: string) {
-    const params = new URLSearchParams(searchParams);
-
-    params.set('sex', newSex);
-    setSearchParams(params);
+    setSearchWith({ sex: newSex });
   }
 
   const handleQueryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -28,15 +25,11 @@ export const PeopleFilters = () => {
   };
 
   const toggleCentury = (char: string) => {
-    let newCentury;
+    const newCenturies = centuries.includes(char)
+      ? centuries.filter(c => c !== char)
+      : [...centuries, char];
 
-    if (centuries.includes(char)) {
-      newCentury = centuries.filter(centr => centr !== char);
-    } else {
-      newCentury = [...centuries, char];
-    }
-
-    setSearchWith({ century: newCentury });
+    setSearchWith({ centuries: newCenturies });
   };
 
   return (

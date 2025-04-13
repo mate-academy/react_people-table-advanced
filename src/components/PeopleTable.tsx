@@ -102,29 +102,29 @@ export const PeopleTable: React.FC<PeopleProps> = ({ people }) => {
     sortTables();
   };
 
-  const [sortConfig, setSortConfig] = useState<{
-    sort: string | null;
-    order: string | null;
-  }>({
-    sort: null,
-    order: null,
-  });
+  const [, setParams] = useSearchParams();
 
-  const handleSort = (sorts: string) => {
-    setSortConfig(prev => {
-      if (prev.sort === sorts) {
-        return prev.order === 'asc'
-          ? { sort: sorts, order: 'desc' }
-          : { sort: null, order: 'asc' };
-      }
+  const handleSort = (field: string) => {
+    const currentSort = params.get('sort');
+    const currentOrder = params.get('order') || 'asc';
 
-      return { sort: sorts, order: 'asc' };
-    });
+    const isSameField = currentSort === field;
+    const newOrder = isSameField && currentOrder === 'asc' ? 'desc' : 'asc';
+
+    const newParams = new URLSearchParams(params);
+
+    newParams.set('sort', field);
+    newParams.set('order', newOrder);
+
+    setParams(newParams);
   };
 
-  const getIconClass = (sortsType: string) => {
-    if (sortConfig.sort === sortsType) {
-      return sortConfig.order === 'asc' ? 'fa-sort-up' : 'fa-sort-down';
+  const getIconClass = (sortType: string) => {
+    const currentSort = params.get('sort');
+    const currentOrder = params.get('order');
+
+    if (currentSort === sortType) {
+      return currentOrder === 'asc' ? 'fa-sort-up' : 'fa-sort-down';
     }
 
     return 'fa-sort';
@@ -153,7 +153,14 @@ export const PeopleTable: React.FC<PeopleProps> = ({ people }) => {
             <th onClick={() => handleSort('name')}>
               <span className="is-flex is-flex-wrap-nowrap">
                 Name
-                <SearchLink params={sortConfig}>
+                <SearchLink
+                  params={{
+                    ...Object.fromEntries(params.entries()),
+                    sort: 'name',
+                    order:
+                      sortParams === 'name' && order === 'asc' ? 'desc' : 'asc',
+                  }}
+                >
                   <span className="icon">
                     <i className={`fas ${getIconClass('name')}`} />
                   </span>
@@ -163,7 +170,14 @@ export const PeopleTable: React.FC<PeopleProps> = ({ people }) => {
             <th onClick={() => handleSort('sex')}>
               <span className="is-flex is-flex-wrap-nowrap">
                 Sex
-                <SearchLink params={sortConfig}>
+                <SearchLink
+                  params={{
+                    ...Object.fromEntries(params.entries()),
+                    sort: 'name',
+                    order:
+                      sortParams === 'name' && order === 'asc' ? 'desc' : 'asc',
+                  }}
+                >
                   <span className="icon">
                     <i className={`fas ${getIconClass('sex')}`} />
                   </span>
@@ -173,7 +187,14 @@ export const PeopleTable: React.FC<PeopleProps> = ({ people }) => {
             <th onClick={() => handleSort('born')}>
               <span className="is-flex is-flex-wrap-nowrap">
                 Born
-                <SearchLink params={sortConfig}>
+                <SearchLink
+                  params={{
+                    ...Object.fromEntries(params.entries()),
+                    sort: 'name',
+                    order:
+                      sortParams === 'name' && order === 'asc' ? 'desc' : 'asc',
+                  }}
+                >
                   <span className="icon">
                     <i className={`fas ${getIconClass('born')}`} />
                   </span>
@@ -183,7 +204,14 @@ export const PeopleTable: React.FC<PeopleProps> = ({ people }) => {
             <th onClick={() => handleSort('died')}>
               <span className="is-flex is-flex-wrap-nowrap">
                 Died
-                <SearchLink params={sortConfig}>
+                <SearchLink
+                  params={{
+                    ...Object.fromEntries(params.entries()),
+                    sort: 'name',
+                    order:
+                      sortParams === 'name' && order === 'asc' ? 'desc' : 'asc',
+                  }}
+                >
                   <span className="icon">
                     <i className={`fas ${getIconClass('died')}`} />
                   </span>
