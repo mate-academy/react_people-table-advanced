@@ -102,7 +102,9 @@ export const PeoplePage = () => {
         }
       })
       .catch(() => setErrorLoading(true))
-      .finally(() => setLoading(false));
+      .finally(() => {
+        setLoading(false);
+      });
   }, []);
 
   return (
