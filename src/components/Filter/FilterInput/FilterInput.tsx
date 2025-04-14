@@ -1,5 +1,4 @@
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { FilterParams } from '../../../types/FilterParams';
 import { getSearchWith } from '../../../utils/searchHelper';
 
 export const FilterInput = () => {
@@ -8,7 +7,7 @@ export const FilterInput = () => {
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const path = getSearchWith(searchParams, {
-      [FilterParams.inputSearch.key]: event.currentTarget.value,
+      query: event.currentTarget.value,
     });
 
     navigate({ search: path });

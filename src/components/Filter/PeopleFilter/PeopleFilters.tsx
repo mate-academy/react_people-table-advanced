@@ -1,37 +1,30 @@
-import { FilterParams } from '../../../types/FilterParams';
+import {
+  PeopleFilterParams,
+  SexFilterValue,
+} from '../../../types/FilterParams';
 import { SearchLink } from '../../SearchLink';
 import { FilterInput } from '../FilterInput';
 
 const CENTURY_FOR_FILTER = ['16', '17', '18', '19', '20'];
+const resetAllFilters: PeopleFilterParams = {
+  sex: null,
+  query: null,
+  centuries: null,
+};
 
 export const PeopleFilters = () => {
-  const resetAllFilters = {
-    [FilterParams.century.key]: null,
-    [FilterParams.inputSearch.key]: null,
-    [FilterParams.sex.key]: null,
-  };
-
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        <SearchLink
-          className="is-active"
-          params={{ [FilterParams.sex.key]: null }}
-        >
+        <SearchLink className="is-active" params={{ sex: null }}>
           All
         </SearchLink>
-        <SearchLink
-          className=""
-          params={{ [FilterParams.sex.key]: FilterParams.sex.male }}
-        >
+        <SearchLink className="" params={{ sex: SexFilterValue.Male }}>
           Male
         </SearchLink>
-        <SearchLink
-          className=""
-          params={{ [FilterParams.sex.key]: FilterParams.sex.female }}
-        >
+        <SearchLink className="" params={{ sex: SexFilterValue.Female }}>
           Female
         </SearchLink>
       </p>
@@ -53,7 +46,7 @@ export const PeopleFilters = () => {
                 data-cy="century"
                 // className="button mr-1 is-info"
                 className="button mr-1"
-                params={{ [FilterParams.century.key]: century }}
+                params={{ centuries: century }}
               >
                 {century}
               </SearchLink>
@@ -64,7 +57,7 @@ export const PeopleFilters = () => {
             <SearchLink
               data-cy="centuryALL"
               className="button is-success is-outlined"
-              params={{ [FilterParams.century.key]: null }}
+              params={{ centuries: null }}
             >
               All
             </SearchLink>
@@ -75,7 +68,7 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <SearchLink
           className="button is-link is-outlined is-fullwidth"
-          params={resetAllFilters}
+          params={{ ...resetAllFilters }}
         >
           Reset all filters
         </SearchLink>

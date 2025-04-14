@@ -1,15 +1,57 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Loader } from '../../components/Loader';
 import { Person } from '../../types';
 import { getPeople } from '../../api';
 import { PeopleTable } from '../../components/Table/PeopleTable';
 import { PeopleFilters } from '../../components/Filter/PeopleFilter';
+import { useSearchParams } from 'react-router-dom';
+import { PeopleFilterParams, SexFilterValue } from '../../types/FilterParams';
 
 export const PeoplePage = () => {
   const [peopleList, setPeopleList] = useState<Person[]>();
   const [errorMessage, setErrorMessage] = useState(false);
+  const [searchParams] = useSearchParams();
+
+  const [filterParams, setFilterParams] = useState<PeopleFilterParams>({});
+
+  const getFilteredPeopleList = useCallback(() => {
+    return peopleList?.filter(person => {
+      if (filterParams.sex) {
+        if (person.sex !== filterParams.sex) {
+          return false;
+        }
+      }
+
+      if (filterParams.query) {
+        const lowerQuery = filterParams.query.toLowerCase();
+        const fullName =
+          `${person.name} ${person.fatherName} ${person.motherName}`.toLowerCase();
+
+        if (!fullName.includes(lowerQuery)) {
+          return false;
+        }
+      }
+
+      if (filterParams.centuries && person.born) {
+        const bornYear = +person.born;
+
+        if (!isNaN(bornYear)) {
+          const centuryStart = (+filterParams.centuries - 1) * 100 + 1;
+          const centuryEnd = centuryStart + 99;
+
+          if (bornYear < centuryStart || bornYear > centuryEnd) {
+            return false;
+          }
+        }
+      }
+
+      return true;
+    });
+  }, [filterParams, peopleList]);
 
   const renderContent = () => {
+    const filteredPeople = getFilteredPeopleList();
+
     if (errorMessage) {
       return (
         <p data-cy="peopleLoadingError" className="has-text-danger">
@@ -18,15 +60,15 @@ export const PeoplePage = () => {
       );
     }
 
-    if (!peopleList) {
+    if (!filteredPeople) {
       return <Loader />;
     }
 
-    if (!peopleList.length) {
+    if (!filteredPeople.length) {
       return <p data-cy="noPeopleMessage">There are no people on the server</p>;
     }
 
-    return <PeopleTable peopleList={peopleList} />;
+    return <PeopleTable peopleList={filteredPeople} />;
   };
 
   const callGetRequest = async () => {
@@ -52,8 +94,18 @@ export const PeoplePage = () => {
     callGetRequest();
   }, []);
 
+  useEffect(() => {
+    const newFilterParams: PeopleFilterParams = {
+      sex: searchParams.get('sex') as SexFilterValue,
+      query: searchParams.get('query'),
+      centuries: searchParams.get('centuries'),
+    };
+
+    setFilterParams(newFilterParams);
+  }, [searchParams]);
+
   return (
-    <div className="container">
+    <>
       <h1 className="title">People Page</h1>
 
       <div className="block">
@@ -69,6 +121,6 @@ export const PeoplePage = () => {
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };

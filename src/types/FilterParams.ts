@@ -1,13 +1,10 @@
-export const FilterParams = {
-  sex: {
-    key: 'sex',
-    male: 'm',
-    female: 'f',
-  },
-  century: {
-    key: 'centuries',
-  },
-  inputSearch: {
-    key: 'query',
-  },
-} as const;
+export enum SexFilterValue {
+  Male = 'm',
+  Female = 'f',
+}
+
+export interface PeopleFilterParams {
+  sex?: SexFilterValue | null;
+  query?: string | null;
+  centuries?: string | null;
+}
