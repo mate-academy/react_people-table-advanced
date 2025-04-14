@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Person } from '../types';
@@ -60,7 +61,8 @@ export const PeoplePage: React.FC = () => {
 
   const filteredPeople = sortedPeople.filter(person => {
     const matchesQuery = queryParam
-      ? person.name.toLowerCase().includes(queryParam.toLowerCase())
+      ? [person.name, person.motherName, person.fatherName].some(name =>
+        name && name.toLowerCase().includes(queryParam.toLowerCase()))
       : true;
 
     const matchesSex = currentSex ? person.sex === currentSex : true;
@@ -97,7 +99,7 @@ export const PeoplePage: React.FC = () => {
                 </p>
               )}
 
-              {!isLoading && !error && !sortedPeople.length && (
+              {!isLoading && !error && !filteredPeople.length && (
                 <p>There are no people matching the current search criteria</p>
               )}
 

@@ -34,27 +34,18 @@ export const PeopleFilters = () => {
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        {/* <a className="is-active" href="#/people">
-          All
-        </a> */}
         <SearchLink
           params={{ sex: null }}
           className={classNames({ 'is-active': !currentSex })}
         >
           All
         </SearchLink>
-        {/* <a className="" href="#/people?sex=m">
-          Male
-        </a> */}
         <SearchLink
           params={{ sex: 'm' }}
           className={classNames({ 'is-active': currentSex === 'm' })}
         >
           Male
         </SearchLink>
-        {/* <a className="" href="#/people?sex=f">
-          Female
-        </a> */}
         <SearchLink
           params={{ sex: 'f' }}
           className={classNames({ 'is-active': currentSex === 'f' })}
@@ -97,45 +88,6 @@ export const PeopleFilters = () => {
                 {century}
               </SearchLink>
             ))}
-            {/* <a
-              data-cy="century"
-              className="button mr-1"
-              href="#/people?centuries=16"
-            >
-              16
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=17"
-            >
-              17
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=18"
-            >
-              18
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=19"
-            >
-              19
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1"
-              href="#/people?centuries=20"
-            >
-              20
-            </a> */}
           </div>
 
           <div className="level-right ml-4">
