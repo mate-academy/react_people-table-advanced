@@ -104,7 +104,7 @@ export const PeoplePage = () => {
   const [searchParams] = useSearchParams();
   const sexFilterBy = searchParams.get('sex') || SexFilter.All;
   const query = searchParams.get('query') || '';
-  const centuryFilterBy = searchParams.get('centuries')?.split('-') || [];
+  const centuryFilterBy = searchParams.getAll('centuries') || [];
   const sortBy = searchParams.get('sort') || '';
   const orderBy = searchParams.get('order') || '';
   const [people, setPeople] = useState<Person[]>([]);
