@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
-import { Person } from '../../types';
-import { RoutesParts } from '../../types/RoutesURLParts';
+import { Person } from '../../../types';
+import { RoutesParts } from '../../../types/RoutesURLParts';
 import classNames from 'classnames';
 
 interface Props {

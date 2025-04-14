@@ -4,4 +4,4 @@ export const RoutesParts = {
   people: '/people',
   personId: ':slug',
   notFount: '*',
-};
+} as const;

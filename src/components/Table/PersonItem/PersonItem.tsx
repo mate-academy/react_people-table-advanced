@@ -1,4 +1,4 @@
-import { Person } from '../../types';
+import { Person } from '../../../types';
 import { PersonLink } from '../PersonLink';
 import classNames from 'classnames';
 

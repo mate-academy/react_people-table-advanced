@@ -1,6 +1,6 @@
 import classNames from 'classnames';
 import { NavLink, NavLinkRenderProps } from 'react-router-dom';
-import { RoutesParts } from '../types/RoutesURLParts';
+import { RoutesParts } from '../../types/RoutesURLParts';
 
 export const Navbar = () => {
   const isActiveNavLink = ({ isActive }: NavLinkRenderProps) =>

@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react';
 import { Loader } from '../../components/Loader';
 import { Person } from '../../types';
 import { getPeople } from '../../api';
-import { PeopleTable } from '../../components/PeopleTable';
-import { PeopleFilters } from '../../components/PeopleFilters';
+import { PeopleTable } from '../../components/Table/PeopleTable';
+import { PeopleFilters } from '../../components/Filter/PeopleFilter';
 
 export const PeoplePage = () => {
   const [peopleList, setPeopleList] = useState<Person[]>();
@@ -29,7 +29,7 @@ export const PeoplePage = () => {
     return <PeopleTable peopleList={peopleList} />;
   };
 
-  const callRequest = async () => {
+  const callGetRequest = async () => {
     try {
       const peopleFromServer = await getPeople();
       const deepCopy = peopleFromServer.map(person => ({
@@ -49,7 +49,7 @@ export const PeoplePage = () => {
   };
 
   useEffect(() => {
-    callRequest();
+    callGetRequest();
   }, []);
 
   return (
@@ -58,9 +58,11 @@ export const PeoplePage = () => {
 
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
-          <div className="column is-7-tablet is-narrow-desktop">
-            <PeopleFilters />
-          </div>
+          {peopleList && (
+            <div className="column is-7-tablet is-narrow-desktop">
+              <PeopleFilters />
+            </div>
+          )}
 
           <div className="column">
             <div className="box table-container">{renderContent()}</div>

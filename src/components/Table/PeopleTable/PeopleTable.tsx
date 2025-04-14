@@ -1,5 +1,5 @@
 import React from 'react';
-import { Person } from '../../types';
+import { Person } from '../../../types';
 import { PersonItem } from '../PersonItem';
 import { useParams } from 'react-router-dom';
 
