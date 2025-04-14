@@ -45,17 +45,17 @@ const page = {
     .and('have.text', text),
 }
 
-let failed = false;
+ let failed = false;
 
-Cypress.on('fail', (e) => {
+ Cypress.on('fail', (e) => {
   failed = true;
-  throw e;
-});
+   throw e;
+ });
 
 describe('', () => {
-  beforeEach(() => {
+   beforeEach(() => {
     if (failed) Cypress.runner.stop();
-  });
+   });
 
   describe('/ page', () => {
     it('should have correct address', () => {
@@ -93,7 +93,6 @@ describe('', () => {
       page.visit('/');
       page.assetTitle('Home Page');
     });
-
 
     it('should not send API request', () => {
       page.spyOnPeopleRequest();
