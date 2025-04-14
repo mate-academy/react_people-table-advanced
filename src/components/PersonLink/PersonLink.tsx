@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useLocation, useParams } from 'react-router-dom';
 import classNames from 'classnames';
 
 import { Person } from '../../types';
@@ -10,6 +10,7 @@ type Props = {
 
 export const PersonLink: React.FC<Props> = ({ person }) => {
   const { slug } = useParams();
+  const location = useLocation();
 
   return (
     <tr
@@ -20,7 +21,7 @@ export const PersonLink: React.FC<Props> = ({ person }) => {
     >
       <td>
         <Link
-          to={`../${person.slug}`}
+          to={`/people/${person.slug}${location.search}`}
           className={classNames({ 'has-text-danger': person.sex === 'f' })}
         >
           {person?.name}
@@ -33,7 +34,10 @@ export const PersonLink: React.FC<Props> = ({ person }) => {
 
       <td>
         {person.mother ? (
-          <Link to={`../${person.mother.slug}`} className="has-text-danger">
+          <Link
+            to={`/people/${person.mother.slug}${location.search}`}
+            className="has-text-danger"
+          >
             {person.mother.name}
           </Link>
         ) : (
@@ -43,7 +47,9 @@ export const PersonLink: React.FC<Props> = ({ person }) => {
 
       <td>
         {person.father ? (
-          <Link to={`../${person.father.slug}`}>{person.father.name}</Link>
+          <Link to={`/people/${person.father.slug}${location.search}`}>
+            {person.father.name}
+          </Link>
         ) : (
           person.fatherName || '-'
         )}
