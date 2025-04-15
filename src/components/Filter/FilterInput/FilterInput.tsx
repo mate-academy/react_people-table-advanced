@@ -1,25 +1,22 @@
-import { useNavigate, useSearchParams } from 'react-router-dom';
-import { getSearchWith } from '../../../utils/searchHelper';
+import React from 'react';
 
-export const FilterInput = () => {
-  const [searchParams] = useSearchParams();
-  const navigate = useNavigate();
+interface Props {
+  onChangeInput: (text: string) => void;
+}
 
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const path = getSearchWith(searchParams, {
-      query: event.currentTarget.value,
-    });
-
-    navigate({ search: path });
-  };
-
+export const FilterInput: React.FC<Props> = ({ onChangeInput }) => {
   return (
-    <input
-      onChange={handleInputChange}
-      data-cy="NameFilter"
-      type="search"
-      className="input"
-      placeholder="Search"
-    />
+    <p className="control has-icons-left">
+      <input
+        onChange={event => onChangeInput(event.currentTarget.value)}
+        data-cy="NameFilter"
+        type="search"
+        className="input"
+        placeholder="Search"
+      />
+      <span className="icon is-left">
+        <i className="fas fa-search" aria-hidden="true" />
+      </span>
+    </p>
   );
 };

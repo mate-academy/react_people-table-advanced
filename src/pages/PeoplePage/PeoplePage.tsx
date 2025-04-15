@@ -11,7 +11,6 @@ export const PeoplePage = () => {
   const [peopleList, setPeopleList] = useState<Person[]>();
   const [errorMessage, setErrorMessage] = useState(false);
   const [searchParams] = useSearchParams();
-
   const [filterParams, setFilterParams] = useState<PeopleFilterParams>({});
 
   const getFilteredPeopleList = useCallback(() => {
@@ -49,28 +48,6 @@ export const PeoplePage = () => {
     });
   }, [filterParams, peopleList]);
 
-  const renderContent = () => {
-    const filteredPeople = getFilteredPeopleList();
-
-    if (errorMessage) {
-      return (
-        <p data-cy="peopleLoadingError" className="has-text-danger">
-          Something went wrong
-        </p>
-      );
-    }
-
-    if (!filteredPeople) {
-      return <Loader />;
-    }
-
-    if (!filteredPeople.length) {
-      return <p data-cy="noPeopleMessage">There are no people on the server</p>;
-    }
-
-    return <PeopleTable peopleList={filteredPeople} />;
-  };
-
   const callGetRequest = async () => {
     try {
       const peopleFromServer = await getPeople();
@@ -89,6 +66,8 @@ export const PeoplePage = () => {
       setErrorMessage(true);
     }
   };
+
+  const validPeopleList = getFilteredPeopleList();
 
   useEffect(() => {
     callGetRequest();
@@ -117,7 +96,25 @@ export const PeoplePage = () => {
           )}
 
           <div className="column">
-            <div className="box table-container">{renderContent()}</div>
+            <div className="box table-container">
+              {errorMessage && (
+                <p data-cy="peopleLoadingError" className="has-text-danger">
+                  Something went wrong
+                </p>
+              )}
+
+              {!errorMessage && !validPeopleList && <Loader />}
+
+              {validPeopleList && validPeopleList.length === 0 && (
+                <p data-cy="noPeopleMessage">
+                  There are no people on the server
+                </p>
+              )}
+
+              {validPeopleList && validPeopleList.length > 0 && (
+                <PeopleTable peopleList={validPeopleList} />
+              )}
+            </div>
           </div>
         </div>
       </div>
