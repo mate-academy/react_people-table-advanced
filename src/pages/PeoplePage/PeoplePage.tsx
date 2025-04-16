@@ -5,7 +5,8 @@ import { getPeople } from '../../api';
 import { PeopleTable } from '../../components/Table/PeopleTable';
 import { PeopleFilters } from '../../components/Filter/PeopleFilter';
 import { useSearchParams } from 'react-router-dom';
-import { PeopleFilterParams, SexFilterValue } from '../../types/FilterParams';
+import { PeopleFilterParams } from '../../types/FilterParams';
+import { PersonSex } from '../../constants/PersonSex';
 
 export const PeoplePage = () => {
   const [peopleList, setPeopleList] = useState<Person[]>();
@@ -15,69 +16,54 @@ export const PeoplePage = () => {
 
   const getFilteredPeopleList = useCallback(() => {
     return peopleList?.filter(person => {
-      if (filterParams.sex) {
-        if (person.sex !== filterParams.sex) {
-          return false;
-        }
-      }
+      const bySex = !filterParams.sex || filterParams.sex === person.sex;
 
-      if (filterParams.query) {
-        const lowerQuery = filterParams.query.toLowerCase();
-        const fullName =
-          `${person.name} ${person.fatherName} ${person.motherName}`.toLowerCase();
+      const byInput =
+        !filterParams.query ||
+        `${person.name} ${person.fatherName} ${person.motherName}`
+          .toLowerCase()
+          .includes(filterParams.query.toLowerCase());
 
-        if (!fullName.includes(lowerQuery)) {
-          return false;
-        }
-      }
+      const personCentury = Math.ceil(person.born / 100);
 
-      if (filterParams.centuries && person.born) {
-        const bornYear = +person.born;
+      const byCentury =
+        !filterParams.centuries?.length ||
+        filterParams.centuries.includes(personCentury.toString());
 
-        if (!isNaN(bornYear)) {
-          const centuryStart = (+filterParams.centuries - 1) * 100 + 1;
-          const centuryEnd = centuryStart + 99;
-
-          if (bornYear < centuryStart || bornYear > centuryEnd) {
-            return false;
-          }
-        }
-      }
-
-      return true;
+      return bySex && byInput && byCentury;
     });
   }, [filterParams, peopleList]);
-
-  const callGetRequest = async () => {
-    try {
-      const peopleFromServer = await getPeople();
-      const deepCopy = peopleFromServer.map(person => ({
-        ...person,
-        mother: peopleFromServer.find(
-          mother => mother.name === person.motherName,
-        ),
-        father: peopleFromServer.find(
-          father => father.name === person.fatherName,
-        ),
-      }));
-
-      setPeopleList(deepCopy);
-    } catch {
-      setErrorMessage(true);
-    }
-  };
 
   const validPeopleList = getFilteredPeopleList();
 
   useEffect(() => {
+    const callGetRequest = async () => {
+      try {
+        const peopleFromServer = await getPeople();
+        const deepCopy = peopleFromServer.map(person => ({
+          ...person,
+          mother: peopleFromServer.find(
+            mother => mother.name === person.motherName,
+          ),
+          father: peopleFromServer.find(
+            father => father.name === person.fatherName,
+          ),
+        }));
+
+        setPeopleList(deepCopy);
+      } catch {
+        setErrorMessage(true);
+      }
+    };
+
     callGetRequest();
   }, []);
 
   useEffect(() => {
     const newFilterParams: PeopleFilterParams = {
-      sex: searchParams.get('sex') as SexFilterValue,
+      sex: searchParams.get('sex') as PersonSex,
       query: searchParams.get('query'),
-      centuries: searchParams.get('centuries'),
+      centuries: searchParams.getAll('centuries'),
     };
 
     setFilterParams(newFilterParams);

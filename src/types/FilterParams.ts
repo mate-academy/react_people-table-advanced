@@ -1,10 +1,7 @@
-export enum SexFilterValue {
-  Male = 'm',
-  Female = 'f',
-}
+import { PersonSex } from '../constants/PersonSex';
 
 export interface PeopleFilterParams {
-  sex?: SexFilterValue | null;
+  sex?: PersonSex | null;
   query?: string | null;
-  centuries?: string | null;
+  centuries?: string[] | null;
 }

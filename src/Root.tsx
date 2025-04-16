@@ -1,6 +1,6 @@
 import { HashRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { App } from './App';
-import { RoutesParts } from './types/RoutesURLParts';
+import { RoutesParts } from './constants/RoutesURLParts';
 import { HomePage } from './pages/HomePage';
 import { UnknowPage } from './pages/UnknownPage';
 import { PeoplePage } from './pages/PeoplePage';

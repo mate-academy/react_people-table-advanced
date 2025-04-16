@@ -1,4 +1,4 @@
-import { SexFilterValue } from '../../../types/FilterParams';
+import { PersonSex } from '../../../constants/PersonSex';
 import { SearchLink } from '../../SearchLink';
 import classNames from 'classnames';
 
@@ -19,17 +19,17 @@ export const FilterBySex: React.FC<Props> = ({ selectedSex }) => {
       </SearchLink>
       <SearchLink
         className={classNames({
-          'is-active': selectedSex === SexFilterValue.Male,
+          'is-active': selectedSex === PersonSex.Male,
         })}
-        params={{ sex: SexFilterValue.Male }}
+        params={{ sex: PersonSex.Male }}
       >
         Male
       </SearchLink>
       <SearchLink
         className={classNames({
-          'is-active': selectedSex === SexFilterValue.Female,
+          'is-active': selectedSex === PersonSex.Female,
         })}
-        params={{ sex: SexFilterValue.Female }}
+        params={{ sex: PersonSex.Female }}
       >
         Female
       </SearchLink>
