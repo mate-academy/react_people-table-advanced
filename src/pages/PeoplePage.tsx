@@ -4,7 +4,7 @@ import { Person } from '../types/Person';
 import { PeopleTable } from '../components/PeopleTable';
 import { PersonLink } from '../components/PersonLink';
 import { getPeople } from '../api';
-import { PeopleFilters } from '../components/PeopleFilters';
+import { PeopleFilters } from '../components/PeopleFilters/PeopleFilters';
 import { Loader } from '../components/Loader';
 
 export const PeoplePage = () => {
@@ -40,8 +40,9 @@ export const PeoplePage = () => {
         person.name.toLowerCase().includes(query) ||
         (person.motherName &&
           person.motherName.toLowerCase().includes(query)) ||
-        (person.fatherName && person.fatherName.toLowerCase().includes(query));
-      person.sex.toLowerCase().includes(query);
+        (person.fatherName &&
+          person.fatherName.toLowerCase().includes(query)) ||
+        person.sex.toLowerCase().includes(query);
 
       const matchesSex = sex ? person.sex === sex : true;
 
@@ -88,7 +89,6 @@ export const PeoplePage = () => {
     );
   }
 
-  // Показываем сообщение, если нет людей, соответствующих фильтрам
   if (filteredPeople.length === 0) {
     return (
       <p data-cy="noPeopleMessage">

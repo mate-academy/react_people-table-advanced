@@ -1,10 +1,10 @@
-import { useNavigate } from 'react-router-dom'; // Для навигации
-import { useSearchParams } from 'react-router-dom'; // Для получения текущих параметров поиска
-import { getSearchWith } from '../utils/searchHelper'; // Для обновления параметров поиска
+import { useNavigate } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
+import { getSearchWith } from '../../utils/searchHelper';
 
 export const ResetFiltersButton = () => {
   const navigate = useNavigate();
-  const [searchParams] = useSearchParams(); // Получаем текущие параметры поиска
+  const [searchParams] = useSearchParams();
 
   const handleReset = () => {
     const newParams = getSearchWith(searchParams, {
@@ -23,8 +23,6 @@ export const ResetFiltersButton = () => {
 
   return (
     <div className="panel-block">
-      {' '}
-      {/* Этот блок будет оборачивать кнопку */}
       <button
         className="button is-link is-outlined is-fullwidth"
         onClick={handleReset}

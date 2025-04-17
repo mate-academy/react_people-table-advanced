@@ -1,5 +1,5 @@
 import { useSearchParams } from 'react-router-dom';
-import { SearchLink } from './SearchLink';
+import { SearchLink } from '../SearchLink';
 
 export const SexFilter = () => {
   const [searchParams] = useSearchParams();

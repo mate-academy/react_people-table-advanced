@@ -1,5 +1,5 @@
 import { useSearchParams } from 'react-router-dom';
-import { getSearchWith } from '../utils/searchHelper';
+import { getSearchWith } from '../../utils/searchHelper';
 
 const centuries = ['16', '17', '18', '19', '20'];
 

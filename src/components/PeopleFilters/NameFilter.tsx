@@ -1,7 +1,7 @@
 // NameFilter.tsx
 import { useSearchParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { getSearchWith } from '../utils/searchHelper';
+import { getSearchWith } from '../../utils/searchHelper';
 
 export const NameFilter = () => {
   const [searchParams, setSearchParams] = useSearchParams();
