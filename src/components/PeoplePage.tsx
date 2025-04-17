@@ -51,8 +51,8 @@ export const PeoplePage: React.FC = () => {
       : true;
     const filterByQuery = query
       ? [person.name, person.fatherName, person.motherName].some(
-        name => name && name.toLowerCase().includes(query.toLowerCase()),
-      )
+          name => name && name.toLowerCase().includes(query.toLowerCase()),
+        )
       : true;
 
     return filteredBySex && filterByCentury && filterByQuery;
@@ -74,7 +74,7 @@ export const PeoplePage: React.FC = () => {
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
           <div className="column is-7-tablet is-narrow-desktop">
-            <PeopleFilters />
+            {!isLoading && !error && people.length > 0 && <PeopleFilters />}
           </div>
 
           <div className="box table-container">
@@ -86,10 +86,16 @@ export const PeoplePage: React.FC = () => {
               </p>
             )}
 
-            {!isLoading && !error && people.length === 0 && (
-              <p data-cy="noPeopleMessage">There are no people on the server</p>
+            {!isLoading &&
+              !error &&
+              people.length === 0 &&
+              !query &&
+              !sex &&
+              centuries.length === 0 && (
+              <p data-cy="noPeopleMessage">
+                There are no people on the server
+              </p>
             )}
-
             {!isLoading && !error && filterPeople.length > 0 && (
               <PeopleTable people={filterPeople} slug={slug} />
             )}
