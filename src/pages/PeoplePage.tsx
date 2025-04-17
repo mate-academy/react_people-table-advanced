@@ -38,7 +38,10 @@ export const PeoplePage = () => {
     return people.filter(person => {
       const matchesQuery =
         person.name.toLowerCase().includes(query) ||
-        person.sex.toLowerCase().includes(query);
+        (person.motherName &&
+          person.motherName.toLowerCase().includes(query)) ||
+        (person.fatherName && person.fatherName.toLowerCase().includes(query));
+      person.sex.toLowerCase().includes(query);
 
       const matchesSex = sex ? person.sex === sex : true;
 
@@ -88,7 +91,9 @@ export const PeoplePage = () => {
   // Показываем сообщение, если нет людей, соответствующих фильтрам
   if (filteredPeople.length === 0) {
     return (
-      <p data-cy="noPeopleMessage">There are no people matching the current search criteria</p>
+      <p data-cy="noPeopleMessage">
+        There are no people matching the current search criteria
+      </p>
     );
   }
 
@@ -101,7 +106,7 @@ export const PeoplePage = () => {
             <PeopleFilters />
           </div>
           <div className="column">
-          <div className="box table-container">
+            <div className="box table-container">
               <PeopleTable
                 persons={sortedPeople}
                 PersonLinkComponent={({ person }) => (
@@ -111,7 +116,6 @@ export const PeoplePage = () => {
               />
             </div>
           </div>
-
         </div>
       </div>
     </>

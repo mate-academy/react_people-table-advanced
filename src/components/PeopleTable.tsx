@@ -28,7 +28,6 @@ export const PeopleTable: React.FC<Props> = ({
   if (persons.length === 0) {
     return <p data-cy="noPeopleMessage">There are no people on the server</p>;
   }
-  
 
   return (
     <table
@@ -53,8 +52,10 @@ export const PeopleTable: React.FC<Props> = ({
 
             return (
               <th key={field}>
-                <span className="is-flex
-                is-flex-wrap-nowrap is-align-items-center">
+                <span
+                  className="is-flex
+                is-flex-wrap-nowrap is-align-items-center"
+                >
                   {field[0].toUpperCase() + field.slice(1)}
 
                   <SearchLink
