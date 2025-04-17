@@ -52,7 +52,8 @@ export const PeopleTable: React.FC<Props> = ({
 
             return (
               <th key={field}>
-                <span className="is-flex is-flex-wrap-nowrap is-align-items-center">
+                <span
+                  className="is-flex is-flex-wrap-nowrap is-align-items-center">
                   {field[0].toUpperCase() + field.slice(1)}
 
                   <SearchLink
