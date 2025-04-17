@@ -85,30 +85,33 @@ export const PeoplePage = () => {
     );
   }
 
+  // Показываем сообщение, если нет людей, соответствующих фильтрам
+  if (filteredPeople.length === 0) {
+    return (
+      <p data-cy="noPeopleMessage">There are no people matching the current search criteria</p>
+    );
+  }
+
   return (
     <>
       <h1 className="title">People Page</h1>
       <div className="block">
-        <div className="columns">
+        <div className="columns is-desktop is-flex-direction-row-reverse">
+          <div className="column is-7-tablet is-narrow-desktop">
+            <PeopleFilters />
+          </div>
           <div className="column">
-            <div className="box table-container">
-              {/* Сохраняем вашу логику с загрузкой, ошибкой и таблицей */}
-              {!isLoading && !hasError && (
-                <PeopleTable
-                  persons={sortedPeople}
-                  PersonLinkComponent={({ person }) => (
-                    <PersonLink person={person} />
-                  )}
-                  getPersonByName={getPersonByName}
-                />
-              )}
+          <div className="box table-container">
+              <PeopleTable
+                persons={sortedPeople}
+                PersonLinkComponent={({ person }) => (
+                  <PersonLink person={person} />
+                )}
+                getPersonByName={getPersonByName}
+              />
             </div>
           </div>
 
-          <div className="column is-7-tablet is-narrow-desktop">
-            {/* Фильтры отображаются только если есть данные */}
-            {people.length > 0 && <PeopleFilters />}
-          </div>
         </div>
       </div>
     </>
