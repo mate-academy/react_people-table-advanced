@@ -92,6 +92,7 @@ export const PeoplePage = () => {
         <div className="columns">
           <div className="column">
             <div className="box table-container">
+              {/* Сохраняем вашу логику с загрузкой, ошибкой и таблицей */}
               {!isLoading && !hasError && (
                 <PeopleTable
                   persons={sortedPeople}
@@ -105,6 +106,7 @@ export const PeoplePage = () => {
           </div>
 
           <div className="column is-7-tablet is-narrow-desktop">
+            {/* Фильтры отображаются только если есть данные */}
             {people.length > 0 && <PeopleFilters />}
           </div>
         </div>
