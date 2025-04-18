@@ -126,7 +126,7 @@ export const PeoplePage = () => {
               {!loading &&
                 !errorMessage &&
                 !people.length &&
-                Object.keys(searchParams).length === 0 && (
+                searchParams.toString().length === 0 && (
                   <p data-cy="noPeopleMessage">
                     There are no people on the server
                   </p>
@@ -135,7 +135,7 @@ export const PeoplePage = () => {
               {!loading &&
                 !errorMessage &&
                 !people.length &&
-                Object.keys(searchParams).length > 0 && (
+                searchParams.toString().length > 0 && (
                   <p>
                     There are no people matching the current search criteria
                   </p>
