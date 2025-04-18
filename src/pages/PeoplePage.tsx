@@ -89,14 +89,6 @@ export const PeoplePage = () => {
     );
   }
 
-  if (filteredPeople.length === 0) {
-    return (
-      <p data-cy="noPeopleMessage">
-        There are no people matching the current search criteria
-      </p>
-    );
-  }
-
   return (
     <>
       <h1 className="title">People Page</h1>
@@ -107,13 +99,21 @@ export const PeoplePage = () => {
           </div>
           <div className="column">
             <div className="box table-container">
-              <PeopleTable
-                persons={sortedPeople}
-                PersonLinkComponent={({ person }) => (
-                  <PersonLink person={person} />
-                )}
-                getPersonByName={getPersonByName}
-              />
+              {!isLoading &&
+                !hasError &&
+                (filteredPeople.length === 0 ? (
+                  <p data-cy="noPeopleMessage">
+                    There are no people matching the current search criteria
+                  </p>
+                ) : (
+                  <PeopleTable
+                    persons={sortedPeople}
+                    PersonLinkComponent={({ person }) => (
+                      <PersonLink person={person} />
+                    )}
+                    getPersonByName={getPersonByName}
+                  />
+                ))}
             </div>
           </div>
         </div>
