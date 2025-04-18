@@ -41,6 +41,6 @@ export const InfoBlock: React.FC<Props> = ({
         </>
       );
     default:
-      return '';
+      return null;
   }
 };
