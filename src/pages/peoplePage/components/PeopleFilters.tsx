@@ -123,7 +123,7 @@ export const PeopleFilters = () => {
               params={{ centuries: [] }}
               data-cy="centuryALL"
               className="button is-success is-outlined"
-              onClick={() => clearCentury}
+              onClick={() => clearCentury()}
             >
               All
             </SearchLink>

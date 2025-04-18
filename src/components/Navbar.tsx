@@ -26,7 +26,7 @@ export const Navbar = () => {
           <NavLink
             className={getLinkClass}
             to={{
-              pathname: 'people',
+              pathname: '/people',
               search: `?${searchParams.toString()}`,
             }}
           >
