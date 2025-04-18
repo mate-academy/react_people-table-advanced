@@ -40,7 +40,7 @@ export const CenturyFilter = () => {
         <div className="level-right ml-4">
           <a
             data-cy="centuryALL"
-            className="button is-success is-outlined"
+            className={`button ${selected.length === 0 ? 'is-success' : 'is-success is-outlined'}`}
             onClick={() => {
               const newParams = getSearchWith(searchParams, {
                 centuries: null,
