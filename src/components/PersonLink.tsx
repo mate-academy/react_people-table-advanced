@@ -3,7 +3,6 @@ import { Person } from '../types/Person';
 import cn from 'classnames';
 import { useLocation } from 'react-router-dom';
 
-
 type Props = {
   person: Person | null;
 };
