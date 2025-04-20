@@ -10,7 +10,6 @@ import 'bulma/css/bulma.css';
 import '@fortawesome/fontawesome-free/css/all.css';
 
 import { App } from './App';
-import React from 'react';
 import { HomePage } from './components/HomePage';
 import { PeoplePage } from './components/PeoplePage';
 import { NotFoundPage } from './components/NotFoundPage';
@@ -24,7 +23,6 @@ const Root = () => (
         <Route index element={<HomePage />} />
 
         <Route path="/people">
-          <Route index element={<PeoplePage />} />
           <Route path=":slug?" element={<PeoplePage />} />
         </Route>
 

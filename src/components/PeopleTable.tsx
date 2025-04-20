@@ -51,10 +51,10 @@ export const PeopleTable: React.FC<Props> = ({ people, slug }: Props) => {
             <td>{person.born}</td>
             <td>{person.died}</td>
             <td>
-              <PeopleLink name={person.motherName || '-'} people={people} />
+              <PeopleLink name={person.motherName || null} people={people} />
             </td>
             <td>
-              <PeopleLink name={person.fatherName || '-'} people={people} />
+              <PeopleLink name={person.fatherName || null} people={people} />
             </td>
           </tr>
         ))}
