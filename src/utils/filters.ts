@@ -46,7 +46,7 @@ export function filter(people: Person[], params: URLSearchParams) {
         break;
     }
 
-    if (params.has('order', 'desc')) {
+    if (params.get('order') === 'desc') {
       filtered.reverse();
     }
   }

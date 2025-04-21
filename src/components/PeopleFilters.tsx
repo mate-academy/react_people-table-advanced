@@ -21,13 +21,17 @@ export const PeopleFilters = () => {
           All
         </SearchLink>
         <SearchLink
-          className={classNames({ 'is-active': searchParams.has('sex', 'm') })}
+          className={classNames({
+            'is-active': searchParams.get('sex') === 'm',
+          })}
           params={{ sex: 'm' }}
         >
           Male
         </SearchLink>
         <SearchLink
-          className={classNames({ 'is-active': searchParams.has('sex', 'f') })}
+          className={classNames({
+            'is-active': searchParams.get('sex') === 'f',
+          })}
           params={{ sex: 'f' }}
         >
           Female
@@ -45,10 +49,10 @@ export const PeopleFilters = () => {
                 data-cy="century"
                 className={classNames({
                   'button mr-1': true,
-                  'is-info': searchParams.has('centuries', `${c}`),
+                  'is-info': searchParams.getAll('centuries').includes(`${c}`),
                 })}
                 params={{
-                  centuries: searchParams.has('centuries', `${c}`)
+                  centuries: searchParams.getAll('centuries').includes(`${c}`)
                     ? searchParams
                       .getAll('centuries')
                       .filter(it => it !== `${c}`)

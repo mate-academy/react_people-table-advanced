@@ -46,7 +46,9 @@ export const PeoplePage = () => {
                 isLoading={isLoading}
                 hasError={hasError}
                 isEmpty={peopleFromApi.length === 0}
-                isFilteredOut={shownPeople.length === 0}
+                isFilteredOut={
+                  shownPeople.length === 0 && peopleFromApi.length !== 0
+                }
               />
               {shownPeople.length !== 0 && <PeopleTable people={shownPeople} />}
             </div>
