@@ -1,4 +1,5 @@
 import { PeopleFilters } from './PeopleFilters';
+import { useSearchParams } from 'react-router-dom';
 import { Loader } from './Loader';
 import { PeopleTable } from './PeopleTable';
 import { useEffect, useState } from 'react';
@@ -6,58 +7,64 @@ import { getPeople } from '../api';
 import { useMemo } from 'react';
 
 export const PeoplePage = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
   const [peoples, setPeoples] = useState([]);
   const [isLoading, setIsloading] = useState(false);
-  const [ErrorType, setErrorType] = useState(false);
-  const [sortBy, setSortBy] = useState<string | null>(null);
-  const [sortOrder,setSortOrder]= useState<'asc'|'desc'|null>(null)
-  const [genderFilter, setGenderFilter] = useState<'m'|'f' | null>(null)
-  const [centuries, setCenturies] = useState<number[]>([]);
-const[input, setInput]=useState<string>('')
+  const [errorType, setErrorType] = useState(false);
 
-const sortedPeople = useMemo(() => {
-  let filtered = [...peoples];
+  const sortOrder = searchParams.get('order') || null;
+  const sortBy = searchParams.get('sort') || null;
+  const genderFilter = searchParams.get('sex') || null;
+  const query = searchParams.get('query') || '';
+  const centuries = useMemo(() => {
+    return searchParams.getAll('centuries').map(Number);
+  }, [searchParams]);
 
+  const sortedPeople = useMemo(() => {
+    let filtered = [...peoples];
 
-  if (genderFilter === 'm') {
-    filtered = filtered.filter((person) => person.sex === 'm');
-  } else if (genderFilter === 'f') {
-    filtered = filtered.filter((person) => person.sex === 'f');
-  }
-
-  if (input.length > 0) {
-    filtered = filtered.filter((person)=> person.name.toLowerCase().includes(input.toLowerCase()))
+    if (genderFilter === 'm') {
+      filtered = filtered.filter(person => person.sex === 'm');
+    } else if (genderFilter === 'f') {
+      filtered = filtered.filter(person => person.sex === 'f');
     }
-  // 🔸 (пізніше додаси фільтр по століттях і пошуку сюди)
-  if (centuries.length > 0) {
 
-    filtered = filtered.filter((person) => {
-      const century = Math.ceil(person.born / 100);
-      return centuries.includes(century)
-    })
-}
-  // 🔸 сортування
-  if (sortBy && sortOrder) {
-    filtered.sort((a, b) => {
-      let result = 0;
+    if (query.length >= 0) {
+      filtered = filtered.filter(person =>
+        person.name.toLowerCase().includes(query.toLowerCase()),
+      );
+    }
 
-      if (sortBy === 'name') {
-        result = a.name.localeCompare(b.name);
-      } else if (sortBy === 'sex') {
-        result = a.sex.localeCompare(b.sex);
-      } else if (sortBy === 'born') {
-        result = a.born - b.born;
-      } else if (sortBy === 'died') {
-        result = a.died - b.died;
-      }
 
-      return sortOrder === 'asc' ? result : -result;
-    });
-  }
+    if (centuries.length > 0) {
+      filtered = filtered.filter(person => {
+        const century = Math.ceil(person.born / 100);
 
-  return filtered;
-}, [peoples, sortBy, sortOrder, genderFilter,input,centuries]);
+        return centuries.includes(century);
+      });
+    }
 
+
+    if (sortBy && sortOrder) {
+      filtered.sort((a, b) => {
+        let result = 0;
+
+        if (sortBy === 'name') {
+          result = a.name.localeCompare(b.name);
+        } else if (sortBy === 'sex') {
+          result = a.sex.localeCompare(b.sex);
+        } else if (sortBy === 'born') {
+          result = a.born - b.born;
+        } else if (sortBy === 'died') {
+          result = a.died - b.died;
+        }
+
+        return sortOrder === 'asc' ? result : -result;
+      });
+    }
+
+    return filtered;
+  }, [peoples, sortBy, sortOrder, genderFilter, query, centuries]);
 
   useEffect(() => {
     setErrorType(false);
@@ -90,15 +97,22 @@ const sortedPeople = useMemo(() => {
           <div className="block">
             <div className="columns is-desktop is-flex-direction-row-reverse">
               <div className="column is-7-tablet is-narrow-desktop">
-                {!isLoading && <PeopleFilters genderFilter={genderFilter} setCenturies={setCenturies}
-                centuries={centuries}  setInput={setInput} input={input} setGenderFilter={setGenderFilter} />}
+                {!isLoading && (
+                  <PeopleFilters
+                    searchParams={searchParams}
+                    setSearchParams={setSearchParams}
+                    genderFilter={genderFilter}
+                    centuries={centuries}
+                    query={query}
+                  />
+                )}
               </div>
 
               <div className="column">
                 <div className="box table-container">
                   {isLoading && <Loader />}
 
-                  {ErrorType && (
+                  {errorType && (
                     <p data-cy="peopleLoadingError">Something went wrong</p>
                   )}
 
@@ -108,12 +122,21 @@ const sortedPeople = useMemo(() => {
                     </p>
                   )}
 
-                  {input.length > 0 && sortedPeople.length ===0  && (
+                  {query.length !== 0 && sortedPeople.length === 0 && (
                     <p>
                       There are no people matching the current search criteria
                     </p>
                   )}
-                  {!isLoading && sortedPeople.length>0 && <PeopleTable sortBy ={sortBy} peoples={peoples} sortOrder={sortOrder} setSortBy={setSortBy} sortPeople={ sortedPeople} setSortOrder={setSortOrder} />}
+                  {!isLoading && sortedPeople.length > 0 && (
+                    <PeopleTable
+                      searchParams={searchParams}
+                      setSearchParams={setSearchParams}
+                      sortBy={sortBy}
+                      peoples={peoples}
+                      sortOrder={sortOrder}
+                      sortPeople={sortedPeople}
+                    />
+                  )}
                 </div>
               </div>
             </div>

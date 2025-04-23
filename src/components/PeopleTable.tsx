@@ -1,21 +1,35 @@
 /* eslint-disable jsx-a11y/control-has-associated-label */
 import { useParams, Link } from 'react-router-dom';
 import { PersonLink } from './PersonLink';
-import classNames from 'classnames';
-export const PeopleTable = ({sortBy, peoples,sortOrder, setSortBy,sortPeople,setSortOrder}) => {
+export const PeopleTable = ({
+  searchParams,
+  setSearchParams,
+  sortBy,
+  peoples,
+  sortOrder,
+
+  sortPeople,
+}) => {
   const { slug } = useParams();
 
   const handleSort = (field: string) => {
-    if (sortBy !== field) {
-      setSortBy(field);
-      setSortOrder('asc');
-    } else if (sortOrder === 'asc') {
-      setSortOrder('desc');
-    } else if (sortOrder === 'desc') {
-      setSortBy(null);
-      setSortOrder(null);
+    const params = new URLSearchParams(searchParams);
+    const currentSort = searchParams.get('sort');
+    const currentOrder = searchParams.get('order');
+
+    if (currentSort !== field) {
+      params.set('sort', field);
+      params.set('order', 'asc');
+    } else if (currentOrder === 'asc') {
+      params.set('order', 'desc');
+    } else {
+      params.delete('sort');
+      params.delete('order');
     }
+
+    setSearchParams(params);
   };
+
   return (
     <table
       data-cy="peopleTable"
@@ -27,13 +41,24 @@ export const PeopleTable = ({sortBy, peoples,sortOrder, setSortBy,sortPeople,set
             <span className="is-flex is-flex-wrap-nowrap">
               Name
               <a href="#/people?sort=name">
-                <span className="icon" onClick={()=> handleSort('name')}>
-                <i className={`fas ${
-    sortBy !== 'name' ? 'fa-sort'
-    : sortOrder === 'asc' ? 'fa-sort-up'
-    : sortOrder === 'desc' ? 'fa-sort-down'
-    : 'fa-sort'
-  }`} />
+                <span
+                  className="icon"
+                  onClick={e => {
+                    e.preventDefault();
+                    handleSort('name');
+                  }}
+                >
+                  <i
+                    className={`fas ${
+                      sortBy !== 'name'
+                        ? 'fa-sort'
+                        : sortOrder === 'asc'
+                          ? 'fa-sort-up'
+                          : sortOrder === 'desc'
+                            ? 'fa-sort-down'
+                            : 'fa-sort'
+                    }`}
+                  />
                 </span>
               </a>
             </span>
@@ -44,12 +69,21 @@ export const PeopleTable = ({sortBy, peoples,sortOrder, setSortBy,sortPeople,set
               Sex
               <a href="#/people?sort=sex">
                 <span className="icon">
-                  <i className={`fas ${
-    sortBy !== 'sex' ? 'fa-sort'
-    : sortOrder === 'asc' ? 'fa-sort-up'
-    : sortOrder === 'desc' ? 'fa-sort-down'
-    : 'fa-sort'
-  }`} onClick={()=>{handleSort('sex')}} />
+                  <i
+                    className={`fas ${
+                      sortBy !== 'sex'
+                        ? 'fa-sort'
+                        : sortOrder === 'asc'
+                          ? 'fa-sort-up'
+                          : sortOrder === 'desc'
+                            ? 'fa-sort-down'
+                            : 'fa-sort'
+                    }`}
+                    onClick={e => {
+                      e.preventDefault();
+                      handleSort('sex');
+                    }}
+                  />
                 </span>
               </a>
             </span>
@@ -60,12 +94,21 @@ export const PeopleTable = ({sortBy, peoples,sortOrder, setSortBy,sortPeople,set
               Born
               <a href="#/people?sort=born&amp;order=desc">
                 <span className="icon">
-                  <i className={`fas ${
-    sortBy !== 'born' ? 'fa-sort'
-    : sortOrder === 'asc' ? 'fa-sort-up'
-    : sortOrder === 'desc' ? 'fa-sort-down'
-    : 'fa-sort'
-  }`} onClick={()=>{handleSort('born')}} />
+                  <i
+                    className={`fas ${
+                      sortBy !== 'born'
+                        ? 'fa-sort'
+                        : sortOrder === 'asc'
+                          ? 'fa-sort-up'
+                          : sortOrder === 'desc'
+                            ? 'fa-sort-down'
+                            : 'fa-sort'
+                    }`}
+                    onClick={e => {
+                      e.preventDefault();
+                      handleSort('born');
+                    }}
+                  />
                 </span>
               </a>
             </span>
@@ -76,12 +119,21 @@ export const PeopleTable = ({sortBy, peoples,sortOrder, setSortBy,sortPeople,set
               Died
               <a href="#/people?sort=died">
                 <span className="icon">
-                  <i className={`fas ${
-    sortBy !== 'died' ? 'fa-sort'
-    : sortOrder === 'asc' ? 'fa-sort-up'
-    : sortOrder === 'desc' ? 'fa-sort-down'
-    : 'fa-sort'
-  }`} onClick={()=>{handleSort('died')}}/>
+                  <i
+                    className={`fas ${
+                      sortBy !== 'died'
+                        ? 'fa-sort'
+                        : sortOrder === 'asc'
+                          ? 'fa-sort-up'
+                          : sortOrder === 'desc'
+                            ? 'fa-sort-down'
+                            : 'fa-sort'
+                    }`}
+                    onClick={e => {
+                      e.preventDefault();
+                      handleSort('died');
+                    }}
+                  />
                 </span>
               </a>
             </span>
