@@ -1,7 +1,7 @@
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Person } from '../types';
 import { useEffect, useState } from 'react';
-import { PersonLink } from '../components/PersonalLink';
+import { PersonLink } from './PersonalLink';
 
 type PeopleTableProps = {
   people: Person[];
