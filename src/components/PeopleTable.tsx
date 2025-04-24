@@ -1,6 +1,7 @@
-import { FC } from 'react';
+import { FC, useState } from 'react';
 import { Person } from '../types';
-import { Link, NavLink } from 'react-router-dom';
+import { Link, NavLink, useParams } from 'react-router-dom';
+import { PersonLink } from './PersonLink';
 
 type Props = {
   people: Person[];
@@ -8,7 +9,8 @@ type Props = {
 
 /* eslint-disable jsx-a11y/control-has-associated-label */
 export const PeopleTable: FC<Props> = ({ people }) => {
-  console.log(people);
+
+
 
   return (
     <table
@@ -67,43 +69,9 @@ export const PeopleTable: FC<Props> = ({ people }) => {
       </thead>
 
       <tbody>
-        {people.map(person => {
-          const { name, sex, born, died, father, slug, mother } = person;
-          const classSex = sex === 'f' ? 'has-text-danger' : '';
-
-          return (
-            <tr data-cy="person" key={slug}>
-              <td>
-                <NavLink to={`${slug}`} className={classSex}>
-                  {name}
-                </NavLink>
-              </td>
-              <td>{sex}</td>
-              <td>{born}</td>
-              <td>{died}</td>
-
-              {mother ? (
-                <td>
-                  <NavLink className={classSex} to={`${mother.slug}`}>
-                    {mother.name}
-                  </NavLink>
-                </td>
-              ) : (
-                <td>-</td>
-              )}
-
-              {father ? (
-                <td>
-                  <NavLink className={classSex} to={`${father.slug}`}>
-                    {father.name}
-                  </NavLink>
-                </td>
-              ) : (
-                <td>-</td>
-              )}
-            </tr>
-          );
-        })}
+        {people.map(person => (
+          <PersonLink person={person} key={person.slug} />
+        ))}
       </tbody>
     </table>
   );

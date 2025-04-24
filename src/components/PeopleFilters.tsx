@@ -1,18 +1,31 @@
-export const PeopleFilters = () => {
+import { FC } from 'react';
+import { NavLink, useSearchParams } from 'react-router-dom';
+
+type Props = {
+  filterChange: (params: any, searchParams: any) => void;
+};
+
+export const PeopleFilters: FC<Props> = ({ filterChange }) => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const newParams = new URLSearchParams(searchParams.toString());
+  console.log('searchParams', newParams);
+
+
+
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        <a className="is-active" href="#/people">
+        <NavLink className="is-active" to="people">
           All
-        </a>
-        <a className="" href="#/people?sex=m">
+        </NavLink>
+        <NavLink className="" to="people?sex=m">
           Male
-        </a>
-        <a className="" href="#/people?sex=f">
+        </NavLink>
+        <NavLink className="" to="people?sex=f">
           Female
-        </a>
+        </NavLink>
       </p>
 
       <div className="panel-block">
