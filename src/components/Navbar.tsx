@@ -23,7 +23,6 @@ export const Navbar: React.FC = () => {
           className={({ isActive, isPending }) =>
             `navbar-item ${isActive || isPending ? 'has-background-grey-lighter' : ''}`
           }
-          end={false}
         >
           People
         </NavLink>
