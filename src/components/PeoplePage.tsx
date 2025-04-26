@@ -1,117 +1,118 @@
-/* eslint-disable prettier/prettier */
-import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import { Person } from '../types';
-import { getPeople } from '../api';
+import { PeopleFilters } from './PeopleFilters';
 import { Loader } from './Loader';
 import { PeopleTable } from './PeopleTable';
-import { PeopleFilters } from './PeopleFilters';
-import { useSearchParams } from 'react-router-dom';
+import { useEffect, useMemo, useState } from 'react';
+import { Person } from '../types';
+import { useLocation, useSearchParams } from 'react-router-dom';
+import { getPeople } from '../api';
 
 export const PeoplePage: React.FC = () => {
   const [people, setPeople] = useState<Person[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState('');
-  const { slug } = useParams<{ slug: string }>();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [hasError, setHasError] = useState<boolean>(false);
+  const location = useLocation();
+  const [searchParams] = useSearchParams();
+
+  const pathParts = location.pathname.split('/');
+  const selectedPersonSlug =
+    pathParts.length === 3 && pathParts[1] === 'people' ? pathParts[2] : null;
+
+  const isPeopleLoaded = !isLoading && !hasError && people.length > 0;
 
   useEffect(() => {
     setIsLoading(true);
 
     getPeople()
-      .then(peopleFromServer => {
-        setPeople(peopleFromServer);
+      .then(data => {
+        setPeople(data);
+        setIsLoading(false);
       })
       .catch(() => {
-        setError('Something went wrong');
-      })
-      .finally(() => {
+        setHasError(true);
         setIsLoading(false);
       });
   }, []);
 
-  const [searchParams] = useSearchParams();
-  const sortField = searchParams.get('sort');
-  const order = searchParams.get('order');
-  const currentSex = searchParams.get('sex');
-  const queryParam = searchParams.get('query') || '';
-  const selectedCenturies = searchParams.getAll('centuries');
+  const filteredPeople = useMemo(() => {
+    if (!people.length) {
+      return [];
+    }
 
-  const sortedPeople = [...people];
+    let result = [...people];
 
-  if (sortField) {
-    sortedPeople.sort((a, b) => {
-      const aVal = a[sortField as keyof Person];
-      const bVal = b[sortField as keyof Person];
+    const sexFilter = searchParams.get('sex');
 
-      if (aVal == null || bVal == null) {
-        return 0;
-      }
+    if (sexFilter) {
+      result = result.filter(person => person.sex === sexFilter);
+    }
 
-      if (aVal > bVal) {
-        return order === 'desc' ? -1 : 1;
-      }
+    const queryFilter = searchParams.get('query')?.toLowerCase();
 
-      if (aVal < bVal) {
-        return order === 'desc' ? 1 : -1;
-      }
+    if (queryFilter) {
+      result = result.filter(person => {
+        return (
+          (person.name && person.name.toLowerCase().includes(queryFilter)) ||
+          (person.motherName &&
+            person.motherName.toLowerCase().includes(queryFilter)) ||
+          (person.fatherName &&
+            person.fatherName.toLowerCase().includes(queryFilter))
+        );
+      });
+    }
 
-      return 0;
-    });
-  }
+    const centuryFilters = searchParams.getAll('centuries');
 
-  const filteredPeople = sortedPeople.filter(person => {
-    const matchesQuery = queryParam
-      ? [person.name, person.motherName, person.fatherName].some(
-        name => name && name.toLowerCase().includes(queryParam.toLowerCase()),
-      )
-      : true;
+    if (centuryFilters.length > 0) {
+      result = result.filter(person => {
+        if (!person.born) {
+          return false;
+        }
 
-    const matchesSex = currentSex ? person.sex === currentSex : true;
+        const century = Math.ceil(person.born / 100);
 
-    const bornCentury = Math.floor(person.born / 100) + 1;
-    const matchesCentury = selectedCenturies.length
-      ? selectedCenturies.includes(String(bornCentury))
-      : true;
+        return centuryFilters.includes(String(century));
+      });
+    }
 
-    return matchesQuery && matchesSex && matchesCentury;
-  });
+    return result;
+  }, [people, searchParams]);
 
   return (
-    <>
+    <div className="container">
       <h1 className="title">People Page</h1>
 
-      <div className="block">
-        <div className="columns is-desktop is-flex-direction-row-reverse">
-          <div className="column is-7-tablet is-narrow-desktop">
-            {!isLoading && !error && people.length > 0 && <PeopleFilters />}
-          </div>
-
-          <div className="column">
+      <div className="columns">
+        <div className="column">
+          <div className="block">
             <div className="box table-container">
               {isLoading && <Loader />}
-              {error && (
+
+              {hasError && (
                 <p data-cy="peopleLoadingError" className="has-text-danger">
                   Something went wrong
                 </p>
               )}
-              {!isLoading && !error && people.length === 0 && (
+
+              {!isLoading && !hasError && people.length === 0 && (
                 <p data-cy="noPeopleMessage">
                   There are no people on the server
                 </p>
               )}
 
-              {!isLoading && !error && !filteredPeople.length && (
-                <p>There are no people matching the current search criteria</p>
-              )}
-
-              {!isLoading && !error && !!filteredPeople.length && (
-                <PeopleTable people={filteredPeople} slug={slug} />
+              {isPeopleLoaded && (
+                <PeopleTable
+                  people={filteredPeople}
+                  selectedPersonSlug={selectedPersonSlug}
+                />
               )}
             </div>
           </div>
         </div>
+
+        <div className="column is-one-quarter">
+          <PeopleFilters isLoaded={isPeopleLoaded} />
+        </div>
       </div>
-    </>
+    </div>
   );
 };
-

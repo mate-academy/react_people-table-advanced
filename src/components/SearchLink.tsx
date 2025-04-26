@@ -1,6 +1,5 @@
 import { Link, LinkProps, useSearchParams } from 'react-router-dom';
 import { getSearchWith, SearchParams } from '../utils/searchHelper';
-import React from 'react';
 
 /**
  * To replace the the standard `Link` we take all it props except for `to`
