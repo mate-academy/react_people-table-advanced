@@ -1,30 +1,36 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import classNames from 'classnames';
+import { Link, useSearchParams } from 'react-router-dom';
 import { Person } from '../types';
 
-type Props = {
-  name: string | null;
-  people: Person[];
+export type PersonLinkProps = {
+  person: string | null;
+  allPeople: Person[];
 };
 
-export const PeopleLink: React.FC<Props> = ({ name, people }: Props) => {
-  if (!name) {
+export const PersonLink: React.FC<PersonLinkProps> = ({
+  person,
+  allPeople,
+}) => {
+  const [searchParams] = useSearchParams();
+
+  if (!person) {
     return <span>-</span>;
   }
 
-  const person = people.find(human => human.name === name);
+  const foundPerson = allPeople.find(p => p.name === person);
 
-  if (!person) {
-    return <span>{name}</span>;
+  if (!foundPerson) {
+    return <span>{person}</span>;
   }
 
+  const isFemale = foundPerson.sex === 'f';
+  const className = isFemale ? 'has-text-danger' : '';
+
+  const searchString = searchParams.toString();
+  const linkTo = `/people/${foundPerson.slug}${searchString ? `?${searchString}` : ''}`;
+
   return (
-    <Link
-      to={`/people/${person.slug}`}
-      className={classNames({ 'has-text-danger': person.sex === 'f' })}
-    >
-      {person.name}
+    <Link className={className} to={linkTo}>
+      {person}
     </Link>
   );
 };

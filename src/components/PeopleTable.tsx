@@ -1,7 +1,7 @@
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Person } from '../types';
 import { useEffect, useState } from 'react';
-import { PersonLink } from './PersonLink';
+import { PersonLink } from './PeopleLink';
 
 type PeopleTableProps = { people: Person[]; selectedPersonSlug: string | null };
 
