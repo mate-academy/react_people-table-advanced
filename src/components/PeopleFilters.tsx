@@ -8,22 +8,43 @@ type Props = {
 export const PeopleFilters: FC<Props> = ({ filterChange }) => {
   const [searchParams, setSearchParams] = useSearchParams();
   const newParams = new URLSearchParams(searchParams.toString());
-  console.log('searchParams', newParams);
+  console.log('searchParams-sex', newParams.get('sex'));
+  console.log('searchParams-search', newParams.get(''));
+  const search = '';
 
-
+  // const handleInputSearch=(e)=>{
+  //   setSearchParams('seacrh', e.target.value);
+  // }
 
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        <NavLink className="is-active" to="people">
+        <NavLink
+          className="is-active"
+          to={{
+            search: '',
+          }}
+        >
           All
         </NavLink>
-        <NavLink className="" to="people?sex=m">
+        <NavLink
+          className=""
+          to={{
+            // pathname: "people?sex=m",
+            search: 'sex=m',
+          }}
+        >
           Male
         </NavLink>
-        <NavLink className="" to="people?sex=f">
+        <NavLink
+          className=""
+          to={{
+            // pathname: "people?sex=f",
+            search: 'sex=f',
+          }}
+        >
           Female
         </NavLink>
       </p>
