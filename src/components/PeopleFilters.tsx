@@ -7,15 +7,29 @@ type Props = {
 
 export const PeopleFilters: FC<Props> = ({ filterChange }) => {
   const [searchParams, setSearchParams] = useSearchParams();
+<<<<<<< HEAD
   const newParams = new URLSearchParams(searchParams.toString());
 
   console.log('searchParams-sex', newParams.get('sex'));
   console.log('searchParams-search', newParams.get(''));
   const search = '';
+=======
+>>>>>>> 1f6e55ea06409fefc2a60d97e4b213ad357cefdb
 
-  // const handleInputSearch=(e)=>{
-  //   setSearchParams('seacrh', e.target.value);
-  // }
+  const query = searchParams.get('query') || '';
+  const centuries = searchParams.getAll('centuries') || [];
+
+  const hendleFilterChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const params = new URLSearchParams(searchParams);
+    params.set('query', e.target.value);
+    setSearchParams(params);
+  };
+
+  const handleSenturiesChange = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    console.log(e.target);
+  };
+  console.log('searchParams', searchParams.getAll('centuries'));
+  console.log('centuries:', centuries);
 
   return (
     <nav className="panel">
@@ -57,6 +71,8 @@ export const PeopleFilters: FC<Props> = ({ filterChange }) => {
             type="search"
             className="input"
             placeholder="Search"
+            value={query}
+            onChange={hendleFilterChange}
           />
 
           <span className="icon is-left">
@@ -68,55 +84,56 @@ export const PeopleFilters: FC<Props> = ({ filterChange }) => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            <a
+            <NavLink
               data-cy="century"
               className="button mr-1"
-              href="#/people?centuries=16"
+              to="#/people?centuries=16"
+              onClick={handleSenturiesChange}
             >
               16
-            </a>
+            </NavLink>
 
-            <a
+            <NavLink
               data-cy="century"
               className="button mr-1 is-info"
-              href="#/people?centuries=17"
+              to="#/people?centuries=17"
             >
               17
-            </a>
+            </NavLink>
 
-            <a
+            <NavLink
               data-cy="century"
               className="button mr-1 is-info"
-              href="#/people?centuries=18"
+              to="#/people?centuries=18"
             >
               18
-            </a>
+            </NavLink>
 
-            <a
+            <NavLink
               data-cy="century"
               className="button mr-1 is-info"
-              href="#/people?centuries=19"
+              to="#/people?centuries=19"
             >
               19
-            </a>
+            </NavLink>
 
-            <a
+            <NavLink
               data-cy="century"
               className="button mr-1"
-              href="#/people?centuries=20"
+              to="#/people?centuries=20"
             >
               20
-            </a>
+            </NavLink>
           </div>
 
           <div className="level-right ml-4">
-            <a
+            <NavLink
               data-cy="centuryALL"
               className="button is-success is-outlined"
-              href="#/people"
+              to="#/people"
             >
               All
-            </a>
+            </NavLink>
           </div>
         </div>
       </div>
