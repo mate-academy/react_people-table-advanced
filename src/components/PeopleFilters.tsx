@@ -8,6 +8,7 @@ type Props = {
 export const PeopleFilters: FC<Props> = ({ filterChange }) => {
   const [searchParams, setSearchParams] = useSearchParams();
   const newParams = new URLSearchParams(searchParams.toString());
+
   console.log('searchParams-sex', newParams.get('sex'));
   console.log('searchParams-search', newParams.get(''));
   const search = '';
