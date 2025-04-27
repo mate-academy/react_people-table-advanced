@@ -1,35 +1,39 @@
 import { FC } from 'react';
 import { NavLink, useSearchParams } from 'react-router-dom';
+import { getSearchWith } from '../utils/searchHelper';
 
 type Props = {
   filterChange: (params: any, searchParams: any) => void;
 };
 
+enum FilterGander {
+  all = 'all',
+  m = 'm',
+  f = 'f',
+}
+type Gander = 'all' | 'm' | 'f';
+
+type FilterCentury = '16' | '17' | '18' | '19' | '20';
+
 export const PeopleFilters: FC<Props> = ({ filterChange }) => {
   const [searchParams, setSearchParams] = useSearchParams();
-<<<<<<< HEAD
-  const newParams = new URLSearchParams(searchParams.toString());
 
-  console.log('searchParams-sex', newParams.get('sex'));
-  console.log('searchParams-search', newParams.get(''));
-  const search = '';
-=======
->>>>>>> 1f6e55ea06409fefc2a60d97e4b213ad357cefdb
-
+  const gander = searchParams.get('gander') || '';
   const query = searchParams.get('query') || '';
   const centuries = searchParams.getAll('centuries') || [];
 
-  const hendleFilterChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFilterChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const params = new URLSearchParams(searchParams);
     params.set('query', e.target.value);
     setSearchParams(params);
   };
 
-  const handleSenturiesChange = (e: React.MouseEvent<HTMLAnchorElement>) => {
-    console.log(e.target);
+  const handleGanderChange = (gander: Gander) => {
+    const params = new URLSearchParams(searchParams);
+    params.set('gander', gander);
+
+    setSearchParams(params);
   };
-  console.log('searchParams', searchParams.getAll('centuries'));
-  console.log('centuries:', centuries);
 
   return (
     <nav className="panel">
@@ -39,8 +43,9 @@ export const PeopleFilters: FC<Props> = ({ filterChange }) => {
         <NavLink
           className="is-active"
           to={{
-            search: '',
+            search: getSearchWith(searchParams, { gander }),
           }}
+          onClick={() => handleGanderChange('all')}
         >
           All
         </NavLink>
@@ -48,17 +53,18 @@ export const PeopleFilters: FC<Props> = ({ filterChange }) => {
           className=""
           to={{
             // pathname: "people?sex=m",
-            search: 'sex=m',
+            search: getSearchWith(searchParams, { gander }),
           }}
+          onClick={() => handleGanderChange(FilterGander.m)}
         >
           Male
         </NavLink>
         <NavLink
           className=""
           to={{
-            // pathname: "people?sex=f",
-            search: 'sex=f',
+            search: getSearchWith(searchParams, { gander }),
           }}
+          onClick={() => handleGanderChange(FilterGander.f)}
         >
           Female
         </NavLink>
@@ -72,7 +78,7 @@ export const PeopleFilters: FC<Props> = ({ filterChange }) => {
             className="input"
             placeholder="Search"
             value={query}
-            onChange={hendleFilterChange}
+            onChange={handleFilterChange}
           />
 
           <span className="icon is-left">
@@ -88,7 +94,6 @@ export const PeopleFilters: FC<Props> = ({ filterChange }) => {
               data-cy="century"
               className="button mr-1"
               to="#/people?centuries=16"
-              onClick={handleSenturiesChange}
             >
               16
             </NavLink>
