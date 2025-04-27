@@ -7,10 +7,15 @@ type Props = {
 
 export const PeopleFilters: FC<Props> = ({ filterChange }) => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const newParams = new URLSearchParams(searchParams.toString());
+  const newParams = new URLSearchParams(searchParams);
+
+  const query = searchParams.get('query') || '';
+
   console.log('searchParams', newParams);
 
-
+  const handleFilterChange = event => {
+    console.log(event.target.value);
+  };
 
   return (
     <nav className="panel">
@@ -35,6 +40,7 @@ export const PeopleFilters: FC<Props> = ({ filterChange }) => {
             type="search"
             className="input"
             placeholder="Search"
+            onChange={handleFilterChange}
           />
 
           <span className="icon is-left">
