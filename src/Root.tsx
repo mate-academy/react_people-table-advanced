@@ -6,7 +6,7 @@ import {
 } from 'react-router-dom';
 import { HomePage } from './components/HomePage';
 import { App } from './App';
-import { PeoplePage } from './components//PeoplePage';
+import { PeoplePage } from './components/PeoplePage';
 import { NotFoundPage } from './components/NotFoundPage';
 
 export const Root = () => {
