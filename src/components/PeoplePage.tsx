@@ -4,13 +4,14 @@ import { PeopleTable } from './PeopleTable';
 import { Person } from '../types';
 import { useEffect, useState } from 'react';
 import { getPeople } from '../api';
+import { cloneWith, set } from 'cypress/types/lodash';
 
 export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const [filteredPeople, setFilteredPeople] = useState<Person[] | null>([]);
+  const [filteredPeople, setFilteredPeople] = useState<Person[]>([]);
 
   const makeFullPeopleInfo = (peopleParams: Person[]) => {
     const convertedPeopleObjects = peopleParams.reduce<Record<string, Person>>(
@@ -39,17 +40,64 @@ export const PeoplePage = () => {
   useEffect(() => {
     setLoading(true);
     getPeople()
-      .then(data => setPeople(makeFullPeopleInfo(data)))
+      .then(data => {
+        setPeople(makeFullPeopleInfo(data));
+        setFilteredPeople(makeFullPeopleInfo(data));
+      })
       .catch(() => setError('Something went wrong'))
       .finally(() => {
         setLoading(false);
       });
   }, []);
 
-  const handleFilterChange = (params: any, searchParams: any) => {
-    console.log('params', params);
-    console.log('searchParams', searchParams);
+  const filterSexPeople = (sex: string) => {
+    return filteredPeople.filter(person => person.sex === sex);
   };
+
+  const filteredBySearch = (search: string) => {
+    setFilteredPeople([
+      ...people.filter(person =>
+        Object.values(person).some(value => {
+          if (typeof value === 'string') {
+            console.log(value);
+            return value.toLowerCase().includes(search.toLowerCase());
+          }
+        }),
+      ),
+    ]);
+  };
+
+  const handleFilterChange = (params: any, searchParams: any) => {
+    filteredBySearch(searchParams);
+  };
+
+  // const handleFilterChange = (params: any, searchParams: any) => {
+  //   let newFiltered = [...people];
+
+  //   Object.entries(searchParams).forEach(([key, value]) => {
+  //     if (value === null || '') {
+  //       return;
+  //     } else if (Array.isArray(value)) {
+  //       newFiltered = [
+  //         ...newFiltered?.filter(person => {
+  //           return (
+  //             +person.born / 100 < +value && +person.born / 100 > +value - 1
+  //           );
+  //         }),
+  //       ];
+  //     } else if (typeof value === 'string' && typeof key === 'string') {
+  //       newFiltered = [
+  //         ...newFiltered?.filter((person: any) => {
+  //           return (
+  //             person![key].toLowerCase().includes(value.toLowerCase()) || null
+  //           );
+  //         }),
+  //       ];
+  //     }
+  //   });
+
+  //   setFilteredPeople(newFiltered || []);
+  // };
 
   return (
     <>
@@ -75,7 +123,7 @@ export const PeoplePage = () => {
 
               <p>There are no people matching the current search criteria</p>
 
-              <PeopleTable people={people} />
+              <PeopleTable people={filteredPeople} />
             </div>
           </div>
         </div>
