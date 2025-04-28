@@ -1,6 +1,7 @@
 import { FC } from 'react';
-import { NavLink, useSearchParams } from 'react-router-dom';
+import { Link, NavLink, useLocation, useSearchParams } from 'react-router-dom';
 import { getSearchWith } from '../utils/searchHelper';
+import { SearchLink } from './SearchLink';
 
 type Props = {
   filterChange: (params: any, searchParams: any) => void;
@@ -18,56 +19,48 @@ type FilterCentury = '16' | '17' | '18' | '19' | '20';
 export const PeopleFilters: FC<Props> = ({ filterChange }) => {
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const gander = searchParams.get('gander') || '';
+  const sex = searchParams.get('sex') || '';
   const query = searchParams.get('query') || '';
+  const newQuery = searchParams.get('newQuery') || '';
   const centuries = searchParams.getAll('centuries') || [];
 
   const handleFilterChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const params = new URLSearchParams(searchParams);
-    params.set('query', e.target.value);
+    e.preventDefault();
+    const params = new URLSearchParams(searchParams.toString());
+    if (e.target.name === 'query') {
+      params.set('query', e.target.value);
+    } else {
+      params.set('newQuery', e.target.value);
+    }
     setSearchParams(params);
   };
 
-  const handleGanderChange = (gander: Gander) => {
+  const handleGanderChange = (sex: Gander) => {
     const params = new URLSearchParams(searchParams);
-    params.set('gander', gander);
-
+    params.set('sex', sex);
     setSearchParams(params);
   };
+
+  console.log(searchParams.toString());
 
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        <NavLink
+        {/* <SearchLink params={{ gander: FilterGander.all }}>All</SearchLink> */}
+        <button
           className="is-active"
-          to={{
-            search: getSearchWith(searchParams, { gander }),
-          }}
-          onClick={() => handleGanderChange('all')}
+          onClick={() => handleGanderChange(FilterGander.all)}
         >
           All
-        </NavLink>
-        <NavLink
-          className=""
-          to={{
-            // pathname: "people?sex=m",
-            search: getSearchWith(searchParams, { gander }),
-          }}
-          onClick={() => handleGanderChange(FilterGander.m)}
-        >
+        </button>
+        <button className="" onClick={() => handleGanderChange(FilterGander.m)}>
           Male
-        </NavLink>
-        <NavLink
-          className=""
-          to={{
-            search: getSearchWith(searchParams, { gander }),
-          }}
-          onClick={() => handleGanderChange(FilterGander.f)}
-        >
+        </button>
+        <button className="" onClick={() => handleGanderChange(FilterGander.f)}>
           Female
-        </NavLink>
+        </button>
       </p>
 
       <div className="panel-block">
@@ -77,7 +70,23 @@ export const PeopleFilters: FC<Props> = ({ filterChange }) => {
             type="search"
             className="input"
             placeholder="Search"
+            name="query"
             value={query}
+            onChange={handleFilterChange}
+          />
+
+          <span className="icon is-left">
+            <i className="fas fa-search" aria-hidden="true" />
+          </span>
+        </p>
+        <p className="control has-icons-left">
+          <input
+            data-cy="NameFilter"
+            type="search"
+            className="input"
+            placeholder="Search"
+            name="newQuery"
+            value={newQuery}
             onChange={handleFilterChange}
           />
 
