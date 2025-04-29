@@ -1,6 +1,6 @@
 import { FC } from 'react';
 import { Person } from '../types';
-import { NavLink, useParams } from 'react-router-dom';
+import { NavLink, useLocation, useParams } from 'react-router-dom';
 
 type Props = {
   person: Person;
@@ -9,7 +9,7 @@ type Props = {
 export const PersonLink: FC<Props> = ({ person }) => {
   const { name, sex, born, died, father, slug, mother } = person;
   const classSex = sex === 'f' ? 'has-text-danger' : '';
-
+  const { search } = useLocation();
   const { slugName } = useParams();
 
   const activePersonClass = (person: Person): string =>
@@ -18,7 +18,13 @@ export const PersonLink: FC<Props> = ({ person }) => {
   return (
     <tr data-cy="person" key={slug} className={activePersonClass(person)}>
       <td>
-        <NavLink to={`${slug}`} className={classSex}>
+        <NavLink
+          to={{
+            pathname: `${slug}`,
+            search,
+          }}
+          className={classSex}
+        >
           {name}
         </NavLink>
       </td>

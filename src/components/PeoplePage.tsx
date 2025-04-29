@@ -4,14 +4,16 @@ import { PeopleTable } from './PeopleTable';
 import { Person } from '../types';
 import { useEffect, useState } from 'react';
 import { getPeople } from '../api';
-import { cloneWith, set } from 'cypress/types/lodash';
+import { useSearchParams } from 'react-router-dom';
 
 export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const [filteredPeople, setFilteredPeople] = useState<Person[]>([]);
+  const [searchParams] = useSearchParams();
+
+  console.log(searchParams.toString());
 
   const makeFullPeopleInfo = (peopleParams: Person[]) => {
     const convertedPeopleObjects = peopleParams.reduce<Record<string, Person>>(
@@ -42,7 +44,6 @@ export const PeoplePage = () => {
     getPeople()
       .then(data => {
         setPeople(makeFullPeopleInfo(data));
-        setFilteredPeople(makeFullPeopleInfo(data));
       })
       .catch(() => setError('Something went wrong'))
       .finally(() => {
@@ -50,54 +51,33 @@ export const PeoplePage = () => {
       });
   }, []);
 
-  const filterSexPeople = (sex: string) => {
-    return filteredPeople.filter(person => person.sex === sex);
-  };
-
   const filteredBySearch = (search: string) => {
-    setFilteredPeople([
+    const filtered = [
       ...people.filter(person =>
         Object.values(person).some(value => {
           if (typeof value === 'string') {
-            console.log(value);
             return value.toLowerCase().includes(search.toLowerCase());
           }
         }),
       ),
-    ]);
+    ];
+    return filtered;
   };
 
   const handleFilterChange = (params: any, searchParams: any) => {
     filteredBySearch(searchParams);
   };
 
-  // const handleFilterChange = (params: any, searchParams: any) => {
-  //   let newFiltered = [...people];
+  const filteredPeople = () => {
+    if (searchParams.size === 0) {
+      return people;
+    }
+if(searchParams.has('query')) {
+      const query = searchParams.get('query') || '';
+      return filteredBySearch(query);
+    }
 
-  //   Object.entries(searchParams).forEach(([key, value]) => {
-  //     if (value === null || '') {
-  //       return;
-  //     } else if (Array.isArray(value)) {
-  //       newFiltered = [
-  //         ...newFiltered?.filter(person => {
-  //           return (
-  //             +person.born / 100 < +value && +person.born / 100 > +value - 1
-  //           );
-  //         }),
-  //       ];
-  //     } else if (typeof value === 'string' && typeof key === 'string') {
-  //       newFiltered = [
-  //         ...newFiltered?.filter((person: any) => {
-  //           return (
-  //             person![key].toLowerCase().includes(value.toLowerCase()) || null
-  //           );
-  //         }),
-  //       ];
-  //     }
-  //   });
-
-  //   setFilteredPeople(newFiltered || []);
-  // };
+  };
 
   return (
     <>
@@ -106,7 +86,9 @@ export const PeoplePage = () => {
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
           <div className="column is-7-tablet is-narrow-desktop">
-            <PeopleFilters filterChange={handleFilterChange} />
+            {people.length > 0 && (
+              <PeopleFilters filterChange={handleFilterChange} />
+            )}
           </div>
 
           <div className="column">
@@ -123,7 +105,7 @@ export const PeoplePage = () => {
 
               <p>There are no people matching the current search criteria</p>
 
-              <PeopleTable people={filteredPeople} />
+              <PeopleTable people={people} />
             </div>
           </div>
         </div>

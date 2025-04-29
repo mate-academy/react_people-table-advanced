@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import React, { FC } from 'react';
 import { Link, NavLink, useSearchParams } from 'react-router-dom';
 import { getSearchWith } from '../utils/searchHelper';
 import { SearchLink } from './SearchLink';
@@ -14,20 +14,16 @@ enum FilterGander {
   f = 'f',
 }
 
-type FilterCentury = '16' | '17' | '18' | '19' | '20';
-
 export const PeopleFilters: FC<Props> = ({ filterChange }) => {
   const [searchParams, setSearchParams] = useSearchParams();
+
+  const centuriesNumbers = [16, 17, 18, 19, 20];
 
   const sex = searchParams.get('sex') || '';
   const query = searchParams.get('query') || '';
   const centuries = searchParams.getAll('centuries') || [];
-
-  const filteredParams = {
-    sex,
-    query,
-    centuries,
-  };
+  const sort = searchParams.get('sort') || '';
+  const order = searchParams.get('order') || '';
 
   const setSearchWith = (params: any) => {
     const search = getSearchWith(searchParams, params);
@@ -36,7 +32,7 @@ export const PeopleFilters: FC<Props> = ({ filterChange }) => {
 
   const handleFilterChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchWith({ query: e.target.value });
-    filterChange('search', filteredParams.query);
+    filterChange('search', e.target.value);
   };
 
   return (
@@ -87,52 +83,31 @@ export const PeopleFilters: FC<Props> = ({ filterChange }) => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            <NavLink
-              data-cy="century"
-              className="button mr-1"
-              to="#/people?centuries=16"
-            >
-              16
-            </NavLink>
-
-            <NavLink
-              data-cy="century"
-              className="button mr-1 is-info"
-              to="#/people?centuries=17"
-            >
-              17
-            </NavLink>
-
-            <NavLink
-              data-cy="century"
-              className="button mr-1 is-info"
-              to="#/people?centuries=18"
-            >
-              18
-            </NavLink>
-
-            <NavLink
-              data-cy="century"
-              className="button mr-1 is-info"
-              to="#/people?centuries=19"
-            >
-              19
-            </NavLink>
-
-            <NavLink
-              data-cy="century"
-              className="button mr-1"
-              to="#/people?centuries=20"
-            >
-              20
-            </NavLink>
+            {centuriesNumbers.map(century => (
+              <NavLink
+                key={century}
+                data-cy="century"
+                className={classNames('button mr-1', {
+                  'is-info': centuries.includes(`${century}`),
+                })}
+                to={{
+                  search: getSearchWith(searchParams, {
+                    centuries: centuries.includes(`${century}`)
+                      ? centuries.filter(item => item !== `${century}`)
+                      : [...centuries, `${century}`],
+                  }),
+                }}
+              >
+                {century}
+              </NavLink>
+            ))}
           </div>
 
           <div className="level-right ml-4">
             <NavLink
               data-cy="centuryALL"
               className="button is-success is-outlined"
-              to="#/people"
+              to={{ search: getSearchWith(searchParams, { centuries: [] }) }}
             >
               All
             </NavLink>
@@ -141,9 +116,12 @@ export const PeopleFilters: FC<Props> = ({ filterChange }) => {
       </div>
 
       <div className="panel-block">
-        <a className="button is-link is-outlined is-fullwidth" href="#/people">
+        <Link
+          className="button is-link is-outlined is-fullwidth"
+          to={{ search: '' }}
+        >
           Reset all filters
-        </a>
+        </Link>
       </div>
     </nav>
   );
