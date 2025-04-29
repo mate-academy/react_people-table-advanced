@@ -34,7 +34,10 @@ export const PersonLink: FC<Props> = ({ person }) => {
 
       {mother?.slug ? (
         <td>
-          <NavLink className={classSex} to={`${mother.slug}`}>
+          <NavLink
+            className={classSex}
+            to={{ pathname: `${mother.slug}`, search }}
+          >
             {mother.name}
           </NavLink>
         </td>
@@ -44,7 +47,10 @@ export const PersonLink: FC<Props> = ({ person }) => {
 
       {father?.slug ? (
         <td>
-          <NavLink className={classSex} to={`${father.slug}`}>
+          <NavLink
+            className={classSex}
+            to={{ pathname: `${father.slug}`, search }}
+          >
             {father.name}
           </NavLink>
         </td>

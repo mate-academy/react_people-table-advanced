@@ -11,9 +11,46 @@ export const PeoplePage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const [searchParams] = useSearchParams();
+  const [filteredPeople, setFilteredPeople] = useState<Person[] | []>([]);
 
-  console.log(searchParams.toString());
+  const [searchParams] = useSearchParams();
+  const filteredSearchParams = new URLSearchParams(searchParams);
+
+  const filteredePeople = (people: Person[], searchParams: URLSearchParams) => {
+    const filtered = [...people]
+      .filter(person => {
+        if (searchParams.has('query')) {
+          const query = searchParams.get('query');
+          return Object.values(person).some(value => {
+            if (typeof value === 'string') {
+              return query && value.toLowerCase().includes(query.toLowerCase());
+            }
+            return false;
+          });
+        }
+        return true;
+      })
+      .filter(person => {
+        if (searchParams.has('sex')) {
+          const sex = searchParams.get('sex');
+          return person.sex === sex;
+        }
+        return true;
+      })
+      .filter(person => {
+        if (searchParams.has('centuries')) {
+          const centuries = searchParams.getAll('centuries');
+          for (let century of centuries) {
+            if (Math.ceil(+person.born / 100) === +century) {
+              return true;
+            }
+          }
+          return false;
+        }
+        return true;
+      });
+    return filtered;
+  };
 
   const makeFullPeopleInfo = (peopleParams: Person[]) => {
     const convertedPeopleObjects = peopleParams.reduce<Record<string, Person>>(
@@ -44,6 +81,7 @@ export const PeoplePage = () => {
     getPeople()
       .then(data => {
         setPeople(makeFullPeopleInfo(data));
+        setFilteredPeople(makeFullPeopleInfo(data));
       })
       .catch(() => setError('Something went wrong'))
       .finally(() => {
@@ -51,33 +89,9 @@ export const PeoplePage = () => {
       });
   }, []);
 
-  const filteredBySearch = (search: string) => {
-    const filtered = [
-      ...people.filter(person =>
-        Object.values(person).some(value => {
-          if (typeof value === 'string') {
-            return value.toLowerCase().includes(search.toLowerCase());
-          }
-        }),
-      ),
-    ];
-    return filtered;
-  };
-
-  const handleFilterChange = (params: any, searchParams: any) => {
-    filteredBySearch(searchParams);
-  };
-
-  const filteredPeople = () => {
-    if (searchParams.size === 0) {
-      return people;
-    }
-if(searchParams.has('query')) {
-      const query = searchParams.get('query') || '';
-      return filteredBySearch(query);
-    }
-
-  };
+  useEffect(() => {
+    setFilteredPeople(filteredePeople(people, filteredSearchParams));
+  }, [searchParams]);
 
   return (
     <>
@@ -86,9 +100,7 @@ if(searchParams.has('query')) {
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
           <div className="column is-7-tablet is-narrow-desktop">
-            {people.length > 0 && (
-              <PeopleFilters filterChange={handleFilterChange} />
-            )}
+            {people.length > 0 && <PeopleFilters />}
           </div>
 
           <div className="column">
@@ -97,15 +109,17 @@ if(searchParams.has('query')) {
 
               {error && <p data-cy="peopleLoadingError">{error}</p>}
 
-              {!loading && !error && people.length < 0 && (
+              {!loading && !error && filteredPeople.length < 0 && (
                 <p data-cy="noPeopleMessage">
                   There are no people on the server
                 </p>
               )}
 
-              <p>There are no people matching the current search criteria</p>
-
-              <PeopleTable people={people} />
+              {!filteredPeople.length ? (
+                <p>There are no people matching the current search criteria</p>
+              ) : (
+                <PeopleTable people={filteredPeople} />
+              )}
             </div>
           </div>
         </div>

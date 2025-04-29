@@ -4,17 +4,13 @@ import { getSearchWith } from '../utils/searchHelper';
 import { SearchLink } from './SearchLink';
 import classNames from 'classnames';
 
-type Props = {
-  filterChange: (params: any, searchParams: any) => void;
-};
-
 enum FilterGander {
   all = 'all',
   m = 'm',
   f = 'f',
 }
 
-export const PeopleFilters: FC<Props> = ({ filterChange }) => {
+export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const centuriesNumbers = [16, 17, 18, 19, 20];
@@ -31,8 +27,7 @@ export const PeopleFilters: FC<Props> = ({ filterChange }) => {
   };
 
   const handleFilterChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchWith({ query: e.target.value });
-    filterChange('search', e.target.value);
+    setSearchWith({ query: e.target.value || null });
   };
 
   return (
@@ -41,9 +36,9 @@ export const PeopleFilters: FC<Props> = ({ filterChange }) => {
 
       <p className="panel-tabs" data-cy="SexFilter">
         <Link
-          className={classNames({ 'is-active': sex === FilterGander.all })}
+          className={classNames({ 'is-active': sex === '' })}
           to={{
-            search: getSearchWith(searchParams, { sex: FilterGander.all }),
+            search: getSearchWith(searchParams, { sex: null }),
           }}
         >
           All
@@ -106,7 +101,9 @@ export const PeopleFilters: FC<Props> = ({ filterChange }) => {
           <div className="level-right ml-4">
             <NavLink
               data-cy="centuryALL"
-              className="button is-success is-outlined"
+              className={classNames('button is-success ', {
+                'is-outlined': centuries.length,
+              })}
               to={{ search: getSearchWith(searchParams, { centuries: [] }) }}
             >
               All
