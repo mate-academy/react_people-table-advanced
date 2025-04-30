@@ -1,6 +1,6 @@
 import { FC, useState } from 'react';
 import { Person } from '../types';
-import { Link, NavLink, useParams } from 'react-router-dom';
+import { Link, NavLink, useParams, useSearchParams } from 'react-router-dom';
 import { PersonLink } from './PersonLink';
 
 type Props = {
@@ -9,6 +9,10 @@ type Props = {
 
 /* eslint-disable jsx-a11y/control-has-associated-label */
 export const PeopleTable: FC<Props> = ({ people }) => {
+  const [searchParams] = useSearchParams();
+
+
+
   return (
     <table
       data-cy="peopleTable"

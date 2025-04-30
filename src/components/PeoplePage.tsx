@@ -76,6 +76,15 @@ export const PeoplePage = () => {
     });
   };
 
+  const sortedPeople = (people: Person[]) => {
+    const sortName = filteredSearchParams.get('sort');
+    const sortOrder = filteredSearchParams.get('order');
+
+    // if (!sortName || sortName !== newSortName) {
+    //   filteredSearchParams.set('order', sortOrder === 'asc' ? 'desc' : 'asc');
+    // }
+  };
+
   useEffect(() => {
     setLoading(true);
     getPeople()
