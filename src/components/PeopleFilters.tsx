@@ -18,8 +18,6 @@ export const PeopleFilters = () => {
   const sex = searchParams.get('sex') || '';
   const query = searchParams.get('query') || '';
   const centuries = searchParams.getAll('centuries') || [];
-  const sort = searchParams.get('sort') || '';
-  const order = searchParams.get('order') || '';
 
   const setSearchWith = (params: any) => {
     const search = getSearchWith(searchParams, params);
