@@ -42,7 +42,7 @@ export const PeoplePage = () => {
                     </p>
                   )}
                   {/* <p>There are no people matching the current search criteria</p> */}
-                  {people.length === 0 ? (
+                  {people.length === 0 && !hasError ? (
                     <p data-cy="noPeopleMessage">
                       There are no people on the server
                     </p>

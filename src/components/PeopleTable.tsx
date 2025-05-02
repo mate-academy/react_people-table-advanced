@@ -45,7 +45,7 @@ export const PeopleTable: React.FC<PeopleTableProps> = ({ people }) => {
       filtered = filtered.filter(person => person.sex === gender);
     }
 
-    if (centuries.length > 0 && centuries) {
+    if (centuries.length > 0) {
       filtered = filtered.filter(person => {
         const personCentury = Math.ceil(person.born / 100);
 
