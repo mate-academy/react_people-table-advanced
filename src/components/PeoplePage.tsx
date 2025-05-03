@@ -5,6 +5,7 @@ import { Person } from '../types';
 import { useEffect, useState } from 'react';
 import { getPeople } from '../api';
 import { useSearchParams } from 'react-router-dom';
+import { SortName, SortOrder } from '../types/SortTypes';
 
 export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);
@@ -76,13 +77,33 @@ export const PeoplePage = () => {
     });
   };
 
-  const sortedPeople = (people: Person[]) => {
-    const sortName = filteredSearchParams.get('sort');
-    const sortOrder = filteredSearchParams.get('order');
+  const sortedPeople = (sortName: SortName, sortOrder: SortOrder) => {
+    if (sortName === '' || sortOrder === '') {
+      setFilteredPeople(filteredePeople(people, filteredSearchParams));
+      return;
+    }
 
-    // if (!sortName || sortName !== newSortName) {
-    //   filteredSearchParams.set('order', sortOrder === 'asc' ? 'desc' : 'asc');
-    // }
+    if (sortOrder === 'desc') {
+      setFilteredPeople(prevPeople => {
+        return [...prevPeople].reverse();
+      });
+    }
+
+    setFilteredPeople(prevPeople => {
+      return [...prevPeople].sort((a, b) => {
+        if (
+          (sortName === 'name' || sortName === 'sex') &&
+          sortOrder === 'asc'
+        ) {
+          return a[sortName].localeCompare(b[sortName]);
+        } else if (typeof sortName === 'number' && sortOrder === 'asc') {
+          return a.born - b.born;
+        } else if (sortName === 'died') {
+          return a.died - b.died;
+        }
+        return 0;
+      });
+    });
   };
 
   useEffect(() => {
@@ -127,7 +148,10 @@ export const PeoplePage = () => {
               {!filteredPeople.length ? (
                 <p>There are no people matching the current search criteria</p>
               ) : (
-                <PeopleTable people={filteredPeople} />
+                <PeopleTable
+                  people={filteredPeople}
+                  sortedPeople={sortedPeople}
+                />
               )}
             </div>
           </div>
