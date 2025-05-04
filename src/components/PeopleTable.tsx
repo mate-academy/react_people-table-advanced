@@ -11,7 +11,6 @@ import { PersonLink } from './PersonLink';
 import { getSearchWith } from '../utils/searchHelper';
 import classNames from 'classnames';
 import { SortName, SortOrder } from '../types/SortTypes';
-import { get } from 'cypress/types/lodash';
 
 type Props = {
   people: Person[];
@@ -20,7 +19,7 @@ type Props = {
 
 /* eslint-disable jsx-a11y/control-has-associated-label */
 export const PeopleTable: FC<Props> = ({ people, sortedPeople = () => {} }) => {
-  const [searchParams] = useSearchParams();
+  const [searchParams, setearchParams] = useSearchParams();
 
   const [sortName, setSortName] = useState<SortName>('');
   const [sortOrder, setSortOrder] = useState<SortOrder>('');
@@ -36,11 +35,12 @@ export const PeopleTable: FC<Props> = ({ people, sortedPeople = () => {} }) => {
     if (sortEventName === sortName && sortOrder === 'asc') {
       setSortOrder('desc');
       sortedPeople(sortName, sortOrder);
-      getSearchWith(searchParams, { order: sortOrder });
+      getSearchWith(searchParams, { order: 'desc' });
     }
     if (sortEventName === sortName && sortOrder === 'desc') {
       setSortOrder('');
       setSortName('');
+      getSearchWith(searchParams, { order: '' });
       sortedPeople(sortName, sortOrder);
     }
   };

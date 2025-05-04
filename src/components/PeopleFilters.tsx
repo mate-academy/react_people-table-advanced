@@ -28,6 +28,15 @@ export const PeopleFilters = () => {
     setSearchWith({ query: e.target.value || null });
   };
 
+  const handleResetFilters = () => {
+    const order = searchParams.get('order') || '';
+    const sort = searchParams.get('sort') || '';
+
+    setSearchParams({});
+    setSearchParams({ sort });
+    getSearchWith(searchParams, { order });
+  };
+
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
@@ -111,12 +120,12 @@ export const PeopleFilters = () => {
       </div>
 
       <div className="panel-block">
-        <Link
+        <div
           className="button is-link is-outlined is-fullwidth"
-          to={{ search: '' }}
+          onClick={handleResetFilters}
         >
           Reset all filters
-        </Link>
+        </div>
       </div>
     </nav>
   );

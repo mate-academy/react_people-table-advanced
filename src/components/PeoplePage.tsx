@@ -17,6 +17,9 @@ export const PeoplePage = () => {
   const [searchParams] = useSearchParams();
   const filteredSearchParams = new URLSearchParams(searchParams);
 
+  const sortName = (filteredSearchParams.get('sort') as SortName) || '';
+  const orderName = (filteredSearchParams.get('order') as SortOrder) || '';
+
   const filteredePeople = (people: Person[], searchParams: URLSearchParams) => {
     const filtered = [...people]
       .filter(person => {
@@ -50,6 +53,7 @@ export const PeoplePage = () => {
         }
         return true;
       });
+
     return filtered;
   };
 
