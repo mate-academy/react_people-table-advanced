@@ -54,7 +54,7 @@ export const PeopleTable: FC<Props> = ({ people }) => {
       getSearchWith(searchParams, {
         order: sortOrder,
         sort: sortName,
-      }).toString(),
+      }),
     );
   }, [sortName, sortOrder]);
 
