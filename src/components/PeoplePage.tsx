@@ -41,10 +41,6 @@ export const PeoplePage = () => {
                 <p data-cy="noPeopleMessage">
                   There are no people on the server
                 </p>
-              ) : people.length === 0 ? (
-                <p data-cy="noMatchingPeopleMessage">
-                  There are no people matching the current search criteria
-                </p>
               ) : (
                 <PeopleTable people={people} selectedSlug={slug ?? ''} />
               )}

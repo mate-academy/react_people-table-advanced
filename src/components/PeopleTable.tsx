@@ -107,6 +107,14 @@ export const PeopleTable: React.FC<PeopleTableProps> = ({
     );
   };
 
+  if (sorted.length === 0) {
+    return (
+      <p data-cy="noMatchingPeopleMessage">
+        There are no people matching the current search criteria
+      </p>
+    );
+  }
+
   return (
     <div className="block">
       <table

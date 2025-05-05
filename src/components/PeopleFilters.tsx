@@ -3,15 +3,15 @@ import { useSearchParams } from 'react-router-dom';
 
 export const PeopleFilters: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const [nameImput, setNameImput] = useState<string>(
+  const [nameInput, setNameInput] = useState<string>(
     searchParams.get('name') ?? '',
   );
   const sexFilter = searchParams.get('sex') || 'all';
   const selectedCenturies = searchParams.getAll('centuries');
-  const handelNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
 
-    setNameImput(value);
+    setNameInput(value);
     const params = new URLSearchParams(searchParams);
 
     if (value) {
@@ -54,7 +54,7 @@ export const PeopleFilters: React.FC = () => {
 
   const resetAll = () => {
     setSearchParams({});
-    setNameImput('');
+    setNameInput('');
   };
 
   return (
@@ -89,8 +89,8 @@ export const PeopleFilters: React.FC = () => {
             type="search"
             className="input"
             placeholder="Search"
-            value={nameImput}
-            onChange={handelNameChange}
+            value={nameInput}
+            onChange={handleNameChange}
           />
 
           <span className="icon is-left">
