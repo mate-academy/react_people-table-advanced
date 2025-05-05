@@ -2,12 +2,7 @@ import React from 'react';
 import { Link, NavLink, useSearchParams } from 'react-router-dom';
 import { getSearchWith } from '../utils/searchHelper';
 import classNames from 'classnames';
-
-enum FilterGander {
-  all = 'all',
-  m = 'm',
-  f = 'f',
-}
+import { FilterGender } from '../types/Gender';
 
 export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -50,14 +45,14 @@ export const PeopleFilters = () => {
           All
         </Link>
         <Link
-          className={classNames({ 'is-active': sex === FilterGander.m })}
-          to={{ search: getSearchWith(searchParams, { sex: FilterGander.m }) }}
+          className={classNames({ 'is-active': sex === FilterGender.m })}
+          to={{ search: getSearchWith(searchParams, { sex: FilterGender.m }) }}
         >
           Male
         </Link>
         <Link
-          className={classNames({ 'is-active': sex === FilterGander.f })}
-          to={{ search: getSearchWith(searchParams, { sex: FilterGander.f }) }}
+          className={classNames({ 'is-active': sex === FilterGender.f })}
+          to={{ search: getSearchWith(searchParams, { sex: FilterGender.f }) }}
         >
           Female
         </Link>

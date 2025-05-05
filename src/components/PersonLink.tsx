@@ -1,6 +1,7 @@
 import { FC } from 'react';
 import { Person } from '../types';
 import { NavLink, useLocation, useParams } from 'react-router-dom';
+import { FilterGender } from '../types/Gender';
 
 type Props = {
   person: Person;
@@ -8,7 +9,8 @@ type Props = {
 
 export const PersonLink: FC<Props> = ({ person }) => {
   const { name, sex, born, died, father, slug, mother } = person;
-  const classSex = sex === 'f' ? 'has-text-danger' : '';
+  const classSex = (gender: FilterGender | '') =>
+    gender === 'f' ? 'has-text-danger' : '';
   const { search } = useLocation();
   const { slugName } = useParams();
 
@@ -23,7 +25,7 @@ export const PersonLink: FC<Props> = ({ person }) => {
             pathname: `${slug}`,
             search,
           }}
-          className={classSex}
+          className={classSex(sex as FilterGender)}
         >
           {name}
         </NavLink>
@@ -35,27 +37,27 @@ export const PersonLink: FC<Props> = ({ person }) => {
       {mother?.slug ? (
         <td>
           <NavLink
-            className={classSex}
+            className={classSex(mother.sex as FilterGender)}
             to={{ pathname: `${mother.slug}`, search }}
           >
             {mother.name}
           </NavLink>
         </td>
       ) : (
-        <td> {person.motherName || '-'}</td>
+        <td>{person.motherName || '-'}</td>
       )}
 
       {father?.slug ? (
         <td>
           <NavLink
-            className={classSex}
+            className={classSex(father.sex as FilterGender)}
             to={{ pathname: `${father.slug}`, search }}
           >
             {father.name}
           </NavLink>
         </td>
       ) : (
-        <td> {person.fatherName || '-'}</td>
+        <td>{person.fatherName || '-'}</td>
       )}
     </tr>
   );
