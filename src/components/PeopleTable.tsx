@@ -45,6 +45,8 @@ export const PeopleTable: FC<Props> = ({ people }) => {
       setSortOrder(null);
       setSortName(null);
     }
+
+    return;
   };
 
   useEffect(() => {

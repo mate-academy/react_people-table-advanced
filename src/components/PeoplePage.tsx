@@ -19,7 +19,7 @@ export const PeoplePage = () => {
   const sortName = searchParams.get('sort') as SortName;
   const sortOrder = searchParams.get('order') as SortOrder;
 
-  const filteredePeople = (
+  const getFilteredPeople = (
     newPeople: Person[],
     newSearchParams: URLSearchParams,
   ) => {
@@ -124,8 +124,8 @@ export const PeoplePage = () => {
   }, []);
 
   useEffect(() => {
-    setFilteredPeople(filteredePeople(people, searchParams));
-  }, [searchParams]);
+    setFilteredPeople(getFilteredPeople(people, searchParams));
+  }, [searchParams, people]);
 
   return (
     <>
@@ -143,16 +143,16 @@ export const PeoplePage = () => {
 
               {error && <p data-cy="peopleLoadingError">{error}</p>}
 
-              {!loading && !error && filteredPeople.length === 0 && (
+              {!loading && !error && people.length === 0 && (
                 <p data-cy="noPeopleMessage">
                   There are no people on the server
                 </p>
               )}
 
-              {!filteredPeople.length ? (
-                <p>There are no people matching the current search criteria</p>
-              ) : (
+              {filteredPeople.length ? (
                 <PeopleTable people={filteredPeople} />
+              ) : (
+                <p>There are no people matching the current search criteria</p>
               )}
             </div>
           </div>
