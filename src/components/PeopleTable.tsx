@@ -1,12 +1,6 @@
-import {
-  FC,
-  ReactElement,
-  ReactEventHandler,
-  useEffect,
-  useState,
-} from 'react';
+import { FC, useEffect, useState } from 'react';
 import { Person } from '../types';
-import { Link, NavLink, useParams, useSearchParams } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { PersonLink } from './PersonLink';
 import { getSearchWith } from '../utils/searchHelper';
 import classNames from 'classnames';
@@ -14,14 +8,23 @@ import { SortName, SortOrder } from '../types/SortTypes';
 
 type Props = {
   people: Person[];
-  sortedPeople: (
+  sortedPeople?: (
     sortName: SortName | null,
     sortOrder: SortOrder | null,
   ) => void;
 };
 
+const sortNames = [
+  { value: 'Name', name: 'name', link: true },
+  { value: 'Sex', name: 'sex', link: true },
+  { value: 'Born', name: 'born', link: true },
+  { value: 'Died', name: 'died', link: true },
+  { value: 'Mother', name: 'mother', link: false },
+  { value: 'Father', name: 'father', link: false },
+];
+
 /* eslint-disable jsx-a11y/control-has-associated-label */
-export const PeopleTable: FC<Props> = ({ people, sortedPeople = () => {} }) => {
+export const PeopleTable: FC<Props> = ({ people }) => {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const [sortName, setSortName] = useState<SortName | null>(null);
@@ -32,25 +35,26 @@ export const PeopleTable: FC<Props> = ({ people, sortedPeople = () => {} }) => {
 
     if (sortEventName !== sortName) {
       setSortName(sortEventName as SortName);
-      setSortOrder('asc');
-      // sortedPeople(sortName, sortOrder);
     }
-    if (sortEventName === sortName && sortOrder === 'asc') {
+
+    if (sortEventName === sortName && sortOrder === null) {
       setSortOrder('desc');
-      // sortedPeople(sortName, sortOrder);
-      getSearchWith(searchParams, { order: sortOrder });
     }
+
     if (sortEventName === sortName && sortOrder === 'desc') {
       setSortOrder(null);
       setSortName(null);
-      getSearchWith(searchParams, { order: null, sort: null });
-      // sortedPeople(sortName, sortOrder);
     }
   };
 
-  // useEffect(() => {
-  //   getSearchWith(searchParams, { sort: sortName });
-  // }, [searchParams]);
+  useEffect(() => {
+    setSearchParams(
+      getSearchWith(searchParams, {
+        order: sortOrder,
+        sort: sortName,
+      }).toString(),
+    );
+  }, [sortName, sortOrder]);
 
   return (
     <table
@@ -59,95 +63,39 @@ export const PeopleTable: FC<Props> = ({ people, sortedPeople = () => {} }) => {
     >
       <thead>
         <tr>
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Name
-              <Link
-                to={{
-                  search: getSearchWith(searchParams, {
-                    sort: 'name',
-                    order: sortOrder === 'desc' ? 'desc' : null,
-                  }),
-                }}
-                data-sort="name"
-                onClick={handleSort}
-              >
-                <span className="icon">
-                  <i className="fas fa-sort" />
+          {sortNames.map(({ value, name, link }) =>
+            link ? (
+              <th key={name}>
+                <span className="is-flex is-flex-wrap-nowrap">
+                  {value}
+                  <Link
+                    to={{
+                      search: getSearchWith(searchParams, {
+                        sort: name,
+                        order: sortOrder,
+                      }),
+                    }}
+                    data-sort={name}
+                    onClick={handleSort}
+                  >
+                    <span className="icon">
+                      <i
+                        className={classNames('fas', {
+                          'fa-sort': sortName !== name,
+                          'fa-sort-up':
+                            sortName === name && sortOrder !== 'desc',
+                          'fa-sort-down':
+                            sortOrder === 'desc' && sortName === name,
+                        })}
+                      />
+                    </span>
+                  </Link>
                 </span>
-              </Link>
-            </span>
-          </th>
-
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Sex
-              <Link
-                to={{
-                  search: getSearchWith(searchParams, {
-                    sort: 'sex',
-                    order: sortOrder === 'desc' ? 'desc' : null,
-                  }),
-                }}
-                data-sort="sex"
-                onClick={handleSort}
-              >
-                <span className="icon">
-                  <i
-                    className={classNames('fas', {
-                      'fa-sort': !sortOrder && sortName !== 'sex',
-                      'fa-sort-up': sortOrder === 'asc' && sortName === 'sex',
-                      'fa-sort-down':
-                        sortOrder === 'desc' && sortName === 'sex',
-                    })}
-                  />
-                </span>
-              </Link>
-            </span>
-          </th>
-
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Born
-              <Link
-                to={{
-                  search: getSearchWith(searchParams, {
-                    sort: 'born',
-                    order: sortOrder === 'desc' ? 'desc' : null,
-                  }),
-                }}
-                data-sort="born"
-                onClick={handleSort}
-              >
-                <span className="icon">
-                  <i className="fas fa-sort-up" />
-                </span>
-              </Link>
-            </span>
-          </th>
-
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Died
-              <Link
-                to={{
-                  search: getSearchWith(searchParams, {
-                    sort: 'died',
-                    order: sortOrder === 'desc' ? 'desc' : null,
-                  }),
-                }}
-                data-sort="died"
-                onClick={handleSort}
-              >
-                <span className="icon">
-                  <i className="fas fa-sort" />
-                </span>
-              </Link>
-            </span>
-          </th>
-
-          <th>Mother</th>
-          <th>Father</th>
+              </th>
+            ) : (
+              <th key={name}>{value}</th>
+            ),
+          )}
         </tr>
       </thead>
 

@@ -1,7 +1,6 @@
-import React, { FC } from 'react';
+import React from 'react';
 import { Link, NavLink, useSearchParams } from 'react-router-dom';
 import { getSearchWith } from '../utils/searchHelper';
-import { SearchLink } from './SearchLink';
 import classNames from 'classnames';
 
 enum FilterGander {
@@ -19,8 +18,9 @@ export const PeopleFilters = () => {
   const query = searchParams.get('query') || '';
   const centuries = searchParams.getAll('centuries') || [];
 
-  const setSearchWith = (params: any) => {
+  const setSearchWith = (params: {}) => {
     const search = getSearchWith(searchParams, params);
+
     setSearchParams(search);
   };
 
@@ -29,12 +29,11 @@ export const PeopleFilters = () => {
   };
 
   const handleResetFilters = () => {
-    const order = searchParams.get('order') || null;
-    const sort = searchParams.get('sort') || '';
-
-    setSearchParams({});
-    setSearchParams({ sort });
-    getSearchWith(searchParams, { order });
+    setSearchWith({
+      sex: null,
+      query: null,
+      centuries: [],
+    });
   };
 
   return (

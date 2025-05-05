@@ -6,7 +6,6 @@ import { useEffect, useState } from 'react';
 import { getPeople } from '../api';
 import { useSearchParams } from 'react-router-dom';
 import { SortName, SortOrder } from '../types/SortTypes';
-import { filter } from 'cypress/types/bluebird';
 
 export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);
@@ -16,54 +15,67 @@ export const PeoplePage = () => {
   const [filteredPeople, setFilteredPeople] = useState<Person[] | []>([]);
 
   const [searchParams] = useSearchParams();
-  // const filteredSearchParams = new URLSearchParams(searchParams);
 
   const sortName = searchParams.get('sort') as SortName;
   const sortOrder = searchParams.get('order') as SortOrder;
 
-  const filteredePeople = (people: Person[], searchParams: URLSearchParams) => {
-    const filtered = [...people]
+  const filteredePeople = (
+    newPeople: Person[],
+    newSearchParams: URLSearchParams,
+  ) => {
+    const filtered = [...newPeople]
       .filter(person => {
-        if (searchParams.has('query')) {
-          const query = searchParams.get('query');
+        if (newSearchParams.has('query')) {
+          const query = newSearchParams.get('query');
+
           return Object.values(person).some(value => {
             if (typeof value === 'string') {
               return query && value.toLowerCase().includes(query.toLowerCase());
             }
+
             return false;
           });
         }
+
         return true;
       })
       .filter(person => {
-        if (searchParams.has('sex')) {
-          const sex = searchParams.get('sex');
+        if (newSearchParams.has('sex')) {
+          const sex = newSearchParams.get('sex');
+
           return person.sex === sex;
         }
+
         return true;
       })
       .filter(person => {
-        if (searchParams.has('centuries')) {
-          const centuries = searchParams.getAll('centuries');
-          for (let century of centuries) {
+        if (newSearchParams.has('centuries')) {
+          const centuries = newSearchParams.getAll('centuries');
+
+          for (const century of centuries) {
             if (Math.ceil(+person.born / 100) === +century) {
               return true;
             }
           }
+
           return false;
         }
+
         return true;
       })
       .sort((a, b) => {
         if (sortName === 'name' || sortName === 'sex') {
-          return a.name.localeCompare(b.name);
+          return a[sortName].localeCompare(b[sortName]);
         }
+
         if (sortName === 'born') {
           return a.born - b.born;
         }
+
         if (sortName === 'died') {
           return a.died - b.died;
         }
+
         return 0;
       });
 
@@ -97,31 +109,6 @@ export const PeoplePage = () => {
       };
     });
   };
-
-  // const sortedPeople = (people: Person[]) => {
-  //   if (sortName === null || sortOrder === null) {
-  //     return people;
-  //   }
-
-  //   if (sortName) {
-  //     return people.sort((a, b) => {
-  //       if (
-  //         (sortName === 'name' || sortName === 'sex') &&
-  //         sortOrder === 'asc'
-  //       ) {
-  //         return a[sortName].localeCompare(b[sortName]);
-  //       } else if (typeof sortName === 'number' && sortOrder === 'asc') {
-  //         return a.born - b.born;
-  //       } else if (sortName === 'died') {
-  //         return a.died - b.died;
-  //       }
-  //       return 0;
-  //     });
-  //   }
-  //   if (sortOrder === 'desc') {
-  //     return people.reverse();
-  //   }
-  // };
 
   useEffect(() => {
     setLoading(true);
@@ -165,10 +152,7 @@ export const PeoplePage = () => {
               {!filteredPeople.length ? (
                 <p>There are no people matching the current search criteria</p>
               ) : (
-                <PeopleTable
-                  people={filteredPeople}
-                  sortedPeople={filteredePeople}
-                />
+                <PeopleTable people={filteredPeople} />
               )}
             </div>
           </div>

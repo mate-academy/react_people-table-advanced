@@ -12,8 +12,8 @@ export const PersonLink: FC<Props> = ({ person }) => {
   const { search } = useLocation();
   const { slugName } = useParams();
 
-  const activePersonClass = (person: Person): string =>
-    person.slug === slugName ? 'has-background-warning' : '';
+  const activePersonClass = (newPerson: Person): string =>
+    newPerson.slug === slugName ? 'has-background-warning' : '';
 
   return (
     <tr data-cy="person" key={slug} className={activePersonClass(person)}>
