@@ -8,10 +8,6 @@ import { SortName, SortOrder } from '../types/SortTypes';
 
 type Props = {
   people: Person[];
-  sortedPeople?: (
-    sortName: SortName | null,
-    sortOrder: SortOrder | null,
-  ) => void;
 };
 
 const sortNames = [

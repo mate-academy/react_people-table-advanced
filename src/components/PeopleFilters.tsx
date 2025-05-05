@@ -2,14 +2,11 @@ import React from 'react';
 import { Link, NavLink, useSearchParams } from 'react-router-dom';
 import { getSearchWith } from '../utils/searchHelper';
 import classNames from 'classnames';
+import { Gender } from '../types/Gender';
 
 export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  enum Gender {
-    all = 'all',
-    m = 'm',
-    f = 'f',
-  }
+
   const centuriesNumbers = [16, 17, 18, 19, 20];
 
   const sex = searchParams.get('sex') || '';
