@@ -3,17 +3,16 @@ import { useSearchParams } from 'react-router-dom';
 
 export const PeopleFilters: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const [nameImput, setNameInput] = useState<string>(
+  const [nameImput, setNameImput] = useState<string>(
     searchParams.get('name') ?? '',
   );
-  const newURLSearchParams = new URLSearchParams(searchParams);
   const sexFilter = searchParams.get('sex') || 'all';
   const selectedCenturies = searchParams.getAll('centuries');
   const handelNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
 
-    setNameInput(value);
-    const params = newURLSearchParams;
+    setNameImput(value);
+    const params = new URLSearchParams(searchParams);
 
     if (value) {
       params.set('name', value);
@@ -25,7 +24,7 @@ export const PeopleFilters: React.FC = () => {
   };
 
   const handleSexChange = (sex: string) => {
-    const params = newURLSearchParams;
+    const params = new URLSearchParams(searchParams);
 
     if (sex === 'all') {
       params.delete('sex');
@@ -37,7 +36,7 @@ export const PeopleFilters: React.FC = () => {
   };
 
   const toggleCentury = (century: string) => {
-    const params = newURLSearchParams;
+    const params = new URLSearchParams(searchParams);
     const centuries = params.getAll('centuries');
     const idx = centuries.indexOf(century);
 
@@ -55,7 +54,7 @@ export const PeopleFilters: React.FC = () => {
 
   const resetAll = () => {
     setSearchParams({});
-    setNameInput('');
+    setNameImput('');
   };
 
   return (

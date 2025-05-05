@@ -3,18 +3,13 @@ import { Loader } from './Loader';
 import { PeopleTable } from './PeopleTable';
 import { useEffect, useState } from 'react';
 import { getPeople } from '../api';
-import { useParams, useSearchParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { Person } from '../types';
 
 export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[] | null>(null);
   const [error, setError] = useState<Error | null>(null);
   const { slug } = useParams<{ slug?: string }>();
-  const [searchParams] = useSearchParams();
-  const name = searchParams.get('name')?.toLowerCase() || '';
-  const visiblePeople = name
-    ? people?.filter(person => person.name.toLowerCase().includes(name))
-    : people;
 
   useEffect(() => {
     getPeople()
@@ -46,15 +41,12 @@ export const PeoplePage = () => {
                 <p data-cy="noPeopleMessage">
                   There are no people on the server
                 </p>
-              ) : (visiblePeople ?? []).length === 0 ? (
+              ) : people.length === 0 ? (
                 <p data-cy="noMatchingPeopleMessage">
                   There are no people matching the current search criteria
                 </p>
               ) : (
-                <PeopleTable
-                  people={visiblePeople ?? []}
-                  selectedSlug={slug ?? ''}
-                />
+                <PeopleTable people={people} selectedSlug={slug ?? ''} />
               )}
             </div>
           </div>

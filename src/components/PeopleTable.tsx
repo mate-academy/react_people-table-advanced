@@ -18,7 +18,8 @@ export const PeopleTable: React.FC<PeopleTableProps> = ({
   const nameFilter = searchParams.get('name') ?? '';
   const centuries = searchParams.getAll('centuries');
   const sortField = searchParams.get('sort');
-  const sortOrder = searchParams.get('order'); // 'asc' or 'desc'
+  const sortOrder = searchParams.get('order');
+
   const filtered = people.filter(p => {
     if (sexFilter !== 'all' && p.sex !== sexFilter) {
       return false;
