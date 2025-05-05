@@ -29,7 +29,7 @@ export const PeopleFilters = () => {
   };
 
   const handleResetFilters = () => {
-    const order = searchParams.get('order') || '';
+    const order = searchParams.get('order') || null;
     const sort = searchParams.get('sort') || '';
 
     setSearchParams({});

@@ -1,2 +1,2 @@
-export type SortName = 'name' | 'born' | 'died' | 'sex' | '';
-export type SortOrder = 'asc' | 'desc' | '';
+export type SortName = 'name' | 'born' | 'died' | 'sex' | null;
+export type SortOrder = 'asc' | 'desc' | null;

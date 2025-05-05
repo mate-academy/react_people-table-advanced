@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import { getPeople } from '../api';
 import { useSearchParams } from 'react-router-dom';
 import { SortName, SortOrder } from '../types/SortTypes';
+import { filter } from 'cypress/types/bluebird';
 
 export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);
@@ -15,10 +16,10 @@ export const PeoplePage = () => {
   const [filteredPeople, setFilteredPeople] = useState<Person[] | []>([]);
 
   const [searchParams] = useSearchParams();
-  const filteredSearchParams = new URLSearchParams(searchParams);
+  // const filteredSearchParams = new URLSearchParams(searchParams);
 
-  const sortName = (filteredSearchParams.get('sort') as SortName) || '';
-  const orderName = (filteredSearchParams.get('order') as SortOrder) || '';
+  const sortName = searchParams.get('sort') as SortName;
+  const sortOrder = searchParams.get('order') as SortOrder;
 
   const filteredePeople = (people: Person[], searchParams: URLSearchParams) => {
     const filtered = [...people]
@@ -52,7 +53,23 @@ export const PeoplePage = () => {
           return false;
         }
         return true;
+      })
+      .sort((a, b) => {
+        if (sortName === 'name' || sortName === 'sex') {
+          return a.name.localeCompare(b.name);
+        }
+        if (sortName === 'born') {
+          return a.born - b.born;
+        }
+        if (sortName === 'died') {
+          return a.died - b.died;
+        }
+        return 0;
       });
+
+    if (sortOrder === 'desc') {
+      filtered.reverse();
+    }
 
     return filtered;
   };
@@ -81,34 +98,30 @@ export const PeoplePage = () => {
     });
   };
 
-  const sortedPeople = (sortName: SortName, sortOrder: SortOrder) => {
-    if (sortName === '' || sortOrder === '') {
-      setFilteredPeople(filteredePeople(people, filteredSearchParams));
-      return;
-    }
+  // const sortedPeople = (people: Person[]) => {
+  //   if (sortName === null || sortOrder === null) {
+  //     return people;
+  //   }
 
-    if (sortOrder === 'desc') {
-      setFilteredPeople(prevPeople => {
-        return [...prevPeople].reverse();
-      });
-    }
-
-    setFilteredPeople(prevPeople => {
-      return [...prevPeople].sort((a, b) => {
-        if (
-          (sortName === 'name' || sortName === 'sex') &&
-          sortOrder === 'asc'
-        ) {
-          return a[sortName].localeCompare(b[sortName]);
-        } else if (typeof sortName === 'number' && sortOrder === 'asc') {
-          return a.born - b.born;
-        } else if (sortName === 'died') {
-          return a.died - b.died;
-        }
-        return 0;
-      });
-    });
-  };
+  //   if (sortName) {
+  //     return people.sort((a, b) => {
+  //       if (
+  //         (sortName === 'name' || sortName === 'sex') &&
+  //         sortOrder === 'asc'
+  //       ) {
+  //         return a[sortName].localeCompare(b[sortName]);
+  //       } else if (typeof sortName === 'number' && sortOrder === 'asc') {
+  //         return a.born - b.born;
+  //       } else if (sortName === 'died') {
+  //         return a.died - b.died;
+  //       }
+  //       return 0;
+  //     });
+  //   }
+  //   if (sortOrder === 'desc') {
+  //     return people.reverse();
+  //   }
+  // };
 
   useEffect(() => {
     setLoading(true);
@@ -124,7 +137,7 @@ export const PeoplePage = () => {
   }, []);
 
   useEffect(() => {
-    setFilteredPeople(filteredePeople(people, filteredSearchParams));
+    setFilteredPeople(filteredePeople(people, searchParams));
   }, [searchParams]);
 
   return (
@@ -154,7 +167,7 @@ export const PeoplePage = () => {
               ) : (
                 <PeopleTable
                   people={filteredPeople}
-                  sortedPeople={sortedPeople}
+                  sortedPeople={filteredePeople}
                 />
               )}
             </div>

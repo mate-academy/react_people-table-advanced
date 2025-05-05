@@ -14,15 +14,18 @@ import { SortName, SortOrder } from '../types/SortTypes';
 
 type Props = {
   people: Person[];
-  sortedPeople: (sortName: SortName, sortOrder: SortOrder) => void;
+  sortedPeople: (
+    sortName: SortName | null,
+    sortOrder: SortOrder | null,
+  ) => void;
 };
 
 /* eslint-disable jsx-a11y/control-has-associated-label */
 export const PeopleTable: FC<Props> = ({ people, sortedPeople = () => {} }) => {
-  const [searchParams, setearchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
 
-  const [sortName, setSortName] = useState<SortName>('');
-  const [sortOrder, setSortOrder] = useState<SortOrder>('');
+  const [sortName, setSortName] = useState<SortName | null>(null);
+  const [sortOrder, setSortOrder] = useState<SortOrder | null>(null);
 
   const handleSort = (event: React.MouseEvent<HTMLAnchorElement>) => {
     const sortEventName = event.currentTarget.dataset.sort;
@@ -30,24 +33,24 @@ export const PeopleTable: FC<Props> = ({ people, sortedPeople = () => {} }) => {
     if (sortEventName !== sortName) {
       setSortName(sortEventName as SortName);
       setSortOrder('asc');
-      sortedPeople(sortName, sortOrder);
+      // sortedPeople(sortName, sortOrder);
     }
     if (sortEventName === sortName && sortOrder === 'asc') {
       setSortOrder('desc');
-      sortedPeople(sortName, sortOrder);
-      getSearchWith(searchParams, { order: 'desc' });
+      // sortedPeople(sortName, sortOrder);
+      getSearchWith(searchParams, { order: sortOrder });
     }
     if (sortEventName === sortName && sortOrder === 'desc') {
-      setSortOrder('');
-      setSortName('');
-      getSearchWith(searchParams, { order: '' });
-      sortedPeople(sortName, sortOrder);
+      setSortOrder(null);
+      setSortName(null);
+      getSearchWith(searchParams, { order: null, sort: null });
+      // sortedPeople(sortName, sortOrder);
     }
   };
 
-  useEffect(() => {
-    getSearchWith(searchParams, { sort: sortName });
-  }, [searchParams]);
+  // useEffect(() => {
+  //   getSearchWith(searchParams, { sort: sortName });
+  // }, [searchParams]);
 
   return (
     <table
@@ -61,7 +64,10 @@ export const PeopleTable: FC<Props> = ({ people, sortedPeople = () => {} }) => {
               Name
               <Link
                 to={{
-                  search: getSearchWith(searchParams, { sort: 'name' }),
+                  search: getSearchWith(searchParams, {
+                    sort: 'name',
+                    order: sortOrder === 'desc' ? 'desc' : null,
+                  }),
                 }}
                 data-sort="name"
                 onClick={handleSort}
@@ -78,7 +84,10 @@ export const PeopleTable: FC<Props> = ({ people, sortedPeople = () => {} }) => {
               Sex
               <Link
                 to={{
-                  search: getSearchWith(searchParams, { sort: 'sex' }),
+                  search: getSearchWith(searchParams, {
+                    sort: 'sex',
+                    order: sortOrder === 'desc' ? 'desc' : null,
+                  }),
                 }}
                 data-sort="sex"
                 onClick={handleSort}
@@ -86,7 +95,7 @@ export const PeopleTable: FC<Props> = ({ people, sortedPeople = () => {} }) => {
                 <span className="icon">
                   <i
                     className={classNames('fas', {
-                      'fa-sort': sortOrder === '' && sortName !== 'sex',
+                      'fa-sort': !sortOrder && sortName !== 'sex',
                       'fa-sort-up': sortOrder === 'asc' && sortName === 'sex',
                       'fa-sort-down':
                         sortOrder === 'desc' && sortName === 'sex',
@@ -102,7 +111,10 @@ export const PeopleTable: FC<Props> = ({ people, sortedPeople = () => {} }) => {
               Born
               <Link
                 to={{
-                  search: getSearchWith(searchParams, { sort: 'born' }),
+                  search: getSearchWith(searchParams, {
+                    sort: 'born',
+                    order: sortOrder === 'desc' ? 'desc' : null,
+                  }),
                 }}
                 data-sort="born"
                 onClick={handleSort}
@@ -119,7 +131,10 @@ export const PeopleTable: FC<Props> = ({ people, sortedPeople = () => {} }) => {
               Died
               <Link
                 to={{
-                  search: getSearchWith(searchParams, { sort: 'died' }),
+                  search: getSearchWith(searchParams, {
+                    sort: 'died',
+                    order: sortOrder === 'desc' ? 'desc' : null,
+                  }),
                 }}
                 data-sort="died"
                 onClick={handleSort}
