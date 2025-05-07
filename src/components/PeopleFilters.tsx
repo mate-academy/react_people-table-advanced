@@ -1,18 +1,61 @@
+import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
+
 export const PeopleFilters = () => {
+  const location = useLocation();
+  const [textInput, setTextInput] = useState('');
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+
+  const sex = searchParams.get('sex');
+  const centuries = searchParams.get('centuries');
+
+  const getUpdatedLink = (key: string, value: string | null) => {
+    const params = new URLSearchParams(location.search);
+
+    if (value) {
+      params.set(key, value);
+    } else {
+      params.delete(key);
+    }
+
+    return `/people?${params.toString()}`;
+  };
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value.trim();
+
+    setTextInput(value);
+
+    const newUrl = getUpdatedLink('name', value);
+
+    navigate(newUrl, { replace: true });
+  };
+
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        <a className="is-active" href="#/people">
+        <Link
+          className={sex === null ? 'is-active' : ''}
+          to={getUpdatedLink('sex', null)}
+        >
           All
-        </a>
-        <a className="" href="#/people?sex=m">
+        </Link>
+        <Link
+          className={sex === 'm' ? 'is-active' : ''}
+          to={getUpdatedLink('sex', 'm')}
+        >
           Male
-        </a>
-        <a className="" href="#/people?sex=f">
+        </Link>
+        <Link
+          className={sex === 'f' ? 'is-active' : ''}
+          to={getUpdatedLink('sex', 'f')}
+        >
           Female
-        </a>
+        </Link>
       </p>
 
       <div className="panel-block">
@@ -21,7 +64,9 @@ export const PeopleFilters = () => {
             data-cy="NameFilter"
             type="search"
             className="input"
+            value={textInput}
             placeholder="Search"
+            onChange={handleSearchChange}
           />
 
           <span className="icon is-left">
@@ -33,63 +78,73 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            <a
+            <Link
               data-cy="century"
-              className="button mr-1"
-              href="#/people?centuries=16"
+              className={
+                centuries === '16' ? 'button mr-1 is-info' : 'button mr-1'
+              }
+              to={getUpdatedLink('centuries', '16')}
             >
               16
-            </a>
+            </Link>
 
-            <a
+            <Link
               data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=17"
+              className={
+                centuries === '17' ? 'button mr-1 is-info' : 'button mr-1'
+              }
+              to={getUpdatedLink('centuries', '17')}
             >
               17
-            </a>
+            </Link>
 
-            <a
+            <Link
               data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=18"
+              className={
+                centuries === '18' ? 'button mr-1 is-info' : 'button mr-1'
+              }
+              to={getUpdatedLink('centuries', '18')}
             >
               18
-            </a>
+            </Link>
 
-            <a
+            <Link
               data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=19"
+              className={
+                centuries === '19' ? 'button mr-1 is-info' : 'button mr-1'
+              }
+              to={getUpdatedLink('centuries', '19')}
             >
               19
-            </a>
+            </Link>
 
-            <a
+            <Link
               data-cy="century"
-              className="button mr-1"
-              href="#/people?centuries=20"
+              className={
+                centuries === '20' ? 'button mr-1 is-info' : 'button mr-1'
+              }
+              to={getUpdatedLink('centuries', '20')}
             >
               20
-            </a>
+            </Link>
           </div>
 
           <div className="level-right ml-4">
-            <a
+            <Link
               data-cy="centuryALL"
               className="button is-success is-outlined"
-              href="#/people"
+              to={getUpdatedLink('centuries', '')}
             >
               All
-            </a>
+            </Link>
           </div>
         </div>
       </div>
 
       <div className="panel-block">
-        <a className="button is-link is-outlined is-fullwidth" href="#/people">
+        <Link className="button is-link is-outlined is-fullwidth" to="/people">
           Reset all filters
-        </a>
+        </Link>
       </div>
     </nav>
   );
