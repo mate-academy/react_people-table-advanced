@@ -14,24 +14,36 @@ export const PeopleTable = ({ peopleResults }: Props) => {
   const [diedOrder, setDiedOrder] = useState<'asc' | 'desc' | null>(null);
 
   const toggleSortOrder = () => {
+    setDiedOrder(null);
+    setSexOrder(null);
+    setBornOrder(null);
     setSortOrder(prev =>
       prev === null ? 'asc' : prev === 'asc' ? 'desc' : null,
     );
   };
 
   const toggleSexOrder = () => {
+    setDiedOrder(null);
+    setBornOrder(null);
+    setSortOrder(null);
     setSexOrder(prev =>
       prev === null ? 'asc' : prev === 'asc' ? 'desc' : null,
     );
   };
 
   const toggleBornOrder = () => {
+    setDiedOrder(null);
+    setSexOrder(null);
+    setSortOrder(null);
     setBornOrder(prev =>
       prev === null ? 'asc' : prev === 'asc' ? 'desc' : null,
     );
   };
 
   const toggleDiedOrder = () => {
+    setBornOrder(null);
+    setSexOrder(null);
+    setSortOrder(null);
     setDiedOrder(prev =>
       prev === null ? 'asc' : prev === 'asc' ? 'desc' : null,
     );
@@ -40,24 +52,34 @@ export const PeopleTable = ({ peopleResults }: Props) => {
   const finalSortedPeople = [...peopleResults].sort((a, b) => {
     // 1. Ordenar por born
     if (bornOrder) {
-      const bornCompare = bornOrder === 'asc' ? a.born - b.born : b.born - a.born;
-      if (bornCompare !== 0) return bornCompare;
+      const bornCompare =
+        bornOrder === 'asc' ? a.born - b.born : b.born - a.born;
+
+      if (bornCompare !== 0) {
+        return bornCompare;
+      }
     }
 
     if (diedOrder) {
-      const diedCompare = diedOrder === 'asc' ? a.died - b.died : b.died - a.died;
-      if (diedCompare !== 0) return diedCompare;
-    }
+      const diedCompare =
+        diedOrder === 'asc' ? a.died - b.died : b.died - a.died;
 
+      if (diedCompare !== 0) {
+        return diedCompare;
+      }
+    }
 
     if (sexOrder) {
       const sexValue = (sex: string) => (sex === 'f' ? 0 : 1);
-      const sexCompare = sexOrder === 'asc'
-        ? sexValue(a.sex) - sexValue(b.sex)
-        : sexValue(b.sex) - sexValue(a.sex);
-      if (sexCompare !== 0) return sexCompare;
-    }
+      const sexCompare =
+        sexOrder === 'asc'
+          ? sexValue(a.sex) - sexValue(b.sex)
+          : sexValue(b.sex) - sexValue(a.sex);
 
+      if (sexCompare !== 0) {
+        return sexCompare;
+      }
+    }
 
     if (sortOrder) {
       return sortOrder === 'asc'
@@ -67,7 +89,6 @@ export const PeopleTable = ({ peopleResults }: Props) => {
 
     return 0;
   });
-
 
   return (
     <>

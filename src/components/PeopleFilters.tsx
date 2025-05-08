@@ -1,5 +1,5 @@
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
 export const PeopleFilters = () => {
@@ -10,6 +10,12 @@ export const PeopleFilters = () => {
 
   const sex = searchParams.get('sex');
   const centuries = searchParams.get('centuries');
+
+  useEffect(() => {
+    const nameFromUrl = searchParams.get('name') || '';
+
+    setTextInput(nameFromUrl);
+  }, [searchParams]);
 
   const getUpdatedLink = (key: string, value: string | null) => {
     const params = new URLSearchParams(location.search);
@@ -24,9 +30,9 @@ export const PeopleFilters = () => {
   };
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value.trim();
+    const value = e.target.value;
 
-    setTextInput(value);
+    setTextInput(value); // ✅ Atualiza com o que foi digitado
 
     const newUrl = getUpdatedLink('name', value);
 
