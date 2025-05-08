@@ -50,7 +50,7 @@ const filterPeople = (
 
   if (centuries && centuries.length) {
     newPeople = newPeople.filter(p =>
-      centuries.includes((p.born + 100).toString().slice(0, 2)),
+      centuries.includes((Math.floor((p.born - 1) / 100) + 1).toString()),
     );
   }
 

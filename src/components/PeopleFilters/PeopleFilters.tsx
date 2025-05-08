@@ -76,7 +76,9 @@ export const PeopleFilters = () => {
                 key={century}
                 data-cy="century"
                 className={classNames('button mr-1', {
-                  'is-info': searchParams.has('centuries', century.toString()),
+                  'is-info': searchParams
+                    .getAll('centuries')
+                    .includes(century.toString()),
                 })}
                 params={{ centuries: getCenturies(century.toString()) }}
               >

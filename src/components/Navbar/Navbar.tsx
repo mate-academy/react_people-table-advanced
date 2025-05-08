@@ -32,7 +32,7 @@ export const Navbar = () => {
             }}
             to={{
               pathname: '/people',
-              search,
+              search: search || '',
             }}
           >
             People
