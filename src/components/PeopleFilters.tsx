@@ -133,7 +133,7 @@ export const PeopleFilters = () => {
             <Link
               data-cy="centuryALL"
               className="button is-success is-outlined"
-              to={getUpdatedLink('centuries', '')}
+              to={getUpdatedLink('centuries', null)}
             >
               All
             </Link>

@@ -37,54 +37,37 @@ export const PeopleTable = ({ peopleResults }: Props) => {
     );
   };
 
+  const finalSortedPeople = [...peopleResults].sort((a, b) => {
+    // 1. Ordenar por born
+    if (bornOrder) {
+      const bornCompare = bornOrder === 'asc' ? a.born - b.born : b.born - a.born;
+      if (bornCompare !== 0) return bornCompare;
+    }
 
-  const finalSortedPeople = [...peopleResults]
-    .sort((a, b) => {
-      if (bornOrder) {
-        return bornOrder === 'asc' ? a.born - b.born : b.born - a.born;
-      }
+    if (diedOrder) {
+      const diedCompare = diedOrder === 'asc' ? a.died - b.died : b.died - a.died;
+      if (diedCompare !== 0) return diedCompare;
+    }
 
-      return 0;
-    })
-    .sort((a, b) => {
-      if (diedOrder) {
-        return diedOrder === 'asc' ? a.died - b.died : b.died - a.died;
-      }
 
-      return 0;
-    })
-    .sort((a, b) => {
-      if (sexOrder) {
-        if (sexOrder === 'asc') {
-          if (a.sex === 'f' && b.sex !== 'f') {
-            return -1;
-          }
+    if (sexOrder) {
+      const sexValue = (sex: string) => (sex === 'f' ? 0 : 1);
+      const sexCompare = sexOrder === 'asc'
+        ? sexValue(a.sex) - sexValue(b.sex)
+        : sexValue(b.sex) - sexValue(a.sex);
+      if (sexCompare !== 0) return sexCompare;
+    }
 
-          if (a.sex === 'm' && b.sex !== 'm') {
-            return 1;
-          }
-        } else {
-          if (a.sex === 'm' && b.sex !== 'm') {
-            return -1;
-          }
 
-          if (a.sex === 'f' && b.sex !== 'f') {
-            return 1;
-          }
-        }
-      }
+    if (sortOrder) {
+      return sortOrder === 'asc'
+        ? a.name.localeCompare(b.name)
+        : b.name.localeCompare(a.name);
+    }
 
-      return 0;
-    })
-    .sort((a, b) => {
-      if (sortOrder) {
-        return sortOrder === 'asc'
-          ? a.name.localeCompare(b.name)
-          : b.name.localeCompare(a.name);
-      }
+    return 0;
+  });
 
-      return 0;
-    });
 
   return (
     <>
