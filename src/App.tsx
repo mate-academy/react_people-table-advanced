@@ -32,7 +32,7 @@ export const App = () => {
                     'has-background-grey-lighter': isActive,
                   })
                 }
-                to="people"
+                to="/people"
               >
                 People
               </NavLink>

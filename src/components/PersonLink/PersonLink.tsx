@@ -15,7 +15,7 @@ export const PersonLink = ({ person }: Props) => {
   return (
     <Link
       className={isWomanClassName}
-      to={`/people/${person?.slug}?${searchParams}`}
+      to={`/people/${person?.slug}?${searchParams.toString()}`}
     >
       {person?.name}
     </Link>

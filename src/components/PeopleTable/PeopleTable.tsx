@@ -33,7 +33,7 @@ export const PeopleTable = ({ status, people }: Props) => {
       order = 'desc';
     }
 
-    return { sort: current, order: order };
+    return { sort: current || null, order: order || null };
   };
 
   return (

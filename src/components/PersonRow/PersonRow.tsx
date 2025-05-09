@@ -4,7 +4,7 @@ import { PersonLink } from '../PersonLink';
 import classNames from 'classnames';
 
 type Props = {
-  person: Person | null;
+  person: Person;
   people: Person[];
 };
 

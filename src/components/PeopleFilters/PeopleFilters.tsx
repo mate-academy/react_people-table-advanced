@@ -66,7 +66,7 @@ export const PeopleFilters = () => {
             type="search"
             className="input"
             placeholder="Search"
-            value={searchParams.get('query')?.toString()}
+            value={searchParams.get('query')?.toString() || ''}
           />
 
           <span className="icon is-left">
