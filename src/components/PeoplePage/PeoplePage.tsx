@@ -12,12 +12,20 @@ export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[] | null>(null);
   const [searchParams] = useSearchParams();
 
+  //variables that helps filtering and sorting based on searchParams
   const query = searchParams.get('query')?.toLowerCase().trim();
-  const centuriesFilter = searchParams.getAll('centuries');
+  const filteredByCenturies = searchParams.getAll('centuries');
+  const filteredBySex = searchParams.get('sex');
+  const sortParam = searchParams.get('sort');
+  const orderParam = searchParams.get('order');
 
+  /**
+   * Function that filter people by sex, centuries and input
+   */
   const filteredPeople = useMemo(() => {
     let filtered = people;
 
+    //filter by input
     if (query && people) {
       filtered = people?.filter(person => {
         return (
@@ -31,14 +39,14 @@ export const PeoplePage = () => {
       });
     }
 
+    //filter bt century
     if (filtered) {
       filtered = filtered?.filter(person => {
-        console.log(centuriesFilter);
-        if (centuriesFilter.length === 0) {
+        if (filteredByCenturies.length === 0) {
           return true;
         }
 
-        return centuriesFilter.some(centuryString => {
+        return filteredByCenturies.some(centuryString => {
           const century = +centuryString;
           const start = (century - 1) * 100;
           const end = start + 99;
@@ -46,11 +54,58 @@ export const PeoplePage = () => {
           return person.died >= start && person.born <= end;
         });
       });
+
+      //filter by sex
+      if (filtered && filteredBySex === 'f') {
+        filtered = filtered.filter(person => person.sex === 'f');
+      }
+
+      if (filtered && filteredBySex === 'm') {
+        filtered = filtered.filter(person => person.sex === 'm');
+      }
     }
 
     return filtered;
-  }, [centuriesFilter, people, query]);
+  }, [filteredByCenturies, people, query, filteredBySex]);
 
+  /**
+   * sort people based on name, sex, bord and died params in
+   * ascending or descending order
+   */
+  switch (sortParam) {
+    case orderParam && 'name':
+      filteredPeople?.sort((a, b) => b.name.localeCompare(a.name));
+      break;
+    case 'name':
+      filteredPeople?.sort((a, b) => a.name.localeCompare(b.name));
+      break;
+    case orderParam && 'sex':
+      filteredPeople?.sort((a, b) => b.sex.localeCompare(a.sex));
+      break;
+    case 'sex':
+      filteredPeople?.sort((a, b) => a.sex.localeCompare(b.sex));
+      break;
+    case orderParam && 'born':
+      filteredPeople?.sort((a, b) => +b.born - +a.born);
+      break;
+    case 'born':
+      filteredPeople?.sort((a, b) => +a.born - +b.born);
+      break;
+    case orderParam && 'died':
+      filteredPeople?.sort((a, b) => +b.died - +a.died);
+      break;
+    case 'died':
+      filteredPeople?.sort((a, b) => +a.died - +b.died);
+      break;
+
+    default:
+      break;
+  }
+
+  /**
+   * Function that load people from API
+   * @returns Promise<void>
+   */
   const loadPeople = () => {
     return getPeople()
       .then(data => {

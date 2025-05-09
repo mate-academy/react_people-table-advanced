@@ -2,6 +2,8 @@ import { Person } from '../../types';
 import { Loader } from '../Loader';
 import { PersonRow } from '../PersonRow';
 import { Status } from '../../types/Status';
+import { SearchLink } from '../SearchLink';
+import { useSearchParams } from 'react-router-dom';
 
 type Props = {
   status: Status;
@@ -9,6 +11,30 @@ type Props = {
 };
 
 export const PeopleTable = ({ status, people }: Props) => {
+  const [searchParams] = useSearchParams();
+
+  /**
+   *Function that toggle search based on param by ascending or descending order
+   * @param sortType
+   * @returns string{} | null
+}
+   */
+  const toggleSorting = (sortType: string) => {
+    let current = searchParams.get('sort');
+    let order = searchParams.get('order');
+
+    if (current === sortType && order === 'desc') {
+      current = null;
+      order = null;
+    } else if (current !== sortType) {
+      current = sortType;
+    } else if (current === sortType) {
+      order = 'desc';
+    }
+
+    return { sort: current, order: order };
+  };
+
   return (
     <>
       {people?.length !== 0 && status === 'resolved' && (
@@ -26,44 +52,44 @@ export const PeopleTable = ({ status, people }: Props) => {
               <th>
                 <span className="is-flex is-flex-wrap-nowrap">
                   Name
-                  <a href="#/people?sort=name">
+                  <SearchLink params={toggleSorting('name')}>
                     <span className="icon">
                       <i className="fas fa-sort" />
                     </span>
-                  </a>
+                  </SearchLink>
                 </span>
               </th>
 
               <th>
                 <span className="is-flex is-flex-wrap-nowrap">
                   Sex
-                  <a href="#/people?sort=sex">
+                  <SearchLink params={toggleSorting('sex')}>
                     <span className="icon">
                       <i className="fas fa-sort" />
                     </span>
-                  </a>
+                  </SearchLink>
                 </span>
               </th>
 
               <th>
                 <span className="is-flex is-flex-wrap-nowrap">
                   Born
-                  <a href="#/people?sort=born&amp;order=desc">
+                  <SearchLink params={toggleSorting('born')}>
                     <span className="icon">
                       <i className="fas fa-sort-up" />
                     </span>
-                  </a>
+                  </SearchLink>
                 </span>
               </th>
 
               <th>
                 <span className="is-flex is-flex-wrap-nowrap">
                   Died
-                  <a href="#/people?sort=died">
+                  <SearchLink params={toggleSorting('died')}>
                     <span className="icon">
                       <i className="fas fa-sort" />
                     </span>
-                  </a>
+                  </SearchLink>
                 </span>
               </th>
 
