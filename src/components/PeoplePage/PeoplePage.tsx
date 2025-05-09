@@ -73,25 +73,25 @@ export const PeoplePage = () => {
    * ascending or descending order
    */
   switch (sortParam) {
-    case orderParam && 'name':
+    case orderParam === 'desc' && 'name':
       filteredPeople?.sort((a, b) => b.name.localeCompare(a.name));
       break;
     case 'name':
       filteredPeople?.sort((a, b) => a.name.localeCompare(b.name));
       break;
-    case orderParam && 'sex':
+    case orderParam === 'desc' && 'sex':
       filteredPeople?.sort((a, b) => b.sex.localeCompare(a.sex));
       break;
     case 'sex':
       filteredPeople?.sort((a, b) => a.sex.localeCompare(b.sex));
       break;
-    case orderParam && 'born':
+    case orderParam === 'desc' && 'born':
       filteredPeople?.sort((a, b) => +b.born - +a.born);
       break;
     case 'born':
       filteredPeople?.sort((a, b) => +a.born - +b.born);
       break;
-    case orderParam && 'died':
+    case orderParam === 'desc' && 'died':
       filteredPeople?.sort((a, b) => +b.died - +a.died);
       break;
     case 'died':
