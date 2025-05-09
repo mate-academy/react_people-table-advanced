@@ -28,6 +28,7 @@ export const PeopleTable = ({ status, people }: Props) => {
       order = null;
     } else if (current !== sortType) {
       current = sortType;
+      order = null;
     } else if (current === sortType) {
       order = 'desc';
     }
