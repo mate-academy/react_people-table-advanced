@@ -1,22 +1,22 @@
 import { PeopleFilters } from './PeopleFilters';
 import { PeopleTable } from './PeopleTable';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { LoaderEnum } from '../types/loader';
 import { Person } from '../types';
 import { getPeople } from '../api';
 
-export const PeoplePage = () => {
-
+export const PeoplePage: React.FC = () => {
   const [error, setError] = useState('');
-  const [loader, setLoader] = useState<LoaderEnum>(
-    LoaderEnum.initial
-  );
+  const [loader, setLoader] = useState<LoaderEnum>(LoaderEnum.initial);
 
-  const [people, setPeople] = useState<Person[]>([]);  useEffect(() => {
+  const [people, setPeople] = useState<Person[]>([]);
+  useEffect(() => {
     setLoader(LoaderEnum.loading);
 
-
-    getPeople().then((data) => {setPeople(data)})
+    getPeople()
+      .then(data => {
+        setPeople(data);
+      })
       .catch(error => {
         setError(error);
       })
@@ -24,7 +24,6 @@ export const PeoplePage = () => {
         setLoader(LoaderEnum.loaded);
       });
   }, []);
-
 
   return (
     <>
@@ -38,15 +37,7 @@ export const PeoplePage = () => {
 
           <div className="column">
             <div className="box table-container">
-              {/*<Loader />*/}
-
-              {/*<p data-cy="peopleLoadingError">Something went wrong</p>*/}
-
-              {/*<p data-cy="noPeopleMessage">There are no people on the server</p>*/}
-
-              {/*<p>There are no people matching the current search criteria</p>*/}
-
-              <PeopleTable people={people} error={error} loader={loader}  />
+              <PeopleTable people={people} error={error} loader={loader} />
             </div>
           </div>
         </div>
