@@ -1,8 +1,25 @@
-import { PeopleFilters } from './PeopleFilters';
-import { Loader } from './Loader';
-import { PeopleTable } from './PeopleTable';
+import { useEffect, useState } from 'react';
+import { Person } from '../types';
+import PeopleFilters from './PeopleFilters';
+import Loader from './Loader/Loader';
+import PeopleTable from './PeopleTable';
+import { getPeople } from '../api';
+import getNormalizedPeople from '../utils/getNormalizedPeople';
 
-export const PeoplePage = () => {
+export default function PeoplePage() {
+  const [people, setPeople] = useState<Person[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [errorMessage, setErrorMessage] = useState('');
+
+  useEffect(() => {
+    getPeople()
+      .then(setPeople)
+      .catch(() => setErrorMessage('Something went wrong'))
+      .finally(() => setLoading(false));
+  }, []);
+
+  const normalizedPeople = getNormalizedPeople(people);
+
   return (
     <>
       <h1 className="title">People Page</h1>
@@ -15,19 +32,25 @@ export const PeoplePage = () => {
 
           <div className="column">
             <div className="box table-container">
-              <Loader />
+              {loading && <Loader />}
 
-              <p data-cy="peopleLoadingError">Something went wrong</p>
+              {!loading && errorMessage && (
+                <p data-cy="peopleLoadingError">{errorMessage}</p>
+              )}
 
-              <p data-cy="noPeopleMessage">There are no people on the server</p>
+              {!loading && !errorMessage && people.length === 0 && (
+                <p data-cy="noPeopleMessage">
+                  There are no people on the server
+                </p>
+              )}
 
-              <p>There are no people matching the current search criteria</p>
-
-              <PeopleTable />
+              {!loading && people.length > 0 && (
+                <PeopleTable people={normalizedPeople} />
+              )}
             </div>
           </div>
         </div>
       </div>
     </>
   );
-};
+}
