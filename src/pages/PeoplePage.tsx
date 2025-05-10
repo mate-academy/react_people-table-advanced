@@ -1,6 +1,6 @@
-import { PeopleFilters } from './PeopleFilters';
-import { Loader } from './Loader';
-import { PeopleTable } from './PeopleTable';
+import { PeopleFilters } from '../components/PeopleFilters';
+import { Loader } from '../components/Loader';
+import { PeopleTable } from '../components/PeopleTable';
 
 export const PeoplePage = () => {
   return (
