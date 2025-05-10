@@ -1,5 +1,5 @@
 import { NavLink } from 'react-router-dom';
-import getActiveLink from '../utils/getActiveLink';
+import getActiveNavLink from '../utils/getActiveNavLink';
 
 export default function Navbar() {
   return (
@@ -11,11 +11,11 @@ export default function Navbar() {
     >
       <div className="container">
         <div className="navbar-brand">
-          <NavLink to="/" className={getActiveLink}>
+          <NavLink to="/" className={getActiveNavLink}>
             Home
           </NavLink>
 
-          <NavLink to="/people" className={getActiveLink}>
+          <NavLink to="/people" className={getActiveNavLink}>
             People
           </NavLink>
         </div>

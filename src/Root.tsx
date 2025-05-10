@@ -13,8 +13,13 @@ export default function Root() {
       <Routes>
         <Route path="/" element={<App />}>
           <Route path="/home" element={<Navigate to="/" replace />} />
+
           <Route index element={<h1 className="title">Home Page</h1>} />
-          <Route path="people/:slug?" element={<PeoplePage />} />
+
+          <Route path="people">
+            <Route path=":slug?" element={<PeoplePage />} />
+          </Route>
+
           <Route path="*" element={<h1 className="title">Page not found</h1>} />
         </Route>
       </Routes>

@@ -44,8 +44,6 @@ export default function PeoplePage() {
                 </p>
               )}
 
-              {/* <p>There are no people matching the current search criteria</p> */}
-
               {!loading && people.length > 0 && (
                 <PeopleTable people={normalizedPeople} />
               )}
