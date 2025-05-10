@@ -75,9 +75,9 @@ function getVisiblePeople(people: Person[], options: Options) {
 
   if (options.centuriesParams.length) {
     updatedPeople = updatedPeople.filter(person => {
-      const centure = `${Math.ceil(person.born / 100)}`;
+      const century = `${Math.ceil(person.born / 100)}`;
 
-      return options.centuriesParams.includes(centure);
+      return options.centuriesParams.includes(century);
     });
   }
 

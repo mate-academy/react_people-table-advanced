@@ -18,7 +18,7 @@ export default function PeopleFilters() {
 
   function getActiveCenturies(century: string) {
     return centuriesParams.includes(century)
-      ? centuriesParams.filter(currentCenture => currentCenture !== century)
+      ? centuriesParams.filter(currentCentury => currentCentury !== century)
       : [...centuriesParams, century];
   }
 
