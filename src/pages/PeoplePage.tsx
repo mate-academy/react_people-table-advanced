@@ -1,6 +1,6 @@
 import { PeopleFilters } from '../components/PeopleFilters';
 import { Loader } from '../components/Loader';
-import { PeopleTable } from '../components/PeopleTable';
+import { PeopleTable } from '../components/Table/PeopleTable';
 import { useEffect, useState } from 'react';
 import { Person } from '../types';
 import { useParams } from 'react-router-dom';
