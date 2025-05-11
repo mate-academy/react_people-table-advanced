@@ -27,7 +27,12 @@ export const Navbar = () => {
           <NavLink
             aria-current="page"
             className={({ isActive }) => isActiveLink(isActive)}
-            to={{ pathname: '/people', search: searchParams.toString() }}
+            to={{
+              pathname: '/people',
+              search: searchParams.toString()
+                ? `?${searchParams.toString()}`
+                : '',
+            }}
           >
             People
           </NavLink>
