@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { Person } from '../../types';
 
 interface PersonLinkProps {
@@ -10,8 +10,15 @@ const isFimale = (sex: string | undefined) =>
 
 export const PersonLink = ({
   person: { name, slug, sex },
-}: PersonLinkProps) => (
-  <Link to={`../${slug}`} className={isFimale(sex)}>
-    {name}
-  </Link>
-);
+}: PersonLinkProps) => {
+  const [search] = useSearchParams();
+
+  return (
+    <Link
+      to={{ pathname: `../${slug}`, search: search.toString() }}
+      className={isFimale(sex)}
+    >
+      {name}
+    </Link>
+  );
+};
