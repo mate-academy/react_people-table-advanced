@@ -2,15 +2,85 @@ import { PeopleFilters } from '../components/PeopleFilters';
 import { Loader } from '../components/Loader';
 import { PeopleTable } from '../components/Table/PeopleTable';
 import { useEffect, useState } from 'react';
-import { Person } from '../types';
-import { useParams } from 'react-router-dom';
+import { Person, SearchParamsNames } from '../types';
+import { useParams, useSearchParams } from 'react-router-dom';
 import { getPeople } from '../api';
+import { SORT_DESC } from '../constants';
+
+const filterPeople = (people: Person[], searchParams: URLSearchParams) => {
+  let filteredPeople = people;
+  const sex = searchParams.get(SearchParamsNames.Sex);
+  const query = searchParams.get(SearchParamsNames.Query);
+  const centuries = searchParams
+    .getAll(SearchParamsNames.Centuries)
+    .map(century => +century);
+
+  if (sex) {
+    filteredPeople = filteredPeople.filter(person => person.sex === sex);
+  }
+
+  if (query) {
+    filteredPeople = filteredPeople.filter(person =>
+      person.name.includes(query),
+    );
+  }
+
+  if (centuries.length > 0) {
+    filteredPeople = filteredPeople.filter(
+      person =>
+        centuries.includes(Math.ceil(person.born / 100)) ||
+        centuries.includes(Math.ceil(person.died / 100)),
+    );
+  }
+
+  return filteredPeople;
+};
+
+const sortPeople = (people: Person[], searchParams: URLSearchParams) => {
+  const sortField =
+    searchParams.get(SearchParamsNames.Sort)?.toLocaleLowerCase() ?? '';
+  const sortOrder =
+    searchParams.get(SearchParamsNames.Order)?.toLocaleLowerCase() ?? '';
+
+  if (!sortField) {
+    return people;
+  }
+
+  const sortedPeople = [...people];
+
+  switch (true) {
+    case sortField === 'name' || sortField === 'sex':
+      sortedPeople.sort((person1, person2) =>
+        person1[sortField].localeCompare(person2[sortField]),
+      );
+
+      if (sortOrder === SORT_DESC) {
+        sortedPeople.reverse();
+      }
+
+      return sortedPeople;
+
+    case sortField === 'born' || sortField === 'died':
+      sortedPeople.sort(
+        (person1, person2) => +person1[sortField] - person2[sortField],
+      );
+
+      if (sortOrder === SORT_DESC) {
+        sortedPeople.reverse();
+      }
+
+      return sortedPeople;
+    default:
+      return people;
+  }
+};
 
 export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isError, setIsError] = useState(false);
   const { slug: selectedSlug } = useParams();
+  const [searchParams] = useSearchParams();
 
   useEffect(() => {
     getPeople()
@@ -46,7 +116,11 @@ export const PeoplePage = () => {
       });
   }, []);
 
+  const filteredPeople = filterPeople(people, searchParams);
+  const sortedPeople = sortPeople(filteredPeople, searchParams);
+
   const hasNoPeople = !isError && !isLoading && people.length === 0;
+  const hasNoSorted = !hasNoPeople && sortedPeople.length === 0;
 
   return (
     <>
@@ -60,7 +134,9 @@ export const PeoplePage = () => {
 
           <div className="column">
             <div className="box table-container">
-              <p>There are no people matching the current search criteria</p>
+              {hasNoSorted && (
+                <p>There are no people matching the current search criteria</p>
+              )}
 
               {isLoading && <Loader />}
               {isError && (
@@ -73,8 +149,11 @@ export const PeoplePage = () => {
                   There are no people on the server
                 </p>
               )}
-              {people.length > 0 && (
-                <PeopleTable people={people} selectedSlug={selectedSlug} />
+              {sortedPeople.length > 0 && (
+                <PeopleTable
+                  people={sortedPeople}
+                  selectedSlug={selectedSlug}
+                />
               )}
             </div>
           </div>
