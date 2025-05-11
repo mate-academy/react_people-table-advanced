@@ -5,7 +5,7 @@ interface PersonLinkProps {
   person: Person;
 }
 
-const isFimale = (sex: string | undefined) =>
+const isFemale = (sex: string | undefined) =>
   sex === 'f' ? 'has-text-danger' : '';
 
 export const PersonLink = ({
@@ -16,7 +16,7 @@ export const PersonLink = ({
   return (
     <Link
       to={{ pathname: `../${slug}`, search: search.toString() }}
-      className={isFimale(sex)}
+      className={isFemale(sex)}
     >
       {name}
     </Link>

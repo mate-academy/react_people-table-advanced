@@ -87,7 +87,7 @@ export const PeopleFilters = () => {
               <SearchLink
                 data-cy="century"
                 params={{
-                  centuries: null,
+                  [SearchParamsNames.Centuries]: null,
                 }}
                 className={classNames('button', 'is-success', {
                   'is-outlined': centuries.length > 0,

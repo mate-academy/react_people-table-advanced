@@ -28,8 +28,8 @@ const filterPeople = (people: Person[], searchParams: URLSearchParams) => {
   if (centuries.length > 0) {
     filteredPeople = filteredPeople.filter(
       person =>
-        centuries.includes(Math.ceil(person.born / 100)) ||
-        centuries.includes(Math.ceil(person.died / 100)),
+        centuries.includes(Math.floor((person.born - 1) / 100 + 1)) ||
+        centuries.includes(Math.floor((person.died - 1) / 100 + 1)),
     );
   }
 
