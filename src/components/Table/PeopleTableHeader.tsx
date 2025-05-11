@@ -3,14 +3,14 @@ import classNames from 'classnames';
 import { SearchParams } from '../../utils/searchHelper';
 import { SORT_DESC } from '../../constants';
 import { SearchLink } from '../SearchLink';
-import { SearchParamsFields } from '../../types/SearchParamsFields';
+import { SearchParamsNames } from '../../types/SearchParamsNames';
 
 const sortedFields = ['Name', 'Sex', 'Born', 'Died'];
 
 const getSortLink = (field: string, search: URLSearchParams): SearchParams => {
   const sort = field.toLocaleLowerCase();
-  const sortField = search.get(SearchParamsFields.Sort) ?? '';
-  const order = search.get(SearchParamsFields.Order) ?? '';
+  const sortField = search.get(SearchParamsNames.Sort) ?? '';
+  const order = search.get(SearchParamsNames.Order) ?? '';
 
   if (sortField !== field.toLocaleLowerCase()) {
     return {
@@ -29,12 +29,12 @@ const getSortLink = (field: string, search: URLSearchParams): SearchParams => {
 export const PeopleTableHeader = () => {
   const [search] = useSearchParams();
   const getSortClass = (field: string) => {
-    if (field.toLocaleLowerCase() !== search.get(SearchParamsFields.Sort)) {
+    if (field.toLocaleLowerCase() !== search.get(SearchParamsNames.Sort)) {
       return 'fa-sort';
     }
 
     if (
-      field.toLocaleLowerCase() === search.get(SearchParamsFields.Sort) &&
+      field.toLocaleLowerCase() === search.get(SearchParamsNames.Sort) &&
       search.get('order') !== SORT_DESC
     ) {
       return 'fa-sort-up';
