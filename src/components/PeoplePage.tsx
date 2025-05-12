@@ -35,16 +35,16 @@ export const PeoplePage = () => {
 
   const filteredPeople = useMemo(() => {
     return people.filter(person => {
-      const matchQuery =
+      const matchesQuery =
         person.name.toLowerCase().includes(query) ||
         person.motherName?.toLowerCase().includes(query) ||
         person.fatherName?.toLowerCase().includes(query);
 
-      const matchCentury =
+      const matchesCentury =
         centuries.length === 0 ||
         centuries.includes(Math.ceil(person.born / 100).toString());
 
-      return matchQuery && matchCentury;
+      return matchesQuery && matchesCentury;
     });
   }, [people, query, centuries]);
 
@@ -86,7 +86,9 @@ export const PeoplePage = () => {
     return list;
   }, [filteredPeople, sort, order]);
 
-  const selectedPerson = slug ? people.find(p => p.slug === slug) : null;
+  const selectedPerson = slug
+    ? people.find(person => person.slug === slug)
+    : null;
 
   return (
     <>
@@ -121,7 +123,6 @@ export const PeoplePage = () => {
           {selectedPerson && (
             <div className="box" data-cy="personPage">
               <h2 className="title is-4">{selectedPerson.name}</h2>
-
               <ul>
                 <li>
                   <strong>Sex:</strong> {selectedPerson.sex}
@@ -142,7 +143,9 @@ export const PeoplePage = () => {
 
               <button
                 className="button is-link mt-4"
-                onClick={() => setSearchParams(getSearchWith(searchParams, {}))}
+                onClick={() => {
+                  setSearchParams(getSearchWith(searchParams, { slug: null }));
+                }}
               >
                 ← Назад до списку
               </button>

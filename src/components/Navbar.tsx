@@ -1,41 +1,50 @@
+import classNames from 'classnames';
 import { useLocation } from 'react-router-dom';
 import { SearchLink } from './SearchLink';
-import classNames from 'classnames';
 
 const ACTIVE_NAV_CLASS = 'has-background-grey-lighter';
 
 export const Navbar: React.FC = () => {
-  const { hash } = useLocation();
+  const { pathname } = useLocation();
 
   const isActive = (path: string) => {
-    const current = hash.replace(/^#/, '').split('?')[0];
+    if (path === '/') {
+      return pathname === '/';
+    }
 
-    return current === path;
+    return pathname.startsWith(path);
   };
 
   return (
-    <nav className="tabs is-boxed mb-4" data-cy="nav">
-      <ul>
-        <li>
+    <nav
+      className="navbar is-link mb-4"
+      role="navigation"
+      aria-label="main navigation"
+      data-cy="nav"
+    >
+      <div className="navbar-menu is-active">
+        <div className="navbar-start">
           <SearchLink
             to="/"
             params={{}}
-            className={classNames({ [ACTIVE_NAV_CLASS]: isActive('/') })}
+            className={classNames('navbar-item', {
+              [ACTIVE_NAV_CLASS]: isActive('/'),
+            })}
           >
             Home
           </SearchLink>
-        </li>
 
-        <li>
           <SearchLink
             to="/people"
             params={{}}
-            className={classNames({ [ACTIVE_NAV_CLASS]: isActive('/people') })}
+            className={classNames('navbar-item', {
+              [ACTIVE_NAV_CLASS]: isActive('/people'),
+            })}
           >
             People
           </SearchLink>
-        </li>
-      </ul>
+        </div>
+      </div>
     </nav>
   );
 };
