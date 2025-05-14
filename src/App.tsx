@@ -1,20 +1,16 @@
-import { PeoplePage } from './components/PeoplePage';
-import { Navbar } from './components/Navbar';
-
 import './App.scss';
+import { Outlet } from 'react-router-dom';
+import { NavBar } from './components/NavBar/NavBar';
 
-export const App = () => {
-  return (
-    <div data-cy="app">
-      <Navbar />
-
+export const App = () => (
+  <div data-cy="app">
+    <NavBar />
+    <main className="section">
       <div className="section">
         <div className="container">
-          <h1 className="title">Home Page</h1>
-          <h1 className="title">Page not found</h1>
-          <PeoplePage />
+          <Outlet />
         </div>
       </div>
-    </div>
-  );
-};
+    </main>
+  </div>
+);
