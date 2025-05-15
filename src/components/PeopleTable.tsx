@@ -17,16 +17,16 @@ export const PeopleTable = () => {
 
   const sortedValue = (sortValue: SortTypeValue) =>
     sort === sortValue
-      ? order
-        ? { sort: null, order: null }
-        : { sort: sortValue, order: 'desc' }
-      : { sort: sortValue, order: null };
+      ? order === 'asc'
+        ? { sort: sortValue, order: 'desc' }
+        : { sort: null, order: null }
+      : { sort: sortValue, order: 'asc' };
 
   const classIcon = (value: string) => {
     return classNames('fa', {
       'fa-sort': sort !== value,
-      'fa-sort-up': sort === value && !order,
-      'fa-sort-down': sort === value && order,
+      'fa-sort-up': sort === value && order === 'asc',
+      'fa-sort-down': sort === value && order === 'desc',
     });
   };
 
