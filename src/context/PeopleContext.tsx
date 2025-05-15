@@ -29,7 +29,7 @@ export const PeopleContext: React.FC<PropsPeopleContext> = ({ children }) => {
 
   const sorted = useCallback(
     (sortVal: SortTypeValue, arr: Person[]) => {
-      return arr.sort((a: Person, b: Person) => {
+      return [...arr].sort((a: Person, b: Person) => {
         switch (sortVal) {
           case 'name':
             return order

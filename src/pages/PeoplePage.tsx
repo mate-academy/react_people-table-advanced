@@ -63,7 +63,9 @@ export const PeoplePage = () => {
                 <p>There are no people matching the current search criteria</p>
               )}
 
-              {!error && !loading && people && <PeopleTable />}
+              {!error && !loading && visiblePeople.length > 0 && (
+                <PeopleTable />
+              )}
             </div>
           </div>
         </div>
