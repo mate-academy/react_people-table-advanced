@@ -1,33 +1,94 @@
-import { PeopleFilters } from './PeopleFilters';
+import { useEffect, useState } from 'react';
 import { Loader } from './Loader';
+import { Person } from '../types';
 import { PeopleTable } from './PeopleTable';
+import { Outlet, useSearchParams } from 'react-router-dom';
 
 export const PeoplePage = () => {
+  const [data, setData] = useState<Person[] | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [serchParams] = useSearchParams();
+
+  useEffect(() => {
+    setLoading(true);
+
+    fetch('/api/people.json')
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Помилка завантаження JSON');
+        }
+
+        return response.json();
+      })
+      .then(people => {
+        let filteredPeople: Person[] = people;
+
+        const query = serchParams.get('query')?.toLowerCase() || '';
+        const sex = serchParams.get('sex');
+        const centuries = serchParams.getAll('centuries');
+
+        if (query) {
+          filteredPeople = filteredPeople.filter(person =>
+            person.name.toLowerCase().includes(query),
+          );
+        }
+
+        if (sex) {
+          filteredPeople = filteredPeople.filter(person => person.sex === sex);
+        }
+
+        if (centuries.length > 0) {
+          filteredPeople = filteredPeople.filter(person => {
+            const birthCentury = Math.ceil(person.born / 100).toString();
+            const deathCentury = Math.ceil(person.died / 100).toString();
+
+            return (
+              centuries.includes(birthCentury) ||
+              centuries.includes(deathCentury)
+            );
+          });
+        }
+
+        setData(filteredPeople);
+        setError(null);
+      })
+      .catch(() => {
+        setError('Something went wrong');
+        setData([]);
+      })
+      .finally(() => setTimeout(() => setLoading(false), 500));
+  }, [serchParams]);
+
   return (
-    <>
-      <h1 className="title">People Page</h1>
+    <main className="section" data-cy="app">
+      <div className="container">
+        <h1 className="title">People Page</h1>
 
-      <div className="block">
-        <div className="columns is-desktop is-flex-direction-row-reverse">
-          <div className="column is-7-tablet is-narrow-desktop">
-            <PeopleFilters />
-          </div>
+        <div className="block ">
+          <Outlet />
 
-          <div className="column">
-            <div className="box table-container">
-              <Loader />
+          <div className="box table-container">
+            {loading && <Loader data-cy="loader" />}
 
-              <p data-cy="peopleLoadingError">Something went wrong</p>
+            {!loading && error && (
+              <p data-cy="peopleLoadingError" className="has-text-danger">
+                {error}
+              </p>
+            )}
 
+            {!loading && !error && data?.length === 0 && (
               <p data-cy="noPeopleMessage">There are no people on the server</p>
+            )}
 
-              <p>There are no people matching the current search criteria</p>
-
-              <PeopleTable />
-            </div>
+            {!loading && !error && data && data.length > 0 && (
+              <>
+                <PeopleTable data={data} />
+              </>
+            )}
           </div>
         </div>
       </div>
-    </>
+    </main>
   );
 };
