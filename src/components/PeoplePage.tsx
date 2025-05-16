@@ -8,7 +8,7 @@ export const PeoplePage = () => {
   const [data, setData] = useState<Person[] | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const [serchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
 
   useEffect(() => {
     setLoading(true);
@@ -24,9 +24,9 @@ export const PeoplePage = () => {
       .then(people => {
         let filteredPeople: Person[] = people;
 
-        const query = serchParams.get('query')?.toLowerCase() || '';
-        const sex = serchParams.get('sex');
-        const centuries = serchParams.getAll('centuries');
+        const query = searchParams.get('query')?.toLowerCase() || '';
+        const sex = searchParams.get('sex');
+        const centuries = searchParams.getAll('centuries');
 
         if (query) {
           filteredPeople = filteredPeople.filter(person =>
@@ -58,13 +58,11 @@ export const PeoplePage = () => {
         setData([]);
       })
       .finally(() => setTimeout(() => setLoading(false), 500));
-  }, [serchParams]);
+  }, [searchParams]);
 
   return (
     <main className="section" data-cy="app">
       <div className="container">
-        <h1 className="title">People Page</h1>
-
         <div className="block ">
           <Outlet />
 

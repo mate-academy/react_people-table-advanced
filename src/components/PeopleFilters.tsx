@@ -135,7 +135,6 @@ export const PeopleFilters = () => {
             query: null,
             sort: null,
             order: null,
-            currentQuery: null,
           }}
         >
           Reset all filters

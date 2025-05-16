@@ -1,8 +1,8 @@
 /* eslint-disable jsx-a11y/control-has-associated-label */
-import classNames from "classnames";
-import { NavLink, useParams } from "react-router-dom";
-import React from "react";
-import { Person } from "../types";
+import classNames from 'classnames';
+import { NavLink, useParams } from 'react-router-dom';
+import React from 'react';
+import { Person } from '../types';
 
 interface Props {
   data: Person[] | null;
