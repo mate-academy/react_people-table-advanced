@@ -4,15 +4,13 @@ import { PeopleTable } from './PeopleTable';
 import { useEffect, useState } from 'react';
 import { getPeople } from '../api';
 import { Person } from '../types';
-import { useParams, useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 
 export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [searchParams] = useSearchParams();
-
-  const { slug } = useParams();
 
   useEffect(() => {
     getPeople()
@@ -72,7 +70,9 @@ export const PeoplePage = () => {
                 </p>
               )}
 
-              <PeopleTable people={filteredPeople} selectedSlug={slug} />
+              {!loading && !error && filteredPeople.length > 0 && (
+                <PeopleTable people={filteredPeople} />
+              )}
             </div>
           </div>
         </div>

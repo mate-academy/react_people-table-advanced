@@ -1,5 +1,4 @@
 /* eslint-disable no-console */
-import classNames from 'classnames';
 import { useSearchParams } from 'react-router-dom';
 import { Person } from '../types';
 import { PeopleTableHeader } from './PeopleTableHeader';
@@ -7,7 +6,6 @@ import { PersonLink } from './PersonLink';
 
 interface PeopleTableProps {
   people: Person[];
-  selectedSlug: string | undefined;
 }
 
 const sortPeople = (
@@ -49,16 +47,16 @@ const sortPeople = (
 };
 
 /* eslint-disable jsx-a11y/control-has-associated-label */
-export const PeopleTable = ({ people, selectedSlug }: PeopleTableProps) => {
+export const PeopleTable = ({ people }: PeopleTableProps) => {
   const [searchParams] = useSearchParams();
   const sort = searchParams.get('sort');
   const order = searchParams.get('order');
 
   const sortedPeople = sortPeople(people, sort, order);
 
-  if (sortedPeople.length === 0) {
-    return <p>No people available</p>;
-  }
+  const findInList = (name: string) => {
+    return people.find(per => per.name === name);
+  };
 
   return (
     <table
@@ -67,41 +65,13 @@ export const PeopleTable = ({ people, selectedSlug }: PeopleTableProps) => {
     >
       <PeopleTableHeader />
       <tbody>
-        {sortedPeople.map((person: Person) => {
-          const {
-            sex,
-            born,
-            died,
-            slug,
-            fatherName,
-            motherName,
-            father,
-            mother,
-          } = person;
-
-          return (
-            <tr
-              key={slug}
-              data-cy="person"
-              className={classNames({
-                'has-background-warning': selectedSlug === slug,
-              })}
-            >
-              <td>
-                <PersonLink person={person} />
-              </td>
-              <td>{sex}</td>
-              <td>{born}</td>
-              <td>{died}</td>
-              <td>
-                {mother ? <PersonLink person={mother} /> : (motherName ?? '-')}
-              </td>
-              <td>
-                {father ? <PersonLink person={father} /> : (fatherName ?? '-')}
-              </td>
-            </tr>
-          );
-        })}
+        {sortedPeople.map(person => (
+          <PersonLink
+            key={person.slug}
+            person={person}
+            findInList={findInList}
+          />
+        ))}
       </tbody>
     </table>
   );
