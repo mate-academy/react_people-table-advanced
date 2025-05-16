@@ -32,17 +32,15 @@ export const PeopleContext: React.FC<PropsPeopleContext> = ({ children }) => {
       return [...arr].sort((a: Person, b: Person) => {
         switch (sortVal) {
           case 'name':
-            return order === 'desc'
-              ? b.name.localeCompare(a.name)
-              : a.name.localeCompare(b.name);
           case 'sex':
             return order === 'desc'
-              ? b.sex.localeCompare(a.sex)
-              : a.sex.localeCompare(b.sex);
+              ? b[sortVal].localeCompare(a[sortVal])
+              : a[sortVal].localeCompare(b[sortVal]);
           case 'born':
-            return order === 'desc' ? b.born - a.born : a.born - b.born;
           case 'died':
-            return order === 'desc' ? b.died - a.died : a.died - b.died;
+            return order === 'desc'
+              ? b[sortVal] - a[sortVal]
+              : a[sortVal] - b[sortVal];
           default:
             return 0;
         }

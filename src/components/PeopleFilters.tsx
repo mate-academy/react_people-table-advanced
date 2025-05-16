@@ -7,7 +7,7 @@ export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const centuries = searchParams.getAll('centuries');
-  const query = searchParams.get('query') || '';
+  const query = searchParams.get('query') || null;
   const sex = searchParams.get('sex') || null;
 
   return (
@@ -48,7 +48,7 @@ export const PeopleFilters = () => {
             type="search"
             className="input"
             placeholder="Search"
-            value={query}
+            value={query || ''}
             onChange={e => {
               const newParams = getSearchWith(searchParams, {
                 query: e.target.value,
