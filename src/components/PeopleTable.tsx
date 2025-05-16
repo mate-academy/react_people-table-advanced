@@ -79,11 +79,6 @@ export const PeopleTable = ({ people, selectedSlug }: PeopleTableProps) => {
             mother,
           } = person;
 
-          // eslint-disable-next-line no-console
-          console.log('selectedSlug:', selectedSlug);
-          // eslint-disable-next-line no-console
-          console.log('current slug:', slug);
-
           return (
             <tr
               key={slug}

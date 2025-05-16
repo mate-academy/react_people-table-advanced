@@ -107,13 +107,19 @@ export const PeopleFilters = () => {
           </div>
 
           <div className="level-right ml-4">
-            <a
+            <button
               data-cy="centuryALL"
               className="button is-success is-outlined"
-              href="#/people"
+              onClick={() => {
+                const newParams = new URLSearchParams(searchParams);
+
+                newParams.delete('centuries');
+
+                setSearchParams(newParams);
+              }}
             >
               All
-            </a>
+            </button>
           </div>
         </div>
       </div>

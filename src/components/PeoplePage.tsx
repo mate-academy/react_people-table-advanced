@@ -4,12 +4,13 @@ import { PeopleTable } from './PeopleTable';
 import { useEffect, useState } from 'react';
 import { getPeople } from '../api';
 import { Person } from '../types';
-import { useParams } from 'react-router-dom';
+import { useParams, useSearchParams } from 'react-router-dom';
 
 export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+  const [searchParams] = useSearchParams();
 
   const { slug } = useParams();
 
@@ -23,6 +24,23 @@ export const PeoplePage = () => {
         setLoading(false);
       });
   }, []);
+
+  const filteredPeople = people.filter(person => {
+    const query = (searchParams.get('query') || '').toLowerCase();
+    const sex = searchParams.get('sex');
+    const centuries = searchParams.getAll('centuries').map(Number);
+
+    const matchesQuery = person.name.toLowerCase().includes(query);
+
+    const matchesSex = sex ? person.sex === sex : true;
+
+    const birthCentury = Math.floor(person.born / 100) + 1;
+    const matchesCentury = centuries.length
+      ? centuries.includes(birthCentury)
+      : true;
+
+    return matchesQuery && matchesSex && matchesCentury;
+  });
 
   return (
     <>
@@ -48,9 +66,13 @@ export const PeoplePage = () => {
                 </p>
               )}
 
-              <p>There are no people matching the current search criteria</p>
+              {!loading && !error && filteredPeople.length === 0 && (
+                <p data-cy="noPeopleMessage">
+                  There are no people matching the current search criteria
+                </p>
+              )}
 
-              <PeopleTable people={people} selectedSlug={slug} />
+              <PeopleTable people={filteredPeople} selectedSlug={slug} />
             </div>
           </div>
         </div>
