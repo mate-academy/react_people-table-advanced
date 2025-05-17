@@ -57,7 +57,7 @@ export const PeoplePage = () => {
         setError('Something went wrong');
         setData([]);
       })
-      .finally(() => setTimeout(() => setLoading(false), 500));
+      .finally(() => setTimeout(() => setLoading(false), 100));
   }, [searchParams]);
 
   return (
