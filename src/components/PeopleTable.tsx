@@ -1,8 +1,9 @@
 /* eslint-disable jsx-a11y/control-has-associated-label */
-import classNames from 'classnames';
-import { NavLink, useParams } from 'react-router-dom';
-import React from 'react';
-import { Person } from '../types';
+import classNames from "classnames";
+import { useParams } from "react-router-dom";
+import React from "react";
+import { Person } from "../types";
+import { PersonLink } from "./PersonLink";
 
 interface Props {
   data: Person[] | null;
@@ -10,6 +11,7 @@ interface Props {
 
 export const PeopleTable: React.FC<Props> = ({ data }) => {
   const { personId } = useParams();
+
   const getPersonSlug = (name: string, born: number) =>
     `${name.toLowerCase().trim().replace(/\s+/g, '-')}-${born}`;
 
@@ -33,28 +35,26 @@ export const PeopleTable: React.FC<Props> = ({ data }) => {
       </thead>
 
       <tbody>
-        {data?.map((person, index) => {
+        {data?.map(person => {
           const slug = getPersonSlug(person.name, person.born);
           const mother = getPersonByName(person.motherName || null);
           const father = getPersonByName(person.fatherName || null);
 
           return (
             <tr
-              key={index}
+              key={slug}
               data-cy="person"
               className={classNames({
                 'has-background-warning': personId === slug,
               })}
             >
               <td>
-                <NavLink
+                <PersonLink
+                  person={person}
                   className={classNames({
                     'has-text-danger': person.sex === 'f',
                   })}
-                  to={`/people/${slug}`}
-                >
-                  {person.name}
-                </NavLink>
+                />
               </td>
 
               <td>{person.sex}</td>
@@ -64,12 +64,7 @@ export const PeopleTable: React.FC<Props> = ({ data }) => {
               <td>
                 {person.motherName ? (
                   mother ? (
-                    <NavLink
-                      to={`/people/${getPersonSlug(mother.name, mother.born)}`}
-                      className="has-text-danger"
-                    >
-                      {mother.name}
-                    </NavLink>
+                    <PersonLink person={mother} className="has-text-danger" />
                   ) : (
                     person.motherName
                   )
@@ -81,11 +76,7 @@ export const PeopleTable: React.FC<Props> = ({ data }) => {
               <td>
                 {person.fatherName ? (
                   father ? (
-                    <NavLink
-                      to={`/people/${getPersonSlug(father.name, father.born)}`}
-                    >
-                      {father.name}
-                    </NavLink>
+                    <PersonLink person={father} />
                   ) : (
                     person.fatherName
                   )
