@@ -1,7 +1,7 @@
 import { useSearchParams } from 'react-router-dom';
 import { Person } from '../../types';
 import { PersonLink } from '../PersonLink/PersonLink';
-import { getSearchWith } from '../../utils/searchHelper';
+import { getSearchWith, SearchParams } from '../../utils/searchHelper';
 import { SearchLink } from '../SearchLink/SearchLink';
 
 type Props = {
@@ -92,16 +92,16 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
     order: sortOrder,
   });
 
-  const cycleSort = (field: string) => {
+  const cycleSort = (field: string): SearchParams => {
     if (sortField !== field) {
-      return getSearchWith(searchParams, { sort: field });
+      return { sort: field, order: null };
     }
 
     if (sortOrder !== 'desc') {
-      return getSearchWith(searchParams, { order: 'desc' });
-    } else {
-      return getSearchWith(searchParams, { sort: null, order: null });
+      return { sort: field, order: 'desc' };
     }
+
+    return { sort: null, order: null };
   };
 
   const cycleIcon = (field: string) => {
@@ -128,7 +128,10 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
               <span className="is-flex is-flex-wrap-nowrap">
                 {column}
                 <SearchLink
-                  params={{ search: cycleSort(column.toLowerCase()) }}
+                  params={getSearchWith(
+                    searchParams,
+                    cycleSort(column.toLowerCase()),
+                  )}
                 >
                   <span className="icon">
                     {cycleIcon(column.toLowerCase())}
