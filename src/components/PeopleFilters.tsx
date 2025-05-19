@@ -2,7 +2,7 @@ import cn from 'classnames';
 
 import { SearchLink } from './SearchLink';
 import { FilterBy } from '../types/FilterBy';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 type PeopleFilterProps = {
   searchParams: URLSearchParams;
@@ -41,7 +41,29 @@ export const PeopleFilters = ({
     setSearchParams(newSearchParams);
   };
 
-  const resetAllFilters = () => {
+  const handleSexFilter = (sex: string) => (event: React.MouseEvent) => {
+    event.preventDefault();
+    const newSearchParams = new URLSearchParams(searchParams);
+
+    if (!sex) {
+      newSearchParams.delete('sex');
+    } else {
+      newSearchParams.set('sex', sex);
+    }
+
+    setSearchParams(newSearchParams);
+  };
+
+  const handleCenturyAll = (event: React.MouseEvent) => {
+    event.preventDefault();
+    const newSearchParams = new URLSearchParams(searchParams);
+
+    newSearchParams.delete('centuries');
+    setSearchParams(newSearchParams);
+  };
+
+  const resetAllFilters = (event: React.MouseEvent) => {
+    event.preventDefault();
     setQuery('');
     setActiveFilter('');
     setSearchParams(new URLSearchParams());
@@ -52,18 +74,26 @@ export const PeopleFilters = ({
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        <a className={cn({ 'is-active': activeFilter === '' })} href="#/people">
+        <a
+          className={cn({ 'is-active': activeFilter === '' })}
+          href="#/people"
+          onClick={handleSexFilter('')}
+        >
           {FilterBy.All}
         </a>
+
         <a
           className={cn({ 'is-active': activeFilter === 'm' })}
           href="#/people?sex=m"
+          onClick={handleSexFilter('m')}
         >
           {FilterBy.Male}
         </a>
+
         <a
           className={cn({ 'is-active': activeFilter === 'f' })}
           href="#/people?sex=f"
+          onClick={handleSexFilter('f')}
         >
           {FilterBy.Female}
         </a>
@@ -110,6 +140,7 @@ export const PeopleFilters = ({
                 'is-outlined': !!activeCenturies.length,
               })}
               href="#/people"
+              onClick={handleCenturyAll}
             >
               All
             </a>
