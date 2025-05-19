@@ -1,31 +1,44 @@
 import { PeopleFilters } from './PeopleFilters';
 import { Loader } from './Loader';
 import { PeopleTable } from './PeopleTable';
-import { useState, useCallback } from 'react';
+import { useEffect, useState } from 'react';
+import { getPeople } from '../api';
+import { Person } from '../types';
+import { useSearchParams } from 'react-router-dom';
 
 export const PeoplePage = () => {
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(0);
+  const [people, setPeople] = useState<Person[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
+  const [searchParams] = useSearchParams();
 
-  const handleSetLoading = useCallback((value: boolean) => {
-    setIsLoading(value);
+  useEffect(() => {
+    getPeople()
+      .then(setPeople)
+      .catch(() => {
+        setError(true);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   }, []);
 
-  // Função que retorna JSX com base no error
-  const renderErrorMessage = () => {
-    switch (error) {
-      case 1:
-        return <p data-cy="peopleLoadingError">Something went wrong</p>;
-      case 2:
-        return (
-          <p data-cy="noPeopleMessage">There are no people on the server</p>
-        );
-      case 3:
-        return <p>There are no people matching the current search criteria</p>;
-      default:
-        return null;
-    }
-  };
+  const filteredPeople = people.filter(person => {
+    const query = (searchParams.get('query') || '').toLowerCase();
+    const sex = searchParams.get('sex');
+    const centuries = searchParams.getAll('centuries').map(Number);
+
+    const matchesQuery = person.name.toLowerCase().includes(query);
+
+    const matchesSex = sex ? person.sex === sex : true;
+
+    const birthCentury = Math.floor(person.born / 100) + 1;
+    const matchesCentury = centuries.length
+      ? centuries.includes(birthCentury)
+      : true;
+
+    return matchesQuery && matchesSex && matchesCentury;
+  });
 
   return (
     <>
@@ -33,23 +46,32 @@ export const PeoplePage = () => {
 
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
-          {!isLoading && (
-            <div className="column is-7-tablet is-narrow-desktop">
-              <PeopleFilters />
-            </div>
-          )}
+          <div className="column is-7-tablet is-narrow-desktop">
+            <PeopleFilters />
+          </div>
 
           <div className="column">
             <div className="box table-container">
-              {isLoading ? (
-                <Loader />
-              ) : error !== 0 ? (
-                renderErrorMessage()
-              ) : (
-                <PeopleTable
-                  setLoading={handleSetLoading}
-                  setError={setError}
-                />
+              {loading && <Loader />}
+
+              {error && (
+                <p data-cy="peopleLoadingError">Something went wrong</p>
+              )}
+
+              {!loading && !error && people.length === 0 && (
+                <p data-cy="noPeopleMessage">
+                  There are no people on the server
+                </p>
+              )}
+
+              {!loading && !error && filteredPeople.length === 0 && (
+                <p data-cy="noPeopleMessage">
+                  There are no people matching the current search criteria
+                </p>
+              )}
+
+              {!loading && !error && filteredPeople.length > 0 && (
+                <PeopleTable people={filteredPeople} />
               )}
             </div>
           </div>

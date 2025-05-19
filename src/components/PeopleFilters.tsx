@@ -1,118 +1,92 @@
-import { useEffect, useState } from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
+
+const centuries = [16, 17, 18, 19, 20];
+
+const sexes = [
+  { label: 'All', value: null },
+  { label: 'Male', value: 'm' },
+  { label: 'Female', value: 'f' },
+];
 
 export const PeopleFilters = () => {
-  const location = useLocation();
-  const navigate = useNavigate();
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchParams, setSearchParams] = useSearchParams();
 
-  const getNewSearch = (key: string, value: string) => {
-    const searchParams = new URLSearchParams(location.search);
+  const sexFilter = searchParams.get('sex');
+  const centuryFilter = searchParams.getAll('centuries');
+  const queryFilter = searchParams.get('query') || '';
 
-    if (key === 'centuries') {
-      if (!value) {
-        // Remover todos os séculos sem afetar o restante dos filtros
-        searchParams.delete('centuries');
-      } else {
-        const values = searchParams.getAll(key);
-        const valueIndex = values.indexOf(value);
+  const setSexFilter = (sex: string | null) => {
+    const newParams = new URLSearchParams(searchParams);
 
-        if (valueIndex >= 0) {
-          // Já existe, então remove
-          values.splice(valueIndex, 1);
-        } else {
-          // Não existe, então adiciona
-          values.push(value);
-        }
-
-        // Limpa todos e adiciona os atualizados
-        searchParams.delete(key);
-        values.forEach(v => searchParams.append(key, v));
-      }
+    if (sex) {
+      newParams.set('sex', sex);
     } else {
-      if (value) {
-        searchParams.set(key, value);
-      } else {
-        searchParams.delete(key);
-      }
+      newParams.delete('sex');
     }
 
-    return `${location.pathname}?${searchParams.toString()}`;
+    setSearchParams(newParams);
   };
 
-  const getClearedFiltersUrl = () => {
-    const searchParams = new URLSearchParams(location.search);
-    const filtersToClear = ['sex', 'centuries', 'query'];
+  const setCenturyFilter = (century: string) => {
+    const newParams = new URLSearchParams(searchParams);
+    const selected = newParams.getAll('centuries');
 
-    filtersToClear.forEach(key => {
-      searchParams.delete(key);
-    });
+    if (selected.includes(century)) {
+      const updated = selected.filter(c => c !== century);
 
-    const newSearch = searchParams.toString();
+      newParams.delete('centuries');
+      updated.forEach(c => newParams.append('centuries', c));
+    } else {
+      newParams.append('centuries', century);
+    }
 
-    return `${location.pathname}${newSearch ? `?${newSearch}` : ''}`;
+    setSearchParams(newParams);
   };
 
-  useEffect(() => {
-    const queryParam = new URLSearchParams(location.search).get('query');
+  const setQueryFilter = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = event.target.value.trim();
+    const newParams = new URLSearchParams(searchParams);
 
-    if (!queryParam) {
-      setSearchQuery('');
-    }
-  }, [location.search]);
-
-  useEffect(() => {
-    const searchParams = new URLSearchParams(location.search);
-
-    if (searchQuery.trim()) {
-      searchParams.set('query', searchQuery.trim());
+    if (value) {
+      newParams.set('query', value);
     } else {
-      searchParams.delete('query');
+      newParams.delete('query');
     }
 
-    navigate(`${location.pathname}?${searchParams.toString()}`, {
-      replace: true,
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchQuery]);
+    setSearchParams(newParams);
+  };
 
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        <Link
-          className={!location.search.includes('sex=') ? 'is-active' : ''}
-          to={getNewSearch('sex', '')}
-        >
-          All
-        </Link>
+        {sexes.map(({ label, value }) => {
+          const isActive = sexFilter === value;
 
-        <Link
-          className={location.search.includes('sex=m') ? 'is-active' : ''}
-          to={getNewSearch('sex', 'm')}
-        >
-          Male
-        </Link>
-
-        <Link
-          className={location.search.includes('sex=f') ? 'is-active' : ''}
-          to={getNewSearch('sex', 'f')}
-        >
-          Female
-        </Link>
+          return (
+            <a
+              key={label}
+              className={isActive ? 'is-active' : ''}
+              onClick={() => setSexFilter(value)}
+            >
+              {label}
+            </a>
+          );
+        })}
       </p>
 
       <div className="panel-block">
         <p className="control has-icons-left">
           <input
+            value={queryFilter}
+            onChange={setQueryFilter}
             data-cy="NameFilter"
             type="search"
             className="input"
             placeholder="Search"
-            value={searchQuery}
-            onChange={e => setSearchQuery(e.target.value)}
           />
+
           <span className="icon is-left">
             <i className="fas fa-search" aria-hidden="true" />
           </span>
@@ -122,37 +96,47 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            {[16, 17, 18, 19, 20].map(century => (
-              <Link
-                key={century}
-                data-cy="century"
-                className={`button mr-1 ${location.search.includes(`centuries=${century}`) ? 'is-info' : ''}`}
-                to={getNewSearch('centuries', century.toString())}
-              >
-                {century}
-              </Link>
-            ))}
+            {centuries.map(century => {
+              const isActive = centuryFilter.includes(century.toString());
+
+              return (
+                <button
+                  key={century}
+                  data-cy="century"
+                  className={`button mr-1 ${isActive ? 'is-info' : ''}`}
+                  onClick={() => setCenturyFilter(century.toString())}
+                >
+                  {century}
+                </button>
+              );
+            })}
           </div>
 
           <div className="level-right ml-4">
-            <Link
+            <button
               data-cy="centuryALL"
-              className={`button is-success ${location.search.includes('centuries=') ? 'is-outlined' : ''}`}
-              to={getNewSearch('centuries', '')}
+              className="button is-success is-outlined"
+              onClick={() => {
+                const newParams = new URLSearchParams(searchParams);
+
+                newParams.delete('centuries');
+
+                setSearchParams(newParams);
+              }}
             >
               All
-            </Link>
+            </button>
           </div>
         </div>
       </div>
 
       <div className="panel-block">
-        <Link
+        <a
           className="button is-link is-outlined is-fullwidth"
-          to={getClearedFiltersUrl()}
+          onClick={() => setSearchParams({})}
         >
           Reset all filters
-        </Link>
+        </a>
       </div>
     </nav>
   );

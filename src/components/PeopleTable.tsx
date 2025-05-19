@@ -1,229 +1,114 @@
-import { useEffect, useState } from 'react';
+/* eslint-disable no-console */
+import {
+  Link,
+  useLocation,
+  useParams,
+  useSearchParams,
+} from 'react-router-dom';
 import { Person } from '../types';
-import { Link, useSearchParams } from 'react-router-dom';
-import { getPeople } from '../api';
 
-/* eslint-disable jsx-a11y/control-has-associated-label */
+import classNames from 'classnames';
+import { PeopleTableHeader } from './PeopleTableHeader';
 
-type Props = {
-  setLoading: (value: boolean) => void;
-  setError: (value: number) => void;
+interface PeopleTableProps {
+  people: Person[];
+  selectedSlug?: string;
+}
+
+const sortPeople = (
+  people: Person[],
+  sortBy: string | null,
+  order: string | null,
+) => {
+  if (!sortBy) {
+    return people;
+  }
+
+  return [...people].sort((a, b) => {
+    let aValue = a[sortBy as keyof Person];
+    let bValue = b[sortBy as keyof Person];
+
+    if (aValue === null || aValue === undefined) {
+      aValue = '';
+    }
+
+    if (bValue === null || bValue === undefined) {
+      bValue = '';
+    }
+
+    if (typeof aValue === 'string') {
+      aValue = aValue.toLowerCase();
+      bValue = (bValue as string).toLowerCase();
+    }
+
+    if (aValue < bValue) {
+      return order === 'desc' ? 1 : -1;
+    }
+
+    if (aValue > bValue) {
+      return order === 'desc' ? -1 : 1;
+    }
+
+    return 0;
+  });
 };
 
-export const PeopleTable = ({ setLoading, setError }: Props) => {
-  const [people, setPeople] = useState<Person[]>([]);
-  const [isLoaded, setIsLoaded] = useState(false);
-
+/* eslint-disable jsx-a11y/control-has-associated-label */
+export const PeopleTable = ({ people }: PeopleTableProps) => {
   const [searchParams] = useSearchParams();
-  const currentSort = searchParams.get('sort');
-  const currentOrder = searchParams.get('order') || 'asc';
+  const sort = searchParams.get('sort');
+  const order = searchParams.get('order');
+  const { search } = useLocation();
+  const { personSlug } = useParams();
 
-  const sortedPeople = () => {
-    const sexFilter = searchParams.get('sex');
-    const centuriesFilter = searchParams.getAll('centuries');
-    const queryFilter = searchParams.get('query')?.toLowerCase() || '';
+  const sortedPeople = sortPeople(people, sort, order);
 
-    let filtered = [...people];
-
-    if (sexFilter) {
-      filtered = filtered.filter(person => person.sex === sexFilter);
-    }
-
-    if (centuriesFilter.length > 0) {
-      filtered = filtered.filter(person => {
-        const bornCentury = Math.ceil(person.born / 100).toString();
-
-        return centuriesFilter.includes(bornCentury);
-      });
-    }
-
-    if (queryFilter) {
-      filtered = filtered.filter(
-        person =>
-          person.name.toLowerCase().includes(queryFilter) ||
-          person.fatherName?.toLowerCase().includes(queryFilter) ||
-          person.motherName?.toLowerCase().includes(queryFilter),
-      );
-    }
-
-    if (!currentSort) {
-      return filtered;
-    }
-
-    const sorted = [...filtered];
-
-    sorted.sort((a, b) => {
-      const aValue = a[currentSort as keyof Person];
-      const bValue = b[currentSort as keyof Person];
-
-      if (aValue == null) {
-        return 1;
-      }
-
-      if (bValue == null) {
-        return -1;
-      }
-
-      if (typeof aValue === 'number' && typeof bValue === 'number') {
-        return currentOrder === 'asc' ? aValue - bValue : bValue - aValue;
-      }
-
-      if (typeof aValue === 'string' && typeof bValue === 'string') {
-        return currentOrder === 'asc'
-          ? aValue.localeCompare(bValue)
-          : bValue.localeCompare(aValue);
-      }
-
-      return currentOrder === 'asc'
-        ? String(aValue).localeCompare(String(bValue))
-        : String(bValue).localeCompare(String(aValue));
-    });
-
-    return sorted;
+  const findInList = (name: string) => {
+    return people.find(per => per.name === name);
   };
-
-  const getNextOrder = (field: string) => {
-    if (currentSort !== field) {
-      return 'asc';
-    }
-
-    if (currentOrder === 'asc') {
-      return 'desc';
-    }
-
-    return null;
-  };
-
-  const getSortLink = (field: string) => {
-    const newParams = new URLSearchParams(searchParams);
-    const nextOrder = getNextOrder(field);
-
-    if (!nextOrder) {
-      newParams.delete('sort');
-      newParams.delete('order');
-    } else {
-      newParams.set('sort', field);
-      newParams.set('order', nextOrder);
-    }
-
-    return `?${newParams.toString()}`;
-  };
-
-  useEffect(() => {
-    const loadPeople = async () => {
-      setLoading(true);
-      setError(0);
-      try {
-        const data = await getPeople();
-
-        if (data.length === 0) {
-          setError(2);
-        } else {
-          setPeople(data);
-        }
-      } catch (error) {
-        setError(1);
-      } finally {
-        setLoading(false);
-        setIsLoaded(true);
-      }
-    };
-
-    loadPeople();
-  }, [setLoading, setError]);
-
-  useEffect(() => {
-    if (isLoaded && people.length > 0) {
-      const filtered = sortedPeople();
-
-      if (filtered.length === 0) {
-        setError(3); // Nenhum resultado após aplicar os filtros
-      } else {
-        setError(0); // Há resultados, tudo certo
-      }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [people, searchParams, isLoaded]);
-
-  const columns = [
-    { label: 'Name', field: 'name' },
-    { label: 'Sex', field: 'sex' },
-    { label: 'Born', field: 'born' },
-    { label: 'Died', field: 'died' },
-  ];
-
-  const findParentSlug = (parentName: string) => {
-    return people.find(p => p.name === parentName)?.slug;
-  };
-
-  if (!isLoaded) {
-    return null;
-  }
 
   return (
     <table
       data-cy="peopleTable"
       className="table is-striped is-hoverable is-narrow is-fullwidth"
     >
-      <thead>
-        <tr>
-          {columns.map(({ label, field }) => (
-            <th key={field}>
-              <span className="is-flex is-align-items-center">
-                {label}
-                <Link to={getSortLink(field)} className="ml-2">
-                  {currentSort === field && currentOrder === 'asc' && (
-                    <i className="fas fa-sort-up" />
-                  )}
-                  {currentSort === field && currentOrder === 'desc' && (
-                    <i className="fas fa-sort-down" />
-                  )}
-                  {currentSort !== field && <i className="fas fa-sort" />}
-                </Link>
-              </span>
-            </th>
-          ))}
-
-          <th>Mother</th>
-          <th>Father</th>
-        </tr>
-      </thead>
-
+      <PeopleTableHeader />
       <tbody>
-        {sortedPeople().map(person => {
-          const motherSlug = person.motherName
-            ? findParentSlug(person.motherName)
-            : null;
-          const fatherSlug = person.fatherName
-            ? findParentSlug(person.fatherName)
-            : null;
+        {sortedPeople.map(person => {
+          const mother = findInList(person.motherName || '');
+          const father = findInList(person.fatherName || '');
 
           return (
-            <tr data-cy="person" key={person.name}>
+            <tr
+              key={person.slug}
+              data-cy="person"
+              className={classNames({
+                'has-background-warning': person.slug === personSlug,
+              })}
+            >
               <td>
-                {person.sex === 'f' ? (
-                  <a
-                    className="has-text-danger"
-                    href={`#/people/${person.slug}`}
-                  >
-                    {person.name}
-                  </a>
-                ) : (
-                  <a href={`#/people/${person.slug}`}>{person.name}</a>
-                )}
+                <Link
+                  to={{ pathname: `/people/${person.slug}`, search }}
+                  className={classNames({
+                    'has-text-danger': person.sex === 'f',
+                  })}
+                >
+                  {person.name}
+                </Link>
               </td>
+
               <td>{person.sex}</td>
               <td>{person.born}</td>
               <td>{person.died}</td>
               <td>
                 {person.motherName ? (
-                  motherSlug ? (
-                    <a
+                  mother ? (
+                    <Link
                       className="has-text-danger"
-                      href={`#/people/${motherSlug}`}
+                      to={{ pathname: `/people/${mother.slug}`, search }}
                     >
                       {person.motherName}
-                    </a>
+                    </Link>
                   ) : (
                     person.motherName
                   )
@@ -231,10 +116,13 @@ export const PeopleTable = ({ setLoading, setError }: Props) => {
                   '-'
                 )}
               </td>
+
               <td>
                 {person.fatherName ? (
-                  fatherSlug ? (
-                    <a href={`#/people/${fatherSlug}`}>{person.fatherName}</a>
+                  father ? (
+                    <Link to={{ pathname: `/people/${father.slug}`, search }}>
+                      {person.fatherName}
+                    </Link>
                   ) : (
                     person.fatherName
                   )
