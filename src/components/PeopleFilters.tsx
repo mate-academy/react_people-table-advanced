@@ -1,6 +1,8 @@
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { SearchLink } from './SearchLink';
 import React from 'react';
+import { Sex } from './Sex';
+import classNames from 'classnames';
 
 export const PeopleFilters = () => {
   const [searchParams] = useSearchParams();
@@ -49,21 +51,21 @@ export const PeopleFilters = () => {
       <p className="panel-tabs" data-cy="SexFilter">
         <SearchLink
           params={{ sex: null }}
-          className={!currentSex ? 'is-active' : ''}
+          className={classNames({ 'is-active': !currentSex })}
         >
           All
         </SearchLink>
 
         <SearchLink
-          params={{ sex: 'm' }}
-          className={currentSex === 'm' ? 'is-active' : ''}
+          params={{ sex: Sex.Male }}
+          className={classNames({ 'is-active': currentSex === Sex.Male })}
         >
           Male
         </SearchLink>
 
         <SearchLink
-          params={{ sex: 'f' }}
-          className={currentSex === 'f' ? 'is-active' : ''}
+          params={{ sex: Sex.Female }}
+          className={classNames({ 'is-active': currentSex === Sex.Female })}
         >
           Female
         </SearchLink>
@@ -100,7 +102,9 @@ export const PeopleFilters = () => {
                 <SearchLink
                   key={century}
                   data-cy="century"
-                  className={`button mr-1 ${isCenturyActive(century) ? 'is-info' : ''}`}
+                  className={classNames('button', 'mr-1', {
+                    'is-info': isCenturyActive(century),
+                  })}
                   params={{
                     centuries:
                       updatedCenturies.length > 0 ? updatedCenturies : null,

@@ -3,6 +3,7 @@ import classNames from 'classnames';
 import { Link, useParams, useSearchParams } from 'react-router-dom';
 import { Person } from '../types';
 import { PersonLink } from './PersonLink';
+import { Sex } from './Sex';
 
 interface Props {
   data: Person[] | null;
@@ -109,7 +110,7 @@ export const PeopleTable: React.FC<Props> = ({ data }) => {
                 <PersonLink
                   person={person}
                   className={classNames({
-                    'has-text-danger': person.sex === 'f',
+                    'has-text-danger': person.sex === Sex.Female,
                   })}
                 />
               </td>

@@ -10,6 +10,16 @@ export const PeoplePage = () => {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [searchParams] = useSearchParams();
+  const showNoPeopleMessage =
+    !loading &&
+    !error &&
+    filteredPeople.length === 0 &&
+    searchParams.toString() === '';
+  const showNoPeopleForSearch =
+    !loading &&
+    !error &&
+    filteredPeople.length === 0 &&
+    searchParams.toString() !== '';
 
   const sorting = (
     sort: string,
@@ -116,7 +126,7 @@ export const PeoplePage = () => {
         <div className="block">
           <div className="columns is-desktop is-flex-direction-row-reverse">
             <div className="column is-7-tablet is-narrow-desktop">
-              <Outlet />
+              {!loading && <Outlet />}
             </div>
 
             <div className="column">
@@ -129,9 +139,14 @@ export const PeoplePage = () => {
                   </p>
                 )}
 
-                {!loading && !error && filteredPeople.length === 0 && (
+                {showNoPeopleMessage && (
                   <p data-cy="noPeopleMessage">
                     There are no people on the server
+                  </p>
+                )}
+                {showNoPeopleForSearch && (
+                  <p>
+                    There are no people matching the current search criteria
                   </p>
                 )}
 
