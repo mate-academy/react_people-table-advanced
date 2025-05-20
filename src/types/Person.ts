@@ -8,4 +8,5 @@ export interface Person {
   slug: string;
   mother?: Person;
   father?: Person;
+  motherSlug: string | null;
 }
