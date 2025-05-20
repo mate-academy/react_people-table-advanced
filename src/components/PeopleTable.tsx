@@ -1,22 +1,79 @@
-/* eslint-disable jsx-a11y/control-has-associated-label */
-import classNames from "classnames";
-import { useParams } from "react-router-dom";
-import React from "react";
-import { Person } from "../types";
-import { PersonLink } from "./PersonLink";
+import React from 'react';
+import classNames from 'classnames';
+import { Link, useParams, useSearchParams } from 'react-router-dom';
+import { Person } from '../types';
+import { PersonLink } from './PersonLink';
 
 interface Props {
   data: Person[] | null;
 }
 
+type Order = 'ask' | 'desc' | 'without';
+
 export const PeopleTable: React.FC<Props> = ({ data }) => {
   const { personId } = useParams();
+  const [searchParams] = useSearchParams();
 
   const getPersonSlug = (name: string, born: number) =>
     `${name.toLowerCase().trim().replace(/\s+/g, '-')}-${born}`;
 
   const getPersonByName = (name: string | null) =>
     data?.find(person => person.name === name) || null;
+
+  const renderSortableHeader = (label: string, field: string) => {
+    const currentSort = searchParams.get('sort');
+    const currentOrder = (searchParams.get('order') as Order) || 'ask';
+    const isActive = currentSort === field;
+
+    const getNextOrder = (): Order => {
+      if (!isActive || currentOrder === 'without') {
+        return 'ask';
+      }
+
+      if (currentOrder === 'ask') {
+        return 'desc';
+      }
+
+      return 'without';
+    };
+
+    const nextOrder = getNextOrder();
+    const newParams = new URLSearchParams(searchParams.toString());
+
+    if (nextOrder === 'without') {
+      newParams.delete('sort');
+      newParams.delete('order');
+    } else {
+      newParams.set('sort', field);
+      if (nextOrder === 'desc') {
+        newParams.set('order', 'desc');
+      } else {
+        newParams.delete('order'); // `ask` — без параметра `order`
+      }
+    }
+
+    return (
+      <span
+        className="is-flex is-flex-wrap-nowrap"
+        style={{ cursor: 'pointer' }}
+      >
+        {label}
+        <Link to={`?${newParams.toString()}`}>
+          <span className="icon">
+            {isActive && currentOrder === 'ask' && (
+              <i className="fas fa-sort-up" />
+            )}
+            {isActive && currentOrder === 'desc' && (
+              <i className="fas fa-sort-down" />
+            )}
+            {!isActive || currentOrder === 'without' ? (
+              <i className="fas fa-sort" />
+            ) : null}
+          </span>
+        </Link>
+      </span>
+    );
+  };
 
   return (
     <table
@@ -25,10 +82,10 @@ export const PeopleTable: React.FC<Props> = ({ data }) => {
     >
       <thead>
         <tr>
-          <th>Name</th>
-          <th>Sex</th>
-          <th>Born</th>
-          <th>Died</th>
+          <th>{renderSortableHeader('Name', 'name')}</th>
+          <th>{renderSortableHeader('Sex', 'sex')}</th>
+          <th>{renderSortableHeader('Born', 'born')}</th>
+          <th>{renderSortableHeader('Died', 'died')}</th>
           <th>Mother</th>
           <th>Father</th>
         </tr>
@@ -56,11 +113,9 @@ export const PeopleTable: React.FC<Props> = ({ data }) => {
                   })}
                 />
               </td>
-
               <td>{person.sex}</td>
               <td>{person.born}</td>
               <td>{person.died}</td>
-
               <td>
                 {person.motherName ? (
                   mother ? (
@@ -72,7 +127,6 @@ export const PeopleTable: React.FC<Props> = ({ data }) => {
                   '-'
                 )}
               </td>
-
               <td>
                 {person.fatherName ? (
                   father ? (

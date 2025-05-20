@@ -11,6 +11,44 @@ export const PeoplePage = () => {
   const [loading, setLoading] = useState(false);
   const [searchParams] = useSearchParams();
 
+  const sorting = (
+    sort: string,
+    order: string | null,
+    result: Person[],
+  ): Person[] => {
+    switch (sort) {
+      case 'sex':
+        if (order) {
+          return result.sort((a, b) => b.sex.localeCompare(a.sex));
+        } else {
+          return result.sort((a, b) => a.sex.localeCompare(b.sex));
+        }
+
+      case 'name':
+        if (order) {
+          return result.sort((a, b) => b.name.localeCompare(a.name));
+        } else {
+          return result.sort((a, b) => a.name.localeCompare(b.name));
+        }
+
+      case 'born':
+        if (order) {
+          return result.sort((a, b) => +b.born - +a.born);
+        } else {
+          return result.sort((a, b) => +a.born - +b.born);
+        }
+
+      case 'died':
+        if (order) {
+          return result.sort((a, b) => +b.died - +a.died);
+        } else {
+          return result.sort((a, b) => +a.died - +b.died);
+        }
+    }
+
+    return result;
+  };
+
   useEffect(() => {
     setLoading(true);
 
@@ -33,13 +71,18 @@ export const PeoplePage = () => {
       .finally(() => setTimeout(() => setLoading(false), 300));
   }, []);
 
-  // Фільтрація даних при зміні параметрів
   useEffect(() => {
     let result = [...originalPeople];
 
     const query = searchParams.get('query')?.toLowerCase() || '';
     const sex = searchParams.get('sex');
     const centuries = searchParams.getAll('centuries');
+    const sort = searchParams.get('sort');
+    const order = searchParams.get('order');
+
+    if (sort) {
+      result = sorting(sort, order, result);
+    }
 
     if (query) {
       result = result.filter(person =>
