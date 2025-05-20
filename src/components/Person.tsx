@@ -1,6 +1,10 @@
 import cn from 'classnames';
-import { Link, useParams } from 'react-router-dom';
+import {
+  Link,
+  useParams, useSearchParams,
+} from 'react-router-dom';
 import { Person as PersonType } from '../types';
+import React from 'react';
 
 type Props = {
   person: PersonType;
@@ -8,6 +12,10 @@ type Props = {
 };
 
 export const Person: React.FC<Props> = ({ person, people }) => {
+  const [searchParams] = useSearchParams();
+  const currentSearch = searchParams.toString();
+  const searchString = currentSearch ? `?${currentSearch}` : '';
+
   const { slugParam } = useParams();
   const { name, sex, born, died, slug, motherName, fatherName } = person;
 
@@ -20,7 +28,7 @@ export const Person: React.FC<Props> = ({ person, people }) => {
 
     return parent ? (
       <Link
-        to={`/people/${parent.slug}`}
+        to={`/people/${parent.slug}${searchString}`}
         className={cn('', {
           'has-text-danger': parent.sex === 'f',
         })}
@@ -45,7 +53,7 @@ export const Person: React.FC<Props> = ({ person, people }) => {
           className={cn('', {
             'has-text-danger': sex === 'f',
           })}
-          to={`../${slug}`}
+          to={`../${slug}${searchString}`}
         >
           {name}
         </Link>
