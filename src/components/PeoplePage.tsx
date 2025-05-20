@@ -30,18 +30,24 @@ export const PeoplePage = () => {
         ) : (
           <div className="columns is-desktop is-flex-direction-row-reverse">
             <div className="column is-7-tablet is-narrow-desktop">
-              <PeopleFilters/>
+              <PeopleFilters />
             </div>
 
             <div className="column">
               <div className="box table-container">
-                {/*<p>There are no people matching the current search criteria</p>*/}
-                <PeopleTable people={people} />
+                {people.length > 0 ? (
+                  <PeopleTable people={people} />
+                ) : (
+                  <p>
+                    There are no people matching the current search criteria
+                  </p>
+                )}
               </div>
             </div>
           </div>
         )}
       </div>
     </>
+
   );
 };

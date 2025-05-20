@@ -1,10 +1,10 @@
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import classNames from 'classnames';
-import { useState } from "react";
+import { useState } from 'react';
 
 export const PeopleFilters = () => {
   const [search, setSearch] = useSearchParams();
-  const [inputValue, setInputValue] = useState('');
+  const [inputValue, setInputValue] = useState(search.get('query') || '');
   const navigate = useNavigate();
 
   const handleSexFilter = (filterKey: string) => {

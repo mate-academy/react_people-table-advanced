@@ -38,7 +38,9 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
 
     if (centuriesFilter.length > 0) {
       updatedList = updatedList.filter(person =>
-        centuriesFilter.includes(Math.ceil(person.born / 100).toString()),
+        centuriesFilter.includes(
+          (Math.floor((person.born - 1) / 100) + 1).toString(),
+        ),
       );
     }
 
