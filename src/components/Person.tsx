@@ -27,7 +27,7 @@ export const Person: React.FC<Props> = ({ person, people }) => {
     return parent ? (
       <Link
         to={`/people/${parent.slug}${searchString}`}
-        className={cn('', {
+        className={cn({
           'has-text-danger': parent.sex === genderKeyFemale,
         })}
       >
@@ -48,7 +48,7 @@ export const Person: React.FC<Props> = ({ person, people }) => {
     >
       <td>
         <Link
-          className={cn('', {
+          className={cn({
             'has-text-danger': sex === genderKeyFemale,
           })}
           to={`../${slug}${searchString}`}
