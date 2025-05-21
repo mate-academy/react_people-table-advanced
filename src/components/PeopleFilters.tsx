@@ -1,7 +1,13 @@
 import cn from 'classnames';
 
 import { SearchLink } from './SearchLink';
-import { FilterBy } from '../types/FilterBy';
+import {
+  FilterBy,
+  GENDER_MAP,
+  GenderKey,
+  genderKeyFemale,
+  genderKeyMale,
+} from '../types/FilterBy';
 import React, { useEffect, useState } from 'react';
 
 type PeopleFilterProps = {
@@ -21,11 +27,11 @@ export const PeopleFilters = ({
   setSearchParams,
   activeCenturies,
 }: PeopleFilterProps) => {
-  const [activeFilter, setActiveFilter] = useState('');
+  const [activeFilter, setActiveFilter] = useState<GenderKey | ''>('');
   const centuryList = [16, 17, 18, 19, 20];
 
   useEffect(() => {
-    setActiveFilter(searchParams.get('sex') || '');
+    setActiveFilter((searchParams.get('sex') || '') as GenderKey | '');
     setQuery(searchParams.get('query') || '');
   }, [searchParams, setQuery]);
 
@@ -41,18 +47,19 @@ export const PeopleFilters = ({
     setSearchParams(newSearchParams);
   };
 
-  const handleSexFilter = (sex: string) => (event: React.MouseEvent) => {
-    event.preventDefault();
-    const newSearchParams = new URLSearchParams(searchParams);
+  const handleSexFilter =
+    (sex: GenderKey | '') => (event: React.MouseEvent) => {
+      event.preventDefault();
+      const newSearchParams = new URLSearchParams(searchParams);
 
-    if (!sex) {
-      newSearchParams.delete('sex');
-    } else {
-      newSearchParams.set('sex', sex);
-    }
+      if (!sex) {
+        newSearchParams.delete('sex');
+      } else {
+        newSearchParams.set('sex', sex);
+      }
 
-    setSearchParams(newSearchParams);
-  };
+      setSearchParams(newSearchParams);
+    };
 
   const handleCenturyAll = (event: React.MouseEvent) => {
     event.preventDefault();
@@ -83,19 +90,19 @@ export const PeopleFilters = ({
         </a>
 
         <a
-          className={cn({ 'is-active': activeFilter === 'm' })}
-          href="#/people?sex=m"
-          onClick={handleSexFilter('m')}
+          className={cn({ 'is-active': activeFilter === genderKeyMale })}
+          href={`#/people?sex=${genderKeyMale}`}
+          onClick={handleSexFilter(genderKeyMale)}
         >
-          {FilterBy.Male}
+          {GENDER_MAP[genderKeyMale]}
         </a>
 
         <a
-          className={cn({ 'is-active': activeFilter === 'f' })}
-          href="#/people?sex=f"
-          onClick={handleSexFilter('f')}
+          className={cn({ 'is-active': activeFilter === genderKeyFemale })}
+          href={`#/people?sex=${genderKeyFemale}`}
+          onClick={handleSexFilter(genderKeyFemale)}
         >
-          {FilterBy.Female}
+          {GENDER_MAP[genderKeyFemale]}
         </a>
       </p>
 

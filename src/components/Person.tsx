@@ -1,10 +1,8 @@
 import cn from 'classnames';
-import {
-  Link,
-  useParams, useSearchParams,
-} from 'react-router-dom';
+import { Link, useParams, useSearchParams } from 'react-router-dom';
 import { Person as PersonType } from '../types';
 import React from 'react';
+import { genderKeyFemale } from '../types/FilterBy';
 
 type Props = {
   person: PersonType;
@@ -30,7 +28,7 @@ export const Person: React.FC<Props> = ({ person, people }) => {
       <Link
         to={`/people/${parent.slug}${searchString}`}
         className={cn('', {
-          'has-text-danger': parent.sex === 'f',
+          'has-text-danger': parent.sex === genderKeyFemale,
         })}
       >
         {parent.name}
@@ -46,12 +44,12 @@ export const Person: React.FC<Props> = ({ person, people }) => {
   return (
     <tr
       data-cy="person"
-      className={person.slug === slugParam ? 'has-background-warning' : ''}
+      className={cn(person.slug === slugParam && 'has-background-warning')}
     >
       <td>
         <Link
           className={cn('', {
-            'has-text-danger': sex === 'f',
+            'has-text-danger': sex === genderKeyFemale,
           })}
           to={`../${slug}${searchString}`}
         >

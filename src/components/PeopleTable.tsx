@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/control-has-associated-label */
 
-import { useState } from 'react';
+import React, { useState } from 'react';
 import cn from 'classnames';
 
 import { Person as PersonType } from '../types';

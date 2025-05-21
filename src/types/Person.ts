@@ -1,6 +1,8 @@
+import { GenderKey } from './FilterBy';
+
 export interface Person {
   name: string;
-  sex: string;
+  sex: GenderKey;
   born: number;
   died: number;
   fatherName: string | null;

@@ -7,20 +7,21 @@ import { PeoplePageTitle } from '../pages/PeoplePageTitle';
 import { Person } from '../types';
 import { getPeople } from '../api';
 import { useSearchParams } from 'react-router-dom';
+import { GenderKey, genderKeyFemale, genderKeyMale } from '../types/FilterBy';
 
 export const PeoplePage = () => {
-  // #region states
+  //#region states
   const [loading, setLoading] = useState(true);
   const [fetchPeopleError, setFetchPeopleError] = useState(false);
   const [people, setPeople] = useState<Person[]>([]);
   const [query, setQuery] = useState('');
   const [showFilters, setShowFilters] = useState(false);
-  // #endregion
+  //#endregion
 
   const [searchParams, setSearchParams] = useSearchParams();
 
   const activeCenturies = searchParams.getAll('centuries') || '';
-  const activeSex = searchParams.get('sex') || '';
+  const activeSex = (searchParams.get('sex') || '') as GenderKey | '';
   const activeQuery = searchParams.get('query') || '';
 
   const toggleCenturies = (currentCentury: number) => {
@@ -47,13 +48,10 @@ export const PeoplePage = () => {
   };
 
   const handleFilterBySex = (sex: string, peopleList: Person[]) => {
-    switch (sex) {
-      case 'm':
-        return peopleList.filter(person => person.sex === activeSex);
-      case 'f':
-        return peopleList.filter(person => person.sex === activeSex);
-      default:
-        return peopleList;
+    if (sex === genderKeyMale || sex === genderKeyFemale) {
+      return peopleList.filter(person => person.sex === sex);
+    } else {
+      return peopleList;
     }
   };
 
@@ -79,12 +77,16 @@ export const PeoplePage = () => {
     fetchPeople();
   }, []);
 
-  // #region conditions
+  //#region conditions
   const fetchingErrorNotification = !loading && fetchPeopleError;
   const noPeopleNotification = !loading && !fetchPeopleError && !people.length;
-  const showPeopleTable = !loading && !fetchPeopleError && !!people.length;
   const noVisiblePeopleByCriteria = !visiblePeople.length;
-  // #endregion
+  const showPeopleTable =
+    !loading &&
+    !fetchPeopleError &&
+    !!people.length &&
+    !noVisiblePeopleByCriteria;
+  //#endregion
 
   return (
     <>
@@ -119,7 +121,7 @@ export const PeoplePage = () => {
                 </p>
               )}
 
-              {noVisiblePeopleByCriteria && (
+              {noVisiblePeopleByCriteria && !loading && (
                 <p>There are no people matching the current search criteria</p>
               )}
 
