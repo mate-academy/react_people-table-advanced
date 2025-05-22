@@ -1,0 +1,1 @@
+export { PeoplePage } from './PeoplePage';
