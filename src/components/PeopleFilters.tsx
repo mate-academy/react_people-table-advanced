@@ -3,6 +3,14 @@ import { getSearchWith } from '../utils/searchHelper';
 import { SearchLink } from './SearchLink';
 import cn from 'classnames';
 
+// const filterParams = ['query', 'sex', 'centuries'];
+
+enum FilterParams {
+  Query = 'query',
+  Sex = 'sex',
+  Centuries = 'centuries',
+}
+
 enum SexFilter {
   All = 'All',
   Male = 'm',
@@ -66,19 +74,19 @@ export const PeopleFilters = () => {
       <p className="panel-tabs" data-cy="SexFilter">
         <SearchLink
           params={{ sex: null }}
-          className={getLinkClass('sex', null)}
+          className={getLinkClass(FilterParams.Sex, null)}
         >
           {SexFilter.All}
         </SearchLink>
         <SearchLink
-          params={{ sex: SexFilter.Male }}
-          className={getLinkClass('sex', SexFilter.Male)}
+          params={{ [FilterParams.Sex]: SexFilter.Male }}
+          className={getLinkClass(FilterParams.Sex, SexFilter.Male)}
         >
           {SexFilter.Male}
         </SearchLink>
         <SearchLink
-          params={{ sex: SexFilter.Female }}
-          className={getLinkClass('sex', SexFilter.Female)}
+          params={{ [FilterParams.Sex]: SexFilter.Female }}
+          className={getLinkClass(FilterParams.Sex, SexFilter.Female)}
         >
           {SexFilter.Female}
         </SearchLink>
@@ -92,7 +100,7 @@ export const PeopleFilters = () => {
             className="input"
             placeholder="Search"
             onChange={e => inputChange(e)}
-            value={searchParams.get('query') || ''}
+            value={searchParams.get(FilterParams.Query) || ''}
           />
 
           <span className="icon is-left">
@@ -111,7 +119,7 @@ export const PeopleFilters = () => {
                   search: toggleCentury(century),
                   pathname: location.pathname,
                 }}
-                className={`button mr-1 ${getLinkClass('centuries', String(century), 'is-info')}`}
+                className={`button mr-1 ${getLinkClass(FilterParams.Centuries, String(century), 'is-info')}`}
               >
                 {century}
               </Link>
@@ -122,11 +130,11 @@ export const PeopleFilters = () => {
             <Link
               data-cy="centuryALL"
               className={cn('button is-success', {
-                'is-outlined': location.search,
+                'is-outlined': searchParams.has(FilterParams.Centuries),
               })}
               to={{
                 search: getSearchWith(searchParams, {
-                  centuries: [],
+                  centuries: null,
                 }),
                 pathname: location.pathname,
               }}

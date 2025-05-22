@@ -122,9 +122,16 @@ export const PeopleTableComponent = ({ people }: Props) => {
     applySearchParams();
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [location.search, people]);
+  }, [location.search, people, searchParams]);
 
   // #endregion
+  if (!filterPeople.length) {
+    return (
+      <p data-cy="noPeopleMessage">
+        There are no people matching the current search criteria
+      </p>
+    );
+  }
 
   return (
     <table
