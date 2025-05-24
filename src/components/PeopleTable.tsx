@@ -14,11 +14,11 @@ export const PeopleTable: React.FC<Props> = ({ filteredAndSortedPeople }) => {
   const [searchParams] = useSearchParams();
 
   function setSortParms(field: string) {
-    if (searchParams.has('order')) {
+    if (searchParams.get('order')) {
       return { sort: null, order: null };
     }
 
-    if (searchParams.has('sort', field.toLowerCase())) {
+    if (searchParams.get('sort') === field.toLowerCase()) {
       return { sort: field.toLowerCase(), order: 'desc' };
     }
 
@@ -27,16 +27,16 @@ export const PeopleTable: React.FC<Props> = ({ filteredAndSortedPeople }) => {
 
   function getArrowClass(rowName: string) {
     if (
-      searchParams.has('sort') &&
-      !searchParams.has('order') &&
+      searchParams.get('sort') &&
+      !searchParams.get('order') &&
       rowName === searchParams.get('sort')
     ) {
       return '-up';
     }
 
     if (
-      searchParams.has('sort') &&
-      searchParams.has('order') &&
+      searchParams.get('sort') &&
+      searchParams.get('order') &&
       rowName === searchParams.get('sort')
     ) {
       return '-down';

@@ -36,7 +36,7 @@ export const PeopleFilters = () => {
     return { centuries: null };
   }
 
-  function clearSeacrhParams() {
+  function clearSearchParams() {
     return { sex: null, query: null, centuries: null };
   }
 
@@ -45,19 +45,19 @@ export const PeopleFilters = () => {
       <p className="panel-heading">Filters</p>
       <p className="panel-tabs" data-cy="SexFilter">
         <SearchLink
-          className={!searchParams.has('sex') ? 'is-active' : ''}
+          className={!searchParams.get('sex') ? 'is-active' : ''}
           params={genderChange(null)}
         >
           All
         </SearchLink>
         <SearchLink
-          className={searchParams.has('sex', 'm') ? 'is-active' : ''}
+          className={searchParams.get('sex') === 'm' ? 'is-active' : ''}
           params={genderChange('m')}
         >
           Male
         </SearchLink>
         <SearchLink
-          className={searchParams.has('sex', 'f') ? 'is-active' : ''}
+          className={searchParams.get('sex') === 'f' ? 'is-active' : ''}
           params={genderChange('f')}
         >
           Female
@@ -111,7 +111,7 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <SearchLink
           className="button is-link is-outlined is-fullwidth"
-          params={clearSeacrhParams()}
+          params={clearSearchParams()}
         >
           Reset all filters
         </SearchLink>
