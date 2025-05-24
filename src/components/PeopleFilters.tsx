@@ -44,7 +44,7 @@ export const PeopleFilters: React.FC<Props> = ({
     });
 
     setPeoplesList(newPeoplesList.length === 0 ? initialList : newPeoplesList);
-  }, [searchParams, initialList]);
+  }, [searchParams, initialList, setPeoplesList]);
 
   return (
     <nav className="panel">
