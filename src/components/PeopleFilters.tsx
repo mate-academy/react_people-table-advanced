@@ -27,8 +27,6 @@ export const PeopleFilters: React.FC<Props> = ({
   const { search } = useLocation();
   const navigate = useNavigate();
 
-  const ass = searchParams.toString();
-
   useEffect(() => {
     if (!initialList) {
       return;
@@ -46,7 +44,7 @@ export const PeopleFilters: React.FC<Props> = ({
     });
 
     setPeoplesList(newPeoplesList.length === 0 ? initialList : newPeoplesList);
-  }, [ass, initialList]);
+  }, [searchParams, initialList]);
 
   return (
     <nav className="panel">
