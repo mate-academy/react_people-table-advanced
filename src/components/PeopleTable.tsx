@@ -8,7 +8,7 @@ import {
 import { Person } from '../types';
 
 import classNames from 'classnames';
-import { PeopleTableHeader } from '../components/PeopleTabletHeader';
+import { PeopleTableHeader } from './PeopleTableHeader';
 
 interface PeopleTableProps {
   people: Person[];
