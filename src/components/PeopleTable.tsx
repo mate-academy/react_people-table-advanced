@@ -159,11 +159,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
       <tbody>
         {visiblePeople.map(person => {
           return (
-            <PersonLink
-              key={person.name}
-              person={person}
-              people={visiblePeople}
-            />
+            <PersonLink key={person.name} person={person} people={people} />
           );
         })}
       </tbody>
