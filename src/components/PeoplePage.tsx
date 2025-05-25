@@ -33,7 +33,9 @@ export const PeoplePage = () => {
           <div className="column">
             <div className="box table-container">
               {loading && <Loader />}
-              {errorMessage && !loading && <Notification />}
+              {errorMessage && !loading && (
+                <Notification message={errorMessage} />
+              )}
               {people && !loading && people.length === 0 && (
                 <p data-cy="noPeopleMessage">
                   There are no people on the server
