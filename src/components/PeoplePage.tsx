@@ -1,86 +1,28 @@
-import { useEffect, useState, useMemo } from 'react';
-import { useSearchParams } from 'react-router-dom';
-import { getPeople } from '../api';
-import { Person } from '../types';
-import { Loader } from '../components/Loader';
-import PeopleFilters from '../components/PeopleFilters';
-import PeopleTable from '../components/PeopleTable';
+import { useMemo } from 'react';
+import { Loader } from './Loader';
+import { PeopleFilters } from './PeopleFilters';
+import { PeopleTable } from './PeopleTable';
+import { filterPeople, sortPeople } from '../utils/peopleUtils';
+import { usePeople } from '../hooks/usePeople';
+import { useSearchFilters } from '../hooks/useSearchFilters';
 
-const PeoplePage = () => {
-  const [people, setPeople] = useState<Person[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [isError, setIsError] = useState(false);
-
-  const [searchParams] = useSearchParams();
-
-  const sex = searchParams.get('sex') || '';
-  const query = searchParams.get('query') || '';
-  const sort = searchParams.get('sort') || '';
-  const order = searchParams.get('order') || '';
-
-  const centuries = useMemo(
-    () => searchParams.getAll('century'),
-    [searchParams],
-  );
+export const PeoplePage = () => {
+  const { people, isLoading, error } = usePeople();
+  const filters = useSearchFilters();
 
   const filteredPeople = useMemo(() => {
-    let result = [...people];
+    const filtered = filterPeople(people, {
+      sex: filters.sex,
+      query: filters.query,
+      centuries: filters.centuries,
+    });
 
-    if (sex) {
-      result = result.filter(person => person.sex === sex);
-    }
+    return sortPeople(filtered, filters.sort, filters.order);
+  }, [people, filters]);
 
-    if (centuries.length > 0) {
-      result = result.filter(person => {
-        const century = Math.ceil(person.born / 100);
-
-        return centuries.includes(century.toString());
-      });
-    }
-
-    if (query) {
-      const lowerQuery = query.toLowerCase();
-
-      result = result.filter(
-        person =>
-          person.name.toLowerCase().includes(lowerQuery) ||
-          person.fatherName?.toLowerCase().includes(lowerQuery) ||
-          person.motherName?.toLowerCase().includes(lowerQuery),
-      );
-    }
-
-    if (sort) {
-      result.sort((a, b) => {
-        const valueA = a[sort as keyof Person];
-        const valueB = b[sort as keyof Person];
-
-        if (typeof valueA === 'string' && typeof valueB === 'string') {
-          return order === 'desc'
-            ? valueB.localeCompare(valueA)
-            : valueA.localeCompare(valueB);
-        }
-
-        if (typeof valueA === 'number' && typeof valueB === 'number') {
-          return order === 'desc' ? valueB - valueA : valueA - valueB;
-        }
-
-        return 0;
-      });
-    }
-
-    return result;
-  }, [people, sex, centuries, query, sort, order]);
-
-  useEffect(() => {
-    setIsLoading(true);
-
-    getPeople()
-      .then(gotPeople => {
-        setPeople(gotPeople);
-      })
-      .catch(() => setIsError(true))
-      .finally(() => setIsLoading(false));
-  }, []);
+  const showFilters = people.length > 0 && !isLoading;
+  const noPeopleOnServer = !isLoading && people.length === 0;
+  const noMatches = people.length > 0 && filteredPeople.length === 0;
 
   return (
     <>
@@ -89,26 +31,26 @@ const PeoplePage = () => {
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
           <div className="column is-7-tablet is-narrow-desktop">
-            {people.length > 0 && !isLoading && <PeopleFilters />}
+            {showFilters && <PeopleFilters />}
           </div>
 
           <div className="column">
             <div className="box table-container">
               {isLoading && <Loader />}
 
-              {isError && (
+              {error && (
                 <p data-cy="peopleLoadingError" className="has-text-danger">
                   Something went wrong
                 </p>
               )}
 
-              {!isLoading && people.length === 0 && (
+              {noPeopleOnServer && (
                 <p data-cy="noPeopleMessage">
                   There are no people on the server
                 </p>
               )}
 
-              {people.length > 0 && filteredPeople.length === 0 && (
+              {noMatches && (
                 <p>There are no people matching the current search criteria</p>
               )}
 
@@ -120,5 +62,3 @@ const PeoplePage = () => {
     </>
   );
 };
-
-export default PeoplePage;

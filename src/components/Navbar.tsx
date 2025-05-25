@@ -1,7 +1,15 @@
-import { NavLink } from 'react-router-dom';
 import classNames from 'classnames';
+import { NavLink } from 'react-router-dom';
 
-const Navbar = () => (
+const NAV_LINKS = [
+  { to: '/', label: 'Home' },
+  { to: '/people', label: 'People' },
+] as const;
+
+const getNavItemClass = ({ isActive }: { isActive: boolean }) =>
+  classNames('navbar-item', { 'has-background-grey-lighter': isActive });
+
+export const Navbar = () => (
   <nav
     data-cy="nav"
     className="navbar is-fixed-top has-shadow"
@@ -10,30 +18,12 @@ const Navbar = () => (
   >
     <div className="container">
       <div className="navbar-brand">
-        <NavLink
-          to="/"
-          className={({ isActive }) =>
-            classNames('navbar-item', {
-              'has-background-grey-lighter': isActive,
-            })
-          }
-        >
-          Home
-        </NavLink>
-
-        <NavLink
-          to="/people"
-          className={({ isActive }) =>
-            classNames('navbar-item', {
-              'has-background-grey-lighter': isActive,
-            })
-          }
-        >
-          People
-        </NavLink>
+        {NAV_LINKS.map(({ to, label }) => (
+          <NavLink key={to} to={to} className={getNavItemClass}>
+            {label}
+          </NavLink>
+        ))}
       </div>
     </div>
   </nav>
 );
-
-export default Navbar;

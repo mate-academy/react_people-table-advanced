@@ -1,51 +1,67 @@
 import classNames from 'classnames';
 import { useSearchParams } from 'react-router-dom';
 import { SearchLink } from './SearchLink';
+import { useCallback } from 'react';
+import { useSearchFilters } from '../hooks/useSearchFilters';
 
-const genderOptions = ['All', 'Male', 'Female'];
+const GENDER_OPTIONS = [
+  { label: 'All', value: '' },
+  { label: 'Male', value: 'm' },
+  { label: 'Female', value: 'f' },
+] as const;
 
-const PeopleFilters = () => {
+const CENTURY_OPTIONS = [16, 17, 18, 19, 20] as const;
+
+export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
+  const {
+    sex: activeSex,
+    query,
+    centuries: activeCenturies,
+  } = useSearchFilters();
 
-  const query = searchParams.get('query') || '';
-  const activeSex = searchParams.get('sex') || '';
-  const activeCenturies = searchParams.getAll('century');
+  const handleQueryChange = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      const newQuery = event.target.value.trim();
+      const params = new URLSearchParams(searchParams);
 
-  const handleQueryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const params = new URLSearchParams(searchParams);
-    const newQuery = event.target.value.trim();
+      if (newQuery) {
+        params.set('query', newQuery);
+      } else {
+        params.delete('query');
+      }
 
-    if (newQuery) {
-      params.set('query', newQuery);
-    } else {
-      params.delete('query');
-    }
+      setSearchParams(params);
+    },
+    [searchParams, setSearchParams],
+  );
 
-    setSearchParams(params);
-  };
+  const getCenturyToggleParams = useCallback(
+    (century: number) => {
+      const centuryStr = century.toString();
+      const isActive = activeCenturies.includes(centuryStr);
+
+      return isActive
+        ? activeCenturies.filter(c => c !== centuryStr)
+        : [...activeCenturies, centuryStr];
+    },
+    [activeCenturies],
+  );
 
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        {genderOptions.map((gender, i) => {
-          const genderChar = gender.charAt(0).toLowerCase();
-
-          return (
-            <SearchLink
-              key={gender}
-              params={{ sex: i === 0 ? null : genderChar }}
-              className={classNames({
-                'is-active':
-                  activeSex === genderChar ||
-                  (!activeSex && genderChar === 'a'),
-              })}
-            >
-              {gender}
-            </SearchLink>
-          );
-        })}
+        {GENDER_OPTIONS.map(({ value, label }) => (
+          <SearchLink
+            key={value || 'all'}
+            params={{ sex: value || null }}
+            className={classNames({ 'is-active': activeSex === value })}
+          >
+            {label}
+          </SearchLink>
+        ))}
       </p>
 
       <div className="panel-block">
@@ -58,7 +74,6 @@ const PeopleFilters = () => {
             value={query}
             onChange={handleQueryChange}
           />
-
           <span className="icon is-left">
             <i className="fas fa-search" aria-hidden="true" />
           </span>
@@ -68,16 +83,14 @@ const PeopleFilters = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            {[16, 17, 18, 19, 20].map(century => (
+            {CENTURY_OPTIONS.map(century => (
               <SearchLink
                 key={century}
                 data-cy="century"
-                className={`button mr-1 ${activeCenturies.includes(century.toString()) ? 'is-info' : ''}`}
-                params={{
-                  century: activeCenturies.includes(century.toString())
-                    ? activeCenturies.filter(c => c !== century.toString())
-                    : [...activeCenturies, century.toString()],
-                }}
+                className={classNames('button mr-1', {
+                  'is-info': activeCenturies.includes(century.toString()),
+                })}
+                params={{ century: getCenturyToggleParams(century) }}
               >
                 {century}
               </SearchLink>
@@ -107,5 +120,3 @@ const PeopleFilters = () => {
     </nav>
   );
 };
-
-export default PeopleFilters;

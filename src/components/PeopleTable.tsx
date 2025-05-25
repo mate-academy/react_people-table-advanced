@@ -1,23 +1,26 @@
-import { useParams, useSearchParams } from 'react-router-dom';
-import { Person } from '../types';
-import PersonLink from './PersonLink';
+import { useParams } from 'react-router-dom';
+import classNames from 'classnames';
+import { Person, SortField } from '../types';
+import { PersonRow } from './PersonRow';
 import { SearchLink } from './SearchLink';
+import { useSearchFilters } from '../hooks/useSearchFilters';
 
-type Props = {
+type PeopleTableProps = {
   people: Person[];
 };
 
-const columns = ['Name', 'Sex', 'Born', 'Died'];
+const TABLE_COLUMNS: { label: string; field: SortField }[] = [
+  { label: 'Name', field: 'name' },
+  { label: 'Sex', field: 'sex' },
+  { label: 'Born', field: 'born' },
+  { label: 'Died', field: 'died' },
+];
 
-const PeopleTable: React.FC<Props> = ({ people }) => {
+export const PeopleTable: React.FC<PeopleTableProps> = ({ people }) => {
   const { selectedPerson } = useParams();
+  const { sort: currentSort, order: currentOrder } = useSearchFilters();
 
-  const [searchParams] = useSearchParams();
-
-  const currentSort = searchParams.get('sort') || '';
-  const currentOrder = searchParams.get('order') || '';
-
-  const getSortIcon = (field: string) => {
+  const getSortIcon = (field: SortField): string => {
     if (currentSort !== field) {
       return 'fa-sort';
     }
@@ -25,62 +28,56 @@ const PeopleTable: React.FC<Props> = ({ people }) => {
     return currentOrder === 'desc' ? 'fa-sort-down' : 'fa-sort-up';
   };
 
-  const getSortParams = (field: string) => {
+  const getSortParams = (field: SortField) => {
     if (currentSort !== field) {
       return { sort: field, order: null };
     }
 
-    if (!currentOrder) {
+    if (currentOrder === 'asc') {
       return { sort: field, order: 'desc' };
     }
 
     return { sort: null, order: null };
   };
 
+  if (people.length === 0) {
+    return null;
+  }
+
   return (
-    <>
-      {people.length > 0 && (
-        <table
-          data-cy="peopleTable"
-          className="table is-striped is-hoverable is-narrow is-fullwidth"
-        >
-          <thead>
-            <tr>
-              {columns.map(column => {
-                const field = column.toLowerCase();
+    <table
+      data-cy="peopleTable"
+      className="table is-striped is-hoverable is-narrow is-fullwidth"
+    >
+      <thead>
+        <tr>
+          {TABLE_COLUMNS.map(({ label, field }) => (
+            <th key={field}>
+              <span className="is-flex is-flex-wrap-nowrap">
+                {label}
+                <SearchLink params={getSortParams(field)}>
+                  <span className="icon">
+                    <i className={classNames('fas', getSortIcon(field))} />
+                  </span>
+                </SearchLink>
+              </span>
+            </th>
+          ))}
+          <th>Mother</th>
+          <th>Father</th>
+        </tr>
+      </thead>
 
-                return (
-                  <th key={column}>
-                    <span className="is-flex is-flex-wrap-nowrap">
-                      {column}
-                      <SearchLink params={getSortParams(field)}>
-                        <span className="icon">
-                          <i className={`fas ${getSortIcon(field)}`} />
-                        </span>
-                      </SearchLink>
-                    </span>
-                  </th>
-                );
-              })}
-              <th>Mother</th>
-              <th>Father</th>
-            </tr>
-          </thead>
-
-          <tbody>
-            {people.map(person => (
-              <PersonLink
-                key={person.slug}
-                person={person}
-                people={people}
-                markedPerson={selectedPerson === person.slug}
-              />
-            ))}
-          </tbody>
-        </table>
-      )}
-    </>
+      <tbody>
+        {people.map(person => (
+          <PersonRow
+            key={person.slug}
+            person={person}
+            people={people}
+            isSelected={selectedPerson === person.slug}
+          />
+        ))}
+      </tbody>
+    </table>
   );
 };
-
-export default PeopleTable;

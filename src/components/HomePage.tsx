@@ -1,3 +1,1 @@
-const HomePage = () => <h1 className="title">Home Page</h1>;
-
-export default HomePage;
+export const HomePage = () => <h1 className="title">Home Page</h1>;
