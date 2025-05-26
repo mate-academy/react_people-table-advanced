@@ -1,4 +1,4 @@
-export const Navbar = () => {
+export const NavBar = () => {
   return (
     <nav
       data-cy="nav"
