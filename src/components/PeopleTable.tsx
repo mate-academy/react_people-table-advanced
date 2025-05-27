@@ -25,10 +25,6 @@ export const PeopleTable: React.FC<Props> = ({
   const peopleMap = new Map<string, string>();
   let visiblePeople: Person[] = [];
 
-  if (!query) {
-    handleErrorMessage(null);
-  }
-
   people.forEach(person => {
     if (person.name && person.slug) {
       peopleMap.set(person.name, person.slug);
