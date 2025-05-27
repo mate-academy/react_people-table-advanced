@@ -24,16 +24,15 @@ export const PeopleFilters: React.FC<Props> = ({
   const [searchParams, setSearchParams] = useSearchParams();
   const { search } = useLocation();
 
-  if (!initialList) {
-    return null;
-  }
+  if (!initialList) return null;
+
 
   const debouncedFilter = useRef(
     debounce((list: Person[], filterText: string) => {
       const filtered = list.filter(
         person =>
-          typeof person.father === 'string' &&
-          person.father.toLowerCase().includes(filterText.toLowerCase()),
+          typeof person.fatherName === 'string' &&
+          person.fatherName.toLowerCase().includes(filterText.toLowerCase()),
       );
 
       setPeoplesList(filtered);
@@ -41,8 +40,10 @@ export const PeopleFilters: React.FC<Props> = ({
   );
 
   useEffect(() => {
+
     const centuriesValues = searchParams.getAll('centuries');
     const sexSearchParams = searchParams.get('sex');
+
 
     let filtered: Person[] | null = null;
     let result: Person[] | null = null;
@@ -79,6 +80,8 @@ export const PeopleFilters: React.FC<Props> = ({
       setPeoplesList(filtered);
     */
   }, [searchParams, initialList, inputValue]);
+
+  if (!initialList) return
 
   return (
     <nav className="panel">

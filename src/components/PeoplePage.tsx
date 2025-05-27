@@ -9,12 +9,15 @@ export const PeoplePage = () => {
   const [peoplesList, setPeoplesList] = useState<Person[] | null>(null);
   const [initialList, setInitialList] = useState<Person[] | null>(null);
 
+
   useEffect(() => {
     getPeople().then(response => {
       setPeoplesList(response);
       setInitialList(response);
     });
   }, []);
+
+  if (!initialList) return null
 
   return (
     <>
