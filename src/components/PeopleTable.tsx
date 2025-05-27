@@ -5,7 +5,7 @@ import { Person } from '../types/Person';
 import classNames from 'classnames';
 import { useEffect, useReducer } from 'react';
 import { getSearchWith } from '../utils/searchHelper';
-import { useGetNextSortParams } from '../utils/sortFunction';
+import { getNextSortParams } from '../utils/sortFunction';
 
 type Props = {
   peoplesList: Person[];
@@ -61,7 +61,9 @@ export const PeopleTable: React.FC<Props> = ({ initialList, peoplesList }) => {
   const [params] = useSearchParams();
   const { slug } = useParams();
 
-  if (!initialList) return null;
+  if (!initialList) {
+    return null;
+  }
 
   useEffect(() => {
     const sort = params.get('sort');
@@ -105,7 +107,7 @@ export const PeopleTable: React.FC<Props> = ({ initialList, peoplesList }) => {
               Name
               <Link
                 to={{
-                  search: getSearchWith(params, useGetNextSortParams('name')),
+                  search: getSearchWith(params, getNextSortParams('name')),
                 }}
               >
                 <span className="icon">
@@ -120,7 +122,7 @@ export const PeopleTable: React.FC<Props> = ({ initialList, peoplesList }) => {
               Sex
               <Link
                 to={{
-                  search: getSearchWith(params, useGetNextSortParams('sex')),
+                  search: getSearchWith(params, getNextSortParams('sex')),
                 }}
               >
                 <span className="icon">
@@ -135,7 +137,7 @@ export const PeopleTable: React.FC<Props> = ({ initialList, peoplesList }) => {
               Born
               <Link
                 to={{
-                  search: getSearchWith(params, useGetNextSortParams('born')),
+                  search: getSearchWith(params, getNextSortParams('born')),
                 }}
               >
                 <span className="icon">
@@ -150,7 +152,7 @@ export const PeopleTable: React.FC<Props> = ({ initialList, peoplesList }) => {
               Died
               <Link
                 to={{
-                  search: getSearchWith(params, useGetNextSortParams('died')),
+                  search: getSearchWith(params, getNextSortParams('died')),
                 }}
               >
                 <span className="icon">

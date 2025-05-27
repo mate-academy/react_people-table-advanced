@@ -2,7 +2,7 @@ import { useSearchParams } from 'react-router-dom';
 
 type Key = 'name' | 'sex' | 'born' | 'died';
 
-export const useGetNextSortParams = (key: Key) => {
+export const getNextSortParams = (key: Key) => {
   const [params] = useSearchParams();
   const sort = params.get('sort');
   const order = params.get('order');

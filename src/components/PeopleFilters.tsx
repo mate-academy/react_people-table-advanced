@@ -24,13 +24,18 @@ export const PeopleFilters: React.FC<Props> = ({
   const [searchParams, setSearchParams] = useSearchParams();
   const { search } = useLocation();
 
-  if (!initialList) return null;
+  if (!initialList) {
+    return null;
+  }
 
   const debouncedFilter = useRef(
     debounce((list: Person[], filterText: string) => {
-      const filtered = list.filter(person =>
-        person.father.toLowerCase().includes(filterText.toLowerCase())
+      const filtered = list.filter(
+        person =>
+          typeof person.father === 'string' &&
+          person.father.toLowerCase().includes(filterText.toLowerCase()),
       );
+
       setPeoplesList(filtered);
     }, 200),
   );
@@ -53,6 +58,7 @@ export const PeopleFilters: React.FC<Props> = ({
     if (searchParams.get('centuries')) {
       result = filtered.filter(person => {
         const century = Math.ceil(person.born / 100).toString();
+
         return centuriesValues.includes(century);
       });
     } else {
@@ -72,8 +78,6 @@ export const PeopleFilters: React.FC<Props> = ({
 
       setPeoplesList(filtered);
     */
-
-
   }, [searchParams, initialList, inputValue]);
 
   return (
