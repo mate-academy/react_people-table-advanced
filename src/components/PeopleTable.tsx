@@ -10,7 +10,6 @@ import { getNextSortParams } from '../utils/sortFunction';
 type Props = {
   peoplesList: Person[];
   initialList: Person[];
-  setPeoplesList: (p: Person[] | null) => void;
 };
 
 type State = Person[];
@@ -60,8 +59,6 @@ export const PeopleTable: React.FC<Props> = ({ initialList, peoplesList }) => {
   const [stateList, dispatch] = useReducer(reduce, initialList);
   const [params] = useSearchParams();
   const { slug } = useParams();
-
-  if (!initialList) return null;
 
 
   useEffect(() => {

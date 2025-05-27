@@ -1,7 +1,4 @@
 import classNames from 'classnames';
-import debounce from 'lodash/debounce';
-import { Person } from '../types/Person';
-import { useEffect, useRef, useState } from 'react';
 
 import {
   getSaveSearchParams,
@@ -10,78 +7,21 @@ import {
 } from '../utils/utilsPeopleFilters';
 
 import { Link, NavLink, useLocation, useSearchParams } from 'react-router-dom';
+import { getSearchWith } from '../utils/searchHelper';
 
 type Props = {
-  setPeoplesList: (Set: Person[] | null) => void;
-  initialList: Person[] | null;
+  inputValue: string;
+  setInputValue: (p: string) => void
 };
 
 export const PeopleFilters: React.FC<Props> = ({
-  initialList,
-  setPeoplesList,
+  inputValue,
+  setInputValue,
 }) => {
-  const [inputValue, setInputValue] = useState<string>('');
   const [searchParams, setSearchParams] = useSearchParams();
   const { search } = useLocation();
 
-  if (!initialList) return null;
 
-
-  const debouncedFilter = useRef(
-    debounce((list: Person[], filterText: string) => {
-      const filtered = list.filter(
-        person =>
-          typeof person.fatherName === 'string' &&
-          person.fatherName.toLowerCase().includes(filterText.toLowerCase()),
-      );
-
-      setPeoplesList(filtered);
-    }, 200),
-  );
-
-  useEffect(() => {
-
-    const centuriesValues = searchParams.getAll('centuries');
-    const sexSearchParams = searchParams.get('sex');
-
-
-    let filtered: Person[] | null = null;
-    let result: Person[] | null = null;
-
-    if (sexSearchParams === 'm') {
-      filtered = initialList.filter(person => person.sex === 'm');
-    } else if (sexSearchParams === 'f') {
-      filtered = initialList.filter(person => person.sex === 'f');
-    } else {
-      filtered = initialList;
-    }
-
-    if (searchParams.get('centuries')) {
-      result = filtered.filter(person => {
-        const century = Math.ceil(person.born / 100).toString();
-
-        return centuriesValues.includes(century);
-      });
-    } else {
-      result = filtered;
-    }
-
-    debouncedFilter.current(result, inputValue);
-
-    /*
-      const filtered = initialList
-      .filter(p => sexSearchParams ? p.sex === sexSearchParams : true)
-      .filter(p => {
-        if (centuriesValues.length === 0) return true;
-        const century = Math.ceil(p.born / 100).toString();
-        return centuriesValues.includes(century);
-      });
-
-      setPeoplesList(filtered);
-    */
-  }, [searchParams, initialList, inputValue]);
-
-  if (!initialList) return
 
   return (
     <nav className="panel">
@@ -92,7 +32,9 @@ export const PeopleFilters: React.FC<Props> = ({
           className={({ isActive }) =>
             isActive && search === '' ? 'is-active' : ''
           }
-          to="/people"
+          to={{
+            search: getSearchWith(searchParams, {'sex': null})
+          }}
         >
           All
         </NavLink>
