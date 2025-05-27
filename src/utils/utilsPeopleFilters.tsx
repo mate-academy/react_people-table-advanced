@@ -2,7 +2,7 @@ export const getSaveSearchParams = (
   searchParams: URLSearchParams,
   key: string,
   value: string,
-): string => {
+) => {
   const newParams = new URLSearchParams(searchParams);
   const values = newParams.getAll(key);
 
@@ -15,7 +15,7 @@ export const getSaveSearchParams = (
 
   updatedValues.forEach(v => newParams.append(key, v));
 
-  return `${newParams.toString()}`;
+  return newParams;
 };
 
 export const searchQueryParams = (

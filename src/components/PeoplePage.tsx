@@ -3,7 +3,7 @@ import { Loader } from './Loader';
 import { PeopleTable } from './PeopleTable';
 import { useEffect, useState } from 'react';
 import { getPeople } from '../api';
-import { Person } from '../types';
+import { Person } from '../types/Person';
 
 export const PeoplePage = () => {
   const [peoplesList, setPeoplesList] = useState<Person[] | null>(null);
@@ -36,7 +36,10 @@ export const PeoplePage = () => {
               {!peoplesList ? (
                 <Loader />
               ) : (
-                <PeopleTable peoplesList={peoplesList} />
+                <PeopleTable
+                  initialList={initialList}
+                  peoplesList={peoplesList}
+                />
               )}
             </div>
           </div>

@@ -1,7 +1,7 @@
 /* eslint-disable jsx-a11y/control-has-associated-label */
 
 import { Link, useParams, useSearchParams } from 'react-router-dom';
-import { Person } from '../types';
+import { Person } from '../types/Person';
 import classNames from 'classnames';
 import { useEffect, useReducer } from 'react';
 import { getSearchWith } from '../utils/searchHelper';
@@ -9,80 +9,84 @@ import { useGetNextSortParams } from '../utils/sortFunction';
 
 type Props = {
   peoplesList: Person[];
+  initialList: Person[];
+  setPeoplesList: (p: Person[] | null) => void;
 };
 
 type State = Person[];
 
 type Action =
   | { type: 'defult'; payload: Person[] }
-  | { type: 'name-asc' }
-  | { type: 'name-desc' }
-  | { type: 'sex-desc' }
-  | { type: 'sex' }
-  | { type: 'born' }
-  | { type: 'born-desc' }
-  | { type: 'died' }
-  | { type: 'died-desc' };
+  | { type: 'name-asc'; payload: Person[] }
+  | { type: 'name-desc'; payload: Person[] }
+  | { type: 'sex-desc'; payload: Person[] }
+  | { type: 'sex'; payload: Person[] }
+  | { type: 'born'; payload: Person[] }
+  | { type: 'born-desc'; payload: Person[] }
+  | { type: 'died'; payload: Person[] }
+  | { type: 'died-desc'; payload: Person[] };
 
-function reduce(state: State, action: Action): State {
+function reduce(_state: State, action: Action): State {
   switch (action.type) {
     case 'defult':
       return action.payload;
     case 'name-asc':
-      return [...state].sort((a, b) => a.name.localeCompare(b.name));
+      return [...action.payload].sort((a, b) => a.name.localeCompare(b.name));
     case 'name-desc':
-      return [...state].sort((a, b) => b.name.localeCompare(a.name));
+      return [...action.payload].sort((a, b) => b.name.localeCompare(a.name));
     case 'born':
-      return [...state].sort((a, b) => a.born - b.born);
+      return [...action.payload].sort((a, b) => a.born - b.born);
     case 'born-desc':
-      return [...state].sort((a, b) => b.born - a.born);
+      return [...action.payload].sort((a, b) => b.born - a.born);
     case 'died':
-      return [...state].sort((a, b) => a.died - b.died);
+      return [...action.payload].sort((a, b) => a.died - b.died);
     case 'died-desc':
-      return [...state].sort((a, b) => b.died - a.died);
+      return [...action.payload].sort((a, b) => b.died - a.died);
 
     case 'sex':
       return [
-        ...[...state].filter(person => person.sex === 'f'),
-        ...[...state].filter(person => person.sex === 'm'),
+        ...[...action.payload].filter(person => person.sex === 'f'),
+        ...[...action.payload].filter(person => person.sex === 'm'),
       ];
     case 'sex-desc':
       return [
-        ...[...state].filter(person => person.sex === 'm'),
-        ...[...state].filter(person => person.sex === 'f'),
+        ...[...action.payload].filter(person => person.sex === 'm'),
+        ...[...action.payload].filter(person => person.sex === 'f'),
       ];
   }
 }
 
-export const PeopleTable: React.FC<Props> = ({ peoplesList }) => {
-  const [stateList, dispatch] = useReducer(reduce, peoplesList);
+export const PeopleTable: React.FC<Props> = ({ initialList, peoplesList }) => {
+  const [stateList, dispatch] = useReducer(reduce, initialList);
   const [params] = useSearchParams();
   const { slug } = useParams();
+
+  if (!initialList) return null;
 
   useEffect(() => {
     const sort = params.get('sort');
     const order = params.get('order');
 
     if (sort === 'name' && !order) {
-      dispatch({ type: 'name-asc' });
+      dispatch({ type: 'name-asc', payload: peoplesList });
     } else if (sort === 'name' && order === 'desc') {
-      dispatch({ type: 'name-desc' });
+      dispatch({ type: 'name-desc', payload: peoplesList });
     } else if (sort === 'sex' && !order) {
-      dispatch({ type: 'sex' });
+      dispatch({ type: 'sex', payload: peoplesList });
     } else if (sort === 'sex' && order === 'desc') {
-      dispatch({ type: 'sex-desc' });
+      dispatch({ type: 'sex-desc', payload: peoplesList });
     } else if (sort === 'born' && !order) {
-      dispatch({ type: 'born' });
+      dispatch({ type: 'born', payload: peoplesList });
     } else if (sort === 'born' && order) {
-      dispatch({ type: 'born-desc' });
+      dispatch({ type: 'born-desc', payload: peoplesList });
     } else if (sort === 'died' && !order) {
-      dispatch({ type: 'died' });
+      dispatch({ type: 'died', payload: peoplesList });
     } else if (sort === 'died' && order) {
-      dispatch({ type: 'died-desc' });
+      dispatch({ type: 'died-desc', payload: peoplesList });
     } else {
       dispatch({ type: 'defult', payload: peoplesList });
     }
-  }, [params]);
+  }, [params, peoplesList]);
 
   const seartchFather = (fatherName: string | null) => {
     return peoplesList.find(p => p.name === fatherName) || null;

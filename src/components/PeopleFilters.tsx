@@ -1,18 +1,15 @@
-import { Person } from '../types';
 import classNames from 'classnames';
+import debounce from 'lodash/debounce';
+import { Person } from '../types/Person';
+import { useEffect, useRef, useState } from 'react';
+
 import {
   getSaveSearchParams,
   searchParamsSetSex,
   searchQueryParams,
 } from '../utils/utilsPeopleFilters';
-import {
-  Link,
-  NavLink,
-  useLocation,
-  useNavigate,
-  useSearchParams,
-} from 'react-router-dom';
-import { useEffect } from 'react';
+
+import { Link, NavLink, useLocation, useSearchParams } from 'react-router-dom';
 
 type Props = {
   setPeoplesList: (Set: Person[] | null) => void;
@@ -23,28 +20,61 @@ export const PeopleFilters: React.FC<Props> = ({
   initialList,
   setPeoplesList,
 }) => {
-  const [searchParams] = useSearchParams();
+  const [inputValue, setInputValue] = useState<string>('');
+  const [searchParams, setSearchParams] = useSearchParams();
   const { search } = useLocation();
-  const navigate = useNavigate();
+
+  if (!initialList) return null;
+
+  const debouncedFilter = useRef(
+    debounce((list: Person[], filterText: string) => {
+      const filtered = list.filter(person =>
+        person.father.toLowerCase().includes(filterText.toLowerCase())
+      );
+      setPeoplesList(filtered);
+    }, 200),
+  );
 
   useEffect(() => {
-    if (!initialList) {
-      return;
+    const centuriesValues = searchParams.getAll('centuries');
+    const sexSearchParams = searchParams.get('sex');
+
+    let filtered: Person[] | null = null;
+    let result: Person[] | null = null;
+
+    if (sexSearchParams === 'm') {
+      filtered = initialList.filter(person => person.sex === 'm');
+    } else if (sexSearchParams === 'f') {
+      filtered = initialList.filter(person => person.sex === 'f');
+    } else {
+      filtered = initialList;
     }
 
-    const centuriesValues = searchParams.getAll('centuries');
-    const newPeoplesList: Person[] = [];
+    if (searchParams.get('centuries')) {
+      result = filtered.filter(person => {
+        const century = Math.ceil(person.born / 100).toString();
+        return centuriesValues.includes(century);
+      });
+    } else {
+      result = filtered;
+    }
 
-    initialList.forEach(person => {
-      const century = Math.ceil(person.born / 100);
+    debouncedFilter.current(result, inputValue);
 
-      if (centuriesValues.includes(century.toString())) {
-        newPeoplesList.push(person);
-      }
-    });
+    /*
+      const filtered = initialList
+      .filter(p => sexSearchParams ? p.sex === sexSearchParams : true)
+      .filter(p => {
+        if (centuriesValues.length === 0) return true;
+        const century = Math.ceil(p.born / 100).toString();
+        return centuriesValues.includes(century);
+      });
 
-    setPeoplesList(newPeoplesList.length === 0 ? initialList : newPeoplesList);
-  }, [searchParams, initialList, setPeoplesList]);
+      setPeoplesList(filtered);
+    */
+
+
+  }, [searchParams, initialList, inputValue]);
 
   return (
     <nav className="panel">
@@ -84,6 +114,10 @@ export const PeopleFilters: React.FC<Props> = ({
             type="search"
             className="input"
             placeholder="Search"
+            value={inputValue}
+            onChange={e => {
+              setInputValue(e.target.value);
+            }}
           />
 
           <span className="icon is-left">
@@ -101,11 +135,6 @@ export const PeopleFilters: React.FC<Props> = ({
                 'centuries',
                 item,
               );
-              const newSearch = getSaveSearchParams(
-                searchParams,
-                'centuries',
-                item,
-              );
 
               return (
                 <button
@@ -114,7 +143,15 @@ export const PeopleFilters: React.FC<Props> = ({
                   className={classNames('button mr-1', {
                     'is-info': isActive,
                   })}
-                  onClick={() => navigate({ search: newSearch })}
+                  onClick={() => {
+                    const newSearch = getSaveSearchParams(
+                      searchParams,
+                      'centuries',
+                      item,
+                    );
+
+                    setSearchParams(newSearch);
+                  }}
                 >
                   {item}
                 </button>
