@@ -5,7 +5,7 @@ import { PeopleTable } from '../../components/PeopleTable/PeopleTable';
 import { getPeople } from '../../api';
 import { PeopleFilters } from '../../components/PeopleFilters/PeopleFilters';
 
-export const People = () => {
+export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);
   const [isError, setIsError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
