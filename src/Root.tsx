@@ -1,5 +1,5 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
-import { PeoplePage } from './components/PeoplePage/PeoplePage';
+import { PeoplePage } from './pages/PeoplePage/PeoplePage';
 
 export const Root = () => (
   <Routes>

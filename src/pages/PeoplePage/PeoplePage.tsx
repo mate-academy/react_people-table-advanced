@@ -1,126 +1,66 @@
-import { useEffect, useState } from 'react';
-import { getPeople } from '../../api';
 import { Loader } from '../../components/Loader';
+import { useEffect, useState } from 'react';
 import { Person } from '../../types';
-import { Link, useParams } from 'react-router-dom';
+import { PeopleTable } from '../../components/PeopleTable/PeopleTable';
+import { getPeople } from '../../api';
+import { PeopleFilters } from '../../components/PeopleFilters/PeopleFilters';
 
-export const PeoplePage = () => {
+export const People = () => {
   const [people, setPeople] = useState<Person[]>([]);
+  const [isError, setIsError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [hasError, setHasError] = useState(false);
-
-  const { personSlug } = useParams();
 
   useEffect(() => {
-    const fetchData = async () => {
-      setIsLoading(true);
-
-      try {
-        const peopleFromServer = await getPeople();
-
-        setPeople(peopleFromServer);
-      } catch {
-        setHasError(true);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchData();
+    setIsLoading(true);
+    setIsError(false);
+    getPeople()
+      .then(newPeople => setPeople(newPeople))
+      .catch(() => setIsError(true))
+      .finally(() => setIsLoading(false));
   }, []);
 
-  // Memoize the person finding logic
-  const getPersonByName = (name: string | null) =>
-    name ? people.find(person => person.name === name) : null;
+  let content;
+
+  if (isLoading) {
+    return (
+      <>
+        <h1 className="title">People Page</h1>
+        <div className="block">
+          <div className="columns is-desktop is-flex-direction-row-reverse">
+            <div className="column">
+              <div className="box table-container">
+                <Loader />
+              </div>
+            </div>
+          </div>
+        </div>
+      </>
+    );
+  } else if (isError) {
+    content = (
+      <p data-cy="peopleLoadingError" className="has-text-danger">
+        Something went wrong
+      </p>
+    );
+  } else if (people.length == 0) {
+    content = (
+      <p data-cy="noPeopleMessage">There are no people on the server</p>
+    );
+  } else {
+    content = <PeopleTable people={people} />;
+  }
 
   return (
     <>
       <h1 className="title">People Page</h1>
       <div className="block">
-        <div className="box table-container">
-          {isLoading && <Loader />}
-          {hasError && (
-            <p data-cy="peopleLoadingError" className="has-text-danger">
-              Something went wrong
-            </p>
-          )}
-          {people.length === 0 && !isLoading && !hasError && (
-            <p data-cy="noPeopleMessage">There are no people on the server</p>
-          )}
-          {!isLoading && (
-            <table
-              data-cy="peopleTable"
-              className="table is-striped is-hoverable is-narrow is-fullwidth"
-            >
-              <thead>
-                <tr>
-                  <th>Name</th>
-                  <th>Sex</th>
-                  <th>Born</th>
-                  <th>Died</th>
-                  <th>Mother</th>
-                  <th>Father</th>
-                </tr>
-              </thead>
-
-              <tbody>
-                {people.map(person => {
-                  // Pre-calculate these values once per person
-                  const mother = getPersonByName(person.motherName);
-                  const father = getPersonByName(person.fatherName);
-                  const isActive = person.slug === personSlug;
-                  const isFemale = person.sex === 'f';
-
-                  return (
-                    <tr
-                      data-cy="person"
-                      key={person.slug} // Better to use slug as key if available
-                      className={isActive ? 'has-background-warning' : ''}
-                    >
-                      <td>
-                        <Link
-                          to={`/people/${person.slug}`}
-                          className={isFemale ? 'has-text-danger' : ''}
-                        >
-                          {person.name}
-                        </Link>
-                      </td>
-
-                      <td>{person.sex}</td>
-                      <td>{person.born}</td>
-                      <td>{person.died}</td>
-                      <td className={mother ? 'has-text-danger' : ''}>
-                        {mother ? (
-                          <Link
-                            className="has-text-danger"
-                            to={`/people/${mother.slug}`}
-                          >
-                            {person.motherName}
-                          </Link>
-                        ) : person.motherName ? (
-                          person.motherName
-                        ) : (
-                          '-'
-                        )}
-                      </td>
-
-                      <td>
-                        {father ? (
-                          <Link to={`/people/${father.slug}`}>
-                            {person.fatherName}
-                          </Link>
-                        ) : person.fatherName ? (
-                          person.fatherName
-                        ) : (
-                          '-'
-                        )}
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          )}
+        <div className="columns is-desktop is-flex-direction-row-reverse">
+          <div className="column is-7-tablet is-narrow-desktop">
+            <PeopleFilters />
+          </div>
+          <div className="column">
+            <div className="box table-container">{content}</div>
+          </div>
         </div>
       </div>
     </>
