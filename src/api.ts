@@ -14,3 +14,6 @@ export async function getPeople(): Promise<Person[]> {
     .then(() => fetch(API_URL))
     .then(response => response.json());
 }
+
+export const findPerson = (people: Person[], personName: string | null) =>
+  people.find(item => item.name === personName);
