@@ -85,29 +85,33 @@ export const PeopleTable: React.FC<Props> = ({ initialList, peoplesList }) => {
     }
   }, [params, peoplesList]);
 
- const searchFather = (fatherName: string | null) => {
-  if (!fatherName) return null;
+  const searchFather = (fatherName: string | null) => {
+    if (!fatherName) {
+      return null;
+    }
 
-  const normalizedFatherName = fatherName.trim().toLocaleLowerCase();
+    const normalizedFatherName = fatherName.trim().toLocaleLowerCase();
 
-  return (
-    peoplesList.find(p =>
-      p.name.trim().toLocaleLowerCase() === normalizedFatherName
-    ) || null
-  );
-};
+    return (
+      peoplesList.find(
+        p => p.name.trim().toLocaleLowerCase() === normalizedFatherName,
+      ) || null
+    );
+  };
 
-const searchMother = (motherName: string | null) => {
-  if (!motherName) return null;
+  const searchMother = (motherName: string | null) => {
+    if (!motherName) {
+      return null;
+    }
 
-  const normalizedMotherName = motherName.trim().toLocaleLowerCase();
+    const normalizedMotherName = motherName.trim().toLocaleLowerCase();
 
-  return (
-    peoplesList.find(p =>
-      p.name.trim().toLocaleLowerCase() === normalizedMotherName
-    ) || null
-  );
-};
+    return (
+      peoplesList.find(
+        p => p.name.trim().toLocaleLowerCase() === normalizedMotherName,
+      ) || null
+    );
+  };
 
   return (
     <table
@@ -179,8 +183,8 @@ const searchMother = (motherName: string | null) => {
           <th>Mother</th>
           <th>Father</th>
         </tr>
-      </thead> {/* df */}
-
+      </thead>{' '}
+      {/* df */}
       <tbody>
         {stateList.map(person => {
           const father = searchFather(person.fatherName);
@@ -213,10 +217,10 @@ const searchMother = (motherName: string | null) => {
                     to={`/people/${mather.slug}`}
                     className="has-text-danger"
                   >
-                    {person.motherName}
+                    {person.motherName || '-'}
                   </Link>
                 ) : (
-                  '-'
+                  person.motherName || '-'
                 )}
               </td>
 
