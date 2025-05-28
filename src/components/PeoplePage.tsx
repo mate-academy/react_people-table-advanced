@@ -46,8 +46,10 @@ export const PeoplePage = () => {
   }, []);
 
   useEffect(() => {
+    if (!initialList.length) {
+      return;
+    }
 
-    if (!initialList.length) return;
     const centuriesValues = searchParams.getAll('centuries');
     const sexSearchParams = searchParams.get('sex');
 
@@ -64,7 +66,6 @@ export const PeoplePage = () => {
     setIsFilteredReady(false);
 
     debouncedFilter.current(filteredBase, inputValue);
-
   }, [searchParams, initialList, inputValue]);
 
   return (
