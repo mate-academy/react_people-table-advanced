@@ -10,7 +10,7 @@ type Props = Omit<LinkProps, 'to'> & {
 };
 
 /**
- * SearchLink updates the given `params` in the search keeping the `pathname`
+ *e SearchLink updates the given `params` in the search keeping the `pathnam`
  * and the other existing search params (see `getSearchWith`)
  */
 export const SearchLink: React.FC<Props> = ({
