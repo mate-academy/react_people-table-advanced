@@ -1,3 +1,50 @@
+// Main app container
+[data-cy="app"] {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+// Hide iframes (existing rule)
 iframe {
   display: none;
+}
+
+// Main content area
+.main-content {
+  flex: 1;
+  padding: 2rem 0;
+  background-color: #f5f5f5;
+
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+  .main-content {
+    padding: 1rem 0;
+  }
+}
+
+// Utility classes (optional)
+.text-center {
+  text-align: center;
+}
+
+.full-width {
+  width: 100%;
+}
+
+// Animation for route transitions (optional)
+.fade-enter {
+  opacity: 0;
+}
+
+.fade-enter-active {
+  opacity: 1;
+  transition: opacity 300ms ease-in;
 }

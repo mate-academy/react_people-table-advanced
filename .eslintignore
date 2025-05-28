@@ -1,2 +1,4 @@
 /build
 /node_modules
+// eslint-disable-next-line no-console
+console.error('Error fetching people:', error);

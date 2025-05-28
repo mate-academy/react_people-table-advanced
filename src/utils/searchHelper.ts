@@ -1,44 +1,32 @@
-export type SearchParams = {
-  [key: string]: string | string[] | null;
+type SearchParams = {
+  [key: string]: string | string[] | null | undefined;
 };
 
 /**
- * This function prepares a correct search string
- * from a given currentParams and paramsToUpdate.
+ * Helper function to manipulate URL search parameters
+ *
+ * @param params - Current URLSearchParams instance
+ * @param paramsToUpdate - Object with new params to update
+ * @returns String with updated search parameters
  */
-export function getSearchWith(
-  currentParams: URLSearchParams,
-  paramsToUpdate: SearchParams, // it's our custom type
-): string {
-  // copy currentParams by creating new object from a string
-  const newParams = new URLSearchParams(currentParams.toString());
-
-  // Here is the example of paramsToUpdate
-  // {
-  //   sex: 'm',                ['sex', 'm']
-  //   order: null,             ['order', null]
-  //   centuries: ['16', '19'], ['centuries', ['16', '19']]
-  // }
-  //
-  // - params with the `null` value are deleted;
-  // - string value is set to given param key;
-  // - array of strings adds several params with the same key;
+export const getSearchWith = (
+  params: URLSearchParams,
+  paramsToUpdate: SearchParams,
+): string => {
+  const newParams = new URLSearchParams(params.toString());
 
   Object.entries(paramsToUpdate).forEach(([key, value]) => {
-    if (value === null) {
+    if (value === null || value === undefined) {
       newParams.delete(key);
     } else if (Array.isArray(value)) {
-      // we delete the key to remove old values
       newParams.delete(key);
-
-      value.forEach(part => {
-        newParams.append(key, part);
-      });
+      value.forEach(item => newParams.append(key, item));
     } else {
       newParams.set(key, value);
     }
   });
 
-  // we return a string to use it inside links
   return newParams.toString();
-}
+};
+
+export type { SearchParams };
