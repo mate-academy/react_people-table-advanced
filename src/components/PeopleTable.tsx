@@ -5,7 +5,7 @@ import { Person } from '../types/Person';
 import classNames from 'classnames';
 import { useEffect, useReducer } from 'react';
 import { getSearchWith } from '../utils/searchHelper';
-import { getNextSortParams } from '../utils/sortFunction';
+import { GetNextSortParams } from '../utils/sortFunction';
 
 type Props = {
   peoplesList: Person[];
@@ -125,7 +125,7 @@ export const PeopleTable: React.FC<Props> = ({ initialList, peoplesList }) => {
               Name
               <Link
                 to={{
-                  search: getSearchWith(params, getNextSortParams('name')),
+                  search: getSearchWith(params, GetNextSortParams('name')),
                 }}
               >
                 <span className="icon">
@@ -140,7 +140,7 @@ export const PeopleTable: React.FC<Props> = ({ initialList, peoplesList }) => {
               Sex
               <Link
                 to={{
-                  search: getSearchWith(params, getNextSortParams('sex')),
+                  search: getSearchWith(params, GetNextSortParams('sex')),
                 }}
               >
                 <span className="icon">
@@ -155,7 +155,7 @@ export const PeopleTable: React.FC<Props> = ({ initialList, peoplesList }) => {
               Born
               <Link
                 to={{
-                  search: getSearchWith(params, getNextSortParams('born')),
+                  search: getSearchWith(params, GetNextSortParams('born')),
                 }}
               >
                 <span className="icon">
@@ -170,7 +170,7 @@ export const PeopleTable: React.FC<Props> = ({ initialList, peoplesList }) => {
               Died
               <Link
                 to={{
-                  search: getSearchWith(params, getNextSortParams('died')),
+                  search: getSearchWith(params, GetNextSortParams('died')),
                 }}
               >
                 <span className="icon">
