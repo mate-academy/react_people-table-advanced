@@ -85,9 +85,29 @@ export const PeopleTable: React.FC<Props> = ({ initialList, peoplesList }) => {
     }
   }, [params, peoplesList]);
 
-  const seartchFather = (fatherName: string | null) => {
-    return peoplesList.find(p => p.name === fatherName) || null;
-  };
+ const searchFather = (fatherName: string | null) => {
+  if (!fatherName) return null;
+
+  const normalizedFatherName = fatherName.trim().toLocaleLowerCase();
+
+  return (
+    peoplesList.find(p =>
+      p.name.trim().toLocaleLowerCase() === normalizedFatherName
+    ) || null
+  );
+};
+
+const searchMother = (motherName: string | null) => {
+  if (!motherName) return null;
+
+  const normalizedMotherName = motherName.trim().toLocaleLowerCase();
+
+  return (
+    peoplesList.find(p =>
+      p.name.trim().toLocaleLowerCase() === normalizedMotherName
+    ) || null
+  );
+};
 
   return (
     <table
@@ -98,7 +118,6 @@ export const PeopleTable: React.FC<Props> = ({ initialList, peoplesList }) => {
         <tr>
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
-              {' '}
               Name
               <Link
                 to={{
@@ -160,11 +179,12 @@ export const PeopleTable: React.FC<Props> = ({ initialList, peoplesList }) => {
           <th>Mother</th>
           <th>Father</th>
         </tr>
-      </thead>
+      </thead> {/* df */}
 
       <tbody>
         {stateList.map(person => {
-          const father = seartchFather(person.fatherName);
+          const father = searchFather(person.fatherName);
+          const mather = searchMother(person.motherName);
 
           return (
             <tr
@@ -187,13 +207,19 @@ export const PeopleTable: React.FC<Props> = ({ initialList, peoplesList }) => {
               <td>{person.sex}</td>
               <td>{person.born}</td>
               <td>{person.died}</td>
-              <td
-                className={classNames({
-                  'has-text-danger': person.sex === 'f',
-                })}
-              >
-                {person.motherName || '-'}
+              <td>
+                {mather ? (
+                  <Link
+                    to={`/people/${mather.slug}`}
+                    className="has-text-danger"
+                  >
+                    {person.motherName}
+                  </Link>
+                ) : (
+                  '-'
+                )}
               </td>
+
               <td>
                 {father ? (
                   <Link to={`/people/${father.slug}`}>

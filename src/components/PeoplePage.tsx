@@ -13,7 +13,6 @@ export const PeoplePage = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [hasError, setHasError] = useState<boolean>(false);
   const [inputValue, setInputValue] = useState<string>('');
-  const [isFilteredReady, setIsFilteredReady] = useState(false);
   const [searchParams] = useSearchParams();
 
   const debouncedFilter = useRef(
@@ -25,7 +24,6 @@ export const PeoplePage = () => {
       );
 
       setPeoplesList(filtered);
-      setIsFilteredReady(true);
     }, 300),
   );
 
@@ -41,7 +39,6 @@ export const PeoplePage = () => {
       })
       .finally(() => {
         setIsLoading(false);
-        setIsFilteredReady(true);
       });
   }, []);
 
@@ -62,8 +59,6 @@ export const PeoplePage = () => {
           ? centuriesValues.includes(century)
           : true;
       });
-
-    setIsFilteredReady(false);
 
     debouncedFilter.current(filteredBase, inputValue);
   }, [searchParams, initialList, inputValue]);
@@ -88,8 +83,6 @@ export const PeoplePage = () => {
               {hasError ? (
                 <p data-cy="peopleLoadingError">Something went wrong</p>
               ) : isLoading ? (
-                <Loader />
-              ) : !isFilteredReady ? (
                 <Loader />
               ) : initialList.length === 0 ? (
                 <p data-cy="noPeopleMessage">
