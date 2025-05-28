@@ -46,28 +46,26 @@ export const PeoplePage = () => {
   }, []);
 
   useEffect(() => {
-  const centuriesValues = searchParams.getAll('centuries');
-  const sexSearchParams = searchParams.get('sex');
 
-  let filteredBase = initialList
-    .filter(p => (sexSearchParams ? p.sex === sexSearchParams : true))
-    .filter(person => {
-      const century = Math.ceil(person.born / 100).toString();
-      return centuriesValues.length ? centuriesValues.includes(century) : true;
-    });
+    if (!initialList.length) return;
+    const centuriesValues = searchParams.getAll('centuries');
+    const sexSearchParams = searchParams.get('sex');
 
-  setIsFilteredReady(false);
+    const filteredBase = initialList
+      .filter(p => (sexSearchParams ? p.sex === sexSearchParams : true))
+      .filter(person => {
+        const century = Math.ceil(person.born / 100).toString();
 
-  debouncedFilter.current.cancel();
+        return centuriesValues.length
+          ? centuriesValues.includes(century)
+          : true;
+      });
 
-  if (!inputValue.trim()) {
-    setPeoplesList(filteredBase);
-    setIsFilteredReady(true);
-  } else {
+    setIsFilteredReady(false);
+
     debouncedFilter.current(filteredBase, inputValue);
-  }
-}, [searchParams, initialList, inputValue]);
 
+  }, [searchParams, initialList, inputValue]);
 
   return (
     <>
@@ -93,7 +91,9 @@ export const PeoplePage = () => {
               ) : !isFilteredReady ? (
                 <Loader />
               ) : initialList.length === 0 ? (
-                <p data-cy="noPeopleMessage">There are no people on the server</p>
+                <p data-cy="noPeopleMessage">
+                  There are no people on the server
+                </p>
               ) : peoplesList.length === 0 ? (
                 <p>There are no people matching the current search criteria</p>
               ) : (

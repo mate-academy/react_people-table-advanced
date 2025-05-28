@@ -60,7 +60,6 @@ export const PeopleTable: React.FC<Props> = ({ initialList, peoplesList }) => {
   const [params] = useSearchParams();
   const { slug } = useParams();
 
-
   useEffect(() => {
     const sort = params.get('sort');
     const order = params.get('order');

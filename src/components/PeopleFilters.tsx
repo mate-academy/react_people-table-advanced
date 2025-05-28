@@ -11,7 +11,7 @@ import { getSearchWith } from '../utils/searchHelper';
 
 type Props = {
   inputValue: string;
-  setInputValue: (p: string) => void
+  setInputValue: (p: string) => void;
 };
 
 export const PeopleFilters: React.FC<Props> = ({
@@ -20,8 +20,6 @@ export const PeopleFilters: React.FC<Props> = ({
 }) => {
   const [searchParams, setSearchParams] = useSearchParams();
   const { search } = useLocation();
-
-
 
   return (
     <nav className="panel">
@@ -33,7 +31,7 @@ export const PeopleFilters: React.FC<Props> = ({
             isActive && search === '' ? 'is-active' : ''
           }
           to={{
-            search: getSearchWith(searchParams, {'sex': null})
+            search: getSearchWith(searchParams, { sex: null }),
           }}
         >
           All
