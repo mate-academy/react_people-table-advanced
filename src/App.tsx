@@ -1,7 +1,7 @@
-import { PeoplePage } from './components/PeoplePage';
 import { Navbar } from './components/Navbar';
 
 import './App.scss';
+import { Root } from './Root';
 
 export const App = () => {
   return (
@@ -10,9 +10,7 @@ export const App = () => {
 
       <div className="section">
         <div className="container">
-          <h1 className="title">Home Page</h1>
-          <h1 className="title">Page not found</h1>
-          <PeoplePage />
+          <Root />
         </div>
       </div>
     </div>
