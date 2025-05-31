@@ -5,7 +5,7 @@ const centuries = ['16', '17', '18', '19', '20'];
 
 export const CenturyFilter = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const selected = searchParams.getAll('centuries');
+  const selected = searchParams.getAll('century');
 
   const toggleCentury = (century: string) => {
     const newSelected = selected.includes(century)
@@ -13,7 +13,7 @@ export const CenturyFilter = () => {
       : [...selected, century];
 
     const newParams = getSearchWith(searchParams, {
-      centuries: newSelected.length ? newSelected : null,
+      century: newSelected.length ? newSelected : null,
     });
 
     setSearchParams(newParams);
@@ -41,7 +41,7 @@ export const CenturyFilter = () => {
             className={`button ${selected.length === 0 ? 'is-success' : 'is-success is-outlined'}`}
             onClick={() => {
               const newParams = getSearchWith(searchParams, {
-                centuries: null,
+                century: null,
               });
 
               setSearchParams(newParams);

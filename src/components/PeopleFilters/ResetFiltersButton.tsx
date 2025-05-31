@@ -1,20 +1,34 @@
-import { SearchLink } from '../SearchLink';
+import { useNavigate } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
+import { getSearchWith } from '../../utils/searchHelper';
 
 export const ResetFiltersButton = () => {
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+
+  const handleReset = () => {
+    const newParams = getSearchWith(searchParams, {
+      query: null,
+      sex: null,
+      century: null,
+      sort: null,
+      order: null,
+    });
+
+    navigate({
+      pathname: '/people',
+      search: newParams.toString(),
+    });
+  };
+
   return (
     <div className="panel-block">
-      <SearchLink
+      <button
         className="button is-link is-outlined is-fullwidth"
-        params={{
-          sex: null,
-          query: null,
-          centuries: null,
-          sort: null,
-          order: null,
-        }}
+        onClick={handleReset}
       >
         Reset all filters
-      </SearchLink>
+      </button>
     </div>
   );
 };

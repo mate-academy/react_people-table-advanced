@@ -15,7 +15,7 @@ export const PeoplePage = () => {
   const [searchParams] = useSearchParams();
   const query = searchParams.get('query')?.toLowerCase() || '';
   const sex = searchParams.get('sex');
-  const centuries = searchParams.getAll('centuries');
+  const centuries = searchParams.getAll('century');
   const sort = searchParams.get('sort');
   const order = searchParams.get('order');
 
