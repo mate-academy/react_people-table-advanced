@@ -5,7 +5,7 @@ const centuries = ['16', '17', '18', '19', '20'];
 
 export const CenturyFilter = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const selected = searchParams.getAll('century');
+  const selected = searchParams.getAll('centuries');
 
   const toggleCentury = (century: string) => {
     const newSelected = selected.includes(century)
