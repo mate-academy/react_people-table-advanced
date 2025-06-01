@@ -1,20 +1,107 @@
+import { Link, useSearchParams } from 'react-router-dom';
+import { SearchLink } from './SearchLink';
+import classNames from 'classnames';
+import { Gender } from '../types/Gender';
+import React from 'react';
+import { getSearchWith } from '../utils/getSearchWith';
+// import { getSearchWith } from '../utils/searchHelper';
+
+const centuriesValue: string[] = ['16', '17', '18', '19', '20'];
+const lettersValue: string[] = ['a', 'e', 'o', 'u', 'i'];
+
 export const PeopleFilters = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const query = searchParams.get('query') || '';
+  const sex = searchParams.get('sex') || '';
+  const centuries = searchParams.getAll('centuries') || [];
+  const letters = searchParams.getAll('letters') || [];
+
+  type Param = string | number;
+  type Params = {
+    [key: string]: Param[] | Param | null;
+  };
+  function setSearchWith(params: Params) {
+    //const newParams = new URLSearchParams(searchParams);
+    const search = getSearchWith(params, searchParams);
+
+    //params.set("userId", event.target.value);
+    setSearchParams(search);
+  }
+
+  const resetParams = {
+    query: null,
+    sex: null,
+    centuries: null,
+    letters: null,
+  };
+
+  const resetCenturies = {
+    centuries: null,
+  };
+
+  const isActiveSex = (value: string | null) => {
+    return (!sex && value === null) || value === sex;
+  };
+
+  // not used
+  const appendCenturies = (century: string) => {
+    return centuries.includes(century)
+      ? centuries.filter(currCentury => currCentury !== century)
+      : [...centuries, century];
+  };
+
+  const appendLetters = (letter: string) => {
+    return letters.includes(letter)
+      ? letters.filter(currLetter => currLetter !== letter)
+      : [...letters, letter];
+  };
+
+  // end not used
+
+  function handleQueryChange(event: React.ChangeEvent<HTMLInputElement>) {
+    //setQuery(event.target.value);
+    setSearchWith({ query: event.target.value || null });
+
+    //const params = new URLSearchParams(searchParams);
+    //params.set("query", event.target.value);
+    //setSearchParams(params);
+    //setSearchParams(`?query=${event.target.value}`);
+  }
+
+  /*
+  const handleQueryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const params = new URLSearchParams(searchParams);
+
+    params.set('query', event.target.value);
+    setSearchParams(params);
+  };
+*/
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        <a className="is-active" href="#/people">
+        <SearchLink
+          className={classNames({ 'is-active': isActiveSex(null) })}
+          params={{ sex: null }}
+        >
           All
-        </a>
-        <a className="" href="#/people?sex=m">
-          Male
-        </a>
-        <a className="" href="#/people?sex=f">
-          Female
-        </a>
-      </p>
+        </SearchLink>
 
+        <SearchLink
+          className={classNames({ 'is-active': isActiveSex(Gender.Male) })}
+          params={{ sex: Gender.Male }}
+        >
+          Male
+        </SearchLink>
+
+        <SearchLink
+          className={classNames({ 'is-active': isActiveSex(Gender.Female) })}
+          params={{ sex: Gender.Female }}
+        >
+          Female
+        </SearchLink>
+      </p>
       <div className="panel-block">
         <p className="control has-icons-left">
           <input
@@ -22,6 +109,8 @@ export const PeopleFilters = () => {
             type="search"
             className="input"
             placeholder="Search"
+            value={query}
+            onChange={handleQueryChange}
           />
 
           <span className="icon is-left">
@@ -29,67 +118,130 @@ export const PeopleFilters = () => {
           </span>
         </p>
       </div>
-
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            <a
-              data-cy="century"
-              className="button mr-1"
-              href="#/people?centuries=16"
-            >
-              16
-            </a>
+            {centuriesValue.map(century => (
+              <Link
+                key={century}
+                to={{
+                  search: getSearchWith(
+                    {
+                      centuries: centuries.includes(century)
+                        ? centuries.filter(ch => century !== ch)
+                        : [...centuries, century],
+                    },
+                    searchParams,
+                  ),
+                }}
+                /* onClick={() => toggleLetter(letter)} */
+                className={classNames('button', {
+                  'is-info': centuries.includes(century),
+                })}
+              >
+                {century}
+              </Link>
+            ))}
 
-            <a
-              data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=17"
-            >
-              17
-            </a>
+            {false &&
+              centuriesValue.map(century => {
+                return (
+                  <SearchLink
+                    key={century}
+                    data-cy="century"
+                    className={classNames('button mr-1', {
+                      'is-info': centuries.includes(century),
+                    })}
+                    params={{ centuries: appendCenturies(century) }}
+                  >
+                    {century}
+                  </SearchLink>
+                );
+              })}
 
-            <a
-              data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=18"
-            >
-              18
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=19"
-            >
-              19
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1"
-              href="#/people?centuries=20"
-            >
-              20
-            </a>
+            <div className="level-left">
+              <SearchLink
+                data-cy="centuryALL"
+                className={classNames('button is-success', {
+                  'is-outlined': centuries.length > 0,
+                })}
+                params={{ centuries: null }}
+              >
+                All centuries
+              </SearchLink>
+            </div>
           </div>
 
-          <div className="level-right ml-4">
-            <a
-              data-cy="centuryALL"
-              className="button is-success is-outlined"
-              href="#/people"
-            >
-              All
-            </a>
-          </div>
+          {false && (
+            <div className="level-right ml-4">
+              {lettersValue.map(letter => {
+                return (
+                  <SearchLink
+                    key={letter}
+                    data-cy="letter"
+                    className={classNames('button mr-1', {
+                      'is-info': letters.includes(letter),
+                    })}
+                    params={{ letters: appendLetters(letter) }}
+                  >
+                    {letter}
+                  </SearchLink>
+                );
+              })}
+            </div>
+          )}
         </div>
       </div>
 
       <div className="panel-block">
-        <a className="button is-link is-outlined is-fullwidth" href="#/people">
+        <div className="buttons">
+          {lettersValue.map(letter => (
+            <Link
+              key={letter}
+              to={{
+                search: getSearchWith(
+                  {
+                    letters: letters.includes(letter)
+                      ? letters.filter(ch => letter !== ch)
+                      : [...letters, letter],
+                  },
+                  searchParams,
+                ),
+              }}
+              /* onClick={() => toggleLetter(letter)} */
+              className={classNames('button', {
+                'is-info': letters.includes(letter),
+              })}
+            >
+              {letter}
+            </Link>
+          ))}
+          <Link
+            /*onClick={clearLetters}*/
+            to={{ search: getSearchWith({ letters: null }, searchParams) }}
+            className={classNames('button', {
+              'is-info': letters.length > 0,
+            })}
+            /*disabled={letters.length === 0}*/
+          >
+            Clear all letters
+          </Link>
+        </div>
+      </div>
+
+      <div className="panel-block">
+        <SearchLink
+          className="button is-link is-outlined is-fullwidth"
+          params={resetCenturies}
+        >
+          Reset centuries
+        </SearchLink>
+        <SearchLink
+          className="button is-link is-outlined is-fullwidth"
+          params={resetParams}
+        >
           Reset all filters
-        </a>
+        </SearchLink>
       </div>
     </nav>
   );
