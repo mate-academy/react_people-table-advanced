@@ -34,7 +34,7 @@ export const PeoplePage = () => {
 
     // Filter by century
     if (selectedCenturies.length > 0) {
-      const personCentury = Math.floor((person.born - 1) / 100 + 1).toString();
+      const personCentury = Math.floor(person.born / 100 + 1).toString();
 
       if (!selectedCenturies.includes(personCentury)) {
         return false;
