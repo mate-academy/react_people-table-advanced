@@ -25,7 +25,7 @@ export const PeopleFilters: React.FC<Props> = ({
     setSearchWith({ query: event.target.value || null });
   }
 
-  function getUpdatedLetters(century: string): string[] {
+  function getUpdatedCenturies(century: string): string[] {
     return centuries.includes(century)
       ? centuries.filter(ch => century !== ch)
       : [...centuries, century];
@@ -84,7 +84,7 @@ export const PeopleFilters: React.FC<Props> = ({
                 key={century}
                 data-cy="century"
                 className={`button mr-1 ${selectedCenturies.includes(century.toString()) ? 'is-info' : ''}`}
-                to={`/people?${getSearchWith(searchParams, { centuries: getUpdatedLetters(century.toString()) })}`}
+                to={`/people?${getSearchWith(searchParams, { centuries: getUpdatedCenturies(century.toString()) })}`}
               >
                 {century}
               </Link>
