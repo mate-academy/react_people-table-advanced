@@ -30,9 +30,9 @@ export const getFilteredPeople = (
     );
   }
 
-  if (letters) {
+  if (letters.length !== 0) {
     filteredPeople = filteredPeople.filter(
-      person => person.name.includes(letters.join('')), //letters.some(l=>person.name.includes(l))
+      person => letters.some(l => person.name.includes(l)), //letters.some(l=>person.name.includes(l))
     );
   }
 

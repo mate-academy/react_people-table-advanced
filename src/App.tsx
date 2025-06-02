@@ -47,12 +47,16 @@ export const App = () => {
             <NavLink to="/" className={getLinkActive} style={getLinkStyle}>
               Home
             </NavLink>
-            <NavLink to="people" className={getLinkActive} style={getLinkStyle}>
+            <NavLink
+              to="/people"
+              className={getLinkActive}
+              style={getLinkStyle}
+            >
               People
             </NavLink>
             {slug && (
               <NavLink
-                to={`${slug}`}
+                to={`/${slug}`}
                 className={getLinkActive}
                 style={getLinkStyle}
               >

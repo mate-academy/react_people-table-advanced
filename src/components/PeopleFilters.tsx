@@ -1,4 +1,4 @@
-import { Link, useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import { SearchLink } from './SearchLink';
 import classNames from 'classnames';
 import { Gender } from '../types/Gender';
@@ -39,11 +39,13 @@ export const PeopleFilters = () => {
     centuries: null,
   };
 
+  const resetLetters = {
+    letters: null,
+  };
   const isActiveSex = (value: string | null) => {
     return (!sex && value === null) || value === sex;
   };
 
-  // not used
   const appendCenturies = (century: string) => {
     return centuries.includes(century)
       ? centuries.filter(currCentury => currCentury !== century)
@@ -55,8 +57,6 @@ export const PeopleFilters = () => {
       ? letters.filter(currLetter => currLetter !== letter)
       : [...letters, letter];
   };
-
-  // end not used
 
   function handleQueryChange(event: React.ChangeEvent<HTMLInputElement>) {
     //setQuery(event.target.value);
@@ -121,43 +121,20 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            {centuriesValue.map(century => (
-              <Link
-                key={century}
-                to={{
-                  search: getSearchWith(
-                    {
-                      centuries: centuries.includes(century)
-                        ? centuries.filter(ch => century !== ch)
-                        : [...centuries, century],
-                    },
-                    searchParams,
-                  ),
-                }}
-                /* onClick={() => toggleLetter(letter)} */
-                className={classNames('button', {
-                  'is-info': centuries.includes(century),
-                })}
-              >
-                {century}
-              </Link>
-            ))}
-
-            {false &&
-              centuriesValue.map(century => {
-                return (
-                  <SearchLink
-                    key={century}
-                    data-cy="century"
-                    className={classNames('button mr-1', {
-                      'is-info': centuries.includes(century),
-                    })}
-                    params={{ centuries: appendCenturies(century) }}
-                  >
-                    {century}
-                  </SearchLink>
-                );
-              })}
+            {centuriesValue.map(century => {
+              return (
+                <SearchLink
+                  key={century}
+                  data-cy="century"
+                  className={classNames('button mr-1', {
+                    'is-info': centuries.includes(century),
+                  })}
+                  params={{ centuries: appendCenturies(century) }}
+                >
+                  {century}
+                </SearchLink>
+              );
+            })}
 
             <div className="level-left">
               <SearchLink
@@ -171,61 +148,34 @@ export const PeopleFilters = () => {
               </SearchLink>
             </div>
           </div>
-
-          {false && (
-            <div className="level-right ml-4">
-              {lettersValue.map(letter => {
-                return (
-                  <SearchLink
-                    key={letter}
-                    data-cy="letter"
-                    className={classNames('button mr-1', {
-                      'is-info': letters.includes(letter),
-                    })}
-                    params={{ letters: appendLetters(letter) }}
-                  >
-                    {letter}
-                  </SearchLink>
-                );
-              })}
-            </div>
-          )}
         </div>
       </div>
 
       <div className="panel-block">
         <div className="buttons">
-          {lettersValue.map(letter => (
-            <Link
-              key={letter}
-              to={{
-                search: getSearchWith(
-                  {
-                    letters: letters.includes(letter)
-                      ? letters.filter(ch => letter !== ch)
-                      : [...letters, letter],
-                  },
-                  searchParams,
-                ),
-              }}
-              /* onClick={() => toggleLetter(letter)} */
-              className={classNames('button', {
-                'is-info': letters.includes(letter),
-              })}
-            >
-              {letter}
-            </Link>
-          ))}
-          <Link
-            /*onClick={clearLetters}*/
-            to={{ search: getSearchWith({ letters: null }, searchParams) }}
+          {lettersValue.map(letter => {
+            return (
+              <SearchLink
+                key={letter}
+                data-cy="letter"
+                className={classNames('button mr-1', {
+                  'is-info': letters.includes(letter),
+                })}
+                params={{ letters: appendLetters(letter) }}
+              >
+                {letter}
+              </SearchLink>
+            );
+          })}
+
+          <SearchLink
             className={classNames('button', {
               'is-info': letters.length > 0,
             })}
-            /*disabled={letters.length === 0}*/
+            params={resetLetters}
           >
-            Clear all letters
-          </Link>
+            Clear All Letters
+          </SearchLink>
         </div>
       </div>
 
