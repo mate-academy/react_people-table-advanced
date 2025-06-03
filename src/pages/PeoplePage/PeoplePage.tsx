@@ -21,6 +21,8 @@ export const PeoplePage = () => {
 
   const { state, dispatch } = context;
 
+  const isSoreted = state.sortedAndFilteredPeople.length === 0;
+
   useEffect(() => {
     if (!state.isLoading && !state.isError) {
       dispatch({
@@ -34,7 +36,7 @@ export const PeoplePage = () => {
         },
       });
     }
-  }, [dispatch, searchParams, state.isLoading]);
+  }, [dispatch, searchParams, state.isError, state.isLoading]);
 
   return (
     <>
@@ -58,10 +60,7 @@ export const PeoplePage = () => {
                 !state.isError &&
                 state.people.length > 0 &&
                 state.sortedAndFilteredPeople.length > 0 && <PeopleTable />}
-              {state.people.length > 0 &&
-                state.sortedAndFilteredPeople.length === 0 && (
-                  <NoPeopleMatchingPage />
-                )}
+              {state.people.length > 0 && isSoreted && <NoPeopleMatchingPage />}
             </div>
           </div>
         </div>
