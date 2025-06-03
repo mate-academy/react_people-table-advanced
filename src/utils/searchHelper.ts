@@ -1,7 +1,6 @@
 export type SearchParams = {
   [key: string]: string | string[] | null;
 };
-
 /**
  * This function prepares a correct search string
  * from a given currentParams and paramsToUpdate.
