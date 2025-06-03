@@ -9,3 +9,8 @@ export interface Person {
   mother?: Person;
   father?: Person;
 }
+
+export type CompletePerson = Omit<Person, 'mother' | 'father'> & {
+  mother: Person | null;
+  father: Person | null;
+};
