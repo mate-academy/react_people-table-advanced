@@ -54,7 +54,7 @@ export const PeopleFilters: React.FC = () => {
     updatedParams.delete('sex');
     updatedParams.delete('centuries');
 
-    return `people?${updatedParams.toString()}`;
+    return `/people?${updatedParams.toString()}`;
   };
 
   return (

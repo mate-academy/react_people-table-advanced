@@ -8,7 +8,7 @@ import { SomethingWrong } from '../../components/SomethingWrong/SomethingWrong';
 import { useSearchParams } from 'react-router-dom';
 import { Sex } from '../../types/Action';
 import { SortType } from '../../types/State';
-import { NoPeopleMatchingPage } from '../noPeopleMathingPage';
+import { NoPeopleMatchingPage } from '../NoPeopleMatchingPage';
 
 export const PeoplePage = () => {
   const context = useContext(PeopleContext);
@@ -16,12 +16,12 @@ export const PeoplePage = () => {
   const [searchParams] = useSearchParams();
 
   if (!context) {
-    throw new Error('content does not exist');
+    throw new Error('context does not exist');
   }
 
   const { state, dispatch } = context;
 
-  const isSoreted = state.sortedAndFilteredPeople.length === 0;
+  const isSorted = state.sortedAndFilteredPeople.length === 0;
 
   useEffect(() => {
     if (!state.isLoading && !state.isError) {
@@ -60,7 +60,7 @@ export const PeoplePage = () => {
                 !state.isError &&
                 state.people.length > 0 &&
                 state.sortedAndFilteredPeople.length > 0 && <PeopleTable />}
-              {state.people.length > 0 && isSoreted && <NoPeopleMatchingPage />}
+              {state.people.length > 0 && isSorted && <NoPeopleMatchingPage />}
             </div>
           </div>
         </div>
