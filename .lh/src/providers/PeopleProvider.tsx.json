@@ -1,0 +1,30 @@
+{
+    "sourceFile": "src/providers/PeopleProvider.tsx",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 3,
+            "patches": [
+                {
+                    "date": 1715717975001,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1715841091257,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -8,9 +8,9 @@\n   useState,\n } from 'react';\n import { Person } from '../types/Person';\n import { getPeople } from '../api';\n-import { useParams } from 'react-router-dom';\n+import { useParams, useSearchParams } from 'react-router-dom';\n \n interface PeopleContextI {\n   people: Person[];\n   activePerson?: Person;\n@@ -29,8 +29,11 @@\n   const [error, setError] = useState(false);\n   const [pending, setPending] = useState(false);\n   const { slug } = useParams();\n \n+  const [searchParams, setSearchParams] = useSearchParams();\n+  const sex = searchParams.get('sex');\n+\n   useEffect(() => {\n     setPending(true);\n     getPeople()\n       .then(data => {\n@@ -58,10 +61,14 @@\n     () => people.find(p => p.slug === slug),\n     [slug, people],\n   );\n \n+  const filteredPeople = useMemo(() => people.filter(person => (\n+    person.sex === sex\n+  )),[sex])\n+\n   const value = {\n-    people,\n+    people: filteredPeople,\n     activePerson,\n     error,\n     pending,\n   };\n"
+                },
+                {
+                    "date": 1715841169457,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -62,9 +62,14 @@\n     [slug, people],\n   );\n \n   const filteredPeople = useMemo(\n-    () => people.filter(person => person.sex === sex),\n+    () => people.filter(person => {\n+      if (!sex) {\n+        return person;\n+      }\n+      return person.sex === sex\n+    }),\n     [sex],\n   );\n \n   const value = {\n"
+                },
+                {
+                    "date": 1715841282137,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -15,8 +15,9 @@\n   people: Person[];\n   activePerson?: Person;\n   error: boolean;\n   pending: boolean;\n+  filters?: Record<string, string>\n }\n \n const PeopleContext = createContext<PeopleContextI>({\n   people: [],\n@@ -77,8 +78,9 @@\n     people: filteredPeople,\n     activePerson,\n     error,\n     pending,\n+    filters: {sex}\n   };\n \n   return (\n     <PeopleContext.Provider value={value}>{children}</PeopleContext.Provider>\n"
+                }
+            ],
+            "date": 1715717975001,
+            "name": "Commit-0",
+            "content": "import {\n  FC,\n  PropsWithChildren,\n  createContext,\n  useContext,\n  useEffect,\n  useMemo,\n  useState,\n} from 'react';\nimport { Person } from '../types/Person';\nimport { getPeople } from '../api';\nimport { useParams } from 'react-router-dom';\n\ninterface PeopleContextI {\n  people: Person[];\n  activePerson?: Person;\n  error: boolean;\n  pending: boolean;\n}\n\nconst PeopleContext = createContext<PeopleContextI>({\n  people: [],\n  error: false,\n  pending: false,\n});\n\nexport const PeopleProvider: FC<PropsWithChildren> = ({ children }) => {\n  const [people, setPeople] = useState<Person[]>([]);\n  const [error, setError] = useState(false);\n  const [pending, setPending] = useState(false);\n  const { slug } = useParams();\n\n  useEffect(() => {\n    setPending(true);\n    getPeople()\n      .then(data => {\n        const mapped = data.reduce<{ [key: string]: Person }>(\n          (prev, curr) => ({\n            ...prev,\n            [curr.name]: curr,\n          }),\n          {},\n        );\n\n        setPeople(\n          data.map(d => ({\n            ...d,\n            mother: d.motherName ? mapped[d.motherName] : undefined,\n            father: d.fatherName ? mapped[d.fatherName] : undefined,\n          })),\n        );\n      })\n      .catch(() => setError(true))\n      .finally(() => setPending(false));\n  }, []);\n\n  const activePerson = useMemo(\n    () => people.find(p => p.slug === slug),\n    [slug, people],\n  );\n\n  const value = {\n    people,\n    activePerson,\n    error,\n    pending,\n  };\n\n  return (\n    <PeopleContext.Provider value={value}>{children}</PeopleContext.Provider>\n  );\n};\n\nexport const usePeople = () => useContext(PeopleContext);\n"
+        }
+    ]
+}

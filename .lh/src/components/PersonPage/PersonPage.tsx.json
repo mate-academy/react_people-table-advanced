@@ -1,0 +1,22 @@
+{
+    "sourceFile": "src/components/PersonPage/PersonPage.tsx",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 1,
+            "patches": [
+                {
+                    "date": 1715860473321,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1715860492786,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -6,13 +6,13 @@\n interface Props {\n   person: Person;\n }\n export const PersonPage: FC<Props> = ({ person }) => {\n-  const search = useLocation();\n+  const { search } = useLocation();\n \n   return (\n     <Link\n-      to={`/people/${person.slug}`}\n+      to={`/people/${person.slug}${search}`}\n       className={classNames({ 'has-text-danger': person.sex === 'f' })}\n     >\n       {person.name}\n     </Link>\n"
+                }
+            ],
+            "date": 1715860473321,
+            "name": "Commit-0",
+            "content": "import { FC } from 'react';\nimport { Person } from '../../types';\nimport { Link, useLocation } from 'react-router-dom';\nimport classNames from 'classnames';\n\ninterface Props {\n  person: Person;\n}\nexport const PersonPage: FC<Props> = ({ person }) => {\n  const search = useLocation();\n  \n  return (\n    <Link\n      to={`/people/${person.slug}`}\n      className={classNames({ 'has-text-danger': person.sex === 'f' })}\n    >\n      {person.name}\n    </Link>\n  )\n};\n"
+        }
+    ]
+}
