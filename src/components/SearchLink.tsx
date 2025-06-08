@@ -11,7 +11,7 @@ type Props = Omit<LinkProps, 'to'> & {
 
 /**
  * SearchLink updates the given `params` in the search keeping the `pathname`
- * and the other existing search params (see `getSearchWith`)
+ *
  */
 export const SearchLink: React.FC<Props> = ({
   children, // this is the content between the open and closing tags
