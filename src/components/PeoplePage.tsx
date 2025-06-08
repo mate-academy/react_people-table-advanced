@@ -1,4 +1,4 @@
-import { PeopleFilters } from './PeopleFilters';
+import { PeopleFilters, sortPeople } from './PeopleFilters';
 import { Loader } from './Loader';
 import { PeopleTable } from './PeopleTable';
 import { useEffect, useState } from 'react';
@@ -47,7 +47,9 @@ export const PeoplePage = () => {
                 </p>
               )}
 
-              <p>There are no people matching the current search criteria</p>
+              {!loading && !error && sortPeople.length === 0 && (
+                <p>There are no people matching the current search criteria</p>
+              )}
 
               {!loading && !error && people.length > 0 && (
                 <PeopleTable people={people} />

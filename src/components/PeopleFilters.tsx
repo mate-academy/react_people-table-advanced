@@ -10,7 +10,7 @@ export const PeopleFilters = () => {
   const query = searchParams.get('query') || '';
   const centuries = ['16', '17', '18', '19', '20'];
 
-  const handleQery = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleQuery = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchParams(
       getSearchWith(searchParams, {
         query: event?.target.value || null,
@@ -51,7 +51,7 @@ export const PeopleFilters = () => {
             className="input"
             placeholder="Search"
             value={query}
-            onChange={handleQery}
+            onChange={handleQuery}
           />
 
           <span className="icon is-left">
@@ -72,7 +72,7 @@ export const PeopleFilters = () => {
                 })}
                 params={{
                   centuries: [...centuries].includes(century)
-                    ? centuries.filter(item => item === century)
+                    ? centuries.filter(item => item !== century)
                     : [...centuries, century],
                 }}
               >
@@ -154,6 +154,8 @@ export const sortPeople = (
         newPeople = newPeople.sort((a, b) => a.sex.localeCompare(b.sex));
         break;
       case 'Born':
+        newPeople = newPeople.sort((a, b) => a.born - b.born);
+        break;
       case 'Died':
         newPeople = newPeople.sort((a, b) => a.died - b.died);
         break;
