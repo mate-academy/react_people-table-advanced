@@ -1,6 +1,6 @@
 import { NavLink } from 'react-router-dom';
 
-export const NavBar = () => {
+export const Navbar = () => {
   const isActiveClass = ({ isActive }: { isActive: boolean }) => {
     return `navbar-item ${isActive ? 'has-background-grey-lighter' : ''}`;
   };

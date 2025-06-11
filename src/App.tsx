@@ -4,12 +4,12 @@ import { Navigate, Route, Routes } from 'react-router-dom';
 import HomePage from './components/HomePage';
 import NotFoundPage from './components/NotFoundPage';
 import { PeoplePage } from './components/PeoplePage';
-import { NavBar } from './components/Navbar';
+import { Navbar }  from './components/Navbar';
 
 export default function App() {
   return (
     <div data-cy="app">
-      <NavBar />
+      <Navbar />
       <main className="section">
         <div className="container">
           <Routes>
