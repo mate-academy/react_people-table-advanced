@@ -1,24 +1,30 @@
-export const Navbar = () => {
-  return (
-    <nav
-      data-cy="nav"
-      className="navbar is-fixed-top has-shadow"
-      role="navigation"
-      aria-label="main navigation"
-    >
-      <div className="container">
-        <div className="navbar-brand">
-          <a className="navbar-item" href="#/">
-            Home
-          </a>
+import { useLocation, Link } from 'react-router-dom';
+import classNames from 'classnames';
 
-          <a
-            aria-current="page"
-            className="navbar-item has-background-grey-lighter"
-            href="#/people"
+export const Navbar = () => {
+  const { pathname } = useLocation();
+
+  return (
+    <nav className="navbar" data-cy="nav">
+      <div className="navbar-menu is-active">
+        <div className="navbar-start">
+          <Link
+            to="/"
+            className={classNames('navbar-item', {
+              'has-background-grey-lighter': pathname === '/',
+            })}
+          >
+            Home
+          </Link>
+
+          <Link
+            to="/people"
+            className={classNames('navbar-item', {
+              'has-background-grey-lighter': pathname.startsWith('/people'),
+            })}
           >
             People
-          </a>
+          </Link>
         </div>
       </div>
     </nav>
