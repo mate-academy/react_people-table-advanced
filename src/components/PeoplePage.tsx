@@ -1,6 +1,7 @@
 import { PeopleFilters } from './PeopleFilters';
 import { Loader } from './Loader';
 import { PeopleTable } from './PeopleTable';
+import React from 'react';
 
 export const PeoplePage = () => {
   return (
