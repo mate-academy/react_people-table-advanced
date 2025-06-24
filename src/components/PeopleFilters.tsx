@@ -1,10 +1,8 @@
 import { useSearchParams } from 'react-router-dom';
-// Припускається, що getSearchWith знаходиться в '../utils/searchHelper'
-// і працює з URLSearchParams або створює їх
 import { getSearchWith } from '../utils/searchHelper';
 import { SearchLink } from './SearchLink';
 import classNames from 'classnames';
-import React, { useCallback } from 'react'; // Додано useCallback для оптимізації
+import React, { useCallback } from 'react';
 
 export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -17,7 +15,6 @@ export const PeopleFilters = () => {
   const centuriesArr = ['16', '17', '18', '19', '20'];
 
   const handleQueryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    // getSearchWith має повертати URLSearchParams або SearchParams
     const newSearchParams = getSearchWith(searchParams, {
       query: event.target.value || null,
     });
@@ -25,10 +22,9 @@ export const PeopleFilters = () => {
     setSearchParams(newSearchParams);
   };
 
-  // Ця функція тепер буде генерувати URLSearchParams об'єкт
   const getSexSearchParams = useCallback(
     (newSex: string | null) => {
-      const newParams = new URLSearchParams(searchParams); // Копіюємо поточні параметри
+      const newParams = new URLSearchParams(searchParams);
 
       if (newSex) {
         newParams.set('sex', newSex);
@@ -41,9 +37,33 @@ export const PeopleFilters = () => {
     [searchParams],
   );
 
+  // const getCenturySearchParams = useCallback(
+  //   (centuryToToggle: string) => {
+  //     const newParams = new URLSearchParams(searchParams);
+
+  //     if (centuries.includes(centuryToToggle)) {
+  //       const updatedCenturies = centuries.filter(c => c !== centuryToToggle);
+
+  //       newParams.delete('centuries');
+  //       updatedCenturies.forEach(c => newParams.append('centuries', c));
+  //     } else {
+  //       newParams.append('centuries', centuryToToggle);
+  //     }
+
+  //     return newParams;
+  //   },
+  //   [searchParams, centuries],
+  // );
+
   const getCenturySearchParams = useCallback(
     (centuryToToggle: string) => {
       const newParams = new URLSearchParams(searchParams);
+
+      if (!centuryToToggle) {
+        newParams.delete('centuries');
+
+        return newParams;
+      }
 
       if (centuries.includes(centuryToToggle)) {
         const updatedCenturies = centuries.filter(c => c !== centuryToToggle);
@@ -72,19 +92,19 @@ export const PeopleFilters = () => {
       <p className="panel-tabs" data-cy="SexFilter">
         <SearchLink
           className={classNames({ 'is-active': !sex })}
-          params={getSexSearchParams(null)} // Передаємо URLSearchParams
+          params={getSexSearchParams(null)}
         >
           Усі
         </SearchLink>
         <SearchLink
           className={classNames({ 'is-active': sex === 'm' })}
-          params={getSexSearchParams('m')} // Передаємо URLSearchParams
+          params={getSexSearchParams('m')}
         >
           Чоловіки
         </SearchLink>
         <SearchLink
           className={classNames({ 'is-active': sex === 'f' })}
-          params={getSexSearchParams('f')} // Передаємо URLSearchParams
+          params={getSexSearchParams('f')}
         >
           Жінки
         </SearchLink>
@@ -129,7 +149,7 @@ export const PeopleFilters = () => {
               className={classNames('button is-success', {
                 'is-outlined': centuries.length > 0,
               })}
-              params={getCenturySearchParams('')} // Передаємо пустий рядок або null, щоб скинути всі століття
+              params={getCenturySearchParams('')}
             >
               Усі
             </SearchLink>
