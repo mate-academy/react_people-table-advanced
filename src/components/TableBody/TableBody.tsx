@@ -5,9 +5,10 @@ import { PersonLink } from '../PersonLink';
 
 interface TableBodyProps {
   people: Person[];
+  allPeople: Person[];
 }
 
-export const TableBody: React.FC<TableBodyProps> = ({ people }) => {
+export const TableBody: React.FC<TableBodyProps> = ({ people, allPeople }) => {
   const { slug } = useParams();
   const selectedUserSlug = slug;
 
@@ -15,9 +16,9 @@ export const TableBody: React.FC<TableBodyProps> = ({ people }) => {
     <tbody>
       {people.map(person => {
         const mother =
-          people.find(parent => parent.name === person.motherName) || null;
+          allPeople.find(parent => parent.name === person.motherName) || null;
         const father =
-          people.find(parent => parent.name === person.fatherName) || null;
+          allPeople.find(parent => parent.name === person.fatherName) || null;
 
         return (
           <tr

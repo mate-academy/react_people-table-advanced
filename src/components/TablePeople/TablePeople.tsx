@@ -111,7 +111,7 @@ export const PeopleTable = () => {
                     sortDirection={direction}
                     onSort={handleSort}
                   />
-                  <TableBody people={visiblePeople} />
+                  <TableBody people={visiblePeople} allPeople={people} />
                 </table>
               )}
             </div>
