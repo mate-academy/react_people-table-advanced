@@ -10,6 +10,7 @@ import { PeopleFilters } from '../PeopleFilters';
 import { SortFields } from '../../types/SortFields';
 import { preparedPeople } from '../../utils/preparedPeople';
 import { SortDirection } from '../../types/SortDirection';
+import { Sex } from '../../types/Sex';
 
 export const PeopleTable = () => {
   const [people, setPeople] = useState<Person[]>([]);
@@ -18,8 +19,18 @@ export const PeopleTable = () => {
   const [columnName, setColumnName] = useState<SortFields | null>(null);
   const [direction, setDirection] = useState<SortDirection>(null);
   const [query, setQuery] = useState<string>('');
+  const [sexFilter, setSexFilter] = useState<Sex | null>(null);
+  const [centuryFilter, setCenturyFilter] = useState<number[]>([]);
 
-  const visiblePeople = preparedPeople(people, query, columnName, direction);
+  const filters = {
+    query: query,
+    sexFilter: sexFilter,
+    centuryFilter: centuryFilter,
+  };
+
+  const visiblePeople = preparedPeople(people, filters, columnName, direction);
+
+  const hasPeopleAfterFiltered = visiblePeople.length > 0;
 
   const handleSort = (column: SortFields) => {
     if (columnName !== column) {
@@ -68,7 +79,14 @@ export const PeopleTable = () => {
         <div className="columns is-desktop is-flex-direction-row-reverse">
           {!loading && !errorsKey && (
             <div className="column is-7-tablet is-narrow-desktop">
-              <PeopleFilters setQuery={setQuery} query={query} />
+              <PeopleFilters
+                setQuery={setQuery}
+                query={query}
+                setSexFilter={setSexFilter}
+                sexFilter={sexFilter}
+                setCenturyFilter={setCenturyFilter}
+                centuryFilter={centuryFilter}
+              />
             </div>
           )}
 
@@ -78,6 +96,8 @@ export const PeopleTable = () => {
                 <Loader />
               ) : errorsKey ? (
                 <p data-cy={errorsKey}>{Errors[errorsKey]}</p>
+              ) : !hasPeopleAfterFiltered ? (
+                <p>There are no people matching the current search criteria</p>
               ) : (
                 <table
                   data-cy="peopleTable"

@@ -28,10 +28,7 @@ export const TableBody: React.FC<TableBodyProps> = ({ people }) => {
             })}
           >
             <td>
-              <PersonLink
-                person={selectedUserSlug === person.slug ? null : person}
-                personName={person.name}
-              />
+              <PersonLink person={person} personName={person.name} />
             </td>
 
             <td>{person.sex}</td>

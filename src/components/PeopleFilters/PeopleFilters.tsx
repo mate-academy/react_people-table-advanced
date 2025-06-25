@@ -1,21 +1,30 @@
 import { Dispatch } from 'react';
 import { FilterCentury } from '../FilterCentury/FilterCentury';
 import { FilterGender } from '../FilterGender';
+import { Sex } from '../../types/Sex';
 
 interface PeopleFiltersProps {
   setQuery: Dispatch<React.SetStateAction<string>>;
   query: string;
+  setCenturyFilter: Dispatch<React.SetStateAction<number[]>>;
+  centuryFilter: number[];
+  setSexFilter: Dispatch<React.SetStateAction<Sex | null>>;
+  sexFilter: Sex | null;
 }
 
 export const PeopleFilters: React.FC<PeopleFiltersProps> = ({
   query,
   setQuery,
+  sexFilter,
+  setSexFilter,
+  setCenturyFilter,
+  centuryFilter,
 }) => {
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
 
-      <FilterGender />
+      <FilterGender setSexFilter={setSexFilter} sexFilter={sexFilter} />
 
       <div className="panel-block">
         <p className="control has-icons-left">
@@ -35,11 +44,22 @@ export const PeopleFilters: React.FC<PeopleFiltersProps> = ({
       </div>
 
       <div className="panel-block">
-        <FilterCentury />
+        <FilterCentury
+          setCenturyFilter={setCenturyFilter}
+          centuryFilter={centuryFilter}
+        />
       </div>
 
       <div className="panel-block">
-        <a className="button is-link is-outlined is-fullwidth" href="#/people">
+        <a
+          className="button is-link is-outlined is-fullwidth"
+          href="#/people"
+          onClick={() => {
+            setQuery('');
+            setCenturyFilter([]);
+            setSexFilter(null);
+          }}
+        >
           Reset all filters
         </a>
       </div>

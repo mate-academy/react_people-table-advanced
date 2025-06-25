@@ -1,19 +1,30 @@
+import { FilterService } from '../types/FiltersService/FilterService';
 import { Person } from '../types/Person';
 
 export const getFilteredPeople = (
   people: Person[],
-  query: string,
+  filters: FilterService,
 ): Person[] => {
+  const { query, sexFilter, centuryFilter } = filters;
+
   const normalizedQuery = query.toLowerCase().trim();
+  const hasQuery = normalizedQuery !== '';
+  const hasSexFilter = sexFilter !== null;
+  const hasCenturyFilter = centuryFilter.length > 0;
 
-  let filteredPeople = [...people];
+  return people.filter(person => {
+    const matchesQuery =
+      !hasQuery ||
+      person.name.toLowerCase().includes(normalizedQuery) ||
+      person.motherName?.toLowerCase().includes(normalizedQuery) ||
+      person.fatherName?.toLowerCase().includes(normalizedQuery);
 
-  filteredPeople = people.filter(
-    ({ motherName, fatherName, name }) =>
-      name.toLowerCase().includes(normalizedQuery) ||
-      motherName?.toLocaleLowerCase().includes(normalizedQuery) ||
-      fatherName?.toLowerCase().includes(normalizedQuery),
-  );
+    const matchesSex = !hasSexFilter || person.sex === sexFilter;
 
-  return filteredPeople;
+    const birthCentury = Math.floor(person.born / 100) + 1;
+    const matchesCentury =
+      !hasCenturyFilter || centuryFilter.includes(birthCentury);
+
+    return matchesQuery && matchesSex && matchesCentury;
+  });
 };

@@ -1,6 +1,32 @@
+import { Dispatch } from 'react';
+import cn from 'classnames';
+
+interface FilterCenturyProps {
+  centuryFilter: number[];
+  setCenturyFilter: Dispatch<React.SetStateAction<number[]>>;
+}
+
 export const FilterCenturyValue = [16, 17, 18, 19, 20];
 
-export const FilterCentury = () => {
+export const FilterCentury: React.FC<FilterCenturyProps> = ({
+  centuryFilter,
+  setCenturyFilter,
+}) => {
+  const handleToggleCentury = (century: number) => {
+    setCenturyFilter(currentCentury =>
+      currentCentury.includes(century)
+        ? currentCentury.filter(centur => centur !== century)
+        : [...currentCentury, century],
+    );
+  };
+
+  const handleToggleAllCentury = (
+    event: React.MouseEvent<HTMLAnchorElement>,
+  ) => {
+    event.preventDefault();
+    setCenturyFilter([]);
+  };
+
   return (
     <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
       <div className="level-left">
@@ -8,8 +34,14 @@ export const FilterCentury = () => {
           <a
             key={century}
             data-cy="century"
-            className="button mr-1"
+            className={cn('button mr-1', {
+              'is-info': centuryFilter.includes(century),
+            })}
             href={`#/people?centuries=${century}`}
+            onClick={event => {
+              event.preventDefault();
+              handleToggleCentury(century);
+            }}
           >
             {century}
           </a>
@@ -19,8 +51,11 @@ export const FilterCentury = () => {
       <div className="level-right ml-4">
         <a
           data-cy="centuryALL"
-          className="button is-success is-outlined"
+          className={cn('button is-success', {
+            'is-outlined': centuryFilter.length > 0,
+          })}
           href="#/people"
+          onClick={handleToggleAllCentury}
         >
           All
         </a>
