@@ -1,6 +1,7 @@
 // import { Dispatch } from 'react';
 import { FilterCentury } from '../FilterCentury/FilterCentury';
 import { FilterGender } from '../FilterGender';
+import { SearchLink } from '../SeachLink';
 
 interface PeopleFiltersProps {
   query: string;
@@ -43,17 +44,13 @@ export const PeopleFilters: React.FC<PeopleFiltersProps> = ({
       </div>
 
       <div className="panel-block">
-        <a
-          className="button is-link is-outlined is-fullwidth"
-          href="#/people"
-          // onClick={() => {
-          //   setQuery('');
-          //   setCenturyFilter([]);
-          //   setSexFilter(null);
-          // }}
+        <SearchLink
+          data-cy="centuryALL"
+          className="button is-link is-fullwidth is-outlined"
+          params={{ query: null, sexFilter: null, centuryFilter: [] }}
         >
           Reset all filters
-        </a>
+        </SearchLink>
       </div>
     </nav>
   );

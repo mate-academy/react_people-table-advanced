@@ -10,21 +10,19 @@ import { PeopleFilters } from '../PeopleFilters';
 import { SortFields } from '../../types/SortFields';
 import { preparedPeople } from '../../utils/preparedPeople';
 import { SortDirection } from '../../types/SortDirection';
-// import { Sex } from '../../types/Sex';
 import { useSearchParams } from 'react-router-dom';
 
 export const PeopleTable = () => {
   const [people, setPeople] = useState<Person[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [errorsKey, setErrorsKey] = useState<ErrorsKey | null>(null);
-  const [columnName, setColumnName] = useState<SortFields | null>(null);
-  const [direction, setDirection] = useState<SortDirection>(null);
-  // const [centuryFilter, setCenturyFilter] = useState<number[]>([]);
   const [searchParams, setSearchParams] = useSearchParams();
 
   const query = searchParams.get('query') || '';
   const sexFilter = searchParams.get('sex');
   const centuriesFilter = searchParams.getAll('centuries');
+  const columnName = searchParams.get('sort') as SortFields | null;
+  const direction = (searchParams.get('order') as SortDirection) || 'asc';
 
   const handleQueryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const params = new URLSearchParams();
@@ -44,20 +42,21 @@ export const PeopleTable = () => {
   const hasPeopleAfterFiltered = visiblePeople.length > 0;
 
   const handleSort = (column: SortFields) => {
-    if (columnName !== column) {
-      setColumnName(column);
-      setDirection('asc');
+    const newParams = new URLSearchParams(searchParams);
+    const currentSort = newParams.get('sort');
+    const currentOrder = newParams.get('order');
 
-      return;
+    if (currentSort !== column) {
+      newParams.set('sort', column);
+      newParams.delete('order');
+    } else if (currentOrder !== 'desc') {
+      newParams.set('order', 'desc');
+    } else {
+      newParams.delete('sort');
+      newParams.delete('order');
     }
 
-    if (direction === 'asc') {
-      setDirection('desc');
-
-      return;
-    }
-
-    setDirection(null);
+    setSearchParams(newParams);
   };
 
   const handleGetPeople = () => {
