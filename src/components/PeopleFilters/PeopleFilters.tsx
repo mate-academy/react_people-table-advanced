@@ -1,30 +1,25 @@
-import { Dispatch } from 'react';
+// import { Dispatch } from 'react';
 import { FilterCentury } from '../FilterCentury/FilterCentury';
 import { FilterGender } from '../FilterGender';
-import { Sex } from '../../types/Sex';
 
 interface PeopleFiltersProps {
-  setQuery: Dispatch<React.SetStateAction<string>>;
   query: string;
-  setCenturyFilter: Dispatch<React.SetStateAction<number[]>>;
-  centuryFilter: number[];
-  setSexFilter: Dispatch<React.SetStateAction<Sex | null>>;
-  sexFilter: Sex | null;
+  centuryFilter: string[];
+  sexFilter: string | null;
+  changeQuery: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 export const PeopleFilters: React.FC<PeopleFiltersProps> = ({
   query,
-  setQuery,
   sexFilter,
-  setSexFilter,
-  setCenturyFilter,
   centuryFilter,
+  changeQuery,
 }) => {
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
 
-      <FilterGender setSexFilter={setSexFilter} sexFilter={sexFilter} />
+      <FilterGender sexFilter={sexFilter} />
 
       <div className="panel-block">
         <p className="control has-icons-left">
@@ -34,7 +29,7 @@ export const PeopleFilters: React.FC<PeopleFiltersProps> = ({
             className="input"
             placeholder="Search"
             value={query}
-            onChange={event => setQuery(event.target.value.trimStart())}
+            onChange={changeQuery}
           />
 
           <span className="icon is-left">
@@ -44,21 +39,18 @@ export const PeopleFilters: React.FC<PeopleFiltersProps> = ({
       </div>
 
       <div className="panel-block">
-        <FilterCentury
-          setCenturyFilter={setCenturyFilter}
-          centuryFilter={centuryFilter}
-        />
+        <FilterCentury centuryFilter={centuryFilter} />
       </div>
 
       <div className="panel-block">
         <a
           className="button is-link is-outlined is-fullwidth"
           href="#/people"
-          onClick={() => {
-            setQuery('');
-            setCenturyFilter([]);
-            setSexFilter(null);
-          }}
+          // onClick={() => {
+          //   setQuery('');
+          //   setCenturyFilter([]);
+          //   setSexFilter(null);
+          // }}
         >
           Reset all filters
         </a>

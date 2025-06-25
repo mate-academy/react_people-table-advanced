@@ -5,12 +5,12 @@ export const getFilteredPeople = (
   people: Person[],
   filters: FilterService,
 ): Person[] => {
-  const { query, sexFilter, centuryFilter } = filters;
+  const { query, sexFilter, centuriesFilter } = filters;
 
   const normalizedQuery = query.toLowerCase().trim();
   const hasQuery = normalizedQuery !== '';
   const hasSexFilter = sexFilter !== null;
-  const hasCenturyFilter = centuryFilter.length > 0;
+  const hasCenturyFilter = centuriesFilter.length > 0;
 
   return people.filter(person => {
     const matchesQuery =
@@ -23,7 +23,7 @@ export const getFilteredPeople = (
 
     const birthCentury = Math.floor(person.born / 100) + 1;
     const matchesCentury =
-      !hasCenturyFilter || centuryFilter.includes(birthCentury);
+      !hasCenturyFilter || centuriesFilter.includes(String(birthCentury));
 
     return matchesQuery && matchesSex && matchesCentury;
   });

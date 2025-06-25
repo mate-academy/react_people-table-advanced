@@ -10,7 +10,8 @@ import { PeopleFilters } from '../PeopleFilters';
 import { SortFields } from '../../types/SortFields';
 import { preparedPeople } from '../../utils/preparedPeople';
 import { SortDirection } from '../../types/SortDirection';
-import { Sex } from '../../types/Sex';
+// import { Sex } from '../../types/Sex';
+import { useSearchParams } from 'react-router-dom';
 
 export const PeopleTable = () => {
   const [people, setPeople] = useState<Person[]>([]);
@@ -18,14 +19,24 @@ export const PeopleTable = () => {
   const [errorsKey, setErrorsKey] = useState<ErrorsKey | null>(null);
   const [columnName, setColumnName] = useState<SortFields | null>(null);
   const [direction, setDirection] = useState<SortDirection>(null);
-  const [query, setQuery] = useState<string>('');
-  const [sexFilter, setSexFilter] = useState<Sex | null>(null);
-  const [centuryFilter, setCenturyFilter] = useState<number[]>([]);
+  // const [centuryFilter, setCenturyFilter] = useState<number[]>([]);
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const query = searchParams.get('query') || '';
+  const sexFilter = searchParams.get('sex');
+  const centuriesFilter = searchParams.getAll('centuries');
+
+  const handleQueryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const params = new URLSearchParams();
+
+    params.set('query', event.target.value.trimStart());
+    setSearchParams(params);
+  };
 
   const filters = {
     query: query,
     sexFilter: sexFilter,
-    centuryFilter: centuryFilter,
+    centuriesFilter: centuriesFilter,
   };
 
   const visiblePeople = preparedPeople(people, filters, columnName, direction);
@@ -80,12 +91,10 @@ export const PeopleTable = () => {
           {!loading && !errorsKey && (
             <div className="column is-7-tablet is-narrow-desktop">
               <PeopleFilters
-                setQuery={setQuery}
+                changeQuery={handleQueryChange}
                 query={query}
-                setSexFilter={setSexFilter}
                 sexFilter={sexFilter}
-                setCenturyFilter={setCenturyFilter}
-                centuryFilter={centuryFilter}
+                centuryFilter={centuriesFilter}
               />
             </div>
           )}

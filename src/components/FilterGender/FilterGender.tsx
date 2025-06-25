@@ -1,10 +1,8 @@
-import { Dispatch } from 'react';
-import { Sex } from '../../types/Sex';
 import cn from 'classnames';
+import { SearchLink } from '../SeachLink';
 
 interface FilterGenderProps {
-  setSexFilter: Dispatch<React.SetStateAction<Sex | null>>;
-  sexFilter: Sex | null;
+  sexFilter: string | null;
 }
 
 export const FilterSex = {
@@ -13,27 +11,18 @@ export const FilterSex = {
   Female: 'f',
 } as const;
 
-export const FilterGender: React.FC<FilterGenderProps> = ({
-  setSexFilter,
-  sexFilter,
-}) => {
+export const FilterGender: React.FC<FilterGenderProps> = ({ sexFilter }) => {
   return (
     <p className="panel-tabs" data-cy="SexFilter">
       {Object.entries(FilterSex).map(([text, gender]) => {
-        const href = gender ? `#/people?sex=${gender}` : '#/people';
-
         return (
-          <a
+          <SearchLink
             key={text}
             className={cn({ 'is-active': gender === sexFilter })}
-            href={href}
-            onClick={event => {
-              event.preventDefault();
-              setSexFilter(gender);
-            }}
+            params={{ sex: gender }}
           >
             {text}
-          </a>
+          </SearchLink>
         );
       })}
     </p>
