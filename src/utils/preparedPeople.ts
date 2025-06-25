@@ -1,14 +1,18 @@
 import { Person } from '../types/Person';
-import { SortConfig } from '../types/SortConfig';
+import { SortDirection } from '../types/SortDirection';
+import { SortFields } from '../types/SortFields';
 import { getFilteredPeople } from './getPeopleFiltered';
 import { getSortedPeople } from './getSortedPeople';
 
 export const preparedPeople = (
   people: Person[],
   query: string,
-  sortConfig: SortConfig,
+  columnName: SortFields | null,
+  direction: SortDirection,
 ): Person[] => {
-  const filtered = getFilteredPeople(people, query);
+  const filteredPeople = getFilteredPeople(people, query);
 
-  return getSortedPeople(filtered, sortConfig);
+  getSortedPeople(filteredPeople, columnName, direction);
+
+  return filteredPeople;
 };

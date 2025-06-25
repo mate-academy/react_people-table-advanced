@@ -2,12 +2,12 @@ import { Dispatch } from 'react';
 import { FilterCentury } from '../FilterCentury/FilterCentury';
 import { FilterGender } from '../FilterGender';
 
-interface PeopeleFiltersProps {
+interface PeopleFiltersProps {
   setQuery: Dispatch<React.SetStateAction<string>>;
   query: string;
 }
 
-export const PeopleFilters: React.FC<PeopeleFiltersProps> = ({
+export const PeopleFilters: React.FC<PeopleFiltersProps> = ({
   query,
   setQuery,
 }) => {

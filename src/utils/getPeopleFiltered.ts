@@ -6,10 +6,14 @@ export const getFilteredPeople = (
 ): Person[] => {
   const normalizedQuery = query.toLowerCase().trim();
 
-  return people.filter(
+  let filteredPeople = [...people];
+
+  filteredPeople = people.filter(
     ({ motherName, fatherName, name }) =>
       name.toLowerCase().includes(normalizedQuery) ||
       motherName?.toLocaleLowerCase().includes(normalizedQuery) ||
       fatherName?.toLowerCase().includes(normalizedQuery),
   );
+
+  return filteredPeople;
 };
