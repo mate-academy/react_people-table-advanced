@@ -1,3 +1,27 @@
+import cn from 'classnames';
+import { ReactNode } from 'react';
+import { NavLink } from 'react-router-dom';
+
+const getNavLinkClass = ({ isActive }: { isActive: boolean }) =>
+  cn('navbar-item', { 'has-background-grey-lighter': isActive });
+
+interface NavigationObject {
+  to: string;
+  children: ReactNode;
+}
+
+const navigation: NavigationObject[] = [
+  {
+    to: '/',
+    children: 'Home',
+  },
+
+  {
+    to: '/people',
+    children: 'People',
+  },
+];
+
 export const Navbar = () => {
   return (
     <nav
@@ -8,17 +32,11 @@ export const Navbar = () => {
     >
       <div className="container">
         <div className="navbar-brand">
-          <a className="navbar-item" href="#/">
-            Home
-          </a>
-
-          <a
-            aria-current="page"
-            className="navbar-item has-background-grey-lighter"
-            href="#/people"
-          >
-            People
-          </a>
+          {navigation.map(({ to, children }) => (
+            <NavLink key={to} className={getNavLinkClass} to={to}>
+              {children}
+            </NavLink>
+          ))}
         </div>
       </div>
     </nav>
