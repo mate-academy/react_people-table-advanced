@@ -31,7 +31,7 @@ export const SortableNameColumn: React.FC<Props> = ({
     return (
       <span className="is-flex is-flex-wrap-nowrap">
         {columnName}
-        <SearchLink params={{ order: 'desc' }}>
+        <SearchLink params={{ sort: sortBy, order: 'desc' }}>
           <span className="icon">
             <i className="fas fa-sort-up" />
           </span>

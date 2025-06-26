@@ -3,7 +3,7 @@ import { useParams, useSearchParams } from 'react-router-dom';
 import { calculateCentury } from '../utils/calculateCentury';
 import { Person } from '../types';
 import { filterPeople } from '../utils/people/filterPeople';
-import { sortPeploe } from '../utils/people/sortPeople';
+import { sortPeople } from '../utils/people/sortPeople';
 import { getPeople } from '../api';
 
 export const usePeople = () => {
@@ -53,7 +53,7 @@ export const usePeople = () => {
     centuriesSearchParams,
   });
 
-  const visiblePeople = sortPeploe(filteredPeople, {
+  const visiblePeople = sortPeople(filteredPeople, {
     sortSearchParam,
     orderSearchParam,
   });
