@@ -33,4 +33,4 @@ export const SearchLink: React.FC<Props> = ({
       {children}
     </Link>
   );
-};
+}; //link
