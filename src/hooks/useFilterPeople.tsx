@@ -16,13 +16,13 @@ export const useFilterPeople = (people: Person[] | null) => {
 
   const visiblePeople = people
     ? getVisiblePeople(
-        people,
-        sex as SexFilterTypeValues,
-        centuries,
-        query,
-        sort as SortTypesValues,
-        order,
-      )
+      people,
+      sex as SexFilterTypeValues,
+      centuries,
+      query,
+      sort as SortTypesValues,
+      order,
+    )
     : [];
 
   return {
