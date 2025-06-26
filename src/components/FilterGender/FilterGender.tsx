@@ -1,8 +1,8 @@
 import cn from 'classnames';
-import { SearchLink } from '../SeachLink';
+import { SearchLink } from '../SearchLink';
 
 interface FilterGenderProps {
-  sexFilter: string | null;
+  sex: string | null;
 }
 
 export const FilterSex = {
@@ -11,14 +11,14 @@ export const FilterSex = {
   Female: 'f',
 } as const;
 
-export const FilterGender: React.FC<FilterGenderProps> = ({ sexFilter }) => {
+export const FilterGender: React.FC<FilterGenderProps> = ({ sex }) => {
   return (
     <p className="panel-tabs" data-cy="SexFilter">
       {Object.entries(FilterSex).map(([text, gender]) => {
         return (
           <SearchLink
             key={text}
-            className={cn({ 'is-active': gender === sexFilter })}
+            className={cn({ 'is-active': gender === sex })}
             params={{ sex: gender }}
           >
             {text}

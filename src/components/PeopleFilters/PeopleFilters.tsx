@@ -1,26 +1,26 @@
 // import { Dispatch } from 'react';
 import { FilterCentury } from '../FilterCentury/FilterCentury';
 import { FilterGender } from '../FilterGender';
-import { SearchLink } from '../SeachLink';
+import { SearchLink } from '../SearchLink';
 
 interface PeopleFiltersProps {
   query: string;
-  centuryFilter: string[];
-  sexFilter: string | null;
+  centuries: string[];
+  sex: string | null;
   changeQuery: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 export const PeopleFilters: React.FC<PeopleFiltersProps> = ({
   query,
-  sexFilter,
-  centuryFilter,
+  centuries,
+  sex,
   changeQuery,
 }) => {
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
 
-      <FilterGender sexFilter={sexFilter} />
+      <FilterGender sex={sex} />
 
       <div className="panel-block">
         <p className="control has-icons-left">
@@ -40,14 +40,14 @@ export const PeopleFilters: React.FC<PeopleFiltersProps> = ({
       </div>
 
       <div className="panel-block">
-        <FilterCentury centuryFilter={centuryFilter} />
+        <FilterCentury centuries={centuries} />
       </div>
 
       <div className="panel-block">
         <SearchLink
           data-cy="centuryALL"
           className="button is-link is-fullwidth is-outlined"
-          params={{ query: null, sexFilter: null, centuryFilter: [] }}
+          params={{ query: null, sex: null, centuries: [] }}
         >
           Reset all filters
         </SearchLink>

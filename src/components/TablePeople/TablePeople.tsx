@@ -33,8 +33,8 @@ export const PeopleTable = () => {
 
   const filters = {
     query: query,
-    sexFilter: sexFilter,
-    centuriesFilter: centuriesFilter,
+    sex: sexFilter,
+    centuries: centuriesFilter,
   };
 
   const visiblePeople = preparedPeople(people, filters, columnName, direction);
@@ -92,8 +92,8 @@ export const PeopleTable = () => {
               <PeopleFilters
                 changeQuery={handleQueryChange}
                 query={query}
-                sexFilter={sexFilter}
-                centuryFilter={centuriesFilter}
+                sex={sexFilter}
+                centuries={centuriesFilter}
               />
             </div>
           )}

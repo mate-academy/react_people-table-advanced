@@ -5,12 +5,12 @@ export const getFilteredPeople = (
   people: Person[],
   filters: FilterService,
 ): Person[] => {
-  const { query, sexFilter, centuriesFilter } = filters;
+  const { query, sex, centuries } = filters;
 
   const normalizedQuery = query.toLowerCase().trim();
   const hasQuery = normalizedQuery !== '';
-  const hasSexFilter = sexFilter !== null;
-  const hasCenturyFilter = centuriesFilter.length > 0;
+  const hasSexFilter = sex !== null;
+  const hasCenturyFilter = centuries.length > 0;
 
   return people.filter(person => {
     const matchesQuery =
@@ -19,11 +19,11 @@ export const getFilteredPeople = (
       person.motherName?.toLowerCase().includes(normalizedQuery) ||
       person.fatherName?.toLowerCase().includes(normalizedQuery);
 
-    const matchesSex = !hasSexFilter || person.sex === sexFilter;
+    const matchesSex = !hasSexFilter || person.sex === sex;
 
     const birthCentury = Math.floor(person.born / 100) + 1;
     const matchesCentury =
-      !hasCenturyFilter || centuriesFilter.includes(String(birthCentury));
+      !hasCenturyFilter || centuries.includes(String(birthCentury));
 
     return matchesQuery && matchesSex && matchesCentury;
   });

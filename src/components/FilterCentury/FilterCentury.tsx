@@ -1,30 +1,28 @@
 import cn from 'classnames';
-import { SearchLink } from '../SeachLink';
+import { SearchLink } from '../SearchLink';
 
 interface FilterCenturyProps {
-  centuryFilter: string[];
+  centuries: string[];
 }
 
 export const FilterCenturyValue = [16, 17, 18, 19, 20];
 
-export const FilterCentury: React.FC<FilterCenturyProps> = ({
-  centuryFilter,
-}) => {
+export const FilterCentury: React.FC<FilterCenturyProps> = ({ centuries }) => {
   return (
     <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
       <div className="level-left">
         {FilterCenturyValue.map(century => {
           const centuryStr = String(century);
-          const newCenturies = centuryFilter.includes(centuryStr)
-            ? centuryFilter.filter(c => c !== centuryStr)
-            : [...centuryFilter, centuryStr];
+          const newCenturies = centuries.includes(centuryStr)
+            ? centuries.filter(c => c !== centuryStr)
+            : [...centuries, centuryStr];
 
           return (
             <SearchLink
               key={century}
               data-cy="century"
               className={cn('button mr-1', {
-                'is-info': centuryFilter.includes(centuryStr),
+                'is-info': centuries.includes(centuryStr),
               })}
               params={{ centuries: newCenturies }}
             >
@@ -38,7 +36,7 @@ export const FilterCentury: React.FC<FilterCenturyProps> = ({
         <SearchLink
           data-cy="centuryALL"
           className={cn('button', 'is-success', {
-            'is-outlined': centuryFilter.length > 0,
+            'is-outlined': centuries.length > 0,
           })}
           params={{ centuries: [] }}
         >
