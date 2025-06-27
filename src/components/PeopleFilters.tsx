@@ -5,31 +5,6 @@ import { useFilters } from '../hooks/useFilters';
 import { centuriesList } from '../hooks/useFilters';
 
 export const PeopleFilters: React.FC = ({}) => {
-  // const [searchParams, setSearchParams] = useSearchParams();
-
-  // const query = searchParams.get('query') || '';
-  // const currentSex = searchParams.get('sex');
-  // const selectedCenturies = searchParams.getAll('centuries');
-
-  // const centuriesList = ['16', '17', '18', '19', '20'];
-
-  // const handleQueryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-  //   const value = event.target.value;
-  //   const newSearch = getSearchWith(searchParams, {
-  //     query: value ? value : null,
-  //   });
-
-  //   setSearchParams(newSearch);
-  // };
-
-  // const toogleCenturies = (century: string) => {
-  //   if (selectedCenturies.includes(century)) {
-  //     return selectedCenturies.filter(cent => cent !== century);
-  //   } else {
-  //     return [...selectedCenturies, century];
-  //   }
-  // };
-
   const {
     query,
     currentSex,
