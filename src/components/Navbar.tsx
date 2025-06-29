@@ -1,24 +1,33 @@
+import { Link, useLocation } from 'react-router-dom';
+
 export const Navbar = () => {
+  const { pathname } = useLocation();
+
+  const isHome = pathname === '/';
+  const isPeople = pathname.startsWith('/people');
+
   return (
     <nav
-      data-cy="nav"
       className="navbar is-fixed-top has-shadow"
       role="navigation"
       aria-label="main navigation"
+      data-cy="nav"
     >
       <div className="container">
         <div className="navbar-brand">
-          <a className="navbar-item" href="#/">
+          <Link
+            to="/"
+            className={`navbar-item ${isHome ? 'has-background-grey-lighter' : ''}`}
+          >
             Home
-          </a>
+          </Link>
 
-          <a
-            aria-current="page"
-            className="navbar-item has-background-grey-lighter"
-            href="#/people"
+          <Link
+            to="/people"
+            className={`navbar-item ${isPeople ? 'has-background-grey-lighter' : ''}`}
           >
             People
-          </a>
+          </Link>
         </div>
       </div>
     </nav>
