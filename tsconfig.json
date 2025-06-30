@@ -5,6 +5,7 @@
   ],
   "compilerOptions": {
     "sourceMap": false,
+    "jsx": "react-native",
     "types": ["node", "cypress"]
   }
 }
