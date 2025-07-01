@@ -1,30 +1,81 @@
-export const PeopleFilters = () => {
+import { useState } from 'react';
+import { Link, NavLink, useLocation, useSearchParams } from 'react-router-dom';
+import { getSearchWith } from '../utils/searchHelper';
+import classNames from 'classnames';
+
+export const PeopleFilters: React.FC = () => {
+  const location = useLocation();
+  const [query, setQuery] = useState('');
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const handleQueryChange = (qw: string) => {
+    setQuery(qw);
+    setSearchParams(getSearchWith(searchParams, { query: qw || null }));
+  };
+
+  const paramsList = (key: string, value: string) => {
+    const currentList = searchParams.getAll(key);
+
+    return currentList.includes(value)
+      ? currentList.filter(v => v !== value)
+      : [...currentList, value];
+  };
+
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        <a className="is-active" href="#/people">
+        <NavLink
+          className={classNames({
+            'is-active': searchParams.get('sex') === null,
+          })}
+          end
+          to={{
+            pathname: location.pathname,
+            search: getSearchWith(searchParams, { sex: null }),
+          }}
+        >
           All
-        </a>
-        <a className="" href="#/people?sex=m">
+        </NavLink>
+        <NavLink
+          className={classNames({
+            'is-active': searchParams.get('sex') === 'm',
+          })}
+          end
+          to={{
+            pathname: location.pathname,
+            search: getSearchWith(searchParams, { sex: 'm' }),
+          }}
+        >
           Male
-        </a>
-        <a className="" href="#/people?sex=f">
+        </NavLink>
+        <NavLink
+          className={classNames({
+            'is-active': searchParams.get('sex') === 'f',
+          })}
+          end
+          to={{
+            pathname: location.pathname,
+            search: getSearchWith(searchParams, { sex: 'f' }),
+          }}
+        >
           Female
-        </a>
+        </NavLink>
       </p>
 
       <div className="panel-block">
         <p className="control has-icons-left">
           <input
+            value={query}
             data-cy="NameFilter"
             type="search"
             className="input"
             placeholder="Search"
+            onChange={e => handleQueryChange(e.target.value)}
           />
 
-          <span className="icon is-left">
+          <span className="icon is-left" onClick={() => handleQueryChange('')}>
             <i className="fas fa-search" aria-hidden="true" />
           </span>
         </p>
@@ -33,63 +84,113 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            <a
+            <NavLink
               data-cy="century"
-              className="button mr-1"
-              href="#/people?centuries=16"
+              className={classNames('button mr-1', {
+                'is-info': searchParams.getAll('centuries').includes('16'),
+              })}
+              to={{
+                pathname: location.pathname,
+                search: getSearchWith(searchParams, {
+                  centuries: paramsList('centuries', '16'),
+                }),
+              }}
             >
               16
-            </a>
+            </NavLink>
 
-            <a
+            <NavLink
               data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=17"
+              className={classNames('button mr-1', {
+                'is-info': searchParams.getAll('centuries').includes('17'),
+              })}
+              to={{
+                pathname: location.pathname,
+                search: getSearchWith(searchParams, {
+                  centuries: paramsList('centuries', '17'),
+                }),
+              }}
             >
               17
-            </a>
+            </NavLink>
 
-            <a
+            <NavLink
               data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=18"
+              className={classNames('button mr-1', {
+                'is-info': searchParams.getAll('centuries').includes('18'),
+              })}
+              to={{
+                pathname: location.pathname,
+                search: getSearchWith(searchParams, {
+                  centuries: paramsList('centuries', '18'),
+                }),
+              }}
             >
               18
-            </a>
+            </NavLink>
 
-            <a
+            <NavLink
               data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=19"
+              className={classNames('button mr-1', {
+                'is-info': searchParams.getAll('centuries').includes('19'),
+              })}
+              to={{
+                pathname: location.pathname,
+                search: getSearchWith(searchParams, {
+                  centuries: paramsList('centuries', '19'),
+                }),
+              }}
             >
               19
-            </a>
+            </NavLink>
 
-            <a
+            <NavLink
               data-cy="century"
-              className="button mr-1"
-              href="#/people?centuries=20"
+              className={classNames('button mr-1', {
+                'is-info': searchParams.getAll('centuries').includes('20'),
+              })}
+              to={{
+                pathname: location.pathname,
+                search: getSearchWith(searchParams, {
+                  centuries: paramsList('centuries', '20'),
+                }),
+              }}
             >
               20
-            </a>
+            </NavLink>
           </div>
 
           <div className="level-right ml-4">
-            <a
+            <NavLink
               data-cy="centuryALL"
-              className="button is-success is-outlined"
-              href="#/people"
+              className={classNames('button is-success', {
+                'is-outlined': searchParams.get('centuries') !== null,
+              })}
+              to={{
+                pathname: location.pathname,
+                search: getSearchWith(searchParams, { centuries: null }),
+              }}
             >
               All
-            </a>
+            </NavLink>
           </div>
         </div>
       </div>
 
       <div className="panel-block">
-        <a className="button is-link is-outlined is-fullwidth" href="#/people">
+        <Link
+          className="button is-link is-outlined is-fullwidth"
+          to={{
+            pathname: location.pathname,
+            search: getSearchWith(searchParams, {
+              centuries: null,
+              sex: null,
+              query: null,
+            }),
+          }}
+        >
           Reset all filters
-        </a>
+        </Link>
       </div>
     </nav>
   );
