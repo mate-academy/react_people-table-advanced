@@ -1,36 +1,44 @@
-import { Link, LinkProps, useSearchParams } from 'react-router-dom';
-import { getSearchWith, SearchParams } from '../utils/searchHelper';
+import { NavLink } from 'react-router-dom';
+import { Person } from '../types';
 
-/**
- * To replace the the standard `Link` we take all it props except for `to`
- * along with the custom `params` prop that we use for updating the search
- */
-type Props = Omit<LinkProps, 'to'> & {
-  params: SearchParams;
-};
+interface SearchLinkProps {
+  person?: Person;
+  name?: string;
+  people?: Person[];
+  onClick?: (slug: string) => void;
+}
 
-/**
- * SearchLink updates the given `params` in the search keeping the `pathname`
- * and the other existing search params (see `getSearchWith`)
- */
-export const SearchLink: React.FC<Props> = ({
-  children, // this is the content between the open and closing tags
-  params, // the params to be updated in the `search`
-  ...props // all usual Link props like `className`, `style` and `id`
-}) => {
-  const [searchParams] = useSearchParams();
+export const SearchLink = ({
+  person,
+  name,
+  people,
+  onClick,
+}: SearchLinkProps) => {
+  let targetPerson = person;
+
+  if (!targetPerson && name && people) {
+    targetPerson = people.find(p => p.name === name);
+  }
+
+  if (!targetPerson) {
+    return <>{name ?? '-'}</>;
+  }
+
+  const className = targetPerson.sex === 'f' ? 'has-text-danger' : undefined;
+
+  const handleClick = () => {
+    if (onClick) {
+      onClick(targetPerson.slug);
+    }
+  };
 
   return (
-    <Link
-      // to={{ search: getSearchWith(searchParams, { query: 'sdf' }) }}
-      // to={{ search: getSearchWith(searchParams, { query: null }) }}
-      // to={{ search: getSearchWith(searchParams, { centuries: ['16', '18'] }) }}
-      to={{
-        search: getSearchWith(searchParams, params),
-      }}
-      {...props} // copy all the other props
+    <NavLink
+      to={`/people/${targetPerson.slug}`}
+      className={className}
+      onClick={handleClick}
     >
-      {children}
-    </Link>
+      {targetPerson.name}
+    </NavLink>
   );
 };
