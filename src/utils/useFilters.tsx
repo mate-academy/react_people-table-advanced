@@ -1,5 +1,5 @@
 import { useSearchParams } from 'react-router-dom';
-import { getSearchWith } from './useFilters';
+import { getSearchWith } from './searchHelper';
 import { CenturyFilters } from '../types/CenturyFilters';
 
 export const useFilters = () => {
