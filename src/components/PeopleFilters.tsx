@@ -40,7 +40,7 @@ export const PeopleFilters = () => {
       newParams.append('centuries', century);
     }
 
-    setSearchParams(newParams.toString());
+    setSearchParams(newParams);
   }
 
   const createGenderLink = (gender: string | null) => {
