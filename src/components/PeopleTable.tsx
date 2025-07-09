@@ -62,45 +62,6 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
     return slug ?? '';
   };
 
-  const query = searchParams.get('query')?.toLowerCase() || '';
-  const centuries = searchParams.getAll('centuries').map(Number);
-  const sex = searchParams.get('sex');
-
-  const filteredPeople = people.filter(p => {
-    const matchesQuery =
-      !query ||
-      p.name.toLowerCase().includes(query) ||
-      p.fatherName?.toLowerCase().includes(query) ||
-      p.motherName?.toLowerCase().includes(query);
-
-    const bornCentury = Math.ceil(p.born / 100);
-    const matchesCentury =
-      centuries.length === 0 || centuries.includes(bornCentury);
-
-    const matchesSex = !sex || p.sex === sex;
-
-    return matchesQuery && matchesCentury && matchesSex;
-  });
-
-  if (sortField) {
-    filteredPeople.sort((a, b) => {
-      const aValue = a[sortField as keyof Person];
-      const bValue = b[sortField as keyof Person];
-
-      if (typeof aValue === 'string' && typeof bValue === 'string') {
-        return isDesc
-          ? bValue.localeCompare(aValue)
-          : aValue.localeCompare(bValue);
-      }
-
-      if (typeof aValue === 'number' && typeof bValue === 'number') {
-        return isDesc ? bValue - aValue : aValue - bValue;
-      }
-
-      return 0;
-    });
-  }
-
   return (
     <table
       data-cy="peopleTable"
@@ -138,7 +99,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
       </thead>
 
       <tbody>
-        {filteredPeople.map(person => (
+        {people.map(person => (
           <PersonLink
             key={person.slug}
             person={person}
