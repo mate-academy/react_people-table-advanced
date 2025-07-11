@@ -1,3 +1,21 @@
 iframe {
   display: none;
 }
+
+.sortable {
+  cursor: pointer;
+  color: #007bff;
+  transition: color 0.2s;
+}
+
+.sortable:hover {
+  color: black;
+}
+
+.sort-icon {
+  color: #007bff;
+}
+
+.sortable:hover .sort-icon {
+  color: black;
+}
