@@ -14,7 +14,7 @@ export const PeoplePage = () => {
 
   const sort = searchParams.get('sort') || '';
   const order = searchParams.get('order') || '';
-  const sex = searchParams.get('sex') || 'a';
+  const sex = searchParams.get('sex') || 'All';
   const query = searchParams.get('query') || '';
   const centuriesFromParams = useMemo(() => {
     return searchParams.getAll('centuries') || [];
@@ -51,9 +51,9 @@ export const PeoplePage = () => {
           break;
       }
 
-      if (sex === 'm') {
+      if (sex === 'Male') {
         filtered = filtered.filter(person => person.sex === 'm');
-      } else if (sex === 'f') {
+      } else if (sex === 'Female') {
         filtered = filtered.filter(person => person.sex === 'f');
       }
 

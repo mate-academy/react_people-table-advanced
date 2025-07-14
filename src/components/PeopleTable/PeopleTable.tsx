@@ -48,8 +48,8 @@ export const PeopleTable: React.FC<Props> = ({
         order: newOrder,
       });
     } else {
-      searchParams.delete(sort);
-      searchParams.delete(order);
+      searchParams.delete('sort');
+      searchParams.delete('order');
     }
 
     setSearchParams(newParams);

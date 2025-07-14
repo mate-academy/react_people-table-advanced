@@ -30,7 +30,7 @@ export const PeopleFilters: React.FC<Props> = ({
     e.preventDefault();
     let newParams = '';
 
-    if (type === 'a') {
+    if (type === 'All') {
       searchParams.delete('sex');
     } else {
       newParams = getSearchWith(searchParams, {
@@ -87,9 +87,9 @@ export const PeopleFilters: React.FC<Props> = ({
           <a
             key={index}
             className={classNames({
-              'is-active': sex === item.toLowerCase()[0],
+              'is-active': sex === item,
             })}
-            onClick={e => handleSex(e, item.toLowerCase()[0])}
+            onClick={e => handleSex(e, item)}
           >
             {item}
           </a>
