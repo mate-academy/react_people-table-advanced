@@ -1,13 +1,79 @@
+import { useContext, useEffect, useState } from 'react';
 import { Person } from '../types';
 import { PersonCard } from './PersonCard';
+import { SortBtn } from './SortBtn/SortBtn';
+import { AppContext } from '../context/AppContext';
 
 type Props = {
   persons: Person[];
   currentSlug: string | undefined;
 };
 
+enum SortParams {
+  NAME = 'Name',
+  SEX = 'Sex',
+  BORN = 'Born',
+  DIED = 'Died',
+}
+
+const sortTable = (type: string, table: Person[], reverse: boolean = false) => {
+  if (type.length && table.length) {
+    const sortedTable = [...table];
+
+    switch (type) {
+      case 'name':
+        if (reverse) {
+          return sortedTable
+            .sort((a, b) => a.name.localeCompare(b.name))
+            .reverse();
+        } else {
+          return sortedTable.sort((a, b) => a.name.localeCompare(b.name));
+        }
+
+      case 'sex':
+        if (reverse) {
+          return sortedTable
+            .sort((a, b) => a.sex.localeCompare(b.sex))
+            .reverse();
+        } else {
+          return sortedTable.sort((a, b) => a.sex.localeCompare(b.sex));
+        }
+
+      case 'born':
+        if (reverse) {
+          return sortedTable.sort((a, b) => a.born - b.born).reverse();
+        } else {
+          return sortedTable.sort((a, b) => a.born - b.born);
+        }
+
+      case 'died':
+        if (reverse) {
+          return sortedTable.sort((a, b) => a.died - b.died).reverse();
+        } else {
+          return sortedTable.sort((a, b) => a.died - b.died);
+        }
+
+      default:
+        return sortedTable;
+    }
+  }
+
+  return table;
+};
+
 /* eslint-disable jsx-a11y/control-has-associated-label */
 export const PeopleTable: React.FC<Props> = ({ persons, currentSlug }) => {
+  const [sortedPeople, setSortedPeople] = useState<Person[] | null>(null);
+  const { searchParams } = useContext(AppContext);
+
+  useEffect(() => {
+    const isReverse = searchParams.has('order');
+    const sortType = searchParams.get('sort') || '';
+    const sortedTable = sortTable(sortType, persons, isReverse);
+
+    setSortedPeople(sortedTable);
+  }, [searchParams, persons]);
+
   return (
     <table
       data-cy="peopleTable"
@@ -15,49 +81,9 @@ export const PeopleTable: React.FC<Props> = ({ persons, currentSlug }) => {
     >
       <thead>
         <tr>
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Name
-              <a href="#/people?sort=name">
-                <span className="icon">
-                  <i className="fas fa-sort" />
-                </span>
-              </a>
-            </span>
-          </th>
-
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Sex
-              <a href="#/people?sort=sex">
-                <span className="icon">
-                  <i className="fas fa-sort" />
-                </span>
-              </a>
-            </span>
-          </th>
-
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Born
-              <a href="#/people?sort=born&amp;order=desc">
-                <span className="icon">
-                  <i className="fas fa-sort-up" />
-                </span>
-              </a>
-            </span>
-          </th>
-
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Died
-              <a href="#/people?sort=died">
-                <span className="icon">
-                  <i className="fas fa-sort" />
-                </span>
-              </a>
-            </span>
-          </th>
+          {Object.values(SortParams).map((el, index) => (
+            <SortBtn name={el} key={index} />
+          ))}
 
           <th>Mother</th>
           <th>Father</th>
@@ -65,9 +91,11 @@ export const PeopleTable: React.FC<Props> = ({ persons, currentSlug }) => {
       </thead>
 
       <tbody>
-        {persons.map((person, index) => (
-          <PersonCard person={person} currentSlug={currentSlug} key={index} />
-        ))}
+        {sortedPeople?.length &&
+          sortedPeople !== null &&
+          sortedPeople.map((person, index) => (
+            <PersonCard person={person} currentSlug={currentSlug} key={index} />
+          ))}
       </tbody>
     </table>
   );
