@@ -56,7 +56,7 @@ export const GenderBtn: React.FC<Props> = ({ filter }) => {
       })}
       to={{
         pathname: '/people',
-        search: currentGender ? `?sex=${currentGender}` : '',
+        search: searchParams.toString(),
       }}
     >
       {filter}
