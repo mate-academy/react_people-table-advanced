@@ -1,28 +1,15 @@
-import { FilterSexValues, SexFilter } from '../../types/SexFilter';
+import { FilterSexValues } from '../../types/SexFilter';
 import { SearchLink } from '../SearchLink/SearchLink';
 import { CenturyFilter } from '../CenturyFilter/CenturyFilter';
 import { NameFilter } from '../NameFilter/NameFilter';
 import { useNavigate, useSearchParams } from 'react-router-dom';
+import { usePeopleContext } from '../../context/ContextProvider';
 
-interface Props {
-  sexFilter: SexFilter;
-  centuryFilter: string[];
-  nameFilter: string;
-  setSexFilter: React.Dispatch<React.SetStateAction<string>>;
-  setNameFilter: React.Dispatch<React.SetStateAction<string>>;
-  setCenturyFilter: React.Dispatch<React.SetStateAction<string[]>>;
-}
-
-export const PeopleFilters: React.FC<Props> = ({
-  sexFilter,
-  nameFilter,
-  setSexFilter,
-  centuryFilter,
-  setNameFilter,
-  setCenturyFilter,
-}) => {
+export const PeopleFilters = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
+
+  const { sexFilter, setSexFilter, setCenturyFilter } = usePeopleContext();
 
   const resetAllFilters = () => {
     const newParams = new URLSearchParams(searchParams);
@@ -62,12 +49,9 @@ export const PeopleFilters: React.FC<Props> = ({
         </SearchLink>
       </p>
 
-      <NameFilter nameFilter={nameFilter} setNameFilter={setNameFilter} />
+      <NameFilter />
 
-      <CenturyFilter
-        centuryFilter={centuryFilter}
-        setCenturyFilter={setCenturyFilter}
-      />
+      <CenturyFilter />
 
       <div className="panel-block">
         <SearchLink

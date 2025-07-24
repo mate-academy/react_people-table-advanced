@@ -1,15 +1,11 @@
 import { useParams } from 'react-router-dom';
-import { Person } from '../../types/Person';
 import { PersonLink } from '../PersonLink/PersonLink';
 import classNames from 'classnames';
+import { usePeopleContext } from '../../context/ContextProvider';
 
-interface Props {
-  people: Person[] | null;
-  filteredPeople: Person[] | null;
-}
-
-export const PeopleTable: React.FC<Props> = ({ people, filteredPeople }) => {
+export const PeopleTable: React.FC = () => {
   const { slug } = useParams();
+  const { filteredPeople, people } = usePeopleContext();
 
   const findParent = (name: string | null) => {
     if (name === null) {

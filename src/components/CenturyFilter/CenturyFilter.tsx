@@ -1,17 +1,11 @@
 import classNames from 'classnames';
 import { FilterCenturyValues } from '../../types/CenturyFilter';
 import { SearchLink } from '../SearchLink/SearchLink';
+import { usePeopleContext } from '../../context/ContextProvider';
 
-interface Props {
-  centuryFilter: string[];
-  setCenturyFilter: React.Dispatch<React.SetStateAction<string[]>>;
-}
-
-export const CenturyFilter: React.FC<Props> = ({
-  centuryFilter,
-  setCenturyFilter,
-}) => {
+export const CenturyFilter: React.FC = () => {
   const { C16, C17, C18, C19, C20 } = FilterCenturyValues;
+  const { centuryFilter, setCenturyFilter } = usePeopleContext();
 
   const getUpdatedCenturyFilter = (value: string): string[] => {
     return centuryFilter.includes(value)

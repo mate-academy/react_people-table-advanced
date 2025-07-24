@@ -1,29 +1,11 @@
 import { Outlet } from 'react-router-dom';
 import { Loader } from '../Loader/Loader';
 import { PeopleFilters } from '../PeopleFilters/PeopleFilters';
-import { SexFilter } from '../../types/SexFilter';
+import { usePeopleContext } from '../../context/ContextProvider';
 
-interface Props {
-  isLoadingPeople: boolean;
-  fetchPeopleError: boolean;
-  sexFilter: SexFilter;
-  nameFilter: string;
-  centuryFilter: string[];
-  setSexFilter: React.Dispatch<React.SetStateAction<string>>;
-  setNameFilter: React.Dispatch<React.SetStateAction<string>>;
-  setCenturyFilter: React.Dispatch<React.SetStateAction<string[]>>;
-}
+export const PeoplePage = () => {
+  const { isLoadingPeople, fetchPeopleError } = usePeopleContext();
 
-export const PeoplePage: React.FC<Props> = ({
-  isLoadingPeople,
-  fetchPeopleError,
-  sexFilter,
-  nameFilter,
-  centuryFilter,
-  setSexFilter,
-  setNameFilter,
-  setCenturyFilter,
-}) => {
   return (
     <>
       <h1 className="title">People Page</h1>
@@ -33,14 +15,7 @@ export const PeoplePage: React.FC<Props> = ({
         <div className="block">
           <div className="columns is-desktop is-flex-direction-row-reverse">
             <div className="column is-7-tablet is-narrow-desktop">
-              <PeopleFilters
-                setSexFilter={setSexFilter}
-                sexFilter={sexFilter}
-                nameFilter={nameFilter}
-                centuryFilter={centuryFilter}
-                setCenturyFilter={setCenturyFilter}
-                setNameFilter={setNameFilter}
-              />
+              <PeopleFilters />
             </div>
             <div className="box table-container">
               <div className="column">

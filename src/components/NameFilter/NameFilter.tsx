@@ -1,14 +1,11 @@
 import { useNavigate } from 'react-router-dom';
+import { usePeopleContext } from '../../context/ContextProvider';
 
-interface Props {
-  nameFilter: string;
-  setNameFilter: React.Dispatch<React.SetStateAction<string>>;
-}
-
-export const NameFilter: React.FC<Props> = () => {
+export const NameFilter: React.FC = () => {
   const navigate = useNavigate();
+  const { query } = usePeopleContext();
 
-  const handleChange = e => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
 
     navigate(`?query=${encodeURIComponent(value)}`);
