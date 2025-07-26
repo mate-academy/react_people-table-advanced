@@ -35,6 +35,7 @@ export const PeoplePage = () => {
     if (sex && person.sex !== sex) {
       return false;
     }
+
     if (query) {
       const q = query.toLowerCase();
       const nameMatch = person.name.toLowerCase().includes(q);
@@ -45,12 +46,16 @@ export const PeoplePage = () => {
         return false;
       }
     }
+
     const birthYear = person.born;
-    if (!birthYear) return false;
+
+    if (!birthYear) {
+      return false;
+    }
 
     const personCentury = Math.floor((birthYear - 1) / 100) + 1;
 
-    if (centuries.length > 0 && !centuries.includes(personCentury.toString())){
+    if (centuries.length > 0 && !centuries.includes(personCentury.toString())) {
       return false;
     }
 
