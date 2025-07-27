@@ -12,14 +12,15 @@ interface UsePeopleSortingResult {
   sortedPeople: Person[];
 }
 
-export const usePeopleSorting = ( people: Person[] ): UsePeopleSortingResult => {
+export const usePeopleSorting = (people: Person[]): UsePeopleSortingResult => {
   const [searchParams] = useSearchParams();
   const [sortType, setSortType] = useState<Sort>(null);
   const [sortOrder, setSortOrder] = useState<SortOrder>('asc');
 
   useEffect(() => {
     const currentSortTypeInUrl = searchParams.get('sort') as Sort;
-    const currentSortOrderInUrl = searchParams.get('order') === 'desc' ? 'desc' : 'asc';
+    const currentSortOrderInUrl =
+      searchParams.get('order') === 'desc' ? 'desc' : 'asc';
 
     setSortType(currentSortTypeInUrl);
     if (currentSortTypeInUrl) {
@@ -82,4 +83,4 @@ export const usePeopleSorting = ( people: Person[] ): UsePeopleSortingResult => 
     setSortOrder,
     sortedPeople,
   };
-}
+};

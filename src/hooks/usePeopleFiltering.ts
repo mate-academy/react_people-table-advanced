@@ -1,21 +1,22 @@
-import { useMemo, useState } from "react";
-import { Person } from "../types";
-import { Filter } from "../types/Filter";
-import { useSearchParams } from "react-router-dom";
+import { useMemo, useState } from 'react';
+import { Person } from '../types';
+import { Filter } from '../types/Filter';
+import { useSearchParams } from 'react-router-dom';
 
 function centuryMaker(century: number): number {
   return Math.ceil(century / 100);
 }
 
-type usePeopleFilteringResult = {
+type UsePeopleFilteringResult = {
   filterType: Filter;
   filteredPeople: Person[];
 };
 
-
-export const usePeopleFiltering = (people: Person[]): usePeopleFilteringResult => {
+export const usePeopleFiltering = (
+  people: Person[],
+): UsePeopleFilteringResult => {
   const [searchParams] = useSearchParams();
-  const [filterType, setFilterType] = useState<Filter>(null);
+  const [filterType] = useState<Filter>(null);
 
   const filteredPeople = useMemo(() => {
     let newPeople = [...people];
@@ -35,11 +36,13 @@ export const usePeopleFiltering = (people: Person[]): usePeopleFilteringResult =
       const diedCentury = centuryMaker(person.died).toString();
 
       if (filters.centuries.length > 0) {
-        if (!filters.centuries.includes(bornCentury) && !filters.centuries.includes(diedCentury)) {
+        if (
+          !filters.centuries.includes(bornCentury) &&
+          !filters.centuries.includes(diedCentury)
+        ) {
           return false;
         }
       }
-
 
       if (
         filters.query &&
@@ -55,5 +58,4 @@ export const usePeopleFiltering = (people: Person[]): usePeopleFilteringResult =
   }, [people, searchParams]);
 
   return { filterType, filteredPeople };
-
-}
+};

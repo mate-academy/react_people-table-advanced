@@ -49,18 +49,12 @@ export const PeopleProvider: React.FC<PeopleProviderProps> = ({ children }) => {
   const [isError, setIsError] = useState(false);
   const isPeoplePage = useLocation().pathname.includes('/people');
 
-  const {filteredPeople} = usePeopleFiltering(people);
+  const { filteredPeople } = usePeopleFiltering(people);
 
-  const { 
-    sortType,
-    sortOrder,
-    setSortType,
-    setSortOrder,
-    sortedPeople,
-  } = usePeopleSorting(filteredPeople);
+  const { sortType, sortOrder, setSortType, setSortOrder, sortedPeople } =
+    usePeopleSorting(filteredPeople);
 
   const [filterType, setFilterType] = useState<Filter>(null);
-
 
   const value = useMemo(
     () => ({
@@ -79,7 +73,17 @@ export const PeopleProvider: React.FC<PeopleProviderProps> = ({ children }) => {
       setSortOrder,
       setFilterType,
     }),
-    [sortedPeople, sortOrder, sortType, isLoading, isError, isPeoplePage],
+    [
+      sortedPeople,
+      sortOrder,
+      sortType,
+      isLoading,
+      isError,
+      isPeoplePage,
+      filterType,
+      setSortType,
+      setSortOrder,
+    ],
   );
 
   return (
