@@ -1,6 +1,9 @@
-import React, { createContext, useEffect, useMemo, useState } from 'react';
+import React, { createContext, useMemo, useState } from 'react';
+import { usePeopleSorting } from '../hooks/usePeopleSorting';
 import { Person, Sort } from '../types';
-import { useLocation, useSearchParams } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
+import { Filter } from '../types/Filter';
+import { usePeopleFiltering } from '../hooks/usePeopleFiltering';
 
 type PeopleContextType = {
   people: Person[];
@@ -8,13 +11,15 @@ type PeopleContextType = {
   isError: boolean;
   isPeople: boolean;
   isPeoplePage: boolean;
-  setPeople: (people: Person[]) => void;
+  sortType: Sort;
   sortOrder: 'asc' | 'desc';
+  filterType: Filter;
+  setPeople: (people: Person[]) => void;
   setIsLoading: (isLoading: boolean) => void;
   setIsError: (isError: boolean) => void;
-  sortType: Sort;
   setSortType: (sortType: Sort) => void;
   setSortOrder: (sortOrder: 'asc' | 'desc') => void;
+  setFilterType: (filterType: Filter) => void;
 };
 
 export const PeopleContext = createContext<PeopleContextType>({
@@ -25,11 +30,13 @@ export const PeopleContext = createContext<PeopleContextType>({
   isPeoplePage: false,
   sortType: null,
   sortOrder: 'asc',
+  filterType: null,
   setPeople: () => {},
   setIsLoading: () => {},
   setIsError: () => {},
   setSortType: () => {},
   setSortOrder: () => {},
+  setFilterType: () => {},
 });
 
 type PeopleProviderProps = {
@@ -41,85 +48,36 @@ export const PeopleProvider: React.FC<PeopleProviderProps> = ({ children }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [isError, setIsError] = useState(false);
   const isPeoplePage = useLocation().pathname.includes('/people');
-  const [searchParams] = useSearchParams();
 
-  const [sortType, setSortType] = useState<Sort>(null);
-  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
+  const {filteredPeople} = usePeopleFiltering(people);
 
-  useEffect(() => {
-    const currentSortTypeInUrl = searchParams.get('sort') as Sort;
-    const currentSortOrderInUrl =
-      searchParams.get('order') === 'desc' ? 'desc' : 'asc';
+  const { 
+    sortType,
+    sortOrder,
+    setSortType,
+    setSortOrder,
+    sortedPeople,
+  } = usePeopleSorting(filteredPeople);
 
-    setSortType(currentSortTypeInUrl);
+  const [filterType, setFilterType] = useState<Filter>(null);
 
-    if (currentSortTypeInUrl) {
-      setSortOrder(currentSortOrderInUrl);
-    } else {
-      setSortOrder('asc');
-    }
-  }, [searchParams]);
-
-  const sortedPeople = useMemo(() => {
-    const newPeople = [...people];
-
-    if (!sortType) {
-      return newPeople;
-    }
-
-    newPeople.sort((a, b) => {
-      let valA: string | number;
-      let valB: string | number;
-
-      switch (sortType) {
-        case 'name':
-          valA = a.name.toLowerCase();
-          valB = b.name.toLowerCase();
-          break;
-        case 'sex':
-          valA = a.sex;
-          valB = b.sex;
-          break;
-        case 'born':
-          valA = a.born;
-          valB = b.born;
-          break;
-        case 'died':
-          valA = a.died;
-          valB = b.died;
-          break;
-        default:
-          return 0;
-      }
-
-      if (valA < valB) {
-        return sortOrder === 'asc' ? -1 : 1;
-      }
-
-      if (valA > valB) {
-        return sortOrder === 'asc' ? 1 : -1;
-      }
-
-      return 0;
-    });
-
-    return newPeople;
-  }, [people, sortType, sortOrder]);
 
   const value = useMemo(
     () => ({
       people: sortedPeople,
-      setPeople,
       isLoading,
       isError,
       isPeople: sortedPeople.length > 0,
       isPeoplePage,
       sortType,
+      sortOrder,
+      filterType,
+      setPeople,
       setIsLoading,
       setIsError,
       setSortType,
       setSortOrder,
-      sortOrder,
+      setFilterType,
     }),
     [sortedPeople, sortOrder, sortType, isLoading, isError, isPeoplePage],
   );

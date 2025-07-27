@@ -1,35 +1,13 @@
 import { useContext } from 'react';
-import { PeopleContext } from '../store/PeopleContext';
+import { PeopleContext } from '../../store/PeopleContext';
 import { PersonLink } from './PersonLink';
 import classNames from 'classnames';
-import { Link, useLocation, useSearchParams } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
+import { SearchLink } from '../SearchLink';
 
 export const PeopleTable = () => {
   const { people, sortOrder, sortType } = useContext(PeopleContext);
   const { pathname } = useLocation();
-  const [searchParams] = useSearchParams();
-
-  function getSortLinkProps(newSortType: 'name' | 'sex' | 'born' | 'died') {
-    const newSearchParams = new URLSearchParams(searchParams.toString());
-
-    if (sortType === newSortType) {
-      if (sortOrder === 'asc') {
-        newSearchParams.set('sort', newSortType);
-        newSearchParams.set('order', 'desc');
-      } else {
-        newSearchParams.delete('sort');
-        newSearchParams.delete('order');
-      }
-    } else {
-      newSearchParams.set('sort', newSortType);
-      newSearchParams.delete('order');
-    }
-
-    return {
-      pathname,
-      search: newSearchParams.toString(),
-    };
-  }
 
   return (
     <div>
@@ -42,7 +20,22 @@ export const PeopleTable = () => {
             <th>
               <span className="is-flex is-flex-wrap-nowrap">
                 Name
-                <Link to={getSortLinkProps('name')}>
+                <SearchLink
+                  params={{
+                    sort:
+                      sortType === 'name'
+                        ? sortOrder === 'asc'
+                          ? 'name'
+                          : null
+                        : 'name',
+                    order:
+                      sortType === 'name'
+                        ? sortOrder === 'asc'
+                          ? 'desc'
+                          : null
+                        : null,
+                  }}
+                >
                   <span className="icon">
                     <i
                       className={classNames('fas', {
@@ -54,14 +47,29 @@ export const PeopleTable = () => {
                       })}
                     />
                   </span>
-                </Link>
+                </SearchLink>
               </span>
             </th>
 
             <th>
               <span className="is-flex is-flex-wrap-nowrap">
                 Sex
-                <Link to={getSortLinkProps('sex')}>
+                <SearchLink
+                  params={{
+                    sort:
+                      sortType === 'sex'
+                        ? sortOrder === 'asc'
+                          ? 'sex'
+                          : null
+                        : 'sex',
+                    order:
+                      sortType === 'sex'
+                        ? sortOrder === 'asc'
+                          ? 'desc'
+                          : null
+                        : null,
+                  }}
+                >
                   <span className="icon">
                     <i
                       className={classNames('fas', {
@@ -72,14 +80,29 @@ export const PeopleTable = () => {
                       })}
                     />
                   </span>
-                </Link>
+                </SearchLink>
               </span>
             </th>
 
             <th>
               <span className="is-flex is-flex-wrap-nowrap">
                 Born
-                <Link to={getSortLinkProps('born')}>
+                <SearchLink
+                  params={{
+                    sort:
+                      sortType === 'born'
+                        ? sortOrder === 'asc'
+                          ? 'born'
+                          : null
+                        : 'born',
+                    order:
+                      sortType === 'born'
+                        ? sortOrder === 'asc'
+                          ? 'desc'
+                          : null
+                        : null,
+                  }}
+                >
                   <span className="icon">
                     <i
                       className={classNames('fas', {
@@ -91,14 +114,29 @@ export const PeopleTable = () => {
                       })}
                     />
                   </span>
-                </Link>
+                </SearchLink>
               </span>
             </th>
 
             <th>
               <span className="is-flex is-flex-wrap-nowrap">
                 Died
-                <Link to={getSortLinkProps('died')}>
+                <SearchLink
+                  params={{
+                    sort:
+                      sortType === 'died'
+                        ? sortOrder === 'asc'
+                          ? 'died'
+                          : null
+                        : 'died',
+                    order:
+                      sortType === 'died'
+                        ? sortOrder === 'asc'
+                          ? 'desc'
+                          : null
+                        : null,
+                  }}
+                >
                   <span className="icon">
                     <i
                       className={classNames('fas', {
@@ -110,7 +148,7 @@ export const PeopleTable = () => {
                       })}
                     />
                   </span>
-                </Link>
+                </SearchLink>
               </span>
             </th>
 

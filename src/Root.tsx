@@ -6,9 +6,9 @@ import {
 } from 'react-router-dom';
 import { PeopleProvider } from './store/PeopleContext';
 import { App } from './App';
-import { PeoplePage } from './components/PeoplePage';
-import { NotFoundPage } from './components/NotFoundPage';
-import { HomePage } from './components/HomePage';
+import { PeoplePage } from './pages/PeoplePage';
+import { NotFoundPage } from './pages/NotFoundPage';
+import { HomePage } from './pages/HomePage';
 
 export const Root = () => (
   <Router>

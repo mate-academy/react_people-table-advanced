@@ -1,6 +1,6 @@
-import { PeopleFilters } from './PeopleFilters';
-import { Loader } from './Loader';
-import { PeopleTable } from './PeopleTable';
+import { PeopleFilters } from '../components/People/PeopleFilters';
+import { Loader } from '../components/Loader';
+import { PeopleTable } from '../components/People/PeopleTable';
 import { useContext, useEffect } from 'react';
 import { PeopleContext } from '../store/PeopleContext';
 import { getPeople } from '../api';
@@ -55,9 +55,13 @@ export const PeoplePage = () => {
               {isLoading ? (
                 <Loader />
               ) : isError ? (
-                <p className="has-text-danger">Something went wrong</p>
+                <p className="has-text-danger" data-cy="peopleLoadingError">
+                  Something went wrong
+                </p>
               ) : !isPeople ? (
-                <p>There are no people matching the current search criteria</p>
+                <p data-cy="noPeopleMessage">
+                  There are no people matching the current search criteria
+                </p>
               ) : (
                 <PeopleTable />
               )}
