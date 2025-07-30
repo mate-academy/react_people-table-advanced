@@ -165,7 +165,7 @@ export const PeopleFilters: React.FC = () => {
       <div className="panel-block">
         <Link
           className="button is-link is-outlined is-fullwidth"
-          to="#/people"
+          to="/people"
           onClick={() => {
             setQuery('');
             setSex('all');

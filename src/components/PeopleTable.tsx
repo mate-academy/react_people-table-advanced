@@ -1,5 +1,5 @@
 /* eslint-disable */
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { usePeopleContext } from '../context/PeopleContext';
 import { useParams, useSearchParams } from 'react-router-dom';
 import { PersonLink } from './PersonLink';
@@ -15,11 +15,9 @@ export const PeopleTable: React.FC = () => {
   const sortKey = searchParams.get('sort') as keyToSort;
   const order = searchParams.get('order');
 
-  const filteredPeoples = useMemo(() => {
-    let result = [...(peoples || [])];
-
+  useEffect(() => {
     if (sortKey) {
-      if (order) {
+      if (order === 'desc') {
         setArrState(2);
       } else {
         setArrState(1);
@@ -27,6 +25,10 @@ export const PeopleTable: React.FC = () => {
     } else {
       setArrState(0);
     }
+  }, [sortKey, order]);
+
+  const filteredPeoples = useMemo(() => {
+    let result = [...(peoples || [])];
 
     if (query) {
       result = result.filter(
