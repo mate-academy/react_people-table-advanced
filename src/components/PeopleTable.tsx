@@ -1,10 +1,8 @@
 /* eslint-disable */
-
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { usePeopleContext } from '../context/PeopleContext';
-import { useLocation, useParams, useSearchParams } from 'react-router-dom';
+import { useParams, useSearchParams } from 'react-router-dom';
 import { PersonLink } from './PersonLink';
-import { filter } from 'cypress/types/bluebird';
 
 type keyToSort = 'name' | 'sex' | 'born' | 'died' | null;
 

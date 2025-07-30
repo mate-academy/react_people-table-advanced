@@ -74,15 +74,15 @@ export const PeopleFilters: React.FC = () => {
 
   useEffect(() => {
     setSex(searchParams.get('sex') || 'all');
-  }, [searchParams]);
+  }, [searchParams, setSex]);
 
   useEffect(() => {
     setQuery(searchParams.get('query') || '');
-  }, [searchParams]);
+  }, [searchParams, setQuery]);
 
   useEffect(() => {
     setCenturies(searchParams.getAll('century').map(Number));
-  }, [searchParams]);
+  }, [searchParams, setCenturies]);
 
   return (
     <nav className="panel">
