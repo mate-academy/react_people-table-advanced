@@ -1,18 +1,107 @@
-export const PeopleFilters = () => {
+import { SexFilter } from '../types/SexFilter';
+import { usePeopleContext } from '../context/PeopleContext';
+import { Link, useSearchParams } from 'react-router-dom';
+import { CenturyFilter } from '../types/CenturyFilter';
+import { useEffect } from 'react';
+
+const sexOptions = [
+  { label: 'All', value: SexFilter.All },
+  { label: 'Male', value: SexFilter.Male },
+  { label: 'Female', value: SexFilter.Female },
+];
+
+const centuryOptions = [
+  { label: '16th century', value: CenturyFilter.Sixteen },
+  { label: '17th century', value: CenturyFilter.Seventeen },
+  { label: '18th century', value: CenturyFilter.Eighteen },
+  { label: '19th century', value: CenturyFilter.Nineteen },
+  { label: '20th century', value: CenturyFilter.Twenty },
+];
+
+export const PeopleFilters: React.FC = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const { query, setQuery, sex, setSex, centuries, setCenturies } =
+    usePeopleContext();
+
+  const handleSexChange = (value: string) => {
+    setSex(value);
+
+    const params = new URLSearchParams(searchParams);
+
+    params.set('sex', value);
+    setSearchParams(params);
+  };
+
+  const handleQueryChange = (value: string) => {
+    setQuery(value);
+
+    const params = new URLSearchParams(searchParams);
+
+    if (!value) {
+      params.delete('query');
+    } else {
+      params.set('query', value);
+    }
+
+    setSearchParams(params);
+  };
+
+  const handleCenturyChange = (value: number | null) => {
+    const params = new URLSearchParams(searchParams);
+
+    if (value === null) {
+      setCenturies([]);
+      params.delete('century');
+    } else {
+      let newCenturies: number[];
+
+      if (centuries.includes(value)) {
+        newCenturies = centuries.filter(c => c !== value);
+      } else {
+        newCenturies = [...centuries, value];
+      }
+
+      setCenturies(newCenturies);
+
+      params.delete('century');
+      newCenturies.forEach(c => {
+        params.append('century', c.toString());
+      });
+    }
+
+    setSearchParams(params);
+  };
+
+  useEffect(() => {
+    setSex(searchParams.get('sex') || 'all');
+  }, [searchParams, setSex]);
+
+  useEffect(() => {
+    setQuery(searchParams.get('query') || '');
+  }, [searchParams, setQuery]);
+
+  useEffect(() => {
+    setCenturies(searchParams.getAll('century').map(Number));
+  }, [searchParams, setCenturies]);
+
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        <a className="is-active" href="#/people">
-          All
-        </a>
-        <a className="" href="#/people?sex=m">
-          Male
-        </a>
-        <a className="" href="#/people?sex=f">
-          Female
-        </a>
+        {sexOptions.map(({ label, value }) => {
+          return (
+            <a
+              key={value}
+              onClick={() => {
+                handleSexChange(value);
+              }}
+              className={sex === value ? 'is-active' : ''}
+            >
+              {label}
+            </a>
+          );
+        })}
       </p>
 
       <div className="panel-block">
@@ -22,10 +111,20 @@ export const PeopleFilters = () => {
             type="search"
             className="input"
             placeholder="Search"
+            value={query}
+            onChange={e => {
+              handleQueryChange(e.target.value);
+            }}
           />
 
           <span className="icon is-left">
-            <i className="fas fa-search" aria-hidden="true" />
+            <i
+              className="fas fa-search"
+              aria-hidden="true"
+              onClick={() => {
+                setQuery('');
+              }}
+            />
           </span>
         </p>
       </div>
@@ -33,52 +132,29 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            <a
-              data-cy="century"
-              className="button mr-1"
-              href="#/people?centuries=16"
-            >
-              16
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=17"
-            >
-              17
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=18"
-            >
-              18
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=19"
-            >
-              19
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1"
-              href="#/people?centuries=20"
-            >
-              20
-            </a>
+            {centuryOptions.map(({ value }) => {
+              return (
+                <a
+                  key={value}
+                  data-cy="century"
+                  className={`button mr-1 ${centuries.includes(value) ? 'is-info' : ''}`}
+                  onClick={() => {
+                    handleCenturyChange(value);
+                  }}
+                >
+                  {value}
+                </a>
+              );
+            })}
           </div>
 
           <div className="level-right ml-4">
             <a
               data-cy="centuryALL"
               className="button is-success is-outlined"
-              href="#/people"
+              onClick={() => {
+                handleCenturyChange(null);
+              }}
             >
               All
             </a>
@@ -87,9 +163,17 @@ export const PeopleFilters = () => {
       </div>
 
       <div className="panel-block">
-        <a className="button is-link is-outlined is-fullwidth" href="#/people">
+        <Link
+          className="button is-link is-outlined is-fullwidth"
+          to="/people"
+          onClick={() => {
+            setQuery('');
+            setSex('all');
+            setCenturies([]);
+          }}
+        >
           Reset all filters
-        </a>
+        </Link>
       </div>
     </nav>
   );
