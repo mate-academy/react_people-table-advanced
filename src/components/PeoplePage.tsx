@@ -44,7 +44,9 @@ export const PeoplePage: React.FC = () => {
         (person.fatherName &&
           person.fatherName.toLowerCase().includes(queryFilter))) &&
       (centuryFilters.length === 0 ||
-        centuryFilters.includes(String(Math.ceil(person.born / 100))))
+        centuryFilters.includes(
+          String(Math.floor((person.born - 1) / 100) + 1),
+        ))
     );
   });
 
