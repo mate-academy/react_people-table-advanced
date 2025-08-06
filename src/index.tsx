@@ -1,13 +1,16 @@
-import { createRoot } from 'react-dom/client';
-import { HashRouter as Router } from 'react-router-dom';
+// src/index.tsx (ou src/index.js)
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import App from './App';
+import './index.scss'; // Certifique-se de que esta importação existe se você a tiver
 
-import 'bulma/css/bulma.css';
-import '@fortawesome/fontawesome-free/css/all.css';
+const root = ReactDOM.createRoot(
+  document.getElementById('root') as HTMLElement,
+);
 
-import { App } from './App';
-
-createRoot(document.getElementById('root') as HTMLDivElement).render(
-  <Router>
-    <App />
-  </Router>,
+root.render(
+  // Comente ou remova estas linhas para desabilitar o Strict Mode em desenvolvimento/testes
+  // <React.StrictMode>
+  <App />,
+  // </React.StrictMode>
 );
