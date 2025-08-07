@@ -1,3 +1,6 @@
+import classNames from 'classnames';
+import { NavLink } from 'react-router-dom';
+
 export const Navbar = () => {
   return (
     <nav
@@ -8,17 +11,22 @@ export const Navbar = () => {
     >
       <div className="container">
         <div className="navbar-brand">
-          <a className="navbar-item" href="#/">
-            Home
-          </a>
-
-          <a
-            aria-current="page"
-            className="navbar-item has-background-grey-lighter"
-            href="#/people"
-          >
-            People
-          </a>
+          {[
+            { name: 'Home', to: '/' },
+            { name: 'People', to: 'people' },
+          ].map(({ name, to }) => (
+            <NavLink
+              key={name}
+              className={({ isActive }) =>
+                classNames('navbar-item', {
+                  'has-background-grey-lighter': isActive,
+                })
+              }
+              to={to}
+            >
+              {name}
+            </NavLink>
+          ))}
         </div>
       </div>
     </nav>
