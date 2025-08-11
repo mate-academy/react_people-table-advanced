@@ -1,3 +1,6 @@
+import { NavLink } from 'react-router-dom';
+import { getLinkClass } from '../utils/utils';
+
 export const Navbar = () => {
   return (
     <nav
@@ -8,17 +11,12 @@ export const Navbar = () => {
     >
       <div className="container">
         <div className="navbar-brand">
-          <a className="navbar-item" href="#/">
+          <NavLink to="/" className={getLinkClass}>
             Home
-          </a>
-
-          <a
-            aria-current="page"
-            className="navbar-item has-background-grey-lighter"
-            href="#/people"
-          >
+          </NavLink>
+          <NavLink to="people" className={getLinkClass}>
             People
-          </a>
+          </NavLink>
         </div>
       </div>
     </nav>
