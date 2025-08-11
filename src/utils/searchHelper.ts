@@ -1,5 +1,6 @@
+type Param = string | number;
 export type SearchParams = {
-  [key: string]: string | string[] | null;
+  [key: string]: Param | Param[] | null;
 };
 
 /**
@@ -32,10 +33,10 @@ export function getSearchWith(
       newParams.delete(key);
 
       value.forEach(part => {
-        newParams.append(key, part);
+        newParams.append(key, part.toString());
       });
     } else {
-      newParams.set(key, value);
+      newParams.set(key, value.toString());
     }
   });
 
