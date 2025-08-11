@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { Person } from './types/Person';
 
 // eslint-disable-next-line operator-linebreak
