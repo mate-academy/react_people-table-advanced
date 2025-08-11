@@ -1,4 +1,4 @@
-import { Person } from './types/Person';
+import { Person } from './Person';
 
 // eslint-disable-next-line operator-linebreak
 const API_URL =
@@ -8,7 +8,7 @@ function wait(delay: number) {
   return new Promise(resolve => setTimeout(resolve, delay));
 }
 
-export async function getPeople(): Promise<Person[]> {
+export function getPeople(): Promise<Person[]> {
   // keep this delay for testing purpose
   return wait(500)
     .then(() => fetch(API_URL))
