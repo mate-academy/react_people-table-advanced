@@ -1,18 +1,51 @@
-export const PeopleFilters = () => {
+import React from 'react';
+import cn from 'classnames';
+
+interface Props {
+  sex: string;
+  query: string;
+  centuries: string[];
+  onReset: (param: string) => void;
+  onSexChange: (sexFilter: string) => void;
+  setCenturies: (century: string) => void;
+  onQueryChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+}
+
+export const PeopleFilters: React.FC<Props> = ({
+  sex,
+  query,
+  centuries,
+  onSexChange,
+  onReset,
+  onQueryChange,
+  setCenturies,
+}) => {
+  const handleResetAll = () => {
+    onReset('sex');
+    onReset('query');
+    onReset('centuries');
+  };
+
+  const centuriesArray = ['16', '17', '18', '19', '20'];
+
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        <a className="is-active" href="#/people">
-          All
-        </a>
-        <a className="" href="#/people?sex=m">
-          Male
-        </a>
-        <a className="" href="#/people?sex=f">
-          Female
-        </a>
+        {[
+          { param: '', title: 'All' },
+          { param: 'm', title: 'Male' },
+          { param: 'f', title: 'Female' },
+        ].map(filter => (
+          <a
+            key={filter.title}
+            className={cn({ 'is-active': sex === filter.param })}
+            onClick={() => onSexChange(filter.param)}
+          >
+            {filter.title}
+          </a>
+        ))}
       </p>
 
       <div className="panel-block">
@@ -22,6 +55,8 @@ export const PeopleFilters = () => {
             type="search"
             className="input"
             placeholder="Search"
+            value={query}
+            onChange={onQueryChange}
           />
 
           <span className="icon is-left">
@@ -33,52 +68,25 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            <a
-              data-cy="century"
-              className="button mr-1"
-              href="#/people?centuries=16"
-            >
-              16
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=17"
-            >
-              17
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=18"
-            >
-              18
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=19"
-            >
-              19
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1"
-              href="#/people?centuries=20"
-            >
-              20
-            </a>
+            {centuriesArray.map(filter => (
+              <a
+                key={filter}
+                data-cy="century"
+                className={cn('button mr-1', {
+                  'is-info': centuries.includes(filter),
+                })}
+                onClick={() => setCenturies(filter)}
+              >
+                {filter}
+              </a>
+            ))}
           </div>
 
           <div className="level-right ml-4">
             <a
               data-cy="centuryALL"
               className="button is-success is-outlined"
-              href="#/people"
+              onClick={() => onReset('centuries')}
             >
               All
             </a>
@@ -87,7 +95,11 @@ export const PeopleFilters = () => {
       </div>
 
       <div className="panel-block">
-        <a className="button is-link is-outlined is-fullwidth" href="#/people">
+        <a
+          className="button is-link is-outlined is-fullwidth"
+          href="#/people"
+          onClick={handleResetAll}
+        >
           Reset all filters
         </a>
       </div>
