@@ -1,8 +1,12 @@
 import { PeopleFilters } from './PeopleFilters';
 import { Loader } from './Loader';
 import { PeopleTable } from './PeopleTable';
+import { useContext } from 'react';
+import { getPeopleContext } from '../contexts/ContextGetPeople';
 
 export const PeoplePage = () => {
+  const { people, isLoading, isError } = useContext(getPeopleContext);
+
   return (
     <>
       <h1 className="title">People Page</h1>
@@ -15,15 +19,17 @@ export const PeoplePage = () => {
 
           <div className="column">
             <div className="box table-container">
-              <Loader />
+              {isError && (
+                <p data-cy="peopleLoadingError">Something went wrong</p>
+              )}
+              {isLoading ? <Loader /> : <PeopleTable />}
+              {!isLoading && people.length === 0 && !isError ? (
+                <p data-cy="noPeopleMessage">
+                  There are no people on the server
+                </p>
+              ) : null}
 
-              <p data-cy="peopleLoadingError">Something went wrong</p>
-
-              <p data-cy="noPeopleMessage">There are no people on the server</p>
-
-              <p>There are no people matching the current search criteria</p>
-
-              <PeopleTable />
+              {/* {isError && <p>There are no people matching the current search criteria</p> } */}
             </div>
           </div>
         </div>
