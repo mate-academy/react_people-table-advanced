@@ -1,18 +1,132 @@
+import { useSearchParams } from 'react-router-dom';
+import { Sex } from '../types';
+import cn from 'classnames';
+
 export const PeopleFilters = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const query = searchParams.get('query') || '';
+
+  const handleQuery = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const params = new URLSearchParams(searchParams);
+
+    if (event.target.value.length === 0) {
+      params.delete('query');
+    } else {
+      params.set('query', event.target.value);
+    }
+
+    setSearchParams(params);
+  };
+
+  const handleGenderChange = (
+    gender: Sex,
+    event: React.MouseEvent<HTMLAnchorElement, MouseEvent>,
+  ) => {
+    event.preventDefault();
+    const params = new URLSearchParams(searchParams);
+
+    if (gender === Sex.All) {
+      params.delete('sex');
+    } else {
+      params.set('sex', gender);
+    }
+
+    setSearchParams(params);
+  };
+
+  const genderTabActive = (gender: Sex) => {
+    return searchParams.get('sex') === gender ? 'is-active' : '';
+  };
+
+  const handleCenturyChange = (
+    century: string,
+    event: React.MouseEvent<HTMLAnchorElement, MouseEvent>,
+  ) => {
+    event.preventDefault();
+
+    const params = new URLSearchParams(searchParams);
+    const centuries = params.getAll('centuries');
+
+    if (centuries.includes(century)) {
+      const newCenturies = centuries.filter(
+        currCentury => currCentury !== century,
+      );
+
+      params.delete('centuries');
+      newCenturies.forEach(currCentury =>
+        params.append('centuries', currCentury),
+      );
+    } else {
+      params.append('centuries', century);
+    }
+
+    setSearchParams(params);
+  };
+
+  const handleAll = (
+    event: React.MouseEvent<HTMLAnchorElement, MouseEvent>,
+  ) => {
+    event.preventDefault();
+    const params = new URLSearchParams(searchParams);
+
+    params.delete('centuries');
+    setSearchParams(params);
+  };
+
+  const centuryTabActive = (century: string) => {
+    const centuries = searchParams.getAll('centuries');
+
+    return centuries.includes(century) ? 'is-info' : '';
+  };
+
+  const handleReset = (
+    event: React.MouseEvent<HTMLAnchorElement, MouseEvent>,
+  ) => {
+    event.preventDefault();
+    const params = new URLSearchParams(searchParams);
+
+    params.delete('query');
+    params.delete('sex');
+    params.delete('centuries');
+
+    setSearchParams(params);
+  };
+
+  const genderSelection = [
+    {
+      label: 'All',
+      link: '#/people',
+      sex: Sex.All,
+    },
+    {
+      label: 'Male',
+      link: '#/people?sex=m',
+      sex: Sex.Male,
+    },
+    {
+      label: 'Female',
+      link: '#/people?sex=f',
+      sex: Sex.Female,
+    },
+  ];
+
+  const centuries = ['16', '17', '18', '19', '20'];
+
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
-
       <p className="panel-tabs" data-cy="SexFilter">
-        <a className="is-active" href="#/people">
-          All
-        </a>
-        <a className="" href="#/people?sex=m">
-          Male
-        </a>
-        <a className="" href="#/people?sex=f">
-          Female
-        </a>
+        {genderSelection.map(({ label, link, sex }) => (
+          <a
+            key={label}
+            className={cn('panel-block', genderTabActive(sex))}
+            href={link}
+            onClick={event => handleGenderChange(sex, event)}
+          >
+            {label}
+          </a>
+        ))}
       </p>
 
       <div className="panel-block">
@@ -22,6 +136,10 @@ export const PeopleFilters = () => {
             type="search"
             className="input"
             placeholder="Search"
+            value={query}
+            onChange={event => {
+              handleQuery(event);
+            }}
           />
 
           <span className="icon is-left">
@@ -33,45 +151,17 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            <a
-              data-cy="century"
-              className="button mr-1"
-              href="#/people?centuries=16"
-            >
-              16
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=17"
-            >
-              17
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=18"
-            >
-              18
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=19"
-            >
-              19
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1"
-              href="#/people?centuries=20"
-            >
-              20
-            </a>
+            {centuries.map(century => (
+              <a
+                key={century}
+                data-cy="century"
+                className={cn('button mr-1', centuryTabActive(century))}
+                href={`#/people?centuries=${century}`}
+                onClick={event => handleCenturyChange(century, event)}
+              >
+                {century}
+              </a>
+            ))}
           </div>
 
           <div className="level-right ml-4">
@@ -79,6 +169,7 @@ export const PeopleFilters = () => {
               data-cy="centuryALL"
               className="button is-success is-outlined"
               href="#/people"
+              onClick={event => handleAll(event)}
             >
               All
             </a>
@@ -87,7 +178,11 @@ export const PeopleFilters = () => {
       </div>
 
       <div className="panel-block">
-        <a className="button is-link is-outlined is-fullwidth" href="#/people">
+        <a
+          className="button is-link is-outlined is-fullwidth"
+          href="#/people"
+          onClick={event => handleReset(event)}
+        >
           Reset all filters
         </a>
       </div>

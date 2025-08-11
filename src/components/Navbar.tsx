@@ -1,4 +1,10 @@
+import { NavLink } from 'react-router-dom';
+import cn from 'classnames';
 export const Navbar = () => {
+  const isTabActive = ({ isActive }: { isActive: boolean }) => {
+    return isActive ? 'has-background-grey-lighter' : '';
+  };
+
   return (
     <nav
       data-cy="nav"
@@ -8,17 +14,24 @@ export const Navbar = () => {
     >
       <div className="container">
         <div className="navbar-brand">
-          <a className="navbar-item" href="#/">
+          <NavLink
+            className={({ isActive }) =>
+              cn('navbar-item', isTabActive({ isActive }))
+            }
+            to="/"
+          >
             Home
-          </a>
+          </NavLink>
 
-          <a
+          <NavLink
             aria-current="page"
-            className="navbar-item has-background-grey-lighter"
-            href="#/people"
+            className={({ isActive }) =>
+              cn('navbar-item', isTabActive({ isActive }))
+            }
+            to="people"
           >
             People
-          </a>
+          </NavLink>
         </div>
       </div>
     </nav>
