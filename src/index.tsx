@@ -4,10 +4,15 @@ import { HashRouter as Router } from 'react-router-dom';
 import 'bulma/css/bulma.css';
 import '@fortawesome/fontawesome-free/css/all.css';
 
-import { App } from './App';
+import { PeopleProvider } from './components/store/PeopleContext';
+import { Root } from './Root';
 
-createRoot(document.getElementById('root') as HTMLDivElement).render(
+const container = document.getElementById('root') as HTMLElement;
+
+createRoot(container).render(
   <Router>
-    <App />
+    <PeopleProvider>
+      <Root />
+    </PeopleProvider>
   </Router>,
 );
