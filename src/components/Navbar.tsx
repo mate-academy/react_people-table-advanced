@@ -1,4 +1,7 @@
-export const Navbar = () => {
+import { NavLink } from 'react-router-dom';
+import getActiveNavLink from '../utils/getActiveNavLink';
+
+export default function Navbar() {
   return (
     <nav
       data-cy="nav"
@@ -8,19 +11,15 @@ export const Navbar = () => {
     >
       <div className="container">
         <div className="navbar-brand">
-          <a className="navbar-item" href="#/">
+          <NavLink to="/" className={getActiveNavLink}>
             Home
-          </a>
+          </NavLink>
 
-          <a
-            aria-current="page"
-            className="navbar-item has-background-grey-lighter"
-            href="#/people"
-          >
+          <NavLink to="/people" className={getActiveNavLink}>
             People
-          </a>
+          </NavLink>
         </div>
       </div>
     </nav>
   );
-};
+}
