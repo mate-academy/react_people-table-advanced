@@ -1,6 +1,8 @@
+import { PersonSex } from './PersonSex';
+
 export interface Person {
   name: string;
-  sex: string;
+  sex: PersonSex;
   born: number;
   died: number;
   fatherName: string | null;
