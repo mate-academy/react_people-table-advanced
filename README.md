@@ -1,7 +1,6 @@
 # React People Table (Advanced) - Filterging and Sorting
 
 > Here is [the working example](https://mate-academy.github.io/react_people-table-advanced/)
-
 > Sorting and filtering tests are not implemented yet
 
 Using code from the [React People Table](https://github.com/mate-academy/react_people-table-basics#react-people-table)
@@ -24,6 +23,7 @@ implement the ability to filter and sort people in the table.
     - if sorting is disabled there should not be `sort` and `order` search params;
 
 ## Instructions
+
 - Install Prettier Extention and use this [VSCode settings](https://mate-academy.github.io/fe-program/tools/vscode/settings.json) to enable format on save.
 - Implement a solution following the [React task guideline](https://github.com/mate-academy/react_task-guideline#react-tasks-guideline).
 - Use the [React TypeScript cheat sheet](https://mate-academy.github.io/fe-program/js/extra/react-typescript).
