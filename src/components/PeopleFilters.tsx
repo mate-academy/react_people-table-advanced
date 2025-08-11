@@ -1,16 +1,50 @@
-export const PeopleFilters = () => {
+import cn from 'classnames';
+
+type Props = {
+  handleQueryFilter: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  handleSexFilter: (
+    e: React.MouseEvent<HTMLAnchorElement, MouseEvent>,
+    arg: string,
+  ) => void;
+  handleCenturyFilter: (arg: string) => void;
+  handleQuery: string;
+  searchParams: URLSearchParams;
+};
+
+export const PeopleFilters: React.FC<Props> = ({
+  handleQueryFilter,
+  handleQuery,
+  handleSexFilter,
+  handleCenturyFilter,
+  searchParams,
+}) => {
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        <a className="is-active" href="#/people">
+        <a
+          className={cn({
+            'is-active': searchParams.get('sex') === null,
+          })}
+          onClick={e => handleSexFilter(e, 'all')}
+        >
           All
         </a>
-        <a className="" href="#/people?sex=m">
+        <a
+          className={cn({
+            'is-active': searchParams.get('sex') === 'm',
+          })}
+          onClick={e => handleSexFilter(e, 'm')}
+        >
           Male
         </a>
-        <a className="" href="#/people?sex=f">
+        <a
+          className={cn({
+            'is-active': searchParams.get('sex') === 'f',
+          })}
+          onClick={e => handleSexFilter(e, 'f')}
+        >
           Female
         </a>
       </p>
@@ -22,6 +56,8 @@ export const PeopleFilters = () => {
             type="search"
             className="input"
             placeholder="Search"
+            value={handleQuery}
+            onChange={e => handleQueryFilter(e)}
           />
 
           <span className="icon is-left">
@@ -33,55 +69,66 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            <a
+            <span
               data-cy="century"
-              className="button mr-1"
-              href="#/people?centuries=16"
+              className={cn('button mr-1', {
+                'is-info': searchParams.getAll('centuries')?.includes('16'),
+              })}
+              onClick={() => handleCenturyFilter('16')}
             >
               16
-            </a>
+            </span>
 
-            <a
+            <span
               data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=17"
+              className={cn('button mr-1', {
+                'is-info': searchParams.getAll('centuries')?.includes('17'),
+              })}
+              onClick={() => handleCenturyFilter('17')}
             >
               17
-            </a>
-
-            <a
+            </span>
+            <span
               data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=18"
+              className={cn('button mr-1', {
+                'is-info': searchParams.getAll('centuries')?.includes('18'),
+              })}
+              onClick={() => handleCenturyFilter('18')}
             >
               18
-            </a>
+            </span>
 
-            <a
+            <span
               data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=19"
+              className={cn('button mr-1', {
+                'is-info': searchParams.getAll('centuries')?.includes('19'),
+              })}
+              onClick={() => handleCenturyFilter('19')}
             >
               19
-            </a>
+            </span>
 
-            <a
+            <span
               data-cy="century"
-              className="button mr-1"
-              href="#/people?centuries=20"
+              className={cn('button mr-1', {
+                'is-info': searchParams.getAll('centuries')?.includes('20'),
+              })}
+              onClick={() => handleCenturyFilter('20')}
             >
               20
-            </a>
+            </span>
           </div>
 
           <div className="level-right ml-4">
-            <a
+            <span
               data-cy="centuryALL"
-              className="button is-success is-outlined"
-              href="#/people"
+              className={cn('button is-success', {
+                'is-outlined': searchParams.getAll('centuries')?.length !== 0,
+              })}
+              onClick={() => handleCenturyFilter('all')}
             >
               All
-            </a>
+            </span>
           </div>
         </div>
       </div>
