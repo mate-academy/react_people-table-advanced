@@ -1,20 +1,22 @@
-import { PeoplePage } from './components/PeoplePage';
-import { Navbar } from './components/Navbar';
-
 import './App.scss';
+import { Outlet } from 'react-router-dom';
+import { HomePage } from './components/HomePage';
+import { Navbar } from './components/Navbar';
+import { useContext } from 'react';
+import { PeopleContext } from './Context';
 
 export const App = () => {
+  const { pathname } = useContext(PeopleContext);
+
   return (
     <div data-cy="app">
       <Navbar />
-
-      <div className="section">
+      <main className="section">
         <div className="container">
-          <h1 className="title">Home Page</h1>
-          <h1 className="title">Page not found</h1>
-          <PeoplePage />
+          {pathname === '/' && <HomePage />}
+          <Outlet />
         </div>
-      </div>
+      </main>
     </div>
   );
 };
