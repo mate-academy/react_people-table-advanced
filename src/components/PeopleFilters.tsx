@@ -1,16 +1,68 @@
-export const PeopleFilters = () => {
+import classNames from 'classnames';
+import React from 'react';
+import { Link, useLocation } from 'react-router-dom';
+import { CenturyButton } from './CenturyButton';
+
+type Props = {
+  query: string;
+  handleInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  toggleSex: (sex: string | null) => void;
+  toggleCentuary: (cent: string | null) => void;
+  handleReset: () => void;
+};
+
+const usePeopleFilters = () => {
+  const { search } = useLocation();
+  const params = new URLSearchParams(search);
+  const selectedSex = params.get('sex');
+  const selectedCenturies = params.getAll('centuries');
+  const centuries = [16, 17, 18, 19, 20];
+
+  return { selectedSex, selectedCenturies, centuries };
+};
+
+const preventDefaultAndToggle = (
+  e: React.MouseEvent<HTMLAnchorElement>,
+  toggleFunction: (value: string | null) => void,
+  value: string | null,
+) => {
+  e.preventDefault();
+  toggleFunction(value);
+};
+
+export const PeopleFilters: React.FC<Props> = ({
+  query,
+  handleInputChange,
+  toggleSex,
+  toggleCentuary,
+  handleReset,
+}) => {
+  const { selectedSex, selectedCenturies, centuries } = usePeopleFilters();
+
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        <a className="is-active" href="#/people">
+        <a
+          className={classNames({ 'is-active': selectedSex === null })}
+          href="#/people"
+          onClick={e => preventDefaultAndToggle(e, toggleSex, null)}
+        >
           All
         </a>
-        <a className="" href="#/people?sex=m">
+        <a
+          className={classNames({ 'is-active': selectedSex === 'm' })}
+          href="#/people?sex=m"
+          onClick={e => preventDefaultAndToggle(e, toggleSex, 'm')}
+        >
           Male
         </a>
-        <a className="" href="#/people?sex=f">
+        <a
+          className={classNames({ 'is-active': selectedSex === 'f' })}
+          href="#/people?sex=f"
+          onClick={e => preventDefaultAndToggle(e, toggleSex, 'f')}
+        >
           Female
         </a>
       </p>
@@ -22,6 +74,8 @@ export const PeopleFilters = () => {
             type="search"
             className="input"
             placeholder="Search"
+            value={query}
+            onChange={handleInputChange}
           />
 
           <span className="icon is-left">
@@ -33,52 +87,24 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            <a
-              data-cy="century"
-              className="button mr-1"
-              href="#/people?centuries=16"
-            >
-              16
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=17"
-            >
-              17
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=18"
-            >
-              18
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=19"
-            >
-              19
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1"
-              href="#/people?centuries=20"
-            >
-              20
-            </a>
+            {centuries.map(century => (
+              <CenturyButton
+                key={century}
+                century={century}
+                selectedCenturies={selectedCenturies}
+                toggleCentuary={toggleCentuary}
+              />
+            ))}
           </div>
 
           <div className="level-right ml-4">
             <a
               data-cy="centuryALL"
-              className="button is-success is-outlined"
+              className={classNames('button is-success', {
+                'is-outlined': selectedCenturies.length,
+              })}
               href="#/people"
+              onClick={e => preventDefaultAndToggle(e, toggleCentuary, null)}
             >
               All
             </a>
@@ -87,9 +113,15 @@ export const PeopleFilters = () => {
       </div>
 
       <div className="panel-block">
-        <a className="button is-link is-outlined is-fullwidth" href="#/people">
+        <Link
+          className="button is-link is-outlined is-fullwidth"
+          to="/people"
+          onClick={() => {
+            handleReset();
+          }}
+        >
           Reset all filters
-        </a>
+        </Link>
       </div>
     </nav>
   );
