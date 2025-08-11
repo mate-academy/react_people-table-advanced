@@ -1,18 +1,24 @@
-import { PeoplePage } from './components/PeoplePage';
+// #region imports
+import { useEffect } from 'react';
+import { Outlet } from 'react-router-dom';
 import { Navbar } from './components/Navbar';
-
 import './App.scss';
+// #endregion
 
 export const App = () => {
+  useEffect(() => {
+    const html = document.getElementsByTagName('html')[0];
+
+    html.classList.add('has-navbar-fixed-top');
+  }, []);
+
   return (
     <div data-cy="app">
       <Navbar />
 
       <div className="section">
         <div className="container">
-          <h1 className="title">Home Page</h1>
-          <h1 className="title">Page not found</h1>
-          <PeoplePage />
+          <Outlet />
         </div>
       </div>
     </div>
