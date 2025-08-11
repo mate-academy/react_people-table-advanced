@@ -1,16 +1,47 @@
-export const PeopleFilters = () => {
+import React from 'react';
+import { useSearchParams } from 'react-router-dom';
+
+type Props = {
+  query: string;
+  updateQuery: (query: string) => void;
+  updateSex: (sex: string) => void;
+  selected: string[];
+  toggleCentury: (century: string) => void;
+  resetAllFilters: () => void;
+};
+
+export const PeopleFilters: React.FC<Props> = ({
+  query,
+  updateQuery,
+  toggleCentury,
+  selected,
+  updateSex,
+  resetAllFilters,
+}) => {
+  const [searchParams] = useSearchParams();
+
+  function getActiveCentury(value: string) {
+    return selected.includes(value) ? 'button mr-1 is-info' : 'button mr-1';
+  }
+  function getActiveSex(value: string) {
+    return searchParams.get('sex') === value ? 'is-active' : '';
+  }
+
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        <a className="is-active" href="#/people">
+        <a
+          className={!searchParams.get('sex') ? 'is-active' : ''}
+          onClick={() => updateSex('all')}
+        >
           All
         </a>
-        <a className="" href="#/people?sex=m">
+        <a className={getActiveSex('m')} onClick={() => updateSex('m')}>
           Male
         </a>
-        <a className="" href="#/people?sex=f">
+        <a className={getActiveSex('f')} onClick={() => updateSex('f')}>
           Female
         </a>
       </p>
@@ -22,6 +53,8 @@ export const PeopleFilters = () => {
             type="search"
             className="input"
             placeholder="Search"
+            value={query}
+            onChange={e => updateQuery(e.target.value)}
           />
 
           <span className="icon is-left">
@@ -35,40 +68,40 @@ export const PeopleFilters = () => {
           <div className="level-left">
             <a
               data-cy="century"
-              className="button mr-1"
-              href="#/people?centuries=16"
+              className={getActiveCentury('16')}
+              onClick={() => toggleCentury('16')}
             >
               16
             </a>
 
             <a
               data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=17"
+              className={getActiveCentury('17')}
+              onClick={() => toggleCentury('17')}
             >
               17
             </a>
 
             <a
               data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=18"
+              className={getActiveCentury('18')}
+              onClick={() => toggleCentury('18')}
             >
               18
             </a>
 
             <a
               data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=19"
+              className={getActiveCentury('19')}
+              onClick={() => toggleCentury('19')}
             >
               19
             </a>
 
             <a
               data-cy="century"
-              className="button mr-1"
-              href="#/people?centuries=20"
+              className={getActiveCentury('20')}
+              onClick={() => toggleCentury('20')}
             >
               20
             </a>
@@ -77,8 +110,8 @@ export const PeopleFilters = () => {
           <div className="level-right ml-4">
             <a
               data-cy="centuryALL"
-              className="button is-success is-outlined"
-              href="#/people"
+              className={`button is-success ${selected.length === 0 ? '' : 'is-outlined'}`}
+              onClick={() => toggleCentury('ALL')}
             >
               All
             </a>
@@ -87,7 +120,10 @@ export const PeopleFilters = () => {
       </div>
 
       <div className="panel-block">
-        <a className="button is-link is-outlined is-fullwidth" href="#/people">
+        <a
+          className="button is-link is-outlined is-fullwidth"
+          onClick={resetAllFilters}
+        >
           Reset all filters
         </a>
       </div>
