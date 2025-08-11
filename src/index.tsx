@@ -4,10 +4,16 @@ import { HashRouter as Router } from 'react-router-dom';
 import 'bulma/css/bulma.css';
 import '@fortawesome/fontawesome-free/css/all.css';
 
-import { App } from './App';
+import Root from './Root';
 
-createRoot(document.getElementById('root') as HTMLDivElement).render(
-  <Router>
-    <App />
-  </Router>,
-);
+const rootElement = document.getElementById('root');
+
+if (rootElement) {
+  const root = createRoot(rootElement);
+
+  root.render(
+    <Router>
+      <Root />
+    </Router>,
+  );
+}
