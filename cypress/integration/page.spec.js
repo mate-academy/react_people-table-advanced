@@ -24,26 +24,26 @@ const page = {
     return cy.intercept('**/people.json', errorResponse).as('peopleData')
   },
 
-  visit: (url) => {
-    cy.visit(url);
-    page.getByDataCy('app').should('exist');
-  },
-  getByDataCy: name => cy.get(`[data-cy="${name}"]`),
-  title: () => cy.get('.title'),
-  nav: () => cy.getByDataCy('nav'),
-  loader: () => cy.getByDataCy('loader'),
-  noPeopleMessage: () => cy.getByDataCy('noPeopleMessage'),
-  peopleLoadingError: () => cy.getByDataCy('peopleLoadingError'),
-  peopleTable: () => cy.getByDataCy('peopleTable'),
-  people: () => cy.getByDataCy('person'),
-  heading: () => page.peopleTable().find('th'),
+    visit: (url) => {
+      cy.visit(url);
+      page.getByDataCy('app').should('exist');
+    },
+    getByDataCy: name => cy.get(`[data-cy="${name}"]`),
+    title: () => cy.get('.title'),
+    nav: () => cy.getByDataCy('nav'),
+    loader: () => cy.getByDataCy('loader'),
+    noPeopleMessage: () => cy.getByDataCy('noPeopleMessage'),
+    peopleLoadingError: () => cy.getByDataCy('peopleLoadingError'),
+    peopleTable: () => cy.getByDataCy('peopleTable'),
+    people: () => cy.getByDataCy('person'),
+    heading: () => page.peopleTable().find('th'),
 
-  assertHash: hash => cy.location('hash').should('eq', hash),
-  assertSearch: search => cy.location('search').should('eq', search),
-  assetTitle: text => page.title()
-    .should('have.length', 1)
-    .and('have.text', text),
-}
+    assertHash: hash => cy.location('hash').should('eq', hash),
+    assertSearch: search => cy.location('search').should('eq', search),
+    assetTitle: text => page.title()
+      .should('have.length', 1)
+      .and('have.text', text),
+  }
 
 let failed = false;
 
