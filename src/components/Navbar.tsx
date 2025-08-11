@@ -1,4 +1,17 @@
-export const Navbar = () => {
+import React from 'react';
+import { NavLink } from 'react-router-dom';
+import cn from 'classnames';
+type Props = {};
+
+export const Navbar: React.FC<Props> = props => {
+  const {} = props;
+
+  const linkStatus = ({ isActive }: { isActive: boolean }) => {
+    return cn('navbar-item', {
+      'has-background-grey-lighter': isActive,
+    });
+  };
+
   return (
     <nav
       data-cy="nav"
@@ -8,17 +21,13 @@ export const Navbar = () => {
     >
       <div className="container">
         <div className="navbar-brand">
-          <a className="navbar-item" href="#/">
+          <NavLink className={linkStatus} to="/">
             Home
-          </a>
+          </NavLink>
 
-          <a
-            aria-current="page"
-            className="navbar-item has-background-grey-lighter"
-            href="#/people"
-          >
+          <NavLink className={linkStatus} to="/people">
             People
-          </a>
+          </NavLink>
         </div>
       </div>
     </nav>
