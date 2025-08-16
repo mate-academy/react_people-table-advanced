@@ -1,8 +1,25 @@
 import { PeopleFilters } from './PeopleFilters';
 import { Loader } from './Loader';
 import { PeopleTable } from './PeopleTable';
+import React, { useContext } from 'react';
+import { PeopleContext } from '../context/PeopleContext';
 
 export const PeoplePage = () => {
+  const { people, loading, error } = useContext(PeopleContext);
+  const peopleMap = new Map(people.map(p => [p.name, p]));
+
+  if (loading) {
+    return <Loader />;
+  }
+
+  if (error) {
+    return <p data-cy="peopleLoadingError">Something went wrong</p>;
+  }
+
+  if (!people.length) {
+    return <p data-cy="noPeopleMessage">There are no people on the server</p>;
+  }
+
   return (
     <>
       <h1 className="title">People Page</h1>
@@ -23,7 +40,7 @@ export const PeoplePage = () => {
 
               <p>There are no people matching the current search criteria</p>
 
-              <PeopleTable />
+              <PeopleTable people={people} peopleMap={peopleMap} />
             </div>
           </div>
         </div>
