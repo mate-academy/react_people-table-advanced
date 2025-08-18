@@ -10,7 +10,8 @@ export const PeopleTable: React.FC<PeopleTableProps> = ({
   const { slug } = useParams();
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const search = searchParams.get('search') || '';
+  // const search = searchParams.get('search') || '';
+  const query = searchParams.get('query') || '';
   const sortField = searchParams.get('sort');
   const order = searchParams.get('order');
   const selectedCenturies = searchParams.getAll('centuries');
@@ -21,7 +22,7 @@ export const PeopleTable: React.FC<PeopleTableProps> = ({
       person.name,
       person.motherName,
       person.fatherName,
-    ].some(n => n?.toLowerCase().includes(search.toLowerCase()));
+    ].some(n => n?.toLowerCase().includes(query.toLowerCase()));
 
     const personCentury = Math.ceil(person.born / 100);
 
