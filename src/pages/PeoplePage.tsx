@@ -3,11 +3,13 @@ import { PeopleTable } from '../components/PeopleTable';
 import { Loader } from '../components/Loader';
 import { useParams, useSearchParams } from 'react-router-dom';
 import { PeopleContext } from '../context/PeopleContext';
+import { PeopleFilters } from '../components/PeopleFilters';
+// import { PeopleFiltersProps } from '../types/PeopleFiltersProps';
 
 export const PeoplePage: React.FC = () => {
   const { people, loading, error } = useContext(PeopleContext);
   const { slug } = useParams<{ slug?: string }>();
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const selectedPerson = people.find(p => p.slug === slug);
 
@@ -54,12 +56,23 @@ export const PeoplePage: React.FC = () => {
       <div className="container">
         <h1 className="title">People Page</h1>
 
-        <PeopleTable
-          people={people}
-          highlightedSlug={selectedPersonSlug}
-          peopleMap={peopleMap}
-          searchParams={searchParams}
-        />
+        <div className="columns is-desktop is-flex-direction-row-reverse">
+          <div className="column is-3-tablet is-narrow-desktop">
+            <PeopleFilters
+              searchParams={searchParams}
+              setSearchParams={setSearchParams}
+            />
+          </div>
+
+          <div className="column">
+            <PeopleTable
+              people={people}
+              highlightedSlug={selectedPersonSlug}
+              peopleMap={peopleMap}
+              searchParams={searchParams}
+            />
+          </div>
+        </div>
       </div>
     </main>
   );

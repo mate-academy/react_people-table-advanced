@@ -1,11 +1,15 @@
 import classNames from 'classnames';
-import React, { useContext } from 'react';
-import { useSearchParams } from 'react-router-dom';
-import { PeopleContext } from '../context/PeopleContext';
+import React from 'react';
+// import { useSearchParams } from 'react-router-dom';
+// import { PeopleContext } from '../context/PeopleContext';
+import { PeopleFiltersProps } from '../types/PeopleFiltersProps';
 
-export const PeopleFilters: React.FC = () => {
-  const { people, loading, error } = useContext(PeopleContext);
-  const [searchParams, setSearchParams] = useSearchParams();
+export const PeopleFilters: React.FC<PeopleFiltersProps> = ({
+  searchParams,
+  setSearchParams,
+}) => {
+  // const { people, loading, error } = useContext(PeopleContext);
+  // const [searchParams, setSearchParams] = useSearchParams();
   // const search = searchParams.get('search') || '';
   const query = searchParams.get('query') || '';
   const centuries = searchParams.getAll('centuries');
@@ -48,12 +52,8 @@ export const PeopleFilters: React.FC = () => {
   };
 
   const resetAll = () => {
-    setSearchParams({});
+    setSearchParams(new URLSearchParams());
   };
-
-  if (loading || error || people.length === 0) {
-    return null;
-  }
 
   return (
     <nav className="panel">
