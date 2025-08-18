@@ -9,15 +9,30 @@ export const PeopleTable: React.FC<PeopleTableProps> = ({
 }) => {
   const { slug } = useParams();
   const [searchParams, setSearchParams] = useSearchParams();
+
   const search = searchParams.get('search') || '';
   const sortField = searchParams.get('sort');
   const order = searchParams.get('order');
+  const selectedCenturies = searchParams.getAll('centuries');
+  const selectedSex = searchParams.get('sex');
 
-  const filteredPeople = people.filter(p =>
-    [p.name, p.motherName, p.fatherName].some(n =>
-      n?.toLowerCase().includes(search.toLowerCase()),
-    ),
-  );
+  const filteredPeople = people.filter(person => {
+    const matchesSearch = [
+      person.name,
+      person.motherName,
+      person.fatherName,
+    ].some(n => n?.toLowerCase().includes(search.toLowerCase()));
+
+    const personCentury = Math.ceil(person.born / 100);
+
+    const matchesCentury =
+      selectedCenturies.length === 0 ||
+      selectedCenturies.includes(String(personCentury));
+
+    const matchesSex = !selectedSex || person.sex === selectedSex;
+
+    return matchesSearch && matchesCentury && matchesSex;
+  });
 
   const handleSort = (field: string) => {
     const newParams = new URLSearchParams(searchParams);

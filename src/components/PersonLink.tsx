@@ -24,7 +24,7 @@ const PersonLink: React.FC<PersonLinkProps> = ({ personName, peopleMap }) => {
       className={person.sex === 'f' ? 'has-text-danger' : ''}
       data-cy="personLink"
     >
-      {personName}
+      {person.name}
     </Link>
   );
 };

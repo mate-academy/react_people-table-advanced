@@ -1,10 +1,13 @@
 import classNames from 'classnames';
-import React from 'react';
+import React, { useContext } from 'react';
 import { useSearchParams } from 'react-router-dom';
+import { PeopleContext } from '../context/PeopleContext';
 
 export const PeopleFilters: React.FC = () => {
+  const { people, loading, error } = useContext(PeopleContext);
   const [searchParams, setSearchParams] = useSearchParams();
-  const search = searchParams.get('search') || '';
+  // const search = searchParams.get('search') || '';
+  const query = searchParams.get('query') || '';
   const centuries = searchParams.getAll('centuries');
 
   const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -13,9 +16,9 @@ export const PeopleFilters: React.FC = () => {
     const newParams = new URLSearchParams(searchParams);
 
     if (value) {
-      newParams.set('search', value);
+      newParams.set('query', value);
     } else {
-      newParams.delete('search');
+      newParams.delete('query');
     }
 
     setSearchParams(newParams);
@@ -48,6 +51,10 @@ export const PeopleFilters: React.FC = () => {
     setSearchParams({});
   };
 
+  if (loading || error || people.length === 0) {
+    return null;
+  }
+
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
@@ -71,7 +78,7 @@ export const PeopleFilters: React.FC = () => {
             type="search"
             className="input"
             placeholder="Search"
-            value={search}
+            value={query}
             onChange={handleNameChange}
           />
 

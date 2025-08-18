@@ -4,4 +4,5 @@ export interface PeopleTableProps {
   people: Person[];
   highlightedSlug?: string;
   peopleMap: Map<string, Person>;
+  searchParams: URLSearchParams;
 }

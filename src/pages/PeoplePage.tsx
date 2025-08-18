@@ -1,12 +1,13 @@
 import React, { useContext } from 'react';
 import { PeopleTable } from '../components/PeopleTable';
 import { Loader } from '../components/Loader';
-import { useParams } from 'react-router-dom';
+import { useParams, useSearchParams } from 'react-router-dom';
 import { PeopleContext } from '../context/PeopleContext';
 
 export const PeoplePage: React.FC = () => {
   const { people, loading, error } = useContext(PeopleContext);
   const { slug } = useParams<{ slug?: string }>();
+  const [searchParams] = useSearchParams();
 
   const selectedPerson = people.find(p => p.slug === slug);
 
@@ -57,6 +58,7 @@ export const PeoplePage: React.FC = () => {
           people={people}
           highlightedSlug={selectedPersonSlug}
           peopleMap={peopleMap}
+          searchParams={searchParams}
         />
       </div>
     </main>
