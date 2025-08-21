@@ -1,3 +1,10 @@
 iframe {
   display: none;
 }
+
+button {
+  border: none;
+  font: inherit;
+  background-color: transparent;
+  cursor: pointer;
+}
