@@ -304,7 +304,7 @@ describe('', () => {
     });
 
     it('should not show loading error if API send no people', () => {
-      page.mockPeopleError();
+      page.mockNoPeople();
       page.visit('/#/people');
       page.peopleLoadingError().should('not.exist');
     });
