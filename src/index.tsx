@@ -5,9 +5,15 @@ import 'bulma/css/bulma.css';
 import '@fortawesome/fontawesome-free/css/all.css';
 
 import { App } from './App';
+import { FilterContextProvider } from './context/FiltersContext';
+import { PeopleContextProvider } from './context/PeopleContext';
 
 createRoot(document.getElementById('root') as HTMLDivElement).render(
   <Router>
-    <App />
+    <FilterContextProvider>
+      <PeopleContextProvider>
+        <App />
+      </PeopleContextProvider>
+    </FilterContextProvider>
   </Router>,
 );
