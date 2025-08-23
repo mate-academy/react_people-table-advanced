@@ -12,9 +12,11 @@ export const PeopleFilters = () => {
     useContext(FiltersContext);
 
   const handleQueryChange = (value: string) => {
-    const cleaned = value.replace(/\s+/g, ' ');
+    const cleaned = value.replace(/\s+/g, ' ').trim();
 
-    updateSearchParams({ query: cleaned });
+    updateSearchParams({
+      query: cleaned === '' ? null : cleaned,
+    });
   };
 
   return (

@@ -18,19 +18,15 @@ export const PeopleTable: React.FC<Props> = ({ people, isSelectedPerson }) => {
   const { sort, order } = useContext(FiltersContext);
 
   const getSortParams = (value: SortField) => {
-    let params = {};
-
     if (sort !== value) {
-      params = { sort: value, order: null };
-    } else if (order === '') {
-      params = { order: 'desc' };
-    } else if (order === 'desc') {
-      params = { sort: null, order: null };
-    } else {
-      params = { order: 'desc' };
+      return { sort: value, order: null };
     }
 
-    return params;
+    if (!order) {
+      return { sort: value, order: 'desc' };
+    }
+
+    return { sort: null, order: null };
   };
 
   return (
