@@ -20,20 +20,39 @@ export const PeopleTable: FC<Props> = ({
   const sortField = searchParams.get('sort');
   const sortOrder = searchParams.get('order') || 'asc';
 
+  const normalizeNumber = (value: number | null | undefined, asc: boolean) => {
+    if (Number.isFinite(value)) {
+      return value as number;
+    }
+
+    return asc ? Infinity : -Infinity;
+  };
+
   const visiblePeople = [...people].sort((p1, p2) => {
     if (!sortField) {
       return 0;
     }
 
     let result = 0;
+    const asc = sortOrder === 'asc';
 
     switch (sortField) {
-      case 'born':
-        result = p1.born - p2.born;
+      case 'born': {
+        const a = normalizeNumber(p1.born, asc);
+        const b = normalizeNumber(p2.born, asc);
+
+        result = a - b;
         break;
-      case 'died':
-        result = p1.died - p2.died;
+      }
+
+      case 'died': {
+        const a = normalizeNumber(p1.died, asc);
+        const b = normalizeNumber(p2.died, asc);
+
+        result = a - b;
         break;
+      }
+
       case 'name':
         result = p1.name.localeCompare(p2.name);
         break;
@@ -44,7 +63,7 @@ export const PeopleTable: FC<Props> = ({
         result = 0;
     }
 
-    return sortOrder === 'asc' ? result : -result;
+    return asc ? result : -result;
   });
 
   const renderSortIcon = (field: string) => {
@@ -169,8 +188,8 @@ export const PeopleTable: FC<Props> = ({
             </td>
 
             <td>{person.sex}</td>
-            <td>{person.born}</td>
-            <td>{person.died}</td>
+            <td>{person.born ?? '-'}</td>
+            <td>{person.died ?? '-'}</td>
 
             <td>
               <PersonLink
