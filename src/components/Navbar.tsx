@@ -2,7 +2,8 @@ import classNames from 'classnames';
 import { Link, useLocation } from 'react-router-dom';
 
 export const Navbar = () => {
-  const { pathname } = useLocation();
+  const location = useLocation();
+  const { pathname, search } = location;
 
   const isHomeActive = pathname === '/';
   const isTabsActive = pathname.startsWith('/people');
@@ -29,7 +30,7 @@ export const Navbar = () => {
             className={classNames('navbar-item', {
               'has-background-grey-lighter': isTabsActive,
             })}
-            to="/people"
+            to={{ pathname: '/people', search }} // ✅ сохраняем параметры
           >
             People
           </Link>
