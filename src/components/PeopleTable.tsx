@@ -1,14 +1,48 @@
 import React from 'react';
+import cn from 'classnames';
 import { Person } from '../types';
-import classNames from 'classnames';
+import { SearchLink } from './SearchLink';
 import PersonLink from './PersonLink';
 
 type Props = {
   people: Person[];
   selectedSlug: string;
+  sort: string;
+  order: string;
 };
 
-const PeopleTable: React.FC<Props> = ({ people, selectedSlug }) => {
+type SortKey = 'name' | 'sex' | 'born' | 'died';
+
+const PeopleTable: React.FC<Props> = ({
+  people,
+  selectedSlug,
+  sort,
+  order,
+}) => {
+  const getSortParams = (key: SortKey) => {
+    if (sort !== key) {
+      return { sort: key, order: null };
+    }
+
+    if (order === 'asc') {
+      return { sort: key, order: 'desc' };
+    }
+
+    return { sort: null, order: null };
+  };
+
+  const getIconClass = (key: SortKey) => {
+    if (sort !== key) {
+      return 'fa-sort';
+    }
+
+    if (order === 'asc') {
+      return 'fa-sort-up';
+    }
+
+    return 'fa-sort-down';
+  };
+
   return (
     <table
       data-cy="peopleTable"
@@ -16,10 +50,50 @@ const PeopleTable: React.FC<Props> = ({ people, selectedSlug }) => {
     >
       <thead>
         <tr>
-          <th>Name</th>
-          <th>Sex</th>
-          <th>Born</th>
-          <th>Died</th>
+          <th>
+            <span className="is-flex is-flex-wrap-nowrap">
+              Name
+              <SearchLink params={getSortParams('name')}>
+                <span className="icon">
+                  <i className={cn('fas', getIconClass('name'))} />
+                </span>
+              </SearchLink>
+            </span>
+          </th>
+
+          <th>
+            <span className="is-flex is-flex-wrap-nowrap">
+              Sex
+              <SearchLink params={getSortParams('sex')}>
+                <span className="icon">
+                  <i className={cn('fas', getIconClass('sex'))} />
+                </span>
+              </SearchLink>
+            </span>
+          </th>
+
+          <th>
+            <span className="is-flex is-flex-wrap-nowrap">
+              Born
+              <SearchLink params={getSortParams('born')}>
+                <span className="icon">
+                  <i className={cn('fas', getIconClass('born'))} />
+                </span>
+              </SearchLink>
+            </span>
+          </th>
+
+          <th>
+            <span className="is-flex is-flex-wrap-nowrap">
+              Died
+              <SearchLink params={getSortParams('died')}>
+                <span className="icon">
+                  <i className={cn('fas', getIconClass('died'))} />
+                </span>
+              </SearchLink>
+            </span>
+          </th>
+
           <th>Mother</th>
           <th>Father</th>
         </tr>
@@ -30,7 +104,7 @@ const PeopleTable: React.FC<Props> = ({ people, selectedSlug }) => {
           <tr
             key={person.slug}
             data-cy="person"
-            className={classNames({
+            className={cn({
               'has-background-warning': person.slug === selectedSlug,
             })}
           >
