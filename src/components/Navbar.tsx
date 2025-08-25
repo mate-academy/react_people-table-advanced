@@ -1,6 +1,9 @@
-import { NavLink } from 'react-router-dom';
+import { NavLink, useLocation } from 'react-router-dom';
 
 const Navbar = () => {
+  const location = useLocation();
+  const isOnPeople = location.pathname.startsWith('/people');
+
   return (
     <nav
       data-cy="nav"
@@ -23,7 +26,10 @@ const Navbar = () => {
             className={({ isActive }) =>
               'navbar-item' + (isActive ? ' has-background-grey-lighter' : '')
             }
-            to="/people"
+            to={{
+              pathname: '/people',
+              search: isOnPeople ? location.search : '',
+            }}
           >
             People
           </NavLink>

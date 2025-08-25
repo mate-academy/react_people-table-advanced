@@ -66,7 +66,7 @@ export const PeopleFilters: React.FC<Props> = ({
                 <SearchLink
                   key={century}
                   data-cy="century"
-                  params={{ centuries: newCenturies }}
+                  params={{ centuries: newCenturies.length > 0 ? newCenturies : null }}
                   className={`${
                     centuries.includes(century) ? 'is-info' : ''
                   } button mr-1`}

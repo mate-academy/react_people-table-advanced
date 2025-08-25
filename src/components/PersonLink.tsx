@@ -1,6 +1,6 @@
 import React from 'react';
 import { Person } from '../types';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 type Props = {
   name: string | null;
@@ -8,6 +8,7 @@ type Props = {
 };
 
 const PersonLink: React.FC<Props> = ({ name, people }) => {
+  const { search } = useLocation();
   const personFound = people.find(person => name === person.name);
 
   return (
@@ -15,7 +16,7 @@ const PersonLink: React.FC<Props> = ({ name, people }) => {
       {personFound ? (
         <Link
           className={personFound.sex === 'f' ? 'has-text-danger' : ''}
-          to={`/people/${personFound.slug}`}
+          to={{ pathname: `/people/${personFound.slug}`, search }}
         >
           {personFound.name}
         </Link>
