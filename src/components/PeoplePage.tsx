@@ -62,8 +62,8 @@ export const PeoplePage: React.FC = () => {
 
     if (sortField) {
       res.sort((a, b) => {
-        const av = a[sortField] as any;
-        const bv = b[sortField] as any;
+        const av: string | number = a[sortField];
+        const bv: string | number = b[sortField];
 
         if (typeof av === 'number' && typeof bv === 'number') {
           return av - bv;

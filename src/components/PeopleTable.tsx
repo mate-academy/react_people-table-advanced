@@ -7,6 +7,9 @@ import { getPeople } from '../api';
 import { Person } from '../types/Person';
 import { useSearchParams } from 'react-router-dom';
 
+// тільки ці поля дозволено сортувати
+type SortableField = 'name' | 'sex' | 'born' | 'died';
+
 export const PeoplePage: React.FC = () => {
   const [people, setPeople] = useState<Person[]>([]);
   const [loading, setLoading] = useState(false);
@@ -29,35 +32,52 @@ export const PeoplePage: React.FC = () => {
 
     // filter by query
     const query = searchParams.get('query')?.trim().toLowerCase();
+
     if (query) {
       res = res.filter(p => {
         const name = p.name.toLowerCase();
         const mother = (p.motherName || '').toLowerCase();
         const father = (p.fatherName || '').toLowerCase();
-        return name.includes(query) || mother.includes(query) || father.includes(query);
+
+        return (
+          name.includes(query) ||
+          mother.includes(query) ||
+          father.includes(query)
+        );
       });
     }
 
-    // filter by centuries
+    // filter by centuries (multi-select)
     const centuries = searchParams.getAll('centuries');
+
     if (centuries.length) {
-      res = res.filter(p => centuries.includes(String(Math.ceil(p.born / 100))));
+      res = res.filter(p =>
+        centuries.includes(String(Math.ceil(p.born / 100))),
+      );
     }
 
     // filter by sex
     const sex = searchParams.get('sex');
+
     if (sex === 'm' || sex === 'f') {
       res = res.filter(p => p.sex === sex);
     }
 
-    // sorting
-    const sortField = searchParams.get('sort') as keyof Person | null;
+    const sortFieldParam = searchParams.get('sort');
+    const sortField: SortableField | null =
+      sortFieldParam === 'name' ||
+      sortFieldParam === 'sex' ||
+      sortFieldParam === 'born' ||
+      sortFieldParam === 'died'
+        ? sortFieldParam
+        : null;
+
     const order = searchParams.get('order'); // 'desc' | null
 
     if (sortField) {
       res.sort((a, b) => {
-        const av = a[sortField];
-        const bv = b[sortField];
+        const av: string | number = a[sortField];
+        const bv: string | number = b[sortField];
 
         if (typeof av === 'number' && typeof bv === 'number') {
           return av - bv;
