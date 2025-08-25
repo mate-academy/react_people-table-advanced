@@ -13,7 +13,10 @@ export const App: React.FC = () => {
           <Routes>
             <Route path="/" element={<Navigate to="/people" replace />} />
             <Route path="/people/*" element={<PeoplePage />} />
-            <Route path="*" element={<h1 className="title">Page not found</h1>} />
+            <Route
+              path="*"
+              element={<h1 className="title">Page not found</h1>}
+            />
           </Routes>
         </div>
       </div>

@@ -27,36 +27,53 @@ export const PeoplePage: React.FC = () => {
     let res = [...people];
 
     const query = searchParams.get('query')?.trim().toLowerCase();
+
     if (query) {
       res = res.filter(p => {
         const name = p.name.toLowerCase();
         const mother = (p.motherName || '').toLowerCase();
         const father = (p.fatherName || '').toLowerCase();
-        return name.includes(query) || mother.includes(query) || father.includes(query);
+
+        return (
+          name.includes(query) ||
+          mother.includes(query) ||
+          father.includes(query)
+        );
       });
     }
 
     const centuries = searchParams.getAll('centuries');
+
     if (centuries.length) {
-      res = res.filter(p => centuries.includes(String(Math.ceil(p.born / 100))));
+      res = res.filter(p =>
+        centuries.includes(String(Math.ceil(p.born / 100))),
+      );
     }
 
     const sex = searchParams.get('sex');
+
     if (sex === 'm' || sex === 'f') {
       res = res.filter(p => p.sex === sex);
     }
 
-    const sortField = (searchParams.get('sort') as 'name' | 'sex' | 'born' | 'died') || null;
+    const sortField =
+      (searchParams.get('sort') as 'name' | 'sex' | 'born' | 'died') || null;
     const order = searchParams.get('order');
 
     if (sortField) {
       res.sort((a, b) => {
         const av = a[sortField] as any;
         const bv = b[sortField] as any;
-        if (typeof av === 'number' && typeof bv === 'number') return av - bv;
+
+        if (typeof av === 'number' && typeof bv === 'number') {
+          return av - bv;
+        }
+
         return String(av).localeCompare(String(bv));
       });
-      if (order === 'desc') res.reverse();
+      if (order === 'desc') {
+        res.reverse();
+      }
     }
 
     return res;
