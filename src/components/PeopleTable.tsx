@@ -19,9 +19,11 @@ function nextSortParams(
   if (currentSort !== field) {
     return { sort: field, order: null as unknown as string };
   }
+
   if (currentSort === field && currentOrder !== 'desc') {
     return { sort: field, order: 'desc' };
   }
+
   return { sort: null as unknown as string, order: null as unknown as string };
 }
 
@@ -40,8 +42,12 @@ export const PeopleTable: React.FC<Props> = ({ people, allPeople }) => {
 
   // знайти slug за точним ім'ям, якщо така людина є у даних
   const findSlugByName = (name?: string): string | null => {
-    if (!name) return null;
+    if (!name) {
+      return null;
+    }
+
     const found = universe.find(p => p.name === name);
+
     return found?.slug ?? null;
   };
 
