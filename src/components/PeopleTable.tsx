@@ -1,110 +1,110 @@
 /* eslint-disable jsx-a11y/control-has-associated-label */
-import React from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
+import { PeopleFilters } from './PeopleFilters';
+import { Loader } from './Loader';
+import { PeopleTable } from './PeopleTable';
+import { getPeople } from '../api';
 import { Person } from '../types/Person';
 import { useSearchParams } from 'react-router-dom';
-import { SearchLink } from './SearchLink';
 
-type Props = {
-  people: Person[];
-};
-
-function nextSortParams(
-  currentSort: string | null,
-  currentOrder: string | null,
-  field: string,
-) {
-  // 1-й клік: sort=<field> (ASC)
-  if (currentSort !== field) {
-    return { sort: field, order: null as unknown as string };
-  }
-
-  // 2-й клік: DESC
-  if (currentSort === field && currentOrder !== 'desc') {
-    return { sort: field, order: 'desc' };
-  }
-
-  // 3-й клік: скинути сортування
-  return { sort: null as unknown as string, order: null as unknown as string };
-}
-
-export const PeopleTable: React.FC<Props> = ({ people }) => {
+export const PeoplePage: React.FC = () => {
+  const [people, setPeople] = useState<Person[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [loadError, setLoadError] = useState<string | null>(null);
   const [searchParams] = useSearchParams();
-  const sort = searchParams.get('sort');
-  const order = searchParams.get('order');
 
-  const HeaderCell: React.FC<{
-    label: string;
-    field: 'name' | 'sex' | 'born' | 'died';
-  }> = ({ label, field }) => {
-    const next = nextSortParams(sort, order, field);
-    const isActive = sort === field;
-    const isDesc = isActive && order === 'desc';
+  useEffect(() => {
+    setLoading(true);
+    setLoadError(null);
+    getPeople()
+      .then(data => setPeople(data))
+      .catch(() => setLoadError('Something went wrong'))
+      .finally(() => setLoading(false));
+  }, []);
 
-    return (
-      <th>
-        <span className="is-flex is-flex-wrap-nowrap">
-          {label}
-          <SearchLink className="ml-2" params={next}>
-            <span className="icon">
-              <i
-                className={`fas ${
-                  !isActive ? 'fa-sort' : isDesc ? 'fa-sort-down' : 'fa-sort-up'
-                }`}
-              />
-            </span>
-          </SearchLink>
-        </span>
-      </th>
-    );
-  };
+  const hasPeople = people.length > 0;
+
+  const filtered = useMemo(() => {
+    let res = [...people];
+
+    // filter by query
+    const query = searchParams.get('query')?.trim().toLowerCase();
+    if (query) {
+      res = res.filter(p => {
+        const name = p.name.toLowerCase();
+        const mother = (p.motherName || '').toLowerCase();
+        const father = (p.fatherName || '').toLowerCase();
+        return name.includes(query) || mother.includes(query) || father.includes(query);
+      });
+    }
+
+    // filter by centuries
+    const centuries = searchParams.getAll('centuries');
+    if (centuries.length) {
+      res = res.filter(p => centuries.includes(String(Math.ceil(p.born / 100))));
+    }
+
+    // filter by sex
+    const sex = searchParams.get('sex');
+    if (sex === 'm' || sex === 'f') {
+      res = res.filter(p => p.sex === sex);
+    }
+
+    // sorting
+    const sortField = searchParams.get('sort') as keyof Person | null;
+    const order = searchParams.get('order'); // 'desc' | null
+
+    if (sortField) {
+      res.sort((a, b) => {
+        const av = a[sortField];
+        const bv = b[sortField];
+
+        if (typeof av === 'number' && typeof bv === 'number') {
+          return av - bv;
+        }
+
+        return String(av).localeCompare(String(bv));
+      });
+
+      if (order === 'desc') {
+        res.reverse();
+      }
+    }
+
+    return res;
+  }, [people, searchParams]);
 
   return (
-    <table
-      data-cy="peopleTable"
-      className="table is-striped is-hoverable is-narrow is-fullwidth"
-    >
-      <thead>
-        <tr>
-          <HeaderCell label="Name" field="name" />
-          <HeaderCell label="Sex" field="sex" />
-          <HeaderCell label="Born" field="born" />
-          <HeaderCell label="Died" field="died" />
-          <th>Mother</th>
-          <th>Father</th>
-        </tr>
-      </thead>
+    <>
+      <h1 className="title">People Page</h1>
 
-      <tbody>
-        {people.map(p => (
-          <tr key={p.slug} data-cy="person">
-            <td>
-              <a href={`#/people/${p.slug}`}>{p.name}</a>
-            </td>
-            <td>{p.sex}</td>
-            <td>{p.born}</td>
-            <td>{p.died}</td>
-            <td>
-              {p.motherName ? (
-                <a
-                  className="has-text-danger"
-                  href={`#/people/${p.mother?.slug ?? ''}`}
-                >
-                  {p.motherName}
-                </a>
-              ) : (
-                '—'
-              )}
-            </td>
-            <td>
-              {p.fatherName ? (
-                <a href={`#/people/${p.father?.slug ?? ''}`}>{p.fatherName}</a>
-              ) : (
-                '—'
-              )}
-            </td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
+      <div className="block">
+        <div className="columns is-desktop is-flex-direction-row-reverse">
+          <div className="column is-7-tablet is-narrow-desktop">
+            {hasPeople && <PeopleFilters people={people} />}
+          </div>
+
+          <div className="column">
+            {loading && <Loader />}
+
+            {!loading && loadError && (
+              <p data-cy="peopleLoadingError">Something went wrong</p>
+            )}
+
+            {!loading && !loadError && people.length === 0 && (
+              <p data-cy="noPeopleMessage">There are no people on the server</p>
+            )}
+
+            {!loading && !loadError && hasPeople && filtered.length === 0 && (
+              <p>There are no people matching the current search criteria</p>
+            )}
+
+            {!loading && !loadError && filtered.length > 0 && (
+              <PeopleTable people={filtered} />
+            )}
+          </div>
+        </div>
+      </div>
+    </>
   );
 };
