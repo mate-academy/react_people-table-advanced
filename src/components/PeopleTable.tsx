@@ -1,11 +1,12 @@
 /* eslint-disable jsx-a11y/control-has-associated-label */
 import React from 'react';
 import { Person } from '../types/Person';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, useLocation } from 'react-router-dom';
 import { SearchLink } from './SearchLink';
 
 type Props = {
-  people: Person[];
+  people: Person[]; // відфільтрований список для відображення
+  allPeople?: Person[]; // повний список для резолву родичів (опційно)
 };
 
 type SortField = 'name' | 'sex' | 'born' | 'died';
@@ -15,24 +16,34 @@ function nextSortParams(
   currentOrder: string | null,
   field: SortField,
 ) {
-  // 1-й клік: sort=field (ASC)
   if (currentSort !== field) {
     return { sort: field, order: null as unknown as string };
   }
-
-  // 2-й клік: DESC
   if (currentSort === field && currentOrder !== 'desc') {
     return { sort: field, order: 'desc' };
   }
-
-  // 3-й клік: вимкнути сортування
   return { sort: null as unknown as string, order: null as unknown as string };
 }
 
-export const PeopleTable: React.FC<Props> = ({ people }) => {
+export const PeopleTable: React.FC<Props> = ({ people, allPeople }) => {
   const [searchParams] = useSearchParams();
   const sort = searchParams.get('sort');
   const order = searchParams.get('order');
+
+  const location = useLocation();
+  const selectedSlug = location.pathname.startsWith('/people/')
+    ? location.pathname.slice('/people/'.length)
+    : null;
+
+  // джерело правди для пошуку родичів
+  const universe = allPeople ?? people;
+
+  // знайти slug за точним ім'ям, якщо така людина є у даних
+  const findSlugByName = (name?: string): string | null => {
+    if (!name) return null;
+    const found = universe.find(p => p.name === name);
+    return found?.slug ?? null;
+  };
 
   const HeaderCell: React.FC<{
     label: string;
@@ -78,35 +89,65 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
       </thead>
 
       <tbody>
-        {people.map(p => (
-          <tr key={p.slug} data-cy="person">
-            <td>
-              <a href={`#/people/${p.slug}`}>{p.name}</a>
-            </td>
-            <td>{p.sex}</td>
-            <td>{p.born}</td>
-            <td>{p.died}</td>
-            <td>
-              {p.motherName ? (
+        {people.map(p => {
+          // визначаємо, чи є посилання для матері/батька
+          const motherSlug = p.mother?.slug ?? findSlugByName(p.motherName);
+          const fatherSlug = p.father?.slug ?? findSlugByName(p.fatherName);
+
+          return (
+            <tr
+              key={p.slug}
+              data-cy="person"
+              className={
+                p.slug === selectedSlug ? 'has-background-warning' : undefined
+              }
+            >
+              <td>
                 <a
-                  className="has-text-danger"
-                  href={`#/people/${p.mother?.slug ?? ''}`}
+                  href={`#/people/${p.slug}`}
+                  className={p.sex === 'f' ? 'has-text-danger' : undefined}
                 >
-                  {p.motherName}
+                  {p.name}
                 </a>
-              ) : (
-                '—'
-              )}
-            </td>
-            <td>
-              {p.fatherName ? (
-                <a href={`#/people/${p.father?.slug ?? ''}`}>{p.fatherName}</a>
-              ) : (
-                '—'
-              )}
-            </td>
-          </tr>
-        ))}
+              </td>
+
+              <td>{p.sex}</td>
+              <td>{p.born}</td>
+              <td>{p.died}</td>
+
+              {/* Mother: <a> лише якщо існує реальна людина зі slug; інакше текст */}
+              <td>
+                {p.motherName ? (
+                  motherSlug ? (
+                    <a
+                      className="has-text-danger"
+                      href={`#/people/${motherSlug}`}
+                    >
+                      {p.motherName}
+                    </a>
+                  ) : (
+                    <span className="has-text-danger">{p.motherName}</span>
+                  )
+                ) : (
+                  '-'
+                )}
+              </td>
+
+              {/* Father: <a> лише якщо існує реальна людина зі slug; інакше текст */}
+              <td>
+                {p.fatherName ? (
+                  fatherSlug ? (
+                    <a href={`#/people/${fatherSlug}`}>{p.fatherName}</a>
+                  ) : (
+                    <span>{p.fatherName}</span>
+                  )
+                ) : (
+                  '-'
+                )}
+              </td>
+            </tr>
+          );
+        })}
       </tbody>
     </table>
   );

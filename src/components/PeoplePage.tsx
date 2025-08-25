@@ -6,6 +6,9 @@ import { getPeople } from '../api';
 import { Person } from '../types/Person';
 import { useSearchParams } from 'react-router-dom';
 
+// дозволені поля сортування
+type SortableField = 'name' | 'sex' | 'born' | 'died';
+
 export const PeoplePage: React.FC = () => {
   const [people, setPeople] = useState<Person[]>([]);
   const [loading, setLoading] = useState(false);
@@ -26,6 +29,7 @@ export const PeoplePage: React.FC = () => {
   const filtered = useMemo(() => {
     let res = [...people];
 
+    // query filter
     const query = searchParams.get('query')?.trim().toLowerCase();
 
     if (query) {
@@ -42,6 +46,7 @@ export const PeoplePage: React.FC = () => {
       });
     }
 
+    // centuries (multi)
     const centuries = searchParams.getAll('centuries');
 
     if (centuries.length) {
@@ -50,20 +55,29 @@ export const PeoplePage: React.FC = () => {
       );
     }
 
+    // sex
     const sex = searchParams.get('sex');
 
     if (sex === 'm' || sex === 'f') {
       res = res.filter(p => p.sex === sex);
     }
 
-    const sortField =
-      (searchParams.get('sort') as 'name' | 'sex' | 'born' | 'died') || null;
-    const order = searchParams.get('order');
+    // sorting
+    const sortFieldParam = searchParams.get('sort');
+    const sortField: SortableField | null =
+      sortFieldParam === 'name' ||
+      sortFieldParam === 'sex' ||
+      sortFieldParam === 'born' ||
+      sortFieldParam === 'died'
+        ? sortFieldParam
+        : null;
+
+    const order = searchParams.get('order'); // 'desc' | null
 
     if (sortField) {
       res.sort((a, b) => {
-        const av: string | number = a[sortField];
-        const bv: string | number = b[sortField];
+        const av = a[sortField];
+        const bv = b[sortField];
 
         if (typeof av === 'number' && typeof bv === 'number') {
           return av - bv;
@@ -71,6 +85,7 @@ export const PeoplePage: React.FC = () => {
 
         return String(av).localeCompare(String(bv));
       });
+
       if (order === 'desc') {
         res.reverse();
       }
