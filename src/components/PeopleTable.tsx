@@ -4,23 +4,27 @@ import { Person } from '../types/Person';
 import { useSearchParams } from 'react-router-dom';
 import { SearchLink } from './SearchLink';
 
-type Props = { people: Person[] };
+type Props = {
+  people: Person[];
+};
 
 function nextSortParams(
   currentSort: string | null,
   currentOrder: string | null,
   field: string,
 ) {
+  // 1-й клік: sort=<field> (ASC)
   if (currentSort !== field) {
-return { sort: field, order: null as any };
-}
+    return { sort: field, order: null as unknown as string };
+  }
 
+  // 2-й клік: DESC
   if (currentSort === field && currentOrder !== 'desc') {
-  {
-return { sort: field, order: 'desc' };
-}
+    return { sort: field, order: 'desc' };
+  }
 
-  return { sort: null as any, order: null as any };
+  // 3-й клік: скинути сортування
+  return { sort: null as unknown as string, order: null as unknown as string };
 }
 
 export const PeopleTable: React.FC<Props> = ({ people }) => {
@@ -28,10 +32,10 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
   const sort = searchParams.get('sort');
   const order = searchParams.get('order');
 
-  const headerCell = (
-    label: string,
-    field: 'name' | 'sex' | 'born' | 'died',
-  ) => {
+  const HeaderCell: React.FC<{
+    label: string;
+    field: 'name' | 'sex' | 'born' | 'died';
+  }> = ({ label, field }) => {
     const next = nextSortParams(sort, order, field);
     const isActive = sort === field;
     const isDesc = isActive && order === 'desc';
@@ -43,7 +47,9 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
           <SearchLink className="ml-2" params={next}>
             <span className="icon">
               <i
-                className={`fas ${!isActive ? 'fa-sort' : isDesc ? 'fa-sort-down' : 'fa-sort-up'}`}
+                className={`fas ${
+                  !isActive ? 'fa-sort' : isDesc ? 'fa-sort-down' : 'fa-sort-up'
+                }`}
               />
             </span>
           </SearchLink>
@@ -59,10 +65,10 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
     >
       <thead>
         <tr>
-          {headerCell('Name', 'name')}
-          {headerCell('Sex', 'sex')}
-          {headerCell('Born', 'born')}
-          {headerCell('Died', 'died')}
+          <HeaderCell label="Name" field="name" />
+          <HeaderCell label="Sex" field="sex" />
+          <HeaderCell label="Born" field="born" />
+          <HeaderCell label="Died" field="died" />
           <th>Mother</th>
           <th>Father</th>
         </tr>
@@ -81,7 +87,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
               {p.motherName ? (
                 <a
                   className="has-text-danger"
-                  href={`#/people/${p.mother?.slug || ''}`}
+                  href={`#/people/${p.mother?.slug ?? ''}`}
                 >
                   {p.motherName}
                 </a>
@@ -91,7 +97,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
             </td>
             <td>
               {p.fatherName ? (
-                <a href={`#/people/${p.father?.slug || ''}`}>{p.fatherName}</a>
+                <a href={`#/people/${p.father?.slug ?? ''}`}>{p.fatherName}</a>
               ) : (
                 '—'
               )}
