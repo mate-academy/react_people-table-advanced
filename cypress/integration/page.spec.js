@@ -1,4 +1,4 @@
-/// <reference types="Cypress" />
+/// <reference types="cypress" />
 
 const ACTIVE_NAV_LINK_CLASS = 'has-background-grey-lighter';
 const SELECTED_PERSON_CLASS = 'has-background-warning';
@@ -61,7 +61,7 @@ describe('', () => {
     it('should have correct address', () => {
       page.mockPeople();
       page.visit('/');
-      page.assertHash('');
+      cy.location('pathname').should('eq', '/');
     });
 
     it('should have navigation', () => {
