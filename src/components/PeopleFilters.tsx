@@ -13,9 +13,7 @@ type PersonRow = Person & {
   slug?: string;
 };
 
-type Props = {
-  people: PersonRow[];
-};
+type Props = { people: PersonRow[] };
 
 function bornCentury(year?: number | null): number | null {
   if (year === undefined || year === null) {
@@ -39,7 +37,8 @@ export const PeopleFilters: React.FC<Props> = ({ people }) => {
       }
     });
     const all = Array.from(set).sort((a, b) => a - b);
-    const selected = (searchParams.getAll('centuries') || [])
+    const selected = searchParams
+      .getAll('centuries')
       .map(Number)
       .filter(n => !Number.isNaN(n));
 
@@ -61,11 +60,9 @@ export const PeopleFilters: React.FC<Props> = ({ people }) => {
     const nextParams = new URLSearchParams(next);
 
     nextParams.delete('centuries');
-
     Array.from(current)
       .sort((a, b) => a - b)
       .forEach(c => nextParams.append('centuries', String(c)));
-
     setSearchParams(nextParams);
   };
 
@@ -122,10 +119,6 @@ export const PeopleFilters: React.FC<Props> = ({ people }) => {
             Clear
           </button>
         </div>
-
-        {allCenturies.length === 0 && (
-          <div style={{ color: '#888' }}>No centuries in data</div>
-        )}
 
         <div style={{ display: 'grid', gap: 6, marginTop: 8 }}>
           {allCenturies.map(c => {

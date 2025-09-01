@@ -2,7 +2,8 @@ import React from 'react';
 import { useParams } from 'react-router-dom';
 import { getPeople } from '../api';
 import type { Person } from '../types';
-import { PeopleTable } from './PeopleTable';
+import { PeopleFilters } from './PeopleFilters';
+import { PeopleTable, slugifyName } from './PeopleTable';
 
 type PersonRow = Person & {
   sex?: 'm' | 'f' | string;
@@ -10,7 +11,6 @@ type PersonRow = Person & {
   died?: number;
   motherName?: string | null;
   fatherName?: string | null;
-  slug?: string;
 };
 
 export const PeoplePage: React.FC = () => {
@@ -50,24 +50,36 @@ export const PeoplePage: React.FC = () => {
   }, []);
 
   const hasPeople = people.length > 0;
-  const isEmpty = !error && !hasPeople && !isLoading; // пустой ответ
-  const showError = !!error && !isLoading;
+
+  // определяем выбранное имя по slug
+  const selectedName = React.useMemo(() => {
+    if (!slug || !people.length) {
+      return null;
+    }
+
+    const found = people.find(p => slugifyName(p.name, p.born) === slug);
+
+    return found?.name ?? null;
+  }, [slug, people]);
 
   return (
     <section>
       <h1 className="title">People Page</h1>
 
       {isLoading && <div data-cy="loader">Loading…</div>}
-
-      {isEmpty && <div data-cy="noPeopleMessage">No people were loaded</div>}
-
-      {showError && (
+      {!isLoading && error && (
         <div data-cy="peopleLoadingError">Unable to load people</div>
       )}
-
-      {hasPeople && !showError && (
-        <PeopleTable people={people} selectedSlug={slug ?? null} />
+      {!isLoading && !error && !hasPeople && (
+        <div data-cy="noPeopleMessage">No people were loaded</div>
       )}
+
+      <div style={{ display: 'flex', gap: 16 }}>
+        {hasPeople && <PeopleFilters people={people} />}
+        {hasPeople && (
+          <PeopleTable people={people} selectedName={selectedName} />
+        )}
+      </div>
     </section>
   );
 };

@@ -8,20 +8,14 @@ export const SearchLink: React.FC<Props> = ({
   to,
   ...rest
 }) => {
-  const location = useLocation();
-
+  const { search } = useLocation();
   let targetTo = to;
 
   if (preserveSearch) {
     if (typeof to === 'string') {
-      const hasSearch = to.includes('?');
-
-      targetTo = hasSearch ? to : `${to}${location.search || ''}`;
+      targetTo = to.includes('?') ? to : `${to}${search || ''}`;
     } else {
-      targetTo = {
-        ...to,
-        search: to.search ?? location.search,
-      };
+      targetTo = { ...to, search: to.search ?? search };
     }
   }
 

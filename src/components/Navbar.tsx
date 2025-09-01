@@ -1,9 +1,11 @@
 import React from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useLocation } from 'react-router-dom';
 
 const ACTIVE = 'has-background-grey-lighter';
 
 export const Navbar: React.FC = () => {
+  const { search } = useLocation();
+
   return (
     <nav className="navbar" data-cy="nav" style={{ gap: 12 }}>
       <NavLink
@@ -15,7 +17,7 @@ export const Navbar: React.FC = () => {
       </NavLink>
 
       <NavLink
-        to="/people"
+        to={{ pathname: '/people', search }}
         className={({ isActive }) => (isActive ? ACTIVE : undefined)}
       >
         People
