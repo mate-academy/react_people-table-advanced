@@ -1,645 +1,321 @@
-/* eslint-disable jsx-a11y/control-has-associated-label */
-export const PeopleTable = () => {
+/* eslint-disable @typescript-eslint/indent */
+import React from 'react';
+import { useSearchParams } from 'react-router-dom';
+import { getSearchWith } from '../utils/searchHelper';
+import type { Person } from '../types';
+import { SearchLink } from './SearchLink';
+
+type SortField = 'name' | 'sex' | 'born' | 'died';
+type SortOrder = 'desc' | null;
+
+type PersonRow = Person & {
+  sex?: string;
+  born?: number;
+  died?: number;
+  motherName?: string | null;
+  fatherName?: string | null;
+};
+
+type Props = {
+  people: PersonRow[];
+  selectedName?: string | null;
+};
+
+// slugify: имя → нижний регистр, пробелы → дефисы, + год рождения (если передан)
+export function slugifyName(name: string, born?: number | null): string {
+  const base = name
+    .trim()
+    .toLowerCase()
+    .replace(/\s+/g, '-')
+    .replace(/[^a-z0-9-]/g, '');
+
+  return born ? `${base}-${born}` : base;
+}
+
+const SELECTORS: Record<
+  SortField,
+  (p: PersonRow) => string | number | undefined
+> = {
+  name: p => p.name,
+  sex: p => p.sex,
+  born: p => p.born,
+  died: p => p.died,
+};
+
+function normalize(str?: string | null) {
+  return (str ?? '').toLowerCase();
+}
+
+export const PeopleTable: React.FC<Props> = ({
+  people,
+  selectedName = null,
+}) => {
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const sort = (searchParams.get('sort') as SortField | null) ?? null;
+  const order: SortOrder = searchParams.get('order') === 'desc' ? 'desc' : null;
+  const query = normalize(searchParams.get('query') ?? '');
+  const centuries = searchParams
+    .getAll('centuries')
+    .map(Number)
+    .filter(n => !Number.isNaN(n));
+
+  // быстрый поиск человека по имени (берём первого, если в данных есть дубликаты)
+  const findByName = React.useMemo(() => {
+    const map = new Map<string, PersonRow[]>();
+
+    people.forEach(p => {
+      const key = (p.name || '').trim();
+
+      if (!map.has(key)) {
+        map.set(key, []);
+      }
+
+      map.get(key)!.push(p);
+    });
+
+    return (name?: string | null): PersonRow | undefined => {
+      if (!name) {
+        return undefined;
+      }
+
+      const arr = map.get(name.trim());
+
+      return arr?.[0];
+    };
+  }, [people]);
+
+  // фильтрация
+  const filtered = React.useMemo(() => {
+    const byQuery = (p: PersonRow) => {
+      if (!query) {
+        return true;
+      }
+
+      const fields = [p.name, p.motherName ?? '', p.fatherName ?? ''].map(
+        normalize,
+      );
+
+      return fields.some(f => f.includes(query));
+    };
+
+    const byCenturies = (p: PersonRow) => {
+      if (centuries.length === 0) {
+        return true;
+      }
+
+      if (p.born === undefined || p.born === null) {
+        return false;
+      }
+
+      const c = Math.ceil(p.born / 100);
+
+      return centuries.includes(c);
+    };
+
+    return people.filter(p => byQuery(p) && byCenturies(p));
+  }, [people, query, centuries]);
+
+  // сортировка (после фильтрации)
+  const sorted = React.useMemo(() => {
+    if (!sort) {
+      return filtered;
+    }
+
+    const s = [...filtered].sort((a, b) => {
+      const av = SELECTORS[sort](a);
+      const bv = SELECTORS[sort](b);
+
+      if (typeof av === 'string' && typeof bv === 'string') {
+        return normalize(av).localeCompare(normalize(bv));
+      }
+
+      const an = typeof av === 'number' ? av : Number.NaN;
+      const bn = typeof bv === 'number' ? bv : Number.NaN;
+
+      if (Number.isNaN(an) && Number.isNaN(bn)) {
+        return 0;
+      }
+
+      if (Number.isNaN(an)) {
+        return -1;
+      }
+
+      if (Number.isNaN(bn)) {
+        return 1;
+      }
+
+      return an - bn;
+    });
+
+    if (order === 'desc') {
+      s.reverse();
+    }
+
+    return s;
+  }, [filtered, sort, order]);
+
+  // 3-состояния: none → asc → desc → none
+  const cycleSort = (field: SortField) => {
+    let nextSort: SortField | null = field;
+    let nextOrder: SortOrder = null;
+
+    if (sort !== field) {
+      nextSort = field;
+      nextOrder = null;
+    } else if (sort === field && order !== 'desc') {
+      nextSort = field;
+      nextOrder = 'desc';
+    } else {
+      nextSort = null;
+      nextOrder = null;
+    }
+
+    const next = getSearchWith(searchParams, {
+      sort: nextSort,
+      order: nextOrder,
+    });
+    const nextParams = new URLSearchParams(next);
+
+    if (!nextSort) {
+      nextParams.delete('sort');
+    }
+
+    if (!nextOrder) {
+      nextParams.delete('order');
+    }
+
+    setSearchParams(nextParams);
+  };
+
   return (
-    <table
-      data-cy="peopleTable"
-      className="table is-striped is-hoverable is-narrow is-fullwidth"
-    >
-      <thead>
-        <tr>
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Name
-              <a href="#/people?sort=name">
-                <span className="icon">
-                  <i className="fas fa-sort" />
-                </span>
-              </a>
-            </span>
-          </th>
+    <div data-cy="peopleTable" style={{ flex: 1, overflowX: 'auto' }}>
+      <table className="table is-fullwidth">
+        <thead>
+          <tr>
+            <th>
+              <span>Name</span>
+              <button
+                type="button"
+                onClick={() => cycleSort('name')}
+                aria-label="Sort by name"
+                data-cy="sortByName"
+                style={{ marginLeft: 8 }}
+              />
+            </th>
+            <th>
+              <span>Sex</span>
+              <button
+                type="button"
+                onClick={() => cycleSort('sex')}
+                aria-label="Sort by sex"
+                data-cy="sortBySex"
+                style={{ marginLeft: 8 }}
+              />
+            </th>
+            <th>
+              <span>Born</span>
+              <button
+                type="button"
+                onClick={() => cycleSort('born')}
+                aria-label="Sort by born"
+                data-cy="sortByBorn"
+                style={{ marginLeft: 8 }}
+              />
+            </th>
+            <th>
+              <span>Died</span>
+              <button
+                type="button"
+                onClick={() => cycleSort('died')}
+                aria-label="Sort by died"
+                data-cy="sortByDied"
+                style={{ marginLeft: 8 }}
+              />
+            </th>
+            <th>Mother</th>
+            <th>Father</th>
+          </tr>
+        </thead>
 
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Sex
-              <a href="#/people?sort=sex">
-                <span className="icon">
-                  <i className="fas fa-sort" />
-                </span>
-              </a>
-            </span>
-          </th>
+        <tbody>
+          {sorted.map((p, idx) => {
+            const isSelected = !!selectedName && p.name === selectedName;
 
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Born
-              <a href="#/people?sort=born&amp;order=desc">
-                <span className="icon">
-                  <i className="fas fa-sort-up" />
-                </span>
-              </a>
-            </span>
-          </th>
+            // сам человек: имя + (если есть) год рождения
+            const personSlug = slugifyName(p.name, p.born);
 
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Died
-              <a href="#/people?sort=died">
-                <span className="icon">
-                  <i className="fas fa-sort" />
-                </span>
-              </a>
-            </span>
-          </th>
+            // мать/отец: ищем их объект по имени; линк — только если нашли
+            const mother = findByName(p.motherName ?? null);
+            const father = findByName(p.fatherName ?? null);
 
-          <th>Mother</th>
-          <th>Father</th>
-        </tr>
-      </thead>
+            return (
+              <tr
+                key={`${p.name}-${idx}`}
+                data-cy="person"
+                className={isSelected ? 'has-background-warning' : undefined}
+              >
+                <td>
+                  <SearchLink
+                    to={`/people/${personSlug}`}
+                    preserveSearch
+                    className={p.sex === 'f' ? 'has-text-danger' : undefined}
+                  >
+                    {p.name}
+                  </SearchLink>
+                </td>
 
-      <tbody>
-        <tr data-cy="person">
-          <td>
-            <a href="#/people/pieter-haverbeke-1602">Pieter Haverbeke</a>
-          </td>
-          <td>m</td>
-          <td>1602</td>
-          <td>1642</td>
-          <td>-</td>
-          <td>
-            <a href="#/people/lieven-van-haverbeke-1570">
-              Lieven van Haverbeke
-            </a>
-          </td>
-        </tr>
+                <td>{p.sex ?? ''}</td>
+                <td>{p.born ?? ''}</td>
+                <td>{p.died ?? ''}</td>
 
-        <tr data-cy="person">
-          <td>
-            <a className="has-text-danger" href="#/people/anna-van-hecke-1607">
-              Anna van Hecke
-            </a>
-          </td>
-          <td>f</td>
-          <td>1607</td>
-          <td>1670</td>
-          <td>Martijntken Beelaert</td>
-          <td>Paschasius van Hecke</td>
-        </tr>
+                <td>
+                  {p.motherName ? (
+                    mother ? (
+                      <SearchLink
+                        to={`/people/${slugifyName(mother.name, mother.born)}`}
+                        preserveSearch
+                        className="has-text-danger"
+                      >
+                        {p.motherName}
+                      </SearchLink>
+                    ) : (
+                      // если матери нет в таблице — показываем обычный текст
+                      <>{p.motherName}</>
+                    )
+                  ) : (
+                    '-'
+                  )}
+                </td>
 
-        <tr data-cy="person">
-          <td>
-            <a href="#/people/lieven-haverbeke-1631">Lieven Haverbeke</a>
-          </td>
-          <td>m</td>
-          <td>1631</td>
-          <td>1676</td>
-          <td>
-            <a className="has-text-danger" href="#/people/anna-van-hecke-1607">
-              Anna van Hecke
-            </a>
-          </td>
-          <td>
-            <a href="#/people/pieter-haverbeke-1602">Pieter Haverbeke</a>
-          </td>
-        </tr>
+                <td>
+                  {p.fatherName ? (
+                    father ? (
+                      <SearchLink
+                        to={`/people/${slugifyName(father.name, father.born)}`}
+                        preserveSearch
+                      >
+                        {p.fatherName}
+                      </SearchLink>
+                    ) : (
+                      // если отца нет в таблице — показываем обычный текст
+                      <>{p.fatherName}</>
+                    )
+                  ) : (
+                    '-'
+                  )}
+                </td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
 
-        <tr data-cy="person">
-          <td>
-            <a
-              className="has-text-danger"
-              href="#/people/elisabeth-hercke-1632"
-            >
-              Elisabeth Hercke
-            </a>
-          </td>
-          <td>f</td>
-          <td>1632</td>
-          <td>1674</td>
-          <td>Margriet de Brabander</td>
-          <td>Willem Hercke</td>
-        </tr>
-
-        <tr data-cy="person">
-          <td>
-            <a href="#/people/daniel-haverbeke-1652">Daniel Haverbeke</a>
-          </td>
-          <td>m</td>
-          <td>1652</td>
-          <td>1723</td>
-          <td>
-            <a
-              className="has-text-danger"
-              href="#/people/elisabeth-hercke-1632"
-            >
-              Elisabeth Hercke
-            </a>
-          </td>
-          <td>
-            <a href="#/people/lieven-haverbeke-1631">Lieven Haverbeke</a>
-          </td>
-        </tr>
-
-        <tr data-cy="person">
-          <td>
-            <a className="has-text-danger" href="#/people/joanna-de-pape-1654">
-              Joanna de Pape
-            </a>
-          </td>
-          <td>f</td>
-          <td>1654</td>
-          <td>1723</td>
-          <td>Petronella Wauters</td>
-          <td>Vincent de Pape</td>
-        </tr>
-
-        <tr data-cy="person">
-          <td>
-            <a className="has-text-danger" href="#/people/martina-de-pape-1666">
-              Martina de Pape
-            </a>
-          </td>
-          <td>f</td>
-          <td>1666</td>
-          <td>1727</td>
-          <td>Petronella Wauters</td>
-          <td>Vincent de Pape</td>
-        </tr>
-
-        <tr data-cy="person">
-          <td>
-            <a href="#/people/willem-haverbeke-1668">Willem Haverbeke</a>
-          </td>
-          <td>m</td>
-          <td>1668</td>
-          <td>1731</td>
-          <td>
-            <a
-              className="has-text-danger"
-              href="#/people/elisabeth-hercke-1632"
-            >
-              Elisabeth Hercke
-            </a>
-          </td>
-          <td>
-            <a href="#/people/lieven-haverbeke-1631">Lieven Haverbeke</a>
-          </td>
-        </tr>
-
-        <tr data-cy="person">
-          <td>
-            <a href="#/people/jan-haverbeke-1671">Jan Haverbeke</a>
-          </td>
-          <td>m</td>
-          <td>1671</td>
-          <td>1731</td>
-          <td>
-            <a
-              className="has-text-danger"
-              href="#/people/elisabeth-hercke-1632"
-            >
-              Elisabeth Hercke
-            </a>
-          </td>
-          <td>
-            <a href="#/people/lieven-haverbeke-1631">Lieven Haverbeke</a>
-          </td>
-        </tr>
-
-        <tr data-cy="person" className="has-background-warning">
-          <td>
-            <a className="has-text-danger" href="#/people/maria-de-rycke-1683">
-              Maria de Rycke
-            </a>
-          </td>
-          <td>f</td>
-          <td>1683</td>
-          <td>1724</td>
-          <td>Laurentia van Vlaenderen</td>
-          <td>Frederik de Rycke</td>
-        </tr>
-
-        <tr data-cy="person">
-          <td>
-            <a
-              className="has-text-danger"
-              href="#/people/livina-haverbeke-1692"
-            >
-              Livina Haverbeke
-            </a>
-          </td>
-          <td>f</td>
-          <td>1692</td>
-          <td>1743</td>
-          <td>
-            <a className="has-text-danger" href="#/people/joanna-de-pape-1654">
-              Joanna de Pape
-            </a>
-          </td>
-          <td>
-            <a href="#/people/daniel-haverbeke-1652">Daniel Haverbeke</a>
-          </td>
-        </tr>
-
-        <tr data-cy="person">
-          <td>
-            <a href="#/people/pieter-bernard-haverbeke-1695">
-              Pieter Bernard Haverbeke
-            </a>
-          </td>
-          <td>m</td>
-          <td>1695</td>
-          <td>1762</td>
-          <td>Petronella Wauters</td>
-          <td>
-            <a href="#/people/willem-haverbeke-1668">Willem Haverbeke</a>
-          </td>
-        </tr>
-
-        <tr data-cy="person">
-          <td>
-            <a href="#/people/lieven-de-causmaecker-1696">
-              Lieven de Causmaecker
-            </a>
-          </td>
-          <td>m</td>
-          <td>1696</td>
-          <td>1724</td>
-          <td>Joanna Claes</td>
-          <td>Carel de Causmaecker</td>
-        </tr>
-
-        <tr data-cy="person">
-          <td>
-            <a className="has-text-danger" href="#/people/jacoba-lammens-1699">
-              Jacoba Lammens
-            </a>
-          </td>
-          <td>f</td>
-          <td>1699</td>
-          <td>1740</td>
-          <td>Livina de Vrieze</td>
-          <td>Lieven Lammens</td>
-        </tr>
-
-        <tr data-cy="person">
-          <td>
-            <a href="#/people/pieter-de-decker-1705">Pieter de Decker</a>
-          </td>
-          <td>m</td>
-          <td>1705</td>
-          <td>1780</td>
-          <td>Petronella van de Steene</td>
-          <td>Joos de Decker</td>
-        </tr>
-
-        <tr data-cy="person">
-          <td>
-            <a
-              className="has-text-danger"
-              href="#/people/laurentia-haverbeke-1710"
-            >
-              Laurentia Haverbeke
-            </a>
-          </td>
-          <td>f</td>
-          <td>1710</td>
-          <td>1786</td>
-          <td>
-            <a className="has-text-danger" href="#/people/maria-de-rycke-1683">
-              Maria de Rycke
-            </a>
-          </td>
-          <td>
-            <a href="#/people/jan-haverbeke-1671">Jan Haverbeke</a>
-          </td>
-        </tr>
-
-        <tr data-cy="person">
-          <td>
-            <a
-              className="has-text-danger"
-              href="#/people/elisabeth-haverbeke-1711"
-            >
-              Elisabeth Haverbeke
-            </a>
-          </td>
-          <td>f</td>
-          <td>1711</td>
-          <td>1754</td>
-          <td>
-            <a className="has-text-danger" href="#/people/maria-de-rycke-1683">
-              Maria de Rycke
-            </a>
-          </td>
-          <td>
-            <a href="#/people/jan-haverbeke-1671">Jan Haverbeke</a>
-          </td>
-        </tr>
-
-        <tr data-cy="person">
-          <td>
-            <a href="#/people/jan-van-brussel-1714">Jan van Brussel</a>
-          </td>
-          <td>m</td>
-          <td>1714</td>
-          <td>1748</td>
-          <td>Joanna van Rooten</td>
-          <td>Jacobus van Brussel</td>
-        </tr>
-
-        <tr data-cy="person">
-          <td>
-            <a href="#/people/bernardus-de-causmaecker-1721">
-              Bernardus de Causmaecker
-            </a>
-          </td>
-          <td>m</td>
-          <td>1721</td>
-          <td>1789</td>
-          <td>
-            <a
-              className="has-text-danger"
-              href="#/people/livina-haverbeke-1692"
-            >
-              Livina Haverbeke
-            </a>
-          </td>
-          <td>
-            <a href="#/people/lieven-de-causmaecker-1696">
-              Lieven de Causmaecker
-            </a>
-          </td>
-        </tr>
-
-        <tr data-cy="person">
-          <td>
-            <a href="#/people/jan-francies-haverbeke-1725">
-              Jan Francies Haverbeke
-            </a>
-          </td>
-          <td>m</td>
-          <td>1725</td>
-          <td>1779</td>
-          <td>Livina de Vrieze</td>
-          <td>
-            <a href="#/people/pieter-bernard-haverbeke-1695">
-              Pieter Bernard Haverbeke
-            </a>
-          </td>
-        </tr>
-
-        <tr data-cy="person">
-          <td>
-            <a
-              className="has-text-danger"
-              href="#/people/angela-haverbeke-1728"
-            >
-              Angela Haverbeke
-            </a>
-          </td>
-          <td>f</td>
-          <td>1728</td>
-          <td>1734</td>
-          <td>Livina de Vrieze</td>
-          <td>
-            <a href="#/people/pieter-bernard-haverbeke-1695">
-              Pieter Bernard Haverbeke
-            </a>
-          </td>
-        </tr>
-
-        <tr data-cy="person">
-          <td>
-            <a
-              className="has-text-danger"
-              href="#/people/petronella-de-decker-1731"
-            >
-              Petronella de Decker
-            </a>
-          </td>
-          <td>f</td>
-          <td>1731</td>
-          <td>1781</td>
-          <td>
-            <a
-              className="has-text-danger"
-              href="#/people/livina-haverbeke-1692"
-            >
-              Livina Haverbeke
-            </a>
-          </td>
-          <td>
-            <a href="#/people/pieter-de-decker-1705">Pieter de Decker</a>
-          </td>
-        </tr>
-
-        <tr data-cy="person">
-          <td>
-            <a href="#/people/jacobus-bernardus-van-brussel-1736">
-              Jacobus Bernardus van Brussel
-            </a>
-          </td>
-          <td>m</td>
-          <td>1736</td>
-          <td>1809</td>
-          <td>
-            <a
-              className="has-text-danger"
-              href="#/people/elisabeth-haverbeke-1711"
-            >
-              Elisabeth Haverbeke
-            </a>
-          </td>
-          <td>
-            <a href="#/people/jan-van-brussel-1714">Jan van Brussel</a>
-          </td>
-        </tr>
-
-        <tr data-cy="person">
-          <td>
-            <a href="#/people/pieter-antone-haverbeke-1753">
-              Pieter Antone Haverbeke
-            </a>
-          </td>
-          <td>m</td>
-          <td>1753</td>
-          <td>1798</td>
-          <td>
-            <a
-              className="has-text-danger"
-              href="#/people/petronella-de-decker-1731"
-            >
-              Petronella de Decker
-            </a>
-          </td>
-          <td>
-            <a href="#/people/jan-francies-haverbeke-1725">
-              Jan Francies Haverbeke
-            </a>
-          </td>
-        </tr>
-
-        <tr data-cy="person">
-          <td>
-            <a href="#/people/jan-frans-van-brussel-1761">
-              Jan Frans van Brussel
-            </a>
-          </td>
-          <td>m</td>
-          <td>1761</td>
-          <td>1833</td>
-          <td>-</td>
-          <td>
-            <a href="#/people/jacobus-bernardus-van-brussel-1736">
-              Jacobus Bernardus van Brussel
-            </a>
-          </td>
-        </tr>
-
-        <tr data-cy="person">
-          <td>
-            <a className="has-text-danger" href="#/people/livina-sierens-1761">
-              Livina Sierens
-            </a>
-          </td>
-          <td>f</td>
-          <td>1761</td>
-          <td>1826</td>
-          <td>Maria van Waes</td>
-          <td>Jan Sierens</td>
-        </tr>
-
-        <tr data-cy="person">
-          <td>
-            <a
-              className="has-text-danger"
-              href="#/people/joanna-de-causmaecker-1762"
-            >
-              Joanna de Causmaecker
-            </a>
-          </td>
-          <td>f</td>
-          <td>1762</td>
-          <td>1807</td>
-          <td>-</td>
-          <td>
-            <a href="#/people/bernardus-de-causmaecker-1721">
-              Bernardus de Causmaecker
-            </a>
-          </td>
-        </tr>
-
-        <tr data-cy="person">
-          <td>
-            <a href="#/people/carel-haverbeke-1796">Carel Haverbeke</a>
-          </td>
-          <td>m</td>
-          <td>1796</td>
-          <td>1837</td>
-          <td>
-            <a className="has-text-danger" href="#/people/livina-sierens-1761">
-              Livina Sierens
-            </a>
-          </td>
-          <td>
-            <a href="#/people/pieter-antone-haverbeke-1753">
-              Pieter Antone Haverbeke
-            </a>
-          </td>
-        </tr>
-
-        <tr data-cy="person">
-          <td>
-            <a
-              className="has-text-danger"
-              href="#/people/maria-van-brussel-1801"
-            >
-              Maria van Brussel
-            </a>
-          </td>
-          <td>f</td>
-          <td>1801</td>
-          <td>1834</td>
-          <td>
-            <a
-              className="has-text-danger"
-              href="#/people/joanna-de-causmaecker-1762"
-            >
-              Joanna de Causmaecker
-            </a>
-          </td>
-          <td>
-            <a href="#/people/jan-frans-van-brussel-1761">
-              Jan Frans van Brussel
-            </a>
-          </td>
-        </tr>
-
-        <tr data-cy="person">
-          <td>
-            <a href="#/people/carolus-haverbeke-1832">Carolus Haverbeke</a>
-          </td>
-          <td>m</td>
-          <td>1832</td>
-          <td>1905</td>
-          <td>
-            <a
-              className="has-text-danger"
-              href="#/people/maria-van-brussel-1801"
-            >
-              Maria van Brussel
-            </a>
-          </td>
-          <td>
-            <a href="#/people/carel-haverbeke-1796">Carel Haverbeke</a>
-          </td>
-        </tr>
-
-        <tr data-cy="person">
-          <td>
-            <a className="has-text-danger" href="#/people/maria-sturm-1835">
-              Maria Sturm
-            </a>
-          </td>
-          <td>f</td>
-          <td>1835</td>
-          <td>1917</td>
-          <td>Seraphina Spelier</td>
-          <td>Charles Sturm</td>
-        </tr>
-
-        <tr data-cy="person">
-          <td>
-            <a
-              className="has-text-danger"
-              href="#/people/emma-de-milliano-1876"
-            >
-              Emma de Milliano
-            </a>
-          </td>
-          <td>f</td>
-          <td>1876</td>
-          <td>1956</td>
-          <td>Sophia van Damme</td>
-          <td>Petrus de Milliano</td>
-        </tr>
-
-        <tr data-cy="person">
-          <td>
-            <a href="#/people/emile-haverbeke-1877">Emile Haverbeke</a>
-          </td>
-          <td>m</td>
-          <td>1877</td>
-          <td>1968</td>
-          <td>
-            <a className="has-text-danger" href="#/people/maria-sturm-1835">
-              Maria Sturm
-            </a>
-          </td>
-          <td>
-            <a href="#/people/carolus-haverbeke-1832">Carolus Haverbeke</a>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+      {sorted.length === 0 && (
+        <div style={{ padding: 16, color: '#777' }}>
+          No people match your filters.
+        </div>
+      )}
+    </div>
   );
 };
