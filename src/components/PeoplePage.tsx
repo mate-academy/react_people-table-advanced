@@ -22,12 +22,13 @@ export const PeoplePage = () => {
   );
 
   const filteredPeople = useMemo(() => {
+    const prepearedQuery = query?.trim().toLowerCase();
     let result = people;
 
-    if (query) {
+    if (prepearedQuery) {
       result = result.filter(p =>
         [p.name, p.fatherName, p.motherName].some(name =>
-          name?.includes(query),
+          name?.toLowerCase()?.includes(prepearedQuery),
         ),
       );
     }

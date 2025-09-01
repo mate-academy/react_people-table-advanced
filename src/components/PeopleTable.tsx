@@ -24,9 +24,15 @@ export const PeopleTable: React.FC<Props> = ({ peopleMap, filteredPeople }) => {
       return filteredPeople;
     }
 
-    const sorted = [...filteredPeople].sort((a, b) =>
-      a[sortBy] === b[sortBy] ? 0 : a[sortBy] > b[sortBy] ? 1 : -1,
-    );
+    const sorted = [...filteredPeople].sort((a, b) => {
+      if (sortBy === 'born' || sortBy === 'died') {
+        return Number(a[sortBy] - Number(b[sortBy]));
+      } else {
+        return a[sortBy].localeCompare(b[sortBy], undefined, {
+          sensitivity: 'base',
+        });
+      }
+    });
 
     if (order === 'desc') {
       sorted.reverse();
