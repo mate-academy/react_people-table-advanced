@@ -1,57 +1,106 @@
-import { Person } from '../types/Person';
-import { SearchLink } from './SearchLink';
+import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
+import { SearchLink } from './SearchLink';
+import { Person } from '../types/Person';
+import { getPeople } from '../api';
 
-// wstaw tutaj swoje obecne dane osób
-const peopleData: Person[] = [
-  {
-    name: 'Pieter Haverbeke',
-    sex: 'm',
-    born: 1602,
-    died: 1642,
-    fatherName: 'Lieven van Haverbeke',
-    motherName: null,
-    slug: 'pieter-haverbeke-1602',
-  },
-  {
-    name: 'Anna van Hecke',
-    sex: 'f',
-    born: 1607,
-    died: 1670,
-    fatherName: 'Paschasius van Hecke',
-    motherName: 'Martijntken Beelaert',
-    slug: 'anna-van-hecke-1607',
-  },
-  // ... dodaj resztę osób analogicznie
-];
-
-export const PeopleTable: React.FC = () => {
+export const PeopleTable = () => {
+  const [people, setPeople] = useState<Person[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
   const [searchParams] = useSearchParams();
+
+  useEffect(() => {
+    setLoading(true);
+    setError(false);
+
+    getPeople()
+      .then(data => setPeople(data))
+      .catch(() => setError(true))
+      .finally(() => setLoading(false));
+  }, []);
+
+  const query = searchParams.get('query')?.toLowerCase().trim() || '';
+  const selectedCenturies = searchParams
+    .getAll('centuries')
+    .map(Number)
+    .filter(n => !isNaN(n));
+
   const sortField = searchParams.get('sort');
-  const order = searchParams.get('order');
+  const sortOrder = searchParams.get('order');
 
-  const sortedPeople = [...peopleData].sort((a: Person, b: Person) => {
-    if (!sortField) {
-      return 0;
+  const filteredPeople = people.filter(person => {
+    const personText = [
+      person.name,
+      person.motherName || '',
+      person.fatherName || '',
+    ]
+      .join(' ')
+      .toLowerCase();
+
+    if (query && !personText.includes(query)) return false;
+
+    if (selectedCenturies.length > 0) {
+      const bornCentury = Math.floor(person.born / 100) + 1;
+      if (!selectedCenturies.includes(bornCentury)) return false;
     }
 
-    const aValue = a[sortField as keyof Person];
-    const bValue = b[sortField as keyof Person];
+    return true;
+  });
 
-    if (typeof aValue === 'string' && typeof bValue === 'string') {
-      return aValue.localeCompare(bValue);
+  const sortedPeople = [...filteredPeople].sort((a, b) => {
+    if (!sortField) return 0;
+
+    let aValue: string | number = '';
+    let bValue: string | number = '';
+
+    switch (sortField) {
+      case 'name':
+        aValue = a.name.toLowerCase();
+        bValue = b.name.toLowerCase();
+        break;
+      case 'sex':
+        aValue = a.sex;
+        bValue = b.sex;
+        break;
+      case 'born':
+        aValue = a.born;
+        bValue = b.born;
+        break;
+      case 'died':
+        aValue = a.died;
+        bValue = b.died;
+        break;
+      default:
+        return 0;
     }
 
-    if (typeof aValue === 'number' && typeof bValue === 'number') {
-      return aValue - bValue;
-    }
-
+    if (aValue < bValue) return sortOrder === 'desc' ? 1 : -1;
+    if (aValue > bValue) return sortOrder === 'desc' ? -1 : 1;
     return 0;
   });
 
-  if (order === 'desc') {
-    sortedPeople.reverse();
-  }
+  if (loading) return <p>Loading people...</p>;
+  if (error)
+    return <p data-cy="peopleLoadingError">Something went wrong</p>;
+  if (people.length === 0)
+    return <p data-cy="noPeopleMessage">There are no people on the server</p>;
+  if (filteredPeople.length === 0)
+    return <p>There are no people matching the current search criteria</p>;
+
+  const getNextSortParams = (field: string): Record<string, string | string[] | null> => {
+    if (sortField !== field) return { sort: field, order: null };
+    if (!sortOrder) return { sort: field, order: 'desc' };
+    return { sort: null, order: null };
+  };
+
+  const renderSortLink = (field: string) => (
+    <SearchLink params={getNextSortParams(field)}>
+      <span className="icon">
+        <i className="fas fa-sort" />
+      </span>
+    </SearchLink>
+  );
 
   return (
     <table
@@ -62,79 +111,42 @@ export const PeopleTable: React.FC = () => {
         <tr>
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
-              Name
-              <SearchLink
-                params={{
-                  sort: 'name',
-                  order: order === 'asc' ? 'desc' : 'asc',
-                }}
-              >
-                <span className="icon">
-                  <i className="fas fa-sort" />
-                </span>
-              </SearchLink>
+              Name {renderSortLink('name')}
             </span>
           </th>
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
-              Sex
-              <SearchLink
-                params={{
-                  sort: 'sex',
-                  order: order === 'asc' ? 'desc' : 'asc',
-                }}
-              >
-                <span className="icon">
-                  <i className="fas fa-sort" />
-                </span>
-              </SearchLink>
+              Sex {renderSortLink('sex')}
             </span>
           </th>
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
-              Born
-              <SearchLink
-                params={{
-                  sort: 'born',
-                  order: order === 'asc' ? 'desc' : 'asc',
-                }}
-              >
-                <span className="icon">
-                  <i className="fas fa-sort" />
-                </span>
-              </SearchLink>
+              Born {renderSortLink('born')}
             </span>
           </th>
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
-              Died
-              <SearchLink
-                params={{
-                  sort: 'died',
-                  order: order === 'asc' ? 'desc' : 'asc',
-                }}
-              >
-                <span className="icon">
-                  <i className="fas fa-sort" />
-                </span>
-              </SearchLink>
+              Died {renderSortLink('died')}
             </span>
           </th>
           <th>Mother</th>
           <th>Father</th>
         </tr>
       </thead>
+
       <tbody>
-        {sortedPeople.map((person: Person) => (
+        {sortedPeople.map(person => (
           <tr key={person.slug} data-cy="person">
             <td>
-              <a href={`#/people/${person.slug}`}>{person.name}</a>
+              <SearchLink params={{}}>
+                {person.name}
+              </SearchLink>
             </td>
             <td>{person.sex}</td>
             <td>{person.born}</td>
             <td>{person.died}</td>
-            <td>{person.motherName}</td>
-            <td>{person.fatherName}</td>
+            <td>{person.motherName || '-'}</td>
+            <td>{person.fatherName || '-'}</td>
           </tr>
         ))}
       </tbody>
