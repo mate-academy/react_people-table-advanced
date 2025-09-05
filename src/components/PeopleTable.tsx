@@ -13,20 +13,22 @@ export const PeopleTable: React.FC = () => {
   const [searchParams] = useSearchParams();
 
   useEffect(() => {
-    getPeople().then((data) => {
+    getPeople().then(data => {
       setPeople(data);
       setLoading(false);
     });
   }, []);
 
-  if (loading) return <p>Loading...</p>;
+  if (loading) {
+    return <p>Loading...</p>;
+  }
 
   const query = searchParams.get('query')?.toLowerCase().trim() ?? '';
   const selectedCenturies = searchParams
     .getAll('centuries')
-    .map((c) => parseInt(c, 10));
+    .map(c => parseInt(c, 10));
 
-  const filteredPeople = people.filter((p) => {
+  const filteredPeople = people.filter(p => {
     const matchesQuery =
       !query ||
       p.name.toLowerCase().includes(query) ||
@@ -35,7 +37,8 @@ export const PeopleTable: React.FC = () => {
 
     const birthCentury = Math.floor(p.born / 100) + 1;
     const matchesCentury =
-      selectedCenturies.length === 0 || selectedCenturies.includes(birthCentury);
+      selectedCenturies.length === 0 ||
+      selectedCenturies.includes(birthCentury);
 
     return matchesQuery && matchesCentury;
   });
@@ -44,6 +47,7 @@ export const PeopleTable: React.FC = () => {
   const sortOrder = searchParams.get('order') as 'asc' | 'desc' | null;
 
   const sortedPeople = [...filteredPeople];
+
   if (sortField && ['name', 'sex', 'born', 'died'].includes(sortField)) {
     sortedPeople.sort((a: Person, b: Person) => {
       switch (sortField) {
@@ -62,8 +66,14 @@ export const PeopleTable: React.FC = () => {
   }
 
   const getNextSortParams = (field: SortField) => {
-    if (sortField !== field) return { sort: field, order: null };
-    if (!sortOrder) return { sort: field, order: 'desc' };
+    if (sortField !== field) {
+      return { sort: field, order: null };
+    }
+
+    if (!sortOrder) {
+      return { sort: field, order: 'desc' };
+    }
+
     return { sort: null, order: null };
   };
 
@@ -99,10 +109,7 @@ export const PeopleTable: React.FC = () => {
         {sortedPeople.map((person: Person) => (
           <tr key={person.slug}>
             <td>
-              <SearchLink
-                params={{}}
-                pathname={`/people/${person.slug}`}
-              >
+              <SearchLink params={{}} pathname={`/people/${person.slug}`}>
                 {person.name}
               </SearchLink>
             </td>
