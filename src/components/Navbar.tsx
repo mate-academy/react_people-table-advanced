@@ -1,4 +1,10 @@
+import classNames from 'classnames';
+import { Link, useLocation } from 'react-router-dom';
+
 export const Navbar = () => {
+  const { pathname } = useLocation();
+  const location = useLocation();
+
   return (
     <nav
       data-cy="nav"
@@ -8,17 +14,24 @@ export const Navbar = () => {
     >
       <div className="container">
         <div className="navbar-brand">
-          <a className="navbar-item" href="#/">
+          <Link
+            className={classNames('navbar-item', {
+              'has-background-grey-lighter': pathname === '/',
+            })}
+            to="/"
+          >
             Home
-          </a>
+          </Link>
 
-          <a
+          <Link
             aria-current="page"
-            className="navbar-item has-background-grey-lighter"
-            href="#/people"
+            className={classNames('navbar-item', {
+              'has-background-grey-lighter': pathname.startsWith('/people'),
+            })}
+            to={{ pathname: '/people', search: location.search }}
           >
             People
-          </a>
+          </Link>
         </div>
       </div>
     </nav>
