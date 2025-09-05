@@ -6,15 +6,19 @@ export const PeopleFilters = () => {
 
   const query = searchParams.get('query') || '';
   const selectedCenturies = new Set(
-    searchParams.getAll('centuries').map(Number)
+    searchParams.getAll('centuries').map(Number),
   );
   const sex = searchParams.get('sex') || 'all';
 
   const toggleCentury = (c: number) => {
     const newParams = new URLSearchParams(searchParams.toString());
     const selected = new Set(newParams.getAll('centuries').map(Number));
-    if (selected.has(c)) selected.delete(c);
-    else selected.add(c);
+
+    if (selected.has(c)) {
+      selected.delete(c);
+    } else {
+      selected.add(c);
+    }
 
     newParams.delete('centuries');
     selected.forEach(v => newParams.append('centuries', v.toString()));
@@ -61,8 +65,13 @@ export const PeopleFilters = () => {
             onChange={e => {
               const newParams = new URLSearchParams(searchParams.toString());
               const value = e.target.value;
-              if (value) newParams.set('query', value);
-              else newParams.delete('query');
+
+              if (value) {
+                newParams.set('query', value);
+              } else {
+                newParams.delete('query');
+              }
+
               setSearchParams(newParams);
             }}
           />
