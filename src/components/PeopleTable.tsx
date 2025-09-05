@@ -1,186 +1,119 @@
-import { useEffect, useState } from 'react';
+// src/components/PeopleTable.tsx
+import React, { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { SearchLink } from './SearchLink';
 import { Person } from '../types/Person';
 import { getPeople } from '../api';
+import { SearchLink } from './SearchLink';
 
-export const PeopleTable = () => {
+type SortField = 'name' | 'sex' | 'born' | 'died';
+
+export const PeopleTable: React.FC = () => {
   const [people, setPeople] = useState<Person[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
   const [searchParams] = useSearchParams();
 
   useEffect(() => {
-    setLoading(true);
-    setError(false);
-
-    getPeople()
-      .then(data => setPeople(data))
-      .catch(() => setError(true))
-      .finally(() => setLoading(false));
+    getPeople().then((data) => {
+      setPeople(data);
+      setLoading(false);
+    });
   }, []);
 
-  const query = searchParams.get('query')?.toLowerCase().trim() || '';
+  if (loading) return <p>Loading...</p>;
+
+  const query = searchParams.get('query')?.toLowerCase().trim() ?? '';
   const selectedCenturies = searchParams
     .getAll('centuries')
-    .map(Number)
-    .filter(n => !isNaN(n));
+    .map((c) => parseInt(c, 10));
 
-  const sortField = searchParams.get('sort');
-  const sortOrder = searchParams.get('order');
+  const filteredPeople = people.filter((p) => {
+    const matchesQuery =
+      !query ||
+      p.name.toLowerCase().includes(query) ||
+      p.motherName?.toLowerCase().includes(query) ||
+      p.fatherName?.toLowerCase().includes(query);
 
-  const filteredPeople = people.filter(person => {
-    const personText = [
-      person.name,
-      person.motherName || '',
-      person.fatherName || '',
-    ]
-      .join(' ')
-      .toLowerCase();
+    const birthCentury = Math.floor(p.born / 100) + 1;
+    const matchesCentury =
+      selectedCenturies.length === 0 || selectedCenturies.includes(birthCentury);
 
-    if (query && !personText.includes(query)) {
-      return false;
-    }
-
-    if (selectedCenturies.length > 0) {
-      const bornCentury = Math.floor(person.born / 100) + 1;
-
-      if (!selectedCenturies.includes(bornCentury)) {
-        return false;
-      }
-    }
-
-    return true;
+    return matchesQuery && matchesCentury;
   });
 
-  const sortedPeople = [...filteredPeople].sort((a, b) => {
-    if (!sortField) {
-      return 0;
-    }
+  const sortField = searchParams.get('sort') as SortField | null;
+  const sortOrder = searchParams.get('order') as 'asc' | 'desc' | null;
 
-    let aValue: string | number = '';
-    let bValue: string | number = '';
-
-    switch (sortField) {
-      case 'name':
-        aValue = a.name.toLowerCase();
-        bValue = b.name.toLowerCase();
-        break;
-      case 'sex':
-        aValue = a.sex;
-        bValue = b.sex;
-        break;
-      case 'born':
-        aValue = a.born;
-        bValue = b.born;
-        break;
-      case 'died':
-        aValue = a.died;
-        bValue = b.died;
-        break;
-      default:
-        return 0;
-    }
-
-    if (aValue < bValue) {
-      return sortOrder === 'desc' ? 1 : -1;
-    }
-
-    if (aValue > bValue) {
-      return sortOrder === 'desc' ? -1 : 1;
-    }
-
-    return 0;
-  });
-
-  if (loading) {
-    return <p>Loading people...</p>;
-  }
-
-  if (error) {
-    return <p data-cy="peopleLoadingError">Something went wrong</p>;
-  }
-
-  if (people.length === 0) {
-    {
-      return <p data-cy="noPeopleMessage">There are no people on the server</p>;
-    }
-
-    if (filteredPeople.length === 0) {
-      {
-        return <p>There are no people matching the current search criteria</p>;
+  const sortedPeople = [...filteredPeople];
+  if (sortField && ['name', 'sex', 'born', 'died'].includes(sortField)) {
+    sortedPeople.sort((a: Person, b: Person) => {
+      switch (sortField) {
+        case 'name':
+        case 'sex':
+          return sortOrder === 'desc'
+            ? b[sortField].localeCompare(a[sortField])
+            : a[sortField].localeCompare(b[sortField]);
+        case 'born':
+        case 'died':
+          return sortOrder === 'desc'
+            ? b[sortField] - a[sortField]
+            : a[sortField] - b[sortField];
       }
-
-      const getNextSortParams = (
-        field: string,
-      ): Record<string, string | string[] | null> => {
-        if (sortField !== field) {
-          return { sort: field, order: null };
-        }
-
-        if (!sortOrder) {
-          return { sort: field, order: 'desc' };
-        }
-
-        return { sort: null, order: null };
-      };
-
-      const renderSortLink = (field: string) => (
-        <SearchLink params={getNextSortParams(field)}>
-          <span className="icon">
-            <i className="fas fa-sort" />
-          </span>
-        </SearchLink>
-      );
-
-      return (
-        <table
-          data-cy="peopleTable"
-          className="table is-striped is-hoverable is-narrow is-fullwidth"
-        >
-          <thead>
-            <tr>
-              <th>
-                <span className="is-flex is-flex-wrap-nowrap">
-                  Name {renderSortLink('name')}
-                </span>
-              </th>
-              <th>
-                <span className="is-flex is-flex-wrap-nowrap">
-                  Sex {renderSortLink('sex')}
-                </span>
-              </th>
-              <th>
-                <span className="is-flex is-flex-wrap-nowrap">
-                  Born {renderSortLink('born')}
-                </span>
-              </th>
-              <th>
-                <span className="is-flex is-flex-wrap-nowrap">
-                  Died {renderSortLink('died')}
-                </span>
-              </th>
-              <th>Mother</th>
-              <th>Father</th>
-            </tr>
-          </thead>
-
-          <tbody>
-            {sortedPeople.map(person => (
-              <tr key={person.slug} data-cy="person">
-                <td>
-                  <SearchLink params={{}}>{person.name}</SearchLink>
-                </td>
-                <td>{person.sex}</td>
-                <td>{person.born}</td>
-                <td>{person.died}</td>
-                <td>{person.motherName || '-'}</td>
-                <td>{person.fatherName || '-'}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      );
-    }
+    });
   }
+
+  const getNextSortParams = (field: SortField) => {
+    if (sortField !== field) return { sort: field, order: null };
+    if (!sortOrder) return { sort: field, order: 'desc' };
+    return { sort: null, order: null };
+  };
+
+  return (
+    <table className="table is-fullwidth">
+      <thead>
+        <tr>
+          <th>
+            <SearchLink params={getNextSortParams('name')} pathname="/people">
+              Name
+            </SearchLink>
+          </th>
+          <th>
+            <SearchLink params={getNextSortParams('sex')} pathname="/people">
+              Sex
+            </SearchLink>
+          </th>
+          <th>
+            <SearchLink params={getNextSortParams('born')} pathname="/people">
+              Born
+            </SearchLink>
+          </th>
+          <th>
+            <SearchLink params={getNextSortParams('died')} pathname="/people">
+              Died
+            </SearchLink>
+          </th>
+          <th>Father</th>
+          <th>Mother</th>
+        </tr>
+      </thead>
+      <tbody>
+        {sortedPeople.map((person: Person) => (
+          <tr key={person.slug}>
+            <td>
+              <SearchLink
+                params={{}}
+                pathname={`/people/${person.slug}`}
+              >
+                {person.name}
+              </SearchLink>
+            </td>
+            <td>{person.sex}</td>
+            <td>{person.born}</td>
+            <td>{person.died}</td>
+            <td>{person.fatherName}</td>
+            <td>{person.motherName}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  );
 };
