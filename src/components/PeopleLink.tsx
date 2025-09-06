@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { Person } from '../types';
 import React from 'react';
 
@@ -7,9 +7,14 @@ type Props = {
 };
 
 export const PeopleLink: React.FC<Props> = ({ person }) => {
+  const location = useLocation();
+
   return (
     <Link
-      to={`/people/${person.slug}`}
+      to={{
+        pathname: `/people/${person.slug}`,
+        search: location.search,
+      }}
       className={person.sex === 'f' ? 'has-text-danger' : ''}
     >
       {person.name}
