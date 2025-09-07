@@ -1,96 +1,83 @@
-export const PeopleFilters = () => {
+import React from 'react';
+
+export default function PeopleFilters({ searchParams, setSearchParams }) {
+  const query = searchParams.get('query') || '';
+  const sex = searchParams.get('sex') || '';
+  const centuries = searchParams.getAll('centuries');
+
+  const updateParam = (key, value) => {
+    const params = new URLSearchParams(searchParams);
+
+    if (value) params.set(key, value);
+    else {
+      params.delete(key);
+    }
+
+    setSearchParams(params);
+  };
+
+  const toggleCentury = century => {
+    const params = new URLSearchParams(searchParams);
+    const current = params.getAll('centuries');
+
+    if (current.includes(century)) {
+      params.delete('centuries');
+      current
+        .filter(c => c !== century)
+        .forEach(c => params.append('centuries', c));
+    } else {
+      params.append('centuries', century);
+    }
+
+    setSearchParams(params);
+  };
+
   return (
-    <nav className="panel">
-      <p className="panel-heading">Filters</p>
+    <div>
+      <h3 className="title is-5">Filters</h3>
 
-      <p className="panel-tabs" data-cy="SexFilter">
-        <a className="is-active" href="#/people">
+      {/* Name filter */}
+      <input
+        className="input"
+        placeholder="Search by name..."
+        value={query}
+        onChange={e => updateParam('query', e.target.value)}
+      />
+
+      {/* Sex filter */}
+      <div className="buttons mt-3">
+        <button
+          className={`button ${!sex ? 'is-info' : ''}`}
+          onClick={() => updateParam('sex', '')}
+        >
           All
-        </a>
-        <a className="" href="#/people?sex=m">
+        </button>
+        <button
+          className={`button ${sex === 'm' ? 'is-info' : ''}`}
+          onClick={() => updateParam('sex', 'm')}
+        >
           Male
-        </a>
-        <a className="" href="#/people?sex=f">
+        </button>
+        <button
+          className={`button ${sex === 'f' ? 'is-info' : ''}`}
+          onClick={() => updateParam('sex', 'f')}
+        >
           Female
-        </a>
-      </p>
-
-      <div className="panel-block">
-        <p className="control has-icons-left">
-          <input
-            data-cy="NameFilter"
-            type="search"
-            className="input"
-            placeholder="Search"
-          />
-
-          <span className="icon is-left">
-            <i className="fas fa-search" aria-hidden="true" />
-          </span>
-        </p>
+        </button>
       </div>
 
-      <div className="panel-block">
-        <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
-          <div className="level-left">
-            <a
-              data-cy="century"
-              className="button mr-1"
-              href="#/people?centuries=16"
-            >
-              16
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=17"
-            >
-              17
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=18"
-            >
-              18
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=19"
-            >
-              19
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1"
-              href="#/people?centuries=20"
-            >
-              20
-            </a>
-          </div>
-
-          <div className="level-right ml-4">
-            <a
-              data-cy="centuryALL"
-              className="button is-success is-outlined"
-              href="#/people"
-            >
-              All
-            </a>
-          </div>
-        </div>
+      {/* Century filter */}
+      <div className="buttons mt-3">
+        {['16', '17', '18', '19', '20'].map(c => (
+          <button
+            key={c}
+            className={`button ${centuries.includes(c) ? 'is-info' : ''}`}
+            onClick={() => toggleCentury(c)}
+          >
+            {c}th
+          </button>
+        ))}
       </div>
-
-      <div className="panel-block">
-        <a className="button is-link is-outlined is-fullwidth" href="#/people">
-          Reset all filters
-        </a>
-      </div>
-    </nav>
+    </div>
   );
-};
+}

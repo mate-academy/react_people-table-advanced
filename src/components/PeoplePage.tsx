@@ -1,33 +1,58 @@
-import { PeopleFilters } from './PeopleFilters';
+import React, { useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { Loader } from './Loader';
-import { PeopleTable } from './PeopleTable';
+import ErrorMessage from './ErrorMessage';
+import PeopleFilters from './PeopleFilters';
+import PeopleTable from './PeopleTable';
 
-export const PeoplePage = () => {
+export function PeoplePage() {
+  const [people, setPeople] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  useEffect(() => {
+    fetch('/api/people.json')
+      .then(res => res.json())
+      .then(data => {
+        setPeople(data);
+        setLoading(false);
+      })
+      .catch(err => {
+        setError(err.message);
+        setLoading(false);
+      });
+  }, []);
+
+  if (loading) {
+    return <Loader />;
+  }
+
+  if (error) {
+    return <ErrorMessage message={error} />;
+  }
+
+  if (!people.length) {
+    return <p>No people found</p>;
+  }
+
   return (
-    <>
-      <h1 className="title">People Page</h1>
-
-      <div className="block">
-        <div className="columns is-desktop is-flex-direction-row-reverse">
-          <div className="column is-7-tablet is-narrow-desktop">
-            <PeopleFilters />
-          </div>
-
-          <div className="column">
-            <div className="box table-container">
-              <Loader />
-
-              <p data-cy="peopleLoadingError">Something went wrong</p>
-
-              <p data-cy="noPeopleMessage">There are no people on the server</p>
-
-              <p>There are no people matching the current search criteria</p>
-
-              <PeopleTable />
-            </div>
-          </div>
-        </div>
+    <div className="columns">
+      <div className="column is-one-quarter">
+        <PeopleFilters
+          searchParams={searchParams}
+          setSearchParams={setSearchParams}
+        />
       </div>
-    </>
+
+      <div className="column">
+        <PeopleTable
+          people={people}
+          searchParams={searchParams}
+          setSearchParams={setSearchParams}
+        />
+      </div>
+    </div>
   );
-};
+}
