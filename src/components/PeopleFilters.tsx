@@ -8,8 +8,9 @@ export default function PeopleFilters({ searchParams, setSearchParams }) {
   const updateParam = (key, value) => {
     const params = new URLSearchParams(searchParams);
 
-    if (value) params.set(key, value);
-    else {
+    if (value) {
+      params.set(key, value);
+    } else {
       params.delete(key);
     }
 
@@ -20,15 +21,26 @@ export default function PeopleFilters({ searchParams, setSearchParams }) {
     const params = new URLSearchParams(searchParams);
     const current = params.getAll('centuries');
 
+    let nextCenturies;
+
     if (current.includes(century)) {
-      params.delete('centuries');
-      current
-        .filter(c => c !== century)
-        .forEach(c => params.append('centuries', c));
+      nextCenturies = current.filter(c => c !== century);
     } else {
-      params.append('centuries', century);
+      nextCenturies = [...current, century];
     }
 
+    nextCenturies = Array.from(new Set(nextCenturies));
+
+    params.delete('centuries');
+    nextCenturies.forEach(c => params.append('centuries', c));
+
+    setSearchParams(params);
+  };
+
+  const clearCenturies = () => {
+    const params = new URLSearchParams(searchParams);
+
+    params.delete('centuries');
     setSearchParams(params);
   };
 
@@ -68,6 +80,14 @@ export default function PeopleFilters({ searchParams, setSearchParams }) {
 
       {/* Century filter */}
       <div className="buttons mt-3">
+        {/* All button for centuries - removes the centuries param entirely */}
+        <button
+          className={`button ${centuries.length === 0 ? 'is-info' : ''}`}
+          onClick={clearCenturies}
+        >
+          All
+        </button>
+
         {['16', '17', '18', '19', '20'].map(c => (
           <button
             key={c}

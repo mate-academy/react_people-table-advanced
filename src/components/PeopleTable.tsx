@@ -1,11 +1,30 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+
+const ALLOWED_SORT_FIELDS = ['name', 'sex', 'born', 'died'];
 
 export default function PeopleTable({ people, searchParams, setSearchParams }) {
   const query = (searchParams.get('query') || '').toLowerCase();
   const sex = searchParams.get('sex') || '';
   const centuries = searchParams.getAll('centuries');
-  const sortField = searchParams.get('sort');
-  const sortOrder = searchParams.get('order');
+
+  const sortFieldRaw = searchParams.get('sort');
+  const sortOrderRaw = searchParams.get('order');
+
+  useEffect(() => {
+    if (sortFieldRaw && !ALLOWED_SORT_FIELDS.includes(sortFieldRaw)) {
+      const params = new URLSearchParams(searchParams);
+
+      params.delete('sort');
+      params.delete('order');
+      setSearchParams(params);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sortFieldRaw]);
+
+  const sortField = ALLOWED_SORT_FIELDS.includes(sortFieldRaw)
+    ? sortFieldRaw
+    : null;
+  const sortOrder = sortOrderRaw === 'desc' ? 'desc' : 'asc'; // default to 'asc' when sorting
 
   let filtered = people.filter(p => {
     const matchesQuery =
@@ -53,11 +72,13 @@ export default function PeopleTable({ people, searchParams, setSearchParams }) {
 
   const toggleSort = field => {
     const params = new URLSearchParams(searchParams);
+    const currentSort = params.get('sort');
+    const currentOrder = params.get('order');
 
-    if (sortField !== field) {
+    if (currentSort !== field) {
       params.set('sort', field);
       params.delete('order');
-    } else if (sortOrder !== 'desc') {
+    } else if (currentOrder !== 'desc') {
       params.set('order', 'desc');
     } else {
       params.delete('sort');
@@ -67,14 +88,34 @@ export default function PeopleTable({ people, searchParams, setSearchParams }) {
     setSearchParams(params);
   };
 
+  const headerCell = (label, field) => {
+    const currentSort = searchParams.get('sort');
+    const currentOrder = searchParams.get('order') || 'asc';
+    const isActive = currentSort === field;
+    const indicator = isActive ? (currentOrder === 'desc' ? '▼' : '▲') : '↕';
+
+    return (
+      <th
+        onClick={() => toggleSort(field)}
+        style={{ cursor: 'pointer', userSelect: 'none' }}
+        className={isActive ? 'has-text-weight-bold' : ''}
+        role="button"
+        aria-pressed={isActive}
+        title={`Sort by ${label}`}
+      >
+        <span>{label}</span> <span style={{ marginLeft: 6 }}>{indicator}</span>
+      </th>
+    );
+  };
+
   return (
     <table className="table is-fullwidth">
       <thead>
         <tr>
-          <th onClick={() => toggleSort('name')}>Name</th>
-          <th onClick={() => toggleSort('sex')}>Sex</th>
-          <th onClick={() => toggleSort('born')}>Born</th>
-          <th onClick={() => toggleSort('died')}>Died</th>
+          {headerCell('Name', 'name')}
+          {headerCell('Sex', 'sex')}
+          {headerCell('Born', 'born')}
+          {headerCell('Died', 'died')}
         </tr>
       </thead>
       <tbody>
