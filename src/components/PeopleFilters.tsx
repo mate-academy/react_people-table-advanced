@@ -1,95 +1,63 @@
-export const PeopleFilters = () => {
+import React from 'react';
+import { NameFilter } from './NameFilter';
+import { SetURLSearchParams } from 'react-router-dom';
+import { CenturyFilter } from './CenturyFilter';
+import { SexFilter } from './SexFilter';
+
+type PeopleFiltersProps = {
+  searchParams: URLSearchParams;
+  setSearchParams: SetURLSearchParams;
+};
+
+export const PeopleFilters: React.FC<PeopleFiltersProps> = ({
+  searchParams,
+  setSearchParams,
+}) => {
+  const handleReset = () => {
+    const resetParams = new URLSearchParams(searchParams);
+
+    resetParams.delete('query');
+    resetParams.delete('centuries');
+    resetParams.delete('sex');
+    resetParams.delete('sort');
+
+    setSearchParams(resetParams);
+  };
+
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
 
-      <p className="panel-tabs" data-cy="SexFilter">
-        <a className="is-active" href="#/people">
-          All
-        </a>
-        <a className="" href="#/people?sex=m">
-          Male
-        </a>
-        <a className="" href="#/people?sex=f">
-          Female
-        </a>
-      </p>
+      <SexFilter
+        searchParams={searchParams}
+        setSearchParams={setSearchParams}
+      />
 
       <div className="panel-block">
-        <p className="control has-icons-left">
-          <input
-            data-cy="NameFilter"
-            type="search"
-            className="input"
-            placeholder="Search"
-          />
-
-          <span className="icon is-left">
-            <i className="fas fa-search" aria-hidden="true" />
-          </span>
-        </p>
+        <NameFilter
+          searchParams={searchParams}
+          setSearchParams={setSearchParams}
+        />
       </div>
 
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            <a
-              data-cy="century"
-              className="button mr-1"
-              href="#/people?centuries=16"
-            >
-              16
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=17"
-            >
-              17
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=18"
-            >
-              18
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=19"
-            >
-              19
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1"
-              href="#/people?centuries=20"
-            >
-              20
-            </a>
-          </div>
-
-          <div className="level-right ml-4">
-            <a
-              data-cy="centuryALL"
-              className="button is-success is-outlined"
-              href="#/people"
-            >
-              All
-            </a>
+            <CenturyFilter
+              searchParams={searchParams}
+              setSearchParams={setSearchParams}
+            />
           </div>
         </div>
       </div>
 
       <div className="panel-block">
-        <a className="button is-link is-outlined is-fullwidth" href="#/people">
+        <button
+          className="button is-link is-outlined is-fullwidth"
+          onClick={handleReset}
+        >
           Reset all filters
-        </a>
+        </button>
       </div>
     </nav>
   );
