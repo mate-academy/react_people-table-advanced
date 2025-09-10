@@ -1,4 +1,13 @@
+import classNames from 'classnames';
+import { Link, matchPath, useLocation } from 'react-router-dom';
+
 export const Navbar = () => {
+  const { pathname, search } = useLocation();
+
+  const isTabActive =
+    matchPath({ path: '/people/:slug', end: true }, pathname) ||
+    matchPath({ path: '/people', end: true }, pathname);
+
   return (
     <nav
       data-cy="nav"
@@ -8,17 +17,23 @@ export const Navbar = () => {
     >
       <div className="container">
         <div className="navbar-brand">
-          <a className="navbar-item" href="#/">
+          <Link
+            className={classNames('navbar-item', {
+              'has-background-grey-lighter': pathname === '/',
+            })}
+            to="/"
+          >
             Home
-          </a>
+          </Link>
 
-          <a
-            aria-current="page"
-            className="navbar-item has-background-grey-lighter"
-            href="#/people"
+          <Link
+            className={classNames('navbar-item', {
+              'has-background-grey-lighter': isTabActive,
+            })}
+            to={`/people${search}`}
           >
             People
-          </a>
+          </Link>
         </div>
       </div>
     </nav>
