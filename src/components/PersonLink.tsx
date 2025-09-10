@@ -1,4 +1,4 @@
-import { NavLink } from 'react-router-dom';
+import { NavLink, useLocation } from 'react-router-dom';
 import classNames from 'classnames';
 import { Person } from '../types';
 
@@ -7,13 +7,18 @@ type Props = {
 };
 
 export const PersonLink = ({ person }: Props) => {
+  const location = useLocation();
+
   if (!person) {
     return <span>-</span>;
   }
 
   return (
     <NavLink
-      to={`/people/${person.slug}`}
+      to={{
+        pathname: `/people/${person.slug}`,
+        search: location.search,
+      }}
       className={classNames({ 'has-text-danger': person.sex === 'f' })}
     >
       {person.name}

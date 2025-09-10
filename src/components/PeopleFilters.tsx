@@ -10,7 +10,11 @@ export const PeopleFilters = () => {
   const sex = searchParams.get('sex') || 'All';
 
   function handleQueryChange(e: React.ChangeEvent<HTMLInputElement>) {
-    setSearchParams(getSearchWith(searchParams, { query: e.target.value }));
+    const value = e.target.value;
+
+    setSearchParams(
+      getSearchWith(searchParams, { query: value ? value : null }),
+    );
   }
 
   function toggleCentury(n: number) {

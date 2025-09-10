@@ -29,6 +29,7 @@ export const PeoplePage = () => {
     if (centuries.length > 0) {
       result = result.filter(p => {
         const bornCentury = Math.floor(p.born / 100) + 1;
+
         return centuries.includes(String(bornCentury));
       });
     }
@@ -39,10 +40,28 @@ export const PeoplePage = () => {
 
     if (sortField) {
       result = [...result].sort((a, b) => {
-        const aVal = a[sortField as keyof typeof a];
-        const bVal = b[sortField as keyof typeof b];
+        let aVal = a[sortField as keyof typeof a];
+        let bVal = b[sortField as keyof typeof b];
 
-        if (aVal === undefined || bVal === undefined) return 0;
+        if (typeof aVal === 'number' || typeof bVal === 'number') {
+          aVal =
+            aVal !== undefined
+              ? (aVal as number)
+              : order === 'desc'
+                ? Number.NEGATIVE_INFINITY
+                : Number.POSITIVE_INFINITY;
+
+          bVal =
+            bVal !== undefined
+              ? (bVal as number)
+              : order === 'desc'
+                ? Number.NEGATIVE_INFINITY
+                : Number.POSITIVE_INFINITY;
+
+          return order === 'desc'
+            ? (bVal as number) - (aVal as number)
+            : (aVal as number) - (bVal as number);
+        }
 
         if (typeof aVal === 'string' && typeof bVal === 'string') {
           return order === 'desc'
@@ -50,9 +69,7 @@ export const PeoplePage = () => {
             : aVal.localeCompare(bVal);
         }
 
-        return order === 'desc'
-          ? (bVal as number) - (aVal as number)
-          : (aVal as number) - (bVal as number);
+        return 0;
       });
     }
 
