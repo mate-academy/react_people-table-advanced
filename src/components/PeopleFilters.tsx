@@ -1,4 +1,4 @@
-import { ChangeEvent, FC, MouseEvent, useEffect, useState } from 'react';
+import { ChangeEvent, FC, useEffect, useState } from 'react';
 import cn from 'classnames';
 import { SearchLink } from './SearchLink';
 import { getSearchWith } from '../utils/searchHelper';
@@ -20,12 +20,7 @@ export const PeopleFilters: FC<Props> = ({ searchParams, setSearchParams }) => {
     setQuery(searchParams.get('query') || '');
   }, [searchParams]);
 
-  const handleCenturyClick = (
-    event: MouseEvent<HTMLButtonElement>,
-    value: number,
-  ) => {
-    event.preventDefault();
-
+  const handleCenturyClick = (value: number) => {
     const currentCenturies = searchParams.getAll('centuries');
     const stringValue = String(value);
 
@@ -49,7 +44,7 @@ export const PeopleFilters: FC<Props> = ({ searchParams, setSearchParams }) => {
       query: value || null,
     });
 
-    setSearchParams(newSearch);
+    setSearchParams(new URLSearchParams(newSearch));
   };
 
   return (
@@ -105,7 +100,7 @@ export const PeopleFilters: FC<Props> = ({ searchParams, setSearchParams }) => {
                 className={cn('button mr-1', {
                   'is-info': centuriesUrl.includes(century),
                 })}
-                onClick={event => handleCenturyClick(event, +century)}
+                onClick={() => handleCenturyClick(+century)}
               >
                 {century}
               </button>

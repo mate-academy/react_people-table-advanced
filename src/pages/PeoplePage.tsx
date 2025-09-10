@@ -4,6 +4,7 @@ import { Loader } from '../components/Loader';
 import { PeopleTable } from '../components/PeopleTable';
 import { useSearchParams } from 'react-router-dom';
 import { useGetPeople } from '../hooks/useGetPeople';
+import { useMemo } from 'react';
 
 export const PeoplePage = () => {
   const { error, isLoading, people } = useGetPeople();
@@ -13,68 +14,73 @@ export const PeoplePage = () => {
   const centuries = searchParams.getAll('centuries');
   const sex = searchParams.get('sex');
 
-  const filteredPeople = people.filter(person => {
-    if (query) {
-      const matchesQuery =
-        person.name.toLowerCase().includes(query) ||
-        (person.motherName &&
-          person.motherName.toLowerCase().includes(query)) ||
-        (person.fatherName && person.fatherName.toLowerCase().includes(query));
+  const filteredPeople = useMemo(() => {
+    return people.filter(person => {
+      if (query) {
+        const matchesQuery =
+          person.name.toLowerCase().includes(query) ||
+          (person.motherName &&
+            person.motherName.toLowerCase().includes(query)) ||
+          (person.fatherName &&
+            person.fatherName.toLowerCase().includes(query));
 
-      if (!matchesQuery) {
+        if (!matchesQuery) {
+          return false;
+        }
+      }
+
+      if (centuries.length > 0) {
+        const birthCentury = Math.floor(person.born / 100) + 1;
+
+        if (!centuries.includes(String(birthCentury))) {
+          return false;
+        }
+      }
+
+      if (sex && person.sex !== sex) {
         return false;
       }
-    }
 
-    if (centuries.length > 0) {
-      const birthCentury = Math.floor(person.born / 100) + 1;
-
-      if (!centuries.includes(String(birthCentury))) {
-        return false;
-      }
-    }
-
-    if (sex && person.sex !== sex) {
-      return false;
-    }
-
-    return true;
-  });
+      return true;
+    });
+  }, [people, query, centuries, sex]);
 
   const sortField = searchParams.get('sort');
   const order = searchParams.get('order') || 'asc';
 
-  const sortedPeople = [...filteredPeople].sort((a, b) => {
-    if (!sortField) {
+  const sortedPeople = useMemo(() => {
+    return [...filteredPeople].sort((a, b) => {
+      if (!sortField) {
+        return 0;
+      }
+
+      const firstValue = a[sortField as keyof typeof a];
+      const secondValue = b[sortField as keyof typeof b];
+
+      if (firstValue === secondValue) {
+        return 0;
+      }
+
+      if (typeof firstValue === 'number' && typeof secondValue === 'number') {
+        return order === 'asc'
+          ? firstValue - secondValue
+          : secondValue - firstValue;
+      }
+
+      const firstStringValue = String(firstValue).toLowerCase();
+      const secondStringValue = String(secondValue).toLowerCase();
+
+      if (firstStringValue < secondStringValue) {
+        return order === 'asc' ? -1 : 1;
+      }
+
+      if (firstStringValue > secondStringValue) {
+        return order === 'asc' ? 1 : -1;
+      }
+
       return 0;
-    }
-
-    const firstValue = a[sortField as keyof typeof a];
-    const secondValue = b[sortField as keyof typeof b];
-
-    if (firstValue === secondValue) {
-      return 0;
-    }
-
-    if (typeof firstValue === 'number' && typeof secondValue === 'number') {
-      return order === 'asc'
-        ? firstValue - secondValue
-        : secondValue - firstValue;
-    }
-
-    const firstStringValue = String(firstValue).toLowerCase();
-    const secondStringValue = String(secondValue).toLowerCase();
-
-    if (firstStringValue < secondStringValue) {
-      return order === 'asc' ? -1 : 1;
-    }
-
-    if (firstStringValue > secondStringValue) {
-      return order === 'asc' ? 1 : -1;
-    }
-
-    return 0;
-  });
+    });
+  }, [filteredPeople, sortField, order]);
 
   return (
     <>

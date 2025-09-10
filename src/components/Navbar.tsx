@@ -26,7 +26,7 @@ export const Navbar = () => {
             className={({ isActive }) =>
               cn('navbar-item', { 'has-background-grey-lighter': isActive })
             }
-            to={`/people${location.search}`}
+            to={{ pathname: '/people', search: location.search }}
           >
             People
           </NavLink>

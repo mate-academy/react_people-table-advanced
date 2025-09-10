@@ -25,7 +25,7 @@ const PersonLink: FC<Props> = ({ name, people }) => {
     <Link
       to={{
         pathname: `/people/${person.slug}`,
-        search: searchParams.toString(),
+        search: searchParams.toString() ? `?${searchParams.toString()}` : '',
       }}
       className={cn({ 'has-text-danger': person.sex === 'f' })}
     >

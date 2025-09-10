@@ -2,13 +2,13 @@ import { FC } from 'react';
 import { Person } from '../types/Person';
 import PersonLink from './PersonLink';
 import cn from 'classnames';
-import { useLocation } from 'react-router-dom';
+import { URLSearchParamsInit, useLocation } from 'react-router-dom';
 import PeopleTableHeader from './PeopleTableHeader';
 
 type Props = {
   people: Person[];
   searchParams: URLSearchParams;
-  setSearchParams: (params: URLSearchParams) => void;
+  setSearchParams: (params: URLSearchParamsInit) => void;
 };
 
 /* eslint-disable jsx-a11y/control-has-associated-label */

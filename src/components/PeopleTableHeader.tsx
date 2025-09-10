@@ -1,11 +1,12 @@
 import { FC } from 'react';
 
 import cn from 'classnames';
+import { URLSearchParamsInit } from 'react-router-dom';
 const HEADER_CELLS = ['name', 'sex', 'born', 'died'];
 
 type Props = {
   searchParams: URLSearchParams;
-  setSearchParams: (params: URLSearchParams) => void;
+  setSearchParams: (params: URLSearchParamsInit) => void;
 };
 
 const PeopleTableHeader: FC<Props> = ({ searchParams, setSearchParams }) => {
