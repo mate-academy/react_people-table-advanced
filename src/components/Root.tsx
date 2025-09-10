@@ -4,7 +4,6 @@ import HomePage from './HomePage';
 import { PeoplePage } from './PeoplePage';
 import NotFoundPage from './NotFoundPage';
 
-
 const Root = () => {
   return (
     <>
@@ -21,6 +20,5 @@ const Root = () => {
     </>
   );
 };
-
 
 export default Root;
