@@ -32,15 +32,23 @@ const PeoplePage: React.FC = () => {
 
   const updateQuery = (value: string) => {
     const nextParams = getSearchWith(searchParams, { query: value || null });
+
     setSearchParams(nextParams);
   };
 
   const filteredAndSorted = useMemo(() => {
     const filtered = allPeople.filter(person => {
-      const matchesName = person.name.toLowerCase().includes(currentQuery.toLowerCase());
+      const query = currentQuery.toLowerCase();
+      const matchesName = [
+        person.name,
+        person.motherName ?? '',
+        person.fatherName ?? '',
+      ].some(n => n.toLowerCase().includes(query));
+
       const matchesSex = !currentSex || person.sex === currentSex;
       const century = String(Math.ceil(person.born / 100));
-      const matchesCentury = !selectedCenturies.length || selectedCenturies.includes(century);
+      const matchesCentury =
+        !selectedCenturies.length || selectedCenturies.includes(century);
 
       return matchesName && matchesSex && matchesCentury;
     });
@@ -66,7 +74,14 @@ const PeoplePage: React.FC = () => {
 
       return 0;
     });
-  }, [allPeople, currentQuery, currentSex, selectedCenturies, sortField, sortOrder]);
+  }, [
+    allPeople,
+    currentQuery,
+    currentSex,
+    selectedCenturies,
+    sortField,
+    sortOrder,
+  ]);
 
   return (
     <>

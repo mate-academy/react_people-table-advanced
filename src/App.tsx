@@ -6,7 +6,6 @@ import NotFoundPage from './pages/NotFoundPage';
 import Navbar from './components/Navbar';
 
 export const App = () => {
-
   return (
     <div data-cy="app">
       <Navbar />
