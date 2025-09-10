@@ -2,10 +2,11 @@ import { ChangeEvent, FC, MouseEvent, useEffect, useState } from 'react';
 import cn from 'classnames';
 import { SearchLink } from './SearchLink';
 import { getSearchWith } from '../utils/searchHelper';
+import { URLSearchParamsInit } from 'react-router-dom';
 
 type Props = {
   searchParams: URLSearchParams;
-  setSearchParams: (params: URLSearchParams) => void;
+  setSearchParams: (params: URLSearchParamsInit) => void;
 };
 
 const CENTURIES = ['16', '17', '18', '19', '20'];
@@ -25,23 +26,18 @@ export const PeopleFilters: FC<Props> = ({ searchParams, setSearchParams }) => {
   ) => {
     event.preventDefault();
 
-    const newSearchParams = new URLSearchParams(searchParams);
-    const currentCenturies = newSearchParams.getAll('centuries');
+    const currentCenturies = searchParams.getAll('centuries');
+    const stringValue = String(value);
 
-    if (currentCenturies.includes(String(value))) {
-      const centuriesWithoutValue = currentCenturies.filter(
-        century => century !== String(value),
-      );
+    const newCenturies = currentCenturies.includes(stringValue)
+      ? currentCenturies.filter(c => c !== stringValue)
+      : [...currentCenturies, stringValue];
 
-      newSearchParams.delete('centuries');
-      centuriesWithoutValue.forEach(c =>
-        newSearchParams.append('centuries', c),
-      );
-    } else {
-      newSearchParams.append('centuries', String(value));
-    }
+    const newSearch = getSearchWith(searchParams, {
+      centuries: newCenturies.length > 0 ? newCenturies : null,
+    });
 
-    setSearchParams(newSearchParams);
+    setSearchParams(new URLSearchParams(newSearch));
   };
 
   const onQueryChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -53,7 +49,7 @@ export const PeopleFilters: FC<Props> = ({ searchParams, setSearchParams }) => {
       query: value || null,
     });
 
-    setSearchParams(new URLSearchParams(newSearch));
+    setSearchParams(newSearch);
   };
 
   return (

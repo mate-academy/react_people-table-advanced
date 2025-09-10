@@ -83,10 +83,12 @@ export const PeoplePage = () => {
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
           <div className="column is-7-tablet is-narrow-desktop">
-            <PeopleFilters
-              searchParams={searchParams}
-              setSearchParams={setSearchParams}
-            />
+            {!isLoading && !error && people.length > 0 && (
+              <PeopleFilters
+                searchParams={searchParams}
+                setSearchParams={setSearchParams}
+              />
+            )}
           </div>
 
           <div className="column">
