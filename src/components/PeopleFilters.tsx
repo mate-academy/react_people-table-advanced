@@ -1,96 +1,142 @@
-export const PeopleFilters = () => {
+import { useCallback } from 'react';
+import { SearchParams } from '../utils/searchHelper';
+
+interface PeopleFiltersProps {
+  query: string | null;
+  centuries: string[] | null;
+  sex: string | null;
+  onFilterChange: (params: SearchParams) => void;
+}
+
+export const PeopleFilters: React.FC<PeopleFiltersProps> = ({
+  query,
+  centuries,
+  sex,
+  onFilterChange,
+}) => {
+  // Normalizar valores nulos
+  const queryValue = query ?? '';
+  const currentCenturies = centuries ?? [];
+
+  const handleQueryChange = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      const newQuery = event.target.value || null;
+
+      onFilterChange({ query: newQuery });
+    },
+    [onFilterChange],
+  );
+
+  const handleCenturyChange = useCallback(
+    (century: string) => {
+      const newCenturies = currentCenturies.includes(century)
+        ? currentCenturies.filter(c => c !== century)
+        : [...currentCenturies, century];
+
+      onFilterChange({ centuries: newCenturies.length > 0 ? newCenturies : null });
+    },
+    [currentCenturies, onFilterChange]
+  );
+
+  const handleSexChange = useCallback(
+    (newSex: string) => {
+      onFilterChange({ sex: newSex === sex ? null : newSex });
+    },
+    [sex, onFilterChange]
+  );
+
+  const handleClearFilters = useCallback(() => {
+    onFilterChange({ query: null, centuries: null, sex: null });
+  }, [onFilterChange]);
+
   return (
-    <nav className="panel">
-      <p className="panel-heading">Filters</p>
+    <div className="box">
+      <h2 className="title is-4">Filters</h2>
 
-      <p className="panel-tabs" data-cy="SexFilter">
-        <a className="is-active" href="#/people">
-          All
-        </a>
-        <a className="" href="#/people?sex=m">
-          Male
-        </a>
-        <a className="" href="#/people?sex=f">
-          Female
-        </a>
-      </p>
-
-      <div className="panel-block">
-        <p className="control has-icons-left">
+      {/* Query Filter */}
+      <div className="field">
+        <label htmlFor="query-filter" className="label">
+          Name
+        </label>
+        <div className="control">
           <input
-            data-cy="NameFilter"
-            type="search"
+            id="query-filter"
             className="input"
-            placeholder="Search"
+            type="text"
+            placeholder="Search by name..."
+            value={queryValue}
+            onChange={handleQueryChange}
           />
-
-          <span className="icon is-left">
-            <i className="fas fa-search" aria-hidden="true" />
-          </span>
-        </p>
+        </div>
       </div>
 
-      <div className="panel-block">
-        <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
-          <div className="level-left">
-            <a
-              data-cy="century"
-              className="button mr-1"
-              href="#/people?centuries=16"
-            >
-              16
-            </a>
+      {/* Centuries Filter */}
+      <div className="field">
+        <span className="label">Centuries</span>
+        <div className="control">
+          {['16', '17', '18', '19', '20'].map(century => (
+            <div key={century} className="field">
+              <label className="checkbox" style={{ display: 'block' }}>
+                <input
+                  type="checkbox"
+                  checked={currentCenturies.includes(century)}
+                  onChange={() => handleCenturyChange(century)}
+                />
+                {' '}{century}th century
+              </label>
+            </div>
+          ))}
+        </div>
+      </div>
 
-            <a
-              data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=17"
-            >
-              17
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=18"
-            >
-              18
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=19"
-            >
-              19
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1"
-              href="#/people?centuries=20"
-            >
-              20
-            </a>
+      {/* Sex Filter */}
+      <div className="field">
+        <span className="label">Sex</span>
+        <div className="control">
+          <div className="field">
+            <label className="radio">
+              <input
+                type="radio"
+                name="sex"
+                checked={sex === 'm'}
+                onChange={() => handleSexChange('m')}
+              />
+              {' '}Male
+            </label>
           </div>
-
-          <div className="level-right ml-4">
-            <a
-              data-cy="centuryALL"
-              className="button is-success is-outlined"
-              href="#/people"
-            >
-              All
-            </a>
+          <div className="field">
+            <label className="radio">
+              <input
+                type="radio"
+                name="sex"
+                checked={sex === 'f'}
+                onChange={() => handleSexChange('f')}
+              />
+              {' '}Female
+            </label>
+          </div>
+          <div className="field">
+            <label className="radio">
+              <input
+                type="radio"
+                name="sex"
+                checked={sex === null}
+                onChange={() => handleSexChange('any')}
+              />
+              {' '}Any
+            </label>
           </div>
         </div>
       </div>
 
-      <div className="panel-block">
-        <a className="button is-link is-outlined is-fullwidth" href="#/people">
-          Reset all filters
-        </a>
+      {/* Clear Filters Button */}
+      <div className="field">
+        <div className="control">
+          <button className="button is-link is-light" onClick={handleClearFilters}>
+            Clear all filters
+          </button>
+        </div>
       </div>
-    </nav>
+    </div>
   );
 };
