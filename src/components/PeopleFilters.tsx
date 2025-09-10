@@ -1,5 +1,5 @@
-import { SearchLink } from './SearchLink';
 import React from 'react';
+import { SearchLink } from './SearchLink';
 
 const ERA_LIST = ['16', '17', '18', '19', '20'];
 
