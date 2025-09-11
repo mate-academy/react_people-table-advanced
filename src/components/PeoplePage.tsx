@@ -1,16 +1,18 @@
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { getPeople } from '../api';
-import { Person } from '../types/Person';
-import { PeopleTable } from '../components/PeopleTable';
-import { Loader } from '../components/Loader';
+import { Person } from '../types';
+import { PeopleTable } from './PeopleTable';
+import { Loader } from './Loader';
 import { useParams, useSearchParams } from 'react-router-dom';
+import { PeopleFilters } from './PeopleFilter';
 
-export const PeoplePage = () => {
+export const PeoplePage: React.FC = () => {
   const [people, setPeople] = useState<Person[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+
   const { slug } = useParams<{ slug: string }>();
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
 
   useEffect(() => {
     setLoading(true);
@@ -20,56 +22,61 @@ export const PeoplePage = () => {
       .then(data => setPeople(data))
       .catch(() => setError(true))
       .finally(() => setLoading(false));
-  }, [slug]);
+  }, []);
 
-  const query = searchParams.get('query') || '';
-  const sortField = searchParams.get('sort');
-  const sortOrder = searchParams.get('order');
+  const filteredPeople = useMemo(() => {
+    let result = [...people];
 
-  const visiblePeople = useMemo(() => {
-    let filtered = people;
+    const query = searchParams.get('query')?.toLowerCase();
 
     if (query) {
-      const lower = query.toLowerCase();
-
-      filtered = filtered.filter(p =>
+      result = result.filter(p =>
         [p.name, p.motherName, p.fatherName]
           .filter(Boolean)
-          .some(val => val!.toLowerCase().includes(lower)),
+          .some(n => n!.toLowerCase().includes(query)),
       );
     }
 
-    if (sortField) {
-      filtered = [...filtered].sort((a, b) => {
-        const aVal = a[sortField as keyof Person];
-        const bVal = b[sortField as keyof Person];
+    const sex = searchParams.get('sex');
 
-        if (aVal! < bVal!) {
-          return sortOrder === 'desc' ? 1 : -1;
-        }
+    if (sex) {
+      result = result.filter(p => p.sex === sex);
+    }
 
-        if (aVal! > bVal!) {
-          return sortOrder === 'desc' ? -1 : 1;
-        }
+    const centuries = searchParams.getAll('centuries');
 
-        return 0;
+    if (centuries.length > 0) {
+      result = result.filter(p => {
+        const bornCentury = Math.floor(p.born / 100) + 1;
+
+        return centuries.includes(String(bornCentury));
       });
     }
 
-    return filtered;
-  }, [people, query, sortField, sortOrder]);
+    const sortField = searchParams.get('sort') as keyof Person;
+    const order = searchParams.get('order');
 
-  const handleQueryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value.trim();
+    if (sortField) {
+      result.sort((a, b) => {
+        const aVal = a[sortField];
+        const bVal = b[sortField];
 
-    if (value) {
-      searchParams.set('query', value);
-    } else {
-      searchParams.delete('query');
+        if (aVal == null || bVal == null) {
+          return 0;
+        }
+
+        if (typeof aVal === 'number' && typeof bVal === 'number') {
+          return order === 'desc' ? bVal - aVal : aVal - bVal;
+        }
+
+        return order === 'desc'
+          ? String(bVal).localeCompare(String(aVal))
+          : String(aVal).localeCompare(String(bVal));
+      });
     }
 
-    setSearchParams(searchParams);
-  };
+    return result;
+  }, [people, searchParams]);
 
   return (
     <>
@@ -77,39 +84,24 @@ export const PeoplePage = () => {
 
       {loading && <Loader />}
       {error && (
-        <p data-cy="peopleLoadingError" className="has-text-danger">
+        <p className="has-text-danger" data-cy="peopleLoadingError">
           Something went wrong
         </p>
       )}
+
       {!loading && !error && people.length === 0 && (
         <p data-cy="noPeopleMessage">There are no people on the server</p>
       )}
 
       {!loading && !error && people.length > 0 && (
-        <>
-          <div className="field">
-            <label className="label" htmlFor="searchInput">
-              Search
-            </label>
-            <input
-              id="searchInput"
-              type="text"
-              className="input"
-              placeholder="Type to search..."
-            />
-            <div className="control">
-              <input
-                className="input"
-                type="text"
-                placeholder="Search by name"
-                value={query}
-                onChange={handleQueryChange}
-              />
-            </div>
+        <div className="columns">
+          <div className="column is-one-quarter">
+            <PeopleFilters />
           </div>
-
-          <PeopleTable people={visiblePeople} selectedSlug={slug} />
-        </>
+          <div className="column">
+            <PeopleTable people={filteredPeople} selectedSlug={slug} />
+          </div>
+        </div>
       )}
     </>
   );
