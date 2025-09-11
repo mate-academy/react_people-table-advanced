@@ -1,4 +1,16 @@
-export const Navbar = () => {
+import { Link, useLocation, useSearchParams } from 'react-router-dom';
+
+export const Navbar: React.FC = () => {
+  const location = useLocation();
+  const [searchParams] = useSearchParams();
+
+  const isHomeActive = location.pathname === '/';
+  const isPeopleActive = location.pathname.startsWith('/people');
+
+  const peopleLink = isPeopleActive
+    ? `/people?${searchParams.toString()}`
+    : '/people';
+
   return (
     <nav
       data-cy="nav"
@@ -8,17 +20,19 @@ export const Navbar = () => {
     >
       <div className="container">
         <div className="navbar-brand">
-          <a className="navbar-item" href="#/">
+          <Link
+            className={`navbar-item ${isHomeActive ? 'has-background-grey-lighter' : ''}`}
+            to="/"
+          >
             Home
-          </a>
+          </Link>
 
-          <a
-            aria-current="page"
-            className="navbar-item has-background-grey-lighter"
-            href="#/people"
+          <Link
+            className={`navbar-item ${isPeopleActive ? 'has-background-grey-lighter' : ''}`}
+            to={peopleLink}
           >
             People
-          </a>
+          </Link>
         </div>
       </div>
     </nav>
