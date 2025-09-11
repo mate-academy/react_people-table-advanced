@@ -37,7 +37,7 @@ export const PeoplePage = () => {
   const filteredPeoples = useMemo(() => {
     let result = [...peoples];
 
-    const query = searchParams.get('query')?.toLocaleLowerCase();
+    const query = searchParams.get('query')?.trim().toLocaleLowerCase();
 
     if (query) {
       result = result.filter(people =>
@@ -53,7 +53,8 @@ export const PeoplePage = () => {
       result = result.filter(people => people.sex === sex);
     }
 
-    const centuries = searchParams.getAll('centuries');
+    const centuries = searchParams.getAll('centuries').filter((value, index, self) => self.indexOf(value) === index);
+
 
     if (centuries.length > 0) {
       result = result.filter(people => {
@@ -65,18 +66,16 @@ export const PeoplePage = () => {
 
     const sortField = searchParams.get('sort') as keyof Person;
     const order = searchParams.get('order');
+    const validSortFields = ['name', 'sex', 'born', 'died'];
 
-    if (sortField) {
+    if (sortField && validSortFields.includes(sortField)) {
       result.sort((a, b) => {
         const aVal = a[sortField];
         const bVal = b[sortField];
 
-        if (aVal == null || bVal == null) {
-          if (sortField === 'died') {
-            return (a.died === null ? 1 : 0) - (b.died === null ? 1 : 0);
-          }
-          return 0;
-        }
+        if (aVal == null && bVal == null) return 0;
+        if (aVal == null) return 1;
+        if (bVal == null) return -1;
 
         if (typeof aVal === 'number' && typeof bVal === 'number') {
           return order === 'desc' ? bVal - aVal : aVal - bVal;
@@ -89,7 +88,7 @@ export const PeoplePage = () => {
     }
 
     return result;
-  }, [peoples, searchParams]);
+  }, [peoples, searchParams.toString()]);
 
   const hasLoadedAndNoErrors = !isLoading && !error && firstLoad;
   const showFilters = hasLoadedAndNoErrors && peoples.length > 0;
