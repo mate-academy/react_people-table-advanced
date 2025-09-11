@@ -1,11 +1,19 @@
 import React from 'react';
-import { NavLink, Navigate, Route, Routes } from 'react-router-dom';
+import {
+  NavLink,
+  Navigate,
+  Route,
+  Routes,
+  useLocation,
+} from 'react-router-dom';
 import { HomePage } from './pages/HomePage';
 import { PeoplePage } from './pages/PeoplePage';
 import { NotFoundPage } from './pages/NotFoundPage';
 import './App.scss';
 
 export const App = () => {
+  const location = useLocation();
+
   return (
     <div data-cy="app">
       <nav
@@ -27,7 +35,7 @@ export const App = () => {
             </NavLink>
 
             <NavLink
-              to="/people"
+              to={{ pathname: '/people', search: location.search }}
               className={({ isActive }) =>
                 'navbar-item' + (isActive ? ' has-background-grey-lighter' : '')
               }

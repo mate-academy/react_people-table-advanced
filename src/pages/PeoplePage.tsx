@@ -5,71 +5,90 @@ import { Person } from '../types/Person';
 import { Loader } from '../components/Loader';
 import { PeopleTable } from '../components/PeopleTable';
 import { PeopleFilters } from '../components/PeopleFilters';
+import { getSearchWith } from '../utils/searchHelper';
 
 export const PeoplePage: React.FC = () => {
   const [people, setPeople] = useState<Person[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+  const { slug } = useParams<{ slug?: string }>();
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  // Сортування з URL
+  const initialSortField = searchParams.get('sort') as keyof Person | null;
+  const initialSortOrder = searchParams.get('order') as 'asc' | 'desc' | null;
+
   const [sortField, setSortField] = useState<keyof Person | undefined>(
-    undefined,
+    initialSortField || undefined,
   );
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc' | undefined>(
-    undefined,
+    initialSortOrder || undefined,
   );
 
-  const [searchParams] = useSearchParams();
-  const { slug } = useParams<{ slug?: string }>();
-
   useEffect(() => {
-    setError(false);
     setLoading(true);
-
+    setError(false);
     getPeople()
       .then(data => setPeople(data))
       .catch(() => setError(true))
       .finally(() => setLoading(false));
   }, []);
 
-  // Sorting handler
   const handleSort = (field: keyof Person) => {
+    let newSort: keyof Person | undefined = field;
+    let newOrder: 'asc' | 'desc' | undefined = 'asc';
+
     if (sortField !== field) {
-      setSortField(field);
-      setSortOrder('asc');
+      newSort = field;
+      newOrder = 'asc';
     } else if (sortOrder === 'asc') {
-      setSortOrder('desc');
+      newOrder = 'desc';
     } else if (sortOrder === 'desc') {
-      setSortField(undefined);
-      setSortOrder(undefined);
+      newSort = undefined;
+      newOrder = undefined;
     }
+
+    setSortField(newSort);
+    setSortOrder(newOrder);
+
+    setSearchParams(
+      getSearchWith(searchParams, {
+        sort: newSort || null,
+        order: newOrder || null,
+      }),
+    );
   };
 
-  // Filtering
-  let filtered = [...people];
+  // Фільтрація
+  let filteredPeople = [...people];
   const query = searchParams.get('query')?.toLowerCase() || '';
   const sex = searchParams.get('sex');
   const centuries = searchParams.getAll('centuries');
 
   if (query) {
-    filtered = filtered.filter(p =>
-      [p.name, p.motherName, p.fatherName].some(v =>
-        v?.toLowerCase().includes(query),
-      ),
+    filteredPeople = filteredPeople.filter(
+      p =>
+        p.name.toLowerCase().includes(query) ||
+        p.motherName?.toLowerCase().includes(query) ||
+        p.fatherName?.toLowerCase().includes(query),
     );
   }
 
   if (sex) {
-    filtered = filtered.filter(p => p.sex === sex);
+    filteredPeople = filteredPeople.filter(p => p.sex === sex);
   }
 
   if (centuries.length) {
-    filtered = filtered.filter(p =>
-      centuries.includes(String(Math.floor(p.born / 100) + 1)),
-    );
+    filteredPeople = filteredPeople.filter(p => {
+      const century = Math.floor((p.born - 1) / 100) + 1;
+
+      return centuries.includes(String(century));
+    });
   }
 
-  // Sorting
+  // Сортування
   if (sortField) {
-    filtered.sort((a, b) => {
+    filteredPeople.sort((a, b) => {
       const aVal = a[sortField];
       const bVal = b[sortField];
 
@@ -87,33 +106,45 @@ export const PeoplePage: React.FC = () => {
     <>
       <h1 className="title">People Page</h1>
 
-      {loading && <Loader />}
+      {loading && (
+        <div data-cy="loader">
+          <Loader />
+        </div>
+      )}
+
       {error && (
         <p data-cy="peopleLoadingError" className="has-text-danger">
           Something went wrong
         </p>
       )}
 
-      {!loading && !error && (
-        <div className="columns is-desktop is-flex-direction-row-reverse">
-          <div className="column is-3">
-            <PeopleFilters />
-          </div>
-
-          <div className="column">
-            <PeopleTable
-              people={filtered}
-              selectedSlug={slug}
-              sortField={sortField}
-              sortOrder={sortOrder}
-              onSort={handleSort}
-            />
-          </div>
-        </div>
+      {!loading && !error && people.length === 0 && (
+        <p data-cy="noPeopleMessage">There are no people on the server</p>
       )}
 
-      {!loading && !error && filtered.length === 0 && (
-        <p data-cy="noPeopleMessage">No people match your filters</p>
+      {!loading && !error && people.length > 0 && (
+        <div className="block">
+          <div className="columns is-desktop is-flex-direction-row-reverse">
+            <div className="column is-7-tablet is-narrow-desktop">
+              <PeopleFilters peopleLoaded={!loading && !error} />
+            </div>
+
+            <div className="column">
+              {filteredPeople.length === 0 && (
+                <p>There are no people matching the current search criteria</p>
+              )}
+              {filteredPeople.length > 0 && (
+                <PeopleTable
+                  people={filteredPeople}
+                  selectedSlug={slug}
+                  sortField={sortField}
+                  sortOrder={sortOrder}
+                  onSort={handleSort}
+                />
+              )}
+            </div>
+          </div>
+        </div>
       )}
     </>
   );

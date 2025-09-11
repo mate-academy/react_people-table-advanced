@@ -2,7 +2,11 @@ import React, { ChangeEvent } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { getSearchWith, SearchParams } from '../utils/searchHelper';
 
-export const PeopleFilters: React.FC = () => {
+type Props = {
+  peopleLoaded?: boolean;
+};
+
+export const PeopleFilters: React.FC<Props> = ({ peopleLoaded }) => {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const updateParams = (params: SearchParams) => {
@@ -72,6 +76,7 @@ export const PeopleFilters: React.FC = () => {
             placeholder="Search"
             defaultValue={searchParams.get('query') || ''}
             onChange={handleQueryChange}
+            disabled={!peopleLoaded}
           />
           <span className="icon is-left">
             <i className="fas fa-search" aria-hidden="true" />
