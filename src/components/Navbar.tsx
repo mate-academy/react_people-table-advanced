@@ -1,24 +1,26 @@
+import { Link, useLocation } from 'react-router-dom';
+
 export const Navbar = () => {
+  const location = useLocation();
+  const isActive = (path: string) =>
+    location.pathname === path || location.pathname.startsWith(`${path}/`);
+
+  const getClass = (path: string) =>
+    `navbar-item ${isActive(path) ? 'is-active has-background-grey-lighter' : ''}`;
+
   return (
     <nav
+      className="navbar is-light is-fixed-top is-mobile has-shadow"
       data-cy="nav"
-      className="navbar is-fixed-top has-shadow"
-      role="navigation"
-      aria-label="main navigation"
     >
       <div className="container">
         <div className="navbar-brand">
-          <a className="navbar-item" href="#/">
+          <Link to="/" className={getClass('/')}>
             Home
-          </a>
-
-          <a
-            aria-current="page"
-            className="navbar-item has-background-grey-lighter"
-            href="#/people"
-          >
+          </Link>
+          <Link to="/people" className={getClass('/people')}>
             People
-          </a>
+          </Link>
         </div>
       </div>
     </nav>
