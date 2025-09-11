@@ -1,7 +1,5 @@
-import './Loader.scss';
+import React from 'react';
 
-export const Loader = () => (
-  <div className="Loader" data-cy="loader">
-    <div className="Loader__content" />
-  </div>
+export const Loader: React.FC = () => (
+  <div className="loader" data-cy="loader"></div>
 );
