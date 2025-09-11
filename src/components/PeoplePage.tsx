@@ -56,7 +56,7 @@ export const PeoplePage: React.FC = () => {
 
     if (centuries.length > 0) {
       filteredPeople = filteredPeople.filter(person => {
-        const birthCentury = Math.floor(person.born / 100) + 1;
+        const birthCentury = Math.floor((person.born - 1) / 100) + 1;
 
         return centuries.includes(birthCentury.toString());
       });
@@ -64,8 +64,9 @@ export const PeoplePage: React.FC = () => {
 
     const sort = searchParams.get('sort');
     const order = searchParams.get('order');
+    const allowedSortFields = ['name', 'sex', 'born', 'died'];
 
-    if (sort) {
+    if (sort && allowedSortFields.includes(sort)) {
       filteredPeople.sort((a, b) => {
         const aValue = a[sort as keyof Person];
         const bValue = b[sort as keyof Person];
