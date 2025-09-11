@@ -1,8 +1,9 @@
 import * as React from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
+import { SortField } from '../../types/Filters';
 
 type Props = {
-  field: string;
+  field: SortField;
 };
 
 export const SortLink: React.FC<Props> = ({ field }) => {
