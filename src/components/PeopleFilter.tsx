@@ -75,30 +75,24 @@ export const PeopleFilters: React.FC = () => {
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        <a
+        <button
+          type="button"
           className={classNames({ 'is-active': !sexParam })}
-          href="#/people"
-          onClick={e => {
-            e.preventDefault();
-            handleSexFilter(null);
-          }}
+          onClick={() => handleSexFilter(null)}
           data-cy="sexAll"
         >
           All
-        </a>
+        </button>
         {Object.entries(Sex).map(([key, value]) => (
-          <a
+          <button
             key={value}
+            type="button"
             className={classNames({ 'is-active': sexParam === value })}
-            href={`#/people?sex=${value}`}
-            onClick={e => {
-              e.preventDefault();
-              handleSexFilter(value as Sex);
-            }}
+            onClick={() => handleSexFilter(value as Sex)}
             data-cy={`sex${key}`}
           >
             {key === 'Male' ? 'Male' : 'Female'}
-          </a>
+          </button>
         ))}
       </p>
 
@@ -117,50 +111,41 @@ export const PeopleFilters: React.FC = () => {
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
             {Object.values(Century).map(c => (
-              <a
+              <button
                 key={c}
+                type="button"
                 className={classNames('button mr-1', {
                   'is-info': centuriesParam.includes(c),
                 })}
-                href={`#/people?centuries=${c}`}
-                onClick={e => {
-                  e.preventDefault();
-                  handleCenturyClick(c as Century);
-                }}
+                onClick={() => handleCenturyClick(c as Century)}
                 data-cy={`century${c}`}
               >
                 {c}
-              </a>
+              </button>
             ))}
-            <a
+            <button
+              type="button"
               className={classNames('button is-success', {
                 'is-outlined': centuriesParam.length > 0,
               })}
-              href="#/people"
-              onClick={e => {
-                e.preventDefault();
-                handleAllCenturies();
-              }}
+              onClick={handleAllCenturies}
               data-cy="centuryALL"
             >
               All
-            </a>
+            </button>
           </div>
         </div>
       </div>
 
       <div className="panel-block">
-        <a
+        <button
+          type="button"
           className="button is-link is-outlined is-fullwidth"
-          href="#/people"
-          onClick={e => {
-            e.preventDefault();
-            handleResetAll();
-          }}
+          onClick={handleResetAll}
           data-cy="resetFilters"
         >
           Reset all filters
-        </a>
+        </button>
       </div>
     </nav>
   );

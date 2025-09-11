@@ -38,35 +38,41 @@ export const PeoplePage: React.FC = () => {
   const sortOrder = searchParams.get('order') as 'asc' | 'desc' | null;
 
   const filtered = people.filter(person => {
-    const matchQuery = person.name.toLowerCase().includes(query);
+    const fields = [
+      person.name,
+      person.motherName ?? '',
+      person.fatherName ?? '',
+    ].map(f => f.toLowerCase());
+
+    const matchQuery = fields.some(f => f.includes(query));
     const matchSex = sex ? person.sex === sex : true;
     const matchCentury = centuries.length
-      ? centuries.includes(String(person.born).slice(0, 2))
+      ? centuries.includes(String(Math.ceil(person.born / 100)))
       : true;
 
     return matchQuery && matchSex && matchCentury;
   });
 
+  const allowedSortFields: (keyof Person)[] = ['name', 'sex', 'born', 'died'];
+
   const sorted = [...filtered].sort((a, b) => {
-    if (!sortField) {
+    if (!sortField || !allowedSortFields.includes(sortField)) return 0;
+
+    const valA = a[sortField];
+    const valB = b[sortField];
+
+    if (typeof valA === 'number' && typeof valB === 'number') {
+      if (sortOrder === 'asc') return (valA ?? Infinity) - (valB ?? Infinity);
+      if (sortOrder === 'desc')
+        return (valB ?? -Infinity) - (valA ?? -Infinity);
       return 0;
     }
 
-    const valA = a[sortField] ?? '';
-    const valB = b[sortField] ?? '';
+    const strA = (valA ?? '').toString();
+    const strB = (valB ?? '').toString();
 
-    if (valA === valB) {
-      return 0;
-    }
-
-    if (sortOrder === 'asc') {
-      return valA > valB ? 1 : -1;
-    }
-
-    if (sortOrder === 'desc') {
-      return valA > valB ? -1 : 1;
-    }
-
+    if (sortOrder === 'asc') return strA.localeCompare(strB);
+    if (sortOrder === 'desc') return strB.localeCompare(strA);
     return 0;
   });
 
@@ -78,7 +84,7 @@ export const PeoplePage: React.FC = () => {
         </h1>
         <div className="columns">
           <div className="column is-one-quarter">
-            <PeopleFilters />
+            {!loading && !error && <PeopleFilters />}
           </div>
           <div className="column">
             {loading && <div data-cy="loader">Loading...</div>}
