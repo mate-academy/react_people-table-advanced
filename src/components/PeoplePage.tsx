@@ -40,8 +40,8 @@ export const PeoplePage = () => {
     return resolvedPeople.filter(p => {
       const matchName =
         p.name.toLowerCase().includes(query) ||
-        p.motherName?.toLowerCase().includes(query) ||
-        p.fatherName?.toLowerCase().includes(query);
+        (p.motherName ?? '').toLowerCase().includes(query) ||
+        (p.fatherName ?? '').toLowerCase().includes(query);
 
       const matchSex = !sex || p.sex === sex;
 
@@ -63,7 +63,7 @@ export const PeoplePage = () => {
       const bVal = b[sort as keyof Person];
 
       if (aVal == null || bVal == null) {
-        return 0;
+        return String(a.name).localeCompare(String(b.name));
       }
 
       if (typeof aVal === 'number' && typeof bVal === 'number') {

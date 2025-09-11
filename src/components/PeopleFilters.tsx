@@ -1,21 +1,22 @@
 import { useSearchParams } from 'react-router-dom';
-import { useState, useEffect } from 'react';
 
 export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const [query, setQuery] = useState(searchParams.get('query') || '');
 
-  useEffect(() => {
+  const query = searchParams.get('query') ?? '';
+
+  const handleQueryChange = (value: string) => {
     const newParams = new URLSearchParams(searchParams);
+    const trimmed = value.trim();
 
-    if (query) {
-      newParams.set('query', query);
+    if (trimmed) {
+      newParams.set('query', trimmed);
     } else {
       newParams.delete('query');
     }
 
     setSearchParams(newParams);
-  }, [query, searchParams, setSearchParams]);
+  };
 
   const updateParam = (key: string, value: string | null) => {
     const newParams = new URLSearchParams(searchParams);
@@ -47,14 +48,14 @@ export const PeopleFilters = () => {
   return (
     <div className="box">
       <div className="field">
-        <label htmlFor={`forLabel`} className="label">
+        <label htmlFor="forLabel" className="label">
           Search
         </label>
         <input
           className="input"
+          id="forLabel"
           value={query}
-          id={`forLabel`}
-          onChange={e => setQuery(e.target.value)}
+          onChange={e => handleQueryChange(e.target.value)}
         />
       </div>
 

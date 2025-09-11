@@ -1,6 +1,6 @@
+import { useSearchParams } from 'react-router-dom';
 import { Person } from '../types';
 import { SearchLink } from './SearchLink';
-import { useSearchParams } from 'react-router-dom';
 
 interface Props {
   people: Person[];
@@ -25,22 +25,10 @@ export const PeopleTable = ({ people, selectedSlug }: Props) => {
     return {};
   };
 
-  const buildSortLink = (field: string) => {
-    const newParams = new URLSearchParams(searchParams);
+  const buildSortParams = (field: string) => {
     const next = getNextSort(field);
 
-    newParams.delete('sort');
-    newParams.delete('order');
-
-    if (next.sort) {
-      newParams.set('sort', next.sort);
-    }
-
-    if (next.order) {
-      newParams.set('order', next.order);
-    }
-
-    return `/people?${newParams.toString()}`;
+    return { ...next };
   };
 
   return (
@@ -50,17 +38,23 @@ export const PeopleTable = ({ people, selectedSlug }: Props) => {
     >
       <thead>
         <tr>
-          {['name', 'sex', 'born', 'died'].map(field => (
-            <th key={field}>
-              <SearchLink to={buildSortLink(field)}>
-                {field[0].toUpperCase() + field.slice(1)}
-              </SearchLink>
-            </th>
-          ))}
+          <th>
+            <SearchLink params={buildSortParams('name')}>Name</SearchLink>
+          </th>
+          <th>
+            <SearchLink params={buildSortParams('sex')}>Sex</SearchLink>
+          </th>
+          <th>
+            <SearchLink params={buildSortParams('born')}>Born</SearchLink>
+          </th>
+          <th>
+            <SearchLink params={buildSortParams('died')}>Died</SearchLink>
+          </th>
           <th>Mother</th>
           <th>Father</th>
         </tr>
       </thead>
+
       <tbody>
         {people.map(p => (
           <tr
@@ -79,6 +73,7 @@ export const PeopleTable = ({ people, selectedSlug }: Props) => {
             <td>{p.sex}</td>
             <td>{p.born}</td>
             <td>{p.died}</td>
+
             <td>
               {p.mother ? (
                 <SearchLink
@@ -91,6 +86,7 @@ export const PeopleTable = ({ people, selectedSlug }: Props) => {
                 p.motherName || '-'
               )}
             </td>
+
             <td>
               {p.father ? (
                 <SearchLink to={`/people/${p.father.slug}`}>
