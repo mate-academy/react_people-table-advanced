@@ -1,12 +1,10 @@
 import { useSearchParams } from 'react-router-dom';
 import { getSearchWith } from '../utils/searchHelper';
-import { useFetchPeople } from './useFetchPeople';
 import { useEffect, useState } from 'react';
 import { Person } from '../types/Person';
 import { SearchParams } from '../utils/searchHelper';
 
-export const useFilterPeople = () => {
-  const { people } = useFetchPeople();
+export const useFilterPeople = (people: Person[] | null) => {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const [filteredPeople, setFilteredPeople] = useState<Person[] | null>(people);

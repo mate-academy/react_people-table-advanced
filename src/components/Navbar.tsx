@@ -23,7 +23,7 @@ const Navbar = () => {
           </Link>
 
           <Link
-            to="/people"
+            to={{ pathname: '/people', search: location.search }}
             className={cn('navbar-item', {
               'has-background-grey-lighter':
                 location.pathname.startsWith('/people'),

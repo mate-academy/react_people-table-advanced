@@ -1,11 +1,20 @@
 import { NavLink } from 'react-router-dom';
-import { useFilterPeople } from '../hooks/useFilterPeople';
 import { getSearchWith } from '../utils/searchHelper';
 import cn from 'classnames';
+import { URLSearchParamsInit } from 'react-router-dom';
 
-export const PeopleFilters = () => {
-  const { searchParams, setSearchParams } = useFilterPeople();
+type Props = {
+  searchParams: URLSearchParams;
+  setSearchParams: (
+    nextInit: URLSearchParamsInit,
+    navigateOptions?: { replace?: boolean; state?: unknown },
+  ) => void;
+};
 
+export const PeopleFilters: React.FC<Props> = ({
+  searchParams,
+  setSearchParams,
+}) => {
   const currentGender = searchParams.get('sex');
 
   const query = searchParams.get('query') || '';

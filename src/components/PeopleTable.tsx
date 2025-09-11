@@ -3,20 +3,19 @@ import { Person } from '../types/Person';
 import cn from 'classnames';
 import { Link, useLocation } from 'react-router-dom';
 import { getSearchWith } from '../utils/searchHelper';
-import { useFilterPeople } from '../hooks/useFilterPeople';
 import { SortType, OrderType } from '../types/Sort';
 import { useSortableColumns } from '../hooks/useSortableColumns';
 import { useEffect, useState } from 'react';
 
 type Props = {
   people: Person[];
+  searchParams: URLSearchParams;
 };
 
-const PeopleTable: React.FC<Props> = ({ people }) => {
+const PeopleTable: React.FC<Props> = ({ people, searchParams }) => {
   const [sortedPeople, setSortedPeople] = useState<Person[]>(people);
 
   const location = useLocation();
-  const { searchParams } = useFilterPeople();
   const { SortableColumns } = useSortableColumns();
 
   const getSort = (searchParams.get('sort') as SortType) || null;

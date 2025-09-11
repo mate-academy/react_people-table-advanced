@@ -3,10 +3,13 @@ import PeopleTable from '../components/PeopleTable';
 import { PeopleFilters } from '../components/PeopleFilters';
 import { useFetchPeople } from '../hooks/useFetchPeople';
 import { useFilterPeople } from '../hooks/useFilterPeople';
+import { useSearchParams } from 'react-router-dom';
 
 const PeoplePage = () => {
   const { people, isLoading, error } = useFetchPeople();
-  const { filteredPeople, filterError } = useFilterPeople();
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const { filteredPeople, filterError } = useFilterPeople(people);
 
   const isServerError =
     !isLoading && !error && people !== null && people?.length === 0;
@@ -21,7 +24,12 @@ const PeoplePage = () => {
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
           <div className="column is-7-tablet is-narrow-desktop">
-            <PeopleFilters />
+            {renderTable && (
+              <PeopleFilters
+                searchParams={searchParams}
+                setSearchParams={setSearchParams}
+              />
+            )}
           </div>
 
           <div className="column">
@@ -42,7 +50,12 @@ const PeoplePage = () => {
 
               {filterError && <p>{filterError}</p>}
 
-              {renderTable && <PeopleTable people={filteredPeople} />}
+              {renderTable && (
+                <PeopleTable
+                  people={filteredPeople}
+                  searchParams={searchParams}
+                />
+              )}
             </div>
           </div>
         </div>

@@ -12,7 +12,6 @@ export const App = () => (
         <Navbar />
         <Routes>
           <Route index element={<HomePage />} />
-          <Route path={'/'} element={<HomePage />} />
           <Route path="/home" element={<Navigate to="/" replace />} />
           <Route path={'people'}>
             <Route index element={<PeoplePage />} />
