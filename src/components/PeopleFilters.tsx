@@ -20,6 +20,7 @@ export const PeopleFilters = () => {
   const getCenturyLinkClass = (century: string) => {
     return cn('button mr-1', { 'is-info': centuries.includes(century) });
   };
+
   const getNewCenturies = (century: string) => {
     const newCenturies = searchParams.getAll('centuries').includes(century)
       ? centuries.filter(currCentury => currCentury !== century)
@@ -27,6 +28,7 @@ export const PeopleFilters = () => {
 
     return newCenturies;
   };
+
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>

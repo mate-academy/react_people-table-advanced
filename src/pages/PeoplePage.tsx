@@ -32,11 +32,13 @@ const getPreparedPeople = (
 
     if (centuries.length > 0 && matches) {
       const personCentury = Math.ceil(person.born / 100);
+
       matches = centuries.includes(String(personCentury));
     }
 
     if (query && matches) {
       const q = query.toLowerCase();
+
       matches = (person.name.toLowerCase().includes(q) ||
         person.fatherName?.toLowerCase().includes(q) ||
         person.motherName?.toLowerCase().includes(q)) as boolean;
@@ -47,6 +49,7 @@ const getPreparedPeople = (
 
   if (sort) {
     const dir = order ? -1 : 1;
+
     filteredPeople.sort((personA, personB) => {
       switch (sort) {
         case 'name':
@@ -123,11 +126,11 @@ export const PeoplePage = () => {
                 <p>There are no people matching the current search criteria</p>
               )}
               {!isLoading &&
-              !error &&
-              people.length > 0 &&
-              preparedPeople.length > 0 && (
-                <PeopleTable people={preparedPeople} />
-              )}
+                !error &&
+                people.length > 0 &&
+                preparedPeople.length > 0 && (
+                  <PeopleTable people={preparedPeople} />
+                )}
             </div>
           </div>
         </div>
