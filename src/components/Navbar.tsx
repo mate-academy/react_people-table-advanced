@@ -1,12 +1,14 @@
-import { Link, useLocation } from 'react-router-dom';
+import { SearchLink } from './SearchLink';
+import { useLocation } from 'react-router-dom';
 
 export const Navbar = () => {
   const location = useLocation();
-  const isActive = (path: string) =>
-    location.pathname === path || location.pathname.startsWith(`${path}/`);
 
-  const getClass = (path: string) =>
-    `navbar-item ${isActive(path) ? 'is-active has-background-grey-lighter' : ''}`;
+  const isActive = (path: string) => {
+    return (
+      location.pathname === path || location.pathname.startsWith(`${path}/`)
+    );
+  };
 
   return (
     <nav
@@ -15,12 +17,18 @@ export const Navbar = () => {
     >
       <div className="container">
         <div className="navbar-brand">
-          <Link to="/" className={getClass('/')}>
+          <SearchLink
+            to="/"
+            className={`navbar-item ${isActive('/') ? 'has-background-grey-lighter' : ''}`}
+          >
             Home
-          </Link>
-          <Link to="/people" className={getClass('/people')}>
+          </SearchLink>
+          <SearchLink
+            to="/people"
+            className={`navbar-item ${isActive('/people') ? 'has-background-grey-lighter' : ''}`}
+          >
             People
-          </Link>
+          </SearchLink>
         </div>
       </div>
     </nav>

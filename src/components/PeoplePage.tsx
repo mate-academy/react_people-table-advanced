@@ -15,42 +15,66 @@ export const PeoplePage = () => {
 
   useEffect(() => {
     getPeople()
-      .then(res => setPeople(res))
+      .then(setPeople)
       .catch(() => setError('Something went wrong'))
       .finally(() => setLoading(false));
   }, []);
 
   const resolvedPeople = useMemo(() => {
-    return people.map(person => {
-      const mother = people.find(p => p.name === person.motherName);
-      const father = people.find(p => p.name === person.fatherName);
-      return { ...person, mother, father };
-    });
+    return people.map(p => ({
+      ...p,
+      mother: people.find(m => m.name === p.motherName),
+      father: people.find(f => f.name === p.fatherName),
+    }));
   }, [people]);
 
-  const nameFilter = searchParams.get('name') || '';
-  const sexFilter = searchParams.get('sex') || '';
-  const centuryFilter = searchParams.getAll('centuries').map(Number);
+  const query = searchParams.get('query')?.toLowerCase() || '';
+  const sex = searchParams.get('sex');
+  const centuries = searchParams.getAll('centuries').map(Number);
+  const sort = searchParams.get('sort');
+  const order = searchParams.get('order') === 'desc' ? 'desc' : 'asc';
 
   const getCentury = (year: number) => Math.ceil(year / 100);
 
   const filteredPeople = useMemo(() => {
     return resolvedPeople.filter(p => {
-      const query = nameFilter.toLowerCase();
-      const nameMatch =
+      const matchName =
         p.name.toLowerCase().includes(query) ||
         p.motherName?.toLowerCase().includes(query) ||
         p.fatherName?.toLowerCase().includes(query);
 
+      const matchSex = !sex || p.sex === sex;
+
       const personCentury = getCentury(p.born);
-      const centuryMatch =
-        centuryFilter.length === 0 || centuryFilter.includes(personCentury);
+      const matchCentury =
+        centuries.length === 0 || centuries.includes(personCentury);
 
-      const sexMatch = !sexFilter || p.sex === sexFilter;
-
-      return nameMatch && centuryMatch && sexMatch;
+      return matchName && matchSex && matchCentury;
     });
-  }, [resolvedPeople, nameFilter, centuryFilter, sexFilter]);
+  }, [resolvedPeople, query, sex, centuries]);
+
+  const sortedPeople = useMemo(() => {
+    if (!sort) {
+      return filteredPeople;
+    }
+
+    return [...filteredPeople].sort((a, b) => {
+      const aVal = a[sort as keyof Person];
+      const bVal = b[sort as keyof Person];
+
+      if (aVal == null || bVal == null) {
+        return 0;
+      }
+
+      if (typeof aVal === 'number' && typeof bVal === 'number') {
+        return order === 'asc' ? aVal - bVal : bVal - aVal;
+      }
+
+      return order === 'asc'
+        ? String(aVal).localeCompare(String(bVal))
+        : String(bVal).localeCompare(String(aVal));
+    });
+  }, [filteredPeople, sort, order]);
 
   return (
     <>
@@ -66,13 +90,13 @@ export const PeoplePage = () => {
             <div className="box table-container">
               {loading && <Loader />}
               {error && <p data-cy="peopleLoadingError">{error}</p>}
-              {!loading && filteredPeople.length === 0 && (
+              {!loading && sortedPeople.length === 0 && (
                 <p data-cy="noPeopleMessage">
                   There are no people matching the current search criteria
                 </p>
               )}
-              {!loading && filteredPeople.length > 0 && (
-                <PeopleTable people={filteredPeople} selectedSlug={slug} />
+              {!loading && sortedPeople.length > 0 && (
+                <PeopleTable people={sortedPeople} selectedSlug={slug} />
               )}
             </div>
           </div>

@@ -1,108 +1,107 @@
 import { Person } from '../types';
+import { SearchLink } from './SearchLink';
+import { useSearchParams } from 'react-router-dom';
 
-interface PeopleTableProps {
+interface Props {
   people: Person[];
   selectedSlug?: string;
 }
 
-export const PeopleTable = ({ people, selectedSlug }: PeopleTableProps) => {
+export const PeopleTable = ({ people, selectedSlug }: Props) => {
+  const [searchParams] = useSearchParams();
+
+  const getNextSort = (field: string) => {
+    const currentSort = searchParams.get('sort');
+    const currentOrder = searchParams.get('order') || 'asc';
+
+    if (currentSort !== field) {
+      return { sort: field, order: 'asc' };
+    }
+
+    if (currentOrder === 'asc') {
+      return { sort: field, order: 'desc' };
+    }
+
+    return {};
+  };
+
+  const buildSortLink = (field: string) => {
+    const newParams = new URLSearchParams(searchParams);
+    const next = getNextSort(field);
+
+    newParams.delete('sort');
+    newParams.delete('order');
+
+    if (next.sort) {
+      newParams.set('sort', next.sort);
+    }
+
+    if (next.order) {
+      newParams.set('order', next.order);
+    }
+
+    return `/people?${newParams.toString()}`;
+  };
+
   return (
     <table
       className="table is-striped is-hoverable is-narrow is-fullwidth"
       data-cy="peopleTable"
     >
       <thead>
-      <tr>
-        <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Name
-              <a href="#/people?sort=name">
-                <span className="icon">
-                  <i className="fas fa-sort" />
-                </span>
-              </a>
-            </span>
-        </th>
-        <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Sex
-              <a href="#/people?sort=sex">
-                <span className="icon">
-                  <i className="fas fa-sort" />
-                </span>
-              </a>
-            </span>
-        </th>
-        <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Born
-              <a href="#/people?sort=born&order=desc">
-                <span className="icon">
-                  <i className="fas fa-sort-up" />
-                </span>
-              </a>
-            </span>
-        </th>
-        <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Died
-              <a href="#/people?sort=died">
-                <span className="icon">
-                  <i className="fas fa-sort" />
-                </span>
-              </a>
-            </span>
-        </th>
-        <th>Mother</th>
-        <th>Father</th>
-      </tr>
+        <tr>
+          {['name', 'sex', 'born', 'died'].map(field => (
+            <th key={field}>
+              <SearchLink to={buildSortLink(field)}>
+                {field[0].toUpperCase() + field.slice(1)}
+              </SearchLink>
+            </th>
+          ))}
+          <th>Mother</th>
+          <th>Father</th>
+        </tr>
       </thead>
-
       <tbody>
-      {people.map((person) => {
-        const isSelected = person.slug === selectedSlug;
-
-        return (
+        {people.map(p => (
           <tr
-            key={person.slug}
+            key={p.slug}
             data-cy="person"
-            className={isSelected ? 'has-background-warning' : ''}
+            className={p.slug === selectedSlug ? 'has-background-warning' : ''}
           >
             <td>
-              <a
-                href={`#/people/${person.slug}`}
-                className={person.sex === 'f' ? 'has-text-danger' : ''}
+              <SearchLink
+                to={`/people/${p.slug}`}
+                className={p.sex === 'f' ? 'has-text-danger' : ''}
               >
-                {person.name}
-              </a>
+                {p.name}
+              </SearchLink>
             </td>
-            <td>{person.sex}</td>
-            <td>{person.born}</td>
-            <td>{person.died}</td>
+            <td>{p.sex}</td>
+            <td>{p.born}</td>
+            <td>{p.died}</td>
             <td>
-              {person.mother ? (
-                <a
-                  href={`#/people/${person.mother.slug}`}
+              {p.mother ? (
+                <SearchLink
+                  to={`/people/${p.mother.slug}`}
                   className="has-text-danger"
                 >
-                  {person.mother.name}
-                </a>
+                  {p.mother.name}
+                </SearchLink>
               ) : (
-                person.motherName || '-'
+                p.motherName || '-'
               )}
             </td>
             <td>
-              {person.father ? (
-                <a href={`#/people/${person.father.slug}`}>
-                  {person.father.name}
-                </a>
+              {p.father ? (
+                <SearchLink to={`/people/${p.father.slug}`}>
+                  {p.father.name}
+                </SearchLink>
               ) : (
-                person.fatherName || '-'
+                p.fatherName || '-'
               )}
             </td>
           </tr>
-        );
-      })}
+        ))}
       </tbody>
     </table>
   );

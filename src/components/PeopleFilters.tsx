@@ -1,92 +1,82 @@
 import { useSearchParams } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 
 export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
+  const [query, setQuery] = useState(searchParams.get('query') || '');
 
-  const handleSexChange = (sex: string | null) => {
-    if (sex) {
-      searchParams.set('sex', sex);
+  useEffect(() => {
+    const newParams = new URLSearchParams(searchParams);
+
+    if (query) {
+      newParams.set('query', query);
     } else {
-      searchParams.delete('sex');
+      newParams.delete('query');
     }
-    setSearchParams(searchParams);
-  };
 
-  const handleCenturyChange = (century: number) => {
-    const centuries = searchParams.getAll('centuries');
-    if (centuries.includes(String(century))) {
-      const newCenturies = centuries.filter(c => c !== String(century));
-      searchParams.delete('centuries');
-      newCenturies.forEach(c => searchParams.append('centuries', c));
-    } else {
-      searchParams.append('centuries', String(century));
-    }
-    setSearchParams(searchParams);
-  };
+    setSearchParams(newParams);
+  }, [query, searchParams, setSearchParams]);
 
-  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
+  const updateParam = (key: string, value: string | null) => {
+    const newParams = new URLSearchParams(searchParams);
+
     if (value) {
-      searchParams.set('name', value);
+      newParams.set(key, value);
     } else {
-      searchParams.delete('name');
+      newParams.delete(key);
     }
-    setSearchParams(searchParams);
+
+    setSearchParams(newParams);
   };
 
-  const resetFilters = () => {
-    setSearchParams({});
+  const toggleCentury = (century: number) => {
+    const newParams = new URLSearchParams(searchParams);
+    const centuries = newParams.getAll('centuries');
+    const exists = centuries.includes(String(century));
+
+    newParams.delete('centuries');
+
+    const newValues = exists
+      ? centuries.filter(c => c !== String(century))
+      : [...centuries, String(century)];
+
+    newValues.forEach(c => newParams.append('centuries', c));
+    setSearchParams(newParams);
   };
-
-
-  const activeCenturies = searchParams.getAll('centuries');
 
   return (
     <div className="box">
-      <h2 className="title is-5">Filters</h2>
-
-      <div className="buttons">
-        <p className="panel-tabs" data-cy="SexFilter">
-          <a className="is-active" href="#/people" onClick={() => handleSexChange(null)}>
-            All
-          </a>
-          <a className="" href="#/people?sex=m"  onClick={() => handleSexChange('m')}>
-            Male
-          </a>
-          <a className="" href="#/people?sex=f" onClick={() => handleSexChange('f')}>
-            Female
-          </a>
-        </p>
-      </div>
-
       <div className="field">
+        <label htmlFor={`forLabel`} className="label">
+          Search
+        </label>
         <input
           className="input"
-          type="text"
-          placeholder="Search..."
-          defaultValue={searchParams.get('name') || ''}
-          onChange={handleSearch}
+          value={query}
+          id={`forLabel`}
+          onChange={e => setQuery(e.target.value)}
         />
       </div>
 
       <div className="buttons">
-        {[16, 17, 18, 19, 20].map(c => (
-          <button
-            key={c}
-            className={`button ${activeCenturies.includes(String(c)) ? 'is-link' : ''}`}
-            onClick={() => handleCenturyChange(c)}
-          >
-            {c}
-          </button>
-        ))}
-        <button className="button" onClick={() => setSearchParams({})}>
+        <button className="button" onClick={() => updateParam('sex', null)}>
           All
+        </button>
+        <button className="button" onClick={() => updateParam('sex', 'm')}>
+          Male
+        </button>
+        <button className="button" onClick={() => updateParam('sex', 'f')}>
+          Female
         </button>
       </div>
 
-      <button className="button is-light is-fullwidth" onClick={resetFilters}>
-        Reset all filters
-      </button>
+      <div className="buttons">
+        {[16, 17, 18, 19, 20].map(c => (
+          <button key={c} className="button" onClick={() => toggleCentury(c)}>
+            {c}
+          </button>
+        ))}
+      </div>
     </div>
   );
 };
