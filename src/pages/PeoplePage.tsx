@@ -123,11 +123,11 @@ export const PeoplePage = () => {
                 <p>There are no people matching the current search criteria</p>
               )}
               {!isLoading &&
-                !error &&
-                people.length > 0 &&
-                preparedPeople.length > 0 && (
-                  <PeopleTable people={preparedPeople} />
-                )}
+              !error &&
+              people.length > 0 &&
+              preparedPeople.length > 0 && (
+                <PeopleTable people={preparedPeople} />
+              )}
             </div>
           </div>
         </div>
