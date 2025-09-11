@@ -37,9 +37,17 @@ export const PeoplePage: React.FC = () => {
   }
 
   if (centuries.length) {
-    filteredPeople = filteredPeople.filter(p =>
-      centuries.includes(Math.floor(p.born / 100 + 1).toString()),
-    );
+    filteredPeople = filteredPeople.filter(p => {
+      const born = Number(p.born);
+
+      if (!Number.isFinite(born)) {
+        return false;
+      }
+
+      const century = Math.floor((born - 1) / 100) + 1;
+
+      return centuries.includes(String(century));
+    });
   }
 
   return (
@@ -66,7 +74,9 @@ export const PeoplePage: React.FC = () => {
         <div className="block">
           <div className="columns is-desktop is-flex-direction-row-reverse">
             <div className="column is-7-tablet is-narrow-desktop">
-              <PeopleFilters peopleLoaded={!loading && !error} />
+              {!loading && !error && (
+                <PeopleFilters peopleLoaded={!loading && !error} />
+              )}
             </div>
 
             <div className="column">

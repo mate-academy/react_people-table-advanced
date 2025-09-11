@@ -10,14 +10,16 @@ export const PeopleFilters: React.FC<Props> = ({ peopleLoaded }) => {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const updateParams = (params: SearchParams) => {
-    setSearchParams(getSearchWith(searchParams, params));
+    setSearchParams(prev => getSearchWith(prev, params));
   };
 
   // Name filter
   const handleQueryChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value.trim();
+    const rawValue = e.target.value;
 
-    updateParams({ query: value || null });
+    updateParams({
+      query: rawValue.trim() === '' ? null : rawValue,
+    });
   };
 
   // Sex filter
@@ -74,7 +76,7 @@ export const PeopleFilters: React.FC<Props> = ({ peopleLoaded }) => {
             type="search"
             className="input"
             placeholder="Search"
-            defaultValue={searchParams.get('query') || ''}
+            value={searchParams.get('query') || ''}
             onChange={handleQueryChange}
             disabled={!peopleLoaded}
           />
