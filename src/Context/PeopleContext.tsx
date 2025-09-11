@@ -1,27 +1,28 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  useMemo,
+} from 'react';
 import { Person } from '../types/Person';
 import { getPeople } from '../utils/fetchClient';
 import { ErrorMessage } from '../types/ErrorMessage';
 
-type UsersContextType = {
+type PeopleContextType = {
   people: Person[];
   setPeople: React.Dispatch<React.SetStateAction<Person[]>>;
   loading: boolean;
   error: string | null;
 };
 
-export const UsersContext = createContext<UsersContextType>({
-  people: [],
-  setPeople: () => {},
-  loading: false,
-  error: null,
-});
+const PeopleContext = createContext<PeopleContextType | undefined>(undefined);
 
 type Props = {
   children: React.ReactNode;
 };
 
-export const UsersProvider: React.FC<Props> = ({ children }) => {
+export const PeopleProvider: React.FC<Props> = ({ children }) => {
   const [people, setPeople] = useState<Person[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -43,11 +44,22 @@ export const UsersProvider: React.FC<Props> = ({ children }) => {
     fetchPeople();
   }, []);
 
+  const value = useMemo(
+    () => ({ people, setPeople, loading, error }),
+    [people, setPeople, loading, error],
+  );
+
   return (
-    <UsersContext.Provider value={{ people, setPeople, loading, error }}>
-      {children}
-    </UsersContext.Provider>
+    <PeopleContext.Provider value={value}>{children}</PeopleContext.Provider>
   );
 };
 
-export const usePeople = () => useContext(UsersContext);
+export const usePeople = () => {
+  const context = useContext(PeopleContext);
+
+  if (!context) {
+    throw new Error('usePeople must be used within a PeopleProvider');
+  }
+
+  return context;
+};

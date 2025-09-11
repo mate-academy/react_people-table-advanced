@@ -95,7 +95,7 @@ export const PeoplePage = () => {
       params.delete('order');
     }
 
-    return { search: params.toString() };
+    return { search: '?' + params.toString() };
   };
 
   // #endregion
@@ -115,7 +115,7 @@ export const PeoplePage = () => {
           is-7-tablet
           is-narrow-desktop"
           >
-            <PeopleFilters />
+            {!loading && !error && <PeopleFilters />}
           </div>
 
           <div className="column">

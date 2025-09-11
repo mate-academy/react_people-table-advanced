@@ -3,7 +3,7 @@ import { Navbar } from './components/Navbar';
 import { HomePage } from './Pages/HomePage';
 import { PeoplePage } from './Pages/PeoplePage';
 import { NotFoundPage } from './Pages/NotFoundPage';
-import { UsersProvider } from './Context/PeopleContext';
+import { PeopleProvider } from './Context/PeopleContext';
 import './App.scss';
 
 export const App = () => {
@@ -21,9 +21,9 @@ export const App = () => {
             <Route
               path="people"
               element={
-                <UsersProvider>
+                <PeopleProvider>
                   <Outlet />
-                </UsersProvider>
+                </PeopleProvider>
               }
             >
               <Route index element={<PeoplePage />} />

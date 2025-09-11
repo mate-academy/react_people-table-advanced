@@ -15,17 +15,17 @@ export const PeopleTable: React.FC<Props> = ({ person }) => {
 
   const activePerson = people.find(user => user.slug === slug) || null;
 
-  const getParentSlug = (parentName: string | null) => {
-    return people.find(p => p.name === parentName)?.slug || null;
-  };
+  const getParent = (parentName: string | null) =>
+    people.find(p => p.name === parentName) || null;
 
-  const motherSlug = getParentSlug(person.motherName);
-  const fatherSlug = getParentSlug(person.fatherName);
+  const parents = [
+    { person: getParent(person.motherName), defaultName: person.motherName },
+    { person: getParent(person.fatherName), defaultName: person.fatherName },
+  ];
 
   return (
     <tr
       data-cy="person"
-      key={person.slug}
       className={cn({
         'has-background-warning': activePerson?.slug === person.slug,
       })}
@@ -33,9 +33,7 @@ export const PeopleTable: React.FC<Props> = ({ person }) => {
       <td>
         <Link
           to={`/people/${person.slug}${location.search}`}
-          className={cn({
-            'has-text-danger': person.sex === 'f',
-          })}
+          className={cn({ 'has-text-danger': person.sex === 'f' })}
         >
           {person.name}
         </Link>
@@ -44,27 +42,21 @@ export const PeopleTable: React.FC<Props> = ({ person }) => {
       <td>{person.sex}</td>
       <td>{person.born}</td>
       <td>{person.died}</td>
-      <td>
-        {motherSlug ? (
-          <Link
-            to={`/people/${motherSlug}${location.search}`}
-            className={cn({ 'has-text-danger': person.motherName })}
-          >
-            {person.motherName}
-          </Link>
-        ) : (
-          person.motherName || '-'
-        )}
-      </td>
-      <td>
-        {fatherSlug ? (
-          <Link to={`/people/${fatherSlug}${location.search}`}>
-            {person.fatherName}
-          </Link>
-        ) : (
-          person.fatherName || '-'
-        )}
-      </td>
+
+      {parents.map((p, idx) => (
+        <td key={idx}>
+          {p.person ? (
+            <Link
+              to={`/people/${p.person.slug}${location.search}`}
+              className={cn({ 'has-text-danger': p.person.sex === 'f' })}
+            >
+              {p.person.name}
+            </Link>
+          ) : (
+            p.defaultName || '-'
+          )}
+        </td>
+      ))}
     </tr>
   );
 };
