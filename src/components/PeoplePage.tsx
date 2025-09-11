@@ -72,6 +72,9 @@ export const PeoplePage = () => {
         const bVal = b[sortField];
 
         if (aVal == null || bVal == null) {
+          if (sortField === 'died') {
+            return (a.died === null ? 1 : 0) - (b.died === null ? 1 : 0);
+          }
           return 0;
         }
 
@@ -88,15 +91,21 @@ export const PeoplePage = () => {
     return result;
   }, [peoples, searchParams]);
 
+  const hasLoadedAndNoErrors = !isLoading && !error && firstLoad;
+  const showFilters = hasLoadedAndNoErrors && peoples.length > 0;
+  const noMatches = showFilters && filteredPeoples.length === 0;
+
   return (
     <>
       <h1 className="title">People Page</h1>
 
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
-          <div className="column is-7-tablet is-narrow-desktop">
-            <PeopleFilters />
-          </div>
+          {showFilters && (
+            <div className="column is-7-tablet is-narrow-desktop">
+              <PeopleFilters />
+            </div>
+          )}
 
           <div className="column">
             <div className="box table-container">
@@ -108,14 +117,17 @@ export const PeoplePage = () => {
                 </p>
               )}
 
-              {!isLoading && !error && firstLoad && peoples.length === 0 && (
+              {hasLoadedAndNoErrors && peoples.length === 0 && (
                 <p data-cy="noPeopleMessage">
                   There are no people on the server
                 </p>
               )}
-              <p>There are no people matching the current search criteria</p>
 
-              {!isLoading && !error && peoples.length > 0 && (
+              {noMatches && (
+                <p>There are no people matching the current search criteria</p>
+              )}
+
+              {filteredPeoples.length > 0 && (
                 <PeopleTable peoples={filteredPeoples} selectedSlug={slug} />
               )}
             </div>

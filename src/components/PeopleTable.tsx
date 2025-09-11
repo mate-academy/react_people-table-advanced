@@ -23,18 +23,14 @@ export const PeopleTable: React.FC<Props> = ({ peoples, selectedSlug }) => {
 
   const getNextSortParams = (field: string) => {
     if (currentSort !== field) {
-      return { sort: field, order: 'asc' };
-    }
-
-    if (currentOrder === 'asc') {
-      return { sort: field, order: 'desc' };
+      return { sort: field, order: null };
     }
 
     if (currentOrder === 'desc') {
       return { sort: null, order: null };
     }
 
-    return { sort: field, order: 'asc' };
+    return { sort: field, order: 'desc' };
   };
 
   return (
@@ -58,7 +54,7 @@ export const PeopleTable: React.FC<Props> = ({ peoples, selectedSlug }) => {
                         'fa-sort': currentSort !== column.sortField,
                         'fa-sort-up':
                           currentSort === column.sortField &&
-                          currentOrder === 'asc',
+                          currentOrder !== 'desc',
                         'fa-sort-down':
                           currentSort === column.sortField &&
                           currentOrder === 'desc',
