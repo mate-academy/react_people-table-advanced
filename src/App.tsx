@@ -1,6 +1,9 @@
-import { PeoplePage } from './components/PeoplePage';
+import { Routes, Route, Navigate, Outlet } from 'react-router-dom';
 import { Navbar } from './components/Navbar';
-
+import { HomePage } from './Pages/HomePage';
+import { PeoplePage } from './Pages/PeoplePage';
+import { NotFoundPage } from './Pages/NotFoundPage';
+import { PeopleProvider } from './Context/PeopleContext';
 import './App.scss';
 
 export const App = () => {
@@ -10,9 +13,26 @@ export const App = () => {
 
       <div className="section">
         <div className="container">
-          <h1 className="title">Home Page</h1>
-          <h1 className="title">Page not found</h1>
-          <PeoplePage />
+          <Routes>
+            <Route path="/home" element={<Navigate to="/" replace />} />
+
+            <Route path="/" element={<HomePage />} />
+
+            <Route
+              path="people"
+              element={
+                <PeopleProvider>
+                  <Outlet />
+                </PeopleProvider>
+              }
+            >
+              <Route index element={<PeoplePage />} />
+              <Route path=":slug" element={<PeoplePage />} />
+            </Route>
+
+            {/* 404 */}
+            <Route path="*" element={<NotFoundPage />} />
+          </Routes>
         </div>
       </div>
     </div>
