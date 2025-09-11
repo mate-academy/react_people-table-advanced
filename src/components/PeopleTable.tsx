@@ -1,6 +1,6 @@
 import React from 'react';
 import cn from 'classnames';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useLocation, useParams } from 'react-router-dom';
 import { Person } from '../types/Person';
 import { usePeople } from '../Context/PeopleContext';
 
@@ -10,7 +10,8 @@ type Props = {
 
 export const PeopleTable: React.FC<Props> = ({ person }) => {
   const { slug } = useParams();
-  const { users: people } = usePeople();
+  const { people } = usePeople();
+  const location = useLocation();
 
   const activePerson = people.find(user => user.slug === slug) || null;
 
@@ -31,7 +32,7 @@ export const PeopleTable: React.FC<Props> = ({ person }) => {
     >
       <td>
         <Link
-          to={`/people/${person.slug}`}
+          to={`/people/${person.slug}${location.search}`}
           className={cn({
             'has-text-danger': person.sex === 'f',
           })}
@@ -46,25 +47,23 @@ export const PeopleTable: React.FC<Props> = ({ person }) => {
       <td>
         {motherSlug ? (
           <Link
-            to={`/people/${motherSlug}`}
-            className={cn({
-              'has-text-danger': person.motherName,
-            })}
+            to={`/people/${motherSlug}${location.search}`}
+            className={cn({ 'has-text-danger': person.motherName })}
           >
             {person.motherName}
           </Link>
         ) : (
-          person.motherName
+          person.motherName || '-'
         )}
-        {!person.motherName && '-'}
       </td>
       <td>
         {fatherSlug ? (
-          <Link to={`/people/${fatherSlug}`}>{person.fatherName}</Link>
+          <Link to={`/people/${fatherSlug}${location.search}`}>
+            {person.fatherName}
+          </Link>
         ) : (
-          person.fatherName
+          person.fatherName || '-'
         )}
-        {!person.fatherName && '-'}
       </td>
     </tr>
   );

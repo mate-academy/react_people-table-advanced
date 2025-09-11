@@ -14,7 +14,7 @@ import { SortOrder } from '../types/SortOrder';
 
 export const PeoplePage = () => {
   const [searchParams] = useSearchParams();
-  const { users: people, loading, error } = usePeople();
+  const { people, loading, error } = usePeople();
 
   const query = searchParams.get('query')?.toLowerCase() || '';
   const sex = searchParams.get('sex');
@@ -26,7 +26,9 @@ export const PeoplePage = () => {
   // #region filteredPeople
 
   const filteredPeople = people.filter(person => {
-    const matchesQuery = person.name.toLowerCase().includes(query);
+    const matchesQuery = [person.name, person.motherName, person.fatherName]
+      .filter(Boolean)
+      .some(field => field!.toLowerCase().includes(query));
 
     const matchesSex = sex ? person.sex === sex : true;
 
@@ -71,6 +73,7 @@ export const PeoplePage = () => {
   });
 
   const getSortLink = (key: SortKey) => {
+    const params = new URLSearchParams(searchParams);
     let newOrder: SortOrder | null = 'asc';
 
     if (sortKey === key) {
@@ -81,11 +84,12 @@ export const PeoplePage = () => {
       }
     }
 
-    const params = new URLSearchParams(searchParams);
-
-    if (newOrder) {
+    if (newOrder === 'desc') {
       params.set('sort', key);
-      params.set('order', newOrder);
+      params.set('order', 'desc');
+    } else if (newOrder === 'asc') {
+      params.set('sort', key);
+      params.delete('order');
     } else {
       params.delete('sort');
       params.delete('order');

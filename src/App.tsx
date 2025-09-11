@@ -1,10 +1,10 @@
-import { PeoplePage } from './Pages/PeoplePage';
+import { Routes, Route, Navigate, Outlet } from 'react-router-dom';
 import { Navbar } from './components/Navbar';
-import { Navigate, Route, Routes } from 'react-router-dom';
-import './App.scss';
 import { HomePage } from './Pages/HomePage';
+import { PeoplePage } from './Pages/PeoplePage';
 import { NotFoundPage } from './Pages/NotFoundPage';
 import { UsersProvider } from './Context/PeopleContext';
+import './App.scss';
 
 export const App = () => {
   return (
@@ -18,24 +18,19 @@ export const App = () => {
 
             <Route path="/" element={<HomePage />} />
 
-            <Route path="people">
-              <Route
-                index
-                element={
-                  <UsersProvider>
-                    <PeoplePage />
-                  </UsersProvider>
-                }
-              />
-              <Route
-                path=":slug"
-                element={
-                  <UsersProvider>
-                    <PeoplePage />
-                  </UsersProvider>
-                }
-              />
+            <Route
+              path="people"
+              element={
+                <UsersProvider>
+                  <Outlet />
+                </UsersProvider>
+              }
+            >
+              <Route index element={<PeoplePage />} />
+              <Route path=":slug" element={<PeoplePage />} />
             </Route>
+
+            {/* 404 */}
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </div>

@@ -4,15 +4,15 @@ import { getPeople } from '../utils/fetchClient';
 import { ErrorMessage } from '../types/ErrorMessage';
 
 type UsersContextType = {
-  users: Person[];
-  setUsers: React.Dispatch<React.SetStateAction<Person[]>>;
+  people: Person[];
+  setPeople: React.Dispatch<React.SetStateAction<Person[]>>;
   loading: boolean;
   error: string | null;
 };
 
 export const UsersContext = createContext<UsersContextType>({
-  users: [],
-  setUsers: () => {},
+  people: [],
+  setPeople: () => {},
   loading: false,
   error: null,
 });
@@ -22,7 +22,7 @@ type Props = {
 };
 
 export const UsersProvider: React.FC<Props> = ({ children }) => {
-  const [users, setUsers] = useState<Person[]>([]);
+  const [people, setPeople] = useState<Person[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -32,7 +32,7 @@ export const UsersProvider: React.FC<Props> = ({ children }) => {
       try {
         const data = await getPeople();
 
-        setUsers(data);
+        setPeople(data);
       } catch {
         setError(ErrorMessage.peopleLoadingError);
       } finally {
@@ -44,7 +44,7 @@ export const UsersProvider: React.FC<Props> = ({ children }) => {
   }, []);
 
   return (
-    <UsersContext.Provider value={{ users, setUsers, loading, error }}>
+    <UsersContext.Provider value={{ people, setPeople, loading, error }}>
       {children}
     </UsersContext.Provider>
   );
