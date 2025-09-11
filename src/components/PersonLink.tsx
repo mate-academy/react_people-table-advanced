@@ -1,6 +1,7 @@
-import classNames from 'classnames';
-import { Person } from './../types';
+import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import classNames from 'classnames';
+import { Person } from '../types';
 
 interface Props {
   personName: string | null;
@@ -19,6 +20,7 @@ export const PersonLink: React.FC<Props> = ({ personName, peoples }) => {
     <Link
       className={classNames({ 'has-text-danger': personData.sex === 'f' })}
       to={`/people/${personData.slug}${search}`}
+      data-cy="personLink"
     >
       {personName}
     </Link>

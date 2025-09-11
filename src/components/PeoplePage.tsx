@@ -1,108 +1,109 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useSearchParams, useParams } from 'react-router-dom';
 import { getPeople } from '../api';
 import { Person } from '../types';
 import { PeopleTable } from './PeopleTable';
-import { Loader } from './Loader';
-import { useParams, useSearchParams } from 'react-router-dom';
 import { PeopleFilters } from './PeopleFilter';
 
 export const PeoplePage: React.FC = () => {
   const [people, setPeople] = useState<Person[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
-
-  const { slug } = useParams<{ slug: string }>();
   const [searchParams] = useSearchParams();
+  const { slug: selectedSlug } = useParams<{ slug: string }>();
 
   useEffect(() => {
-    setLoading(true);
-    setError(false);
+    const fetchPeople = async () => {
+      setLoading(true);
+      setError(false);
+      try {
+        const data = await getPeople();
 
-    getPeople()
-      .then(data => setPeople(data))
-      .catch(() => setError(true))
-      .finally(() => setLoading(false));
+        setPeople(data);
+      } catch (err) {
+        setError(true);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPeople();
   }, []);
 
-  const filteredPeople = useMemo(() => {
-    let result = [...people];
+  const query = searchParams.get('query')?.toLowerCase() || '';
+  const sex = searchParams.get('sex');
+  const centuries = searchParams.getAll('centuries');
 
-    const query = searchParams.get('query')?.toLowerCase();
+  const sortField = searchParams.get('sort') as keyof Person | null;
+  const sortOrder = searchParams.get('order') as 'asc' | 'desc' | null;
 
-    if (query) {
-      result = result.filter(p =>
-        [p.name, p.motherName, p.fatherName]
-          .filter(Boolean)
-          .some(n => n!.toLowerCase().includes(query)),
-      );
+  const filtered = people.filter(person => {
+    const matchQuery = person.name.toLowerCase().includes(query);
+    const matchSex = sex ? person.sex === sex : true;
+    const matchCentury = centuries.length
+      ? centuries.includes(String(person.born).slice(0, 2))
+      : true;
+
+    return matchQuery && matchSex && matchCentury;
+  });
+
+  const sorted = [...filtered].sort((a, b) => {
+    if (!sortField) {
+      return 0;
     }
 
-    const sex = searchParams.get('sex');
+    const valA = a[sortField] ?? '';
+    const valB = b[sortField] ?? '';
 
-    if (sex) {
-      result = result.filter(p => p.sex === sex);
+    if (valA === valB) {
+      return 0;
     }
 
-    const centuries = searchParams.getAll('centuries');
-
-    if (centuries.length > 0) {
-      result = result.filter(p => {
-        const bornCentury = Math.floor(p.born / 100) + 1;
-
-        return centuries.includes(String(bornCentury));
-      });
+    if (sortOrder === 'asc') {
+      return valA > valB ? 1 : -1;
     }
 
-    const sortField = searchParams.get('sort') as keyof Person;
-    const order = searchParams.get('order');
-
-    if (sortField) {
-      result.sort((a, b) => {
-        const aVal = a[sortField];
-        const bVal = b[sortField];
-
-        if (aVal == null || bVal == null) {
-          return 0;
-        }
-
-        if (typeof aVal === 'number' && typeof bVal === 'number') {
-          return order === 'desc' ? bVal - aVal : aVal - bVal;
-        }
-
-        return order === 'desc'
-          ? String(bVal).localeCompare(String(aVal))
-          : String(aVal).localeCompare(String(bVal));
-      });
+    if (sortOrder === 'desc') {
+      return valA > valB ? -1 : 1;
     }
 
-    return result;
-  }, [people, searchParams]);
+    return 0;
+  });
 
   return (
-    <>
-      <h1 className="title">People Page</h1>
-
-      {loading && <Loader />}
-      {error && (
-        <p className="has-text-danger" data-cy="peopleLoadingError">
-          Something went wrong
-        </p>
-      )}
-
-      {!loading && !error && people.length === 0 && (
-        <p data-cy="noPeopleMessage">There are no people on the server</p>
-      )}
-
-      {!loading && !error && people.length > 0 && (
+    <section className="section">
+      <div className="container">
+        <h1 className="title" data-cy="pageTitle">
+          People Page
+        </h1>
         <div className="columns">
           <div className="column is-one-quarter">
             <PeopleFilters />
           </div>
           <div className="column">
-            <PeopleTable people={filteredPeople} selectedSlug={slug} />
+            {loading && <div data-cy="loader">Loading...</div>}
+            {error && (
+              <div
+                data-cy="peopleLoadingError"
+                className="notification is-danger"
+              >
+                Error loading people
+              </div>
+            )}
+            {!loading && !error && sorted.length === 0 && (
+              <div
+                data-cy="noPeopleMessage"
+                className="notification is-warning"
+              >
+                No people found
+              </div>
+            )}
+            {!loading && !error && sorted.length > 0 && (
+              <PeopleTable people={sorted} selectedSlug={selectedSlug} />
+            )}
           </div>
         </div>
-      )}
-    </>
+      </div>
+    </section>
   );
 };
