@@ -1,4 +1,4 @@
-import { PeoplePage } from '../src/components/PeoplePage';
+import { PeoplePage } from './components/PeoplePage';
 import { Navbar } from './components/Navbar';
 import { Routes, Route } from 'react-router-dom';
 
