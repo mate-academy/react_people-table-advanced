@@ -3,6 +3,6 @@ import '@fortawesome/fontawesome-free/css/all.css';
 import { createRoot } from 'react-dom/client';
 import { AppRouter } from './AppRouter';
 
-createRoot(document.getElementById('root') as HTMLDivElement).render(
-  <AppRouter />,
-);
+const rootEl = document.getElementById('root');
+if (!rootEl) throw new Error('Root element not found');
+createRoot(rootEl).render(<AppRouter />);
