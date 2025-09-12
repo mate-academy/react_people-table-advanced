@@ -113,9 +113,17 @@ export const PeoplePage = () => {
                   There are no people on the server
                 </p>
               )}
-              <p>There are no people matching the current search criteria</p>
 
-              {!isLoading && !error && peoples.length > 0 && (
+              {!isLoading &&
+                !error &&
+                peoples.length > 0 &&
+                filteredPeoples.length === 0 && (
+                  <p data-cy="noPeopleMessage">
+                    There are no people matching the current search criteria
+                  </p>
+                )}
+
+              {!isLoading && !error && filteredPeoples.length > 0 && (
                 <PeopleTable peoples={filteredPeoples} selectedSlug={slug} />
               )}
             </div>
