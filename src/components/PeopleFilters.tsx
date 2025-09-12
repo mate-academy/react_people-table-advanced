@@ -6,15 +6,18 @@ import cn from 'classnames';
 export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const centuries = searchParams.getAll('centuries');
+  const query = searchParams.get('query');
 
   const handleQueryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const newParams = new URLSearchParams(searchParams.toString());
+
     if (event.target.value) {
-      searchParams.set('query', event.target.value.trim());
-      setSearchParams(searchParams);
+      newParams.set('query', event.target.value.trim());
     } else {
-      searchParams.delete('query');
-      setSearchParams(searchParams);
+      newParams.delete('query');
     }
+
+    setSearchParams(newParams);
   };
 
   const getCenturyLinkClass = (century: string) => {
@@ -61,6 +64,7 @@ export const PeopleFilters = () => {
             type="search"
             className="input"
             placeholder="Search"
+            value={query ?? ''}
             onChange={handleQueryChange}
           />
 

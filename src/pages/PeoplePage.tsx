@@ -40,8 +40,8 @@ const getPreparedPeople = (
       const q = query.toLowerCase();
 
       matches = (person.name.toLowerCase().includes(q) ||
-        person.fatherName?.toLowerCase().includes(q) ||
-        person.motherName?.toLowerCase().includes(q)) as boolean;
+        (person.fatherName || '').toLowerCase().includes(q) ||
+        (person.motherName || '').toLowerCase().includes(q)) as boolean;
     }
 
     return matches;
@@ -88,7 +88,7 @@ export const PeoplePage = () => {
       })
       .then(setPeople)
       .catch(err => {
-        setError(err);
+        setError(err?.message ?? String(err));
       })
       .finally(() => {
         setIsLoading(false);

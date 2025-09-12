@@ -6,6 +6,7 @@ import { useSearchParams } from 'react-router-dom';
 import { SearchLink } from './SearchLink';
 import { SearchParams } from '../utils/searchHelper';
 import { SortField } from '../types/SortFields';
+import { SortType } from '../types/SortType';
 
 /* eslint-disable jsx-a11y/control-has-associated-label */
 type Props = {
@@ -18,10 +19,10 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
   const order = searchParams.get('order');
 
   const getNewSortParams = (sortField: SortField): SearchParams => {
-    if (sort === sortField && order) {
+    if (sort === sortField && order === SortType.Descending) {
       return { sort: null, order: null };
     } else if (sort === sortField) {
-      return { order: 'desc' };
+      return { sort: sortField, order: SortType.Descending };
     } else {
       return { sort: sortField, order: null };
     }
@@ -47,7 +48,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
               Name
               <SearchLink params={getNewSortParams(SortField.Name)}>
                 <span className="icon">
-                  <i className={getSortIconClass('name')} />
+                  <i className={getSortIconClass(SortField.Name)} />
                 </span>
               </SearchLink>
             </span>
@@ -58,7 +59,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
               Sex
               <SearchLink params={getNewSortParams(SortField.Sex)}>
                 <span className="icon">
-                  <i className={getSortIconClass('sex')} />
+                  <i className={getSortIconClass(SortField.Sex)} />
                 </span>
               </SearchLink>
             </span>
@@ -69,7 +70,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
               Born
               <SearchLink params={getNewSortParams(SortField.Born)}>
                 <span className="icon">
-                  <i className={getSortIconClass('born')} />
+                  <i className={getSortIconClass(SortField.Born)} />
                 </span>
               </SearchLink>
             </span>
@@ -80,7 +81,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
               Died
               <SearchLink params={getNewSortParams(SortField.Died)}>
                 <span className="icon">
-                  <i className={getSortIconClass('died')} />
+                  <i className={getSortIconClass(SortField.Died)} />
                 </span>
               </SearchLink>
             </span>
