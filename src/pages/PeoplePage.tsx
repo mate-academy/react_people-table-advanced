@@ -14,8 +14,10 @@ const PeoplePage = () => {
   const isServerError =
     !isLoading && !error && people !== null && people?.length === 0;
 
-  const renderTable =
-    !isLoading && !error && filteredPeople && filteredPeople?.length > 0;
+  // const renderTable =
+  //   !isLoading && !error && filteredPeople && filteredPeople?.length > 0;
+  const filtersVisible = !isLoading && !error && people !== null;
+  const tableVisible = filteredPeople && filteredPeople.length > 0;
 
   return (
     <div>
@@ -24,7 +26,7 @@ const PeoplePage = () => {
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
           <div className="column is-7-tablet is-narrow-desktop">
-            {renderTable && (
+            {filtersVisible && (
               <PeopleFilters
                 searchParams={searchParams}
                 setSearchParams={setSearchParams}
@@ -50,7 +52,7 @@ const PeoplePage = () => {
 
               {filterError && <p>{filterError}</p>}
 
-              {renderTable && (
+              {tableVisible && (
                 <PeopleTable
                   people={filteredPeople}
                   searchParams={searchParams}
