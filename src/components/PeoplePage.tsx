@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/indent */
 import { useEffect, useMemo, useState } from 'react';
 import { Loader } from './Loader';
 import { Person } from '../types';
@@ -22,15 +23,9 @@ export const PeoplePage = () => {
       try {
         setIsLoading(true);
         const peopleList = await getPeople();
-
-        if (!ignore) {
-          setPeoples(peopleList);
-        }
-      } catch (e) {
-        if (!ignore) {
-          setError(true);
-          setPeoples([]);
-        }
+        if (!ignore) setPeoples(peopleList);
+      } catch {
+        if (!ignore) setError(true);
       } finally {
         if (!ignore) {
           setIsLoading(false);
@@ -48,29 +43,23 @@ export const PeoplePage = () => {
 
   const filteredPeoples = useMemo(() => {
     let result = [...peoples];
-
-    const query = searchParams.get('query')?.toLocaleLowerCase();
-
+    const query = searchParams.get('query')?.toLowerCase();
     if (query) {
       result = result.filter(people =>
         [people.name, people.fatherName, people.motherName]
           .filter(Boolean)
-          .some(name => name?.toLowerCase().includes(query)),
+          .some(name => name!.toLowerCase().includes(query)),
       );
     }
 
     const sex = searchParams.get('sex');
-
-    if (sex) {
-      result = result.filter(people => people.sex === sex);
-    }
+    if (sex) result = result.filter(people => people.sex === sex);
 
     const centuries = searchParams.getAll('centuries');
-
     if (centuries.length > 0) {
       result = result.filter(people => {
+        if (!people.born || isNaN(people.born)) return false;
         const bornCentury = Math.floor(people.born / 100) + 1;
-
         return centuries.includes(String(bornCentury));
       });
     }
@@ -80,17 +69,17 @@ export const PeoplePage = () => {
 
     if (sortField) {
       result.sort((a, b) => {
-        const aVal = a[sortField];
-        const bVal = b[sortField];
+        let aVal = a[sortField];
+        let bVal = b[sortField];
 
-        if (aVal == null || bVal == null) {
-          return 0;
-        }
-
-        if (typeof aVal === 'number' && typeof bVal === 'number') {
+        if (typeof aVal === 'number' || typeof bVal === 'number') {
+          aVal = typeof aVal === 'number' ? aVal : Infinity;
+          bVal = typeof bVal === 'number' ? bVal : Infinity;
           return order === 'desc' ? bVal - aVal : aVal - bVal;
         }
 
+        aVal = aVal ?? '';
+        bVal = bVal ?? '';
         return order === 'desc'
           ? String(bVal).localeCompare(String(aVal))
           : String(aVal).localeCompare(String(bVal));
@@ -107,7 +96,7 @@ export const PeoplePage = () => {
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
           <div className="column is-7-tablet is-narrow-desktop">
-            <PeopleFilters />
+            {firstLoad && !isLoading && !error && <PeopleFilters />}
           </div>
 
           <div className="column">
@@ -128,8 +117,8 @@ export const PeoplePage = () => {
 
               {!isLoading &&
                 !error &&
-                peoples.length > 0 &&
-                filteredPeoples.length === 0 && (
+                filteredPeoples.length === 0 &&
+                peoples.length > 0 && (
                   <p data-cy="noPeopleMessage">
                     There are no people matching the current search criteria
                   </p>

@@ -8,12 +8,10 @@ interface Props {
 }
 
 export const PersonLink: React.FC<Props> = ({ personName, peoples }) => {
-  const personData = peoples.find(people => people.name === personName);
+  const personData = peoples.find(p => p.name === personName);
   const { search } = useLocation();
 
-  if (!personData || !personName) {
-    return <span>{personName || '-'}</span>;
-  }
+  if (!personData || !personName) return <span>{personName || '-'}</span>;
 
   return (
     <Link

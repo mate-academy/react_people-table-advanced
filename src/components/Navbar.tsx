@@ -1,7 +1,9 @@
 import classNames from 'classnames';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useLocation } from 'react-router-dom';
 
 export const Navbar = () => {
+  const { search } = useLocation();
+
   return (
     <nav
       data-cy="nav"
@@ -22,13 +24,14 @@ export const Navbar = () => {
           >
             Home
           </NavLink>
+
           <NavLink
             className={({ isActive }) =>
               classNames('navbar-item', {
                 'has-background-grey-lighter': isActive,
               })
             }
-            to="/people"
+            to={{ pathname: '/people', search }}
           >
             People
           </NavLink>

@@ -71,8 +71,7 @@ export const PeopleFilters = () => {
 
   const handleAllCentury = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
-    const next = new URLSearchParams(searchParams);
-
+    const next = new URLSearchParams(searchParams.toString());
     next.delete('centuries');
     setSearchParams(next);
   };
@@ -101,7 +100,7 @@ export const PeopleFilters = () => {
             href={`#/people?sex=${value}`}
             onClick={e => handleSexFilter(e, value as Sex)}
           >
-            {key === 'Male' ? 'Male' : 'Female'}
+            {key}
           </a>
         ))}
       </p>
@@ -116,7 +115,6 @@ export const PeopleFilters = () => {
             value={query}
             onChange={handleQueryChange}
           />
-
           <span className="icon is-left">
             <i className="fas fa-search" aria-hidden="true" />
           </span>
@@ -148,7 +146,7 @@ export const PeopleFilters = () => {
                 'is-outlined': centuriesParam.length > 0,
               })}
               href="#/people"
-              onClick={e => handleAllCentury(e)}
+              onClick={handleAllCentury}
             >
               All
             </a>
@@ -160,7 +158,7 @@ export const PeopleFilters = () => {
         <a
           className="button is-link is-outlined is-fullwidth"
           href="#/people"
-          onClick={e => handleAllReset(e)}
+          onClick={handleAllReset}
         >
           Reset all filters
         </a>
