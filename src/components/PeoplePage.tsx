@@ -16,22 +16,34 @@ export const PeoplePage = () => {
   const [searchParams] = useSearchParams();
 
   useEffect(() => {
+    let ignore = false;
+
     const loadPeoples = async () => {
       try {
         setIsLoading(true);
         const peopleList = await getPeople();
 
-        setPeoples(peopleList);
+        if (!ignore) {
+          setPeoples(peopleList);
+        }
       } catch (e) {
-        setError(true);
-        setPeoples([]);
+        if (!ignore) {
+          setError(true);
+          setPeoples([]);
+        }
       } finally {
-        setIsLoading(false);
-        setFirstLoad(true);
+        if (!ignore) {
+          setIsLoading(false);
+          setFirstLoad(true);
+        }
       }
     };
 
     loadPeoples();
+
+    return () => {
+      ignore = true;
+    };
   }, []);
 
   const filteredPeoples = useMemo(() => {
