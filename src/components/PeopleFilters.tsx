@@ -1,108 +1,124 @@
-import { Link, useSearchParams } from 'react-router-dom';
-import { SearchLink } from './SearchLink';
-import cn from 'classnames';
-import { getSearchWith } from '../utils/searchHelper';
+import classNames from 'classnames';
+import type { ChangeEvent } from 'react';
 
-export const PeopleFilters = () => {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const centuryValues = ['16', '17', '18', '19', '20'];
-  const sex = searchParams.get('sex');
-  const query = searchParams.get('query') || '';
-  const centuries = searchParams.getAll('centuries') || [];
+type Props = {
+  sex: string;
+  query: string;
+  centuries: string[];
+  allCenturies: number[];
+  handleGenderChange: (gen: string) => void;
+  handleQueryChange: (event: ChangeEvent<HTMLInputElement>) => void;
+  handleCenturyChange: (number: number) => void;
+  clearCenturies: () => void;
+  resetAll: () => void;
+};
 
-  function handleQueryChange(event: React.ChangeEvent<HTMLInputElement>) {
-    setSearchParams(
-      getSearchWith(searchParams, { query: event.target.value || null }),
-    );
-  }
-
+export const PeopleFilters: React.FC<Props> = ({
+  sex,
+  query,
+  centuries,
+  allCenturies,
+  handleGenderChange,
+  handleQueryChange,
+  handleCenturyChange,
+  clearCenturies,
+  resetAll,
+}) => {
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
+
       <p className="panel-tabs" data-cy="SexFilter">
-        <SearchLink
-          className={cn({ 'is-active': !sex })}
-          params={{ sex: null }}
+        <button
+          type="button"
+          className={classNames(sex === '' ? 'is-active' : '')}
+          onClick={() => handleGenderChange('')}
         >
           All
-        </SearchLink>
-
-        <SearchLink
-          className={cn({ 'is-active': sex === 'm' })}
-          params={{ sex: 'm' }}
+        </button>
+        <button
+          type="button"
+          className={classNames(sex === 'm' ? 'is-active' : '')}
+          onClick={() => handleGenderChange('m')}
         >
           Male
-        </SearchLink>
-
-        <SearchLink
-          className={cn({ 'is-active': sex === 'f' })}
-          params={{ sex: 'f' }}
+        </button>
+        <button
+          type="button"
+          className={classNames(sex === 'f' ? 'is-active' : '')}
+          onClick={() => handleGenderChange('f')}
         >
           Female
-        </SearchLink>
-
+        </button>
       </p>
 
       <div className="panel-block">
         <p className="control has-icons-left">
           <input
-            type="search"
             data-cy="NameFilter"
+            type="search"
+            value={query}
             className="input"
             placeholder="Search"
-            value={query}
-            onChange={handleQueryChange}
+            onChange={e => {
+              handleQueryChange(e);
+            }}
           />
-
           <span className="icon is-left">
             <i className="fas fa-search" aria-hidden="true" />
           </span>
-
         </p>
       </div>
-
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
-
           <div className="level-left">
-            {centuryValues.map(century => (
-              <SearchLink
-                key={century}
-                data-cy="century"
-                className={cn('button', 'mr-1', {
-                  'is-info': centuries.includes(century),
-                })}
-                params={{
-                  centuries: centuries.includes(century)
-                    ? centuries.filter(cen => cen !== century)
-                    : [...centuries, century],
-                }}
-              >
-                {century}
-              </SearchLink>
-            ))}
+            {allCenturies.map(cen => {
+              return (
+                <button
+                  key={cen}
+                  data-cy="century"
+                  className={classNames(
+                    centuries.includes(cen.toString())
+                      ? 'button mr-1 is-info'
+                      : 'button mr-1',
+                  )}
+                  onClick={() => {
+                    handleCenturyChange(cen);
+                  }}
+                >
+                  {cen}
+                </button>
+              );
+            })}
           </div>
-
           <div className="level-right ml-4">
-            <SearchLink
+            <button
               data-cy="centuryALL"
-              className="button is-success is-outlined"
-              params={{ centuries: null }}
+              className={classNames('button is-success', {
+                'is-outlined': centuries.length !== 0,
+              })}
+              onClick={e => {
+                e.preventDefault();
+                clearCenturies();
+              }}
             >
               All
-            </SearchLink>
-
+            </button>
           </div>
         </div>
       </div>
+
       <div className="panel-block">
-        {' '}
-        <Link
+        <button
+          type="button"
           className="button is-link is-outlined is-fullwidth"
-          to={{ search: '' }}
+          onClick={e => {
+            e.preventDefault();
+            resetAll();
+          }}
         >
           Reset all filters
-        </Link>
+        </button>
       </div>
     </nav>
   );
