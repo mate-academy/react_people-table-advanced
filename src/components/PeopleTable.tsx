@@ -92,6 +92,7 @@ export const PeopleTable: React.FC<Props> = ({ people, slug, handleSort }) => {
             const fatherExist = people.find(
               pers => pers.name === person.fatherName,
             );
+
             return (
               <tr
                 data-cy="person"
@@ -139,4 +140,5 @@ export const PeopleTable: React.FC<Props> = ({ people, slug, handleSort }) => {
     </>
   );
 };
+
 export default PeopleTable;

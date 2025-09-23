@@ -2,6 +2,7 @@ import { Navbar } from './components/Navbar';
 
 import './App.scss';
 import { Outlet } from 'react-router-dom';
+import { PeopleProvider } from './PeopleProvider';
 export const App = () => {
   return (
     <div data-cy="app">
@@ -9,7 +10,9 @@ export const App = () => {
 
       <div className="section">
         <div className="container">
-          <Outlet />
+          <PeopleProvider>
+            <Outlet />
+          </PeopleProvider>
         </div>
       </div>
     </div>
