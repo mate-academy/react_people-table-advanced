@@ -1,18 +1,65 @@
+import { NavLink, useSearchParams } from 'react-router-dom';
+import React from 'react';
+import classNames from 'classnames';
+
 export const PeopleFilters = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const handleSetQuery = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const params = new URLSearchParams(searchParams);
+
+    if (event.target.value) {
+      params.set('query', event.target.value);
+    } else {
+      params.delete('query');
+    }
+
+    setSearchParams(params);
+  };
+
+  const handleSetSex = (sex: string | null) => {
+    const params = new URLSearchParams(searchParams);
+
+    if (sex) {
+      params.set('sex', sex);
+    } else {
+      params.delete('sex');
+    }
+
+    return `?${params.toString()}`;
+  };
+
+  const handleSetCentury = (century: number | null) => {
+    const params = new URLSearchParams(searchParams);
+    const current = params.getAll('centuries');
+    let centuries: string[] = [...current];
+
+    if (century === null) {
+      params.delete('centuries');
+    } else {
+      const centuryStr = century.toString();
+
+      if (centuries.includes(centuryStr)) {
+        centuries = centuries.filter(c => c !== centuryStr);
+      } else {
+        centuries.push(centuryStr);
+      }
+
+      params.delete('centuries');
+      centuries.forEach(c => params.append('centuries', c));
+    }
+
+    return `?${params.toString()}`;
+  };
+
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        <a className="is-active" href="#/people">
-          All
-        </a>
-        <a className="" href="#/people?sex=m">
-          Male
-        </a>
-        <a className="" href="#/people?sex=f">
-          Female
-        </a>
+        <NavLink to={handleSetSex(null)}>All</NavLink>
+        <NavLink to={handleSetSex('m')}>Male</NavLink>
+        <NavLink to={handleSetSex('f')}>Female</NavLink>
       </p>
 
       <div className="panel-block">
@@ -22,8 +69,9 @@ export const PeopleFilters = () => {
             type="search"
             className="input"
             placeholder="Search"
+            value={searchParams.get('query') || ''}
+            onChange={handleSetQuery}
           />
-
           <span className="icon is-left">
             <i className="fas fa-search" aria-hidden="true" />
           </span>
@@ -33,55 +81,32 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            <a
-              data-cy="century"
-              className="button mr-1"
-              href="#/people?centuries=16"
-            >
-              16
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=17"
-            >
-              17
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=18"
-            >
-              18
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=19"
-            >
-              19
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1"
-              href="#/people?centuries=20"
-            >
-              20
-            </a>
+            {[16, 17, 18, 19, 20].map(c => (
+              <NavLink
+                key={c}
+                data-cy="century"
+                to={handleSetCentury(c)}
+                className={classNames('button mr-1', {
+                  'is-info': searchParams
+                    .getAll('centuries')
+                    .includes(c.toString()),
+                })}
+              >
+                {c}
+              </NavLink>
+            ))}
           </div>
 
           <div className="level-right ml-4">
-            <a
+            <NavLink
               data-cy="centuryALL"
-              className="button is-success is-outlined"
-              href="#/people"
+              to={handleSetCentury(null)}
+              className={classNames('button is-outlined', {
+                'is-success': searchParams.getAll('centuries').length === 0,
+              })}
             >
               All
-            </a>
+            </NavLink>
           </div>
         </div>
       </div>
