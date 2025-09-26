@@ -1,4 +1,15 @@
+import { useLocation, Link, useSearchParams } from 'react-router-dom';
+import { getSearchWith } from '../utils/searchHelper';
+
+const ACTIVE_NAV_LINK_CLASS = 'has-background-grey-lighter';
+
 export const Navbar = () => {
+  const location = useLocation();
+  const [searchParams] = useSearchParams();
+
+  const isHome = location.pathname === '/';
+  const isPeople = location.pathname.startsWith('/people');
+
   return (
     <nav
       data-cy="nav"
@@ -8,17 +19,25 @@ export const Navbar = () => {
     >
       <div className="container">
         <div className="navbar-brand">
-          <a className="navbar-item" href="#/">
+          <Link
+            to={{
+              pathname: '/',
+              search: getSearchWith(searchParams, {}),
+            }}
+            className={`navbar-item ${isHome ? ACTIVE_NAV_LINK_CLASS : ''}`}
+          >
             Home
-          </a>
+          </Link>
 
-          <a
-            aria-current="page"
-            className="navbar-item has-background-grey-lighter"
-            href="#/people"
+          <Link
+            to={{
+              pathname: '/people',
+              search: getSearchWith(searchParams, {}),
+            }}
+            className={`navbar-item ${isPeople ? ACTIVE_NAV_LINK_CLASS : ''}`}
           >
             People
-          </a>
+          </Link>
         </div>
       </div>
     </nav>
