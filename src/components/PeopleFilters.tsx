@@ -1,18 +1,108 @@
+import cn from 'classnames';
+import { Link, useSearchParams } from 'react-router-dom';
+import { Sex } from '../types/Sex';
+
 export const PeopleFilters = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const query = searchParams.get('query') || '';
+  const sexFilter = searchParams.get('sex') || '';
+  const centuries = searchParams.getAll('centuries') || [];
+
+  const handleSexFilterChange = (sex: Sex) => {
+    const params = new URLSearchParams(searchParams);
+
+    if (sex === '') {
+      params.delete('sex');
+    } else {
+      params.set('sex', sex);
+    }
+
+    setSearchParams(params);
+  };
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const params = new URLSearchParams(searchParams);
+    const value = e.target.value;
+
+    if (value === '') {
+      params.delete('query');
+    } else {
+      params.set('query', value);
+    }
+
+    setSearchParams(params);
+  };
+
+  const handleCenturyFilterChange = (century: string) => {
+    const params = new URLSearchParams(searchParams);
+    const newCenturies = centuries.includes(century)
+      ? centuries.filter(c => c !== century)
+      : [...centuries, century];
+
+    params.delete('centuries');
+
+    newCenturies.forEach(c => params.append('centuries', c));
+    setSearchParams(params);
+  };
+
+  const handleClearCenturyFilter = () => {
+    const params = new URLSearchParams(searchParams);
+
+    params.delete('centuries');
+    setSearchParams(params);
+  };
+
+  const handleResetFilters = () => {
+    const params = new URLSearchParams(searchParams);
+
+    params.delete('centuries');
+    params.delete('query');
+    params.delete('sex');
+    setSearchParams(params);
+  };
+
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        <a className="is-active" href="#/people">
+        <Link
+          className={cn({
+            'is-active': sexFilter === '',
+          })}
+          to="#"
+          onClick={e => {
+            e.preventDefault();
+            handleSexFilterChange('');
+          }}
+        >
           All
-        </a>
-        <a className="" href="#/people?sex=m">
+        </Link>
+        <Link
+          className={cn({
+            'is-active': sexFilter === 'm',
+          })}
+          to="#"
+          onClick={e => {
+            e.preventDefault();
+            handleSexFilterChange('m');
+          }}
+        >
           Male
-        </a>
-        <a className="" href="#/people?sex=f">
+        </Link>
+        <Link
+          className={cn({
+            'is-active': sexFilter === 'f',
+          })}
+          to="#"
+          onClick={e => {
+            e.preventDefault();
+            handleSexFilterChange('f');
+          }}
+        >
           Female
-        </a>
+        </Link>
       </p>
 
       <div className="panel-block">
@@ -22,6 +112,8 @@ export const PeopleFilters = () => {
             type="search"
             className="input"
             placeholder="Search"
+            value={query}
+            onChange={e => handleSearchChange(e)}
           />
 
           <span className="icon is-left">
@@ -33,63 +125,101 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            <a
+            <Link
               data-cy="century"
-              className="button mr-1"
-              href="#/people?centuries=16"
+              className={cn('button mr-1', {
+                'is-info': centuries.includes('16'),
+              })}
+              to="#"
+              onClick={e => {
+                e.preventDefault();
+                handleCenturyFilterChange('16');
+              }}
             >
               16
-            </a>
+            </Link>
 
-            <a
+            <Link
               data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=17"
+              className={cn('button mr-1', {
+                'is-info': centuries.includes('17'),
+              })}
+              to="#"
+              onClick={e => {
+                e.preventDefault();
+                handleCenturyFilterChange('17');
+              }}
             >
               17
-            </a>
+            </Link>
 
-            <a
+            <Link
               data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=18"
+              className={cn('button mr-1', {
+                'is-info': centuries.includes('18'),
+              })}
+              to="#"
+              onClick={e => {
+                e.preventDefault();
+                handleCenturyFilterChange('18');
+              }}
             >
               18
-            </a>
+            </Link>
 
-            <a
+            <Link
               data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=19"
+              className={cn('button mr-1', {
+                'is-info': centuries.includes('19'),
+              })}
+              to="#"
+              onClick={e => {
+                e.preventDefault();
+                handleCenturyFilterChange('19');
+              }}
             >
               19
-            </a>
+            </Link>
 
-            <a
+            <Link
               data-cy="century"
-              className="button mr-1"
-              href="#/people?centuries=20"
+              className={cn('button mr-1', {
+                'is-info': centuries.includes('20'),
+              })}
+              to="#"
+              onClick={e => {
+                e.preventDefault();
+                handleCenturyFilterChange('20');
+              }}
             >
               20
-            </a>
+            </Link>
           </div>
 
           <div className="level-right ml-4">
-            <a
+            <Link
               data-cy="centuryALL"
               className="button is-success is-outlined"
-              href="#/people"
+              to="#"
+              onClick={e => {
+                e.preventDefault();
+                handleClearCenturyFilter();
+              }}
             >
               All
-            </a>
+            </Link>
           </div>
         </div>
       </div>
 
       <div className="panel-block">
-        <a className="button is-link is-outlined is-fullwidth" href="#/people">
+        <Link
+          className="button is-link is-outlined is-fullwidth"
+          to="#"
+          onClick={() => handleResetFilters()}
+        >
           Reset all filters
-        </a>
+        </Link>
       </div>
     </nav>
   );
