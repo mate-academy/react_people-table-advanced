@@ -47,17 +47,19 @@ declare global {
   }
 }
 
-Cypress.Commands.add('getByDataCy', selector => {
-  cy.get(`[data-cy="${selector}"]`);
+// cypress/support/commands.ts
+Cypress.Commands.add('getByDataCy', (selector: string) => {
+  return cy.get(`[data-cy="${selector}"]`);
 });
 
 Cypress.Commands.add(
   'byDataCy',
   { prevSubject: 'optional' },
-
-  (subject, name) => {
+  (subject: any, name: string) => {
     const selector = `[data-cy="${name}"]`;
-
-    return subject ? cy.wrap(subject).find(selector) : cy.get(selector);
+    if (subject) {
+      return cy.wrap(subject).find(selector);
+    }
+    return cy.get(selector);
   },
 );
