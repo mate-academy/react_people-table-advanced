@@ -8,9 +8,20 @@ function wait(delay: number) {
   return new Promise(resolve => setTimeout(resolve, delay));
 }
 
-export async function getPeople(): Promise<Person[]> {
+export function getPeople(): Promise<Person[]> {
   // keep this delay for testing purpose
   return wait(500)
     .then(() => fetch(API_URL))
-    .then(response => response.json());
+    .then(async response => {
+      if (!response.ok) {
+        // Try to read error text, fallback to status text/code
+        const text = await response.text().catch(() => '');
+        const message =
+          text || response.statusText || `HTTP ${response.status}`;
+
+        throw new Error(message);
+      }
+
+      return response.json() as Promise<Person[]>;
+    });
 }
