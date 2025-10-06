@@ -17,6 +17,7 @@ export const SortLink: React.FC<Props> = ({ field }) => {
   const newParams = new URLSearchParams(searchParams);
 
   if (!isActive) {
+    newParams.delete('order');
     newParams.set('sort', field);
   } else if (isActive && !currentOrder) {
     newParams.set('order', 'desc');

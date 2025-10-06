@@ -1,8 +1,11 @@
 import classNames from 'classnames';
 import * as React from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useSearchParams } from 'react-router-dom';
 
 const Navigation: React.FC = () => {
+  const [searchParams] = useSearchParams();
+  const search = searchParams.toString();
+
   return (
     <nav
       data-cy="nav"
@@ -14,22 +17,25 @@ const Navigation: React.FC = () => {
         <div className="navbar-brand">
           <NavLink
             to="/"
-            className={({ isActive }) => {
-              return classNames('navbar-item', {
+            className={({ isActive }) =>
+              classNames('navbar-item', {
                 'has-background-grey-lighter': isActive,
-              });
-            }}
+              })
+            }
           >
             Home
           </NavLink>
 
           <NavLink
-            to="people"
-            className={({ isActive }) => {
-              return classNames('navbar-item', {
-                'has-background-grey-lighter': isActive,
-              });
+            to={{
+              pathname: '/people',
+              search: search ? `?${search}` : '',
             }}
+            className={({ isActive }) =>
+              classNames('navbar-item', {
+                'has-background-grey-lighter': isActive,
+              })
+            }
           >
             People
           </NavLink>

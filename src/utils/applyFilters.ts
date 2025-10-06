@@ -14,8 +14,8 @@ export function applyFilters(people: Person[], filters: Filters): Person[] {
     result = result.filter(
       person =>
         person.name.toLowerCase().includes(query) ||
-        person.motherName?.toLowerCase().includes(query) ||
-        person.fatherName?.toLowerCase().includes(query),
+        (person.motherName || '').toLowerCase().includes(query) ||
+        (person.fatherName || '').toLowerCase().includes(query),
     );
   }
 
