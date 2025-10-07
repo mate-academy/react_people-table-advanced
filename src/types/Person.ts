@@ -9,3 +9,5 @@ export interface Person {
   mother?: Person;
   father?: Person;
 }
+
+export type PersonKey = keyof Pick<Person, 'name' | 'sex' | 'born' | 'died'>;
