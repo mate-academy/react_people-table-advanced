@@ -1,96 +1,79 @@
+/* eslint-disable jsx-a11y/label-has-associated-control */
+import { useSearchParams } from 'react-router-dom';
+import { useMemo } from 'react';
+import React from 'react';
+
 export const PeopleFilters = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const query = searchParams.get('query') || '';
+  const centuries = searchParams.getAll('centuries');
+
+  const handleQueryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = event.target.value;
+    const trimmed = value.trim();
+    const params = new URLSearchParams(searchParams.toString());
+
+    if (trimmed) {
+      params.set('query', trimmed);
+    } else {
+      params.delete('query');
+    }
+
+    setSearchParams(params);
+  };
+
+  const toggleCentury = (century: number) => {
+    const params = new URLSearchParams(searchParams);
+    const all = params.getAll('centuries');
+
+    if (all.includes(String(century))) {
+      const filtered = all.filter(c => c !== String(century));
+
+      params.delete('centuries');
+      filtered.forEach(c => params.append('centuries', c));
+    } else {
+      params.append('centuries', String(century));
+    }
+
+    setSearchParams(params);
+  };
+
+  const centuryOptions = useMemo(() => [14, 15, 16, 17, 18, 19], []);
+
   return (
-    <nav className="panel">
-      <p className="panel-heading">Filters</p>
-
-      <p className="panel-tabs" data-cy="SexFilter">
-        <a className="is-active" href="#/people">
-          All
-        </a>
-        <a className="" href="#/people?sex=m">
-          Male
-        </a>
-        <a className="" href="#/people?sex=f">
-          Female
-        </a>
-      </p>
-
-      <div className="panel-block">
-        <p className="control has-icons-left">
+    <aside className="box" data-cy="filters">
+      <div className="field">
+        <label className="label">Search by name</label>
+        <div className="control">
           <input
-            data-cy="NameFilter"
-            type="search"
+            data-cy="nameFilter"
             className="input"
-            placeholder="Search"
+            type="text"
+            value={query}
+            onChange={handleQueryChange}
+            placeholder="Type a name..."
           />
-
-          <span className="icon is-left">
-            <i className="fas fa-search" aria-hidden="true" />
-          </span>
-        </p>
-      </div>
-
-      <div className="panel-block">
-        <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
-          <div className="level-left">
-            <a
-              data-cy="century"
-              className="button mr-1"
-              href="#/people?centuries=16"
-            >
-              16
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=17"
-            >
-              17
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=18"
-            >
-              18
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=19"
-            >
-              19
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1"
-              href="#/people?centuries=20"
-            >
-              20
-            </a>
-          </div>
-
-          <div className="level-right ml-4">
-            <a
-              data-cy="centuryALL"
-              className="button is-success is-outlined"
-              href="#/people"
-            >
-              All
-            </a>
-          </div>
         </div>
       </div>
 
-      <div className="panel-block">
-        <a className="button is-link is-outlined is-fullwidth" href="#/people">
-          Reset all filters
-        </a>
+      <div className="field">
+        <label className="label">Centuries</label>
+        <div className="buttons are-small">
+          {centuryOptions.map(c => (
+            <button
+              key={c}
+              className={`button ${
+                centuries.includes(String(c)) ? 'is-info' : ''
+              }`}
+              onClick={() => toggleCentury(c)}
+              data-cy={`century-${c}`}
+            >
+              {c}
+            </button>
+          ))}
+        </div>
       </div>
-    </nav>
+    </aside>
   );
 };
