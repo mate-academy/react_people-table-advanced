@@ -2,6 +2,7 @@ import { PeoplePage } from './components/PeoplePage';
 import { Navbar } from './components/Navbar';
 
 import './App.scss';
+import React from 'react';
 
 export const App = () => {
   return (
