@@ -1,26 +1,23 @@
 import React from 'react';
+import { Link, useLocation } from 'react-router-dom';
 
 export const Navbar = () => {
+  const { search } = useLocation();
+
   return (
     <nav
-      data-cy="nav"
-      className="navbar is-fixed-top has-shadow"
+      className="navbar is-link"
       role="navigation"
       aria-label="main navigation"
     >
-      <div className="container">
-        <div className="navbar-brand">
-          <a className="navbar-item" href="#/">
+      <div className="navbar-menu is-active">
+        <div className="navbar-start">
+          <Link to="/" className="navbar-item">
             Home
-          </a>
-
-          <a
-            aria-current="page"
-            className="navbar-item has-background-grey-lighter"
-            href="#/people"
-          >
+          </Link>
+          <Link to={{ pathname: '/people', search }} className="navbar-item">
             People
-          </a>
+          </Link>
         </div>
       </div>
     </nav>
