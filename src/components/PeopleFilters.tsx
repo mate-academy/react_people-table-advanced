@@ -11,10 +11,11 @@ export const PeopleFilters = () => {
 
   const handleQueryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
-    const params = new URLSearchParams(searchParams);
+    const trimmed = value.trim();
+    const params = new URLSearchParams(searchParams.toString());
 
-    if (value) {
-      params.set('query', value);
+    if (trimmed) {
+      params.set('query', trimmed);
     } else {
       params.delete('query');
     }
