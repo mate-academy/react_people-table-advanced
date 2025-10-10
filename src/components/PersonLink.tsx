@@ -9,10 +9,11 @@ type Props = {
 
 export const PersonLink: React.FC<Props> = ({ person }) => {
   const [searchParams] = useSearchParams();
+
   return (
     <NavLink
       to={{
-        pathname:`/people/${person.slug}`,
+        pathname: `/people/${person.slug}`,
         search: searchParams.toString(),
       }}
       className={classNames({ 'has-text-danger': person.sex === 'f' })}

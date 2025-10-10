@@ -6,6 +6,7 @@ const getClass = ({ isActive }: { isActive: boolean }) =>
 
 export const Navbar = () => {
   const location = useLocation();
+
   return (
     <nav
       data-cy="nav"
@@ -22,7 +23,7 @@ export const Navbar = () => {
           <NavLink
             className={getClass}
             to={{
-              pathname: "/people",
+              pathname: '/people',
               search: location.search,
             }}
           >

@@ -35,8 +35,9 @@ export const PeoplePage = () => {
       const normalizedQuery = query.trim().toLowerCase();
 
       filtered = filtered.filter(person =>
-        [person.name, person.motherName, person.fatherName]
-          .some(val => val?.toLowerCase().includes(normalizedQuery)),
+        [person.name, person.motherName, person.fatherName].some(val =>
+          val?.toLowerCase().includes(normalizedQuery),
+        ),
       );
     }
 
