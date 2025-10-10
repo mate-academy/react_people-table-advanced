@@ -1,31 +1,46 @@
-import { PeopleFilters } from './PeopleFilters';
-import { Loader } from './Loader';
-import { PeopleTable } from './PeopleTable';
+import { Loader } from '../components/Loader';
+import { getPeople } from '../api';
+import { useEffect, useState } from 'react';
+import { Person } from '../types';
+import { PeopleTable } from '../components/PeopleTable';
 
 export const PeoplePage = () => {
+  const [people, setPeople] = useState<Person[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [isErrorMessageShow, setIsErrorMessageShow] = useState(false);
+
+  useEffect(() => {
+    setLoading(true);
+    setIsErrorMessageShow(false);
+    getPeople()
+      .then(setPeople)
+      .catch(() => {
+        setIsErrorMessageShow(true);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, []);
+
   return (
     <>
       <h1 className="title">People Page</h1>
 
       <div className="block">
-        <div className="columns is-desktop is-flex-direction-row-reverse">
-          <div className="column is-7-tablet is-narrow-desktop">
-            <PeopleFilters />
-          </div>
+        <div className="box table-container">
+          {loading && <Loader />}
 
-          <div className="column">
-            <div className="box table-container">
-              <Loader />
+          {isErrorMessageShow && (
+            <p data-cy="peopleLoadingError" className="has-text-danger">
+              Something went wrong
+            </p>
+          )}
 
-              <p data-cy="peopleLoadingError">Something went wrong</p>
+          {!isErrorMessageShow && !loading && !!people.length && (
+            <p data-cy="noPeopleMessage">There are no people on the server</p>
+          )}
 
-              <p data-cy="noPeopleMessage">There are no people on the server</p>
-
-              <p>There are no people matching the current search criteria</p>
-
-              <PeopleTable />
-            </div>
-          </div>
+          {people.length !== 0 && <PeopleTable people={people} />}
         </div>
       </div>
     </>
