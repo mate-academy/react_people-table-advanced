@@ -33,7 +33,12 @@ export const PeoplePage = () => {
   }, []);
 
   const filteredPeople = people.filter(person => {
-    const matchesQuery = person.name.toLowerCase().includes(query);
+    const fieldsToCheck = [person.name, person.motherName, person.fatherName];
+
+    const matchesQuery = query
+      ? fieldsToCheck.some(field => field?.toLowerCase().includes(query))
+      : true;
+
     const matchesSex = sex ? person.sex === sex : true;
 
     const personCentury = Math.floor(person.born / 100) + 1;
@@ -91,7 +96,9 @@ export const PeoplePage = () => {
                 </p>
               )}
 
-              {people.length !== 0 && <PeopleTable people={sortedPeople} />}
+              {!loading && !isErrorMessageShow && people.length !== 0 && (
+                <PeopleTable people={sortedPeople} />
+              )}
             </div>
           </div>
         </div>

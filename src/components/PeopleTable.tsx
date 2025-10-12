@@ -28,7 +28,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
   }
 
   function getIconClass(param: string) {
-    if (params.has('order') && params.get('sort') === param) {
+    if (params.get('order') === 'desc' && params.get('sort') === param) {
       return 'fa-sort-down';
     } else if (params.has('sort') && params.get('sort') === param) {
       return 'fa-sort-up';
@@ -42,29 +42,28 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
       data-cy="peopleTable"
       className="table is-striped is-hoverable is-narrow is-fullwidth"
     >
-      {people.length > 0 && (
-        <thead>
-          <tr>
-            {headLines.map(line => (
-              <th key={line}>
-                <span className="is-flex is-flex-wrap-nowrap">
-                  {line}
-                  <SearchLink params={getSortParams(line)}>
-                    <span className="icon">
-                      <i
-                        className={`fas ${getIconClass(line.toLocaleLowerCase())}`}
-                      />
-                    </span>
-                  </SearchLink>
-                </span>
-              </th>
-            ))}
+      <thead>
+        <tr>
+          {headLines.map(line => (
+            <th key={line}>
+              <span className="is-flex is-flex-wrap-nowrap">
+                {line}
+                <SearchLink params={getSortParams(line)}>
+                  <span className="icon">
+                    <i
+                      className={`fas ${getIconClass(line.toLocaleLowerCase())}`}
+                    />
+                  </span>
+                </SearchLink>
+              </span>
+            </th>
+          ))}
 
-            <th>Mother</th>
-            <th>Father</th>
-          </tr>
-        </thead>
-      )}
+          <th>Mother</th>
+          <th>Father</th>
+        </tr>
+      </thead>
+
       <tbody>
         {people.map(person => (
           <PersonInfo person={person} key={person.slug} people={people} />

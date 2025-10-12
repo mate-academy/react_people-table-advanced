@@ -1,6 +1,6 @@
 import classNames from 'classnames';
 import { SearchLink } from './SearchLink';
-import { Link, useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import { getSearchWith, SearchParams } from '../utils/searchHelper';
 
 export const PeopleFilters = () => {
@@ -30,9 +30,9 @@ export const PeopleFilters = () => {
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        <Link to="/people" className={activeLink(null)}>
+        <SearchLink params={{ sex: null }} className={activeLink(null)}>
           All
-        </Link>
+        </SearchLink>
         <SearchLink params={{ sex: 'm' }} className={activeLink('m')}>
           Male
         </SearchLink>
@@ -96,7 +96,6 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <SearchLink
           params={{ query: null, centuries: null, sex: null }}
-          data-cy="centuryALL"
           className="button is-link is-outlined is-fullwidth"
         >
           Reset all filters
