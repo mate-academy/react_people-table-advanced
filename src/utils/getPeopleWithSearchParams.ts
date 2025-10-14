@@ -13,8 +13,8 @@ export function getPeopleWithSearchParams(
 
       if (
         person.name.toLowerCase().includes(valueLowerCase) ||
-        person.motherName?.toLowerCase().includes(valueLowerCase) ||
-        person.fatherName?.toLowerCase().includes(valueLowerCase)
+        (person.motherName || '').toLowerCase().includes(valueLowerCase) ||
+        (person.fatherName || '').toLowerCase().includes(valueLowerCase)
       ) {
         return true;
       }

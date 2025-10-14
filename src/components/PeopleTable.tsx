@@ -25,14 +25,16 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
   }
 
   if (personSlug && !personSlugIsCorrect(personSlug)) {
-    return <Navigate to=".." />;
+    return (
+      <Navigate to={{ pathname: '..', search: searchParams.toString() }} />
+    );
   }
 
   function getSortParams(sortBy: keyof Person): SearchParams {
     const sort = searchParams.get('sort');
     const order = searchParams.get('order');
 
-    if (sort && order) {
+    if (sort && order && sort === sortBy) {
       return { sort: null, order: null };
     }
 
