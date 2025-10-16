@@ -1,17 +1,25 @@
-import React from 'react';
-import { Link, useSearchParams } from 'react-router-dom';
+import { Link, LinkProps, useSearchParams } from 'react-router-dom';
 import { getSearchWith } from '../utils/searchHelper';
 
-type Props = {
-  to: string;
-  params: Record<string, string | string[]>;
-  children: React.ReactNode;
+type Props = Omit<LinkProps, 'to'> & {
+  to: string; // caminho da rota
+  params: Record<string, string | string[] | null>; // permite remover keys
 };
 
-export const SearchLink: React.FC<Props> = ({ to, params, children }) => {
+export const SearchLink: React.FC<Props> = ({
+  to,
+  params,
+  children,
+  ...rest
+}) => {
   const [searchParams] = useSearchParams();
 
   const search = getSearchWith(searchParams, params);
+  const searchString = search ? `?${search}` : '';
 
-  return <Link to={{ pathname: to, search }}>{children}</Link>;
+  return (
+    <Link to={`${to}${searchString}`} {...rest}>
+      {children}
+    </Link>
+  );
 };

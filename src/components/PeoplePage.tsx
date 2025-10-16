@@ -1,24 +1,12 @@
-import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import { PeopleFilters } from './PeopleFilters';
-import { Loader } from './loader/Loader';
+import { Loader } from './Loader';
 import { PeopleTable } from './PeopleTable';
-import peopleData from '../public/api/people.json';
-import { Person } from '../types';
+import peopleData from '../components/api/people.json';
 
 export const PeoplePage = () => {
-  const [people, setPeople] = useState<Person[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
-
-  useEffect(() => {
-    try {
-      setPeople(peopleData);
-      setLoading(false);
-    } catch (e) {
-      setError(true);
-      setLoading(false);
-    }
-  }, []);
+  const { slug } = useParams<{ slug: string }>();
+  const people = peopleData;
 
   return (
     <>
@@ -27,24 +15,17 @@ export const PeoplePage = () => {
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
           <div className="column is-7-tablet is-narrow-desktop">
-            {!loading && !error && people.length > 0 && <PeopleFilters />}
+            <PeopleFilters />
           </div>
 
           <div className="column">
             <div className="box table-container">
-              {loading && <Loader />}
-              {error && (
-                <p data-cy="peopleLoadingError">Something went wrong</p>
-              )}
-              {!loading && !error && people.length === 0 && (
-                <p data-cy="noPeopleMessage">
-                  There are no people on the server
-                </p>
-              )}
+              <Loader />
+              <p data-cy="peopleLoadingError">Something went wrong</p>
+              <p data-cy="noPeopleMessage">There are no people on the server</p>
+              <p>There are no people matching the current search criteria</p>
 
-              {!loading && !error && people.length > 0 && (
-                <PeopleTable people={people} />
-              )}
+              <PeopleTable people={people} selectedPersonSlug={slug} />
             </div>
           </div>
         </div>

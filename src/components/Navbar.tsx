@@ -7,10 +7,14 @@ export const Navbar: React.FC = () => {
     <nav className="navbar">
       <ul className="navbar__list">
         <li>
-          <SearchLink to="/" params={{}}>Home</SearchLink>
+          <SearchLink to="/" params={{}}>
+            Home
+          </SearchLink>
         </li>
         <li>
-          <SearchLink to="/people" params={{}}>People</SearchLink>
+          <SearchLink to="/people" params={{}}>
+            People
+          </SearchLink>
         </li>
       </ul>
     </nav>
