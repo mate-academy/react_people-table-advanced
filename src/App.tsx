@@ -1,24 +1,26 @@
 import React from 'react';
-import { HashRouter, Routes, Route } from 'react-router-dom';
-import { Navbar } from './components/Navbar';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import { HomePage } from './components/HomePage';
 import { PeoplePage } from './components/PeoplePage';
 import { NotFoundPage } from './components/NotFoundPage';
+import { Navbar } from './components/Navbar';
 
 export const App: React.FC = () => {
   return (
-    <HashRouter>
+    <div data-cy="app">
       <Navbar />
 
-      <section className="section">
+      <main className="section">
         <div className="container">
           <Routes>
+            <Route path="/home" element={<Navigate to="/" replace />} />
             <Route path="/" element={<HomePage />} />
-            <Route path="/people/*" element={<PeoplePage />} />
+            <Route path="/people" element={<PeoplePage />} />
+            <Route path="/people/:slug" element={<PeoplePage />} />
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </div>
-      </section>
-    </HashRouter>
+      </main>
+    </div>
   );
 };

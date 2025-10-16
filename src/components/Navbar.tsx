@@ -1,23 +1,18 @@
-export const Navbar = () => {
+import React from 'react';
+import { SearchLink } from './SearchLink';
+import './Navbar.css';
+
+export const Navbar: React.FC = () => {
   return (
-    <nav
-      data-cy="nav"
-      className="navbar is-fixed-top has-shadow"
-      role="navigation"
-      aria-label="main navigation"
-    >
-      <div className="container">
-        <div className="navbar-brand">
-          <a className="navbar-item" href="#/">Home</a>
-          <a
-            aria-current="page"
-            className="navbar-item has-background-grey-lighter"
-            href="#/people"
-          >
-            People
-          </a>
-        </div>
-      </div>
+    <nav className="navbar">
+      <ul className="navbar__list">
+        <li>
+          <SearchLink to="/" params={{}}>Home</SearchLink>
+        </li>
+        <li>
+          <SearchLink to="/people" params={{}}>People</SearchLink>
+        </li>
+      </ul>
     </nav>
   );
 };

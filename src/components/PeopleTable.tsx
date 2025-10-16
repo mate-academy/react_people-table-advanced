@@ -1,122 +1,160 @@
-import { useSearchParams } from 'react-router-dom';
-import peopleData from '../public/api/people.json';
-import { Person } from '../types';
+import React from 'react';
+import { Person } from '../types/Person';
+import { PersonLink } from './PersonLink';
 import { SearchLink } from './SearchLink';
+import { useSearchParams } from 'react-router-dom';
+import sortBoth from '/public/sort_both.png';
+import sortAsc from '/public/sort_asc.png';
+import sortDesc from '/public/sort_desc.png';
+import { getSearchWith } from '../utils/searchHelper';
 
-const sortIcons = {
-  none: '/sort_both.png',
-  asc: '/sort_asc.png',
-  desc: '/sort_desc.png',
-};
+interface Props {
+  people: Person[];
+  selectedPersonSlug?: string;
+}
 
-const getSortedPeople = (people: Person[], sort: string | null, order: string | null) => {
-  if (!sort) return people;
-  const sorted = [...people].sort((a, b) => {
-    const fieldA = a[sort as keyof Person];
-    const fieldB = b[sort as keyof Person];
-
-    if (typeof fieldA === 'number' && typeof fieldB === 'number') {
-      return fieldA - fieldB;
-    }
-    return String(fieldA).localeCompare(String(fieldB));
-  });
-  if (order === 'desc') return sorted.reverse();
-  return sorted;
-};
-
-export const PeopleTable = () => {
+export const PeopleTable: React.FC<Props> = ({
+  people,
+  selectedPersonSlug,
+}) => {
   const [searchParams] = useSearchParams();
-  const query = searchParams.get('query')?.toLowerCase() || '';
-  const sex = searchParams.get('sex');
-  const centuries = searchParams.getAll('centuries');
-  const sortField = searchParams.get('sort');
-  const sortOrder = searchParams.get('order');
+  const sort = searchParams.get('sort');
+  const order = searchParams.get('order');
 
-  let filtered = peopleData.filter((p) => {
-    const matchSex = sex ? p.sex === sex : true;
-    const matchQuery =
-      !query ||
-      p.name.toLowerCase().includes(query) ||
-      (p.motherName && p.motherName.toLowerCase().includes(query)) ||
-      (p.fatherName && p.fatherName.toLowerCase().includes(query));
-    const century = Math.floor(p.born / 100) + 1;
-    const matchCentury = centuries.length ? centuries.includes(century.toString()) : true;
-    return matchSex && matchQuery && matchCentury;
-  });
+  const getNextSort = (field: string): [string | null, string | null] => {
+    if (sort !== field) {
+      return [field, null];
+    }
 
-  filtered = getSortedPeople(filtered, sortField, sortOrder);
+    if (!order) {
+      return [field, 'desc'];
+    }
 
-  const getNextSort = (field: string) => {
-    if (sortField !== field) return { sort: field, order: null };
-    if (!sortOrder) return { sort: field, order: 'asc' };
-    if (sortOrder === 'asc') return { sort: field, order: 'desc' };
-    return { sort: null, order: null };
+    return [null, null];
   };
 
   const getSortIcon = (field: string) => {
-    if (sortField !== field) return sortIcons.none;
-    if (!sortOrder) return sortIcons.asc;
-    if (sortOrder === 'asc') return sortIcons.desc;
-    return sortIcons.none;
+    if (sort !== field) {
+      return sortBoth;
+    }
+
+    if (order === 'desc') {
+      return sortDesc;
+    }
+
+    return sortAsc;
   };
 
+  const sortedPeople = [...people];
+
+  if (sort) {
+    sortedPeople.sort((a, b) => {
+      const valA = (a as any)[sort];
+      const valB = (b as any)[sort];
+
+      if (valA < valB) {
+        return order === 'desc' ? 1 : -1;
+      }
+
+      if (valA > valB) {
+        return order === 'desc' ? -1 : 1;
+      }
+
+      return 0;
+    });
+  }
+
   return (
-    <table
-      data-cy="peopleTable"
-      className="table is-striped is-hoverable is-narrow is-fullwidth"
-    >
-      <thead>
-        <tr>
-          {['name', 'sex', 'born', 'died'].map((field) => (
-            <th key={field}>
-              <span className="is-flex is-flex-wrap-nowrap">
-                {field.charAt(0).toUpperCase() + field.slice(1)}
-                <SearchLink params={getNextSort(field)}>
-                  <img
-                    src={getSortIcon(field)}
-                    alt="sort icon"
-                    style={{ marginLeft: 4 }}
-                  />
-                </SearchLink>
-              </span>
-            </th>
-          ))}
-          <th>Mother</th>
-          <th>Father</th>
-        </tr>
-      </thead>
-      <tbody>
-        {filtered.map((p) => (
-          <tr key={p.slug} data-cy="person">
-            <td>
-              <SearchLink params={{}} to={`/people/${p.slug}`}>
-                {p.name}
-              </SearchLink>
-            </td>
-            <td>{p.sex}</td>
-            <td>{p.born}</td>
-            <td>{p.died}</td>
-            <td>
-              {p.motherName ? (
-                <SearchLink params={{}} to={`/people/${p.mother?.slug || '#'}`}>
-                  {p.motherName}
-                </SearchLink>
-              ) : (
-                '-'
-              )}
-            </td>
-            <td>
-              {p.fatherName ? (
-                <SearchLink params={{}} to={`/people/${p.father?.slug || '#'}`}>
-                  {p.fatherName}
-                </SearchLink>
-              ) : (
-                '-'
-              )}
-            </td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
+    <div className="block">
+      <div className="box table-container">
+        <table
+          data-cy="peopleTable"
+          className="table is-striped is-hoverable is-narrow is-fullwidth"
+        >
+          <thead>
+            <tr>
+              {['name', 'sex', 'born', 'died'].map(field => {
+                const [nextSort, nextOrder] = getNextSort(field);
+
+                return (
+                  <th key={field}>
+                    <SearchLink
+                      params={getSearchWith(searchParams, {
+                        sort: nextSort,
+                        order: nextOrder,
+                      })}
+                    >
+                      <img
+                        src={getSortIcon(field)}
+                        alt="sort"
+                        style={{ width: '10px', marginRight: '5px' }}
+                      />
+                      {field[0].toUpperCase() + field.slice(1)}
+                    </SearchLink>
+                  </th>
+                );
+              })}
+              <th>Mother</th>
+              <th>Father</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            {sortedPeople.map(person => {
+              const isSelected = person.slug === selectedPersonSlug;
+
+              return (
+                <tr
+                  key={person.slug}
+                  data-cy="person"
+                  className={isSelected ? 'has-background-warning' : undefined}
+                >
+                  <td>
+                    <PersonLink person={person} people={people} />
+                  </td>
+                  <td>{person.sex}</td>
+                  <td>{person.born}</td>
+                  <td>{person.died}</td>
+                  <td>
+                    {person.motherName ? (
+                      <PersonLink
+                        person={
+                          people.find(p => p.name === person.motherName) || {
+                            ...person,
+                            name: person.motherName,
+                            slug: person.motherName,
+                            sex: 'f',
+                          }
+                        }
+                        people={people}
+                      />
+                    ) : (
+                      '-'
+                    )}
+                  </td>
+                  <td>
+                    {person.fatherName ? (
+                      <PersonLink
+                        person={
+                          people.find(p => p.name === person.fatherName) || {
+                            ...person,
+                            name: person.fatherName,
+                            slug: person.fatherName,
+                            sex: 'm',
+                          }
+                        }
+                        people={people}
+                      />
+                    ) : (
+                      '-'
+                    )}
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+    </div>
   );
 };

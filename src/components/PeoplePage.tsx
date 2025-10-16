@@ -33,9 +33,13 @@ export const PeoplePage = () => {
           <div className="column">
             <div className="box table-container">
               {loading && <Loader />}
-              {error && <p data-cy="peopleLoadingError">Something went wrong</p>}
+              {error && (
+                <p data-cy="peopleLoadingError">Something went wrong</p>
+              )}
               {!loading && !error && people.length === 0 && (
-                <p data-cy="noPeopleMessage">There are no people on the server</p>
+                <p data-cy="noPeopleMessage">
+                  There are no people on the server
+                </p>
               )}
 
               {!loading && !error && people.length > 0 && (
