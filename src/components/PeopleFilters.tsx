@@ -1,23 +1,53 @@
+import { useSearchParams } from 'react-router-dom';
+import cn from 'classnames';
+import { getSearchWith } from '../utils/searchHelper';
+import { SearchLink } from './SearchLink';
+
 export const PeopleFilters = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const query = searchParams.get('query') || '';
+  const centuries = searchParams.getAll('centuries');
+
+  const handleQueryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+
+    setSearchParams(getSearchWith(searchParams, { query: value || null }));
+  };
+
+  const renderCenturyButton = (century: string) => (
+    <SearchLink
+      key={century}
+      data-cy="century"
+      className={cn('button mr-1', {
+        'is-info': centuries.includes(century),
+      })}
+      params={{
+        centuries: centuries.includes(century)
+          ? centuries.filter(c => c !== century)
+          : [...centuries, century],
+      }}
+    >
+      {century}
+    </SearchLink>
+  );
+
+  const centuryList = ['16', '17', '18', '19', '20'];
+
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        <a className="is-active" href="#/people">
-          All
-        </a>
-        <a className="" href="#/people?sex=m">
-          Male
-        </a>
-        <a className="" href="#/people?sex=f">
-          Female
-        </a>
+        <SearchLink params={{ sex: null }}>All</SearchLink>
+        <SearchLink params={{ sex: 'm' }}>Male</SearchLink>
+        <SearchLink params={{ sex: 'f' }}>Female</SearchLink>
       </p>
 
       <div className="panel-block">
         <p className="control has-icons-left">
           <input
+            value={query}
+            onChange={handleQueryChange}
             data-cy="NameFilter"
             type="search"
             className="input"
@@ -33,63 +63,34 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            <a
-              data-cy="century"
-              className="button mr-1"
-              href="#/people?centuries=16"
-            >
-              16
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=17"
-            >
-              17
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=18"
-            >
-              18
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=19"
-            >
-              19
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1"
-              href="#/people?centuries=20"
-            >
-              20
-            </a>
+            {centuryList.map(renderCenturyButton)}
           </div>
 
           <div className="level-right ml-4">
-            <a
+            <button
               data-cy="centuryALL"
               className="button is-success is-outlined"
-              href="#/people"
+              type="button"
+              onClick={() =>
+                setSearchParams(
+                  getSearchWith(searchParams, { centuries: null }),
+                )
+              }
             >
               All
-            </a>
+            </button>
           </div>
         </div>
       </div>
 
       <div className="panel-block">
-        <a className="button is-link is-outlined is-fullwidth" href="#/people">
+        <button
+          type="button"
+          className="button is-link is-outlined is-fullwidth"
+          onClick={() => setSearchParams(new URLSearchParams())}
+        >
           Reset all filters
-        </a>
+        </button>
       </div>
     </nav>
   );
