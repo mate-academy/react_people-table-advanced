@@ -1,16 +1,61 @@
-export const PeopleFilters = () => {
+import React from 'react';
+import { useSearchParams } from 'react-router-dom';
+import { getSearchWith } from '../utils/searchHelper';
+
+export const PeopleFilters: React.FC = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const query = searchParams.get('query') || '';
+  const sex = searchParams.get('sex');
+  const centuries = searchParams.getAll('centuries');
+
+  function handleQueryChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const value = e.target.value.trim();
+
+    setSearchParams(getSearchWith(searchParams, { query: value || null }));
+  }
+
+  function handleSexChange(value: 'm' | 'f' | null) {
+    setSearchParams(getSearchWith(searchParams, { sex: value }));
+  }
+
+  function handleCenturyChange(century: string) {
+    const newCenturies = centuries.includes(century)
+      ? centuries.filter(c => c !== century)
+      : [...centuries, century];
+
+    setSearchParams(
+      getSearchWith(searchParams, {
+        centuries: newCenturies.length ? newCenturies : null,
+      }),
+    );
+  }
+
+  function handleReset() {
+    setSearchParams({});
+  }
+
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        <a className="is-active" href="#/people">
+        <a
+          className={!sex ? 'is-active' : ''}
+          onClick={() => handleSexChange(null)}
+        >
           All
         </a>
-        <a className="" href="#/people?sex=m">
+        <a
+          className={sex === 'm' ? 'is-active' : ''}
+          onClick={() => handleSexChange('m')}
+        >
           Male
         </a>
-        <a className="" href="#/people?sex=f">
+        <a
+          className={sex === 'f' ? 'is-active' : ''}
+          onClick={() => handleSexChange('f')}
+        >
           Female
         </a>
       </p>
@@ -22,74 +67,46 @@ export const PeopleFilters = () => {
             type="search"
             className="input"
             placeholder="Search"
+            value={query}
+            onChange={handleQueryChange}
           />
-
           <span className="icon is-left">
             <i className="fas fa-search" aria-hidden="true" />
           </span>
         </p>
       </div>
 
-      <div className="panel-block">
-        <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
-          <div className="level-left">
-            <a
+      <div className="panel-block" data-cy="CenturyFilter">
+        <div className="buttons">
+          {['16', '17', '18', '19', '20'].map(c => (
+            <button
+              key={c}
               data-cy="century"
-              className="button mr-1"
-              href="#/people?centuries=16"
+              className={`button ${centuries.includes(c) ? 'is-info' : ''}`}
+              onClick={() => handleCenturyChange(c)}
             >
-              16
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=17"
-            >
-              17
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=18"
-            >
-              18
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=19"
-            >
-              19
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1"
-              href="#/people?centuries=20"
-            >
-              20
-            </a>
-          </div>
-
-          <div className="level-right ml-4">
-            <a
-              data-cy="centuryALL"
-              className="button is-success is-outlined"
-              href="#/people"
-            >
-              All
-            </a>
-          </div>
+              {c}
+            </button>
+          ))}
+          <button
+            data-cy="centuryALL"
+            className="button is-success is-outlined"
+            onClick={() =>
+              setSearchParams(getSearchWith(searchParams, { centuries: null }))
+            }
+          >
+            All
+          </button>
         </div>
       </div>
 
       <div className="panel-block">
-        <a className="button is-link is-outlined is-fullwidth" href="#/people">
+        <button
+          className="button is-link is-outlined is-fullwidth"
+          onClick={handleReset}
+        >
           Reset all filters
-        </a>
+        </button>
       </div>
     </nav>
   );

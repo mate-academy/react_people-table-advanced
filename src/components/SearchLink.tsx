@@ -1,36 +1,48 @@
-import { Link, LinkProps, useSearchParams } from 'react-router-dom';
 import { getSearchWith, SearchParams } from '../utils/searchHelper';
+import { Person } from '../types';
+import { Link, LinkProps, useSearchParams } from 'react-router-dom';
+import classNames from 'classnames';
 
-/**
- * To replace the the standard `Link` we take all it props except for `to`
- * along with the custom `params` prop that we use for updating the search
- */
 type Props = Omit<LinkProps, 'to'> & {
-  params: SearchParams;
+  person?: Person | null;
+  fallbackName?: string | null;
+  params?: SearchParams;
 };
 
-/**
- * SearchLink updates the given `params` in the search keeping the `pathname`
- * and the other existing search params (see `getSearchWith`)
- */
 export const SearchLink: React.FC<Props> = ({
-  children, // this is the content between the open and closing tags
-  params, // the params to be updated in the `search`
-  ...props // all usual Link props like `className`, `style` and `id`
+  person,
+  fallbackName,
+  params = {},
+  children,
+  className,
+  ...props
 }) => {
   const [searchParams] = useSearchParams();
 
-  return (
+  if (!person && !fallbackName) {
+    return <span>-</span>;
+  }
+
+  const name = person?.name || fallbackName;
+  const slug = person?.slug;
+
+  const linkClass = classNames(className, {
+    'has-text-link': person?.sex === 'm',
+    'has-text-danger': person?.sex === 'f',
+  });
+
+  return slug ? (
     <Link
-      // to={{ search: getSearchWith(searchParams, { query: 'sdf' }) }}
-      // to={{ search: getSearchWith(searchParams, { query: null }) }}
-      // to={{ search: getSearchWith(searchParams, { centuries: ['16', '18'] }) }}
       to={{
+        pathname: `/people/${slug}`,
         search: getSearchWith(searchParams, params),
       }}
-      {...props} // copy all the other props
+      className={linkClass}
+      {...props}
     >
-      {children}
+      {name}
     </Link>
+  ) : (
+    <span>{name}</span>
   );
 };
