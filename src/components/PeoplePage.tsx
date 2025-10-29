@@ -112,6 +112,49 @@ export const PeoplePage: React.FC = () => {
     );
   }, [people, searchParams]);
 
+  const sortedPeople = useMemo(() => {
+    if (!filteredPeople.length) {
+      return [] as Person[];
+    }
+
+    const sortField = searchParams.get('sort');
+    const order = searchParams.get('order');
+    const isDesc = order === 'desc';
+
+    const validFields = new Set(['name', 'sex', 'born', 'died']);
+
+    if (!sortField || !validFields.has(sortField)) {
+      return filteredPeople;
+    }
+
+    const list = [...filteredPeople];
+
+    list.sort((a, b) => {
+      let cmp = 0;
+
+      switch (sortField) {
+        case 'name':
+          cmp = a.name.localeCompare(b.name);
+          break;
+        case 'sex':
+          cmp = a.sex.localeCompare(b.sex);
+          break;
+        case 'born':
+          cmp = a.born - b.born;
+          break;
+        case 'died':
+          cmp = a.died - b.died;
+          break;
+        default:
+          cmp = 0;
+      }
+
+      return isDesc ? -cmp : cmp;
+    });
+
+    return list;
+  }, [filteredPeople, searchParams]);
+
   return (
     <div data-cy="peoplePage">
       <h1 className="title">People Page</h1>
@@ -146,7 +189,7 @@ export const PeoplePage: React.FC = () => {
                     </p>
                   ) : (
                     <PeopleTable
-                      people={filteredPeople}
+                      people={sortedPeople}
                       selectedSlug={selectedSlug}
                     />
                   )}
