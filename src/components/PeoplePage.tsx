@@ -1,43 +1,14 @@
 import { PeopleFilters } from './PeopleFilters';
 import { Loader } from './Loader';
 import { PeopleTable } from './PeopleTable';
-import { useParams } from 'react-router-dom';
+import { useParams, useSearchParams } from 'react-router-dom';
 import { useEffect, useMemo, useState } from 'react';
 import { Person } from '../types';
 import { getPeople } from '../api';
 
-// export const PeoplePage = () => {
-//   return (
-//     <>
-//       <h1 className="title">People Page</h1>
-
-//       <div className="block">
-//         <div className="columns is-desktop is-flex-direction-row-reverse">
-//           <div className="column is-7-tablet is-narrow-desktop">
-//             <PeopleFilters />
-//           </div>
-
-//           <div className="column">
-//             <div className="box table-container">
-//               <Loader />
-
-//               <p data-cy="peopleLoadingError">Something went wrong</p>
-
-//               <p data-cy="noPeopleMessage">There are no people on the server</p>
-
-//               <p>There are no people matching the current search criteria</p>
-
-//               <PeopleTable />
-//             </div>
-//           </div>
-//         </div>
-//       </div>
-//     </>
-//   );
-// };
-
 export const PeoplePage: React.FC = () => {
   const { slug } = useParams();
+  const [searchParams] = useSearchParams();
   const [people, setPeople] = useState<Person[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [hasError, setHasError] = useState(false);
@@ -95,14 +66,62 @@ export const PeoplePage: React.FC = () => {
 
   const selectedSlug = useMemo(() => slug, [slug]);
 
+  const filteredPeople = useMemo(() => {
+    if (!people.length) {
+      return [] as Person[];
+    }
+
+    // Name query filter (case-insensitive, by name/motherName/fatherName)
+    const query = (searchParams.get('query') || '').trim().toLowerCase();
+    const sex = searchParams.get('sex'); // 'm' | 'f' | null
+    const centuries = searchParams.getAll('centuries'); // array of strings
+
+    const hasQuery = query.length > 0;
+
+    const matchesQuery = (p: Person) => {
+      if (!hasQuery) {
+        return true;
+      }
+
+      const names = [p.name, p.motherName || '', p.fatherName || ''];
+      const fields = names.map(v => v.toLowerCase());
+
+      return fields.some(v => v.includes(query));
+    };
+
+    const matchesSex = (p: Person) => {
+      if (!sex) {
+        return true;
+      }
+
+      return p.sex === sex;
+    };
+
+    const matchesCentury = (p: Person) => {
+      if (!centuries.length) {
+        return true;
+      }
+
+      const bornCentury = Math.ceil(p.born / 100).toString();
+
+      return centuries.includes(bornCentury);
+    };
+
+    return people.filter(
+      p => matchesQuery(p) && matchesSex(p) && matchesCentury(p),
+    );
+  }, [people, searchParams]);
+
   return (
     <div data-cy="peoplePage">
       <h1 className="title">People Page</h1>
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
-          <div className="column is-7-tablet is-narrow-desktop">
-            <PeopleFilters />
-          </div>
+          {!isLoading && !hasError && people.length > 0 && (
+            <div className="column is-7-tablet is-narrow-desktop">
+              <PeopleFilters />
+            </div>
+          )}
           <div className="column">
             <div className="box table-container">
               {isLoading && <Loader />}
@@ -120,7 +139,18 @@ export const PeoplePage: React.FC = () => {
               )}
 
               {!isLoading && !hasError && people.length > 0 && (
-                <PeopleTable people={people} selectedSlug={selectedSlug} />
+                <>
+                  {filteredPeople.length === 0 ? (
+                    <p>
+                      There are no people matching the current search criteria
+                    </p>
+                  ) : (
+                    <PeopleTable
+                      people={filteredPeople}
+                      selectedSlug={selectedSlug}
+                    />
+                  )}
+                </>
               )}
             </div>
           </div>
