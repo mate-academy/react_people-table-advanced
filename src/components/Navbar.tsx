@@ -1,3 +1,11 @@
+import { NavLink } from 'react-router-dom';
+import cn from 'classnames';
+
+const getClasses = ({ isActive }: { isActive: boolean }) =>
+  cn('navbar-item', {
+    'has-background-grey-lighter': isActive,
+  });
+
 export const Navbar = () => {
   return (
     <nav
@@ -8,17 +16,19 @@ export const Navbar = () => {
     >
       <div className="container">
         <div className="navbar-brand">
-          <a className="navbar-item" href="#/">
+          <NavLink to="/" className={getClasses}>
             Home
-          </a>
-
-          <a
-            aria-current="page"
-            className="navbar-item has-background-grey-lighter"
-            href="#/people"
-          >
+          </NavLink>
+          <NavLink to="/people" className={getClasses}>
             People
-          </a>
+          </NavLink>
+
+          {/*
+            aria-current="page"
+
+            I don't know what is that and how to use it.
+            it just was inside People link right from the beggining.
+          */}
         </div>
       </div>
     </nav>
