@@ -15,7 +15,6 @@ type Props = {
 
 export const PeopleTable: React.FC<Props> = ({ people }) => {
   const [filteredPeople, setFilteredPeople] = useState<Person[]>(people);
-
   const [searchParams] = useSearchParams();
 
   useEffect(() => {
@@ -25,58 +24,50 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
 
     const lowerCaseQuery = query.toLowerCase().trim();
 
-    filteredList = people.filter(
-      person =>
-        person.name.toLowerCase().includes(lowerCaseQuery) ||
-        person.motherName?.toLowerCase().includes(lowerCaseQuery) ||
-        person.fatherName?.toLowerCase().includes(lowerCaseQuery),
+    filteredList = people.filter(person =>
+      person.name.toLowerCase().includes(lowerCaseQuery) ||
+      (person.motherName || '').toLowerCase().includes(lowerCaseQuery) ||
+      (person.fatherName || '').toLowerCase().includes(lowerCaseQuery),
     );
 
     if (centuries.length) {
       filteredList = filteredList.filter(person =>
-        centuries.includes(String(Math.ceil(+person.born / 100))),
+        centuries.includes(String(Math.ceil(person.born / 100))),
       );
     }
 
     switch (searchParams.get('sex')) {
-      case Sex.MALE: {
+      case Sex.MALE:
         filteredList = filteredList.filter(person => person.sex === Sex.MALE);
         break;
-      }
 
-      case Sex.FEMALE: {
+      case Sex.FEMALE:
         filteredList = filteredList.filter(person => person.sex === Sex.FEMALE);
         break;
-      }
 
-      default: {
+      default:
         break;
-      }
     }
 
     const sortBy = searchParams.get('sort');
     const sortOrder = searchParams.get('order');
 
     switch (sortBy) {
-      case SortCategory.name: {
+      case SortCategory.name:
         filteredList.sort((a, b) => a.name.localeCompare(b.name));
         break;
-      }
 
-      case SortCategory.born: {
+      case SortCategory.born:
         filteredList.sort((a, b) => a.born - b.born);
         break;
-      }
 
-      case SortCategory.died: {
+      case SortCategory.died:
         filteredList.sort((a, b) => a.died - b.died);
         break;
-      }
 
-      case SortCategory.sex: {
+      case SortCategory.sex:
         filteredList.sort((a, b) => a.sex.localeCompare(b.sex));
         break;
-      }
 
       default:
         break;
@@ -88,6 +79,11 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
 
     setFilteredPeople(filteredList);
   }, [people, searchParams]);
+
+  // ✅ Відображення правильного повідомлення
+  const noPeopleMessage = !people.length
+    ? 'There are no people on the server.'
+    : 'No people match the current filters.';
 
   return (
     <table
@@ -162,8 +158,12 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
         </tr>
       </thead>
       <tbody>
-        {!people.length || !filteredPeople.length ? (
-          <NoPeopleMessage />
+        {!filteredPeople.length ? (
+          <tr>
+            <td colSpan={6} className="has-text-centered">
+              <NoPeopleMessage message={noPeopleMessage} />
+            </td>
+          </tr>
         ) : (
           filteredPeople.map(person => (
             <PersonLink key={`${person.name}-${person.born}`} person={person} />

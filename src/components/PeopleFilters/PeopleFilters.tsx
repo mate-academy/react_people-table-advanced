@@ -10,7 +10,7 @@ export const PeopleFilters = () => {
   const query = searchParams.get('query') || '';
   const centuries = searchParams.getAll('centuries') || [];
 
-  function handleQueryChange(event: React.ChangeEvent<HTMLInputElement>) {
+  const handleQueryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const params = new URLSearchParams(searchParams);
 
     if (!event.target.value.length) {
@@ -20,9 +20,9 @@ export const PeopleFilters = () => {
     }
 
     setSearchParams(params);
-  }
+  };
 
-  function toggleCentury(newCentury: string) {
+  const toggleCentury = (newCentury: string) => {
     const params = new URLSearchParams(searchParams);
     const newCenturies = centuries.includes(String(newCentury))
       ? centuries.filter(century => century !== newCentury)
@@ -31,7 +31,7 @@ export const PeopleFilters = () => {
     params.delete('centuries');
     newCenturies.forEach(century => params.append('centuries', century));
     setSearchParams(params);
-  }
+  };
 
   const isActivatedFilter = (century: number) => {
     const selectedCenturies = searchParams.getAll('centuries');
@@ -78,7 +78,7 @@ export const PeopleFilters = () => {
             className="input"
             value={query}
             placeholder="Search"
-            onChange={input => handleQueryChange(input)}
+            onChange={handleQueryChange}
           />
 
           <span className="icon is-left">
@@ -123,9 +123,12 @@ export const PeopleFilters = () => {
       </div>
 
       <div className="panel-block">
-        <a className="button is-link is-outlined is-fullwidth" href="#/people">
+        <SearchLink
+          className="button is-link is-outlined is-fullwidth"
+          params={{ sex: null, centuries: [], query: null }}
+        >
           Reset all filters
-        </a>
+        </SearchLink>
       </div>
     </nav>
   );
