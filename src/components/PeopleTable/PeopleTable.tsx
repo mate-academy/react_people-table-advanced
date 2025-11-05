@@ -56,19 +56,15 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
       case SortCategory.name:
         filteredList.sort((a, b) => a.name.localeCompare(b.name));
         break;
-
       case SortCategory.born:
         filteredList.sort((a, b) => a.born - b.born);
         break;
-
       case SortCategory.died:
         filteredList.sort((a, b) => a.died - b.died);
         break;
-
       case SortCategory.sex:
         filteredList.sort((a, b) => a.sex.localeCompare(b.sex));
         break;
-
       default:
         break;
     }
@@ -80,85 +76,99 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
     setFilteredPeople(filteredList);
   }, [people, searchParams]);
 
-  // ✅ Відображення правильного повідомлення
   const noPeopleMessage = !people.length
     ? 'There are no people on the server.'
     : 'No people match the current filters.';
+
+  const hasPeople = filteredPeople.length > 0;
 
   return (
     <table
       data-cy="peopleTable"
       className="table is-striped is-hoverable is-narrow is-fullwidth"
     >
-      <thead>
-        <tr>
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Name
-              <SearchLink params={handleSort(SortCategory.name, searchParams)}>
-                <span className="icon">
-                  <i
-                    className={getSortIconClass(
-                      SortCategory.name,
-                      searchParams,
-                    )}
-                  />
-                </span>
-              </SearchLink>
-            </span>
-          </th>
+      {hasPeople && (
+        <thead>
+          <tr>
+            <th>
+              <span className="is-flex is-flex-wrap-nowrap">
+                Name
+                <SearchLink
+                  params={handleSort(SortCategory.name, searchParams)}
+                >
+                  <span className="icon">
+                    <i
+                      className={getSortIconClass(
+                        SortCategory.name,
+                        searchParams,
+                      )}
+                    />
+                  </span>
+                </SearchLink>
+              </span>
+            </th>
 
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Sex
-              <SearchLink params={handleSort(SortCategory.sex, searchParams)}>
-                <span className="icon">
-                  <i
-                    className={getSortIconClass(SortCategory.sex, searchParams)}
-                  />
-                </span>
-              </SearchLink>
-            </span>
-          </th>
+            <th>
+              <span className="is-flex is-flex-wrap-nowrap">
+                Sex
+                <SearchLink params={handleSort(SortCategory.sex, searchParams)}>
+                  <span className="icon">
+                    <i
+                      // eslint-disable-next-line max-len
+                      className={getSortIconClass(
+                        SortCategory.sex,
+                        searchParams,
+                      )}
+                    />
+                  </span>
+                </SearchLink>
+              </span>
+            </th>
 
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Born
-              <SearchLink params={handleSort(SortCategory.born, searchParams)}>
-                <span className="icon">
-                  <i
-                    className={getSortIconClass(
-                      SortCategory.born,
-                      searchParams,
-                    )}
-                  />
-                </span>
-              </SearchLink>
-            </span>
-          </th>
+            <th>
+              <span className="is-flex is-flex-wrap-nowrap">
+                Born
+                <SearchLink
+                  params={handleSort(SortCategory.born, searchParams)}
+                >
+                  <span className="icon">
+                    <i
+                      className={getSortIconClass(
+                        SortCategory.born,
+                        searchParams,
+                      )}
+                    />
+                  </span>
+                </SearchLink>
+              </span>
+            </th>
 
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Died
-              <SearchLink params={handleSort(SortCategory.died, searchParams)}>
-                <span className="icon">
-                  <i
-                    className={getSortIconClass(
-                      SortCategory.died,
-                      searchParams,
-                    )}
-                  />
-                </span>
-              </SearchLink>
-            </span>
-          </th>
+            <th>
+              <span className="is-flex is-flex-wrap-nowrap">
+                Died
+                <SearchLink
+                  params={handleSort(SortCategory.died, searchParams)}
+                >
+                  <span className="icon">
+                    <i
+                      className={getSortIconClass(
+                        SortCategory.died,
+                        searchParams,
+                      )}
+                    />
+                  </span>
+                </SearchLink>
+              </span>
+            </th>
 
-          <th>Mother</th>
-          <th>Father</th>
-        </tr>
-      </thead>
+            <th>Mother</th>
+            <th>Father</th>
+          </tr>
+        </thead>
+      )}
+
       <tbody>
-        {!filteredPeople.length ? (
+        {!hasPeople ? (
           <tr>
             <td colSpan={6} className="has-text-centered">
               <NoPeopleMessage message={noPeopleMessage} />
