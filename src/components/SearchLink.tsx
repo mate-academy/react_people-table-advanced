@@ -1,5 +1,6 @@
 import { Link, LinkProps, useSearchParams } from 'react-router-dom';
-import { getSearchWith, SearchParams } from '../utils/searchHelper';
+import { getSearchWith } from '../utils/searchHelper';
+import { SearchParams } from '../types/SearchParams';
 
 /**
  * To replace the the standard `Link` we take all it props except for `to`
@@ -26,7 +27,7 @@ export const SearchLink: React.FC<Props> = ({
       // to={{ search: getSearchWith(searchParams, { query: null }) }}
       // to={{ search: getSearchWith(searchParams, { centuries: ['16', '18'] }) }}
       to={{
-        search: getSearchWith(searchParams, params),
+        search: getSearchWith(params, searchParams),
       }}
       {...props} // copy all the other props
     >
