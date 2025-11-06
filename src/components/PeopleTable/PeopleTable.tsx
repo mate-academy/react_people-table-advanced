@@ -24,10 +24,11 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
 
     const lowerCaseQuery = query.toLowerCase().trim();
 
-    filteredList = people.filter(person =>
-      person.name.toLowerCase().includes(lowerCaseQuery) ||
-      (person.motherName || '').toLowerCase().includes(lowerCaseQuery) ||
-      (person.fatherName || '').toLowerCase().includes(lowerCaseQuery),
+    filteredList = people.filter(
+      person =>
+        person.name.toLowerCase().includes(lowerCaseQuery) ||
+        (person.motherName || '').toLowerCase().includes(lowerCaseQuery) ||
+        (person.fatherName || '').toLowerCase().includes(lowerCaseQuery),
     );
 
     if (centuries.length) {
