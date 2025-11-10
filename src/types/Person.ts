@@ -31,5 +31,5 @@ export type TableField = {
 export enum Order {
   ASC = 'asc',
   DESC = 'desc',
-  ALL = 'all',
+  None = 'none',
 }

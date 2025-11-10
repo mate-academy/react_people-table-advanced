@@ -20,20 +20,20 @@ const TABLE_FIELDS: TableField[] = [
 ];
 
 const sortIcons: Record<Order, React.ReactNode> = {
-  [Order.ALL]: <i className="fas fa-sort" />,
+  [Order.None]: <i className="fas fa-sort" />,
   [Order.ASC]: <i className="fas fa-sort-up" />,
   [Order.DESC]: <i className="fas fa-sort-down" />,
 };
 
 const getNextOrder = (order: Order) => {
   switch (order) {
-    case Order.ALL:
+    case Order.None:
       return Order.ASC;
     case Order.ASC:
       return Order.DESC;
     case Order.DESC:
     default:
-      return Order.ALL;
+      return Order.None;
   }
 };
 
@@ -43,7 +43,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
   const navigate = useNavigate();
 
   const sortField = searchParams.get('sort') as keyof Person | null;
-  const sortOrder = (searchParams.get('order') as Order) || Order.ALL;
+  const sortOrder = (searchParams.get('order') as Order) || Order.None;
 
   const handleSort = (
     event: React.MouseEvent<HTMLAnchorElement>,
@@ -54,10 +54,17 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
     const isSameField = sortField === fieldName;
     const nextOrder: Order = isSameField ? getNextOrder(sortOrder) : Order.ASC;
 
-    navigate(
-      nextOrder === Order.ALL ? '' : `?sort=${fieldName}&order=${nextOrder}`,
-      { replace: true },
-    );
+    const newSearchParams = new URLSearchParams(searchParams);
+
+    if (nextOrder === Order.None) {
+      newSearchParams.delete('sort');
+      newSearchParams.delete('order');
+    } else {
+      newSearchParams.set('sort', fieldName);
+      newSearchParams.set('order', nextOrder);
+    }
+
+    navigate(`?${newSearchParams.toString()}`, { replace: true });
   };
 
   const peopleByName = React.useMemo(() => {
@@ -90,7 +97,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
                     <span className="icon">
                       {sortField === field.name
                         ? sortIcons[sortOrder]
-                        : sortIcons[Order.ALL]}
+                        : sortIcons[Order.None]}
                     </span>
                   </a>
                 )}

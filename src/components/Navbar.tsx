@@ -1,4 +1,4 @@
-import { NavLink } from 'react-router-dom';
+import { NavLink, useLocation } from 'react-router-dom';
 import cn from 'classnames';
 
 const getClasses = ({ isActive }: { isActive: boolean }) =>
@@ -7,6 +7,8 @@ const getClasses = ({ isActive }: { isActive: boolean }) =>
   });
 
 export const Navbar = () => {
+  const location = useLocation();
+
   return (
     <nav
       data-cy="nav"
@@ -19,7 +21,11 @@ export const Navbar = () => {
           <NavLink to="/" className={getClasses}>
             Home
           </NavLink>
-          <NavLink to="/people" className={getClasses}>
+
+          <NavLink
+            to={{ pathname: '/people', search: location.search }}
+            className={getClasses}
+          >
             People
           </NavLink>
 

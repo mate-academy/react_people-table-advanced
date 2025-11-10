@@ -24,14 +24,13 @@ const PeoplePage = () => {
 
   preparedPeople = getSortedPeople(preparedPeople, {
     field: (searchParams.get('sort') as keyof Person) || null,
-    order: (searchParams.get('order') as Order) || Order.ALL,
+    order: (searchParams.get('order') as Order) || Order.None,
   });
 
-  const noPeopleMatchingCriteria = preparedPeople.length === 0;
+  const hasMatches = preparedPeople.length > 0;
 
   const showFilters = !isLoading && !error;
-  const showTable =
-    !isLoading && !error && !noPeople && !noPeopleMatchingCriteria;
+  const showTable = !isLoading && !error && !noPeople && hasMatches;
 
   return (
     <>
@@ -57,7 +56,7 @@ const PeoplePage = () => {
                 </p>
               )}
 
-              {!isLoading && noPeopleMatchingCriteria && (
+              {!isLoading && !noPeople && hasMatches && (
                 <p>There are no people matching the current search criteria</p>
               )}
 

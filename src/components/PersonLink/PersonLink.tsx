@@ -16,8 +16,10 @@ const PersonLink: React.FC<Props> = ({ person }) => {
   const location = useLocation();
   const colorClass = sexColorMap[person.sex] || 'has-text-grey';
 
+  const pathname = `/people/${person.slug}`;
+
   return (
-    <Link to={`${person.slug}${location.search}`} className={cn(colorClass)}>
+    <Link to={{ pathname, search: location.search }} className={cn(colorClass)}>
       {person.name}
     </Link>
   );
