@@ -56,7 +56,7 @@ const PeoplePage = () => {
                 </p>
               )}
 
-              {!isLoading && !noPeople && hasMatches && (
+              {!isLoading && !noPeople && !hasMatches && (
                 <p>There are no people matching the current search criteria</p>
               )}
 

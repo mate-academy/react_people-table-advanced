@@ -50,31 +50,35 @@ export const PeopleFilters = () => {
       ? existingCenturies.filter(item => item !== century)
       : [...existingCenturies, century];
 
-    currentParams.delete('centuries');
-    updatedCenturies.forEach(c => currentParams.append('centuries', String(c)));
+    const updatedSearch = getSearchWith(currentParams, {
+      centuries: updatedCenturies.map(String),
+    });
 
-    navigate(`?${currentParams.toString()}`, { replace: true });
+    navigate(`?${updatedSearch}`, { replace: true });
   };
 
   const handleClearCenturies = (event: React.MouseEvent<HTMLAnchorElement>) => {
     event.preventDefault();
 
     const currentParams = new URLSearchParams(location.search);
+    const updatedSearch = getSearchWith(currentParams, {
+      centuries: null,
+    });
 
-    currentParams.delete('centuries');
-    navigate(`?${currentParams.toString()}`, { replace: true });
+    navigate(`?${updatedSearch}`, { replace: true });
   };
 
   const resetFilters = (event: React.MouseEvent<HTMLAnchorElement>) => {
     event.preventDefault();
 
     const currentParams = new URLSearchParams(location.search);
+    const updatedSearch = getSearchWith(currentParams, {
+      sex: null,
+      query: null,
+      centuries: null,
+    });
 
-    currentParams.delete('sex');
-    currentParams.delete('query');
-    currentParams.delete('centuries');
-
-    navigate(`?${currentParams.toString()}`, { replace: true });
+    navigate(`?${updatedSearch}`, { replace: true });
   };
 
   return (
