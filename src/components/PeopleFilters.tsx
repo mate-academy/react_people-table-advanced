@@ -1,95 +1,76 @@
-export const PeopleFilters = () => {
+import { CenturyFilter } from './CenturyFilter';
+import { NameFilter } from './NameFilter';
+import cn from 'classnames';
+import { Link, useSearchParams } from 'react-router-dom';
+import { getSearchWith } from '../utils/searchHelper';
+import { SearchLink } from './SearchLink';
+
+export const PeopleFilters = ({}) => {
+  const [searchParams] = useSearchParams();
+  const sex = searchParams.get('sex') || null;
+
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        <a className="is-active" href="#/people">
+        {/* <Link
+          className={cn({ 'is-active': sex === null })}
+          to={{ search: getSearchWith(searchParams, { sex: null }) }}
+        >
           All
-        </a>
-        <a className="" href="#/people?sex=m">
+        </Link> */}
+        <SearchLink
+          className={cn({ 'is-active': sex === null })}
+          params={{ sex: null }}
+        >
+          All
+        </SearchLink>
+        {/* <Link
+          className={cn({ 'is-active': sex === 'm' })}
+          to={{ search: getSearchWith(searchParams, { sex: 'm' }) }}
+        >
           Male
-        </a>
-        <a className="" href="#/people?sex=f">
+        </Link> */}
+        <SearchLink
+          className={cn({ 'is-active': sex === 'm' })}
+          params={{ sex: 'm' }}
+        >
+          Male
+        </SearchLink>
+        {/* <Link
+          className={cn({ 'is-active': sex === 'f' })}
+          to={{ search: getSearchWith(searchParams, { sex: 'f' }) }}
+        >
           Female
-        </a>
+        </Link> */}
+        <SearchLink
+          className={cn({ 'is-active': sex === 'f' })}
+          params={{ sex: 'f' }}
+        >
+          Female
+        </SearchLink>
       </p>
 
-      <div className="panel-block">
-        <p className="control has-icons-left">
-          <input
-            data-cy="NameFilter"
-            type="search"
-            className="input"
-            placeholder="Search"
-          />
+      <NameFilter />
 
-          <span className="icon is-left">
-            <i className="fas fa-search" aria-hidden="true" />
-          </span>
-        </p>
-      </div>
+      <CenturyFilter />
 
       <div className="panel-block">
-        <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
-          <div className="level-left">
-            <a
-              data-cy="century"
-              className="button mr-1"
-              href="#/people?centuries=16"
-            >
-              16
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=17"
-            >
-              17
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=18"
-            >
-              18
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=19"
-            >
-              19
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1"
-              href="#/people?centuries=20"
-            >
-              20
-            </a>
-          </div>
-
-          <div className="level-right ml-4">
-            <a
-              data-cy="centuryALL"
-              className="button is-success is-outlined"
-              href="#/people"
-            >
-              All
-            </a>
-          </div>
-        </div>
-      </div>
-
-      <div className="panel-block">
-        <a className="button is-link is-outlined is-fullwidth" href="#/people">
+        <Link
+          className="button is-link is-outlined is-fullwidth"
+          to={{
+            search: getSearchWith(searchParams, {
+              sex: null,
+              query: null,
+              centuries: null,
+              sort: null,
+              order: null,
+            }),
+          }}
+        >
           Reset all filters
-        </a>
+        </Link>
       </div>
     </nav>
   );
