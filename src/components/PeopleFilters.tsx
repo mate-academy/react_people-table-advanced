@@ -1,18 +1,87 @@
+import { useSearchParams } from 'react-router-dom';
+import { SearchLink } from './SearchLink';
+import cn from 'classnames';
+
 export const PeopleFilters = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const currSex = searchParams.get('sex');
+  const currCent = searchParams.getAll('centuries');
+  const currQuery = searchParams.get('query') || '';
+
+  const hanldeReset = () => {
+    return {
+      query: null,
+      sex: null,
+      centuries: null,
+    };
+  };
+
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const newValue = event.target.value;
+
+    const newSearchParams = new URLSearchParams(searchParams.toString());
+
+    if (newValue) {
+      newSearchParams.set('query', newValue);
+    } else {
+      newSearchParams.delete('query');
+    }
+
+    setSearchParams(newSearchParams);
+  };
+
+  const handleToggleCenteryFilter = (selectedCentery: string) => {
+    const newSearchParams = new URLSearchParams(searchParams.toString());
+
+    const currCentury = newSearchParams.getAll('centuries');
+
+    const isSelected = currCentury.includes(selectedCentery);
+
+    let finalCenteries: string[];
+
+    if (isSelected) {
+      finalCenteries = currCentury.filter(cent => cent !== selectedCentery);
+    } else {
+      finalCenteries = [...currCentury, selectedCentery];
+    }
+
+    if (finalCenteries.length === 0) {
+      return { centuries: null };
+    }
+
+    return { centuries: finalCenteries };
+  };
+
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        <a className="is-active" href="#/people">
+        <SearchLink
+          className={cn({
+            'is-active': currSex === null,
+          })}
+          params={{ sex: null }}
+        >
           All
-        </a>
-        <a className="" href="#/people?sex=m">
+        </SearchLink>
+        <SearchLink
+          className={cn({
+            'is-active': currSex === 'm',
+          })}
+          params={{ sex: 'm' }}
+        >
           Male
-        </a>
-        <a className="" href="#/people?sex=f">
+        </SearchLink>
+        <SearchLink
+          className={cn({
+            'is-active': currSex === 'f',
+          })}
+          params={{ sex: 'f' }}
+        >
           Female
-        </a>
+        </SearchLink>
       </p>
 
       <div className="panel-block">
@@ -22,6 +91,8 @@ export const PeopleFilters = () => {
             type="search"
             className="input"
             placeholder="Search"
+            value={currQuery}
+            onChange={handleInputChange}
           />
 
           <span className="icon is-left">
@@ -33,63 +104,76 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            <a
+            <SearchLink
               data-cy="century"
-              className="button mr-1"
-              href="#/people?centuries=16"
+              className={cn('button mr-1', {
+                'is-info': currCent.includes('16'),
+              })}
+              params={handleToggleCenteryFilter('16')}
             >
               16
-            </a>
+            </SearchLink>
 
-            <a
+            <SearchLink
               data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=17"
+              className={cn('button mr-1', {
+                'is-info': currCent.includes('17'),
+              })}
+              params={handleToggleCenteryFilter('17')}
             >
               17
-            </a>
+            </SearchLink>
 
-            <a
+            <SearchLink
               data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=18"
+              className={cn('button mr-1', {
+                'is-info': currCent.includes('18'),
+              })}
+              params={handleToggleCenteryFilter('18')}
             >
               18
-            </a>
+            </SearchLink>
 
-            <a
+            <SearchLink
               data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=19"
+              className={cn('button mr-1', {
+                'is-info': currCent.includes('19'),
+              })}
+              params={handleToggleCenteryFilter('19')}
             >
               19
-            </a>
+            </SearchLink>
 
-            <a
+            <SearchLink
               data-cy="century"
-              className="button mr-1"
-              href="#/people?centuries=20"
+              className={cn('button mr-1', {
+                'is-info': currCent.includes('20'),
+              })}
+              params={handleToggleCenteryFilter('20')}
             >
               20
-            </a>
+            </SearchLink>
           </div>
 
           <div className="level-right ml-4">
-            <a
+            <SearchLink
               data-cy="centuryALL"
               className="button is-success is-outlined"
-              href="#/people"
+              params={{ centuries: null }}
             >
               All
-            </a>
+            </SearchLink>
           </div>
         </div>
       </div>
 
       <div className="panel-block">
-        <a className="button is-link is-outlined is-fullwidth" href="#/people">
+        <SearchLink
+          className="button is-link is-outlined is-fullwidth"
+          params={hanldeReset()}
+        >
           Reset all filters
-        </a>
+        </SearchLink>
       </div>
     </nav>
   );
