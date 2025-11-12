@@ -1,5 +1,45 @@
+import { FC } from 'react';
+import { Person } from '../types';
+import { Link, useParams, useSearchParams } from 'react-router-dom';
+import cn from 'classnames';
+import { SearchLink } from './SearchLink';
+
+type Props = {
+  people: Person[];
+};
+
 /* eslint-disable jsx-a11y/control-has-associated-label */
-export const PeopleTable = () => {
+export const PeopleTable: FC<Props> = ({ people }) => {
+  const { personSlug } = useParams();
+
+  const [searchParams] = useSearchParams();
+
+  const handleNextSortParams = (field: string) => {
+    const currField = searchParams.get('sort');
+    const currOrder = searchParams.get('order');
+
+    const isActive = currField === field;
+
+    let nextOrder: 'asc' | 'desc' | null;
+    let nextSort: string | null = field;
+
+    if (isActive) {
+      if (currOrder === 'asc') {
+        nextOrder = 'desc';
+      } else {
+        nextOrder = null;
+        nextSort = null;
+      }
+    } else {
+      nextOrder = 'asc';
+    }
+
+    return {
+      sort: nextSort,
+      order: nextOrder,
+    };
+  };
+
   return (
     <table
       data-cy="peopleTable"
@@ -10,44 +50,84 @@ export const PeopleTable = () => {
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Name
-              <a href="#/people?sort=name">
+              <SearchLink params={handleNextSortParams('name')}>
                 <span className="icon">
-                  <i className="fas fa-sort" />
+                  <i
+                    className={cn('fas', {
+                      'fa-sort': searchParams.get('sort') !== 'name',
+                      'fa-sort-up':
+                        searchParams.get('sort') === 'name' &&
+                        searchParams.get('order') === 'asc',
+                      'fa-sort-down':
+                        searchParams.get('sort') === 'name' &&
+                        searchParams.get('order') === 'desc',
+                    })}
+                  />
                 </span>
-              </a>
+              </SearchLink>
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Sex
-              <a href="#/people?sort=sex">
+              <SearchLink params={handleNextSortParams('sex')}>
                 <span className="icon">
-                  <i className="fas fa-sort" />
+                  <i
+                    className={cn('fas', {
+                      'fa-sort': searchParams.get('sort') !== 'sex',
+                      'fa-sort-up':
+                        searchParams.get('sort') === 'sex' &&
+                        searchParams.get('order') === 'asc',
+                      'fa-sort-down':
+                        searchParams.get('sort') === 'sex' &&
+                        searchParams.get('order') === 'desc',
+                    })}
+                  />
                 </span>
-              </a>
+              </SearchLink>
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Born
-              <a href="#/people?sort=born&amp;order=desc">
+              <SearchLink params={handleNextSortParams('born')}>
                 <span className="icon">
-                  <i className="fas fa-sort-up" />
+                  <i
+                    className={cn('fas', {
+                      'fa-sort': searchParams.get('sort') !== 'born',
+                      'fa-sort-up':
+                        searchParams.get('sort') === 'born' &&
+                        searchParams.get('order') === 'asc',
+                      'fa-sort-down':
+                        searchParams.get('sort') === 'born' &&
+                        searchParams.get('order') === 'desc',
+                    })}
+                  />
                 </span>
-              </a>
+              </SearchLink>
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Died
-              <a href="#/people?sort=died">
+              <SearchLink params={handleNextSortParams('died')}>
                 <span className="icon">
-                  <i className="fas fa-sort" />
+                  <i
+                    className={cn('fas', {
+                      'fa-sort': searchParams.get('sort') !== 'died',
+                      'fa-sort-up':
+                        searchParams.get('sort') === 'died' &&
+                        searchParams.get('order') === 'asc',
+                      'fa-sort-down':
+                        searchParams.get('sort') === 'died' &&
+                        searchParams.get('order') === 'desc',
+                    })}
+                  />
                 </span>
-              </a>
+              </SearchLink>
             </span>
           </th>
 
@@ -57,7 +137,70 @@ export const PeopleTable = () => {
       </thead>
 
       <tbody>
-        <tr data-cy="person">
+        {people.map(person => {
+          const personMother = people.find(
+            mother => mother.name === person.motherName,
+          );
+
+          const personFather = people.find(
+            father => father.name === person.fatherName,
+          );
+
+          return (
+            <tr
+              key={person.slug}
+              data-cy="person"
+              className={cn({
+                'has-background-warning': person.slug === personSlug,
+              })}
+            >
+              <td>
+                <Link
+                  to={`/people/${person.slug}`}
+                  className={cn({
+                    'has-text-danger': person.sex === 'f',
+                  })}
+                >
+                  {person.name}
+                </Link>
+              </td>
+
+              <td>{person.sex}</td>
+              <td>{person.born}</td>
+              <td>{person.died}</td>
+              {person.motherName ? (
+                personMother ? (
+                  <td>
+                    <Link
+                      to={`/people/${personMother.slug}`}
+                      className="has-text-danger"
+                    >
+                      {person.motherName}
+                    </Link>
+                  </td>
+                ) : (
+                  <td>{person.motherName}</td>
+                )
+              ) : (
+                <td>-</td>
+              )}
+              {person.fatherName ? (
+                personFather ? (
+                  <td>
+                    <Link to={`/people/${personFather.slug}`}>
+                      {person.fatherName}
+                    </Link>
+                  </td>
+                ) : (
+                  <td>{person.fatherName}</td>
+                )
+              ) : (
+                <td>-</td>
+              )}
+            </tr>
+          );
+        })}
+        {/* <tr data-cy="person">
           <td>
             <a href="#/people/pieter-haverbeke-1602">Pieter Haverbeke</a>
           </td>
@@ -638,7 +781,7 @@ export const PeopleTable = () => {
           <td>
             <a href="#/people/carolus-haverbeke-1832">Carolus Haverbeke</a>
           </td>
-        </tr>
+        </tr> */}
       </tbody>
     </table>
   );
