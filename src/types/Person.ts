@@ -1,4 +1,5 @@
 export interface Person {
+  localCompare(person2: Person): number;
   name: string;
   sex: string;
   born: number;

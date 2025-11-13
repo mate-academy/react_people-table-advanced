@@ -1,18 +1,94 @@
+import React from 'react';
+import { Link, useSearchParams } from 'react-router-dom';
+import { getSearchWith } from '../utils/searchHelper';
+import cn from 'classnames';
+import { Sex } from '../types/Sex';
+
 export const PeopleFilters = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const handleNameFilter = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = event.target.value.trim();
+    const newParams = getSearchWith(searchParams, { query: value || null });
+
+    setSearchParams(newParams);
+  };
+
+  const currentSex = searchParams.get('sex');
+
+  const query = searchParams.get('query') || '';
+
+  const currentCenturies = searchParams.getAll('centuries');
+
+  const toggleCenturyLink = (century: string) => {
+    const updated = currentCenturies.includes(century)
+      ? currentCenturies.filter(c => c !== century)
+      : [...currentCenturies, century];
+
+    return {
+      pathname: '/people',
+      search: getSearchWith(searchParams, {
+        centuries: updated.length ? updated : null,
+      }),
+    };
+  };
+
+  const toggleAllCenturies = () => {
+    const allCenturies = ['16', '17', '18', '19', '20'];
+    const newParams = getSearchWith(searchParams, {
+      centuries:
+        currentCenturies.length === allCenturies.length ? null : allCenturies,
+    });
+
+    setSearchParams(newParams);
+  };
+
+  const handleResetAllFilters = () => {
+    const newParams = getSearchWith(searchParams, {
+      query: null,
+      sex: null,
+      centuries: null,
+      sort: null,
+      order: null,
+    });
+
+    setSearchParams(newParams);
+  };
+
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        <a className="is-active" href="#/people">
+        <Link
+          to={{
+            pathname: '/people',
+            search: getSearchWith(searchParams, { sex: null }),
+          }}
+          className={cn({ 'is-active': currentSex === null })}
+        >
           All
-        </a>
-        <a className="" href="#/people?sex=m">
+        </Link>
+
+        <Link
+          to={{
+            pathname: '/people',
+            search: getSearchWith(searchParams, { sex: Sex.M }),
+          }}
+          className={cn({ 'is-active': currentSex === Sex.M })}
+        >
           Male
-        </a>
-        <a className="" href="#/people?sex=f">
+        </Link>
+
+        <Link
+          to={{
+            pathname: '/people',
+            search: getSearchWith(searchParams, { sex: Sex.F }),
+          }}
+          className={cn({ 'is-active': currentSex === Sex.F })}
+        >
           Female
-        </a>
+        </Link>
       </p>
 
       <div className="panel-block">
@@ -22,6 +98,8 @@ export const PeopleFilters = () => {
             type="search"
             className="input"
             placeholder="Search"
+            value={query}
+            onChange={handleNameFilter}
           />
 
           <span className="icon is-left">
@@ -33,63 +111,78 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            <a
+            <Link
               data-cy="century"
-              className="button mr-1"
-              href="#/people?centuries=16"
+              className={cn('button mr-1', {
+                'is-info': currentCenturies.includes('16'),
+              })}
+              to={toggleCenturyLink('16')}
             >
               16
-            </a>
+            </Link>
 
-            <a
+            <Link
               data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=17"
+              className={cn('button mr-1', {
+                'is-info': currentCenturies.includes('17'),
+              })}
+              to={toggleCenturyLink('17')}
             >
               17
-            </a>
+            </Link>
 
-            <a
+            <Link
               data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=18"
+              className={cn('button mr-1', {
+                'is-info': currentCenturies.includes('18'),
+              })}
+              to={toggleCenturyLink('18')}
             >
               18
-            </a>
+            </Link>
 
-            <a
+            <Link
               data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=19"
+              className={cn('button mr-1', {
+                'is-info': currentCenturies.includes('19'),
+              })}
+              to={toggleCenturyLink('19')}
             >
               19
-            </a>
+            </Link>
 
-            <a
+            <Link
               data-cy="century"
-              className="button mr-1"
-              href="#/people?centuries=20"
+              className={cn('button mr-1', {
+                'is-info': currentCenturies.includes('20'),
+              })}
+              to={toggleCenturyLink('20')}
             >
               20
-            </a>
+            </Link>
           </div>
 
           <div className="level-right ml-4">
-            <a
+            <button
               data-cy="centuryALL"
-              className="button is-success is-outlined"
-              href="#/people"
+              className={cn('button is-success', {
+                'is-outlined': currentCenturies.length !== 0,
+              })}
+              onClick={toggleAllCenturies}
             >
               All
-            </a>
+            </button>
           </div>
         </div>
       </div>
 
       <div className="panel-block">
-        <a className="button is-link is-outlined is-fullwidth" href="#/people">
+        <button
+          className="button is-link is-outlined is-fullwidth"
+          onClick={handleResetAllFilters}
+        >
           Reset all filters
-        </a>
+        </button>
       </div>
     </nav>
   );
