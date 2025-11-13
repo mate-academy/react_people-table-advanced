@@ -8,9 +8,23 @@ function wait(delay: number) {
   return new Promise(resolve => setTimeout(resolve, delay));
 }
 
-export async function getPeople(): Promise<Person[]> {
+export function getPeople(): Promise<Person[]> {
   // keep this delay for testing purpose
   return wait(500)
     .then(() => fetch(API_URL))
-    .then(response => response.json());
+    .then(response => response.json())
+    .then((people: Person[]) => {
+      return people.map(person => {
+        const personWithParents = person;
+
+        personWithParents.mother = people.find(
+          s => s.name === person.motherName,
+        );
+        personWithParents.father = people.find(
+          s => s.name === person.fatherName,
+        );
+
+        return personWithParents;
+      });
+    });
 }

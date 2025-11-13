@@ -1,5 +1,7 @@
+import { SortOrder } from '../types';
+
 export type SearchParams = {
-  [key: string]: string | string[] | null;
+  [key: string]: string | string[] | null | SortOrder;
 };
 
 /**
@@ -35,7 +37,7 @@ export function getSearchWith(
         newParams.append(key, part);
       });
     } else {
-      newParams.set(key, value);
+      newParams.set(key, value as string);
     }
   });
 
