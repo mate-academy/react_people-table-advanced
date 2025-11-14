@@ -1,8 +1,37 @@
 import { PeopleFilters } from './PeopleFilters';
 import { Loader } from './Loader';
 import { PeopleTable } from './PeopleTable';
+import { useEffect, useState } from 'react';
+import { Person } from '../types';
+import { getPeople } from '../api';
+import { ErrorMessage } from '../types/errorMessage';
 
 export const PeoplePage = () => {
+  const [people, setPeople] = useState<Person[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    getPeople()
+      .then(peopleFromServer => {
+        const aggregatedPeople = peopleFromServer.map(person => ({
+          ...person,
+          mother: peopleFromServer.find(
+            ({ name }) => name === person.motherName,
+          ),
+          father: peopleFromServer.find(
+            ({ name }) => name === person.fatherName,
+          ),
+        }));
+
+        setPeople(aggregatedPeople);
+      })
+      .catch(() => {
+        setError(ErrorMessage.LOADING_ERROR);
+      })
+      .finally(() => setIsLoading(false));
+  }, []);
+
   return (
     <>
       <h1 className="title">People Page</h1>
@@ -15,15 +44,17 @@ export const PeoplePage = () => {
 
           <div className="column">
             <div className="box table-container">
-              <Loader />
+              {error && <p data-cy="peopleLoadingError">{error}</p>}
 
-              <p data-cy="peopleLoadingError">Something went wrong</p>
-
-              <p data-cy="noPeopleMessage">There are no people on the server</p>
-
-              <p>There are no people matching the current search criteria</p>
-
-              <PeopleTable />
+              {isLoading ? (
+                <Loader />
+              ) : people.length === 0 ? (
+                <p data-cy="noPeopleMessage">
+                  There are no people on the server
+                </p>
+              ) : (
+                <PeopleTable people={people} />
+              )}
             </div>
           </div>
         </div>
