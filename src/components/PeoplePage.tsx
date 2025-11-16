@@ -50,15 +50,12 @@ export const PeoplePage = () => {
     if (query.trim()) {
       const q = query.trim().toLowerCase();
 
-      result = result.filter(p => {
-        const fields = [
-          p.name ?? '',
-          p.motherName ?? '',
-          p.fatherName ?? '',
-        ].join('');
-
-        return fields.toLowerCase().includes(q);
-      });
+      result = result.filter(
+        p =>
+          (p.name ?? '').toLowerCase().includes(q) ||
+          (p.motherName ?? '').toLowerCase().includes(q) ||
+          (p.fatherName ?? '').toLowerCase().includes(q),
+      );
     }
 
     if (sortField) {
@@ -100,7 +97,7 @@ export const PeoplePage = () => {
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
           <div className="column is-7-tablet is-narrow-desktop">
-            <PeopleFilters />
+            {!isLoading && !error && people.length > 0 && <PeopleFilters />}
           </div>
 
           <div className="column">
