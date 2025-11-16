@@ -14,3 +14,12 @@ export async function getPeople(): Promise<Person[]> {
     .then(() => fetch(API_URL))
     .then(response => response.json());
 }
+
+enum ErrorServices {
+  Unknown = 'Unknown',
+  NoPeople = 'There are no people on the server'
+}
+export const ErrorServicesText: Record<ErrorServices, string> = {
+  [ErrorServices.Unknown]: 'Something went wrong',
+  [ErrorServices.NoPeople]: 'There are no people on the server',
+};
