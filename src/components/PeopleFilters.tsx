@@ -160,7 +160,9 @@ export const PeopleFilters = ({ filterPeople }: Props) => {
                   ? 'button is-success'
                   : 'button is-success is-outlined'
               }
-              to="#/people"
+              to={{
+                search: getSearchWith(searchParams, { centuries: null }),
+              }}
             >
               All
             </Link>
@@ -169,7 +171,10 @@ export const PeopleFilters = ({ filterPeople }: Props) => {
       </div>
 
       <div className="panel-block">
-        <Link className="button is-link is-outlined is-fullwidth" to="#/people">
+        <Link
+          className="button is-link is-outlined is-fullwidth"
+          to={{ pathname: '/people' }}
+        >
           Reset all filters
         </Link>
       </div>

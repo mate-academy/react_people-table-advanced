@@ -1,11 +1,20 @@
-import { NavLink, useLocation, useParams } from 'react-router-dom';
+import {
+  Link,
+  NavLink,
+  useLocation,
+  useParams,
+  useSearchParams,
+} from 'react-router-dom';
 import { Person } from '../types';
+import { getSearchWith } from '../utils/searchHelper';
 
 /* eslint-disable jsx-a11y/control-has-associated-label */
 
 interface PersonRowProps {
   person: Person;
 }
+
+// "#/people?sort=name"
 
 const PersonRow = ({ person }: PersonRowProps) => {
   const { slug } = useParams();
@@ -78,6 +87,8 @@ interface Props {
 }
 
 export const PeopleTable = ({ people }: Props) => {
+  const [searchParams] = useSearchParams();
+
   const enrichedPeople = people.map(person => {
     return {
       ...person,
@@ -85,6 +96,18 @@ export const PeopleTable = ({ people }: Props) => {
       father: people.find(p => p.name === person.fatherName),
     };
   });
+
+  const toggleLink = (value: string) => {
+    if (!searchParams.toString().includes('sort')) {
+      return getSearchWith(searchParams, { sort: value });
+    }
+
+    if (searchParams.toString().includes('order')) {
+      return getSearchWith(searchParams, { sort: null, order: null });
+    }
+
+    return getSearchWith(searchParams, { order: 'desc' });
+  };
 
   return (
     <table
@@ -96,44 +119,80 @@ export const PeopleTable = ({ people }: Props) => {
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Name
-              <a href="#/people?sort=name">
+              <Link
+                to={{
+                  search: toggleLink('name'),
+                }}
+              >
                 <span className="icon">
-                  <i className="fas fa-sort" />
+                  <i
+                    className={
+                      searchParams.toString().includes('name')
+                        ? searchParams.toString().includes('order')
+                          ? 'fas fa-sort-down'
+                          : 'fas fa-sort-up'
+                        : 'fas fa-sort'
+                    }
+                  />
                 </span>
-              </a>
+              </Link>
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Sex
-              <a href="#/people?sort=sex">
+              <Link to={{ search: toggleLink('sex') }}>
                 <span className="icon">
-                  <i className="fas fa-sort" />
+                  <i
+                    className={
+                      searchParams.toString().includes('sex')
+                        ? searchParams.toString().includes('order')
+                          ? 'fas fa-sort-down'
+                          : 'fas fa-sort-up'
+                        : 'fas fa-sort'
+                    }
+                  />
                 </span>
-              </a>
+              </Link>
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Born
-              <a href="#/people?sort=born&amp;order=desc">
+              <Link to={{ search: toggleLink('born') }}>
                 <span className="icon">
-                  <i className="fas fa-sort-up" />
+                  <i
+                    className={
+                      searchParams.toString().includes('born')
+                        ? searchParams.toString().includes('order')
+                          ? 'fas fa-sort-down'
+                          : 'fas fa-sort-up'
+                        : 'fas fa-sort'
+                    }
+                  />
                 </span>
-              </a>
+              </Link>
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Died
-              <a href="#/people?sort=died">
+              <Link to={{ search: toggleLink('died') }}>
                 <span className="icon">
-                  <i className="fas fa-sort" />
+                  <i
+                    className={
+                      searchParams.toString().includes('died')
+                        ? searchParams.toString().includes('order')
+                          ? 'fas fa-sort-down'
+                          : 'fas fa-sort-up'
+                        : 'fas fa-sort'
+                    }
+                  />
                 </span>
-              </a>
+              </Link>
             </span>
           </th>
 
