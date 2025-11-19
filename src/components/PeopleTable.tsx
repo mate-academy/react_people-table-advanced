@@ -98,15 +98,18 @@ export const PeopleTable = ({ people }: Props) => {
   });
 
   const toggleLink = (value: string) => {
-    if (!searchParams.toString().includes('sort')) {
-      return getSearchWith(searchParams, { sort: value });
+    const sortField = searchParams.get('sort');
+    const hasOrder = searchParams.has('order');
+
+    if (sortField !== value) {
+      return getSearchWith(searchParams, { sort: value, order: null });
     }
 
-    if (searchParams.toString().includes('order')) {
-      return getSearchWith(searchParams, { sort: null, order: null });
+    if (!hasOrder) {
+      return getSearchWith(searchParams, { order: 'desc' });
     }
 
-    return getSearchWith(searchParams, { order: 'desc' });
+    return getSearchWith(searchParams, { sort: null, order: null });
   };
 
   return (
@@ -127,8 +130,8 @@ export const PeopleTable = ({ people }: Props) => {
                 <span className="icon">
                   <i
                     className={
-                      searchParams.toString().includes('name')
-                        ? searchParams.toString().includes('order')
+                      searchParams.get('sort') === 'name'
+                        ? searchParams.has('order')
                           ? 'fas fa-sort-down'
                           : 'fas fa-sort-up'
                         : 'fas fa-sort'
@@ -146,8 +149,8 @@ export const PeopleTable = ({ people }: Props) => {
                 <span className="icon">
                   <i
                     className={
-                      searchParams.toString().includes('sex')
-                        ? searchParams.toString().includes('order')
+                      searchParams.get('sort') === 'sex'
+                        ? searchParams.has('order')
                           ? 'fas fa-sort-down'
                           : 'fas fa-sort-up'
                         : 'fas fa-sort'
@@ -165,8 +168,8 @@ export const PeopleTable = ({ people }: Props) => {
                 <span className="icon">
                   <i
                     className={
-                      searchParams.toString().includes('born')
-                        ? searchParams.toString().includes('order')
+                      searchParams.get('sort') === 'born'
+                        ? searchParams.has('order')
                           ? 'fas fa-sort-down'
                           : 'fas fa-sort-up'
                         : 'fas fa-sort'
@@ -184,8 +187,8 @@ export const PeopleTable = ({ people }: Props) => {
                 <span className="icon">
                   <i
                     className={
-                      searchParams.toString().includes('died')
-                        ? searchParams.toString().includes('order')
+                      searchParams.get('sort') === 'died'
+                        ? searchParams.has('order')
                           ? 'fas fa-sort-down'
                           : 'fas fa-sort-up'
                         : 'fas fa-sort'

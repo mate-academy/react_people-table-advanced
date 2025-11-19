@@ -84,10 +84,10 @@ export const PeoplePage = () => {
     return [...filteredPeople].sort((personA, personB) => {
       switch (sort) {
         case 'born':
-          return (personB.born - personA.born) * direction;
+          return (personA.born - personB.born) * direction;
 
         case 'died':
-          return (personB.died - personA.died) * direction;
+          return (personA.died - personB.died) * direction;
         case 'sex':
           return (sexWeight(personA.sex) - sexWeight(personB.sex)) * direction;
 
