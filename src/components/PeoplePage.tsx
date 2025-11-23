@@ -26,7 +26,6 @@ export const PeoplePage = () => {
 
   const visiblePeople = useMemo(() => {
     const query = searchParams.get('query') || '';
-    // const slug = useParams().slug;
     const sex = searchParams.get('sex');
     const centuries = searchParams.getAll('centuries');
     const sort = searchParams.get('sort');
@@ -88,6 +87,7 @@ export const PeoplePage = () => {
   const showNoMatchingPeople =
     !isLoading && !isError && people.length > 0 && visiblePeople.length === 0;
   const showTable = !isLoading && !isError && visiblePeople.length > 0;
+  const showFilters = !isLoading && !isError && people.length > 0;
 
   return (
     <>
@@ -96,7 +96,7 @@ export const PeoplePage = () => {
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
           <div className="column is-7-tablet is-narrow-desktop">
-            <PeopleFilters />
+            {showFilters && <PeopleFilters />}
           </div>
 
           <div className="column">

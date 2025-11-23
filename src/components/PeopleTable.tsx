@@ -34,10 +34,10 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
     }
 
     if (currentOrder === 'desc') {
-      return 'fas fa-sort-up';
+      return 'fas fa-sort-down';
     }
 
-    return 'fas fa-sort-down';
+    return 'fas fa-sort-up';
   };
 
   return (

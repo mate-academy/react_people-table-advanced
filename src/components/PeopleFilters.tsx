@@ -39,7 +39,7 @@ export const PeopleFilters = () => {
           params={{ sex: 'f' }}
           className={classname({ 'is-active': selectedSex === 'f' })}
         >
-          Male
+          Female
         </SearchLink>
       </p>
 
