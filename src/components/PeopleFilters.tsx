@@ -28,7 +28,7 @@ export const PeopleFilters = ({
   };
 
   const handleQuery = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const value = event.target.value;
+    const value = event.target.value || null;
 
     setSearchWith({ query: value });
   };
