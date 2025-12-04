@@ -1,4 +1,12 @@
+import { Link, useLocation, useSearchParams } from 'react-router-dom';
+
 export const Navbar = () => {
+  const { pathname } = useLocation();
+  const [searchParams] = useSearchParams();
+
+  const search = searchParams.toString();
+  const peopleLink = `/people${search ? `?${search}` : ''}`;
+
   return (
     <nav
       data-cy="nav"
@@ -8,17 +16,24 @@ export const Navbar = () => {
     >
       <div className="container">
         <div className="navbar-brand">
-          <a className="navbar-item" href="#/">
+          <Link
+            className={`navbar-item ${pathname === '/' ? 'has-background-grey-lighter' : ''}`}
+            to="/"
+          >
             Home
-          </a>
+          </Link>
 
-          <a
+          <Link
             aria-current="page"
-            className="navbar-item has-background-grey-lighter"
-            href="#/people"
+            className={`navbar-item ${
+              pathname.startsWith('/people')
+                ? 'has-background-grey-lighter'
+                : ''
+            }`}
+            to={peopleLink}
           >
             People
-          </a>
+          </Link>
         </div>
       </div>
     </nav>
