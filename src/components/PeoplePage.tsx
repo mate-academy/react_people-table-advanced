@@ -31,11 +31,13 @@ export const PeoplePage = () => {
       }
 
       const nameMatch = person.name.toLowerCase().includes(query.toLowerCase());
-      const motherMatch = person.motherName
-        ?.toLowerCase()
+
+      const motherMatch = (person.motherName || '')
+        .toLowerCase()
         .includes(query.toLowerCase());
-      const fatherMatch = person.fatherName
-        ?.toLowerCase()
+
+      const fatherMatch = (person.fatherName || '')
+        .toLowerCase()
         .includes(query.toLowerCase());
 
       return nameMatch || motherMatch || fatherMatch;

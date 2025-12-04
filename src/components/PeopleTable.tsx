@@ -29,16 +29,13 @@ export const PeopleTable: React.FC<Props> = ({
             const isActive = sort === column;
             const isDesc = order === 'desc';
 
-            let params: Record<string, string | null> = {
-              sort: column,
-              order: null,
-            };
+            let params: Record<string, string | null>;
 
             if (!isActive) {
               params = { sort: column };
-            } else if (isActive && !isDesc) {
+            } else if (!isDesc) {
               params = { sort: column, order: 'desc' };
-            } else if (isActive && isDesc) {
+            } else {
               params = { sort: null, order: null };
             }
 
