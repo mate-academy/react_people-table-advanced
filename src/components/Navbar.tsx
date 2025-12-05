@@ -1,3 +1,5 @@
+import { Route } from "react-router-dom";
+
 export const Navbar = () => {
   return (
     <nav
@@ -8,10 +10,13 @@ export const Navbar = () => {
     >
       <div className="container">
         <div className="navbar-brand">
+          <Route path="/home">
           <a className="navbar-item" href="#/">
             Home
           </a>
+          </Route>
 
+          <Route path="/people">
           <a
             aria-current="page"
             className="navbar-item has-background-grey-lighter"
@@ -19,6 +24,7 @@ export const Navbar = () => {
           >
             People
           </a>
+          </Route>
         </div>
       </div>
     </nav>
