@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 
 export interface LinkPerson {
   name: string;
@@ -21,10 +21,15 @@ const generateSlug = (name: string, born?: number): string => {
 };
 
 export const PersonLink: React.FC<PersonLinkProps> = ({ person }) => {
+  const [searchParams] = useSearchParams();
+  const searchString = searchParams.toString();
+
   const nameToUse = person.name;
   const slug = generateSlug(nameToUse, person.born);
 
-  const absolutePath = `/people/${slug}`;
+  const absolutePath = searchString
+    ? `/people/${slug}?${searchString}`
+    : `/people/${slug}`;
 
   const className = person.sex === 'f' ? 'has-text-danger' : undefined;
 
