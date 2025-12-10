@@ -1,20 +1,63 @@
-import { PeoplePage } from './components/PeoplePage';
-import { Navbar } from './components/Navbar';
+import {
+  Navigate,
+  NavLink,
+  Route,
+  Routes,
+  useSearchParams,
+} from 'react-router-dom';
 
 import './App.scss';
+import { Home } from './components/Home';
+import { PeoplePage } from './components/PeoplePage';
+import { NotFoundPage } from './components/NotFoundPage';
 
 export const App = () => {
+  const [searchParams] = useSearchParams();
+  const searchString = searchParams.toString();
+  const peopleLinkTo = searchString ? `/people?${searchString}` : '/people';
+
   return (
     <div data-cy="app">
-      <Navbar />
-
-      <div className="section">
+      <nav
+        data-cy="nav"
+        className="navbar is-fixed-top has-shadow"
+        role="navigation"
+        aria-label="main navigation"
+      >
         <div className="container">
-          <h1 className="title">Home Page</h1>
-          <h1 className="title">Page not found</h1>
-          <PeoplePage />
+          <div className="navbar-brand">
+            <NavLink
+              className={({ isActive }) =>
+                `navbar-item ${isActive ? 'has-background-grey-lighter' : ''}`
+              }
+              to="/"
+            >
+              Home
+            </NavLink>
+
+            <NavLink
+              className={({ isActive }) =>
+                `navbar-item ${isActive ? 'has-background-grey-lighter' : ''}`
+              }
+              to={peopleLinkTo}
+            >
+              People
+            </NavLink>
+          </div>
         </div>
-      </div>
+      </nav>
+
+      <main className="section">
+        <div className="container">
+          <Routes>
+            <Route path="/home" element={<Navigate to="/" replace />} />
+            <Route path="/" element={<Home />} />
+            <Route path="/people/:slug" element={<PeoplePage />} />
+            <Route path="/people" element={<PeoplePage />} />
+            <Route path="*" element={<NotFoundPage />} />
+          </Routes>
+        </div>
+      </main>
     </div>
   );
 };
