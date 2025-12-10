@@ -1,0 +1,1 @@
+export { getPeople } from './api';

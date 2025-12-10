@@ -1,0 +1,1 @@
+export { PersonWidget } from './PersonWidget';
