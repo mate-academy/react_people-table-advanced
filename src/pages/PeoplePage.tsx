@@ -118,15 +118,22 @@ export const PeoplePage: React.FC = () => {
                 </p>
               )}
 
-              <p>There are no people matching the current search criteria</p>
+              {/* eslint-disable @typescript-eslint/indent */}
+              {!loading &&
+                !error &&
+                people.length > 0 &&
+                filteredAndSortedPeople.length === 0 && (
+                  <p>
+                    There are no people matching the current search criteria
+                  </p>
+                )}
+              {/* eslint-enable @typescript-eslint/indent */}
 
               {!loading && !error && people.length > 0 && (
-                <>
-                  <PeopleTable
-                    people={filteredAndSortedPeople}
-                    selectedSlug={slug || null}
-                  />
-                </>
+                <PeopleTable
+                  people={filteredAndSortedPeople}
+                  selectedSlug={slug || null}
+                />
               )}
             </div>
           </div>

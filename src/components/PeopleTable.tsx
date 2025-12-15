@@ -65,7 +65,7 @@ export const PeopleTable: React.FC<PeopleTableProps> = ({
           </th>
 
           <th>
-            <SearchLink params={getSortParams('nborn')}>
+            <SearchLink params={getSortParams('born')}>
               Born{getSortIcon('born')}
             </SearchLink>
           </th>
