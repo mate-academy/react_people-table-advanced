@@ -6,6 +6,7 @@ import { getPeopleWithParents } from '../services/Person';
 import { PeopleFilters } from '../components/PeopleFilters';
 import { getPeople } from '../utils/api';
 import { useSearchParams } from 'react-router-dom';
+import { sortBy } from '../utils/dataActions';
 
 export const PeoplePage = () => {
   const [peopleFromServer, setPeopleFromServer] = useState<Person[]>([]);
@@ -15,6 +16,8 @@ export const PeoplePage = () => {
   const sex = searchParams.get('sex') || '';
   const query = searchParams.get('query') || '';
   const centuries = searchParams.getAll('centuries');
+  const sort = searchParams.get('sort') || '';
+  const order = searchParams.get('order') || '';
 
   useEffect(() => {
     const loadPeople = async () => {
@@ -56,6 +59,10 @@ export const PeoplePage = () => {
     });
   }, [peopleFromServer, sex, query, centuries]);
 
+  const sortedPeople = useMemo(() => {
+    return sortBy<Person>(filteredPeople, sort as keyof Person, order);
+  }, [filteredPeople, sort, order]);
+
   const isPlugVisible =
     !isLoading && peopleFromServer.length === 0 && !errorMessage;
   const isListVisible =
@@ -94,7 +101,7 @@ export const PeoplePage = () => {
                 <p>There are no people matching the current search criteria</p>
               )}
 
-              {isListVisible && <PeopleTable people={filteredPeople} />}
+              {isListVisible && <PeopleTable people={sortedPeople} />}
             </div>
           </div>
         </div>

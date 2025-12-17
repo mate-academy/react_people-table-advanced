@@ -1,14 +1,38 @@
-import { useParams } from 'react-router-dom';
+import { useParams, useSearchParams } from 'react-router-dom';
 import { Person } from '../types';
 import classNames from 'classnames';
 import { PersonLink } from './PersonLink';
+import { SearchLink } from './SearchLink';
+import React from 'react';
 
 type Props = {
   people: Person[];
 };
 
-export const PeopleTable: React.FC<Props> = ({ people }) => {
+const sortField = [
+  { fieldSort: 'name', title: 'Name' },
+  { fieldSort: 'sex', title: 'Sex' },
+  { fieldSort: 'born', title: 'Born' },
+  { fieldSort: 'died', title: 'Died' },
+];
+
+const PeopleTableComponent: React.FC<Props> = ({ people }) => {
   const { slug: selectedPerson } = useParams();
+  const [searchParams] = useSearchParams();
+  const sort = searchParams.get('sort') || '';
+  const order = searchParams.get('order') || '';
+
+  const getNextSortParams = (fieldSort: string) => {
+    if (fieldSort === sort && order) {
+      return { sort: null, order: null };
+    }
+
+    if (fieldSort === sort && !order) {
+      return { sort: fieldSort, order: 'desc' };
+    }
+
+    return { sort: fieldSort, order: null };
+  };
 
   return (
     <table
@@ -17,49 +41,29 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
     >
       <thead>
         <tr>
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Name
-              <a href="#/people?sort=name">
-                <span className="icon">
-                  <i className="fas fa-sort" />
-                </span>
-              </a>
-            </span>
-          </th>
+          {sortField.map(({ fieldSort, title }) => {
+            const iconClass = classNames('fas', {
+              'fa-sort-up': fieldSort === sort && !order,
+              'fa-sort-down': fieldSort === sort && order,
+              'fa-sort': fieldSort !== sort,
+            });
 
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Sex
-              <a href="#/people?sort=sex">
-                <span className="icon">
-                  <i className="fas fa-sort" />
+            return (
+              <th key={fieldSort}>
+                <span className="is-flex is-flex-wrap-nowrap">
+                  {title}
+                  <SearchLink
+                    params={getNextSortParams(fieldSort)}
+                    className="icon ml-1"
+                  >
+                    <span className="icon">
+                      <i className={iconClass} />
+                    </span>
+                  </SearchLink>
                 </span>
-              </a>
-            </span>
-          </th>
-
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Born
-              <a href="#/people?sort=born&amp;order=desc">
-                <span className="icon">
-                  <i className="fas fa-sort-up" />
-                </span>
-              </a>
-            </span>
-          </th>
-
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Died
-              <a href="#/people?sort=died">
-                <span className="icon">
-                  <i className="fas fa-sort-down" />
-                </span>
-              </a>
-            </span>
-          </th>
+              </th>
+            );
+          })}
 
           <th>Mother</th>
           <th>Father</th>
@@ -102,3 +106,5 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
     </table>
   );
 };
+
+export const PeopleTable = React.memo(PeopleTableComponent);

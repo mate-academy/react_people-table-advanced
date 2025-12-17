@@ -13,7 +13,7 @@ export const PersonLink: React.FC<Props> = ({ person, fallbackName }) => {
     return (
       <NavLink
         to={{
-          pathname: `../${person.slug}`,
+          pathname: `/people/${person.slug}`,
           search: search,
         }}
         className={person.sex === 'f' ? 'has-text-danger' : ''}
