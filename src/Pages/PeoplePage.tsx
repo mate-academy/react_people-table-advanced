@@ -67,7 +67,8 @@ export const PeoplePage = () => {
     !isLoading && peopleFromServer.length === 0 && !errorMessage;
   const isListVisible =
     !isLoading && peopleFromServer.length > 0 && !errorMessage;
-
+  const isFilterVisible =
+    !isLoading && peopleFromServer.length > 0 && !errorMessage;
   const isNoResults =
     !isLoading && peopleFromServer.length > 0 && filteredPeople.length === 0;
 
@@ -77,7 +78,7 @@ export const PeoplePage = () => {
 
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
-          {!isLoading && (
+          {isFilterVisible && (
             <div className="column is-7-tablet is-narrow-desktop">
               <PeopleFilters />
             </div>
