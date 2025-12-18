@@ -58,7 +58,9 @@ export const PeopleFilters = () => {
       <p className="subtitle is-5">Filters</p>
 
       <div className="field">
-        <label htmlFor="name-filter" className="label">Name</label>
+        <label htmlFor="name-filter" className="label">
+          Name
+        </label>
 
         <div className="control">
           <input
@@ -73,7 +75,9 @@ export const PeopleFilters = () => {
       </div>
 
       <div className="field">
-        <label htmlFor="sex-filter" className="label">Sex</label>
+        <label htmlFor="sex-filter" className="label">
+          Sex
+        </label>
 
         <div className="control">
           <div className="select is-fullwidth">
