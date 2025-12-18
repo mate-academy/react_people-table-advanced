@@ -25,9 +25,19 @@ export const PeoplePage = () => {
   const sex = searchParams.get('sex');
   const centuries = searchParams.getAll('centuries');
   const sort = searchParams.get('sort');
+  const order = searchParams.get('order');
 
   const visiblePeople = [...people]
-    .filter(person => person.name.toLowerCase().includes(query.toLowerCase()))
+    .filter(person => {
+  const lowerQuery = query.toLowerCase();
+
+  return (
+    person.name.toLowerCase().includes(lowerQuery) ||
+    (person.motherName?.toLowerCase() || '').includes(lowerQuery) ||
+    (person.fatherName?.toLowerCase() || '').includes(lowerQuery)
+  );
+})
+
     .filter(person => !sex || person.sex === sex)
     .filter(person => {
       if (!centuries.length) {
@@ -43,18 +53,27 @@ export const PeoplePage = () => {
         return 0;
       }
 
+      let comparison = 0;
+
+  
       switch (sort) {
         case 'name':
-          return a.name.localeCompare(b.name);
+          comparison = a.name.localeCompare(b.name);
+          break;
         case 'sex':
-          return a.sex.localeCompare(b.sex);
+          comparison = a.sex.localeCompare(b.sex);
+          break;
         case 'born':
-          return a.born - b.born;
+          comparison = a.born - b.born;
+          break;
         case 'died':
-          return (a.died ?? Infinity) - (b.died ?? Infinity);
+          comparison = (a.died ?? Infinity) - (b.died ?? Infinity);
+          break;
         default:
           return 0;
       }
+
+      return order === 'desc' ? -comparison : comparison;
     });
 
   return (
