@@ -20,9 +20,10 @@ export const PeopleTable: React.FC<Props> = ({ people, selectedSlug }) => {
     }
 
     if (!currentOrder || currentOrder === 'asc') {
-      return { sort: column, order: 'desc' }
+      return { sort: column, order: 'desc' };
     }
-    return { sort: null, orden: null };
+
+    return { sort: null, order: null };
   };
 
   const getSortIcon = (column: string) => {
@@ -30,10 +31,10 @@ export const PeopleTable: React.FC<Props> = ({ people, selectedSlug }) => {
       return 'fa-sort';
     }
 
-    if (currentSort === 'desc') {
+    if (currentOrder=== 'desc') {
       return 'fa-sort-down';
     }
-    
+
     return 'fa-sort-up';
   };
 
@@ -46,7 +47,7 @@ export const PeopleTable: React.FC<Props> = ({ people, selectedSlug }) => {
         <tr>
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
-               Name
+              Name
               <SearchLink params={getSortParams('name')}>
                 <span className="icon">
                   <i className={`fas ${getSortIcon('name')}`} />
@@ -77,7 +78,7 @@ export const PeopleTable: React.FC<Props> = ({ people, selectedSlug }) => {
             </span>
           </th>
 
-         <th>
+          <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Died
               <SearchLink params={getSortParams('died')}>

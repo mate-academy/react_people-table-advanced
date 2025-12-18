@@ -29,14 +29,14 @@ export const PeoplePage = () => {
 
   const visiblePeople = [...people]
     .filter(person => {
-  const lowerQuery = query.toLowerCase();
+      const lowerQuery = query.toLowerCase();
 
-  return (
-    person.name.toLowerCase().includes(lowerQuery) ||
-    (person.motherName?.toLowerCase() || '').includes(lowerQuery) ||
-    (person.fatherName?.toLowerCase() || '').includes(lowerQuery)
-  );
-})
+      return (
+        person.name.toLowerCase().includes(lowerQuery) ||
+        (person.motherName?.toLowerCase() || '').includes(lowerQuery) ||
+        (person.fatherName?.toLowerCase() || '').includes(lowerQuery)
+      );
+    })
 
     .filter(person => !sex || person.sex === sex)
     .filter(person => {
@@ -55,7 +55,6 @@ export const PeoplePage = () => {
 
       let comparison = 0;
 
-  
       switch (sort) {
         case 'name':
           comparison = a.name.localeCompare(b.name);
