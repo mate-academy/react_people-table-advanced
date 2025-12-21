@@ -4,10 +4,23 @@ import { SearchLink } from './SearchLink';
 const CENTURIES = ['16', '17', '18', '19', '20'];
 
 export const PeopleFilters = () => {
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const query = searchParams.get('query') || '';
   const selectedCenturies = searchParams.getAll('century');
+
+  const handleQueryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = event.target.value;
+    const params = new URLSearchParams(searchParams);
+
+    if (value) {
+      params.set('query', value);
+    } else {
+      params.delete('query');
+    }
+
+    setSearchParams(params);
+  };
 
   return (
     <nav className="panel">
@@ -22,19 +35,7 @@ export const PeopleFilters = () => {
             className="input"
             placeholder="Search"
             value={query}
-            onChange={event => {
-              const value = event.target.value;
-
-              // empty input → remove query param
-              if (!value) {
-                window.history.replaceState(
-                  null,
-                  '',
-                  '#/people' +
-                    window.location.search.replace(/query=[^&]+&?/, ''),
-                );
-              }
-            }}
+            onChange={handleQueryChange}
           />
 
           <span className="icon is-left">
@@ -43,7 +44,7 @@ export const PeopleFilters = () => {
         </p>
       </div>
 
-      {/* 🕰 Century filter */}
+      {/* Century filter */}
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
