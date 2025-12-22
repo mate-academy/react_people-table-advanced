@@ -64,18 +64,16 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
                 onClick={e => sortHandler(e, key)}
               >
                 {value}
-                <a href={`#/people?sort=${key}`}>
-                  <span className="icon">
-                    <i
-                      className={classNames(
-                        'fas',
-                        { 'fa-sort': oldSort !== key },
-                        { 'fa-sort-up': oldSort === key && order === 'asc' },
-                        { 'fa-sort-down': oldSort === key && order === 'desc' },
-                      )}
-                    />
-                  </span>
-                </a>
+                <span className="icon">
+                  <i
+                    className={classNames(
+                      'fas',
+                      { 'fa-sort': oldSort !== key },
+                      { 'fa-sort-up': oldSort === key && order === 'asc' },
+                      { 'fa-sort-down': oldSort === key && order === 'desc' },
+                    )}
+                  />
+                </span>
               </span>
             </th>
           ))}

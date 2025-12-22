@@ -110,10 +110,6 @@ export const PeoplePage: React.FC = () => {
     }
   }
 
-  if (sort === '') {
-    sortedPeople = finalPeople;
-  }
-
   return (
     <>
       <h1 className="title">People Page</h1>
@@ -138,11 +134,13 @@ export const PeoplePage: React.FC = () => {
                 </p>
               )}
 
-              {sortedPeople.length === 0 && !error && (
+              {people.length > 0 && sortedPeople.length === 0 && !error && (
                 <p>There are no people matching the current search criteria</p>
               )}
 
-              {people.length !== 0 && <PeopleTable people={sortedPeople} />}
+              {sortedPeople.length !== 0 && (
+                <PeopleTable people={sortedPeople} />
+              )}
             </div>
           </div>
         </div>
