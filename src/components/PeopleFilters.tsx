@@ -1,6 +1,7 @@
 import classNames from 'classnames';
 import React from 'react';
 import { useSearchParams } from 'react-router-dom';
+import { SearchLink } from './SearchLink';
 
 const sexList: { [key: string]: string } = {
   All: '',
@@ -29,37 +30,10 @@ export const PeopleFilters = () => {
     setSearchParams(params);
   }
 
-  function handleSexFilterChange(event: React.MouseEvent<HTMLAnchorElement>) {
-    event.preventDefault();
-    const sex = event.currentTarget.href.split('=')[1] || '';
-
-    const params = new URLSearchParams(searchParams);
-
-    params.set('sex', sex);
-
-    if (!sex) {
-      params.delete('sex');
-    }
-
-    setSearchParams(params);
-  }
-
-  function handleCenturyFilterChange(
-    event: React.MouseEvent<HTMLAnchorElement>,
-  ) {
-    event.preventDefault();
-    const century = event.currentTarget.href.split('=')[1];
-
-    const params = new URLSearchParams(searchParams);
-
-    const newCenturies = centuries.includes(century)
-      ? centuries.filter(c => c !== century)
-      : [...centuries, century];
-
-    params.delete('centuries');
-    newCenturies.forEach(c => params.append('centuries', c));
-
-    setSearchParams(params);
+  function processArrayParams(current: string[], newElement: string) {
+    return current.includes(newElement)
+      ? current.filter(c => c !== newElement)
+      : [...current, newElement];
   }
 
   return (
@@ -68,16 +42,15 @@ export const PeopleFilters = () => {
 
       <p className="panel-tabs" data-cy="SexFilter">
         {Object.entries(sexList).map(([name, value]) => (
-          <a
+          <SearchLink
             key={name}
             className={
               value === (searchParams.get('sex') || '') ? 'is-active' : ''
             }
-            href={`#/people?sex=${value}`}
-            onClick={handleSexFilterChange}
+            params={{ sex: value }}
           >
             {name}
-          </a>
+          </SearchLink>
         ))}
       </p>
 
@@ -103,17 +76,16 @@ export const PeopleFilters = () => {
           <div className="level-left">
             <div className="level-right ml-4">
               {centuryList.map(century => (
-                <a
+                <SearchLink
                   key={century}
                   data-cy="century"
                   className={classNames('button mr-1', {
                     'is-info': centuries.includes(century),
                   })}
-                  href={`#/people?centuries=${century}`}
-                  onClick={handleCenturyFilterChange}
+                  params={{ centuries: processArrayParams(centuries, century) }}
                 >
                   {century}
-                </a>
+                </SearchLink>
               ))}
             </div>
           </div>

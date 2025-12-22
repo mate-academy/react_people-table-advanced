@@ -82,26 +82,26 @@ export const PeoplePage: React.FC = () => {
   if (sort) {
     switch (sort) {
       case 'name':
-        sortedPeople = finalPeople.sort((a, b) =>
+        sortedPeople = [...finalPeople].sort((a, b) =>
           order === 'asc'
             ? a.name.localeCompare(b.name)
             : b.name.localeCompare(a.name),
         );
         break;
       case 'sex':
-        sortedPeople = finalPeople.sort((a, b) =>
+        sortedPeople = [...finalPeople].sort((a, b) =>
           order === 'asc'
             ? a.sex.localeCompare(b.sex)
             : b.sex.localeCompare(a.sex),
         );
         break;
       case 'born':
-        sortedPeople = finalPeople.sort((a, b) =>
+        sortedPeople = [...finalPeople].sort((a, b) =>
           order === 'asc' ? a.born - b.born : b.born - a.born,
         );
         break;
       case 'died':
-        sortedPeople = finalPeople.sort((a, b) =>
+        sortedPeople = [...finalPeople].sort((a, b) =>
           order === 'asc' ? a.died - b.died : b.died - a.died,
         );
         break;
