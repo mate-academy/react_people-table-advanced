@@ -1,3 +1,15 @@
 iframe {
   display: none;
 }
+
+th.unsorted::after {
+  content: " ↕";
+}
+
+th.asc::after {
+  content: " ↑";
+}
+
+th.desc::after {
+  content: " ↓";
+}

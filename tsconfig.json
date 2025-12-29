@@ -1,10 +1,18 @@
 {
   "extends": "@mate-academy/students-ts-config",
-  "include": [
-    "src"
-  ],
+  "include": ["src"],
   "compilerOptions": {
+    "baseUrl": "./src",
     "sourceMap": false,
-    "types": ["node", "cypress"]
+    "types": ["node", "cypress"],
+    "target": "es2020",
+    "module": "esnext",
+    "jsx": "react-jsx",
+    "lib": ["DOM", "ES2020"],
+    "allowJs": false,
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "strict": true
   }
 }
