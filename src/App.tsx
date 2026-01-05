@@ -1,20 +1,15 @@
-import { PeoplePage } from './components/PeoplePage';
-import { Navbar } from './components/Navbar';
+import { Person } from './types/Person';
 
-import './App.scss';
+// eslint-disable-next-line operator-linebreak
+const API_URL =
+  'https://mate-academy.github.io/react_people-table/api/people.json';
 
-export const App = () => {
-  return (
-    <div data-cy="app">
-      <Navbar />
+function wait(delay: number) {
+  return new Promise(resolve => setTimeout(resolve, delay));
+}
 
-      <div className="section">
-        <div className="container">
-          <h1 className="title">Home Page</h1>
-          <h1 className="title">Page not found</h1>
-          <PeoplePage />
-        </div>
-      </div>
-    </div>
-  );
-};
+export async function getPeople(): Promise<Person[]> {
+  return wait(500)
+    .then(() => fetch(API_URL))
+    .then(response => response.json());
+}
