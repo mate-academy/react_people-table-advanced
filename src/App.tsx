@@ -1,15 +1,32 @@
-import { Person } from './types/Person';
+import { Routes, Route, Navigate } from 'react-router-dom';
+import { PeoplePage } from './components/PeoplePage';
+import { Navbar } from './components/Navbar';
 
-// eslint-disable-next-line operator-linebreak
-const API_URL =
-  'https://mate-academy.github.io/react_people-table/api/people.json';
+import './App.scss';
 
-function wait(delay: number) {
-  return new Promise(resolve => setTimeout(resolve, delay));
-}
+export const App = () => {
+  return (
+    <div data-cy="app">
+      <Navbar />
 
-export async function getPeople(): Promise<Person[]> {
-  return wait(500)
-    .then(() => fetch(API_URL))
-    .then(response => response.json());
-}
+      <div className="section">
+        <div className="container">
+          <Routes>
+            <Route path="/" element={<h1 className="title">Home Page</h1>} />
+
+            <Route path="/home" element={<Navigate to="/" replace />} />
+
+            <Route path="/people" element={<PeoplePage />} />
+
+            <Route path="/people/:slug" element={<PeoplePage />} />
+
+            <Route
+              path="*"
+              element={<h1 className="title">Page not found</h1>}
+            />
+          </Routes>
+        </div>
+      </div>
+    </div>
+  );
+};
