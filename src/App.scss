@@ -1,3 +1,26 @@
 iframe {
   display: none;
 }
+
+.sort-icons {
+  display: inline-flex;
+  flex-direction: column;
+  margin-left: 4px;
+  font-size: 1rem;
+  line-height: 0.05;
+  cursor: pointer;
+  color: #b5b5b5;
+}
+
+.sort-icons .active {
+  color: #3273dc;
+}
+
+.th-content {
+  display: inline-flex;
+  align-items: center;
+}
+
+.section {
+  margin-top: 50px;
+}
