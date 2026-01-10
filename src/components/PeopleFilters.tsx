@@ -38,7 +38,13 @@ export const PeopleFilters = () => {
   };
 
   const resetFilters = () => {
-    setSearchParams({});
+    const params = new URLSearchParams(searchParams);
+
+    params.delete('query');
+    params.delete('sex');
+    params.delete('centuries');
+
+    setSearchParams(params);
   };
 
   const sex = searchParams.get('sex');

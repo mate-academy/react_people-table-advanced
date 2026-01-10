@@ -4,17 +4,19 @@ import { useSearchParams } from 'react-router-dom';
 
 interface PeopleTableProps {
   people: Person[];
+  allPeople: Person[];
   selectedPerson: Person | null;
   setSelectedPerson: (person: Person | null) => void;
 }
 
 const PeopleTable: React.FC<PeopleTableProps> = ({
   people,
+  allPeople,
   selectedPerson,
   setSelectedPerson,
 }) => {
   const getPersonByName = (name: string | null) =>
-    people.find(p => p.name === name) || null;
+    allPeople.find(p => p.name === name) || null;
 
   const [searchParams, setSearchParams] = useSearchParams();
   const sort = searchParams.get('sort');

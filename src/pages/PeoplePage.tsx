@@ -123,6 +123,7 @@ const PeoplePage: React.FC<PeoplePageProps> = ({
         <div className="column">
           <PeopleTable
             people={visiblePeople}
+            allPeople={people}
             selectedPerson={selectedPerson}
             setSelectedPerson={setSelectedPerson}
           />
