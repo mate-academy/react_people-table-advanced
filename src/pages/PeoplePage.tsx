@@ -10,7 +10,6 @@ import { PeopleFilters } from '../components/PeopleFilters';
 interface PeoplePageProps {
   selectedPerson: Person | null;
   setSelectedPerson: (person: Person | null) => void;
-  slug?: string | null;
 }
 
 const PeoplePage: React.FC<PeoplePageProps> = ({

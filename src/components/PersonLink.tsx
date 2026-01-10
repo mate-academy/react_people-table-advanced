@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { Person } from '../types/Person';
 
 interface PersonLinkProps {
@@ -14,9 +14,14 @@ const PersonLink: React.FC<PersonLinkProps> = ({
     setSelectedPerson?.(person);
   };
 
+  const [searchParams] = useSearchParams();
+
   return (
     <Link
-      to={`/people/${person.slug}`}
+      to={{
+        pathname: `/people/${person.slug}`,
+        search: searchParams.toString(),
+      }}
       className={person.sex === 'f' ? 'has-text-danger' : ''}
       onClick={handleClick}
     >

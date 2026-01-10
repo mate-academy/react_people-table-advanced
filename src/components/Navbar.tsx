@@ -1,6 +1,8 @@
-import { NavLink } from 'react-router-dom';
+import { NavLink, useLocation } from 'react-router-dom';
 
 export default function Navbar() {
+  const location = useLocation();
+
   return (
     <nav
       data-cy="nav"
@@ -20,7 +22,12 @@ export default function Navbar() {
           </NavLink>
 
           <NavLink
-            to="/people"
+            to={{
+              pathname: '/people',
+              search: location.pathname.startsWith('/people')
+                ? location.search
+                : '',
+            }}
             className={({ isActive }) =>
               'navbar-item' + (isActive ? ' has-background-grey-lighter' : '')
             }
