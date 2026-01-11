@@ -1,7 +1,9 @@
 import React from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useLocation } from 'react-router-dom';
 
 export const Navbar = () => {
+  const location = useLocation();
+
   return (
     <nav
       data-cy="nav"
@@ -21,7 +23,10 @@ export const Navbar = () => {
             Home
           </NavLink>
           <NavLink
-            to="/people"
+            to={{
+              pathname: '/people',
+              search: location.search,
+            }}
             className={({ isActive }) =>
               `navbar-item ${isActive ? 'is-active has-background-grey-lighter' : ''}`
             }

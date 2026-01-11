@@ -6,7 +6,7 @@ import classNames from 'classnames';
 export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const query = searchParams.get('query') || '';
-  const centuries = searchParams.getAll('centuries') || [];
+  const centuries = searchParams.getAll('centuries');
   const sex = searchParams.get('sex') || '';
 
   return (
