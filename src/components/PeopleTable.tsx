@@ -12,7 +12,6 @@ type SortField = 'name' | 'sex' | 'born' | 'died';
 
 /* eslint-disable jsx-a11y/control-has-associated-label */
 export const PeopleTable: React.FC<Props> = ({ personSlug, people }) => {
-
   const [searchParams] = useSearchParams();
 
   const sort = searchParams.get('sort');
