@@ -35,7 +35,7 @@ export const PeoplePage: React.FC = () => {
 
     if (centuries.length > 0) {
       result = result.filter(person => {
-        const bornCentury = Math.floor(person.born / 100);
+        const bornCentury = Math.ceil(person.born / 100);
 
         return centuries.includes(bornCentury.toString());
       });

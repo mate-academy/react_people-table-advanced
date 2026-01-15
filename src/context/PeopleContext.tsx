@@ -8,7 +8,7 @@ type PeopleContextType = {
   error: boolean;
   setError: React.Dispatch<React.SetStateAction<boolean>>;
   loading: boolean;
-  setLoalding: React.Dispatch<React.SetStateAction<boolean>>;
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 export const PeopleContext = React.createContext<PeopleContextType>({
@@ -17,16 +17,16 @@ export const PeopleContext = React.createContext<PeopleContextType>({
   error: false,
   setError: () => {},
   loading: false,
-  setLoalding: () => {},
+  setLoading: () => {},
 });
 
 export const PeopleProvider = ({ children }: { children: React.ReactNode }) => {
   const [people, setPeople] = React.useState<Person[]>([]);
-  const [loading, setLoalding] = React.useState<boolean>(false);
+  const [loading, setLoading] = React.useState<boolean>(false);
   const [error, setError] = React.useState<boolean>(false);
 
   React.useEffect(() => {
-    setLoalding(true);
+    setLoading(true);
     setError(false);
     getPeople()
       .then(fetchedPeople => {
@@ -52,7 +52,7 @@ export const PeopleProvider = ({ children }: { children: React.ReactNode }) => {
         setError(true);
       })
       .finally(() => {
-        setLoalding(false);
+        setLoading(false);
       });
   }, []);
 
@@ -60,7 +60,7 @@ export const PeopleProvider = ({ children }: { children: React.ReactNode }) => {
     people,
     setPeople,
     loading,
-    setLoalding,
+    setLoading,
     error,
     setError,
   };

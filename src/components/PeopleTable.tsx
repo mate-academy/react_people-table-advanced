@@ -8,9 +8,10 @@ type Props = {
   people: Person[];
 };
 
+type SortField = 'name' | 'sex' | 'born' | 'died';
+
 /* eslint-disable jsx-a11y/control-has-associated-label */
 export const PeopleTable: React.FC<Props> = ({ personSlug, people }) => {
-  type SortField = 'name' | 'sex' | 'born' | 'died';
 
   const [searchParams] = useSearchParams();
 
