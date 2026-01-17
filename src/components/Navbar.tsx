@@ -1,4 +1,13 @@
+import classNames from 'classnames';
+import { SearchLink } from './SearchLink';
+
 export const Navbar = () => {
+  const getLinkClass = ({ isActive }: { isActive: boolean }) =>
+    classNames('navbar-item', {
+      'is-active': isActive,
+      'has-background-grey-lighter': isActive,
+    });
+
   return (
     <nav
       data-cy="nav"
@@ -8,17 +17,13 @@ export const Navbar = () => {
     >
       <div className="container">
         <div className="navbar-brand">
-          <a className="navbar-item" href="#/">
+          <SearchLink to="/" end className={getLinkClass}>
             Home
-          </a>
+          </SearchLink>
 
-          <a
-            aria-current="page"
-            className="navbar-item has-background-grey-lighter"
-            href="#/people"
-          >
+          <SearchLink to="/people" className={getLinkClass}>
             People
-          </a>
+          </SearchLink>
         </div>
       </div>
     </nav>

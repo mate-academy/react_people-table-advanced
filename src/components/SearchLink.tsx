@@ -1,12 +1,13 @@
-import { Link, LinkProps, useSearchParams } from 'react-router-dom';
+import { NavLink, NavLinkProps, useSearchParams } from 'react-router-dom';
 import { getSearchWith, SearchParams } from '../utils/searchHelper';
 
 /**
- * To replace the the standard `Link` we take all it props except for `to`
+ * To replace the the standard `NavLink` we take all it props
  * along with the custom `params` prop that we use for updating the search
  */
-type Props = Omit<LinkProps, 'to'> & {
-  params: SearchParams;
+type Props = Omit<NavLinkProps, 'to'> & {
+  params?: SearchParams;
+  to?: NavLinkProps['to'];
 };
 
 /**
@@ -16,21 +17,22 @@ type Props = Omit<LinkProps, 'to'> & {
 export const SearchLink: React.FC<Props> = ({
   children, // this is the content between the open and closing tags
   params, // the params to be updated in the `search`
-  ...props // all usual Link props like `className`, `style` and `id`
+  to,
+  ...props
 }) => {
   const [searchParams] = useSearchParams();
 
+  const targetTo = typeof to === 'object' ? to : { pathname: to };
+
   return (
-    <Link
-      // to={{ search: getSearchWith(searchParams, { query: 'sdf' }) }}
-      // to={{ search: getSearchWith(searchParams, { query: null }) }}
-      // to={{ search: getSearchWith(searchParams, { centuries: ['16', '18'] }) }}
+    <NavLink
       to={{
-        search: getSearchWith(searchParams, params),
+        ...targetTo,
+        search: getSearchWith(searchParams, params || {}),
       }}
-      {...props} // copy all the other props
+      {...props}
     >
       {children}
-    </Link>
+    </NavLink>
   );
 };
