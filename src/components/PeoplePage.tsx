@@ -18,13 +18,18 @@ export const PeoplePage = () => {
     fetch('https://mate-academy.github.io/react_people-table/api/people.json')
       .then(response => {
         if (!response.ok) {
+          setErrorMessage('Something went wrong');
           throw new Error();
         }
 
         return response.json();
       })
       .then(data => setPeople(data))
-      .catch(() => setErrorMessage('Something went wrong'))
+      .catch(error => {
+        if (error instanceof TypeError) {
+          setErrorMessage('Something went wrong');
+        }
+      })
       .finally(() => setLoading(false));
   }, []);
 
@@ -43,8 +48,8 @@ export const PeoplePage = () => {
     visiblePeople = visiblePeople.filter(
       person =>
         person.name.toLowerCase().includes(normalizedQuery) ||
-        person.motherName?.toLowerCase().includes(normalizedQuery) ||
-        person.fatherName?.toLowerCase().includes(normalizedQuery),
+        (person.motherName?.toLowerCase().includes(normalizedQuery) ?? false) ||
+        (person.fatherName?.toLowerCase().includes(normalizedQuery) ?? false),
     );
   }
 
