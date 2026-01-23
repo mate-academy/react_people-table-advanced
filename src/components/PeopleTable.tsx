@@ -13,6 +13,7 @@ export const PeopleTable: React.FC<Props> = ({ people, selectedSlug }) => {
   const [searchParams] = useSearchParams();
   const sortField = searchParams.get('sort');
   const sortOrder = searchParams.get('order');
+  const search = searchParams.toString();
 
   const getSortIcon = (field: string) => {
     if (sortField !== field) {
@@ -101,7 +102,10 @@ export const PeopleTable: React.FC<Props> = ({ people, selectedSlug }) => {
           >
             <td>
               <Link
-                to={`/people/${person.slug}`}
+                to={{
+                  pathname: `/people/${person.slug}`,
+                  search,
+                }}
                 className={classNames({
                   'has-text-danger': person.sex === 'f',
                 })}
@@ -116,7 +120,10 @@ export const PeopleTable: React.FC<Props> = ({ people, selectedSlug }) => {
               {person.motherName ? (
                 person.mother ? (
                   <Link
-                    to={`/people/${person.mother.slug}`}
+                    to={{
+                      pathname: `/people/${person.mother.slug}`,
+                      search,
+                    }}
                     className="has-text-danger"
                   >
                     {person.motherName}
@@ -131,7 +138,12 @@ export const PeopleTable: React.FC<Props> = ({ people, selectedSlug }) => {
             <td>
               {person.fatherName ? (
                 person.father ? (
-                  <Link to={`/people/${person.father.slug}`}>
+                  <Link
+                    to={{
+                      pathname: `/people/${person.father.slug}`,
+                      search,
+                    }}
+                  >
                     {person.fatherName}
                   </Link>
                 ) : (
