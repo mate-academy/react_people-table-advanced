@@ -4,14 +4,13 @@ import { PersonLink } from './PersonLink';
 import classNames from 'classnames';
 import { SearchLink } from './SearchLink';
 import { useSearchParams } from 'react-router-dom';
-import { useEffect } from 'react';
 
 type SortBy = 'name' | 'sex' | 'born' | 'died';
 
 /* eslint-disable jsx-a11y/control-has-associated-label */
 export const PeopleTable = () => {
   const [searchParams] = useSearchParams();
-  const { peopleFromServer, visiblePeople, setVisiblePeople } = usePeople();
+  const { visiblePeople } = usePeople();
   const currentSort = searchParams.get('sort');
   const currentOrder = searchParams.get('order');
 
@@ -30,29 +29,6 @@ export const PeopleTable = () => {
       return { sort: sortBy, order: null };
     }
   };
-
-  const handleSorting = () => {
-    const sorted = [...peopleFromServer].sort((a, b) => {
-      switch (currentSort) {
-        case 'name':
-          return a.name.localeCompare(b.name);
-        case 'sex':
-          return a.sex.localeCompare(b.sex);
-        case 'born':
-          return a.born - b.born;
-        case 'died':
-          return a.died - b.died;
-        default:
-          return 0;
-      }
-    });
-
-    setVisiblePeople(currentOrder === 'desc' ? sorted.reverse() : sorted);
-  };
-
-  useEffect(() => {
-    handleSorting();
-  }, [currentSort, currentOrder]);
 
   return (
     <table

@@ -1,11 +1,9 @@
 import { useSearchParams } from 'react-router-dom';
 import { SearchLink } from './SearchLink';
-import { useEffect, useState } from 'react';
-import { usePeople } from './PeopleContext';
 import classNames from 'classnames';
+import { useState } from 'react';
 
 export const PeopleFilters = () => {
-  const { peopleFromServer, setVisiblePeople } = usePeople();
   const [searchParams, setSearchParams] = useSearchParams();
   const currentSex = searchParams.get('sex');
   const currentQuery = searchParams.get('query');
@@ -19,46 +17,6 @@ export const PeopleFilters = () => {
 
     return { centuries: [...currentCenturies, century] };
   };
-
-  const handleFilter = () => {
-    const filter = [...peopleFromServer].filter(person => {
-      switch (currentSex) {
-        case 'm':
-          return person.sex === 'm';
-        case 'f':
-          return person.sex === 'f';
-        default:
-          return person;
-      }
-    });
-
-    const filterTwo = [...filter].filter(person => {
-      if (currentCenturies?.length === 0) {
-        return person;
-      }
-
-      return currentCenturies?.includes(
-        Math.ceil(person.born / 100).toString(),
-      );
-    });
-
-    const filterThree = [...filterTwo].filter(person => {
-      if (currentQuery?.length === 0 || currentQuery === null) {
-        return person;
-      }
-
-      return person.name
-        .toLowerCase()
-        .trim()
-        .includes(currentQuery.toLowerCase().trim());
-    });
-
-    setVisiblePeople(filterThree);
-  };
-
-  useEffect(() => {
-    handleFilter();
-  }, [currentSex, currentCenturies, currentQuery]);
 
   return (
     <nav className="panel">
