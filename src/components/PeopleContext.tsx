@@ -55,14 +55,16 @@ export const PeopleProvider: React.FC<{ children: React.ReactNode }> = ({
           .toLowerCase()
           .trim()
           .includes(currentQuery.toLowerCase().trim()) ||
-        person
-          .fatherName!.toLowerCase()
-          .trim()
-          .includes(currentQuery.toLowerCase().trim()) ||
-        person
-          .motherName!.toLowerCase()
-          .trim()
-          .includes(currentQuery.toLowerCase().trim())
+        (person.fatherName !== null &&
+          person.fatherName
+            .toLowerCase()
+            .trim()
+            .includes(currentQuery.toLowerCase().trim())) ||
+        (person.motherName !== null &&
+          person.motherName
+            .toLowerCase()
+            .trim()
+            .includes(currentQuery.toLowerCase().trim()))
       );
     });
 
@@ -82,7 +84,7 @@ export const PeopleProvider: React.FC<{ children: React.ReactNode }> = ({
     });
 
     setVisiblePeople(currentOrder === 'desc' ? sorted.reverse() : sorted);
-  });
+  }, [visiblePeople, peopleFromServer]);
 
   return (
     <PeopleContext.Provider

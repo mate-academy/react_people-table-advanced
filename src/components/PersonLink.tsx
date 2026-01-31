@@ -1,7 +1,7 @@
 import React from 'react';
 import { Person } from '../types';
 import { usePeople } from '../components/PeopleContext';
-import { NavLink, useParams } from 'react-router-dom';
+import { NavLink, useLocation, useParams } from 'react-router-dom';
 
 type Props = {
   person: Person;
@@ -10,6 +10,7 @@ type Props = {
 export const PersonLink: React.FC<Props> = ({ person }) => {
   const { peopleFromServer } = usePeople();
   const { selectedPerson } = useParams();
+  const location = useLocation();
 
   const personExists = (name: string): boolean => {
     const names = [...peopleFromServer].map(p => p.name);
@@ -29,7 +30,10 @@ export const PersonLink: React.FC<Props> = ({ person }) => {
     >
       <td>
         <NavLink
-          to={`/people/${person.slug}`}
+          to={{
+            pathname: `/people/${person.slug}`,
+            search: location.search,
+          }}
           className={person.sex === 'f' ? 'has-text-danger' : ''}
         >
           {person.name}
@@ -43,7 +47,10 @@ export const PersonLink: React.FC<Props> = ({ person }) => {
         {person.motherName ? (
           personExists(person.motherName) ? (
             <NavLink
-              to={`/people/${findPerson(person.motherName)?.slug}`}
+              to={{
+                pathname: `/people/${findPerson(person.motherName)?.slug}`,
+                search: location.search,
+              }}
               className="has-text-danger"
             >
               {person.motherName}
@@ -58,7 +65,12 @@ export const PersonLink: React.FC<Props> = ({ person }) => {
       <td>
         {person.fatherName ? (
           personExists(person.fatherName) ? (
-            <NavLink to={`/people/${findPerson(person.fatherName)?.slug}`}>
+            <NavLink
+              to={{
+                pathname: `/people/${findPerson(person.fatherName)?.slug}`,
+                search: location.search,
+              }}
+            >
               {person.fatherName}
             </NavLink>
           ) : (

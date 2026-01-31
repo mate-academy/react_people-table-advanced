@@ -12,7 +12,10 @@ export const Navbar = () => {
       <div className="container">
         <div className="navbar-brand">
           <NavLink
-            to="/"
+            to={{
+              pathname: `/`,
+              search: location.search,
+            }}
             className={({ isActive }) => {
               return classNames('navbar-item', {
                 'has-background-grey-lighter': isActive,
@@ -22,7 +25,10 @@ export const Navbar = () => {
             Home
           </NavLink>
           <NavLink
-            to="/people"
+            to={{
+              pathname: `/people/`,
+              search: location.search,
+            }}
             className={({ isActive }) => {
               return classNames('navbar-item', {
                 'has-background-grey-lighter': isActive,
