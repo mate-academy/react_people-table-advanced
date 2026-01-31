@@ -1,4 +1,19 @@
+import classNames from 'classnames';
+import { useEffect } from 'react';
+import { NavLink, useSearchParams } from 'react-router-dom';
+
 export const Navbar = () => {
+  const [searchParams] = useSearchParams();
+
+  const getIsActivePage = ({ isActive }: { isActive: boolean }) =>
+    classNames('navbar-item', {
+      'has-background-grey-lighter': isActive,
+    });
+
+  useEffect(() => {
+    document.documentElement.classList.add('has-navbar-fixed-top');
+  }, []);
+
   return (
     <nav
       data-cy="nav"
@@ -8,17 +23,20 @@ export const Navbar = () => {
     >
       <div className="container">
         <div className="navbar-brand">
-          <a className="navbar-item" href="#/">
+          <NavLink className={getIsActivePage} to="/" end>
             Home
-          </a>
+          </NavLink>
 
-          <a
+          <NavLink
             aria-current="page"
-            className="navbar-item has-background-grey-lighter"
-            href="#/people"
+            className={getIsActivePage}
+            to={{
+              pathname: '/people',
+              search: searchParams.toString(),
+            }}
           >
             People
-          </a>
+          </NavLink>
         </div>
       </div>
     </nav>
