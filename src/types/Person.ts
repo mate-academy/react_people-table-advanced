@@ -6,6 +6,9 @@ export interface Person {
   fatherName: string | null;
   motherName: string | null;
   slug: string;
-  mother?: Person;
-  father?: Person;
+}
+
+export interface PersonWithRelations extends Person {
+  mother: Person | null;
+  father: Person | null;
 }
