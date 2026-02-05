@@ -13,7 +13,7 @@ export const PeopleFilters = () => {
     setQuery(searchParams.get('query') ?? '');
   }, [searchParams.toString()]);
 
-  // debounce query changes
+  // debounce query changes — include searchParams in deps to avoid stale closure
   useEffect(() => {
     const t = setTimeout(() => {
       const next = query ? query : null;
@@ -22,8 +22,7 @@ export const PeopleFilters = () => {
     }, 300);
 
     return () => clearTimeout(t);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [query]);
+  }, [query, searchParams.toString(), navigate]);
 
   const currentSex = searchParams.get('sex');
   const currentCenturies = searchParams.getAll('centuries');
