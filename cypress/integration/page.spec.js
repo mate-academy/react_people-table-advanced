@@ -45,17 +45,7 @@ const page = {
     .and('have.text', text),
 }
 
-let failed = false;
-
-Cypress.on('fail', (e) => {
-  failed = true;
-  throw e;
-});
-
 describe('', () => {
-  beforeEach(() => {
-    if (failed) Cypress.runner.stop();
-  });
 
   describe('/ page', () => {
     it('should have correct address', () => {
