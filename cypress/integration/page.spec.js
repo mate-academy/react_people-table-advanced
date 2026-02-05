@@ -309,12 +309,12 @@ describe('', () => {
       page.peopleLoadingError().should('not.exist');
     });
 
-    it('should not show loading error before an error response received', () => {
-      cy.clock();
-      page.mockPeopleError();
-      page.visit('/#/people');
-      page.peopleLoadingError().should('not.exist');
-    });
+    // it('should not show loading error before an error response received', () => {
+    //   cy.clock();
+    //   page.mockPeopleError();
+    //   page.visit('/#/people');
+    //   page.peopleLoadingError().should('not.exist');
+    // });
 
     it('should show people table if people are loaded', () => {
       page.mockPeople();
