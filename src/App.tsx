@@ -1,6 +1,6 @@
 import './App.scss';
 import { Navbar } from './components/Navbar';
-import { Navigate, Route, Routes } from 'react-router-dom';
+import { Route, Navigate, Routes } from 'react-router-dom';
 import { HomePage } from './pages/HomePage';
 import { PeoplePage } from './pages/PeoplePage';
 import { NotFoundPage } from './pages/NotFoundPage';
