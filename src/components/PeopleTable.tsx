@@ -51,7 +51,8 @@ export const PeopleTable: React.FC<Props> = ({ users }) => {
                     className={classNames('fas', {
                       'fa-sort': sortedRow !== 'name',
                       'fa-sort-up': sortedRow === 'name' && !sortOrder,
-                      'fa-sort-down': sortOrder === 'desc',
+                      'fa-sort-down':
+                        sortOrder === 'desc' && sortedRow === 'name',
                     })}
                   />
                 </span>
@@ -68,7 +69,8 @@ export const PeopleTable: React.FC<Props> = ({ users }) => {
                     className={classNames('fas', {
                       'fa-sort': sortedRow !== 'sex',
                       'fa-sort-up': sortedRow === 'sex' && !sortOrder,
-                      'fa-sort-down': sortOrder === 'desc',
+                      'fa-sort-down':
+                        sortOrder === 'desc' && sortedRow === 'sex',
                     })}
                   />
                 </span>
@@ -85,7 +87,8 @@ export const PeopleTable: React.FC<Props> = ({ users }) => {
                     className={classNames('fas', {
                       'fa-sort': sortedRow !== 'born',
                       'fa-sort-up': sortedRow === 'born' && !sortOrder,
-                      'fa-sort-down': sortOrder === 'desc',
+                      'fa-sort-down':
+                        sortOrder === 'desc' && sortedRow === 'born',
                     })}
                   />
                 </span>
