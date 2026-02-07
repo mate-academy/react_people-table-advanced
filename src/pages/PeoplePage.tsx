@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/indent */
 import { useEffect, useState } from 'react';
 import { Person } from '../types';
 import { getPeople } from '../api';
@@ -35,23 +36,28 @@ export const PeoplePage = () => {
   const query = searchParams.get('query') || '';
 
   let visiblePeople = [...people];
+
   if (query) {
     const lowerQuery = query.toLowerCase();
-    visiblePeople = visiblePeople.filter((person) =>
-      person.name.toLowerCase().includes(lowerQuery) ||
-      person.fatherName?.toLowerCase().includes(lowerQuery) ||
-      person.motherName?.toLowerCase().includes(lowerQuery)
-    )
+
+    visiblePeople = visiblePeople.filter(
+      person =>
+        person.name.toLowerCase().includes(lowerQuery) ||
+        (person.fatherName || '').toLowerCase().includes(lowerQuery) ||
+        (person.motherName || '').toLowerCase().includes(lowerQuery),
+    );
   }
+
   if (sex) {
-    visiblePeople = visiblePeople.filter(person => person.sex === sex)
-  };
+    visiblePeople = visiblePeople.filter(person => person.sex === sex);
+  }
 
   if (centuries.length > 0) {
-    visiblePeople = visiblePeople.filter((person) => {
+    visiblePeople = visiblePeople.filter(person => {
       const personCentury = Math.floor(person.born / 100) + 1;
+
       return centuries.includes(String(personCentury));
-    })
+    });
   }
 
   if (sort) {
@@ -60,8 +66,9 @@ export const PeoplePage = () => {
       const valB = b[sort as SortField];
 
       if (typeof valA === 'string') {
-        return valA.localeCompare(valB as string)
-      };
+        return valA.localeCompare(valB as string);
+      }
+
       return Number(valA) - Number(valB);
     });
 
@@ -85,23 +92,26 @@ export const PeoplePage = () => {
           <div className="column">
             <div className="box table-container">
               {isLoader && <Loader />}
-
               {!isLoader && error && (
                 <p data-cy="peopleLoadingError" className="has-text-danger">
                   Something went wrong
                 </p>
               )}
-
               {!isLoader && !error && people.length === 0 && (
                 <p data-cy="noPeopleMessage">
                   There are no people on the server
                 </p>
               )}
 
-              {!isLoader && !error && people.length > 0 && visiblePeople.length === 0 && (
-                <p>There are no people matching the current search criteria</p>
-              )}
-              
+              {!isLoader &&
+                !error &&
+                people.length > 0 &&
+                visiblePeople.length === 0 && (
+                  <p>
+                    There are no people matching the current search criteria
+                  </p>
+                )}
+
               {!isLoader && !error && visiblePeople.length > 0 && (
                 <PeopleTable people={visiblePeople} />
               )}

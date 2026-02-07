@@ -1,6 +1,6 @@
 import { useSearchParams } from 'react-router-dom';
 
-import { SearchLink } from "../SearchLink";
+import { SearchLink } from '../SearchLink';
 import React from 'react';
 
 export const PeopleFilters = () => {
@@ -9,35 +9,44 @@ export const PeopleFilters = () => {
   const centuries = searchParams.getAll('centuries') || [];
   const query = searchParams.get('query') || '';
   const resetParams = {
-    sex:  null,
-    query:  null,
-    centuries:  null,
+    sex: null,
+    query: null,
+    centuries: null,
     sort: null,
-    order:  null,
+    order: null,
   };
   const isAllActive = centuries.length === 0;
   const handleChangeQuery = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
     const params = new URLSearchParams(searchParams);
+
     if (value) {
-      params.set('query', value)
+      params.set('query', value);
     } else {
-      params.delete('query')
+      params.delete('query');
     }
-    setSearchParams(params)
-  }
+
+    setSearchParams(params);
+  };
+
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        <SearchLink className={!sex ? 'is-active' : ''} params={{sex: null}}>
+        <SearchLink className={!sex ? 'is-active' : ''} params={{ sex: null }}>
           All
         </SearchLink>
-        <SearchLink className={sex === 'm' ? 'is-active' : ''} params={{sex: 'm'}}>
+        <SearchLink
+          className={sex === 'm' ? 'is-active' : ''}
+          params={{ sex: 'm' }}
+        >
           Male
         </SearchLink>
-        <SearchLink className={sex === 'f' ? 'is-active' : ''} params={{sex: 'f'}}>
+        <SearchLink
+          className={sex === 'f' ? 'is-active' : ''}
+          params={{ sex: 'f' }}
+        >
           Female
         </SearchLink>
       </p>
@@ -62,22 +71,26 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            {[16,17,18,19,20].map((c) => {
+            {[16, 17, 18, 19, 20].map(c => {
               const value = String(c);
               const isActive = centuries.includes(String(c));
 
               const nextCenturies = isActive
                 ? centuries.filter(cent => cent !== value)
-                : [...centuries, value]
+                : [...centuries, value];
 
-              return <SearchLink
-                key={c}
-                data-cy="century"
-                className={`button mr-1 ${isActive ? 'is-info' : ''}`}
-                params={{centuries: nextCenturies.length ? nextCenturies : null}}
-              >
-                {c}
-              </SearchLink>
+              return (
+                <SearchLink
+                  key={c}
+                  data-cy="century"
+                  className={`button mr-1 ${isActive ? 'is-info' : ''}`}
+                  params={{
+                    centuries: nextCenturies.length ? nextCenturies : null,
+                  }}
+                >
+                  {c}
+                </SearchLink>
+              );
             })}
           </div>
 
@@ -85,11 +98,9 @@ export const PeopleFilters = () => {
             <SearchLink
               data-cy="centuryALL"
               className={`button is-success is-outlined ${
-                isAllActive
-                  ? 'is-active'
-                  : ''
+                isAllActive ? 'is-active' : ''
               }`}
-              params={{centuries: null}}
+              params={{ centuries: null }}
             >
               All
             </SearchLink>
@@ -98,7 +109,10 @@ export const PeopleFilters = () => {
       </div>
 
       <div className="panel-block">
-        <SearchLink className="button is-link is-outlined is-fullwidth" params={resetParams}>
+        <SearchLink
+          className="button is-link is-outlined is-fullwidth"
+          params={resetParams}
+        >
           Reset all filters
         </SearchLink>
       </div>

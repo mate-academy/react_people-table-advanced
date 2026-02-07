@@ -14,15 +14,33 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
   const order = searchParams.get('order') || null;
 
   const getNextLink = (field: string) => {
-    if (sort !== field) return `?sort=${field}`;
-    if (!order) return `?sort=${field}&order=desc`;
-    return '';
+    const params = new URLSearchParams(searchParams);
+    
+    if (sort !== field) {
+      params.set('sort', field);
+      params.delete('order');
+    } else if (!order) {
+      params.set('order', 'desc');
+    } else {
+      params.delete('sort');
+      params.delete('order');
+    }
+
+    return `?${params.toString()}`;
   };
+
   const getIcon = (field: string) => {
-    if (sort !== field) return 'fas fa-sort';
-    if (order === 'desc') return 'fas fa-sort-down';
+    if (sort !== field) {
+      return 'fas fa-sort';
+    }
+
+    if (order === 'desc') {
+      return 'fas fa-sort-down';
+    }
+
     return 'fas fa-sort-up';
-  }
+  };
+
   return (
     <table
       data-cy="peopleTable"
