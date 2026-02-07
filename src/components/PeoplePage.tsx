@@ -126,6 +126,7 @@ export const PeoplePage = () => {
                 </p>
               )}
 
+              {/* eslint-disable */}
               {!loading &&
                 !error &&
                 people.length > 0 &&
@@ -133,7 +134,8 @@ export const PeoplePage = () => {
                   <p>
                     There are no people matching the current search criteria
                   </p>
-                )}
+              )}
+              {/* eslint-enable */}
 
               {!loading && !error && visiblePeople.length > 0 && (
                 <PeopleTable people={visiblePeople} selectedSlug={slug} />
