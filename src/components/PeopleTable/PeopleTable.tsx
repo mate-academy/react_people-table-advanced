@@ -1,20 +1,26 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useParams, useSearchParams } from 'react-router-dom';
+import { useMemo } from 'react';
+import classNames from 'classnames';
+
 import { Person } from '../../types';
 import { PersonLink } from '../PersonLink/PersonLink';
-import classNames from 'classnames';
 import { SearchLink } from '../SearchLink/SearchLink';
-import { useMemo } from 'react';
+import { SearchParams } from '../../utils/searchHelper';
 
 type Props = {
   people: Person[];
 };
 
+type StringSortKey = 'name' | 'sex';
+type NumberSortKey = 'born' | 'died';
+type SortKey = StringSortKey | NumberSortKey;
+
 export const PeopleTable: React.FC<Props> = ({ people }) => {
   const { slug: selectedPerson } = useParams();
   const [searchParams] = useSearchParams();
 
-  const sort = searchParams.get('sort');
+  const sort = searchParams.get('sort') as SortKey | null;
   const order = searchParams.get('order');
   const sex = searchParams.get('sex');
   const query = searchParams.get('query')?.trim();
@@ -26,12 +32,18 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
     switch (sort) {
       case 'name':
       case 'sex':
-        normalizedPeople.sort((a, b) => a[sort].localeCompare(b[sort]));
+        normalizedPeople.sort((a, b) =>
+          a[sort].localeCompare(b[sort]),
+        );
         break;
+
       case 'born':
       case 'died':
-        normalizedPeople.sort((a, b) => a[sort] - b[sort]);
+        normalizedPeople.sort((a, b) =>
+          a[sort] - b[sort],
+        );
         break;
+
       default:
         break;
     }
@@ -41,20 +53,23 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
     }
 
     if (sex) {
-      normalizedPeople = normalizedPeople.filter(person => person.sex === sex);
+      normalizedPeople = normalizedPeople.filter(
+        person => person.sex === sex,
+      );
     }
 
     if (query) {
+      const normalizedQuery = query.toLowerCase();
+
       normalizedPeople = normalizedPeople.filter(person => {
-        const normalizedName = person.name.trim().toLocaleLowerCase();
-        const normalizedMother = person.motherName?.toLocaleLowerCase() || '';
-        const normalizedFather = person.fatherName?.toLocaleLowerCase() || '';
-        const normalizedQuery = query.toLocaleLowerCase();
+        const name = person.name.toLowerCase();
+        const mother = person.motherName?.toLowerCase() || '';
+        const father = person.fatherName?.toLowerCase() || '';
 
         return (
-          normalizedName.includes(normalizedQuery) ||
-          normalizedMother?.includes(normalizedQuery) ||
-          normalizedFather?.includes(normalizedQuery)
+          name.includes(normalizedQuery)
+          || mother.includes(normalizedQuery)
+          || father.includes(normalizedQuery)
         );
       });
     }
@@ -62,7 +77,6 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
     if (centuries.length) {
       normalizedPeople = normalizedPeople.filter(person => {
         const personCentury = Math.ceil(person.born / 100);
-
         return centuries.includes(String(personCentury));
       });
     }
@@ -70,11 +84,11 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
     return normalizedPeople;
   }, [people, searchParams]);
 
-  const getSortParams = (column: string) => {
+  const getSortParams = (column: SortKey): SearchParams => {
     const isCurrentColumn = sort === column;
     const isDesc = order === 'desc';
 
-    let nextParams;
+    let nextParams: SearchParams;
 
     if (!isCurrentColumn) {
       nextParams = { sort: column, order: null };
@@ -87,17 +101,15 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
     return nextParams;
   };
 
-  const getSortClassNames = (column: string) => {
+  const getSortClassNames = (column: SortKey) => {
     const isCurrentColumn = sort === column;
     const isDesc = order === 'desc';
 
-    const iconClass = classNames('fas', {
+    return classNames('fas', {
       'fa-sort': !isCurrentColumn,
       'fa-sort-up': isCurrentColumn && !isDesc,
       'fa-sort-down': isCurrentColumn && isDesc,
     });
-
-    return iconClass;
   };
 
   return (
@@ -174,27 +186,22 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
                   <td>
                     <PersonLink person={person} />
                   </td>
-
                   <td>{person.sex}</td>
                   <td>{person.born}</td>
                   <td>{person.died}</td>
                   <td>
-                    {!person.motherName ? (
-                      '-'
-                    ) : mother ? (
-                      <PersonLink person={mother} />
-                    ) : (
-                      person.motherName
-                    )}
+                    {!person.motherName
+                      ? '-'
+                      : mother
+                        ? <PersonLink person={mother} />
+                        : person.motherName}
                   </td>
                   <td>
-                    {!person.fatherName ? (
-                      '-'
-                    ) : father ? (
-                      <PersonLink person={father} />
-                    ) : (
-                      person.fatherName
-                    )}
+                    {!person.fatherName
+                      ? '-'
+                      : father
+                        ? <PersonLink person={father} />
+                        : person.fatherName}
                   </td>
                 </tr>
               );
