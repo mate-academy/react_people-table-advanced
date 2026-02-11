@@ -1,5 +1,5 @@
 import cn from 'classnames';
-import React, { useState } from 'react';
+import React from 'react';
 import { Person } from '../types';
 import { PeopleLink } from './PeopleLink';
 import { Link, useParams, useSearchParams } from 'react-router-dom';
@@ -17,82 +17,56 @@ type Props = {
 export const PeopleTable: React.FC<Props> = ({ people }) => {
   const { personSlug } = useParams();
   const [searchParams] = useSearchParams();
-  const [sortOrder, setOrder] = useState<SortOrders>(SortOrders.Default);
 
   const centuries = searchParams.getAll('centuries') || [];
   const filterBySex = searchParams.get('sex') || '';
   const query = searchParams.get('query') || '';
-  const searchOrder = (searchParams.get('order') ||
+  const sortOrder = (searchParams.get('order') ||
     SortOrders.Default) as SortOrders;
-  const searchOption = (searchParams.get('sort') || '') as SortOptions;
+  const sortOption = (searchParams.get('sort') || '') as SortOptions;
+
+  const sortBar = Object.entries(SortOptions);
 
   const filteredPeople = getFilteredPeople(
     people,
     filterBySex,
     query,
     centuries,
-    searchOption,
-    searchOrder,
+    sortOption,
+    sortOrder,
   );
 
   function handleSortOption(option: SortOptions) {
-    switch (sortOrder) {
-      case SortOrders.Default:
-        return getSearchWith({ sort: option }, searchParams);
-
-      case SortOrders.Ascedent:
-        return getSearchWith(
-          { sort: option, order: SortOrders.Descedent },
-          searchParams,
-        );
-
-      case SortOrders.Descedent:
-        return getSearchWith({ sort: null, order: null }, searchParams);
-
-      default:
-        break;
+    if (option !== sortOption) {
+      return getSearchWith({ sort: option, order: null }, searchParams);
     }
 
-    return;
-  }
-
-  function handleSetOrder() {
-    switch (sortOrder) {
-      case SortOrders.Default:
-        setOrder(SortOrders.Ascedent);
-
-        break;
-
-      case SortOrders.Ascedent:
-        setOrder(SortOrders.Descedent);
-
-        break;
-      case SortOrders.Descedent:
-        setOrder(SortOrders.Default);
-
-        break;
-
-      default:
-        break;
+    if (sortOrder !== SortOrders.Descendant) {
+      return getSearchWith(
+        { sort: option, order: SortOrders.Descendant },
+        searchParams,
+      );
     }
+
+    return getSearchWith({ sort: null, order: null }, searchParams);
   }
 
   function setClassName(value: SortOptions) {
+    const isActive = sortOption === value;
+
     return {
-      'fa-sort': !searchOption || searchOption !== value,
-      'fa-sort-up': searchOption === value && !searchOrder,
-      'fa-sort-down': searchOrder,
+      'fa-sort': !isActive,
+      'fa-sort-up': isActive && !sortOrder,
+      'fa-sort-down': isActive && sortOrder === SortOrders.Descendant,
     };
   }
-
-  const sortBar = Object.entries(SortOptions);
 
   return (
     <table
       data-cy="peopleTable"
       className="table is-striped is-hoverable is-narrow is-fullwidth"
     >
-      {(filteredPeople.length !== 0 && (
+      {filteredPeople.length !== 0 ? (
         <>
           <thead>
             <tr>
@@ -104,7 +78,6 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
                       to={{
                         search: handleSortOption(value),
                       }}
-                      onClick={handleSetOrder}
                     >
                       <span className="icon">
                         <i className={cn('fas', setClassName(value))} />
@@ -129,7 +102,9 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
             ))}
           </tbody>
         </>
-      )) || <p>{Errors.FiltersNoMatch}</p>}
+      ) : (
+        <p>{Errors.FiltersNoMatch}</p>
+      )}
     </table>
   );
 };
