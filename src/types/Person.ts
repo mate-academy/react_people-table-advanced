@@ -9,3 +9,5 @@ export interface Person {
   mother?: Person;
   father?: Person;
 }
+
+export type SortPersonKey = 'name' | 'sex' | 'born' | 'died';
