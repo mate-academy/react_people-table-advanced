@@ -1,40 +1,13 @@
-import React from 'react';
+import cn from 'classnames';
+import React, { useState } from 'react';
 import { Person } from '../types';
 import { PeopleLink } from './PeopleLink';
-import { useParams, useSearchParams } from 'react-router-dom';
+import { Link, useParams, useSearchParams } from 'react-router-dom';
 import { Errors } from '../types/Errors';
-
-const getFilteredPeople = (
-  people: Person[],
-  sortBySex: string | null,
-  query: string,
-  centuries: string[],
-) => {
-  let newPeople = [...people];
-  const normalizedQuery = query.trim();
-
-  if (centuries.length > 0) {
-    const normilizedCenturies = centuries.map(century => +century);
-
-    newPeople = newPeople.filter(person => {
-      const bornCentury = Math.ceil(person.born / 100);
-
-      return normilizedCenturies.includes(bornCentury);
-    });
-  }
-
-  if (normalizedQuery !== '') {
-    newPeople = newPeople.filter(person =>
-      person.name.toLowerCase().includes(query.toLowerCase()),
-    );
-  }
-
-  if (sortBySex) {
-    newPeople = newPeople.filter(person => person.sex === sortBySex);
-  }
-
-  return newPeople;
-};
+import { getSearchWith } from '../utils/searchHelper';
+import { SortOrders } from '../types/SortOrders';
+import { SortOptions } from '../types/SortOptions';
+import { getFilteredPeople } from '../utils/getFilteredPeople';
 
 /* eslint-disable jsx-a11y/control-has-associated-label */
 type Props = {
@@ -44,11 +17,75 @@ type Props = {
 export const PeopleTable: React.FC<Props> = ({ people }) => {
   const { personSlug } = useParams();
   const [searchParams] = useSearchParams();
-  const sortBySex = searchParams.get('sex') || '';
-  const query = searchParams.get('query') || '';
-  const centuries = searchParams.getAll('centuries') || [];
+  const [sortOrder, setOrder] = useState<SortOrders>(SortOrders.Default);
 
-  const filteredPeople = getFilteredPeople(people, sortBySex, query, centuries);
+  const centuries = searchParams.getAll('centuries') || [];
+  const filterBySex = searchParams.get('sex') || '';
+  const query = searchParams.get('query') || '';
+  const searchOrder = (searchParams.get('order') ||
+    SortOrders.Default) as SortOrders;
+  const searchOption = (searchParams.get('sort') || '') as SortOptions;
+
+  const filteredPeople = getFilteredPeople(
+    people,
+    filterBySex,
+    query,
+    centuries,
+    searchOption,
+    searchOrder,
+  );
+
+  function handleSortOption(option: SortOptions) {
+    switch (sortOrder) {
+      case SortOrders.Default:
+        return getSearchWith({ sort: option }, searchParams);
+
+      case SortOrders.Ascedent:
+        return getSearchWith(
+          { sort: option, order: SortOrders.Descedent },
+          searchParams,
+        );
+
+      case SortOrders.Descedent:
+        return getSearchWith({ sort: null, order: null }, searchParams);
+
+      default:
+        break;
+    }
+
+    return;
+  }
+
+  function handleSetOrder() {
+    switch (sortOrder) {
+      case SortOrders.Default:
+        setOrder(SortOrders.Ascedent);
+
+        break;
+
+      case SortOrders.Ascedent:
+        setOrder(SortOrders.Descedent);
+
+        break;
+      case SortOrders.Descedent:
+        setOrder(SortOrders.Default);
+
+        break;
+
+      default:
+        break;
+    }
+  }
+
+  function setClassName(value: SortOptions) {
+    return {
+      'fa-sort': !searchOption || searchOption !== value,
+      'fa-sort-up': searchOption === value && !searchOrder,
+      'fa-sort-down': searchOrder,
+    };
+  }
+
+  const sortBar = Object.entries(SortOptions);
 
   return (
     <table
@@ -59,49 +96,23 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
         <>
           <thead>
             <tr>
-              <th>
-                <span className="is-flex is-flex-wrap-nowrap">
-                  Name
-                  <a href="#/people?sort=name">
-                    <span className="icon">
-                      <i className="fas fa-sort" />
-                    </span>
-                  </a>
-                </span>
-              </th>
-
-              <th>
-                <span className="is-flex is-flex-wrap-nowrap">
-                  Sex
-                  <a href="#/people?sort=sex">
-                    <span className="icon">
-                      <i className="fas fa-sort" />
-                    </span>
-                  </a>
-                </span>
-              </th>
-
-              <th>
-                <span className="is-flex is-flex-wrap-nowrap">
-                  Born
-                  <a href="#/people?sort=born&amp;order=desc">
-                    <span className="icon">
-                      <i className="fas fa-sort-up" />
-                    </span>
-                  </a>
-                </span>
-              </th>
-
-              <th>
-                <span className="is-flex is-flex-wrap-nowrap">
-                  Died
-                  <a href="#/people?sort=died">
-                    <span className="icon">
-                      <i className="fas fa-sort" />
-                    </span>
-                  </a>
-                </span>
-              </th>
+              {sortBar.map(([key, value]) => (
+                <th key={key}>
+                  <span className="is-flex is-flex-wrap-nowrap">
+                    {key}
+                    <Link
+                      to={{
+                        search: handleSortOption(value),
+                      }}
+                      onClick={handleSetOrder}
+                    >
+                      <span className="icon">
+                        <i className={cn('fas', setClassName(value))} />
+                      </span>
+                    </Link>
+                  </span>
+                </th>
+              ))}
 
               <th>Mother</th>
               <th>Father</th>

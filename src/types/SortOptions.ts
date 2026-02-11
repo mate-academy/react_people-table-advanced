@@ -1,6 +1,6 @@
 export enum SortOptions {
-  Name = 'Name',
-  Sex = 'Sex',
-  Born = 'Born',
-  Died = 'Died',
+  Name = 'name',
+  Sex = 'sex',
+  Born = 'born',
+  Died = 'died',
 }

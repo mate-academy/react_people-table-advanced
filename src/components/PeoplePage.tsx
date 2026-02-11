@@ -5,14 +5,8 @@ import { useEffect, useState } from 'react';
 import { Person } from '../types';
 import { getPeople } from '../api';
 import { Errors } from '../types/Errors';
-
-const peopleWithParents = (people: Person[]) => {
-  return people.map(person => ({
-    ...person,
-    mother: people.find(parent => parent.name === person.motherName),
-    father: people.find(parent => parent.name === person.fatherName),
-  }));
-};
+import { setParents } from '../utils/setParents';
+import { handleErrorMessage } from '../utils/handleErrorMessage';
 
 export const PeoplePage = () => {
   const [peopleFromServer, setPeopleFromServer] = useState<Person[]>([]);
@@ -35,19 +29,7 @@ export const PeoplePage = () => {
       });
   }, []);
 
-  const people = peopleWithParents(peopleFromServer);
-
-  const handleErrorMessage = (error: Errors): string | null => {
-    switch (error) {
-      case Errors.Loading:
-        return 'peopleLoadingError';
-
-      case Errors.NoPeople:
-        return 'noPeopleMessage';
-    }
-
-    return null;
-  };
+  const people = setParents(peopleFromServer);
 
   return (
     <>
@@ -66,7 +48,7 @@ export const PeoplePage = () => {
               )}
 
               {(isloading && <Loader />) ||
-                (people.length !== 0 && <PeopleTable people={people} />)}
+                (people.length && <PeopleTable people={people} />)}
             </div>
           </div>
         </div>

@@ -1,8 +1,10 @@
 import cn from 'classnames';
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { Person } from '../types';
 import { ParentLink } from './ParentLink';
+import { Sex } from '../types/Sex';
+import { selectPersonWith } from '../utils/selectPersonWith';
 
 type Props = {
   person: Person;
@@ -22,6 +24,8 @@ export const PeopleLink: React.FC<Props> = ({ person, personSlug }) => {
     slug,
   } = person;
 
+  const location = useLocation().search;
+
   return (
     <tr
       data-cy="person"
@@ -29,8 +33,8 @@ export const PeopleLink: React.FC<Props> = ({ person, personSlug }) => {
     >
       <td>
         <Link
-          className={cn({ 'has-text-danger': sex === 'f' })}
-          to={`/people/${slug}`}
+          className={cn({ 'has-text-danger': sex === Sex.Female })}
+          to={selectPersonWith(`/people/${slug}`, location)}
         >
           {name}
         </Link>
@@ -38,8 +42,20 @@ export const PeopleLink: React.FC<Props> = ({ person, personSlug }) => {
       <td>{sex}</td>
       <td>{born}</td>
       <td>{died}</td>
-      <td>{(mother ? <ParentLink parent={mother} /> : motherName) || '-'}</td>
-      <td>{(father ? <ParentLink parent={father} /> : fatherName) || '-'}</td>
+      <td>
+        {(mother ? (
+          <ParentLink parent={mother} location={location} />
+        ) : (
+          motherName
+        )) || '-'}
+      </td>
+      <td>
+        {(father ? (
+          <ParentLink parent={father} location={location} />
+        ) : (
+          fatherName
+        )) || '-'}
+      </td>
     </tr>
   );
 };
