@@ -14,7 +14,7 @@ export const PeopleFilters = () => {
   const centuries = searchParams.getAll('centuries') || [];
 
   const setSearchWith = (params: SearchParams) => {
-    const search = getSearchWith(params, searchParams);
+    const search = getSearchWith(searchParams, params);
 
     setSearchParams(search);
   };
@@ -24,15 +24,18 @@ export const PeopleFilters = () => {
   }
 
   function handleToggleAll() {
-    return { search: getSearchWith({ centuries: [] }, searchParams) };
+    return { search: getSearchWith(searchParams, { centuries: [] }) };
   }
 
   function resetFilters() {
     return {
-      search: getSearchWith(
-        { centuries: [], order: null, query: null, sort: null, sex: null },
-        searchParams,
-      ),
+      search: getSearchWith(searchParams, {
+        centuries: [],
+        order: null,
+        query: null,
+        sort: null,
+        sex: null,
+      }),
     };
   }
 
@@ -54,10 +57,9 @@ export const PeopleFilters = () => {
                 'is-active': isActive,
               })}
               to={{
-                search: getSearchWith(
-                  { sex: isAll ? null : value },
-                  searchParams,
-                ),
+                search: getSearchWith(searchParams, {
+                  sex: isAll ? null : value,
+                }),
               }}
             >
               {key}
@@ -94,12 +96,9 @@ export const PeopleFilters = () => {
                   'is-info': centuries.includes(century),
                 })}
                 to={{
-                  search: getSearchWith(
-                    {
-                      centuries: toggleCenturies(centuries, century),
-                    },
-                    searchParams,
-                  ),
+                  search: getSearchWith(searchParams, {
+                    centuries: toggleCenturies(centuries, century),
+                  }),
                 }}
               >
                 {century}

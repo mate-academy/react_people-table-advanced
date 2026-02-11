@@ -1,4 +1,5 @@
 import { Person } from '../types';
+import { SortDirection } from '../types/SortDirection';
 import { SortOptions } from '../types/SortOptions';
 import { SortOrders } from '../types/SortOrders';
 import { getSortedPeople } from './getSortedPeople';
@@ -8,10 +9,10 @@ export const getFilteredPeople = (
   filterBySex: string | null,
   query: string,
   centuries: string[],
-  sortOption: SortOptions,
+  sortOption?: SortOptions,
   sortOrder?: SortOrders,
 ) => {
-  let newPeople = [...people];
+  let newPeople = people;
   const normalizedQuery = query.trim().toLowerCase();
 
   if (centuries.length > 0) {
@@ -27,9 +28,9 @@ export const getFilteredPeople = (
   if (normalizedQuery !== '') {
     newPeople = newPeople.filter(
       person =>
-        person.name.toLowerCase().includes(normalizedQuery) ||
-        person.motherName?.toLowerCase().includes(normalizedQuery) ||
-        person.fatherName?.toLowerCase().includes(normalizedQuery),
+        (person.name || '').toLowerCase().includes(normalizedQuery) ||
+        (person.motherName || '').toLowerCase().includes(normalizedQuery) ||
+        (person.fatherName || '').toLowerCase().includes(normalizedQuery),
     );
   }
 
@@ -38,7 +39,8 @@ export const getFilteredPeople = (
   }
 
   if (sortOption) {
-    const direction = sortOrder === SortOrders.Descendant ? -1 : 1;
+    const direction: SortDirection =
+      sortOrder === SortOrders.Descendant ? -1 : 1;
 
     newPeople = getSortedPeople(newPeople, sortOption, direction);
   }

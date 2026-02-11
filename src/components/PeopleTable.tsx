@@ -38,17 +38,17 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
 
   function handleSortOption(option: SortOptions) {
     if (option !== sortOption) {
-      return getSearchWith({ sort: option, order: null }, searchParams);
+      return getSearchWith(searchParams, { sort: option, order: null });
     }
 
     if (sortOrder !== SortOrders.Descendant) {
-      return getSearchWith(
-        { sort: option, order: SortOrders.Descendant },
-        searchParams,
-      );
+      return getSearchWith(searchParams, {
+        sort: option,
+        order: SortOrders.Descendant,
+      });
     }
 
-    return getSearchWith({ sort: null, order: null }, searchParams);
+    return getSearchWith(searchParams, { sort: null, order: null });
   }
 
   function setClassName(value: SortOptions) {
@@ -56,7 +56,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
 
     return {
       'fa-sort': !isActive,
-      'fa-sort-up': isActive && !sortOrder,
+      'fa-sort-up': isActive && sortOrder === SortOrders.Default,
       'fa-sort-down': isActive && sortOrder === SortOrders.Descendant,
     };
   }
@@ -103,7 +103,13 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
           </tbody>
         </>
       ) : (
-        <p>{Errors.FiltersNoMatch}</p>
+        <tbody>
+          <tr>
+            <td>
+              <p>{Errors.FiltersNoMatch}</p>
+            </td>
+          </tr>
+        </tbody>
       )}
     </table>
   );

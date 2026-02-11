@@ -11,10 +11,9 @@ import { handleErrorMessage } from '../utils/handleErrorMessage';
 export const PeoplePage = () => {
   const [peopleFromServer, setPeopleFromServer] = useState<Person[]>([]);
   const [errorMessage, setErrorMessage] = useState<Errors>(Errors.Default);
-  const [isloading, setIsLoading] = useState(false);
+  const [isloading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    setIsLoading(true);
     getPeople()
       .then(people => {
         setPeopleFromServer(people);
@@ -38,7 +37,7 @@ export const PeoplePage = () => {
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
           <div className="column is-7-tablet is-narrow-desktop">
-            {isloading || <PeopleFilters />}
+            {isloading ? null : <PeopleFilters />}
           </div>
 
           <div className="column">
@@ -47,8 +46,11 @@ export const PeoplePage = () => {
                 <p data-cy={handleErrorMessage(errorMessage)}>{errorMessage}</p>
               )}
 
-              {(isloading && <Loader />) ||
-                (people.length && <PeopleTable people={people} />)}
+              {isloading ? (
+                <Loader />
+              ) : people.length ? (
+                <PeopleTable people={people} />
+              ) : null}
             </div>
           </div>
         </div>

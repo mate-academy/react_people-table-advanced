@@ -1,12 +1,13 @@
 import { Person } from '../types';
+import { SortDirection } from '../types/SortDirection';
 import { SortOptions } from '../types/SortOptions';
 
 export function getSortedPeople(
   peopleToSort: Person[],
   option: SortOptions,
-  sortDirection: number,
+  sortDirection: SortDirection,
 ) {
-  return peopleToSort.sort((a: Person, b: Person) => {
+  return [...peopleToSort].sort((a: Person, b: Person) => {
     const person1 = a[option];
     const person2 = b[option];
 
@@ -16,6 +17,18 @@ export function getSortedPeople(
 
     if (typeof person1 === 'number' && typeof person2 === 'number') {
       return sortDirection * (person1 - person2);
+    }
+
+    if (person1 == null && person2 != null) {
+      return 1;
+    }
+
+    if (person1 != null && person2 == null) {
+      return -1;
+    }
+
+    if (person1 == null && person2 == null) {
+      return 0;
     }
 
     return 0;

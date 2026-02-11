@@ -1,12 +1,15 @@
 import { Errors } from '../types/Errors';
 
+const dataCyLoadingError = 'peopleLoadingError';
+const dataCyNoPeopleError = 'noPeopleMessage';
+
 export const handleErrorMessage = (error: Errors): string | null => {
   switch (error) {
     case Errors.Loading:
-      return 'peopleLoadingError';
+      return dataCyLoadingError;
 
     case Errors.NoPeople:
-      return 'noPeopleMessage';
+      return dataCyNoPeopleError;
   }
 
   return null;
