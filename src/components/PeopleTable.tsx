@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { PersonLink } from './PersonLink';
 import { useParams } from 'react-router-dom';
 import classNames from 'classnames';
@@ -59,11 +60,14 @@ export const PeopleTable: React.FC<Props> = ({
           <p data-cy="noPeopleMessage">There are no people on the server</p>
         )}
 
-        {visiblePeople.length === 0 && (
+        {!isLoading &&
+          !error &&
+          people.length > 0 &&
+          visiblePeople.length === 0 && (
           <p>There are no people matching the current search criteria</p>
         )}
 
-        {!isLoading && people.length > 0 && (
+        {!isLoading && !error && visiblePeople.length > 0 && (
           <table
             data-cy="peopleTable"
             className="table is-striped is-hoverable is-narrow is-fullwidth"
