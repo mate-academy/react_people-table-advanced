@@ -24,8 +24,11 @@ export const getFilteredPeople = (
   }
 
   if (normalizedQuery !== '') {
-    newPeople = newPeople.filter(person =>
-      person.name.toLowerCase().includes(normalizedQuery),
+    newPeople = newPeople.filter(
+      person =>
+        person.name.toLowerCase().includes(normalizedQuery) ||
+        person.motherName?.toLowerCase().includes(normalizedQuery) ||
+        person.fatherName?.toLowerCase().includes(normalizedQuery),
     );
   }
 

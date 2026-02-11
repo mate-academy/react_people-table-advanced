@@ -24,7 +24,7 @@ export const PeopleLink: React.FC<Props> = ({ person, personSlug }) => {
     slug,
   } = person;
 
-  const location = useLocation().search;
+  const { search } = useLocation();
 
   return (
     <tr
@@ -34,7 +34,7 @@ export const PeopleLink: React.FC<Props> = ({ person, personSlug }) => {
       <td>
         <Link
           className={cn({ 'has-text-danger': sex === Sex.Female })}
-          to={selectPersonWith(`/people/${slug}`, location)}
+          to={selectPersonWith(`/people/${slug}`, search)}
         >
           {name}
         </Link>
@@ -44,14 +44,14 @@ export const PeopleLink: React.FC<Props> = ({ person, personSlug }) => {
       <td>{died}</td>
       <td>
         {(mother ? (
-          <ParentLink parent={mother} location={location} />
+          <ParentLink parent={mother} search={search} />
         ) : (
           motherName
         )) || '-'}
       </td>
       <td>
         {(father ? (
-          <ParentLink parent={father} location={location} />
+          <ParentLink parent={father} search={search} />
         ) : (
           fatherName
         )) || '-'}

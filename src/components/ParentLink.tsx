@@ -6,15 +6,15 @@ import { Sex } from '../types/Sex';
 
 type Props = {
   parent: Person;
-  location: string;
+  search: string;
 };
 
-export const ParentLink: React.FC<Props> = ({ parent, location }) => {
+export const ParentLink: React.FC<Props> = ({ parent, search }) => {
   const { name, slug, sex } = parent;
 
   return (
     <Link
-      to={selectPersonWith(`/people/${slug}`, location)}
+      to={selectPersonWith(`/people/${slug}`, search)}
       className={cn({ 'has-text-danger': sex === Sex.Female })}
     >
       {name}

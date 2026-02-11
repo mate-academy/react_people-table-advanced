@@ -20,7 +20,7 @@ export const PeopleFilters = () => {
   };
 
   function handleChangeQuery(newQuery: string) {
-    setSearchWith({ query: newQuery || null });
+    setSearchWith({ query: newQuery.trim() || null });
   }
 
   function handleToggleAll() {
