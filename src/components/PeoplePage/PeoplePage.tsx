@@ -12,47 +12,42 @@ export const PeoplePage: React.FC = () => {
 
   useEffect(() => {
     setIsLoading(true);
-    setIsHasError(false);
-
     getPeople()
-      .then(data => {
-        setPeople(data);
-      })
-      .catch(() => {
-        setIsHasError(true);
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
+      .then(setPeople)
+      .catch(() => setIsHasError(true))
+      .finally(() => setIsLoading(false));
   }, []);
+
+  const showLoadingError = !isLoading && isError;
+  const showNoPeopleError = !isLoading && !isError && !people.length;
+  const showTable = !isLoading && !isError && people.length > 0;
 
   return (
     <>
       <h1 className="title">People Page</h1>
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
-          <div className="column is-7-tablet is-narrow-desktop">
-            <PeopleFilters />
-          </div>
+          {showTable && (
+            <div className="column is-7-tablet is-narrow-desktop">
+              <PeopleFilters />
+            </div>
+          )}
           <div className="column">
             <div className="box table-container">
-              {isLoading && <Loader />}
-
-              {isError && (
+              {showLoadingError && (
                 <p data-cy="peopleLoadingError" className="has-text-danger">
                   Something went wrong
                 </p>
               )}
 
-              {!isLoading && !isError && people.length === 0 && (
+              {showNoPeopleError && (
                 <p data-cy="noPeopleMessage">
                   There are no people on the server
                 </p>
               )}
 
-              {!isLoading && !isError && people.length > 0 && (
-                <PeopleTable people={people} />
-              )}
+              {showTable && <PeopleTable people={people} />}
+              {isLoading && <Loader />}
             </div>
           </div>
         </div>
