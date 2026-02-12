@@ -30,6 +30,8 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
         normalizedPeople.sort((a, b) => a.sex.localeCompare(b.sex));
         break;
       case 'born':
+        normalizedPeople.sort((a, b) => a.born - b.born);
+        break;
       case 'died':
         normalizedPeople.sort((a, b) => a.died - b.died);
         break;
