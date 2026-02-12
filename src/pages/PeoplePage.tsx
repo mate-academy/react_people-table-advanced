@@ -26,8 +26,8 @@ export const PeoplePage = () => {
       filteredPeople = filteredPeople.filter(
         person =>
           person.name.toLowerCase().includes(queryToLowerCase) ||
-          person.motherName?.toLowerCase().includes(queryToLowerCase) ||
-          person.fatherName?.toLowerCase().includes(queryToLowerCase),
+          (person.motherName ?? '').toLowerCase().includes(queryToLowerCase) ||
+          (person.fatherName ?? '').toLowerCase().includes(queryToLowerCase),
       );
     }
 

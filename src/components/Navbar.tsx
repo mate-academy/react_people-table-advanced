@@ -5,6 +5,8 @@ export const Navbar = () => {
   const location = useLocation();
   const [searchParams] = useSearchParams();
 
+  const isPeoplePage = location.pathname.startsWith('/people');
+
   return (
     <nav
       data-cy="nav"
@@ -24,15 +26,16 @@ export const Navbar = () => {
           </Link>
 
           <Link
-            aria-current="page"
             className={classNames('navbar-item', {
-              'has-background-grey-lighter':
-                location.pathname.startsWith('/people'),
+              'has-background-grey-lighter': isPeoplePage,
             })}
             to={{
               pathname: '/people',
-              search: searchParams.toString(),
+              search: searchParams.toString()
+                ? `?${searchParams.toString()}`
+                : undefined,
             }}
+            aria-current={isPeoplePage ? 'page' : undefined}
           >
             People
           </Link>
