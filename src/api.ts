@@ -10,7 +10,15 @@ function wait(delay: number) {
 
 export async function getPeople(): Promise<Person[]> {
   // keep this delay for testing purpose
-  return wait(500)
-    .then(() => fetch(API_URL))
-    .then(response => response.json());
+  await wait(500);
+
+  const response = await fetch(API_URL);
+
+  if (!response.ok) {
+    throw new Error('Failed to load people');
+  }
+
+  const data = (await response.json()) as Person[];
+
+  return data;
 }
