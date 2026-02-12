@@ -1,4 +1,8 @@
+import { useLocation } from 'react-router-dom';
+
 export const Navbar = () => {
+  const location = useLocation();
+
   return (
     <nav
       data-cy="nav"
@@ -8,14 +12,18 @@ export const Navbar = () => {
     >
       <div className="container">
         <div className="navbar-brand">
-          <a className="navbar-item" href="#/">
+          <a
+            className={`navbar-item ${location.pathname === '/' ? 'has-background-grey-lighter' : ''}`}
+            href="#/"
+            aria-current={location.pathname === '/' ? 'page' : undefined}
+          >
             Home
           </a>
 
           <a
-            aria-current="page"
-            className="navbar-item has-background-grey-lighter"
+            className={`navbar-item ${location.pathname === '/people' ? 'has-background-grey-lighter' : ''}`}
             href="#/people"
+            aria-current={location.pathname === '/people' ? 'page' : undefined}
           >
             People
           </a>
