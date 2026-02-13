@@ -1,18 +1,52 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import classNames from 'classnames';
+import React, { useState } from 'react';
+import { Link, useSearchParams } from 'react-router-dom';
+import { getSearchWith } from '../utils/searchHelper';
+
 export const PeopleFilters = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [inputValue, setInputValue] = useState<string>('');
+  const centuries = searchParams.getAll('centuries') || [];
+
+  function reset() {
+    setInputValue('');
+  }
+
+  function setSearchWith(param: any) {
+    const result = getSearchWith(searchParams, param);
+
+    setSearchParams(result);
+  }
+
+  function handelQueryChange(event: React.ChangeEvent<HTMLInputElement>) {
+    const val = event.target.value.trimStart().trim();
+    const result = val === '' ? { query: null } : { query: val };
+
+    setInputValue(val);
+    setSearchWith(result);
+  }
+
+  function sexFiller(value: string) {
+    const result = ['f', 'm'].includes(value) ? { sex: value } : { sex: null };
+
+    setSearchWith(result);
+  }
+
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        <a className="is-active" href="#/people">
-          All
-        </a>
-        <a className="" href="#/people?sex=m">
-          Male
-        </a>
-        <a className="" href="#/people?sex=f">
-          Female
-        </a>
+        {['All', 'Male', 'Female'].map(option => {
+          const short = option === 'All' ? '' : option[0].toLowerCase();
+
+          return (
+            <a key={option} className="" onClick={() => sexFiller(short)}>
+              {option}
+            </a>
+          );
+        })}
       </p>
 
       <div className="panel-block">
@@ -20,8 +54,10 @@ export const PeopleFilters = () => {
           <input
             data-cy="NameFilter"
             type="search"
+            value={inputValue}
             className="input"
             placeholder="Search"
+            onChange={handelQueryChange}
           />
 
           <span className="icon is-left">
@@ -33,45 +69,26 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            <a
-              data-cy="century"
-              className="button mr-1"
-              href="#/people?centuries=16"
-            >
-              16
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=17"
-            >
-              17
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=18"
-            >
-              18
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=19"
-            >
-              19
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1"
-              href="#/people?centuries=20"
-            >
-              20
-            </a>
+            {['16', '17', '18', '19', '20'].map(number => {
+              return (
+                <Link
+                  key={number}
+                  data-cy="century"
+                  className={classNames('button mr-1', {
+                    'is-info': centuries.includes(number.toString()),
+                  })}
+                  to={{
+                    search: getSearchWith(searchParams, {
+                      centuries: centuries.includes(number)
+                        ? centuries.filter(century => century !== number)
+                        : [...centuries, number],
+                    }),
+                  }}
+                >
+                  {number}
+                </Link>
+              );
+            })}
           </div>
 
           <div className="level-right ml-4">
@@ -79,6 +96,7 @@ export const PeopleFilters = () => {
               data-cy="centuryALL"
               className="button is-success is-outlined"
               href="#/people"
+              onClick={reset}
             >
               All
             </a>
@@ -87,7 +105,11 @@ export const PeopleFilters = () => {
       </div>
 
       <div className="panel-block">
-        <a className="button is-link is-outlined is-fullwidth" href="#/people">
+        <a
+          className="button is-link is-outlined is-fullwidth"
+          href="#/people"
+          onClick={reset}
+        >
           Reset all filters
         </a>
       </div>
