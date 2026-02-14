@@ -2,10 +2,22 @@ import { useSearchParams } from 'react-router-dom';
 import { SearchLink } from './SearchLink';
 
 export const PeopleFilters = () => {
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const query = searchParams.get('query') || '';
   const sex = searchParams.get('sex');
   const centuries = searchParams.getAll('centuries');
+
+  const handleQueryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const next = new URLSearchParams(searchParams);
+
+    if (e.target.value) {
+      next.set('query', e.target.value);
+    } else {
+      next.delete('query');
+    }
+
+    setSearchParams(next, { replace: true });
+  };
 
   return (
     <nav className="panel">
@@ -16,16 +28,10 @@ export const PeopleFilters = () => {
         <SearchLink params={{ sex: null }} className={!sex ? 'is-active' : ''}>
           All
         </SearchLink>
-        <SearchLink
-          params={{ sex: 'm' }}
-          className={sex === 'm' ? 'is-active' : ''}
-        >
+        <SearchLink params={{ sex: 'm' }} className={sex === 'm' ? 'is-active' : ''}>
           Male
         </SearchLink>
-        <SearchLink
-          params={{ sex: 'f' }}
-          className={sex === 'f' ? 'is-active' : ''}
-        >
+        <SearchLink params={{ sex: 'f' }} className={sex === 'f' ? 'is-active' : ''}>
           Female
         </SearchLink>
       </p>
@@ -39,15 +45,7 @@ export const PeopleFilters = () => {
             className="input"
             placeholder="Search"
             value={query}
-            onChange={e => {
-              const next = new URLSearchParams(searchParams);
-
-              e.target.value
-                ? next.set('query', e.target.value)
-                : next.delete('query');
-              window.history.replaceState(null, '', `?${next.toString()}`);
-              window.dispatchEvent(new PopStateEvent('popstate'));
-            }}
+            onChange={handleQueryChange}
           />
           <span className="icon is-left">
             <i className="fas fa-search" />
