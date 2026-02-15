@@ -6,6 +6,7 @@ import { getSearchWith, SearchParams } from '../utils/searchHelper';
  * along with the custom `params` prop that we use for updating the search
  */
 type Props = Omit<LinkProps, 'to'> & {
+  slug?: string;
   params: SearchParams;
 };
 
@@ -16,9 +17,11 @@ type Props = Omit<LinkProps, 'to'> & {
 export const SearchLink: React.FC<Props> = ({
   children, // this is the content between the open and closing tags
   params, // the params to be updated in the `search`
+  slug,
   ...props // all usual Link props like `className`, `style` and `id`
 }) => {
   const [searchParams] = useSearchParams();
+  const pathname = slug ? `/people/${slug}` : undefined;
 
   return (
     <Link
@@ -26,7 +29,8 @@ export const SearchLink: React.FC<Props> = ({
       // to={{ search: getSearchWith(searchParams, { query: null }) }}
       // to={{ search: getSearchWith(searchParams, { centuries: ['16', '18'] }) }}
       to={{
-        search: getSearchWith(searchParams, params),
+        pathname,
+        search: '?' + getSearchWith(searchParams, params),
       }}
       {...props} // copy all the other props
     >
