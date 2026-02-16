@@ -32,9 +32,15 @@ const matchesQuery = (p: Person, q: string) => {
     return true;
   }
 
-  const fields = [p.name, getParentName(p.mother), getParentName(p.father)]
+  const fields = [
+    p.name,
+    p.motherName,
+    p.fatherName,
+    getParentName(p.mother),
+    getParentName(p.father),
+  ]
     .filter(Boolean)
-    .map(v => v.toLowerCase());
+    .map(v => v!.toLowerCase());
 
   return fields.some(v => v.includes(query));
 };
@@ -45,6 +51,7 @@ const matchesCenturies = (p: Person, centuries: string[]) => {
   }
 
   const personCentury = String(getCentury(p.born));
+
   return centuries.includes(personCentury);
 };
 

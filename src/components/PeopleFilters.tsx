@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { getSearchWith, SearchParams } from '../utils/searchHelper';
 
@@ -15,6 +15,10 @@ export const PeopleFilters: React.FC = () => {
 
   const [q, setQ] = useState(queryFromUrl);
 
+  useEffect(() => {
+    setQ(queryFromUrl);
+  }, [queryFromUrl]);
+
   const gotoWith = (update: SearchParams) => {
     const next = getSearchWith(sp, update);
 
@@ -26,12 +30,11 @@ export const PeopleFilters: React.FC = () => {
   };
 
   const onQueryChange = (value: string) => {
-    setQ(value);
-    const trimmed = value.trim();
+    const trimmed = value.trimStart();
+    const urlValue = trimmed.trim();
 
-    gotoWith({
-      query: trimmed ? trimmed : null,
-    });
+    setQ(trimmed);
+    gotoWith({ query: urlValue ? urlValue : null });
   };
 
   const toggleCentury = (c: number) => {
@@ -47,7 +50,8 @@ export const PeopleFilters: React.FC = () => {
 
   const clearCenturies = () => gotoWith({ centuries: null });
 
-  const resetAll = () =>
+  const resetAll = () => {
+    setQ('');
     gotoWith({
       sex: null,
       query: null,
@@ -55,44 +59,34 @@ export const PeopleFilters: React.FC = () => {
       sort: null,
       order: null,
     });
+  };
 
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        <a
-          href="#"
-          className={!sex ? 'is-active' : ''}
-          onClick={e => {
-            e.preventDefault();
-            onSexChange(null);
-          }}
+        <button
+          type="button"
+          className={`button is-white ${!sex ? 'is-active' : ''}`}
+          onClick={() => onSexChange(null)}
         >
           All
-        </a>
-
-        <a
-          href="#"
-          className={sex === 'm' ? 'is-active' : ''}
-          onClick={e => {
-            e.preventDefault();
-            onSexChange('m');
-          }}
+        </button>
+        <button
+          type="button"
+          className={`button is-white ${sex === 'm' ? 'is-active' : ''}`}
+          onClick={() => onSexChange('m')}
         >
           Male
-        </a>
-
-        <a
-          href="#"
-          className={sex === 'f' ? 'is-active' : ''}
-          onClick={e => {
-            e.preventDefault();
-            onSexChange('f');
-          }}
+        </button>
+        <button
+          type="button"
+          className={`button is-white ${sex === 'f' ? 'is-active' : ''}`}
+          onClick={() => onSexChange('f')}
         >
           Female
-        </a>
+        </button>
       </p>
 
       <div className="panel-block">
@@ -105,7 +99,6 @@ export const PeopleFilters: React.FC = () => {
             value={q}
             onChange={e => onQueryChange(e.target.value)}
           />
-
           <span className="icon is-left">
             <i className="fas fa-search" aria-hidden="true" />
           </span>
@@ -136,7 +129,7 @@ export const PeopleFilters: React.FC = () => {
             <button
               data-cy="centuryALL"
               type="button"
-              className="button is-success"
+              className="button is-success is-outlined"
               onClick={clearCenturies}
             >
               All
