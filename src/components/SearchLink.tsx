@@ -1,34 +1,29 @@
+import React from 'react';
 import { Link, LinkProps, useSearchParams } from 'react-router-dom';
 import { getSearchWith, SearchParams } from '../utils/searchHelper';
 
-/**
- * To replace the the standard `Link` we take all it props except for `to`
- * along with the custom `params` prop that we use for updating the search
- */
-type Props = Omit<LinkProps, 'to'> & {
+type Props = {
+  to: string;
   params: SearchParams;
-};
+  children: React.ReactNode;
+} & Omit<LinkProps, 'to'>;
 
-/**
- * SearchLink updates the given `params` in the search keeping the `pathname`
- * and the other existing search params (see `getSearchWith`)
- */
 export const SearchLink: React.FC<Props> = ({
-  children, // this is the content between the open and closing tags
-  params, // the params to be updated in the `search`
-  ...props // all usual Link props like `className`, `style` and `id`
+  to,
+  params,
+  children,
+  ...rest
 }) => {
   const [searchParams] = useSearchParams();
+  const next = getSearchWith(searchParams, params);
 
   return (
     <Link
-      // to={{ search: getSearchWith(searchParams, { query: 'sdf' }) }}
-      // to={{ search: getSearchWith(searchParams, { query: null }) }}
-      // to={{ search: getSearchWith(searchParams, { centuries: ['16', '18'] }) }}
+      {...rest}
       to={{
-        search: getSearchWith(searchParams, params),
+        pathname: to,
+        search: next ? `?${next}` : '',
       }}
-      {...props} // copy all the other props
     >
       {children}
     </Link>

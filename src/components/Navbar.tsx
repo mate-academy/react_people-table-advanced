@@ -1,24 +1,28 @@
-export const Navbar = () => {
-  return (
-    <nav
-      data-cy="nav"
-      className="navbar is-fixed-top has-shadow"
-      role="navigation"
-      aria-label="main navigation"
-    >
-      <div className="container">
-        <div className="navbar-brand">
-          <a className="navbar-item" href="#/">
-            Home
-          </a>
+import React from 'react';
+import { NavLink, useLocation } from 'react-router-dom';
 
-          <a
-            aria-current="page"
-            className="navbar-item has-background-grey-lighter"
-            href="#/people"
+const ACTIVE_CLASS = 'has-background-grey-lighter';
+
+export const Navbar: React.FC = () => {
+  const location = useLocation();
+
+  const getLinkClass = ({ isActive }: { isActive: boolean }) =>
+    `navbar-item ${isActive ? ACTIVE_CLASS : ''}`;
+
+  return (
+    <nav className="navbar" data-cy="nav">
+      <div className="navbar-menu">
+        <div className="navbar-start">
+          <NavLink to="/" end className={getLinkClass}>
+            Home
+          </NavLink>
+
+          <NavLink
+            to={{ pathname: '/people', search: location.search }}
+            className={getLinkClass}
           >
             People
-          </a>
+          </NavLink>
         </div>
       </div>
     </nav>
