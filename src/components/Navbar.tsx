@@ -29,7 +29,11 @@ export const Navbar = () => {
               pathname: '/people',
               search: searchParams.toString() || undefined,
             }}
-            className={pathname.startsWith('/people') ? 'is-active' : ''}
+            className={
+              pathname.startsWith('/people')
+                ? 'has-background-grey-lighter'
+                : ''
+            }
           >
             People
           </Link>
