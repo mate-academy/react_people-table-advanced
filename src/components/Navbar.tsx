@@ -1,9 +1,10 @@
 /* eslint-disable @typescript-eslint/indent */
 /* eslint-disable max-len */
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useSearchParams } from 'react-router-dom';
 
 export const Navbar = () => {
   const { pathname } = useLocation();
+  const [searchParams] = useSearchParams();
 
   return (
     <nav
@@ -24,12 +25,11 @@ export const Navbar = () => {
           </Link>
 
           <Link
-            to="/people"
-            className={`navbar-item ${
-              pathname.startsWith('/people')
-                ? 'has-background-grey-lighter'
-                : ''
-            }`}
+            to={{
+              pathname: '/people',
+              search: searchParams.toString() || undefined,
+            }}
+            className={pathname.startsWith('/people') ? 'is-active' : ''}
           >
             People
           </Link>
