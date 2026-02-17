@@ -20,21 +20,19 @@ export const PeopleFilters = () => {
 
   useEffect(() => {
     const timeout = setTimeout(() => {
-      setSearchParams(prev => {
-        const next = new URLSearchParams(prev);
+      const next = new URLSearchParams(searchParams.toString());
 
-        if (query) {
-          next.set('query', query);
-        } else {
-          next.delete('query');
-        }
+      if (query) {
+        next.set('query', query);
+      } else {
+        next.delete('query');
+      }
 
-        return next;
-      });
+      setSearchParams(next);
     }, 300);
 
     return () => clearTimeout(timeout);
-  }, [query, setSearchParams]);
+  }, [query, searchParams, setSearchParams]);
 
   useEffect(() => {
     setQuery(name);
