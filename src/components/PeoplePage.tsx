@@ -1,60 +1,52 @@
-import { PeopleFilters } from './PeopleFilters';
-import { Loader } from './Loader';
-import { PeopleTable } from './PeopleTable';
+// src/components/PeoplePage.tsx (new/inferred based on requirements)
+
 import { useEffect, useState } from 'react';
+import { getPeople } from '../api'; // Assuming this exists as per typical structure
 import { Person } from '../types';
-import { getPeople } from '../api';
+import { PeopleFilters } from './PeopleFilters';
+import { PeopleTable } from './PeopleTable';
 
-export const PeoplePage = () => {
+export const PeoplePage: React.FC = () => {
   const [people, setPeople] = useState<Person[]>([]);
-  const [filteredPeople, setFilteredPeople] = useState<Person[]>(people);
-
-  const [isError, setIsError] = useState<boolean>(false);
+  const [filteredPeople, setFilteredPeople] = useState<Person[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    setIsLoading(true);
     getPeople()
-      .then(res => {
-        setPeople(res);
+      .then(loadedPeople => {
+        setPeople(loadedPeople);
+        setFilteredPeople(loadedPeople);
       })
-      .catch(() => setIsError(true));
-  }, [people]);
+      .catch(() => {
+        setFilteredPeople([]);
+      })
+      .finally(() => setIsLoading(false));
+  }, []); // Empty dependency array to fetch only once
 
   return (
-    <>
-      <h1 className="title">People Page</h1>
+    <div className="container">
+      <h1 className="title">People</h1>
 
-      <div className="block">
-        <div className="columns is-desktop is-flex-direction-row-reverse">
-          <div className="column is-7-tablet is-narrow-desktop">
-            {people.length > 0 && (
-              <PeopleFilters
-                people={people}
-                setFilteredPeople={setFilteredPeople}
-              />
-            )}
-          </div>
-
-          <div className="column">
-            <div className="box table-container">
-              {people.length <= 0 && <Loader />}
-
-              {isError && (
-                <p data-cy="peopleLoadingError">Something went wrong</p>
-              )}
-
-              {!people && (
-                <p data-cy="noPeopleMessage">
-                  There are no people on the server
-                </p>
-              )}
-
-              {/* <p>There are no people matching the current search criteria</p> */}
-
-              <PeopleTable allPeople={people} people={filteredPeople} />
+      <div className="columns">
+        <div className="column is-one-quarter">
+          <PeopleFilters
+            people={people}
+            setFilteredPeople={setFilteredPeople}
+          />
+        </div>
+        <div className="column">
+          {isLoading ? (
+            <div className="loader" data-cy="loader">
+              Loading...
             </div>
-          </div>
+          ) : filteredPeople.length === 0 ? (
+            <p data-cy="noDataMessage">No people found</p>
+          ) : (
+            <PeopleTable people={filteredPeople} allPeople={people} />
+          )}
         </div>
       </div>
-    </>
+    </div>
   );
 };

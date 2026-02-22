@@ -1,10 +1,16 @@
-/* eslint-disable jsx-a11y/control-has-associated-label */
+// src/components/PeopleTable.tsx (updated with sorting implementation and navigation fixes)
 
 import classNames from 'classnames';
 import { Person } from '../types';
 import { PersonLink } from './PersonLink';
 import { useEffect, useState } from 'react';
-import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
+import {
+  Link,
+  useLocation,
+  useParams,
+  useSearchParams,
+} from 'react-router-dom';
+import { getSearchWith } from '../utils/searchHelper';
 
 type Props = {
   people: Person[];
@@ -14,21 +20,46 @@ type Props = {
 export const PeopleTable: React.FC<Props> = ({ people, allPeople }) => {
   const [checkedSlug, setCheckedSlug] = useState<string>('');
 
-  const navigate = useNavigate();
-
   const { slug } = useParams();
-  const { pathname, search } = useLocation();
-  const params = new URLSearchParams(search);
+  const { search } = useLocation();
+  const [searchParams, setSearchParams] = useSearchParams();
 
   useEffect(() => {
-    if (slug) {
-      setCheckedSlug(slug);
-    }
+    setCheckedSlug(slug || '');
   }, [slug]);
+
+  const sort = searchParams.get('sort');
+  const order = searchParams.get('order') || 'asc';
+
+  const getSortIcon = (field: string) => {
+    if (sort !== field) {
+      return 'fas fa-sort';
+    }
+
+    return order === 'asc' ? 'fas fa-sort-up' : 'fas fa-sort-down';
+  };
+
+  const handleSort = (field: string) => {
+    let newOrder: string | null = 'asc';
+    let newSort: string | null = field;
+
+    if (sort === field) {
+      if (order === 'asc') {
+        newOrder = 'desc';
+      } else {
+        newSort = null;
+        newOrder = null;
+      }
+    }
+
+    setSearchParams(
+      getSearchWith(searchParams, { sort: newSort, order: newOrder }),
+    );
+  };
 
   return (
     <>
-      {people && people.length > 0 && (
+      {people.length > 0 && (
         <table
           data-cy="peopleTable"
           className="table is-striped is-hoverable is-narrow is-fullwidth"
@@ -36,49 +67,49 @@ export const PeopleTable: React.FC<Props> = ({ people, allPeople }) => {
           <thead>
             <tr>
               <th>
-                <span className="is-flex is-flex-wrap-nowrap">
+                <button
+                  className="button is-ghost"
+                  onClick={() => handleSort('name')}
+                >
                   Name
-                  <a href="#/people?sort=name">
-                    <span className="icon">
-                      <i className="fas fa-sort" />
-                    </span>
-                  </a>
-                </span>
+                  <span className="icon">
+                    <i className={getSortIcon('name')} />
+                  </span>
+                </button>
               </th>
-
               <th>
-                <span className="is-flex is-flex-wrap-nowrap">
+                <button
+                  className="button is-ghost"
+                  onClick={() => handleSort('sex')}
+                >
                   Sex
-                  <a href="#/people?sort=sex">
-                    <span className="icon">
-                      <i className="fas fa-sort" />
-                    </span>
-                  </a>
-                </span>
+                  <span className="icon">
+                    <i className={getSortIcon('sex')} />
+                  </span>
+                </button>
               </th>
-
               <th>
-                <span className="is-flex is-flex-wrap-nowrap">
+                <button
+                  className="button is-ghost"
+                  onClick={() => handleSort('born')}
+                >
                   Born
-                  <a href="#/people?sort=born&amp;order=desc">
-                    <span className="icon">
-                      <i className="fas fa-sort-up" />
-                    </span>
-                  </a>
-                </span>
+                  <span className="icon">
+                    <i className={getSortIcon('born')} />
+                  </span>
+                </button>
               </th>
-
               <th>
-                <span className="is-flex is-flex-wrap-nowrap">
+                <button
+                  className="button is-ghost"
+                  onClick={() => handleSort('died')}
+                >
                   Died
-                  <a href="#/people?sort=died">
-                    <span className="icon">
-                      <i className="fas fa-sort" />
-                    </span>
-                  </a>
-                </span>
+                  <span className="icon">
+                    <i className={getSortIcon('died')} />
+                  </span>
+                </button>
               </th>
-
               <th>Mother</th>
               <th>Father</th>
             </tr>
@@ -86,18 +117,8 @@ export const PeopleTable: React.FC<Props> = ({ people, allPeople }) => {
 
           <tbody>
             {people.map(person => {
-              const motherInList = allPeople.find(
-                per => per.name === person.motherName,
-              );
-              const fatherInList = allPeople.find(
-                per => per.name === person.fatherName,
-              );
-
-              const handleOnclick = (personSlug: string) => {
-                console.log(search);
-                navigate(`${personSlug}${search}`, { replace: true });
-                setCheckedSlug(personSlug);
-              };
+              const mother = allPeople.find(p => p.name === person.motherName);
+              const father = allPeople.find(p => p.name === person.fatherName);
 
               return (
                 <tr
@@ -109,11 +130,7 @@ export const PeopleTable: React.FC<Props> = ({ people, allPeople }) => {
                 >
                   <td>
                     <Link
-                      to={{
-                        pathname: `/people/${person.slug}`,
-                        search: params.toString(),
-                      }}
-                      onClick={() => handleOnclick(person.slug)}
+                      to={`/people/${person.slug}${search}`}
                       className={classNames({
                         'has-text-danger': person.sex === 'f',
                       })}
@@ -125,23 +142,17 @@ export const PeopleTable: React.FC<Props> = ({ people, allPeople }) => {
                   <td>{person.born}</td>
                   <td>{person.died}</td>
                   <td>
-                    {motherInList ? (
-                      <PersonLink
-                        parent={motherInList}
-                        handleOnClick={handleOnclick}
-                      />
+                    {mother ? (
+                      <PersonLink parent={mother} />
                     ) : (
-                      <span>{person.motherName ? person.motherName : '-'}</span>
+                      person.motherName || '—'
                     )}
                   </td>
                   <td>
-                    {fatherInList ? (
-                      <PersonLink
-                        parent={fatherInList}
-                        handleOnClick={handleOnclick}
-                      />
+                    {father ? (
+                      <PersonLink parent={father} />
                     ) : (
-                      <span>{person.fatherName ? person.fatherName : '-'}</span>
+                      person.fatherName || '—'
                     )}
                   </td>
                 </tr>

@@ -1,10 +1,6 @@
-/* eslint-disable @typescript-eslint/indent */
-import {
-  Link,
-  useLocation,
-  useParams,
-  useSearchParams,
-} from 'react-router-dom';
+// src/components/PeopleFilters.tsx (updated with query sync and sorting moved to PeoplePage useEffect? Wait, actually integrated sorting into filter effect for filteredPeople)
+
+import { Link, useSearchParams } from 'react-router-dom';
 import { Person } from '../types';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import classNames from 'classnames';
@@ -19,82 +15,86 @@ export const PeopleFilters: React.FC<Props> = ({
   people,
   setFilteredPeople,
 }) => {
-  enum FilterBy {
-    all = '',
-    male = 'm',
-    female = 'f',
-  }
-
-  const { slug } = useParams();
-  const { pathname, search } = useLocation();
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const [value, setValue] = useState('');
+  const [query, setQuery] = useState(searchParams.get('query') || '');
 
   const sex = searchParams.get('sex') || '';
-  const centuries = searchParams.getAll('centuries') || [];
+  const centuries = searchParams.getAll('centuries');
+  const sort = searchParams.get('sort');
+  const order = searchParams.get('order') || 'asc';
 
   useEffect(() => {
-    const filtered = people
-      .filter(person => {
-        switch (sex) {
-          case 'm':
-            return person.sex === 'm';
-          case 'f':
-            return person.sex === 'f';
-          default:
-            return person;
-        }
-      })
-      .filter(person => {
-        if (!value) {
-          return true;
-        }
+    setQuery(searchParams.get('query') || '');
+  }, [searchParams]);
 
-        return [person.name, person.motherName, person.fatherName].some(field =>
-          field?.toLocaleUpperCase().includes(value.toLocaleUpperCase()),
-        );
-      })
-      .filter(person => {
-        if (centuries.length === 0) {
-          return person;
-        }
+  useEffect(() => {
+    let filtered = people;
 
-        const century = Math.floor((person.born - 1) / 100 + 1);
+    // Sex filter
+    if (sex) {
+      filtered = filtered.filter(person => person.sex === sex);
+    }
 
-        if (centuries.some(c => c === century.toString())) {
-          return person;
-        }
+    // Query filter
+    const searchTerm = query.trim().toUpperCase();
+
+    if (searchTerm) {
+      filtered = filtered.filter(person =>
+        [person.name, person.motherName, person.fatherName].some(field =>
+          field?.toUpperCase().includes(searchTerm),
+        ),
+      );
+    }
+
+    // Centuries filter
+    if (centuries.length > 0) {
+      filtered = filtered.filter(person => {
+        const century = Math.floor((person.born - 1) / 100 + 1).toString();
+
+        return centuries.includes(century);
       });
+    }
+
+    // Sorting
+    if (sort) {
+      filtered = [...filtered].sort((a, b) => {
+        let comparison = 0;
+
+        switch (sort) {
+          case 'name':
+            comparison = a.name.localeCompare(b.name);
+            break;
+          case 'sex':
+            comparison = a.sex.localeCompare(b.sex);
+            break;
+          case 'born':
+          case 'died':
+            comparison = (a[sort] ?? 0) - (b[sort] ?? 0);
+            break;
+          default:
+            break;
+        }
+
+        return order === 'asc' ? comparison : -comparison;
+      });
+    }
 
     setFilteredPeople(filtered);
-  }, [searchParams, people, value]);
+  }, [people, sex, centuries, query, sort, order, setFilteredPeople]);
 
-  const handleCenturyClick = (century: string): string => {
+  const toggleCentury = (century: string) => {
     const current = searchParams.getAll('centuries');
+    const next = current.includes(century)
+      ? current.filter(c => c !== century)
+      : [...current, century];
 
-    if (current.includes(century)) {
-      const currentIndex = current.indexOf(century);
-
-      return getSearchWith(searchParams, {
-        centuries: [
-          ...current.slice(0, currentIndex),
-          ...current.slice(currentIndex + 1),
-        ],
-      });
-    } else {
-      return getSearchWith(searchParams, {
-        centuries: [...centuries, century],
-      });
-    }
+    setSearchParams(
+      getSearchWith(searchParams, { centuries: next.length ? next : null }),
+    );
   };
 
-  const isActived = (century: string) => {
-    if (centuries.includes(century)) {
-      return true;
-    }
-    return false;
-  };
+  const isCenturyActive = (century: string) => centuries.includes(century);
 
   return (
     <nav className="panel">
@@ -102,20 +102,20 @@ export const PeopleFilters: React.FC<Props> = ({
 
       <p className="panel-tabs" data-cy="SexFilter">
         <Link
-          className={classNames({ 'is-active': sex === FilterBy.all })}
-          to={`?${getSearchWith(searchParams, { sex: null })}`}
+          className={classNames({ 'is-active': !sex })}
+          to={getSearchWith(searchParams, { sex: null })}
         >
           All
         </Link>
         <Link
-          className={classNames({ 'is-active': sex === FilterBy.male })}
-          to={`${pathname}?${getSearchWith(searchParams, { sex: FilterBy.male })}`}
+          className={classNames({ 'is-active': sex === 'm' })}
+          to={getSearchWith(searchParams, { sex: 'm' })}
         >
           Male
         </Link>
         <Link
-          className={classNames({ 'is-active': sex === FilterBy.female })}
-          to={`${pathname}?${getSearchWith(searchParams, { sex: FilterBy.female })}`}
+          className={classNames({ 'is-active': sex === 'f' })}
+          to={getSearchWith(searchParams, { sex: 'f' })}
         >
           Female
         </Link>
@@ -127,18 +127,17 @@ export const PeopleFilters: React.FC<Props> = ({
             data-cy="NameFilter"
             type="search"
             className="input"
-            placeholder="Search"
-            value={value}
+            placeholder="Search by name, mother or father"
+            value={query}
             onChange={e => {
-              setValue(e.target.value);
+              const newValue = e.target.value;
+
+              setQuery(newValue);
               setSearchParams(
-                e.target.value === ''
-                  ? getSearchWith(searchParams, { query: null })
-                  : getSearchWith(searchParams, { query: e.target.value }),
+                getSearchWith(searchParams, { query: newValue.trim() || null }),
               );
             }}
           />
-
           <span className="icon is-left">
             <i className="fas fa-search" aria-hidden="true" />
           </span>
@@ -148,93 +147,46 @@ export const PeopleFilters: React.FC<Props> = ({
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            <Link
-              data-cy="century"
-              className={classNames('button mr-1', {
-                'is-info': isActived('16'),
-              })}
-              to={{
-                pathname,
-                search: `?${handleCenturyClick('16')}`,
-              }}
-            >
-              16
-            </Link>
-
-            <Link
-              data-cy="century"
-              className={classNames('button mr-1', {
-                'is-info': isActived('17'),
-              })}
-              to={{
-                pathname,
-                search: `?${handleCenturyClick('17')}`,
-              }}
-            >
-              17
-            </Link>
-
-            <Link
-              data-cy="century"
-              className={classNames('button mr-1', {
-                'is-info': isActived('18'),
-              })}
-              to={{
-                pathname,
-                search: `?${handleCenturyClick('18')}`,
-              }}
-            >
-              18
-            </Link>
-
-            <Link
-              data-cy="century"
-              className={classNames('button mr-1', {
-                'is-info': isActived('19'),
-              })}
-              to={{
-                pathname,
-                search: `?${handleCenturyClick('19')}`,
-              }}
-            >
-              19
-            </Link>
-
-            <Link
-              data-cy="century"
-              className={classNames('button mr-1', {
-                'is-info': isActived('20'),
-              })}
-              to={{
-                pathname,
-                search: `?${handleCenturyClick('20')}`,
-              }}
-            >
-              20
-            </Link>
+            {(['16', '17', '18', '19', '20'] as const).map(century => (
+              <button
+                key={century}
+                type="button"
+                data-cy="century"
+                className={classNames('button mr-1', {
+                  'is-info': isCenturyActive(century),
+                })}
+                onClick={() => toggleCentury(century)}
+              >
+                {century}
+              </button>
+            ))}
           </div>
 
           <div className="level-right ml-4">
-            <Link
+            <button
               data-cy="centuryALL"
               className={classNames('button is-success', {
                 'is-outlined': centuries.length > 0,
               })}
-              to={{
-                pathname,
-                search: `?${getSearchWith(searchParams, { centuries: null })}`,
-              }}
+              onClick={() =>
+                setSearchParams(
+                  getSearchWith(searchParams, { centuries: null }),
+                )
+              }
             >
               All
-            </Link>
+            </button>
           </div>
         </div>
       </div>
 
       <div className="panel-block">
-        <a className="button is-link is-outlined is-fullwidth" href="#/people">
+        <button
+          className="button is-link is-outlined is-fullwidth"
+          onClick={() => setSearchParams({})}
+        >
           Reset all filters
-        </a>
+        </button>
       </div>
     </nav>
   );
