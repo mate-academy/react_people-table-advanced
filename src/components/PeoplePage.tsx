@@ -30,7 +30,7 @@ export const PeoplePage = () => {
     let result = [...people];
 
     if (sexFilter) {
-      result = people.filter(p => p.sex === sexFilter);
+      result = result.filter(p => p.sex === sexFilter);
     }
 
     if (centuriesFilter.length > 0) {
@@ -94,7 +94,7 @@ export const PeoplePage = () => {
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
           <div className="column is-7-tablet is-narrow-desktop">
-            <PeopleFilters />
+            {!loading && <PeopleFilters />}
           </div>
 
           <div className="column">
