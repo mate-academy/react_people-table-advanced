@@ -1,52 +1,145 @@
-// src/components/PeoplePage.tsx (new/inferred based on requirements)
-
-import { useEffect, useState } from 'react';
-import { getPeople } from '../api'; // Assuming this exists as per typical structure
-import { Person } from '../types';
+import React, { useEffect, useMemo, useState } from 'react';
 import { PeopleFilters } from './PeopleFilters';
+import { Loader } from './Loader';
 import { PeopleTable } from './PeopleTable';
+import { getPeople } from '../api';
+import { Person } from '../types';
+import { useSearchParams } from 'react-router-dom';
+import { getSearchWith } from '../utils/searchHelper';
+import { useParams } from 'react-router-dom';
 
-export const PeoplePage: React.FC = () => {
+type Status = 'initial' | 'loading' | 'loaded' | 'error';
+
+export const PeoplePage = () => {
+  const { slug } = useParams();
+
   const [people, setPeople] = useState<Person[]>([]);
-  const [filteredPeople, setFilteredPeople] = useState<Person[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [status, setStatus] = useState<Status>('initial');
+  const [errorMessage, setErrorMessage] = useState('');
+  const [searchParams, setSearchParams] = useSearchParams();
 
   useEffect(() => {
-    setIsLoading(true);
+    setStatus('loading');
     getPeople()
       .then(loadedPeople => {
         setPeople(loadedPeople);
-        setFilteredPeople(loadedPeople);
+        setStatus('loaded');
       })
-      .catch(() => {
-        setFilteredPeople([]);
-      })
-      .finally(() => setIsLoading(false));
-  }, []); // Empty dependency array to fetch only once
+      .catch((error: Error) => {
+        setErrorMessage(error.message || 'Something went wrong');
+        setStatus('error');
+      });
+  }, []);
+
+  const query = searchParams.get('query')?.toLowerCase() || '';
+  const sex = searchParams.get('sex');
+  const centuries = searchParams.getAll('centuries');
+  const sort = searchParams.get('sort');
+  const order = searchParams.get('order');
+
+  const filteredPeople = useMemo(() => {
+    return people.filter(person => {
+      const matchesQuery =
+        !query ||
+        person.name.toLowerCase().includes(query) ||
+        person.motherName?.toLowerCase().includes(query) ||
+        person.fatherName?.toLowerCase().includes(query);
+
+      const matchesSex = !sex || person.sex === sex;
+
+      const personCentury = Math.ceil(person.born / 100).toString();
+      const matchesCentury =
+        centuries.length === 0 || centuries.includes(personCentury);
+
+      return matchesQuery && matchesSex && matchesCentury;
+    });
+  }, [people, query, sex, centuries]);
+
+  const sortedPeople = useMemo(() => {
+    const copy = [...filteredPeople];
+
+    if (sort) {
+      copy.sort((a, b) => {
+        const valA = a[sort as keyof Person];
+        const valB = b[sort as keyof Person];
+
+        if (valA === null || valB === null) {
+          return 0;
+        }
+
+        if (typeof valA === 'string' && typeof valB === 'string') {
+          return order === 'desc'
+            ? valB.localeCompare(valA)
+            : valA.localeCompare(valB);
+        }
+
+        return order === 'desc'
+          ? (valB as number) - (valA as number)
+          : (valA as number) - (valB as number);
+      });
+    }
+
+    return copy;
+  }, [filteredPeople, sort, order]);
+
+  const handleSortChange = (field: string) => {
+    let nextSort: string | null = field;
+    let nextOrder: string | null = null;
+
+    if (sort === field) {
+      if (order !== 'desc') {
+        nextOrder = 'desc';
+      } else {
+        nextSort = null;
+      }
+    }
+
+    setSearchParams(
+      getSearchWith(searchParams, {
+        sort: nextSort,
+        order: nextOrder,
+      }),
+    );
+  };
+
+  const isLoading = status === 'loading' || status === 'initial';
+  const isLoaded = status === 'loaded';
 
   return (
-    <div className="container">
-      <h1 className="title">People</h1>
+    <>
+      <h1 className="title">People Page</h1>
 
-      <div className="columns">
-        <div className="column is-one-quarter">
-          <PeopleFilters
-            people={people}
-            setFilteredPeople={setFilteredPeople}
-          />
-        </div>
-        <div className="column">
-          {isLoading ? (
-            <div className="loader" data-cy="loader">
-              Loading...
+      <div className="block">
+        <div className="columns is-desktop is-flex-direction-row-reverse">
+          <div className="column is-7-tablet is-narrow-desktop">
+            {isLoaded && <PeopleFilters />}
+          </div>
+
+          <div className="column">
+            <div className="box table-container">
+              {isLoading && <Loader />}
+              {status === 'error' && (
+                <p data-cy="peopleLoadingError"> {errorMessage}</p>
+              )}
+
+              {isLoaded &&
+                (sortedPeople.length > 0 ? (
+                  <PeopleTable
+                    people={sortedPeople}
+                    selectedSlug={slug}
+                    onSortChange={handleSortChange}
+                    currentSort={sort}
+                    currentOrder={order}
+                  />
+                ) : (
+                  <p data-cy="noPeopleMessage">
+                    There are no people on the server
+                  </p>
+                ))}
             </div>
-          ) : filteredPeople.length === 0 ? (
-            <p data-cy="noDataMessage">No people found</p>
-          ) : (
-            <PeopleTable people={filteredPeople} allPeople={people} />
-          )}
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };

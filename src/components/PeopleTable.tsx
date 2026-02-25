@@ -1,166 +1,158 @@
-// src/components/PeopleTable.tsx (updated with sorting implementation and navigation fixes)
-
-import classNames from 'classnames';
+/* eslint-disable jsx-a11y/control-has-associated-label */
+import React from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import { Person } from '../types';
-import { PersonLink } from './PersonLink';
-import { useEffect, useState } from 'react';
-import {
-  Link,
-  useLocation,
-  useParams,
-  useSearchParams,
-} from 'react-router-dom';
-import { getSearchWith } from '../utils/searchHelper';
 
-type Props = {
+interface Props {
   people: Person[];
-  allPeople: Person[];
+  selectedSlug?: string;
+  onSortChange: (field: string) => void;
+  currentSort: string | null;
+  currentOrder: string | null;
+}
+
+const SortIcon = ({
+  field,
+  currentSort,
+  currentOrder,
+}: {
+  field: string;
+  currentSort: string | null;
+  currentOrder: string | null;
+}) => {
+  if (currentSort !== field) {
+    return <i className="fas fa-sort" />;
+  }
+
+  if (currentOrder !== 'desc') {
+    return <i className="fas fa-sort-down" />;
+  }
+
+  return <i className="fas fa-sort-up" />;
 };
 
-export const PeopleTable: React.FC<Props> = ({ people, allPeople }) => {
-  const [checkedSlug, setCheckedSlug] = useState<string>('');
-
-  const { slug } = useParams();
+export const PeopleTable: React.FC<Props> = ({
+  people,
+  selectedSlug,
+  onSortChange,
+  currentSort,
+  currentOrder,
+}) => {
   const { search } = useLocation();
-  const [searchParams, setSearchParams] = useSearchParams();
 
-  useEffect(() => {
-    setCheckedSlug(slug || '');
-  }, [slug]);
-
-  const sort = searchParams.get('sort');
-  const order = searchParams.get('order') || 'asc';
-
-  const getSortIcon = (field: string) => {
-    if (sort !== field) {
-      return 'fas fa-sort';
-    }
-
-    return order === 'asc' ? 'fas fa-sort-up' : 'fas fa-sort-down';
+  const findParentInList = (name: string | null) => {
+    return people.find(p => p.name === name);
   };
 
-  const handleSort = (field: string) => {
-    let newOrder: string | null = 'asc';
-    let newSort: string | null = field;
+  const renderLinkOrText = (
+    person: Person,
+    field: 'mother' | 'father',
+  ): JSX.Element | string => {
+    const parentObj = field === 'mother' ? person.mother : person.father;
+    const parentName =
+      field === 'mother' ? person.motherName : person.fatherName;
 
-    if (sort === field) {
-      if (order === 'asc') {
-        newOrder = 'desc';
-      } else {
-        newSort = null;
-        newOrder = null;
-      }
+    const linkedPerson = findParentInList(parentName);
+
+    const target = linkedPerson || parentObj;
+
+    if (target && (target.slug || target.id)) {
+      return (
+        <Link
+          to={{
+            pathname: `/people/${target.slug || target.id}`,
+            search,
+          }}
+          className={
+            field === 'mother' || target.sex === 'f' ? 'has-text-danger' : ''
+          }
+          key={target.id}
+        >
+          {parentName}
+        </Link>
+      );
     }
 
-    setSearchParams(
-      getSearchWith(searchParams, { sort: newSort, order: newOrder }),
-    );
+    if (parentName) {
+      return (
+        <span className={field === 'mother' ? 'has-text-danger' : ''}>
+          {parentName}
+        </span>
+      );
+    }
+
+    return '-';
   };
+
+  const renderSortHeader = (field: string, title: string) => (
+    <th key={field}>
+      <span className="is-flex is-flex-wrap-nowrap">
+        {title}
+        <button
+          type="button"
+          onClick={() => onSortChange(field)}
+          className="button is-ghost p-0 h-auto has-text-danger ml-1"
+          style={{ border: 'none', background: 'none' }}
+        >
+          <span className="icon">
+            <SortIcon
+              field={field}
+              currentSort={currentSort}
+              currentOrder={currentOrder}
+            />
+          </span>
+        </button>
+      </span>
+    </th>
+  );
 
   return (
-    <>
-      {people.length > 0 && (
-        <table
-          data-cy="peopleTable"
-          className="table is-striped is-hoverable is-narrow is-fullwidth"
-        >
-          <thead>
-            <tr>
-              <th>
-                <button
-                  className="button is-ghost"
-                  onClick={() => handleSort('name')}
+    <table
+      data-cy="peopleTable"
+      className="table is-striped is-hoverable is-narrow is-fullwidth"
+    >
+      <thead>
+        <tr>
+          {renderSortHeader('name', 'Name')}
+          {renderSortHeader('sex', 'Sex')}
+          {renderSortHeader('born', 'Born')}
+          {renderSortHeader('died', 'Died')}
+          <th key="mother">Mother</th>
+          <th key="father">Father</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        {people.map(person => {
+          const isSelected =
+            selectedSlug === (person.slug || person.id.toString());
+
+          return (
+            <tr
+              data-cy="person"
+              key={person.id}
+              className={isSelected ? 'has-background-warning' : ''}
+            >
+              <td>
+                <Link
+                  to={{
+                    pathname: `/people/${person.slug || person.id}`,
+                    search,
+                  }}
+                  className={person.sex === 'f' ? 'has-text-danger' : ''}
                 >
-                  Name
-                  <span className="icon">
-                    <i className={getSortIcon('name')} />
-                  </span>
-                </button>
-              </th>
-              <th>
-                <button
-                  className="button is-ghost"
-                  onClick={() => handleSort('sex')}
-                >
-                  Sex
-                  <span className="icon">
-                    <i className={getSortIcon('sex')} />
-                  </span>
-                </button>
-              </th>
-              <th>
-                <button
-                  className="button is-ghost"
-                  onClick={() => handleSort('born')}
-                >
-                  Born
-                  <span className="icon">
-                    <i className={getSortIcon('born')} />
-                  </span>
-                </button>
-              </th>
-              <th>
-                <button
-                  className="button is-ghost"
-                  onClick={() => handleSort('died')}
-                >
-                  Died
-                  <span className="icon">
-                    <i className={getSortIcon('died')} />
-                  </span>
-                </button>
-              </th>
-              <th>Mother</th>
-              <th>Father</th>
+                  {person.name}
+                </Link>
+              </td>
+              <td>{person.sex}</td>
+              <td>{person.born}</td>
+              <td>{person.died}</td>
+              <td>{renderLinkOrText(person, 'mother')}</td>
+              <td>{renderLinkOrText(person, 'father')}</td>
             </tr>
-          </thead>
-
-          <tbody>
-            {people.map(person => {
-              const mother = allPeople.find(p => p.name === person.motherName);
-              const father = allPeople.find(p => p.name === person.fatherName);
-
-              return (
-                <tr
-                  data-cy="person"
-                  key={person.slug}
-                  className={classNames({
-                    'has-background-warning': checkedSlug === person.slug,
-                  })}
-                >
-                  <td>
-                    <Link
-                      to={`/people/${person.slug}${search}`}
-                      className={classNames({
-                        'has-text-danger': person.sex === 'f',
-                      })}
-                    >
-                      {person.name}
-                    </Link>
-                  </td>
-                  <td>{person.sex}</td>
-                  <td>{person.born}</td>
-                  <td>{person.died}</td>
-                  <td>
-                    {mother ? (
-                      <PersonLink parent={mother} />
-                    ) : (
-                      person.motherName || '—'
-                    )}
-                  </td>
-                  <td>
-                    {father ? (
-                      <PersonLink parent={father} />
-                    ) : (
-                      person.fatherName || '—'
-                    )}
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
-      )}
-    </>
+          );
+        })}
+      </tbody>
+    </table>
   );
 };
