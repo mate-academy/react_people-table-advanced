@@ -1,3 +1,13 @@
+// NavLink aplica a classe "active" automaticamente quando a rota corresponde
+import { NavLink } from 'react-router-dom';
+// classNames facilita a composição condicional de classes CSS
+import classNames from 'classnames';
+
+/**
+ * Barra de navegação fixa no topo da página.
+ * Usa NavLink do React Router para destacar o link ativo
+ * com a classe 'has-background-grey-lighter'.
+ */
 export const Navbar = () => {
   return (
     <nav
@@ -8,17 +18,29 @@ export const Navbar = () => {
     >
       <div className="container">
         <div className="navbar-brand">
-          <a className="navbar-item" href="#/">
+          {/* Link para a página inicial — fica ativo apenas na rota "/" exata */}
+          <NavLink
+            to="/"
+            className={({ isActive }) =>
+              classNames('navbar-item', {
+                'has-background-grey-lighter': isActive,
+              })
+            }
+          >
             Home
-          </a>
+          </NavLink>
 
-          <a
-            aria-current="page"
-            className="navbar-item has-background-grey-lighter"
-            href="#/people"
+          {/* Link para a página de pessoas — fica ativo em "/people" e sub-rotas */}
+          <NavLink
+            to="/people"
+            className={({ isActive }) =>
+              classNames('navbar-item', {
+                'has-background-grey-lighter': isActive,
+              })
+            }
           >
             People
-          </a>
+          </NavLink>
         </div>
       </div>
     </nav>
