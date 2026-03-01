@@ -20,6 +20,7 @@ export const SearchLink: React.FC<Props> = ({
 }) => {
   const [searchParams] = useSearchParams();
 
+
   return (
     <Link
       // to={{ search: getSearchWith(searchParams, { query: 'sdf' }) }}

@@ -13,11 +13,11 @@ export const PeoplePage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const sex = searchParams.get('sex') || '';
   const centuries = searchParams.getAll('centuries') || [];
-  const query = searchParams.get('query') ||  '';
+  const query = searchParams.get('query') || '';
   const sort = searchParams.get('sort');
   const order = searchParams.get('order');
 
-  const normalixedQuery = query?.toLowerCase() || '';
+  const normalizedQuery = query?.toLowerCase() || '';
 
   const getOrder = (column: string) => {
     if (sort !== column) {
@@ -61,12 +61,15 @@ export const PeoplePage = () => {
   }, []);
 
   const filteredPeople = useMemo(() => {
-    return people.filter((person) => {
-      if (normalixedQuery && !(person.name.toLowerCase().includes(normalixedQuery)
-        || person.motherName?.toLowerCase().includes(normalixedQuery)
-          || person.fatherName?.toLowerCase().includes(normalixedQuery)
-        )
-      ) {
+    return people.filter(person => {
+      const matchesQuery =
+        person.name.toLowerCase().includes(normalizedQuery) ||
+        (person.motherName &&
+          person.motherName.toLowerCase().includes(normalizedQuery)) ||
+        (person.fatherName &&
+          person.fatherName.toLowerCase().includes(normalizedQuery));
+
+      if (normalizedQuery && !matchesQuery) {
         return false;
       }
 
@@ -74,15 +77,16 @@ export const PeoplePage = () => {
         return false;
       }
 
-      if (centuries.length > 0 && !centuries.includes(Math.ceil(person.born / 100).toString())) {
+      if (
+        centuries.length > 0 &&
+        !centuries.includes(Math.ceil(person.born / 100).toString())
+      ) {
         return false;
       }
 
-;
-
       return true;
-    })
-}, [people, sex, centuries, query]);
+    });
+  }, [people, sex, centuries, normalizedQuery]);
 
   const sortedPeople = useMemo(() => {
     if (!sort) {
@@ -169,7 +173,8 @@ export const PeoplePage = () => {
                 people={sortedPeople}
                 sort={sort}
                 order={order}
-                getOrder={getOrder}/>
+                getOrder={getOrder}
+              />
             </div>
           </div>
         </div>
