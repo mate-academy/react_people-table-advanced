@@ -29,32 +29,45 @@ export const PeoplePage = () => {
   const centuries = searchParams.getAll('centuries');
   const sort = searchParams.get('sort') || '';
   const order = searchParams.get('order') || '';
-
   const normalizedQuery = query.trim().toLowerCase();
 
-  const preparedPeople = people.filter(person => {
-    if (!normalizedQuery) {
-      return true;
-    }
+  let queryFiltered = people;
 
-    const name = person.name.toLowerCase();
-    const mother = (person.motherName || '').toLowerCase();
-    const father = (person.fatherName || '').toLowerCase();
+  if (normalizedQuery) {
+    queryFiltered = people.filter(person => {
+      const name = person.name.toLowerCase();
+      const mother = (person.motherName || '').toLowerCase();
+      const father = (person.fatherName || '').toLowerCase();
 
-    return (
-      name.includes(normalizedQuery) ||
-      mother.includes(normalizedQuery) ||
-      father.includes(normalizedQuery)
-    );
-  });
+      return (
+        name.includes(normalizedQuery) ||
+        mother.includes(normalizedQuery) ||
+        father.includes(normalizedQuery)
+      );
+    });
+  }
+
+  let sexFiltered = queryFiltered;
+
+  if (sex) {
+    sexFiltered = queryFiltered.filter(person => person.sex === sex);
+  }
+
+  let preparedPeople = sexFiltered;
+
+  if (centuries.length) {
+    preparedPeople = sexFiltered.filter(person => {
+      const century = Math.ceil(person.born / 100);
+
+      return centuries.includes(String(century));
+    });
+  }
 
   const showFilters = !isLoading && !hasError && people.length > 0;
   const showNoPeople = !isLoading && !hasError && people.length === 0;
   const showNoMatches = showFilters && preparedPeople.length === 0;
   const showTable = showFilters && preparedPeople.length > 0;
 
-  void sex;
-  void centuries;
   void sort;
   void order;
 
