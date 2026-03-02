@@ -3,8 +3,8 @@ import { useParams, useSearchParams } from 'react-router-dom';
 import { getPeople } from '../api';
 import { Person } from '../types';
 import { PeopleFilters } from './PeopleFilters';
-import { Loader } from './Loader';
 import { PeopleTable } from './PeopleTable';
+import { Loader } from './Loader';
 
 export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);
