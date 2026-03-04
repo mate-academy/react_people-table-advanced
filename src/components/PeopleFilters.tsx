@@ -17,7 +17,7 @@ export const PeopleFilters = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const [search, setSearch] = useState<string>('');
+  const [search, setSearch] = useState<string>(() => searchParams.get('query') || '');
   const sortBySex = searchParams.get('sex');
   const sortByCentury = searchParams.getAll('centuries');
 
@@ -79,7 +79,9 @@ export const PeopleFilters = () => {
 
     params.set('query', value);
 
-    if (!value) {
+    if (value) {
+      params.set('query', value);
+    } else {
       params.delete('query');
     }
 

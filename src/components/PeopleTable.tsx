@@ -74,10 +74,8 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
 
       copy = copy.filter(item => {
         const selfMatch = item.name.toLowerCase().includes(lowerSearch);
-        const momMatch = item.mother?.name.toLowerCase().includes(lowerSearch);
-        const fatherMatch = item.father?.name
-          .toLowerCase()
-          .includes(lowerSearch);
+        const momMatch = item.motherName?.toLowerCase().includes(lowerSearch);
+        const fatherMatch = item.fatherName?.toLowerCase().includes(lowerSearch);
 
         return selfMatch || momMatch || fatherMatch;
       });
