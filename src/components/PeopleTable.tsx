@@ -1,5 +1,7 @@
 /* eslint-disable jsx-a11y/control-has-associated-label */
 import { Person } from '../types';
+import { useSearchParams } from 'react-router-dom';
+import { SearchLink } from './SearchLink';
 import { PersonLink } from './PersonLink';
 
 type Props = {
@@ -7,7 +9,33 @@ type Props = {
   selectedSlug?: string;
 };
 
+type SortField = 'name' | 'sex' | 'died' | 'born';
+
 export const PeopleTable: React.FC<Props> = ({ people, selectedSlug }) => {
+  const [searchParams] = useSearchParams();
+  const sort = searchParams.get('sort');
+  const order = searchParams.get('order');
+
+  const getNextSortParams = (field: SortField) => {
+    if (sort !== field) {
+      return { sort: field, order: null };
+    }
+
+    if (order !== 'desc') {
+      return { sort: field, order: 'desc' };
+    }
+
+    return { sort: null, order: null };
+  };
+
+  const getSortIcon = (field: SortField) => {
+    if (sort !== field) {
+      return 'fas fa-sort';
+    }
+
+    return order === 'desc' ? 'fas fa-sort-down' : 'fas fa-sort-up';
+  };
+
   const getRelativeByName = (name: string | null) => {
     if (!name) {
       return null;
@@ -26,44 +54,44 @@ export const PeopleTable: React.FC<Props> = ({ people, selectedSlug }) => {
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Name
-              <a href="#/people?sort=name">
+              <SearchLink params={getNextSortParams('name')}>
                 <span className="icon">
-                  <i className="fas fa-sort" />
+                  <i className={getSortIcon('name')} />
                 </span>
-              </a>
+              </SearchLink>
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Sex
-              <a href="#/people?sort=sex">
+              <SearchLink params={getNextSortParams('sex')}>
                 <span className="icon">
-                  <i className="fas fa-sort" />
+                  <i className={getSortIcon('sex')} />
                 </span>
-              </a>
+              </SearchLink>
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Born
-              <a href="#/people?sort=born&amp;order=desc">
+              <SearchLink params={getNextSortParams('born')}>
                 <span className="icon">
-                  <i className="fas fa-sort-up" />
+                  <i className={getSortIcon('born')} />
                 </span>
-              </a>
+              </SearchLink>
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Died
-              <a href="#/people?sort=died">
+              <SearchLink params={getNextSortParams('died')}>
                 <span className="icon">
-                  <i className="fas fa-sort" />
+                  <i className={getSortIcon('died')} />
                 </span>
-              </a>
+              </SearchLink>
             </span>
           </th>
 

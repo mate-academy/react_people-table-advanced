@@ -6,6 +6,8 @@ import { PeopleFilters } from './PeopleFilters';
 import { PeopleTable } from './PeopleTable';
 import { Loader } from './Loader';
 
+type SortField = 'name' | 'sex' | 'died' | 'born';
+
 export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -63,13 +65,28 @@ export const PeoplePage = () => {
     });
   }
 
+  const visiblePeople = [...preparedPeople];
+
+  if (sort) {
+    const field = sort as SortField;
+
+    visiblePeople.sort((a, b) => {
+      if (field === 'name' || field === 'sex') {
+        return a[field].localeCompare(b[field]);
+      }
+
+      return a[field] - b[field];
+    });
+
+    if (order === 'desc') {
+      visiblePeople.reverse();
+    }
+  }
+
   const showFilters = !isLoading && !hasError && people.length > 0;
   const showNoPeople = !isLoading && !hasError && people.length === 0;
-  const showNoMatches = showFilters && preparedPeople.length === 0;
-  const showTable = showFilters && preparedPeople.length > 0;
-
-  void sort;
-  void order;
+  const showNoMatches = showFilters && visiblePeople.length === 0;
+  const showTable = showFilters && visiblePeople.length > 0;
 
   return (
     <>
@@ -102,7 +119,7 @@ export const PeoplePage = () => {
               )}
 
               {showTable && (
-                <PeopleTable people={preparedPeople} selectedSlug={slug} />
+                <PeopleTable people={visiblePeople} selectedSlug={slug} />
               )}
             </div>
           </div>
