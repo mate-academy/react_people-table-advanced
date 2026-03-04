@@ -1,8 +1,93 @@
+import { useEffect, useState } from 'react';
+import { useParams, useSearchParams } from 'react-router-dom';
+import { getPeople } from '../api';
+import { Person } from '../types';
 import { PeopleFilters } from './PeopleFilters';
-import { Loader } from './Loader';
 import { PeopleTable } from './PeopleTable';
+import { Loader } from './Loader';
+
+type SortField = 'name' | 'sex' | 'died' | 'born';
 
 export const PeoplePage = () => {
+  const [people, setPeople] = useState<Person[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [hasError, setHasError] = useState(false);
+
+  useEffect(() => {
+    setIsLoading(true);
+    setHasError(false);
+
+    getPeople()
+      .then(setPeople)
+      .catch(() => setHasError(true))
+      .finally(() => setIsLoading(false));
+  }, []);
+
+  const { slug } = useParams();
+  const [searchParams] = useSearchParams();
+
+  const query = searchParams.get('query') || '';
+  const sex = searchParams.get('sex') || '';
+  const centuries = searchParams.getAll('centuries');
+  const sort = searchParams.get('sort') || '';
+  const order = searchParams.get('order') || '';
+  const normalizedQuery = query.trim().toLowerCase();
+
+  let queryFiltered = people;
+
+  if (normalizedQuery) {
+    queryFiltered = people.filter(person => {
+      const name = person.name.toLowerCase();
+      const mother = (person.motherName || '').toLowerCase();
+      const father = (person.fatherName || '').toLowerCase();
+
+      return (
+        name.includes(normalizedQuery) ||
+        mother.includes(normalizedQuery) ||
+        father.includes(normalizedQuery)
+      );
+    });
+  }
+
+  let sexFiltered = queryFiltered;
+
+  if (sex) {
+    sexFiltered = queryFiltered.filter(person => person.sex === sex);
+  }
+
+  let preparedPeople = sexFiltered;
+
+  if (centuries.length) {
+    preparedPeople = sexFiltered.filter(person => {
+      const century = Math.ceil(person.born / 100);
+
+      return centuries.includes(String(century));
+    });
+  }
+
+  const visiblePeople = [...preparedPeople];
+
+  if (sort) {
+    const field = sort as SortField;
+
+    visiblePeople.sort((a, b) => {
+      if (field === 'name' || field === 'sex') {
+        return a[field].localeCompare(b[field]);
+      }
+
+      return a[field] - b[field];
+    });
+
+    if (order === 'desc') {
+      visiblePeople.reverse();
+    }
+  }
+
+  const showFilters = !isLoading && !hasError && people.length > 0;
+  const showNoPeople = !isLoading && !hasError && people.length === 0;
+  const showNoMatches = showFilters && visiblePeople.length === 0;
+  const showTable = showFilters && visiblePeople.length > 0;
+
   return (
     <>
       <h1 className="title">People Page</h1>
@@ -10,20 +95,32 @@ export const PeoplePage = () => {
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
           <div className="column is-7-tablet is-narrow-desktop">
-            <PeopleFilters />
+            {showFilters && <PeopleFilters />}
           </div>
 
           <div className="column">
             <div className="box table-container">
-              <Loader />
+              {isLoading && <Loader />}
 
-              <p data-cy="peopleLoadingError">Something went wrong</p>
+              {hasError && (
+                <p data-cy="peopleLoadingError" className="has-text-danger">
+                  Something went wrong
+                </p>
+              )}
 
-              <p data-cy="noPeopleMessage">There are no people on the server</p>
+              {showNoPeople && (
+                <p data-cy="noPeopleMessage">
+                  There are no people on the server
+                </p>
+              )}
 
-              <p>There are no people matching the current search criteria</p>
+              {showNoMatches && (
+                <p>There are no people matching the current search criteria</p>
+              )}
 
-              <PeopleTable />
+              {showTable && (
+                <PeopleTable people={visiblePeople} selectedSlug={slug} />
+              )}
             </div>
           </div>
         </div>
