@@ -4,27 +4,7 @@ import { Link, useParams, useSearchParams } from 'react-router-dom';
 import { Person } from '../types/Person';
 import { PersonLink } from './PersonLInk';
 import { useFilteredPeople } from '../hooks/useFilteredPeople';
-
-const getSortParams = (
-  searchParams: URLSearchParams,
-  field: string,
-): string => {
-  const params = new URLSearchParams(searchParams);
-  const currentSort = params.get('sort');
-  const currentOrder = params.get('order');
-
-  if (currentSort !== field) {
-    params.set('sort', field);
-    params.delete('order');
-  } else if (!currentOrder) {
-    params.set('order', 'desc');
-  } else {
-    params.delete('sort');
-    params.delete('order');
-  }
-
-  return params.toString();
-};
+import { getSortParams } from '../hooks/useSearchParam';
 
 const SortableHeader: React.FC<{ field: string; label: string }> = ({
   field,

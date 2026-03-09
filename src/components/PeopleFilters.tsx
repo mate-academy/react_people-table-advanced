@@ -1,16 +1,15 @@
 import { useSearchParams } from 'react-router-dom';
-import classNames from 'classnames'; // або самі пишіть умовні класи
+import classNames from 'classnames';
 
 export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
 
-  // Зчитуємо поточні значення
-  const sex = searchParams.get('sex') || ''; // '' | 'm' | 'f'
-  const query = searchParams.get('query') || ''; // для пошуку по імені
-  const centuriesStr = searchParams.get('centuries') || ''; // "17,18,19" або "17"
-  const centuries = centuriesStr
-    ? centuriesStr.split(',').map(Number).filter(Boolean)
-    : [];
+  const sex = searchParams.get('sex') || '';
+  const query = searchParams.get('query') || '';
+  const centuries = searchParams
+    .getAll('centuries')
+    .map(Number)
+    .filter(Boolean);
 
   // ─── handlers ───────────────────────────────────────────────
 
@@ -41,14 +40,16 @@ export const PeopleFilters = () => {
   const toggleCentury = (cent: number) => {
     const newCenturies = centuries.includes(cent)
       ? centuries.filter(c => c !== cent)
-      : [...centuries, cent];
+      : [...centuries, cent].sort((a, b) => a - b);
 
-    const value =
-      newCenturies.length > 0
-        ? newCenturies.sort((a, b) => a - b).join(',')
-        : null;
+    setSearchParams(prev => {
+      const next = new URLSearchParams(prev);
 
-    updateParams({ centuries: value });
+      next.delete('centuries');
+      newCenturies.forEach(c => next.append('centuries', String(c)));
+
+      return next;
+    });
   };
 
   const resetAll = () => {
@@ -126,7 +127,15 @@ export const PeopleFilters = () => {
             <a
               data-cy="centuryALL"
               className="button is-success is-outlined"
-              onClick={() => updateParams({ centuries: null })}
+              onClick={() => {
+                setSearchParams(prev => {
+                  const next = new URLSearchParams(prev);
+
+                  next.delete('centuries');
+
+                  return next;
+                });
+              }}
               style={{ cursor: 'pointer' }}
             >
               All
