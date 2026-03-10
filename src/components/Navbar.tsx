@@ -9,7 +9,10 @@ export const Navbar = () => {
 
   const peopleLink = {
     pathname: '/people',
-    search: pathname.startsWith('/people') && currentSearch ? `?${currentSearch}` : '',
+    search:
+      pathname.startsWith('/people') && currentSearch
+        ? `?${currentSearch}`
+        : '',
   };
 
   return (
