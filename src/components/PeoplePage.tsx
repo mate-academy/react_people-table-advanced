@@ -1,33 +1,37 @@
-import { PeopleFilters } from './PeopleFilters';
-import { Loader } from './Loader';
-import { PeopleTable } from './PeopleTable';
+import { Link, useSearchParams } from 'react-router-dom';
+import { Person } from '../types/Person';
+import classNames from 'classnames';
 
-export const PeoplePage = () => {
+type Props = {
+  name: string | null;
+  people: Person[];
+  to?: string;
+};
+
+export const PeoplePage = ({ name, people, to }: Props) => {
+  const [searchParams] = useSearchParams();
+
+  if (!name) {
+    return '-';
+  }
+
+  const person = people.find(p => p.name === name);
+
+  if (!person) {
+    return name;
+  }
+
   return (
-    <>
-      <h1 className="title">People Page</h1>
-
-      <div className="block">
-        <div className="columns is-desktop is-flex-direction-row-reverse">
-          <div className="column is-7-tablet is-narrow-desktop">
-            <PeopleFilters />
-          </div>
-
-          <div className="column">
-            <div className="box table-container">
-              <Loader />
-
-              <p data-cy="peopleLoadingError">Something went wrong</p>
-
-              <p data-cy="noPeopleMessage">There are no people on the server</p>
-
-              <p>There are no people matching the current search criteria</p>
-
-              <PeopleTable />
-            </div>
-          </div>
-        </div>
-      </div>
-    </>
+    <Link
+      to={{
+        pathname: to || `/people/${person.slug}`,
+        search: searchParams.toString(),
+      }}
+      className={classNames({
+        'has-text-danger': person.sex === 'f',
+      })}
+    >
+      {name}
+    </Link>
   );
 };
