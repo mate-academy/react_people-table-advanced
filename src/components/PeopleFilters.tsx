@@ -35,7 +35,7 @@ export const PeopleFilters = () => {
     setSearchParams(params);
   }
 
-  function toggleSenturies(ct: string) {
+  function toggleCenturies(ct: string) {
     const params = new URLSearchParams(searchParams);
 
     const newCenturies = centuries.includes(ct)
@@ -112,7 +112,7 @@ export const PeopleFilters = () => {
                 'is-info': centuries.includes('16'),
               })}
               onClick={() => {
-                toggleSenturies('16');
+                toggleCenturies('16');
               }}
             >
               16
@@ -124,7 +124,7 @@ export const PeopleFilters = () => {
                 'is-info': centuries.includes('17'),
               })}
               onClick={() => {
-                toggleSenturies('17');
+                toggleCenturies('17');
               }}
             >
               17
@@ -136,7 +136,7 @@ export const PeopleFilters = () => {
                 'is-info': centuries.includes('18'),
               })}
               onClick={() => {
-                toggleSenturies('18');
+                toggleCenturies('18');
               }}
             >
               18
@@ -148,7 +148,7 @@ export const PeopleFilters = () => {
                 'is-info': centuries.includes('19'),
               })}
               onClick={() => {
-                toggleSenturies('19');
+                toggleCenturies('19');
               }}
             >
               19
@@ -160,7 +160,7 @@ export const PeopleFilters = () => {
                 'is-info': centuries.includes('20'),
               })}
               onClick={() => {
-                toggleSenturies('20');
+                toggleCenturies('20');
               }}
             >
               20
