@@ -74,7 +74,7 @@ export const PeopleTable = () => {
         break;
 
       case 'died':
-        sortedPeoople.sort((a, b) => b.born - a.born);
+        sortedPeoople.sort((a, b) => a.born - b.born);
         break;
 
       default:
