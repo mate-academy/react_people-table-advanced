@@ -29,12 +29,14 @@ export const PeopleFilters = () => {
         >
           All
         </Link>
+
         <Link
           className={classNames({ 'is-active': sex === 'm' })}
           to={{ search: getSearchWith(searchParams, { sex: 'm' }) }}
         >
           Male
         </Link>
+
         <Link
           className={classNames({ 'is-active': sex === 'f' })}
           to={{ search: getSearchWith(searchParams, { sex: 'f' }) }}
@@ -65,7 +67,7 @@ export const PeopleFilters = () => {
           <div className="level-left">
             {['16', '17', '18', '19', '20'].map(century => (
               <Link
-                key={+century}
+                key={century}
                 data-cy="century"
                 className={classNames('button mr-1', {
                   'is-info': centuries.includes(century),
@@ -73,7 +75,7 @@ export const PeopleFilters = () => {
                 to={{
                   search: getSearchWith(searchParams, {
                     centuries: centuries.includes(century)
-                      ? centuries.filter(c => century !== c)
+                      ? centuries.filter(c => c !== century)
                       : [...centuries, century],
                   }),
                 }}
@@ -87,7 +89,7 @@ export const PeopleFilters = () => {
             <Link
               data-cy="centuryALL"
               className="button is-success is-outlined"
-              to="/people"
+              to={{ search: getSearchWith(searchParams, { centuries: null }) }}
             >
               All
             </Link>
