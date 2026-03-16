@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/indent */
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { getPeople } from '../api';
@@ -8,6 +7,8 @@ import { Person } from '../types/Person';
 import { PeopleFilters } from './PeopleFilters';
 import { Loader } from './Loader';
 import { PeopleTable } from './PeopleTable';
+
+type SortField = 'name' | 'sex' | 'born' | 'died';
 
 export const PeoplePage = () => {
   const [searchParams] = useSearchParams();
@@ -24,6 +25,7 @@ export const PeoplePage = () => {
 
   useEffect(() => {
     setLoading(true);
+    setHasError(false);
 
     getPeople()
       .then(data => {
@@ -53,6 +55,37 @@ export const PeoplePage = () => {
       centuries.length === 0 || centuries.includes(personCentury);
 
     return matchesQuery && matchesSex && matchesCentury;
+  });
+
+  const sortedPeople = [...visiblePeople].sort((person1, person2) => {
+    if (!sort) {
+      return 0;
+    }
+
+    let result = 0;
+
+    switch (sort as SortField) {
+      case 'name':
+        result = person1.name.localeCompare(person2.name);
+        break;
+
+      case 'sex':
+        result = person1.sex.localeCompare(person2.sex);
+        break;
+
+      case 'born':
+        result = person1.born - person2.born;
+        break;
+
+      case 'died':
+        result = person1.died - person2.died;
+        break;
+
+      default:
+        result = 0;
+    }
+
+    return order === 'desc' ? -result : result;
   });
 
   return (
@@ -89,7 +122,7 @@ export const PeoplePage = () => {
                 )}
 
               {!loading && !hasError && visiblePeople.length > 0 && (
-                <PeopleTable people={visiblePeople} />
+                <PeopleTable people={sortedPeople} />
               )}
             </div>
           </div>
