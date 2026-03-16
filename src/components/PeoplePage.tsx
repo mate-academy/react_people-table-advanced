@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/indent */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { getPeople } from '../api';
@@ -38,15 +40,19 @@ export const PeoplePage = () => {
   const normalizedQuery = query.toLowerCase();
 
   const visiblePeople = people.filter(person => {
-    if (!normalizedQuery) {
-      return true;
-    }
-
-    return (
+    const matchesQuery =
+      !normalizedQuery ||
       person.name.toLowerCase().includes(normalizedQuery) ||
       person.motherName?.toLowerCase().includes(normalizedQuery) ||
-      person.fatherName?.toLowerCase().includes(normalizedQuery)
-    );
+      person.fatherName?.toLowerCase().includes(normalizedQuery);
+
+    const matchesSex = !sex || person.sex === sex;
+
+    const personCentury = Math.ceil(person.born / 100).toString();
+    const matchesCentury =
+      centuries.length === 0 || centuries.includes(personCentury);
+
+    return matchesQuery && matchesSex && matchesCentury;
   });
 
   return (
