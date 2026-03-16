@@ -111,12 +111,13 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
         {people.map(person => (
           <tr key={person.slug} data-cy="person">
             <td>
-              <a
-                href={`#/people/${person.slug}`}
+              <SearchLink
+                to={`/people/${person.slug}`}
+                params={{}}
                 className={person.sex === 'f' ? 'has-text-danger' : ''}
               >
                 {person.name}
-              </a>
+              </SearchLink>
             </td>
 
             <td>{person.sex}</td>
@@ -125,12 +126,13 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
 
             <td>
               {person.mother ? (
-                <a
-                  href={`#/people/${person.mother.slug}`}
+                <SearchLink
+                  to={`/people/${person.mother.slug}`}
+                  params={{}}
                   className={person.mother.sex === 'f' ? 'has-text-danger' : ''}
                 >
                   {person.motherName}
-                </a>
+                </SearchLink>
               ) : (
                 person.motherName || '-'
               )}
@@ -138,12 +140,13 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
 
             <td>
               {person.father ? (
-                <a
-                  href={`#/people/${person.father.slug}`}
+                <SearchLink
+                  to={`/people/${person.father.slug}`}
+                  params={{}}
                   className={person.father.sex === 'f' ? 'has-text-danger' : ''}
                 >
                   {person.fatherName}
-                </a>
+                </SearchLink>
               ) : (
                 person.fatherName || '-'
               )}
