@@ -1,6 +1,5 @@
-/* eslint-disable @typescript-eslint/indent */
 import { useEffect, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useParams, useSearchParams } from 'react-router-dom';
 import { getPeople } from '../api';
 import { Person } from '../types/Person';
 
@@ -10,7 +9,14 @@ import { PeopleTable } from './PeopleTable';
 
 type SortField = 'name' | 'sex' | 'born' | 'died';
 
+const sortFields: SortField[] = ['name', 'sex', 'born', 'died'];
+
+const isSortField = (value: string): value is SortField => {
+  return sortFields.includes(value as SortField);
+};
+
 export const PeoplePage = () => {
+  const { slug } = useParams();
   const [searchParams] = useSearchParams();
 
   const query = searchParams.get('query') || '';
@@ -58,13 +64,13 @@ export const PeoplePage = () => {
   });
 
   const sortedPeople = [...visiblePeople].sort((person1, person2) => {
-    if (!sort) {
+    if (!isSortField(sort)) {
       return 0;
     }
 
     let result = 0;
 
-    switch (sort as SortField) {
+    switch (sort) {
       case 'name':
         result = person1.name.localeCompare(person2.name);
         break;
@@ -80,13 +86,13 @@ export const PeoplePage = () => {
       case 'died':
         result = person1.died - person2.died;
         break;
-
-      default:
-        result = 0;
     }
 
     return order === 'desc' ? -result : result;
   });
+
+  const hasPeople = people.length > 0;
+  const hasVisiblePeople = visiblePeople.length > 0;
 
   return (
     <>
@@ -106,23 +112,18 @@ export const PeoplePage = () => {
                 <p data-cy="peopleLoadingError">Something went wrong</p>
               )}
 
-              {!loading && !hasError && people.length === 0 && (
+              {!loading && !hasError && !hasPeople && (
                 <p data-cy="noPeopleMessage">
                   There are no people on the server
                 </p>
               )}
 
-              {!loading &&
-                !hasError &&
-                people.length > 0 &&
-                visiblePeople.length === 0 && (
-                  <p>
-                    There are no people matching the current search criteria
-                  </p>
-                )}
+              {!loading && !hasError && hasPeople && !hasVisiblePeople && (
+                <p>There are no people matching the current search criteria</p>
+              )}
 
-              {!loading && !hasError && visiblePeople.length > 0 && (
-                <PeopleTable people={sortedPeople} />
+              {!loading && !hasError && hasVisiblePeople && (
+                <PeopleTable people={sortedPeople} selectedSlug={slug} />
               )}
             </div>
           </div>

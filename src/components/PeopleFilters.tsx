@@ -13,14 +13,15 @@ export const PeopleFilters = () => {
 
   const handleQueryChange = (event: ChangeEvent<HTMLInputElement>) => {
     const newQuery = event.target.value;
+    const params = new URLSearchParams(searchParams);
 
     if (newQuery.trim()) {
-      searchParams.set('query', newQuery);
+      params.set('query', newQuery);
     } else {
-      searchParams.delete('query');
+      params.delete('query');
     }
 
-    setSearchParams(searchParams);
+    setSearchParams(params);
   };
 
   const getToggledCenturies = (century: string) => {
@@ -76,16 +77,20 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            {centuryOptions.map(century => (
-              <SearchLink
-                key={century}
-                data-cy="century"
-                className={`button mr-1 ${centuries.includes(century) ? 'is-info' : ''}`.trim()}
-                params={{ centuries: getToggledCenturies(century) }}
-              >
-                {century}
-              </SearchLink>
-            ))}
+            {centuryOptions.map(century => {
+              const isActive = centuries.includes(century);
+
+              return (
+                <SearchLink
+                  key={century}
+                  data-cy="century"
+                  className={`button mr-1 ${isActive ? 'is-info' : ''}`.trim()}
+                  params={{ centuries: getToggledCenturies(century) }}
+                >
+                  {century}
+                </SearchLink>
+              );
+            })}
           </div>
 
           <div className="level-right ml-4">
