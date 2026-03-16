@@ -15,6 +15,14 @@ const isSortField = (value: string): value is SortField => {
   return sortFields.includes(value as SortField);
 };
 
+const matchesQuery = (value: string | null, normalizedQuery: string) => {
+  if (!value) {
+    return false;
+  }
+
+  return value.toLowerCase().includes(normalizedQuery);
+};
+
 export const PeoplePage = () => {
   const { slug } = useParams();
   const [searchParams] = useSearchParams();
@@ -48,11 +56,11 @@ export const PeoplePage = () => {
   const normalizedQuery = query.toLowerCase();
 
   const visiblePeople = people.filter(person => {
-    const matchesQuery =
+    const matchesPersonQuery =
       !normalizedQuery ||
-      person.name.toLowerCase().includes(normalizedQuery) ||
-      person.motherName?.toLowerCase().includes(normalizedQuery) ||
-      person.fatherName?.toLowerCase().includes(normalizedQuery);
+      matchesQuery(person.name, normalizedQuery) ||
+      matchesQuery(person.motherName, normalizedQuery) ||
+      matchesQuery(person.fatherName, normalizedQuery);
 
     const matchesSex = !sex || person.sex === sex;
 
@@ -60,7 +68,7 @@ export const PeoplePage = () => {
     const matchesCentury =
       centuries.length === 0 || centuries.includes(personCentury);
 
-    return matchesQuery && matchesSex && matchesCentury;
+    return matchesPersonQuery && matchesSex && matchesCentury;
   });
 
   const sortedPeople = [...visiblePeople].sort((person1, person2) => {
