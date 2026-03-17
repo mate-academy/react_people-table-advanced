@@ -5,8 +5,10 @@ import { useContext, useEffect, useState } from 'react';
 import { getPeople } from '../api';
 import { PeopleContext } from '../context/PeopleContext';
 
+type Status = 'loading' | 'success' | 'empty' | 'error';
+
 export const PeoplePage = () => {
-  const [status, setStatus] = useState('loading');
+  const [status, setStatus] = useState<Status>('loading');
   const { setPeople } = useContext(PeopleContext);
 
   useEffect(() => {
