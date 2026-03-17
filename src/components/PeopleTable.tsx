@@ -1,4 +1,3 @@
-// components/PeopleTable.tsx
 import { Link, useParams, useSearchParams } from 'react-router-dom';
 import { Person } from '../types';
 import { SearchLink } from './SearchLink';
@@ -54,7 +53,10 @@ export const PeopleTable = ({ people }: Props) => {
 
     return (
       <Link
-        to={`/people/${person.slug}`}
+        to={{
+          pathname: `/people/${person.slug}`,
+          search: searchParams.toString(),
+        }}
         className={person.sex === 'f' ? 'has-text-danger' : ''}
       >
         {person.name}
@@ -94,7 +96,10 @@ export const PeopleTable = ({ people }: Props) => {
           >
             <td>
               <Link
-                to={`/people/${person.slug}`}
+                to={{
+                  pathname: `/people/${person.slug}`,
+                  search: searchParams.toString(),
+                }}
                 className={person.sex === 'f' ? 'has-text-danger' : ''}
               >
                 {person.name}
