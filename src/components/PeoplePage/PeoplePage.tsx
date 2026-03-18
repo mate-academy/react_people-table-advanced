@@ -1,9 +1,9 @@
-import { PeopleFilters } from './PeopleFilters';
-import { Loader } from './Loader';
-import { PeopleTable } from './PeopleTable';
+import { PeopleFilters } from '../PeopleFilters';
+import { Loader } from '../Loader';
+import { PeopleTable } from '../PeopleTable';
 import { useContext, useEffect, useState } from 'react';
-import { getPeople } from '../api';
-import { PeopleContext } from '../context/PeopleContext';
+import { getPeople } from '../../api';
+import { PeopleContext } from '../../context/PeopleContext';
 
 type Status = 'loading' | 'success' | 'empty' | 'error';
 

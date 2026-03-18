@@ -1,8 +1,8 @@
 /* eslint-disable jsx-a11y/control-has-associated-label */
 import classNames from 'classnames';
-import { PersonLink } from './PersonLink';
+import { PersonLink } from '../PersonLink';
 import { useContext } from 'react';
-import { PeopleContext } from '../context/PeopleContext';
+import { PeopleContext } from '../../context/PeopleContext';
 import { useParams } from 'react-router-dom';
 
 export const PeopleTable = () => {
