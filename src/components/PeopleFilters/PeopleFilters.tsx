@@ -1,4 +1,20 @@
+import { useSearchParams } from 'react-router-dom';
+
 export const PeopleFilters = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  function handleSearch(e: React.ChangeEvent<HTMLInputElement>) {
+    const params = new URLSearchParams(searchParams);
+
+    if (e.target.value === '') {
+      params.delete('query');
+    } else {
+      params.set('query', e.target.value);
+    }
+
+    setSearchParams(params);
+  }
+
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
@@ -22,6 +38,8 @@ export const PeopleFilters = () => {
             type="search"
             className="input"
             placeholder="Search"
+            onChange={handleSearch}
+            value={searchParams.get('query') || ''}
           />
 
           <span className="icon is-left">
