@@ -4,6 +4,7 @@ import { PersonLink } from '../PersonLink';
 import { useContext } from 'react';
 import { PeopleContext } from '../../context/PeopleContext';
 import { useParams, useSearchParams } from 'react-router-dom';
+import { Person } from '../../types';
 
 export const PeopleTable = () => {
   const { people } = useContext(PeopleContext);
@@ -11,6 +12,11 @@ export const PeopleTable = () => {
   const [searchParams] = useSearchParams();
 
   const query = (searchParams.get('query') || '').toLowerCase().trim();
+  const peopleByName: Record<string, Person> = {};
+
+  people.forEach(person => {
+    peopleByName[person.name] = person;
+  });
 
   const visiblePeople = people.filter(
     p =>
@@ -82,12 +88,8 @@ export const PeopleTable = () => {
 
           <tbody>
             {visiblePeople.map(p => {
-              const motherPerson = people.find(
-                person => person.name === p.motherName,
-              );
-              const fatherPerson = people.find(
-                person => person.name === p.fatherName,
-              );
+              const motherPerson = peopleByName[p.motherName ?? ''];
+              const fatherPerson = peopleByName[p.fatherName ?? ''];
 
               return (
                 <tr
