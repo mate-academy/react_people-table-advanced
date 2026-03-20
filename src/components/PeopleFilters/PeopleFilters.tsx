@@ -1,18 +1,67 @@
-import { useSearchParams } from 'react-router-dom';
+import { useParams, useSearchParams } from 'react-router-dom';
+import classNames from 'classnames';
+
+const CENTURIES = ['16', '17', '18', '19', '20'] as const;
 
 export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
+  const { personName } = useParams();
+
+  const centuries = searchParams.getAll('centuries');
 
   function handleSearch(e: React.ChangeEvent<HTMLInputElement>) {
     const params = new URLSearchParams(searchParams);
+    const value = e.target.value.toLowerCase();
 
-    if (e.target.value === '') {
+    if (value === '') {
       params.delete('query');
     } else {
-      params.set('query', e.target.value);
+      params.set('query', value);
     }
 
     setSearchParams(params);
+  }
+
+  function handleCentury(century: string) {
+    const params = new URLSearchParams(searchParams);
+    let newCenturies: string[] = [];
+
+    newCenturies = centuries.includes(century)
+      ? centuries.filter(c => c !== century)
+      : [...centuries, century];
+
+    params.delete('centuries');
+    newCenturies.forEach(c => params.append('centuries', c));
+    setSearchParams(params);
+  }
+
+  function handleCenturyReset() {
+    const params = new URLSearchParams(searchParams);
+
+    params.delete('centuries');
+    setSearchParams(params);
+  }
+
+  function getCenturyHref(century: string) {
+    const params = new URLSearchParams(searchParams);
+    let result = '';
+
+    params.append('centuries', century);
+
+    if (personName) {
+      result += `/${personName}`;
+    }
+
+    if (centuries.includes(century)) {
+      const filteredCenturies = centuries.filter(c => c !== century);
+
+      params.delete('centuries');
+      filteredCenturies.forEach(c => params.append('centuries', c));
+    }
+
+    result += params.toString() ? `?${params.toString()}` : '';
+
+    return result;
   }
 
   return (
@@ -51,45 +100,22 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            <a
-              data-cy="century"
-              className="button mr-1"
-              href="#/people?centuries=16"
-            >
-              16
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=17"
-            >
-              17
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=18"
-            >
-              18
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=19"
-            >
-              19
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1"
-              href="#/people?centuries=20"
-            >
-              20
-            </a>
+            {CENTURIES.map(century => (
+              <a
+                key={century}
+                data-cy="century"
+                className={classNames('button mr-1', {
+                  'is-info': centuries.includes(century),
+                })}
+                href={`#/people${getCenturyHref(century)}`}
+                onClick={e => {
+                  e.preventDefault();
+                  handleCentury(century);
+                }}
+              >
+                {century}
+              </a>
+            ))}
           </div>
 
           <div className="level-right ml-4">
@@ -97,6 +123,10 @@ export const PeopleFilters = () => {
               data-cy="centuryALL"
               className="button is-success is-outlined"
               href="#/people"
+              onClick={e => {
+                e.preventDefault();
+                handleCenturyReset();
+              }}
             >
               All
             </a>
