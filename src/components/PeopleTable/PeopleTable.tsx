@@ -12,18 +12,25 @@ export const PeopleTable = () => {
   const [searchParams] = useSearchParams();
 
   const query = (searchParams.get('query') || '').toLowerCase().trim();
+  const centuries = searchParams.getAll('centuries');
   const peopleByName: Record<string, Person> = {};
 
   people.forEach(person => {
     peopleByName[person.name] = person;
   });
 
-  const visiblePeople = people.filter(
-    p =>
-      p.name.toLowerCase().includes(query) ||
-      (p.motherName || '').toLowerCase().includes(query) ||
-      (p.fatherName || '').toLowerCase().includes(query),
-  );
+  const visiblePeople = people
+    .filter(
+      p =>
+        p.name.toLowerCase().includes(query) ||
+        (p.motherName || '').toLowerCase().includes(query) ||
+        (p.fatherName || '').toLowerCase().includes(query),
+    )
+    .filter(
+      p =>
+        !centuries.length ||
+        centuries.includes(String(Math.ceil(p.born / 100))),
+    );
 
   return (
     <>
