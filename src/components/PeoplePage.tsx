@@ -57,14 +57,15 @@ export const PeoplePage = () => {
 
   const filteredPeople = () => {
     let filter = [...people];
+    const queryToLower = query.toLowerCase();
 
     if (filtered !== undefined) {
       if (query !== '') {
         filter = filter.filter(
           person =>
-            person.name.includes(query) ||
-            person.fatherName?.includes(query) ||
-            person.motherName?.includes(query),
+            person.name.toLowerCase().includes(queryToLower) ||
+            person.fatherName?.toLowerCase().includes(queryToLower) ||
+            person.motherName?.toLowerCase().includes(queryToLower),
         );
       }
 

@@ -52,6 +52,16 @@ export const PeopleFilters = () => {
     setSearchParams(params);
   }
 
+  function resetAllFilter() {
+    const params = new URLSearchParams(searchParams);
+
+    params.delete('sex');
+    params.delete('query');
+    params.delete('centuries');
+
+    setSearchParams(params);
+  }
+
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
@@ -187,7 +197,14 @@ export const PeopleFilters = () => {
       </div>
 
       <div className="panel-block">
-        <a className="button is-link is-outlined is-fullwidth" href="#/people">
+        <a
+          className="button is-link is-outlined is-fullwidth"
+          href="#/people"
+          onClick={event => {
+            event.preventDefault();
+            resetAllFilter();
+          }}
+        >
           Reset all filters
         </a>
       </div>
