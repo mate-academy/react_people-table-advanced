@@ -69,13 +69,25 @@ export const PeopleFilters = () => {
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        <a className="is-active" href="#/people">
+        <a
+          className={classNames({ 'is-active': sexParam === null })}
+          href={`#/people?${getSearchWith(searchParams, {})}`}
+          onClick={e => handleSexClick(e, null)}
+        >
           All
         </a>
-        <a className="" href="#/people?sex=m">
+        <a
+          className={classNames({ 'is-active': sexParam === 'm' })}
+          href={`#/people?${getSearchWith(searchParams, { sex: 'm' })}`}
+          onClick={e => handleSexClick(e, 'm')}
+        >
           Male
         </a>
-        <a className="" href="#/people?sex=f">
+        <a
+          className={classNames({ 'is-active': sexParam === 'f' })}
+          href={`#/people?${getSearchWith(searchParams, { sex: 'f' })}`}
+          onClick={e => handleSexClick(e, 'f')}
+        >
           Female
         </a>
       </p>
@@ -135,7 +147,11 @@ export const PeopleFilters = () => {
       </div>
 
       <div className="panel-block">
-        <a className="button is-link is-outlined is-fullwidth" href="#/people">
+        <a
+          className="button is-link is-outlined is-fullwidth"
+          href="#/people"
+          onClick={e => handleResetFilters(e)}
+        >
           Reset all filters
         </a>
       </div>
