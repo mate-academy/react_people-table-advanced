@@ -32,7 +32,8 @@ export const PeopleTable = () => {
       p =>
         !centuries.length ||
         centuries.includes(String(Math.ceil(p.born / 100))),
-    );
+    )
+    .filter(p => sex === null || p.sex === sex);
 
   return (
     <>
