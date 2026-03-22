@@ -64,6 +64,27 @@ export const PeopleFilters = () => {
     return result;
   }
 
+  function handleSexClick(
+    e: React.MouseEvent<HTMLAnchorElement>,
+    sex: string | null,
+  ) {
+    e.preventDefault();
+    const params = new URLSearchParams(searchParams);
+
+    if (sex === null) {
+      params.delete('sex');
+    } else {
+      params.set('sex', sex);
+    }
+
+    setSearchParams(params);
+  }
+
+  function handleResetFilters(e: React.MouseEvent<HTMLAnchorElement>) {
+    e.preventDefault();
+    setSearchParams({});
+  }
+
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
