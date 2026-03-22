@@ -13,6 +13,8 @@ export const PeopleTable = () => {
 
   const query = (searchParams.get('query') || '').toLowerCase().trim();
   const centuries = searchParams.getAll('centuries');
+  const sex = searchParams.get('sex');
+
   const peopleByName: Record<string, Person> = {};
 
   people.forEach(person => {

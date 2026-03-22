@@ -1,5 +1,6 @@
 import { useParams, useSearchParams } from 'react-router-dom';
 import classNames from 'classnames';
+import { getSearchWith } from '../../utils/searchHelper';
 
 const CENTURIES = ['16', '17', '18', '19', '20'] as const;
 
@@ -8,6 +9,7 @@ export const PeopleFilters = () => {
   const { personName } = useParams();
 
   const centuries = searchParams.getAll('centuries');
+  const sexParam = searchParams.get('sex');
 
   function handleSearch(e: React.ChangeEvent<HTMLInputElement>) {
     const params = new URLSearchParams(searchParams);
