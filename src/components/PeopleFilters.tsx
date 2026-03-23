@@ -1,18 +1,75 @@
+import classNames from 'classnames';
+import { Link, NavLink, useSearchParams } from 'react-router-dom';
+
+type SearchParams = {
+  [key: string]: string | string[] | null;
+};
+
 export const PeopleFilters = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const centuries = searchParams.getAll('centuries') || [];
+
+  function setParamWith(
+    params: SearchParams,
+    search?: string | URLSearchParams,
+  ): string {
+    const newParams = new URLSearchParams(search);
+
+    Object.entries(params).forEach(([key, value]) => {
+      if (value === null) {
+        newParams.delete(key);
+      } else if (Array.isArray(value)) {
+        newParams.delete(key);
+        value.forEach(i => newParams.append(key, i));
+      } else {
+        newParams.set(key, value);
+      }
+    });
+
+    //setSearchParams(newParams);
+
+    return newParams.toString();
+  }
+
+  const handleChangeQuery = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchParams(
+      setParamWith({ query: event.target.value || null }, searchParams),
+    );
+  };
+
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        <a className="is-active" href="#/people">
+        <NavLink
+          to={{
+            pathname: '/people',
+            search: setParamWith({ sex: null }, searchParams),
+          }}
+          className={classNames({ 'is-active': !searchParams.has('sex') })}
+        >
           All
-        </a>
-        <a className="" href="#/people?sex=m">
+        </NavLink>
+
+        <NavLink
+          to={{
+            pathname: '/people',
+            search: setParamWith({ sex: 'm' }, searchParams),
+          }}
+          className={classNames({ 'is-active': searchParams.has('sex', 'm') })}
+        >
           Male
-        </a>
-        <a className="" href="#/people?sex=f">
+        </NavLink>
+        <NavLink
+          to={{
+            pathname: '/people',
+            search: setParamWith({ sex: 'f' }, searchParams),
+          }}
+          className={classNames({ 'is-active': searchParams.has('sex', 'f') })}
+        >
           Female
-        </a>
+        </NavLink>
       </p>
 
       <div className="panel-block">
@@ -22,6 +79,7 @@ export const PeopleFilters = () => {
             type="search"
             className="input"
             placeholder="Search"
+            onChange={handleChangeQuery}
           />
 
           <span className="icon is-left">
@@ -33,63 +91,53 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            <a
-              data-cy="century"
-              className="button mr-1"
-              href="#/people?centuries=16"
-            >
-              16
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=17"
-            >
-              17
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=18"
-            >
-              18
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=19"
-            >
-              19
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1"
-              href="#/people?centuries=20"
-            >
-              20
-            </a>
+            {[16, 17, 18, 19, 20].map(item => (
+              <Link
+                data-cy="century"
+                key={item}
+                to={{
+                  pathname: '/people',
+                  search: setParamWith(
+                    {
+                      centuries: centuries.includes(`${item}`)
+                        ? centuries.filter(i => i !== `${item}`)
+                        : [...centuries, `${item}`],
+                    },
+                    searchParams,
+                  ),
+                }}
+                className={classNames('button', 'mr-1', {
+                  'is-info': searchParams
+                    .getAll('centuries')
+                    .includes(`${item}`),
+                })}
+              >
+                {item}
+              </Link>
+            ))}
           </div>
 
           <div className="level-right ml-4">
-            <a
+            <Link
               data-cy="centuryALL"
-              className="button is-success is-outlined"
-              href="#/people"
+              to={{
+                pathname: '/people',
+                search: setParamWith({ centuries: null }, searchParams),
+              }}
+              className={classNames('button', 'is-success', {
+                'is-outlined': searchParams.has('centuries'),
+              })}
             >
               All
-            </a>
+            </Link>
           </div>
         </div>
       </div>
 
       <div className="panel-block">
-        <a className="button is-link is-outlined is-fullwidth" href="#/people">
+        <Link className="button is-link is-outlined is-fullwidth" to="/people">
           Reset all filters
-        </a>
+        </Link>
       </div>
     </nav>
   );
