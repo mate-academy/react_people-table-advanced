@@ -81,20 +81,20 @@ export const PeopleFilters = () => {
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
             {CENTURIES.map(century => (
-              <a
+              <SearchLink
                 key={century}
                 data-cy="century"
                 className={classNames('button mr-1', {
                   'is-info': centuries.includes(century),
                 })}
-                href={`#/people${getCenturyHref(century)}`}
-                onClick={e => {
-                  e.preventDefault();
-                  handleCentury(century);
+                params={{
+                  centuries: centuries.includes(century)
+                    ? centuries.filter(c => c !== century)
+                    : [...centuries, century],
                 }}
               >
                 {century}
-              </a>
+              </SearchLink>
             ))}
           </div>
 
