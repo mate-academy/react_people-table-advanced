@@ -40,27 +40,24 @@ export const PeopleFilters = () => {
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        <a
+        <SearchLink
           className={classNames({ 'is-active': sexParam === null })}
-          href={`#/people?${getSearchWith(searchParams, {})}`}
-          onClick={e => handleSexClick(e, null)}
+          params={{ sex: null }}
         >
           All
-        </a>
-        <a
+        </SearchLink>
+        <SearchLink
           className={classNames({ 'is-active': sexParam === 'm' })}
-          href={`#/people?${getSearchWith(searchParams, { sex: 'm' })}`}
-          onClick={e => handleSexClick(e, 'm')}
+          params={{ sex: 'm' }}
         >
           Male
-        </a>
-        <a
+        </SearchLink>
+        <SearchLink
           className={classNames({ 'is-active': sexParam === 'f' })}
-          href={`#/people?${getSearchWith(searchParams, { sex: 'f' })}`}
-          onClick={e => handleSexClick(e, 'f')}
+          params={{ sex: 'f' }}
         >
           Female
-        </a>
+        </SearchLink>
       </p>
 
       <div className="panel-block">
