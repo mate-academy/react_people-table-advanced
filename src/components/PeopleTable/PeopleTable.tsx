@@ -5,15 +5,18 @@ import { useContext } from 'react';
 import { PeopleContext } from '../../context/PeopleContext';
 import { useParams, useSearchParams } from 'react-router-dom';
 import { Person } from '../../types';
+import { SearchLink } from '../SearchLink';
 
 export const PeopleTable = () => {
   const { people } = useContext(PeopleContext);
   const { personName } = useParams();
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const query = (searchParams.get('query') || '').toLowerCase().trim();
   const centuries = searchParams.getAll('centuries');
   const sex = searchParams.get('sex');
+  const sort = searchParams.get('sort') || '';
+  const order = searchParams.get('order') || '';
 
   const peopleByName: Record<string, Person> = {};
 
@@ -35,6 +38,41 @@ export const PeopleTable = () => {
     )
     .filter(p => sex === null || p.sex === sex);
 
+  const sortedPeople = [...visiblePeople];
+
+  if (sort) {
+    sortedPeople.sort((a, b) => {
+      let comparison = 0;
+
+      if (sort === 'name' || sort === 'sex') {
+        comparison = a[sort].localeCompare(b[sort]);
+      } else if (sort === 'born' || sort === 'died') {
+        comparison = a[sort] - b[sort];
+      }
+
+      return order === 'desc' ? -comparison : comparison;
+    });
+  }
+
+  function setSort(e: React.MouseEvent<HTMLAnchorElement>, name: string) {
+    e.preventDefault();
+    if (sort === name && order === 'desc') {
+      setSearchParams(prev => {
+        prev.delete('sort');
+        prev.delete('order');
+
+        return prev;
+      });
+    } else if (sort === name) {
+      setSearchParams({
+        sort,
+        order: 'desc',
+      });
+    } else {
+      setSearchParams({ sort: name });
+    }
+  }
+
   return (
     <>
       {visiblePeople.length === 0 && (
@@ -50,44 +88,80 @@ export const PeopleTable = () => {
               <th>
                 <span className="is-flex is-flex-wrap-nowrap">
                   Name
-                  <a href="#/people?sort=name">
+                  <SearchLink
+                    params={{ sort: 'name' }}
+                    onClick={e => setSort(e, 'name')}
+                  >
                     <span className="icon">
-                      <i className="fas fa-sort" />
+                      <i
+                        className={classNames('fas', {
+                          'fa-sort': sort !== 'name',
+                          'fa-sort-up': sort === 'name' && order !== 'desc',
+                          'fa-sort-down': sort === 'name' && order === 'desc',
+                        })}
+                      />
                     </span>
-                  </a>
+                  </SearchLink>
                 </span>
               </th>
 
               <th>
                 <span className="is-flex is-flex-wrap-nowrap">
                   Sex
-                  <a href="#/people?sort=sex">
+                  <SearchLink
+                    params={{ sort: 'sex' }}
+                    onClick={e => setSort(e, 'sex')}
+                  >
                     <span className="icon">
-                      <i className="fas fa-sort" />
+                      <i
+                        className={classNames('fas', {
+                          'fa-sort': sort !== 'sex',
+                          'fa-sort-up': sort === 'sex' && order !== 'desc',
+                          'fa-sort-down': sort === 'sex' && order === 'desc',
+                        })}
+                      />
                     </span>
-                  </a>
+                  </SearchLink>
                 </span>
               </th>
 
               <th>
                 <span className="is-flex is-flex-wrap-nowrap">
                   Born
-                  <a href="#/people?sort=born&amp;order=desc">
+                  <SearchLink
+                    params={{ sort: 'born' }}
+                    onClick={e => setSort(e, 'born')}
+                  >
                     <span className="icon">
-                      <i className="fas fa-sort-up" />
+                      <i
+                        className={classNames('fas', {
+                          'fa-sort': sort !== 'born',
+                          'fa-sort-up': sort === 'born' && order !== 'desc',
+                          'fa-sort-down': sort === 'born' && order === 'desc',
+                        })}
+                      />
                     </span>
-                  </a>
+                  </SearchLink>
                 </span>
               </th>
 
               <th>
                 <span className="is-flex is-flex-wrap-nowrap">
                   Died
-                  <a href="#/people?sort=died">
+                  <SearchLink
+                    params={{ sort: 'died' }}
+                    onClick={e => setSort(e, 'died')}
+                  >
                     <span className="icon">
-                      <i className="fas fa-sort" />
+                      <i
+                        className={classNames('fas', {
+                          'fa-sort': sort !== 'died',
+                          'fa-sort-up': sort === 'died' && order !== 'desc',
+                          'fa-sort-down': sort === 'died' && order === 'desc',
+                        })}
+                      />
                     </span>
-                  </a>
+                  </SearchLink>
                 </span>
               </th>
 
@@ -97,7 +171,7 @@ export const PeopleTable = () => {
           </thead>
 
           <tbody>
-            {visiblePeople.map(p => {
+            {sortedPeople.map(p => {
               const motherPerson = peopleByName[p.motherName ?? ''];
               const fatherPerson = peopleByName[p.fatherName ?? ''];
 
