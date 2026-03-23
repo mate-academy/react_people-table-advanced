@@ -1,6 +1,6 @@
 import { useSearchParams } from 'react-router-dom';
 import classNames from 'classnames';
-import { getSearchWith } from '../../utils/searchHelper';
+import { SearchLink } from '../SearchLink';
 
 const CENTURIES = ['16', '17', '18', '19', '20'] as const;
 
@@ -23,51 +23,10 @@ export const PeopleFilters = () => {
     setSearchParams(params);
   }
 
-  function handleCentury(century: string) {
-    const params = new URLSearchParams(searchParams);
-    let newCenturies: string[] = [];
-
-    newCenturies = centuries.includes(century)
-      ? centuries.filter(c => c !== century)
-      : [...centuries, century];
-
-    params.delete('centuries');
-    newCenturies.forEach(c => params.append('centuries', c));
-    setSearchParams(params);
-  }
-
   function handleCenturyReset() {
     const params = new URLSearchParams(searchParams);
 
     params.delete('centuries');
-    setSearchParams(params);
-  }
-
-  function getCenturyHref(century: string) {
-    const newCenturies = centuries.includes(century)
-      ? centuries.filter(c => c !== century)
-      : [...centuries, century];
-
-    const search = getSearchWith(searchParams, {
-      centuries: newCenturies.length ? newCenturies : null,
-    });
-
-    return search ? `?${search}` : '';
-  }
-
-  function handleSexClick(
-    e: React.MouseEvent<HTMLAnchorElement>,
-    sex: string | null,
-  ) {
-    e.preventDefault();
-    const params = new URLSearchParams(searchParams);
-
-    if (sex === null) {
-      params.delete('sex');
-    } else {
-      params.set('sex', sex);
-    }
-
     setSearchParams(params);
   }
 
