@@ -5,12 +5,12 @@ import { useContext } from 'react';
 import { PeopleContext } from '../../context/PeopleContext';
 import { useParams, useSearchParams } from 'react-router-dom';
 import { Person } from '../../types';
-import { SearchLink } from '../SearchLink';
+import { SortableColumn } from '../SortableColumn';
 
 export const PeopleTable = () => {
   const { people } = useContext(PeopleContext);
   const { personName } = useParams();
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
 
   const query = (searchParams.get('query') || '').toLowerCase().trim();
   const centuries = searchParams.getAll('centuries');
@@ -54,25 +54,6 @@ export const PeopleTable = () => {
     });
   }
 
-  function setSort(e: React.MouseEvent<HTMLAnchorElement>, name: string) {
-    e.preventDefault();
-    if (sort === name && order === 'desc') {
-      setSearchParams(prev => {
-        prev.delete('sort');
-        prev.delete('order');
-
-        return prev;
-      });
-    } else if (sort === name) {
-      setSearchParams({
-        sort,
-        order: 'desc',
-      });
-    } else {
-      setSearchParams({ sort: name });
-    }
-  }
-
   return (
     <>
       {visiblePeople.length === 0 && (
@@ -85,86 +66,10 @@ export const PeopleTable = () => {
         >
           <thead>
             <tr>
-              <th>
-                <span className="is-flex is-flex-wrap-nowrap">
-                  Name
-                  <SearchLink
-                    params={{ sort: 'name' }}
-                    onClick={e => setSort(e, 'name')}
-                  >
-                    <span className="icon">
-                      <i
-                        className={classNames('fas', {
-                          'fa-sort': sort !== 'name',
-                          'fa-sort-up': sort === 'name' && order !== 'desc',
-                          'fa-sort-down': sort === 'name' && order === 'desc',
-                        })}
-                      />
-                    </span>
-                  </SearchLink>
-                </span>
-              </th>
-
-              <th>
-                <span className="is-flex is-flex-wrap-nowrap">
-                  Sex
-                  <SearchLink
-                    params={{ sort: 'sex' }}
-                    onClick={e => setSort(e, 'sex')}
-                  >
-                    <span className="icon">
-                      <i
-                        className={classNames('fas', {
-                          'fa-sort': sort !== 'sex',
-                          'fa-sort-up': sort === 'sex' && order !== 'desc',
-                          'fa-sort-down': sort === 'sex' && order === 'desc',
-                        })}
-                      />
-                    </span>
-                  </SearchLink>
-                </span>
-              </th>
-
-              <th>
-                <span className="is-flex is-flex-wrap-nowrap">
-                  Born
-                  <SearchLink
-                    params={{ sort: 'born' }}
-                    onClick={e => setSort(e, 'born')}
-                  >
-                    <span className="icon">
-                      <i
-                        className={classNames('fas', {
-                          'fa-sort': sort !== 'born',
-                          'fa-sort-up': sort === 'born' && order !== 'desc',
-                          'fa-sort-down': sort === 'born' && order === 'desc',
-                        })}
-                      />
-                    </span>
-                  </SearchLink>
-                </span>
-              </th>
-
-              <th>
-                <span className="is-flex is-flex-wrap-nowrap">
-                  Died
-                  <SearchLink
-                    params={{ sort: 'died' }}
-                    onClick={e => setSort(e, 'died')}
-                  >
-                    <span className="icon">
-                      <i
-                        className={classNames('fas', {
-                          'fa-sort': sort !== 'died',
-                          'fa-sort-up': sort === 'died' && order !== 'desc',
-                          'fa-sort-down': sort === 'died' && order === 'desc',
-                        })}
-                      />
-                    </span>
-                  </SearchLink>
-                </span>
-              </th>
-
+              <SortableColumn label="Name" field="name" />
+              <SortableColumn label="Sex" field="sex" />
+              <SortableColumn label="Born" field="born" />
+              <SortableColumn label="Died" field="died" />
               <th>Mother</th>
               <th>Father</th>
             </tr>
