@@ -42,11 +42,11 @@ export const PeoplePage: React.FC = () => {
           person.name
             .toLowerCase()
             .includes(searchParams.get('query').toLowerCase()) ||
-          person.motherName
-            ?.toLowerCase()
+          (person.motherName || '')
+            .toLowerCase()
             .includes(searchParams.get('query').toLowerCase()) ||
-          person.fatherName
-            ?.toLowerCase()
+          (person.fatherName || '')
+            .toLowerCase()
             .includes(searchParams.get('query').toLowerCase()),
       );
     }
