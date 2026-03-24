@@ -39,9 +39,15 @@ export const PeoplePage: React.FC = () => {
     if (searchParams.has('query')) {
       preparedPeople = preparedPeople.filter(
         person =>
-          person.name.includes(searchParams.get('query')) ||
-          person.motherName?.includes(searchParams.get('query')) ||
-          person.fatherName?.includes(searchParams.get('query')),
+          person.name
+            .toLowerCase()
+            .includes(searchParams.get('query').toLowerCase()) ||
+          person.motherName
+            ?.toLowerCase()
+            .includes(searchParams.get('query').toLowerCase()) ||
+          person.fatherName
+            ?.toLowerCase()
+            .includes(searchParams.get('query').toLowerCase()),
       );
     }
 
@@ -55,13 +61,17 @@ export const PeoplePage: React.FC = () => {
       preparedPeople = preparedPeople.filter(item =>
         searchParams
           .getAll('centuries')
-          .includes(`${Math.floor(item.born / 100)}`),
+          .includes(`${Math.ceil(item.born / 100)}`),
       );
     }
 
     if (searchParams.has('sort')) {
-      const fieldForSorting = searchParams.get('sort');
-      const order = searchParams.has('order', 'desc') ? -1 : 1;
+      const fieldForSorting = searchParams.get('sort') as
+        | 'name'
+        | 'sex'
+        | 'born'
+        | 'died';
+      const order = searchParams.get('order') === 'desc' ? -1 : 1;
 
       preparedPeople.sort((a, b) => {
         return (
@@ -83,7 +93,9 @@ export const PeoplePage: React.FC = () => {
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
           <div className="column is-7-tablet is-narrow-desktop">
-            {!isLoading && peopleFromServer.length > 0 && <PeopleFilters />}
+            {isLoading === Loading.LOADED && peopleFromServer.length > 0 && (
+              <PeopleFilters />
+            )}
           </div>
 
           <div className="column">

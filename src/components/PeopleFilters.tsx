@@ -1,39 +1,14 @@
 import classNames from 'classnames';
 import { Link, NavLink, useSearchParams } from 'react-router-dom';
-
-type SearchParams = {
-  [key: string]: string | string[] | null;
-};
+import { getSearchWith } from '../utils/searchHelper';
 
 export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const centuries = searchParams.getAll('centuries') || [];
 
-  function setParamWith(
-    params: SearchParams,
-    search?: string | URLSearchParams,
-  ): string {
-    const newParams = new URLSearchParams(search);
-
-    Object.entries(params).forEach(([key, value]) => {
-      if (value === null) {
-        newParams.delete(key);
-      } else if (Array.isArray(value)) {
-        newParams.delete(key);
-        value.forEach(i => newParams.append(key, i));
-      } else {
-        newParams.set(key, value);
-      }
-    });
-
-    //setSearchParams(newParams);
-
-    return newParams.toString();
-  }
-
   const handleChangeQuery = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchParams(
-      setParamWith({ query: event.target.value || null }, searchParams),
+      getSearchWith(searchParams, { query: event.target.value || null }),
     );
   };
 
@@ -45,7 +20,7 @@ export const PeopleFilters = () => {
         <NavLink
           to={{
             pathname: '/people',
-            search: setParamWith({ sex: null }, searchParams),
+            search: getSearchWith(searchParams, { sex: null }),
           }}
           className={classNames({ 'is-active': !searchParams.has('sex') })}
         >
@@ -55,18 +30,22 @@ export const PeopleFilters = () => {
         <NavLink
           to={{
             pathname: '/people',
-            search: setParamWith({ sex: 'm' }, searchParams),
+            search: getSearchWith(searchParams, { sex: 'm' }),
           }}
-          className={classNames({ 'is-active': searchParams.has('sex', 'm') })}
+          className={classNames({
+            'is-active': searchParams.get('sex') === 'm',
+          })}
         >
           Male
         </NavLink>
         <NavLink
           to={{
             pathname: '/people',
-            search: setParamWith({ sex: 'f' }, searchParams),
+            search: getSearchWith(searchParams, { sex: 'f' }),
           }}
-          className={classNames({ 'is-active': searchParams.has('sex', 'f') })}
+          className={classNames({
+            'is-active': searchParams.get('sex') === 'f',
+          })}
         >
           Female
         </NavLink>
@@ -97,14 +76,11 @@ export const PeopleFilters = () => {
                 key={item}
                 to={{
                   pathname: '/people',
-                  search: setParamWith(
-                    {
-                      centuries: centuries.includes(`${item}`)
-                        ? centuries.filter(i => i !== `${item}`)
-                        : [...centuries, `${item}`],
-                    },
-                    searchParams,
-                  ),
+                  search: getSearchWith(searchParams, {
+                    centuries: centuries.includes(`${item}`)
+                      ? centuries.filter(i => i !== `${item}`)
+                      : [...centuries, `${item}`],
+                  }),
                 }}
                 className={classNames('button', 'mr-1', {
                   'is-info': searchParams
@@ -122,7 +98,7 @@ export const PeopleFilters = () => {
               data-cy="centuryALL"
               to={{
                 pathname: '/people',
-                search: setParamWith({ centuries: null }, searchParams),
+                search: getSearchWith(searchParams, { centuries: null }),
               }}
               className={classNames('button', 'is-success', {
                 'is-outlined': searchParams.has('centuries'),

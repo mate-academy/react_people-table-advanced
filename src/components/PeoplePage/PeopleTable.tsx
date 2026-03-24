@@ -16,7 +16,7 @@ export const PeopleTable: React.FC<{ peoples: Person[] }> = ({ peoples }) => {
         <tr>
           {['Name', 'Sex', 'Born', 'Died'].map(field => {
             const fieldValue = field.toLowerCase();
-            const isSorted = searchParams.has('sort', fieldValue);
+            const isSorted = searchParams.get('sort') === fieldValue;
             const isOrderedSort = searchParams.has('order');
 
             return (
@@ -37,7 +37,8 @@ export const PeopleTable: React.FC<{ peoples: Person[] }> = ({ peoples }) => {
                         className={classNames('fas', {
                           'fa-sort': !isSorted,
                           'fa-sort-up': isSorted && !isOrderedSort,
-                          'fa-sort-down': searchParams.has('order', 'desc'),
+                          'fa-sort-down':
+                            isSorted && searchParams.get('order') === 'desc',
                         })}
                       />
                     </span>
