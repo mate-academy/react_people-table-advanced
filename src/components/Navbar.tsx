@@ -1,4 +1,13 @@
-export const Navbar = () => {
+import React from 'react';
+import classNames from 'classnames';
+import { Link, useLocation } from 'react-router-dom';
+
+const getLinkClass = ({ isActive }: { isActive: boolean }) =>
+  classNames('navbar-item', { 'has-background-grey-lighter': isActive });
+
+export const Navbar: React.FC = () => {
+  const { pathname, search } = useLocation();
+
   return (
     <nav
       data-cy="nav"
@@ -8,17 +17,18 @@ export const Navbar = () => {
     >
       <div className="container">
         <div className="navbar-brand">
-          <a className="navbar-item" href="#/">
+          <Link className={getLinkClass({ isActive: pathname === '/' })} to="/">
             Home
-          </a>
+          </Link>
 
-          <a
-            aria-current="page"
-            className="navbar-item has-background-grey-lighter"
-            href="#/people"
+          <Link
+            className={getLinkClass({
+              isActive: pathname.startsWith('/people'),
+            })}
+            to={{ pathname: '/people', search: search }}
           >
             People
-          </a>
+          </Link>
         </div>
       </div>
     </nav>
