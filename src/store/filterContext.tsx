@@ -26,19 +26,20 @@ export const FilterProvider: React.FC<Props> = ({ children }) => {
   const sort = searchParams.get('sort');
 
   const visiblePeople = () => {
-    let filteredPeople = people;
+    let filteredPeople = [...people];
 
     if (!people) {
       return;
     }
 
-    if (!sort) {
-      filteredPeople = people;
-    }
-
     if (query) {
-      filteredPeople = filteredPeople.filter((person: Person) =>
-        person.name.toLowerCase().includes(query.toLowerCase()),
+      filteredPeople = filteredPeople.filter(
+        (person: Person) =>
+          person.name.toLowerCase().includes(query.toLowerCase()) ||
+          (person.motherName &&
+            person.motherName.toLowerCase().includes(query.toLowerCase())) ||
+          (person.fatherName &&
+            person.fatherName.toLowerCase().includes(query.toLowerCase())),
       );
     }
 

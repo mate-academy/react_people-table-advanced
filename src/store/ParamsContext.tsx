@@ -66,19 +66,12 @@ export const ParamsProvider: React.FC<Props> = ({ children }) => {
   const toogleSort = (field: string) => {
     const params = new URLSearchParams(searchParams);
 
-    if (!sort) {
+    if (sort !== field) {
       params.set('sort', field);
-    }
-
-    if (sort && sort !== field) {
-      params.set('sort', field);
-    }
-
-    if (sort && sort === field) {
+      params.delete('order');
+    } else if (sort === field && order !== 'desc') {
       params.set('order', 'desc');
-    }
-
-    if (sort === field && order === 'desc') {
+    } else {
       params.delete('sort');
       params.delete('order');
     }
