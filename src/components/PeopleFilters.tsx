@@ -38,7 +38,7 @@ export const PeopleFilters = () => {
   const availableCenturies = ['16', '17', '18', '19', '20'];
 
   return (
-    <nav className="panel">
+    <nav className="panel people-filters">
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
@@ -48,7 +48,7 @@ export const PeopleFilters = () => {
       </p>
 
       <div className="panel-block">
-        <p className="control has-icons-left">
+        <p className="control has-icons-left is-expanded">
           <input
             data-cy="NameFilter"
             type="search"
@@ -65,13 +65,16 @@ export const PeopleFilters = () => {
       </div>
 
       <div className="panel-block">
-        <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
-          <div className="level-left">
+        <div
+          className="level is-flex-grow-1 is-mobile people-filters__century"
+          data-cy="CenturyFilter"
+        >
+          <div className="level-left people-filters__century-buttons">
             {availableCenturies.map(century => (
               <button
                 key={century}
                 data-cy="century"
-                className={classNames('button mr-1', {
+                className={classNames('button', {
                   'is-info': centuries.includes(century),
                 })}
                 onClick={() => toggleCentury(century)}
@@ -81,7 +84,7 @@ export const PeopleFilters = () => {
             ))}
           </div>
 
-          <div className="level-right ml-4">
+          <div className="level-right people-filters__century-all">
             <button
               data-cy="centuryALL"
               className={classNames('button is-success', {

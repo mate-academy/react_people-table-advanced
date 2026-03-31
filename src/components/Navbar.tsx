@@ -17,7 +17,7 @@ export const Navbar = () => {
                 ? 'navbar-item has-background-grey-lighter'
                 : 'navbar-item'
             }
-            to="/"
+            to="/home"
           >
             Home
           </NavLink>

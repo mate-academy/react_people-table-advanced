@@ -1,3 +1,29 @@
 iframe {
   display: none;
 }
+
+.people-filters .panel-block .control {
+  width: 100%;
+}
+
+.people-filters__century-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.people-filters__century-all {
+  margin-left: 1rem;
+}
+
+@media (max-width: 768px) {
+  .people-filters__century {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .people-filters__century-all {
+    margin-left: 0;
+  }
+}
