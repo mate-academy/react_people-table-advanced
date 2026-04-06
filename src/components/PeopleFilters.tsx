@@ -9,6 +9,7 @@ type Props = {
 export const PeopleFilters = ({ query, onQueryChange }: Props) => {
   const [searchParams] = useSearchParams();
   const centuries = searchParams.getAll('centuries');
+
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>

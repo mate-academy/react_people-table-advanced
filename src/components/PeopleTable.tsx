@@ -14,8 +14,14 @@ export const PeopleTable = ({ people }: Props) => {
   const order = searchParams.get('order');
 
   const getSortParams = (field: string) => {
-    if (sort !== field) return { sort: field, order: null };
-    if (order !== 'desc') return { sort: field, order: 'desc' };
+    if (sort !== field) {
+      return { sort: field, order: null };
+    }
+
+    if (order !== 'desc') {
+      return { sort: field, order: 'desc' };
+    }
+
     return { sort: null, order: null };
   };
 

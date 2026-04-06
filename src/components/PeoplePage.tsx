@@ -5,6 +5,7 @@ import { PeopleTable } from './PeopleTable';
 import { Loader } from './Loader';
 import { useSearchParams } from 'react-router-dom';
 import { PeopleFilters } from './PeopleFilters';
+import { getSearchWith } from '../utils/searchHelper';
 
 export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);
@@ -35,7 +36,9 @@ export const PeoplePage = () => {
   const order = searchParams.get('order');
 
   const sortedPeople = [...filteredPeople].sort((a, b) => {
-    if (!sort) return 0;
+    if (!sort) {
+      return 0;
+    }
 
     let comparison = 0;
 
@@ -75,7 +78,11 @@ export const PeoplePage = () => {
             <div className="column is-7-tablet is-narrow-desktop">
               <PeopleFilters
                 query={query}
-                onQueryChange={value => setSearchParams({ query: value })}
+                onQueryChange={value =>
+                  setSearchParams(
+                    getSearchWith(searchParams, { query: value || null }),
+                  )
+                }
               />
             </div>
           )}
