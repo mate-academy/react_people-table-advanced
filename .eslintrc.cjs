@@ -20,7 +20,7 @@ module.exports = {
       },
     },
   ],
-  'react/no-children-prop': 'off',
+  
   parser: '@typescript-eslint/parser',
   parserOptions: {
     ecmaFeatures: {
@@ -39,6 +39,7 @@ module.exports = {
   ],
   rules: {
     // JS
+    
     semi: 'off',
     '@typescript-eslint/semi': ['error', 'always'],
     'prefer-const': 2,
@@ -72,6 +73,7 @@ module.exports = {
     'implicit-arrow-linebreak:': 0,
 
     // React
+    'react/no-children-prop': 'off',
     'react/prop-types': 0,
     'react/require-default-props': 0,
     'import/prefer-default-export': 0,
