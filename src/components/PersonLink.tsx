@@ -8,6 +8,7 @@ type Props = {
 
 export const PersonLink = ({ person, name }: Props) => {
   const { search } = useLocation();
+
   return (
     <Link
       to={`/people/${person.slug}${search}`}
