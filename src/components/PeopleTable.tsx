@@ -96,10 +96,8 @@ export const PeopleTable: React.FC<Props> = ({ people, setVisiblePeople }) => {
       );
     }
 
-    if (searchParams.has('order')) {
-      if (searchParams.get('order') === 'desc') {
-        return sortedPeople.reverse();
-      }
+    if (searchParams.get('order') === 'desc') {
+      sortedPeople.reverse();
     }
 
     setVisiblePeople(sortedPeople.length);
