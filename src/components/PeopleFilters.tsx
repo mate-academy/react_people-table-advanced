@@ -1,4 +1,4 @@
-import { Link, useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import classNames from 'classnames';
 import { SearchLink } from './SearchLink';
 import { getSearchWith } from '../utils/searchHelper';
@@ -54,9 +54,12 @@ export const PeopleFilters = () => {
             value={currentQuery}
             onChange={event => {
               setSearchParams(
-                getSearchWith(searchParams, {
-                  query: event.target.value === '' ? null : event.target.value,
-                }),
+                new URLSearchParams(
+                  getSearchWith(searchParams, {
+                    query:
+                      event.target.value === '' ? null : event.target.value,
+                  }),
+                ),
               );
             }}
           />
@@ -136,12 +139,18 @@ export const PeopleFilters = () => {
       </div>
 
       <div className="panel-block">
-        <Link
+        <SearchLink
           className="button is-link is-outlined is-fullwidth"
-          to={'/people'}
+          params={{
+            query: null,
+            sex: null,
+            centuries: null,
+            sort: null,
+            order: null,
+          }}
         >
           Reset all filters
-        </Link>
+        </SearchLink>
       </div>
     </nav>
   );

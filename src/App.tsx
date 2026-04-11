@@ -43,7 +43,6 @@ export const App = () => {
               </NavLink>
             </div>
           </div>
-          w
         </nav>
 
         <main className="section">

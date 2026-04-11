@@ -20,6 +20,6 @@ export interface PeopleTableProps {
 }
 
 export interface PersonProps {
-  name: string;
-  person: Person;
+  name?: string | null;
+  person?: Person | null;
 }

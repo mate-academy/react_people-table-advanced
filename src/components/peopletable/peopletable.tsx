@@ -47,7 +47,12 @@ export const PeopleTable: React.FC<PeopleTableProps> = ({
       return false;
     }
 
-    if (normalizedQuery && !p.name.toLowerCase().includes(normalizedQuery)) {
+    if (
+      normalizedQuery &&
+      !p.name.toLowerCase().includes(normalizedQuery) &&
+      !p.motherName?.toLowerCase().includes(normalizedQuery) &&
+      !p.fatherName?.toLowerCase().includes(normalizedQuery)
+    ) {
       return false;
     }
 
@@ -84,7 +89,9 @@ export const PeopleTable: React.FC<PeopleTableProps> = ({
         {person.length === 0 && serveAlone && (
           <p data-cy="noPeopleMessage">There are no people on the server</p>
         )}
-        <p>There are no people matching the current search criteria</p>
+        {serveAlone && filteredPeople.length === 0 && (
+          <p>There are no people matching the current search criteria</p>
+        )}
 
         {serveAlone && (
           <table
