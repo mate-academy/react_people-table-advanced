@@ -8,4 +8,18 @@ export interface Person {
   slug: string;
   mother?: Person;
   father?: Person;
+  [key: string]: string | number | null | undefined | Person;
+}
+
+export interface PeopleTableProps {
+  person: Person[];
+  errorMessage: string;
+  isLoading: boolean;
+  serveAlone: boolean;
+  selectedUser: string | undefined;
+}
+
+export interface PersonProps {
+  name?: string | null;
+  person?: Person | null;
 }
