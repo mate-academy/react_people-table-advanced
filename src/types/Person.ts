@@ -18,3 +18,8 @@ export interface PeopleTableProps {
   serveAlone: boolean;
   selectedUser: string | undefined;
 }
+
+export interface PersonProps {
+  name: string;
+  person: Person;
+}

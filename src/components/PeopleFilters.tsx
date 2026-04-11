@@ -1,10 +1,9 @@
-import React from 'react';
-import { PeopleFilterProps } from '../types/peoplefilter';
 import { Link, useSearchParams } from 'react-router-dom';
 import classNames from 'classnames';
 import { SearchLink } from './SearchLink';
+import { getSearchWith } from '../utils/searchHelper';
 
-export const PeopleFilters: React.FC<PeopleFilterProps> = () => {
+export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const currentSex = searchParams.get('sex');
   const currentCenturies = searchParams.getAll('centuries'); // [1, 2, 3]
@@ -54,7 +53,11 @@ export const PeopleFilters: React.FC<PeopleFilterProps> = () => {
             placeholder="Search"
             value={currentQuery}
             onChange={event => {
-              setSearchParams({ query: event.target.value });
+              setSearchParams(
+                getSearchWith(searchParams, {
+                  query: event.target.value === '' ? null : event.target.value,
+                }),
+              );
             }}
           />
 

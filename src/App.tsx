@@ -1,5 +1,11 @@
 import './App.scss';
-import { Navigate, NavLink, Route, Routes } from 'react-router-dom';
+import {
+  Navigate,
+  Route,
+  Routes,
+  useLocation,
+  NavLink,
+} from 'react-router-dom';
 import classNames from 'classnames';
 import { NotFoundPage } from './components/notfoundpage/NotFoundPage';
 import { PeoplePage } from './components/peoplepage/peoplepage';
@@ -11,6 +17,8 @@ export const App = () => {
       'has-background-grey-lighter': isActive,
     });
   };
+
+  const { search } = useLocation();
 
   return (
     <>
@@ -27,11 +35,15 @@ export const App = () => {
                 Home
               </NavLink>
 
-              <NavLink className={getLinkClass} to={'/people'}>
+              <NavLink
+                className={getLinkClass}
+                to={{ pathname: '/people', search: search }}
+              >
                 People
               </NavLink>
             </div>
           </div>
+          w
         </nav>
 
         <main className="section">

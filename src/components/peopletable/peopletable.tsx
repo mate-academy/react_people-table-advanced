@@ -58,11 +58,13 @@ export const PeopleTable: React.FC<PeopleTableProps> = ({
     if (!currentSort) {
       return 0;
     } else if (typeof a[currentSort] === 'string') {
-      const result = a[currentSort].localeCompare(b[currentSort]);
+      const result = String(a[currentSort]).localeCompare(
+        String(b[currentSort]),
+      );
 
       return currentOrder === 'desc' ? -result : result;
     } else {
-      const result = a[currentSort] - b[currentSort];
+      const result = Number(a[currentSort]) - Number(b[currentSort]);
 
       return currentOrder === 'desc' ? -result : result;
     }
