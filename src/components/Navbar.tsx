@@ -1,24 +1,20 @@
+import { NavLink } from 'react-router-dom';
+
 export const Navbar = () => {
+  const getClass = ({ isActive }: { isActive: boolean }) =>
+    `navbar-item ${isActive ? 'has-background-grey-lighter' : ''}`;
+
   return (
-    <nav
-      data-cy="nav"
-      className="navbar is-fixed-top has-shadow"
-      role="navigation"
-      aria-label="main navigation"
-    >
+    <nav data-cy="nav" className="navbar is-fixed-top has-shadow">
       <div className="container">
         <div className="navbar-brand">
-          <a className="navbar-item" href="#/">
+          <NavLink to="/" className={getClass}>
             Home
-          </a>
+          </NavLink>
 
-          <a
-            aria-current="page"
-            className="navbar-item has-background-grey-lighter"
-            href="#/people"
-          >
+          <NavLink to="/people" className={getClass}>
             People
-          </a>
+          </NavLink>
         </div>
       </div>
     </nav>
