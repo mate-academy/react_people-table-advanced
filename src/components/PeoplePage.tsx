@@ -40,8 +40,8 @@ export const PeoplePage = () => {
     const lowerQuery = query.toLowerCase();
     const matchesQuery =
       person.name.toLowerCase().includes(lowerQuery) ||
-      person.motherName?.toLowerCase().includes(lowerQuery) ||
-      person.fatherName?.toLowerCase().includes(lowerQuery);
+      (person.motherName || '').toLowerCase().includes(lowerQuery) ||
+      (person.fatherName || '').toLowerCase().includes(lowerQuery);
 
     const matchesSex = !sex || person.sex === sex;
 
@@ -75,7 +75,7 @@ export const PeoplePage = () => {
 
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
-          {!loading && !error && (
+          {!loading && !error && people.length > 0 && (
             <div className="column is-7-tablet is-narrow-desktop">
               <PeopleFilters />
             </div>

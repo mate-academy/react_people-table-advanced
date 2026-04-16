@@ -63,18 +63,18 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            {CENTURIES.map(century => (
+            {CENTURIES.map(c => (
               <SearchLink
-                key={century}
+                key={c}
                 data-cy="century"
-                className={`button mr-1 ${centuries.includes(century) ? 'is-info' : ''}`}
+                className={`button mr-1 ${centuries.includes(c) ? 'is-info' : ''}`}
                 params={{
-                  centuries: centuries.includes(century)
-                    ? centuries.filter(x => x !== century)
-                    : [...centuries, century],
+                  centuries: centuries.includes(c)
+                    ? centuries.filter(x => x !== c)
+                    : [...centuries, c],
                 }}
               >
-                {century}
+                {c}
               </SearchLink>
             ))}
           </div>
