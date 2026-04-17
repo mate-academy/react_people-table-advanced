@@ -32,9 +32,9 @@ export const PeoplePage = () => {
   const filteredPeople = (people || []).filter(person => {
     // Пошук за ім'ям (або батьками)
     const matchesQuery = !query ||
-      person.name.toLowerCase().includes(query) ||
-      person.motherName?.toLowerCase().includes(query) ||
-      person.fatherName?.toLowerCase().includes(query);
+  person.name.toLowerCase().includes(query.toLowerCase()) ||
+  (person.motherName?.toLowerCase().includes(query.toLowerCase()) ?? false) ||
+  (person.fatherName?.toLowerCase().includes(query.toLowerCase()) ?? false);
 
     // Стать
     const matchesSex = !sex || person.sex === sex;
@@ -71,9 +71,11 @@ export const PeoplePage = () => {
 
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
-          <div className="column is-7-tablet is-narrow-desktop">
-            <PeopleFilters />
-          </div>
+          {!loading && !isError && people !== null && (
+            <div className="column is-7-tablet is-narrow-desktop">
+              <PeopleFilters />
+            </div>
+          )}
 
           <div className="column">
             <div className="box table-container">

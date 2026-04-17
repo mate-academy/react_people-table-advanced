@@ -7,7 +7,7 @@ type Props = {
   onSelect?: (slug: string) => void;
 };
 
-export const PersonLink: React.FC<Props> = ({ person, onSelect }) => {
+export const PersonLink = ({ person, onSelect }: Props) => {
   // 1. Отримуємо поточні параметри пошуку з URL
   const [searchParams] = useSearchParams();
 

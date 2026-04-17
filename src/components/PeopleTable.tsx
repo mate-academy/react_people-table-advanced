@@ -9,11 +9,7 @@ type Props = {
   onSelect: (slug: string) => void;
 };
 /* eslint-disable jsx-a11y/control-has-associated-label */
-export const PeopleTable: React.FC<Props> = ({
-  people,
-  selectedSlug,
-  onSelect,
-}) => {
+export const PeopleTable = ({ people, selectedSlug, onSelect }: Props) => {
   const getPersonByName = (name: string | null) =>
     people.find(p => p.name === name);
 
@@ -23,7 +19,7 @@ export const PeopleTable: React.FC<Props> = ({
 
   const getNextSortParams = (field: string) => {
     if (sortField !== field) {
-      return { sort: field, order: null }; // перший клік: ставимо поле, order за замовчуванням asc
+      return { sort: field, order: null };
     }
 
     if (sortOrder === null) {
