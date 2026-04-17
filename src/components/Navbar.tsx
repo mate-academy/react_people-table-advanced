@@ -1,3 +1,12 @@
+import classNames from 'classnames';
+import { NavLink } from 'react-router-dom';
+
+// eslint-disable-next-line @typescript-eslint/no-shadow
+export const isActive = ({ isActive }: { isActive: boolean }) =>
+  classNames('navbar-item', {
+    'has-background-grey-lighter': isActive,
+  });
+
 export const Navbar = () => {
   return (
     <nav
@@ -8,17 +17,13 @@ export const Navbar = () => {
     >
       <div className="container">
         <div className="navbar-brand">
-          <a className="navbar-item" href="#/">
+          <NavLink className={isActive} to="/" end>
             Home
-          </a>
+          </NavLink>
 
-          <a
-            aria-current="page"
-            className="navbar-item has-background-grey-lighter"
-            href="#/people"
-          >
+          <NavLink aria-current="page" className={isActive} to="/people">
             People
-          </a>
+          </NavLink>
         </div>
       </div>
     </nav>
