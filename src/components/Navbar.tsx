@@ -1,4 +1,15 @@
+import classNames from 'classnames';
+import { NavLink, useSearchParams } from 'react-router-dom';
+
+// eslint-disable-next-line @typescript-eslint/no-shadow
+export const isActive = ({ isActive }: { isActive: boolean }) =>
+  classNames('navbar-item', {
+    'has-background-grey-lighter': isActive,
+  });
+
 export const Navbar = () => {
+  const [searchParams] = useSearchParams();
+
   return (
     <nav
       data-cy="nav"
@@ -8,17 +19,17 @@ export const Navbar = () => {
     >
       <div className="container">
         <div className="navbar-brand">
-          <a className="navbar-item" href="#/">
+          <NavLink className={isActive} to="/" end>
             Home
-          </a>
+          </NavLink>
 
-          <a
+          <NavLink
             aria-current="page"
-            className="navbar-item has-background-grey-lighter"
-            href="#/people"
+            to={{ pathname: '/people', search: searchParams.toString() }}
+            className={isActive}
           >
             People
-          </a>
+          </NavLink>
         </div>
       </div>
     </nav>
