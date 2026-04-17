@@ -1,5 +1,7 @@
+import { Link, useSearchParams } from 'react-router-dom';
 import { Person } from '../types';
 import { PersonLink } from './PersonLink';
+import { getSearchWith } from '../utils/searchHelper';
 
 type Props = {
   people: Person[];
@@ -15,6 +17,22 @@ export const PeopleTable: React.FC<Props> = ({
   const getPersonByName = (name: string | null) =>
     people.find(p => p.name === name);
 
+  const [searchParams] = useSearchParams();
+  const sortField = searchParams.get('sort');
+  const sortOrder = searchParams.get('order');
+
+  const getNextSortParams = (field: string) => {
+    if (sortField !== field) {
+      return { sort: field, order: null }; // перший клік: ставимо поле, order за замовчуванням asc
+    }
+
+    if (sortOrder === null) {
+      return { sort: field, order: 'desc' }; // другий клік: desc
+    }
+
+    return { sort: null, order: null }; // третій клік: прибираємо сортування
+  };
+
   return (
     <table
       data-cy="peopleTable"
@@ -25,44 +43,78 @@ export const PeopleTable: React.FC<Props> = ({
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Name
-              <a href="#/people?sort=name">
+              {/* Використовуємо Link замість <a> */}
+              <Link
+                to={{
+                  search: getSearchWith(
+                    searchParams,
+                    getNextSortParams('name'),
+                  ),
+                }}
+              >
                 <span className="icon">
-                  <i className="fas fa-sort" />
+                  <i
+                    className={`fas fa-sort${sortField === 'name' ? (sortOrder === 'desc' ? '-down' : '-up') : ''}`}
+                  />
                 </span>
-              </a>
+              </Link>
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Sex
-              <a href="#/people?sort=sex">
+              <Link
+                to={{
+                  search: getSearchWith(searchParams, getNextSortParams('sex')),
+                }}
+              >
                 <span className="icon">
-                  <i className="fas fa-sort" />
+                  <i
+                    className={`fas fa-sort${sortField === 'sex' ? (sortOrder === 'desc' ? '-down' : '-up') : ''}`}
+                  />
                 </span>
-              </a>
+              </Link>
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Born
-              <a href="#/people?sort=born&amp;order=desc">
+              <Link
+                to={{
+                  search: getSearchWith(
+                    searchParams,
+                    getNextSortParams('born'),
+                  ),
+                }}
+              >
                 <span className="icon">
-                  <i className="fas fa-sort-up" />
+                  <i
+                    className={`fas fa-sort${sortField === 'born' ? (sortOrder === 'desc' ? '-down' : '-up') : ''}`}
+                  />
                 </span>
-              </a>
+              </Link>
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Died
-              <a href="#/people?sort=died">
+              <Link
+                to={{
+                  search: getSearchWith(
+                    searchParams,
+                    getNextSortParams('died'),
+                  ),
+                }}
+              >
                 <span className="icon">
-                  <i className="fas fa-sort" />
+                  <i
+                    className={`fas fa-sort${sortField === 'died' ? (sortOrder === 'desc' ? '-down' : '-up') : ''}`}
+                  />
                 </span>
-              </a>
+              </Link>
             </span>
           </th>
 

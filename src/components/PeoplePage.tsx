@@ -29,7 +29,6 @@ export const PeoplePage = () => {
       .finally(() => setLoading(false));
   }, []);
 
-  // 2. Фільтруємо людей ПЕРЕД рендерингом
   const filteredPeople = (people || []).filter(person => {
     // Пошук за ім'ям (або батьками)
     const matchesQuery = !query ||
@@ -46,6 +45,22 @@ export const PeoplePage = () => {
     const matchesCentury = centuries.length === 0 || centuries.includes(personCentury);
 
     return matchesQuery && matchesSex && matchesCentury;
+  });
+
+  const sortField = searchParams.get('sort') || '';
+  const sortOrder = searchParams.get('order') || 'asc';
+
+  const sortedPeople = [...filteredPeople].sort((a, b) => {
+    const valueA = a[sortField as keyof Person] ?? '';
+    const valueB = b[sortField as keyof Person] ?? '';
+
+    if (typeof valueA === 'number' && typeof valueB === 'number') {
+      return sortOrder === 'asc' ? valueA - valueB : valueB - valueA;
+    }
+
+    return sortOrder === 'asc'
+      ? String(valueA).localeCompare(String(valueB))
+      : String(valueB).localeCompare(String(valueA));
   });
 
   return (
@@ -84,7 +99,7 @@ export const PeoplePage = () => {
               {/* 4. Таблиця */}
               {!loading && !isError && filteredPeople.length > 0 && (
                 <PeopleTable
-                  people={filteredPeople}
+                  people={sortedPeople}
                   selectedSlug={selectedSlug}
                   onSelect={() => {}}
                 />
