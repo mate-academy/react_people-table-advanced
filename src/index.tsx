@@ -4,10 +4,12 @@ import { HashRouter as Router } from 'react-router-dom';
 import 'bulma/css/bulma.css';
 import '@fortawesome/fontawesome-free/css/all.css';
 
-import { App } from './App';
+import { Root } from './Root';
 
 createRoot(document.getElementById('root') as HTMLDivElement).render(
-  <Router>
-    <App />
-  </Router>,
+  <div className="has-navbar-fixed-top">
+    <Router>
+      <Root />
+    </Router>
+  </div>,
 );
