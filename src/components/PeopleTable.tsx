@@ -130,7 +130,10 @@ export const PeopleTable = ({ people }: { people: Person[] }) => {
             >
               <td>
                 <Link
-                  to={`/people/${person.slug}`}
+                  to={{
+                    pathname: `/people/${person.slug}`,
+                    search: searchParams.toString(),
+                  }}
                   className={person.sex === 'f' ? 'has-text-danger' : ''}
                 >
                   {person.name}
@@ -142,7 +145,10 @@ export const PeopleTable = ({ people }: { people: Person[] }) => {
               <td>
                 {mother ? (
                   <Link
-                    to={`/people/${mother?.slug}`}
+                    to={{
+                      pathname: `/people/${mother.slug}`,
+                      search: searchParams.toString(),
+                    }}
                     className={mother.sex === 'f' ? 'has-text-danger' : ''}
                   >
                     {mother?.name}
@@ -153,7 +159,15 @@ export const PeopleTable = ({ people }: { people: Person[] }) => {
               </td>
               <td>
                 {father ? (
-                  <Link to={`/people/${father?.slug}`}>{father?.name}</Link>
+                  <Link
+                    to={{
+                      pathname: `/people/${father.slug}`,
+                      search: searchParams.toString(),
+                    }}
+                    className={father.sex === 'f' ? 'has-text-danger' : ''}
+                  >
+                    {father?.name}
+                  </Link>
                 ) : (
                   person.fatherName || '-'
                 )}

@@ -97,9 +97,9 @@ export const PeoplePage = () => {
                 </p>
               )}
 
-              {!loading && !error && people.length > 0 && (
+              {!loading && !error && filteredPeople.length > 0 && (
                 <PeopleTable
-                  people={filteredPeople.length ? filteredPeople : people} />
+                  people={filteredPeople} />
               )}
             </div>
           </div>
