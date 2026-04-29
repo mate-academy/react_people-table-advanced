@@ -1,6 +1,13 @@
+export enum Gender {
+  Male = 'm',
+  Female = 'f',
+}
+
+export type Sex = `${Gender}`;
+
 export interface Person {
   name: string;
-  sex: string;
+  sex: Sex;
   born: number;
   died: number;
   fatherName: string | null;

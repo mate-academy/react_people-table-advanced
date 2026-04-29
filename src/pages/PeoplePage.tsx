@@ -1,47 +1,21 @@
-import { useEffect, useMemo, useState } from 'react';
+import React, { useMemo } from 'react';
 
 import { Loader } from '../components/Loader';
 import { PeopleTable } from '../components/PeopleTable';
-import Person from '../types/Person';
-import { getPeople } from '../api';
 import { PeopleFilters } from '../components/PeopleFilters';
+import usePeople from '../hooks/usePeople';
+import extendPeopleData from '../utils/extendPeopleData';
+import useFilteredPeople from '../hooks/useFilteredPeople';
 
-export const PeoplePage = () => {
-  const [people, setPeople] = useState<Person[]>([]);
-
-  const [isLoading, setIsLoading] = useState(false);
-  const [errorMessage, setErrorMessage] = useState('');
-
-  useEffect(() => {
-    setErrorMessage('');
-    setIsLoading(true);
-
-    getPeople()
-      .then(setPeople)
-      .catch(() => {
-        setErrorMessage('Cannot load people. Please try again later.');
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
-  }, []);
+export const PeoplePageBase = () => {
+  const { people, isLoading, errorMessage } = usePeople();
 
   const extendedPeopleData = useMemo(() => {
-    if (people.length === 0) {
-      return people;
-    } else {
-      return [...people].map(pers => {
-        const mother = people.find(person => person.name === pers.motherName);
-        const father = people.find(person => person.name === pers.fatherName);
-
-        return {
-          ...pers,
-          mother,
-          father,
-        };
-      });
-    }
+    return extendPeopleData(people);
   }, [people]);
+
+  const filteredPeople = useFilteredPeople(extendedPeopleData);
+  const isNoPeopleLoaded = !isLoading && !errorMessage && people.length === 0;
 
   return (
     <>
@@ -50,7 +24,7 @@ export const PeoplePage = () => {
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
           <div className="column is-7-tablet is-narrow-desktop">
-            <PeopleFilters />
+            {people.length > 0 && <PeopleFilters />}
           </div>
 
           <div className="column">
@@ -63,13 +37,13 @@ export const PeoplePage = () => {
                 </p>
               )}
 
-              {!isLoading && !errorMessage && people.length === 0 && (
+              {isNoPeopleLoaded && (
                 <p data-cy="noPeopleMessage">
                   There are no people on the server
                 </p>
               )}
 
-              {people.length > 0 && <PeopleTable people={extendedPeopleData} />}
+              {people.length > 0 && <PeopleTable people={filteredPeople} />}
             </div>
           </div>
         </div>
@@ -77,3 +51,5 @@ export const PeoplePage = () => {
     </>
   );
 };
+
+export const PeoplePage = React.memo(PeoplePageBase);
