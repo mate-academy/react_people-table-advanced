@@ -2,14 +2,14 @@ import { useSearchParams } from 'react-router-dom';
 import { SearchLink } from './SearchLink';
 
 export const PeopleFilters = () => {
-  const [serchParams, setSerchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
 
-  const query = serchParams.get('query') || '';
-  const currentSex = serchParams.get('sex');
-  const selectedCenturies = serchParams.getAll('centuries');
+  const query = searchParams.get('query') || '';
+  const currentSex = searchParams.get('sex');
+  const selectedCenturies = searchParams.getAll('centuries');
 
   const handleQueryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const nextParams = new URLSearchParams(serchParams);
+    const nextParams = new URLSearchParams(searchParams);
     const value = event.target.value;
 
     if (value) {
@@ -18,7 +18,7 @@ export const PeopleFilters = () => {
       nextParams.delete('query');
     }
 
-    setSerchParams(nextParams);
+    setSearchParams(nextParams);
   };
 
   const getToggleCenturyParams = (century: string) => {
@@ -82,7 +82,10 @@ export const PeopleFilters = () => {
               <SearchLink
                 key={century}
                 data-cy="century"
-                className={`button mr-1 ${selectedCenturies.includes(century)}`}
+                // ИСПРАВЛЕНО: добавлен тернарный оператор для 'is-active'
+                className={`button mr-1 ${
+                  selectedCenturies.includes(century) ? 'is-active' : ''
+                }`}
                 params={getToggleCenturyParams(century)}
               >
                 {century}
@@ -92,7 +95,10 @@ export const PeopleFilters = () => {
           <div className="level-right ml-4">
             <SearchLink
               data-cy="centuryALL"
-              className={`button is-success is-outlined ${selectedCenturies.length === 0 ? 'is-active' : ''}`}
+              // ИСПРАВЛЕНО: убрал дублирование логики, оставил чистый тернарник
+              className={`button is-success is-outlined ${
+                selectedCenturies.length === 0 ? 'is-active' : ''
+              }`}
               params={{ centuries: null }}
             >
               All
