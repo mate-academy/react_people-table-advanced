@@ -15,23 +15,35 @@ const PersonTableItemBase: React.FC<Props> = ({ person }) => {
   const { slug: paramSlug } = useParams();
 
   const motherInfoTd = useMemo(() => {
-    if (!!motherName && !!mother) {
-      return <PersonLink person={mother} />;
-    } else if (!!motherName) {
-      return <>{motherName}</>;
-    } else {
+    if (!motherName && !mother) {
       return <>-</>;
     }
+
+    if (!!motherName && !!mother) {
+      return <PersonLink person={mother} />;
+    }
+
+    if (!!motherName) {
+      return <>{motherName}</>;
+    }
+
+    return <>-</>;
   }, [motherName, mother]);
 
   const fatherInfoTd = useMemo(() => {
-    if (!!fatherName && !!father) {
-      return <PersonLink person={father} />;
-    } else if (!!fatherName) {
-      return <>{fatherName}</>;
-    } else {
+    if (!fatherName && !father) {
       return <>-</>;
     }
+
+    if (!!fatherName && !!father) {
+      return <PersonLink person={father} />;
+    }
+
+    if (!!fatherName) {
+      return <>{fatherName}</>;
+    }
+
+    return <>-</>;
   }, [fatherName, father]);
 
   return (

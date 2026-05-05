@@ -19,18 +19,22 @@ const SortLinkBase: React.FC<Props> = ({ sortField }) => {
         [URLSearchParam.Sort]: sortField,
         [URLSearchParam.Order]: null,
       });
-    } else if (sortParam === sortField && !orderParam) {
+    }
+
+    if (sortParam === sortField && !orderParam) {
       return getSearchWith(searchParams, {
         [URLSearchParam.Order]: OrderField.Descending,
       });
-    } else if (sortParam === sortField && orderParam) {
+    }
+
+    if (sortParam === sortField && orderParam) {
       return getSearchWith(searchParams, {
         [URLSearchParam.Sort]: null,
         [URLSearchParam.Order]: null,
       });
-    } else {
-      return searchParams.toString();
     }
+
+    return searchParams.toString();
   };
 
   return (
