@@ -1,5 +1,7 @@
+import { useSearchParams } from 'react-router-dom';
 import { PeopleDictionary, PersonSlug } from '../../types';
 import { PeopleTableRow } from '../PeopleTableRow';
+import { SearchLink } from '../SearchLink';
 
 type Props = {
   people: PeopleDictionary;
@@ -7,6 +9,10 @@ type Props = {
 };
 
 export const PeopleTable: React.FC<Props> = ({ people, peopleSlugs }) => {
+  const [searchParams] = useSearchParams();
+  const sort = searchParams.get('sort');
+  const order = searchParams.get('order');
+
   return (
     <table
       data-cy="peopleTable"
@@ -14,49 +20,25 @@ export const PeopleTable: React.FC<Props> = ({ people, peopleSlugs }) => {
     >
       <thead>
         <tr>
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Name
-              <a href="#/people?sort=name">
-                <span className="icon">
-                  <i className="fas fa-sort" />
-                </span>
-              </a>
-            </span>
-          </th>
-
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Sex
-              <a href="#/people?sort=sex">
-                <span className="icon">
-                  <i className="fas fa-sort" />
-                </span>
-              </a>
-            </span>
-          </th>
-
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Born
-              <a href="#/people?sort=born&amp;order=desc">
-                <span className="icon">
-                  <i className="fas fa-sort-up" />
-                </span>
-              </a>
-            </span>
-          </th>
-
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Died
-              <a href="#/people?sort=died">
-                <span className="icon">
-                  <i className="fas fa-sort" />
-                </span>
-              </a>
-            </span>
-          </th>
+          {['name', 'sex', 'born', 'died'].map(field => (
+            <th key={field}>
+              <span className="is-flex is-flex-wrap-nowrap">
+                {field[0].toLocaleUpperCase() + field.slice(1)}
+                <SearchLink
+                  params={{
+                    sort: sort === field && order === 'desc' ? null : field,
+                    //    sort !== field || order !== 'desc' ? field : null,
+                    order: sort === field && order !== 'desc' ? 'desc' : null,
+                    //     sort !== field || order === 'desc' ? null : 'desc',
+                  }}
+                >
+                  <span className="icon">
+                    <i className="fas fa-sort" />
+                  </span>
+                </SearchLink>
+              </span>
+            </th>
+          ))}
 
           <th>Mother</th>
           <th>Father</th>

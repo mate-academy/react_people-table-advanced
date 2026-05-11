@@ -14,16 +14,16 @@ export const Root = () => (
   <Router>
     <PeopleProvider>
       <Routes>
+        <Route path="home" element={<Navigate to="/" replace />} />
+
         <Route path="/" element={<App />}>
-          <Route path="home" element={<Navigate to=".." replace />} />
+          <Route path="*" element={<NotFoundPage />} />
 
           <Route index element={<HomePage />} />
 
           <Route path="people">
             <Route path=":slug?" element={<PeoplePage />} />
           </Route>
-
-          <Route path="*" element={<NotFoundPage />} />
         </Route>
       </Routes>
     </PeopleProvider>
