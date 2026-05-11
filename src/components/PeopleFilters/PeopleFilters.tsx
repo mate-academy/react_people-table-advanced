@@ -2,6 +2,7 @@ import { Link, useSearchParams } from 'react-router-dom';
 import { SearchLink } from '../SearchLink';
 import { getSearchWith } from '../../utils/searchHelper';
 import classNames from 'classnames';
+import { toggleValueInArray } from '../../utils/toggleValueInArray';
 
 export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -38,7 +39,7 @@ export const PeopleFilters = () => {
             type="search"
             className="input"
             placeholder="Search"
-            // * Needs debouncing
+            // ! Needs debouncing
             onChange={event =>
               setSearchParams(
                 getSearchWith(searchParams, {
@@ -57,36 +58,26 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            {['16', '17', '18', '19', '20'].map(century => {
+            {['16', '17', '18', '19', '20'].map(century => (
               // ! A new array has to be created for every century,
-              // !  on every render.
+              // !  on every render (toggleValueInArray 1st arg).
               // !  Instead, a single value could be passed and the
               // !  construction of a new array can be performed
               // !  in another place.
               // TODO!
-              const indexOfCentury = centuries.indexOf(century);
-
-              const newCenturies = [...centuries];
-
-              if (indexOfCentury === -1) {
-                newCenturies.push(century);
-              } else {
-                newCenturies.splice(indexOfCentury, 1);
-              }
-
-              return (
-                <SearchLink
-                  key={century}
-                  data-cy="century"
-                  params={{ centuries: newCenturies }}
-                  className={classNames('button mr-1', {
-                    'is-info': centuries.includes(century),
-                  })}
-                >
-                  {century}
-                </SearchLink>
-              );
-            })}
+              <SearchLink
+                key={century}
+                data-cy="century"
+                params={{
+                  centuries: toggleValueInArray([...centuries], century),
+                }}
+                className={classNames('button mr-1', {
+                  'is-info': centuries.includes(century),
+                })}
+              >
+                {century}
+              </SearchLink>
+            ))}
           </div>
 
           <div className="level-right ml-4">

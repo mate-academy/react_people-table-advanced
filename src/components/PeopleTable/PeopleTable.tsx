@@ -2,6 +2,7 @@ import { useSearchParams } from 'react-router-dom';
 import { PeopleDictionary, PersonSlug } from '../../types';
 import { PeopleTableRow } from '../PeopleTableRow';
 import { SearchLink } from '../SearchLink';
+import classNames from 'classnames';
 
 type Props = {
   people: PeopleDictionary;
@@ -33,7 +34,13 @@ export const PeopleTable: React.FC<Props> = ({ people, peopleSlugs }) => {
                   }}
                 >
                   <span className="icon">
-                    <i className="fas fa-sort" />
+                    <i
+                      className={classNames('fas', {
+                        'fa-sort': sort !== field,
+                        'fa-sort-up': sort === field && order !== 'desc',
+                        'fa-sort-down': sort === field && order === 'desc',
+                      })}
+                    />
                   </span>
                 </SearchLink>
               </span>
