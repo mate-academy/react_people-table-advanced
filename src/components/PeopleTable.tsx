@@ -1,14 +1,20 @@
 /* eslint-disable jsx-a11y/control-has-associated-label */
-import { useSearchParams } from 'react-router-dom';
+import {
+  useSearchParams,
+  useParams,
+  useLocation,
+  Link,
+} from 'react-router-dom';
 import { SearchLink } from './SearchLink';
-import { Person } from '../types/Person'; // Не забудь імпортувати тип!
-
+import { Person } from '../types/Person';
 type Props = {
   people: Person[];
 };
 
 export const PeopleTable: React.FC<Props> = ({ people }) => {
   const [searchParams] = useSearchParams();
+  const { slug } = useParams();
+  const location = useLocation();
   const sortField = searchParams.get('sort');
   const sortOrder = searchParams.get('order');
 
@@ -89,43 +95,65 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
       </thead>
 
       <tbody>
-        {people.map(person => (
-          <tr key={person.slug} data-cy="person">
-            <td>
-              <a
-                href={`#/people/${person.slug}`}
-                className={person.sex === 'f' ? 'has-text-danger' : ''}
-              >
-                {person.name}
-              </a>
-            </td>
-            <td>{person.sex}</td>
-            <td>{person.born}</td>
-            <td>{person.died}</td>
-            <td>
-              {person.motherName ? (
-                <a
-                  href={`#/people/${person.motherName.toLowerCase().replace(/ /g, '-')}`}
+        {people.map(person => {
+          const mother = people.find(p => p.name === person.motherName);
+          const father = people.find(p => p.name === person.fatherName);
+
+          return (
+            <tr
+              key={person.slug}
+              data-cy="person"
+              className={slug === person.slug ? 'has-background-warning' : ''}
+            >
+              <td>
+                <Link
+                  to={{
+                    pathname: `/people/${person.slug}`,
+                    search: location.search,
+                  }}
+                  className={person.sex === 'f' ? 'has-text-danger' : ''}
                 >
-                  {person.motherName}
-                </a>
-              ) : (
-                '-'
-              )}
-            </td>
-            <td>
-              {person.fatherName ? (
-                <a
-                  href={`#/people/${person.fatherName.toLowerCase().replace(/ /g, '-')}`}
-                >
-                  {person.fatherName}
-                </a>
-              ) : (
-                '-'
-              )}
-            </td>
-          </tr>
-        ))}
+                  {person.name}
+                </Link>
+              </td>
+              <td>{person.sex}</td>
+              <td>{person.born}</td>
+              <td>{person.died}</td>
+              <td>
+                {/* Якщо матір знайдено в базі - малюємо червоне посилання, інакше просто текст */}
+                {mother ? (
+                  <Link
+                    to={{
+                      pathname: `/people/${mother.slug}`,
+                      search: location.search,
+
+                    }}
+                    className="has-text-danger"
+                  >
+                    {mother.name}
+                  </Link>
+                ) : (
+                  person.motherName || '-'
+                )}
+              </td>
+              <td>
+                {/* Аналогічно для батька, але без червоного класу */}
+                {father ? (
+                  <Link
+                    to={{
+                      pathname: `/people/${father.slug}`,
+                      search: location.search,
+                    }}
+                  >
+                    {father.name}
+                  </Link>
+                ) : (
+                  person.fatherName || '-'
+                )}
+              </td>
+            </tr>
+          );
+        })}
       </tbody>
     </table>
   );
