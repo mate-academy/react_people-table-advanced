@@ -4,6 +4,7 @@ module.exports = {
     es2024: true,
   },
   extends: [
+    "prettier",
     'plugin:react/recommended',
     "plugin:react-hooks/recommended",
     'airbnb-typescript',
@@ -16,6 +17,7 @@ module.exports = {
     {
       'files': ['**/*.spec.jsx'],
       'rules': {
+        'indent': 'off',
         'react/jsx-filename-extension': ['off'],
       }
     }
@@ -38,6 +40,7 @@ module.exports = {
   ],
   rules: {
     // JS
+    'indent': 'off',
     'semi': 'off',
     '@typescript-eslint/semi': ['error', 'always'],
     'prefer-const': 2,
