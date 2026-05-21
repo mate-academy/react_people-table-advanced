@@ -1,15 +1,16 @@
 import { useParams } from 'react-router-dom';
 import { Person } from '../types';
-import { Loader } from './Loader';
 import { PersonLink } from './PersonLink';
+import { SearchLink } from './SearchLink';
 
 type Props = {
   people: Person[];
-  error: boolean;
   loading: boolean;
+  order: string;
+  sort: string;
 };
 
-export const PeopleTable = ({ people, error, loading }: Props) => {
+export const PeopleTable = ({ people, loading, order, sort }: Props) => {
   const { slug } = useParams();
 
   const getPersonLink = (name: string | null) => {
@@ -26,65 +27,114 @@ export const PeopleTable = ({ people, error, loading }: Props) => {
     return name;
   };
 
+  function getSortParams(sortBy: string): {
+    sort: string | null;
+    order?: string | null;
+  } {
+    if (sortBy === sort && order === 'desc') {
+      return { sort: null, order: null };
+    }
+
+    if (sortBy === sort) {
+      return { sort: sortBy, order: 'desc' };
+    }
+
+    return { sort: sortBy };
+  }
+
+  function getSortIcon(sortBy: string) {
+    if (sort !== sortBy) {
+      return 'fas fa-sort';
+    }
+
+    if (order === 'desc') {
+      return 'fas fa-sort-down';
+    }
+
+    return 'fas fa-sort-up';
+  }
+
   return (
-    <div className="container">
-      <div className="block">
-        <div className="box table-container">
-          {loading && <Loader />}
+    <>
+      {!loading && (
+        <table
+          data-cy="peopleTable"
+          className="table is-striped is-hoverable is-narrow is-fullwidth"
+        >
+          <thead>
+            <tr>
+              <th>
+                <span className="is-flex is-flex-wrap-nowrap">
+                  Name
+                  <SearchLink params={getSortParams('name')}>
+                    <span className="icon">
+                      <i className={getSortIcon('name')} />
+                    </span>
+                  </SearchLink>
+                </span>
+              </th>
 
-          {error && !loading && (
-            <p data-cy="peopleLoadingError" className="has-text-danger">
-              Something went wrong
-            </p>
-          )}
+              <th>
+                <span className="is-flex is-flex-wrap-nowrap">
+                  Sex
+                  <SearchLink params={getSortParams('sex')}>
+                    <span className="icon">
+                      <i className={getSortIcon('sex')} />
+                    </span>
+                  </SearchLink>
+                </span>
+              </th>
 
-          {!error && !loading && people.length === 0 && (
-            <p data-cy="noPeopleMessage">There are no people on the server</p>
-          )}
+              <th>
+                <span className="is-flex is-flex-wrap-nowrap">
+                  Born
+                  <SearchLink params={getSortParams('born')}>
+                    <span className="icon">
+                      <i className={getSortIcon('born')} />
+                    </span>
+                  </SearchLink>
+                </span>
+              </th>
 
-          {!loading && (
-            <table
-              data-cy="peopleTable"
-              className="table is-striped is-hoverable is-narrow is-fullwidth"
-            >
-              <thead>
-                <tr>
-                  <th>Name</th>
-                  <th>Sex</th>
-                  <th>Born</th>
-                  <th>Died</th>
-                  <th>Mother</th>
-                  <th>Father</th>
-                </tr>
-              </thead>
+              <th>
+                <span className="is-flex is-flex-wrap-nowrap">
+                  Died
+                  <SearchLink params={getSortParams('died')}>
+                    <span className="icon">
+                      <i className={getSortIcon('died')} />
+                    </span>
+                  </SearchLink>
+                </span>
+              </th>
 
-              <tbody>
-                {people.map(person => (
-                  <tr
-                    key={person.slug}
-                    data-cy="person"
-                    className={
-                      person.slug === String(slug)
-                        ? 'has-background-warning'
-                        : ''
-                    }
-                  >
-                    <td>
-                      <PersonLink person={person} />
-                    </td>
+              <th>Mother</th>
+              <th>Father</th>
+            </tr>
+          </thead>
 
-                    <td>{person.sex}</td>
-                    <td>{person.born}</td>
-                    <td>{person.died}</td>
-                    <td>{getPersonLink(person.motherName)}</td>
-                    <td>{getPersonLink(person.fatherName)}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          )}
-        </div>
-      </div>
-    </div>
+          <tbody>
+            {people.map(person => (
+              <tr
+                key={person.slug}
+                data-cy="person"
+                className={
+                  person.slug === String(slug) ? 'has-background-warning' : ''
+                }
+              >
+                <td>
+                  <PersonLink person={person} />
+                </td>
+
+                <td>{person.sex}</td>
+                <td>{person.born}</td>
+                <td>{person.died}</td>
+                <td>{getPersonLink(person.motherName)}</td>
+                <td>{getPersonLink(person.fatherName)}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
+    </>
   );
 };
