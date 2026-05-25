@@ -71,7 +71,11 @@ export const PeopleTable: React.FC<Props> = ({ allPeople }) => {
 
       if (query) {
         newPeople = newPeople.filter(person => {
-          return person.name.toLowerCase().includes(query.toLowerCase());
+          return (
+            person.name.toLowerCase().includes(query.toLowerCase()) ||
+            person.father?.name.toLowerCase().includes(query.toLowerCase()) ||
+            person.mother?.name.toLowerCase().includes(query.toLowerCase())
+          );
         });
       }
 
@@ -111,7 +115,7 @@ export const PeopleTable: React.FC<Props> = ({ allPeople }) => {
 
       setFilterPeople(newPeople);
     }
-  }, [serchParams]);
+  }, [serchParams, allPeople]);
 
   return (
     <table
