@@ -1,6 +1,9 @@
 export type SearchParams = {
-  [key: string]: string | string[] | null;
+  [key: string]: Sex | Centuries | null;
 };
+
+export type Sex = 'm' | 'f' | string;
+export type Centuries = string[];
 
 /**
  * This function prepares a correct search string
