@@ -12,7 +12,7 @@ interface Props {
   people: Person[];
 }
 
-export const PeopleTable: React.FC<Props> = ({ people }) => {
+export const PeopleTable: React.FC<Props> = ({ people: peopleList }) => {
   const { slug } = useParams();
   const [searchParams] = useSearchParams();
 
@@ -68,9 +68,11 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
       </thead>
 
       <tbody>
-        {people.map(person => {
-          const mother = people.find(people => people.name === person.motherName) || null;
-          const father = people.find(people => people.name === person.fatherName) || null;
+        {peopleList.map(person => {
+          const mother =
+            peopleList.find(item => item.name === person.motherName) || null;
+          const father =
+            peopleList.find(item => item.name === person.fatherName) || null;
 
           return (
             <tr
