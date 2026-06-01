@@ -1,8 +1,8 @@
 import { PeopleFilters } from '../components/PeopleFilters';
 import { Loader } from '../components/Loader';
 import { PeopleTable } from '../components/PeopleTable';
-import { useEffect, useState } from 'react';
-import { Person } from '../types';
+import { useEffect, useMemo, useState } from 'react';
+import { Person, SortField } from '../types';
 import { getPeople } from '../api';
 import { useSearchParams } from 'react-router-dom';
 
@@ -15,7 +15,7 @@ export const PeoplePage = () => {
   const query = searchParams.get('query')?.toLowerCase() || null;
   const sex = searchParams.get('sex');
   const centuries = searchParams.getAll('centuries');
-  const sort = searchParams.get('sort');
+  const sort = searchParams.get('sort') as SortField | null;
   const order = searchParams.get('order');
 
   const handleQueryChange = (stringQuery: string) => {
@@ -107,7 +107,7 @@ export const PeoplePage = () => {
     setSearchParams(params);
   };
 
-  const handleSort = (field: string) => {
+  const handleSort = (field: SortField) => {
     const params = new URLSearchParams(searchParams);
 
     if (sort !== field) {
@@ -123,53 +123,55 @@ export const PeoplePage = () => {
     setSearchParams(params);
   };
 
-  let preparedPeopleData = [...userData];
+  const preparedPeopleData = useMemo(() => {
+    let filteredPeople = [...userData];
 
-  if (query) {
-    preparedPeopleData = preparedPeopleData.filter(
-      person =>
-        person.name.toLowerCase().includes(query) ||
-        person.motherName?.toLowerCase().includes(query) ||
-        person.fatherName?.toLowerCase().includes(query),
-    );
-  }
-
-  if (sex) {
-    preparedPeopleData = preparedPeopleData.filter(
-      person => person.sex === sex,
-    );
-  }
-
-  if (centuries.length) {
-    preparedPeopleData = preparedPeopleData.filter(person =>
-      centuries.includes(Math.ceil(person.born / 100).toString()),
-    );
-  }
-
-  if (sort) {
-    preparedPeopleData.sort((a, b) => {
-      switch (sort) {
-        case 'name':
-          return a.name.localeCompare(b.name);
-
-        case 'sex':
-          return a.sex.localeCompare(b.sex);
-
-        case 'born':
-          return a.born - b.born;
-
-        case 'died':
-          return a.died - b.died;
-
-        default:
-          return 0;
-      }
-    });
-
-    if (order === 'desc') {
-      preparedPeopleData.reverse();
+    if (query) {
+      filteredPeople = filteredPeople.filter(
+        person =>
+          person.name.toLowerCase().includes(query) ||
+          person.motherName?.toLowerCase().includes(query) ||
+          person.fatherName?.toLowerCase().includes(query),
+      );
     }
-  }
+
+    if (sex) {
+      filteredPeople = filteredPeople.filter(person => person.sex === sex);
+    }
+
+    if (centuries.length) {
+      filteredPeople = filteredPeople.filter(person =>
+        centuries.includes(Math.ceil(person.born / 100).toString()),
+      );
+    }
+
+    if (sort) {
+      filteredPeople.sort((a, b) => {
+        switch (sort) {
+          case 'name':
+            return a.name.localeCompare(b.name);
+
+          case 'sex':
+            return a.sex.localeCompare(b.sex);
+
+          case 'born':
+            return a.born - b.born;
+
+          case 'died':
+            return a.died - b.died;
+
+          default:
+            return 0;
+        }
+      });
+
+      if (order === 'desc') {
+        filteredPeople.reverse();
+      }
+    }
+
+    return filteredPeople;
+  }, [userData, query, sex, centuries, sort, order]);
 
   return (
     <>

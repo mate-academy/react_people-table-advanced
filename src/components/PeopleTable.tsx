@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/control-has-associated-label */
 
-import { Person } from '../types';
+import { Person, SortField } from '../types';
 import PersonLink from './PersonLink';
 import { useParams } from 'react-router-dom';
 
@@ -8,7 +8,7 @@ type Props = {
   preparedPeopleData: Person[];
   sort: string | null;
   order: string | null;
-  handleSort: (field: string) => void;
+  handleSort: (field: SortField) => void;
 };
 
 export const PeopleTable: React.FC<Props> = ({
