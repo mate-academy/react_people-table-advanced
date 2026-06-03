@@ -23,11 +23,17 @@ export const PeoplePage = () => {
 
   const visiblePeople = people.filter(person => {
     const query = searchParams.get('query') || null;
+    const normalizedQuery = query?.toLowerCase() || '';
     const sex = searchParams.get('sex') || null;
     const centuries = searchParams.getAll('centuries') || null;
-    const diedCentury = Math.ceil(person.died / 100);
+    const bornCentury = Math.ceil(person.born / 100);
+    const matchesName = person.name.toLowerCase().includes(normalizedQuery);
+    const matchesMother =
+      person.motherName?.toLowerCase().includes(normalizedQuery) ?? false;
+    const matchesFather =
+      person.fatherName?.toLowerCase().includes(normalizedQuery) ?? false;
 
-    if (query && !person.name.toLocaleLowerCase().includes(query)) {
+    if (query && !matchesName && !matchesMother && !matchesFather) {
       return false;
     }
 
@@ -35,7 +41,7 @@ export const PeoplePage = () => {
       return false;
     }
 
-    if (centuries.length > 0 && !centuries.includes(diedCentury.toString())) {
+    if (centuries.length > 0 && !centuries.includes(bornCentury.toString())) {
       return false;
     }
 
@@ -71,13 +77,14 @@ export const PeoplePage = () => {
                 </p>
               )}
 
-              {/*
-              <p>There are no people matching the current search criteria</p>
-              */}
+              {people.length > 0 && visiblePeople.length === 0 && (
+                <p>There are no people matching the current search criteria</p>
+              )}
 
-              {!isLoading && (
+              {!isLoading && visiblePeople.length > 0 && (
                 <PeopleTable
                   people={visiblePeople}
+                  allPeople={people}
                   searchParams={searchParams}
                 />
               )}

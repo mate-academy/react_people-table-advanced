@@ -18,7 +18,7 @@ export const PeopleFilters: React.FC<Props> = ({
   const handleQueryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchParams(
       getSearchWith(searchParams, {
-        query: event.target.value.toLocaleLowerCase().trim() || null,
+        query: event.target.value || null,
       }),
     );
   };

@@ -8,10 +8,15 @@ import classNames from 'classnames';
 
 type Props = {
   people: Person[];
+  allPeople: Person[];
   searchParams: URLSearchParams;
 };
 
-export const PeopleTable: React.FC<Props> = ({ people, searchParams }) => {
+export const PeopleTable: React.FC<Props> = ({
+  people,
+  searchParams,
+  allPeople,
+}) => {
   const sort = searchParams.get('sort');
   const order = searchParams.get('order');
 
@@ -35,6 +40,45 @@ export const PeopleTable: React.FC<Props> = ({ people, searchParams }) => {
       order: null,
     });
   };
+
+  function filterring() {
+    const filteredVisiblePeople = [...people].sort((personA, personB) => {
+      switch (sort) {
+        case 'name':
+          if (order !== 'desc') {
+            return personA.name.localeCompare(personB.name);
+          } else {
+            return personB.name.localeCompare(personA.name);
+          }
+
+        case 'sex':
+          if (order !== 'desc') {
+            return personA.sex.localeCompare(personB.sex);
+          } else {
+            return personB.sex.localeCompare(personA.sex);
+          }
+
+        case 'born':
+          if (order !== 'desc') {
+            return +personA.born - +personB.born;
+          } else {
+            return +personB.born - +personA.born;
+          }
+
+        case 'died':
+          if (order !== 'desc') {
+            return +personA.died - +personB.died;
+          } else {
+            return +personB.died - +personA.died;
+          }
+
+        default:
+          return 0;
+      }
+    });
+
+    return filteredVisiblePeople;
+  }
 
   return (
     <table
@@ -133,9 +177,13 @@ export const PeopleTable: React.FC<Props> = ({ people, searchParams }) => {
       </thead>
 
       <tbody>
-        {people.map(person => {
+        {filterring().map(person => {
           return (
-            <PersonTable key={person.slug} person={person} people={people} />
+            <PersonTable
+              key={person.slug}
+              person={person}
+              allPeople={allPeople}
+            />
           );
         })}
       </tbody>

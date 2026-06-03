@@ -2,7 +2,7 @@ import classNames from 'classnames';
 import { Link, useLocation } from 'react-router-dom';
 
 export const Navbar = () => {
-  const { pathname } = useLocation();
+  const { pathname, search } = useLocation();
 
   return (
     <nav
@@ -27,7 +27,7 @@ export const Navbar = () => {
             className={classNames('navbar-item', {
               'has-background-grey-lighter': pathname.startsWith('/people'),
             })}
-            to="/people"
+            to={{ pathname: '/people', search }}
           >
             People
           </Link>

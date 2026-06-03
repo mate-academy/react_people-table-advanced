@@ -4,14 +4,14 @@ import classNames from 'classnames';
 
 type Props = {
   person: Person;
-  people: Person[];
+  allPeople: Person[];
 };
 
-export const PersonTable: React.FC<Props> = ({ person, people }) => {
-  const mother = people.find(p => p.name === person.motherName);
-  const father = people.find(p => p.name === person.fatherName);
+export const PersonTable: React.FC<Props> = ({ person, allPeople }) => {
+  const mother = allPeople.find(p => p.name === person.motherName);
+  const father = allPeople.find(p => p.name === person.fatherName);
 
-  const { pathname } = useLocation();
+  const { pathname, search } = useLocation();
 
   return (
     <tr
@@ -22,7 +22,7 @@ export const PersonTable: React.FC<Props> = ({ person, people }) => {
     >
       <td>
         <Link
-          to={`/people/${person.slug}`}
+          to={{ pathname: `/people/${person.slug}`, search }}
           className={classNames({
             'has-text-danger': person.sex === 'f',
           })}
@@ -36,7 +36,10 @@ export const PersonTable: React.FC<Props> = ({ person, people }) => {
       <td>
         {person.motherName ? (
           mother ? (
-            <Link className="has-text-danger" to={`/people/${mother.slug}`}>
+            <Link
+              className="has-text-danger"
+              to={{ pathname: `/people/${mother.slug}`, search }}
+            >
               {person.motherName}
             </Link>
           ) : (
@@ -49,7 +52,9 @@ export const PersonTable: React.FC<Props> = ({ person, people }) => {
       <td>
         {person.fatherName ? (
           father ? (
-            <Link to={`/people/${father.slug}`}>{person.fatherName}</Link>
+            <Link to={{ pathname: `/people/${father.slug}`, search }}>
+              {person.fatherName}
+            </Link>
           ) : (
             person.fatherName
           )
