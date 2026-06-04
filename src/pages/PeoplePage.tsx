@@ -78,11 +78,13 @@ export const PeoplePage = () => {
                 </div>
               </div>
 
-              <div className="column is-narrow">
-                <div>
-                  <PeopleFilters />
+              {!hasError && people.length > 0 && (
+                <div className="column is-narrow">
+                  <div>
+                    <PeopleFilters />
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
           </>
         )}
