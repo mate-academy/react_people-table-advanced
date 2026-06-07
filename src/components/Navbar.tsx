@@ -1,4 +1,10 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+
+import { NavLink, useSearchParams } from 'react-router-dom';
+
 export const Navbar = () => {
+  const [searchParams] = useSearchParams();
+
   return (
     <nav
       data-cy="nav"
@@ -8,17 +14,27 @@ export const Navbar = () => {
     >
       <div className="container">
         <div className="navbar-brand">
-          <a className="navbar-item" href="#/">
+          <NavLink
+            to="/"
+            className={({ isActive }) =>
+              isActive
+                ? 'navbar-item has-background-grey-lighter'
+                : 'navbar-item'
+            }
+          >
             Home
-          </a>
+          </NavLink>
 
-          <a
-            aria-current="page"
-            className="navbar-item has-background-grey-lighter"
-            href="#/people"
+          <NavLink
+            to={`/people?${searchParams.toString()}`}
+            className={({ isActive }) =>
+              isActive
+                ? 'navbar-item has-background-grey-lighter'
+                : 'navbar-item'
+            }
           >
             People
-          </a>
+          </NavLink>
         </div>
       </div>
     </nav>
