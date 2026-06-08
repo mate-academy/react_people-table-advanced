@@ -23,6 +23,10 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
 
   const getSortParams = (field: SortField) => {
     if (sort !== field) {
+      return { sort: field, order: 'asc' };
+    }
+
+    if (order === 'asc') {
       return { sort: field, order: 'desc' };
     }
 
