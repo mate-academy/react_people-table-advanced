@@ -1,4 +1,8 @@
+import { NavLink, useLocation } from 'react-router-dom';
+
 export const Navbar = () => {
+  const location = useLocation();
+
   return (
     <nav
       data-cy="nav"
@@ -8,17 +12,28 @@ export const Navbar = () => {
     >
       <div className="container">
         <div className="navbar-brand">
-          <a className="navbar-item" href="#/">
+          <NavLink
+            to="/"
+            className={({ isActive }) =>
+              isActive
+                ? 'navbar-item has-background-grey-lighter'
+                : 'navbar-item'
+            }
+          >
             Home
-          </a>
+          </NavLink>
 
-          <a
+          <NavLink
+            to={{ pathname: '/people', search: location.search }}
             aria-current="page"
-            className="navbar-item has-background-grey-lighter"
-            href="#/people"
+            className={({ isActive }) =>
+              isActive
+                ? 'navbar-item has-background-grey-lighter'
+                : 'navbar-item'
+            }
           >
             People
-          </a>
+          </NavLink>
         </div>
       </div>
     </nav>
