@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import cn from 'classnames';
 import { Person } from '../types';
 
@@ -8,6 +8,8 @@ type Props = {
 };
 
 export const PersonLink: React.FC<Props> = ({ name, people }) => {
+  const { search } = useLocation();
+
   if (!name) {
     return '-';
   }
@@ -18,7 +20,8 @@ export const PersonLink: React.FC<Props> = ({ name, people }) => {
     return (
       <Link
         className={cn(foundPerson.sex === 'f' && 'has-text-danger')}
-        to={`/people/${foundPerson.slug}`}
+        // to={`/people/${foundPerson.slug}`}
+        to={{ pathname: `/people/${foundPerson.slug}`, search: search }}
       >
         {foundPerson.name}
       </Link>

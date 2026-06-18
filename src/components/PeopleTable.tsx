@@ -1,16 +1,19 @@
 /* eslint-disable jsx-a11y/control-has-associated-label */
-
 import cn from 'classnames';
 import React from 'react';
 import { useParams } from 'react-router-dom';
 import { Person } from '../types';
 import { PersonLink } from './PersonLink';
+import { SortSelector } from './SortSelector';
+import { SORT_SELECTORS } from '../constants';
 
 type Props = {
   people: Person[];
+  sort: string;
+  order: boolean;
 };
 
-export const PeopleTable: React.FC<Props> = ({ people }) => {
+export const PeopleTable: React.FC<Props> = ({ people, sort, order }) => {
   const { slug } = useParams();
 
   return (
@@ -20,50 +23,14 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
     >
       <thead>
         <tr>
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Name
-              <a href="#/people?sort=name">
-                <span className="icon">
-                  <i className="fas fa-sort" />
-                </span>
-              </a>
-            </span>
-          </th>
-
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Sex
-              <a href="#/people?sort=sex">
-                <span className="icon">
-                  <i className="fas fa-sort" />
-                </span>
-              </a>
-            </span>
-          </th>
-
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Born
-              <a href="#/people?sort=born&amp;order=desc">
-                <span className="icon">
-                  <i className="fas fa-sort-up" />
-                </span>
-              </a>
-            </span>
-          </th>
-
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Died
-              <a href="#/people?sort=died">
-                <span className="icon">
-                  <i className="fas fa-sort" />
-                </span>
-              </a>
-            </span>
-          </th>
-
+          {SORT_SELECTORS.map(selector => (
+            <SortSelector
+              key={selector}
+              sort={selector}
+              currentSort={sort}
+              order={order}
+            />
+          ))}
           <th>Mother</th>
           <th>Father</th>
         </tr>
