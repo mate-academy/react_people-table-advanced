@@ -60,7 +60,7 @@ export const PeoplePage = () => {
     preparedPeople = [...preparedPeople].reverse();
   }
 
-  const handleQuerryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleQueryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const search = new URLSearchParams(searchParams);
 
     if (e.target.value) {
@@ -100,7 +100,7 @@ export const PeoplePage = () => {
               <PeopleFilters
                 currentSex={sex}
                 query={query}
-                onQueryChange={handleQuerryChange}
+                onQueryChange={handleQueryChange}
                 centuries={centuries}
               />
             </div>
