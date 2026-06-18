@@ -52,8 +52,8 @@ export const PeoplePage = () => {
       if (query) {
         return (
           person.name.toLowerCase().includes(query) ||
-          person.motherName?.toLowerCase().includes(query) ||
-          person.fatherName?.toLowerCase().includes(query)
+          (person.motherName || '').toLowerCase().includes(query) ||
+          (person.fatherName || '').toLowerCase().includes(query)
         );
       }
 

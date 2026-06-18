@@ -17,7 +17,10 @@ export const Navbar = () => {
             className={classNames('navbar-item', {
               'has-background-grey-lighter': location.pathname === '/',
             })}
-            to="/"
+            to={{
+              pathname: '/',
+              search: location.search,
+            }}
           >
             Home
           </Link>
@@ -27,7 +30,10 @@ export const Navbar = () => {
               'has-background-grey-lighter':
                 location.pathname.startsWith('/people'),
             })}
-            to="/people"
+            to={{
+              pathname: '/people',
+              search: location.search,
+            }}
           >
             People
           </Link>
