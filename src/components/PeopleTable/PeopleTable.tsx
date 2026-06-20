@@ -2,7 +2,12 @@ import React from 'react';
 import { Person } from '../../types';
 import { PersonLink } from '../PersonLink';
 import classNames from 'classnames';
-import { Link, useParams, useSearchParams } from 'react-router-dom';
+import {
+  Link,
+  useLocation,
+  useParams,
+  useSearchParams,
+} from 'react-router-dom';
 import { getSearchWith, SearchParams } from '../../utils/searchHelper';
 
 interface Props {
@@ -13,6 +18,8 @@ interface Props {
 /* eslint-disable jsx-a11y/control-has-associated-label */
 export const PeopleTable: React.FC<Props> = ({ people, isLoading }) => {
   const [searchParams, setSearchParams] = useSearchParams();
+  const { search } = useLocation();
+
   const sort = searchParams.get('sort');
   const order = searchParams.get('order');
 
@@ -61,9 +68,9 @@ export const PeopleTable: React.FC<Props> = ({ people, isLoading }) => {
   }
 
   const setSearchWith = (params: SearchParams) => {
-    const search = getSearchWith(searchParams, params);
+    const searching = getSearchWith(searchParams, params);
 
-    setSearchParams(search);
+    setSearchParams(searching);
   };
 
   return (
@@ -207,7 +214,10 @@ export const PeopleTable: React.FC<Props> = ({ people, isLoading }) => {
           >
             <td>
               <Link
-                to={`/people/${person.slug}`}
+                to={{
+                  pathname: `/people/${person.slug}`,
+                  search: search,
+                }}
                 className={classNames({
                   'has-text-danger': person.sex === 'f',
                 })}

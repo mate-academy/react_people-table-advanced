@@ -19,8 +19,19 @@ export const PeoplePage = () => {
 
   const normalizedQuery = query.toLowerCase();
 
-  const matchesQuery = (person: Person) =>
-    person.name.toLowerCase().includes(normalizedQuery);
+  const matchesQuery = (person: Person) => {
+    const nameMatch = person.name.toLowerCase().includes(normalizedQuery);
+
+    const motherMatch = person.motherName
+      ? person.motherName.toLowerCase().includes(normalizedQuery)
+      : false;
+
+    const fatherMatch = person.fatherName
+      ? person.fatherName.toLowerCase().includes(normalizedQuery)
+      : false;
+
+    return nameMatch || motherMatch || fatherMatch;
+  };
 
   const filteredPeople = people.filter(matchesQuery);
 
@@ -60,7 +71,7 @@ export const PeoplePage = () => {
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
           <div className="column is-7-tablet is-narrow-desktop">
-            {!loading && <PeopleFilters />}
+            {!loading && !error && peopleLength && <PeopleFilters />}
           </div>
 
           <div className="column">
