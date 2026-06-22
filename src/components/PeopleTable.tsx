@@ -36,6 +36,7 @@ const getSortParams = (col: SortCol, sort: string, order: string) => {
 export const PeopleTable = ({ people }: Props) => {
   const { slug } = useParams();
   const [searchParams] = useSearchParams();
+  const search = searchParams.toString();
   const sort = searchParams.get('sort') || '';
   const order = searchParams.get('order') || '';
 
@@ -46,7 +47,7 @@ export const PeopleTable = ({ people }: Props) => {
 
     return (
       <a
-        href={`#/people/${person.slug}`}
+        href={`#/people/${person.slug}${search ? `?${search}` : ''}`}
         className={person.sex === 'f' ? 'has-text-danger' : ''}
       >
         {person.name}
@@ -87,7 +88,7 @@ export const PeopleTable = ({ people }: Props) => {
           >
             <td>
               <a
-                href={`#/people/${person.slug}`}
+                href={`#/people/${person.slug}${search ? `?${search}` : ''}`}
                 className={person.sex === 'f' ? 'has-text-danger' : ''}
               >
                 {person.name}
