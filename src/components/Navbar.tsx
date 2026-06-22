@@ -1,7 +1,7 @@
 import { useLocation } from 'react-router-dom';
 
 export const Navbar = () => {
-  const { pathname } = useLocation();
+  const { pathname, search } = useLocation();
 
   return (
     <nav
@@ -21,7 +21,7 @@ export const Navbar = () => {
 
           <a
             className={`navbar-item${pathname.startsWith('/people') ? ' has-background-grey-lighter' : ''}`}
-            href="#/people"
+            href={`#/people${search}`}
           >
             People
           </a>
