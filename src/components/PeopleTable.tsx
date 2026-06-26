@@ -1,5 +1,6 @@
 import { Person } from '../types/Person';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams, useSearchParams } from 'react-router-dom';
+import { SearchLink } from './SearchLink';
 
 type Props = {
   people: Person[];
@@ -7,6 +8,35 @@ type Props = {
 
 export const PeopleTable = ({ people }: Props) => {
   const { slug } = useParams();
+  const [searchParams] = useSearchParams();
+  const sort = searchParams.get('sort') || '';
+  const order = searchParams.get('order') || '';
+
+  const getSortParams = (field: string) => {
+    if (sort !== field) {
+      return { sort: field, order: null };
+    }
+
+    if (!order) {
+      return { sort: field, order: 'desc' };
+    }
+
+    return { sort: null, order: null };
+  };
+
+  const getSortIcon = (field: string) => {
+    if (sort !== field) {
+      return 'fas fa-sort';
+    }
+
+    if (order === 'desc') {
+      return 'fas fa-sort-down';
+    }
+
+    return 'fas fa-sort-up';
+  };
+
+  const sortableColumns = ['name', 'sex', 'born', 'died'];
 
   return (
     <table
@@ -15,10 +45,18 @@ export const PeopleTable = ({ people }: Props) => {
     >
       <thead>
         <tr>
-          <th>Name</th>
-          <th>Sex</th>
-          <th>Born</th>
-          <th>Died</th>
+          {sortableColumns.map(col => (
+            <th key={col}>
+              <span className="is-flex is-flex-wrap-nowrap">
+                {col.charAt(0).toUpperCase() + col.slice(1)}
+                <SearchLink params={getSortParams(col)}>
+                  <span className="icon">
+                    <i className={getSortIcon(col)} />
+                  </span>
+                </SearchLink>
+              </span>
+            </th>
+          ))}
           <th>Mother</th>
           <th>Father</th>
         </tr>
@@ -33,7 +71,7 @@ export const PeopleTable = ({ people }: Props) => {
           >
             <td>
               <Link
-                to={`/people/${person.slug}`}
+                to={`/people/${person.slug}?${searchParams.toString()}`}
                 className={person.sex === 'f' ? 'has-text-danger' : ''}
               >
                 {person.name}
@@ -45,7 +83,7 @@ export const PeopleTable = ({ people }: Props) => {
             <td>
               {person.mother ? (
                 <Link
-                  to={`/people/${person.mother.slug}`}
+                  to={`/people/${person.mother.slug}?${searchParams.toString()}`}
                   className="has-text-danger"
                 >
                   {person.motherName}
@@ -56,7 +94,9 @@ export const PeopleTable = ({ people }: Props) => {
             </td>
             <td>
               {person.father ? (
-                <Link to={`/people/${person.father.slug}`}>
+                <Link
+                  to={`/people/${person.father.slug}?${searchParams.toString()}`}
+                >
                   {person.fatherName}
                 </Link>
               ) : (
