@@ -2,21 +2,21 @@ import { Link, LinkProps, useSearchParams } from 'react-router-dom';
 import { getSearchWith, SearchParams } from '../utils/searchHelper';
 
 /**
- * To replace the the standard `Link` we take all it props except for `to`
- * along with the custom `params` prop that we use for updating the search
+ * Щоб замінити стандартне `Link`, ми беремо всі його властивості, крім `to`
+ * разом із власною властивістю `params`, яку ми використовуємо для оновлення пошуку
  */
 type Props = Omit<LinkProps, 'to'> & {
   params: SearchParams;
 };
 
 /**
- * SearchLink updates the given `params` in the search keeping the `pathname`
- * and the other existing search params (see `getSearchWith`)
+ * SearchLink оновлює задані `params` у пошуку, зберігаючи `pathname`
+ * та інші існуючі параметри пошуку (див. `getSearchWith`)
  */
 export const SearchLink: React.FC<Props> = ({
-  children, // this is the content between the open and closing tags
-  params, // the params to be updated in the `search`
-  ...props // all usual Link props like `className`, `style` and `id`
+  children, // це вміст між відкриваючим та закриваючим тегами
+  params, // параметри, які потрібно оновити в `search`
+  ...props // усі звичайні властивості посилань, такі як `className`, `style` та `id`
 }) => {
   const [searchParams] = useSearchParams();
 
@@ -28,7 +28,7 @@ export const SearchLink: React.FC<Props> = ({
       to={{
         search: getSearchWith(searchParams, params),
       }}
-      {...props} // copy all the other props
+      {...props} // скопіювати всі інші пропси
     >
       {children}
     </Link>
