@@ -10,11 +10,13 @@ export const NameFilter = () => {
       <input
         data-cy="NameFilter"
         value={query}
-        onChange={event => setSearchParams(
-          getSearchWith(searchParams, {
-            query: event.target.value || null,
-          }),
-        )}
+        onChange={event =>
+          setSearchParams(
+            getSearchWith(searchParams, {
+              query: event.target.value || null,
+            }),
+          )
+        }
         className="input"
         type="text"
         placeholder="Search"

@@ -13,7 +13,6 @@ const getNavLinkClassName = ({ isActive }: Status) => {
 
 export const Navbar = () => {
   const location = useLocation();
-  console.log('location', location.pathname);
 
   return (
     <nav
