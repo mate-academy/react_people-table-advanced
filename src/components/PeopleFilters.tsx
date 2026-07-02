@@ -54,7 +54,7 @@ export const PeopleFilters = () => {
               setSearchParams(newParams);
             }}
           />
-        
+
           <span className="icon is-left">
             <i className="fas fa-search" aria-hidden="true" />
           </span>
@@ -113,7 +113,7 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <SearchLink
           className="button is-link is-outlined is-fullwidth"
-          params={{ query: null, centuries: null, sort: null, order: null }}
+          params={{ query: null, centuries: null, sort: null, order: null, sex: null }}
         >
           Reset all filters
         </SearchLink>
