@@ -1,13 +1,15 @@
 import classNames from 'classnames';
 import { Person } from '../../types';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 type Props = {
-  people: Person[]; // потрібен повний список для пошуку
+  people: Person[];
   personName: string | null;
 };
 
 export const PersonLink: React.FC<Props> = ({ personName, people }) => {
+  const location = useLocation();
+
   if (!personName) {
     return '-';
   }
@@ -21,7 +23,10 @@ export const PersonLink: React.FC<Props> = ({ personName, people }) => {
   return (
     <Link
       className={classNames({ 'has-text-danger': foundPerson.sex === 'f' })}
-      to={`/people/${foundPerson.slug}`}
+      to={{
+        pathname: `/people/${foundPerson.slug}`,
+        search: location.search,
+      }}
     >
       {personName}
     </Link>

@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import { Person } from '../types';
 import { PersonLink } from './PersonLink';
 import { SearchLink } from './SearchLink';
-type SortField = 'name' | 'sex' | 'born' | 'died';
+import { SortField } from '../types/SortField';
 
 type Props = {
   people: Person[];

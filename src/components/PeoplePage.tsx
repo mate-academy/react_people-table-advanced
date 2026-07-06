@@ -5,6 +5,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { getPeople } from '../api';
 import { Person } from '../types';
 import { useSearchParams } from 'react-router-dom';
+import { SortField } from '../types/SortField';
 
 export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);
@@ -20,7 +21,7 @@ export const PeoplePage = () => {
 
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const sex = searchParams.get('sex') || '';
+  const sex = searchParams.get('sex');
   const query = searchParams.get('query') ?? '';
   const centuries = searchParams.getAll('centuries');
   const sort = searchParams.get('sort');
@@ -90,10 +91,16 @@ export const PeoplePage = () => {
   }, [people, sex, query, centuries]);
 
   const resetAll = () => {
-    setSearchParams({});
+    const params = new URLSearchParams(searchParams);
+
+    params.delete('sex');
+    params.delete('query');
+    params.delete('centuries');
+
+    setSearchParams(params);
   };
 
-  const getSortParams = (field: string) => {
+  const getSortParams = (field: SortField) => {
     if (sort !== field) {
       return {
         sort: field,
@@ -158,7 +165,7 @@ export const PeoplePage = () => {
         <p data-cy="noPeopleMessage">There are no people on the server</p>
       )}
 
-      {!isLoading && (
+      {!isLoading && !hasError && people.length > 0 && (
         <div className="block">
           <div className="columns is-desktop is-flex-direction-row-reverse">
             <div className="column is-7-tablet is-narrow-desktop">
