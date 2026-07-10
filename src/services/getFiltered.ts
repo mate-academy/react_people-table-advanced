@@ -22,7 +22,7 @@ function sortPeople(people: Person[], sortBy: Sort, order: string | null) {
       );
     case 'died':
       return [...people].sort((person1: Person, person2: Person) =>
-        !order ? person1.born - person2.born : person2.born - person1.born,
+        !order ? person1.died - person2.died : person2.died - person1.died,
       );
     default:
       return people;
@@ -51,8 +51,8 @@ export function getFilteredPeople(
     copiedPeople = copiedPeople.filter(person => {
       return (
         person.name.toLowerCase().includes(query) ||
-        person.fatherName?.toLowerCase().includes(query) ||
-        person.motherName?.toLowerCase().includes(query)
+        person.fatherName?.toLowerCase().includes(query.toLowerCase()) ||
+        person.motherName?.toLowerCase().includes(query.toLowerCase())
       );
     });
   }

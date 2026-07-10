@@ -9,7 +9,7 @@ interface Props {
   sortBy: string | null;
   order: string | null;
   searchParams: URLSearchParams;
-  handleSort: (sort: string) => void;
+  handleSort: (sort: string) => string;
 }
 
 /* eslint-disable jsx-a11y/control-has-associated-label */
@@ -30,12 +30,9 @@ export const PeopleTable: React.FC<Props> = ({
       <thead>
         <tr>
           <th>
-            <span
-              className="is-flex is-flex-wrap-nowrap"
-              onClick={() => handleSort('name')}
-            >
+            <span className="is-flex is-flex-wrap-nowrap">
               Name
-              <Link to={`/people?${searchParams.toString()}`}>
+              <Link to={handleSort('name')}>
                 <span className="icon">
                   <i
                     className={classNames('fas', {
@@ -50,12 +47,9 @@ export const PeopleTable: React.FC<Props> = ({
           </th>
 
           <th>
-            <span
-              className="is-flex is-flex-wrap-nowrap"
-              onClick={() => handleSort('sex')}
-            >
+            <span className="is-flex is-flex-wrap-nowrap">
               Sex
-              <Link to={`/people?${searchParams.toString()}`}>
+              <Link to={handleSort('sex')}>
                 <span className="icon">
                   <i
                     className={classNames('fas', {
@@ -69,12 +63,9 @@ export const PeopleTable: React.FC<Props> = ({
             </span>
           </th>
           <th>
-            <span
-              className="is-flex is-flex-wrap-nowrap"
-              onClick={() => handleSort('born')}
-            >
+            <span className="is-flex is-flex-wrap-nowrap">
               Born
-              <Link to={`/people?${searchParams.toString()}`}>
+              <Link to={handleSort('born')}>
                 <span className="icon">
                   <i
                     className={classNames('fas', {
@@ -89,12 +80,9 @@ export const PeopleTable: React.FC<Props> = ({
           </th>
 
           <th>
-            <span
-              className="is-flex is-flex-wrap-nowrap"
-              onClick={() => handleSort('died')}
-            >
+            <span className="is-flex is-flex-wrap-nowrap">
               Died
-              <Link to={`/people?${searchParams.toString()}`}>
+              <Link to={handleSort('died')}>
                 <span className="icon">
                   <i
                     className={classNames('fas', {

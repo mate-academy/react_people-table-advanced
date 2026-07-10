@@ -1,14 +1,15 @@
 import classNames from 'classnames';
 import React from 'react';
-import { Link, NavLink } from 'react-router-dom';
+import { Link, NavLink, useLocation } from 'react-router-dom';
 
 interface Props {
   sex: string | null;
   query: string;
   centuries: string[];
-  handleSex: (gender: string) => void;
+  handleSex: (gender: string) => string;
   searchParams: URLSearchParams;
   setSearchParams: (params: URLSearchParams) => void;
+  resetFilters: () => string;
 }
 
 export const PeopleFilters: React.FC<Props> = ({
@@ -18,7 +19,10 @@ export const PeopleFilters: React.FC<Props> = ({
   handleSex,
   searchParams,
   setSearchParams,
+  resetFilters,
 }) => {
+  const { pathname } = useLocation();
+
   const handleQuery = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
     const params = new URLSearchParams(searchParams);
@@ -42,11 +46,15 @@ export const PeopleFilters: React.FC<Props> = ({
     params.delete('centuries');
     activeCenturies.forEach(current => params.append('centuries', current));
 
-    return `/people?${params.toString()}`;
+    return `${pathname}?${params.toString()}`;
   };
 
   const handleAllCenturies = () => {
-    searchParams.delete('centuries');
+    const params = new URLSearchParams(searchParams);
+
+    params.delete('centuries');
+
+    return `${pathname}?${params.toString()}`;
   };
 
   return (
@@ -116,8 +124,7 @@ export const PeopleFilters: React.FC<Props> = ({
               className={classNames('button', {
                 'is-success': centuries.length === 0,
               })}
-              to="/people"
-              onClick={handleAllCenturies}
+              to={handleAllCenturies()}
             >
               All
             </Link>
@@ -126,9 +133,12 @@ export const PeopleFilters: React.FC<Props> = ({
       </div>
 
       <div className="panel-block">
-        <a className="button is-link is-outlined is-fullwidth" href="#/people">
+        <Link
+          className="button is-link is-outlined is-fullwidth"
+          to={resetFilters()}
+        >
           Reset all filters
-        </a>
+        </Link>
       </div>
     </nav>
   );

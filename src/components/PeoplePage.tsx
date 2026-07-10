@@ -3,20 +3,21 @@ import { Loader } from './Loader';
 import { PeopleTable } from './PeopleTable';
 import { useContext, useEffect, useMemo } from 'react';
 import { PeopleState } from '../context/PeopleContext';
-import { useSearchParams } from 'react-router-dom';
+import { useLocation, useSearchParams } from 'react-router-dom';
 import { getFilteredPeople, Sort } from '../services/getFiltered';
 
 export const PeoplePage = () => {
   const { people, isLoading, isEmpty, isError, getPeople } =
     useContext(PeopleState);
 
+  const { pathname } = useLocation();
   const [searchParams, setSearchParams] = useSearchParams();
 
   const sortBy = searchParams.get('sort') || null;
   const order = searchParams.get('order') || null;
 
   const sex = searchParams.get('sex') || null;
-  const query = searchParams.get('query') || '';
+  const query = searchParams.get('query')?.toLowerCase() ?? '';
   const centuries = useMemo(
     () => searchParams.getAll('centuries') || [],
     [searchParams],
@@ -30,6 +31,7 @@ export const PeoplePage = () => {
 
     if (currentSearch !== sort) {
       params.set('sort', sort);
+      params.delete('order');
     } else if (currentOrder === null) {
       params.set('order', 'desc');
     } else {
@@ -37,7 +39,7 @@ export const PeoplePage = () => {
       params.delete('order');
     }
 
-    setSearchParams(params);
+    return `/people?${params.toString()}`;
   };
 
   const handleSex = (gender: string) => {
@@ -49,7 +51,17 @@ export const PeoplePage = () => {
       params.set('sex', gender);
     }
 
-    return `/people?${params.toString()}`;
+    return `${pathname}?${params.toString()}`;
+  };
+
+  const resetFilters = () => {
+    const params = new URLSearchParams(searchParams);
+
+    params.delete('sex');
+    params.delete('query');
+    params.delete('centuries');
+
+    return `${pathname}?${params.toString()}`;
   };
 
   const peopleWithParents = useMemo(() => {
@@ -93,6 +105,7 @@ export const PeoplePage = () => {
                   handleSex={handleSex}
                   searchParams={searchParams}
                   setSearchParams={setSearchParams}
+                  resetFilters={resetFilters}
                 />
               )}
             </div>
