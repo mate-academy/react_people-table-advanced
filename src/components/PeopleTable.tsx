@@ -8,7 +8,7 @@ interface Props {
   filteredPeople: Person[];
   sortBy: string | null;
   order: string | null;
-  handleSort: (sort: string) => string;
+  handleSort: (sort: string) => void;
 }
 
 /* eslint-disable jsx-a11y/control-has-associated-label */
@@ -30,7 +30,13 @@ export const PeopleTable: React.FC<Props> = ({
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Name
-              <Link to={handleSort('name')}>
+              <Link
+                to="#"
+                onClick={event => {
+                  event.preventDefault();
+                  handleSort('name');
+                }}
+              >
                 <span className="icon">
                   <i
                     className={classNames('fas', {
@@ -47,7 +53,13 @@ export const PeopleTable: React.FC<Props> = ({
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Sex
-              <Link to={handleSort('sex')}>
+              <Link
+                to="#"
+                onClick={event => {
+                  event.preventDefault();
+                  handleSort('sex');
+                }}
+              >
                 <span className="icon">
                   <i
                     className={classNames('fas', {
@@ -63,7 +75,13 @@ export const PeopleTable: React.FC<Props> = ({
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Born
-              <Link to={handleSort('born')}>
+              <Link
+                to="#"
+                onClick={event => {
+                  event.preventDefault();
+                  handleSort('born');
+                }}
+              >
                 <span className="icon">
                   <i
                     className={classNames('fas', {
@@ -80,7 +98,13 @@ export const PeopleTable: React.FC<Props> = ({
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Died
-              <Link to={handleSort('died')}>
+              <Link
+                to="#"
+                onClick={event => {
+                  event.preventDefault();
+                  handleSort('died');
+                }}
+              >
                 <span className="icon">
                   <i
                     className={classNames('fas', {

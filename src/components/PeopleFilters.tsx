@@ -1,6 +1,6 @@
 import classNames from 'classnames';
 import React from 'react';
-import { Link, NavLink, useLocation } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 
 interface Props {
   sex: string | null;
@@ -9,7 +9,7 @@ interface Props {
   handleSex: (gender: string) => string;
   searchParams: URLSearchParams;
   setSearchParams: (params: URLSearchParams) => void;
-  resetFilters: () => string;
+  resetFilters: () => void;
 }
 
 export const PeopleFilters: React.FC<Props> = ({
@@ -21,8 +21,6 @@ export const PeopleFilters: React.FC<Props> = ({
   setSearchParams,
   resetFilters,
 }) => {
-  const { pathname } = useLocation();
-
   const handleQuery = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
     const params = new URLSearchParams(searchParams);
@@ -46,7 +44,7 @@ export const PeopleFilters: React.FC<Props> = ({
     params.delete('centuries');
     activeCenturies.forEach(current => params.append('centuries', current));
 
-    return `${pathname}?${params.toString()}`;
+    setSearchParams(params);
   };
 
   const handleAllCenturies = () => {
@@ -54,7 +52,7 @@ export const PeopleFilters: React.FC<Props> = ({
 
     params.delete('centuries');
 
-    return `${pathname}?${params.toString()}`;
+    setSearchParams(params);
   };
 
   return (
@@ -104,30 +102,30 @@ export const PeopleFilters: React.FC<Props> = ({
           <div className="level-left">
             {['16', '17', '18', '19', '20'].map(century => {
               return (
-                <Link
+                <button
                   key={century}
                   data-cy="century"
                   className={classNames('button mr-1', {
                     'is-info': centuries.includes(century),
                   })}
-                  to={handleCenturies(century)}
+                  onClick={() => handleCenturies(century)}
                 >
                   {century}
-                </Link>
+                </button>
               );
             })}
           </div>
 
           <div className="level-right ml-4">
-            <Link
+            <button
               data-cy="centuryALL"
               className={classNames('button', {
                 'is-success': centuries.length === 0,
               })}
-              to={handleAllCenturies()}
+              onClick={() => handleAllCenturies()}
             >
               All
-            </Link>
+            </button>
           </div>
         </div>
       </div>
@@ -135,7 +133,8 @@ export const PeopleFilters: React.FC<Props> = ({
       <div className="panel-block">
         <Link
           className="button is-link is-outlined is-fullwidth"
-          to={resetFilters()}
+          to="/people"
+          onClick={resetFilters}
         >
           Reset all filters
         </Link>

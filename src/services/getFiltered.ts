@@ -51,8 +51,8 @@ export function getFilteredPeople(
     copiedPeople = copiedPeople.filter(person => {
       return (
         person.name.toLowerCase().includes(query) ||
-        person.fatherName?.toLowerCase().includes(query.toLowerCase()) ||
-        person.motherName?.toLowerCase().includes(query.toLowerCase())
+        person.fatherName?.toLowerCase().includes(query) ||
+        person.motherName?.toLowerCase().includes(query)
       );
     });
   }

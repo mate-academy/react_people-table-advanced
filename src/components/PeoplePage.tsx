@@ -39,7 +39,7 @@ export const PeoplePage = () => {
       params.delete('order');
     }
 
-    return `/people?${params.toString()}`;
+    setSearchParams(params);
   };
 
   const handleSex = (gender: string) => {
@@ -61,7 +61,7 @@ export const PeoplePage = () => {
     params.delete('query');
     params.delete('centuries');
 
-    return `${pathname}?${params.toString()}`;
+    setSearchParams(params);
   };
 
   const peopleWithParents = useMemo(() => {
