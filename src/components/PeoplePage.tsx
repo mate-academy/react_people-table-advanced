@@ -131,7 +131,6 @@ export const PeoplePage = () => {
                     filteredPeople={filteredPeople}
                     sortBy={sortBy}
                     order={order}
-                    searchParams={searchParams}
                     handleSort={handleSort}
                   />
                 )}

@@ -8,7 +8,6 @@ interface Props {
   filteredPeople: Person[];
   sortBy: string | null;
   order: string | null;
-  searchParams: URLSearchParams;
   handleSort: (sort: string) => string;
 }
 
@@ -17,7 +16,6 @@ export const PeopleTable: React.FC<Props> = ({
   filteredPeople,
   sortBy,
   order,
-  searchParams,
   handleSort,
 }) => {
   const { slug } = useParams();
