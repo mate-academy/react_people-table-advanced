@@ -45,7 +45,11 @@ export const PeopleFilters = () => {
           className={cn({
             'is-active': sex === null,
           })}
-          to="#/people"
+          to={{
+            search: getSearchWith(searchParams, {
+              sex: null,
+            }),
+          }}
         >
           All
         </Link>
@@ -152,7 +156,11 @@ export const PeopleFilters = () => {
               className={cn('button is-success is-outlined', {
                 'is-info': centuries === null,
               })}
-              to="#/people"
+              to={{
+                search: getSearchWith(searchParams, {
+                  centuries: null,
+                }),
+              }}
             >
               All
             </Link>
@@ -161,7 +169,18 @@ export const PeopleFilters = () => {
       </div>
 
       <div className="panel-block">
-        <Link className="button is-link is-outlined is-fullwidth" to="#/people">
+        <Link
+          className="button is-link is-outlined is-fullwidth"
+          to={{
+            search: getSearchWith(searchParams, {
+              sex: null,
+              centuries: null,
+              query: null,
+              sort: null,
+              order: null,
+            }),
+          }}
+        >
           Reset all filters
         </Link>
       </div>

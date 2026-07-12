@@ -27,8 +27,16 @@ export const PeoplePage = () => {
     const matchesCentury =
       centuries.length === 0 || centuries.includes(String(personCentury));
 
+    // const matchesQuery =
+    //   !query || person.name.toLowerCase().includes(query.toLowerCase());
+
+    const normalizedQuery = query.toLowerCase();
+
     const matchesQuery =
-      !query || person.name.toLowerCase().includes(query.toLowerCase());
+      !query ||
+      person.name.toLowerCase().includes(normalizedQuery) ||
+      person.motherName?.toLowerCase().includes(normalizedQuery) ||
+      person.fatherName?.toLowerCase().includes(normalizedQuery);
 
     return matchesSex && matchesCentury && matchesQuery;
   });
@@ -86,7 +94,7 @@ export const PeoplePage = () => {
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
           <div className="column is-7-tablet is-narrow-desktop">
-            <PeopleFilters />
+            {!isLoading && !hasError && people.length > 0 && <PeopleFilters />}
           </div>
 
           <div className="column">

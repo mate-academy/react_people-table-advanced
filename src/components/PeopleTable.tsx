@@ -15,6 +15,32 @@ export const PeopleTable = ({ people, selectedSlug }: Props) => {
   const sort = searchParams.get('sort');
   const order = searchParams.get('order');
 
+  const getSortLink = (field: string) => {
+    if (sort !== field) {
+      return {
+        search: getSearchWith(searchParams, {
+          sort: field,
+          order: null,
+        }),
+      };
+    }
+
+    if (order !== 'desc') {
+      return {
+        search: getSearchWith(searchParams, {
+          order: 'desc',
+        }),
+      };
+    }
+
+    return {
+      search: getSearchWith(searchParams, {
+        sort: null,
+        order: null,
+      }),
+    };
+  };
+
   return (
     <table
       data-cy="peopleTable"
@@ -26,12 +52,13 @@ export const PeopleTable = ({ people, selectedSlug }: Props) => {
             <span className="is-flex is-flex-wrap-nowrap">
               Name
               <Link
-                to={{
-                  search: getSearchWith(searchParams, {
-                    sort: 'name',
-                    order: sort === 'name' && order !== 'desc' ? 'desc' : null,
-                  }),
-                }}
+                to={getSortLink('name')}
+                // to={{
+                //   search: getSearchWith(searchParams, {
+                //     sort: 'name',
+                //     order: sort === 'name' && order !== 'desc' ? 'desc' : null,
+                //   }),
+                // }}
               >
                 <span className="icon">
                   <i
@@ -50,12 +77,13 @@ export const PeopleTable = ({ people, selectedSlug }: Props) => {
             <span className="is-flex is-flex-wrap-nowrap">
               Sex
               <Link
-                to={{
-                  search: getSearchWith(searchParams, {
-                    sort: 'sex',
-                    order: sort === 'sex' && order !== 'desc' ? 'desc' : null,
-                  }),
-                }}
+                to={getSortLink('sex')}
+                // to={{
+                //   search: getSearchWith(searchParams, {
+                //     sort: 'sex',
+                //     order: sort === 'sex' && order !== 'desc' ? 'desc' : null,
+                //   }),
+                // }}
               >
                 <span className="icon">
                   <i
@@ -74,12 +102,13 @@ export const PeopleTable = ({ people, selectedSlug }: Props) => {
             <span className="is-flex is-flex-wrap-nowrap">
               Born
               <Link
-                to={{
-                  search: getSearchWith(searchParams, {
-                    sort: 'born',
-                    order: sort === 'born' && order !== 'desc' ? 'desc' : null,
-                  }),
-                }}
+                to={getSortLink('born')}
+                // to={{
+                //   search: getSearchWith(searchParams, {
+                //     sort: 'born',
+                //     order: sort === 'born' && order !== 'desc' ? 'desc' : null,
+                //   }),
+                // }}
               >
                 <span className="icon">
                   <i
@@ -98,12 +127,13 @@ export const PeopleTable = ({ people, selectedSlug }: Props) => {
             <span className="is-flex is-flex-wrap-nowrap">
               Died
               <Link
-                to={{
-                  search: getSearchWith(searchParams, {
-                    sort: 'died',
-                    order: sort === 'died' && order !== 'desc' ? 'desc' : null,
-                  }),
-                }}
+                to={getSortLink('died')}
+                // to={{
+                //   search: getSearchWith(searchParams, {
+                //     sort: 'died',
+                //     order: sort === 'died' && order !== 'desc' ? 'desc' : null,
+                //   }),
+                // }}
               >
                 <span className="icon">
                   <i
