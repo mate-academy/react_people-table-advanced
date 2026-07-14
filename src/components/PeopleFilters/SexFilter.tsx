@@ -27,44 +27,35 @@
 //     </>
 //   );
 // };
-import { useSearchParams } from 'react-router-dom';
+import { Link, useSearchParams, useLocation } from 'react-router-dom';
+import { getSearchWith } from '../../utils/searchHelper';
 
 export const SexFilter = () => {
   const [searchParams] = useSearchParams();
+  const { pathname } = useLocation();
   const activeSex = searchParams.get('sex');
 
-  // Дістаємо поточний query, щоб не загубити його при переході
-  const currentQuery = searchParams.get('query');
-
-  // Функція-помічник, яка створює чистий рядок параметрів для href
   const getHref = (sexValue: string | null) => {
-    const params = new URLSearchParams();
-
-    if (sexValue) {
-      params.set('sex', sexValue);
-    }
-
-    if (currentQuery) {
-      params.set('query', currentQuery);
-    }
-
-    // Якщо параметрів немає — повертаємо просто шлях, інакше додаємо знак "?"
-    const queryString = params.toString();
-
-    return queryString ? `#/people?${queryString}` : '#/people';
+    return {
+      pathname,
+      search: getSearchWith(searchParams, { sex: sexValue || null }),
+    };
   };
 
   return (
     <p className="panel-tabs" data-cy="SexFilter">
-      <a className={activeSex === null ? 'is-active' : ''} href={getHref(null)}>
+      <Link
+        className={activeSex === null ? 'is-active' : ''}
+        to={getHref(null)}
+      >
         All
-      </a>
-      <a className={activeSex === 'm' ? 'is-active' : ''} href={getHref('m')}>
+      </Link>
+      <Link className={activeSex === 'm' ? 'is-active' : ''} to={getHref('m')}>
         Male
-      </a>
-      <a className={activeSex === 'f' ? 'is-active' : ''} href={getHref('f')}>
+      </Link>
+      <Link className={activeSex === 'f' ? 'is-active' : ''} to={getHref('f')}>
         Female
-      </a>
+      </Link>
     </p>
   );
 };

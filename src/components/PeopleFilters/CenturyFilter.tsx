@@ -1,17 +1,17 @@
 // .. CenturyFilter.tsx
-import { Link, useSearchParams } from 'react-router-dom';
+import { Link, useSearchParams, useLocation } from 'react-router-dom';
 import { getSearchWith } from '../../utils/searchHelper';
 
 export const CenturyFilter = () => {
   const [searchParams] = useSearchParams();
+  const { pathname } = useLocation();
 
-  // Отримуємо всі обрані століття як масив рядків
   const activeCenturies = searchParams.getAll('centuries');
 
   const getHref = (centuryValue: string | null) => {
-    // Якщо клікнули на "All", скидаємо фільтр століть (передаємо null)
     if (centuryValue === null) {
       return {
+        pathname,
         search: getSearchWith(searchParams, { centuries: null }),
       };
     }
@@ -19,16 +19,13 @@ export const CenturyFilter = () => {
     let updatedCenturies = [...activeCenturies];
 
     if (updatedCenturies.includes(centuryValue)) {
-      // Якщо століття вже було активним — прибираємо його з масиву
       updatedCenturies = updatedCenturies.filter(c => c !== centuryValue);
     } else {
-      // Якщо не було — додаємо
       updatedCenturies.push(centuryValue);
     }
 
-    // Повертаємо об'єкт для властивості `to` у компонента <Link>.
-    // getSearchWith автоматично збереже стать, пошук, сортування тощо.
     return {
+      pathname,
       search: getSearchWith(searchParams, { centuries: updatedCenturies }),
     };
   };
@@ -46,7 +43,6 @@ export const CenturyFilter = () => {
               <Link
                 key={century}
                 data-cy="century"
-                // Якщо століття активне, додаємо клас is-info, інакше забираємо
                 className={`button mr-1 ${isActive ? 'is-info' : ''}`}
                 to={getHref(century)}
               >

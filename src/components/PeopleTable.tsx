@@ -1,10 +1,8 @@
 /* eslint-disable jsx-a11y/control-has-associated-label */
-
-/* eslint-disable jsx-a11y/control-has-associated-label */
-
-import { useSearchParams } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import type { Person } from '../types';
 import { PersonLink } from './PersonLink';
+import { getSearchWith } from '../utils/searchHelper'; // Перевір шлях до утиліти
 
 interface PeopleTableProps {
   people: Person[];
@@ -12,33 +10,27 @@ interface PeopleTableProps {
 }
 
 export const PeopleTable = ({ people, selectedSlug }: PeopleTableProps) => {
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
 
-  // Отримуємо поточні параметри сортування з URL
   const sortBy = searchParams.get('sort') || '';
   const sortOrder = searchParams.get('order') || '';
 
-  // Універсальна функція для зміни параметрів сортування в URL
-  const handleSort = (field: string) => {
-    const newParams = new URLSearchParams(searchParams);
+  const getSortSearchString = (field: string) => {
+    const paramsToUpdate: Record<string, string | null> = {};
 
     if (sortBy !== field) {
-      // Якщо обрано нове поле сортування: встановлюємо 'asc'
-      newParams.set('sort', field);
-      newParams.set('order', 'asc');
+      paramsToUpdate.sort = field;
+      paramsToUpdate.order = 'asc';
     } else if (sortOrder === 'asc') {
-      // Якщо вже було 'asc': змінюємо на 'desc'
-      newParams.set('order', 'desc');
+      paramsToUpdate.order = 'desc';
     } else {
-      // Якщо було 'desc': повністю скидаємо сортування для цього поля
-      newParams.delete('sort');
-      newParams.delete('order');
+      paramsToUpdate.sort = null;
+      paramsToUpdate.order = null;
     }
 
-    setSearchParams(newParams);
+    return getSearchWith(searchParams, paramsToUpdate);
   };
 
-  // Логіка сортування на основі даних з URL
   const sortPeople = (data: Person[]): Person[] => {
     if (!sortBy || !sortOrder) {
       return data;
@@ -72,23 +64,6 @@ export const PeopleTable = ({ people, selectedSlug }: PeopleTableProps) => {
 
   const sortedPeople = sortPeople(people);
 
-  // Допоміжна функція для побудови правильного href (для підтримки SEO/доступності)
-  const getSortHref = (field: string) => {
-    const tempParams = new URLSearchParams(searchParams);
-
-    if (sortBy !== field) {
-      tempParams.set('sort', field);
-      tempParams.set('order', 'asc');
-    } else if (sortOrder === 'asc') {
-      tempParams.set('order', 'desc');
-    } else {
-      tempParams.delete('sort');
-      tempParams.delete('order');
-    }
-
-    return `#/people?${tempParams.toString()}`;
-  };
-
   return (
     <table
       data-cy="peopleTable"
@@ -99,13 +74,7 @@ export const PeopleTable = ({ people, selectedSlug }: PeopleTableProps) => {
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Name
-              <a
-                href={getSortHref('name')}
-                onClick={event => {
-                  event.preventDefault();
-                  handleSort('name');
-                }}
-              >
+              <Link to={{ search: getSortSearchString('name') }}>
                 <span className="icon">
                   <i
                     className={`fas ${
@@ -117,20 +86,14 @@ export const PeopleTable = ({ people, selectedSlug }: PeopleTableProps) => {
                     }`}
                   />
                 </span>
-              </a>
+              </Link>
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Sex
-              <a
-                href={getSortHref('sex')}
-                onClick={event => {
-                  event.preventDefault();
-                  handleSort('sex');
-                }}
-              >
+              <Link to={{ search: getSortSearchString('sex') }}>
                 <span className="icon">
                   <i
                     className={`fas ${
@@ -142,20 +105,14 @@ export const PeopleTable = ({ people, selectedSlug }: PeopleTableProps) => {
                     }`}
                   />
                 </span>
-              </a>
+              </Link>
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Born
-              <a
-                href={getSortHref('born')}
-                onClick={event => {
-                  event.preventDefault();
-                  handleSort('born');
-                }}
-              >
+              <Link to={{ search: getSortSearchString('born') }}>
                 <span className="icon">
                   <i
                     className={`fas ${
@@ -167,20 +124,14 @@ export const PeopleTable = ({ people, selectedSlug }: PeopleTableProps) => {
                     }`}
                   />
                 </span>
-              </a>
+              </Link>
             </span>
           </th>
 
           <th>
             <span className="is-flex is-flex-wrap-nowrap">
               Died
-              <a
-                href={getSortHref('died')}
-                onClick={event => {
-                  event.preventDefault();
-                  handleSort('died');
-                }}
-              >
+              <Link to={{ search: getSortSearchString('died') }}>
                 <span className="icon">
                   <i
                     className={`fas ${
@@ -192,7 +143,7 @@ export const PeopleTable = ({ people, selectedSlug }: PeopleTableProps) => {
                     }`}
                   />
                 </span>
-              </a>
+              </Link>
             </span>
           </th>
 
