@@ -1,41 +1,36 @@
 // .. CenturyFilter.tsx
-import { useSearchParams } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
+import { getSearchWith } from '../../utils/searchHelper';
 
 export const CenturyFilter = () => {
   const [searchParams] = useSearchParams();
 
   // Отримуємо всі обрані століття як масив рядків
   const activeCenturies = searchParams.getAll('centuries');
-  const currentSex = searchParams.get('sex');
-  const currentQuery = searchParams.get('query');
 
   const getHref = (centuryValue: string | null) => {
-    const params = new URLSearchParams();
-
-    // Зберігаємо стать та пошуковий запит, якщо вони є
-    if (currentSex) {
-      params.set('sex', currentSex);
+    // Якщо клікнули на "All", скидаємо фільтр століть (передаємо null)
+    if (centuryValue === null) {
+      return {
+        search: getSearchWith(searchParams, { centuries: null }),
+      };
     }
 
-    if (currentQuery) {
-      params.set('query', currentQuery);
+    let updatedCenturies = [...activeCenturies];
+
+    if (updatedCenturies.includes(centuryValue)) {
+      // Якщо століття вже було активним — прибираємо його з масиву
+      updatedCenturies = updatedCenturies.filter(c => c !== centuryValue);
+    } else {
+      // Якщо не було — додаємо
+      updatedCenturies.push(centuryValue);
     }
 
-    if (centuryValue !== null) {
-      let updatedCenturies = [...activeCenturies];
-
-      if (updatedCenturies.includes(centuryValue)) {
-        updatedCenturies = updatedCenturies.filter(c => c !== centuryValue);
-      } else {
-        updatedCenturies.push(centuryValue);
-      }
-
-      updatedCenturies.forEach(c => params.append('centuries', c));
-    }
-
-    const queryString = params.toString();
-
-    return queryString ? `#/people?${queryString}` : '#/people';
+    // Повертаємо об'єкт для властивості `to` у компонента <Link>.
+    // getSearchWith автоматично збереже стать, пошук, сортування тощо.
+    return {
+      search: getSearchWith(searchParams, { centuries: updatedCenturies }),
+    };
   };
 
   const centuries = ['16', '17', '18', '19', '20'];
@@ -48,27 +43,29 @@ export const CenturyFilter = () => {
             const isActive = activeCenturies.includes(century);
 
             return (
-              <a
+              <Link
                 key={century}
                 data-cy="century"
                 // Якщо століття активне, додаємо клас is-info, інакше забираємо
                 className={`button mr-1 ${isActive ? 'is-info' : ''}`}
-                href={getHref(century)}
+                to={getHref(century)}
               >
                 {century}
-              </a>
+              </Link>
             );
           })}
         </div>
 
         <div className="level-right ml-4">
-          <a
+          <Link
             data-cy="centuryALL"
-            className={`button is-success ${activeCenturies.length > 0 ? 'is-outlined' : ''}`}
-            href={getHref(null)}
+            className={`button is-success ${
+              activeCenturies.length > 0 ? 'is-outlined' : ''
+            }`}
+            to={getHref(null)}
           >
             All
-          </a>
+          </Link>
         </div>
       </div>
     </div>

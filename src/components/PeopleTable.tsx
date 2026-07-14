@@ -1,113 +1,93 @@
 /* eslint-disable jsx-a11y/control-has-associated-label */
-import { useState } from 'react';
+
+/* eslint-disable jsx-a11y/control-has-associated-label */
+
+import { useSearchParams } from 'react-router-dom';
 import type { Person } from '../types';
 import { PersonLink } from './PersonLink';
 
-type SortOrder = 'asc' | 'desc' | null;
-type SortSex = 'asc' | 'desc' | null;
-type SortName = 'asc' | 'desc' | null;
 interface PeopleTableProps {
   people: Person[];
   selectedSlug?: string;
 }
 
 export const PeopleTable = ({ people, selectedSlug }: PeopleTableProps) => {
-  const [sortBorn, setSortBorn] = useState<SortOrder>(null);
-  const [sortDied, setSortDied] = useState<SortOrder>(null);
-  const [sortSex, setSortSex] = useState<SortSex>(null);
-  const [sortName, setSortName] = useState<SortName>(null);
+  const [searchParams, setSearchParams] = useSearchParams();
 
-  const handleSortName = () => {
-    setSortDied(null);
-    setSortBorn(null);
-    setSortSex(null);
-    if (sortName === null) {
-      setSortName('asc');
-    } else if (sortName === 'asc') {
-      setSortName('desc');
-    } else if (sortName === 'desc') {
-      setSortName(null);
+  // Отримуємо поточні параметри сортування з URL
+  const sortBy = searchParams.get('sort') || '';
+  const sortOrder = searchParams.get('order') || '';
+
+  // Універсальна функція для зміни параметрів сортування в URL
+  const handleSort = (field: string) => {
+    const newParams = new URLSearchParams(searchParams);
+
+    if (sortBy !== field) {
+      // Якщо обрано нове поле сортування: встановлюємо 'asc'
+      newParams.set('sort', field);
+      newParams.set('order', 'asc');
+    } else if (sortOrder === 'asc') {
+      // Якщо вже було 'asc': змінюємо на 'desc'
+      newParams.set('order', 'desc');
+    } else {
+      // Якщо було 'desc': повністю скидаємо сортування для цього поля
+      newParams.delete('sort');
+      newParams.delete('order');
     }
+
+    setSearchParams(newParams);
   };
 
-  const handleSortSexTogle = () => {
-    setSortDied(null);
-    setSortBorn(null);
-    setSortName(null);
-    if (sortSex === null) {
-      setSortSex('asc');
-    } else if (sortSex === 'asc') {
-      setSortSex('desc');
-    } else if (sortSex === 'desc') {
-      setSortSex(null);
-    }
-  };
-
-  const handleSortBornToggle = () => {
-    setSortDied(null);
-    setSortSex(null);
-    setSortName(null);
-    if (sortBorn === null) {
-      setSortBorn('asc');
-    } else if (sortBorn === 'asc') {
-      setSortBorn('desc');
-    } else if (sortBorn === 'desc') {
-      setSortBorn(null);
-    }
-  };
-
-  const handleSortDiedToggle = () => {
-    setSortBorn(null);
-    setSortSex(null);
-    setSortName(null);
-    if (sortDied === null) {
-      setSortDied('asc');
-    } else if (sortDied === 'asc') {
-      setSortDied('desc');
-    } else if (sortDied === 'desc') {
-      setSortDied(null);
-    }
-  };
-
+  // Логіка сортування на основі даних з URL
   const sortPeople = (data: Person[]): Person[] => {
+    if (!sortBy || !sortOrder) {
+      return data;
+    }
+
     const newPeople = [...data];
 
-    if (sortName === 'asc') {
-      return newPeople.sort((a, b) => a.name.localeCompare(b.name));
-    }
+    return newPeople.sort((a, b) => {
+      let comparison = 0;
 
-    if (sortName === 'desc') {
-      return newPeople.sort((a, b) => b.name.localeCompare(a.name));
-    }
+      switch (sortBy) {
+        case 'name':
+          comparison = a.name.localeCompare(b.name);
+          break;
+        case 'sex':
+          comparison = a.sex.localeCompare(b.sex);
+          break;
+        case 'born':
+          comparison = a.born - b.born;
+          break;
+        case 'died':
+          comparison = a.died - b.died;
+          break;
+        default:
+          return 0;
+      }
 
-    if (sortSex === 'asc') {
-      return newPeople.sort((a, b) => a.sex.localeCompare(b.sex));
-    }
-
-    if (sortSex === 'desc') {
-      return newPeople.sort((a, b) => b.sex.localeCompare(a.sex));
-    }
-
-    if (sortBorn === 'asc') {
-      return newPeople.sort((a, b) => a.born - b.born);
-    }
-
-    if (sortBorn === 'desc') {
-      return newPeople.sort((a, b) => b.born - a.born);
-    }
-
-    if (sortDied === 'asc') {
-      return newPeople.sort((a, b) => a.died - b.died);
-    }
-
-    if (sortDied === 'desc') {
-      return newPeople.sort((a, b) => b.died - a.died);
-    }
-
-    return data;
+      return sortOrder === 'asc' ? comparison : -comparison;
+    });
   };
 
   const sortedPeople = sortPeople(people);
+
+  // Допоміжна функція для побудови правильного href (для підтримки SEO/доступності)
+  const getSortHref = (field: string) => {
+    const tempParams = new URLSearchParams(searchParams);
+
+    if (sortBy !== field) {
+      tempParams.set('sort', field);
+      tempParams.set('order', 'asc');
+    } else if (sortOrder === 'asc') {
+      tempParams.set('order', 'desc');
+    } else {
+      tempParams.delete('sort');
+      tempParams.delete('order');
+    }
+
+    return `#/people?${tempParams.toString()}`;
+  };
 
   return (
     <table
@@ -120,20 +100,20 @@ export const PeopleTable = ({ people, selectedSlug }: PeopleTableProps) => {
             <span className="is-flex is-flex-wrap-nowrap">
               Name
               <a
-                href="#/people?sort=name"
+                href={getSortHref('name')}
                 onClick={event => {
                   event.preventDefault();
-                  handleSortName();
+                  handleSort('name');
                 }}
               >
                 <span className="icon">
                   <i
                     className={`fas ${
-                      sortName === 'asc'
-                        ? 'fa-sort-up'
-                        : sortName === 'desc'
-                          ? 'fa-sort-down'
-                          : 'fa-sort'
+                      sortBy === 'name'
+                        ? sortOrder === 'asc'
+                          ? 'fa-sort-up'
+                          : 'fa-sort-down'
+                        : 'fa-sort'
                     }`}
                   />
                 </span>
@@ -145,20 +125,20 @@ export const PeopleTable = ({ people, selectedSlug }: PeopleTableProps) => {
             <span className="is-flex is-flex-wrap-nowrap">
               Sex
               <a
-                href="#/people?sort=sex"
+                href={getSortHref('sex')}
                 onClick={event => {
                   event.preventDefault();
-                  handleSortSexTogle();
+                  handleSort('sex');
                 }}
               >
                 <span className="icon">
                   <i
                     className={`fas ${
-                      sortSex === 'asc'
-                        ? 'fa-sort-up'
-                        : sortSex === 'desc'
-                          ? 'fa-sort-down'
-                          : 'fa-sort'
+                      sortBy === 'sex'
+                        ? sortOrder === 'asc'
+                          ? 'fa-sort-up'
+                          : 'fa-sort-down'
+                        : 'fa-sort'
                     }`}
                   />
                 </span>
@@ -170,20 +150,20 @@ export const PeopleTable = ({ people, selectedSlug }: PeopleTableProps) => {
             <span className="is-flex is-flex-wrap-nowrap">
               Born
               <a
-                href="#/people?sort=born&amp;order=desc"
+                href={getSortHref('born')}
                 onClick={event => {
                   event.preventDefault();
-                  handleSortBornToggle();
+                  handleSort('born');
                 }}
               >
                 <span className="icon">
                   <i
                     className={`fas ${
-                      sortBorn === 'asc'
-                        ? 'fa-sort-up'
-                        : sortBorn === 'desc'
-                          ? 'fa-sort-down'
-                          : 'fa-sort'
+                      sortBy === 'born'
+                        ? sortOrder === 'asc'
+                          ? 'fa-sort-up'
+                          : 'fa-sort-down'
+                        : 'fa-sort'
                     }`}
                   />
                 </span>
@@ -195,20 +175,20 @@ export const PeopleTable = ({ people, selectedSlug }: PeopleTableProps) => {
             <span className="is-flex is-flex-wrap-nowrap">
               Died
               <a
-                href="#/people?sort=died"
+                href={getSortHref('died')}
                 onClick={event => {
                   event.preventDefault();
-                  handleSortDiedToggle();
+                  handleSort('died');
                 }}
               >
                 <span className="icon">
                   <i
                     className={`fas ${
-                      sortDied === 'asc'
-                        ? 'fa-sort-up'
-                        : sortDied === 'desc'
-                          ? 'fa-sort-down'
-                          : 'fa-sort'
+                      sortBy === 'died'
+                        ? sortOrder === 'asc'
+                          ? 'fa-sort-up'
+                          : 'fa-sort-down'
+                        : 'fa-sort'
                     }`}
                   />
                 </span>

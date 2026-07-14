@@ -1,5 +1,6 @@
 // ..  NameFilter.tsx
 import { useSearchParams } from 'react-router-dom';
+import { getSearchWith } from '../../utils/searchHelper';
 
 export const NameFilter = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -7,15 +8,11 @@ export const NameFilter = () => {
 
   const handleValue = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value.trimStart();
-    const newParams = new URLSearchParams(searchParams);
+    const updatedSearch = getSearchWith(searchParams, {
+      query: value || null,
+    });
 
-    if (value !== '') {
-      newParams.set('query', value);
-    } else {
-      newParams.delete('query'); // Видаляємо параметр, якщо інпут порожній
-    }
-
-    setSearchParams(newParams);
+    setSearchParams(updatedSearch);
   };
 
   return (
