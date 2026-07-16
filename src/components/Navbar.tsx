@@ -1,24 +1,28 @@
+import { useLocation, NavLink } from 'react-router-dom';
+
 export const Navbar = () => {
+  const location = useLocation();
+
   return (
-    <nav
-      data-cy="nav"
-      className="navbar is-fixed-top has-shadow"
-      role="navigation"
-      aria-label="main navigation"
-    >
+    <nav data-cy="nav" className="navbar is-fixed-top has-shadow">
       <div className="container">
         <div className="navbar-brand">
-          <a className="navbar-item" href="#/">
+          <NavLink
+            to="/"
+            className={({ isActive }) =>
+              `navbar-item ${isActive ? 'has-background-grey-lighter' : ''}`
+            }
+          >
             Home
-          </a>
-
-          <a
-            aria-current="page"
-            className="navbar-item has-background-grey-lighter"
-            href="#/people"
+          </NavLink>
+          <NavLink
+            to={`/people${location.search}`}
+            className={({ isActive }) =>
+              `navbar-item ${isActive ? 'has-background-grey-lighter' : ''}`
+            }
           >
             People
-          </a>
+          </NavLink>
         </div>
       </div>
     </nav>
