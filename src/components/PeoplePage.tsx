@@ -80,6 +80,9 @@ export const PeoplePage = () => {
     });
   }, [people, searchParams]);
 
+  const hasNoMatchingPeople =
+    !isLoading && !hasError && people.length > 0 && visiblePeople.length === 0;
+
   return (
     <>
       <h1 className="title">People Page</h1>
@@ -106,14 +109,11 @@ export const PeoplePage = () => {
                 </p>
               )}
 
-              {!isLoading &&
-                !hasError &&
-                people.length > 0 &&
-                visiblePeople.length === 0 && (
-                  <p>
-                    There are no people matching the current search criteria
+              {hasNoMatchingPeople && (
+                <p data-cy="noPeopleMatchingMessage">
+                  There are no people matching the current search criteria
                 </p>
-                )}
+              )}
 
               {!isLoading && !hasError && visiblePeople.length > 0 && (
                 <PeopleTable people={visiblePeople} />
