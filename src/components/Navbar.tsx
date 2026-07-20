@@ -1,9 +1,8 @@
 import { NavLink, useLocation } from 'react-router-dom';
 import classNames from 'classnames';
 
-const getNavLinkClassName = ({ isActive }: { isActive: boolean }) => (
-  classNames('navbar-item', { 'has-background-grey-lighter': isActive })
-);
+const getNavLinkClassName = ({ isActive }: { isActive: boolean }) =>
+  classNames('navbar-item', { 'has-background-grey-lighter': isActive });
 
 export const Navbar = () => {
   const location = useLocation();

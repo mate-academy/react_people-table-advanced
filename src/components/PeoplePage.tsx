@@ -81,13 +81,15 @@ export const PeoplePage = () => {
     [people, searchParams],
   );
 
+  const loaded = !isLoading && !hasError;
+
   return (
     <>
       <h1 className="title">People Page</h1>
 
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
-          {!isLoading && !hasError && people.length > 0 && (
+          {loaded && people.length > 0 && (
             <div className="column is-7-tablet is-narrow-desktop">
               <PeopleFilters />
             </div>
@@ -101,22 +103,17 @@ export const PeoplePage = () => {
                 <p data-cy="peopleLoadingError">Something went wrong</p>
               )}
 
-              {!isLoading && !hasError && people.length === 0 && (
+              {loaded && people.length === 0 && (
                 <p data-cy="noPeopleMessage">
                   There are no people on the server
                 </p>
               )}
 
-              {!isLoading &&
-                !hasError &&
-                people.length > 0 &&
-                visiblePeople.length === 0 && (
-                <p>
-                    There are no people matching the current search criteria
-                </p>
+              {loaded && people.length > 0 && visiblePeople.length === 0 && (
+                <p>There are no people matching the current search criteria</p>
               )}
 
-              {!isLoading && !hasError && visiblePeople.length > 0 && (
+              {loaded && visiblePeople.length > 0 && (
                 <PeopleTable people={visiblePeople} />
               )}
             </div>
