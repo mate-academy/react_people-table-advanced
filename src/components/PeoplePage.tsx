@@ -111,10 +111,10 @@ export const PeoplePage = () => {
                 !hasError &&
                 people.length > 0 &&
                 visiblePeople.length === 0 && (
-                  <p>
+                <p>
                     There are no people matching the current search criteria
-                  </p>
-                )}
+                </p>
+              )}
 
               {!isLoading && !hasError && visiblePeople.length > 0 && (
                 <PeopleTable people={visiblePeople} />
