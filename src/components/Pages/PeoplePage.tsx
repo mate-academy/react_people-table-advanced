@@ -49,7 +49,7 @@ export const PeoplePage = () => {
 
       return matchesQuery && matchesSex && mathcesCentury;
     });
-  }, [queryFilter, centuryFilter, sexFilter]);
+  }, [queryFilter, centuryFilter, sexFilter, people]);
 
   const sortingHandle = useMemo(() => {
     return [...filterHandle].sort((a, b) => {
