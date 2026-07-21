@@ -1,20 +1,46 @@
-import { PeoplePage } from './components/PeoplePage';
-import { Navbar } from './components/Navbar';
-
 import './App.scss';
+import { Route, Routes, NavLink, Navigate } from 'react-router-dom';
+import { HomePage } from './pages/HomePage';
+import { NotFoundPage } from './pages/NotFoundPage';
+import { PeoplePage } from './pages/PeoplePage';
 
-export const App = () => {
-  return (
-    <div data-cy="app">
-      <Navbar />
+type LinkProps = {
+  isActive: boolean;
+};
 
-      <div className="section">
-        <div className="container">
-          <h1 className="title">Home Page</h1>
-          <h1 className="title">Page not found</h1>
-          <PeoplePage />
+const getNavLinkClass = ({ isActive }: LinkProps) => {
+  return isActive ? 'navbar-item has-background-grey-lighter' : 'navbar-item';
+};
+
+export const App = () => (
+  <div data-cy="app">
+    <nav
+      data-cy="nav"
+      className="navbar is-fixed-top has-shadow"
+      role="navigation"
+      aria-label="main navigation"
+    >
+      <div className="container">
+        <div className="navbar-brand">
+          <NavLink className={getNavLinkClass} to="/">
+            Home
+          </NavLink>
+
+          <NavLink className={getNavLinkClass} to="/people">
+            People
+          </NavLink>
         </div>
       </div>
-    </div>
-  );
-};
+    </nav>
+
+    <main>
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/people" element={<PeoplePage />} />
+        <Route path="/people/:slug" element={<PeoplePage />} />
+        <Route path="/home" element={<Navigate to="/" replace />} />
+        <Route path="*" element={<NotFoundPage />} />
+      </Routes>
+    </main>
+  </div>
+);
