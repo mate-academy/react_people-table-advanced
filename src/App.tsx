@@ -9,8 +9,6 @@ import { PageNotFound } from './components/ErrorMessages/PageNotFound';
 
 import { Routes, Route, Navigate } from 'react-router-dom';
 
-import './App.scss';
-
 export const App: React.FC = () => {
   return (
     <div data-cy="app">

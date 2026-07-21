@@ -23,7 +23,7 @@ export const PeopleFilters: React.FC<FilterProps> = ({
       <p className="panel-heading">Filters</p>
       <p className="panel-tabs" data-cy="SexFilter">
         <Link
-          className={classNames({ 'is-active': !sexFilter })} //це працює неправильно, коли фільтер включений (наприклад по століттю) спочатку показує всіх, коли клацає між ч і ж, а потім натискаєш all (і ч і ж), воно працює як ресет, хоча має показувати як все
+          className={classNames({ 'is-active': !sexFilter })}
           to={{ search: getSearchWith(searchParams, { sex: null }) }}
         >
           All
