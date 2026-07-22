@@ -1,3 +1,58 @@
 iframe {
   display: none;
 }
+
+.panel-tabs button {
+  padding: 0.5em;
+  color: #485fc7;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid #ededed;
+  cursor: pointer;
+  font: inherit;
+}
+
+.panel-tabs button.is-active {
+  color: #363636;
+  border-bottom-color: #363636;
+}
+
+.panel-block .control,
+.panel-block .buttons {
+  width: 100%;
+}
+
+.panel-block .buttons {
+  margin-bottom: 0;
+}
+
+.table-container {
+  min-height: 100px;
+}
+
+.people-table {
+  &__sortable {
+    cursor: pointer;
+    user-select: none;
+
+    span {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+    }
+  }
+
+  &__sort-icon {
+    width: 14px;
+    color: #3273dc;
+    font-size: 14px;
+  }
+}
+
+html {
+  padding-top: 3.25rem;
+}
+
+.section {
+  padding-top: 2rem;
+}
