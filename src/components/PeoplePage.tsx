@@ -54,8 +54,15 @@ export const PeoplePage = () => {
         const valA = a[sort as keyof Person];
         const valB = b[sort as keyof Person];
 
-        const cleanA = valA ?? '';
-        const cleanB = valB ?? '';
+        if (sort === 'born' || sort === 'died') {
+          const numA = Number(valA);
+          const numB = Number(valB);
+
+          return order === 'desc' ? numB - numA : numA - numB;
+        }
+
+        const cleanA = (valA ?? '').toString().toLowerCase();
+        const cleanB = (valB ?? '').toString().toLowerCase();
 
         if (cleanA < cleanB) {
           return order === 'desc' ? 1 : -1;

@@ -74,12 +74,15 @@ export const PeopleTable = ({ people, allPeople }: Props) => {
               className={isSelected ? 'has-background-warning' : ''}
             >
               <td>
-                <a
-                  href={`#/people/${person.slug || person.name}`}
+                <Link
+                  to={{
+                    pathname: `/people/${person.slug || person.name}`,
+                    search: getSearchWith(searchParams, {}),
+                  }}
                   className={person.sex === 'f' ? 'has-text-danger' : ''}
                 >
                   {person.name}
-                </a>
+                </Link>
               </td>
               <td>{person.sex}</td>
               <td>{person.born}</td>
@@ -88,12 +91,15 @@ export const PeopleTable = ({ people, allPeople }: Props) => {
               <td>
                 {person.motherName ? (
                   allPeople.some(p => p.name === person.motherName) ? (
-                    <a
-                      href={`#/people/${allPeople.find(p => p.name === person.motherName)?.slug}`}
+                    <Link
+                      to={{
+                        pathname: `/people/${allPeople.find(p => p.name === person.motherName)?.slug}`,
+                        search: getSearchWith(searchParams, {}),
+                      }}
                       className="has-text-danger"
                     >
                       {person.motherName}
-                    </a>
+                    </Link>
                   ) : (
                     person.motherName
                   )
@@ -105,11 +111,14 @@ export const PeopleTable = ({ people, allPeople }: Props) => {
               <td>
                 {person.fatherName ? (
                   allPeople.some(p => p.name === person.fatherName) ? (
-                    <a
-                      href={`#/people/${allPeople.find(p => p.name === person.fatherName)?.slug}`}
+                    <Link
+                      to={{
+                        pathname: `/people/${allPeople.find(p => p.name === person.fatherName)?.slug}`,
+                        search: getSearchWith(searchParams, {}),
+                      }}
                     >
                       {person.fatherName}
-                    </a>
+                    </Link>
                   ) : (
                     person.fatherName
                   )
