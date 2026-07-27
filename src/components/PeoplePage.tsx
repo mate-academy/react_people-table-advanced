@@ -18,13 +18,19 @@ export const PeoplePage = () => {
   const [searchParams] = useSearchParams();
 
   const query = searchParams.get('query') || '';
+  const centuries = searchParams.getAll('centuries');
 
   const filterPeoples = people.filter(person => {
-    return (
+    const matchesQuery =
       person.name.toLowerCase().includes(query.toLowerCase()) ||
       person.motherName?.toLowerCase().includes(query.toLowerCase()) ||
-      person.fatherName?.toLowerCase().includes(query.toLowerCase())
-    );
+      person.fatherName?.toLowerCase().includes(query.toLowerCase());
+
+    const matchesCentury =
+      centuries.length === 0 ||
+      centuries.includes(String(Math.ceil(person.born / 100)));
+
+    return matchesQuery && matchesCentury;
   });
 
   const sort = searchParams.get('sort');

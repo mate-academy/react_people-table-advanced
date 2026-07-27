@@ -6,10 +6,16 @@ export const PeopleFilters = () => {
   //#region Text search
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const value = event.target.value; // Criação de variável para a pesquisa
+    const value = event.target.value;
+    const params = new URLSearchParams(searchParams);
 
-    searchParams.set('query', value); // Adiciona o que foi digitado a URL
-    setSearchParams(searchParams); // Seta a nova URL
+    if (value) {
+      params.set('query', value);
+    } else {
+      params.delete('query');
+    }
+
+    setSearchParams(params);
   };
   //#endregion
 
@@ -43,14 +49,27 @@ export const PeopleFilters = () => {
   const sex = searchParams.get('sex');
 
   const handleSex = (value: string) => {
-    searchParams.set('sex', value);
-    setSearchParams(searchParams);
+    const params = new URLSearchParams(searchParams);
+
+    params.set('sex', value);
+
+    setSearchParams(params);
   };
   //#endregion
 
   const deleteKey = (key: string) => {
     searchParams.delete(key);
     setSearchParams(searchParams);
+  };
+
+  const resetFilters = () => {
+    const params = new URLSearchParams(searchParams);
+
+    params.delete('centuries');
+    params.delete('sex');
+    params.delete('query');
+
+    setSearchParams(params);
   };
 
   return (
@@ -190,7 +209,10 @@ export const PeopleFilters = () => {
                   : 'button is-outlined'
               }
               href="#/people"
-              onClick={() => deleteKey('centuries')}
+              onClick={event => {
+                event.preventDefault();
+                deleteKey('centuries');
+              }}
             >
               All
             </a>
@@ -203,9 +225,7 @@ export const PeopleFilters = () => {
           className="button is-link is-outlined is-fullwidth"
           href="#/people"
           onClick={() => {
-            deleteKey('centuries');
-            deleteKey('sex');
-            deleteKey('query');
+            resetFilters();
           }}
         >
           Reset all filters
