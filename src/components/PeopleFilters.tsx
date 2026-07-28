@@ -42,10 +42,10 @@ export const PeopleFilters: React.FC<Props> = ({ query, sex, centuries }) => {
       ? centuries.filter(century => century !== currCentury.toString())
       : [...centuries, currCentury.toString()];
 
-    params.delete('century');
+    params.delete('centuries');
 
     selectedCenturies.forEach(selectedCentury =>
-      params.append('century', selectedCentury),
+      params.append('centuries', selectedCentury),
     );
 
     setSearchParams(params);
