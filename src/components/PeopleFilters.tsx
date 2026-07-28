@@ -54,7 +54,7 @@ export const PeopleFilters: React.FC<Props> = ({ query, sex, centuries }) => {
   function handleClearCentury() {
     const params = new URLSearchParams(searchParams);
 
-    params.delete('century');
+    params.delete('centuries');
     setSearchParams(params);
   }
 
