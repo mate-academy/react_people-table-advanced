@@ -1,5 +1,9 @@
 import React from 'react';
-import { NavLink, NavLinkRenderProps } from 'react-router-dom';
+import { NavLink, NavLinkRenderProps, useLocation } from 'react-router-dom';
+
+type LocationState = {
+  search?: string;
+};
 
 const NAV_ITEMS = [
   { path: '/', label: 'Home' },
@@ -10,6 +14,9 @@ const getClassName = ({ isActive }: NavLinkRenderProps) =>
   isActive ? 'navbar-item has-background-grey-lighter' : 'navbar-item';
 
 export const NavBar: React.FC = () => {
+  const { search, state, pathname } = useLocation();
+  const typedState = state as LocationState | null;
+
   return (
     <nav
       data-cy="nav"
@@ -23,7 +30,20 @@ export const NavBar: React.FC = () => {
             <NavLink
               key={path}
               className={getClassName}
-              to={path}
+              to={{
+                pathname: path,
+                search:
+                  path === '/people'
+                    ? pathname === '/people'
+                      ? search
+                      : typedState?.search || ''
+                    : '',
+              }}
+              state={
+                path === '/'
+                  ? { search: search || typedState?.search || '' }
+                  : null
+              }
               end={path === '/'}
             >
               {label}
