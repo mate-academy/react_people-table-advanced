@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/control-has-associated-label */
 
-import { useParams } from 'react-router-dom';
+import { useParams, useSearchParams } from 'react-router-dom';
 import { Person } from '../types/Person';
 import { SortField } from '../types/SortField';
 import { SearchLink } from './SearchLink';
@@ -65,8 +65,7 @@ const SortableHeader: React.FC<SortableHeaderProps> = ({
 
 export const PeopleTable: React.FC<Props> = ({ people }) => {
   const { personSlug } = useParams();
-
-  const searchParams = new URLSearchParams(window.location.search);
+  const [searchParams] = useSearchParams();
 
   const currentSort = searchParams.get('sort');
   const currentOrder = searchParams.get('order');
