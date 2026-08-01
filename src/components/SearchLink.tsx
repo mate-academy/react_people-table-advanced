@@ -20,15 +20,36 @@ export const SearchLink: React.FC<Props> = ({
 }) => {
   const [searchParams] = useSearchParams();
 
+  // const getSortParams = (field: string) => {
+  //   const currentSort = searchParams.get('sort');
+  //   const currentOrder = searchParams.get('order');
+
+  //   if (currentSort !== field) {
+  //     return {
+  //       sort: field,
+  //       order: null,
+  //     };
+  //   }
+
+  //   if (!currentOrder) {
+  //     return {
+  //       sort: field,
+  //       order: 'desc',
+  //     };
+  //   }
+
+  //   return {
+  //     sort: null,
+  //     order: null,
+  //   };
+  // };
+
   return (
     <Link
-      // to={{ search: getSearchWith(searchParams, { query: 'sdf' }) }}
-      // to={{ search: getSearchWith(searchParams, { query: null }) }}
-      // to={{ search: getSearchWith(searchParams, { centuries: ['16', '18'] }) }}
       to={{
         search: getSearchWith(searchParams, params),
       }}
-      {...props} // copy all the other props
+      {...props}
     >
       {children}
     </Link>
