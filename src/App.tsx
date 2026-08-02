@@ -1,20 +1,42 @@
-import { PeoplePage } from './components/PeoplePage';
+import './App.scss';
+// import cn from 'classnames';
+import { Outlet, useLocation } from 'react-router-dom';
 import { Navbar } from './components/Navbar';
 
-import './App.scss';
-
 export const App = () => {
+  // const getLinkClass = ({ isActive }: { isActive: boolean }) =>
+  //   cn('navbar-item', { 'has-background-grey-lighter': isActive });
+  const { pathname, search } = useLocation();
+
   return (
     <div data-cy="app">
       <Navbar />
-
-      <div className="section">
+      {/* <nav
+        data-cy="nav"
+        className="navbar is-fixed-top has-shadow"
+        role="navigation"
+        aria-label="main navigation"
+      >
         <div className="container">
-          <h1 className="title">Home Page</h1>
-          <h1 className="title">Page not found</h1>
-          <PeoplePage />
+          <div className="navbar-brand">
+            <NavLink to="/" end className={getLinkClass}>
+              Home
+            </NavLink>
+
+            <NavLink to="people" className={getLinkClass}>
+              People
+            </NavLink>
+          </div>
         </div>
+      </nav> */}
+      <br></br>
+      <div className="section">
+        <p className="title is-5 has-text-info">{pathname}</p>
+        <p className="title is-6">{search && search.replace('&', ' &')}</p>
       </div>
+      <main className="section">
+        <Outlet />
+      </main>
     </div>
   );
 };
