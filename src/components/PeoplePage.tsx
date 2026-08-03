@@ -164,8 +164,8 @@ export const PeoplePage = () => {
                 !hasError &&
                 hasPeople &&
                 visiblePeople.length > 0 && (
-                  <PeopleTable people={visiblePeople} selectedSlug={slug} />
-                )}
+                <PeopleTable people={visiblePeople} selectedSlug={slug} />
+              )}
             </div>
           </div>
         </div>
