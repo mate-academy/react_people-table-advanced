@@ -16,15 +16,6 @@ export const PeoplePage: React.FC = () => {
   const { personSlug } = useParams();
   const [searchParams] = useSearchParams();
 
-  const noPeople =
-    !isLoading && isLoaded && !errorMessage && people.length === 0;
-  const hasError = !isLoading && errorMessage;
-  const hasPeople = !isLoading && !errorMessage && people.length > 0;
-
-  if (searchParams.has('query') && searchParams.get('query') === '') {
-    searchParams.delete('query');
-  }
-
   const newSearchParams = new URLSearchParams(searchParams);
 
   function loadPeople() {
@@ -62,7 +53,6 @@ export const PeoplePage: React.FC = () => {
     return +checkedCentury === centuryBirth;
   }
 
-  // function getFilteredPeople(newPeople: Person[], newParams: URLSearchParams) {
   function getFilteredPeople(newParams: URLSearchParams) {
     let currentPeople = [...people];
 
@@ -104,8 +94,6 @@ export const PeoplePage: React.FC = () => {
           return;
 
         default:
-          // filteredPeople = currentPeople;
-
           return;
       }
     });
@@ -114,6 +102,15 @@ export const PeoplePage: React.FC = () => {
   }
 
   const visiblePeople = getFilteredPeople(newSearchParams);
+
+  const noPeople =
+    !isLoading && isLoaded && !errorMessage && people.length === 0;
+  const hasError = !isLoading && errorMessage;
+  const hasPeople = !hasError && visiblePeople.length > 0;
+  const noPeopleByFilter = !hasError && visiblePeople.length === 0;
+  // const hasPeople = !isLoading && !errorMessage && visiblePeople.length > 0;
+  // const noPeopleByFilter =
+  //   !isLoading && !errorMessage && visiblePeople.length === 0;
 
   return (
     <>
@@ -129,20 +126,23 @@ export const PeoplePage: React.FC = () => {
             <div className="box table-container">
               {isLoading && <Loader />}
 
-              {noPeople && (
-                <p data-cy="noPeopleMessage">
-                  There are no people on the server
-                </p>
-              )}
-
               {hasError && (
                 <p data-cy="peopleLoadingError" className="has-text-danger">
                   {errorMessage}
                 </p>
               )}
 
+              {noPeople && (
+                <p data-cy="noPeopleMessage">
+                  There are no people on the server
+                </p>
+              )}
+
+              {noPeopleByFilter && (
+                <p>There are no people matching the current search criteria</p>
+              )}
+
               {hasPeople && (
-                // <PeopleTable people={people} selectedSlug={personSlug} />
                 <PeopleTable people={visiblePeople} selectedSlug={personSlug} />
               )}
             </div>
