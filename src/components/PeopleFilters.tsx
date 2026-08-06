@@ -2,27 +2,7 @@ import React from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import classNames from 'classnames';
 
-type SearchParamsToUpdate = Record<string, string | string[] | null>;
-
-export const getSearchWith = (
-  currentParams: URLSearchParams,
-  paramsToUpdate: SearchParamsToUpdate,
-): string => {
-  const newParams = new URLSearchParams(currentParams.toString());
-
-  Object.entries(paramsToUpdate).forEach(([key, value]) => {
-    if (value === null || value === '') {
-      newParams.delete(key);
-    } else if (Array.isArray(value)) {
-      newParams.delete(key);
-      value.forEach(v => newParams.append(key, v));
-    } else {
-      newParams.set(key, value);
-    }
-  });
-
-  return newParams.toString();
-};
+import { getSearchWith } from '../utils/searchHelper';
 
 const CENTURIES = ['16', '17', '18', '19', '20'];
 
