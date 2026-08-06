@@ -1,37 +1,20 @@
+import React from 'react';
 import { Loader } from './Loader';
 import { PeopleTable } from './arrayList/list';
 import { Person } from '../../types';
-import { PeopleFilters } from '../Loader/PeopleFilters';
+import { PeopleFilters } from './PeopleFilters';
 import '../../App.scss';
-
-export enum Filter {
-  All = 'All',
-  Male = 'Male',
-  Female = 'Female',
-}
 
 interface Props {
   people: Person[];
   loading: boolean;
   errorMessage: boolean;
-  setFilter: (filter: Filter) => void;
-  filter: Filter;
-  setTitleFilter: (titleFilter: string) => void;
-  titleFilter: string;
-  century: boolean[];
-  setCentury: (century: boolean[]) => void;
 }
 
 export const PeoplePage: React.FC<Props> = ({
   people,
   loading,
   errorMessage,
-  setFilter,
-  filter,
-  setTitleFilter,
-  titleFilter,
-  century,
-  setCentury,
 }) => {
   return (
     <>
@@ -51,24 +34,11 @@ export const PeoplePage: React.FC<Props> = ({
           )}
 
           {!loading && !errorMessage && people.length > 0 && (
-            <table
-              data-cy="peopleTable"
-              /* eslint-disable-next-line */
-              className="table is-striped is-hoverable is-narrow is-fullwidth"
-            >
-              <PeopleTable people={people} />
-            </table>
+            <PeopleTable people={people} />
           )}
         </div>
-        <PeopleFilters
-          /* eslint-disable-next-line */
-          setFilter={setFilter}
-          filter={filter}
-          setTitleFilter={setTitleFilter}
-          titleFilter={titleFilter}
-          century={century}
-          setCentury={setCentury}
-        />
+
+        <PeopleFilters />
       </div>
     </>
   );
