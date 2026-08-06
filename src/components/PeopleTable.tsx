@@ -1,6 +1,5 @@
-/* eslint-disable jsx-a11y/control-has-associated-label */
 import React from 'react';
-import { Link, useSearchParams } from 'react-router-dom';
+import { Link, useParams, useSearchParams } from 'react-router-dom';
 import classNames from 'classnames';
 
 import { Person } from '../types/Person';
@@ -31,11 +30,11 @@ const findPerson = (
 
 export const PeopleTable: React.FC<Props> = ({ people }) => {
   const [searchParams] = useSearchParams();
+  const { slug } = useParams<{ slug: string }>();
 
   const currentSort = searchParams.get('sort');
   const currentOrder = searchParams.get('order');
 
-  // Цикл сортування: default (asc) -> desc -> clear (disabled)
   const getSortSearch = (field: SortField) => {
     if (currentSort !== field) {
       return getSearchWith(searchParams, { sort: field, order: null });
@@ -100,8 +99,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
               data-cy="person"
               key={person.slug}
               className={classNames({
-                'has-background-warning':
-                  searchParams.get('slug') === person.slug,
+                'has-background-warning': slug === person.slug, 
               })}
             >
               <td>
