@@ -1,10 +1,17 @@
 /* eslint-disable jsx-a11y/control-has-associated-label */
-
-import { Link } from 'react-router-dom';
-import { Person } from '../types/Person';
-
+import React from 'react';
+import { Link, useSearchParams } from 'react-router-dom';
 import classNames from 'classnames';
-import { useParams } from 'react-router-dom';
+
+import { Person } from '../types/Person';
+import { PersonLink } from './PersonLink';
+import { getSearchWith } from '../utils/searchHelper';
+
+interface Props {
+  people: Person[];
+}
+
+type SortField = 'name' | 'sex' | 'born' | 'died';
 
 const findPerson = (
   people: Person[],
@@ -22,8 +29,39 @@ const findPerson = (
   );
 };
 
-export const PeopleTable = ({ people }: { people: Person[] }) => {
-  const { slug } = useParams<{ slug: string }>();
+export const PeopleTable: React.FC<Props> = ({ people }) => {
+  const [searchParams] = useSearchParams();
+
+  const currentSort = searchParams.get('sort');
+  const currentOrder = searchParams.get('order');
+
+  // Цикл сортування: default (asc) -> desc -> clear (disabled)
+  const getSortSearch = (field: SortField) => {
+    if (currentSort !== field) {
+      return getSearchWith(searchParams, { sort: field, order: null });
+    }
+
+    if (currentOrder !== 'desc') {
+      return getSearchWith(searchParams, { sort: field, order: 'desc' });
+    }
+
+    return getSearchWith(searchParams, { sort: null, order: null });
+  };
+
+  const getSortIconClass = (field: SortField) => {
+    if (currentSort !== field) {
+      return 'fa-sort';
+    }
+
+    return currentOrder === 'desc' ? 'fa-sort-down' : 'fa-sort-up';
+  };
+
+  const columns: { label: string; field: SortField }[] = [
+    { label: 'Name', field: 'name' },
+    { label: 'Sex', field: 'sex' },
+    { label: 'Born', field: 'born' },
+    { label: 'Died', field: 'died' },
+  ];
 
   return (
     <table
@@ -32,50 +70,18 @@ export const PeopleTable = ({ people }: { people: Person[] }) => {
     >
       <thead>
         <tr>
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Name
-              <a href="#/people?sort=name">
-                <span className="icon">
-                  <i className="fas fa-sort" />
-                </span>
-              </a>
-            </span>
-          </th>
-
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Sex
-              <a href="#/people?sort=sex">
-                <span className="icon">
-                  <i className="fas fa-sort" />
-                </span>
-              </a>
-            </span>
-          </th>
-
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Born
-              <a href="#/people?sort=born&amp;order=desc">
-                <span className="icon">
-                  <i className="fas fa-sort-up" />
-                </span>
-              </a>
-            </span>
-          </th>
-
-          <th>
-            <span className="is-flex is-flex-wrap-nowrap">
-              Died
-              <a href="#/people?sort=died">
-                <span className="icon">
-                  <i className="fas fa-sort" />
-                </span>
-              </a>
-            </span>
-          </th>
-
+          {columns.map(({ label, field }) => (
+            <th key={field}>
+              <span className="is-flex is-flex-wrap-nowrap">
+                {label}
+                <Link to={{ search: getSortSearch(field) }}>
+                  <span className="icon">
+                    <i className={`fas ${getSortIconClass(field)}`} />
+                  </span>
+                </Link>
+              </span>
+            </th>
+          ))}
           <th>Mother</th>
           <th>Father</th>
         </tr>
@@ -94,41 +100,22 @@ export const PeopleTable = ({ people }: { people: Person[] }) => {
               data-cy="person"
               key={person.slug}
               className={classNames({
-                'has-background-warning': slug === person.slug,
+                'has-background-warning':
+                  searchParams.get('slug') === person.slug,
               })}
             >
               <td>
-                <Link
-                  to={`/people/${person.slug}`}
-                  className={classNames({
-                    'has-text-danger': person.sex === 'f',
-                  })}
-                >
-                  {person.name}
-                </Link>
+                <PersonLink person={person} />
               </td>
 
               <td>{person.sex}</td>
               <td>{person.born}</td>
               <td>{person.died}</td>
               <td>
-                {mother ? (
-                  <Link
-                    to={`/people/${mother.slug}`}
-                    className="has-text-danger"
-                  >
-                    {mother.name}
-                  </Link>
-                ) : (
-                  motherName || '-'
-                )}
+                {mother ? <PersonLink person={mother} /> : motherName || '-'}
               </td>
               <td>
-                {father ? (
-                  <Link to={`/people/${father.slug}`}>{father.name}</Link>
-                ) : (
-                  fatherName || '-'
-                )}
+                {father ? <PersonLink person={father} /> : fatherName || '-'}
               </td>
             </tr>
           );
