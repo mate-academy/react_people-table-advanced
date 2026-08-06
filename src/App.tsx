@@ -1,8 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { Routes, Route, Navigate, HashRouter } from 'react-router-dom';
+import {
+  Routes,
+  Route,
+  Navigate,
+  HashRouter,
+  useSearchParams,
+} from 'react-router-dom';
 import { getPeople } from './api';
 import { Person } from './types/Person';
-import { Filter } from './types/Filter';
 import { NotFoundPage } from './components/Loader/NotFoundPage';
 import { PeoplePage } from './components/Loader/PeoplePage';
 import { HomePage } from './components/Loader/HomePage';
@@ -10,21 +15,12 @@ import { Navbar } from './Navbar';
 
 import './App.scss';
 
-export const App: React.FC = () => {
+const AppContent: React.FC = () => {
   const [people, setPeople] = useState<Person[]>([]);
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState(false);
 
-  const [filter, setFilter] = useState<Filter>(Filter.All);
-  const [titleFilter, setTitleFilter] = useState('');
-  const [century, setCentury] = useState<boolean[]>([
-    false,
-    false,
-    false,
-    false,
-    false,
-    true,
-  ]);
+  const [searchParams] = useSearchParams();
 
   useEffect(() => {
     setLoading(true);
@@ -34,67 +30,105 @@ export const App: React.FC = () => {
       .finally(() => setLoading(false));
   }, []);
 
+  const sexParam = searchParams.get('sex');
+  const queryParam = (searchParams.get('query') || '').toLowerCase().trim();
+  const centuriesParams = searchParams.getAll('centuries');
+  const sortParam = searchParams.get('sort');
+  const orderParam = searchParams.get('order');
+
   const visiblePeople = people.filter(person => {
-    const matchesSex =
-      filter === Filter.All ||
-      (filter === Filter.Male && person.sex === 'm') ||
-      (filter === Filter.Female && person.sex === 'f');
+    if (sexParam === 'm' && person.sex !== 'm') {
+      return false;
+    }
 
-    const matchesName = person.name
-      .toLowerCase()
-      .includes(titleFilter.trim().toLowerCase());
+    if (sexParam === 'f' && person.sex !== 'f') {
+      return false;
+    }
 
-    const centuryOfBorn = Math.ceil(person.born / 100);
+    if (queryParam) {
+      const matchesName = person.name.toLowerCase().includes(queryParam);
+      const matchesMother = person.motherName
+        ? person.motherName.toLowerCase().includes(queryParam)
+        : false;
+      const matchesFather = person.fatherName
+        ? person.fatherName.toLowerCase().includes(queryParam)
+        : false;
 
-    const centuryfilter =
-      (century[0] === false &&
-        century[1] === false &&
-        century[2] === false &&
-        century[3] === false &&
-        century[4] === false) ||
-      (centuryOfBorn === 16 && century[0] === true) ||
-      (centuryOfBorn === 17 && century[1] === true) ||
-      (centuryOfBorn === 18 && century[2] === true) ||
-      (centuryOfBorn === 19 && century[3] === true) ||
-      (centuryOfBorn === 20 && century[4] === true);
+      if (!matchesName && !matchesMother && !matchesFather) {
+        return false;
+      }
+    }
 
-    return matchesSex && matchesName && centuryfilter;
+    if (centuriesParams.length > 0) {
+      const centuryOfBorn = Math.ceil(person.born / 100).toString();
+
+      if (!centuriesParams.includes(centuryOfBorn)) {
+        return false;
+      }
+    }
+
+    return true;
   });
 
+  if (sortParam) {
+    visiblePeople.sort((a, b) => {
+      const valueA = a[sortParam as keyof Person];
+      const valueB = b[sortParam as keyof Person];
+
+      if (valueA === undefined || valueA === null) {
+        return 1;
+      }
+
+      if (valueB === undefined || valueB === null) {
+        return -1;
+      }
+
+      let result = 0;
+
+      if (typeof valueA === 'number' && typeof valueB === 'number') {
+        result = valueA - valueB;
+      } else {
+        result = String(valueA).localeCompare(String(valueB));
+      }
+
+      return orderParam === 'desc' ? -result : result;
+    });
+  }
+
+  return (
+    <div data-cy="app">
+      <Navbar />
+      <main className="section">
+        <div className="container">
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/home" element={<Navigate to="/" replace />} />
+
+            <Route path="/people">
+              <Route
+                path=":slug?"
+                element={
+                  <PeoplePage
+                    people={visiblePeople}
+                    loading={loading}
+                    errorMessage={errorMessage}
+                  />
+                }
+              />
+            </Route>
+
+            <Route path="*" element={<NotFoundPage />} />
+          </Routes>
+        </div>
+      </main>
+    </div>
+  );
+};
+
+export const App: React.FC = () => {
   return (
     <HashRouter>
-      <div data-cy="app">
-        <Navbar />
-        <main className="section">
-          <div className="container">
-            <Routes>
-              <Route path="/" element={<HomePage />} />
-              <Route path="/home" element={<Navigate to="/" replace />} />
-
-              <Route path="/people">
-                <Route
-                  path=":slug?"
-                  element={
-                    <PeoplePage
-                      people={visiblePeople}
-                      loading={loading}
-                      errorMessage={errorMessage}
-                      setFilter={setFilter}
-                      filter={filter}
-                      setTitleFilter={setTitleFilter}
-                      titleFilter={titleFilter}
-                      century={century}
-                      setCentury={setCentury}
-                    />
-                  }
-                />
-              </Route>
-
-              <Route path="*" element={<NotFoundPage />} />
-            </Routes>
-          </div>
-        </main>
-      </div>
+      <AppContent />
     </HashRouter>
   );
 };
