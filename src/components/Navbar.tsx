@@ -1,4 +1,18 @@
-export const Navbar = () => {
+import React from 'react';
+import { NavLink, useSearchParams } from 'react-router-dom';
+import classNames from 'classnames';
+
+export const Navbar: React.FC = () => {
+  const [searchParams] = useSearchParams();
+  const searchString = searchParams.toString();
+
+  const getNavLinkClass = ({ isActive }: { isActive: boolean }) =>
+    classNames('navbar-item', {
+      'has-background-grey-lighter': isActive,
+    });
+
+  const peopleTo = searchString ? `/people?${searchString}` : '/people';
+
   return (
     <nav
       data-cy="nav"
@@ -8,17 +22,13 @@ export const Navbar = () => {
     >
       <div className="container">
         <div className="navbar-brand">
-          <a className="navbar-item" href="#/">
+          <NavLink to="/" className={getNavLinkClass}>
             Home
-          </a>
+          </NavLink>
 
-          <a
-            aria-current="page"
-            className="navbar-item has-background-grey-lighter"
-            href="#/people"
-          >
+          <NavLink to={peopleTo} className={getNavLinkClass}>
             People
-          </a>
+          </NavLink>
         </div>
       </div>
     </nav>
