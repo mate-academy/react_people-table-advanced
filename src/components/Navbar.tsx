@@ -11,6 +11,8 @@ export const Navbar: React.FC = () => {
       'has-background-grey-lighter': isActive,
     });
 
+  const peopleTo = searchString ? `/people?${searchString}` : '/people';
+
   return (
     <nav
       data-cy="nav"
@@ -24,13 +26,7 @@ export const Navbar: React.FC = () => {
             Home
           </NavLink>
 
-          <NavLink
-            to={{
-              pathname: '/people',
-              search: searchString ? `?${searchString}` : '',
-            }}
-            className={getNavLinkClass}
-          >
+          <NavLink to={peopleTo} className={getNavLinkClass}>
             People
           </NavLink>
         </div>

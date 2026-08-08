@@ -1,128 +1,100 @@
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
+import { PeopleTable } from './PeopleTable';
+import { PeopleFilters } from './PeopleFilters';
 import { Person } from '../types/Person';
 import { getPeople } from '../api';
-import { Loader } from '../components/Loader';
-import { PeopleTable } from '../components/PeopleTable';
-import { PeopleFilters } from '../components/PeopleFilters';
+import { Loader } from './Loader';
 
 export const PeoplePage: React.FC = () => {
   const [people, setPeople] = useState<Person[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [hasError, setHasError] = useState(false);
-
+  const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState(false);
   const [searchParams] = useSearchParams();
 
   useEffect(() => {
-    setIsLoading(true);
-    setHasError(false);
+    setLoading(true);
+    setErrorMessage(false);
 
     getPeople()
       .then(setPeople)
-      .catch(() => setHasError(true))
-      .finally(() => setIsLoading(false));
+      .catch(() => setErrorMessage(true))
+      .finally(() => setLoading(false));
   }, []);
 
-  const filteredPeople = useMemo(() => {
-    const query = searchParams.get('query')?.toLowerCase().trim() || '';
-    const sex = searchParams.get('sex') || '';
-    const centuries = searchParams.getAll('centuries');
-    const sort = searchParams.get('sort');
-    const order = searchParams.get('order');
+  const query = searchParams.get('query')?.toLowerCase() || '';
+  const sex = searchParams.get('sex') || '';
+  const centuries = searchParams.getAll('centuries');
+  const sort = searchParams.get('sort');
+  const order = searchParams.get('order');
 
-    return people
-      .filter(person => {
-        if (query) {
-          const nameMatch = person.name.toLowerCase().includes(query);
-          const motherMatch = person.motherName?.toLowerCase().includes(query);
-          const fatherMatch = person.fatherName?.toLowerCase().includes(query);
+  let preparedPeople = [...people];
 
-          if (!nameMatch && !motherMatch && !fatherMatch) {
-            return false;
-          }
-        }
+  if (query) {
+    preparedPeople = preparedPeople.filter(
+      p =>
+        p.name.toLowerCase().includes(query) ||
+        (p.motherName && p.motherName.toLowerCase().includes(query)) ||
+        (p.fatherName && p.fatherName.toLowerCase().includes(query)),
+    );
+  }
 
-        if (sex && person.sex !== sex) {
-          return false;
-        }
+  if (sex) {
+    preparedPeople = preparedPeople.filter(p => p.sex === sex);
+  }
 
-        if (centuries.length > 0) {
-          const century = Math.ceil(person.born / 100).toString();
+  if (centuries.length > 0) {
+    preparedPeople = preparedPeople.filter(p => {
+      const century = Math.ceil(p.born / 100).toString();
 
-          if (!centuries.includes(century)) {
-            return false;
-          }
-        }
+      return centuries.includes(century);
+    });
+  }
 
-        return true;
-      })
-      .sort((a, b) => {
-        if (!sort) {
-          return 0;
-        }
+  if (sort) {
+    preparedPeople.sort((a, b) => {
+      let valA = a[sort as keyof Person] ?? '';
+      let valB = b[sort as keyof Person] ?? '';
 
-        const aValue = a[sort as keyof Person];
-        const bValue = b[sort as keyof Person];
+      if (typeof valA === 'string') {
+        valA = valA.toLowerCase();
+        valB = (valB as string).toLowerCase();
+      }
 
-        if (aValue === bValue) {
-          return 0;
-        }
+      if (valA < valB) {
+        return order === 'desc' ? 1 : -1;
+      }
 
-        if (aValue === null || aValue === undefined) {
-          return 1;
-        }
+      if (valA > valB) {
+        return order === 'desc' ? -1 : 1;
+      }
 
-        if (bValue === null || bValue === undefined) {
-          return -1;
-        }
-
-        const isAsc = order !== 'desc';
-
-        if (typeof aValue === 'string' && typeof bValue === 'string') {
-          const result = aValue.localeCompare(bValue);
-
-          return isAsc ? result : -result;
-        }
-
-        if (aValue < bValue) {
-          return isAsc ? -1 : 1;
-        }
-
-        return isAsc ? 1 : -1;
-      });
-  }, [people, searchParams]);
+      return 0;
+    });
+  }
 
   return (
-    <>
+    <div className="container">
       <h1 className="title">People Page</h1>
+      <PeopleFilters />
 
-      {isLoading && <Loader />}
+      {loading && <Loader />}
 
-      {!isLoading && hasError && (
+      {errorMessage && (
         <p data-cy="peopleLoadingError" className="has-text-danger">
-          Something went wrong
+          Failed to load people
         </p>
       )}
 
-      {!isLoading && !hasError && (
-        <div className="block">
-          <div className="columns is-desktop is-reversed-touch">
-            <div className="column">
-              {filteredPeople.length === 0 ? (
-                <p data-cy="noPeopleMessage">
-                  There are no people matching the criteria
-                </p>
-              ) : (
-                <PeopleTable people={filteredPeople} />
-              )}
-            </div>
-
-            <div className="column is-7-tablet is-narrow-desktop">
-              <PeopleFilters />
-            </div>
-          </div>
-        </div>
+      {!loading && !errorMessage && (
+        <>
+          {preparedPeople.length === 0 ? (
+            <p data-cy="noPeopleMessage">There are no people on the server</p>
+          ) : (
+            <PeopleTable people={preparedPeople} />
+          )}
+        </>
       )}
-    </>
+    </div>
   );
 };
