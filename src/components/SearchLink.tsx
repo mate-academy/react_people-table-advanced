@@ -3,23 +3,26 @@ import { Link, LinkProps, useSearchParams } from 'react-router-dom';
 import { getSearchWith, SearchParams } from '../utils/searchHelper';
 
 type Props = Omit<LinkProps, 'to'> & {
-  to: string | { pathname?: string; search?: string };
+  to: string;
   params?: SearchParams;
 };
 
 export const SearchLink: React.FC<Props> = ({
-  children,
   to,
   params = {},
+  children,
   ...props
 }) => {
   const [searchParams] = useSearchParams();
 
-  const pathname = typeof to === 'string' ? to : to.pathname || '';
-  const search = getSearchWith(searchParams, params);
-
   return (
-    <Link to={{ pathname, search }} {...props}>
+    <Link
+      to={{
+        pathname: to,
+        search: getSearchWith(searchParams, params),
+      }}
+      {...props}
+    >
       {children}
     </Link>
   );

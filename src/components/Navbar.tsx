@@ -4,6 +4,7 @@ import classNames from 'classnames';
 
 export const Navbar: React.FC = () => {
   const [searchParams] = useSearchParams();
+  const searchString = searchParams.toString();
 
   const getNavLinkClass = ({ isActive }: { isActive: boolean }) =>
     classNames('navbar-item', {
@@ -15,6 +16,7 @@ export const Navbar: React.FC = () => {
       data-cy="nav"
       className="navbar is-fixed-top has-shadow"
       role="navigation"
+      aria-label="main navigation"
     >
       <div className="container">
         <div className="navbar-brand">
@@ -25,7 +27,7 @@ export const Navbar: React.FC = () => {
           <NavLink
             to={{
               pathname: '/people',
-              search: searchParams.toString(),
+              search: searchString ? `?${searchString}` : '',
             }}
             className={getNavLinkClass}
           >
