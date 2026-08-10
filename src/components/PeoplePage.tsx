@@ -29,9 +29,7 @@ export const PeoplePage: React.FC = () => {
 
       // Filter by name, mother name or father name
       if (currentQuery) {
-        const matchesName = person.name
-          .toLowerCase()
-          .includes(currentQuery);
+        const matchesName = person.name.toLowerCase().includes(currentQuery);
 
         const matchesMother = person.motherName
           ?.toLowerCase()
@@ -59,8 +57,7 @@ export const PeoplePage: React.FC = () => {
     });
   }, [people, searchParams]);
 
-  const hasNoPeopleOnServer =
-    !loading && !errorMessage && people.length === 0;
+  const hasNoPeopleOnServer = !loading && !errorMessage && people.length === 0;
 
   const hasNoMatchingPeople =
     !loading &&
@@ -90,10 +87,7 @@ export const PeoplePage: React.FC = () => {
               {loading && <Loader />}
 
               {errorMessage && (
-                <p
-                  data-cy="peopleLoadingError"
-                  className="has-text-danger"
-                >
+                <p data-cy="peopleLoadingError" className="has-text-danger">
                   Something went wrong
                 </p>
               )}
@@ -111,10 +105,7 @@ export const PeoplePage: React.FC = () => {
               )}
 
               {!loading && !errorMessage && visiblePeople.length > 0 && (
-                <PeopleTable
-                  people={visiblePeople}
-                  activePerson={slug}
-                />
+                <PeopleTable people={visiblePeople} activePerson={slug} />
               )}
             </div>
           </div>
