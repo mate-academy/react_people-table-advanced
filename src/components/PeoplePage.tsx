@@ -1,10 +1,12 @@
-import { PeopleFilters } from './PeopleFilters';
-import { Loader } from './Loader';
-import { PeopleTable } from './PeopleTable';
-import { Person } from '../types';
 import React, { useEffect, useMemo, useState } from 'react';
-import { getPeople } from '../api';
 import { useParams, useSearchParams } from 'react-router-dom';
+
+import { getPeople } from '../api';
+import { Person } from '../types';
+
+import { Loader } from './Loader';
+import { PeopleFilters } from './PeopleFilters';
+import { PeopleTable } from './PeopleTable';
 
 export const PeoplePage: React.FC = () => {
   const { slug } = useParams<{ slug?: string }>();
@@ -16,30 +18,35 @@ export const PeoplePage: React.FC = () => {
 
   const visiblePeople = useMemo(() => {
     const currentSex = searchParams.get('sex');
-    const currentQuery = searchParams.get('query') || '';
+    const currentQuery = searchParams.get('query')?.trim().toLowerCase() || '';
     const currentCenturies = searchParams.getAll('centuries');
 
     return people.filter(person => {
+      // Filter by sex
       if (currentSex && person.sex !== currentSex) {
         return false;
       }
 
-      const normalizedQuery = currentQuery.trim().toLocaleLowerCase();
+      // Filter by name, mother name or father name
+      if (currentQuery) {
+        const matchesName = person.name
+          .toLowerCase()
+          .includes(currentQuery);
 
-      if (normalizedQuery) {
-        const matchesName = person.name.toLowerCase().includes(normalizedQuery);
         const matchesMother = person.motherName
           ?.toLowerCase()
-          .includes(normalizedQuery);
+          .includes(currentQuery);
+
         const matchesFather = person.fatherName
           ?.toLowerCase()
-          .includes(normalizedQuery);
+          .includes(currentQuery);
 
         if (!matchesName && !matchesMother && !matchesFather) {
           return false;
         }
       }
 
+      // Filter by century
       if (currentCenturies.length > 0) {
         const century = Math.ceil(person.born / 100).toString();
 
@@ -52,7 +59,9 @@ export const PeoplePage: React.FC = () => {
     });
   }, [people, searchParams]);
 
-  const hasNoPeopleOnServer = !loading && !errorMessage && people.length === 0;
+  const hasNoPeopleOnServer =
+    !loading && !errorMessage && people.length === 0;
+
   const hasNoMatchingPeople =
     !loading &&
     !errorMessage &&
@@ -81,7 +90,10 @@ export const PeoplePage: React.FC = () => {
               {loading && <Loader />}
 
               {errorMessage && (
-                <p data-cy="peopleLoadingError" className="has-text-danger">
+                <p
+                  data-cy="peopleLoadingError"
+                  className="has-text-danger"
+                >
                   Something went wrong
                 </p>
               )}
@@ -99,7 +111,10 @@ export const PeoplePage: React.FC = () => {
               )}
 
               {!loading && !errorMessage && visiblePeople.length > 0 && (
-                <PeopleTable people={visiblePeople} activePerson={slug} />
+                <PeopleTable
+                  people={visiblePeople}
+                  activePerson={slug}
+                />
               )}
             </div>
           </div>
