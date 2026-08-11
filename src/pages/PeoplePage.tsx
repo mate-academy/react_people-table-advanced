@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Person } from '../types/Person';
 import { getPeople } from '../api';
-import { Loader } from '../components/Loader';
+import { Loader } from '../components/Loader/Loader';
 import { PeopleFilters } from '../components/filters/PeopleFilters';
 import { PeopleTable } from '../components/PeopleTable';
 import { getPreparedPeople } from '../utils/getPreparedPeople';
@@ -22,6 +22,10 @@ export const PeoplePage: React.FC = () => {
   }, []);
 
   const visiblePeople = getPreparedPeople(people, searchParams);
+
+  const noPeopleOnServer = !isLoading && !hasError && people.length === 0;
+  const noMatches =
+    !isLoading && !hasError && people.length > 0 && visiblePeople.length === 0;
 
   return (
     <>
@@ -45,19 +49,14 @@ export const PeoplePage: React.FC = () => {
                 </p>
               )}
 
-              {!isLoading && !hasError && people.length === 0 && (
+              {noPeopleOnServer && (
                 <p data-cy="noPeopleMessage">
                   There are no people on the server
                 </p>
               )}
 
-              {!isLoading &&
-                !hasError &&
-                people.length > 0 &&
-                visiblePeople.length === 0 && (
-                <p>
-                    There are no people matching the current search criteria
-                </p>
+              {noMatches && (
+                <p>There are no people matching the current search criteria</p>
               )}
 
               {!isLoading && visiblePeople.length > 0 && (
