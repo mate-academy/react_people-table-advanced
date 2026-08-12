@@ -1,96 +1,115 @@
+import { ChangeEvent } from 'react';
+import { useSearchParams } from 'react-router-dom';
+
+import { SearchLink } from './SearchLink';
+
+const centuries = [16, 17, 18, 19, 20];
+
 export const PeopleFilters = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const query = searchParams.get('query') || '';
+  const selectedCenturies = searchParams.getAll('centuries');
+
+  const handleQueryChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const params = new URLSearchParams(searchParams);
+    const value = event.target.value;
+
+    if (value) {
+      params.set('query', value);
+    } else {
+      params.delete('query');
+    }
+
+    setSearchParams(params);
+  };
+
+  const handleCenturyClick = (century: number) => {
+    const params = new URLSearchParams(searchParams);
+    const value = String(century);
+
+    const currentCenturies = params.getAll('centuries');
+
+    params.delete('centuries');
+
+    if (currentCenturies.includes(value)) {
+      currentCenturies
+        .filter(centuryValue => centuryValue !== value)
+        .forEach(centuryValue => {
+          params.append('centuries', centuryValue);
+        });
+    } else {
+      [...currentCenturies, value].forEach(centuryValue => {
+        params.append('centuries', centuryValue);
+      });
+    }
+
+    setSearchParams(params);
+  };
+
   return (
-    <nav className="panel">
-      <p className="panel-heading">Filters</p>
+    <aside>
+      <h2 className="subtitle is-4">Filters</h2>
 
-      <p className="panel-tabs" data-cy="SexFilter">
-        <a className="is-active" href="#/people">
-          All
-        </a>
-        <a className="" href="#/people?sex=m">
-          Male
-        </a>
-        <a className="" href="#/people?sex=f">
-          Female
-        </a>
-      </p>
+      <div className="field">
+        <label className="label" htmlFor="query">
+          Name
+        </label>
 
-      <div className="panel-block">
-        <p className="control has-icons-left">
+        <div className="control">
           <input
+            id="query"
             data-cy="NameFilter"
-            type="search"
             className="input"
-            placeholder="Search"
+            type="text"
+            placeholder="Search..."
+            value={query}
+            onChange={handleQueryChange}
           />
-
-          <span className="icon is-left">
-            <i className="fas fa-search" aria-hidden="true" />
-          </span>
-        </p>
-      </div>
-
-      <div className="panel-block">
-        <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
-          <div className="level-left">
-            <a
-              data-cy="century"
-              className="button mr-1"
-              href="#/people?centuries=16"
-            >
-              16
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=17"
-            >
-              17
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=18"
-            >
-              18
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=19"
-            >
-              19
-            </a>
-
-            <a
-              data-cy="century"
-              className="button mr-1"
-              href="#/people?centuries=20"
-            >
-              20
-            </a>
-          </div>
-
-          <div className="level-right ml-4">
-            <a
-              data-cy="centuryALL"
-              className="button is-success is-outlined"
-              href="#/people"
-            >
-              All
-            </a>
-          </div>
         </div>
       </div>
 
-      <div className="panel-block">
-        <a className="button is-link is-outlined is-fullwidth" href="#/people">
-          Reset all filters
-        </a>
+      <div className="field">
+        <p className="label">Century</p>
+
+        <div className="buttons">
+          <SearchLink
+            params={{
+              centuries: null,
+            }}
+            className={
+              selectedCenturies.length === 0 ? 'button is-link' : 'button'
+            }
+          >
+            All
+          </SearchLink>
+
+          {centuries.map(century => {
+            const isSelected = selectedCenturies.includes(String(century));
+
+            return (
+              <button
+                key={century}
+                type="button"
+                className={isSelected ? 'button is-link' : 'button'}
+                onClick={() => handleCenturyClick(century)}
+              >
+                {century}
+              </button>
+            );
+          })}
+        </div>
       </div>
-    </nav>
+
+      <SearchLink
+        params={{
+          query: null,
+          centuries: null,
+        }}
+        className="button is-danger is-light"
+      >
+        Reset all filters
+      </SearchLink>
+    </aside>
   );
 };
