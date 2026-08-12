@@ -2,14 +2,40 @@ import { PeopleFilters } from './PeopleFilters';
 import { Loader } from './Loader';
 import { PeopleTable } from './PeopleTable';
 import { usePeople } from '../hooks/usePeople';
+import { useSearchParams } from 'react-router-dom';
+import { getPreparedPeople } from '../helpers/people';
 
 export const PeoplePage = () => {
+  const [searchParams] = useSearchParams();
+
   const peopleState = usePeople();
+
+  const query = searchParams.get('query') || '';
+  const centuries = searchParams.getAll('centuries') || [];
+  const sex = searchParams.get('sex') || '';
+
+  const preparedPeople = getPreparedPeople(peopleState.people, {
+    query,
+    centuries,
+    sex,
+  });
 
   const shouldRenderNoPeopleMessage =
     !peopleState.isLoading &&
     !peopleState.hasError &&
     peopleState.people.length === 0;
+
+  const shouldRenderNoMatchingPeopleMessage =
+    !peopleState.isLoading &&
+    !peopleState.hasError &&
+    peopleState.people.length > 0 &&
+    preparedPeople.length === 0;
+
+  const shouldRenderPeopleTable =
+    !peopleState.isLoading &&
+    !peopleState.hasError &&
+    peopleState.people.length > 0 &&
+    preparedPeople.length !== 0;
 
   return (
     <>
@@ -17,9 +43,11 @@ export const PeoplePage = () => {
 
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
-          <div className="column is-7-tablet is-narrow-desktop">
-            <PeopleFilters />
-          </div>
+          {peopleState.people.length !== 0 && (
+            <div className="column is-7-tablet is-narrow-desktop">
+              <PeopleFilters />
+            </div>
+          )}
 
           <div className="column">
             <div className="box table-container">
@@ -37,10 +65,12 @@ export const PeoplePage = () => {
                 </p>
               )}
 
-              <p>There are no people matching the current search criteria</p>
+              {shouldRenderNoMatchingPeopleMessage && (
+                <p>There are no people matching the current search criteria</p>
+              )}
 
-              {!peopleState.isLoading && !peopleState.hasError && (
-                <PeopleTable people={peopleState.people} />
+              {shouldRenderPeopleTable && (
+                <PeopleTable people={preparedPeople} />
               )}
             </div>
           </div>
