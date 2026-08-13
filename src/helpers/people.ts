@@ -1,14 +1,19 @@
 import { Person } from '../types';
+import { SortFields } from '../types/SortFields';
 
-interface PeopleFilterOptions {
+interface PeoplePreparatorOptions {
   query: string;
   centuries: string[];
   sex: string;
+  sort: SortFields | '';
+  order: 'desc' | '';
 }
+
+export const CENTURIES = [16, 17, 18, 19, 20];
 
 export const getPreparedPeople = (
   people: Person[],
-  { query, centuries, sex }: PeopleFilterOptions,
+  { query, centuries, sex, sort, order }: PeoplePreparatorOptions,
 ) => {
   let preparedPeople = [...people];
 
@@ -33,6 +38,23 @@ export const getPreparedPeople = (
 
   if (sex) {
     preparedPeople = preparedPeople.filter(person => person.sex === sex);
+  }
+
+  if (sort) {
+    preparedPeople.sort((personA, personB) => {
+      const valA = personA[sort];
+      const valB = personB[sort];
+
+      let result = 0;
+
+      if (typeof valA === 'number' && typeof valB === 'number') {
+        result = valA - valB;
+      } else if (typeof valA === 'string' && typeof valB === 'string') {
+        result = valA.localeCompare(valB);
+      }
+
+      return order === 'desc' ? result * -1 : result;
+    });
   }
 
   return preparedPeople;

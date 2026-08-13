@@ -2,22 +2,20 @@ import { PeopleFilters } from './PeopleFilters';
 import { Loader } from './Loader';
 import { PeopleTable } from './PeopleTable';
 import { usePeople } from '../hooks/usePeople';
-import { useSearchParams } from 'react-router-dom';
 import { getPreparedPeople } from '../helpers/people';
+import { usePeopleParams } from '../hooks/usePeopleParams';
 
 export const PeoplePage = () => {
-  const [searchParams] = useSearchParams();
+  const { sex, query, centuries, sort, order } = usePeopleParams();
 
   const peopleState = usePeople();
-
-  const query = searchParams.get('query') || '';
-  const centuries = searchParams.getAll('centuries') || [];
-  const sex = searchParams.get('sex') || '';
 
   const preparedPeople = getPreparedPeople(peopleState.people, {
     query,
     centuries,
     sex,
+    sort,
+    order,
   });
 
   const shouldRenderNoPeopleMessage =

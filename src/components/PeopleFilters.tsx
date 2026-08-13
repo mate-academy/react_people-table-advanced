@@ -2,13 +2,12 @@ import React from 'react';
 import { Link, NavLink, useSearchParams } from 'react-router-dom';
 import { getSearchWith, SearchParams } from '../utils/searchHelper';
 import classNames from 'classnames';
+import { CENTURIES } from '../helpers/people';
+import { usePeopleParams } from '../hooks/usePeopleParams';
 
 export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-
-  const query = searchParams.get('query') || '';
-  const centuries = searchParams.getAll('centuries') || [];
-  const sex = searchParams.get('sex') || '';
+  const { sex, query, centuries } = usePeopleParams();
 
   const setSearchWith = (paramsToUpdate: SearchParams) => {
     const newParams = getSearchWith(searchParams, paramsToUpdate);
@@ -29,8 +28,6 @@ export const PeopleFilters = () => {
         : [...centuries, formattedCentury],
     });
   };
-
-  const centuriesConfig = [16, 17, 18, 19, 20];
 
   return (
     <nav className="panel">
@@ -77,7 +74,7 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            {centuriesConfig.map(century => (
+            {CENTURIES.map(century => (
               <Link
                 key={century}
                 data-cy="century"
