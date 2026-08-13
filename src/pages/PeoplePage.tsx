@@ -16,8 +16,6 @@ export const PeoplePage: React.FC = () => {
   const { personSlug } = useParams();
   const [searchParams] = useSearchParams();
 
-  const newSearchParams = new URLSearchParams(searchParams);
-
   function loadPeople() {
     setIsLoading(true);
 
@@ -33,6 +31,8 @@ export const PeoplePage: React.FC = () => {
   }
 
   useEffect(loadPeople, []);
+
+  const newSearchParams = new URLSearchParams(searchParams);
 
   function isQueryIncluded(man: Person, chars: string): boolean {
     const normalizedChars = chars.toLowerCase();
@@ -101,7 +101,89 @@ export const PeoplePage: React.FC = () => {
     return currentPeople;
   }
 
-  const visiblePeople = getFilteredPeople(newSearchParams);
+  const isParam = (searchParam: string) => {
+    return searchParams.has(searchParam);
+  };
+
+  const paramValue = (searchParam: string) => {
+    return searchParams.get(searchParam);
+  };
+
+  const sortField = isParam('sort') ? paramValue('sort') : null;
+  const sortOrder = isParam('order') ? paramValue('order') : null;
+
+  function getSortedPeople(
+    currentPeople: Person[],
+    currentSort: string | null,
+    // order: string | null,
+  ) {
+    // const preparedPeople = [...currentPeople];
+
+    return currentPeople.toSorted((person1, person2) => {
+      switch (currentSort) {
+        case 'name':
+          return person1.name.localeCompare(person2.name);
+
+        case 'sex':
+          return person1.sex.localeCompare(person2.sex);
+
+        case 'born':
+          return person1.born - person2.born;
+
+        case 'died':
+          return person1.died - person2.died;
+
+        default:
+          return 0;
+      }
+    });
+  }
+
+  // function getSortedPeople(
+  //   currentPeople: Person[],
+  //   sort: string | null,
+  //   order: string | null,
+  // ) {
+  //   const preparedPeople = [...currentPeople];
+
+  //   if (sort !== null && order === null) {
+  //     preparedPeople.sort((person1, person2) => {
+  //       switch (sort) {
+  //         case 'name':
+  //           return person1.name.localeCompare(person2.name);
+
+  //         case 'sex':
+  //           return person1.sex.localeCompare(person2.sex);
+
+  //         case 'born':
+  //           return person1.born - person2.born;
+
+  //         case 'died':
+  //           return person1.died - person2.died;
+
+  //         default:
+  //           return 0;
+  //       }
+  //     });
+  //   }
+
+  //   return preparedPeople;
+  // }
+
+  function getVisiblePeople(
+    newParams: URLSearchParams,
+    sort: string | null,
+    order: string | null,
+  ) {
+    const filteredPeople = getFilteredPeople(newParams);
+
+    const preparedPeople =
+      sort === null ? filteredPeople : getSortedPeople(filteredPeople, sort);
+
+    return order === 'desc' ? preparedPeople.toReversed() : preparedPeople;
+  }
+
+  const visiblePeople = getVisiblePeople(newSearchParams, sortField, sortOrder);
 
   const noPeople =
     !isLoading && isLoaded && !errorMessage && people.length === 0;
@@ -143,7 +225,12 @@ export const PeoplePage: React.FC = () => {
               )}
 
               {hasPeople && (
-                <PeopleTable people={visiblePeople} selectedSlug={personSlug} />
+                <PeopleTable
+                  people={visiblePeople}
+                  selectedSlug={personSlug}
+                  sortField={sortField}
+                  sortOrder={sortOrder}
+                />
               )}
             </div>
           </div>
