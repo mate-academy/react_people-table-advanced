@@ -37,7 +37,7 @@ export const PeoplePage = () => {
 
       <div className="columns">
         <div className="column is-narrow">
-          <PeopleFilters />
+          <PeopleFilters isLoaded={!isLoading} />
         </div>
 
         <div className="column">

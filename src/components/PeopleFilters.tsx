@@ -3,10 +3,18 @@ import { useSearchParams } from 'react-router-dom';
 
 import { SearchLink } from './SearchLink';
 
+type Props = {
+  isLoaded: boolean;
+};
+
 const centuries = [16, 17, 18, 19, 20];
 
-export const PeopleFilters = () => {
+export const PeopleFilters = ({ isLoaded }: Props) => {
   const [searchParams, setSearchParams] = useSearchParams();
+
+  if (!isLoaded) {
+    return null;
+  }
 
   const query = searchParams.get('query') || '';
   const selectedCenturies = searchParams.getAll('centuries');
