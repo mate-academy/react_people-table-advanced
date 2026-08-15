@@ -115,10 +115,7 @@ export const PeoplePage: React.FC = () => {
   function getSortedPeople(
     currentPeople: Person[],
     currentSort: string | null,
-    // order: string | null,
   ) {
-    // const preparedPeople = [...currentPeople];
-
     return currentPeople.toSorted((person1, person2) => {
       switch (currentSort) {
         case 'name':
@@ -139,37 +136,6 @@ export const PeoplePage: React.FC = () => {
     });
   }
 
-  // function getSortedPeople(
-  //   currentPeople: Person[],
-  //   sort: string | null,
-  //   order: string | null,
-  // ) {
-  //   const preparedPeople = [...currentPeople];
-
-  //   if (sort !== null && order === null) {
-  //     preparedPeople.sort((person1, person2) => {
-  //       switch (sort) {
-  //         case 'name':
-  //           return person1.name.localeCompare(person2.name);
-
-  //         case 'sex':
-  //           return person1.sex.localeCompare(person2.sex);
-
-  //         case 'born':
-  //           return person1.born - person2.born;
-
-  //         case 'died':
-  //           return person1.died - person2.died;
-
-  //         default:
-  //           return 0;
-  //       }
-  //     });
-  //   }
-
-  //   return preparedPeople;
-  // }
-
   function getVisiblePeople(
     newParams: URLSearchParams,
     sort: string | null,
@@ -185,14 +151,19 @@ export const PeoplePage: React.FC = () => {
 
   const visiblePeople = getVisiblePeople(newSearchParams, sortField, sortOrder);
 
-  const noPeople =
-    !isLoading && isLoaded && !errorMessage && people.length === 0;
+  const isLoadedWithoutError = isLoaded && !errorMessage;
   const hasError = !isLoading && errorMessage;
-  const hasPeople = !hasError && visiblePeople.length > 0;
-  const noPeopleByFilter = !hasError && visiblePeople.length === 0;
-  // const hasPeople = !isLoading && !errorMessage && visiblePeople.length > 0;
+  const noPeople = isLoadedWithoutError && people.length === 0;
+  const hasPeople = isLoadedWithoutError && visiblePeople.length > 0;
+  const noPeopleByFilter = isLoadedWithoutError && visiblePeople.length === 0;
+
+  // const noPeople = isLoaded && !errorMessage && people.length === 0;
+  // const hasPeople = isLoaded && !errorMessage && visiblePeople.length > 0;
   // const noPeopleByFilter =
-  //   !isLoading && !errorMessage && visiblePeople.length === 0;
+  //   isLoaded && !errorMessage && visiblePeople.length === 0;
+
+  // const hasPeople = !hasError && visiblePeople.length > 0;
+  // const noPeopleByFilter = !hasError && visiblePeople.length === 0;
 
   return (
     <>
