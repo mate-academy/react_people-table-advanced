@@ -14,8 +14,6 @@ type Props = {
 // eslint-disable-next-line react/display-name
 export const PeopleSort: React.FC<Props> = React.memo(
   ({ sortType, sortTitle, sortField, sortOrder }) => {
-    console.log('render PeopleSort');
-
     return (
       <th>
         <span className="is-flex is-flex-wrap-nowrap">

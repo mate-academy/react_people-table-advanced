@@ -33,8 +33,6 @@ export const PeopleFilters = () => {
       : [...centuries, century];
   };
 
-  console.log('render PeopleFilter');
-
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>

@@ -16,8 +16,6 @@ export const SortLink: React.FC<Props> = ({
 }) => {
   const { state } = useLocation();
 
-  console.log('render SortLink');
-
   if (sortOrder === 'desc' && sortField !== sortType && sortField === state) {
     return (
       <SearchLink params={{ sort: sortType, order: null }} state={sortField}>
