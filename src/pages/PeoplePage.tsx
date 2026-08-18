@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
 
 import { PeopleTable } from './../components/PeopleTable/PeopleTable';
@@ -6,6 +6,8 @@ import { Person } from './../types';
 import { getPeople } from './../api';
 import { Loader } from './../components/Loader';
 import { PeopleFilters } from './../components/PeopleFilters';
+import { SortTypes } from './../types/SortTypes';
+import { Filters } from './../types';
 
 export const PeoplePage: React.FC = () => {
   const [people, setPeople] = useState<Person[]>([]);
@@ -53,21 +55,21 @@ export const PeoplePage: React.FC = () => {
     return +checkedCentury === centuryBirth;
   }
 
-  function getFilteredPeople(newParams: URLSearchParams) {
+  function getFilteredPeople(newParams: URLSearchParams): Person[] {
     let currentPeople = [...people];
 
     Array.from(newParams.entries()).forEach(([key, value]) => {
       let filteredPeople: Person[] = [];
 
       switch (key) {
-        case 'sex':
+        case Filters.Sex:
           filteredPeople = currentPeople.filter(person => person.sex === value);
 
           currentPeople = [...filteredPeople];
 
           return;
 
-        case 'query':
+        case Filters.Query:
           filteredPeople = currentPeople.filter(person =>
             isQueryIncluded(person, value),
           );
@@ -75,8 +77,8 @@ export const PeoplePage: React.FC = () => {
 
           return;
 
-        case 'centuries':
-          const centuries = newParams.getAll('centuries');
+        case Filters.Centuries:
+          const centuries = newParams.getAll(Filters.Centuries);
 
           const peopleByCenturies = centuries.map(century =>
             currentPeople.filter(person => isBornInCentury(person, century)),
@@ -115,19 +117,19 @@ export const PeoplePage: React.FC = () => {
   function getSortedPeople(
     currentPeople: Person[],
     currentSort: string | null,
-  ) {
+  ): Person[] {
     return currentPeople.toSorted((person1, person2) => {
       switch (currentSort) {
-        case 'name':
+        case SortTypes.Name:
           return person1.name.localeCompare(person2.name);
 
-        case 'sex':
+        case SortTypes.Sex:
           return person1.sex.localeCompare(person2.sex);
 
-        case 'born':
+        case SortTypes.Born:
           return person1.born - person2.born;
 
-        case 'died':
+        case SortTypes.Died:
           return person1.died - person2.died;
 
         default:
@@ -143,8 +145,13 @@ export const PeoplePage: React.FC = () => {
   ) {
     const filteredPeople = getFilteredPeople(newParams);
 
-    const preparedPeople =
-      sort === null ? filteredPeople : getSortedPeople(filteredPeople, sort);
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    const sortedPeople = useMemo(
+      () => getSortedPeople(filteredPeople, sort),
+      [filteredPeople, sort],
+    );
+
+    const preparedPeople = sort === null ? filteredPeople : sortedPeople;
 
     return order === 'desc' ? preparedPeople.toReversed() : preparedPeople;
   }
@@ -156,14 +163,6 @@ export const PeoplePage: React.FC = () => {
   const noPeople = isLoadedWithoutError && people.length === 0;
   const hasPeople = isLoadedWithoutError && visiblePeople.length > 0;
   const noPeopleByFilter = isLoadedWithoutError && visiblePeople.length === 0;
-
-  // const noPeople = isLoaded && !errorMessage && people.length === 0;
-  // const hasPeople = isLoaded && !errorMessage && visiblePeople.length > 0;
-  // const noPeopleByFilter =
-  //   isLoaded && !errorMessage && visiblePeople.length === 0;
-
-  // const hasPeople = !hasError && visiblePeople.length > 0;
-  // const noPeopleByFilter = !hasError && visiblePeople.length === 0;
 
   return (
     <>

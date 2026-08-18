@@ -3,16 +3,17 @@ import cn from 'classnames';
 
 import { SearchLink } from './../SearchLink';
 import { getSearchWith, SearchParams } from './../../utils/searchHelper';
+import { Filters } from '../../types';
 
 export const usedCenturies = ['16', '17', '18', '19', '20'];
 
 export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const sex = searchParams.get('sex') || '';
-  const query = searchParams.get('query') || '';
-  const centuries = searchParams.getAll('centuries') || [];
-  const isChosenCenturies = searchParams.has('centuries');
+  const sex = searchParams.get(Filters.Sex) || '';
+  const query = searchParams.get(Filters.Query) || '';
+  const centuries = searchParams.getAll(Filters.Centuries) || [];
+  const isChosenCenturies = searchParams.has(Filters.Centuries);
 
   function setSearchWith(params: SearchParams) {
     const newSearch = getSearchWith(params, searchParams);
@@ -31,6 +32,8 @@ export const PeopleFilters = () => {
       ? centuries.filter(currentCentury => currentCentury !== century)
       : [...centuries, century];
   };
+
+  console.log('render PeopleFilter');
 
   return (
     <nav className="panel">

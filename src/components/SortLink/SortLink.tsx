@@ -1,26 +1,26 @@
 import React from 'react';
 import { SearchLink } from '../SearchLink';
 import { useLocation } from 'react-router-dom';
+import { SortType } from '../../types';
 
 type Props = {
-  sortText: string;
+  sortType: SortType;
   sortField: string | null;
   sortOrder: string | null;
 };
 
 export const SortLink: React.FC<Props> = ({
-  sortText,
+  sortType,
   sortField,
   sortOrder,
 }) => {
   const { state } = useLocation();
 
-  // console.log('state = ', state);
-  // console.log('sortField = ', sortField);
+  console.log('render SortLink');
 
-  if (sortOrder === 'desc' && sortField !== sortText && sortField === state) {
+  if (sortOrder === 'desc' && sortField !== sortType && sortField === state) {
     return (
-      <SearchLink params={{ sort: sortText, order: null }} state={sortField}>
+      <SearchLink params={{ sort: sortType, order: null }} state={sortField}>
         <span className="icon">
           <i className="fas fa-sort" />
         </span>
@@ -28,7 +28,7 @@ export const SortLink: React.FC<Props> = ({
     );
   }
 
-  if (sortOrder === 'desc' && sortField === sortText) {
+  if (sortOrder === 'desc' && sortField === sortType) {
     return (
       <SearchLink params={{ sort: null, order: null }} state={sortField}>
         <span className="icon">
@@ -38,12 +38,9 @@ export const SortLink: React.FC<Props> = ({
     );
   }
 
-  if (sortOrder === null && sortField === sortText) {
+  if (sortOrder === null && sortField === sortType) {
     return (
-      <SearchLink
-        params={{ sort: `${sortText}`, order: 'desc' }}
-        state={sortField}
-      >
+      <SearchLink params={{ sort: sortType, order: 'desc' }} state={sortField}>
         <span className="icon">
           <i className="fas fa-sort-up" />
         </span>
@@ -52,7 +49,7 @@ export const SortLink: React.FC<Props> = ({
   }
 
   return (
-    <SearchLink params={{ sort: `${sortText}` }} state={sortField}>
+    <SearchLink params={{ sort: sortType }} state={sortField}>
       <span className="icon">
         <i className="fas fa-sort" />
       </span>

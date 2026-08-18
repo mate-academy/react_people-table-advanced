@@ -1,30 +1,32 @@
 import React from 'react';
+import { SortType } from './../../types';
+import { SortTypeKey } from './../../types';
 
-import { SortLink } from '../SortLink';
+import { SortLink } from './../SortLink';
 
 type Props = {
-  sortTitle: string;
+  sortType: SortType;
+  sortTitle: SortTypeKey;
   sortField: string | null;
   sortOrder: string | null;
 };
 
-export const PeopleSort: React.FC<Props> = ({
-  sortTitle,
-  sortField,
-  sortOrder,
-}) => {
-  const sortText = sortTitle.toLowerCase();
+// eslint-disable-next-line react/display-name
+export const PeopleSort: React.FC<Props> = React.memo(
+  ({ sortType, sortTitle, sortField, sortOrder }) => {
+    console.log('render PeopleSort');
 
-  return (
-    <th>
-      <span className="is-flex is-flex-wrap-nowrap">
-        {sortTitle}
-        <SortLink
-          sortText={sortText}
-          sortField={sortField}
-          sortOrder={sortOrder}
-        />
-      </span>
-    </th>
-  );
-};
+    return (
+      <th>
+        <span className="is-flex is-flex-wrap-nowrap">
+          {sortTitle}
+          <SortLink
+            sortType={sortType}
+            sortField={sortField}
+            sortOrder={sortOrder}
+          />
+        </span>
+      </th>
+    );
+  },
+);
