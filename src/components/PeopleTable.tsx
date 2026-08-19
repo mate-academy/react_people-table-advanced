@@ -56,7 +56,6 @@ export const PeopleTable: React.FC<Props> = ({ people, selectedSlug }) => {
             <th key={field}>
               <span className="is-flex is-align-items-center">
                 <span>{title}</span>
-
                 <SearchLink params={getSortParams(field)} className="icon">
                   <i
                     className={`fas ${
@@ -71,7 +70,6 @@ export const PeopleTable: React.FC<Props> = ({ people, selectedSlug }) => {
               </span>
             </th>
           ))}
-
           <th>Mother</th>
           <th>Father</th>
         </tr>
