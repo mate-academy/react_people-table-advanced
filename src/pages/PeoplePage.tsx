@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
 
 import { PeopleTable } from './../components/PeopleTable/PeopleTable';
@@ -146,10 +146,11 @@ export const PeoplePage: React.FC = () => {
     const filteredPeople = getFilteredPeople(newParams);
 
     // eslint-disable-next-line react-hooks/rules-of-hooks
-    const sortedPeople = useMemo(
-      () => getSortedPeople(filteredPeople, sort),
-      [filteredPeople, sort],
-    );
+    const sortedPeople = getSortedPeople(filteredPeople, sort);
+    // const sortedPeople = useMemo(
+    //   () => getSortedPeople(filteredPeople, sort),
+    //   [filteredPeople, sort],
+    // );
 
     const preparedPeople = sort === null ? filteredPeople : sortedPeople;
 
@@ -161,8 +162,8 @@ export const PeoplePage: React.FC = () => {
   const isLoadedWithoutError = isLoaded && !errorMessage;
   const hasError = !isLoading && errorMessage;
   const noPeople = isLoadedWithoutError && people.length === 0;
-  const hasPeople = isLoadedWithoutError && visiblePeople.length > 0;
-  const noPeopleByFilter = isLoadedWithoutError && visiblePeople.length === 0;
+  const hasPeople = isLoadedWithoutError && people.length > 0;
+  const noPeopleByFilter = hasPeople && visiblePeople.length === 0;
 
   return (
     <>

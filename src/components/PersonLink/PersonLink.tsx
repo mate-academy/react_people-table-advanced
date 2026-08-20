@@ -2,7 +2,7 @@ import React from 'react';
 import { Person } from './../../types';
 import cn from 'classnames';
 
-import { NavLink } from 'react-router-dom';
+import { NavLink, useSearchParams } from 'react-router-dom';
 
 type Props = {
   person: Person;
@@ -15,6 +15,8 @@ export const PersonLink: React.FC<Props> = ({
   people,
   selectedSlug,
 }) => {
+  const [searchParams] = useSearchParams();
+
   const { name, sex, born, died, motherName, fatherName, slug } = person;
 
   const findNameInList = (checkName: string) => {
@@ -30,7 +32,7 @@ export const PersonLink: React.FC<Props> = ({
 
     return parent ? (
       <NavLink
-        to={`/people/${parent.slug}`}
+        to={`/people/${parent.slug}?${searchParams.toString()}`}
         className={cn({ 'has-text-danger': parent.sex === 'f' })}
       >
         {parentName}
@@ -49,7 +51,7 @@ export const PersonLink: React.FC<Props> = ({
     >
       <td>
         <NavLink
-          to={`/people/${slug}`}
+          to={`/people/${slug}?${searchParams.toString()}`}
           className={cn({ 'has-text-danger': sex === 'f' })}
         >
           {name}
