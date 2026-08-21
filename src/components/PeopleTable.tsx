@@ -23,16 +23,16 @@ export const PeopleTable = ({ people, selectedPerson }: Props) => {
       };
     }
 
-    if (order === null) {
+    if (order === 'desc') {
       return {
-        sort: field,
-        order: 'desc',
+        sort: null,
+        order: null,
       };
     }
 
     return {
-      sort: null,
-      order: null,
+      sort: field,
+      order: 'desc',
     };
   };
 
