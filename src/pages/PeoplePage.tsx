@@ -48,12 +48,11 @@ export const PeoplePage: React.FC = () => {
     );
   }
 
-  function isBornInCentury(man: Person, checkedCentury: string): boolean {
+  const personCentury = (man: Person) => {
     const { born } = man;
-    const centuryBirth = Math.ceil(+born / 100);
 
-    return +checkedCentury === centuryBirth;
-  }
+    return Math.ceil(+born / 100).toString();
+  };
 
   function getFilteredPeople(newParams: URLSearchParams): Person[] {
     let currentPeople = [...people];
@@ -80,17 +79,10 @@ export const PeoplePage: React.FC = () => {
         case Filters.Centuries:
           const centuries = newParams.getAll(Filters.Centuries);
 
-          const peopleByCenturies = centuries.map(century =>
-            currentPeople.filter(person => isBornInCentury(person, century)),
+          filteredPeople = currentPeople.filter(person =>
+            centuries.includes(personCentury(person)),
           );
 
-          filteredPeople = peopleByCenturies.reduce(
-            (peopleTotal, peopleByCentury) => [
-              ...peopleTotal,
-              ...peopleByCentury,
-            ],
-            [],
-          );
           currentPeople = [...filteredPeople];
 
           return;
@@ -145,12 +137,7 @@ export const PeoplePage: React.FC = () => {
   ) {
     const filteredPeople = getFilteredPeople(newParams);
 
-    // eslint-disable-next-line react-hooks/rules-of-hooks
     const sortedPeople = getSortedPeople(filteredPeople, sort);
-    // const sortedPeople = useMemo(
-    //   () => getSortedPeople(filteredPeople, sort),
-    //   [filteredPeople, sort],
-    // );
 
     const preparedPeople = sort === null ? filteredPeople : sortedPeople;
 
@@ -195,7 +182,7 @@ export const PeoplePage: React.FC = () => {
                 <p>There are no people matching the current search criteria</p>
               )}
 
-              {hasPeople && (
+              {hasPeople && !noPeopleByFilter && (
                 <PeopleTable
                   people={visiblePeople}
                   selectedSlug={personSlug}

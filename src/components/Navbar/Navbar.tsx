@@ -21,7 +21,7 @@ export const Navbar = () => {
           </NavLink>
 
           <NavLink
-            to={`/people/?${searchParams}`}
+            to={`/people?${searchParams}`}
             aria-current="page"
             className={getLinkClass}
           >

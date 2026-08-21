@@ -1,6 +1,5 @@
 import React from 'react';
 import { SearchLink } from '../SearchLink';
-import { useLocation } from 'react-router-dom';
 import { SortType } from '../../types';
 
 type Props = {
@@ -14,11 +13,11 @@ export const SortLink: React.FC<Props> = ({
   sortField,
   sortOrder,
 }) => {
-  const { state } = useLocation();
+  const isActive = sortType === sortField;
 
-  if (sortOrder === 'desc' && sortField !== sortType && sortField === state) {
+  if (!isActive) {
     return (
-      <SearchLink params={{ sort: sortType, order: null }} state={sortField}>
+      <SearchLink params={{ sort: sortType, order: null }}>
         <span className="icon">
           <i className="fas fa-sort" />
         </span>
@@ -26,19 +25,9 @@ export const SortLink: React.FC<Props> = ({
     );
   }
 
-  if (sortOrder === 'desc' && sortField === sortType) {
+  if (sortOrder !== 'desc') {
     return (
-      <SearchLink params={{ sort: null, order: null }} state={sortField}>
-        <span className="icon">
-          <i className="fas fa-sort-down" />
-        </span>
-      </SearchLink>
-    );
-  }
-
-  if (sortOrder === null && sortField === sortType) {
-    return (
-      <SearchLink params={{ sort: sortType, order: 'desc' }} state={sortField}>
+      <SearchLink params={{ order: 'desc' }}>
         <span className="icon">
           <i className="fas fa-sort-up" />
         </span>
@@ -47,9 +36,9 @@ export const SortLink: React.FC<Props> = ({
   }
 
   return (
-    <SearchLink params={{ sort: sortType }} state={sortField}>
+    <SearchLink params={{ sort: null, order: null }}>
       <span className="icon">
-        <i className="fas fa-sort" />
+        <i className="fas fa-sort-down" />
       </span>
     </SearchLink>
   );
