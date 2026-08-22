@@ -80,7 +80,7 @@ export const PeoplePage: React.FC = () => {
           const centuries = newParams.getAll(Filters.Centuries);
 
           filteredPeople = currentPeople.filter(person =>
-            centuries.includes(personCentury(person)),
+            centuries.some(century => century === personCentury(person)),
           );
 
           currentPeople = [...filteredPeople];
@@ -159,7 +159,7 @@ export const PeoplePage: React.FC = () => {
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
           <div className="column is-7-tablet is-narrow-desktop">
-            {!isLoading && <PeopleFilters />}
+            {isLoaded && <PeopleFilters />}
           </div>
 
           <div className="column">
