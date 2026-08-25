@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { PeopleFilters } from './PeopleFilters';
 import { Loader } from './Loader';
@@ -23,52 +23,63 @@ export const PeoplePage = () => {
       .finally(() => setIsLoading(false));
   }, []);
 
+  // Отримання значення URL-параметрів
   const query = searchParams.get('query') || '';
+  const sex = searchParams.get('sex');
   const centuries = searchParams.getAll('centuries');
   const sort = searchParams.get('sort');
   const order = searchParams.get('order');
 
-  // 1. Фільтрація за пошуковим запитом (query)
-  let visiblePeople = people.filter(person => {
-    if (!query) {
-      return true;
+  // Мемоізована фільтрація та сортування
+  const visiblePeople = useMemo(() => {
+    let result = [...people];
+
+    // 1. Фільтрація за Name / Mother / Father
+    if (query) {
+      const normalizedQuery = query.toLowerCase();
+
+      result = result.filter(
+        person =>
+          person.name.toLowerCase().includes(normalizedQuery) ||
+          person.motherName?.toLowerCase().includes(normalizedQuery) ||
+          person.fatherName?.toLowerCase().includes(normalizedQuery),
+      );
     }
 
-    const normalizedQuery = query.toLowerCase();
+    // 2. Фільтрація за Sex
+    if (sex) {
+      result = result.filter(person => person.sex === sex);
+    }
 
-    return (
-      person.name.toLowerCase().includes(normalizedQuery) ||
-      person.motherName?.toLowerCase().includes(normalizedQuery) ||
-      person.fatherName?.toLowerCase().includes(normalizedQuery)
-    );
-  });
+    // 3. Фільтрація за Centuries
+    if (centuries.length > 0) {
+      result = result.filter(person => {
+        const century = Math.ceil(person.born / 100).toString();
 
-  // 2. Фільтрація за століттями (centuries)
-  if (centuries.length > 0) {
-    visiblePeople = visiblePeople.filter(person => {
-      const century = Math.ceil(person.born / 100).toString();
+        return centuries.includes(century);
+      });
+    }
 
-      return centuries.includes(century);
-    });
-  }
+    // 4. Сортування
+    if (sort) {
+      result.sort((a, b) => {
+        const valA = a[sort as keyof Person] ?? '';
+        const valB = b[sort as keyof Person] ?? '';
 
-  // 3. Сортування (sort & order)
-  if (sort) {
-    visiblePeople.sort((a, b) => {
-      const valA = a[sort as keyof Person] ?? '';
-      const valB = b[sort as keyof Person] ?? '';
+        let cmp = 0;
 
-      let result = 0;
+        if (typeof valA === 'string' && typeof valB === 'string') {
+          cmp = valA.localeCompare(valB);
+        } else if (typeof valA === 'number' && typeof valB === 'number') {
+          cmp = valA - valB;
+        }
 
-      if (typeof valA === 'string' && typeof valB === 'string') {
-        result = valA.localeCompare(valB);
-      } else if (typeof valA === 'number' && typeof valB === 'number') {
-        result = valA - valB;
-      }
+        return order === 'desc' ? -cmp : cmp;
+      });
+    }
 
-      return order === 'desc' ? -result : result;
-    });
-  }
+    return result;
+  }, [people, query, sex, centuries, sort, order]);
 
   const showNoPeopleOnServer = !isLoading && !isError && people.length === 0;
   const showNoMatchingPeople =
@@ -81,7 +92,6 @@ export const PeoplePage = () => {
 
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
-          {/* Сайдбар відображається лише після завантаження даних та за відсутності помилки */}
           {!isLoading && !isError && (
             <div className="column is-7-tablet is-narrow-desktop">
               <PeopleFilters />
