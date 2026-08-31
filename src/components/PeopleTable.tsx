@@ -20,23 +20,26 @@ export const PeopleTable = ({ people }: Props) => {
 
   const query = searchParams.get('query')?.toLowerCase() || '';
   const centuries = searchParams.getAll('centuries');
+
   const sort = searchParams.get('sort') as SortField | null;
   const order = searchParams.get('order');
 
   let visiblePeople = [...people];
 
-  // Filter by name, mother name or father name
   if (query) {
     visiblePeople = visiblePeople.filter(person => {
       return (
         person.name.toLowerCase().includes(query) ||
-        person.motherName?.toLowerCase().includes(query) ||
-        person.fatherName?.toLowerCase().includes(query)
+        Boolean(
+          person.motherName?.toLowerCase().includes(query),
+        ) ||
+        Boolean(
+          person.fatherName?.toLowerCase().includes(query),
+        )
       );
     });
   }
 
-  // Filter by centuries
   if (centuries.length > 0) {
     visiblePeople = visiblePeople.filter(person => {
       const century = Math.ceil(person.born / 100);
@@ -45,35 +48,40 @@ export const PeopleTable = ({ people }: Props) => {
     });
   }
 
-  // Sort people
+  if (searchParams.get('sex')) {
+    const sex = searchParams.get('sex');
+
+    visiblePeople = visiblePeople.filter(
+      person => person.sex === sex,
+    );
+  }
+
   if (sort) {
     visiblePeople.sort((personA, personB) => {
       let result = 0;
 
-      if (sort === 'name') {
-        result = personA.name.localeCompare(personB.name);
-      }
+      switch (sort) {
+        case 'name':
+          result = personA.name.localeCompare(personB.name);
+          break;
 
-      if (sort === 'sex') {
-        result = personA.sex.localeCompare(personB.sex);
-      }
+        case 'sex':
+          result = personA.sex.localeCompare(personB.sex);
+          break;
 
-      if (sort === 'born') {
-        result = personA.born - personB.born;
-      }
+        case 'born':
+          result = personA.born - personB.born;
+          break;
 
-      if (sort === 'died') {
-        result = personA.died - personB.died;
+        case 'died':
+          result = personA.died - personB.died;
+          break;
       }
 
       return order === 'desc' ? -result : result;
     });
   }
 
-  // Three-state sorting:
-  // 1. no sorting -> ascending
-  // 2. ascending -> descending
-  // 3. descending -> no sorting
   const getSortParams = (field: SortField) => {
     if (sort !== field) {
       return {
@@ -107,12 +115,10 @@ export const PeopleTable = ({ people }: Props) => {
     return 'fas fa-sort-up';
   };
 
-  const getParent = (parentName: string | null) => {
-    if (!parentName) {
-      return null;
-    }
+  const getPersonSearch = () => {
+    const search = searchParams.toString();
 
-    return people.find(person => person.name === parentName) || null;
+    return search ? `?${search}` : '';
   };
 
   return (
@@ -176,73 +182,70 @@ export const PeopleTable = ({ people }: Props) => {
       </thead>
 
       <tbody>
-        {visiblePeople.map(person => {
-          const mother = getParent(person.motherName);
-          const father = getParent(person.fatherName);
+        {visiblePeople.map(person => (
+          <tr
+            data-cy="person"
+            key={person.slug}
+            className={
+              person.slug === personSlug
+                ? 'has-background-warning'
+                : ''
+            }
+          >
+            <td>
+              <Link
+                to={{
+                  pathname: `/people/${person.slug}`,
+                  search: getPersonSearch(),
+                }}
+                className={
+                  person.sex === 'f' ? 'has-text-danger' : ''
+                }
+              >
+                {person.name}
+              </Link>
+            </td>
 
-          return (
-            <tr
-              data-cy="person"
-              key={person.slug}
-              className={
-                person.slug === personSlug
-                  ? 'has-background-warning'
-                  : ''
-              }
-            >
-              <td>
+            <td>{person.sex}</td>
+            <td>{person.born}</td>
+            <td>{person.died}</td>
+
+            <td>
+              {person.mother ? (
                 <Link
                   to={{
-                    pathname: `/people/${person.slug}`,
-                    search: searchParams.toString(),
+                    pathname: `/people/${person.mother.slug}`,
+                    search: getPersonSearch(),
                   }}
                   className={
-                    person.sex === 'f' ? 'has-text-danger' : ''
+                    person.mother.sex === 'f'
+                      ? 'has-text-danger'
+                      : ''
                   }
                 >
-                  {person.name}
+                  {person.mother.name}
                 </Link>
-              </td>
+              ) : (
+                person.motherName || '-'
+              )}
+            </td>
 
-              <td>{person.sex}</td>
-
-              <td>{person.born}</td>
-
-              <td>{person.died}</td>
-
-              <td>
-                {mother ? (
-                  <Link
-                    to={{
-                      pathname: `/people/${mother.slug}`,
-                      search: searchParams.toString(),
-                    }}
-                    className="has-text-danger"
-                  >
-                    {mother.name}
-                  </Link>
-                ) : (
-                  person.motherName || '-'
-                )}
-              </td>
-
-              <td>
-                {father ? (
-                  <Link
-                    to={{
-                      pathname: `/people/${father.slug}`,
-                      search: searchParams.toString(),
-                    }}
-                  >
-                    {father.name}
-                  </Link>
-                ) : (
-                  person.fatherName || '-'
-                )}
-              </td>
-            </tr>
-          );
-        })}
+            <td>
+              {person.father ? (
+                <Link
+                  to={{
+                    pathname: `/people/${person.father.slug}`,
+                    search: getPersonSearch(),
+                  }}
+                >
+                  {person.father.name}
+                </Link>
+              ) : (
+                person.fatherName || '-'
+              )}
+            </td>
+          </tr>
+        ))}
       </tbody>
     </table>
   );

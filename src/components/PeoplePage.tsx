@@ -3,8 +3,8 @@ import { useEffect, useState } from 'react';
 import { getPeople } from '../api';
 import { Person } from '../types/Person';
 
-import { PeopleFilters } from './PeopleFilters';
 import { Loader } from './Loader';
+import { PeopleFilters } from './PeopleFilters';
 import { PeopleTable } from './PeopleTable';
 import React from 'react';
 
@@ -15,7 +15,9 @@ export const PeoplePage = () => {
 
   useEffect(() => {
     getPeople()
-      .then(setPeople)
+      .then(data => {
+        setPeople(data);
+      })
       .catch(() => {
         setHasError(true);
       })
@@ -23,6 +25,22 @@ export const PeoplePage = () => {
         setLoading(false);
       });
   }, []);
+
+  const peopleWithParents = people.map(person => {
+    const mother = person.motherName
+      ? people.find(parent => parent.name === person.motherName)
+      : undefined;
+
+    const father = person.fatherName
+      ? people.find(parent => parent.name === person.fatherName)
+      : undefined;
+
+    return {
+      ...person,
+      mother,
+      father,
+    };
+  });
 
   return (
     <>
@@ -41,7 +59,10 @@ export const PeoplePage = () => {
               {loading && <Loader />}
 
               {hasError && (
-                <p data-cy="peopleLoadingError">
+                <p
+                  data-cy="peopleLoadingError"
+                  className="has-text-danger"
+                >
                   Something went wrong
                 </p>
               )}
@@ -53,7 +74,7 @@ export const PeoplePage = () => {
               )}
 
               {!loading && !hasError && people.length > 0 && (
-                <PeopleTable people={people} />
+                <PeopleTable people={peopleWithParents} />
               )}
             </div>
           </div>

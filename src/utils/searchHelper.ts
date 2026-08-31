@@ -22,5 +22,7 @@ export function getSearchWith(
     }
   });
 
-  return newParams.toString();
+  const search = newParams.toString();
+
+  return search ? `?${search}` : '';
 }

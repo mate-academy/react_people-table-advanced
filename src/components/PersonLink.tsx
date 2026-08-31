@@ -5,18 +5,21 @@ import React from 'react';
 
 type Props = {
   person: Person;
+  className?: string;
 };
 
-export const PersonLink = ({ person }: Props) => {
+export const PersonLink = ({ person, className }: Props) => {
   const [searchParams] = useSearchParams();
+
+  const search = searchParams.toString();
 
   return (
     <Link
-      className={person.sex === 'f' ? 'has-text-danger' : ''}
       to={{
         pathname: `/people/${person.slug}`,
-        search: searchParams.toString(),
+        search: search ? `?${search}` : '',
       }}
+      className={className}
     >
       {person.name}
     </Link>

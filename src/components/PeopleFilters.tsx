@@ -1,6 +1,8 @@
 /* eslint-disable prettier/prettier */
 import { useSearchParams } from 'react-router-dom';
 
+import { getSearchWith } from '../utils/searchHelper';
+
 import { SearchLink } from './SearchLink';
 import React from 'react';
 
@@ -9,8 +11,17 @@ export const PeopleFilters = () => {
 
   const selectedSex = searchParams.get('sex');
   const selectedCenturies = searchParams.getAll('centuries');
+  const query = searchParams.get('query') || '';
 
   const centuries = ['16', '17', '18', '19', '20'];
+
+  const getSexClass = (sex: string | null) => {
+    if (sex === null && selectedSex === null) {
+      return 'is-active';
+    }
+
+    return selectedSex === sex ? 'is-active' : '';
+  };
 
   return (
     <nav className="panel">
@@ -18,22 +29,28 @@ export const PeopleFilters = () => {
 
       <p className="panel-tabs" data-cy="SexFilter">
         <SearchLink
-          params={{ sex: null }}
-          className={!selectedSex ? 'is-active' : ''}
+          params={{
+            sex: null,
+          }}
+          className={getSexClass(null)}
         >
           All
         </SearchLink>
 
         <SearchLink
-          params={{ sex: 'm' }}
-          className={selectedSex === 'm' ? 'is-active' : ''}
+          params={{
+            sex: 'm',
+          }}
+          className={getSexClass('m')}
         >
           Male
         </SearchLink>
 
         <SearchLink
-          params={{ sex: 'f' }}
-          className={selectedSex === 'f' ? 'is-active' : ''}
+          params={{
+            sex: 'f',
+          }}
+          className={getSexClass('f')}
         >
           Female
         </SearchLink>
@@ -46,20 +63,21 @@ export const PeopleFilters = () => {
             type="search"
             className="input"
             placeholder="Search"
-            value={searchParams.get('query') || ''}
+            value={query}
             onChange={event => {
               const value = event.target.value;
 
-              window.location.hash = value
-                ? `/people?${new URLSearchParams({
-                    ...Object.fromEntries(searchParams),
-                    query: value,
-                  }).toString()}`
-                : `/people?${new URLSearchParams(
-                    Object.fromEntries(
-                      [...searchParams].filter(([key]) => key !== 'query'),
-                    ),
-                  ).toString()}`;
+              const search = getSearchWith(searchParams, {
+                query: value || null,
+              });
+
+              window.history.pushState(
+                null,
+                '',
+                `${window.location.pathname}${search}`,
+              );
+
+              window.dispatchEvent(new PopStateEvent('popstate'));
             }}
           />
 
@@ -103,7 +121,9 @@ export const PeopleFilters = () => {
           <div className="level-right ml-4">
             <SearchLink
               data-cy="centuryALL"
-              params={{ centuries: null }}
+              params={{
+                centuries: null,
+              }}
               className="button is-success is-outlined"
             >
               All
@@ -118,8 +138,6 @@ export const PeopleFilters = () => {
             sex: null,
             query: null,
             centuries: null,
-            sort: null,
-            order: null,
           }}
           className="button is-link is-outlined is-fullwidth"
         >
