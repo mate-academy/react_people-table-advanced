@@ -41,10 +41,7 @@ export const PeoplePage = () => {
               {loading && <Loader />}
 
               {hasError && (
-                <p
-                  data-cy="peopleLoadingError"
-                  className="has-text-danger"
-                >
+                <p data-cy="peopleLoadingError">
                   Something went wrong
                 </p>
               )}
