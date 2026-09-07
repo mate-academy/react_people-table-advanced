@@ -213,11 +213,18 @@ export const PeopleFilters: React.FC<Props> = ({
       <div className="panel-block">
         <a
           className="button is-link is-outlined is-fullwidth"
-          href="#/people"
           onClick={() => {
             setSelectedCenturies(['all']);
             setFilterTypes('all');
             setQuery('');
+
+            setSearchParams(
+              getSearchWith(searchParams, {
+                query: null,
+                sex: null,
+                centuries: null,
+              }),
+            );
           }}
         >
           Reset all filters
