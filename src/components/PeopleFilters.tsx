@@ -1,5 +1,6 @@
 import { SearchLink } from './SearchLink';
 import { useSearchParams } from 'react-router-dom';
+import classNames from 'classnames';
 
 export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -59,7 +60,9 @@ export const PeopleFilters = () => {
           <div className="level-left">
             <SearchLink
               data-cy="century"
-              className="button mr-1"
+              className={classNames('button mr-1', {
+                'is-info': selectedCenturies.includes('16'),
+              })}
               params={{ centuries: toogleCenturies('16') }}
             >
               16
@@ -67,7 +70,9 @@ export const PeopleFilters = () => {
 
             <SearchLink
               data-cy="century"
-              className="button mr-1 is-info"
+              className={classNames('button mr-1', {
+                'is-info': selectedCenturies.includes('17'),
+              })}
               params={{ centuries: toogleCenturies('17') }}
             >
               17
@@ -75,7 +80,9 @@ export const PeopleFilters = () => {
 
             <SearchLink
               data-cy="century"
-              className="button mr-1 is-info"
+              className={classNames('button mr-1', {
+                'is-info': selectedCenturies.includes('18'),
+              })}
               params={{ centuries: toogleCenturies('18') }}
             >
               18
@@ -83,7 +90,9 @@ export const PeopleFilters = () => {
 
             <SearchLink
               data-cy="century"
-              className="button mr-1 is-info"
+              className={classNames('button mr-1', {
+                'is-info': selectedCenturies.includes('19'),
+              })}
               params={{ centuries: toogleCenturies('19') }}
             >
               19
@@ -91,7 +100,9 @@ export const PeopleFilters = () => {
 
             <SearchLink
               data-cy="century"
-              className="button mr-1"
+              className={classNames('button mr-1', {
+                'is-info': selectedCenturies.includes('20'),
+              })}
               params={{ centuries: toogleCenturies('20') }}
             >
               20
