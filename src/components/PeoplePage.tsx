@@ -17,8 +17,13 @@ export const PeoplePage = () => {
   const centuries = searchParams.getAll('centuries');
 
   const filteredPeople = people.filter(person => {
-    const matchesName = person.name.toLowerCase().includes(query.toLowerCase());
+    const matchesName =
+      person.name.toLowerCase().includes(query.toLowerCase()) ||
+      person.motherName?.toLowerCase().includes(query.toLowerCase()) ||
+      person.fatherName?.toLowerCase().includes(query.toLowerCase());
+
     const matchesSex = !sex || person.sex === sex;
+
     const matchesCentury =
       centuries.length === 0 ||
       centuries.includes(String(Math.floor((person.born - 1) / 100) + 1));
