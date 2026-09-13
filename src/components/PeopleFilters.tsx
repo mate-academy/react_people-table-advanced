@@ -1,18 +1,44 @@
+import { useSearchParams, NavLink } from 'react-router-dom';
+// import { useState } from 'react';
+
 export const PeopleFilters = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const params = new URLSearchParams(searchParams);
+  const sex = searchParams.get('sex');
+  const centuries = searchParams.getAll('centuries');
+  // const [numbers, setNumbers] = useState([]);
+
+  function sendCentury(num: number | null | string) {
+    const cent = searchParams.getAll('centuries');
+
+    if (!cent.includes(String(num))) {
+      params.append('centuries', String(num));
+      setSearchParams(params);
+    }
+
+    if (num === '') {
+      setSearchParams({});
+    }
+  }
+
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        <a className="is-active" href="#/people">
+        <NavLink className={!sex ? 'is-active' : ''} to="/people" end>
           All
-        </a>
-        <a className="" href="#/people?sex=m">
+        </NavLink>
+        <NavLink className={sex === 'm' ? 'is-active' : ''} to="/people?sex=m">
           Male
-        </a>
-        <a className="" href="#/people?sex=f">
+        </NavLink>
+        <NavLink
+          className={sex === 'f' ? 'is-active' : ''}
+          to="/people?sex=f"
+          end
+        >
           Female
-        </a>
+        </NavLink>
       </p>
 
       <div className="panel-block">
@@ -22,6 +48,9 @@ export const PeopleFilters = () => {
             type="search"
             className="input"
             placeholder="Search"
+            onChange={event => {
+              setSearchParams(`?query=${event?.target.value}`);
+            }}
           />
 
           <span className="icon is-left">
@@ -33,63 +62,90 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            <a
+            <NavLink
               data-cy="century"
-              className="button mr-1"
-              href="#/people?centuries=16"
+              className={`button mr-1 ${centuries.includes('16') ? 'is-info' : ''}`}
+              to="/people?centuries=16"
+              onClick={event => {
+                event.preventDefault();
+                sendCentury(16);
+              }}
             >
               16
-            </a>
+            </NavLink>
 
-            <a
+            <NavLink
               data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=17"
+              className={`button mr-1 ${centuries.includes('17') ? 'is-info' : ''}`}
+              to="/people?centuries=17"
+              onClick={event => {
+                event.preventDefault();
+                sendCentury(17);
+              }}
             >
               17
-            </a>
+            </NavLink>
 
-            <a
+            <NavLink
               data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=18"
+              className={`button mr-1 ${centuries.includes('18') ? 'is-info' : ''}`}
+              to="/people?centuries=18"
+              onClick={event => {
+                event.preventDefault();
+                sendCentury(18);
+              }}
             >
               18
-            </a>
+            </NavLink>
 
-            <a
+            <NavLink
               data-cy="century"
-              className="button mr-1 is-info"
-              href="#/people?centuries=19"
+              className={`button mr-1 ${centuries.includes('19') ? 'is-info' : ''}`}
+              to="/people?centuries=19"
+              onClick={event => {
+                event.preventDefault();
+                sendCentury(19);
+              }}
             >
               19
-            </a>
+            </NavLink>
 
-            <a
+            <NavLink
               data-cy="century"
-              className="button mr-1"
-              href="#/people?centuries=20"
+              className={`button mr-1 ${centuries.includes('20') ? 'is-info' : ''}`}
+              to="/people?centuries=20"
+              onClick={event => {
+                event.preventDefault();
+                sendCentury(20);
+              }}
             >
               20
-            </a>
+            </NavLink>
           </div>
 
           <div className="level-right ml-4">
-            <a
+            <NavLink
               data-cy="centuryALL"
               className="button is-success is-outlined"
-              href="#/people"
+              to="/people"
+              onClick={event => {
+                event.preventDefault();
+                sendCentury('');
+              }}
             >
               All
-            </a>
+            </NavLink>
           </div>
         </div>
       </div>
 
       <div className="panel-block">
-        <a className="button is-link is-outlined is-fullwidth" href="#/people">
+        <NavLink
+          className="button is-link is-outlined is-fullwidth"
+          to="#/people"
+        >
           Reset all filters
-        </a>
+        </NavLink>
       </div>
     </nav>
   );
