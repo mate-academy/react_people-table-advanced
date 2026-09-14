@@ -1,11 +1,17 @@
 import { useSearchParams, NavLink } from 'react-router-dom';
 // import { useState } from 'react';
+import { Person } from '../types';
 
-export const PeopleFilters = () => {
+interface PeopleFilterProps {
+  database: Person[];
+}
+
+export const PeopleFilters = ({ database, setDatabase }: PeopleFilterProps) => {
   const [searchParams, setSearchParams] = useSearchParams();
   const params = new URLSearchParams(searchParams);
   const sex = searchParams.get('sex');
   const centuries = searchParams.getAll('centuries');
+
   // const [numbers, setNumbers] = useState([]);
 
   function sendCentury(num: number | null | string) {
@@ -17,7 +23,24 @@ export const PeopleFilters = () => {
     }
 
     if (num === '') {
-      setSearchParams({});
+      params.delete('centuries');
+      setSearchParams(params);
+    }
+  }
+
+  function sendSex(sexPeople: string) {
+    const sexCurrent = searchParams.get('sex');
+
+    if (sexPeople === '') {
+      params.delete('sex');
+      setSearchParams(params);
+
+      return;
+    }
+
+    if (sexCurrent !== sexPeople) {
+      params.set('sex', sexPeople);
+      setSearchParams(params);
     }
   }
 
@@ -26,16 +49,33 @@ export const PeopleFilters = () => {
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        <NavLink className={!sex ? 'is-active' : ''} to="/people" end>
+        <NavLink
+          className={!sex ? 'is-active' : ''}
+          to="/people"
+          onClick={event => {
+            event.preventDefault();
+            sendSex('');
+          }}
+        >
           All
         </NavLink>
-        <NavLink className={sex === 'm' ? 'is-active' : ''} to="/people?sex=m">
+        <NavLink
+          className={sex === 'm' ? 'is-active' : ''}
+          to="/people?sex=m"
+          onClick={event => {
+            event.preventDefault();
+            sendSex('m');
+          }}
+        >
           Male
         </NavLink>
         <NavLink
           className={sex === 'f' ? 'is-active' : ''}
           to="/people?sex=f"
-          end
+          onClick={event => {
+            event.preventDefault();
+            sendSex('f');
+          }}
         >
           Female
         </NavLink>
@@ -49,7 +89,11 @@ export const PeopleFilters = () => {
             className="input"
             placeholder="Search"
             onChange={event => {
-              setSearchParams(`?query=${event?.target.value}`);
+              setSearchParams(`?query=${event.target.value}`);
+              database.filter(p => {
+                return p.name === event.target.value;
+              });
+              setDatabase(database);
             }}
           />
 
@@ -143,6 +187,10 @@ export const PeopleFilters = () => {
         <NavLink
           className="button is-link is-outlined is-fullwidth"
           to="#/people"
+          onClick={event => {
+            event.preventDefault();
+            setSearchParams({});
+          }}
         >
           Reset all filters
         </NavLink>

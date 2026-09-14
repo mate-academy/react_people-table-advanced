@@ -9,10 +9,14 @@ export const PeoplePage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [database, setDatabase] = useState<Person[]>([]);
   const [error, setError] = useState('');
+  const [databaseFiltered, setDatabaseFiltered] = useState(database);
 
   useEffect(() => {
     getPeople()
-      .then(data => setDatabase(data))
+      .then(data => {
+        setDatabase(data);
+        setDatabaseFiltered(data);
+      })
       .catch(err => setError(err))
       .finally(() => setIsLoading(false));
   }, []);
@@ -25,7 +29,10 @@ export const PeoplePage = () => {
         <div className="block">
           <div className="columns is-desktop is-flex-direction-row-reverse">
             <div className="column is-7-tablet is-narrow-desktop">
-              <PeopleFilters />
+              <PeopleFilters
+                setDatabase={setDatabaseFiltered}
+                database={databaseFiltered}
+              />
             </div>
 
             <div className="column">
@@ -43,7 +50,7 @@ export const PeoplePage = () => {
                 )}
 
                 {!isLoading && database.length > 0 && (
-                  <PersonTable database={database} />
+                  <PersonTable databaseFiltered={databaseFiltered} />
                 )}
 
                 <p>There are no people matching the current search criteria</p>

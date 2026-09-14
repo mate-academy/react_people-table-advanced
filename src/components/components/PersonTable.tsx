@@ -4,10 +4,10 @@ import { Person } from '../../types';
 import { useParams } from 'react-router-dom';
 
 interface PersonTableProps {
-  database: Person[];
+  databaseFiltered: Person[];
 }
 
-const PersonTable = ({ database }: PersonTableProps) => {
+const PersonTable = ({ databaseFiltered }: PersonTableProps) => {
   const { slug } = useParams();
 
   return (
@@ -28,9 +28,9 @@ const PersonTable = ({ database }: PersonTableProps) => {
       </thead>
 
       <tbody>
-        {database.map(person => {
-          const mom = database.find(p => p.name === person.motherName);
-          const dad = database.find(p => p.name === person.fatherName);
+        {databaseFiltered.map(person => {
+          const mom = databaseFiltered.find(p => p.name === person.motherName);
+          const dad = databaseFiltered.find(p => p.name === person.fatherName);
 
           return (
             <tr
