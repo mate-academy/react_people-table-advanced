@@ -1,19 +1,25 @@
-import { useSearchParams, NavLink } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
+import { getSearchWith } from '../utils/searchHelper';
 // import { useState } from 'react';
-import { Person } from '../types';
+// import { Person } from '../types';
+import { SearchLink } from './SearchLink';
 
+/*
 interface PeopleFilterProps {
   database: Person[];
+  setDatabase: (database: Person[]) => void;
 }
+  */
 
-export const PeopleFilters = ({ database, setDatabase }: PeopleFilterProps) => {
+export const PeopleFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const params = new URLSearchParams(searchParams);
+  // const params = new URLSearchParams(searchParams);
   const sex = searchParams.get('sex');
   const centuries = searchParams.getAll('centuries');
 
   // const [numbers, setNumbers] = useState([]);
 
+  /*
   function sendCentury(num: number | null | string) {
     const cent = searchParams.getAll('centuries');
 
@@ -27,7 +33,9 @@ export const PeopleFilters = ({ database, setDatabase }: PeopleFilterProps) => {
       setSearchParams(params);
     }
   }
+    */
 
+  /* 
   function sendSex(sexPeople: string) {
     const sexCurrent = searchParams.get('sex');
 
@@ -43,12 +51,14 @@ export const PeopleFilters = ({ database, setDatabase }: PeopleFilterProps) => {
       setSearchParams(params);
     }
   }
+    */
 
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
+        {/*
         <NavLink
           className={!sex ? 'is-active' : ''}
           to="/people"
@@ -59,26 +69,31 @@ export const PeopleFilters = ({ database, setDatabase }: PeopleFilterProps) => {
         >
           All
         </NavLink>
-        <NavLink
+        */}
+        <SearchLink
+          className={!sex ? 'is-active' : ''}
+          params={{
+            sex: null,
+          }}
+        >
+          All
+        </SearchLink>
+        <SearchLink
           className={sex === 'm' ? 'is-active' : ''}
-          to="/people?sex=m"
-          onClick={event => {
-            event.preventDefault();
-            sendSex('m');
+          params={{
+            sex: 'm',
           }}
         >
           Male
-        </NavLink>
-        <NavLink
+        </SearchLink>
+        <SearchLink
           className={sex === 'f' ? 'is-active' : ''}
-          to="/people?sex=f"
-          onClick={event => {
-            event.preventDefault();
-            sendSex('f');
+          params={{
+            sex: 'f',
           }}
         >
           Female
-        </NavLink>
+        </SearchLink>
       </p>
 
       <div className="panel-block">
@@ -89,11 +104,11 @@ export const PeopleFilters = ({ database, setDatabase }: PeopleFilterProps) => {
             className="input"
             placeholder="Search"
             onChange={event => {
-              setSearchParams(`?query=${event.target.value}`);
-              database.filter(p => {
-                return p.name === event.target.value;
-              });
-              setDatabase(database);
+              setSearchParams(
+                getSearchWith(searchParams, {
+                  query: event.target.value,
+                }),
+              );
             }}
           />
 
@@ -106,19 +121,18 @@ export const PeopleFilters = ({ database, setDatabase }: PeopleFilterProps) => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            <NavLink
+            <SearchLink
               data-cy="century"
               className={`button mr-1 ${centuries.includes('16') ? 'is-info' : ''}`}
-              to="/people?centuries=16"
-              onClick={event => {
-                event.preventDefault();
-                sendCentury(16);
+              params={{
+                centuries: ['16'],
               }}
             >
               16
-            </NavLink>
+            </SearchLink>
 
-            <NavLink
+            {/*
+             <NavLink
               data-cy="century"
               className={`button mr-1 ${centuries.includes('17') ? 'is-info' : ''}`}
               to="/people?centuries=17"
@@ -129,61 +143,65 @@ export const PeopleFilters = ({ database, setDatabase }: PeopleFilterProps) => {
             >
               17
             </NavLink>
+            */}
 
-            <NavLink
+            <SearchLink
+              data-cy="century"
+              className={`button mr-1 ${centuries.includes('17') ? 'is-info' : ''}`}
+              params={{
+                centuries: ['17'],
+              }}
+            >
+              17
+            </SearchLink>
+
+            <SearchLink
               data-cy="century"
               className={`button mr-1 ${centuries.includes('18') ? 'is-info' : ''}`}
-              to="/people?centuries=18"
-              onClick={event => {
-                event.preventDefault();
-                sendCentury(18);
+              params={{
+                centuries: ['18'],
               }}
             >
               18
-            </NavLink>
+            </SearchLink>
 
-            <NavLink
+            <SearchLink
               data-cy="century"
               className={`button mr-1 ${centuries.includes('19') ? 'is-info' : ''}`}
-              to="/people?centuries=19"
-              onClick={event => {
-                event.preventDefault();
-                sendCentury(19);
+              params={{
+                centuries: ['19'],
               }}
             >
               19
-            </NavLink>
+            </SearchLink>
 
-            <NavLink
+            <SearchLink
               data-cy="century"
               className={`button mr-1 ${centuries.includes('20') ? 'is-info' : ''}`}
-              to="/people?centuries=20"
-              onClick={event => {
-                event.preventDefault();
-                sendCentury(20);
+              params={{
+                centuries: ['20'],
               }}
             >
               20
-            </NavLink>
+            </SearchLink>
           </div>
 
           <div className="level-right ml-4">
-            <NavLink
+            <SearchLink
               data-cy="centuryALL"
               className="button is-success is-outlined"
-              to="/people"
-              onClick={event => {
-                event.preventDefault();
-                sendCentury('');
+              params={{
+                centuries: null,
               }}
             >
               All
-            </NavLink>
+            </SearchLink>
           </div>
         </div>
       </div>
 
       <div className="panel-block">
+        {/* 
         <NavLink
           className="button is-link is-outlined is-fullwidth"
           to="#/people"
@@ -194,6 +212,13 @@ export const PeopleFilters = ({ database, setDatabase }: PeopleFilterProps) => {
         >
           Reset all filters
         </NavLink>
+        */}
+        <SearchLink
+          className="button is-link is-outlined is-fullwidth"
+          params={{ sex: null, query: null, centuries: null }}
+        >
+          Reset all filters
+        </SearchLink>
       </div>
     </nav>
   );

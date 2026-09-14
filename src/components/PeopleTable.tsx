@@ -8,6 +8,7 @@ interface PeopleTableProps {
 }
 export const PeopleTable = ({ database }: PeopleTableProps) => {
   const { slug } = useParams();
+
   return (
     <table
       data-cy="peopleTable"
