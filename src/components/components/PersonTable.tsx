@@ -1,5 +1,6 @@
 import PersonLink from './PersonLink';
 import { Person } from '../../types';
+import { SearchLink } from '../SearchLink';
 
 import { useParams } from 'react-router-dom';
 
@@ -18,10 +19,42 @@ const PersonTable = ({ databaseFiltered }: PersonTableProps) => {
     >
       <thead>
         <tr>
-          <th>Name</th>
-          <th>Sex</th>
-          <th>Born</th>
-          <th>Died</th>
+          <th>
+            <SearchLink
+              params={{
+                sort: 'name',
+              }}
+            >
+              Name
+            </SearchLink>
+          </th>
+          <th>
+            <SearchLink
+              params={{
+                sort: 'sex',
+              }}
+            >
+              Sex
+            </SearchLink>
+          </th>
+          <th>
+            <SearchLink
+              params={{
+                sort: 'born',
+              }}
+            >
+              Born
+            </SearchLink>
+          </th>
+          <th>
+            <SearchLink
+              params={{
+                sort: 'died',
+              }}
+            >
+              Died
+            </SearchLink>
+          </th>
           <th>Mother</th>
           <th>Father</th>
         </tr>
