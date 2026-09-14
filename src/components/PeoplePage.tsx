@@ -30,7 +30,7 @@ export const PeoplePage = () => {
       .filter(data => {
         const query = searchParams.get('query')?.toLowerCase().trim();
         const sex = searchParams.get('sex');
-        const century = searchParams.get('centuries');
+        const century = searchParams.getAll('centuries');
 
         if (query) {
           return data.name.toLowerCase().includes(query);
@@ -40,21 +40,43 @@ export const PeoplePage = () => {
           return data.sex === sex;
         }
 
-        if (century) {
-          return Math.ceil(Number(data.died) / 100) === Number(century);
+        if (century.length > 0) {
+          return century.includes(String(Math.ceil(Number(data.died) / 100)));
         }
 
         return true;
       })
       .sort((a, b) => {
         const sort = searchParams.get('sort');
+        const directionBorn = searchParams.get('directionBorn');
+        const directionSex = searchParams.get('directionSex');
+        const directionName = searchParams.get('directionName');
+        const directionDied = searchParams.get('directionDied');
 
         if (sort === 'died') {
-          return Number(a.died) - Number(b.died);
+          if (directionDied === 'asc') {
+            return Number(a.died) - Number(b.died);
+          } else {
+            return Number(b.died) - Number(a.died);
+          }
         } else if (sort === 'name') {
-          return a.name.localeCompare(b.name);
+          if (directionName === 'asc') {
+            return a.name.localeCompare(b.name);
+          } else {
+            return b.name.localeCompare(a.name);
+          }
         } else if (sort === 'sex') {
-          return a.sex.localeCompare(b.sex);
+          if (directionSex === 'asc') {
+            return a.sex.localeCompare(b.sex);
+          } else {
+            return b.sex.localeCompare(a.sex);
+          }
+        } else if (sort === 'born') {
+          if (directionBorn === 'asc') {
+            return Number(a.born) - Number(b.born);
+          } else {
+            return Number(b.born) - Number(a.born);
+          }
         }
 
         return 0;

@@ -1,6 +1,7 @@
 import PersonLink from './PersonLink';
 import { Person } from '../../types';
 import { SearchLink } from '../SearchLink';
+import { useState } from 'react';
 
 import { useParams } from 'react-router-dom';
 
@@ -10,6 +11,58 @@ interface PersonTableProps {
 
 const PersonTable = ({ databaseFiltered }: PersonTableProps) => {
   const { slug } = useParams();
+  const [directionSex, setDirectionSex] = useState('asc');
+  const [directionName, setDirectionName] = useState('asc');
+  const [directionBorn, setDirectionBorn] = useState('asc');
+  const [directionDied, setDirectionDied] = useState('asc');
+
+  function getDirectionName() {
+    if (directionName === 'asc') {
+      setDirectionName('desc');
+
+      return 'desc';
+    } else {
+      setDirectionName('asc');
+
+      return 'asc';
+    }
+  }
+
+  function getDirectionDied() {
+    if (directionDied === 'asc') {
+      setDirectionDied('desc');
+
+      return 'desc';
+    } else {
+      setDirectionDied('asc');
+
+      return 'asc';
+    }
+  }
+
+  function getDirectionBorn() {
+    if (directionBorn === 'asc') {
+      setDirectionBorn('desc');
+
+      return 'desc';
+    } else {
+      setDirectionBorn('asc');
+
+      return 'asc';
+    }
+  }
+
+  function getDirectionSex() {
+    if (directionSex === 'asc') {
+      setDirectionSex('desc');
+
+      return 'desc';
+    } else {
+      setDirectionSex('asc');
+
+      return 'asc';
+    }
+  }
 
   return (
     <table
@@ -23,6 +76,10 @@ const PersonTable = ({ databaseFiltered }: PersonTableProps) => {
             <SearchLink
               params={{
                 sort: 'name',
+                directionName,
+              }}
+              onClick={() => {
+                getDirectionName();
               }}
             >
               Name
@@ -32,6 +89,10 @@ const PersonTable = ({ databaseFiltered }: PersonTableProps) => {
             <SearchLink
               params={{
                 sort: 'sex',
+                directionSex,
+              }}
+              onClick={() => {
+                getDirectionSex();
               }}
             >
               Sex
@@ -41,6 +102,10 @@ const PersonTable = ({ databaseFiltered }: PersonTableProps) => {
             <SearchLink
               params={{
                 sort: 'born',
+                directionBorn,
+              }}
+              onClick={() => {
+                getDirectionBorn();
               }}
             >
               Born
@@ -50,6 +115,10 @@ const PersonTable = ({ databaseFiltered }: PersonTableProps) => {
             <SearchLink
               params={{
                 sort: 'died',
+                directionDied,
+              }}
+              onClick={() => {
+                getDirectionDied();
               }}
             >
               Died
