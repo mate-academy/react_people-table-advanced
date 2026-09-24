@@ -83,4 +83,3 @@ export const CenturyFilter: React.FC<Props> = ({ people }) => {
     </div>
   );
 };
-
