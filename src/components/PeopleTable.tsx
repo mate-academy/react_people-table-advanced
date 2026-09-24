@@ -1,9 +1,8 @@
 /* eslint-disable jsx-a11y/control-has-associated-label */
 import React from 'react';
 import { Person } from '../types';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams, useSearchParams } from 'react-router-dom';
 import { PersonLink } from './PersonLink';
-import { useSearchParams } from 'react-router-dom';
 
 type Props = {
   persons: Person[];
@@ -18,6 +17,7 @@ export const PeopleTable: React.FC<Props> = ({ persons }) => {
   const query = searchParams.get('query') || '';
   const centuriesParam = searchParams.getAll('centuries');
   const getCentury = (year: number) => Math.ceil(year / 100);
+
   const visiblePeople = persons.filter(person => {
     const matchesQuery =
       query === '' ||
