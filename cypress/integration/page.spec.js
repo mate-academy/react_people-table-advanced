@@ -260,7 +260,7 @@ describe('', () => {
 
     it('should hide loader on people loading error', () => {
       cy.clock();
-      page.mockNoPeople();
+      page.mockPeopleError();
       page.visit('/#/people');
       cy.tick(10000);
       page.loader().should('not.exist');
@@ -304,7 +304,7 @@ describe('', () => {
     });
 
     it('should not show loading error if API send no people', () => {
-      page.mockPeopleError();
+      page.mockNoPeople();
       page.visit('/#/people');
       page.peopleLoadingError().should('not.exist');
     });
