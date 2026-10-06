@@ -1,4 +1,10 @@
-export const Navbar = () => {
+import { Link } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
+import cn from 'classnames';
+
+export function Navbar() {
+  const { pathname } = useLocation();
+
   return (
     <nav
       data-cy="nav"
@@ -8,19 +14,25 @@ export const Navbar = () => {
     >
       <div className="container">
         <div className="navbar-brand">
-          <a className="navbar-item" href="#/">
+          <Link
+            to="/"
+            className={cn('navbar-item', {
+              'has-background-grey-lighter': pathname === '/',
+            })}
+          >
             Home
-          </a>
+          </Link>
 
-          <a
-            aria-current="page"
-            className="navbar-item has-background-grey-lighter"
-            href="#/people"
+          <Link
+            to="/people"
+            className={cn('navbar-item', {
+              'has-background-grey-lighter': pathname.startsWith('/people'),
+            })}
           >
             People
-          </a>
+          </Link>
         </div>
       </div>
     </nav>
   );
-};
+}
