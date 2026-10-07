@@ -1,8 +1,50 @@
+import { useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { PeopleFilters } from './PeopleFilters';
 import { Loader } from './Loader';
 import { PeopleTable } from './PeopleTable';
+import { getFilteredPeople } from '../utils/getFilteredPeople';
+import { Person } from '../types';
+import { getPeople } from '../api';
+import { getSortedPeople } from '../utils/getSortedPeople';
 
 export const PeoplePage = () => {
+  const [people, setPeople] = useState<Person[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+
+  const [searchParams] = useSearchParams();
+
+  const query = searchParams.get('query');
+  const sex = searchParams.get('sex');
+  const centuries = searchParams.getAll('centuries');
+  const sort = searchParams.get('sort');
+  const order = searchParams.get('order');
+
+  const filteredPeople = getFilteredPeople(people, query, sex, centuries);
+
+  const sortedPeople = getSortedPeople(filteredPeople, sort, order);
+
+  useEffect(() => {
+    setLoading(true);
+
+    const loadPeople = async () => {
+      try {
+        const peopleData = await getPeople();
+
+        setPeople(peopleData);
+      } catch {
+        setError('Something went wrong');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadPeople();
+  }, []);
+
+  const hasPeople = people.length > 0;
+
   return (
     <>
       <h1 className="title">People Page</h1>
@@ -10,20 +52,24 @@ export const PeoplePage = () => {
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
           <div className="column is-7-tablet is-narrow-desktop">
-            <PeopleFilters />
+            {hasPeople && <PeopleFilters />}
           </div>
 
           <div className="column">
             <div className="box table-container">
-              <Loader />
+              {loading && <Loader />}
 
-              <p data-cy="peopleLoadingError">Something went wrong</p>
+              {error && <p data-cy="peopleLoadingError">{error}</p>}
 
-              <p data-cy="noPeopleMessage">There are no people on the server</p>
+              {!hasPeople && !loading && (
+                <p data-cy="noPeopleMessage">
+                  There are no people on the server
+                </p>
+              )}
 
-              <p>There are no people matching the current search criteria</p>
+              {/* <p>There are no people matching the current search criteria</p> */}
 
-              <PeopleTable />
+              {hasPeople && <PeopleTable people={sortedPeople} />}
             </div>
           </div>
         </div>
