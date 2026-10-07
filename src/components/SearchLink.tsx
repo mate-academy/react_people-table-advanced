@@ -6,7 +6,8 @@ import { getSearchWith, SearchParams } from '../utils/searchHelper';
  * along with the custom `params` prop that we use for updating the search
  */
 type Props = Omit<LinkProps, 'to'> & {
-  params: SearchParams;
+  to?: string;
+  params?: SearchParams;
 };
 
 /**
@@ -15,19 +16,23 @@ type Props = Omit<LinkProps, 'to'> & {
  */
 export const SearchLink: React.FC<Props> = ({
   children, // this is the content between the open and closing tags
+  to,
   params, // the params to be updated in the `search`
   ...props // all usual Link props like `className`, `style` and `id`
 }) => {
   const [searchParams] = useSearchParams();
+  const search = params
+    ? getSearchWith(searchParams, params)
+    : searchParams.toString();
+
+  const targetTo = to ? { pathname: to, search } : { search };
 
   return (
     <Link
       // to={{ search: getSearchWith(searchParams, { query: 'sdf' }) }}
       // to={{ search: getSearchWith(searchParams, { query: null }) }}
       // to={{ search: getSearchWith(searchParams, { centuries: ['16', '18'] }) }}
-      to={{
-        search: getSearchWith(searchParams, params),
-      }}
+      to={targetTo}
       {...props} // copy all the other props
     >
       {children}
