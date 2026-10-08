@@ -112,30 +112,27 @@ export const PeoplePage = () => {
   return (
     <>
       <h1 className="title">People Page</h1>
+      {peopleIsLoading ? (
+        <Loader />
+      ) : errorLoading ? (
+        <p data-cy="peopleLoadingError" className="has-text-danger">
+          Something went wrong
+        </p>
+      ) : people.length === 0 ? (
+        <p data-cy="noPeopleMessage">There are no people on the server</p>
+      ) : (
+        <div className="block">
+          <div className="columns is-desktop is-flex-direction-row-reverse">
+            <div className="column is-7-tablet is-narrow-desktop">
+              <PeopleFilters
+                filters={filters}
+                getNewCenturies={getNewCenturies}
+                onChangeQuery={handleChangeQuery}
+              />
+            </div>
 
-      <div className="block">
-        <div className="columns is-desktop is-flex-direction-row-reverse">
-          <div className="column is-7-tablet is-narrow-desktop">
-            <PeopleFilters
-              filters={filters}
-              getNewCenturies={getNewCenturies}
-              onChangeQuery={handleChangeQuery}
-            />
-          </div>
-
-          <div className="column">
-            <div className="box table-container">
-              {peopleIsLoading ? (
-                <Loader />
-              ) : errorLoading ? (
-                <p data-cy="peopleLoadingError" className="has-text-danger">
-                  Something went wrong
-                </p>
-              ) : people.length === 0 ? (
-                <p data-cy="noPeopleMessage">
-                  There are no people on the server
-                </p>
-              ) : (
+            <div className="column">
+              <div className="box table-container">
                 <table
                   data-cy="peopleTable"
                   className="table is-striped is-hoverable is-narrow
@@ -178,7 +175,7 @@ export const PeoplePage = () => {
                                 : { sort: null, order: null }
                           }
                         >
-                          sex
+                          Sex
                           {filters.sort !== 'sex' && (
                             <i className="fas fa-sort" />
                           )}
@@ -249,11 +246,11 @@ export const PeoplePage = () => {
                   </thead>
                   <PeopleTable people={sortedPeople} />
                 </table>
-              )}
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      )}
     </>
   );
 };
