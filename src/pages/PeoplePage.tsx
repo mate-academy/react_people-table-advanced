@@ -43,7 +43,10 @@ export const PeoplePage = () => {
     .filter(person => !sex || person.sex === sex)
     .filter(
       person =>
-        !query || person.name.toLowerCase().includes(query.toLowerCase()),
+        !query ||
+        person.name.toLowerCase().includes(query.toLowerCase()) ||
+        person.motherName?.toLowerCase().includes(query.toLowerCase()) ||
+        person.fatherName?.toLowerCase().includes(query.toLowerCase()),
     )
     .filter(person => {
       const personCentury = Math.ceil(person.born / 100);
