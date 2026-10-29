@@ -1,31 +1,33 @@
-# React People Table (Advanced) - Filterging and Sorting
+# People Table
 
-> Here is [the working example](https://mate-academy.github.io/react_people-table-advanced/)
+A React and TypeScript app that shows a table of people, with filtering and sorting saved in the URL.
 
-> Sorting and filtering tests are not implemented yet
+## Live Preview
 
-Using code from the [React People Table](https://github.com/mate-academy/react_people-table-basics#react-people-table)
-implement the ability to filter and sort people in the table.
+[slysahex.github.io/react_people-table-advanced](https://slysahex.github.io/react_people-table-advanced/)
 
-1. All the filters and sort params should be saved as URL Search Params, so you could share the link to show exactly what you see.
-1. Keep search params when navigating within the `People` page (when selecting a person or clicking the `People` link).
-1. The sidebar with the filters should appear only when people are loaded.
-1. `NameFilter` should update the `query` search param with the text from the input.
-    - show only people with the `name`, `motherName` or `fatherName` that match the query case insensitive;
-    - if the input is empty there should not be `query` in the search params.
-1. `CenturyFilter` should allow to choose several centuries or all of them.
-    - add `centuries` search params using `append` method  `getAll` method;
-1. Implement sorting by `name`, `sex`, `born` and `died` by clicking on arrows in a `th`;
-    - the first click on a column sorts people by the selected field ascending (`a -> z` or `0 -> 9`);
-    - the second click (when people are already sorted ascending by this field) reverses the order of sorting;
-    - the third click (when people are already sorted in reversed order by this field) disables sorting;
-    - use `sort` search param to save sort field;
-    - add `order=desc` (short for `descending`) if sorted in reversed order;
-    - if sorting is disabled there should not be `sort` and `order` search params;
+## Technologies Used
 
-## Instructions
-- Install Prettier Extention and use this [VSCode settings](https://mate-academy.github.io/fe-program/tools/vscode/settings.json) to enable format on save.
-- Implement a solution following the [React task guideline](https://github.com/mate-academy/react_task-guideline#react-tasks-guideline).
-- Use the [React TypeScript cheat sheet](https://mate-academy.github.io/fe-program/js/extra/react-typescript).
-- Open one more terminal and run tests with `npm test` to ensure your solution is correct.
-- Replace `<your_account>` with your Github username in the [DEMO LINK](https://<your_account>.github.io/react_people-table-advanced/) and add it to the PR description.
+- React 18 (hooks)
+- TypeScript
+- React Router 6 (URL search params)
+- Bulma, SCSS
+- classnames
+
+## Features
+
+- Load people from an API, with a loader and error states
+- Search by name, mother's name or father's name (case-insensitive)
+- Filter by sex and by one or several centuries
+- Sort by name, sex, birth year or death year (ascending, descending, off)
+- All filters and sorting are stored in URL search params, so you can share a link to exactly what you see
+- Click a parent's name to jump to that person in the table
+
+## Getting Started
+
+```bash
+git clone https://github.com/slysahex/react_people-table-advanced.git
+cd react_people-table-advanced
+npm install
+npm start
+```
