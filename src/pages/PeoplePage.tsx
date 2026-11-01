@@ -2,11 +2,13 @@ import { useEffect, useMemo, useState } from 'react';
 import { Loader } from '../components/Loader';
 import { Person } from '../types';
 import { getPeople } from '../api';
-import { PersonRow } from '../components/PersonRow';
 import { useParams, useSearchParams } from 'react-router-dom';
 import { PeopleFilters } from '../components/PeopleFilters/PeopleFilters';
-import { PersonFilter } from '../utils/filterTodos/TodoFilter';
+import { PersonFilter } from '../utils/filterPersons/PersonFilter';
 import { SerchParams } from '../types/SerchParams';
+import { PeopleTable } from '../components/PeopleTable';
+import { PersonSorter } from '../utils/PersonSorter';
+import { SortOrder, SortParams } from '../types/SortParams';
 
 export const PeoplePage: React.FC = () => {
   const [peoples, setPeoples] = useState<Person[]>([]);
@@ -39,7 +41,25 @@ export const PeoplePage: React.FC = () => {
       filters.push(PersonFilter.FilterByCenturies(...searchCenturies));
     }
 
-    return PersonFilter.Filter(peoples, ...filters);
+    const filteredPeoples = PersonFilter.Filter(peoples, ...filters);
+
+    const sortBy = searchParams.get('sort');
+
+    if (!sortBy) {
+      return filteredPeoples;
+    }
+
+    const orderBy = searchParams.get('order');
+
+    if (!orderBy) {
+      return filteredPeoples.sort(
+        PersonSorter.SortBy(sortBy as SortParams, SortOrder.Asc),
+      );
+    }
+
+    return filteredPeoples.sort(
+      PersonSorter.SortBy(sortBy as SortParams, orderBy as SortOrder),
+    );
   }, [peoples, searchParams]);
 
   useEffect(() => {
@@ -94,36 +114,10 @@ export const PeoplePage: React.FC = () => {
                       There are no people matching the current search criteria
                     </p>
                   ) : (
-                    <table
-                      data-cy="peopleTable"
-                      className={
-                        'table is-striped ' +
-                        'is-hoverable is-narrow is-fullwidth'
-                      }
-                    >
-                      <thead>
-                        <tr>
-                          <th>Name</th>
-                          <th>Sex</th>
-                          <th>Born</th>
-                          <th>Died</th>
-                          <th>Mother</th>
-                          <th>Father</th>
-                        </tr>
-                      </thead>
-
-                      <tbody>
-                        {renderPeople.map(person => {
-                          return (
-                            <PersonRow
-                              person={person}
-                              isSelected={person.slug === selectedPersonSlug}
-                              key={person.slug}
-                            />
-                          );
-                        })}
-                      </tbody>
-                    </table>
+                    <PeopleTable
+                      persons={renderPeople}
+                      selectedPersonSlug={selectedPersonSlug}
+                    />
                   )}
                 </>
               )}
