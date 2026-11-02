@@ -11,27 +11,12 @@ export const PeopleFilters = () => {
   const query = searchParams.get('query');
   const centuries = searchParams.getAll('centuries');
 
-
   const handleQueryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchParams(
       getSearchWith(searchParams, { query: event.target.value || null }),
     );
   };
-  const getCenturySearch = (century: string) => {
-    const params = new URLSearchParams(searchParams);
 
-    params.delete('centuries');
-
-    centuries
-      .filter(c => c !== century)
-      .forEach(c => params.append('centuries', c));
-
-    if (!centuries.includes(century)) {
-      params.append('centuries', century);
-    }
-
-    return params.toString();
-  };
 
   return (
     <nav className="panel">
@@ -78,22 +63,27 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-        {CENTURIES.map(century => {
-              const value = century.toString();
-              const isSelected = centuries.includes(value);
-              return (
-              <Link
-                key={century}
-                data-cy="century"
-                className={classNames('button', 'mr-1', {
-                  'is-info': isSelected,
-                })}
-                to={{ search: getCenturySearch(value) }}
-              >
-                {century}
-              </Link>
-              );
-            })}
+            {CENTURIES.map(century => {
+   const value = century.toString();
+  const isSelected = centuries.includes(value);
+
+  return (
+    <SearchLink
+      key={century}
+      data-cy="century"
+      className={classNames('button', 'mr-1', {
+        'is-info': isSelected,
+      })}
+      params={{
+        centuries: isSelected
+          ? centuries.filter(c => c !== value)
+          : centuries.concat(value),
+      }}
+    >
+      {century}
+    </SearchLink>
+  );
+})}
           </div>
 
           <div className="level-right ml-4">
