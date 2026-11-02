@@ -1,6 +1,9 @@
-
 import { useEffect, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import {
+  useSearchParams,
+  useLocation,
+  useNavigate,
+} from 'react-router-dom';
 
 import { Person } from '../types/Person';
 import { getPeople } from '../api';
@@ -8,6 +11,7 @@ import { getPeople } from '../api';
 import { PeopleTable } from './PeopleTable';
 import { PeopleFilters } from './PeopleFilters';
 import { Loader } from './Loader';
+
 
 export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);
@@ -21,6 +25,15 @@ export const PeoplePage = () => {
 
   const sort = searchParams.get('sort') || '';
   const order = searchParams.get('order') || 'asc';
+const query = searchParams.get('query') || '';
+const centuries = searchParams.getAll('centuries');
+
+const location = useLocation();
+const navigate = useNavigate();
+
+const slug = location.pathname.split('/').pop();
+
+
 
 
   useEffect(() => {
@@ -36,6 +49,20 @@ export const PeoplePage = () => {
         setIsLoading(false);
       });
   }, []);
+
+
+
+useEffect(() => {
+  if (people.length === 0) {
+    return;
+  }
+
+  const person = people.find(p => p.slug === slug);
+
+  setSelectedPerson(person || null);
+}, [people, slug]);
+
+
 
 
   const handleSort = (field: string) => {
@@ -55,7 +82,31 @@ export const PeoplePage = () => {
   };
 
 
-  const sortedPeople = [...people].sort((a, b) => {
+const filteredPeople = people.filter(person => {
+  const normalizedQuery = query.toLowerCase();
+
+  const matchesQuery = [
+    person.name,
+    person.motherName,
+    person.fatherName,
+  ].some(value => value?.toLowerCase().includes(normalizedQuery));
+
+  const personCentury = Math.ceil(person.born / 100);
+
+  const matchesCentury =
+    centuries.length === 0 ||
+    centuries.includes(String(personCentury));
+
+  return matchesQuery && matchesCentury;
+});
+
+
+
+
+
+
+const sortedPeople = [...filteredPeople].sort((a, b) => {
+
     if (!sort) {
       return 0;
     }
@@ -102,37 +153,47 @@ export const PeoplePage = () => {
 
   return (
     <>
-      <h1 className="title">
-        People
-      </h1>
+<h1 className="title">
+  People Page
+</h1>
 
-
-      <PeopleFilters />
+      {!isLoading && !errorMessage && people.length > 0 && (
+  <PeopleFilters />
+)}
 
 
       {errorMessage && (
-        <p className="notification is-danger">
-          {errorMessage}
-        </p>
-      )}
+  <p
+    data-cy="peopleLoadingError"
+    className="notification is-danger"
+  >
+    {errorMessage}
+  </p>
+)}
 
-
-      {!errorMessage && people.length === 0 && (
-        <p className="notification">
-          No people found
-        </p>
-      )}
+{!errorMessage && people.length === 0 && (
+  <p
+    data-cy="noPeopleMessage"
+    className="notification"
+  >
+    No people found
+  </p>
+)}
 
 
       {people.length > 0 && (
-        <PeopleTable
-          people={sortedPeople}
-          selectedPerson={selectedPerson}
-          onSelectPerson={setSelectedPerson}
-          sort={sort}
-          order={order}
-          onSort={handleSort}
-        />
+
+     <PeopleTable
+  people={sortedPeople}
+  selectedPerson={selectedPerson}
+  onSelectPerson={(person) => {
+    setSelectedPerson(person);
+    navigate(`/people/${person.slug}`);
+  }}
+  sort={sort}
+  order={order}
+  onSort={handleSort}
+/>
       )}
     </>
   );

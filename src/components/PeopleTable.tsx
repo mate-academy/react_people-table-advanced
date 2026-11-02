@@ -37,33 +37,35 @@ export const PeopleTable = ({
     >
       <thead>
         <tr>
-          <th
-            className={getClassName('name')}
-            onClick={() => onSort('name')}
-          >
-            Name {getArrow('name')}
-          </th>
+         <th
+  className={getClassName('name')}
+  onClick={() => onSort('name')}
+>
+  Name
+</th>
 
-          <th
-            className={getClassName('sex')}
-            onClick={() => onSort('sex')}
-          >
-            Sex {getArrow('sex')}
-          </th>
+<th
+  className={getClassName('sex')}
+  onClick={() => onSort('sex')}
+>
+  Sex
+</th>
 
-          <th
-            className={getClassName('born')}
-            onClick={() => onSort('born')}
-          >
-            Born {getArrow('born')}
-          </th>
+<th
+  className={getClassName('born')}
+  onClick={() => onSort('born')}
+>
+  Born
+</th>
 
-          <th
-            className={getClassName('died')}
-            onClick={() => onSort('died')}
-          >
-            Died {getArrow('died')}
-          </th>
+<th
+  className={getClassName('died')}
+  onClick={() => onSort('died')}
+>
+  Died
+</th>
+
+
 
           <th>Mother</th>
           <th>Father</th>
@@ -72,18 +74,25 @@ export const PeopleTable = ({
 
       <tbody>
         {people.map(person => (
-          <tr
-            key={person.slug}
-            className={
+        <tr
+  key={person.slug}
+  data-cy="person"
+  className={
               selectedPerson?.slug === person.slug
-                ? 'has-background-warning-light'
+
+                ? 'has-background-warning'
                 : ''
             }
             onClick={() => onSelectPerson(person)}
           >
-            <td>
-              {person.name}
-            </td>
+          <td>
+<a
+  href={`#/people/${person.slug}`}
+  className={person.sex === 'f' ? 'has-text-danger' : 'has-text-link'}
+>
+  {person.name}
+</a>
+</td>
 
             <td>{person.sex}</td>
 
@@ -91,37 +100,38 @@ export const PeopleTable = ({
 
             <td>{person.died}</td>
 
-            <td>
-              {person.mother ? (
-                <a
-                  href={`#/people/${person.mother.slug}`}
-                  className="has-text-danger"
-                  onClick={(event) => {
-                    event.stopPropagation();
-                  }}
-                >
-                  {person.mother.name}
-                </a>
-              ) : (
-                '-'
-              )}
-            </td>
-
-            <td>
-              {person.father ? (
-                <a
-                  href={`#/people/${person.father.slug}`}
-                  className="has-text-link"
-                  onClick={(event) => {
-                    event.stopPropagation();
-                  }}
-                >
-                  {person.father.name}
-                </a>
-              ) : (
-                '-'
-              )}
-            </td>
+  <td>
+  {person.motherName ? (
+    people.some(p => p.name === person.motherName) ? (
+      <a
+        href={`#/people/${people.find(p => p.name === person.motherName)!.slug}`}
+        className="has-text-danger"
+      >
+        {person.motherName}
+      </a>
+    ) : (
+      person.motherName
+    )
+  ) : (
+    '-'
+  )}
+</td>
+<td>
+  {person.fatherName ? (
+    people.some(p => p.name === person.fatherName) ? (
+      <a
+        href={`#/people/${people.find(p => p.name === person.fatherName)!.slug}`}
+        className="has-text-link"
+      >
+        {person.fatherName}
+      </a>
+    ) : (
+      person.fatherName
+    )
+  ) : (
+    '-'
+  )}
+</td>
           </tr>
         ))}
       </tbody>
