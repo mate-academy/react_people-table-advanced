@@ -21,7 +21,7 @@ export const PeoplePage: React.FC = () => {
   const renderPeople = useMemo(() => {
     const filters: ((person: Person) => boolean)[] = [];
 
-    const searchName = searchParams.get(SerchParams.Name);
+    const searchName = searchParams.get(SerchParams.Query);
 
     if (searchName) {
       filters.push(PersonFilter.FilterByName(searchName));
@@ -87,10 +87,11 @@ export const PeoplePage: React.FC = () => {
 
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
-          <div className="column is-7-tablet is-narrow-desktop">
-            <PeopleFilters />
-          </div>
-
+          {!isLoading && (
+            <div className="column is-7-tablet is-narrow-desktop">
+              <PeopleFilters />
+            </div>
+          )}
           <div className="column">
             <div className="box table-container">
               {isError && (

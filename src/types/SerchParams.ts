@@ -1,5 +1,5 @@
 export enum SerchParams {
-  Name = 'name',
+  Query = 'query',
   Sex = 'sex',
   Centuries = 'centuries',
 }

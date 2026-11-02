@@ -18,7 +18,7 @@ export const PeopleFilters = () => {
   };
 
   const handleNameFilterChange = (query: string) => {
-    setSearchParams(getNewSearchParams(SerchParams.Name, query || null));
+    setSearchParams(getNewSearchParams(SerchParams.Query, query || null));
   };
 
   const handleCenturyFilter = (century: string) => {
@@ -73,7 +73,7 @@ export const PeopleFilters = () => {
             type="search"
             className="input"
             placeholder="Search"
-            value={searchParams.get(SerchParams.Name) || ''}
+            value={searchParams.get(SerchParams.Query) || ''}
             onChange={e => handleNameFilterChange(e.target.value)}
           />
 
@@ -167,7 +167,17 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <Link
           className="button is-link is-outlined is-fullwidth"
-          to={{ search: '' }}
+          to={(() => {
+            const newSearchParams = new URLSearchParams(searchParams);
+
+            Object.values(SerchParams).forEach(param =>
+              newSearchParams.delete(param),
+            );
+
+            return {
+              search: newSearchParams.toString(),
+            };
+          })()}
         >
           Reset all filters
         </Link>
