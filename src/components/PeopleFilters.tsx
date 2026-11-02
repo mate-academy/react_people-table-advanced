@@ -1,4 +1,4 @@
-import { Link, useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import { getSearchWith } from '../utils/searchHelper';
 import { SearchLink } from './SearchLink';
 import classNames from 'classnames';
@@ -16,7 +16,6 @@ export const PeopleFilters = () => {
       getSearchWith(searchParams, { query: event.target.value || null }),
     );
   };
-
 
   return (
     <nav className="panel">
@@ -64,26 +63,26 @@ export const PeopleFilters = () => {
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
             {CENTURIES.map(century => {
-   const value = century.toString();
-  const isSelected = centuries.includes(value);
+              const value = century.toString();
+              const isSelected = centuries.includes(value);
 
-  return (
-    <SearchLink
-      key={century}
-      data-cy="century"
-      className={classNames('button', 'mr-1', {
-        'is-info': isSelected,
-      })}
-      params={{
-        centuries: isSelected
-          ? centuries.filter(c => c !== value)
-          : centuries.concat(value),
-      }}
-    >
-      {century}
-    </SearchLink>
-  );
-})}
+              return (
+                <SearchLink
+                  key={century}
+                  data-cy="century"
+                  className={classNames('button', 'mr-1', {
+                    'is-info': isSelected,
+                  })}
+                  params={{
+                    centuries: isSelected
+                      ? centuries.filter(c => c !== value)
+                      : centuries.concat(value),
+                  }}
+                >
+                  {century}
+                </SearchLink>
+              );
+            })}
           </div>
 
           <div className="level-right ml-4">
