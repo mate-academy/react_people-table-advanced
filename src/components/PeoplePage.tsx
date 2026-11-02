@@ -38,7 +38,9 @@ export const PeoplePage = () => {
   }, []);
 
   const visiblePeople = people.filter(person => {
-    const matchesQuery = person.name.toLowerCase().includes(query);
+    const matchesQuery = person.name.toLowerCase().includes(query) ||
+                         person.motherName?.toLowerCase().includes(query) ||
+                         person.fatherName?.toLowerCase().includes(query);
     const matchesSex = !sex || person.sex === sex;
     const matchesCentury =
       centuries.length === 0 ||
