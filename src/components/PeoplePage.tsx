@@ -29,14 +29,7 @@ export const PeoplePage: React.FC = () => {
   const visiblePeople = useMemo(() => {
     let result = [...people];
 
-    // 1. Filtro por Sexo
-    const sex = searchParams.get('sex');
-
-    if (sex) {
-      result = result.filter(person => person.sex === sex);
-    }
-
-    // 2. Filtro por Nome / Pais
+    // 1. Filtro por Nome / Pais (query)
     const query = searchParams.get('query')?.toLowerCase().trim();
 
     if (query) {
@@ -48,7 +41,7 @@ export const PeoplePage: React.FC = () => {
       );
     }
 
-    // 3. Filtro por Séculos
+    // 2. Filtro por Séculos (centuries)
     const centuries = searchParams.getAll('centuries');
 
     if (centuries.length > 0) {
@@ -59,7 +52,7 @@ export const PeoplePage: React.FC = () => {
       });
     }
 
-    // 4. Ordenação (3 estados)
+    // 3. Ordenação (sort & order)
     const sort = searchParams.get('sort');
     const isDesc = searchParams.get('order') === 'desc';
 
