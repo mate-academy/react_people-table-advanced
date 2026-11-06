@@ -8,7 +8,6 @@ const CENTURIES = ['16', '17', '18', '19', '20'];
 export const PeopleFilters: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const selectedSex = searchParams.get('sex');
   const query = searchParams.get('query') || '';
   const selectedCenturies = searchParams.getAll('centuries');
 
@@ -25,28 +24,6 @@ export const PeopleFilters: React.FC = () => {
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
-
-      {/* Sex Filter */}
-      <p className="panel-tabs" data-cy="SexFilter">
-        <SearchLink
-          params={{ sex: null }}
-          className={!selectedSex ? 'is-active' : ''}
-        >
-          All
-        </SearchLink>
-        <SearchLink
-          params={{ sex: 'm' }}
-          className={selectedSex === 'm' ? 'is-active' : ''}
-        >
-          Male
-        </SearchLink>
-        <SearchLink
-          params={{ sex: 'f' }}
-          className={selectedSex === 'f' ? 'is-active' : ''}
-        >
-          Female
-        </SearchLink>
-      </p>
 
       {/* Name Filter */}
       <div className="panel-block">
@@ -115,7 +92,6 @@ export const PeopleFilters: React.FC = () => {
           className="button is-link is-outlined is-fullwidth"
           params={{
             query: null,
-            sex: null,
             centuries: null,
           }}
         >
