@@ -17,7 +17,9 @@ export const App = () => (
             to="/"
             end
             className={({ isActive }) =>
-              classNames('navbar-item', {'has-background-grey-lighter' : isActive})
+              classNames('navbar-item', {
+                'has-background-grey-lighter': isActive,
+              })
             }
           >
             Home
@@ -26,7 +28,9 @@ export const App = () => (
           <NavLink
             to="/people"
             className={({ isActive }) =>
-              classNames('navbar-item', {'has-background-grey-lighter' : isActive})
+              classNames('navbar-item', {
+                'has-background-grey-lighter': isActive,
+              })
             }
           >
             People
@@ -37,7 +41,7 @@ export const App = () => (
 
     <main className="section">
       <div className="container">
-        <Outlet/>
+        <Outlet />
       </div>
     </main>
   </div>

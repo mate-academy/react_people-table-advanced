@@ -26,14 +26,14 @@ export const PeopleTable: React.FC<Props> = ({ people, slug }) => {
       <tbody>
         {people.map(person => {
           const mother = people.find(p => p.name === person.motherName);
-          const father= people.find(p => p.name === person.fatherName);
+          const father = people.find(p => p.name === person.fatherName);
 
-          return(
-            <tr 
-              key={person.slug} 
+          return (
+            <tr
+              key={person.slug}
               data-cy="person"
               className={classNames({
-                "has-background-warning" : slug === person.slug,
+                'has-background-warning': slug === person.slug,
               })}
             >
               <td>
@@ -42,10 +42,22 @@ export const PeopleTable: React.FC<Props> = ({ people, slug }) => {
               <td>{person.sex}</td>
               <td>{person.born}</td>
               <td>{person.died}</td>
-              <td>{mother ? (<PersonLink person={mother}/>) : (person.motherName || '-')}</td>
-              <td>{father ? (<PersonLink person={father}/>) : (person.fatherName || '-')}</td>
+              <td>
+                {mother ? (
+                  <PersonLink person={mother} />
+                ) : (
+                  person.motherName || '-'
+                )}
+              </td>
+              <td>
+                {father ? (
+                  <PersonLink person={father} />
+                ) : (
+                  person.fatherName || '-'
+                )}
+              </td>
             </tr>
-          )
+          );
         })}
       </tbody>
     </table>
