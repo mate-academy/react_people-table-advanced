@@ -3,7 +3,6 @@ import { PeopleFilters } from './PeopleFilters';
 import { Loader } from './Loader';
 import { PeopleTable } from './PeopleTable';
 import { useSearchParams } from 'react-router-dom';
-import { getSearchWith } from '../utils/searchHelper';
 import { Person } from '../types';
 import { getPeople } from '../api';
 
@@ -12,7 +11,7 @@ export const PeoplePage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
 
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
 
   const query = searchParams.get('query') ?? '';
   const sex = searchParams.get('sex') ?? '';
@@ -61,12 +60,6 @@ export const PeoplePage = () => {
     }
   }
 
-  const handleQueryChange = (value: string) => {
-    const newParams = getSearchWith(searchParams, { query: value || null });
-
-    setSearchParams(newParams);
-  };
-
   useEffect(() => {
     getPeople()
       .then(peopleFromServer => {
@@ -88,12 +81,7 @@ export const PeoplePage = () => {
         <div className="columns is-desktop is-flex-direction-row-reverse">
           {!isLoading && !hasError && people.length > 0 && (
             <div className="column is-7-tablet is-narrow-desktop">
-              <PeopleFilters
-                query={query}
-                onQueryChange={handleQueryChange}
-                sex={sex}
-                centuries={centuries}
-              />
+              <PeopleFilters query={query} sex={sex} centuries={centuries} />
             </div>
           )}
 

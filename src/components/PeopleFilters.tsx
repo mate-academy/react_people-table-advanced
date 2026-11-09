@@ -4,19 +4,13 @@ import { getSearchWith } from '../utils/searchHelper';
 type Props = {
   query: string;
   sex: string;
-  onQueryChange: (value: string) => void;
   centuries: string[];
 };
 
 const availableCenturies = [16, 17, 18, 19, 20];
 
-export const PeopleFilters = ({
-  query,
-  onQueryChange,
-  sex,
-  centuries,
-}: Props) => {
-  const [searchParams] = useSearchParams();
+export const PeopleFilters = ({ query, sex, centuries }: Props) => {
+  const [searchParams, setSearchParams] = useSearchParams();
 
   return (
     <nav className="panel">
@@ -63,7 +57,11 @@ export const PeopleFilters = ({
             placeholder="Search"
             value={query}
             onChange={event => {
-              onQueryChange(event.target.value);
+              setSearchParams(
+                getSearchWith(searchParams, {
+                  query: event.target.value || null,
+                }),
+              );
             }}
           />
 

@@ -58,7 +58,7 @@ export const PeopleTable = ({ people, sort, order, allPeople }: Props) => {
         <tr>
           {sortableColumns.map(({ title, field }) => (
             <th key={field}>
-              {title}{' '}
+              {title}
               <Link
                 to={{
                   pathname: location.pathname,
