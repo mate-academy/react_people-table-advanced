@@ -28,20 +28,21 @@ export const PeoplePage = () => {
     }
 
     const sortBy = searchParams.get('sort');
+    const peopleCopy = [...persons];
 
     switch (sortBy) {
       case 'name':
       case 'sex':
-        persons.sort((p1, p2) => p1[sortBy].localeCompare(p2[sortBy]));
+        peopleCopy.sort((p1, p2) => p1[sortBy].localeCompare(p2[sortBy]));
         break;
       case 'born':
       case 'died':
-        persons.sort((p1, p2) => p1[sortBy] - p2[sortBy]);
+        peopleCopy.sort((p1, p2) => p1[sortBy] - p2[sortBy]);
     }
 
     const isDescending = searchParams.get('order') === 'desc';
 
-    return isDescending ? persons.reverse() : persons;
+    return isDescending ? peopleCopy.reverse() : peopleCopy;
   };
 
   const filterPeople = () => {
