@@ -2,7 +2,12 @@ import { Person } from '../types';
 import cn from 'classnames';
 import PersonLink from './PersonLink';
 import { getSearchWith } from '../utils/searchHelper';
-import { Link, useParams, useSearchParams } from 'react-router-dom';
+import {
+  Link,
+  useParams,
+  useSearchParams,
+  useLocation,
+} from 'react-router-dom';
 
 const sortableColumns = [
   { title: 'Name', field: 'name' },
@@ -19,6 +24,7 @@ type Props = {
 };
 
 export const PeopleTable = ({ people, sort, order, allPeople }: Props) => {
+  const location = useLocation();
   const [searchParams] = useSearchParams();
   const { slug } = useParams();
   const isOrdered = order === 'desc';
@@ -55,7 +61,7 @@ export const PeopleTable = ({ people, sort, order, allPeople }: Props) => {
               {title}{' '}
               <Link
                 to={{
-                  pathname: '/people',
+                  pathname: location.pathname,
                   search: getSearchWith(searchParams, getNextSort(field)),
                 }}
               >

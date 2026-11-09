@@ -2,7 +2,7 @@ import { NavLink, useLocation } from 'react-router-dom';
 
 export const Navbar = () => {
   const location = useLocation();
-  const path = `/people/${location.search}`;
+  const path = `/people${location.search}`;
 
   return (
     <nav
