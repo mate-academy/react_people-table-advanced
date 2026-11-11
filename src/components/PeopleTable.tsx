@@ -16,14 +16,14 @@ export const PeopleTable = ({ people }: Props) => {
 
   const sortedPeople = [...people];
   const sort = searchParams.get('sort') as SortField | null;
-  const order = searchParams.get('order');
+  const order = searchParams.get('order') || 'asc';
 
   const handleSort = (field: SortField) => {
     const params = new URLSearchParams(searchParams);
 
     if (sort !== field) {
       params.set('sort', field);
-      params.set('order', 'asc');
+      params.delete('order');
     } else if (order === 'asc') {
       params.set('order', 'desc');
     } else {
@@ -56,7 +56,7 @@ export const PeopleTable = ({ people }: Props) => {
   }
 
   const getSortLabel = (field: SortField) => {
-    if (sort !== field) {
+    if (sort !== field || !sortFields.includes(field)) {
       return 'fa-sort';
     }
 
