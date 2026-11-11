@@ -7,7 +7,7 @@ import { Person } from '../types';
 import { useSearchParams } from 'react-router-dom';
 
 export const PeoplePage = () => {
-  const [people , setPeople] = useState<Person[]>([]);
+  const [people, setPeople] = useState<Person[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [loadingError, setLoadingError] = useState(false);
   const [searchParams] = useSearchParams();
@@ -15,18 +15,23 @@ export const PeoplePage = () => {
   const normalizedQuery = query.toLowerCase();
 
   const sex = searchParams.get('sex');
-  const centuries = searchParams.getAll('centuries')
+  const centuries = searchParams.getAll('centuries');
 
   const visiblePeople = people.filter(person => {
-    const matchesQuery = [person.name, person.motherName, person.fatherName]
-      .some(field => field?.toLowerCase().includes(normalizedQuery));
+    const matchesQuery = [
+      person.name,
+      person.motherName,
+      person.fatherName,
+    ].some(field => field?.toLowerCase().includes(normalizedQuery));
 
     const matchesSex = !sex || person.sex === sex;
 
-    const matchesCentury = centuries.length === 0 || centuries.includes(String(Math.ceil(person.born / 100)));
+    const matchesCentury =
+      centuries.length === 0 ||
+      centuries.includes(String(Math.ceil(person.born / 100)));
 
     return matchesQuery && matchesSex && matchesCentury;
-  })
+  });
 
   useEffect(() => {
     const loadPeople = async () => {
@@ -40,12 +45,12 @@ export const PeoplePage = () => {
       } catch {
         setLoadingError(true);
       } finally {
-        setIsLoading(false)
+        setIsLoading(false);
       }
-    }
+    };
 
     loadPeople();
-  }, [])
+  }, []);
 
   return (
     <>
@@ -53,31 +58,35 @@ export const PeoplePage = () => {
 
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
-          <div className="column is-7-tablet is-narrow-desktop">
-            <PeopleFilters />
-          </div>
+          {!isLoading && !loadingError && people.length > 0 && (
+            <div className="column is-7-tablet is-narrow-desktop">
+              <PeopleFilters />
+            </div>
+          )}
 
           <div className="column">
             <div className="box table-container">
-              {isLoading && (
-                <Loader />
-              )}
+              {isLoading && <Loader />}
 
               {loadingError && (
                 <p data-cy="peopleLoadingError">Something went wrong</p>
               )}
 
-              {!isLoading && !loadingError && (
-                people.length > 0 ? (
+              {!isLoading &&
+                !loadingError &&
+                (people.length > 0 ? (
                   visiblePeople.length > 0 ? (
-                    <PeopleTable people={visiblePeople}/>
+                    <PeopleTable people={visiblePeople} />
                   ) : (
-                    <p>There are no people matching the current search criteria</p>
+                    <p>
+                      There are no people matching the current search criteria
+                    </p>
                   )
                 ) : (
-                  <p data-cy="noPeopleMessage">There are no people on the server</p>
-                )
-              )}
+                  <p data-cy="noPeopleMessage">
+                    There are no people on the server
+                  </p>
+                ))}
             </div>
           </div>
         </div>
