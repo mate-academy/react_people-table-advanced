@@ -33,12 +33,13 @@ export const PeoplePage: React.FC = () => {
     }
 
     // 2. Фільтр за століттями
-    if (centuries.length > 0) {
-      const personCentury = Math.ceil(person.born / 100).toString();
+    const personCentury = (Math.floor((person.born - 1) / 100) + 1).toString();
 
-      if (!centuries.includes(personCentury)) {
-        return false;
-      }
+    const matchesCentury =
+      centuries.length === 0 || centuries.includes(personCentury);
+
+    if (!matchesCentury) {
+      return false;
     }
 
     // 3. Фільтр за іменем (name, motherName, fatherName)

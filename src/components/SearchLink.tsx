@@ -23,6 +23,7 @@ export const SearchLink: React.FC<Props> = ({
   const [searchParams] = useSearchParams();
   const search = getSearchWith(searchParams, params);
 
+
   const targetTo: Partial<Path> =
     typeof to === 'string' ? { pathname: to, search } : { ...to, search };
 

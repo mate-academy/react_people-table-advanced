@@ -16,13 +16,15 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
 
   const getSortParams = (field: string) => {
     if (sortField !== field) {
+
       return { sort: field, order: null };
     }
 
-    if (!sortOrder) {
+    if (sortOrder !== 'desc') {
+
       return { sort: field, order: 'desc' };
     }
-
+    
     return { sort: null, order: null };
   };
 
