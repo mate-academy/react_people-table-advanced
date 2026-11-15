@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, LinkProps, Path, useSearchParams } from 'react-router-dom';
+import { Link, LinkProps, Path, useSearchParams, useLocation } from 'react-router-dom';
 
 type ParamValue = string | string[] | null;
 
@@ -9,8 +9,8 @@ type Props = Omit<LinkProps, 'to'> & {
 };
 
 /**
- * To replace the standard `Link` we take all its props except for `to`
- * along with the custom `params` prop that we use for updating the search
+ * SearchLink updates the given `params` in the search keeping the `pathname`
+ * and the other existing search params (see `getSearchWith`)
  */
 export const SearchLink: React.FC<Props> = ({
   params = {},
@@ -19,6 +19,7 @@ export const SearchLink: React.FC<Props> = ({
   ...linkProps
 }) => {
   const [searchParams] = useSearchParams();
+  const location = useLocation();
   const nextParams = new URLSearchParams(searchParams);
 
   Object.entries(params).forEach(([key, value]) => {
@@ -34,7 +35,12 @@ export const SearchLink: React.FC<Props> = ({
   });
 
   const search = nextParams.toString();
-  let targetTo: Partial<Path> = { search };
+
+  // Визначаємо шлях: якщо передано 'to', використовуємо його, інакше залишаємо поточний pathname
+  let targetTo: string | Partial<Path> = {
+    pathname: location.pathname,
+    search,
+  };
 
   if (typeof to === 'string') {
     targetTo = { pathname: to, search };
