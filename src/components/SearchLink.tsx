@@ -1,12 +1,10 @@
+import React from 'react';
 import { Link, LinkProps, Path, useSearchParams } from 'react-router-dom';
-import { getSearchWith, SearchParams } from '../utils/searchHelper';
 
-/**
- * To replace the standard `Link` we take all its props except for `to`
- * along with the custom `params` prop that we use for updating the search
- */
+type ParamValue = string | string[] | null;
+
 type Props = Omit<LinkProps, 'to'> & {
-  params?: SearchParams;
+  params?: Record<string, ParamValue>;
   to?: string | Partial<Path>;
 };
 
@@ -15,20 +13,37 @@ type Props = Omit<LinkProps, 'to'> & {
  * along with the custom `params` prop that we use for updating the search
  */
 export const SearchLink: React.FC<Props> = ({
-  children,
   params = {},
+  children,
   to,
-  ...props
+  ...linkProps
 }) => {
   const [searchParams] = useSearchParams();
-  const search = getSearchWith(searchParams, params);
+  const nextParams = new URLSearchParams(searchParams);
 
+  Object.entries(params).forEach(([key, value]) => {
+    nextParams.delete(key);
 
-  const targetTo: Partial<Path> =
-    typeof to === 'string' ? { pathname: to, search } : { ...to, search };
+    if (Array.isArray(value)) {
+      value.forEach(item => {
+        nextParams.append(key, item);
+      });
+    } else if (value !== null) {
+      nextParams.set(key, value);
+    }
+  });
+
+  const search = nextParams.toString();
+  let targetTo: Partial<Path> = { search };
+
+  if (typeof to === 'string') {
+    targetTo = { pathname: to, search };
+  } else if (to) {
+    targetTo = { ...to, search };
+  }
 
   return (
-    <Link to={targetTo} {...props}>
+    <Link {...linkProps} to={targetTo}>
       {children}
     </Link>
   );

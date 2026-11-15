@@ -16,15 +16,13 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
 
   const getSortParams = (field: string) => {
     if (sortField !== field) {
-
       return { sort: field, order: null };
     }
 
     if (sortOrder !== 'desc') {
-
       return { sort: field, order: 'desc' };
     }
-    
+
     return { sort: null, order: null };
   };
 
@@ -89,10 +87,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
                 <SearchLink
                   className={person.sex === 'f' ? 'has-text-danger' : ''}
                   params={{}}
-                  to={{
-                    pathname: `/people/${person.slug}`,
-                    search: searchParams.toString(),
-                  }}
+                  to={`/people/${person.slug}`}
                 >
                   {person.name}
                 </SearchLink>
