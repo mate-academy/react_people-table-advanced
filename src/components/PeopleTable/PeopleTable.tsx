@@ -47,76 +47,72 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
     return 'fa-sort';
   }
 
+  if (people.length === 0) {
+    return <p>There are no people matching the current search criteria</p>;
+  }
+
   return (
     <table
       data-cy="peopleTable"
       className="table is-striped is-hoverable is-narrow is-fullwidth"
     >
-      {people.length === 0 ? (
-        <p>There are no people matching the current search criteria</p>
-      ) : (
-        <>
-          <thead>
-            <tr>
-              {columns.map(column => {
-                return (
-                  <th key={column.field}>
-                    <span className="is-flex is-flex-wrap-nowrap">
-                      {column.title}
-                      <SearchLink params={getNextParams(column.field)}>
-                        <span className="icon">
-                          <i
-                            className={cn('fas', getIconClass(column.field))}
-                          />
-                        </span>
-                      </SearchLink>
+      <thead>
+        <tr>
+          {columns.map(column => {
+            return (
+              <th key={column.field}>
+                <span className="is-flex is-flex-wrap-nowrap">
+                  {column.title}
+                  <SearchLink params={getNextParams(column.field)}>
+                    <span className="icon">
+                      <i className={cn('fas', getIconClass(column.field))} />
                     </span>
-                  </th>
-                );
-              })}
+                  </SearchLink>
+                </span>
+              </th>
+            );
+          })}
 
-              <th>Mother</th>
-              <th>Father</th>
-            </tr>
-          </thead>
+          <th>Mother</th>
+          <th>Father</th>
+        </tr>
+      </thead>
 
-          <tbody>
-            {people.map(person => (
-              <tr
-                key={person.slug}
-                data-cy="person"
-                className={cn({
-                  'has-background-warning': person.slug === slug,
-                })}
-              >
-                <td>
-                  <PersonLink person={person} />
-                </td>
+      <tbody>
+        {people.map(person => (
+          <tr
+            key={person.slug}
+            data-cy="person"
+            className={cn({
+              'has-background-warning': person.slug === slug,
+            })}
+          >
+            <td>
+              <PersonLink person={person} />
+            </td>
 
-                <td>{person.sex}</td>
-                <td>{person.born}</td>
-                <td>{person.died}</td>
+            <td>{person.sex}</td>
+            <td>{person.born}</td>
+            <td>{person.died}</td>
 
-                <td>
-                  {person.mother ? (
-                    <PersonLink person={person.mother} />
-                  ) : (
-                    person.motherName || '-'
-                  )}
-                </td>
+            <td>
+              {person.mother ? (
+                <PersonLink person={person.mother} />
+              ) : (
+                person.motherName || '-'
+              )}
+            </td>
 
-                <td>
-                  {person.father ? (
-                    <PersonLink person={person.father} />
-                  ) : (
-                    person.fatherName || '-'
-                  )}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </>
-      )}
+            <td>
+              {person.father ? (
+                <PersonLink person={person.father} />
+              ) : (
+                person.fatherName || '-'
+              )}
+            </td>
+          </tr>
+        ))}
+      </tbody>
     </table>
   );
 };
