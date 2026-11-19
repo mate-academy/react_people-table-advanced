@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import { getPeople } from '../../api';
 import { Person } from '../../types/Person';
 import { Loader } from '../Loader';
@@ -10,8 +10,13 @@ export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
+  const [searchParams] = useSearchParams();
 
-  const { slug } = useParams();
+  const sex = searchParams.get('sex');
+  const query = searchParams.get('query');
+  const centuries = searchParams.getAll('centuries');
+  const sortField = searchParams.get('sort');
+  const isReversed = searchParams.get('order') === 'desc';
 
   useEffect(() => {
     setIsLoading(true);
@@ -19,8 +24,13 @@ export const PeoplePage = () => {
     const loadPeople = async () => {
       try {
         const loadedPeople = await getPeople();
+        const preparedPeople: Person[] = loadedPeople.map(person => ({
+          ...person,
+          mother: loadedPeople.find(m => m.name === person.motherName),
+          father: loadedPeople.find(f => f.name === person.fatherName),
+        }));
 
-        setPeople(loadedPeople);
+        setPeople(preparedPeople);
       } catch {
         setHasError(true);
       } finally {
@@ -30,6 +40,8 @@ export const PeoplePage = () => {
 
     loadPeople();
   }, []);
+
+  const visiblePeople = [...people];
 
   return (
     <>
@@ -41,7 +53,6 @@ export const PeoplePage = () => {
               <PeopleFilters />
             </div>
           )}
-          
 
           <div className="column">
             <div className="box table-container">
@@ -57,7 +68,7 @@ export const PeoplePage = () => {
                 </p>
               )}
               {!isLoading && !hasError && people.length > 0 && (
-                <PeopleTable people={people} slug={slug} />
+                <PeopleTable people={visiblePeople}/>
               )}
             </div>
           </div>
