@@ -1,37 +1,32 @@
+import { useEffect, useMemo, useState } from 'react';
+import { useParams, useSearchParams } from 'react-router-dom';
+import { getPeople } from '../api';
+import { Person } from '../types/Person';
 import { PeopleFilters } from './PeopleFilters';
 import { Loader } from './Loader';
 import { PeopleTable } from './PeopleTable';
-import { useEffect, useMemo, useState } from 'react';
-import { Person } from '../types';
-import { getPeople } from '../api';
-import { useSearchParams } from 'react-router-dom';
-import { useParams } from 'react-router-dom';
-export const PeoplePage = () => {
-  const { slug } = useParams<{ slug: string }>();
 
+export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
 
+  const { slug } = useParams<{ slug: string }>();
   const [searchParams] = useSearchParams();
+
   const sex = searchParams.get('sex') || '';
   const query = searchParams.get('query')?.trim().toLowerCase() || '';
   const centuries = searchParams.getAll('centuries');
+  const centuriesKey = centuries.join(',');
 
   useEffect(() => {
     setIsLoading(true);
     setHasError(false);
 
     getPeople()
-      .then(data => {
-        setPeople(data);
-      })
-      .catch(() => {
-        setHasError(true);
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
+      .then(setPeople)
+      .catch(() => setHasError(true))
+      .finally(() => setIsLoading(false));
   }, []);
 
   const visiblePeople = useMemo(() => {
@@ -62,7 +57,9 @@ export const PeoplePage = () => {
 
       return true;
     });
-  }, [people, sex, query, centuries.join(',')]);
+  }, [people, sex, query, centuriesKey]);
+
+  const hasLoadedPeople = !isLoading && !hasError && people.length > 0;
 
   return (
     <>
@@ -70,9 +67,11 @@ export const PeoplePage = () => {
 
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
-          <div className="column is-7-tablet is-narrow-desktop">
-            <PeopleFilters />
-          </div>
+          {hasLoadedPeople && (
+            <div className="column is-7-tablet is-narrow-desktop">
+              <PeopleFilters />
+            </div>
+          )}
 
           <div className="column">
             <div className="box table-container">
@@ -90,7 +89,11 @@ export const PeoplePage = () => {
                 </p>
               )}
 
-              {!isLoading && !hasError && people.length > 0 && (
+              {hasLoadedPeople && visiblePeople.length === 0 && (
+                <p>There are no people matching the current search criteria</p>
+              )}
+
+              {hasLoadedPeople && visiblePeople.length > 0 && (
                 <PeopleTable people={visiblePeople} selectedSlug={slug} />
               )}
             </div>
