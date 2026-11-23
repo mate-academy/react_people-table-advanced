@@ -5,19 +5,19 @@ import { SearchLink } from '../SearchLink';
 
 type SortLinkProps = {
   field: string;
-}
+};
 
-export const SortLink: React.FC<SortLinkProps> = ( {field} ) => {
+export const SortLink: React.FC<SortLinkProps> = ({ field }) => {
   const [searchParams] = useSearchParams();
   const sortField = searchParams.get('sort') || '';
   const isReversed = searchParams.get('order') === 'desc';
 
   const params = {
-    sort: (field === sortField && isReversed ) ? null : field,
-    order: (field === sortField && !isReversed) ? 'desc' : null,
-  }
+    sort: field === sortField && isReversed ? null : field,
+    order: field === sortField && !isReversed ? 'desc' : null,
+  };
 
-  return(
+  return (
     <SearchLink params={params}>
       <span className="icon">
         <i

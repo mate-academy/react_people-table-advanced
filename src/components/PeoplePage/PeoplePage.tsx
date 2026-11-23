@@ -41,14 +41,60 @@ export const PeoplePage = () => {
     loadPeople();
   }, []);
 
-  const visiblePeople = [...people];
+  let visiblePeople = [...people];
+
+  if (sex) {
+    visiblePeople = visiblePeople.filter(person => person.sex === sex);
+  }
+
+  if (centuries.length>0) {
+    const getCentury = (person: Person) => Math.ceil(person.born/100);
+
+    visiblePeople= visiblePeople.filter(
+      person => centuries.includes(
+        getCentury(person).toString(),
+      ),
+    );
+  }
+
+  if (query) {
+    const lowerQuery = query.toLocaleLowerCase();
+
+    visiblePeople = visiblePeople.filter(p => {
+      return [p.name, p.motherName || '', p.fatherName || '']
+        .join('\n')
+        .toLocaleLowerCase()
+        .includes(lowerQuery);
+    });
+  }
+
+  if (sortField) {
+    visiblePeople.sort((a, b) => {
+      switch(sortField) {
+        case 'name':
+        case 'sex':
+          return a[sortField].localeCompare(b[sortField]);
+
+        case 'born':
+        case 'died':
+          return a[sortField] - b[sortField];
+          
+        default: 
+          return 0; 
+      }
+    });
+    
+    if(isReversed) {
+      visiblePeople.reverse();
+    }
+  }
 
   return (
     <>
       <h1 className="title">People Page</h1>
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
-          {!isLoading && (
+          {!isLoading && !hasError && (
             <div className="column is-7-tablet is-narrow-desktop">
               <PeopleFilters />
             </div>
@@ -68,7 +114,7 @@ export const PeoplePage = () => {
                 </p>
               )}
               {!isLoading && !hasError && people.length > 0 && (
-                <PeopleTable people={visiblePeople}/>
+                <PeopleTable people={visiblePeople} />
               )}
             </div>
           </div>
