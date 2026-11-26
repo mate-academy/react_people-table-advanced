@@ -78,11 +78,11 @@ export const PeopleTable = () => {
       <tbody>
         {peoples.map(person => {
           const mother = allPeoples.find(
-            pers => pers.name === pers.motherName,
+            candidate => candidate.name === person.motherName,
           );
 
           const father = allPeoples.find(
-            pers => pers.name === pers.fatherName,
+            candidate => candidate.name === person.fatherName,
           );
 
           return (
