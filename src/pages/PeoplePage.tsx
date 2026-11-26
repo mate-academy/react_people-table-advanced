@@ -16,7 +16,11 @@ export function PeoplePage() {
 
     getPeople()
       .then(setPeoples)
-      .catch(error => setErrorMessage(error))
+      .catch(error => {
+        const message = error instanceof Error ? error.message : String(error);
+
+        setErrorMessage(message);
+      })
       .finally(() => setIsLoading(false));
   }, []);
 
