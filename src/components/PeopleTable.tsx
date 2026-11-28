@@ -173,10 +173,7 @@ export const PeopleTable: React.FC<Props> = ({ people, selectedPerson }) => {
 
               <td>
                 {father ? (
-                  <Link
-                    to={{ pathname: `/people/${father.slug}`, search }}
-                    className="has-text-danger"
-                  >
+                  <Link to={{ pathname: `/people/${father.slug}`, search }}>
                     {father.name}
                   </Link>
                 ) : (
