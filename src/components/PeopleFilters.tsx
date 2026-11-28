@@ -1,4 +1,58 @@
+import { useSearchParams } from 'react-router-dom';
+
 export const PeopleFilters = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const query = searchParams.get('query') || '';
+  const allCenturies = searchParams.getAll('centuries');
+
+  const handleQueryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const newQuery = event.target.value;
+    const newSearchParams = new URLSearchParams(searchParams);
+
+    if (newQuery) {
+      newSearchParams.set('query', newQuery);
+    } else {
+      newSearchParams.delete('query');
+    }
+
+    setSearchParams(newSearchParams);
+  };
+
+  const handleOneCentury = (century: string) => {
+    const newSearchParams = new URLSearchParams(searchParams);
+
+    if (allCenturies.includes(century)) {
+      const filteredCenturies = allCenturies.filter(item => item !== century);
+
+      newSearchParams.delete('centuries');
+
+      filteredCenturies.forEach(item => {
+        newSearchParams.append('centuries', item);
+      });
+    } else {
+      newSearchParams.append('centuries', century);
+    }
+
+    setSearchParams(newSearchParams);
+  };
+
+  const handleAllCenturies = () => {
+    const newSearchParams = new URLSearchParams(searchParams);
+
+    newSearchParams.delete('centuries');
+
+    setSearchParams(newSearchParams);
+  };
+
+  const isCenturySelected = (century: string) => {
+    if (allCenturies.includes(century)) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
@@ -22,6 +76,8 @@ export const PeopleFilters = () => {
             type="search"
             className="input"
             placeholder="Search"
+            value={query}
+            onChange={handleQueryChange}
           />
 
           <span className="icon is-left">
@@ -35,40 +91,55 @@ export const PeopleFilters = () => {
           <div className="level-left">
             <a
               data-cy="century"
-              className="button mr-1"
+              className={
+                isCenturySelected('16') ? 'button mr-1 is-info' : 'button mr-1'
+              }
               href="#/people?centuries=16"
+              onClick={() => handleOneCentury('16')}
             >
               16
             </a>
 
             <a
               data-cy="century"
-              className="button mr-1 is-info"
+              className={
+                isCenturySelected('17') ? 'button mr-1 is-info' : 'button mr-1'
+              }
               href="#/people?centuries=17"
+              onClick={() => handleOneCentury('17')}
             >
               17
             </a>
 
             <a
               data-cy="century"
-              className="button mr-1 is-info"
+              className={
+                isCenturySelected('18') ? 'button mr-1 is-info' : 'button mr-1'
+              }
               href="#/people?centuries=18"
+              onClick={() => handleOneCentury('18')}
             >
               18
             </a>
 
             <a
               data-cy="century"
-              className="button mr-1 is-info"
+              className={
+                isCenturySelected('19') ? 'button mr-1 is-info' : 'button mr-1'
+              }
               href="#/people?centuries=19"
+              onClick={() => handleOneCentury('19')}
             >
               19
             </a>
 
             <a
               data-cy="century"
-              className="button mr-1"
+              className={
+                isCenturySelected('20') ? 'button mr-1 is-info' : 'button mr-1'
+              }
               href="#/people?centuries=20"
+              onClick={() => handleOneCentury('20')}
             >
               20
             </a>
@@ -79,6 +150,7 @@ export const PeopleFilters = () => {
               data-cy="centuryALL"
               className="button is-success is-outlined"
               href="#/people"
+              onClick={handleAllCenturies}
             >
               All
             </a>
